@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Benjamin Davidson
 
 ! This file was ported from Lean 3 source module algebra.periodic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -96,7 +96,7 @@ theorem Finset.periodic_prod [Add α] [CommMonoid β] {ι : Type _} {f : ι → 
 #align finset.periodic_prod Finset.periodic_prod
 
 @[to_additive]
-theorem Periodic.smul [Add α] [HasSmul γ β] (h : Periodic f c) (a : γ) : Periodic (a • f) c := by
+theorem Periodic.smul [Add α] [SMul γ β] (h : Periodic f c) (a : γ) : Periodic (a • f) c := by
   simp_all
 #align function.periodic.smul Function.Periodic.smul
 
@@ -282,7 +282,7 @@ theorem Periodic.int_mul_eq [Ring α] (h : Periodic f c) (n : ℤ) : f (n * c) =
   `y ∈ Ico 0 c` such that `f x = f y`. -/
 theorem Periodic.exists_mem_Ico₀ [LinearOrderedAddCommGroup α] [Archimedean α] (h : Periodic f c)
     (hc : 0 < c) (x) : ∃ y ∈ Set.Ico 0 c, f x = f y :=
-  let ⟨n, H, _⟩ := exists_unique_zsmul_near_of_pos' hc x
+  let ⟨n, H, _⟩ := existsUnique_zsmul_near_of_pos' hc x
   ⟨x - n • c, H, (h.sub_zsmul_eq n).symm⟩
 #align function.periodic.exists_mem_Ico₀ Function.Periodic.exists_mem_Ico₀
 
@@ -290,7 +290,7 @@ theorem Periodic.exists_mem_Ico₀ [LinearOrderedAddCommGroup α] [Archimedean �
   `y ∈ Ico a (a + c)` such that `f x = f y`. -/
 theorem Periodic.exists_mem_Ico [LinearOrderedAddCommGroup α] [Archimedean α] (h : Periodic f c)
     (hc : 0 < c) (x a) : ∃ y ∈ Set.Ico a (a + c), f x = f y :=
-  let ⟨n, H, _⟩ := exists_unique_add_zsmul_mem_Ico hc x a
+  let ⟨n, H, _⟩ := existsUnique_add_zsmul_mem_Ico hc x a
   ⟨x + n • c, H, (h.zsmul n x).symm⟩
 #align function.periodic.exists_mem_Ico Function.Periodic.exists_mem_Ico
 
@@ -298,7 +298,7 @@ theorem Periodic.exists_mem_Ico [LinearOrderedAddCommGroup α] [Archimedean α] 
   `y ∈ Ioc a (a + c)` such that `f x = f y`. -/
 theorem Periodic.exists_mem_Ioc [LinearOrderedAddCommGroup α] [Archimedean α] (h : Periodic f c)
     (hc : 0 < c) (x a) : ∃ y ∈ Set.Ioc a (a + c), f x = f y :=
-  let ⟨n, H, _⟩ := exists_unique_add_zsmul_mem_Ioc hc x a
+  let ⟨n, H, _⟩ := existsUnique_add_zsmul_mem_Ioc hc x a
   ⟨x + n • c, H, (h.zsmul n x).symm⟩
 #align function.periodic.exists_mem_Ioc Function.Periodic.exists_mem_Ioc
 

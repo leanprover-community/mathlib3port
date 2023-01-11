@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Ken Lee, Chris Hughes
 
 ! This file was ported from Lean 3 source module ring_theory.coprime.lemmas
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,6 +49,8 @@ theorem Nat.is_coprime_iff_coprime {m n : ℕ} : IsCoprime (m : ℤ) n ↔ Nat.C
 #align nat.is_coprime_iff_coprime Nat.is_coprime_iff_coprime
 
 alias Nat.is_coprime_iff_coprime ↔ IsCoprime.nat_coprime Nat.Coprime.is_coprime
+#align is_coprime.nat_coprime IsCoprime.nat_coprime
+#align nat.coprime.is_coprime Nat.Coprime.is_coprime
 
 theorem IsCoprime.prod_left : (∀ i ∈ t, IsCoprime (s i) x) → IsCoprime (∏ i in t, s i) x :=
   (Finset.induction_on t fun _ => isCoprime_one_left) fun b t hbt ih H =>

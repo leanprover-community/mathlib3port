@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 
 ! This file was ported from Lean 3 source module geometry.manifold.algebra.smooth_functions
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -189,7 +189,7 @@ field `𝕜` inherit a vector space structure.
 
 
 instance hasSmul {V : Type _} [NormedAddCommGroup V] [NormedSpace 𝕜 V] :
-    HasSmul 𝕜 C^∞⟮I, N; 𝓘(𝕜, V), V⟯ :=
+    SMul 𝕜 C^∞⟮I, N; 𝓘(𝕜, V), V⟯ :=
   ⟨fun r f => ⟨r • f, smooth_const.smul f.Smooth⟩⟩
 #align smooth_map.has_smul SmoothMap.hasSmul
 
@@ -279,7 +279,7 @@ is naturally a vector space over the ring of smooth functions from `N` to `𝕜`
 
 
 instance hasSmul' {V : Type _} [NormedAddCommGroup V] [NormedSpace 𝕜 V] :
-    HasSmul C^∞⟮I, N; 𝕜⟯ C^∞⟮I, N; 𝓘(𝕜, V), V⟯ :=
+    SMul C^∞⟮I, N; 𝕜⟯ C^∞⟮I, N; 𝓘(𝕜, V), V⟯ :=
   ⟨fun f g => ⟨fun x => f x • g x, Smooth.smul f.2 g.2⟩⟩
 #align smooth_map.has_smul' SmoothMap.hasSmul'
 

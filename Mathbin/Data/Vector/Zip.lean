@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module data.vector.zip
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -53,7 +53,7 @@ theorem zip_with_tail (x : Vector α n) (y : Vector β n) :
 @[to_additive]
 theorem prod_mul_prod_eq_prod_zip_with [CommMonoid α] (x y : Vector α n) :
     x.toList.Prod * y.toList.Prod = (Vector.zipWith (· * ·) x y).toList.Prod :=
-  List.prod_mul_prod_eq_prod_zip_with_of_length_eq x.toList y.toList
+  List.prod_mul_prod_eq_prod_zipWith_of_length_eq x.toList y.toList
     ((toList_length x).trans (toList_length y).symm)
 #align vector.prod_mul_prod_eq_prod_zip_with Vector.prod_mul_prod_eq_prod_zip_with
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module topology.bornology.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -130,8 +130,12 @@ theorem is_cobounded_compl_iff : IsCobounded (sᶜ) ↔ IsBounded s :=
 #align bornology.is_cobounded_compl_iff Bornology.is_cobounded_compl_iff
 
 alias is_bounded_compl_iff ↔ is_bounded.of_compl is_cobounded.compl
+#align bornology.is_bounded.of_compl Bornology.IsBounded.of_compl
+#align bornology.is_cobounded.compl Bornology.IsCobounded.compl
 
 alias is_cobounded_compl_iff ↔ is_cobounded.of_compl is_bounded.compl
+#align bornology.is_cobounded.of_compl Bornology.IsCobounded.of_compl
+#align bornology.is_bounded.compl Bornology.IsBounded.compl
 
 @[simp]
 theorem is_bounded_empty : IsBounded (∅ : Set α) :=

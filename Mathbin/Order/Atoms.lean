@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module order.atoms
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -141,7 +141,21 @@ theorem bot_covby_iff : ⊥ ⋖ a ↔ IsAtom a := by
   simp only [Covby, bot_lt_iff_ne_bot, IsAtom, not_imp_not]
 #align bot_covby_iff bot_covby_iff
 
+/- warning: covby.is_atom -> Covby.is_atom is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)) a) -> (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)) a) -> (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a)
+Case conversion may be inaccurate. Consider using '#align covby.is_atom Covby.is_atomₓ'. -/
+/- warning: is_atom.bot_covby -> IsAtom.bot_covby is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a) -> (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)) a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a) -> (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)) a)
+Case conversion may be inaccurate. Consider using '#align is_atom.bot_covby IsAtom.bot_covbyₓ'. -/
 alias bot_covby_iff ↔ Covby.is_atom IsAtom.bot_covby
+#align covby.is_atom Covby.is_atom
+#align is_atom.bot_covby IsAtom.bot_covby
 
 end IsAtom
 
@@ -174,8 +188,10 @@ theorem isAtom_dual_iff_isCoatom [OrderTop α] {a : α} : IsAtom (OrderDual.toDu
 -/
 
 alias isCoatom_dual_iff_isAtom ↔ _ IsAtom.dual
+#align is_atom.dual IsAtom.dual
 
 alias isAtom_dual_iff_isCoatom ↔ _ IsCoatom.dual
+#align is_coatom.dual IsCoatom.dual
 
 variable [OrderTop α] {a x : α}
 
@@ -247,7 +263,21 @@ theorem covby_top_iff : a ⋖ ⊤ ↔ IsCoatom a :=
   toDual_covby_toDual_iff.symm.trans bot_covby_iff
 #align covby_top_iff covby_top_iff
 
+/- warning: covby.is_coatom -> Covby.is_coatom is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))) -> (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))) -> (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a)
+Case conversion may be inaccurate. Consider using '#align covby.is_coatom Covby.is_coatomₓ'. -/
+/- warning: is_coatom.covby_top -> IsCoatom.covby_top is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a) -> (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a) -> (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)))
+Case conversion may be inaccurate. Consider using '#align is_coatom.covby_top IsCoatom.covby_topₓ'. -/
 alias covby_top_iff ↔ Covby.is_coatom IsCoatom.covby_top
+#align covby.is_coatom Covby.is_coatom
+#align is_coatom.covby_top IsCoatom.covby_top
 
 end IsCoatom
 
@@ -700,8 +730,10 @@ theorem eq_top_of_lt : b = ⊤ :=
 #align is_simple_order.eq_top_of_lt IsSimpleOrder.eq_top_of_lt
 
 alias eq_bot_of_lt ← has_lt.lt.eq_bot
+#align is_simple_order.has_lt.lt.eq_bot IsSimpleOrder.HasLt.Lt.eq_bot
 
 alias eq_top_of_lt ← has_lt.lt.eq_top
+#align is_simple_order.has_lt.lt.eq_top IsSimpleOrder.HasLt.Lt.eq_top
 
 end Preorder
 

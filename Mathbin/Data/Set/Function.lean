@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Andrew Zipperer, Haitao Zhang, Minchao Wu, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.set.function
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -296,6 +296,7 @@ theorem injective_codRestrict {f : ι → α} {s : Set α} (h : ∀ x, f x ∈ s
 #align set.injective_cod_restrict Set.injective_codRestrict
 
 alias injective_cod_restrict ↔ _ _root_.function.injective.cod_restrict
+#align function.injective.cod_restrict Function.Injective.cod_restrict
 
 variable {s s₁ s₂ : Set α} {t t₁ t₂ : Set β} {p : Set γ} {f f₁ f₂ f₃ : α → β} {g g₁ g₂ : β → γ}
   {f' f₁' f₂' : β → α} {g' : γ → β} {a : α} {b : β}
@@ -450,6 +451,7 @@ theorem eqOn_range {ι : Sort _} {f : ι → α} {g₁ g₂ : α → β} :
 #align set.eq_on_range Set.eqOn_range
 
 alias eq_on_range ↔ eq_on.comp_eq _
+#align set.eq_on.comp_eq Set.EqOn.comp_eq
 
 /-! ### Congruence lemmas -/
 
@@ -1089,10 +1091,13 @@ theorem restrictPreimage_bijective (hf : Bijective f) : Bijective (t.restrictPre
 #align set.restrict_preimage_bijective Set.restrictPreimage_bijective
 
 alias Set.restrictPreimage_injective ← _root_.function.injective.restrict_preimage
+#align function.injective.restrict_preimage Function.Injective.restrict_preimage
 
 alias Set.restrictPreimage_surjective ← _root_.function.surjective.restrict_preimage
+#align function.surjective.restrict_preimage Function.Surjective.restrict_preimage
 
 alias Set.restrictPreimage_bijective ← _root_.function.bijective.restrict_preimage
+#align function.bijective.restrict_preimage Function.Bijective.restrict_preimage
 
 end
 
@@ -1158,7 +1163,14 @@ theorem InjOn.ne_iff {x y} (h : InjOn f s) (hx : x ∈ s) (hy : y ∈ s) : f x �
   (h.eq_iff hx hy).Not
 #align set.inj_on.ne_iff Set.InjOn.ne_iff
 
+/- warning: set.inj_on.ne -> Set.InjOn.ne is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {f : α -> β} {x : α} {y : α}, (Set.InjOn.{u1, u2} α β f s) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y s) -> (Ne.{succ u1} α x y) -> (Ne.{succ u2} β (f x) (f y))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {f : α -> β} {x : α} {y : α}, (Set.InjOn.{u2, u1} α β f s) -> (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) -> (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) y s) -> (Ne.{succ u2} α x y) -> (Ne.{succ u1} β (f x) (f y))
+Case conversion may be inaccurate. Consider using '#align set.inj_on.ne Set.InjOn.neₓ'. -/
 alias inj_on.ne_iff ↔ _ inj_on.ne
+#align set.inj_on.ne Set.InjOn.ne
 
 /- warning: set.inj_on.congr -> Set.InjOn.congr is a dubious translation:
 lean 3 declaration is
@@ -1243,6 +1255,7 @@ theorem injOn_of_injective (h : Injective f) (s : Set α) : InjOn f s := fun x h
 #align set.inj_on_of_injective Set.injOn_of_injective
 
 alias inj_on_of_injective ← _root_.function.injective.inj_on
+#align function.injective.inj_on Function.Injective.inj_on
 
 theorem inj_on_id (s : Set α) : InjOn id s :=
   injective_id.InjOn _
@@ -1291,7 +1304,14 @@ theorem injOn_iff_injective : InjOn f s ↔ Injective (s.restrict f) :=
     congr_arg Subtype.val <| @H ⟨a, as⟩ ⟨b, bs⟩ h⟩
 #align set.inj_on_iff_injective Set.injOn_iff_injective
 
+/- warning: set.inj_on.injective -> Set.InjOn.injective is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {f : α -> β}, (Set.InjOn.{u1, u2} α β f s) -> (Function.Injective.{succ u1, succ u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) β (Set.restrict.{u1, u2} α (fun (ᾰ : α) => β) s f))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {f : α -> β}, (Set.InjOn.{u2, u1} α β f s) -> (Function.Injective.{succ u2, succ u1} (Set.Elem.{u2} α s) β (Set.restrict.{u2, u1} α (fun (ᾰ : α) => β) s f))
+Case conversion may be inaccurate. Consider using '#align set.inj_on.injective Set.InjOn.injectiveₓ'. -/
 alias inj_on_iff_injective ↔ inj_on.injective _
+#align set.inj_on.injective Set.InjOn.injective
 
 /- warning: set.maps_to.restrict_inj -> Set.MapsTo.restrict_inj is a dubious translation:
 lean 3 declaration is
@@ -1907,6 +1927,7 @@ theorem bijective_iff_bijOn_univ : Bijective f ↔ BijOn f univ univ :=
 #align set.bijective_iff_bij_on_univ Set.bijective_iff_bijOn_univ
 
 alias bijective_iff_bij_on_univ ↔ _root_.function.bijective.bij_on_univ _
+#align function.bijective.bij_on_univ Function.Bijective.bij_on_univ
 
 /- warning: set.bij_on.compl -> Set.BijOn.compl is a dubious translation:
 lean 3 declaration is
@@ -2992,7 +3013,21 @@ theorem strictMono_restrict [Preorder α] [Preorder β] {f : α → β} {s : Set
     StrictMono (s.restrict f) ↔ StrictMonoOn f s := by simp [Set.restrict, StrictMono, StrictMonoOn]
 #align strict_mono_restrict strictMono_restrict
 
+/- warning: strict_mono.of_restrict -> StrictMono.of_restrict is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α}, (StrictMono.{u1, u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) β (Subtype.preorder.{u1} α _inst_1 (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s)) _inst_2 (Set.restrict.{u1, u2} α (fun (ᾰ : α) => β) s f)) -> (StrictMonoOn.{u1, u2} α β _inst_1 _inst_2 f s)
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : α -> β} {s : Set.{u2} α}, (StrictMono.{u2, u1} (Set.Elem.{u2} α s) β (Subtype.preorder.{u2} α _inst_1 (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s)) _inst_2 (Set.restrict.{u2, u1} α (fun (ᾰ : α) => β) s f)) -> (StrictMonoOn.{u2, u1} α β _inst_1 _inst_2 f s)
+Case conversion may be inaccurate. Consider using '#align strict_mono.of_restrict StrictMono.of_restrictₓ'. -/
+/- warning: strict_mono_on.restrict -> StrictMonoOn.restrict is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α}, (StrictMonoOn.{u1, u2} α β _inst_1 _inst_2 f s) -> (StrictMono.{u1, u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) β (Subtype.preorder.{u1} α _inst_1 (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s)) _inst_2 (Set.restrict.{u1, u2} α (fun (ᾰ : α) => β) s f))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : α -> β} {s : Set.{u2} α}, (StrictMonoOn.{u2, u1} α β _inst_1 _inst_2 f s) -> (StrictMono.{u2, u1} (Set.Elem.{u2} α s) β (Subtype.preorder.{u2} α _inst_1 (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s)) _inst_2 (Set.restrict.{u2, u1} α (fun (ᾰ : α) => β) s f))
+Case conversion may be inaccurate. Consider using '#align strict_mono_on.restrict StrictMonoOn.restrictₓ'. -/
 alias strictMono_restrict ↔ _root_.strict_mono.of_restrict _root_.strict_mono_on.restrict
+#align strict_mono.of_restrict StrictMono.of_restrict
+#align strict_mono_on.restrict StrictMonoOn.restrict
 
 /- warning: strict_mono.cod_restrict -> StrictMono.codRestrict is a dubious translation:
 lean 3 declaration is
@@ -3302,6 +3337,17 @@ theorem bij_on_image : BijOn e s (e '' s) :=
 theorem bij_on_symm_image : BijOn e.symm (e '' s) s :=
   e.bij_on_image.symm e.InvOn
 #align equiv.bij_on_symm_image Equiv.bij_on_symm_image
+
+variable {e}
+
+@[simp]
+theorem bij_on_symm : BijOn e.symm t s ↔ BijOn e s t :=
+  bij_on_comm e.symm.InvOn
+#align equiv.bij_on_symm Equiv.bij_on_symm
+
+alias bij_on_symm ↔ _root_.set.bij_on.of_equiv_symm _root_.set.bij_on.equiv_symm
+#align set.bij_on.of_equiv_symm Set.BijOn.of_equiv_symm
+#align set.bij_on.equiv_symm Set.BijOn.equiv_symm
 
 variable [DecidableEq α] {a b : α}
 

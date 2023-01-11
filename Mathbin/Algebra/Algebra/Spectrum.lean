@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module algebra.algebra.spectrum
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -345,7 +345,7 @@ theorem exists_mem_of_not_is_unit_aeval_prod [IsDomain R] {p : R[X]} {a : A} (hp
     ∃ k : R, k ∈ σ a ∧ eval k p = 0 :=
   by
   rw [← Multiset.prod_to_list, AlgHom.map_list_prod] at h
-  replace h := mt List.prod_is_unit h
+  replace h := mt List.prod_isUnit h
   simp only [not_forall, exists_prop, aeval_C, Multiset.mem_to_list, List.mem_map', aeval_X,
     exists_exists_and_eq_and, Multiset.mem_map, AlgHom.map_sub] at h
   rcases h with ⟨r, r_mem, r_nu⟩

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Floris van Doorn
 
 ! This file was ported from Lean 3 source module data.set.pointwise.smul
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,29 +57,29 @@ section Smul
 /-- The dilation of set `x • s` is defined as `{x • y | y ∈ s}` in locale `pointwise`. -/
 @[to_additive
       "The translation of set `x +ᵥ s` is defined as `{x +ᵥ y | y ∈ s}` in\nlocale `pointwise`."]
-protected def hasSmulSet [HasSmul α β] : HasSmul α (Set β) :=
-  ⟨fun a => image (HasSmul.smul a)⟩
+protected def hasSmulSet [SMul α β] : SMul α (Set β) :=
+  ⟨fun a => image (SMul.smul a)⟩
 #align set.has_smul_set Set.hasSmulSet
 
 /-- The pointwise scalar multiplication of sets `s • t` is defined as `{x • y | x ∈ s, y ∈ t}` in
 locale `pointwise`. -/
 @[to_additive
       "The pointwise scalar addition of sets `s +ᵥ t` is defined as\n`{x +ᵥ y | x ∈ s, y ∈ t}` in locale `pointwise`."]
-protected def hasSmul [HasSmul α β] : HasSmul (Set α) (Set β) :=
-  ⟨image2 HasSmul.smul⟩
+protected def hasSmul [SMul α β] : SMul (Set α) (Set β) :=
+  ⟨image2 SMul.smul⟩
 #align set.has_smul Set.hasSmul
 
 scoped[Pointwise] attribute [instance] Set.hasSmulSet Set.hasSmul
 
 scoped[Pointwise] attribute [instance] Set.hasVaddSet Set.hasVadd
 
-section HasSmul
+section SMul
 
-variable {ι : Sort _} {κ : ι → Sort _} [HasSmul α β] {s s₁ s₂ : Set α} {t t₁ t₂ u : Set β} {a : α}
+variable {ι : Sort _} {κ : ι → Sort _} [SMul α β] {s s₁ s₂ : Set α} {t t₁ t₂ u : Set β} {a : α}
   {b : β}
 
 @[simp, to_additive]
-theorem image2_smul : image2 HasSmul.smul s t = s • t :=
+theorem image2_smul : image2 SMul.smul s t = s • t :=
   rfl
 #align set.image2_smul Set.image2_smul
 
@@ -94,11 +94,23 @@ theorem mem_smul : b ∈ s • t ↔ ∃ x y, x ∈ s ∧ y ∈ t ∧ x • y = 
   Iff.rfl
 #align set.mem_smul Set.mem_smul
 
+/- warning: set.smul_mem_smul -> Set.smul_mem_smul is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_2}} {β : Type.{u_3}} [_inst_1 : SMul.{u_2, u_3} α β] {s : Set.{u_2} α} {t : Set.{u_3} β} {a : α} {b : β}, (Membership.Mem.{u_2, u_2} α (Set.{u_2} α) (Set.hasMem.{u_2} α) a s) -> (Membership.Mem.{u_3, u_3} β (Set.{u_3} β) (Set.hasMem.{u_3} β) b t) -> (Membership.Mem.{u_3, u_3} β (Set.{u_3} β) (Set.hasMem.{u_3} β) (SMul.smul.{u_2, u_3} α β _inst_1 a b) (SMul.smul.{u_2, u_3} (Set.{u_2} α) (Set.{u_3} β) (Set.hasSmul.{u_2, u_3} α β _inst_1) s t))
+but is expected to have type
+  forall {α : Type.{u_1}} [β : AddMonoid.{u_1} α] {_inst_1 : Set.{u_1} α} {s : α}, (Membership.mem.{u_1, u_1} α (Set.{u_1} α) (Set.instMembershipSet.{u_1} α) s _inst_1) -> (forall (a : Nat), Membership.mem.{u_1, u_1} α (Set.{u_1} α) (Set.instMembershipSet.{u_1} α) (HSMul.hSMul.{0, u_1, u_1} Nat α α (instHSMul.{0, u_1} Nat α (AddMonoid.SMul.{u_1} α β)) a s) (HSMul.hSMul.{0, u_1, u_1} Nat (Set.{u_1} α) (Set.{u_1} α) (instHSMul.{0, u_1} Nat (Set.{u_1} α) (Set.NSMul.{u_1} α (AddMonoid.toZero.{u_1} α β) (AddZeroClass.toAdd.{u_1} α (AddMonoid.toAddZeroClass.{u_1} α β)))) a _inst_1))
+Case conversion may be inaccurate. Consider using '#align set.smul_mem_smul Set.smul_mem_smulₓ'. -/
 @[to_additive]
 theorem smul_mem_smul : a ∈ s → b ∈ t → a • b ∈ s • t :=
   mem_image2_of_mem
 #align set.smul_mem_smul Set.smul_mem_smul
 
+/- warning: set.empty_smul -> Set.empty_smul is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_2}} {β : Type.{u_3}} [_inst_1 : SMul.{u_2, u_3} α β] {t : Set.{u_3} β}, Eq.{succ u_3} (Set.{u_3} β) (SMul.smul.{u_2, u_3} (Set.{u_2} α) (Set.{u_3} β) (Set.hasSmul.{u_2, u_3} α β _inst_1) (EmptyCollection.emptyCollection.{u_2} (Set.{u_2} α) (Set.hasEmptyc.{u_2} α)) t) (EmptyCollection.emptyCollection.{u_3} (Set.{u_3} β) (Set.hasEmptyc.{u_3} β))
+but is expected to have type
+  forall {α : Type.{u_1}} [β : AddMonoid.{u_1} α] {_inst_1 : Nat}, (Ne.{1} Nat _inst_1 (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Eq.{succ u_1} (Set.{u_1} α) (HSMul.hSMul.{0, u_1, u_1} Nat (Set.{u_1} α) (Set.{u_1} α) (instHSMul.{0, u_1} Nat (Set.{u_1} α) (Set.NSMul.{u_1} α (AddMonoid.toZero.{u_1} α β) (AddZeroClass.toAdd.{u_1} α (AddMonoid.toAddZeroClass.{u_1} α β)))) _inst_1 (EmptyCollection.emptyCollection.{u_1} (Set.{u_1} α) (Set.instEmptyCollectionSet.{u_1} α))) (EmptyCollection.emptyCollection.{u_1} (Set.{u_1} α) (Set.instEmptyCollectionSet.{u_1} α)))
+Case conversion may be inaccurate. Consider using '#align set.empty_smul Set.empty_smulₓ'. -/
 @[simp, to_additive]
 theorem empty_smul : (∅ : Set α) • t = ∅ :=
   image2_empty_left
@@ -149,6 +161,12 @@ theorem singleton_smul_singleton : ({a} : Set α) • ({b} : Set β) = {a • b}
   image2_singleton
 #align set.singleton_smul_singleton Set.singleton_smul_singleton
 
+/- warning: set.smul_subset_smul -> Set.smul_subset_smul is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_2}} {β : Type.{u_3}} [_inst_1 : SMul.{u_2, u_3} α β] {s₁ : Set.{u_2} α} {s₂ : Set.{u_2} α} {t₁ : Set.{u_3} β} {t₂ : Set.{u_3} β}, (HasSubset.Subset.{u_2} (Set.{u_2} α) (Set.hasSubset.{u_2} α) s₁ s₂) -> (HasSubset.Subset.{u_3} (Set.{u_3} β) (Set.hasSubset.{u_3} β) t₁ t₂) -> (HasSubset.Subset.{u_3} (Set.{u_3} β) (Set.hasSubset.{u_3} β) (SMul.smul.{u_2, u_3} (Set.{u_2} α) (Set.{u_3} β) (Set.hasSmul.{u_2, u_3} α β _inst_1) s₁ t₁) (SMul.smul.{u_2, u_3} (Set.{u_2} α) (Set.{u_3} β) (Set.hasSmul.{u_2, u_3} α β _inst_1) s₂ t₂))
+but is expected to have type
+  forall {α : Type.{u_1}} [β : AddMonoid.{u_1} α] {_inst_1 : Set.{u_1} α} {s₁ : Set.{u_1} α}, (HasSubset.Subset.{u_1} (Set.{u_1} α) (Set.instHasSubsetSet_1.{u_1} α) _inst_1 s₁) -> (forall (t₁ : Nat), HasSubset.Subset.{u_1} (Set.{u_1} α) (Set.instHasSubsetSet_1.{u_1} α) (HSMul.hSMul.{0, u_1, u_1} Nat (Set.{u_1} α) (Set.{u_1} α) (instHSMul.{0, u_1} Nat (Set.{u_1} α) (Set.NSMul.{u_1} α (AddMonoid.toZero.{u_1} α β) (AddZeroClass.toAdd.{u_1} α (AddMonoid.toAddZeroClass.{u_1} α β)))) t₁ _inst_1) (HSMul.hSMul.{0, u_1, u_1} Nat (Set.{u_1} α) (Set.{u_1} α) (instHSMul.{0, u_1} Nat (Set.{u_1} α) (Set.NSMul.{u_1} α (AddMonoid.toZero.{u_1} α β) (AddZeroClass.toAdd.{u_1} α (AddMonoid.toAddZeroClass.{u_1} α β)))) t₁ s₁))
+Case conversion may be inaccurate. Consider using '#align set.smul_subset_smul Set.smul_subset_smulₓ'. -/
 @[to_additive, mono]
 theorem smul_subset_smul : s₁ ⊆ s₂ → t₁ ⊆ t₂ → s₁ • t₁ ⊆ s₂ • t₂ :=
   image2_subset
@@ -258,11 +276,11 @@ theorem bUnion_smul_set (s : Set α) (t : Set β) : (⋃ a ∈ s, a • t) = s �
   unionᵢ_image_left _
 #align set.bUnion_smul_set Set.bUnion_smul_set
 
-end HasSmul
+end SMul
 
 section HasSmulSet
 
-variable {ι : Sort _} {κ : ι → Sort _} [HasSmul α β] {s t t₁ t₂ : Set β} {a : α} {b : β} {x y : β}
+variable {ι : Sort _} {κ : ι → Sort _} [SMul α β] {s t t₁ t₂ : Set β} {a : α} {b : β} {x y : β}
 
 @[simp, to_additive]
 theorem image_smul : (fun x => a • x) '' t = a • t :=
@@ -360,7 +378,7 @@ theorem bUnion_op_smul_set [Mul α] (s t : Set α) : (⋃ a ∈ t, MulOpposite.o
 #align set.bUnion_op_smul_set Set.bUnion_op_smul_set
 
 @[to_additive]
-theorem range_smul_range {ι κ : Type _} [HasSmul α β] (b : ι → α) (c : κ → β) :
+theorem range_smul_range {ι κ : Type _} [SMul α β] (b : ι → α) (c : κ → β) :
     range b • range c = range fun p : ι × κ => b p.1 • c p.2 :=
   ext fun x =>
     ⟨fun hx =>
@@ -370,54 +388,53 @@ theorem range_smul_range {ι κ : Type _} [HasSmul α β] (b : ι → α) (c : �
 #align set.range_smul_range Set.range_smul_range
 
 @[to_additive]
-theorem smul_set_range [HasSmul α β] {ι : Sort _} {f : ι → β} :
-    a • range f = range fun i => a • f i :=
+theorem smul_set_range [SMul α β] {ι : Sort _} {f : ι → β} : a • range f = range fun i => a • f i :=
   (range_comp _ _).symm
 #align set.smul_set_range Set.smul_set_range
 
 @[to_additive]
-instance smul_comm_class_set [HasSmul α γ] [HasSmul β γ] [SMulCommClass α β γ] :
+instance smul_comm_class_set [SMul α γ] [SMul β γ] [SMulCommClass α β γ] :
     SMulCommClass α β (Set γ) :=
   ⟨fun _ _ => commute.set_image <| smul_comm _ _⟩
 #align set.smul_comm_class_set Set.smul_comm_class_set
 
 @[to_additive]
-instance smul_comm_class_set' [HasSmul α γ] [HasSmul β γ] [SMulCommClass α β γ] :
+instance smul_comm_class_set' [SMul α γ] [SMul β γ] [SMulCommClass α β γ] :
     SMulCommClass α (Set β) (Set γ) :=
   ⟨fun _ _ _ => image_image2_distrib_right <| smul_comm _⟩
 #align set.smul_comm_class_set' Set.smul_comm_class_set'
 
 @[to_additive]
-instance smul_comm_class_set'' [HasSmul α γ] [HasSmul β γ] [SMulCommClass α β γ] :
+instance smul_comm_class_set'' [SMul α γ] [SMul β γ] [SMulCommClass α β γ] :
     SMulCommClass (Set α) β (Set γ) :=
   haveI := SMulCommClass.symm α β γ
   SMulCommClass.symm _ _ _
 #align set.smul_comm_class_set'' Set.smul_comm_class_set''
 
 @[to_additive]
-instance smul_comm_class [HasSmul α γ] [HasSmul β γ] [SMulCommClass α β γ] :
+instance smul_comm_class [SMul α γ] [SMul β γ] [SMulCommClass α β γ] :
     SMulCommClass (Set α) (Set β) (Set γ) :=
   ⟨fun _ _ _ => image2_left_comm smul_comm⟩
 #align set.smul_comm_class Set.smul_comm_class
 
 @[to_additive]
-instance is_scalar_tower [HasSmul α β] [HasSmul α γ] [HasSmul β γ] [IsScalarTower α β γ] :
+instance is_scalar_tower [SMul α β] [SMul α γ] [SMul β γ] [IsScalarTower α β γ] :
     IsScalarTower α β (Set γ)
     where smul_assoc a b T := by simp only [← image_smul, image_image, smul_assoc]
 #align set.is_scalar_tower Set.is_scalar_tower
 
 @[to_additive]
-instance is_scalar_tower' [HasSmul α β] [HasSmul α γ] [HasSmul β γ] [IsScalarTower α β γ] :
+instance is_scalar_tower' [SMul α β] [SMul α γ] [SMul β γ] [IsScalarTower α β γ] :
     IsScalarTower α (Set β) (Set γ) :=
   ⟨fun _ _ _ => image2_image_left_comm <| smul_assoc _⟩
 #align set.is_scalar_tower' Set.is_scalar_tower'
 
 @[to_additive]
-instance is_scalar_tower'' [HasSmul α β] [HasSmul α γ] [HasSmul β γ] [IsScalarTower α β γ] :
+instance is_scalar_tower'' [SMul α β] [SMul α γ] [SMul β γ] [IsScalarTower α β γ] :
     IsScalarTower (Set α) (Set β) (Set γ) where smul_assoc T T' T'' := image2_assoc smul_assoc
 #align set.is_scalar_tower'' Set.is_scalar_tower''
 
-instance is_central_scalar [HasSmul α β] [HasSmul αᵐᵒᵖ β] [IsCentralScalar α β] :
+instance is_central_scalar [SMul α β] [SMul αᵐᵒᵖ β] [IsCentralScalar α β] :
     IsCentralScalar α (Set β) :=
   ⟨fun a S => (congr_arg fun f => f '' S) <| funext fun _ => op_smul_eq_smul _ _⟩
 #align set.is_central_scalar Set.is_central_scalar
@@ -466,7 +483,7 @@ protected def mulDistribMulActionSet [Monoid α] [Monoid β] [MulDistribMulActio
 
 scoped[Pointwise] attribute [instance] Set.distribMulActionSet Set.mulDistribMulActionSet
 
-instance [Zero α] [Zero β] [HasSmul α β] [NoZeroSMulDivisors α β] :
+instance [Zero α] [Zero β] [SMul α β] [NoZeroSMulDivisors α β] :
     NoZeroSMulDivisors (Set α) (Set β) :=
   ⟨fun s t h => by
     by_contra' H
@@ -476,7 +493,7 @@ instance [Zero α] [Zero β] [HasSmul α β] [NoZeroSMulDivisors α β] :
     obtain ⟨⟨a, hs, ha⟩, b, ht, hb⟩ := H
     exact (eq_zero_or_eq_zero_of_smul_eq_zero <| h.subset <| smul_mem_smul hs ht).elim ha hb⟩
 
-instance no_zero_smul_divisors_set [Zero α] [Zero β] [HasSmul α β] [NoZeroSMulDivisors α β] :
+instance no_zero_smul_divisors_set [Zero α] [Zero β] [SMul α β] [NoZeroSMulDivisors α β] :
     NoZeroSMulDivisors α (Set β) :=
   ⟨fun a s h => by
     by_contra' H

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton, Mario Carneiro, Isabel Longbottom, Scott Morrison
 
 ! This file was ported from Lean 3 source module set_theory.game.pgame
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -456,12 +456,14 @@ theorem move_left_lf_of_le {x y : Pgame} (h : x ≤ y) (i) : x.moveLeft i ⧏ y 
 #align pgame.move_left_lf_of_le Pgame.move_left_lf_of_le
 
 alias move_left_lf_of_le ← _root_.has_le.le.move_left_lf
+#align has_le.le.move_left_lf LE.le.move_left_lf
 
 theorem lf_move_right_of_le {x y : Pgame} (h : x ≤ y) (j) : x ⧏ y.moveRight j :=
   (le_iff_forall_lf.1 h).2 j
 #align pgame.lf_move_right_of_le Pgame.lf_move_right_of_le
 
 alias lf_move_right_of_le ← _root_.has_le.le.lf_move_right
+#align has_le.le.lf_move_right LE.le.lf_move_right
 
 theorem lf_of_move_right_le {x y : Pgame} {j} (h : x.moveRight j ≤ y) : x ⧏ y :=
   lf_iff_exists_le.2 <| Or.inr ⟨j, h⟩
@@ -538,6 +540,7 @@ theorem lf_of_lt {x y : Pgame} (h : x < y) : x ⧏ y :=
 #align pgame.lf_of_lt Pgame.lf_of_lt
 
 alias lf_of_lt ← _root_.has_lt.lt.lf
+#align has_lt.lt.lf LT.lt.lf
 
 theorem lf_irrefl (x : Pgame) : ¬x ⧏ x :=
   le_rfl.not_gf
@@ -561,8 +564,10 @@ theorem lf_of_lf_of_le {x y z : Pgame} (h₁ : x ⧏ y) (h₂ : y ≤ z) : x ⧏
 #align pgame.lf_of_lf_of_le Pgame.lf_of_lf_of_le
 
 alias lf_of_le_of_lf ← _root_.has_le.le.trans_lf
+#align has_le.le.trans_lf LE.le.trans_lf
 
 alias lf_of_lf_of_le ← lf.trans_le
+#align pgame.lf.trans_le Pgame.Lf.trans_le
 
 @[trans]
 theorem lf_of_lt_of_lf {x y z : Pgame} (h₁ : x < y) (h₂ : y ⧏ z) : x ⧏ z :=
@@ -575,8 +580,10 @@ theorem lf_of_lf_of_lt {x y z : Pgame} (h₁ : x ⧏ y) (h₂ : y < z) : x ⧏ z
 #align pgame.lf_of_lf_of_lt Pgame.lf_of_lf_of_lt
 
 alias lf_of_lt_of_lf ← _root_.has_lt.lt.trans_lf
+#align has_lt.lt.trans_lf LT.lt.trans_lf
 
 alias lf_of_lf_of_lt ← lf.trans_lt
+#align pgame.lf.trans_lt Pgame.Lf.trans_lt
 
 theorem move_left_lf {x : Pgame} : ∀ i, x.moveLeft i ⧏ x :=
   le_rfl.move_left_lf
@@ -926,6 +933,7 @@ theorem lf_of_fuzzy {x y : Pgame} (h : x ‖ y) : x ⧏ y :=
 #align pgame.lf_of_fuzzy Pgame.lf_of_fuzzy
 
 alias lf_of_fuzzy ← fuzzy.lf
+#align pgame.fuzzy.lf Pgame.Fuzzy.lf
 
 theorem lt_or_fuzzy_of_lf {x y : Pgame} : x ⧏ y → x < y ∨ x ‖ y :=
   lf_iff_lt_or_fuzzy.1

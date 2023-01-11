@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.quaternion
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -871,6 +871,7 @@ theorem commute_conj_conj {a b : ℍ[R]} (h : Commute a b) : Commute a.conj b.co
 #align quaternion.commute_conj_conj Quaternion.commute_conj_conj
 
 alias commute_conj_conj ← commute.quaternion_conj
+#align quaternion.commute.quaternion_conj Quaternion.Commute.quaternion_conj
 
 @[simp]
 theorem conj_coe : conj (x : ℍ[R]) = x :=

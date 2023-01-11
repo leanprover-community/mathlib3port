@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Amelia Livingston
 
 ! This file was ported from Lean 3 source module group_theory.congruence
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1032,12 +1032,12 @@ instance {M : Type _} [MulOneClass M] (c : Con M) : One c.Quotient
     where one := ((1 : M) : c.Quotient)
 
 @[to_additive]
-theorem smul {α M : Type _} [MulOneClass M] [HasSmul α M] [IsScalarTower α M M] (c : Con M) (a : α)
+theorem smul {α M : Type _} [MulOneClass M] [SMul α M] [IsScalarTower α M M] (c : Con M) (a : α)
     {w x : M} (h : c w x) : c (a • w) (a • x) := by
   simpa only [smul_one_mul] using c.mul (c.refl' (a • 1 : M)) h
 #align con.smul Con.smul
 
-instance AddCon.Quotient.hasNsmul {M : Type _} [AddMonoid M] (c : AddCon M) : HasSmul ℕ c.Quotient
+instance AddCon.Quotient.hasNsmul {M : Type _} [AddMonoid M] (c : AddCon M) : SMul ℕ c.Quotient
     where smul n := (Quotient.map' ((· • ·) n)) fun x y => c.nsmul n
 #align add_con.quotient.has_nsmul AddCon.Quotient.hasNsmul
 
@@ -1117,7 +1117,7 @@ instance hasDiv : Div c.Quotient :=
 
 /-- The integer scaling induced on the quotient by a congruence relation on a type with a
     subtraction. -/
-instance AddCon.Quotient.hasZsmul {M : Type _} [AddGroup M] (c : AddCon M) : HasSmul ℤ c.Quotient :=
+instance AddCon.Quotient.hasZsmul {M : Type _} [AddGroup M] (c : AddCon M) : SMul ℤ c.Quotient :=
   ⟨fun z => (Quotient.map' ((· • ·) z)) fun x y => c.zsmul z⟩
 #align add_con.quotient.has_zsmul AddCon.Quotient.hasZsmul
 
@@ -1190,13 +1190,13 @@ end Units
 section Actions
 
 @[to_additive]
-instance hasSmul {α M : Type _} [MulOneClass M] [HasSmul α M] [IsScalarTower α M M] (c : Con M) :
-    HasSmul α c.Quotient where smul a := (Quotient.map' ((· • ·) a)) fun x y => c.smul a
+instance hasSmul {α M : Type _} [MulOneClass M] [SMul α M] [IsScalarTower α M M] (c : Con M) :
+    SMul α c.Quotient where smul a := (Quotient.map' ((· • ·) a)) fun x y => c.smul a
 #align con.has_smul Con.hasSmul
 
 @[to_additive]
-theorem coe_smul {α M : Type _} [MulOneClass M] [HasSmul α M] [IsScalarTower α M M] (c : Con M)
-    (a : α) (x : M) : (↑(a • x) : c.Quotient) = a • ↑x :=
+theorem coe_smul {α M : Type _} [MulOneClass M] [SMul α M] [IsScalarTower α M M] (c : Con M) (a : α)
+    (x : M) : (↑(a • x) : c.Quotient) = a • ↑x :=
   rfl
 #align con.coe_smul Con.coe_smul
 

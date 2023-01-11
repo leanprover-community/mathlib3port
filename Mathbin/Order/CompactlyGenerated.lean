@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module order.compactly_generated
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -481,11 +481,16 @@ theorem is_sup_closed_compact_iff_well_founded :
   complete_lattice.is_sup_closed_compact_iff_well_founded CompleteLattice.is_sup_closed_compact_iff_well_founded
 
 alias well_founded_iff_is_Sup_finite_compact ↔ _ is_Sup_finite_compact.well_founded
+#align
+  complete_lattice.is_Sup_finite_compact.well_founded CompleteLattice.IsSupFiniteCompact.well_founded
 
 alias is_Sup_finite_compact_iff_is_sup_closed_compact ↔
   _ is_sup_closed_compact.is_Sup_finite_compact
+#align
+  complete_lattice.is_sup_closed_compact.is_Sup_finite_compact CompleteLattice.IsSupClosedCompact.is_Sup_finite_compact
 
 alias is_sup_closed_compact_iff_well_founded ↔ _ _root_.well_founded.is_sup_closed_compact
+#align well_founded.is_sup_closed_compact WellFounded.is_sup_closed_compact
 
 variable {α}
 

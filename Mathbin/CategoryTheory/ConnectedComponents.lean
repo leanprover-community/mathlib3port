@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.connected_components
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -78,7 +78,7 @@ instance (j : ConnectedComponents J) : IsConnected (Component j) :=
   -- We know that the underlying objects j₁ j₂ have some zigzag between them in `J`
   have h₁₂ : zigzag j₁ j₂ := Quotient.exact' hj₁
   -- Get an explicit zigzag as a list
-  rcases List.exists_chain_of_relation_refl_trans_gen h₁₂ with ⟨l, hl₁, hl₂⟩
+  rcases List.exists_chain_of_relationReflTransGen h₁₂ with ⟨l, hl₁, hl₂⟩
   -- Everything which has a zigzag to j₂ can be lifted to the same component as `j₂`.
   let f : ∀ x, zigzag x j₂ → component (Quotient.mk' j₂) := fun x h => ⟨x, Quotient.sound' h⟩
   -- Everything in our chosen zigzag from `j₁` to `j₂` has a zigzag to `j₂`.

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module data.real.cau_seq_completion
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -106,11 +106,11 @@ theorem mk_sub (f g : CauSeq β abv) : mk f - mk g = mk (f - g) :=
   rfl
 #align cau_seq.completion.mk_sub CauSeq.Completion.mk_sub
 
-instance {γ : Type _} [HasSmul γ β] [IsScalarTower γ β β] : HasSmul γ Cauchy :=
+instance {γ : Type _} [SMul γ β] [IsScalarTower γ β β] : SMul γ Cauchy :=
   ⟨fun c => (Quotient.map ((· • ·) c)) fun f₁ g₁ hf => smul_equiv_smul _ hf⟩
 
 @[simp]
-theorem mk_smul {γ : Type _} [HasSmul γ β] [IsScalarTower γ β β] (c : γ) (f : CauSeq β abv) :
+theorem mk_smul {γ : Type _} [SMul γ β] [IsScalarTower γ β β] (c : γ) (f : CauSeq β abv) :
     c • mk f = mk (c • f) :=
   rfl
 #align cau_seq.completion.mk_smul CauSeq.Completion.mk_smul
@@ -245,7 +245,7 @@ theorem inv_mk {f} (hf) : (@mk α _ β _ abv _ f)⁻¹ = mk (inv f hf) :=
 theorem cau_seq_zero_ne_one : ¬(0 : CauSeq _ abv) ≈ 1 := fun h =>
   have : LimZero (1 - 0) := Setoid.symm h
   have : LimZero 1 := by simpa
-  one_ne_zero <| const_lim_zero.1 this
+  one_ne_zero <| const_limZero.1 this
 #align cau_seq.completion.cau_seq_zero_ne_one CauSeq.Completion.cau_seq_zero_ne_one
 
 theorem zero_ne_one : (0 : Cauchy) ≠ 1 := fun h => cau_seq_zero_ne_one <| mk_eq.1 h
@@ -434,7 +434,7 @@ theorem lim_inv {f : CauSeq β abv} (hf : ¬LimZero f) : lim (inv f hf) = (lim f
               from
               sub_lim_zero (by rw [← mul_assoc, mul_right_comm, const_inv hl] <;> exact h₁ _ _ _)
                 (by rw [← mul_assoc] <;> exact h₁ _ _ _)
-      (lim_zero_congr h₂).mpr <| mul_lim_zero_left _ (Setoid.symm (equiv_lim f))
+      (limZero_congr h₂).mpr <| mul_limZero_left _ (Setoid.symm (equiv_lim f))
 #align cau_seq.lim_inv CauSeq.lim_inv
 
 end

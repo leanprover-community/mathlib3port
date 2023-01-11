@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, François Dupuis
 
 ! This file was ported from Lean 3 source module analysis.convex.function
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,9 +48,9 @@ section OrderedAddCommMonoid
 
 variable [OrderedAddCommMonoid α] [OrderedAddCommMonoid β]
 
-section HasSmul
+section SMul
 
-variable (𝕜) [HasSmul 𝕜 E] [HasSmul 𝕜 α] [HasSmul 𝕜 β] (s : Set E) (f : E → β) {g : β → α}
+variable (𝕜) [SMul 𝕜 E] [SMul 𝕜 α] [SMul 𝕜 β] (s : Set E) (f : E → β) {g : β → α}
 
 /-- Convexity of functions -/
 def ConvexOn : Prop :=
@@ -200,11 +200,11 @@ theorem StrictConcaveOn.comp_strict_convex_on (hg : StrictConcaveOn 𝕜 (f '' s
   hg.dual.comp hf hg' hf'
 #align strict_concave_on.comp_strict_convex_on StrictConcaveOn.comp_strict_convex_on
 
-end HasSmul
+end SMul
 
 section DistribMulAction
 
-variable [HasSmul 𝕜 E] [DistribMulAction 𝕜 β] {s : Set E} {f g : E → β}
+variable [SMul 𝕜 E] [DistribMulAction 𝕜 β] {s : Set E} {f g : E → β}
 
 theorem ConvexOn.add (hf : ConvexOn 𝕜 s f) (hg : ConvexOn 𝕜 s g) : ConvexOn 𝕜 s (f + g) :=
   ⟨hf.1, fun x hx y hy a b ha hb hab =>
@@ -223,7 +223,7 @@ end DistribMulAction
 
 section Module
 
-variable [HasSmul 𝕜 E] [Module 𝕜 β] {s : Set E} {f : E → β}
+variable [SMul 𝕜 E] [Module 𝕜 β] {s : Set E} {f : E → β}
 
 theorem convex_on_const (c : β) (hs : Convex 𝕜 s) : ConvexOn 𝕜 s fun x : E => c :=
   ⟨hs, fun x y _ _ a b _ _ hab => (Convex.combo_self hab c).ge⟩
@@ -248,7 +248,7 @@ end Module
 
 section OrderedSmul
 
-variable [HasSmul 𝕜 E] [Module 𝕜 β] [OrderedSmul 𝕜 β] {s : Set E} {f : E → β}
+variable [SMul 𝕜 E] [Module 𝕜 β] [OrderedSmul 𝕜 β] {s : Set E} {f : E → β}
 
 theorem ConvexOn.convex_le (hf : ConvexOn 𝕜 s f) (r : β) : Convex 𝕜 ({ x ∈ s | f x ≤ r }) :=
   fun x hx y hy a b ha hb hab =>
@@ -295,7 +295,7 @@ end OrderedSmul
 
 section Module
 
-variable [Module 𝕜 E] [HasSmul 𝕜 β] {s : Set E} {f : E → β}
+variable [Module 𝕜 E] [SMul 𝕜 β] {s : Set E} {f : E → β}
 
 /-- Right translation preserves convexity. -/
 theorem ConvexOn.translate_right (hf : ConvexOn 𝕜 s f) (c : E) :
@@ -516,7 +516,7 @@ end Module
 
 section Module
 
-variable [Module 𝕜 E] [Module 𝕜 F] [HasSmul 𝕜 β]
+variable [Module 𝕜 E] [Module 𝕜 F] [SMul 𝕜 β]
 
 /-- If `g` is convex on `s`, so is `(f ∘ g)` on `f ⁻¹' s` for a linear `f`. -/
 theorem ConvexOn.comp_linear_map {f : F → β} {s : Set F} (hf : ConvexOn 𝕜 s f) (g : E →ₗ[𝕜] F) :
@@ -544,7 +544,7 @@ variable [OrderedCancelAddCommMonoid β]
 
 section DistribMulAction
 
-variable [HasSmul 𝕜 E] [DistribMulAction 𝕜 β] {s : Set E} {f g : E → β}
+variable [SMul 𝕜 E] [DistribMulAction 𝕜 β] {s : Set E} {f g : E → β}
 
 theorem StrictConvexOn.add_convex_on (hf : StrictConvexOn 𝕜 s f) (hg : ConvexOn 𝕜 s g) :
     StrictConvexOn 𝕜 s (f + g) :=
@@ -645,7 +645,7 @@ end OrderedCancelAddCommMonoid
 
 section LinearOrderedAddCommMonoid
 
-variable [LinearOrderedAddCommMonoid β] [HasSmul 𝕜 E] [Module 𝕜 β] [OrderedSmul 𝕜 β] {s : Set E}
+variable [LinearOrderedAddCommMonoid β] [SMul 𝕜 E] [Module 𝕜 β] [OrderedSmul 𝕜 β] {s : Set E}
   {f g : E → β}
 
 /-- The pointwise maximum of convex functions is convex. -/
@@ -772,7 +772,7 @@ variable [LinearOrderedCancelAddCommMonoid β]
 
 section OrderedSmul
 
-variable [HasSmul 𝕜 E] [Module 𝕜 β] [OrderedSmul 𝕜 β] {s : Set E} {f g : E → β}
+variable [SMul 𝕜 E] [Module 𝕜 β] [OrderedSmul 𝕜 β] {s : Set E} {f g : E → β}
 
 theorem ConvexOn.le_left_of_right_le' (hf : ConvexOn 𝕜 s f) {x y : E} (hx : x ∈ s) (hy : y ∈ s)
     {a b : 𝕜} (ha : 0 < a) (hb : 0 ≤ b) (hab : a + b = 1) (hfy : f y ≤ f (a • x + b • y)) :
@@ -907,7 +907,7 @@ end LinearOrderedCancelAddCommMonoid
 
 section OrderedAddCommGroup
 
-variable [OrderedAddCommGroup β] [HasSmul 𝕜 E] [Module 𝕜 β] {s : Set E} {f g : E → β}
+variable [OrderedAddCommGroup β] [SMul 𝕜 E] [Module 𝕜 β] {s : Set E} {f g : E → β}
 
 /-- A function `-f` is convex iff `f` is concave. -/
 @[simp]
@@ -954,12 +954,16 @@ theorem neg_strict_concave_on_iff : StrictConcaveOn 𝕜 s (-f) ↔ StrictConvex
 #align neg_strict_concave_on_iff neg_strict_concave_on_iff
 
 alias neg_convex_on_iff ↔ _ ConcaveOn.neg
+#align concave_on.neg ConcaveOn.neg
 
 alias neg_concave_on_iff ↔ _ ConvexOn.neg
+#align convex_on.neg ConvexOn.neg
 
 alias neg_strict_convex_on_iff ↔ _ StrictConcaveOn.neg
+#align strict_concave_on.neg StrictConcaveOn.neg
 
 alias neg_strict_concave_on_iff ↔ _ StrictConvexOn.neg
+#align strict_convex_on.neg StrictConvexOn.neg
 
 theorem ConvexOn.sub (hf : ConvexOn 𝕜 s f) (hg : ConcaveOn 𝕜 s g) : ConvexOn 𝕜 s (f - g) :=
   (sub_eq_add_neg f g).symm ▸ hf.add hg.neg
@@ -1005,7 +1009,7 @@ end AddCommMonoid
 
 section AddCancelCommMonoid
 
-variable [AddCancelCommMonoid E] [OrderedAddCommMonoid β] [Module 𝕜 E] [HasSmul 𝕜 β] {s : Set E}
+variable [AddCancelCommMonoid E] [OrderedAddCommMonoid β] [Module 𝕜 E] [SMul 𝕜 β] {s : Set E}
   {f : E → β}
 
 /-- Right translation preserves strict convexity. -/
@@ -1051,7 +1055,7 @@ variable [OrderedAddCommMonoid β]
 
 section Module
 
-variable [HasSmul 𝕜 E] [Module 𝕜 β] [OrderedSmul 𝕜 β] {s : Set E} {f : E → β}
+variable [SMul 𝕜 E] [Module 𝕜 β] [OrderedSmul 𝕜 β] {s : Set E} {f : E → β}
 
 theorem ConvexOn.smul {c : 𝕜} (hc : 0 ≤ c) (hf : ConvexOn 𝕜 s f) : ConvexOn 𝕜 s fun x => c • f x :=
   ⟨hf.1, fun x hx y hy a b ha hb hab =>
@@ -1083,7 +1087,7 @@ variable [OrderedAddCommMonoid β]
 
 section Module
 
-variable [Module 𝕜 E] [Module 𝕜 F] [HasSmul 𝕜 β]
+variable [Module 𝕜 E] [Module 𝕜 F] [SMul 𝕜 β]
 
 /-- If a function is convex on `s`, it remains convex when precomposed by an affine map. -/
 theorem ConvexOn.comp_affine_map {f : F → β} (g : E →ᵃ[𝕜] F) {s : Set F} (hf : ConvexOn 𝕜 s f) :
@@ -1116,9 +1120,9 @@ section OrderedAddCommMonoid
 
 variable [OrderedAddCommMonoid β]
 
-section HasSmul
+section SMul
 
-variable [HasSmul 𝕜 E] [HasSmul 𝕜 β] {s : Set E}
+variable [SMul 𝕜 E] [SMul 𝕜 β] {s : Set E}
 
 theorem convex_on_iff_div {f : E → β} :
     ConvexOn 𝕜 s f ↔
@@ -1199,7 +1203,7 @@ theorem strict_concave_on_iff_div {f : E → β} :
   @strict_convex_on_iff_div _ _ βᵒᵈ _ _ _ _ _ _ _
 #align strict_concave_on_iff_div strict_concave_on_iff_div
 
-end HasSmul
+end SMul
 
 end OrderedAddCommMonoid
 

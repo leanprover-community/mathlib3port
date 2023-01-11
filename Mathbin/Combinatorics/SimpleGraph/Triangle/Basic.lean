@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.triangle.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,6 +54,8 @@ theorem far_from_triangle_free_iff :
 #align simple_graph.far_from_triangle_free_iff SimpleGraph.far_from_triangle_free_iff
 
 alias far_from_triangle_free_iff ↔ far_from_triangle_free.le_card_sub_card _
+#align
+  simple_graph.far_from_triangle_free.le_card_sub_card SimpleGraph.FarFromTriangleFree.le_card_sub_card
 
 theorem FarFromTriangleFree.mono (hε : G.FarFromTriangleFree ε) (h : δ ≤ ε) :
     G.FarFromTriangleFree δ :=

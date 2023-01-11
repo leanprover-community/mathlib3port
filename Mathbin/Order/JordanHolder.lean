@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module order.jordan_holder
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -246,7 +246,7 @@ theorem to_list_injective : Function.Injective (@CompositionSeries.toList X _ _)
 #align composition_series.to_list_injective CompositionSeries.to_list_injective
 
 theorem chain'_to_list (s : CompositionSeries X) : List.Chain' IsMaximal s.toList :=
-  List.chain'_iff_nth_le.2
+  List.chain'_iff_nthLe.2
     (by
       intro i hi
       simp only [to_list, List.nth_le_of_fn']
@@ -255,7 +255,7 @@ theorem chain'_to_list (s : CompositionSeries X) : List.Chain' IsMaximal s.toLis
 #align composition_series.chain'_to_list CompositionSeries.chain'_to_list
 
 theorem to_list_sorted (s : CompositionSeries X) : s.toList.Sorted (· < ·) :=
-  List.pairwise_iff_nth_le.2 fun i j hi hij =>
+  List.pairwise_iff_nthLe.2 fun i j hi hij =>
     by
     dsimp [to_list]
     rw [List.nth_le_of_fn', List.nth_le_of_fn']
@@ -280,7 +280,7 @@ def ofList (l : List X) (hl : l ≠ []) (hc : List.Chain' IsMaximal l) : Composi
       (by
         conv_rhs => rw [← tsub_add_cancel_of_le (Nat.succ_le_of_lt (List.length_pos_of_ne_nil hl))]
         exact i.2)
-  step' := fun ⟨i, hi⟩ => List.chain'_iff_nth_le.1 hc i hi
+  step' := fun ⟨i, hi⟩ => List.chain'_iff_nthLe.1 hc i hi
 #align composition_series.of_list CompositionSeries.ofList
 
 theorem length_of_list (l : List X) (hl : l ≠ []) (hc : List.Chain' IsMaximal l) :

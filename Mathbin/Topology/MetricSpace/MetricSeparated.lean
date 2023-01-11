@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.metric_separated
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -116,6 +116,7 @@ theorem finite_Union_left_iff {ι : Type _} {I : Set ι} (hI : I.Finite) {s : ι
 #align is_metric_separated.finite_Union_left_iff IsMetricSeparated.finite_Union_left_iff
 
 alias finite_Union_left_iff ↔ _ finite_Union_left
+#align is_metric_separated.finite_Union_left IsMetricSeparated.finite_Union_left
 
 theorem finite_Union_right_iff {ι : Type _} {I : Set ι} (hI : I.Finite) {s : Set X}
     {t : ι → Set X} : IsMetricSeparated s (⋃ i ∈ I, t i) ↔ ∀ i ∈ I, IsMetricSeparated s (t i) := by
@@ -129,6 +130,7 @@ theorem finset_Union_left_iff {ι : Type _} {I : Finset ι} {s : ι → Set X} {
 #align is_metric_separated.finset_Union_left_iff IsMetricSeparated.finset_Union_left_iff
 
 alias finset_Union_left_iff ↔ _ finset_Union_left
+#align is_metric_separated.finset_Union_left IsMetricSeparated.finset_Union_left
 
 @[simp]
 theorem finset_Union_right_iff {ι : Type _} {I : Finset ι} {s : Set X} {t : ι → Set X} :
@@ -137,6 +139,7 @@ theorem finset_Union_right_iff {ι : Type _} {I : Finset ι} {s : Set X} {t : ι
 #align is_metric_separated.finset_Union_right_iff IsMetricSeparated.finset_Union_right_iff
 
 alias finset_Union_right_iff ↔ _ finset_Union_right
+#align is_metric_separated.finset_Union_right IsMetricSeparated.finset_Union_right
 
 end IsMetricSeparated
 

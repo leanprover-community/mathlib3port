@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module field_theory.subfield
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -109,7 +109,7 @@ theorem rat_smul_mem (s : S) (a : ℚ) (x : s) : (a • x : K) ∈ s := by
   simpa only [Rat.smul_def] using mul_mem (coe_rat_mem s a) x.prop
 #align subfield_class.rat_smul_mem SubfieldClass.rat_smul_mem
 
-instance (s : S) : HasSmul ℚ s :=
+instance (s : S) : SMul ℚ s :=
   ⟨fun a x => ⟨a • x, rat_smul_mem s a x⟩⟩
 
 @[simp]

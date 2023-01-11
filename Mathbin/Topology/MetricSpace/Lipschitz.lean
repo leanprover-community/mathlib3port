@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rohan Mitta, Kevin Buzzard, Alistair Tucker, Johannes Hölzl, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.lipschitz
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,6 +65,8 @@ theorem lipschitz_with_iff_dist_le_mul [PseudoMetricSpace α] [PseudoMetricSpace
 #align lipschitz_with_iff_dist_le_mul lipschitz_with_iff_dist_le_mul
 
 alias lipschitz_with_iff_dist_le_mul ↔ LipschitzWith.dist_le_mul LipschitzWith.of_dist_le_mul
+#align lipschitz_with.dist_le_mul LipschitzWith.dist_le_mul
+#align lipschitz_with.of_dist_le_mul LipschitzWith.of_dist_le_mul
 
 /-- A function `f` is Lipschitz continuous with constant `K ≥ 0` on `s` if for all `x, y` in `s`
 we have `dist (f x) (f y) ≤ K * dist x y` -/
@@ -92,6 +94,8 @@ theorem lipschitz_on_with_iff_dist_le_mul [PseudoMetricSpace α] [PseudoMetricSp
 #align lipschitz_on_with_iff_dist_le_mul lipschitz_on_with_iff_dist_le_mul
 
 alias lipschitz_on_with_iff_dist_le_mul ↔ LipschitzOnWith.dist_le_mul LipschitzOnWith.of_dist_le_mul
+#align lipschitz_on_with.dist_le_mul LipschitzOnWith.dist_le_mul
+#align lipschitz_on_with.of_dist_le_mul LipschitzOnWith.of_dist_le_mul
 
 @[simp]
 theorem lipschitz_on_univ [PseudoEmetricSpace α] [PseudoEmetricSpace β] {K : ℝ≥0} {f : α → β} :
@@ -104,6 +108,7 @@ theorem lipschitz_on_with_iff_restrict [PseudoEmetricSpace α] [PseudoEmetricSpa
 #align lipschitz_on_with_iff_restrict lipschitz_on_with_iff_restrict
 
 alias lipschitz_on_with_iff_restrict ↔ LipschitzOnWith.to_restrict _
+#align lipschitz_on_with.to_restrict LipschitzOnWith.to_restrict
 
 theorem MapsTo.lipschitz_on_with_iff_restrict [PseudoEmetricSpace α] [PseudoEmetricSpace β]
     {K : ℝ≥0} {f : α → β} {s : Set α} {t : Set β} (h : MapsTo f s t) :
@@ -112,6 +117,7 @@ theorem MapsTo.lipschitz_on_with_iff_restrict [PseudoEmetricSpace α] [PseudoEme
 #align maps_to.lipschitz_on_with_iff_restrict MapsTo.lipschitz_on_with_iff_restrict
 
 alias MapsTo.lipschitz_on_with_iff_restrict ↔ LipschitzOnWith.to_restrict_maps_to _
+#align lipschitz_on_with.to_restrict_maps_to LipschitzOnWith.to_restrict_maps_to
 
 namespace LipschitzWith
 

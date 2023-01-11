@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.multiset.locally_finite
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,10 +65,13 @@ theorem Ioo_eq_zero_iff [DenselyOrdered α] : ioo a b = 0 ↔ ¬a < b := by
 #align multiset.Ioo_eq_zero_iff Multiset.Ioo_eq_zero_iff
 
 alias Icc_eq_zero_iff ↔ _ Icc_eq_zero
+#align multiset.Icc_eq_zero Multiset.Icc_eq_zero
 
 alias Ico_eq_zero_iff ↔ _ Ico_eq_zero
+#align multiset.Ico_eq_zero Multiset.Ico_eq_zero
 
 alias Ioc_eq_zero_iff ↔ _ Ioc_eq_zero
+#align multiset.Ioc_eq_zero Multiset.Ioc_eq_zero
 
 @[simp]
 theorem Ioo_eq_zero (h : ¬a < b) : ioo a b = 0 :=

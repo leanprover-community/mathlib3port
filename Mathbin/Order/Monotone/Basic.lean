@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Mario Carneiro, Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.monotone.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -313,36 +313,52 @@ protected theorem StrictAntiOn.dual (hf : StrictAntiOn f s) :
 -/
 
 alias antitone_comp_ofDual_iff ↔ _ Monotone.dual_left
+#align monotone.dual_left Monotone.dual_left
 
 alias monotone_comp_ofDual_iff ↔ _ Antitone.dual_left
+#align antitone.dual_left Antitone.dual_left
 
 alias antitone_toDual_comp_iff ↔ _ Monotone.dual_right
+#align monotone.dual_right Monotone.dual_right
 
 alias monotone_toDual_comp_iff ↔ _ Antitone.dual_right
+#align antitone.dual_right Antitone.dual_right
 
 alias antitoneOn_comp_ofDual_iff ↔ _ MonotoneOn.dual_left
+#align monotone_on.dual_left MonotoneOn.dual_left
 
 alias monotoneOn_comp_ofDual_iff ↔ _ AntitoneOn.dual_left
+#align antitone_on.dual_left AntitoneOn.dual_left
 
 alias antitoneOn_toDual_comp_iff ↔ _ MonotoneOn.dual_right
+#align monotone_on.dual_right MonotoneOn.dual_right
 
 alias monotoneOn_toDual_comp_iff ↔ _ AntitoneOn.dual_right
+#align antitone_on.dual_right AntitoneOn.dual_right
 
 alias strictAnti_comp_ofDual_iff ↔ _ StrictMono.dual_left
+#align strict_mono.dual_left StrictMono.dual_left
 
 alias strictMono_comp_ofDual_iff ↔ _ StrictAnti.dual_left
+#align strict_anti.dual_left StrictAnti.dual_left
 
 alias strictAnti_toDual_comp_iff ↔ _ StrictMono.dual_right
+#align strict_mono.dual_right StrictMono.dual_right
 
 alias strictMono_toDual_comp_iff ↔ _ StrictAnti.dual_right
+#align strict_anti.dual_right StrictAnti.dual_right
 
 alias strictAntiOn_comp_ofDual_iff ↔ _ StrictMonoOn.dual_left
+#align strict_mono_on.dual_left StrictMonoOn.dual_left
 
 alias strictMonoOn_comp_ofDual_iff ↔ _ StrictAntiOn.dual_left
+#align strict_anti_on.dual_left StrictAntiOn.dual_left
 
 alias strictAntiOn_toDual_comp_iff ↔ _ StrictMonoOn.dual_right
+#align strict_mono_on.dual_right StrictMonoOn.dual_right
 
 alias strictMonoOn_toDual_comp_iff ↔ _ StrictAntiOn.dual_right
+#align strict_anti_on.dual_right StrictAntiOn.dual_right
 
 end OrderDual
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module measure_theory.measurable_space
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -209,6 +209,8 @@ theorem measurable_iff_le_map {m₁ : MeasurableSpace α} {m₂ : MeasurableSpac
 #align measurable_iff_le_map measurable_iff_le_map
 
 alias measurable_iff_le_map ↔ Measurable.le_map Measurable.of_le_map
+#align measurable.le_map Measurable.le_map
+#align measurable.of_le_map Measurable.of_le_map
 
 theorem measurable_iff_comap_le {m₁ : MeasurableSpace α} {m₂ : MeasurableSpace β} {f : α → β} :
     Measurable f ↔ m₂.comap f ≤ m₁ :=
@@ -216,6 +218,8 @@ theorem measurable_iff_comap_le {m₁ : MeasurableSpace α} {m₂ : MeasurableSp
 #align measurable_iff_comap_le measurable_iff_comap_le
 
 alias measurable_iff_comap_le ↔ Measurable.comap_le Measurable.of_comap_le
+#align measurable.comap_le Measurable.comap_le
+#align measurable.of_comap_le Measurable.of_comap_le
 
 theorem comap_measurable {m : MeasurableSpace β} (f : α → β) : measurable[m.comap f] f :=
   fun s hs => ⟨s, hs, rfl⟩
@@ -1736,6 +1740,8 @@ theorem principal_is_measurably_generated_iff {s : Set α} :
 
 alias principal_is_measurably_generated_iff ↔
   _ _root_.measurable_set.principal_is_measurably_generated
+#align
+  measurable_set.principal_is_measurably_generated MeasurableSet.principal_is_measurably_generated
 
 instance infi_is_measurably_generated {f : ι → Filter α} [∀ i, IsMeasurablyGenerated (f i)] :
     IsMeasurablyGenerated (⨅ i, f i) :=

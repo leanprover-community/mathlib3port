@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module analysis.normed.group.hom
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -318,8 +318,10 @@ theorem mk_normed_add_group_hom_norm_le' (f : V₁ →+ V₂) {C : ℝ} (h : ∀
   normed_add_group_hom.mk_normed_add_group_hom_norm_le' NormedAddGroupHom.mk_normed_add_group_hom_norm_le'
 
 alias mk_normed_add_group_hom_norm_le ← _root_.add_monoid_hom.mk_normed_add_group_hom_norm_le
+#align add_monoid_hom.mk_normed_add_group_hom_norm_le AddMonoidHom.mk_normed_add_group_hom_norm_le
 
 alias mk_normed_add_group_hom_norm_le' ← _root_.add_monoid_hom.mk_normed_add_group_hom_norm_le'
+#align add_monoid_hom.mk_normed_add_group_hom_norm_le' AddMonoidHom.mk_normed_add_group_hom_norm_le'
 
 /-! ### Addition of normed group homs -/
 
@@ -497,13 +499,13 @@ theorem sub_apply (f g : NormedAddGroupHom V₁ V₂) (v : V₁) :
 /-! ### Scalar actions on normed group homs -/
 
 
-section HasSmul
+section SMul
 
 variable {R R' : Type _} [MonoidWithZero R] [DistribMulAction R V₂] [PseudoMetricSpace R]
   [HasBoundedSmul R V₂] [MonoidWithZero R'] [DistribMulAction R' V₂] [PseudoMetricSpace R']
   [HasBoundedSmul R' V₂]
 
-instance : HasSmul R (NormedAddGroupHom V₁ V₂)
+instance : SMul R (NormedAddGroupHom V₁ V₂)
     where smul r f :=
     { toFun := r • f
       map_add' := (r • f.toAddMonoidHom).map_add'
@@ -530,16 +532,16 @@ theorem smul_apply (r : R) (f : NormedAddGroupHom V₁ V₂) (v : V₁) : (r •
 instance [SMulCommClass R R' V₂] : SMulCommClass R R' (NormedAddGroupHom V₁ V₂)
     where smul_comm r r' f := ext fun v => smul_comm _ _ _
 
-instance [HasSmul R R'] [IsScalarTower R R' V₂] : IsScalarTower R R' (NormedAddGroupHom V₁ V₂)
+instance [SMul R R'] [IsScalarTower R R' V₂] : IsScalarTower R R' (NormedAddGroupHom V₁ V₂)
     where smul_assoc r r' f := ext fun v => smul_assoc _ _ _
 
 instance [DistribMulAction Rᵐᵒᵖ V₂] [IsCentralScalar R V₂] :
     IsCentralScalar R (NormedAddGroupHom V₁ V₂)
     where op_smul_eq_smul r f := ext fun v => op_smul_eq_smul _ _
 
-end HasSmul
+end SMul
 
-instance hasNatScalar : HasSmul ℕ (NormedAddGroupHom V₁ V₂)
+instance hasNatScalar : SMul ℕ (NormedAddGroupHom V₁ V₂)
     where smul n f :=
     { toFun := n • f
       map_add' := (n • f.toAddMonoidHom).map_add'
@@ -560,7 +562,7 @@ theorem nsmul_apply (r : ℕ) (f : NormedAddGroupHom V₁ V₂) (v : V₁) : (r 
   rfl
 #align normed_add_group_hom.nsmul_apply NormedAddGroupHom.nsmul_apply
 
-instance hasIntScalar : HasSmul ℤ (NormedAddGroupHom V₁ V₂)
+instance hasIntScalar : SMul ℤ (NormedAddGroupHom V₁ V₂)
     where smul z f :=
     { toFun := z • f
       map_add' := (z • f.toAddMonoidHom).map_add'

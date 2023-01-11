@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Johannes Hölzl, Patrick Massot
 
 ! This file was ported from Lean 3 source module data.set.prod
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1107,8 +1107,10 @@ theorem offDiag_eq_empty : s.offDiag = ∅ ↔ s.Subsingleton := by
 -/
 
 alias off_diag_nonempty ↔ _ nontrivial.off_diag_nonempty
+#align set.nontrivial.off_diag_nonempty Set.Nontrivial.off_diag_nonempty
 
 alias off_diag_nonempty ↔ _ subsingleton.off_diag_eq_empty
+#align set.subsingleton.off_diag_eq_empty Set.Subsingleton.off_diag_eq_empty
 
 variable (s t)
 

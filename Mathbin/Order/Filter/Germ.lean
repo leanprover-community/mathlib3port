@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Abhimanyu Pallavi Sudhir
 
 ! This file was ported from Lean 3 source module order.filter.germ
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -177,6 +177,7 @@ theorem coe_eq : (f : Germ l β) = g ↔ f =ᶠ[l] g :=
 #align filter.germ.coe_eq Filter.Germ.coe_eq
 
 alias coe_eq ↔ _ _root_.filter.eventually_eq.germ_eq
+#align filter.eventually_eq.germ_eq Filter.EventuallyEq.germ_eq
 
 /-- Lift a function `β → γ` to a function `germ l β → germ l γ`. -/
 def map (op : β → γ) : Germ l β → Germ l γ :=
@@ -224,6 +225,7 @@ theorem coe_tendsto {f : α → β} {lb : Filter β} : (f : Germ l β).Tendsto l
 #align filter.germ.coe_tendsto Filter.Germ.coe_tendsto
 
 alias coe_tendsto ↔ _ _root_.filter.tendsto.germ_tendsto
+#align filter.tendsto.germ_tendsto Filter.Tendsto.germ_tendsto
 
 /-- Given two germs `f : germ l β`, and `g : germ lc α`, where `l : filter α`, if `g` tends to `l`,
 then the composition `f ∘ g` is well-defined as a germ at `lc`. -/
@@ -380,20 +382,20 @@ instance [VAdd M G] : VAdd M (Germ l G) :=
   ⟨fun n => map ((· +ᵥ ·) n)⟩
 
 @[to_additive]
-instance [HasSmul M G] : HasSmul M (Germ l G) :=
+instance [SMul M G] : SMul M (Germ l G) :=
   ⟨fun n => map ((· • ·) n)⟩
 
-@[to_additive HasSmul]
+@[to_additive SMul]
 instance [Pow G M] : Pow (Germ l G) M :=
   ⟨fun f n => map (· ^ n) f⟩
 
 @[simp, norm_cast, to_additive]
-theorem coe_smul [HasSmul M G] (n : M) (f : α → G) : ↑(n • f) = (n • f : Germ l G) :=
+theorem coe_smul [SMul M G] (n : M) (f : α → G) : ↑(n • f) = (n • f : Germ l G) :=
   rfl
 #align filter.germ.coe_smul Filter.Germ.coe_smul
 
 @[simp, norm_cast, to_additive]
-theorem const_smul [HasSmul M G] (n : M) (a : G) : (↑(n • a) : Germ l G) = n • ↑a :=
+theorem const_smul [SMul M G] (n : M) (a : G) : (↑(n • a) : Germ l G) = n • ↑a :=
   rfl
 #align filter.germ.const_smul Filter.Germ.const_smul
 
@@ -549,13 +551,12 @@ section Module
 variable {M N R : Type _}
 
 @[to_additive]
-instance hasSmul' [HasSmul M β] : HasSmul (Germ l M) (Germ l β) :=
+instance hasSmul' [SMul M β] : SMul (Germ l M) (Germ l β) :=
   ⟨map₂ (· • ·)⟩
 #align filter.germ.has_smul' Filter.Germ.hasSmul'
 
 @[simp, norm_cast, to_additive]
-theorem coe_smul' [HasSmul M β] (c : α → M) (f : α → β) :
-    ↑(c • f) = (c : Germ l M) • (f : Germ l β) :=
+theorem coe_smul' [SMul M β] (c : α → M) (f : α → β) : ↑(c • f) = (c : Germ l M) • (f : Germ l β) :=
   rfl
 #align filter.germ.coe_smul' Filter.Germ.coe_smul'
 

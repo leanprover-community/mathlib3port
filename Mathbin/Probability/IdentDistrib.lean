@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module probability.ident_distrib
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -134,6 +134,8 @@ theorem measure_mem_eq (h : IdentDistrib f g μ ν) {s : Set γ} (hs : Measurabl
 #align probability_theory.ident_distrib.measure_mem_eq ProbabilityTheory.IdentDistrib.measure_mem_eq
 
 alias measure_mem_eq ← measure_preimage_eq
+#align
+  probability_theory.ident_distrib.measure_preimage_eq ProbabilityTheory.IdentDistrib.measure_preimage_eq
 
 theorem ae_snd (h : IdentDistrib f g μ ν) {p : γ → Prop} (pmeas : MeasurableSet { x | p x })
     (hp : ∀ᵐ x ∂μ, p (f x)) : ∀ᵐ x ∂ν, p (g x) :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module group_theory.group_action.opposite
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -59,40 +59,30 @@ instance (R : Type _) [Monoid R] [Monoid α] [MulDistribMulAction R α] :
     smul_one := fun r => unop_injective <| smul_one r }
 
 @[to_additive]
-instance {M N} [HasSmul M N] [HasSmul M α] [HasSmul N α] [IsScalarTower M N α] :
-    IsScalarTower M N αᵐᵒᵖ :=
+instance {M N} [SMul M N] [SMul M α] [SMul N α] [IsScalarTower M N α] : IsScalarTower M N αᵐᵒᵖ :=
   ⟨fun x y z => unop_injective <| smul_assoc _ _ _⟩
 
 @[to_additive]
-instance {M N} [HasSmul M α] [HasSmul N α] [SMulCommClass M N α] : SMulCommClass M N αᵐᵒᵖ :=
+instance {M N} [SMul M α] [SMul N α] [SMulCommClass M N α] : SMulCommClass M N αᵐᵒᵖ :=
   ⟨fun x y z => unop_injective <| smul_comm _ _ _⟩
 
 @[to_additive]
-instance (R : Type _) [HasSmul R α] [HasSmul Rᵐᵒᵖ α] [IsCentralScalar R α] :
-    IsCentralScalar R αᵐᵒᵖ :=
+instance (R : Type _) [SMul R α] [SMul Rᵐᵒᵖ α] [IsCentralScalar R α] : IsCentralScalar R αᵐᵒᵖ :=
   ⟨fun r m => unop_injective <| op_smul_eq_smul _ _⟩
 
-/- warning: mul_opposite.op_smul_eq_op_smul_op -> MulOpposite.op_smul_eq_op_smul_op is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) {R : Type.{u2}} [_inst_1 : HasSmul.{u2, u1} R α] [_inst_2 : HasSmul.{u2, u1} (MulOpposite.{u2} R) α] [_inst_3 : IsCentralScalar.{u2, u1} R α _inst_1 _inst_2] (r : R) (a : α), Eq.{succ u1} (MulOpposite.{u1} α) (MulOpposite.op.{u1} α (HasSmul.smul.{u2, u1} R α _inst_1 r a)) (HasSmul.smul.{u2, u1} (MulOpposite.{u2} R) (MulOpposite.{u1} α) (MulOpposite.hasSmul.{u1, u2} α (MulOpposite.{u2} R) _inst_2) (MulOpposite.op.{u2} R r) (MulOpposite.op.{u1} α a))
-but is expected to have type
-  forall (α : Type.{u1}) {R : Type.{u2}} [_inst_1 : SMul.{u2, u1} R α] [_inst_2 : SMul.{u2, u1} (MulOpposite.{u2} R) α] [_inst_3 : IsCentralScalar.{u2, u1} R α _inst_1 _inst_2] (r : R) (a : α), Eq.{succ u1} (MulOpposite.{u1} α) (MulOpposite.op.{u1} α (HSMul.hSMul.{u2, u1, u1} R α α (instHSMul.{u2, u1} R α _inst_1) r a)) (HSMul.hSMul.{u2, u1, u1} (MulOpposite.{u2} R) (MulOpposite.{u1} α) (MulOpposite.{u1} α) (instHSMul.{u2, u1} (MulOpposite.{u2} R) (MulOpposite.{u1} α) (MulOpposite.instSMulMulOpposite.{u1, u2} α (MulOpposite.{u2} R) _inst_2)) (MulOpposite.op.{u2} R r) (MulOpposite.op.{u1} α a))
-Case conversion may be inaccurate. Consider using '#align mul_opposite.op_smul_eq_op_smul_op MulOpposite.op_smul_eq_op_smul_opₓ'. -/
-theorem op_smul_eq_op_smul_op {R : Type _} [HasSmul R α] [HasSmul Rᵐᵒᵖ α] [IsCentralScalar R α]
-    (r : R) (a : α) : op (r • a) = op r • op a :=
+#print MulOpposite.op_smul_eq_op_smul_op /-
+theorem op_smul_eq_op_smul_op {R : Type _} [SMul R α] [SMul Rᵐᵒᵖ α] [IsCentralScalar R α] (r : R)
+    (a : α) : op (r • a) = op r • op a :=
   (op_smul_eq_smul r (op a)).symm
 #align mul_opposite.op_smul_eq_op_smul_op MulOpposite.op_smul_eq_op_smul_op
+-/
 
-/- warning: mul_opposite.unop_smul_eq_unop_smul_unop -> MulOpposite.unop_smul_eq_unop_smul_unop is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) {R : Type.{u2}} [_inst_1 : HasSmul.{u2, u1} R α] [_inst_2 : HasSmul.{u2, u1} (MulOpposite.{u2} R) α] [_inst_3 : IsCentralScalar.{u2, u1} R α _inst_1 _inst_2] (r : MulOpposite.{u2} R) (a : MulOpposite.{u1} α), Eq.{succ u1} α (MulOpposite.unop.{u1} α (HasSmul.smul.{u2, u1} (MulOpposite.{u2} R) (MulOpposite.{u1} α) (MulOpposite.hasSmul.{u1, u2} α (MulOpposite.{u2} R) _inst_2) r a)) (HasSmul.smul.{u2, u1} R α _inst_1 (MulOpposite.unop.{u2} R r) (MulOpposite.unop.{u1} α a))
-but is expected to have type
-  forall (α : Type.{u1}) {R : Type.{u2}} [_inst_1 : SMul.{u2, u1} R α] [_inst_2 : SMul.{u2, u1} (MulOpposite.{u2} R) α] [_inst_3 : IsCentralScalar.{u2, u1} R α _inst_1 _inst_2] (r : MulOpposite.{u2} R) (a : MulOpposite.{u1} α), Eq.{succ u1} α (MulOpposite.unop.{u1} α (HSMul.hSMul.{u2, u1, u1} (MulOpposite.{u2} R) (MulOpposite.{u1} α) (MulOpposite.{u1} α) (instHSMul.{u2, u1} (MulOpposite.{u2} R) (MulOpposite.{u1} α) (MulOpposite.instSMulMulOpposite.{u1, u2} α (MulOpposite.{u2} R) _inst_2)) r a)) (HSMul.hSMul.{u2, u1, u1} R α α (instHSMul.{u2, u1} R α _inst_1) (MulOpposite.unop.{u2} R r) (MulOpposite.unop.{u1} α a))
-Case conversion may be inaccurate. Consider using '#align mul_opposite.unop_smul_eq_unop_smul_unop MulOpposite.unop_smul_eq_unop_smul_unopₓ'. -/
-theorem unop_smul_eq_unop_smul_unop {R : Type _} [HasSmul R α] [HasSmul Rᵐᵒᵖ α]
-    [IsCentralScalar R α] (r : Rᵐᵒᵖ) (a : αᵐᵒᵖ) : unop (r • a) = unop r • unop a :=
+#print MulOpposite.unop_smul_eq_unop_smul_unop /-
+theorem unop_smul_eq_unop_smul_unop {R : Type _} [SMul R α] [SMul Rᵐᵒᵖ α] [IsCentralScalar R α]
+    (r : Rᵐᵒᵖ) (a : αᵐᵒᵖ) : unop (r • a) = unop r • unop a :=
   (unop_smul_eq_smul r (unop a)).symm
 #align mul_opposite.unop_smul_eq_unop_smul_unop MulOpposite.unop_smul_eq_unop_smul_unop
+-/
 
 end MulOpposite
 
@@ -106,20 +96,16 @@ reversed.
 
 open MulOpposite
 
-/- warning: has_mul.to_has_opposite_smul -> Mul.toHasOppositeSMul is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_1 : Mul.{u1} α], HasSmul.{u1, u1} (MulOpposite.{u1} α) α
-but is expected to have type
-  forall (α : Type.{u1}) [_inst_1 : Mul.{u1} α], SMul.{u1, u1} (MulOpposite.{u1} α) α
-Case conversion may be inaccurate. Consider using '#align has_mul.to_has_opposite_smul Mul.toHasOppositeSMulₓ'. -/
+#print Mul.toHasOppositeSMul /-
 /-- Like `has_mul.to_has_smul`, but multiplies on the right.
 
 See also `monoid.to_opposite_mul_action` and `monoid_with_zero.to_opposite_mul_action_with_zero`. -/
 @[to_additive
       "Like `has_add.to_has_vadd`, but adds on the right.\n\nSee also `add_monoid.to_opposite_add_action`."]
-instance Mul.toHasOppositeSMul [Mul α] : HasSmul αᵐᵒᵖ α :=
+instance Mul.toHasOppositeSMul [Mul α] : SMul αᵐᵒᵖ α :=
   ⟨fun c x => x * c.unop⟩
 #align has_mul.to_has_opposite_smul Mul.toHasOppositeSMul
+-/
 
 #print op_smul_eq_mul /-
 @[to_additive]
@@ -195,31 +181,23 @@ instance Monoid.toOppositeMulAction [Monoid α] : MulAction αᵐᵒᵖ α
   mul_smul x y r := (mul_assoc _ _ _).symm
 #align monoid.to_opposite_mul_action Monoid.toOppositeMulAction
 
-/- warning: is_scalar_tower.opposite_mid -> IsScalarTower.opposite_mid is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : Mul.{u2} N] [_inst_2 : HasSmul.{u1, u2} M N] [_inst_3 : SMulCommClass.{u1, u2, u2} M N N _inst_2 (Mul.toSMul.{u2} N _inst_1)], IsScalarTower.{u1, u2, u2} M (MulOpposite.{u2} N) N (MulOpposite.hasSmul.{u2, u1} N M _inst_2) (Mul.toHasOppositeSMul.{u2} N _inst_1) _inst_2
-but is expected to have type
-  forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : Mul.{u2} N] [_inst_2 : SMul.{u1, u2} M N] [_inst_3 : SMulCommClass.{u1, u2, u2} M N N _inst_2 (Mul.toSMul.{u2} N _inst_1)], IsScalarTower.{u1, u2, u2} M (MulOpposite.{u2} N) N (MulOpposite.instSMulMulOpposite.{u2, u1} N M _inst_2) (Mul.toHasOppositeSMul.{u2} N _inst_1) _inst_2
-Case conversion may be inaccurate. Consider using '#align is_scalar_tower.opposite_mid IsScalarTower.opposite_midₓ'. -/
+#print IsScalarTower.opposite_mid /-
 @[to_additive]
-instance IsScalarTower.opposite_mid {M N} [Mul N] [HasSmul M N] [SMulCommClass M N N] :
+instance IsScalarTower.opposite_mid {M N} [Mul N] [SMul M N] [SMulCommClass M N N] :
     IsScalarTower M Nᵐᵒᵖ N :=
   ⟨fun x y z => mul_smul_comm _ _ _⟩
 #align is_scalar_tower.opposite_mid IsScalarTower.opposite_mid
+-/
 
-/- warning: smul_comm_class.opposite_mid -> SMulCommClass.opposite_mid is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : Mul.{u2} N] [_inst_2 : HasSmul.{u1, u2} M N] [_inst_3 : IsScalarTower.{u1, u2, u2} M N N _inst_2 (Mul.toSMul.{u2} N _inst_1) _inst_2], SMulCommClass.{u1, u2, u2} M (MulOpposite.{u2} N) N _inst_2 (Mul.toHasOppositeSMul.{u2} N _inst_1)
-but is expected to have type
-  forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : Mul.{u2} N] [_inst_2 : SMul.{u1, u2} M N] [_inst_3 : IsScalarTower.{u1, u2, u2} M N N _inst_2 (Mul.toSMul.{u2} N _inst_1) _inst_2], SMulCommClass.{u1, u2, u2} M (MulOpposite.{u2} N) N _inst_2 (Mul.toHasOppositeSMul.{u2} N _inst_1)
-Case conversion may be inaccurate. Consider using '#align smul_comm_class.opposite_mid SMulCommClass.opposite_midₓ'. -/
+#print SMulCommClass.opposite_mid /-
 @[to_additive]
-instance SMulCommClass.opposite_mid {M N} [Mul N] [HasSmul M N] [IsScalarTower M N N] :
+instance SMulCommClass.opposite_mid {M N} [Mul N] [SMul M N] [IsScalarTower M N N] :
     SMulCommClass M Nᵐᵒᵖ N :=
   ⟨fun x y z => by
     induction y using MulOpposite.rec'
     simp [smul_mul_assoc]⟩
 #align smul_comm_class.opposite_mid SMulCommClass.opposite_mid
+-/
 
 -- The above instance does not create an unwanted diamond, the two paths to
 -- `mul_action αᵐᵒᵖ αᵐᵒᵖ` are defeq.

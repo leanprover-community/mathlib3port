@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module ring_theory.congruence
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -220,9 +220,9 @@ end One
 
 section Smul
 
-variable [Add R] [MulOneClass R] [HasSmul α R] [IsScalarTower α R R] (c : RingCon R)
+variable [Add R] [MulOneClass R] [SMul α R] [IsScalarTower α R R] (c : RingCon R)
 
-instance : HasSmul α c.Quotient :=
+instance : SMul α c.Quotient :=
   c.toCon.HasSmul
 
 @[simp, norm_cast]
@@ -252,7 +252,7 @@ theorem coe_sub (x y : R) : (↑(x - y) : c.Quotient) = x - y :=
   rfl
 #align ring_con.coe_sub RingCon.coe_sub
 
-instance hasZsmul : HasSmul ℤ c.Quotient :=
+instance hasZsmul : SMul ℤ c.Quotient :=
   c.toAddCon
 #align ring_con.has_zsmul RingCon.hasZsmul
 
@@ -267,7 +267,7 @@ section Nsmul
 
 variable [AddMonoid R] [Mul R] (c : RingCon R)
 
-instance hasNsmul : HasSmul ℕ c.Quotient :=
+instance hasNsmul : SMul ℕ c.Quotient :=
   c.toAddCon
 #align ring_con.has_nsmul RingCon.hasNsmul
 

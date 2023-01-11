@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module algebra.group_with_zero.units.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -464,7 +464,14 @@ theorem isUnit_iff_ne_zero : IsUnit a ↔ a ≠ 0 :=
   Units.exists_iff_ne_zero
 #align is_unit_iff_ne_zero isUnit_iff_ne_zero
 
+/- warning: ne.is_unit -> Ne.isUnit is a dubious translation:
+lean 3 declaration is
+  forall {G₀ : Type.{u1}} [_inst_2 : GroupWithZero.{u1} G₀] {a : G₀}, (Ne.{succ u1} G₀ a (OfNat.ofNat.{u1} G₀ 0 (OfNat.mk.{u1} G₀ 0 (Zero.zero.{u1} G₀ (MulZeroClass.toHasZero.{u1} G₀ (MulZeroOneClass.toMulZeroClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2)))))))) -> (IsUnit.{u1} G₀ (MonoidWithZero.toMonoid.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2)) a)
+but is expected to have type
+  forall {G₀ : Type.{u1}} [_inst_2 : GroupWithZero.{u1} G₀] {a : G₀}, (Ne.{succ u1} G₀ a (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (MonoidWithZero.toZero.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) -> (IsUnit.{u1} G₀ (MonoidWithZero.toMonoid.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2)) a)
+Case conversion may be inaccurate. Consider using '#align ne.is_unit Ne.isUnitₓ'. -/
 alias isUnit_iff_ne_zero ↔ _ Ne.isUnit
+#align ne.is_unit Ne.isUnit
 
 attribute [protected] Ne.isUnit
 

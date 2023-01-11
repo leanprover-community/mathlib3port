@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.normed.group.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -332,8 +332,10 @@ theorem dist_eq_norm_div' (a b : E) : dist a b = ‖b / a‖ := by rw [dist_comm
 #align dist_eq_norm_div' dist_eq_norm_div'
 
 alias dist_eq_norm_sub ← dist_eq_norm
+#align dist_eq_norm dist_eq_norm
 
 alias dist_eq_norm_sub' ← dist_eq_norm'
+#align dist_eq_norm' dist_eq_norm'
 
 @[simp, to_additive]
 theorem dist_one_right (a : E) : dist a 1 = ‖a‖ := by rw [dist_eq_norm_div, div_one]
@@ -509,8 +511,10 @@ theorem norm_le_norm_add_norm_div (u v : E) : ‖v‖ ≤ ‖u‖ + ‖u / v‖ 
 #align norm_le_norm_add_norm_div norm_le_norm_add_norm_div
 
 alias norm_le_norm_add_norm_sub' ← norm_le_insert'
+#align norm_le_insert' norm_le_insert'
 
 alias norm_le_norm_add_norm_sub ← norm_le_insert
+#align norm_le_insert norm_le_insert
 
 @[to_additive]
 theorem norm_le_mul_norm_add (u v : E) : ‖u‖ ≤ ‖u * v‖ + ‖v‖ :=
@@ -583,8 +587,10 @@ theorem bounded_iff_forall_norm_le' : Bounded s ↔ ∃ C, ∀ x ∈ s, ‖x‖ 
 #align bounded_iff_forall_norm_le' bounded_iff_forall_norm_le'
 
 alias bounded_iff_forall_norm_le' ↔ Metric.Bounded.exists_norm_le' _
+#align metric.bounded.exists_norm_le' Metric.Bounded.exists_norm_le'
 
 alias bounded_iff_forall_norm_le ↔ Metric.Bounded.exists_norm_le _
+#align metric.bounded.exists_norm_le Metric.Bounded.exists_norm_le
 
 attribute [to_additive Metric.Bounded.exists_norm_le] Metric.Bounded.exists_norm_le'
 
@@ -725,6 +731,7 @@ theorem lipschitz_on_with_iff_norm_div_le {f : E → F} {C : ℝ≥0} :
 #align lipschitz_on_with_iff_norm_div_le lipschitz_on_with_iff_norm_div_le
 
 alias lipschitz_on_with_iff_norm_div_le ↔ LipschitzOnWith.norm_div_le _
+#align lipschitz_on_with.norm_div_le LipschitzOnWith.norm_div_le
 
 attribute [to_additive] LipschitzOnWith.norm_div_le
 
@@ -741,6 +748,7 @@ theorem lipschitz_with_iff_norm_div_le {f : E → F} {C : ℝ≥0} :
 #align lipschitz_with_iff_norm_div_le lipschitz_with_iff_norm_div_le
 
 alias lipschitz_with_iff_norm_div_le ↔ LipschitzWith.norm_div_le _
+#align lipschitz_with.norm_div_le LipschitzWith.norm_div_le
 
 attribute [to_additive] LipschitzWith.norm_div_le
 
@@ -782,6 +790,7 @@ theorem MonoidHomClass.isometry_iff_norm [MonoidHomClass 𝓕 E F] (f : 𝓕) :
 #align monoid_hom_class.isometry_iff_norm MonoidHomClass.isometry_iff_norm
 
 alias MonoidHomClass.isometry_iff_norm ↔ _ MonoidHomClass.isometry_of_norm
+#align monoid_hom_class.isometry_of_norm MonoidHomClass.isometry_of_norm
 
 attribute [to_additive] MonoidHomClass.isometry_of_norm
 
@@ -814,6 +823,7 @@ theorem nndist_eq_nnnorm_div (a b : E) : nndist a b = ‖a / b‖₊ :=
 #align nndist_eq_nnnorm_div nndist_eq_nnnorm_div
 
 alias nndist_eq_nnnorm_sub ← nndist_eq_nnnorm
+#align nndist_eq_nnnorm nndist_eq_nnnorm
 
 @[simp, to_additive nnnorm_zero]
 theorem nnnorm_one' : ‖(1 : E)‖₊ = 0 :=
@@ -858,8 +868,10 @@ theorem nnnorm_le_nnnorm_add_nnnorm_div' (a b : E) : ‖a‖₊ ≤ ‖b‖₊ +
 #align nnnorm_le_nnnorm_add_nnnorm_div' nnnorm_le_nnnorm_add_nnnorm_div'
 
 alias nnnorm_le_nnnorm_add_nnnorm_sub' ← nnnorm_le_insert'
+#align nnnorm_le_insert' nnnorm_le_insert'
 
 alias nnnorm_le_nnnorm_add_nnnorm_sub ← nnnorm_le_insert
+#align nnnorm_le_insert nnnorm_le_insert
 
 @[to_additive]
 theorem nnnorm_le_mul_nnnorm_add (a b : E) : ‖a‖₊ ≤ ‖a * b‖₊ + ‖b‖₊ :=
@@ -1836,6 +1848,7 @@ theorem eq_of_norm_div_le_zero (h : ‖a / b‖ ≤ 0) : a = b := by
 #align eq_of_norm_div_le_zero eq_of_norm_div_le_zero
 
 alias norm_div_eq_zero_iff ↔ eq_of_norm_div_eq_zero _
+#align eq_of_norm_div_eq_zero eq_of_norm_div_eq_zero
 
 attribute [to_additive] eq_of_norm_div_eq_zero
 
@@ -1888,6 +1901,7 @@ theorem has_compact_support_norm_iff : (HasCompactSupport fun x => ‖f x‖) �
 #align has_compact_support_norm_iff has_compact_support_norm_iff
 
 alias has_compact_support_norm_iff ↔ _ HasCompactSupport.norm
+#align has_compact_support.norm HasCompactSupport.norm
 
 theorem Continuous.bounded_above_of_compact_support (hf : Continuous f) (h : HasCompactSupport f) :
     ∃ C, ∀ x, ‖f x‖ ≤ C := by

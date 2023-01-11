@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module group_theory.group_action.sigma
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -30,17 +30,17 @@ variable {ι : Type _} {M N : Type _} {α : ι → Type _}
 
 namespace Sigma
 
-section HasSmul
+section SMul
 
-variable [∀ i, HasSmul M (α i)] [∀ i, HasSmul N (α i)] (a : M) (i : ι) (b : α i) (x : Σi, α i)
+variable [∀ i, SMul M (α i)] [∀ i, SMul N (α i)] (a : M) (i : ι) (b : α i) (x : Σi, α i)
 
 @[to_additive Sigma.hasVadd]
-instance : HasSmul M (Σi, α i) :=
+instance : SMul M (Σi, α i) :=
   ⟨fun a => (Sigma.map id) fun i => (· • ·) a⟩
 
 /- warning: sigma.smul_def -> Sigma.smul_def is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {M : Type.{u2}} {α : ι -> Type.{u3}} [_inst_1 : forall (i : ι), HasSmul.{u2, u3} M (α i)] (a : M) (x : Sigma.{u1, u3} ι (fun (i : ι) => α i)), Eq.{succ (max u1 u3)} (Sigma.{u1, u3} ι (fun (i : ι) => α i)) (HasSmul.smul.{u2, max u1 u3} M (Sigma.{u1, u3} ι (fun (i : ι) => α i)) (Sigma.hasSmul.{u1, u2, u3} ι M (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i)) a x) (Sigma.map.{u1, u1, u3, u3} ι ι (fun (i : ι) => α i) (fun (i : ι) => α i) (id.{succ u1} ι) (fun (i : ι) => HasSmul.smul.{u2, u3} M (α i) (_inst_1 i) a) x)
+  forall {ι : Type.{u1}} {M : Type.{u2}} {α : ι -> Type.{u3}} [_inst_1 : forall (i : ι), SMul.{u2, u3} M (α i)] (a : M) (x : Sigma.{u1, u3} ι (fun (i : ι) => α i)), Eq.{succ (max u1 u3)} (Sigma.{u1, u3} ι (fun (i : ι) => α i)) (SMul.smul.{u2, max u1 u3} M (Sigma.{u1, u3} ι (fun (i : ι) => α i)) (Sigma.hasSmul.{u1, u2, u3} ι M (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i)) a x) (Sigma.map.{u1, u1, u3, u3} ι ι (fun (i : ι) => α i) (fun (i : ι) => α i) (id.{succ u1} ι) (fun (i : ι) => SMul.smul.{u2, u3} M (α i) (_inst_1 i) a) x)
 but is expected to have type
   forall {ι : Type.{u3}} {M : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : forall (i : ι), SMul.{u1, u2} M (α i)] (a : M) (x : Sigma.{u3, u2} ι (fun (i : ι) => α i)), Eq.{max (succ u3) (succ u2)} (Sigma.{u3, u2} ι (fun (i : ι) => α i)) (HSMul.hSMul.{u1, max u3 u2, max u3 u2} M (Sigma.{u3, u2} ι (fun (i : ι) => α i)) (Sigma.{u3, u2} ι (fun (i : ι) => α i)) (instHSMul.{u1, max u3 u2} M (Sigma.{u3, u2} ι (fun (i : ι) => α i)) (Sigma.instSMulSigma.{u3, u1, u2} ι M (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i))) a x) (Sigma.map.{u3, u3, u2, u2} ι ι (fun (i : ι) => α i) α (id.{succ u3} ι) (fun (i : ι) => (fun (x._@.Mathlib.GroupTheory.GroupAction.Sigma._hyg.233 : M) (x._@.Mathlib.GroupTheory.GroupAction.Sigma._hyg.235 : α i) => HSMul.hSMul.{u1, u2, u2} M (α i) (α (id.{succ u3} ι i)) (instHSMul.{u1, u2} M (α i) (_inst_1 i)) x._@.Mathlib.GroupTheory.GroupAction.Sigma._hyg.233 x._@.Mathlib.GroupTheory.GroupAction.Sigma._hyg.235) a) x)
 Case conversion may be inaccurate. Consider using '#align sigma.smul_def Sigma.smul_defₓ'. -/
@@ -51,7 +51,7 @@ theorem smul_def : a • x = x.map id fun i => (· • ·) a :=
 
 /- warning: sigma.smul_mk -> Sigma.smul_mk is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {M : Type.{u2}} {α : ι -> Type.{u3}} [_inst_1 : forall (i : ι), HasSmul.{u2, u3} M (α i)] (a : M) (i : ι) (b : α i), Eq.{succ (max u1 u3)} (Sigma.{u1, u3} ι (fun (i : ι) => α i)) (HasSmul.smul.{u2, max u1 u3} M (Sigma.{u1, u3} ι (fun (i : ι) => α i)) (Sigma.hasSmul.{u1, u2, u3} ι M (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i)) a (Sigma.mk.{u1, u3} ι (fun (i : ι) => α i) i b)) (Sigma.mk.{u1, u3} ι (fun (i : ι) => α i) i (HasSmul.smul.{u2, u3} M (α i) (_inst_1 i) a b))
+  forall {ι : Type.{u1}} {M : Type.{u2}} {α : ι -> Type.{u3}} [_inst_1 : forall (i : ι), SMul.{u2, u3} M (α i)] (a : M) (i : ι) (b : α i), Eq.{succ (max u1 u3)} (Sigma.{u1, u3} ι (fun (i : ι) => α i)) (SMul.smul.{u2, max u1 u3} M (Sigma.{u1, u3} ι (fun (i : ι) => α i)) (Sigma.hasSmul.{u1, u2, u3} ι M (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i)) a (Sigma.mk.{u1, u3} ι (fun (i : ι) => α i) i b)) (Sigma.mk.{u1, u3} ι (fun (i : ι) => α i) i (SMul.smul.{u2, u3} M (α i) (_inst_1 i) a b))
 but is expected to have type
   forall {ι : Type.{u3}} {M : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : forall (i : ι), SMul.{u1, u2} M (α i)] (a : M) (i : ι) (b : α i), Eq.{max (succ u3) (succ u2)} (Sigma.{u3, u2} ι α) (HSMul.hSMul.{u1, max u2 u3, max u3 u2} M (Sigma.{u3, u2} ι α) (Sigma.{u3, u2} ι α) (instHSMul.{u1, max u3 u2} M (Sigma.{u3, u2} ι α) (Sigma.instSMulSigma.{u3, u1, u2} ι M (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i))) a (Sigma.mk.{u3, u2} ι α i b)) (Sigma.mk.{u3, u2} ι α i (HSMul.hSMul.{u1, u2, u2} M (α i) (α i) (instHSMul.{u1, u2} M (α i) (_inst_1 i)) a b))
 Case conversion may be inaccurate. Consider using '#align sigma.smul_mk Sigma.smul_mkₓ'. -/
@@ -61,7 +61,7 @@ theorem smul_mk : a • mk i b = ⟨i, a • b⟩ :=
 #align sigma.smul_mk Sigma.smul_mk
 
 @[to_additive]
-instance [HasSmul M N] [∀ i, IsScalarTower M N (α i)] : IsScalarTower M N (Σi, α i) :=
+instance [SMul M N] [∀ i, IsScalarTower M N (α i)] : IsScalarTower M N (Σi, α i) :=
   ⟨fun a b x => by
     cases x
     rw [smul_mk, smul_mk, smul_mk, smul_assoc]⟩
@@ -73,14 +73,14 @@ instance [∀ i, SMulCommClass M N (α i)] : SMulCommClass M N (Σi, α i) :=
     rw [smul_mk, smul_mk, smul_mk, smul_mk, smul_comm]⟩
 
 @[to_additive]
-instance [∀ i, HasSmul Mᵐᵒᵖ (α i)] [∀ i, IsCentralScalar M (α i)] : IsCentralScalar M (Σi, α i) :=
+instance [∀ i, SMul Mᵐᵒᵖ (α i)] [∀ i, IsCentralScalar M (α i)] : IsCentralScalar M (Σi, α i) :=
   ⟨fun a x => by
     cases x
     rw [smul_mk, smul_mk, op_smul_eq_smul]⟩
 
 /- warning: sigma.has_faithful_smul' -> Sigma.FaithfulSMul' is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {M : Type.{u2}} {α : ι -> Type.{u3}} [_inst_1 : forall (i : ι), HasSmul.{u2, u3} M (α i)] (i : ι) [_inst_3 : FaithfulSMul.{u2, u3} M (α i) (_inst_1 i)], FaithfulSMul.{u2, max u1 u3} M (Sigma.{u1, u3} ι (fun (i : ι) => α i)) (Sigma.hasSmul.{u1, u2, u3} ι M (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i))
+  forall {ι : Type.{u1}} {M : Type.{u2}} {α : ι -> Type.{u3}} [_inst_1 : forall (i : ι), SMul.{u2, u3} M (α i)] (i : ι) [_inst_3 : FaithfulSMul.{u2, u3} M (α i) (_inst_1 i)], FaithfulSMul.{u2, max u1 u3} M (Sigma.{u1, u3} ι (fun (i : ι) => α i)) (Sigma.hasSmul.{u1, u2, u3} ι M (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i))
 but is expected to have type
   forall {ι : Type.{u1}} {M : Type.{u3}} {α : ι -> Type.{u2}} [_inst_1 : forall (i : ι), SMul.{u3, u2} M (α i)] (i : ι) [_inst_3 : FaithfulSMul.{u3, u2} M (α i) (_inst_1 i)], FaithfulSMul.{u3, max u2 u1} M (Sigma.{u1, u2} ι (fun (i : ι) => α i)) (Sigma.instSMulSigma.{u1, u3, u2} ι M (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i))
 Case conversion may be inaccurate. Consider using '#align sigma.has_faithful_smul' Sigma.FaithfulSMul'ₓ'. -/
@@ -94,7 +94,7 @@ protected theorem FaithfulSMul' [FaithfulSMul M (α i)] : FaithfulSMul M (Σi, �
 instance [Nonempty ι] [∀ i, FaithfulSMul M (α i)] : FaithfulSMul M (Σi, α i) :=
   (Nonempty.elim ‹_›) fun i => Sigma.FaithfulSMul' i
 
-end HasSmul
+end SMul
 
 @[to_additive]
 instance {m : Monoid M} [∀ i, MulAction M (α i)] : MulAction M (Σi, α i)

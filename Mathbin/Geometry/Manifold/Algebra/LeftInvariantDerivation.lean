@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 
 ! This file was ported from Lean 3 source module geometry.manifold.algebra.left_invariant_derivation
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -191,18 +191,18 @@ theorem lift_zero :
   rfl
 #align left_invariant_derivation.lift_zero LeftInvariantDerivation.lift_zero
 
-instance hasNatScalar : HasSmul ℕ (LeftInvariantDerivation I G)
+instance hasNatScalar : SMul ℕ (LeftInvariantDerivation I G)
     where smul r X := ⟨r • X, fun g => by simp_rw [LinearMap.map_smul_of_tower, left_invariant']⟩
 #align left_invariant_derivation.has_nat_scalar LeftInvariantDerivation.hasNatScalar
 
-instance hasIntScalar : HasSmul ℤ (LeftInvariantDerivation I G)
+instance hasIntScalar : SMul ℤ (LeftInvariantDerivation I G)
     where smul r X := ⟨r • X, fun g => by simp_rw [LinearMap.map_smul_of_tower, left_invariant']⟩
 #align left_invariant_derivation.has_int_scalar LeftInvariantDerivation.hasIntScalar
 
 instance : AddCommGroup (LeftInvariantDerivation I G) :=
   coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => rfl) fun _ _ => rfl
 
-instance : HasSmul 𝕜 (LeftInvariantDerivation I G)
+instance : SMul 𝕜 (LeftInvariantDerivation I G)
     where smul r X := ⟨r • X, fun g => by simp_rw [LinearMap.map_smul, left_invariant']⟩
 
 variable (r X)

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Alexander Bentkamp, Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.linear_independent
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -278,6 +278,7 @@ theorem linear_independent_subtype_range {ι} {f : ι → M} (hf : Injective f) 
 #align linear_independent_subtype_range linear_independent_subtype_range
 
 alias linear_independent_subtype_range ↔ LinearIndependent.of_subtype_range _
+#align linear_independent.of_subtype_range LinearIndependent.of_subtype_range
 
 theorem linear_independent_image {ι} {s : Set ι} {f : ι → M} (hf : Set.InjOn f s) :
     (LinearIndependent R fun x : s => f x) ↔ LinearIndependent R fun x : f '' s => (x : M) :=
@@ -501,6 +502,7 @@ theorem linear_independent_iff_injective_total :
 #align linear_independent_iff_injective_total linear_independent_iff_injective_total
 
 alias linear_independent_iff_injective_total ↔ LinearIndependent.injective_total _
+#align linear_independent.injective_total LinearIndependent.injective_total
 
 theorem LinearIndependent.injective [Nontrivial R] (hv : LinearIndependent R v) : Injective v :=
   by
@@ -1169,6 +1171,7 @@ theorem linear_independent_unique_iff (v : ι → M) [Unique ι] :
 #align linear_independent_unique_iff linear_independent_unique_iff
 
 alias linear_independent_unique_iff ↔ _ linear_independent_unique
+#align linear_independent_unique linear_independent_unique
 
 theorem linear_independent_singleton {x : M} (hx : x ≠ 0) :
     LinearIndependent R (fun x => x : ({x} : Set M) → M) :=

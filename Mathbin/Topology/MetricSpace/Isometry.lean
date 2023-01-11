@@ -5,7 +5,7 @@ Isometries of emetric and metric spaces
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.isometry
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,15 +54,19 @@ theorem isometry_iff_dist_eq [PseudoMetricSpace α] [PseudoMetricSpace β] {f : 
 
 /-- An isometry preserves distances. -/
 alias isometry_iff_dist_eq ↔ Isometry.dist_eq _
+#align isometry.dist_eq Isometry.dist_eq
 
 /-- A map that preserves distances is an isometry -/
 alias isometry_iff_dist_eq ↔ _ Isometry.of_dist_eq
+#align isometry.of_dist_eq Isometry.of_dist_eq
 
 /-- An isometry preserves non-negative distances. -/
 alias isometry_iff_nndist_eq ↔ Isometry.nndist_eq _
+#align isometry.nndist_eq Isometry.nndist_eq
 
 /-- A map that preserves non-negative distances is an isometry. -/
 alias isometry_iff_nndist_eq ↔ _ Isometry.of_nndist_eq
+#align isometry.of_nndist_eq Isometry.of_nndist_eq
 
 namespace Isometry
 

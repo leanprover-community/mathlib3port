@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jean Lo, Bhavik Mehta, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.locally_convex.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,9 +52,9 @@ section SemiNormedRing
 
 variable [SemiNormedRing 𝕜]
 
-section HasSmul
+section SMul
 
-variable (𝕜) [HasSmul 𝕜 E]
+variable (𝕜) [SMul 𝕜 E]
 
 /-- A set `A` absorbs another set `B` if `B` is contained in all scalings of `A` by elements of
 sufficiently large norm. -/
@@ -172,6 +172,7 @@ theorem balanced_iff_smul_mem : Balanced 𝕜 s ↔ ∀ ⦃a : 𝕜⦄, ‖a‖ 
 #align balanced_iff_smul_mem balanced_iff_smul_mem
 
 alias balanced_iff_smul_mem ↔ Balanced.smul_mem _
+#align balanced.smul_mem Balanced.smul_mem
 
 @[simp]
 theorem balanced_empty : Balanced 𝕜 (∅ : Set E) := fun _ _ => by rw [smul_set_empty]
@@ -209,13 +210,13 @@ theorem balanced_Inter₂ {f : ∀ i, κ i → Set E} (h : ∀ i j, Balanced �
   balanced_Inter fun _ => balanced_Inter <| h _
 #align balanced_Inter₂ balanced_Inter₂
 
-variable [HasSmul 𝕝 E] [SMulCommClass 𝕜 𝕝 E]
+variable [SMul 𝕝 E] [SMulCommClass 𝕜 𝕝 E]
 
 theorem Balanced.smul (a : 𝕝) (hs : Balanced 𝕜 s) : Balanced 𝕜 (a • s) := fun b hb =>
   (smul_comm _ _ _).Subset.trans <| smul_set_mono <| hs _ hb
 #align balanced.smul Balanced.smul
 
-end HasSmul
+end SMul
 
 section Module
 

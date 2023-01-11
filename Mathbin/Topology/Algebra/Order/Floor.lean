@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module topology.algebra.order.floor
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,11 +43,11 @@ theorem tendsto_floor_at_top : Tendsto (floor : α → ℤ) atTop atTop :=
 #align tendsto_floor_at_top tendsto_floor_at_top
 
 theorem tendsto_floor_at_bot : Tendsto (floor : α → ℤ) atBot atBot :=
-  floor_mono.tendsto_at_bot_at_bot fun b => ⟨b, (floor_int_cast _).le⟩
+  floor_mono.tendsto_at_bot_at_bot fun b => ⟨b, (floor_intCast _).le⟩
 #align tendsto_floor_at_bot tendsto_floor_at_bot
 
 theorem tendsto_ceil_at_top : Tendsto (ceil : α → ℤ) atTop atTop :=
-  ceil_mono.tendsto_at_top_at_top fun b => ⟨b, (ceil_int_cast _).ge⟩
+  ceil_mono.tendsto_at_top_at_top fun b => ⟨b, (ceil_intCast _).ge⟩
 #align tendsto_ceil_at_top tendsto_ceil_at_top
 
 theorem tendsto_ceil_at_bot : Tendsto (ceil : α → ℤ) atBot atBot :=

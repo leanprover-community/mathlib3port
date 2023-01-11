@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Simon Hudon, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.group.defs
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -61,11 +61,13 @@ class VSub (G : outParam (Type _)) (P : Type _) where
 #align has_vsub VSub
 -/
 
+#print SMul /-
 /-- Typeclass for types with a scalar multiplication operation, denoted `•` (`\bu`) -/
 @[ext, to_additive]
-class HasSmul (M : Type _) (α : Type _) where
+class SMul (M : Type _) (α : Type _) where
   smul : M → α → α
-#align has_smul HasSmul
+#align has_smul SMul
+-/
 
 -- mathport name: «expr +ᵥ »
 infixl:65 " +ᵥ " => VAdd.vadd
@@ -74,15 +76,15 @@ infixl:65 " +ᵥ " => VAdd.vadd
 infixl:65 " -ᵥ " => VSub.vsub
 
 -- mathport name: «expr • »
-infixr:73 " • " => HasSmul.smul
+infixr:73 " • " => SMul.smul
 
 attribute [to_additive_reorder 1] Pow
 
 attribute [to_additive_reorder 1 4] Pow.pow
 
-attribute [to_additive HasSmul] Pow
+attribute [to_additive SMul] Pow
 
-attribute [to_additive HasSmul.smul] Pow.pow
+attribute [to_additive SMul.smul] Pow.pow
 
 universe u
 
@@ -291,7 +293,7 @@ theorem mul_assoc : ∀ a b c : G, a * b * c = a * (b * c) :=
 lean 3 declaration is
   forall {G : Type.{u1}} [_inst_1 : Semigroup.{u1} G], IsAssociative.{u1} G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (Semigroup.toHasMul.{u1} G _inst_1)))
 but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Semigroup.{u1} G], IsAssociative.{u1} G (fun (x._@.Mathlib.Algebra.Group.Defs._hyg.3285 : G) (x._@.Mathlib.Algebra.Group.Defs._hyg.3287 : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (Semigroup.toMul.{u1} G _inst_1)) x._@.Mathlib.Algebra.Group.Defs._hyg.3285 x._@.Mathlib.Algebra.Group.Defs._hyg.3287)
+  forall {G : Type.{u1}} [_inst_1 : Semigroup.{u1} G], IsAssociative.{u1} G (fun (x._@.Mathlib.Algebra.Group.Defs._hyg.3288 : G) (x._@.Mathlib.Algebra.Group.Defs._hyg.3290 : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (Semigroup.toMul.{u1} G _inst_1)) x._@.Mathlib.Algebra.Group.Defs._hyg.3288 x._@.Mathlib.Algebra.Group.Defs._hyg.3290)
 Case conversion may be inaccurate. Consider using '#align semigroup.to_is_associative Semigroup.to_isAssociativeₓ'. -/
 @[to_additive]
 instance Semigroup.to_isAssociative : IsAssociative G (· * ·) :=
@@ -337,7 +339,7 @@ theorem mul_comm : ∀ a b : G, a * b = b * a :=
 lean 3 declaration is
   forall {G : Type.{u1}} [_inst_1 : CommSemigroup.{u1} G], IsCommutative.{u1} G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (Semigroup.toHasMul.{u1} G (CommSemigroup.toSemigroup.{u1} G _inst_1))))
 but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : CommSemigroup.{u1} G], IsCommutative.{u1} G (fun (x._@.Mathlib.Algebra.Group.Defs._hyg.3389 : G) (x._@.Mathlib.Algebra.Group.Defs._hyg.3391 : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (Semigroup.toMul.{u1} G (CommSemigroup.toSemigroup.{u1} G _inst_1))) x._@.Mathlib.Algebra.Group.Defs._hyg.3389 x._@.Mathlib.Algebra.Group.Defs._hyg.3391)
+  forall {G : Type.{u1}} [_inst_1 : CommSemigroup.{u1} G], IsCommutative.{u1} G (fun (x._@.Mathlib.Algebra.Group.Defs._hyg.3392 : G) (x._@.Mathlib.Algebra.Group.Defs._hyg.3394 : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (Semigroup.toMul.{u1} G (CommSemigroup.toSemigroup.{u1} G _inst_1))) x._@.Mathlib.Algebra.Group.Defs._hyg.3392 x._@.Mathlib.Algebra.Group.Defs._hyg.3394)
 Case conversion may be inaccurate. Consider using '#align comm_semigroup.to_is_commutative CommSemigroup.to_isCommutativeₓ'. -/
 @[to_additive]
 instance CommSemigroup.to_isCommutative : IsCommutative G (· * ·) :=
@@ -705,15 +707,11 @@ instance Monoid.Pow {M : Type _} [Monoid M] : Pow M ℕ :=
 #align monoid.has_pow Monoid.Pow
 -/
 
-/- warning: add_monoid.has_smul_nat -> AddMonoid.SMul is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : AddMonoid.{u1} M], HasSmul.{0, u1} Nat M
-but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : AddMonoid.{u1} M], SMul.{0, u1} Nat M
-Case conversion may be inaccurate. Consider using '#align add_monoid.has_smul_nat AddMonoid.SMulₓ'. -/
-instance AddMonoid.SMul {M : Type _} [AddMonoid M] : HasSmul ℕ M :=
+#print AddMonoid.SMul /-
+instance AddMonoid.SMul {M : Type _} [AddMonoid M] : SMul ℕ M :=
   ⟨AddMonoid.nsmul⟩
 #align add_monoid.has_smul_nat AddMonoid.SMul
+-/
 
 attribute [to_additive AddMonoid.SMul] Monoid.Pow
 
@@ -1065,7 +1063,7 @@ instance DivInvMonoid.Pow {M} [DivInvMonoid M] : Pow M ℤ :=
 #align div_inv_monoid.has_pow DivInvMonoid.Pow
 -/
 
-instance SubNegMonoid.hasSmulInt {M} [SubNegMonoid M] : HasSmul ℤ M :=
+instance SubNegMonoid.hasSmulInt {M} [SubNegMonoid M] : SMul ℤ M :=
   ⟨SubNegMonoid.zsmul⟩
 #align sub_neg_monoid.has_smul_int SubNegMonoid.hasSmulInt
 
@@ -1144,7 +1142,14 @@ theorem div_eq_mul_inv (a b : G) : a / b = a * b⁻¹ :=
   DivInvMonoid.div_eq_mul_inv _ _
 #align div_eq_mul_inv div_eq_mul_inv
 
+/- warning: division_def -> division_def is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} [_inst_1 : DivInvMonoid.{u1} G] (a : G) (b : G), Eq.{succ u1} G (HDiv.hDiv.{u1, u1, u1} G G G (instHDiv.{u1} G (DivInvMonoid.toHasDiv.{u1} G _inst_1)) a b) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G _inst_1)))) a (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G _inst_1) b))
+but is expected to have type
+  forall {G : Type.{u1}} [_inst_1 : DivInvMonoid.{u1} G] (a : G) (b : G), Eq.{succ u1} G (HDiv.hDiv.{u1, u1, u1} G G G (instHDiv.{u1} G (DivInvMonoid.toDiv.{u1} G _inst_1)) a b) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G _inst_1)))) a (Inv.inv.{u1} G (DivInvMonoid.toInv.{u1} G _inst_1) b))
+Case conversion may be inaccurate. Consider using '#align division_def division_defₓ'. -/
 alias div_eq_mul_inv ← division_def
+#align division_def division_def
 
 end DivInvMonoid
 

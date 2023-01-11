@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.constructions.borel_space
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -893,7 +893,7 @@ instance (priority := 100) TopologicalGroup.has_measurable_inv [Group γ] [Topol
 
 instance (priority := 100) HasContinuousSmul.has_measurable_smul {M α} [TopologicalSpace M]
     [TopologicalSpace α] [MeasurableSpace M] [MeasurableSpace α] [OpensMeasurableSpace M]
-    [BorelSpace α] [HasSmul M α] [HasContinuousSmul M α] : HasMeasurableSmul M α :=
+    [BorelSpace α] [SMul M α] [HasContinuousSmul M α] : HasMeasurableSmul M α :=
   ⟨fun c => (continuous_const_smul _).Measurable, fun y =>
     (continuous_id.smul continuous_const).Measurable⟩
 #align has_continuous_smul.has_measurable_smul HasContinuousSmul.has_measurable_smul
@@ -995,7 +995,7 @@ instance (priority := 100) HasContinuousSub.has_measurable_sub₂ [SecondCountab
 
 instance (priority := 100) HasContinuousSmul.has_measurable_smul₂ {M α} [TopologicalSpace M]
     [SecondCountableTopology M] [MeasurableSpace M] [OpensMeasurableSpace M] [TopologicalSpace α]
-    [SecondCountableTopology α] [MeasurableSpace α] [BorelSpace α] [HasSmul M α]
+    [SecondCountableTopology α] [MeasurableSpace α] [BorelSpace α] [SMul M α]
     [HasContinuousSmul M α] : HasMeasurableSmul₂ M α :=
   ⟨continuous_smul.Measurable⟩
 #align has_continuous_smul.has_measurable_smul₂ HasContinuousSmul.has_measurable_smul₂

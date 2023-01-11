@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.connected
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1561,6 +1561,7 @@ theorem is_totally_disconnected_of_is_totally_separated {s : Set α} (H : IsTota
   is_totally_disconnected_of_is_totally_separated is_totally_disconnected_of_is_totally_separated
 
 alias is_totally_disconnected_of_is_totally_separated ← IsTotallySeparated.is_totally_disconnected
+#align is_totally_separated.is_totally_disconnected IsTotallySeparated.is_totally_disconnected
 
 /- ./././Mathport/Syntax/Translate/Command.lean:379:30: infer kinds are unsupported in Lean 4: #[`is_totally_separated_univ] [] -/
 /-- A space is totally separated if any two points can be separated by two disjoint open sets

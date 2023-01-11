@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module group_theory.subgroup.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -203,7 +203,7 @@ omit hSM
 
 /-- An additive subgroup of an `add_group` inherits an integer scaling. -/
 instance AddSubgroupClass.hasZsmul {M S} [SubNegMonoid M] [SetLike S M] [AddSubgroupClass S M]
-    {H : S} : HasSmul ℤ H :=
+    {H : S} : SMul ℤ H :=
   ⟨fun n a => ⟨n • a, zsmul_mem a.2 n⟩⟩
 #align add_subgroup_class.has_zsmul AddSubgroupClass.hasZsmul
 
@@ -672,7 +672,7 @@ instance hasDiv : Div H :=
 #align subgroup.has_div Subgroup.hasDiv
 
 /-- An `add_subgroup` of an `add_group` inherits a natural scaling. -/
-instance AddSubgroup.hasNsmul {G} [AddGroup G] {H : AddSubgroup G} : HasSmul ℕ H :=
+instance AddSubgroup.hasNsmul {G} [AddGroup G] {H : AddSubgroup G} : SMul ℕ H :=
   ⟨fun n a => ⟨n • a, H.nsmul_mem a.2 n⟩⟩
 #align add_subgroup.has_nsmul AddSubgroup.hasNsmul
 
@@ -683,7 +683,7 @@ instance hasNpow : Pow H ℕ :=
 #align subgroup.has_npow Subgroup.hasNpow
 
 /-- An `add_subgroup` of an `add_group` inherits an integer scaling. -/
-instance AddSubgroup.hasZsmul {G} [AddGroup G] {H : AddSubgroup G} : HasSmul ℤ H :=
+instance AddSubgroup.hasZsmul {G} [AddGroup G] {H : AddSubgroup G} : SMul ℤ H :=
   ⟨fun n a => ⟨n • a, H.zsmul_mem a.2 n⟩⟩
 #align add_subgroup.has_zsmul AddSubgroup.hasZsmul
 
@@ -3825,19 +3825,19 @@ theorem smul_def [MulAction G α] {S : Subgroup G} (g : S) (m : α) : g • m = 
 #align subgroup.smul_def Subgroup.smul_def
 
 @[to_additive]
-instance smul_comm_class_left [MulAction G β] [HasSmul α β] [SMulCommClass G α β] (S : Subgroup G) :
+instance smul_comm_class_left [MulAction G β] [SMul α β] [SMulCommClass G α β] (S : Subgroup G) :
     SMulCommClass S α β :=
   S.toSubmonoid.smul_comm_class_left
 #align subgroup.smul_comm_class_left Subgroup.smul_comm_class_left
 
 @[to_additive]
-instance smul_comm_class_right [HasSmul α β] [MulAction G β] [SMulCommClass α G β]
-    (S : Subgroup G) : SMulCommClass α S β :=
+instance smul_comm_class_right [SMul α β] [MulAction G β] [SMulCommClass α G β] (S : Subgroup G) :
+    SMulCommClass α S β :=
   S.toSubmonoid.smul_comm_class_right
 #align subgroup.smul_comm_class_right Subgroup.smul_comm_class_right
 
 /-- Note that this provides `is_scalar_tower S G G` which is needed by `smul_mul_assoc`. -/
-instance [HasSmul α β] [MulAction G α] [MulAction G β] [IsScalarTower G α β] (S : Subgroup G) :
+instance [SMul α β] [MulAction G α] [MulAction G β] [IsScalarTower G α β] (S : Subgroup G) :
     IsScalarTower S α β :=
   S.toSubmonoid.IsScalarTower
 

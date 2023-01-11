@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.convex.strict
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,9 +38,9 @@ section AddCommMonoid
 
 variable [AddCommMonoid E] [AddCommMonoid F]
 
-section HasSmul
+section SMul
 
-variable (𝕜) [HasSmul 𝕜 E] [HasSmul 𝕜 F] (s : Set E)
+variable (𝕜) [SMul 𝕜 E] [SMul 𝕜 F] (s : Set E)
 
 /-- A set is strictly convex if the open segment between any two distinct points lies is in its
 interior. This basically means "convex and not flat on the boundary". -/
@@ -101,7 +101,7 @@ theorem DirectedOn.strict_convex_sUnion {S : Set (Set E)} (hdir : DirectedOn (·
   exact (directedOn_iff_directed.1 hdir).strict_convex_Union fun s => hS _ s.2
 #align directed_on.strict_convex_sUnion DirectedOn.strict_convex_sUnion
 
-end HasSmul
+end SMul
 
 section Module
 
@@ -462,6 +462,7 @@ theorem strict_convex_iff_ord_connected : StrictConvex 𝕜 s ↔ s.OrdConnected
 #align strict_convex_iff_ord_connected strict_convex_iff_ord_connected
 
 alias strict_convex_iff_ord_connected ↔ StrictConvex.ord_connected _
+#align strict_convex.ord_connected StrictConvex.ord_connected
 
 end
 

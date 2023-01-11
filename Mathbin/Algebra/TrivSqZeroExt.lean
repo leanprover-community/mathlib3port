@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module algebra.triv_sq_zero_ext
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -176,18 +176,18 @@ instance [AddCommMonoid R] [AddCommMonoid M] : AddCommMonoid (tsze R M) :=
 instance [AddCommGroup R] [AddCommGroup M] : AddCommGroup (tsze R M) :=
   Prod.addCommGroup
 
-instance [HasSmul S R] [HasSmul S M] : HasSmul S (tsze R M) :=
+instance [SMul S R] [SMul S M] : SMul S (tsze R M) :=
   Prod.hasSmul
 
-instance [HasSmul T R] [HasSmul T M] [HasSmul S R] [HasSmul S M] [HasSmul T S] [IsScalarTower T S R]
+instance [SMul T R] [SMul T M] [SMul S R] [SMul S M] [SMul T S] [IsScalarTower T S R]
     [IsScalarTower T S M] : IsScalarTower T S (tsze R M) :=
   Prod.is_scalar_tower
 
-instance [HasSmul T R] [HasSmul T M] [HasSmul S R] [HasSmul S M] [SMulCommClass T S R]
-    [SMulCommClass T S M] : SMulCommClass T S (tsze R M) :=
+instance [SMul T R] [SMul T M] [SMul S R] [SMul S M] [SMulCommClass T S R] [SMulCommClass T S M] :
+    SMulCommClass T S (tsze R M) :=
   Prod.smul_comm_class
 
-instance [HasSmul S R] [HasSmul S M] [HasSmul Sᵐᵒᵖ R] [HasSmul Sᵐᵒᵖ M] [IsCentralScalar S R]
+instance [SMul S R] [SMul S M] [SMul Sᵐᵒᵖ R] [SMul Sᵐᵒᵖ M] [IsCentralScalar S R]
     [IsCentralScalar S M] : IsCentralScalar S (tsze R M) :=
   Prod.is_central_scalar
 
@@ -233,12 +233,12 @@ theorem snd_neg [Neg R] [Neg M] (x : tsze R M) : (-x).snd = -x.snd :=
 #align triv_sq_zero_ext.snd_neg TrivSqZeroExt.snd_neg
 
 @[simp]
-theorem fst_smul [HasSmul S R] [HasSmul S M] (s : S) (x : tsze R M) : (s • x).fst = s • x.fst :=
+theorem fst_smul [SMul S R] [SMul S M] (s : S) (x : tsze R M) : (s • x).fst = s • x.fst :=
   rfl
 #align triv_sq_zero_ext.fst_smul TrivSqZeroExt.fst_smul
 
 @[simp]
-theorem snd_smul [HasSmul S R] [HasSmul S M] (s : S) (x : tsze R M) : (s • x).snd = s • x.snd :=
+theorem snd_smul [SMul S R] [SMul S M] (s : S) (x : tsze R M) : (s • x).snd = s • x.snd :=
   rfl
 #align triv_sq_zero_ext.snd_smul TrivSqZeroExt.snd_smul
 
@@ -263,7 +263,7 @@ theorem inl_neg [Neg R] [AddGroup M] (r : R) : (inl (-r) : tsze R M) = -inl r :=
 #align triv_sq_zero_ext.inl_neg TrivSqZeroExt.inl_neg
 
 @[simp]
-theorem inl_smul [Monoid S] [AddMonoid M] [HasSmul S R] [DistribMulAction S M] (s : S) (r : R) :
+theorem inl_smul [Monoid S] [AddMonoid M] [SMul S R] [DistribMulAction S M] (s : S) (r : R) :
     (inl (s • r) : tsze R M) = s • inl r :=
   ext rfl (smul_zero s).symm
 #align triv_sq_zero_ext.inl_smul TrivSqZeroExt.inl_smul
@@ -291,7 +291,7 @@ theorem inr_neg [AddGroup R] [Neg M] (m : M) : (inr (-m) : tsze R M) = -inr m :=
 #align triv_sq_zero_ext.inr_neg TrivSqZeroExt.inr_neg
 
 @[simp]
-theorem inr_smul [Zero R] [Zero S] [SMulWithZero S R] [HasSmul S M] (r : S) (m : M) :
+theorem inr_smul [Zero R] [Zero S] [SMulWithZero S R] [SMul S M] (r : S) (m : M) :
     (inr (r • m) : tsze R M) = r • inr m :=
   ext (smul_zero _).symm rfl
 #align triv_sq_zero_ext.inr_smul TrivSqZeroExt.inr_smul
@@ -346,7 +346,7 @@ variable {R : Type u} {M : Type v}
 instance [One R] [Zero M] : One (tsze R M) :=
   ⟨(1, 0)⟩
 
-instance [Mul R] [Add M] [HasSmul R M] : Mul (tsze R M) :=
+instance [Mul R] [Add M] [SMul R M] : Mul (tsze R M) :=
   ⟨fun x y => (x.1 * y.1, x.1 • y.2 + y.1 • x.2)⟩
 
 @[simp]
@@ -360,13 +360,12 @@ theorem snd_one [One R] [Zero M] : (1 : tsze R M).snd = 0 :=
 #align triv_sq_zero_ext.snd_one TrivSqZeroExt.snd_one
 
 @[simp]
-theorem fst_mul [Mul R] [Add M] [HasSmul R M] (x₁ x₂ : tsze R M) :
-    (x₁ * x₂).fst = x₁.fst * x₂.fst :=
+theorem fst_mul [Mul R] [Add M] [SMul R M] (x₁ x₂ : tsze R M) : (x₁ * x₂).fst = x₁.fst * x₂.fst :=
   rfl
 #align triv_sq_zero_ext.fst_mul TrivSqZeroExt.fst_mul
 
 @[simp]
-theorem snd_mul [Mul R] [Add M] [HasSmul R M] (x₁ x₂ : tsze R M) :
+theorem snd_mul [Mul R] [Add M] [SMul R M] (x₁ x₂ : tsze R M) :
     (x₁ * x₂).snd = x₁.fst • x₂.snd + x₂.fst • x₁.snd :=
   rfl
 #align triv_sq_zero_ext.snd_mul TrivSqZeroExt.snd_mul

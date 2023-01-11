@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module topology.algebra.continuous_affine_map
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -220,7 +220,7 @@ variable [Monoid S] [DistribMulAction S W] [SMulCommClass R S W]
 
 variable [HasContinuousConstSmul S W]
 
-instance : HasSmul S (P →A[R] W)
+instance : SMul S (P →A[R] W)
     where smul t f := { t • (f : P →ᵃ[R] W) with cont := f.Continuous.const_smul t }
 
 @[norm_cast, simp]

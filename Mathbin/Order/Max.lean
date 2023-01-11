@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Yury Kudryashov, Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.max
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -357,20 +357,28 @@ theorem isMax_ofDual_iff {a : αᵒᵈ} : IsMax (ofDual a) ↔ IsMin a :=
 -/
 
 alias isBot_toDual_iff ↔ _ IsTop.to_dual
+#align is_top.to_dual IsTop.to_dual
 
 alias isTop_toDual_iff ↔ _ IsBot.to_dual
+#align is_bot.to_dual IsBot.to_dual
 
 alias isMin_toDual_iff ↔ _ IsMax.to_dual
+#align is_max.to_dual IsMax.to_dual
 
 alias isMax_toDual_iff ↔ _ IsMin.to_dual
+#align is_min.to_dual IsMin.to_dual
 
 alias isBot_ofDual_iff ↔ _ IsTop.of_dual
+#align is_top.of_dual IsTop.of_dual
 
 alias isTop_ofDual_iff ↔ _ IsBot.of_dual
+#align is_bot.of_dual IsBot.of_dual
 
 alias isMin_ofDual_iff ↔ _ IsMax.of_dual
+#align is_max.of_dual IsMax.of_dual
 
 alias isMax_ofDual_iff ↔ _ IsMin.of_dual
+#align is_min.of_dual IsMin.of_dual
 
 end LE
 
@@ -421,8 +429,10 @@ theorem not_isMax_of_lt (h : a < b) : ¬IsMax a := fun ha => ha.not_lt h
 -/
 
 alias not_isMin_of_lt ← LT.lt.not_is_min
+#align has_lt.lt.not_is_min LT.lt.not_is_min
 
 alias not_isMax_of_lt ← LT.lt.not_is_max
+#align has_lt.lt.not_is_max LT.lt.not_is_max
 
 #print isMin_iff_forall_not_lt /-
 theorem isMin_iff_forall_not_lt : IsMin a ↔ ∀ b, ¬b < a :=

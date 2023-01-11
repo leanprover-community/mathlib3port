@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Jesse Michael Han, Floris van Doorn
 
 ! This file was ported from Lean 3 source module model_theory.semantics
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1139,7 +1139,7 @@ theorem Sentence.realize_card_ge (n) : M ⊨ Sentence.cardGe L n ↔ ↑n ≤ (#
     bounded_formula.realize_exs]
   simp_rw [bounded_formula.realize_foldr_inf]
   simp only [Function.comp_apply, List.mem_map', Prod.exists, Ne.def, List.mem_product,
-    List.mem_fin_range, forall_exists_index, and_imp, List.mem_filter, true_and_iff]
+    List.mem_finRange, forall_exists_index, and_imp, List.mem_filter, true_and_iff]
   refine' ⟨_, fun xs => ⟨xs.some, _⟩⟩
   · rintro ⟨xs, h⟩
     refine' ⟨⟨xs, fun i j ij => _⟩⟩

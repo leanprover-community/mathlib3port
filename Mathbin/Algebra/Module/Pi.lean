@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Patrick Massot
 
 ! This file was ported from Lean 3 source module algebra.module.pi
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,7 +32,7 @@ variable (x y : ∀ i, f i) (i : I)
 
 namespace Pi
 
-theorem IsSMulRegular.pi {α : Type _} [∀ i, HasSmul α <| f i] {k : α}
+theorem IsSMulRegular.pi {α : Type _} [∀ i, SMul α <| f i] {k : α}
     (hk : ∀ i, IsSMulRegular (f i) k) : IsSMulRegular (∀ i, f i) k := fun _ _ h =>
   funext fun i => hk i (congr_fun h i : _)
 #align is_smul_regular.pi IsSMulRegular.pi

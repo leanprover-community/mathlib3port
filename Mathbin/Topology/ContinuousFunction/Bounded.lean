@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Mario Carneiro, Yury Kudryashov, Heather Macbeth
 
 ! This file was ported from Lean 3 source module topology.continuous_function.bounded
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -737,7 +737,7 @@ theorem coe_nsmul_rec : ∀ n, ⇑(nsmulRec n f) = n • f
   | n + 1 => by rw [nsmulRec, succ_nsmul, coe_add, coe_nsmul_rec]
 #align bounded_continuous_function.coe_nsmul_rec BoundedContinuousFunction.coe_nsmul_rec
 
-instance hasNatScalar : HasSmul ℕ (α →ᵇ β)
+instance hasNatScalar : SMul ℕ (α →ᵇ β)
     where smul n f :=
     { toContinuousMap := n • f.toContinuousMap
       map_bounded' := by simpa [coe_nsmul_rec] using (nsmulRec n f).map_bounded' }
@@ -1040,7 +1040,7 @@ theorem coe_zsmul_rec : ∀ z, ⇑(zsmulRec z f) = z • f
   | -[n+1] => by rw [zsmulRec, negSucc_zsmul, coe_neg, coe_nsmul_rec]
 #align bounded_continuous_function.coe_zsmul_rec BoundedContinuousFunction.coe_zsmul_rec
 
-instance hasIntScalar : HasSmul ℤ (α →ᵇ β)
+instance hasIntScalar : SMul ℤ (α →ᵇ β)
     where smul n f :=
     { toContinuousMap := n • f.toContinuousMap
       map_bounded' := by simpa using (zsmulRec n f).map_bounded' }
@@ -1133,11 +1133,11 @@ using pointwise operations and checking that they are compatible with the unifor
 
 variable {𝕜 : Type _} [PseudoMetricSpace 𝕜] [TopologicalSpace α] [PseudoMetricSpace β]
 
-section HasSmul
+section SMul
 
-variable [Zero 𝕜] [Zero β] [HasSmul 𝕜 β] [HasBoundedSmul 𝕜 β]
+variable [Zero 𝕜] [Zero β] [SMul 𝕜 β] [HasBoundedSmul 𝕜 β]
 
-instance : HasSmul 𝕜 (α →ᵇ β)
+instance : SMul 𝕜 (α →ᵇ β)
     where smul c f :=
     { toContinuousMap := c • f.toContinuousMap
       map_bounded' :=
@@ -1157,7 +1157,7 @@ theorem smul_apply (c : 𝕜) (f : α →ᵇ β) (x : α) : (c • f) x = c • 
   rfl
 #align bounded_continuous_function.smul_apply BoundedContinuousFunction.smul_apply
 
-instance [HasSmul 𝕜ᵐᵒᵖ β] [IsCentralScalar 𝕜 β] : IsCentralScalar 𝕜 (α →ᵇ β)
+instance [SMul 𝕜ᵐᵒᵖ β] [IsCentralScalar 𝕜 β] : IsCentralScalar 𝕜 (α →ᵇ β)
     where op_smul_eq_smul _ _ := ext fun _ => op_smul_eq_smul _ _
 
 instance : HasBoundedSmul 𝕜 (α →ᵇ β)
@@ -1176,7 +1176,7 @@ instance : HasBoundedSmul 𝕜 (α →ᵇ β)
     convert mul_le_mul_of_nonneg_left (dist_coe_le_dist x) dist_nonneg
     simp
 
-end HasSmul
+end SMul
 
 section MulAction
 
@@ -1478,7 +1478,7 @@ functions from `α` to `β` is naturally a module over the algebra of bounded co
 functions from `α` to `𝕜`. -/
 
 
-instance hasSmul' : HasSmul (α →ᵇ 𝕜) (α →ᵇ β) :=
+instance hasSmul' : SMul (α →ᵇ 𝕜) (α →ᵇ β) :=
   ⟨fun (f : α →ᵇ 𝕜) (g : α →ᵇ β) =>
     ofNormedAddCommGroup (fun x => f x • g x) (f.Continuous.smul g.Continuous) (‖f‖ * ‖g‖) fun x =>
       calc

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.rat.defs
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -346,7 +346,7 @@ theorem num_den' {n d h c} : (⟨n, d, h, c⟩ : ℚ) = n /. d :=
 lean 3 declaration is
   forall (z : Int), Eq.{1} Rat ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int Rat (HasLiftT.mk.{1, 1} Int Rat (CoeTCₓ.coe.{1, 1} Int Rat (Int.castCoe.{0} Rat Rat.hasIntCast))) z) (Rat.mk z (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne))))
 but is expected to have type
-  forall (z : Int), Eq.{1} Rat (Rat.ofInt z) (Rat.divInt z (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)))
+  forall (z : Int), Eq.{1} Rat (Int.cast.{0} Rat Rat.instIntCastRat_1 z) (Rat.divInt z (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)))
 Case conversion may be inaccurate. Consider using '#align rat.coe_int_eq_mk Rat.coe_int_eq_divIntₓ'. -/
 theorem coe_int_eq_divInt (z : ℤ) : (z : ℚ) = z /. 1 :=
   num_denom'
@@ -966,7 +966,7 @@ protected theorem add_divInt (a b c : ℤ) : (a + b) /. c = a /. c + b /. c :=
 lean 3 declaration is
   forall (n : Int) (d : Int), Eq.{1} Rat (Rat.mk n d) (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.hasDiv) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int Rat (HasLiftT.mk.{1, 1} Int Rat (CoeTCₓ.coe.{1, 1} Int Rat (Int.castCoe.{0} Rat Rat.hasIntCast))) n) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int Rat (HasLiftT.mk.{1, 1} Int Rat (CoeTCₓ.coe.{1, 1} Int Rat (Int.castCoe.{0} Rat Rat.hasIntCast))) d))
 but is expected to have type
-  forall (n : Int) (d : Int), Eq.{1} Rat (Rat.divInt n d) (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.instDivRat) (Rat.ofInt n) (Rat.ofInt d))
+  forall (n : Int) (d : Int), Eq.{1} Rat (Rat.divInt n d) (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.instDivRat) (Int.cast.{0} Rat Rat.instIntCastRat_1 n) (Int.cast.{0} Rat Rat.instIntCastRat_1 d))
 Case conversion may be inaccurate. Consider using '#align rat.mk_eq_div Rat.divInt_eq_divₓ'. -/
 theorem divInt_eq_div (n d : ℤ) : n /. d = (n : ℚ) / d :=
   by
@@ -1012,7 +1012,7 @@ theorem divInt_div_divInt_cancel_right {x : ℤ} (hx : x ≠ 0) (n d : ℤ) :
 lean 3 declaration is
   forall {n : Int} {d : Int}, Eq.{1} Rat (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.hasDiv) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int Rat (HasLiftT.mk.{1, 1} Int Rat (CoeTCₓ.coe.{1, 1} Int Rat (Int.castCoe.{0} Rat Rat.hasIntCast))) n) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int Rat (HasLiftT.mk.{1, 1} Int Rat (CoeTCₓ.coe.{1, 1} Int Rat (Int.castCoe.{0} Rat Rat.hasIntCast))) d)) (Rat.mk n d)
 but is expected to have type
-  forall {n : Int} {d : Int}, Eq.{1} Rat (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.instDivRat) (Rat.ofInt n) (Rat.ofInt d)) (Rat.divInt n d)
+  forall {n : Int} {d : Int}, Eq.{1} Rat (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.instDivRat) (Int.cast.{0} Rat Rat.instIntCastRat_1 n) (Int.cast.{0} Rat Rat.instIntCastRat_1 d)) (Rat.divInt n d)
 Case conversion may be inaccurate. Consider using '#align rat.coe_int_div_eq_mk Rat.coe_int_div_eq_divIntₓ'. -/
 theorem coe_int_div_eq_divInt {n d : ℤ} : (n : ℚ) / ↑d = n /. d :=
   by

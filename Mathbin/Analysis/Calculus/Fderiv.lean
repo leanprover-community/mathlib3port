@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Sébastien Gouëzel, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.calculus.fderiv
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -401,6 +401,7 @@ theorem has_fderiv_within_at_univ : HasFderivWithinAt f f' univ x ↔ HasFderivA
 #align has_fderiv_within_at_univ has_fderiv_within_at_univ
 
 alias has_fderiv_within_at_univ ↔ HasFderivWithinAt.hasFderivAtOfUniv _
+#align has_fderiv_within_at.has_fderiv_at_of_univ HasFderivWithinAt.hasFderivAtOfUniv
 
 theorem has_fderiv_within_at_insert {y : E} {g' : E →L[𝕜] F} :
     HasFderivWithinAt g g' (insert y s) x ↔ HasFderivWithinAt g g' s x :=
@@ -414,6 +415,8 @@ theorem has_fderiv_within_at_insert {y : E} {g' : E →L[𝕜] F} :
 #align has_fderiv_within_at_insert has_fderiv_within_at_insert
 
 alias has_fderiv_within_at_insert ↔ HasFderivWithinAt.ofInsert HasFderivWithinAt.insert'
+#align has_fderiv_within_at.of_insert HasFderivWithinAt.ofInsert
+#align has_fderiv_within_at.insert' HasFderivWithinAt.insert'
 
 theorem HasFderivWithinAt.insert {g' : E →L[𝕜] F} (h : HasFderivWithinAt g g' s x) :
     HasFderivWithinAt g g' (insert x s) x :=

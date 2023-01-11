@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.rat.lemmas
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -309,7 +309,7 @@ theorem mul_den_eq_num {q : ℚ} : q * q.denom = q.num :=
 lean 3 declaration is
   forall (m : Int) (n : Int), (Ne.{1} Int n (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (Iff (Eq.{1} Nat (Rat.den (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.hasDiv) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int Rat (HasLiftT.mk.{1, 1} Int Rat (CoeTCₓ.coe.{1, 1} Int Rat (Int.castCoe.{0} Rat Rat.hasIntCast))) m) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int Rat (HasLiftT.mk.{1, 1} Int Rat (CoeTCₓ.coe.{1, 1} Int Rat (Int.castCoe.{0} Rat Rat.hasIntCast))) n))) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) n m))
 but is expected to have type
-  forall (m : Int) (n : Int), (Ne.{1} Int n (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Iff (Eq.{1} Nat (Rat.den (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.instDivRat) (Rat.ofInt m) (Rat.ofInt n))) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (Dvd.dvd.{0} Int Int.instDvdInt n m))
+  forall (m : Int) (n : Int), (Ne.{1} Int n (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Iff (Eq.{1} Nat (Rat.den (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.instDivRat) (Int.cast.{0} Rat Rat.instIntCastRat_1 m) (Int.cast.{0} Rat Rat.instIntCastRat_1 n))) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (Dvd.dvd.{0} Int Int.instDvdInt n m))
 Case conversion may be inaccurate. Consider using '#align rat.denom_div_cast_eq_one_iff Rat.den_div_cast_eq_one_iffₓ'. -/
 theorem den_div_cast_eq_one_iff (m n : ℤ) (hn : n ≠ 0) : ((m : ℚ) / n).denom = 1 ↔ n ∣ m :=
   by
@@ -377,7 +377,7 @@ theorem coe_nat_div_self (n : ℕ) : ((n / n : ℕ) : ℚ) = n / n :=
 lean 3 declaration is
   forall (a : Int) (b : Int), (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) b a) -> (Eq.{1} Rat ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int Rat (HasLiftT.mk.{1, 1} Int Rat (CoeTCₓ.coe.{1, 1} Int Rat (Int.castCoe.{0} Rat Rat.hasIntCast))) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) a b)) (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.hasDiv) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int Rat (HasLiftT.mk.{1, 1} Int Rat (CoeTCₓ.coe.{1, 1} Int Rat (Int.castCoe.{0} Rat Rat.hasIntCast))) a) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int Rat (HasLiftT.mk.{1, 1} Int Rat (CoeTCₓ.coe.{1, 1} Int Rat (Int.castCoe.{0} Rat Rat.hasIntCast))) b)))
 but is expected to have type
-  forall (a : Int) (b : Int), (Dvd.dvd.{0} Int Int.instDvdInt b a) -> (Eq.{1} Rat (Rat.ofInt (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt_1) a b)) (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.instDivRat) (Rat.ofInt a) (Rat.ofInt b)))
+  forall (a : Int) (b : Int), (Dvd.dvd.{0} Int Int.instDvdInt b a) -> (Eq.{1} Rat (Int.cast.{0} Rat Rat.instIntCastRat_1 (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt_1) a b)) (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.instDivRat) (Int.cast.{0} Rat Rat.instIntCastRat_1 a) (Int.cast.{0} Rat Rat.instIntCastRat_1 b)))
 Case conversion may be inaccurate. Consider using '#align rat.coe_int_div Rat.coe_int_divₓ'. -/
 theorem coe_int_div (a b : ℤ) (h : b ∣ a) : ((a / b : ℤ) : ℚ) = a / b :=
   by
@@ -450,7 +450,7 @@ theorem inv_coe_nat_num (a : ℕ) : (a : ℚ)⁻¹.num = Int.sign a :=
 lean 3 declaration is
   forall (a : Int), Eq.{1} Nat (Rat.den (Inv.inv.{0} Rat Rat.hasInv ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int Rat (HasLiftT.mk.{1, 1} Int Rat (CoeTCₓ.coe.{1, 1} Int Rat (Int.castCoe.{0} Rat Rat.hasIntCast))) a))) (ite.{1} Nat (Eq.{1} Int a (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) (Int.decidableEq a (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) (Int.natAbs a))
 but is expected to have type
-  forall (a : Int), Eq.{1} Nat (Rat.den (Inv.inv.{0} Rat Rat.instInvRat (Rat.ofInt a))) (ite.{1} Nat (Eq.{1} Int a (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) (Int.instDecidableEqInt a (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) (Int.natAbs a))
+  forall (a : Int), Eq.{1} Nat (Rat.den (Inv.inv.{0} Rat Rat.instInvRat (Int.cast.{0} Rat Rat.instIntCastRat_1 a))) (ite.{1} Nat (Eq.{1} Int a (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) (Int.instDecidableEqInt a (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) (Int.natAbs a))
 Case conversion may be inaccurate. Consider using '#align rat.inv_coe_int_denom Rat.inv_coe_int_denₓ'. -/
 @[simp]
 theorem inv_coe_int_den (a : ℤ) : (a : ℚ)⁻¹.denom = if a = 0 then 1 else a.natAbs := by

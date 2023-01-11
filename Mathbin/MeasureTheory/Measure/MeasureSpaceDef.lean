@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module measure_theory.measure.measure_space_def
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -603,6 +603,7 @@ theorem measure_mono_ae (H : s ≤ᵐ[μ] t) : μ s ≤ μ t :=
 #align measure_theory.measure_mono_ae MeasureTheory.measure_mono_ae
 
 alias measure_mono_ae ← _root_.filter.eventually_le.measure_le
+#align filter.eventually_le.measure_le Filter.EventuallyLe.measure_le
 
 /-- If two sets are equal modulo a set of measure zero, then `μ s = μ t`. -/
 theorem measure_congr (H : s =ᵐ[μ] t) : μ s = μ t :=
@@ -610,6 +611,7 @@ theorem measure_congr (H : s =ᵐ[μ] t) : μ s = μ t :=
 #align measure_theory.measure_congr MeasureTheory.measure_congr
 
 alias measure_congr ← _root_.filter.eventually_eq.measure_eq
+#align filter.eventually_eq.measure_eq Filter.EventuallyEq.measure_eq
 
 theorem measure_mono_null_ae (H : s ≤ᵐ[μ] t) (ht : μ t = 0) : μ s = 0 :=
   nonpos_iff_eq_zero.1 <| ht ▸ H.measure_le

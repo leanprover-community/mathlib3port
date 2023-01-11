@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Yury Kudriashov, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.convex.segment
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,9 +43,9 @@ section OrderedSemiring
 
 variable [OrderedSemiring 𝕜] [AddCommMonoid E]
 
-section HasSmul
+section SMul
 
-variable (𝕜) [HasSmul 𝕜 E] {s : Set E} {x y : E}
+variable (𝕜) [SMul 𝕜 E] {s : Set E} {x y : E}
 
 /-- Segments in a vector space. -/
 def segment (x y : E) : Set E :=
@@ -103,7 +103,7 @@ theorem open_segment_subset_iff :
     hz ▸ H a b ha hb hab⟩
 #align open_segment_subset_iff open_segment_subset_iff
 
-end HasSmul
+end SMul
 
 open Convex
 

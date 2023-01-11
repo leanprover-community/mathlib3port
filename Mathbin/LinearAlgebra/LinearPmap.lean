@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Moritz Doll
 
 ! This file was ported from Lean 3 source module linear_algebra.linear_pmap
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -383,7 +383,7 @@ variable {M N : Type _} [Monoid M] [DistribMulAction M F] [SMulCommClass R M F]
 
 variable [Monoid N] [DistribMulAction N F] [SMulCommClass R N F]
 
-instance : HasSmul M (E →ₗ.[R] F) :=
+instance : SMul M (E →ₗ.[R] F) :=
   ⟨fun a f =>
     { domain := f.domain
       toFun := a • f.toFun }⟩
@@ -405,7 +405,7 @@ theorem coe_smul (a : M) (f : E →ₗ.[R] F) : ⇑(a • f) = a • f :=
 instance [SMulCommClass M N F] : SMulCommClass M N (E →ₗ.[R] F) :=
   ⟨fun a b f => ext' <| smul_comm a b f.toFun⟩
 
-instance [HasSmul M N] [IsScalarTower M N F] : IsScalarTower M N (E →ₗ.[R] F) :=
+instance [SMul M N] [IsScalarTower M N F] : IsScalarTower M N (E →ₗ.[R] F) :=
   ⟨fun a b f => ext' <| smul_assoc a b f.toFun⟩
 
 instance : MulAction M (E →ₗ.[R] F) where

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module measure_theory.measure.measure_space
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -841,13 +841,13 @@ theorem add_apply {m : MeasurableSpace α} (μ₁ μ₂ : Measure α) (s : Set �
   rfl
 #align measure_theory.measure.add_apply MeasureTheory.Measure.add_apply
 
-section HasSmul
+section SMul
 
-variable [HasSmul R ℝ≥0∞] [IsScalarTower R ℝ≥0∞ ℝ≥0∞]
+variable [SMul R ℝ≥0∞] [IsScalarTower R ℝ≥0∞ ℝ≥0∞]
 
-variable [HasSmul R' ℝ≥0∞] [IsScalarTower R' ℝ≥0∞ ℝ≥0∞]
+variable [SMul R' ℝ≥0∞] [IsScalarTower R' ℝ≥0∞ ℝ≥0∞]
 
-instance [MeasurableSpace α] : HasSmul R (Measure α) :=
+instance [MeasurableSpace α] : SMul R (Measure α) :=
   ⟨fun c μ =>
     { toOuterMeasure := c • μ.toOuterMeasure
       m_Union := fun s hs hd =>
@@ -877,15 +877,15 @@ theorem smul_apply {m : MeasurableSpace α} (c : R) (μ : Measure α) (s : Set �
 instance [SMulCommClass R R' ℝ≥0∞] [MeasurableSpace α] : SMulCommClass R R' (Measure α) :=
   ⟨fun _ _ _ => ext fun _ _ => smul_comm _ _ _⟩
 
-instance [HasSmul R R'] [IsScalarTower R R' ℝ≥0∞] [MeasurableSpace α] :
+instance [SMul R R'] [IsScalarTower R R' ℝ≥0∞] [MeasurableSpace α] :
     IsScalarTower R R' (Measure α) :=
   ⟨fun _ _ _ => ext fun _ _ => smul_assoc _ _ _⟩
 
-instance [HasSmul Rᵐᵒᵖ ℝ≥0∞] [IsCentralScalar R ℝ≥0∞] [MeasurableSpace α] :
+instance [SMul Rᵐᵒᵖ ℝ≥0∞] [IsCentralScalar R ℝ≥0∞] [MeasurableSpace α] :
     IsCentralScalar R (Measure α) :=
   ⟨fun _ _ => ext fun _ _ => op_smul_eq_smul _ _⟩
 
-end HasSmul
+end SMul
 
 instance [Monoid R] [MulAction R ℝ≥0∞] [IsScalarTower R ℝ≥0∞ ℝ≥0∞] [MeasurableSpace α] :
     MulAction R (Measure α) :=
@@ -1927,6 +1927,7 @@ theorem ext_iff_of_Union_eq_univ [Countable ι] {s : ι → Set α} (hs : (⋃ i
   measure_theory.measure.ext_iff_of_Union_eq_univ MeasureTheory.Measure.ext_iff_of_Union_eq_univ
 
 alias ext_iff_of_Union_eq_univ ↔ _ ext_of_Union_eq_univ
+#align measure_theory.measure.ext_of_Union_eq_univ MeasureTheory.Measure.ext_of_Union_eq_univ
 
 /-- Two measures are equal if they have equal restrictions on a spanning collection of sets
   (formulated using `bUnion`). -/
@@ -1937,6 +1938,7 @@ theorem ext_iff_of_bUnion_eq_univ {S : Set ι} {s : ι → Set α} (hc : S.Count
   measure_theory.measure.ext_iff_of_bUnion_eq_univ MeasureTheory.Measure.ext_iff_of_bUnion_eq_univ
 
 alias ext_iff_of_bUnion_eq_univ ↔ _ ext_of_bUnion_eq_univ
+#align measure_theory.measure.ext_of_bUnion_eq_univ MeasureTheory.Measure.ext_of_bUnion_eq_univ
 
 /-- Two measures are equal if they have equal restrictions on a spanning collection of sets
   (formulated using `sUnion`). -/
@@ -1947,6 +1949,7 @@ theorem ext_iff_of_sUnion_eq_univ {S : Set (Set α)} (hc : S.Countable) (hs : �
   measure_theory.measure.ext_iff_of_sUnion_eq_univ MeasureTheory.Measure.ext_iff_of_sUnion_eq_univ
 
 alias ext_iff_of_sUnion_eq_univ ↔ _ ext_of_sUnion_eq_univ
+#align measure_theory.measure.ext_of_sUnion_eq_univ MeasureTheory.Measure.ext_of_sUnion_eq_univ
 
 theorem ext_of_generate_from_of_cover {S T : Set (Set α)} (h_gen : ‹_› = generateFrom S)
     (hc : T.Countable) (h_inter : IsPiSystem S) (hU : ⋃₀ T = univ) (htop : ∀ t ∈ T, μ t ≠ ∞)
@@ -2405,6 +2408,7 @@ theorem absolutelyContinuousOfLe (h : μ ≤ ν) : μ ≪ ν := fun s hs =>
   measure_theory.measure.absolutely_continuous_of_le MeasureTheory.Measure.absolutelyContinuousOfLe
 
 alias absolutely_continuous_of_le ← _root_.has_le.le.absolutely_continuous
+#align has_le.le.absolutely_continuous LE.le.absolutelyContinuous
 
 theorem absolutelyContinuousOfEq (h : μ = ν) : μ ≪ ν :=
   h.le.AbsolutelyContinuous
@@ -2412,6 +2416,7 @@ theorem absolutelyContinuousOfEq (h : μ = ν) : μ ≪ ν :=
   measure_theory.measure.absolutely_continuous_of_eq MeasureTheory.Measure.absolutelyContinuousOfEq
 
 alias absolutely_continuous_of_eq ← _root_.eq.absolutely_continuous
+#align eq.absolutely_continuous Eq.absolutelyContinuous
 
 namespace AbsolutelyContinuous
 
@@ -2467,8 +2472,12 @@ theorem ae_le_iff_absolutely_continuous : μ.ae ≤ ν.ae ↔ μ ≪ ν :=
 
 alias ae_le_iff_absolutely_continuous ↔
   _root_.has_le.le.absolutely_continuous_of_ae absolutely_continuous.ae_le
+#align has_le.le.absolutely_continuous_of_ae LE.le.absolutelyContinuousOfAe
+#align
+  measure_theory.measure.absolutely_continuous.ae_le MeasureTheory.Measure.AbsolutelyContinuous.ae_le
 
 alias absolutely_continuous.ae_le ← ae_mono'
+#align measure_theory.measure.ae_mono' MeasureTheory.Measure.ae_mono'
 
 theorem AbsolutelyContinuous.ae_eq (h : μ ≪ ν) {f g : α → δ} (h' : f =ᵐ[ν] g) : f =ᵐ[μ] g :=
   h.ae_le h'
@@ -3201,9 +3210,9 @@ instance isFiniteMeasureSmulNnreal [IsFiniteMeasure μ] {r : ℝ≥0} : IsFinite
     where measure_univ_lt_top := Ennreal.mul_lt_top Ennreal.coe_ne_top (measure_ne_top _ _)
 #align measure_theory.is_finite_measure_smul_nnreal MeasureTheory.isFiniteMeasureSmulNnreal
 
-instance isFiniteMeasureSmulOfNnrealTower {R} [HasSmul R ℝ≥0] [HasSmul R ℝ≥0∞]
-    [IsScalarTower R ℝ≥0 ℝ≥0∞] [IsScalarTower R ℝ≥0∞ ℝ≥0∞] [IsFiniteMeasure μ] {r : R} :
-    IsFiniteMeasure (r • μ) := by
+instance isFiniteMeasureSmulOfNnrealTower {R} [SMul R ℝ≥0] [SMul R ℝ≥0∞] [IsScalarTower R ℝ≥0 ℝ≥0∞]
+    [IsScalarTower R ℝ≥0∞ ℝ≥0∞] [IsFiniteMeasure μ] {r : R} : IsFiniteMeasure (r • μ) :=
+  by
   rw [← smul_one_smul ℝ≥0 r μ]
   infer_instance
 #align
@@ -4258,6 +4267,8 @@ theorem inf_ae_iff : μ.FiniteAtFilter (f ⊓ μ.ae) ↔ μ.FiniteAtFilter f :=
   measure_theory.measure.finite_at_filter.inf_ae_iff MeasureTheory.Measure.FiniteAtFilter.inf_ae_iff
 
 alias inf_ae_iff ↔ of_inf_ae _
+#align
+  measure_theory.measure.finite_at_filter.of_inf_ae MeasureTheory.Measure.FiniteAtFilter.ofInfAe
 
 theorem filterMonoAe (h : f ⊓ μ.ae ≤ g) (hg : μ.FiniteAtFilter g) : μ.FiniteAtFilter f :=
   inf_ae_iff.1 (hg.filter_mono h)

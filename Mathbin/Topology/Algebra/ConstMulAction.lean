@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Kontorovich, Heather Macbeth
 
 ! This file was ported from Lean 3 source module topology.algebra.const_mul_action
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,8 +55,7 @@ actions, including (semi)modules and algebras.
 
 Note that both `has_continuous_const_smul α α` and `has_continuous_const_smul αᵐᵒᵖ α` are
 weaker versions of `has_continuous_mul α`. -/
-class HasContinuousConstSmul (Γ : Type _) (T : Type _) [TopologicalSpace T] [HasSmul Γ T] :
-  Prop where
+class HasContinuousConstSmul (Γ : Type _) (T : Type _) [TopologicalSpace T] [SMul Γ T] : Prop where
   continuous_const_smul : ∀ γ : Γ, Continuous fun x : T => γ • x
 #align has_continuous_const_smul HasContinuousConstSmul
 
@@ -78,9 +77,9 @@ export HasContinuousConstVadd (continuous_const_vadd)
 
 variable {M α β : Type _}
 
-section HasSmul
+section SMul
 
-variable [TopologicalSpace α] [HasSmul M α] [HasContinuousConstSmul M α]
+variable [TopologicalSpace α] [SMul M α] [HasContinuousConstSmul M α]
 
 @[to_additive]
 theorem Filter.Tendsto.const_smul {f : β → α} {l : Filter β} {a : α} (hf : Tendsto f l (𝓝 a))
@@ -115,7 +114,7 @@ theorem Continuous.const_smul (hg : Continuous g) (c : M) : Continuous fun x => 
 /-- If a scalar is central, then its right action is continuous when its left action is. -/
 @[to_additive
       "If an additive action is central, then its right action is continuous when its left\naction is."]
-instance HasContinuousConstSmul.op [HasSmul Mᵐᵒᵖ α] [IsCentralScalar M α] :
+instance HasContinuousConstSmul.op [SMul Mᵐᵒᵖ α] [IsCentralScalar M α] :
     HasContinuousConstSmul Mᵐᵒᵖ α :=
   ⟨MulOpposite.rec' fun c => by simpa only [op_smul_eq_smul] using continuous_const_smul c⟩
 #align has_continuous_const_smul.op HasContinuousConstSmul.op
@@ -135,21 +134,21 @@ instance OrderDual.has_continuous_const_smul' : HasContinuousConstSmul Mᵒᵈ �
 #align order_dual.has_continuous_const_smul' OrderDual.has_continuous_const_smul'
 
 @[to_additive]
-instance [HasSmul M β] [HasContinuousConstSmul M β] : HasContinuousConstSmul M (α × β) :=
+instance [SMul M β] [HasContinuousConstSmul M β] : HasContinuousConstSmul M (α × β) :=
   ⟨fun _ => (continuous_fst.const_smul _).prod_mk (continuous_snd.const_smul _)⟩
 
 @[to_additive]
-instance {ι : Type _} {γ : ι → Type _} [∀ i, TopologicalSpace (γ i)] [∀ i, HasSmul M (γ i)]
+instance {ι : Type _} {γ : ι → Type _} [∀ i, TopologicalSpace (γ i)] [∀ i, SMul M (γ i)]
     [∀ i, HasContinuousConstSmul M (γ i)] : HasContinuousConstSmul M (∀ i, γ i) :=
   ⟨fun _ => continuous_pi fun i => (continuous_apply i).const_smul _⟩
 
 @[to_additive]
-theorem IsCompact.smul {α β} [HasSmul α β] [TopologicalSpace β] [HasContinuousConstSmul α β] (a : α)
+theorem IsCompact.smul {α β} [SMul α β] [TopologicalSpace β] [HasContinuousConstSmul α β] (a : α)
     {s : Set β} (hs : IsCompact s) : IsCompact (a • s) :=
   hs.image (continuous_id'.const_smul a)
 #align is_compact.smul IsCompact.smul
 
-end HasSmul
+end SMul
 
 section Monoid
 
@@ -419,7 +418,7 @@ end IsUnit
 is properly discontinuous, that is, for any pair of compact sets `K, L` in `T`, only finitely many
 `γ:Γ` move `K` to have nontrivial intersection with `L`.
 -/
-class ProperlyDiscontinuousSmul (Γ : Type _) (T : Type _) [TopologicalSpace T] [HasSmul Γ T] :
+class ProperlyDiscontinuousSmul (Γ : Type _) (T : Type _) [TopologicalSpace T] [SMul Γ T] :
   Prop where
   finite_disjoint_inter_image :
     ∀ {K L : Set T}, IsCompact K → IsCompact L → Set.Finite { γ : Γ | (· • ·) γ '' K ∩ L ≠ ∅ }

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Floris van Doorn
 
 ! This file was ported from Lean 3 source module geometry.manifold.cont_mdiff
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1367,6 +1367,8 @@ theorem cont_mdiff_within_at_iff_cont_diff_within_at {f : E → E'} {s : Set E} 
 
 alias cont_mdiff_within_at_iff_cont_diff_within_at ↔
   ContMdiffWithinAt.cont_diff_within_at ContDiffWithinAt.cont_mdiff_within_at
+#align cont_mdiff_within_at.cont_diff_within_at ContMdiffWithinAt.cont_diff_within_at
+#align cont_diff_within_at.cont_mdiff_within_at ContDiffWithinAt.cont_mdiff_within_at
 
 theorem cont_mdiff_at_iff_cont_diff_at {f : E → E'} {x : E} :
     ContMdiffAt 𝓘(𝕜, E) 𝓘(𝕜, E') n f x ↔ ContDiffAt 𝕜 n f x := by
@@ -1375,6 +1377,8 @@ theorem cont_mdiff_at_iff_cont_diff_at {f : E → E'} {x : E} :
 #align cont_mdiff_at_iff_cont_diff_at cont_mdiff_at_iff_cont_diff_at
 
 alias cont_mdiff_at_iff_cont_diff_at ↔ ContMdiffAt.cont_diff_at ContDiffAt.cont_mdiff_at
+#align cont_mdiff_at.cont_diff_at ContMdiffAt.cont_diff_at
+#align cont_diff_at.cont_mdiff_at ContDiffAt.cont_mdiff_at
 
 theorem cont_mdiff_on_iff_cont_diff_on {f : E → E'} {s : Set E} :
     ContMdiffOn 𝓘(𝕜, E) 𝓘(𝕜, E') n f s ↔ ContDiffOn 𝕜 n f s :=
@@ -1382,12 +1386,16 @@ theorem cont_mdiff_on_iff_cont_diff_on {f : E → E'} {s : Set E} :
 #align cont_mdiff_on_iff_cont_diff_on cont_mdiff_on_iff_cont_diff_on
 
 alias cont_mdiff_on_iff_cont_diff_on ↔ ContMdiffOn.cont_diff_on ContDiffOn.cont_mdiff_on
+#align cont_mdiff_on.cont_diff_on ContMdiffOn.cont_diff_on
+#align cont_diff_on.cont_mdiff_on ContDiffOn.cont_mdiff_on
 
 theorem cont_mdiff_iff_cont_diff {f : E → E'} : ContMdiff 𝓘(𝕜, E) 𝓘(𝕜, E') n f ↔ ContDiff 𝕜 n f :=
   by rw [← cont_diff_on_univ, ← cont_mdiff_on_univ, cont_mdiff_on_iff_cont_diff_on]
 #align cont_mdiff_iff_cont_diff cont_mdiff_iff_cont_diff
 
 alias cont_mdiff_iff_cont_diff ↔ ContMdiff.cont_diff ContDiff.cont_mdiff
+#align cont_mdiff.cont_diff ContMdiff.cont_diff
+#align cont_diff.cont_mdiff ContDiff.cont_mdiff
 
 theorem ContDiffWithinAt.comp_cont_mdiff_within_at {g : F → F'} {f : M → F} {s : Set M} {t : Set F}
     {x : M} (hg : ContDiffWithinAt 𝕜 n g t (f x)) (hf : ContMdiffWithinAt I 𝓘(𝕜, F) n f s x)

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.subset_properties
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -179,6 +179,7 @@ theorem is_compact_iff_ultrafilter_le_nhds :
 #align is_compact_iff_ultrafilter_le_nhds is_compact_iff_ultrafilter_le_nhds
 
 alias is_compact_iff_ultrafilter_le_nhds ↔ IsCompact.ultrafilter_le_nhds _
+#align is_compact.ultrafilter_le_nhds IsCompact.ultrafilter_le_nhds
 
 /-- For every open directed cover of a compact set, there exists a single element of the
 cover which itself includes the set. -/
@@ -1641,6 +1642,7 @@ theorem is_clopen_iff_frontier_eq_empty {s : Set α} : IsClopen s ↔ frontier s
 #align is_clopen_iff_frontier_eq_empty is_clopen_iff_frontier_eq_empty
 
 alias is_clopen_iff_frontier_eq_empty ↔ IsClopen.frontier_eq _
+#align is_clopen.frontier_eq IsClopen.frontier_eq
 
 theorem IsClopen.union {s t : Set α} (hs : IsClopen s) (ht : IsClopen t) : IsClopen (s ∪ t) :=
   ⟨hs.1.union ht.1, hs.2.union ht.2⟩
@@ -1816,8 +1818,10 @@ theorem is_irreducible_iff_closure {s : Set α} : IsIrreducible (closure s) ↔ 
 #align is_irreducible_iff_closure is_irreducible_iff_closure
 
 alias is_preirreducible_iff_closure ↔ _ IsPreirreducible.closure
+#align is_preirreducible.closure IsPreirreducible.closure
 
 alias is_irreducible_iff_closure ↔ _ IsIrreducible.closure
+#align is_irreducible.closure IsIrreducible.closure
 
 theorem exists_preirreducible (s : Set α) (H : IsPreirreducible s) :
     ∃ t : Set α, IsPreirreducible t ∧ s ⊆ t ∧ ∀ u, IsPreirreducible u → t ⊆ u → u = t :=

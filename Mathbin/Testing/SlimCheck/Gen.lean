@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module testing.slim_check.gen
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -155,7 +155,7 @@ open ULift
 lean 3 declaration is
   forall {α : Type.{u}} (xs : List.{u} (SlimCheck.Gen.{u} α)), (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) (List.length.{u} (SlimCheck.Gen.{u} α) xs)) -> (SlimCheck.Gen.{u} α)
 but is expected to have type
-  forall {α : Type} (xs : Array.{0} (SlimCheck.Gen.{0} α)), (autoParam.{0} (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (Array.size.{0} (SlimCheck.Gen.{0} α) xs)) _auto._@.Mathlib.Testing.SlimCheck.Gen._hyg.562) -> (SlimCheck.Gen.{0} α)
+  forall {α : Type} (xs : Array.{0} (SlimCheck.Gen.{0} α)), (autoParam.{0} (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (Array.size.{0} (SlimCheck.Gen.{0} α) xs)) _auto._@.Mathlib.Testing.SlimCheck.Gen._hyg.565) -> (SlimCheck.Gen.{0} α)
 Case conversion may be inaccurate. Consider using '#align slim_check.gen.one_of SlimCheck.Gen.oneOfₓ'. -/
 /-- Given a list of example generators, choose one to create an example. -/
 def oneOf (xs : List (Gen α)) (pos : 0 < xs.length) : Gen α := do

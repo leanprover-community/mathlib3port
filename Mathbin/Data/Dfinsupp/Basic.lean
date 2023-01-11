@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Kenny Lau
 
 ! This file was ported from Lean 3 source module data.dfinsupp.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -250,7 +250,7 @@ instance [∀ i, AddZeroClass (β i)] : AddZeroClass (Π₀ i, β i) :=
 
 /-- Note the general `dfinsupp.has_smul` instance doesn't apply as `ℕ` is not distributive
 unless `β i`'s addition is commutative. -/
-instance hasNatScalar [∀ i, AddMonoid (β i)] : HasSmul ℕ (Π₀ i, β i) :=
+instance hasNatScalar [∀ i, AddMonoid (β i)] : SMul ℕ (Π₀ i, β i) :=
   ⟨fun c v => v.mapRange (fun _ => (· • ·) c) fun _ => nsmul_zero _⟩
 #align dfinsupp.has_nat_scalar Dfinsupp.hasNatScalar
 
@@ -321,7 +321,7 @@ theorem coe_sub [∀ i, AddGroup (β i)] (g₁ g₂ : Π₀ i, β i) : ⇑(g₁ 
 
 /-- Note the general `dfinsupp.has_smul` instance doesn't apply as `ℤ` is not distributive
 unless `β i`'s addition is commutative. -/
-instance hasIntScalar [∀ i, AddGroup (β i)] : HasSmul ℤ (Π₀ i, β i) :=
+instance hasIntScalar [∀ i, AddGroup (β i)] : SMul ℤ (Π₀ i, β i) :=
   ⟨fun c v => v.mapRange (fun _ => (· • ·) c) fun _ => zsmul_zero _⟩
 #align dfinsupp.has_int_scalar Dfinsupp.hasIntScalar
 
@@ -344,8 +344,7 @@ instance [∀ i, AddCommGroup (β i)] : AddCommGroup (Π₀ i, β i) :=
 
 /-- Dependent functions with finite support inherit a semiring action from an action on each
 coordinate. -/
-instance [Monoid γ] [∀ i, AddMonoid (β i)] [∀ i, DistribMulAction γ (β i)] :
-    HasSmul γ (Π₀ i, β i) :=
+instance [Monoid γ] [∀ i, AddMonoid (β i)] [∀ i, DistribMulAction γ (β i)] : SMul γ (Π₀ i, β i) :=
   ⟨fun c v => v.mapRange (fun _ => (· • ·) c) fun _ => smul_zero _⟩
 
 theorem smul_apply [Monoid γ] [∀ i, AddMonoid (β i)] [∀ i, DistribMulAction γ (β i)] (b : γ)
@@ -364,7 +363,7 @@ instance {δ : Type _} [Monoid γ] [Monoid δ] [∀ i, AddMonoid (β i)] [∀ i,
     where smul_comm r s m := ext fun i => by simp only [smul_apply, smul_comm r s (m i)]
 
 instance {δ : Type _} [Monoid γ] [Monoid δ] [∀ i, AddMonoid (β i)] [∀ i, DistribMulAction γ (β i)]
-    [∀ i, DistribMulAction δ (β i)] [HasSmul γ δ] [∀ i, IsScalarTower γ δ (β i)] :
+    [∀ i, DistribMulAction δ (β i)] [SMul γ δ] [∀ i, IsScalarTower γ δ (β i)] :
     IsScalarTower γ δ (Π₀ i, β i)
     where smul_assoc r s m := ext fun i => by simp only [smul_apply, smul_assoc r s (m i)]
 

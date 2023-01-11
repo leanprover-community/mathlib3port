@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jake Levinson
 
 ! This file was ported from Lean 3 source module combinatorics.young.young_diagram
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -419,7 +419,7 @@ def rowLens (μ : YoungDiagram) : List ℕ :=
 
 @[simp]
 theorem nth_le_row_lens {μ : YoungDiagram} {i : ℕ} {hi : i < μ.rowLens.length} :
-    μ.rowLens.nthLe i hi = μ.rowLen i := by simp only [row_lens, List.nth_le_range, List.nthLe_map']
+    μ.rowLens.nthLe i hi = μ.rowLen i := by simp only [row_lens, List.nthLe_range, List.nthLe_map']
 #align young_diagram.nth_le_row_lens YoungDiagram.nth_le_row_lens
 
 @[simp]

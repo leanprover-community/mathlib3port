@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathaniel Thomas, Jeremy Avigad, Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.module.submodule.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,7 +38,7 @@ universe u'' u' u v w
 variable {G : Type u''} {S : Type u'} {R : Type u} {M : Type v} {ι : Type w}
 
 /-- `submodule_class S R M` says `S` is a type of submodules `s ≤ M`. -/
-class SubmoduleClass (S : Type _) (R M : outParam <| Type _) [AddZeroClass M] [HasSmul R M]
+class SubmoduleClass (S : Type _) (R M : outParam <| Type _) [AddZeroClass M] [SMul R M]
   [SetLike S M] [AddSubmonoidClass S M] extends SmulMemClass S R M
 #align submodule_class SubmoduleClass
 
@@ -232,7 +232,7 @@ theorem smul_mem (r : R) (h : x ∈ p) : r • x ∈ p :=
   p.smul_mem' r h
 #align submodule.smul_mem Submodule.smul_mem
 
-theorem smul_of_tower_mem [HasSmul S R] [HasSmul S M] [IsScalarTower S R M] (r : S) (h : x ∈ p) :
+theorem smul_of_tower_mem [SMul S R] [SMul S M] [IsScalarTower S R M] (r : S) (h : x ∈ p) :
     r • x ∈ p :=
   p.toSubMulAction.smul_of_tower_mem r h
 #align submodule.smul_of_tower_mem Submodule.smul_of_tower_mem
@@ -247,7 +247,7 @@ theorem sum_smul_mem {t : Finset ι} {f : ι → M} (r : ι → R) (hyp : ∀ c 
 #align submodule.sum_smul_mem Submodule.sum_smul_mem
 
 @[simp]
-theorem smul_mem_iff' [Group G] [MulAction G M] [HasSmul G R] [IsScalarTower G R M] (g : G) :
+theorem smul_mem_iff' [Group G] [MulAction G M] [SMul G R] [IsScalarTower G R M] (g : G) :
     g • x ∈ p ↔ x ∈ p :=
   p.toSubMulAction.smul_mem_iff' g
 #align submodule.smul_mem_iff' Submodule.smul_mem_iff'
@@ -261,19 +261,18 @@ instance : Zero p :=
 instance : Inhabited p :=
   ⟨0⟩
 
-instance [HasSmul S R] [HasSmul S M] [IsScalarTower S R M] : HasSmul S p :=
+instance [SMul S R] [SMul S M] [IsScalarTower S R M] : SMul S p :=
   ⟨fun c x => ⟨c • x.1, smul_of_tower_mem _ c x.2⟩⟩
 
-instance [HasSmul S R] [HasSmul S M] [IsScalarTower S R M] : IsScalarTower S R p :=
+instance [SMul S R] [SMul S M] [IsScalarTower S R M] : IsScalarTower S R p :=
   p.toSubMulAction.IsScalarTower
 
-instance is_scalar_tower' {S' : Type _} [HasSmul S R] [HasSmul S M] [HasSmul S' R] [HasSmul S' M]
-    [HasSmul S S'] [IsScalarTower S' R M] [IsScalarTower S S' M] [IsScalarTower S R M] :
-    IsScalarTower S S' p :=
+instance is_scalar_tower' {S' : Type _} [SMul S R] [SMul S M] [SMul S' R] [SMul S' M] [SMul S S']
+    [IsScalarTower S' R M] [IsScalarTower S S' M] [IsScalarTower S R M] : IsScalarTower S S' p :=
   p.toSubMulAction.isScalarTower'
 #align submodule.is_scalar_tower' Submodule.is_scalar_tower'
 
-instance [HasSmul S R] [HasSmul S M] [IsScalarTower S R M] [HasSmul Sᵐᵒᵖ R] [HasSmul Sᵐᵒᵖ M]
+instance [SMul S R] [SMul S M] [IsScalarTower S R M] [SMul Sᵐᵒᵖ R] [SMul Sᵐᵒᵖ M]
     [IsScalarTower Sᵐᵒᵖ R M] [IsCentralScalar S M] : IsCentralScalar S p :=
   p.toSubMulAction.IsCentralScalar
 
@@ -309,7 +308,7 @@ theorem coe_smul (r : R) (x : p) : ((r • x : p) : M) = r • ↑x :=
 #align submodule.coe_smul Submodule.coe_smul
 
 @[simp, norm_cast]
-theorem coe_smul_of_tower [HasSmul S R] [HasSmul S M] [IsScalarTower S R M] (r : S) (x : p) :
+theorem coe_smul_of_tower [SMul S R] [SMul S M] [IsScalarTower S R M] (r : S) (x : p) :
     ((r • x : p) : M) = r • ↑x :=
   rfl
 #align submodule.coe_smul_of_tower Submodule.coe_smul_of_tower
@@ -331,7 +330,7 @@ instance : AddCommMonoid p :=
     add := (· + ·)
     zero := 0 }
 
-instance module' [Semiring S] [HasSmul S R] [Module S M] [IsScalarTower S R M] : Module S p := by
+instance module' [Semiring S] [SMul S R] [Module S M] [IsScalarTower S R M] : Module S p := by
   refine' { p.to_sub_mul_action.mul_action' with smul := (· • ·).. } <;>
     · intros
       apply SetCoe.ext
@@ -372,7 +371,7 @@ theorem coe_sum (x : ι → p) (s : Finset ι) : ↑(∑ i in s, x i) = ∑ i in
 
 section RestrictScalars
 
-variable (S) [Semiring S] [Module S M] [Module R M] [HasSmul S R] [IsScalarTower S R M]
+variable (S) [Semiring S] [Module S M] [Module R M] [SMul S R] [IsScalarTower S R M]
 
 /-- `V.restrict_scalars S` is the `S`-submodule of the `S`-module given by restriction of scalars,
 corresponding to `V`, an `R`-submodule of the original `R`-module.
@@ -625,7 +624,7 @@ namespace Submodule
 
 variable [DivisionRing S] [Semiring R] [AddCommMonoid M] [Module R M]
 
-variable [HasSmul S R] [Module S M] [IsScalarTower S R M]
+variable [SMul S R] [Module S M] [IsScalarTower S R M]
 
 variable (p : Submodule R M) {s : S} {x y : M}
 

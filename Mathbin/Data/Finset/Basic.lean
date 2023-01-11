@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Jeremy Avigad, Minchao Wu, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.finset.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -489,8 +489,10 @@ theorem nonempty_coe_sort {s : Finset α} : Nonempty ↥s ↔ s.Nonempty :=
 #align finset.nonempty_coe_sort Finset.nonempty_coe_sort
 
 alias coe_nonempty ↔ _ nonempty.to_set
+#align finset.nonempty.to_set Finset.Nonempty.to_set
 
 alias nonempty_coe_sort ↔ _ nonempty.coe_sort
+#align finset.nonempty.coe_sort Finset.Nonempty.coe_sort
 
 theorem Nonempty.bex {s : Finset α} (h : s.Nonempty) : ∃ x : α, x ∈ s :=
   h
@@ -640,6 +642,7 @@ theorem empty_ssubset : ∅ ⊂ s ↔ s.Nonempty :=
 #align finset.empty_ssubset Finset.empty_ssubset
 
 alias empty_ssubset ↔ _ nonempty.empty_ssubset
+#align finset.nonempty.empty_ssubset Finset.Nonempty.empty_ssubset
 
 end Empty
 
@@ -741,6 +744,7 @@ theorem nonempty_iff_eq_singleton_default [Unique α] {s : Finset α} : s.Nonemp
 #align finset.nonempty_iff_eq_singleton_default Finset.nonempty_iff_eq_singleton_default
 
 alias nonempty_iff_eq_singleton_default ↔ nonempty.eq_singleton_default _
+#align finset.nonempty.eq_singleton_default Finset.Nonempty.eq_singleton_default
 
 theorem singleton_iff_unique_mem (s : Finset α) : (∃ a, s = {a}) ↔ ∃! a, a ∈ s := by
   simp only [eq_singleton_iff_unique_mem, ExistsUnique]
@@ -1826,6 +1830,7 @@ theorem not_disjoint_iff_nonempty_inter : ¬Disjoint s t ↔ (s ∩ t).Nonempty 
 #align finset.not_disjoint_iff_nonempty_inter Finset.not_disjoint_iff_nonempty_inter
 
 alias not_disjoint_iff_nonempty_inter ↔ _ nonempty.not_disjoint
+#align finset.nonempty.not_disjoint Finset.Nonempty.not_disjoint
 
 theorem disjoint_or_nonempty_inter (s t : Finset α) : Disjoint s t ∨ (s ∩ t).Nonempty :=
   by

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp
 
 ! This file was ported from Lean 3 source module data.holor
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -146,7 +146,7 @@ instance [AddCommGroup α] : AddCommGroup (Holor α ds) := by
     pi_instance_derive_field
 
 -- scalar product
-instance [Mul α] : HasSmul α (Holor α ds) :=
+instance [Mul α] : SMul α (Holor α ds) :=
   ⟨fun a x => fun t => a * x t⟩
 
 instance [Semiring α] : Module α (Holor α ds) :=
@@ -212,7 +212,7 @@ theorem mul_zero {α : Type} [Ring α] (x : Holor α ds₁) : x ⊗ (0 : Holor �
 #align holor.mul_zero Holor.mul_zero
 
 theorem mul_scalar_mul [Monoid α] (x : Holor α []) (y : Holor α ds) :
-    x ⊗ y = x ⟨[], Forall₂.nil⟩ • y := by simp [mul, HasSmul.smul, HolorIndex.take, HolorIndex.drop]
+    x ⊗ y = x ⟨[], Forall₂.nil⟩ • y := by simp [mul, SMul.smul, HolorIndex.take, HolorIndex.drop]
 #align holor.mul_scalar_mul Holor.mul_scalar_mul
 
 -- holor slices

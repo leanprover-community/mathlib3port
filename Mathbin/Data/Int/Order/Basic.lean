@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.int.order.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -730,7 +730,7 @@ theorem dvd_natAbs {a b : ℤ} : a ∣ b.natAbs ↔ a ∣ b :=
 lean 3 declaration is
   DecidableRel.{1} Int (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup))
 but is expected to have type
-  DecidableRel.{1} Int (fun (x._@.Std.Data.Int.DivMod._hyg.13490 : Int) (x._@.Std.Data.Int.DivMod._hyg.13492 : Int) => Dvd.dvd.{0} Int Int.instDvdInt x._@.Std.Data.Int.DivMod._hyg.13490 x._@.Std.Data.Int.DivMod._hyg.13492)
+  DecidableRel.{1} Int (fun (x._@.Std.Data.Int.DivMod._hyg.13550 : Int) (x._@.Std.Data.Int.DivMod._hyg.13552 : Int) => Dvd.dvd.{0} Int Int.instDvdInt x._@.Std.Data.Int.DivMod._hyg.13550 x._@.Std.Data.Int.DivMod._hyg.13552)
 Case conversion may be inaccurate. Consider using '#align int.decidable_dvd Int.decidableDvdₓ'. -/
 instance decidableDvd : @DecidableRel ℤ (· ∣ ·) := fun a n =>
   decidable_of_decidable_of_iff (by infer_instance) (dvd_iff_emod_eq_zero _ _).symm

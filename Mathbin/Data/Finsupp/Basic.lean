@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Scott Morrison
 
 ! This file was ported from Lean 3 source module data.finsupp.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -182,6 +182,7 @@ def lookupFinsupp (l : Alist fun x : α => M) : α →₀ M
 #align alist.lookup_finsupp Alist.lookupFinsupp
 
 alias lookup_finsupp_to_fun ← lookup_finsupp_apply
+#align alist.lookup_finsupp_apply Alist.lookup_finsupp_apply
 
 theorem lookup_finsupp_eq_iff_of_ne_zero {l : Alist fun x : α => M} {a : α} {x : M} (hx : x ≠ 0) :
     l.lookupFinsupp a = x ↔ x ∈ l.lookup a :=
@@ -1507,7 +1508,7 @@ variable [Monoid G] [MulAction G α] [AddCommMonoid M]
 
 This is not an instance as it would conflict with the action on the range.
 See the `instance_diamonds` test for examples of such conflicts. -/
-def comapHasSmul : HasSmul G (α →₀ M) where smul g := mapDomain ((· • ·) g)
+def comapHasSmul : SMul G (α →₀ M) where smul g := mapDomain ((· • ·) g)
 #align finsupp.comap_has_smul Finsupp.comapHasSmul
 
 attribute [local instance] comap_has_smul
@@ -1612,7 +1613,7 @@ instance [Monoid R] [AddMonoid M] [DistribMulAction R M] : DistribMulAction R (�
     mul_smul := fun r s x => ext fun _ => mul_smul _ _ _ }
 
 instance [Monoid R] [Monoid S] [AddMonoid M] [DistribMulAction R M] [DistribMulAction S M]
-    [HasSmul R S] [IsScalarTower R S M] : IsScalarTower R S (α →₀ M)
+    [SMul R S] [IsScalarTower R S M] : IsScalarTower R S (α →₀ M)
     where smul_assoc r s a := ext fun _ => smul_assoc _ _ _
 
 instance [Monoid R] [Monoid S] [AddMonoid M] [DistribMulAction R M] [DistribMulAction S M]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Nicolò Cavalleri
 
 ! This file was ported from Lean 3 source module topology.continuous_function.algebra
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -100,7 +100,7 @@ theorem coe_int_cast [IntCast β] (n : ℤ) : ((n : C(α, β)) : α → β) = n 
   rfl
 #align continuous_map.coe_int_cast ContinuousMap.coe_int_cast
 
-instance hasNsmul [AddMonoid β] [HasContinuousAdd β] : HasSmul ℕ C(α, β) :=
+instance hasNsmul [AddMonoid β] [HasContinuousAdd β] : SMul ℕ C(α, β) :=
   ⟨fun n f => ⟨n • f, f.Continuous.nsmul n⟩⟩
 #align continuous_map.has_nsmul ContinuousMap.hasNsmul
 
@@ -155,7 +155,7 @@ theorem div_comp [Div γ] [HasContinuousDiv γ] (f g : C(β, γ)) (h : C(α, β)
   rfl
 #align continuous_map.div_comp ContinuousMap.div_comp
 
-instance hasZsmul [AddGroup β] [TopologicalAddGroup β] : HasSmul ℤ C(α, β)
+instance hasZsmul [AddGroup β] [TopologicalAddGroup β] : SMul ℤ C(α, β)
     where smul z f := ⟨z • f, f.Continuous.zsmul z⟩
 #align continuous_map.has_zsmul ContinuousMap.hasZsmul
 
@@ -500,16 +500,16 @@ variable {α β : Type _} [TopologicalSpace α] [TopologicalSpace β] {R R₁ : 
   [TopologicalSpace M] {M₂ : Type _} [TopologicalSpace M₂]
 
 @[to_additive ContinuousMap.hasVadd]
-instance [HasSmul R M] [HasContinuousConstSmul R M] : HasSmul R C(α, M) :=
+instance [SMul R M] [HasContinuousConstSmul R M] : SMul R C(α, M) :=
   ⟨fun r f => ⟨r • f, f.Continuous.const_smul r⟩⟩
 
 @[to_additive]
-instance [LocallyCompactSpace α] [HasSmul R M] [HasContinuousConstSmul R M] :
+instance [LocallyCompactSpace α] [SMul R M] [HasContinuousConstSmul R M] :
     HasContinuousConstSmul R C(α, M) :=
   ⟨fun γ => continuous_of_continuous_uncurry _ (continuous_eval'.const_smul γ)⟩
 
 @[to_additive]
-instance [LocallyCompactSpace α] [TopologicalSpace R] [HasSmul R M] [HasContinuousSmul R M] :
+instance [LocallyCompactSpace α] [TopologicalSpace R] [SMul R M] [HasContinuousSmul R M] :
     HasContinuousSmul R C(α, M) :=
   ⟨by
     refine' continuous_of_continuous_uncurry _ _
@@ -518,33 +518,32 @@ instance [LocallyCompactSpace α] [TopologicalSpace R] [HasSmul R M] [HasContinu
     exact (continuous_fst.comp continuous_fst).smul h⟩
 
 @[simp, norm_cast, to_additive]
-theorem coe_smul [HasSmul R M] [HasContinuousConstSmul R M] (c : R) (f : C(α, M)) :
-    ⇑(c • f) = c • f :=
+theorem coe_smul [SMul R M] [HasContinuousConstSmul R M] (c : R) (f : C(α, M)) : ⇑(c • f) = c • f :=
   rfl
 #align continuous_map.coe_smul ContinuousMap.coe_smul
 
 @[to_additive]
-theorem smul_apply [HasSmul R M] [HasContinuousConstSmul R M] (c : R) (f : C(α, M)) (a : α) :
+theorem smul_apply [SMul R M] [HasContinuousConstSmul R M] (c : R) (f : C(α, M)) (a : α) :
     (c • f) a = c • f a :=
   rfl
 #align continuous_map.smul_apply ContinuousMap.smul_apply
 
 @[simp, to_additive]
-theorem smul_comp [HasSmul R M] [HasContinuousConstSmul R M] (r : R) (f : C(β, M)) (g : C(α, β)) :
+theorem smul_comp [SMul R M] [HasContinuousConstSmul R M] (r : R) (f : C(β, M)) (g : C(α, β)) :
     (r • f).comp g = r • f.comp g :=
   rfl
 #align continuous_map.smul_comp ContinuousMap.smul_comp
 
 @[to_additive]
-instance [HasSmul R M] [HasContinuousConstSmul R M] [HasSmul R₁ M] [HasContinuousConstSmul R₁ M]
+instance [SMul R M] [HasContinuousConstSmul R M] [SMul R₁ M] [HasContinuousConstSmul R₁ M]
     [SMulCommClass R R₁ M] : SMulCommClass R R₁ C(α, M)
     where smul_comm _ _ _ := ext fun _ => smul_comm _ _ _
 
-instance [HasSmul R M] [HasContinuousConstSmul R M] [HasSmul R₁ M] [HasContinuousConstSmul R₁ M]
-    [HasSmul R R₁] [IsScalarTower R R₁ M] : IsScalarTower R R₁ C(α, M)
+instance [SMul R M] [HasContinuousConstSmul R M] [SMul R₁ M] [HasContinuousConstSmul R₁ M]
+    [SMul R R₁] [IsScalarTower R R₁ M] : IsScalarTower R R₁ C(α, M)
     where smul_assoc _ _ _ := ext fun _ => smul_assoc _ _ _
 
-instance [HasSmul R M] [HasSmul Rᵐᵒᵖ M] [HasContinuousConstSmul R M] [IsCentralScalar R M] :
+instance [SMul R M] [SMul Rᵐᵒᵖ M] [HasContinuousConstSmul R M] [IsCentralScalar R M] :
     IsCentralScalar R C(α, M) where op_smul_eq_smul _ _ := ext fun _ => op_smul_eq_smul _ _
 
 instance [Monoid R] [MulAction R M] [HasContinuousConstSmul R M] : MulAction R C(α, M) :=
@@ -804,7 +803,7 @@ namespace ContinuousMap
 
 instance hasSmul' {α : Type _} [TopologicalSpace α] {R : Type _} [Semiring R] [TopologicalSpace R]
     {M : Type _} [TopologicalSpace M] [AddCommMonoid M] [Module R M] [HasContinuousSmul R M] :
-    HasSmul C(α, R) C(α, M) :=
+    SMul C(α, R) C(α, M) :=
   ⟨fun f g => ⟨fun x => f x • g x, Continuous.smul f.2 g.2⟩⟩
 #align continuous_map.has_smul' ContinuousMap.hasSmul'
 
@@ -921,7 +920,7 @@ instance [NonUnitalSemiring β] [TopologicalSemiring β] [StarRing β] [HasConti
     StarRing C(α, β) :=
   { ContinuousMap.starAddMonoid with }
 
-instance [Star R] [Star β] [HasSmul R β] [StarModule R β] [HasContinuousStar β]
+instance [Star R] [Star β] [SMul R β] [StarModule R β] [HasContinuousStar β]
     [HasContinuousConstSmul R β] : StarModule R C(α, β)
     where star_smul k f := ext fun x => star_smul _ _
 

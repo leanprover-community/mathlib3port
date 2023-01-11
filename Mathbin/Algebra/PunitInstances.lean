@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module algebra.punit_instances
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,27 +40,35 @@ instance : CommGroup PUnit := by
       intros <;>
     exact Subsingleton.elim _ _
 
+#print PUnit.one_eq /-
 @[simp, to_additive]
 theorem one_eq : (1 : PUnit) = star :=
   rfl
 #align punit.one_eq PUnit.one_eq
+-/
 
+#print PUnit.mul_eq /-
 @[simp, to_additive]
 theorem mul_eq : x * y = star :=
   rfl
 #align punit.mul_eq PUnit.mul_eq
+-/
 
+#print PUnit.div_eq /-
 -- `sub_eq` simplifies `punit.sub_eq`, but the latter is eligible for `dsimp`
 @[simp, nolint simp_nf, to_additive]
 theorem div_eq : x / y = star :=
   rfl
 #align punit.div_eq PUnit.div_eq
+-/
 
+#print PUnit.inv_eq /-
 -- `neg_eq` simplifies `punit.neg_eq`, but the latter is eligible for `dsimp`
 @[simp, nolint simp_nf, to_additive]
 theorem inv_eq : x⁻¹ = star :=
   rfl
 #align punit.inv_eq PUnit.inv_eq
+-/
 
 instance : CommRing PUnit := by
   refine' { PUnit.commGroup, PUnit.addCommGroup with natCast := fun _ => PUnit.unit.. } <;>
@@ -82,20 +90,26 @@ instance : NormalizedGCDMonoid PUnit := by
       intros <;>
     exact Subsingleton.elim _ _
 
+#print PUnit.gcd_eq /-
 @[simp]
 theorem gcd_eq : gcd x y = star :=
   rfl
 #align punit.gcd_eq PUnit.gcd_eq
+-/
 
+#print PUnit.lcm_eq /-
 @[simp]
 theorem lcm_eq : lcm x y = star :=
   rfl
 #align punit.lcm_eq PUnit.lcm_eq
+-/
 
+#print PUnit.norm_unit_eq /-
 @[simp]
 theorem norm_unit_eq : normUnit x = 1 :=
   rfl
 #align punit.norm_unit_eq PUnit.norm_unit_eq
+-/
 
 instance : CanonicallyOrderedAddMonoid PUnit := by
   refine'
@@ -113,13 +127,15 @@ instance : LinearOrderedAddCommMonoidWithTop PUnit :=
     top_add' := fun _ => rfl }
 
 @[to_additive]
-instance : HasSmul R PUnit :=
+instance : SMul R PUnit :=
   ⟨fun _ _ => unit⟩
 
+#print PUnit.smul_eq /-
 @[simp, to_additive]
 theorem smul_eq (r : R) : r • y = star :=
   rfl
 #align punit.smul_eq PUnit.smul_eq
+-/
 
 @[to_additive]
 instance : IsCentralScalar R PUnit :=
@@ -130,7 +146,7 @@ instance : SMulCommClass R S PUnit :=
   ⟨fun _ _ _ => rfl⟩
 
 @[to_additive]
-instance [HasSmul R S] : IsScalarTower R S PUnit :=
+instance [SMul R S] : IsScalarTower R S PUnit :=
   ⟨fun _ _ _ => rfl⟩
 
 instance [Zero R] : SMulWithZero R PUnit := by

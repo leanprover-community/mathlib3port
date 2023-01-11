@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Damiano Testa, Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.synonym
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -187,12 +187,16 @@ protected theorem exists {p : αᵒᵈ → Prop} : (∃ a, p a) ↔ ∃ a, p (to
 -/
 
 alias to_dual_le_to_dual ↔ _ _root_.has_le.le.dual
+#align has_le.le.dual LE.le.dual
 
 alias to_dual_lt_to_dual ↔ _ _root_.has_lt.lt.dual
+#align has_lt.lt.dual LT.lt.dual
 
 alias of_dual_le_of_dual ↔ _ _root_.has_le.le.of_dual
+#align has_le.le.of_dual LE.le.ofDual
 
 alias of_dual_lt_of_dual ↔ _ _root_.has_lt.lt.of_dual
+#align has_lt.lt.of_dual LT.lt.ofDual
 
 end OrderDual
 

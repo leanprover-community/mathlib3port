@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module measure_theory.measure.outer_measure
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -295,13 +295,13 @@ theorem add_apply (m₁ m₂ : OuterMeasure α) (s : Set α) : (m₁ + m₂) s =
   rfl
 #align measure_theory.outer_measure.add_apply MeasureTheory.OuterMeasure.add_apply
 
-section HasSmul
+section SMul
 
-variable [HasSmul R ℝ≥0∞] [IsScalarTower R ℝ≥0∞ ℝ≥0∞]
+variable [SMul R ℝ≥0∞] [IsScalarTower R ℝ≥0∞ ℝ≥0∞]
 
-variable [HasSmul R' ℝ≥0∞] [IsScalarTower R' ℝ≥0∞ ℝ≥0∞]
+variable [SMul R' ℝ≥0∞] [IsScalarTower R' ℝ≥0∞ ℝ≥0∞]
 
-instance : HasSmul R (OuterMeasure α) :=
+instance : SMul R (OuterMeasure α) :=
   ⟨fun c m =>
     { measureOf := fun s => c • m s
       Empty := by rw [← smul_one_mul c (_ : ℝ≥0∞), empty', mul_zero]
@@ -325,13 +325,13 @@ theorem smul_apply (c : R) (m : OuterMeasure α) (s : Set α) : (c • m) s = c 
 instance [SMulCommClass R R' ℝ≥0∞] : SMulCommClass R R' (OuterMeasure α) :=
   ⟨fun _ _ _ => ext fun _ => smul_comm _ _ _⟩
 
-instance [HasSmul R R'] [IsScalarTower R R' ℝ≥0∞] : IsScalarTower R R' (OuterMeasure α) :=
+instance [SMul R R'] [IsScalarTower R R' ℝ≥0∞] : IsScalarTower R R' (OuterMeasure α) :=
   ⟨fun _ _ _ => ext fun _ => smul_assoc _ _ _⟩
 
-instance [HasSmul Rᵐᵒᵖ ℝ≥0∞] [IsCentralScalar R ℝ≥0∞] : IsCentralScalar R (OuterMeasure α) :=
+instance [SMul Rᵐᵒᵖ ℝ≥0∞] [IsCentralScalar R ℝ≥0∞] : IsCentralScalar R (OuterMeasure α) :=
   ⟨fun _ _ => ext fun _ => op_smul_eq_smul _ _⟩
 
-end HasSmul
+end SMul
 
 instance [Monoid R] [MulAction R ℝ≥0∞] [IsScalarTower R ℝ≥0∞ ℝ≥0∞] : MulAction R (OuterMeasure α) :=
   Injective.mulAction _ coe_fn_injective coe_smul
@@ -423,8 +423,8 @@ theorem sup_apply (m₁ m₂ : OuterMeasure α) (s : Set α) : (m₁ ⊔ m₂) s
   have := supᵢ_apply (fun b => cond b m₁ m₂) s <;> rwa [supᵢ_bool_eq, supᵢ_bool_eq] at this
 #align measure_theory.outer_measure.sup_apply MeasureTheory.OuterMeasure.sup_apply
 
-theorem smul_supr [HasSmul R ℝ≥0∞] [IsScalarTower R ℝ≥0∞ ℝ≥0∞] {ι} (f : ι → OuterMeasure α)
-    (c : R) : (c • ⨆ i, f i) = ⨆ i, c • f i :=
+theorem smul_supr [SMul R ℝ≥0∞] [IsScalarTower R ℝ≥0∞ ℝ≥0∞] {ι} (f : ι → OuterMeasure α) (c : R) :
+    (c • ⨆ i, f i) = ⨆ i, c • f i :=
   ext fun s => by
     simp only [smul_apply, supᵢ_apply, ← smul_one_mul c (f _ _), ← smul_one_mul c (supᵢ _),
       Ennreal.mul_supr]
@@ -1790,7 +1790,7 @@ theorem trim_add (m₁ m₂ : OuterMeasure α) : (m₁ + m₂).trim = m₁.trim 
 #align measure_theory.outer_measure.trim_add MeasureTheory.OuterMeasure.trim_add
 
 /-- `trim` respects scalar multiplication. -/
-theorem trim_smul {R : Type _} [HasSmul R ℝ≥0∞] [IsScalarTower R ℝ≥0∞ ℝ≥0∞] (c : R)
+theorem trim_smul {R : Type _} [SMul R ℝ≥0∞] [IsScalarTower R ℝ≥0∞ ℝ≥0∞] (c : R)
     (m : OuterMeasure α) : (c • m).trim = c • m.trim :=
   ext <| trim_op (smul_apply c m)
 #align measure_theory.outer_measure.trim_smul MeasureTheory.OuterMeasure.trim_smul

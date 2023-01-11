@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.circular
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -160,6 +160,7 @@ theorem btw_cyclic_right {a b c : α} (h : Btw a b c) : Btw c a b :=
 #align btw_cyclic_right btw_cyclic_right
 
 alias btw_cyclic_right ← HasBtw.Btw.cyclic_right
+#align has_btw.btw.cyclic_right HasBtw.Btw.cyclic_right
 
 /-- The order of the `↔` has been chosen so that `rw btw_cyclic` cycles to the right while
 `rw ←btw_cyclic` cycles to the left (thus following the prepended arrow). -/
@@ -176,35 +177,41 @@ theorem btw_of_sbtw {a b c : α} (h : Sbtw a b c) : Btw a b c :=
 #align btw_of_sbtw btw_of_sbtw
 
 alias btw_of_sbtw ← HasSbtw.Sbtw.btw
+#align has_sbtw.sbtw.btw HasSbtw.Sbtw.btw
 
 theorem not_btw_of_sbtw {a b c : α} (h : Sbtw a b c) : ¬Btw c b a :=
   (sbtw_iff_btw_not_btw.1 h).2
 #align not_btw_of_sbtw not_btw_of_sbtw
 
 alias not_btw_of_sbtw ← HasSbtw.Sbtw.not_btw
+#align has_sbtw.sbtw.not_btw HasSbtw.Sbtw.not_btw
 
 theorem not_sbtw_of_btw {a b c : α} (h : Btw a b c) : ¬Sbtw c b a := fun h' => h'.not_btw h
 #align not_sbtw_of_btw not_sbtw_of_btw
 
 alias not_sbtw_of_btw ← HasBtw.Btw.not_sbtw
+#align has_btw.btw.not_sbtw HasBtw.Btw.not_sbtw
 
 theorem sbtw_of_btw_not_btw {a b c : α} (habc : Btw a b c) (hcba : ¬Btw c b a) : Sbtw a b c :=
   sbtw_iff_btw_not_btw.2 ⟨habc, hcba⟩
 #align sbtw_of_btw_not_btw sbtw_of_btw_not_btw
 
 alias sbtw_of_btw_not_btw ← HasBtw.Btw.sbtw_of_not_btw
+#align has_btw.btw.sbtw_of_not_btw HasBtw.Btw.sbtw_of_not_btw
 
 theorem sbtw_cyclic_left {a b c : α} (h : Sbtw a b c) : Sbtw b c a :=
   h.Btw.cyclic_left.sbtw_of_not_btw fun h' => h.not_btw h'.cyclic_left
 #align sbtw_cyclic_left sbtw_cyclic_left
 
 alias sbtw_cyclic_left ← HasSbtw.Sbtw.cyclic_left
+#align has_sbtw.sbtw.cyclic_left HasSbtw.Sbtw.cyclic_left
 
 theorem sbtw_cyclic_right {a b c : α} (h : Sbtw a b c) : Sbtw c a b :=
   h.cyclic_left.cyclic_left
 #align sbtw_cyclic_right sbtw_cyclic_right
 
 alias sbtw_cyclic_right ← HasSbtw.Sbtw.cyclic_right
+#align has_sbtw.sbtw.cyclic_right HasSbtw.Sbtw.cyclic_right
 
 /-- The order of the `↔` has been chosen so that `rw sbtw_cyclic` cycles to the right while
 `rw ←sbtw_cyclic` cycles to the left (thus following the prepended arrow). -/
@@ -223,12 +230,14 @@ theorem sbtw_trans_right {a b c d : α} (hbc : Sbtw a b c) (hcd : Sbtw a c d) : 
 #align sbtw_trans_right sbtw_trans_right
 
 alias sbtw_trans_right ← HasSbtw.Sbtw.trans_right
+#align has_sbtw.sbtw.trans_right HasSbtw.Sbtw.trans_right
 
 theorem sbtw_asymm {a b c : α} (h : Sbtw a b c) : ¬Sbtw c b a :=
   h.Btw.not_sbtw
 #align sbtw_asymm sbtw_asymm
 
 alias sbtw_asymm ← HasSbtw.Sbtw.not_sbtw
+#align has_sbtw.sbtw.not_sbtw HasSbtw.Sbtw.not_sbtw
 
 theorem sbtw_irrefl_left_right {a b : α} : ¬Sbtw a b a := fun h => h.not_btw h.Btw
 #align sbtw_irrefl_left_right sbtw_irrefl_left_right

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Zhouhang Zhou
 
 ! This file was ported from Lean 3 source module measure_theory.function.ae_eq_fun
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -583,15 +583,15 @@ theorem one_to_germ [One β] : (1 : α →ₘ[μ] β).toGerm = 1 :=
 
 -- Note we set up the scalar actions before the `monoid` structures in case we want to
 -- try to override the `nsmul` or `zsmul` fields in future.
-section HasSmul
+section SMul
 
 variable {𝕜 𝕜' : Type _}
 
-variable [HasSmul 𝕜 γ] [HasContinuousConstSmul 𝕜 γ]
+variable [SMul 𝕜 γ] [HasContinuousConstSmul 𝕜 γ]
 
-variable [HasSmul 𝕜' γ] [HasContinuousConstSmul 𝕜' γ]
+variable [SMul 𝕜' γ] [HasContinuousConstSmul 𝕜' γ]
 
-instance : HasSmul 𝕜 (α →ₘ[μ] γ) :=
+instance : SMul 𝕜 (α →ₘ[μ] γ) :=
   ⟨fun c f => comp ((· • ·) c) (continuous_id.const_smul c) f⟩
 
 @[simp]
@@ -611,13 +611,13 @@ theorem smul_to_germ (c : 𝕜) (f : α →ₘ[μ] γ) : (c • f).toGerm = c �
 instance [SMulCommClass 𝕜 𝕜' γ] : SMulCommClass 𝕜 𝕜' (α →ₘ[μ] γ) :=
   ⟨fun a b f => (inductionOn f) fun f hf => by simp_rw [smul_mk, smul_comm]⟩
 
-instance [HasSmul 𝕜 𝕜'] [IsScalarTower 𝕜 𝕜' γ] : IsScalarTower 𝕜 𝕜' (α →ₘ[μ] γ) :=
+instance [SMul 𝕜 𝕜'] [IsScalarTower 𝕜 𝕜' γ] : IsScalarTower 𝕜 𝕜' (α →ₘ[μ] γ) :=
   ⟨fun a b f => (inductionOn f) fun f hf => by simp_rw [smul_mk, smul_assoc]⟩
 
-instance [HasSmul 𝕜ᵐᵒᵖ γ] [IsCentralScalar 𝕜 γ] : IsCentralScalar 𝕜 (α →ₘ[μ] γ) :=
+instance [SMul 𝕜ᵐᵒᵖ γ] [IsCentralScalar 𝕜 γ] : IsCentralScalar 𝕜 (α →ₘ[μ] γ) :=
   ⟨fun a f => (inductionOn f) fun f hf => by simp_rw [smul_mk, op_smul_eq_smul]⟩
 
-end HasSmul
+end SMul
 
 section Mul
 

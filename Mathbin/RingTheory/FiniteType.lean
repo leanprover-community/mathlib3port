@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.finite_type
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -263,6 +263,7 @@ theorem of_finite {f : A →+* B} (hf : f.Finite) : f.FiniteType :=
 #align ring_hom.finite_type.of_finite RingHom.FiniteType.of_finite
 
 alias of_finite ← _root_.ring_hom.finite.to_finite_type
+#align ring_hom.finite.to_finite_type RingHom.Finite.to_finite_type
 
 theorem of_comp_finite_type {f : A →+* B} {g : B →+* C} (h : (g.comp f).FiniteType) :
     g.FiniteType := by
@@ -669,7 +670,7 @@ def modulePolynomialOfEndo : Module R[X] M :=
 #align module_polynomial_of_endo modulePolynomialOfEndo
 
 theorem module_polynomial_of_endo_smul_def (n : R[X]) (a : M) :
-    @HasSmul.smul (modulePolynomialOfEndo f).toHasSmul n a = Polynomial.aeval f n a :=
+    @SMul.smul (modulePolynomialOfEndo f).toHasSmul n a = Polynomial.aeval f n a :=
   rfl
 #align module_polynomial_of_endo_smul_def module_polynomial_of_endo_smul_def
 

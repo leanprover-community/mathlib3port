@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.module.ulift
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,31 +34,31 @@ variable {M : Type v}
 variable {N : Type w}
 
 @[to_additive]
-instance hasSmulLeft [HasSmul R M] : HasSmul (ULift R) M :=
+instance hasSmulLeft [SMul R M] : SMul (ULift R) M :=
   ⟨fun s x => s.down • x⟩
 #align ulift.has_smul_left ULift.hasSmulLeft
 
 @[simp, to_additive]
-theorem smul_def [HasSmul R M] (s : ULift R) (x : M) : s • x = s.down • x :=
+theorem smul_def [SMul R M] (s : ULift R) (x : M) : s • x = s.down • x :=
   rfl
 #align ulift.smul_def ULift.smul_def
 
-instance is_scalar_tower [HasSmul R M] [HasSmul M N] [HasSmul R N] [IsScalarTower R M N] :
+instance is_scalar_tower [SMul R M] [SMul M N] [SMul R N] [IsScalarTower R M N] :
     IsScalarTower (ULift R) M N :=
   ⟨fun x y z => show (x.down • y) • z = x.down • y • z from smul_assoc _ _ _⟩
 #align ulift.is_scalar_tower ULift.is_scalar_tower
 
-instance is_scalar_tower' [HasSmul R M] [HasSmul M N] [HasSmul R N] [IsScalarTower R M N] :
+instance is_scalar_tower' [SMul R M] [SMul M N] [SMul R N] [IsScalarTower R M N] :
     IsScalarTower R (ULift M) N :=
   ⟨fun x y z => show (x • y.down) • z = x • y.down • z from smul_assoc _ _ _⟩
 #align ulift.is_scalar_tower' ULift.is_scalar_tower'
 
-instance is_scalar_tower'' [HasSmul R M] [HasSmul M N] [HasSmul R N] [IsScalarTower R M N] :
+instance is_scalar_tower'' [SMul R M] [SMul M N] [SMul R N] [IsScalarTower R M N] :
     IsScalarTower R M (ULift N) :=
   ⟨fun x y z => show up ((x • y) • z.down) = ⟨x • y • z.down⟩ by rw [smul_assoc]⟩
 #align ulift.is_scalar_tower'' ULift.is_scalar_tower''
 
-instance [HasSmul R M] [HasSmul Rᵐᵒᵖ M] [IsCentralScalar R M] : IsCentralScalar R (ULift M) :=
+instance [SMul R M] [SMul Rᵐᵒᵖ M] [IsCentralScalar R M] : IsCentralScalar R (ULift M) :=
   ⟨fun r m => congr_arg up <| op_smul_eq_smul r m.down⟩
 
 @[to_additive]

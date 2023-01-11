@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: María Inés de Frutos-Fernández, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.normed.group.seminorm
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -326,7 +326,7 @@ end GroupSeminorm
 see that `has_smul R ℝ` should be fixed because `ℝ` is fixed. -/
 namespace AddGroupSeminorm
 
-variable [AddGroup E] [HasSmul R ℝ] [HasSmul R ℝ≥0] [IsScalarTower R ℝ≥0 ℝ] (p : AddGroupSeminorm E)
+variable [AddGroup E] [SMul R ℝ] [SMul R ℝ≥0] [IsScalarTower R ℝ≥0 ℝ] (p : AddGroupSeminorm E)
 
 instance [DecidableEq E] : One (AddGroupSeminorm E) :=
   ⟨{  toFun := fun x => if x = 0 then 0 else 1
@@ -344,7 +344,7 @@ theorem apply_one [DecidableEq E] (x : E) : (1 : AddGroupSeminorm E) x = if x = 
 #align add_group_seminorm.apply_one AddGroupSeminorm.apply_one
 
 /-- Any action on `ℝ` which factors through `ℝ≥0` applies to an `add_group_seminorm`. -/
-instance : HasSmul R (AddGroupSeminorm E) :=
+instance : SMul R (AddGroupSeminorm E) :=
   ⟨fun r p =>
     { toFun := fun x => r • p x
       map_zero' := by
@@ -367,8 +367,8 @@ theorem smul_apply (r : R) (p : AddGroupSeminorm E) (x : E) : (r • p) x = r �
   rfl
 #align add_group_seminorm.smul_apply AddGroupSeminorm.smul_apply
 
-instance [HasSmul R' ℝ] [HasSmul R' ℝ≥0] [IsScalarTower R' ℝ≥0 ℝ] [HasSmul R R']
-    [IsScalarTower R R' ℝ] : IsScalarTower R R' (AddGroupSeminorm E) :=
+instance [SMul R' ℝ] [SMul R' ℝ≥0] [IsScalarTower R' ℝ≥0 ℝ] [SMul R R'] [IsScalarTower R R' ℝ] :
+    IsScalarTower R R' (AddGroupSeminorm E) :=
   ⟨fun r a p => ext fun x => smul_assoc r a (p x)⟩
 
 theorem smul_sup (r : R) (p q : AddGroupSeminorm E) : r • (p ⊔ q) = r • p ⊔ r • q :=
@@ -382,7 +382,7 @@ end AddGroupSeminorm
 
 namespace GroupSeminorm
 
-variable [Group E] [HasSmul R ℝ] [HasSmul R ℝ≥0] [IsScalarTower R ℝ≥0 ℝ]
+variable [Group E] [SMul R ℝ] [SMul R ℝ≥0] [IsScalarTower R ℝ≥0 ℝ]
 
 @[to_additive AddGroupSeminorm.hasOne]
 instance [DecidableEq E] : One (GroupSeminorm E) :=
@@ -402,7 +402,7 @@ theorem apply_one [DecidableEq E] (x : E) : (1 : GroupSeminorm E) x = if x = 1 t
 
 /-- Any action on `ℝ` which factors through `ℝ≥0` applies to an `add_group_seminorm`. -/
 @[to_additive AddGroupSeminorm.hasSmul]
-instance : HasSmul R (GroupSeminorm E) :=
+instance : SMul R (GroupSeminorm E) :=
   ⟨fun r p =>
     { toFun := fun x => r • p x
       map_one' := by
@@ -417,8 +417,8 @@ instance : HasSmul R (GroupSeminorm E) :=
       inv' := fun x => by rw [map_inv_eq_map p] }⟩
 
 @[to_additive AddGroupSeminorm.is_scalar_tower]
-instance [HasSmul R' ℝ] [HasSmul R' ℝ≥0] [IsScalarTower R' ℝ≥0 ℝ] [HasSmul R R']
-    [IsScalarTower R R' ℝ] : IsScalarTower R R' (GroupSeminorm E) :=
+instance [SMul R' ℝ] [SMul R' ℝ≥0] [IsScalarTower R' ℝ≥0 ℝ] [SMul R R'] [IsScalarTower R R' ℝ] :
+    IsScalarTower R R' (GroupSeminorm E) :=
   ⟨fun r a p => ext fun x => smul_assoc r a <| p x⟩
 
 @[simp, to_additive AddGroupSeminorm.coe_smul]

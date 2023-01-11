@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.local_homeomorph
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -533,12 +533,16 @@ theorem iff_preimage_eq : e.IsImage s t ↔ e.source ∩ e ⁻¹' t = e.source �
 #align local_homeomorph.is_image.iff_preimage_eq LocalHomeomorph.IsImage.iff_preimage_eq
 
 alias iff_preimage_eq ↔ preimage_eq of_preimage_eq
+#align local_homeomorph.is_image.preimage_eq LocalHomeomorph.IsImage.preimage_eq
+#align local_homeomorph.is_image.of_preimage_eq LocalHomeomorph.IsImage.of_preimage_eq
 
 theorem iff_symm_preimage_eq : e.IsImage s t ↔ e.target ∩ e.symm ⁻¹' s = e.target ∩ t :=
   symm_iff.symm.trans iff_preimage_eq
 #align local_homeomorph.is_image.iff_symm_preimage_eq LocalHomeomorph.IsImage.iff_symm_preimage_eq
 
 alias iff_symm_preimage_eq ↔ symm_preimage_eq of_symm_preimage_eq
+#align local_homeomorph.is_image.symm_preimage_eq LocalHomeomorph.IsImage.symm_preimage_eq
+#align local_homeomorph.is_image.of_symm_preimage_eq LocalHomeomorph.IsImage.of_symm_preimage_eq
 
 theorem iff_symm_preimage_eq' :
     e.IsImage s t ↔ e.target ∩ e.symm ⁻¹' (e.source ∩ s) = e.target ∩ t := by
@@ -546,12 +550,16 @@ theorem iff_symm_preimage_eq' :
 #align local_homeomorph.is_image.iff_symm_preimage_eq' LocalHomeomorph.IsImage.iff_symm_preimage_eq'
 
 alias iff_symm_preimage_eq' ↔ symm_preimage_eq' of_symm_preimage_eq'
+#align local_homeomorph.is_image.symm_preimage_eq' LocalHomeomorph.IsImage.symm_preimage_eq'
+#align local_homeomorph.is_image.of_symm_preimage_eq' LocalHomeomorph.IsImage.of_symm_preimage_eq'
 
 theorem iff_preimage_eq' : e.IsImage s t ↔ e.source ∩ e ⁻¹' (e.target ∩ t) = e.source ∩ s :=
   symm_iff.symm.trans iff_symm_preimage_eq'
 #align local_homeomorph.is_image.iff_preimage_eq' LocalHomeomorph.IsImage.iff_preimage_eq'
 
 alias iff_preimage_eq' ↔ preimage_eq' of_preimage_eq'
+#align local_homeomorph.is_image.preimage_eq' LocalHomeomorph.IsImage.preimage_eq'
+#align local_homeomorph.is_image.of_preimage_eq' LocalHomeomorph.IsImage.of_preimage_eq'
 
 theorem of_image_eq (h : e '' (e.source ∩ s) = e.target ∩ t) : e.IsImage s t :=
   LocalEquiv.IsImage.of_image_eq h

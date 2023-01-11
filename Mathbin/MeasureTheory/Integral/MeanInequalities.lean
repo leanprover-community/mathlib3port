@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.integral.mean_inequalities
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -85,7 +85,7 @@ def funMulInvSnorm (f : α → ℝ≥0∞) (p : ℝ) (μ : Measure α) : α → 
 theorem fun_eq_fun_mul_inv_snorm_mul_snorm {p : ℝ} (f : α → ℝ≥0∞)
     (hf_nonzero : (∫⁻ a, f a ^ p ∂μ) ≠ 0) (hf_top : (∫⁻ a, f a ^ p ∂μ) ≠ ⊤) {a : α} :
     f a = funMulInvSnorm f p μ a * (∫⁻ c, f c ^ p ∂μ) ^ (1 / p) := by
-  simp [fun_mul_inv_snorm, mul_assoc, inv_mul_cancel, hf_nonzero, hf_top]
+  simp [fun_mul_inv_snorm, mul_assoc, Ennreal.inv_mul_cancel, hf_nonzero, hf_top]
 #align ennreal.fun_eq_fun_mul_inv_snorm_mul_snorm Ennreal.fun_eq_fun_mul_inv_snorm_mul_snorm
 
 theorem fun_mul_inv_snorm_rpow {p : ℝ} (hp0 : 0 < p) {f : α → ℝ≥0∞} {a : α} :
@@ -102,7 +102,7 @@ theorem lintegral_rpow_fun_mul_inv_snorm_eq_one {p : ℝ} (hp0_lt : 0 < p) {f : 
     (∫⁻ c, funMulInvSnorm f p μ c ^ p ∂μ) = 1 :=
   by
   simp_rw [fun_mul_inv_snorm_rpow hp0_lt]
-  rw [lintegral_mul_const', mul_inv_cancel hf_nonzero hf_top]
+  rw [lintegral_mul_const', Ennreal.mul_inv_cancel hf_nonzero hf_top]
   rwa [inv_ne_top]
 #align
   ennreal.lintegral_rpow_fun_mul_inv_snorm_eq_one Ennreal.lintegral_rpow_fun_mul_inv_snorm_eq_one

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jeremy Avigad, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module order.filter.ultrafilter
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -128,6 +128,7 @@ theorem frequently_iff_eventually : (∃ᶠ x in f, p x) ↔ ∀ᶠ x in f, p x 
 #align ultrafilter.frequently_iff_eventually Ultrafilter.frequently_iff_eventually
 
 alias frequently_iff_eventually ↔ _root_.filter.frequently.eventually _
+#align filter.frequently.eventually Filter.Frequently.eventually
 
 theorem compl_mem_iff_not_mem : sᶜ ∈ f ↔ s ∉ f := by rw [← compl_not_mem_iff, compl_compl]
 #align ultrafilter.compl_mem_iff_not_mem Ultrafilter.compl_mem_iff_not_mem
@@ -374,6 +375,7 @@ theorem exists_le (f : Filter α) [h : NeBot f] : ∃ u : Ultrafilter α, ↑u �
 #align ultrafilter.exists_le Ultrafilter.exists_le
 
 alias exists_le ← _root_.filter.exists_ultrafilter_le
+#align filter.exists_ultrafilter_le Filter.exists_ultrafilter_le
 
 /-- Construct an ultrafilter extending a given filter.
   The ultrafilter lemma is the assertion that such a filter exists;
@@ -491,12 +493,14 @@ theorem nmem_hyperfilter_of_finite {s : Set α} (hf : s.Finite) : s ∉ hyperfil
 #align filter.nmem_hyperfilter_of_finite Filter.nmem_hyperfilter_of_finite
 
 alias nmem_hyperfilter_of_finite ← _root_.set.finite.nmem_hyperfilter
+#align set.finite.nmem_hyperfilter Set.Finite.nmem_hyperfilter
 
 theorem compl_mem_hyperfilter_of_finite {s : Set α} (hf : Set.Finite s) : sᶜ ∈ hyperfilter α :=
   compl_mem_iff_not_mem.2 hf.nmem_hyperfilter
 #align filter.compl_mem_hyperfilter_of_finite Filter.compl_mem_hyperfilter_of_finite
 
 alias compl_mem_hyperfilter_of_finite ← _root_.set.finite.compl_mem_hyperfilter
+#align set.finite.compl_mem_hyperfilter Set.Finite.compl_mem_hyperfilter
 
 theorem mem_hyperfilter_of_finite_compl {s : Set α} (hf : Set.Finite (sᶜ)) : s ∈ hyperfilter α :=
   compl_compl s ▸ hf.compl_mem_hyperfilter

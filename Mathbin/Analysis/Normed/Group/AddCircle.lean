@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module analysis.normed.group.add_circle
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -269,7 +269,7 @@ theorem norm_div_nat_cast {m n : ℕ} :
     ‖(↑(↑m / ↑n * p) : AddCircle p)‖ = p * (↑(min (m % n) (n - m % n)) / n) :=
   by
   have : p⁻¹ * (↑m / ↑n * p) = ↑m / ↑n := by rw [mul_comm _ p, inv_mul_cancel_left₀ hp.out.ne.symm]
-  rw [norm_eq' p hp.out, this, abs_sub_round_div_nat_cast_eq]
+  rw [norm_eq' p hp.out, this, abs_sub_round_div_natCast_eq]
 #align add_circle.norm_div_nat_cast AddCircle.norm_div_nat_cast
 
 theorem exists_norm_eq_of_fin_add_order {u : AddCircle p} (hu : IsOfFinAddOrder u) :

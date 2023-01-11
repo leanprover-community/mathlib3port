@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Kevin Buzzard, Yaël Dillies, Eric Wieser
 
 ! This file was ported from Lean 3 source module order.sup_indep
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -154,6 +154,8 @@ theorem sup_indep_iff_pairwise_disjoint : s.SupIndep f ↔ (s : Set ι).Pairwise
 
 alias sup_indep_iff_pairwise_disjoint ↔
   sup_indep.pairwise_disjoint _root_.set.pairwise_disjoint.sup_indep
+#align finset.sup_indep.pairwise_disjoint Finset.SupIndep.pairwise_disjoint
+#align set.pairwise_disjoint.sup_indep Set.PairwiseDisjoint.sup_indep
 
 /-- Bind operation for `sup_indep`. -/
 theorem SupIndep.sup [DecidableEq ι] {s : Finset ι'} {g : ι' → Finset ι} {f : ι → α}
@@ -391,6 +393,8 @@ theorem CompleteLattice.independent_iff_sup_indep [CompleteLattice α] {s : Fins
 
 alias CompleteLattice.independent_iff_sup_indep ↔
   CompleteLattice.Independent.sup_indep Finset.SupIndep.independent
+#align complete_lattice.independent.sup_indep CompleteLattice.Independent.sup_indep
+#align finset.sup_indep.independent Finset.SupIndep.independent
 
 /-- A variant of `complete_lattice.independent_iff_sup_indep` for `fintype`s. -/
 theorem CompleteLattice.independent_iff_sup_indep_univ [CompleteLattice α] [Fintype ι] {f : ι → α} :
@@ -402,6 +406,8 @@ theorem CompleteLattice.independent_iff_sup_indep_univ [CompleteLattice α] [Fin
 
 alias CompleteLattice.independent_iff_sup_indep_univ ↔
   CompleteLattice.Independent.sup_indep_univ Finset.SupIndep.independent_of_univ
+#align complete_lattice.independent.sup_indep_univ CompleteLattice.Independent.sup_indep_univ
+#align finset.sup_indep.independent_of_univ Finset.SupIndep.independent_of_univ
 
 section Frame
 
@@ -417,6 +423,7 @@ theorem set_independent_iff_pairwise_disjoint {s : Set α} :
   complete_lattice.set_independent_iff_pairwise_disjoint CompleteLattice.set_independent_iff_pairwise_disjoint
 
 alias set_independent_iff_pairwise_disjoint ↔ _ _root_.set.pairwise_disjoint.set_independent
+#align set.pairwise_disjoint.set_independent Set.PairwiseDisjoint.set_independent
 
 theorem independent_iff_pairwise_disjoint {f : ι → α} : Independent f ↔ Pairwise (Disjoint on f) :=
   ⟨Independent.pairwise_disjoint, fun hs i =>

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.connectivity
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1454,6 +1454,7 @@ theorem map_is_trail_iff_of_injective (hinj : Function.Injective f) :
   simple_graph.walk.map_is_trail_iff_of_injective SimpleGraph.Walk.map_is_trail_iff_of_injective
 
 alias map_is_trail_iff_of_injective ↔ _ map_is_trail_of_injective
+#align simple_graph.walk.map_is_trail_of_injective SimpleGraph.Walk.map_is_trail_of_injective
 
 theorem map_is_cycle_iff_of_injective {p : G.Walk u u} (hinj : Function.Injective f) :
     (p.map f).IsCycle ↔ p.IsCycle := by
@@ -1463,6 +1464,7 @@ theorem map_is_cycle_iff_of_injective {p : G.Walk u u} (hinj : Function.Injectiv
   simple_graph.walk.map_is_cycle_iff_of_injective SimpleGraph.Walk.map_is_cycle_iff_of_injective
 
 alias map_is_cycle_iff_of_injective ↔ _ map_is_cycle_of_injective
+#align simple_graph.walk.map_is_cycle_of_injective SimpleGraph.Walk.map_is_cycle_of_injective
 
 variable (p f)
 
@@ -1496,6 +1498,8 @@ theorem map_le_is_trail {G G' : SimpleGraph V} (h : G ≤ G') {u v : V} {p : G.W
 #align simple_graph.walk.map_le_is_trail SimpleGraph.Walk.map_le_is_trail
 
 alias map_le_is_trail ↔ is_trail.of_map_le is_trail.map_le
+#align simple_graph.walk.is_trail.of_map_le SimpleGraph.Walk.IsTrail.of_map_le
+#align simple_graph.walk.is_trail.map_le SimpleGraph.Walk.IsTrail.map_le
 
 @[simp]
 theorem map_le_is_path {G G' : SimpleGraph V} (h : G ≤ G') {u v : V} {p : G.Walk u v} :
@@ -1504,6 +1508,8 @@ theorem map_le_is_path {G G' : SimpleGraph V} (h : G ≤ G') {u v : V} {p : G.Wa
 #align simple_graph.walk.map_le_is_path SimpleGraph.Walk.map_le_is_path
 
 alias map_le_is_path ↔ is_path.of_map_le is_path.map_le
+#align simple_graph.walk.is_path.of_map_le SimpleGraph.Walk.IsPath.of_map_le
+#align simple_graph.walk.is_path.map_le SimpleGraph.Walk.IsPath.map_le
 
 @[simp]
 theorem map_le_is_cycle {G G' : SimpleGraph V} (h : G ≤ G') {u : V} {p : G.Walk u u} :
@@ -1512,6 +1518,8 @@ theorem map_le_is_cycle {G G' : SimpleGraph V} (h : G ≤ G') {u : V} {p : G.Wal
 #align simple_graph.walk.map_le_is_cycle SimpleGraph.Walk.map_le_is_cycle
 
 alias map_le_is_cycle ↔ is_cycle.of_map_le is_cycle.map_le
+#align simple_graph.walk.is_cycle.of_map_le SimpleGraph.Walk.IsCycle.of_map_le
+#align simple_graph.walk.is_cycle.map_le SimpleGraph.Walk.IsCycle.map_le
 
 end Walk
 

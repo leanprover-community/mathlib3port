@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.bounded_order
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -167,7 +167,14 @@ theorem ne_top_of_lt (h : a < b) : a ≠ ⊤ :=
   (h.trans_le le_top).Ne
 #align ne_top_of_lt ne_top_of_lt
 
+/- warning: has_lt.lt.ne_top -> LT.lt.ne_top is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α _inst_1)] {a : α} {b : α}, (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) a b) -> (Ne.{succ u1} α a (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α _inst_1)] {a : α} {b : α}, (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) a b) -> (Ne.{succ u1} α a (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2)))
+Case conversion may be inaccurate. Consider using '#align has_lt.lt.ne_top LT.lt.ne_topₓ'. -/
 alias ne_top_of_lt ← LT.lt.ne_top
+#align has_lt.lt.ne_top LT.lt.ne_top
 
 end Preorder
 
@@ -215,9 +222,23 @@ theorem not_isTop_iff_ne_top : ¬IsTop a ↔ a ≠ ⊤ :=
   isTop_iff_eq_top.Not
 #align not_is_top_iff_ne_top not_isTop_iff_ne_top
 
+/- warning: is_max.eq_top -> IsMax.eq_top is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, (IsMax.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) -> (Eq.{succ u1} α a (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, (IsMax.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) -> (Eq.{succ u1} α a (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)))
+Case conversion may be inaccurate. Consider using '#align is_max.eq_top IsMax.eq_topₓ'. -/
 alias isMax_iff_eq_top ↔ IsMax.eq_top _
+#align is_max.eq_top IsMax.eq_top
 
+/- warning: is_top.eq_top -> IsTop.eq_top is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, (IsTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) -> (Eq.{succ u1} α a (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, (IsTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) -> (Eq.{succ u1} α a (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)))
+Case conversion may be inaccurate. Consider using '#align is_top.eq_top IsTop.eq_topₓ'. -/
 alias isTop_iff_eq_top ↔ IsTop.eq_top _
+#align is_top.eq_top IsTop.eq_top
 
 /- warning: top_le_iff -> top_le_iff is a dubious translation:
 lean 3 declaration is
@@ -532,7 +553,14 @@ theorem ne_bot_of_gt (h : a < b) : b ≠ ⊥ :=
   (bot_le.trans_lt h).ne'
 #align ne_bot_of_gt ne_bot_of_gt
 
+/- warning: has_lt.lt.ne_bot -> LT.lt.ne_bot is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α _inst_1)] {a : α} {b : α}, (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) a b) -> (Ne.{succ u1} α b (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α _inst_1)] {a : α} {b : α}, (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) a b) -> (Ne.{succ u1} α b (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2)))
+Case conversion may be inaccurate. Consider using '#align has_lt.lt.ne_bot LT.lt.ne_botₓ'. -/
 alias ne_bot_of_gt ← LT.lt.ne_bot
+#align has_lt.lt.ne_bot LT.lt.ne_bot
 
 end Preorder
 
@@ -580,9 +608,23 @@ theorem not_isBot_iff_ne_bot : ¬IsBot a ↔ a ≠ ⊥ :=
   isBot_iff_eq_bot.Not
 #align not_is_bot_iff_ne_bot not_isBot_iff_ne_bot
 
+/- warning: is_min.eq_bot -> IsMin.eq_bot is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, (IsMin.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) -> (Eq.{succ u1} α a (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, (IsMin.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) -> (Eq.{succ u1} α a (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)))
+Case conversion may be inaccurate. Consider using '#align is_min.eq_bot IsMin.eq_botₓ'. -/
 alias isMin_iff_eq_bot ↔ IsMin.eq_bot _
+#align is_min.eq_bot IsMin.eq_bot
 
+/- warning: is_bot.eq_bot -> IsBot.eq_bot is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, (IsBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) -> (Eq.{succ u1} α a (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, (IsBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) -> (Eq.{succ u1} α a (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)))
+Case conversion may be inaccurate. Consider using '#align is_bot.eq_bot IsBot.eq_botₓ'. -/
 alias isBot_iff_eq_bot ↔ IsBot.eq_bot _
+#align is_bot.eq_bot IsBot.eq_bot
 
 /- warning: le_bot_iff -> le_bot_iff is a dubious translation:
 lean 3 declaration is

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.truncated
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -206,11 +206,11 @@ instance : Neg (TruncatedWittVector p n R) :=
 instance : Sub (TruncatedWittVector p n R) :=
   ⟨fun x y => truncateFun n (x.out - y.out)⟩
 
-instance hasNatScalar : HasSmul ℕ (TruncatedWittVector p n R) :=
+instance hasNatScalar : SMul ℕ (TruncatedWittVector p n R) :=
   ⟨fun m x => truncateFun n (m • x.out)⟩
 #align truncated_witt_vector.has_nat_scalar TruncatedWittVector.hasNatScalar
 
-instance hasIntScalar : HasSmul ℤ (TruncatedWittVector p n R) :=
+instance hasIntScalar : SMul ℤ (TruncatedWittVector p n R) :=
   ⟨fun m x => truncateFun n (m • x.out)⟩
 #align truncated_witt_vector.has_int_scalar TruncatedWittVector.hasIntScalar
 

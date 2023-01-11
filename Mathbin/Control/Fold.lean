@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Sean Leather
 
 ! This file was ported from Lean 3 source module control.fold
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -128,7 +128,7 @@ def Foldl.ofFreeMonoid (f : β → α → β) : FreeMonoid α →* Monoid.Foldl 
   toFun xs := op <| flip (List.foldl f) xs.toList
   map_one' := rfl
   map_mul' := by
-    intros <;> simp only [FreeMonoid.to_list_mul, flip, unop_op, List.foldl_append, op_inj] <;> rfl
+    intros <;> simp only [FreeMonoid.toList_mul, flip, unop_op, List.foldl_append, op_inj] <;> rfl
 #align monoid.foldl.of_free_monoid Monoid.Foldl.ofFreeMonoid
 
 @[reducible]
@@ -366,16 +366,16 @@ theorem fold_map_map [Monoid γ] (f : α → β) (g : β → γ) (xs : t α) :
 theorem foldl_to_list (f : α → β → α) (xs : t β) (x : α) :
     foldl f x xs = List.foldl f x (toList xs) :=
   by
-  rw [← FreeMonoid.to_list_of_list (to_list xs), ← foldl.unop_of_free_monoid]
+  rw [← FreeMonoid.toList_ofList (to_list xs), ← foldl.unop_of_free_monoid]
   simp only [foldl, to_list_spec, fold_map_hom_free, foldl.of_free_monoid_comp_of, foldl.get,
-    FreeMonoid.of_list_to_list]
+    FreeMonoid.ofList_toList]
 #align traversable.foldl_to_list Traversable.foldl_to_list
 
 theorem foldr_to_list (f : α → β → β) (xs : t α) (x : β) :
     foldr f x xs = List.foldr f x (toList xs) :=
   by
   change _ = foldr.of_free_monoid _ (FreeMonoid.ofList <| to_list xs) _
-  rw [to_list_spec, foldr, foldr.get, FreeMonoid.of_list_to_list, fold_map_hom_free,
+  rw [to_list_spec, foldr, foldr.get, FreeMonoid.ofList_toList, fold_map_hom_free,
     foldr.of_free_monoid_comp_of]
 #align traversable.foldr_to_list Traversable.foldr_to_list
 
@@ -383,7 +383,7 @@ theorem foldr_to_list (f : α → β → β) (xs : t α) (x : β) :
 
 -/
 theorem to_list_map (f : α → β) (xs : t α) : toList (f <$> xs) = f <$> toList xs := by
-  simp only [to_list_spec, free.map_eq_map, fold_map_hom, fold_map_map, FreeMonoid.of_list_to_list,
+  simp only [to_list_spec, free.map_eq_map, fold_map_hom, fold_map_map, FreeMonoid.ofList_toList,
     FreeMonoid.map_of, (· ∘ ·)]
 #align traversable.to_list_map Traversable.to_list_map
 
@@ -432,7 +432,7 @@ theorem mfoldl_to_list {f : α → β → m α} {x : α} {xs : t β} :
   calc
     mfoldl f x xs = unop (Mfoldl.ofFreeMonoid f (FreeMonoid.ofList <| toList xs)) x := by
       simp only [mfoldl, to_list_spec, fold_map_hom_free (mfoldl.of_free_monoid f),
-        mfoldl.of_free_monoid_comp_of, mfoldl.get, FreeMonoid.of_list_to_list]
+        mfoldl.of_free_monoid_comp_of, mfoldl.get, FreeMonoid.ofList_toList]
     _ = List.foldlM f x (toList xs) := by simp [mfoldl.of_free_monoid, unop_op, flip]
     
 #align traversable.mfoldl_to_list Traversable.mfoldl_to_list
@@ -442,7 +442,7 @@ theorem mfoldr_to_list (f : α → β → m β) (x : β) (xs : t α) :
   by
   change _ = mfoldr.of_free_monoid f (FreeMonoid.ofList <| to_list xs) x
   simp only [mfoldr, to_list_spec, fold_map_hom_free (mfoldr.of_free_monoid f),
-    mfoldr.of_free_monoid_comp_of, mfoldr.get, FreeMonoid.of_list_to_list]
+    mfoldr.of_free_monoid_comp_of, mfoldr.get, FreeMonoid.ofList_toList]
 #align traversable.mfoldr_to_list Traversable.mfoldr_to_list
 
 @[simp]

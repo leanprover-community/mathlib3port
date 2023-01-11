@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Amelia Livingston
 
 ! This file was ported from Lean 3 source module group_theory.monoid_localization
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -388,7 +388,7 @@ section Scalar
 variable {R R₁ R₂ : Type _}
 
 /-- Scalar multiplication in a monoid localization is defined as `c • ⟨a, b⟩ = ⟨c • a, b⟩`. -/
-protected irreducible_def smul [HasSmul R M] [IsScalarTower R M M] (c : R) (z : Localization S) :
+protected irreducible_def smul [SMul R M] [IsScalarTower R M M] (c : R) (z : Localization S) :
   Localization S :=
   (Localization.liftOn z fun a b => mk (c • a) b) fun a a' b b' h =>
     mk_eq_mk_iff.2
@@ -401,27 +401,26 @@ protected irreducible_def smul [HasSmul R M] [IsScalarTower R M M] (c : R) (z : 
         simp only [smul_mul_assoc, ht])
 #align localization.smul Localization.smul
 
-instance [HasSmul R M] [IsScalarTower R M M] : HasSmul R (Localization S)
-    where smul := Localization.smul
+instance [SMul R M] [IsScalarTower R M M] : SMul R (Localization S) where smul := Localization.smul
 
-theorem smul_mk [HasSmul R M] [IsScalarTower R M M] (c : R) (a b) :
+theorem smul_mk [SMul R M] [IsScalarTower R M M] (c : R) (a b) :
     c • (mk a b : Localization S) = mk (c • a) b :=
   by
-  unfold HasSmul.smul Localization.smul
+  unfold SMul.smul Localization.smul
   apply lift_on_mk
 #align localization.smul_mk Localization.smul_mk
 
-instance [HasSmul R₁ M] [HasSmul R₂ M] [IsScalarTower R₁ M M] [IsScalarTower R₂ M M]
+instance [SMul R₁ M] [SMul R₂ M] [IsScalarTower R₁ M M] [IsScalarTower R₂ M M]
     [SMulCommClass R₁ R₂ M] : SMulCommClass R₁ R₂ (Localization S)
     where smul_comm s t :=
     Localization.ind <| Prod.rec fun r x => by simp only [smul_mk, smul_comm s t r]
 
-instance [HasSmul R₁ M] [HasSmul R₂ M] [IsScalarTower R₁ M M] [IsScalarTower R₂ M M] [HasSmul R₁ R₂]
+instance [SMul R₁ M] [SMul R₂ M] [IsScalarTower R₁ M M] [IsScalarTower R₂ M M] [SMul R₁ R₂]
     [IsScalarTower R₁ R₂ M] : IsScalarTower R₁ R₂ (Localization S)
     where smul_assoc s t :=
     Localization.ind <| Prod.rec fun r x => by simp only [smul_mk, smul_assoc s t r]
 
-instance smul_comm_class_right {R : Type _} [HasSmul R M] [IsScalarTower R M M] :
+instance smul_comm_class_right {R : Type _} [SMul R M] [IsScalarTower R M M] :
     SMulCommClass R (Localization S) (Localization S)
     where smul_comm s :=
     Localization.ind <|
@@ -431,7 +430,7 @@ instance smul_comm_class_right {R : Type _} [HasSmul R M] [IsScalarTower R M M] 
             simp only [smul_mk, smul_eq_mul, mk_mul, mul_comm r₁, smul_mul_assoc]
 #align localization.smul_comm_class_right Localization.smul_comm_class_right
 
-instance is_scalar_tower_right {R : Type _} [HasSmul R M] [IsScalarTower R M M] :
+instance is_scalar_tower_right {R : Type _} [SMul R M] [IsScalarTower R M M] :
     IsScalarTower R (Localization S) (Localization S)
     where smul_assoc s :=
     Localization.ind <|
@@ -440,7 +439,7 @@ instance is_scalar_tower_right {R : Type _} [HasSmul R M] [IsScalarTower R M M] 
           Prod.rec fun r₂ x₂ => by simp only [smul_mk, smul_eq_mul, mk_mul, smul_mul_assoc]
 #align localization.is_scalar_tower_right Localization.is_scalar_tower_right
 
-instance [HasSmul R M] [HasSmul Rᵐᵒᵖ M] [IsScalarTower R M M] [IsScalarTower Rᵐᵒᵖ M M]
+instance [SMul R M] [SMul Rᵐᵒᵖ M] [IsScalarTower R M M] [IsScalarTower Rᵐᵒᵖ M M]
     [IsCentralScalar R M] : IsCentralScalar R (Localization S)
     where op_smul_eq_smul s :=
     Localization.ind <| Prod.rec fun r x => by simp only [smul_mk, op_smul_eq_smul]

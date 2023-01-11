@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis, Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.pi_tensor_product
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -172,8 +172,8 @@ theorem smul_tprod_coeff_aux (z : R) (f : ∀ i, s i) (i : ι) (r : R) :
   Quotient.sound' <| AddConGen.Rel.of _ _ <| Eqv.of_smul _ _ _ _
 #align pi_tensor_product.smul_tprod_coeff_aux PiTensorProduct.smul_tprod_coeff_aux
 
-theorem smul_tprod_coeff (z : R) (f : ∀ i, s i) (i : ι) (r : R₁) [HasSmul R₁ R]
-    [IsScalarTower R₁ R R] [HasSmul R₁ (s i)] [IsScalarTower R₁ R (s i)] :
+theorem smul_tprod_coeff (z : R) (f : ∀ i, s i) (i : ι) (r : R₁) [SMul R₁ R] [IsScalarTower R₁ R R]
+    [SMul R₁ (s i)] [IsScalarTower R₁ R (s i)] :
     tprodCoeff R z (update f i (r • f i)) = tprodCoeff R (r • z) f :=
   by
   have h₁ : r • z = r • (1 : R) * z := by rw [smul_mul_assoc, one_mul]
@@ -234,7 +234,7 @@ variable [Monoid R₂] [DistribMulAction R₂ R] [SMulCommClass R₂ R R]
 
 -- Most of the time we want the instance below this one, which is easier for typeclass resolution
 -- to find.
-instance hasSmul' : HasSmul R₁ (⨂[R] i, s i) :=
+instance hasSmul' : SMul R₁ (⨂[R] i, s i) :=
   ⟨fun r =>
     liftAddHom (fun f : R × ∀ i, s i => tprodCoeff R (r • f.1) f.2)
       (fun r' f i hf => by simp_rw [zero_tprod_coeff' _ f i hf])
@@ -243,7 +243,7 @@ instance hasSmul' : HasSmul R₁ (⨂[R] i, s i) :=
       simp [smul_tprod_coeff, mul_smul_comm]⟩
 #align pi_tensor_product.has_smul' PiTensorProduct.hasSmul'
 
-instance : HasSmul R (⨂[R] i, s i) :=
+instance : SMul R (⨂[R] i, s i) :=
   PiTensorProduct.hasSmul'
 
 theorem smul_tprod_coeff' (r : R₁) (z : R) (f : ∀ i, s i) :
@@ -274,7 +274,7 @@ instance smul_comm_class' [SMulCommClass R₁ R₂ R] : SMulCommClass R₁ R₂ 
       fun z y ihz ihy => by simp_rw [PiTensorProduct.smul_add, ihz, ihy]⟩
 #align pi_tensor_product.smul_comm_class' PiTensorProduct.smul_comm_class'
 
-instance is_scalar_tower' [HasSmul R₁ R₂] [IsScalarTower R₁ R₂ R] :
+instance is_scalar_tower' [SMul R₁ R₂] [IsScalarTower R₁ R₂ R] :
     IsScalarTower R₁ R₂ (⨂[R] i, s i) :=
   ⟨fun r' r'' x =>
     PiTensorProduct.induction_on' x (fun xr xf => by simp only [smul_tprod_coeff', smul_assoc])

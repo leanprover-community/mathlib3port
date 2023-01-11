@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 
 ! This file was ported from Lean 3 source module analysis.schwartz_space
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -197,7 +197,7 @@ section Smul
 variable [NormedField 𝕜] [NormedSpace 𝕜 F] [SMulCommClass ℝ 𝕜 F] [NormedField 𝕜'] [NormedSpace 𝕜' F]
   [SMulCommClass ℝ 𝕜' F]
 
-instance : HasSmul 𝕜 𝓢(E, F) :=
+instance : SMul 𝕜 𝓢(E, F) :=
   ⟨fun c f =>
     { toFun := c • f
       smooth' := (f.smooth _).const_smul c
@@ -217,7 +217,7 @@ theorem smul_apply {f : 𝓢(E, F)} {c : 𝕜} {x : E} : (c • f) x = c • f x
   rfl
 #align schwartz_map.smul_apply SchwartzMap.smul_apply
 
-instance [HasSmul 𝕜 𝕜'] [IsScalarTower 𝕜 𝕜' F] : IsScalarTower 𝕜 𝕜' 𝓢(E, F) :=
+instance [SMul 𝕜 𝕜'] [IsScalarTower 𝕜 𝕜' F] : IsScalarTower 𝕜 𝕜' 𝓢(E, F) :=
   ⟨fun a b f => ext fun x => smul_assoc a b (f x)⟩
 
 instance [SMulCommClass 𝕜 𝕜' F] : SMulCommClass 𝕜 𝕜' 𝓢(E, F) :=
@@ -233,7 +233,7 @@ theorem seminorm_aux_smul_le (k n : ℕ) (c : 𝕜) (f : 𝓢(E, F)) :
   exact mul_le_mul_of_nonneg_left (f.le_seminorm_aux k n x) (norm_nonneg _)
 #align schwartz_map.seminorm_aux_smul_le SchwartzMap.seminorm_aux_smul_le
 
-instance hasNsmul : HasSmul ℕ 𝓢(E, F) :=
+instance hasNsmul : SMul ℕ 𝓢(E, F) :=
   ⟨fun c f =>
     { toFun := c • f
       smooth' := (f.smooth _).const_smul c
@@ -246,7 +246,7 @@ instance hasNsmul : HasSmul ℕ 𝓢(E, F) :=
         exact ((c : ℝ) • f).decay' }⟩
 #align schwartz_map.has_nsmul SchwartzMap.hasNsmul
 
-instance hasZsmul : HasSmul ℤ 𝓢(E, F) :=
+instance hasZsmul : SMul ℤ 𝓢(E, F) :=
   ⟨fun c f =>
     { toFun := c • f
       smooth' := (f.smooth _).const_smul c

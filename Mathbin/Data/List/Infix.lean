@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.list.infix
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -251,10 +251,13 @@ theorem reverse_infix : reverse l₁ <:+: reverse l₂ ↔ l₁ <:+: l₂ :=
 -/
 
 alias reverse_prefix ↔ _ is_suffix.reverse
+#align list.is_suffix.reverse List.isSuffix.reverse
 
 alias reverse_suffix ↔ _ is_prefix.reverse
+#align list.is_prefix.reverse List.isPrefix.reverse
 
 alias reverse_infix ↔ _ is_infix.reverse
+#align list.is_infix.reverse List.isInfix.reverse
 
 #print List.isInfix.length_le /-
 theorem isInfix.length_le (h : l₁ <:+: l₂) : l₁.length ≤ l₂.length :=
@@ -288,6 +291,7 @@ theorem infix_nil_iff : l <:+: [] ↔ l = [] :=
 -/
 
 alias infix_nil_iff ↔ eq_nil_of_infix_nil _
+#align list.eq_nil_of_infix_nil List.eq_nil_of_infix_nil
 
 #print List.prefix_nil_iff /-
 @[simp]
@@ -304,8 +308,10 @@ theorem suffix_nil_iff : l <:+ [] ↔ l = [] :=
 -/
 
 alias prefix_nil_iff ↔ eq_nil_of_prefix_nil _
+#align list.eq_nil_of_prefix_nil List.eq_nil_of_prefix_nil
 
 alias suffix_nil_iff ↔ eq_nil_of_suffix_nil _
+#align list.eq_nil_of_suffix_nil List.eq_nil_of_suffix_nil
 
 #print List.infix_iff_prefix_suffix /-
 theorem infix_iff_prefix_suffix (l₁ l₂ : List α) : l₁ <:+: l₂ ↔ ∃ t, l₁ <+: t ∧ t <:+ l₂ :=
@@ -727,17 +733,21 @@ theorem mem_of_mem_slice {n m : ℕ} {l : List α} {a : α} (h : a ∈ l.slice n
   slice_subset n m l h
 #align list.mem_of_mem_slice List.mem_of_mem_slice
 
-#print List.takeWhile_prefix /-
+/- warning: list.take_while_prefix -> List.takeWhile_prefix is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {l : List.{u1} α} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p], List.isPrefix.{u1} α (List.takeWhile.{u1} α p (fun (a : α) => _inst_1 a) l) l
+but is expected to have type
+  forall {α : Type.{u1}} {l : List.{u1} α} (p : α -> Bool), List.isPrefix.{u1} α (List.takeWhile.{u1} α p l) l
+Case conversion may be inaccurate. Consider using '#align list.take_while_prefix List.takeWhile_prefixₓ'. -/
 theorem takeWhile_prefix (p : α → Prop) [DecidablePred p] : l.takeWhile p <+: l :=
   ⟨l.dropWhile p, takeWhile_append_drop p l⟩
 #align list.take_while_prefix List.takeWhile_prefix
--/
 
 /- warning: list.drop_while_suffix -> List.dropWhile_suffix is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {l : List.{u1} α} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p], List.isSuffix.{u1} α (List.dropWhileₓ.{u1} α p (fun (a : α) => _inst_1 a) l) l
 but is expected to have type
-  forall {α : Type.{u1}} {l : List.{u1} α} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p], List.isSuffix.{u1} α (List.dropWhile.{u1} α (fun (a : α) => Decidable.decide (p a) ((fun (a : α) => _inst_1 a) a)) l) l
+  forall {α : Type.{u1}} {l : List.{u1} α} (p : α -> Bool), List.isSuffix.{u1} α (List.dropWhile.{u1} α p l) l
 Case conversion may be inaccurate. Consider using '#align list.drop_while_suffix List.dropWhile_suffixₓ'. -/
 theorem dropWhile_suffix (p : α → Prop) [DecidablePred p] : l.dropWhile p <:+ l :=
   ⟨l.takeWhile p, takeWhile_append_drop p l⟩
@@ -930,7 +940,7 @@ theorem isPrefix.reduceOption {l₁ l₂ : List (Option α)} (h : l₁ <+: l₂)
 lean 3 declaration is
   forall {α : Type.{u1}} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p] {{l₁ : List.{u1} α}} {{l₂ : List.{u1} α}}, (List.isPrefix.{u1} α l₁ l₂) -> (List.isPrefix.{u1} α (List.filterₓ.{u1} α p (fun (a : α) => _inst_1 a) l₁) (List.filterₓ.{u1} α p (fun (a : α) => _inst_1 a) l₂))
 but is expected to have type
-  forall {α : Type.{u1}} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p] {{l₁ : List.{u1} α}} {{l₂ : List.{u1} α}}, (List.isPrefix.{u1} α l₁ l₂) -> (List.isPrefix.{u1} α (List.filter.{u1} α (fun (a : α) => Decidable.decide (p a) ((fun (a : α) => _inst_1 a) a)) l₁) (List.filter.{u1} α (fun (a : α) => Decidable.decide (p a) ((fun (a : α) => _inst_1 a) a)) l₂))
+  forall {α : Type.{u1}} (p : α -> Bool) {{_inst_1 : List.{u1} α}} {{l₁ : List.{u1} α}}, (List.isPrefix.{u1} α _inst_1 l₁) -> (List.isPrefix.{u1} α (List.filter.{u1} α p _inst_1) (List.filter.{u1} α p l₁))
 Case conversion may be inaccurate. Consider using '#align list.is_prefix.filter List.isPrefix.filterₓ'. -/
 theorem isPrefix.filter (p : α → Prop) [DecidablePred p] ⦃l₁ l₂ : List α⦄ (h : l₁ <+: l₂) :
     l₁.filter p <+: l₂.filter p := by
@@ -943,7 +953,7 @@ theorem isPrefix.filter (p : α → Prop) [DecidablePred p] ⦃l₁ l₂ : List 
 lean 3 declaration is
   forall {α : Type.{u1}} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p] {{l₁ : List.{u1} α}} {{l₂ : List.{u1} α}}, (List.isSuffix.{u1} α l₁ l₂) -> (List.isSuffix.{u1} α (List.filterₓ.{u1} α p (fun (a : α) => _inst_1 a) l₁) (List.filterₓ.{u1} α p (fun (a : α) => _inst_1 a) l₂))
 but is expected to have type
-  forall {α : Type.{u1}} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p] {{l₁ : List.{u1} α}} {{l₂ : List.{u1} α}}, (List.isSuffix.{u1} α l₁ l₂) -> (List.isSuffix.{u1} α (List.filter.{u1} α (fun (a : α) => Decidable.decide (p a) ((fun (a : α) => _inst_1 a) a)) l₁) (List.filter.{u1} α (fun (a : α) => Decidable.decide (p a) ((fun (a : α) => _inst_1 a) a)) l₂))
+  forall {α : Type.{u1}} (p : α -> Bool) {{_inst_1 : List.{u1} α}} {{l₁ : List.{u1} α}}, (List.isSuffix.{u1} α _inst_1 l₁) -> (List.isSuffix.{u1} α (List.filter.{u1} α p _inst_1) (List.filter.{u1} α p l₁))
 Case conversion may be inaccurate. Consider using '#align list.is_suffix.filter List.isSuffix.filterₓ'. -/
 theorem isSuffix.filter (p : α → Prop) [DecidablePred p] ⦃l₁ l₂ : List α⦄ (h : l₁ <:+ l₂) :
     l₁.filter p <:+ l₂.filter p := by
@@ -956,7 +966,7 @@ theorem isSuffix.filter (p : α → Prop) [DecidablePred p] ⦃l₁ l₂ : List 
 lean 3 declaration is
   forall {α : Type.{u1}} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p] {{l₁ : List.{u1} α}} {{l₂ : List.{u1} α}}, (List.isInfix.{u1} α l₁ l₂) -> (List.isInfix.{u1} α (List.filterₓ.{u1} α p (fun (a : α) => _inst_1 a) l₁) (List.filterₓ.{u1} α p (fun (a : α) => _inst_1 a) l₂))
 but is expected to have type
-  forall {α : Type.{u1}} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p] {{l₁ : List.{u1} α}} {{l₂ : List.{u1} α}}, (List.isInfix.{u1} α l₁ l₂) -> (List.isInfix.{u1} α (List.filter.{u1} α (fun (a : α) => Decidable.decide (p a) ((fun (a : α) => _inst_1 a) a)) l₁) (List.filter.{u1} α (fun (a : α) => Decidable.decide (p a) ((fun (a : α) => _inst_1 a) a)) l₂))
+  forall {α : Type.{u1}} (p : α -> Bool) {{_inst_1 : List.{u1} α}} {{l₁ : List.{u1} α}}, (List.isInfix.{u1} α _inst_1 l₁) -> (List.isInfix.{u1} α (List.filter.{u1} α p _inst_1) (List.filter.{u1} α p l₁))
 Case conversion may be inaccurate. Consider using '#align list.is_infix.filter List.isInfix.filterₓ'. -/
 theorem isInfix.filter (p : α → Prop) [DecidablePred p] ⦃l₁ l₂ : List α⦄ (h : l₁ <:+: l₂) :
     l₁.filter p <:+: l₂.filter p := by

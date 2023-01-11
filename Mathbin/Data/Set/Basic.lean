@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura
 
 ! This file was ported from Lean 3 source module data.set.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -188,8 +188,24 @@ theorem lt_iff_ssubset : s < t ↔ s ⊂ t :=
 #align set.lt_iff_ssubset Set.lt_iff_ssubset
 
 alias le_iff_subset ↔ _root_.has_le.le.subset _root_.has_subset.subset.le
+#align has_le.le.subset LE.le.subset
+#align has_subset.subset.le HasSubset.Subset.le
 
+/- warning: has_lt.lt.ssubset -> LT.lt.ssubset is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α}, (LT.lt.{u1} (Set.{u1} α) (Preorder.toLT.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)))))))) s t) -> (HasSSubset.SSubset.{u1} (Set.{u1} α) (Set.hasSsubset.{u1} α) s t)
+but is expected to have type
+  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α}, (LT.lt.{u1} (Set.{u1} α) (Preorder.toLT.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toBiheytingAlgebra.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α))))))))) s t) -> (HasSSubset.SSubset.{u1} (Set.{u1} α) (Set.instHasSSubsetSet.{u1} α) s t)
+Case conversion may be inaccurate. Consider using '#align has_lt.lt.ssubset LT.lt.ssubsetₓ'. -/
+/- warning: has_ssubset.ssubset.lt -> HasSSubset.SSubset.lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α}, (HasSSubset.SSubset.{u1} (Set.{u1} α) (Set.hasSsubset.{u1} α) s t) -> (LT.lt.{u1} (Set.{u1} α) (Preorder.toLT.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)))))))) s t)
+but is expected to have type
+  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α}, (HasSSubset.SSubset.{u1} (Set.{u1} α) (Set.instHasSSubsetSet.{u1} α) s t) -> (LT.lt.{u1} (Set.{u1} α) (Preorder.toLT.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toBiheytingAlgebra.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α))))))))) s t)
+Case conversion may be inaccurate. Consider using '#align has_ssubset.ssubset.lt HasSSubset.SSubset.ltₓ'. -/
 alias lt_iff_ssubset ↔ _root_.has_lt.lt.ssubset _root_.has_ssubset.ssubset.lt
+#align has_lt.lt.ssubset LT.lt.ssubset
+#align has_ssubset.ssubset.lt HasSSubset.SSubset.lt
 
 /-- Coercion from a set to the corresponding subtype. -/
 instance {α : Type u} : CoeSort (Set α) (Type u) :=
@@ -612,6 +628,7 @@ theorem nonempty_coe_sort {s : Set α} : Nonempty ↥s ↔ s.Nonempty :=
 -/
 
 alias nonempty_coe_sort ↔ _ nonempty.coe_sort
+#align set.nonempty.coe_sort Set.Nonempty.coe_sort
 
 #print Set.nonempty_def /-
 theorem nonempty_def : s.Nonempty ↔ ∃ x, x ∈ s :=
@@ -894,6 +911,7 @@ theorem nonempty_iff_ne_empty : s.Nonempty ↔ s ≠ ∅ :=
 -/
 
 alias nonempty_iff_ne_empty ↔ nonempty.ne_empty _
+#align set.nonempty.ne_empty Set.Nonempty.ne_empty
 
 #print Set.not_nonempty_empty /-
 @[simp]
@@ -940,7 +958,14 @@ theorem empty_ssubset : ∅ ⊂ s ↔ s.Nonempty :=
   (@bot_lt_iff_ne_bot (Set α) _ _ _).trans nonempty_iff_ne_empty.symm
 #align set.empty_ssubset Set.empty_ssubset
 
+/- warning: set.nonempty.empty_ssubset -> Set.Nonempty.empty_ssubset is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {s : Set.{u1} α}, (Set.Nonempty.{u1} α s) -> (HasSSubset.SSubset.{u1} (Set.{u1} α) (Set.hasSsubset.{u1} α) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.hasEmptyc.{u1} α)) s)
+but is expected to have type
+  forall {α : Type.{u1}} {s : Set.{u1} α}, (Set.Nonempty.{u1} α s) -> (HasSSubset.SSubset.{u1} (Set.{u1} α) (Set.instHasSSubsetSet.{u1} α) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α)) s)
+Case conversion may be inaccurate. Consider using '#align set.nonempty.empty_ssubset Set.Nonempty.empty_ssubsetₓ'. -/
 alias empty_ssubset ↔ _ nonempty.empty_ssubset
+#align set.nonempty.empty_ssubset Set.Nonempty.empty_ssubset
 
 /-!
 
@@ -993,6 +1018,7 @@ theorem univ_subset_iff {s : Set α} : univ ⊆ s ↔ s = univ :=
 -/
 
 alias univ_subset_iff ↔ eq_univ_of_univ_subset _
+#align set.eq_univ_of_univ_subset Set.eq_univ_of_univ_subset
 
 #print Set.eq_univ_iff_forall /-
 theorem eq_univ_iff_forall {s : Set α} : s = univ ↔ ∀ x, x ∈ s :=
@@ -1182,7 +1208,7 @@ theorem union_assoc (a b c : Set α) : a ∪ b ∪ c = a ∪ (b ∪ c) :=
 lean 3 declaration is
   forall {α : Type.{u1}}, IsAssociative.{u1} (Set.{u1} α) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α))
 but is expected to have type
-  forall {α : Type.{u1}}, IsAssociative.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Data.Set.Basic._hyg.7137 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.7139 : Set.{u1} α) => Union.union.{u1} (Set.{u1} α) (Set.instUnionSet_1.{u1} α) x._@.Mathlib.Data.Set.Basic._hyg.7137 x._@.Mathlib.Data.Set.Basic._hyg.7139)
+  forall {α : Type.{u1}}, IsAssociative.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Data.Set.Basic._hyg.7167 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.7169 : Set.{u1} α) => Union.union.{u1} (Set.{u1} α) (Set.instUnionSet_1.{u1} α) x._@.Mathlib.Data.Set.Basic._hyg.7167 x._@.Mathlib.Data.Set.Basic._hyg.7169)
 Case conversion may be inaccurate. Consider using '#align set.union_is_assoc Set.union_isAssocₓ'. -/
 instance union_isAssoc : IsAssociative (Set α) (· ∪ ·) :=
   ⟨union_assoc⟩
@@ -1192,7 +1218,7 @@ instance union_isAssoc : IsAssociative (Set α) (· ∪ ·) :=
 lean 3 declaration is
   forall {α : Type.{u1}}, IsCommutative.{u1} (Set.{u1} α) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α))
 but is expected to have type
-  forall {α : Type.{u1}}, IsCommutative.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Data.Set.Basic._hyg.7174 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.7176 : Set.{u1} α) => Union.union.{u1} (Set.{u1} α) (Set.instUnionSet_1.{u1} α) x._@.Mathlib.Data.Set.Basic._hyg.7174 x._@.Mathlib.Data.Set.Basic._hyg.7176)
+  forall {α : Type.{u1}}, IsCommutative.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Data.Set.Basic._hyg.7204 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.7206 : Set.{u1} α) => Union.union.{u1} (Set.{u1} α) (Set.instUnionSet_1.{u1} α) x._@.Mathlib.Data.Set.Basic._hyg.7204 x._@.Mathlib.Data.Set.Basic._hyg.7206)
 Case conversion may be inaccurate. Consider using '#align set.union_is_comm Set.union_isCommₓ'. -/
 instance union_isComm : IsCommutative (Set α) (· ∪ ·) :=
   ⟨union_comm⟩
@@ -1535,7 +1561,7 @@ theorem inter_assoc (a b c : Set α) : a ∩ b ∩ c = a ∩ (b ∩ c) :=
 lean 3 declaration is
   forall {α : Type.{u1}}, IsAssociative.{u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α))
 but is expected to have type
-  forall {α : Type.{u1}}, IsAssociative.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Data.Set.Basic._hyg.8573 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.8575 : Set.{u1} α) => Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet_1.{u1} α) x._@.Mathlib.Data.Set.Basic._hyg.8573 x._@.Mathlib.Data.Set.Basic._hyg.8575)
+  forall {α : Type.{u1}}, IsAssociative.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Data.Set.Basic._hyg.8603 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.8605 : Set.{u1} α) => Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet_1.{u1} α) x._@.Mathlib.Data.Set.Basic._hyg.8603 x._@.Mathlib.Data.Set.Basic._hyg.8605)
 Case conversion may be inaccurate. Consider using '#align set.inter_is_assoc Set.inter_isAssocₓ'. -/
 instance inter_isAssoc : IsAssociative (Set α) (· ∩ ·) :=
   ⟨inter_assoc⟩
@@ -1545,7 +1571,7 @@ instance inter_isAssoc : IsAssociative (Set α) (· ∩ ·) :=
 lean 3 declaration is
   forall {α : Type.{u1}}, IsCommutative.{u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α))
 but is expected to have type
-  forall {α : Type.{u1}}, IsCommutative.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Data.Set.Basic._hyg.8610 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.8612 : Set.{u1} α) => Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet_1.{u1} α) x._@.Mathlib.Data.Set.Basic._hyg.8610 x._@.Mathlib.Data.Set.Basic._hyg.8612)
+  forall {α : Type.{u1}}, IsCommutative.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Data.Set.Basic._hyg.8640 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.8642 : Set.{u1} α) => Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet_1.{u1} α) x._@.Mathlib.Data.Set.Basic._hyg.8640 x._@.Mathlib.Data.Set.Basic._hyg.8642)
 Case conversion may be inaccurate. Consider using '#align set.inter_is_comm Set.inter_isCommₓ'. -/
 instance inter_isComm : IsCommutative (Set α) (· ∩ ·) :=
   ⟨inter_comm⟩
@@ -2636,7 +2662,14 @@ theorem not_disjoint_iff_nonempty_inter : ¬Disjoint s t ↔ (s ∩ t).Nonempty 
   not_disjoint_iff
 #align set.not_disjoint_iff_nonempty_inter Set.not_disjoint_iff_nonempty_inter
 
+/- warning: set.nonempty.not_disjoint -> Set.Nonempty.not_disjoint is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α}, (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t)) -> (Not (Disjoint.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) s t))
+but is expected to have type
+  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α}, (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet_1.{u1} α) s t)) -> (Not (Disjoint.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toBiheytingAlgebra.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α))))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toBiheytingAlgebra.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α))))))))) (BooleanAlgebra.toBoundedOrder.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α))) s t))
+Case conversion may be inaccurate. Consider using '#align set.nonempty.not_disjoint Set.Nonempty.not_disjointₓ'. -/
 alias not_disjoint_iff_nonempty_inter ↔ _ nonempty.not_disjoint
+#align set.nonempty.not_disjoint Set.Nonempty.not_disjoint
 
 /- warning: set.disjoint_or_nonempty_inter -> Set.disjoint_or_nonempty_inter is a dubious translation:
 lean 3 declaration is
@@ -3129,13 +3162,41 @@ theorem disjoint_compl_right_iff_subset : Disjoint s (tᶜ) ↔ s ⊆ t :=
   disjoint_compl_right_iff
 #align set.disjoint_compl_right_iff_subset Set.disjoint_compl_right_iff_subset
 
+/- warning: disjoint.subset_compl_right -> Disjoint.subset_compl_right is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α}, (Disjoint.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) s t) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) t))
+but is expected to have type
+  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α}, (Disjoint.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toBiheytingAlgebra.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α))))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toBiheytingAlgebra.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α))))))))) (BooleanAlgebra.toBoundedOrder.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α))) s t) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) s (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) t))
+Case conversion may be inaccurate. Consider using '#align disjoint.subset_compl_right Disjoint.subset_compl_rightₓ'. -/
 alias subset_compl_iff_disjoint_right ↔ _ _root_.disjoint.subset_compl_right
+#align disjoint.subset_compl_right Disjoint.subset_compl_right
 
+/- warning: disjoint.subset_compl_left -> Disjoint.subset_compl_left is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α}, (Disjoint.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) t s) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) t))
+but is expected to have type
+  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α}, (Disjoint.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toBiheytingAlgebra.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α))))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toBiheytingAlgebra.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α))))))))) (BooleanAlgebra.toBoundedOrder.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α))) t s) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) s (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) t))
+Case conversion may be inaccurate. Consider using '#align disjoint.subset_compl_left Disjoint.subset_compl_leftₓ'. -/
 alias subset_compl_iff_disjoint_left ↔ _ _root_.disjoint.subset_compl_left
+#align disjoint.subset_compl_left Disjoint.subset_compl_left
 
+/- warning: has_subset.subset.disjoint_compl_left -> HasSubset.Subset.disjoint_compl_left is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α}, (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) t s) -> (Disjoint.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s) t)
+but is expected to have type
+  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α}, (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) t s) -> (Disjoint.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toBiheytingAlgebra.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α))))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toBiheytingAlgebra.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α))))))))) (BooleanAlgebra.toBoundedOrder.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α))) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s) t)
+Case conversion may be inaccurate. Consider using '#align has_subset.subset.disjoint_compl_left HasSubset.Subset.disjoint_compl_leftₓ'. -/
 alias disjoint_compl_left_iff_subset ↔ _ _root_.has_subset.subset.disjoint_compl_left
+#align has_subset.subset.disjoint_compl_left HasSubset.Subset.disjoint_compl_left
 
+/- warning: has_subset.subset.disjoint_compl_right -> HasSubset.Subset.disjoint_compl_right is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α}, (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s t) -> (Disjoint.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) s (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) t))
+but is expected to have type
+  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α}, (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) s t) -> (Disjoint.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toBiheytingAlgebra.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α))))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toBiheytingAlgebra.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α))))))))) (BooleanAlgebra.toBoundedOrder.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α))) s (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) t))
+Case conversion may be inaccurate. Consider using '#align has_subset.subset.disjoint_compl_right HasSubset.Subset.disjoint_compl_rightₓ'. -/
 alias disjoint_compl_right_iff_subset ↔ _ _root_.has_subset.subset.disjoint_compl_right
+#align has_subset.subset.disjoint_compl_right HasSubset.Subset.disjoint_compl_right
 
 /- warning: set.subset_union_compl_iff_inter_subset -> Set.subset_union_compl_iff_inter_subset is a dubious translation:
 lean 3 declaration is
@@ -4657,6 +4718,7 @@ theorem nontrivial_coe_sort {s : Set α} : Nontrivial s ↔ s.Nontrivial := by
 -/
 
 alias nontrivial_coe_sort ↔ _ nontrivial.coe_sort
+#align set.nontrivial.coe_sort Set.Nontrivial.coe_sort
 
 #print Set.nontrivial_of_nontrivial_coe /-
 /-- A type with a set `s` whose `coe_sort` is a nontrivial type is nontrivial.
@@ -4688,8 +4750,10 @@ theorem not_nontrivial_iff : ¬s.Nontrivial ↔ s.Subsingleton :=
 -/
 
 alias not_nontrivial_iff ↔ _ subsingleton.not_nontrivial
+#align set.subsingleton.not_nontrivial Set.Subsingleton.not_nontrivial
 
 alias not_subsingleton_iff ↔ _ nontrivial.not_subsingleton
+#align set.nontrivial.not_subsingleton Set.Nontrivial.not_subsingleton
 
 protected theorem subsingleton_or_nontrivial (s : Set α) : s.Subsingleton ∨ s.Nontrivial := by
   simp [or_iff_not_imp_right]

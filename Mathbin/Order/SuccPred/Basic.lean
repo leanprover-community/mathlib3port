@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.succ_pred.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -251,6 +251,7 @@ theorem lt_succ_iff_not_isMax : a < succ a ↔ ¬IsMax a :=
 -/
 
 alias lt_succ_iff_not_is_max ↔ _ lt_succ_of_not_is_max
+#align order.lt_succ_of_not_is_max Order.lt_succ_of_not_isMax
 
 #print Order.wcovby_succ /-
 theorem wcovby_succ (a : α) : a ⩿ succ a :=
@@ -407,8 +408,11 @@ theorem succ_lt_succ_iff : succ a < succ b ↔ a < b := by simp
 -/
 
 alias succ_le_succ_iff ↔ le_of_succ_le_succ _
+#align order.le_of_succ_le_succ Order.le_of_succ_le_succ
 
 alias succ_lt_succ_iff ↔ lt_of_succ_lt_succ succ_lt_succ
+#align order.lt_of_succ_lt_succ Order.lt_of_succ_lt_succ
+#align order.succ_lt_succ Order.succ_lt_succ
 
 #print Order.succ_strictMono /-
 theorem succ_strictMono : StrictMono (succ : α → α) := fun a b => succ_lt_succ
@@ -479,6 +483,7 @@ theorem succ_eq_iff_isMax : succ a = a ↔ IsMax a :=
 -/
 
 alias succ_eq_iff_is_max ↔ _ _root_.is_max.succ_eq
+#align is_max.succ_eq IsMax.succ_eq
 
 #print Order.succ_eq_succ_iff_of_not_isMax /-
 theorem succ_eq_succ_iff_of_not_isMax (ha : ¬IsMax a) (hb : ¬IsMax b) : succ a = succ b ↔ a = b :=
@@ -593,6 +598,7 @@ theorem succ_ne_succ_iff : succ a ≠ succ b ↔ a ≠ b :=
 -/
 
 alias succ_ne_succ_iff ↔ _ succ_ne_succ
+#align order.succ_ne_succ Order.succ_ne_succ
 
 #print Order.lt_succ_iff_eq_or_lt /-
 theorem lt_succ_iff_eq_or_lt : a < succ b ↔ a = b ∨ a < b :=
@@ -801,6 +807,7 @@ theorem pred_lt_iff_not_isMin : pred a < a ↔ ¬IsMin a :=
 -/
 
 alias pred_lt_iff_not_is_min ↔ _ pred_lt_of_not_is_min
+#align order.pred_lt_of_not_is_min Order.pred_lt_of_not_isMin
 
 #print Order.pred_wcovby /-
 theorem pred_wcovby (a : α) : pred a ⩿ a :=
@@ -931,8 +938,11 @@ theorem pred_lt_pred_iff : pred a < pred b ↔ a < b := by simp
 -/
 
 alias pred_le_pred_iff ↔ le_of_pred_le_pred _
+#align order.le_of_pred_le_pred Order.le_of_pred_le_pred
 
 alias pred_lt_pred_iff ↔ lt_of_pred_lt_pred pred_lt_pred
+#align order.lt_of_pred_lt_pred Order.lt_of_pred_lt_pred
+#align order.pred_lt_pred Order.pred_lt_pred
 
 #print Order.pred_strictMono /-
 theorem pred_strictMono : StrictMono (pred : α → α) := fun a b => pred_lt_pred
@@ -1003,6 +1013,7 @@ theorem pred_eq_iff_isMin : pred a = a ↔ IsMin a :=
 -/
 
 alias pred_eq_iff_is_min ↔ _ _root_.is_min.pred_eq
+#align is_min.pred_eq IsMin.pred_eq
 
 #print Order.pred_le_le_iff /-
 theorem pred_le_le_iff {a b : α} : pred a ≤ b ∧ b ≤ a ↔ b = a ∨ b = pred a :=
@@ -1095,6 +1106,7 @@ theorem pred_ne_pred_iff : pred a ≠ pred b ↔ a ≠ b :=
 -/
 
 alias pred_ne_pred_iff ↔ _ pred_ne_pred
+#align order.pred_ne_pred Order.pred_ne_pred
 
 #print Order.pred_lt_iff_eq_or_lt /-
 theorem pred_lt_iff_eq_or_lt : pred a < b ↔ a = b ∨ a < b :=

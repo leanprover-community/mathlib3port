@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.clique
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -91,6 +91,7 @@ theorem is_clique_bot_iff : (⊥ : SimpleGraph α).IsClique s ↔ (s : Set α).S
 #align simple_graph.is_clique_bot_iff SimpleGraph.is_clique_bot_iff
 
 alias is_clique_bot_iff ↔ is_clique.subsingleton _
+#align simple_graph.is_clique.subsingleton SimpleGraph.IsClique.subsingleton
 
 end Clique
 
@@ -273,6 +274,7 @@ theorem clique_set_eq_empty_iff : G.cliqueSet n = ∅ ↔ G.CliqueFree n := by
 #align simple_graph.clique_set_eq_empty_iff SimpleGraph.clique_set_eq_empty_iff
 
 alias clique_set_eq_empty_iff ↔ _ clique_free.clique_set
+#align simple_graph.clique_free.clique_set SimpleGraph.CliqueFree.clique_set
 
 attribute [protected] clique_free.clique_set
 
@@ -314,6 +316,7 @@ theorem clique_finset_eq_empty_iff : G.cliqueFinset n = ∅ ↔ G.CliqueFree n :
 #align simple_graph.clique_finset_eq_empty_iff SimpleGraph.clique_finset_eq_empty_iff
 
 alias clique_finset_eq_empty_iff ↔ _ _root_.simple_graph.clique_free.clique_finset
+#align simple_graph.clique_free.clique_finset SimpleGraph.CliqueFree.clique_finset
 
 attribute [protected] clique_free.clique_finset
 

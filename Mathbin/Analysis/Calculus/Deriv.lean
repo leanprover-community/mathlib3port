@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gabriel Ebner, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.deriv
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -222,6 +222,7 @@ theorem has_strict_deriv_at_iff_has_strict_fderiv_at :
 #align has_strict_deriv_at_iff_has_strict_fderiv_at has_strict_deriv_at_iff_has_strict_fderiv_at
 
 alias has_strict_deriv_at_iff_has_strict_fderiv_at ↔ HasStrictDerivAt.hasStrictFderivAt _
+#align has_strict_deriv_at.has_strict_fderiv_at HasStrictDerivAt.hasStrictFderivAt
 
 /-- Expressing `has_deriv_at f f' x` in terms of `has_fderiv_at` -/
 theorem has_deriv_at_iff_has_fderiv_at {f' : F} :
@@ -230,6 +231,7 @@ theorem has_deriv_at_iff_has_fderiv_at {f' : F} :
 #align has_deriv_at_iff_has_fderiv_at has_deriv_at_iff_has_fderiv_at
 
 alias has_deriv_at_iff_has_fderiv_at ↔ HasDerivAt.hasFderivAt _
+#align has_deriv_at.has_fderiv_at HasDerivAt.hasFderivAt
 
 theorem deriv_within_zero_of_not_differentiable_within_at (h : ¬DifferentiableWithinAt 𝕜 f s x) :
     derivWithin f s x = 0 := by
@@ -340,6 +342,7 @@ theorem has_deriv_within_at_congr_set {s t u : Set 𝕜} (hu : u ∈ 𝓝 x) (h 
 #align has_deriv_within_at_congr_set has_deriv_within_at_congr_set
 
 alias has_deriv_within_at_congr_set ↔ HasDerivWithinAt.congr_set _
+#align has_deriv_within_at.congr_set HasDerivWithinAt.congr_set
 
 @[simp]
 theorem has_deriv_within_at_diff_singleton :
@@ -354,6 +357,8 @@ theorem has_deriv_within_at_Ioi_iff_Ici [PartialOrder 𝕜] :
 #align has_deriv_within_at_Ioi_iff_Ici has_deriv_within_at_Ioi_iff_Ici
 
 alias has_deriv_within_at_Ioi_iff_Ici ↔ HasDerivWithinAt.Ici_of_Ioi HasDerivWithinAt.Ioi_of_Ici
+#align has_deriv_within_at.Ici_of_Ioi HasDerivWithinAt.Ici_of_Ioi
+#align has_deriv_within_at.Ioi_of_Ici HasDerivWithinAt.Ioi_of_Ici
 
 @[simp]
 theorem has_deriv_within_at_Iio_iff_Iic [PartialOrder 𝕜] :
@@ -362,6 +367,8 @@ theorem has_deriv_within_at_Iio_iff_Iic [PartialOrder 𝕜] :
 #align has_deriv_within_at_Iio_iff_Iic has_deriv_within_at_Iio_iff_Iic
 
 alias has_deriv_within_at_Iio_iff_Iic ↔ HasDerivWithinAt.Iic_of_Iio HasDerivWithinAt.Iio_of_Iic
+#align has_deriv_within_at.Iic_of_Iio HasDerivWithinAt.Iic_of_Iio
+#align has_deriv_within_at.Iio_of_Iic HasDerivWithinAt.Iio_of_Iic
 
 theorem HasDerivWithinAt.Ioi_iff_Ioo [LinearOrder 𝕜] [OrderClosedTopology 𝕜] {x y : 𝕜} (h : x < y) :
     HasDerivWithinAt f f' (Ioo x y) x ↔ HasDerivWithinAt f f' (Ioi x) x :=
@@ -372,6 +379,8 @@ theorem HasDerivWithinAt.Ioi_iff_Ioo [LinearOrder 𝕜] [OrderClosedTopology �
 #align has_deriv_within_at.Ioi_iff_Ioo HasDerivWithinAt.Ioi_iff_Ioo
 
 alias HasDerivWithinAt.Ioi_iff_Ioo ↔ HasDerivWithinAt.Ioi_of_Ioo HasDerivWithinAt.Ioo_of_Ioi
+#align has_deriv_within_at.Ioi_of_Ioo HasDerivWithinAt.Ioi_of_Ioo
+#align has_deriv_within_at.Ioo_of_Ioi HasDerivWithinAt.Ioo_of_Ioi
 
 theorem has_deriv_at_iff_is_o_nhds_zero :
     HasDerivAt f f' x ↔ (fun h => f (x + h) - f x - h • f') =o[𝓝 0] fun h => h :=

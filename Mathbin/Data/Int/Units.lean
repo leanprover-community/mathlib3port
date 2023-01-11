@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.int.units
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -141,7 +141,14 @@ theorem isUnit_iff_natAbs_eq {n : ℤ} : IsUnit n ↔ n.natAbs = 1 := by
   simp [nat_abs_eq_iff, is_unit_iff, Nat.cast_zero]
 #align int.is_unit_iff_nat_abs_eq Int.isUnit_iff_natAbs_eq
 
+/- warning: int.is_unit.nat_abs_eq -> Int.IsUnit.natAbs_eq is a dubious translation:
+lean 3 declaration is
+  forall {n : Int}, (IsUnit.{0} Int Int.monoid n) -> (Eq.{1} Nat (Int.natAbs n) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))
+but is expected to have type
+  forall {n : Int}, (IsUnit.{0} Int Int.instMonoidInt n) -> (Eq.{1} Nat (Int.natAbs n) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))
+Case conversion may be inaccurate. Consider using '#align int.is_unit.nat_abs_eq Int.IsUnit.natAbs_eqₓ'. -/
 alias is_unit_iff_nat_abs_eq ↔ is_unit.nat_abs_eq _
+#align int.is_unit.nat_abs_eq Int.IsUnit.natAbs_eq
 
 /- warning: int.of_nat_is_unit -> Int.ofNat_isUnit is a dubious translation:
 lean 3 declaration is

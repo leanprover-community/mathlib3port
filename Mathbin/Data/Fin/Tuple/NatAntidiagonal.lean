@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module data.fin.tuple.nat_antidiagonal
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -163,7 +163,7 @@ theorem antidiagonal_tuple_pairwise_pi_lex :
   | 0, n + 1 => List.Pairwise.nil
   | k + 1, n =>
     by
-    simp_rw [antidiagonal_tuple, List.pairwise_bind, List.pairwise_map, List.mem_map',
+    simp_rw [antidiagonal_tuple, List.pairwise_bind, List.pairwise_map', List.mem_map',
       forall_exists_index, and_imp, forall_apply_eq_imp_iff₂]
     simp only [mem_antidiagonal, Prod.forall, and_imp, forall_apply_eq_imp_iff₂]
     simp only [Fin.pi_lex_lt_cons_cons, eq_self_iff_true, true_and_iff, lt_self_iff_false,
@@ -172,7 +172,7 @@ theorem antidiagonal_tuple_pairwise_pi_lex :
     induction n
     · rw [antidiagonal_zero]
       exact List.pairwise_singleton _ _
-    · rw [antidiagonal_succ, List.pairwise_cons, List.pairwise_map]
+    · rw [antidiagonal_succ, List.pairwise_cons, List.pairwise_map']
       refine' ⟨fun p hp x hx y hy => _, _⟩
       · rw [List.mem_map', Prod.exists] at hp
         obtain ⟨a, b, hab, rfl : (Nat.succ a, b) = p⟩ := hp

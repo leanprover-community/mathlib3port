@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Robert Y. Lewis, Johannes Hölzl, Mario Carneiro, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.emetric_space
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -138,6 +138,22 @@ theorem edist_triangle_left (x y z : α) : edist x y ≤ edist z x + edist z y :
 theorem edist_triangle_right (x y z : α) : edist x y ≤ edist x z + edist y z := by
   rw [edist_comm y] <;> apply edist_triangle
 #align edist_triangle_right edist_triangle_right
+
+theorem edist_congr_right {x y z : α} (h : edist x y = 0) : edist x z = edist y z :=
+  by
+  apply le_antisymm
+  · rw [← zero_add (edist y z), ← h]
+    apply edist_triangle
+  · rw [edist_comm] at h
+    rw [← zero_add (edist x z), ← h]
+    apply edist_triangle
+#align edist_congr_right edist_congr_right
+
+theorem edist_congr_left {x y z : α} (h : edist x y = 0) : edist z x = edist z y :=
+  by
+  rw [edist_comm z x, edist_comm z y]
+  apply edist_congr_right h
+#align edist_congr_left edist_congr_left
 
 theorem edist_triangle4 (x y z t : α) : edist x t ≤ edist x y + edist y z + edist z t :=
   calc

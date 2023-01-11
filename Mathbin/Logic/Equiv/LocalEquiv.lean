@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module logic.equiv.local_equiv
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -594,7 +594,21 @@ theorem iff_preimage_eq : e.IsImage s t ↔ e.source ∩ e ⁻¹' t = e.source �
   simp only [is_image, Set.ext_iff, mem_inter_iff, and_congr_right_iff, mem_preimage]
 #align local_equiv.is_image.iff_preimage_eq LocalEquiv.IsImage.iff_preimage_eq
 
+/- warning: local_equiv.is_image.preimage_eq -> LocalEquiv.IsImage.preimage_eq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {e : LocalEquiv.{u1, u2} α β} {s : Set.{u1} α} {t : Set.{u2} β}, (LocalEquiv.IsImage.{u1, u2} α β e s t) -> (Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (LocalEquiv.source.{u1, u2} α β e) (Set.preimage.{u1, u2} α β (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (LocalEquiv.{u1, u2} α β) (fun (_x : LocalEquiv.{u1, u2} α β) => α -> β) (LocalEquiv.hasCoeToFun.{u1, u2} α β) e) t)) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (LocalEquiv.source.{u1, u2} α β e) s))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} {e : LocalEquiv.{u2, u1} α β} {s : Set.{u2} α} {t : Set.{u1} β}, (LocalEquiv.IsImage.{u2, u1} α β e s t) -> (Eq.{succ u2} (Set.{u2} α) (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet_1.{u2} α) (LocalEquiv.source.{u2, u1} α β e) (Set.preimage.{u2, u1} α β (LocalEquiv.toFun.{u2, u1} α β e) t)) (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet_1.{u2} α) (LocalEquiv.source.{u2, u1} α β e) s))
+Case conversion may be inaccurate. Consider using '#align local_equiv.is_image.preimage_eq LocalEquiv.IsImage.preimage_eqₓ'. -/
+/- warning: local_equiv.is_image.of_preimage_eq -> LocalEquiv.IsImage.of_preimage_eq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {e : LocalEquiv.{u1, u2} α β} {s : Set.{u1} α} {t : Set.{u2} β}, (Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (LocalEquiv.source.{u1, u2} α β e) (Set.preimage.{u1, u2} α β (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (LocalEquiv.{u1, u2} α β) (fun (_x : LocalEquiv.{u1, u2} α β) => α -> β) (LocalEquiv.hasCoeToFun.{u1, u2} α β) e) t)) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (LocalEquiv.source.{u1, u2} α β e) s)) -> (LocalEquiv.IsImage.{u1, u2} α β e s t)
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} {e : LocalEquiv.{u2, u1} α β} {s : Set.{u2} α} {t : Set.{u1} β}, (Eq.{succ u2} (Set.{u2} α) (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet_1.{u2} α) (LocalEquiv.source.{u2, u1} α β e) (Set.preimage.{u2, u1} α β (LocalEquiv.toFun.{u2, u1} α β e) t)) (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet_1.{u2} α) (LocalEquiv.source.{u2, u1} α β e) s)) -> (LocalEquiv.IsImage.{u2, u1} α β e s t)
+Case conversion may be inaccurate. Consider using '#align local_equiv.is_image.of_preimage_eq LocalEquiv.IsImage.of_preimage_eqₓ'. -/
 alias iff_preimage_eq ↔ preimage_eq of_preimage_eq
+#align local_equiv.is_image.preimage_eq LocalEquiv.IsImage.preimage_eq
+#align local_equiv.is_image.of_preimage_eq LocalEquiv.IsImage.of_preimage_eq
 
 /- warning: local_equiv.is_image.iff_symm_preimage_eq -> LocalEquiv.IsImage.iff_symm_preimage_eq is a dubious translation:
 lean 3 declaration is
@@ -606,7 +620,21 @@ theorem iff_symm_preimage_eq : e.IsImage s t ↔ e.target ∩ e.symm ⁻¹' s = 
   symm_iff.symm.trans iff_preimage_eq
 #align local_equiv.is_image.iff_symm_preimage_eq LocalEquiv.IsImage.iff_symm_preimage_eq
 
+/- warning: local_equiv.is_image.symm_preimage_eq -> LocalEquiv.IsImage.symm_preimage_eq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {e : LocalEquiv.{u1, u2} α β} {s : Set.{u1} α} {t : Set.{u2} β}, (LocalEquiv.IsImage.{u1, u2} α β e s t) -> (Eq.{succ u2} (Set.{u2} β) (Inter.inter.{u2} (Set.{u2} β) (Set.hasInter.{u2} β) (LocalEquiv.target.{u1, u2} α β e) (Set.preimage.{u2, u1} β α (coeFn.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (LocalEquiv.{u2, u1} β α) (fun (_x : LocalEquiv.{u2, u1} β α) => β -> α) (LocalEquiv.hasCoeToFun.{u2, u1} β α) (LocalEquiv.symm.{u1, u2} α β e)) s)) (Inter.inter.{u2} (Set.{u2} β) (Set.hasInter.{u2} β) (LocalEquiv.target.{u1, u2} α β e) t))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} {e : LocalEquiv.{u2, u1} α β} {s : Set.{u2} α} {t : Set.{u1} β}, (LocalEquiv.IsImage.{u2, u1} α β e s t) -> (Eq.{succ u1} (Set.{u1} β) (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet_1.{u1} β) (LocalEquiv.target.{u2, u1} α β e) (Set.preimage.{u1, u2} β α (LocalEquiv.toFun.{u1, u2} β α (LocalEquiv.symm.{u2, u1} α β e)) s)) (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet_1.{u1} β) (LocalEquiv.target.{u2, u1} α β e) t))
+Case conversion may be inaccurate. Consider using '#align local_equiv.is_image.symm_preimage_eq LocalEquiv.IsImage.symm_preimage_eqₓ'. -/
+/- warning: local_equiv.is_image.of_symm_preimage_eq -> LocalEquiv.IsImage.of_symm_preimage_eq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {e : LocalEquiv.{u1, u2} α β} {s : Set.{u1} α} {t : Set.{u2} β}, (Eq.{succ u2} (Set.{u2} β) (Inter.inter.{u2} (Set.{u2} β) (Set.hasInter.{u2} β) (LocalEquiv.target.{u1, u2} α β e) (Set.preimage.{u2, u1} β α (coeFn.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (LocalEquiv.{u2, u1} β α) (fun (_x : LocalEquiv.{u2, u1} β α) => β -> α) (LocalEquiv.hasCoeToFun.{u2, u1} β α) (LocalEquiv.symm.{u1, u2} α β e)) s)) (Inter.inter.{u2} (Set.{u2} β) (Set.hasInter.{u2} β) (LocalEquiv.target.{u1, u2} α β e) t)) -> (LocalEquiv.IsImage.{u1, u2} α β e s t)
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} {e : LocalEquiv.{u2, u1} α β} {s : Set.{u2} α} {t : Set.{u1} β}, (Eq.{succ u1} (Set.{u1} β) (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet_1.{u1} β) (LocalEquiv.target.{u2, u1} α β e) (Set.preimage.{u1, u2} β α (LocalEquiv.toFun.{u1, u2} β α (LocalEquiv.symm.{u2, u1} α β e)) s)) (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet_1.{u1} β) (LocalEquiv.target.{u2, u1} α β e) t)) -> (LocalEquiv.IsImage.{u2, u1} α β e s t)
+Case conversion may be inaccurate. Consider using '#align local_equiv.is_image.of_symm_preimage_eq LocalEquiv.IsImage.of_symm_preimage_eqₓ'. -/
 alias iff_symm_preimage_eq ↔ symm_preimage_eq of_symm_preimage_eq
+#align local_equiv.is_image.symm_preimage_eq LocalEquiv.IsImage.symm_preimage_eq
+#align local_equiv.is_image.of_symm_preimage_eq LocalEquiv.IsImage.of_symm_preimage_eq
 
 /- warning: local_equiv.is_image.of_image_eq -> LocalEquiv.IsImage.of_image_eq is a dubious translation:
 lean 3 declaration is

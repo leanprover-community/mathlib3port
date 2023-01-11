@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex J. Best
 
 ! This file was ported from Lean 3 source module algebra.module.pointwise_pi
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -30,14 +30,14 @@ open Set
 variable {K ι : Type _} {R : ι → Type _}
 
 @[to_additive]
-theorem smul_pi_subset [∀ i, HasSmul K (R i)] (r : K) (s : Set ι) (t : ∀ i, Set (R i)) :
+theorem smul_pi_subset [∀ i, SMul K (R i)] (r : K) (s : Set ι) (t : ∀ i, Set (R i)) :
     r • pi s t ⊆ pi s (r • t) := by
   rintro x ⟨y, h, rfl⟩ i hi
   exact smul_mem_smul_set (h i hi)
 #align smul_pi_subset smul_pi_subset
 
 @[to_additive]
-theorem smul_univ_pi [∀ i, HasSmul K (R i)] (r : K) (t : ∀ i, Set (R i)) :
+theorem smul_univ_pi [∀ i, SMul K (R i)] (r : K) (t : ∀ i, Set (R i)) :
     r • pi (univ : Set ι) t = pi (univ : Set ι) (r • t) :=
   (Subset.antisymm (smul_pi_subset _ _ _)) fun x h =>
     by

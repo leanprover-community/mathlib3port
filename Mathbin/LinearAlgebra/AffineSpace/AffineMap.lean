@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module linear_algebra.affine_space.affine_map
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -216,7 +216,7 @@ theorem mk'_linear (f : P1 → P2) (f' : V1 →ₗ[k] V2) (p h) : (mk' f f' p h)
   rfl
 #align affine_map.mk'_linear AffineMap.mk'_linear
 
-section HasSmul
+section SMul
 
 variable {R : Type _} [Monoid R] [DistribMulAction R V2] [SMulCommClass k R V2]
 
@@ -240,7 +240,7 @@ theorem smul_linear (t : R) (f : P1 →ᵃ[k] V2) : (t • f).linear = t • f.l
 instance [DistribMulAction Rᵐᵒᵖ V2] [IsCentralScalar R V2] : IsCentralScalar R (P1 →ᵃ[k] V2)
     where op_smul_eq_smul r x := ext fun _ => op_smul_eq_smul _ _
 
-end HasSmul
+end SMul
 
 instance : Zero (P1 →ᵃ[k] V2) where zero := ⟨0, 0, fun p v => (zero_vadd _ _).symm⟩
 

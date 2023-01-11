@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module group_theory.group_action.conj_act
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -144,7 +144,7 @@ theorem to_conj_act_mul (x y : G) : toConjAct (x * y) = toConjAct x * toConjAct 
   rfl
 #align conj_act.to_conj_act_mul ConjAct.to_conj_act_mul
 
-instance : HasSmul (ConjAct G) G where smul g h := ofConjAct g * h * (ofConjAct g)⁻¹
+instance : SMul (ConjAct G) G where smul g h := ofConjAct g * h * (ofConjAct g)⁻¹
 
 theorem smul_def (g : ConjAct G) (h : G) : g • h = ofConjAct g * h * (ofConjAct g)⁻¹ :=
   rfl
@@ -158,8 +158,7 @@ section Monoid
 
 variable [Monoid M]
 
-instance hasUnitsScalar : HasSmul (ConjAct Mˣ) M
-    where smul g h := ofConjAct g * h * ↑(ofConjAct g)⁻¹
+instance hasUnitsScalar : SMul (ConjAct Mˣ) M where smul g h := ofConjAct g * h * ↑(ofConjAct g)⁻¹
 #align conj_act.has_units_scalar ConjAct.hasUnitsScalar
 
 theorem units_smul_def (g : ConjAct Mˣ) (h : M) : g • h = ofConjAct g * h * ↑(ofConjAct g)⁻¹ :=
@@ -175,12 +174,12 @@ instance unitsMulDistribMulAction : MulDistribMulAction (ConjAct Mˣ) M
   smul_one := by simp [units_smul_def]
 #align conj_act.units_mul_distrib_mul_action ConjAct.unitsMulDistribMulAction
 
-instance units_smul_comm_class [HasSmul α M] [SMulCommClass α M M] [IsScalarTower α M M] :
+instance units_smul_comm_class [SMul α M] [SMulCommClass α M M] [IsScalarTower α M M] :
     SMulCommClass α (ConjAct Mˣ) M
     where smul_comm a um m := by rw [units_smul_def, units_smul_def, mul_smul_comm, smul_mul_assoc]
 #align conj_act.units_smul_comm_class ConjAct.units_smul_comm_class
 
-instance units_smul_comm_class' [HasSmul α M] [SMulCommClass M α M] [IsScalarTower α M M] :
+instance units_smul_comm_class' [SMul α M] [SMulCommClass M α M] [IsScalarTower α M M] :
     SMulCommClass (ConjAct Mˣ) α M :=
   haveI : SMulCommClass α M M := SMulCommClass.symm _ _ _
   SMulCommClass.symm _ _ _
@@ -224,12 +223,12 @@ instance mulAction₀ : MulAction (ConjAct G₀) G₀
   mul_smul := by simp [smul_def, mul_assoc, mul_inv_rev]
 #align conj_act.mul_action₀ ConjAct.mulAction₀
 
-instance smul_comm_class₀ [HasSmul α G₀] [SMulCommClass α G₀ G₀] [IsScalarTower α G₀ G₀] :
+instance smul_comm_class₀ [SMul α G₀] [SMulCommClass α G₀ G₀] [IsScalarTower α G₀ G₀] :
     SMulCommClass α (ConjAct G₀) G₀
     where smul_comm a ug g := by rw [smul_def, smul_def, mul_smul_comm, smul_mul_assoc]
 #align conj_act.smul_comm_class₀ ConjAct.smul_comm_class₀
 
-instance smul_comm_class₀' [HasSmul α G₀] [SMulCommClass G₀ α G₀] [IsScalarTower α G₀ G₀] :
+instance smul_comm_class₀' [SMul α G₀] [SMulCommClass G₀ α G₀] [IsScalarTower α G₀ G₀] :
     SMulCommClass (ConjAct G₀) α G₀ :=
   haveI := SMulCommClass.symm G₀ α G₀
   SMulCommClass.symm _ _ _
@@ -260,12 +259,12 @@ instance : MulDistribMulAction (ConjAct G) G
   one_smul := by simp [smul_def]
   mul_smul := by simp [smul_def, mul_assoc]
 
-instance smul_comm_class [HasSmul α G] [SMulCommClass α G G] [IsScalarTower α G G] :
+instance smul_comm_class [SMul α G] [SMulCommClass α G G] [IsScalarTower α G G] :
     SMulCommClass α (ConjAct G) G
     where smul_comm a ug g := by rw [smul_def, smul_def, mul_smul_comm, smul_mul_assoc]
 #align conj_act.smul_comm_class ConjAct.smul_comm_class
 
-instance smul_comm_class' [HasSmul α G] [SMulCommClass G α G] [IsScalarTower α G G] :
+instance smul_comm_class' [SMul α G] [SMulCommClass G α G] [IsScalarTower α G G] :
     SMulCommClass (ConjAct G) α G :=
   haveI := SMulCommClass.symm G α G
   SMulCommClass.symm _ _ _
@@ -289,7 +288,7 @@ theorem stabilizer_eq_centralizer (g : G) : stabilizer (ConjAct G) g = (zpowers 
 
 /-- As normal subgroups are closed under conjugation, they inherit the conjugation action
   of the underlying group. -/
-instance Subgroup.conjAction {H : Subgroup G} [hH : H.Normal] : HasSmul (ConjAct G) H :=
+instance Subgroup.conjAction {H : Subgroup G} [hH : H.Normal] : SMul (ConjAct G) H :=
   ⟨fun g h => ⟨g • h, hH.conj_mem h.1 h.2 (ofConjAct g)⟩⟩
 #align conj_act.subgroup.conj_action ConjAct.Subgroup.conjAction
 

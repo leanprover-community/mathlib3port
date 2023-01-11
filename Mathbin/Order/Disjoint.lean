@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.disjoint
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -117,9 +117,16 @@ theorem disjoint_self : Disjoint a a ↔ a = ⊥ :=
   ⟨fun hd => bot_unique <| hd le_rfl le_rfl, fun h x ha hb => ha.trans_eq h⟩
 #align disjoint_self disjoint_self
 
+/- warning: disjoint.eq_bot_of_self -> Disjoint.eq_bot_of_self is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, (Disjoint.{u1} α _inst_1 _inst_2 a a) -> (Eq.{succ u1} α a (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, (Disjoint.{u1} α _inst_1 _inst_2 a a) -> (Eq.{succ u1} α a (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)))
+Case conversion may be inaccurate. Consider using '#align disjoint.eq_bot_of_self Disjoint.eq_bot_of_selfₓ'. -/
 /- TODO: Rename `disjoint.eq_bot` to `disjoint.inf_eq` and `disjoint.eq_bot_of_self` to
 `disjoint.eq_bot` -/
 alias disjoint_self ↔ Disjoint.eq_bot_of_self _
+#align disjoint.eq_bot_of_self Disjoint.eq_bot_of_self
 
 /- warning: disjoint.ne -> Disjoint.ne is a dubious translation:
 lean 3 declaration is
@@ -416,9 +423,16 @@ theorem codisjoint_self : Codisjoint a a ↔ a = ⊤ :=
   ⟨fun hd => top_unique <| hd le_rfl le_rfl, fun h x ha hb => h.symm.trans_le ha⟩
 #align codisjoint_self codisjoint_self
 
+/- warning: codisjoint.eq_top_of_self -> Codisjoint.eq_top_of_self is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, (Codisjoint.{u1} α _inst_1 _inst_2 a a) -> (Eq.{succ u1} α a (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, (Codisjoint.{u1} α _inst_1 _inst_2 a a) -> (Eq.{succ u1} α a (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)))
+Case conversion may be inaccurate. Consider using '#align codisjoint.eq_top_of_self Codisjoint.eq_top_of_selfₓ'. -/
 /- TODO: Rename `codisjoint.eq_top` to `codisjoint.sup_eq` and `codisjoint.eq_top_of_self` to
 `codisjoint.eq_top` -/
 alias codisjoint_self ↔ Codisjoint.eq_top_of_self _
+#align codisjoint.eq_top_of_self Codisjoint.eq_top_of_self
 
 /- warning: codisjoint.ne -> Codisjoint.ne is a dubious translation:
 lean 3 declaration is

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.algebraic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -422,7 +422,7 @@ variable (R' : Type u) (S' : Type v) (T' : Type w)
 /-- This is not an instance as it forms a diamond with `pi.has_smul`.
 
 See the `instance_diamonds` test for details. -/
-def Polynomial.hasSmulPi [Semiring R'] [HasSmul R' S'] : HasSmul R'[X] (R' → S') :=
+def Polynomial.hasSmulPi [Semiring R'] [SMul R' S'] : SMul R'[X] (R' → S') :=
   ⟨fun p f x => eval x p • f x⟩
 #align polynomial.has_smul_pi Polynomial.hasSmulPi
 
@@ -430,7 +430,7 @@ def Polynomial.hasSmulPi [Semiring R'] [HasSmul R' S'] : HasSmul R'[X] (R' → S
 
 See the `instance_diamonds` test for details. -/
 noncomputable def Polynomial.hasSmulPi' [CommSemiring R'] [Semiring S'] [Algebra R' S']
-    [HasSmul S' T'] : HasSmul R'[X] (S' → T') :=
+    [SMul S' T'] : SMul R'[X] (S' → T') :=
   ⟨fun p f x => aeval x p • f x⟩
 #align polynomial.has_smul_pi' Polynomial.hasSmulPi'
 
@@ -439,13 +439,13 @@ variable {R} {S}
 attribute [local instance] Polynomial.hasSmulPi Polynomial.hasSmulPi'
 
 @[simp]
-theorem polynomial_smul_apply [Semiring R'] [HasSmul R' S'] (p : R'[X]) (f : R' → S') (x : R') :
+theorem polynomial_smul_apply [Semiring R'] [SMul R' S'] (p : R'[X]) (f : R' → S') (x : R') :
     (p • f) x = eval x p • f x :=
   rfl
 #align polynomial_smul_apply polynomial_smul_apply
 
 @[simp]
-theorem polynomial_smul_apply' [CommSemiring R'] [Semiring S'] [Algebra R' S'] [HasSmul S' T']
+theorem polynomial_smul_apply' [CommSemiring R'] [Semiring S'] [Algebra R' S'] [SMul S' T']
     (p : R'[X]) (f : S' → T') (x : S') : (p • f) x = aeval x p • f x :=
   rfl
 #align polynomial_smul_apply' polynomial_smul_apply'

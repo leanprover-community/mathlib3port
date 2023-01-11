@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.algebra.subalgebra.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -358,17 +358,17 @@ section
 /-! `subalgebra`s inherit structure from their `submodule` coercions. -/
 
 
-instance module' [Semiring R'] [HasSmul R' R] [Module R' A] [IsScalarTower R' R A] : Module R' S :=
+instance module' [Semiring R'] [SMul R' R] [Module R' A] [IsScalarTower R' R A] : Module R' S :=
   S.toSubmodule.module'
 #align subalgebra.module' Subalgebra.module'
 
 instance : Module R S :=
   S.module'
 
-instance [Semiring R'] [HasSmul R' R] [Module R' A] [IsScalarTower R' R A] : IsScalarTower R' R S :=
+instance [Semiring R'] [SMul R' R] [Module R' A] [IsScalarTower R' R A] : IsScalarTower R' R S :=
   S.toSubmodule.IsScalarTower
 
-instance algebra' [CommSemiring R'] [HasSmul R' R] [Algebra R' A] [IsScalarTower R' R A] :
+instance algebra' [CommSemiring R'] [SMul R' R] [Algebra R' A] [IsScalarTower R' R A] :
     Algebra R' S :=
   {
     ((algebraMap R' A).codRestrict S) fun x =>
@@ -420,13 +420,13 @@ protected theorem coe_sub {R : Type u} {A : Type v} [CommRing R] [Ring A] [Algeb
 #align subalgebra.coe_sub Subalgebra.coe_sub
 
 @[simp, norm_cast]
-theorem coe_smul [Semiring R'] [HasSmul R' R] [Module R' A] [IsScalarTower R' R A] (r : R')
-    (x : S) : (↑(r • x) : A) = r • ↑x :=
+theorem coe_smul [Semiring R'] [SMul R' R] [Module R' A] [IsScalarTower R' R A] (r : R') (x : S) :
+    (↑(r • x) : A) = r • ↑x :=
   rfl
 #align subalgebra.coe_smul Subalgebra.coe_smul
 
 @[simp, norm_cast]
-theorem coe_algebra_map [CommSemiring R'] [HasSmul R' R] [Algebra R' A] [IsScalarTower R' R A]
+theorem coe_algebra_map [CommSemiring R'] [SMul R' R] [Algebra R' A] [IsScalarTower R' R A]
     (r : R') : ↑(algebraMap R' S r) = algebraMap R' A r :=
   rfl
 #align subalgebra.coe_algebra_map Subalgebra.coe_algebra_map
@@ -1268,25 +1268,25 @@ section Actions
 variable {α β : Type _}
 
 /-- The action by a subalgebra is the action by the underlying algebra. -/
-instance [HasSmul A α] (S : Subalgebra R A) : HasSmul S α :=
+instance [SMul A α] (S : Subalgebra R A) : SMul S α :=
   S.toSubsemiring.HasSmul
 
-theorem smul_def [HasSmul A α] {S : Subalgebra R A} (g : S) (m : α) : g • m = (g : A) • m :=
+theorem smul_def [SMul A α] {S : Subalgebra R A} (g : S) (m : α) : g • m = (g : A) • m :=
   rfl
 #align subalgebra.smul_def Subalgebra.smul_def
 
-instance smul_comm_class_left [HasSmul A β] [HasSmul α β] [SMulCommClass A α β]
-    (S : Subalgebra R A) : SMulCommClass S α β :=
+instance smul_comm_class_left [SMul A β] [SMul α β] [SMulCommClass A α β] (S : Subalgebra R A) :
+    SMulCommClass S α β :=
   S.toSubsemiring.smul_comm_class_left
 #align subalgebra.smul_comm_class_left Subalgebra.smul_comm_class_left
 
-instance smul_comm_class_right [HasSmul α β] [HasSmul A β] [SMulCommClass α A β]
-    (S : Subalgebra R A) : SMulCommClass α S β :=
+instance smul_comm_class_right [SMul α β] [SMul A β] [SMulCommClass α A β] (S : Subalgebra R A) :
+    SMulCommClass α S β :=
   S.toSubsemiring.smul_comm_class_right
 #align subalgebra.smul_comm_class_right Subalgebra.smul_comm_class_right
 
 /-- Note that this provides `is_scalar_tower S R R` which is needed by `smul_mul_assoc`. -/
-instance is_scalar_tower_left [HasSmul α β] [HasSmul A α] [HasSmul A β] [IsScalarTower A α β]
+instance is_scalar_tower_left [SMul α β] [SMul A α] [SMul A β] [IsScalarTower A α β]
     (S : Subalgebra R A) : IsScalarTower S α β :=
   S.toSubsemiring.IsScalarTower
 #align subalgebra.is_scalar_tower_left Subalgebra.is_scalar_tower_left
@@ -1297,7 +1297,7 @@ instance is_scalar_tower_mid {R S T : Type _} [CommSemiring R] [Semiring S] [Add
   ⟨fun x y z => (smul_assoc _ (y : S) _ : _)⟩
 #align subalgebra.is_scalar_tower_mid Subalgebra.is_scalar_tower_mid
 
-instance [HasSmul A α] [FaithfulSMul A α] (S : Subalgebra R A) : FaithfulSMul S α :=
+instance [SMul A α] [FaithfulSMul A α] (S : Subalgebra R A) : FaithfulSMul S α :=
   S.toSubsemiring.HasFaithfulSmul
 
 /-- The action by a subalgebra is the action by the underlying algebra. -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Violeta Hernández Palacios, Grayson Burton, Floris van Doorn
 
 ! This file was ported from Lean 3 source module order.cover
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -82,6 +82,7 @@ theorem wcovby_of_le_of_le (h1 : a ≤ b) (h2 : b ≤ a) : a ⩿ b :=
 -/
 
 alias wcovby_of_le_of_le ← LE.le.wcovby_of_le
+#align has_le.le.wcovby_of_le LE.le.wcovby_of_le
 
 #print AntisymmRel.wcovby /-
 theorem AntisymmRel.wcovby (h : AntisymmRel (· ≤ ·) a b) : a ⩿ b :=
@@ -211,8 +212,10 @@ theorem ofDual_wcovby_ofDual_iff {a b : αᵒᵈ} : ofDual a ⩿ ofDual b ↔ b 
 -/
 
 alias toDual_wcovby_toDual_iff ↔ _ Wcovby.to_dual
+#align wcovby.to_dual Wcovby.to_dual
 
 alias ofDual_wcovby_ofDual_iff ↔ _ Wcovby.of_dual
+#align wcovby.of_dual Wcovby.of_dual
 
 end Preorder
 
@@ -320,8 +323,10 @@ theorem not_covby_iff (h : a < b) : ¬a ⋖ b ↔ ∃ c, a < c ∧ c < b := by
 -/
 
 alias not_covby_iff ↔ exists_lt_lt_of_not_covby _
+#align exists_lt_lt_of_not_covby exists_lt_lt_of_not_covby
 
 alias exists_lt_lt_of_not_covby ← LT.lt.exists_lt_lt
+#align has_lt.lt.exists_lt_lt LT.lt.exists_lt_lt
 
 #print not_covby /-
 /-- In a dense order, nothing covers anything. -/
@@ -353,8 +358,10 @@ theorem ofDual_covby_ofDual_iff {a b : αᵒᵈ} : ofDual a ⋖ ofDual b ↔ b �
 -/
 
 alias toDual_covby_toDual_iff ↔ _ Covby.to_dual
+#align covby.to_dual Covby.to_dual
 
 alias ofDual_covby_ofDual_iff ↔ _ Covby.of_dual
+#align covby.of_dual Covby.of_dual
 
 end LT
 
@@ -548,8 +555,10 @@ theorem wcovby_iff_eq_or_covby : a ⩿ b ↔ a = b ∨ a ⋖ b :=
 -/
 
 alias wcovby_iff_covby_or_eq ↔ Wcovby.covby_or_eq _
+#align wcovby.covby_or_eq Wcovby.covby_or_eq
 
 alias wcovby_iff_eq_or_covby ↔ Wcovby.eq_or_covby _
+#align wcovby.eq_or_covby Wcovby.eq_or_covby
 
 #print Covby.eq_or_eq /-
 theorem Covby.eq_or_eq (h : a ⋖ b) (h2 : a ≤ c) (h3 : c ≤ b) : c = a ∨ c = b :=

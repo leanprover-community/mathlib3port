@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Justus Springer
 
 ! This file was ported from Lean 3 source module algebra.category.Module.filtered_colimits
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -86,7 +86,7 @@ theorem colimit_smul_aux_eq_of_rel (r : R) (x y : Σj, F.obj j)
   Module.filtered_colimits.colimit_smul_aux_eq_of_rel ModuleCat.FilteredColimits.colimit_smul_aux_eq_of_rel
 
 /-- Scalar multiplication in the colimit. See also `colimit_smul_aux`. -/
-instance colimitHasSmul : HasSmul R M
+instance colimitHasSmul : SMul R M
     where smul r x := by
     refine' Quot.lift (colimit_smul_aux F r) _ x
     intro x y h

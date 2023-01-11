@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Hoskin
 
 ! This file was ported from Lean 3 source module algebra.symmetrized
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -155,7 +155,7 @@ instance [Add α] [Mul α] [One α] [Invertible (2 : α)] : Mul αˢʸᵐ
 @[to_additive]
 instance [Inv α] : Inv αˢʸᵐ where inv a := Sym <| (unsym a)⁻¹
 
-instance (R : Type _) [HasSmul R α] : HasSmul R αˢʸᵐ where smul r a := sym (r • unsym a)
+instance (R : Type _) [SMul R α] : SMul R αˢʸᵐ where smul r a := sym (r • unsym a)
 
 @[simp, to_additive]
 theorem sym_one [One α] : sym (1 : α) = 1 :=
@@ -221,12 +221,12 @@ theorem unsym_inv [Inv α] (a : αˢʸᵐ) : unsym a⁻¹ = (unsym a)⁻¹ :=
 #align sym_alg.unsym_inv SymAlg.unsym_inv
 
 @[simp]
-theorem sym_smul {R : Type _} [HasSmul R α] (c : R) (a : α) : sym (c • a) = c • sym a :=
+theorem sym_smul {R : Type _} [SMul R α] (c : R) (a : α) : sym (c • a) = c • sym a :=
   rfl
 #align sym_alg.sym_smul SymAlg.sym_smul
 
 @[simp]
-theorem unsym_smul {R : Type _} [HasSmul R α] (c : R) (a : αˢʸᵐ) : unsym (c • a) = c • unsym a :=
+theorem unsym_smul {R : Type _} [SMul R α] (c : R) (a : αˢʸᵐ) : unsym (c • a) = c • unsym a :=
   rfl
 #align sym_alg.unsym_smul SymAlg.unsym_smul
 

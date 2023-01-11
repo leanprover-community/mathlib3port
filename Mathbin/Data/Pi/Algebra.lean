@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Patrick Massot, Eric Wieser
 
 ! This file was ported from Lean 3 source module data.pi.algebra
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -137,58 +137,54 @@ theorem mul_comp [Mul γ] (x y : β → γ) (z : α → β) : (x * y) ∘ z = x 
   rfl
 #align pi.mul_comp Pi.mul_comp
 
-/- warning: pi.has_smul -> Pi.instSMul is a dubious translation:
-lean 3 declaration is
-  forall {I : Type.{u1}} {α : Type.{u3}} {f : I -> Type.{u2}} [_inst_1 : forall (i : I), HasSmul.{u3, u2} α (f i)], HasSmul.{u3, max u1 u2} α (forall (i : I), f i)
-but is expected to have type
-  forall {I : Type.{u1}} {α : Type.{u3}} {f : I -> Type.{u2}} [_inst_1 : forall (i : I), SMul.{u3, u2} α (f i)], SMul.{u3, max u1 u2} α (forall (i : I), f i)
-Case conversion may be inaccurate. Consider using '#align pi.has_smul Pi.instSMulₓ'. -/
+#print Pi.instSMul /-
 @[to_additive Pi.instVAdd]
-instance instSMul [∀ i, HasSmul α <| f i] : HasSmul α (∀ i : I, f i) :=
+instance instSMul [∀ i, SMul α <| f i] : SMul α (∀ i : I, f i) :=
   ⟨fun s x => fun i => s • x i⟩
 #align pi.has_smul Pi.instSMul
+-/
 
 /- warning: pi.smul_apply -> Pi.smul_apply is a dubious translation:
 lean 3 declaration is
-  forall {I : Type.{u1}} {α : Type.{u3}} {f : I -> Type.{u2}} [_inst_1 : forall (i : I), HasSmul.{u3, u2} α (f i)] (s : α) (x : forall (i : I), f i) (i : I), Eq.{succ u2} (f i) (HasSmul.smul.{u3, max u1 u2} α (forall (i : I), f i) (Pi.instSMul.{u1, u2, u3} I α (fun (i : I) => f i) (fun (i : I) => _inst_1 i)) s x i) (HasSmul.smul.{u3, u2} α (f i) (_inst_1 i) s (x i))
+  forall {I : Type.{u1}} {α : Type.{u3}} {f : I -> Type.{u2}} [_inst_1 : forall (i : I), SMul.{u3, u2} α (f i)] (s : α) (x : forall (i : I), f i) (i : I), Eq.{succ u2} (f i) (SMul.smul.{u3, max u1 u2} α (forall (i : I), f i) (Pi.instSMul.{u1, u2, u3} I α (fun (i : I) => f i) (fun (i : I) => _inst_1 i)) s x i) (SMul.smul.{u3, u2} α (f i) (_inst_1 i) s (x i))
 but is expected to have type
   forall {I : Type.{u2}} {α : Type.{u1}} {f : I -> Type.{u3}} [_inst_1 : forall (i : I), SMul.{u1, u3} α (f i)] (s : α) (x : forall (i : I), f i) (i : I), Eq.{succ u3} (f i) (HSMul.hSMul.{u1, max u2 u3, max u2 u3} α (forall (i : I), f i) (forall (i : I), f i) (instHSMul.{u1, max u2 u3} α (forall (i : I), f i) (Pi.instSMul.{u2, u3, u1} I α (fun (i : I) => f i) (fun (i : I) => _inst_1 i))) s x i) (HSMul.hSMul.{u1, u3, u3} α (f i) (f i) (instHSMul.{u1, u3} α (f i) (_inst_1 i)) s (x i))
 Case conversion may be inaccurate. Consider using '#align pi.smul_apply Pi.smul_applyₓ'. -/
 @[simp, to_additive]
-theorem smul_apply [∀ i, HasSmul α <| f i] (s : α) (x : ∀ i, f i) (i : I) : (s • x) i = s • x i :=
+theorem smul_apply [∀ i, SMul α <| f i] (s : α) (x : ∀ i, f i) (i : I) : (s • x) i = s • x i :=
   rfl
 #align pi.smul_apply Pi.smul_apply
 
 /- warning: pi.smul_def -> Pi.smul_def is a dubious translation:
 lean 3 declaration is
-  forall {I : Type.{u1}} {α : Type.{u3}} {f : I -> Type.{u2}} [_inst_1 : forall (i : I), HasSmul.{u3, u2} α (f i)] (s : α) (x : forall (i : I), f i), Eq.{succ (max u1 u2)} (forall (i : I), f i) (HasSmul.smul.{u3, max u1 u2} α (forall (i : I), f i) (Pi.instSMul.{u1, u2, u3} I α (fun (i : I) => f i) (fun (i : I) => _inst_1 i)) s x) (fun (i : I) => HasSmul.smul.{u3, u2} α (f i) (_inst_1 i) s (x i))
+  forall {I : Type.{u1}} {α : Type.{u3}} {f : I -> Type.{u2}} [_inst_1 : forall (i : I), SMul.{u3, u2} α (f i)] (s : α) (x : forall (i : I), f i), Eq.{succ (max u1 u2)} (forall (i : I), f i) (SMul.smul.{u3, max u1 u2} α (forall (i : I), f i) (Pi.instSMul.{u1, u2, u3} I α (fun (i : I) => f i) (fun (i : I) => _inst_1 i)) s x) (fun (i : I) => SMul.smul.{u3, u2} α (f i) (_inst_1 i) s (x i))
 but is expected to have type
   forall {I : Type.{u2}} {α : Type.{u1}} {f : I -> Type.{u3}} [_inst_1 : forall (i : I), SMul.{u1, u3} α (f i)] (s : α) (x : forall (i : I), f i), Eq.{max (succ u2) (succ u3)} (forall (i : I), f i) (HSMul.hSMul.{u1, max u2 u3, max u2 u3} α (forall (i : I), f i) (forall (i : I), f i) (instHSMul.{u1, max u2 u3} α (forall (i : I), f i) (Pi.instSMul.{u2, u3, u1} I α (fun (i : I) => f i) (fun (i : I) => _inst_1 i))) s x) (fun (i : I) => HSMul.hSMul.{u1, u3, u3} α (f i) (f i) (instHSMul.{u1, u3} α (f i) (_inst_1 i)) s (x i))
 Case conversion may be inaccurate. Consider using '#align pi.smul_def Pi.smul_defₓ'. -/
 @[to_additive]
-theorem smul_def [∀ i, HasSmul α <| f i] (s : α) (x : ∀ i, f i) : s • x = fun i => s • x i :=
+theorem smul_def [∀ i, SMul α <| f i] (s : α) (x : ∀ i, f i) : s • x = fun i => s • x i :=
   rfl
 #align pi.smul_def Pi.smul_def
 
 /- warning: pi.smul_const -> Pi.smul_const is a dubious translation:
 lean 3 declaration is
-  forall {I : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : HasSmul.{u2, u3} α β] (a : α) (b : β), Eq.{succ (max u1 u3)} (I -> β) (HasSmul.smul.{u2, max u1 u3} α (I -> β) (Pi.instSMul.{u1, u3, u2} I α (fun (ᾰ : I) => β) (fun (i : I) => _inst_1)) a (Function.const.{succ u3, succ u1} β I b)) (Function.const.{succ u3, succ u1} β I (HasSmul.smul.{u2, u3} α β _inst_1 a b))
+  forall {I : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : SMul.{u2, u3} α β] (a : α) (b : β), Eq.{succ (max u1 u3)} (I -> β) (SMul.smul.{u2, max u1 u3} α (I -> β) (Pi.instSMul.{u1, u3, u2} I α (fun (ᾰ : I) => β) (fun (i : I) => _inst_1)) a (Function.const.{succ u3, succ u1} β I b)) (Function.const.{succ u3, succ u1} β I (SMul.smul.{u2, u3} α β _inst_1 a b))
 but is expected to have type
   forall {I : Type.{u3}} {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SMul.{u1, u2} α β] (a : α) (b : β), Eq.{max (succ u3) (succ u2)} (I -> β) (HSMul.hSMul.{u1, max u3 u2, max u3 u2} α (I -> β) (I -> β) (instHSMul.{u1, max u3 u2} α (I -> β) (Pi.instSMul.{u3, u2, u1} I α (fun (a._@.Init.Prelude._hyg.54 : I) => β) (fun (i : I) => _inst_1))) a (Function.const.{succ u2, succ u3} β I b)) (Function.const.{succ u2, succ u3} β I (HSMul.hSMul.{u1, u2, u2} α β β (instHSMul.{u1, u2} α β _inst_1) a b))
 Case conversion may be inaccurate. Consider using '#align pi.smul_const Pi.smul_constₓ'. -/
 @[simp, to_additive]
-theorem smul_const [HasSmul α β] (a : α) (b : β) : a • const I b = const I (a • b) :=
+theorem smul_const [SMul α β] (a : α) (b : β) : a • const I b = const I (a • b) :=
   rfl
 #align pi.smul_const Pi.smul_const
 
 /- warning: pi.smul_comp -> Pi.smul_comp is a dubious translation:
 lean 3 declaration is
-  forall {I : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} {γ : Type.{u4}} [_inst_1 : HasSmul.{u2, u4} α γ] (a : α) (x : β -> γ) (y : I -> β), Eq.{max (succ u1) (succ u4)} (I -> γ) (Function.comp.{succ u1, succ u3, succ u4} I β γ (HasSmul.smul.{u2, max u3 u4} α (β -> γ) (Pi.instSMul.{u3, u4, u2} β α (fun (ᾰ : β) => γ) (fun (i : β) => _inst_1)) a x) y) (HasSmul.smul.{u2, max u1 u4} α (I -> γ) (Pi.instSMul.{u1, u4, u2} I α (fun (ᾰ : I) => γ) (fun (i : I) => _inst_1)) a (Function.comp.{succ u1, succ u3, succ u4} I β γ x y))
+  forall {I : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} {γ : Type.{u4}} [_inst_1 : SMul.{u2, u4} α γ] (a : α) (x : β -> γ) (y : I -> β), Eq.{max (succ u1) (succ u4)} (I -> γ) (Function.comp.{succ u1, succ u3, succ u4} I β γ (SMul.smul.{u2, max u3 u4} α (β -> γ) (Pi.instSMul.{u3, u4, u2} β α (fun (ᾰ : β) => γ) (fun (i : β) => _inst_1)) a x) y) (SMul.smul.{u2, max u1 u4} α (I -> γ) (Pi.instSMul.{u1, u4, u2} I α (fun (ᾰ : I) => γ) (fun (i : I) => _inst_1)) a (Function.comp.{succ u1, succ u3, succ u4} I β γ x y))
 but is expected to have type
-  forall {I : Type.{u4}} {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} [_inst_1 : SMul.{u2, u3} α γ] (a : α) (x : β -> γ) (y : I -> β), Eq.{max (succ u4) (succ u3)} (I -> γ) (Function.comp.{succ u4, succ u1, succ u3} I β γ (HSMul.hSMul.{u2, max u1 u3, max u1 u3} α (β -> γ) (β -> γ) (instHSMul.{u2, max u1 u3} α (β -> γ) (Pi.instSMul.{u1, u3, u2} β α (fun (a._@.Mathlib.Data.Pi.Algebra._hyg.1009 : β) => γ) (fun (i : β) => _inst_1))) a x) y) (HSMul.hSMul.{u2, max u4 u3, max u4 u3} α (I -> γ) (I -> γ) (instHSMul.{u2, max u4 u3} α (I -> γ) (Pi.instSMul.{u4, u3, u2} I α (fun (a._@.Init.Prelude._hyg.25 : I) => γ) (fun (i : I) => _inst_1))) a (Function.comp.{succ u4, succ u1, succ u3} I β γ x y))
+  forall {I : Type.{u4}} {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} [_inst_1 : SMul.{u2, u3} α γ] (a : α) (x : β -> γ) (y : I -> β), Eq.{max (succ u4) (succ u3)} (I -> γ) (Function.comp.{succ u4, succ u1, succ u3} I β γ (HSMul.hSMul.{u2, max u1 u3, max u1 u3} α (β -> γ) (β -> γ) (instHSMul.{u2, max u1 u3} α (β -> γ) (Pi.instSMul.{u1, u3, u2} β α (fun (a._@.Mathlib.Data.Pi.Algebra._hyg.1011 : β) => γ) (fun (i : β) => _inst_1))) a x) y) (HSMul.hSMul.{u2, max u4 u3, max u4 u3} α (I -> γ) (I -> γ) (instHSMul.{u2, max u4 u3} α (I -> γ) (Pi.instSMul.{u4, u3, u2} I α (fun (a._@.Init.Prelude._hyg.25 : I) => γ) (fun (i : I) => _inst_1))) a (Function.comp.{succ u4, succ u1, succ u3} I β γ x y))
 Case conversion may be inaccurate. Consider using '#align pi.smul_comp Pi.smul_compₓ'. -/
 @[to_additive]
-theorem smul_comp [HasSmul α γ] (a : α) (x : β → γ) (y : I → β) : (a • x) ∘ y = a • x ∘ y :=
+theorem smul_comp [SMul α γ] (a : α) (x : β → γ) (y : I → β) : (a • x) ∘ y = a • x ∘ y :=
   rfl
 #align pi.smul_comp Pi.smul_comp
 
@@ -586,7 +582,7 @@ variable (a a' : α → γ) (b b' : β → γ)
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : One.{u3} γ], Eq.{max (max (succ u1) (succ u2)) (succ u3)} ((Sum.{u1, u2} α β) -> γ) (Sum.elim.{u1, u2, succ u3} α β γ (OfNat.ofNat.{max u1 u3} (α -> γ) 1 (OfNat.mk.{max u1 u3} (α -> γ) 1 (One.one.{max u1 u3} (α -> γ) (Pi.instOne.{u1, u3} α (fun (ᾰ : α) => γ) (fun (i : α) => _inst_1))))) (OfNat.ofNat.{max u2 u3} (β -> γ) 1 (OfNat.mk.{max u2 u3} (β -> γ) 1 (One.one.{max u2 u3} (β -> γ) (Pi.instOne.{u2, u3} β (fun (ᾰ : β) => γ) (fun (i : β) => _inst_1)))))) (OfNat.ofNat.{max (max u1 u2) u3} ((Sum.{u1, u2} α β) -> γ) 1 (OfNat.mk.{max (max u1 u2) u3} ((Sum.{u1, u2} α β) -> γ) 1 (One.one.{max (max u1 u2) u3} ((Sum.{u1, u2} α β) -> γ) (Pi.instOne.{max u1 u2, u3} (Sum.{u1, u2} α β) (fun (ᾰ : Sum.{u1, u2} α β) => γ) (fun (i : Sum.{u1, u2} α β) => _inst_1)))))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} [_inst_1 : One.{u3} γ], Eq.{max (max (succ u2) (succ u1)) (succ u3)} ((Sum.{u2, u1} α β) -> γ) (Sum.elim.{u2, u1, succ u3} α β γ (OfNat.ofNat.{max u2 u3} (α -> γ) 1 (One.toOfNat1.{max u2 u3} (α -> γ) (Pi.instOne.{u2, u3} α (fun (a._@.Mathlib.Data.Pi.Algebra._hyg.4078 : α) => γ) (fun (i : α) => _inst_1)))) (OfNat.ofNat.{max u1 u3} (β -> γ) 1 (One.toOfNat1.{max u1 u3} (β -> γ) (Pi.instOne.{u1, u3} β (fun (a._@.Mathlib.Data.Pi.Algebra._hyg.4084 : β) => γ) (fun (i : β) => _inst_1))))) (OfNat.ofNat.{max (max u2 u1) u3} ((Sum.{u2, u1} α β) -> γ) 1 (One.toOfNat1.{max (max u2 u1) u3} ((Sum.{u2, u1} α β) -> γ) (Pi.instOne.{max u2 u1, u3} (Sum.{u2, u1} α β) (fun (a._@.Mathlib.Data.Sum.Basic._hyg.1613 : Sum.{u2, u1} α β) => γ) (fun (i : Sum.{u2, u1} α β) => _inst_1))))
+  forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} [_inst_1 : One.{u3} γ], Eq.{max (max (succ u2) (succ u1)) (succ u3)} ((Sum.{u2, u1} α β) -> γ) (Sum.elim.{u2, u1, succ u3} α β γ (OfNat.ofNat.{max u2 u3} (α -> γ) 1 (One.toOfNat1.{max u2 u3} (α -> γ) (Pi.instOne.{u2, u3} α (fun (a._@.Mathlib.Data.Pi.Algebra._hyg.4080 : α) => γ) (fun (i : α) => _inst_1)))) (OfNat.ofNat.{max u1 u3} (β -> γ) 1 (One.toOfNat1.{max u1 u3} (β -> γ) (Pi.instOne.{u1, u3} β (fun (a._@.Mathlib.Data.Pi.Algebra._hyg.4086 : β) => γ) (fun (i : β) => _inst_1))))) (OfNat.ofNat.{max (max u2 u1) u3} ((Sum.{u2, u1} α β) -> γ) 1 (One.toOfNat1.{max (max u2 u1) u3} ((Sum.{u2, u1} α β) -> γ) (Pi.instOne.{max u2 u1, u3} (Sum.{u2, u1} α β) (fun (a._@.Mathlib.Data.Sum.Basic._hyg.1753 : Sum.{u2, u1} α β) => γ) (fun (i : Sum.{u2, u1} α β) => _inst_1))))
 Case conversion may be inaccurate. Consider using '#align sum.elim_one_one Sum.elim_one_oneₓ'. -/
 @[simp, to_additive]
 theorem elim_one_one [One γ] : Sum.elim (1 : α → γ) (1 : β → γ) = 1 :=
@@ -597,7 +593,7 @@ theorem elim_one_one [One γ] : Sum.elim (1 : α → γ) (1 : β → γ) = 1 :=
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : DecidableEq.{succ u2} β] [_inst_3 : One.{u3} γ] (i : α) (c : γ), Eq.{max (max (succ u1) (succ u2)) (succ u3)} ((Sum.{u1, u2} α β) -> γ) (Sum.elim.{u1, u2, succ u3} α β γ (Pi.mulSingle.{u1, u3} α (fun (i : α) => γ) (fun (a : α) (b : α) => _inst_1 a b) (fun (i : α) => _inst_3) i c) (OfNat.ofNat.{max u2 u3} (β -> γ) 1 (OfNat.mk.{max u2 u3} (β -> γ) 1 (One.one.{max u2 u3} (β -> γ) (Pi.instOne.{u2, u3} β (fun (ᾰ : β) => γ) (fun (i : β) => _inst_3)))))) (Pi.mulSingle.{max u1 u2, u3} (Sum.{u1, u2} α β) (fun (ᾰ : Sum.{u1, u2} α β) => γ) (fun (a : Sum.{u1, u2} α β) (b : Sum.{u1, u2} α β) => Sum.decidableEq.{u1, u2} α (fun (a : α) (b : α) => _inst_1 a b) β (fun (a : β) (b : β) => _inst_2 a b) a b) (fun (i : Sum.{u1, u2} α β) => _inst_3) (Sum.inl.{u1, u2} α β i) c)
 but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} [_inst_1 : DecidableEq.{succ u3} α] [_inst_2 : DecidableEq.{succ u2} β] [_inst_3 : One.{u1} γ] (i : α) (c : γ), Eq.{max (max (succ u3) (succ u2)) (succ u1)} ((Sum.{u3, u2} α β) -> γ) (Sum.elim.{u3, u2, succ u1} α β γ (Pi.mulSingle.{u3, u1} α (fun (i : α) => γ) (fun (a : α) (b : α) => _inst_1 a b) (fun (i : α) => _inst_3) i c) (OfNat.ofNat.{max u2 u1} (β -> γ) 1 (One.toOfNat1.{max u2 u1} (β -> γ) (Pi.instOne.{u2, u1} β (fun (a._@.Mathlib.Data.Pi.Algebra._hyg.4150 : β) => γ) (fun (i : β) => _inst_3))))) (Pi.mulSingle.{max u2 u3, u1} (Sum.{u3, u2} α β) (fun (ᾰ : Sum.{u3, u2} α β) => γ) (fun (a : Sum.{u3, u2} α β) (b : Sum.{u3, u2} α β) => Sum.instDecidableEqSum.{u3, u2} α β (fun (a : α) (b : α) => _inst_1 a b) (fun (a : β) (b : β) => _inst_2 a b) a b) (fun (i : Sum.{u3, u2} α β) => _inst_3) (Sum.inl.{u3, u2} α β i) c)
+  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} [_inst_1 : DecidableEq.{succ u3} α] [_inst_2 : DecidableEq.{succ u2} β] [_inst_3 : One.{u1} γ] (i : α) (c : γ), Eq.{max (max (succ u3) (succ u2)) (succ u1)} ((Sum.{u3, u2} α β) -> γ) (Sum.elim.{u3, u2, succ u1} α β γ (Pi.mulSingle.{u3, u1} α (fun (i : α) => γ) (fun (a : α) (b : α) => _inst_1 a b) (fun (i : α) => _inst_3) i c) (OfNat.ofNat.{max u2 u1} (β -> γ) 1 (One.toOfNat1.{max u2 u1} (β -> γ) (Pi.instOne.{u2, u1} β (fun (a._@.Mathlib.Data.Pi.Algebra._hyg.4152 : β) => γ) (fun (i : β) => _inst_3))))) (Pi.mulSingle.{max u2 u3, u1} (Sum.{u3, u2} α β) (fun (ᾰ : Sum.{u3, u2} α β) => γ) (fun (a : Sum.{u3, u2} α β) (b : Sum.{u3, u2} α β) => Sum.instDecidableEqSum.{u3, u2} α β (fun (a : α) (b : α) => _inst_1 a b) (fun (a : β) (b : β) => _inst_2 a b) a b) (fun (i : Sum.{u3, u2} α β) => _inst_3) (Sum.inl.{u3, u2} α β i) c)
 Case conversion may be inaccurate. Consider using '#align sum.elim_mul_single_one Sum.elim_mulSingle_oneₓ'. -/
 @[simp, to_additive]
 theorem elim_mulSingle_one [DecidableEq α] [DecidableEq β] [One γ] (i : α) (c : γ) :
@@ -609,7 +605,7 @@ theorem elim_mulSingle_one [DecidableEq α] [DecidableEq β] [One γ] (i : α) (
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : DecidableEq.{succ u2} β] [_inst_3 : One.{u3} γ] (i : β) (c : γ), Eq.{max (max (succ u1) (succ u2)) (succ u3)} ((Sum.{u1, u2} α β) -> γ) (Sum.elim.{u1, u2, succ u3} α β γ (OfNat.ofNat.{max u1 u3} (α -> γ) 1 (OfNat.mk.{max u1 u3} (α -> γ) 1 (One.one.{max u1 u3} (α -> γ) (Pi.instOne.{u1, u3} α (fun (ᾰ : α) => γ) (fun (i : α) => _inst_3))))) (Pi.mulSingle.{u2, u3} β (fun (ᾰ : β) => γ) (fun (a : β) (b : β) => _inst_2 a b) (fun (i : β) => _inst_3) i c)) (Pi.mulSingle.{max u1 u2, u3} (Sum.{u1, u2} α β) (fun (ᾰ : Sum.{u1, u2} α β) => γ) (fun (a : Sum.{u1, u2} α β) (b : Sum.{u1, u2} α β) => Sum.decidableEq.{u1, u2} α (fun (a : α) (b : α) => _inst_1 a b) β (fun (a : β) (b : β) => _inst_2 a b) a b) (fun (i : Sum.{u1, u2} α β) => _inst_3) (Sum.inr.{u1, u2} α β i) c)
 but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} [_inst_1 : DecidableEq.{succ u3} α] [_inst_2 : DecidableEq.{succ u2} β] [_inst_3 : One.{u1} γ] (i : β) (c : γ), Eq.{max (max (succ u3) (succ u2)) (succ u1)} ((Sum.{u3, u2} α β) -> γ) (Sum.elim.{u3, u2, succ u1} α β γ (OfNat.ofNat.{max u3 u1} (α -> γ) 1 (One.toOfNat1.{max u3 u1} (α -> γ) (Pi.instOne.{u3, u1} α (fun (a._@.Mathlib.Data.Pi.Algebra._hyg.4218 : α) => γ) (fun (i : α) => _inst_3)))) (Pi.mulSingle.{u2, u1} β (fun (ᾰ : β) => γ) (fun (a : β) (b : β) => _inst_2 a b) (fun (i : β) => _inst_3) i c)) (Pi.mulSingle.{max u2 u3, u1} (Sum.{u3, u2} α β) (fun (ᾰ : Sum.{u3, u2} α β) => γ) (fun (a : Sum.{u3, u2} α β) (b : Sum.{u3, u2} α β) => Sum.instDecidableEqSum.{u3, u2} α β (fun (a : α) (b : α) => _inst_1 a b) (fun (a : β) (b : β) => _inst_2 a b) a b) (fun (i : Sum.{u3, u2} α β) => _inst_3) (Sum.inr.{u3, u2} α β i) c)
+  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} [_inst_1 : DecidableEq.{succ u3} α] [_inst_2 : DecidableEq.{succ u2} β] [_inst_3 : One.{u1} γ] (i : β) (c : γ), Eq.{max (max (succ u3) (succ u2)) (succ u1)} ((Sum.{u3, u2} α β) -> γ) (Sum.elim.{u3, u2, succ u1} α β γ (OfNat.ofNat.{max u3 u1} (α -> γ) 1 (One.toOfNat1.{max u3 u1} (α -> γ) (Pi.instOne.{u3, u1} α (fun (a._@.Mathlib.Data.Pi.Algebra._hyg.4220 : α) => γ) (fun (i : α) => _inst_3)))) (Pi.mulSingle.{u2, u1} β (fun (ᾰ : β) => γ) (fun (a : β) (b : β) => _inst_2 a b) (fun (i : β) => _inst_3) i c)) (Pi.mulSingle.{max u2 u3, u1} (Sum.{u3, u2} α β) (fun (ᾰ : Sum.{u3, u2} α β) => γ) (fun (a : Sum.{u3, u2} α β) (b : Sum.{u3, u2} α β) => Sum.instDecidableEqSum.{u3, u2} α β (fun (a : α) (b : α) => _inst_1 a b) (fun (a : β) (b : β) => _inst_2 a b) a b) (fun (i : Sum.{u3, u2} α β) => _inst_3) (Sum.inr.{u3, u2} α β i) c)
 Case conversion may be inaccurate. Consider using '#align sum.elim_one_mul_single Sum.elim_one_mulSingleₓ'. -/
 @[simp, to_additive]
 theorem elim_one_mulSingle [DecidableEq α] [DecidableEq β] [One γ] (i : β) (c : γ) :

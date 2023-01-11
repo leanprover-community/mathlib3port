@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang, Eric Wieser
 
 ! This file was ported from Lean 3 source module ring_theory.graded_algebra.homogeneous_localization
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -274,12 +274,11 @@ theorem denom_pow (c : NumDenomSameDeg 𝒜 x) (n : ℕ) : ((c ^ n).denom : A) =
 #align
   homogeneous_localization.num_denom_same_deg.denom_pow HomogeneousLocalization.NumDenomSameDeg.denom_pow
 
-section HasSmul
+section SMul
 
-variable {α : Type _} [HasSmul α R] [HasSmul α A] [IsScalarTower α R A]
+variable {α : Type _} [SMul α R] [SMul α A] [IsScalarTower α R A]
 
-instance : HasSmul α (NumDenomSameDeg 𝒜 x)
-    where smul m c := ⟨c.deg, m • c.num, c.denom, c.denom_mem⟩
+instance : SMul α (NumDenomSameDeg 𝒜 x) where smul m c := ⟨c.deg, m • c.num, c.denom, c.denom_mem⟩
 
 @[simp]
 theorem deg_smul (c : NumDenomSameDeg 𝒜 x) (m : α) : (m • c).deg = c.deg :=
@@ -299,7 +298,7 @@ theorem denom_smul (c : NumDenomSameDeg 𝒜 x) (m : α) : ((m • c).denom : A)
 #align
   homogeneous_localization.num_denom_same_deg.denom_smul HomogeneousLocalization.NumDenomSameDeg.denom_smul
 
-end HasSmul
+end SMul
 
 variable (𝒜)
 
@@ -361,13 +360,13 @@ instance hasPow : Pow (HomogeneousLocalization 𝒜 x) ℕ
       z
 #align homogeneous_localization.has_pow HomogeneousLocalization.hasPow
 
-section HasSmul
+section SMul
 
-variable {α : Type _} [HasSmul α R] [HasSmul α A] [IsScalarTower α R A]
+variable {α : Type _} [SMul α R] [SMul α A] [IsScalarTower α R A]
 
 variable [IsScalarTower α A A]
 
-instance : HasSmul α (HomogeneousLocalization 𝒜 x)
+instance : SMul α (HomogeneousLocalization 𝒜 x)
     where smul m :=
     Quotient.map' ((· • ·) m) fun c1 c2 (h : Localization.mk _ _ = Localization.mk _ _) =>
       by
@@ -379,7 +378,7 @@ instance : HasSmul α (HomogeneousLocalization 𝒜 x)
 theorem smul_val (y : HomogeneousLocalization 𝒜 x) (n : α) : (n • y).val = n • y.val :=
   by
   induction y using Quotient.induction_on
-  unfold HomogeneousLocalization.val HasSmul.smul
+  unfold HomogeneousLocalization.val SMul.smul
   simp only [Quotient.liftOn₂'_mk, Quotient.liftOn'_mk]
   change Localization.mk _ _ = n • Localization.mk _ _
   dsimp only
@@ -387,7 +386,7 @@ theorem smul_val (y : HomogeneousLocalization 𝒜 x) (n : α) : (n • y).val =
   congr 1
 #align homogeneous_localization.smul_val HomogeneousLocalization.smul_val
 
-end HasSmul
+end SMul
 
 instance : Neg (HomogeneousLocalization 𝒜 x)
     where neg :=

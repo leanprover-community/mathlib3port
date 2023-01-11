@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module algebra.algebra.unitization
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -172,18 +172,18 @@ instance [AddCommMonoid R] [AddCommMonoid A] : AddCommMonoid (Unitization R A) :
 instance [AddCommGroup R] [AddCommGroup A] : AddCommGroup (Unitization R A) :=
   Prod.addCommGroup
 
-instance [HasSmul S R] [HasSmul S A] : HasSmul S (Unitization R A) :=
+instance [SMul S R] [SMul S A] : SMul S (Unitization R A) :=
   Prod.hasSmul
 
-instance [HasSmul T R] [HasSmul T A] [HasSmul S R] [HasSmul S A] [HasSmul T S] [IsScalarTower T S R]
+instance [SMul T R] [SMul T A] [SMul S R] [SMul S A] [SMul T S] [IsScalarTower T S R]
     [IsScalarTower T S A] : IsScalarTower T S (Unitization R A) :=
   Prod.is_scalar_tower
 
-instance [HasSmul T R] [HasSmul T A] [HasSmul S R] [HasSmul S A] [SMulCommClass T S R]
-    [SMulCommClass T S A] : SMulCommClass T S (Unitization R A) :=
+instance [SMul T R] [SMul T A] [SMul S R] [SMul S A] [SMulCommClass T S R] [SMulCommClass T S A] :
+    SMulCommClass T S (Unitization R A) :=
   Prod.smul_comm_class
 
-instance [HasSmul S R] [HasSmul S A] [HasSmul Sᵐᵒᵖ R] [HasSmul Sᵐᵒᵖ A] [IsCentralScalar S R]
+instance [SMul S R] [SMul S A] [SMul Sᵐᵒᵖ R] [SMul Sᵐᵒᵖ A] [IsCentralScalar S R]
     [IsCentralScalar S A] : IsCentralScalar S (Unitization R A) :=
   Prod.is_central_scalar
 
@@ -229,14 +229,12 @@ theorem snd_neg [Neg R] [Neg A] (x : Unitization R A) : (-x).snd = -x.snd :=
 #align unitization.snd_neg Unitization.snd_neg
 
 @[simp]
-theorem fst_smul [HasSmul S R] [HasSmul S A] (s : S) (x : Unitization R A) :
-    (s • x).fst = s • x.fst :=
+theorem fst_smul [SMul S R] [SMul S A] (s : S) (x : Unitization R A) : (s • x).fst = s • x.fst :=
   rfl
 #align unitization.fst_smul Unitization.fst_smul
 
 @[simp]
-theorem snd_smul [HasSmul S R] [HasSmul S A] (s : S) (x : Unitization R A) :
-    (s • x).snd = s • x.snd :=
+theorem snd_smul [SMul S R] [SMul S A] (s : S) (x : Unitization R A) : (s • x).snd = s • x.snd :=
   rfl
 #align unitization.snd_smul Unitization.snd_smul
 
@@ -261,7 +259,7 @@ theorem inl_neg [Neg R] [AddGroup A] (r : R) : (inl (-r) : Unitization R A) = -i
 #align unitization.inl_neg Unitization.inl_neg
 
 @[simp]
-theorem inl_smul [Monoid S] [AddMonoid A] [HasSmul S R] [DistribMulAction S A] (s : S) (r : R) :
+theorem inl_smul [Monoid S] [AddMonoid A] [SMul S R] [DistribMulAction S A] (s : S) (r : R) :
     (inl (s • r) : Unitization R A) = s • inl r :=
   ext rfl (smul_zero s).symm
 #align unitization.inl_smul Unitization.inl_smul
@@ -288,7 +286,7 @@ theorem coe_neg [AddGroup R] [Neg A] (m : A) : (↑(-m) : Unitization R A) = -m 
 #align unitization.coe_neg Unitization.coe_neg
 
 @[simp]
-theorem coe_smul [Zero R] [Zero S] [SMulWithZero S R] [HasSmul S A] (r : S) (m : A) :
+theorem coe_smul [Zero R] [Zero S] [SMulWithZero S R] [SMul S A] (r : S) (m : A) :
     (↑(r • m) : Unitization R A) = r • m :=
   ext (smul_zero _).symm rfl
 #align unitization.coe_smul Unitization.coe_smul
@@ -343,7 +341,7 @@ variable {R A : Type _}
 instance [One R] [Zero A] : One (Unitization R A) :=
   ⟨(1, 0)⟩
 
-instance [Mul R] [Add A] [Mul A] [HasSmul R A] : Mul (Unitization R A) :=
+instance [Mul R] [Add A] [Mul A] [SMul R A] : Mul (Unitization R A) :=
   ⟨fun x y => (x.1 * y.1, x.1 • y.2 + y.1 • x.2 + x.2 * y.2)⟩
 
 @[simp]
@@ -357,13 +355,13 @@ theorem snd_one [One R] [Zero A] : (1 : Unitization R A).snd = 0 :=
 #align unitization.snd_one Unitization.snd_one
 
 @[simp]
-theorem fst_mul [Mul R] [Add A] [Mul A] [HasSmul R A] (x₁ x₂ : Unitization R A) :
+theorem fst_mul [Mul R] [Add A] [Mul A] [SMul R A] (x₁ x₂ : Unitization R A) :
     (x₁ * x₂).fst = x₁.fst * x₂.fst :=
   rfl
 #align unitization.fst_mul Unitization.fst_mul
 
 @[simp]
-theorem snd_mul [Mul R] [Add A] [Mul A] [HasSmul R A] (x₁ x₂ : Unitization R A) :
+theorem snd_mul [Mul R] [Add A] [Mul A] [SMul R A] (x₁ x₂ : Unitization R A) :
     (x₁ * x₂).snd = x₁.fst • x₂.snd + x₂.fst • x₁.snd + x₁.snd * x₂.snd :=
   rfl
 #align unitization.snd_mul Unitization.snd_mul

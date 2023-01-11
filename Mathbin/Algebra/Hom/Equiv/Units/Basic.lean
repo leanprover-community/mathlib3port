@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Callum Sutton, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.hom.equiv.units.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -113,7 +113,7 @@ theorem mulLeft_symm (u : Mˣ) : u.mulLeft.symm = u⁻¹.mulLeft :=
 lean 3 declaration is
   forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] (a : Units.{u1} M _inst_1), Function.Bijective.{succ u1, succ u1} M M (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toHasMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} M _inst_1) M (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} M _inst_1) M (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} M _inst_1) M (coeBase.{succ u1, succ u1} (Units.{u1} M _inst_1) M (Units.hasCoe.{u1} M _inst_1)))) a))
 but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] (a : Units.{u1} M _inst_1), Function.Bijective.{succ u1, succ u1} M M (fun (x._@.Mathlib.Algebra.Hom.Equiv.Units.Basic._hyg.447 : M) => HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) (Units.val.{u1} M _inst_1 a) x._@.Mathlib.Algebra.Hom.Equiv.Units.Basic._hyg.447)
+  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] (a : Units.{u1} M _inst_1), Function.Bijective.{succ u1, succ u1} M M (fun (x._@.Mathlib.Algebra.Hom.Equiv.Units.Basic._hyg.445 : M) => HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) (Units.val.{u1} M _inst_1 a) x._@.Mathlib.Algebra.Hom.Equiv.Units.Basic._hyg.445)
 Case conversion may be inaccurate. Consider using '#align units.mul_left_bijective Units.mulLeft_bijectiveₓ'. -/
 @[to_additive]
 theorem mulLeft_bijective (a : Mˣ) : Function.Bijective ((· * ·) a : M → M) :=
@@ -197,7 +197,7 @@ theorem mulLeft_symm (a : G) : (Equiv.mulLeft a).symm = Equiv.mulLeft a⁻¹ :=
 lean 3 declaration is
   forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G), Function.Bijective.{succ u1, succ u1} G G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a)
 but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G), Function.Bijective.{succ u1, succ u1} G G (fun (x._@.Mathlib.Algebra.Hom.Equiv.Units.Basic._hyg.836 : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a x._@.Mathlib.Algebra.Hom.Equiv.Units.Basic._hyg.836)
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G), Function.Bijective.{succ u1, succ u1} G G (fun (x._@.Mathlib.Algebra.Hom.Equiv.Units.Basic._hyg.832 : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a x._@.Mathlib.Algebra.Hom.Equiv.Units.Basic._hyg.832)
 Case conversion may be inaccurate. Consider using '#align group.mul_left_bijective Group.mulLeft_bijectiveₓ'. -/
 @[to_additive]
 theorem Group.mulLeft_bijective (a : G) : Function.Bijective ((· * ·) a) :=

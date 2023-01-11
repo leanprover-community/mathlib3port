@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sangwoo Jo (aka Jason), Guy Leroy, Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.int.gcd
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -762,7 +762,7 @@ theorem pow_gcd_eq_one {M : Type _} [Monoid M] (x : M) {m n : ℕ} (hm : x ^ m =
 
 /- warning: gcd_nsmul_eq_zero -> gcd_nsmul_eq_zero is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : AddMonoid.{u1} M] (x : M) {m : Nat} {n : Nat}, (Eq.{succ u1} M (HasSmul.smul.{0, u1} Nat M (AddMonoid.SMul.{u1} M _inst_1) m x) (OfNat.ofNat.{u1} M 0 (OfNat.mk.{u1} M 0 (Zero.zero.{u1} M (AddZeroClass.toHasZero.{u1} M (AddMonoid.toAddZeroClass.{u1} M _inst_1)))))) -> (Eq.{succ u1} M (HasSmul.smul.{0, u1} Nat M (AddMonoid.SMul.{u1} M _inst_1) n x) (OfNat.ofNat.{u1} M 0 (OfNat.mk.{u1} M 0 (Zero.zero.{u1} M (AddZeroClass.toHasZero.{u1} M (AddMonoid.toAddZeroClass.{u1} M _inst_1)))))) -> (Eq.{succ u1} M (HasSmul.smul.{0, u1} Nat M (AddMonoid.SMul.{u1} M _inst_1) (Nat.gcd m n) x) (OfNat.ofNat.{u1} M 0 (OfNat.mk.{u1} M 0 (Zero.zero.{u1} M (AddZeroClass.toHasZero.{u1} M (AddMonoid.toAddZeroClass.{u1} M _inst_1))))))
+  forall {M : Type.{u1}} [_inst_1 : AddMonoid.{u1} M] (x : M) {m : Nat} {n : Nat}, (Eq.{succ u1} M (SMul.smul.{0, u1} Nat M (AddMonoid.SMul.{u1} M _inst_1) m x) (OfNat.ofNat.{u1} M 0 (OfNat.mk.{u1} M 0 (Zero.zero.{u1} M (AddZeroClass.toHasZero.{u1} M (AddMonoid.toAddZeroClass.{u1} M _inst_1)))))) -> (Eq.{succ u1} M (SMul.smul.{0, u1} Nat M (AddMonoid.SMul.{u1} M _inst_1) n x) (OfNat.ofNat.{u1} M 0 (OfNat.mk.{u1} M 0 (Zero.zero.{u1} M (AddZeroClass.toHasZero.{u1} M (AddMonoid.toAddZeroClass.{u1} M _inst_1)))))) -> (Eq.{succ u1} M (SMul.smul.{0, u1} Nat M (AddMonoid.SMul.{u1} M _inst_1) (Nat.gcd m n) x) (OfNat.ofNat.{u1} M 0 (OfNat.mk.{u1} M 0 (Zero.zero.{u1} M (AddZeroClass.toHasZero.{u1} M (AddMonoid.toAddZeroClass.{u1} M _inst_1))))))
 but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : AddMonoid.{u1} M] (x : M) {m : Nat} {n : Nat}, (Eq.{succ u1} M (HSMul.hSMul.{0, u1, u1} Nat M M (instHSMul.{0, u1} Nat M (AddMonoid.SMul.{u1} M _inst_1)) m x) (OfNat.ofNat.{u1} M 0 (Zero.toOfNat0.{u1} M (AddMonoid.toZero.{u1} M _inst_1)))) -> (Eq.{succ u1} M (HSMul.hSMul.{0, u1, u1} Nat M M (instHSMul.{0, u1} Nat M (AddMonoid.SMul.{u1} M _inst_1)) n x) (OfNat.ofNat.{u1} M 0 (Zero.toOfNat0.{u1} M (AddMonoid.toZero.{u1} M _inst_1)))) -> (Eq.{succ u1} M (HSMul.hSMul.{0, u1, u1} Nat M M (instHSMul.{0, u1} Nat M (AddMonoid.SMul.{u1} M _inst_1)) (Nat.gcd m n) x) (OfNat.ofNat.{u1} M 0 (Zero.toOfNat0.{u1} M (AddMonoid.toZero.{u1} M _inst_1))))
 Case conversion may be inaccurate. Consider using '#align gcd_nsmul_eq_zero gcd_nsmul_eq_zeroₓ'. -/

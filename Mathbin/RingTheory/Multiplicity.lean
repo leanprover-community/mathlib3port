@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis, Chris Hughes
 
 ! This file was ported from Lean 3 source module ring_theory.multiplicity
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -306,6 +306,7 @@ theorem finite_nat_iff {a b : ℕ} : Finite a b ↔ a ≠ 1 ∧ 0 < b :=
 #align multiplicity.finite_nat_iff multiplicity.finite_nat_iff
 
 alias dvd_iff_multiplicity_pos ↔ _ _root_.has_dvd.dvd.multiplicity_pos
+#align has_dvd.dvd.multiplicity_pos Dvd.Dvd.multiplicity_pos
 
 end Monoid
 
@@ -350,6 +351,7 @@ theorem eq_of_associated_left {a b c : α} (h : Associated a b) :
 #align multiplicity.eq_of_associated_left multiplicity.eq_of_associated_left
 
 alias dvd_iff_multiplicity_pos ↔ _ _root_.has_dvd.dvd.multiplicity_pos
+#align has_dvd.dvd.multiplicity_pos Dvd.Dvd.multiplicity_pos
 
 end CommMonoid
 

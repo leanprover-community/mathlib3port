@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis, Yaël Dillies
 
 ! This file was ported from Lean 3 source module algebra.order.module
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -108,16 +108,19 @@ theorem smul_nonneg_of_nonpos_of_nonpos (hc : c ≤ 0) (ha : a ≤ 0) : 0 ≤ c 
 #align smul_nonneg_of_nonpos_of_nonpos smul_nonneg_of_nonpos_of_nonpos
 
 alias smul_pos_iff_of_neg ↔ _ smul_pos_of_neg_of_neg
+#align smul_pos_of_neg_of_neg smul_pos_of_neg_of_neg
 
 alias smul_neg_iff_of_pos ↔ _ smul_neg_of_pos_of_neg
+#align smul_neg_of_pos_of_neg smul_neg_of_pos_of_neg
 
 alias smul_neg_iff_of_neg ↔ _ smul_neg_of_neg_of_pos
+#align smul_neg_of_neg_of_pos smul_neg_of_neg_of_pos
 
-theorem antitone_smul_left (hc : c ≤ 0) : Antitone (HasSmul.smul c : M → M) := fun a b h =>
+theorem antitone_smul_left (hc : c ≤ 0) : Antitone (SMul.smul c : M → M) := fun a b h =>
   smul_le_smul_of_nonpos h hc
 #align antitone_smul_left antitone_smul_left
 
-theorem strict_anti_smul_left (hc : c < 0) : StrictAnti (HasSmul.smul c : M → M) := fun a b h =>
+theorem strict_anti_smul_left (hc : c < 0) : StrictAnti (SMul.smul c : M → M) := fun a b h =>
   smul_lt_smul_of_neg h hc
 #align strict_anti_smul_left strict_anti_smul_left
 

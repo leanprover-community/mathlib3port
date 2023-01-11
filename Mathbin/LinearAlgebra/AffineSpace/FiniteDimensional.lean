@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module linear_algebra.affine_space.finite_dimensional
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -362,6 +362,7 @@ theorem collinear_iff_finrank_le_one {s : Set P} [FiniteDimensional k (vectorSpa
 #align collinear_iff_finrank_le_one collinear_iff_finrank_le_one
 
 alias collinear_iff_finrank_le_one ↔ Collinear.finrank_le_one _
+#align collinear.finrank_le_one Collinear.finrank_le_one
 
 /-- A subset of a collinear set is collinear. -/
 theorem Collinear.subset {s₁ s₂ : Set P} (hs : s₁ ⊆ s₂) (h : Collinear k s₂) : Collinear k s₁ :=
@@ -671,6 +672,7 @@ theorem coplanar_iff_finrank_le_two {s : Set P} [FiniteDimensional k (vectorSpan
 #align coplanar_iff_finrank_le_two coplanar_iff_finrank_le_two
 
 alias coplanar_iff_finrank_le_two ↔ Coplanar.finrank_le_two _
+#align coplanar.finrank_le_two Coplanar.finrank_le_two
 
 /-- A subset of a coplanar set is coplanar. -/
 theorem Coplanar.subset {s₁ s₂ : Set P} (hs : s₁ ⊆ s₂) (h : Coplanar k s₂) : Coplanar k s₁ :=

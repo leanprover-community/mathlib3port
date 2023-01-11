@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kevin Buzzard, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module linear_algebra.quotient
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -117,18 +117,18 @@ theorem mk_sub : (mk (x - y) : M ⧸ p) = mk x - mk y :=
   rfl
 #align submodule.quotient.mk_sub Submodule.Quotient.mk_sub
 
-section HasSmul
+section SMul
 
-variable {S : Type _} [HasSmul S R] [HasSmul S M] [IsScalarTower S R M] (P : Submodule R M)
+variable {S : Type _} [SMul S R] [SMul S M] [IsScalarTower S R M] (P : Submodule R M)
 
-instance hasSmul' : HasSmul S (M ⧸ P) :=
+instance hasSmul' : SMul S (M ⧸ P) :=
   ⟨fun a =>
     (Quotient.map' ((· • ·) a)) fun x y h =>
       left_rel_apply.mpr <| by simpa [smul_sub] using P.smul_mem (a • 1 : R) (left_rel_apply.mp h)⟩
 #align submodule.quotient.has_smul' Submodule.Quotient.hasSmul'
 
 /-- Shortcut to help the elaborator in the common case. -/
-instance hasSmul : HasSmul R (M ⧸ P) :=
+instance hasSmul : SMul R (M ⧸ P) :=
   Quotient.hasSmul' P
 #align submodule.quotient.has_smul Submodule.Quotient.hasSmul
 
@@ -137,28 +137,28 @@ theorem mk_smul (r : S) (x : M) : (mk (r • x) : M ⧸ p) = r • mk x :=
   rfl
 #align submodule.quotient.mk_smul Submodule.Quotient.mk_smul
 
-instance smul_comm_class (T : Type _) [HasSmul T R] [HasSmul T M] [IsScalarTower T R M]
+instance smul_comm_class (T : Type _) [SMul T R] [SMul T M] [IsScalarTower T R M]
     [SMulCommClass S T M] : SMulCommClass S T (M ⧸ P)
     where smul_comm x y := Quotient.ind' fun z => congr_arg mk (smul_comm _ _ _)
 #align submodule.quotient.smul_comm_class Submodule.Quotient.smul_comm_class
 
-instance is_scalar_tower (T : Type _) [HasSmul T R] [HasSmul T M] [IsScalarTower T R M]
-    [HasSmul S T] [IsScalarTower S T M] : IsScalarTower S T (M ⧸ P)
+instance is_scalar_tower (T : Type _) [SMul T R] [SMul T M] [IsScalarTower T R M] [SMul S T]
+    [IsScalarTower S T M] : IsScalarTower S T (M ⧸ P)
     where smul_assoc x y := Quotient.ind' fun z => congr_arg mk (smul_assoc _ _ _)
 #align submodule.quotient.is_scalar_tower Submodule.Quotient.is_scalar_tower
 
-instance is_central_scalar [HasSmul Sᵐᵒᵖ R] [HasSmul Sᵐᵒᵖ M] [IsScalarTower Sᵐᵒᵖ R M]
+instance is_central_scalar [SMul Sᵐᵒᵖ R] [SMul Sᵐᵒᵖ M] [IsScalarTower Sᵐᵒᵖ R M]
     [IsCentralScalar S M] : IsCentralScalar S (M ⧸ P)
     where op_smul_eq_smul x := Quotient.ind' fun z => congr_arg mk <| op_smul_eq_smul _ _
 #align submodule.quotient.is_central_scalar Submodule.Quotient.is_central_scalar
 
-end HasSmul
+end SMul
 
 section Module
 
 variable {S : Type _}
 
-instance mulAction' [Monoid S] [HasSmul S R] [MulAction S M] [IsScalarTower S R M]
+instance mulAction' [Monoid S] [SMul S R] [MulAction S M] [IsScalarTower S R M]
     (P : Submodule R M) : MulAction S (M ⧸ P) :=
   Function.Surjective.mulAction mk (surjective_quot_mk _) P
 #align submodule.quotient.mul_action' Submodule.Quotient.mulAction'
@@ -167,8 +167,8 @@ instance mulAction (P : Submodule R M) : MulAction R (M ⧸ P) :=
   Quotient.mulAction' P
 #align submodule.quotient.mul_action Submodule.Quotient.mulAction
 
-instance smulZeroClass' [HasSmul S R] [SMulZeroClass S M] [IsScalarTower S R M]
-    (P : Submodule R M) : SMulZeroClass S (M ⧸ P) :=
+instance smulZeroClass' [SMul S R] [SMulZeroClass S M] [IsScalarTower S R M] (P : Submodule R M) :
+    SMulZeroClass S (M ⧸ P) :=
   ZeroHom.smulZeroClass ⟨mk, mk_zero _⟩ P
 #align submodule.quotient.smul_zero_class' Submodule.Quotient.smulZeroClass'
 
@@ -176,7 +176,7 @@ instance smulZeroClass (P : Submodule R M) : SMulZeroClass R (M ⧸ P) :=
   Quotient.smulZeroClass' P
 #align submodule.quotient.smul_zero_class Submodule.Quotient.smulZeroClass
 
-instance distribSmul' [HasSmul S R] [DistribSMul S M] [IsScalarTower S R M] (P : Submodule R M) :
+instance distribSmul' [SMul S R] [DistribSMul S M] [IsScalarTower S R M] (P : Submodule R M) :
     DistribSMul S (M ⧸ P) :=
   Function.Surjective.distribSMul ⟨mk, rfl, fun _ _ => rfl⟩ (surjective_quot_mk _) P
 #align submodule.quotient.distrib_smul' Submodule.Quotient.distribSmul'
@@ -185,7 +185,7 @@ instance distribSmul (P : Submodule R M) : DistribSMul R (M ⧸ P) :=
   Quotient.distribSmul' P
 #align submodule.quotient.distrib_smul Submodule.Quotient.distribSmul
 
-instance distribMulAction' [Monoid S] [HasSmul S R] [DistribMulAction S M] [IsScalarTower S R M]
+instance distribMulAction' [Monoid S] [SMul S R] [DistribMulAction S M] [IsScalarTower S R M]
     (P : Submodule R M) : DistribMulAction S (M ⧸ P) :=
   Function.Surjective.distribMulAction ⟨mk, rfl, fun _ _ => rfl⟩ (surjective_quot_mk _) P
 #align submodule.quotient.distrib_mul_action' Submodule.Quotient.distribMulAction'
@@ -194,7 +194,7 @@ instance distribMulAction (P : Submodule R M) : DistribMulAction R (M ⧸ P) :=
   Quotient.distribMulAction' P
 #align submodule.quotient.distrib_mul_action Submodule.Quotient.distribMulAction
 
-instance module' [Semiring S] [HasSmul S R] [Module S M] [IsScalarTower S R M] (P : Submodule R M) :
+instance module' [Semiring S] [SMul S R] [Module S M] [IsScalarTower S R M] (P : Submodule R M) :
     Module S (M ⧸ P) :=
   Function.Surjective.module _ ⟨mk, rfl, fun _ _ => rfl⟩ (surjective_quot_mk _) P
 #align submodule.quotient.module' Submodule.Quotient.module'
@@ -208,7 +208,7 @@ variable (S)
 /-- The quotient of `P` as an `S`-submodule is the same as the quotient of `P` as an `R`-submodule,
 where `P : submodule R M`.
 -/
-def restrictScalarsEquiv [Ring S] [HasSmul S R] [Module S M] [IsScalarTower S R M]
+def restrictScalarsEquiv [Ring S] [SMul S R] [Module S M] [IsScalarTower S R M]
     (P : Submodule R M) : (M ⧸ P.restrictScalars S) ≃ₗ[S] M ⧸ P :=
   {
     Quotient.congrRight fun _ _ =>
@@ -218,13 +218,13 @@ def restrictScalarsEquiv [Ring S] [HasSmul S R] [Module S M] [IsScalarTower S R 
 #align submodule.quotient.restrict_scalars_equiv Submodule.Quotient.restrictScalarsEquiv
 
 @[simp]
-theorem restrict_scalars_equiv_mk [Ring S] [HasSmul S R] [Module S M] [IsScalarTower S R M]
+theorem restrict_scalars_equiv_mk [Ring S] [SMul S R] [Module S M] [IsScalarTower S R M]
     (P : Submodule R M) (x : M) : restrictScalarsEquiv S P (mk x) = mk x :=
   rfl
 #align submodule.quotient.restrict_scalars_equiv_mk Submodule.Quotient.restrict_scalars_equiv_mk
 
 @[simp]
-theorem restrict_scalars_equiv_symm_mk [Ring S] [HasSmul S R] [Module S M] [IsScalarTower S R M]
+theorem restrict_scalars_equiv_symm_mk [Ring S] [SMul S R] [Module S M] [IsScalarTower S R M]
     (P : Submodule R M) (x : M) : (restrictScalarsEquiv S P).symm (mk x) = mk x :=
   rfl
 #align

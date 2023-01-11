@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.list.perm
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -676,6 +676,8 @@ theorem subperm_cons (a : α) {l₁ l₂ : List α} : a :: l₁ <+~ a :: l₂ �
 #align list.subperm_cons List.subperm_cons
 
 alias subperm_cons ↔ subperm.of_cons subperm.cons
+#align list.subperm.of_cons List.Subperm.of_cons
+#align list.subperm.cons List.Subperm.cons
 
 attribute [protected] subperm.cons
 

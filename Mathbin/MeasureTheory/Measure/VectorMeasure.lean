@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module measure_theory.measure.vector_measure
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -269,7 +269,7 @@ theorem of_nonpos_disjoint_union_eq_zero {s : SignedMeasure α} {A B : Set α} (
 
 end
 
-section HasSmul
+section SMul
 
 variable {M : Type _} [AddCommMonoid M] [TopologicalSpace M]
 
@@ -287,7 +287,7 @@ def smul (r : R) (v : VectorMeasure α M) : VectorMeasure α M
   m_Union' _ hf₁ hf₂ := HasSum.const_smul (v.m_Union hf₁ hf₂)
 #align measure_theory.vector_measure.smul MeasureTheory.VectorMeasure.smul
 
-instance : HasSmul R (VectorMeasure α M) :=
+instance : SMul R (VectorMeasure α M) :=
   ⟨smul⟩
 
 @[simp]
@@ -299,7 +299,7 @@ theorem smul_apply (r : R) (v : VectorMeasure α M) (i : Set α) : (r • v) i =
   rfl
 #align measure_theory.vector_measure.smul_apply MeasureTheory.VectorMeasure.smul_apply
 
-end HasSmul
+end SMul
 
 section AddCommMonoid
 

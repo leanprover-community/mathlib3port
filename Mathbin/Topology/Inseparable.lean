@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang, Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module topology.inseparable
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -752,8 +752,10 @@ theorem specializes_iff_pure : x ⤳ y ↔ pure x ≤ 𝓝 y :=
 #align specializes_iff_pure specializes_iff_pure
 
 alias specializes_iff_nhds ↔ Specializes.nhds_le_nhds _
+#align specializes.nhds_le_nhds Specializes.nhds_le_nhds
 
 alias specializes_iff_pure ↔ Specializes.pure_le_nhds _
+#align specializes.pure_le_nhds Specializes.pure_le_nhds
 
 theorem specializes_iff_forall_open : x ⤳ y ↔ ∀ s : Set X, IsOpen s → y ∈ s → x ∈ s :=
   (specializes_tfae x y).out 0 2
@@ -784,12 +786,14 @@ theorem specializes_iff_mem_closure : x ⤳ y ↔ y ∈ closure ({x} : Set X) :=
 #align specializes_iff_mem_closure specializes_iff_mem_closure
 
 alias specializes_iff_mem_closure ↔ Specializes.mem_closure _
+#align specializes.mem_closure Specializes.mem_closure
 
 theorem specializes_iff_closure_subset : x ⤳ y ↔ closure ({y} : Set X) ⊆ closure {x} :=
   (specializes_tfae x y).out 0 5
 #align specializes_iff_closure_subset specializes_iff_closure_subset
 
 alias specializes_iff_closure_subset ↔ Specializes.closure_subset _
+#align specializes.closure_subset Specializes.closure_subset
 
 theorem Filter.HasBasis.specializes_iff {ι} {p : ι → Prop} {s : ι → Set X}
     (h : (𝓝 y).HasBasis p s) : x ⤳ y ↔ ∀ i, p i → x ∈ s i :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module data.polynomial.degree.definitions
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -224,6 +224,7 @@ theorem nat_degree_lt_iff_degree_lt (hp : p ≠ 0) : p.natDegree < n ↔ p.degre
   WithBot.unbot'_lt_iff <| degree_eq_bot.Not.mpr hp
 #align polynomial.nat_degree_lt_iff_degree_lt Polynomial.nat_degree_lt_iff_degree_lt
 
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Alias.lean:29:6: warning: don't know how to generate #align statements for .. -/
 alias nat_degree_le_iff_degree_le ↔ ..
 
 theorem nat_degree_le_nat_degree [Semiring S] {q : S[X]} (hpq : p.degree ≤ q.degree) :

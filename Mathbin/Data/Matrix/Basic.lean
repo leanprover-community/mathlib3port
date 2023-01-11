@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ellen Arlt, Blair Shi, Sean Leather, Mario Carneiro, Johan Commelin, Lu-Ming Zhang
 
 ! This file was ported from Lean 3 source module data.matrix.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -237,17 +237,17 @@ instance [Subsingleton α] : Subsingleton (Matrix m n α) :=
 instance [Nonempty m] [Nonempty n] [Nontrivial α] : Nontrivial (Matrix m n α) :=
   Function.nontrivial
 
-instance [HasSmul R α] : HasSmul R (Matrix m n α) :=
+instance [SMul R α] : SMul R (Matrix m n α) :=
   Pi.instSMul
 
-instance [HasSmul R α] [HasSmul S α] [SMulCommClass R S α] : SMulCommClass R S (Matrix m n α) :=
+instance [SMul R α] [SMul S α] [SMulCommClass R S α] : SMulCommClass R S (Matrix m n α) :=
   Pi.smulCommClass
 
-instance [HasSmul R S] [HasSmul R α] [HasSmul S α] [IsScalarTower R S α] :
+instance [SMul R S] [SMul R α] [SMul S α] [IsScalarTower R S α] :
     IsScalarTower R S (Matrix m n α) :=
   Pi.isScalarTower
 
-instance [HasSmul R α] [HasSmul Rᵐᵒᵖ α] [IsCentralScalar R α] : IsCentralScalar R (Matrix m n α) :=
+instance [SMul R α] [SMul Rᵐᵒᵖ α] [IsCentralScalar R α] : IsCentralScalar R (Matrix m n α) :=
   Pi.is_central_scalar
 
 instance [Monoid R] [MulAction R α] : MulAction R (Matrix m n α) :=
@@ -283,7 +283,7 @@ theorem neg_of [Neg α] (f : m → n → α) : -of f = of (-f) :=
 #align matrix.neg_of Matrix.neg_of
 
 @[simp]
-theorem smul_of [HasSmul R α] (r : R) (f : m → n → α) : r • of f = of (r • f) :=
+theorem smul_of [SMul R α] (r : R) (f : m → n → α) : r • of f = of (r • f) :=
   rfl
 #align matrix.smul_of Matrix.smul_of
 
@@ -304,7 +304,7 @@ protected theorem map_sub [Sub α] [Sub β] (f : α → β) (hf : ∀ a₁ a₂,
   ext fun _ _ => hf _ _
 #align matrix.map_sub Matrix.map_sub
 
-theorem map_smul [HasSmul R α] [HasSmul R β] (f : α → β) (r : R) (hf : ∀ a, f (r • a) = r • f a)
+theorem map_smul [SMul R α] [SMul R β] (f : α → β) (r : R) (hf : ∀ a, f (r • a) = r • f a)
     (M : Matrix m n α) : (r • M).map f = r • M.map f :=
   ext fun _ _ => hf _
 #align matrix.map_smul Matrix.map_smul
@@ -324,7 +324,7 @@ theorem map_op_smul' [Mul α] [Mul β] (f : α → β) (r : α) (A : Matrix n n 
   ext fun _ _ => hf _ _
 #align matrix.map_op_smul' Matrix.map_op_smul'
 
-theorem IsSMulRegular.matrix [HasSmul R S] {k : R} (hk : IsSMulRegular S k) :
+theorem IsSMulRegular.matrix [SMul R S] {k : R} (hk : IsSMulRegular S k) :
     IsSMulRegular (Matrix m n S) k :=
   IsSMulRegular.pi fun _ => IsSMulRegular.pi fun _ => hk
 #align is_smul_regular.matrix IsSMulRegular.matrix
@@ -578,7 +578,7 @@ theorem diag_neg [Neg α] (A : Matrix n n α) : diag (-A) = -diag A :=
 #align matrix.diag_neg Matrix.diag_neg
 
 @[simp]
-theorem diag_smul [HasSmul R α] (r : R) (A : Matrix n n α) : diag (r • A) = r • diag A :=
+theorem diag_smul [SMul R α] (r : R) (A : Matrix n n α) : diag (r • A) = r • diag A :=
   rfl
 #align matrix.diag_smul Matrix.diag_smul
 
@@ -1937,7 +1937,7 @@ theorem transpose_mul [AddCommMonoid α] [CommSemigroup α] [Fintype n] (M : Mat
 #align matrix.transpose_mul Matrix.transpose_mul
 
 @[simp]
-theorem transpose_smul {R : Type _} [HasSmul R α] (c : R) (M : Matrix m n α) : (c • M)ᵀ = c • Mᵀ :=
+theorem transpose_smul {R : Type _} [SMul R α] (c : R) (M : Matrix m n α) : (c • M)ᵀ = c • Mᵀ :=
   by
   ext (i j)
   rfl
@@ -2105,13 +2105,13 @@ variants which this lemma would not apply to:
 * `matrix.conj_transpose_rat_cast_smul`
 -/
 @[simp]
-theorem conj_transpose_smul [Star R] [Star α] [HasSmul R α] [StarModule R α] (c : R)
+theorem conj_transpose_smul [Star R] [Star α] [SMul R α] [StarModule R α] (c : R)
     (M : Matrix m n α) : (c • M)ᴴ = star c • Mᴴ :=
   Matrix.ext fun i j => star_smul _ _
 #align matrix.conj_transpose_smul Matrix.conj_transpose_smul
 
 @[simp]
-theorem conj_transpose_smul_non_comm [Star R] [Star α] [HasSmul R α] [HasSmul Rᵐᵒᵖ α] (c : R)
+theorem conj_transpose_smul_non_comm [Star R] [Star α] [SMul R α] [SMul Rᵐᵒᵖ α] (c : R)
     (M : Matrix m n α) (h : ∀ (r : R) (a : α), star (r • a) = MulOpposite.op (star r) • star a) :
     (c • M)ᴴ = MulOpposite.op (star c) • Mᴴ :=
   Matrix.ext <| by simp [h]
@@ -2366,7 +2366,7 @@ theorem submatrix_zero [Zero α] :
   rfl
 #align matrix.submatrix_zero Matrix.submatrix_zero
 
-theorem submatrix_smul {R : Type _} [HasSmul R α] (r : R) (A : Matrix m n α) :
+theorem submatrix_smul {R : Type _} [SMul R α] (r : R) (A : Matrix m n α) :
     ((r • A : Matrix m n α).submatrix : (l → m) → (o → n) → Matrix l o α) = r • A.submatrix :=
   rfl
 #align matrix.submatrix_smul Matrix.submatrix_smul
@@ -2583,7 +2583,7 @@ theorem col_add [Add α] (v w : m → α) : col (v + w) = col v + col w :=
 #align matrix.col_add Matrix.col_add
 
 @[simp]
-theorem col_smul [HasSmul R α] (x : R) (v : m → α) : col (x • v) = x • col v :=
+theorem col_smul [SMul R α] (x : R) (v : m → α) : col (x • v) = x • col v :=
   by
   ext
   rfl
@@ -2597,7 +2597,7 @@ theorem row_add [Add α] (v w : m → α) : row (v + w) = row v + row w :=
 #align matrix.row_add Matrix.row_add
 
 @[simp]
-theorem row_smul [HasSmul R α] (x : R) (v : m → α) : row (x • v) = x • row v :=
+theorem row_smul [SMul R α] (x : R) (v : m → α) : row (x • v) = x • row v :=
   by
   ext
   rfl

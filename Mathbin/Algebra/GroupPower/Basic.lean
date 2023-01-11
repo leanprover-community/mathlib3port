@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module algebra.group_power.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -92,7 +92,14 @@ Case conversion may be inaccurate. Consider using '#align pow_two pow_twoₓ'. -
 theorem pow_two (a : M) : a ^ 2 = a * a := by rw [pow_succ, pow_one]
 #align pow_two pow_two
 
+/- warning: sq -> sq is a dubious translation:
+lean 3 declaration is
+  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] (a : M), Eq.{succ u1} M (HPow.hPow.{u1, 0, u1} M Nat M (instHPow.{u1, 0} M Nat (Monoid.Pow.{u1} M _inst_1)) a (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toHasMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) a a)
+but is expected to have type
+  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] (a : M), Eq.{succ u1} M (HPow.hPow.{u1, 0, u1} M Nat M (instHPow.{u1, 0} M Nat (Monoid.Pow.{u1} M _inst_1)) a (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) a a)
+Case conversion may be inaccurate. Consider using '#align sq sqₓ'. -/
 alias pow_two ← sq
+#align sq sq
 
 /- warning: pow_three' -> pow_three' is a dubious translation:
 lean 3 declaration is
@@ -315,6 +322,7 @@ theorem dvd_pow {x y : M} (hxy : x ∣ y) : ∀ {n : ℕ} (hn : n ≠ 0), x ∣ 
 -/
 
 alias dvd_pow ← Dvd.Dvd.pow
+#align has_dvd.dvd.pow Dvd.Dvd.pow
 
 #print dvd_pow_self /-
 theorem dvd_pow_self (a : M) {n : ℕ} (hn : n ≠ 0) : a ∣ a ^ n :=

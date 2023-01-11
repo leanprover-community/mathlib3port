@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 
 ! This file was ported from Lean 3 source module algebra.regular.smul
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,17 +36,13 @@ coincide.
 
 variable {R S : Type _} (M : Type _) {a b : R} {s : S}
 
-/- warning: is_smul_regular -> IsSMulRegular is a dubious translation:
-lean 3 declaration is
-  forall {R : Type.{u1}} (M : Type.{u2}) [_inst_1 : HasSmul.{u1, u2} R M], R -> Prop
-but is expected to have type
-  forall {R : Type.{u1}} (M : Type.{u2}) [_inst_1 : SMul.{u1, u2} R M], R -> Prop
-Case conversion may be inaccurate. Consider using '#align is_smul_regular IsSMulRegularₓ'. -/
+#print IsSMulRegular /-
 /-- An `M`-regular element is an element `c` such that multiplication on the left by `c` is an
 injective map `M → M`. -/
-def IsSMulRegular [HasSmul R M] (c : R) :=
+def IsSMulRegular [SMul R M] (c : R) :=
   Function.Injective ((· • ·) c : M → M)
 #align is_smul_regular IsSMulRegular
+-/
 
 #print IsLeftRegular.isSMulRegular /-
 theorem IsLeftRegular.isSMulRegular [Mul R] {c : R} (h : IsLeftRegular c) : IsSMulRegular R c :=
@@ -80,13 +76,13 @@ namespace IsSMulRegular
 
 variable {M}
 
-section HasSmul
+section SMul
 
-variable [HasSmul R M] [HasSmul R S] [HasSmul S M] [IsScalarTower R S M]
+variable [SMul R M] [SMul R S] [SMul S M] [IsScalarTower R S M]
 
 /- warning: is_smul_regular.smul -> IsSMulRegular.smul is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} {S : Type.{u2}} {M : Type.{u3}} {a : R} {s : S} [_inst_1 : HasSmul.{u1, u3} R M] [_inst_2 : HasSmul.{u1, u2} R S] [_inst_3 : HasSmul.{u2, u3} S M] [_inst_4 : IsScalarTower.{u1, u2, u3} R S M _inst_2 _inst_3 _inst_1], (IsSMulRegular.{u1, u3} R M _inst_1 a) -> (IsSMulRegular.{u2, u3} S M _inst_3 s) -> (IsSMulRegular.{u2, u3} S M _inst_3 (HasSmul.smul.{u1, u2} R S _inst_2 a s))
+  forall {R : Type.{u1}} {S : Type.{u2}} {M : Type.{u3}} {a : R} {s : S} [_inst_1 : SMul.{u1, u3} R M] [_inst_2 : SMul.{u1, u2} R S] [_inst_3 : SMul.{u2, u3} S M] [_inst_4 : IsScalarTower.{u1, u2, u3} R S M _inst_2 _inst_3 _inst_1], (IsSMulRegular.{u1, u3} R M _inst_1 a) -> (IsSMulRegular.{u2, u3} S M _inst_3 s) -> (IsSMulRegular.{u2, u3} S M _inst_3 (SMul.smul.{u1, u2} R S _inst_2 a s))
 but is expected to have type
   forall {R : Type.{u3}} {S : Type.{u1}} {M : Type.{u2}} {a : R} {s : S} [_inst_1 : SMul.{u3, u2} R M] [_inst_2 : SMul.{u3, u1} R S] [_inst_3 : SMul.{u1, u2} S M] [_inst_4 : IsScalarTower.{u3, u1, u2} R S M _inst_2 _inst_3 _inst_1], (IsSMulRegular.{u3, u2} R M _inst_1 a) -> (IsSMulRegular.{u1, u2} S M _inst_3 s) -> (IsSMulRegular.{u1, u2} S M _inst_3 (HSMul.hSMul.{u3, u1, u1} R S S (instHSMul.{u3, u1} R S _inst_2) a s))
 Case conversion may be inaccurate. Consider using '#align is_smul_regular.smul IsSMulRegular.smulₓ'. -/
@@ -97,7 +93,7 @@ theorem smul (ra : IsSMulRegular M a) (rs : IsSMulRegular M s) : IsSMulRegular M
 
 /- warning: is_smul_regular.of_smul -> IsSMulRegular.of_smul is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} {S : Type.{u2}} {M : Type.{u3}} {s : S} [_inst_1 : HasSmul.{u1, u3} R M] [_inst_2 : HasSmul.{u1, u2} R S] [_inst_3 : HasSmul.{u2, u3} S M] [_inst_4 : IsScalarTower.{u1, u2, u3} R S M _inst_2 _inst_3 _inst_1] (a : R), (IsSMulRegular.{u2, u3} S M _inst_3 (HasSmul.smul.{u1, u2} R S _inst_2 a s)) -> (IsSMulRegular.{u2, u3} S M _inst_3 s)
+  forall {R : Type.{u1}} {S : Type.{u2}} {M : Type.{u3}} {s : S} [_inst_1 : SMul.{u1, u3} R M] [_inst_2 : SMul.{u1, u2} R S] [_inst_3 : SMul.{u2, u3} S M] [_inst_4 : IsScalarTower.{u1, u2, u3} R S M _inst_2 _inst_3 _inst_1] (a : R), (IsSMulRegular.{u2, u3} S M _inst_3 (SMul.smul.{u1, u2} R S _inst_2 a s)) -> (IsSMulRegular.{u2, u3} S M _inst_3 s)
 but is expected to have type
   forall {R : Type.{u1}} {S : Type.{u3}} {M : Type.{u2}} {s : S} [_inst_1 : SMul.{u1, u2} R M] [_inst_2 : SMul.{u1, u3} R S] [_inst_3 : SMul.{u3, u2} S M] [_inst_4 : IsScalarTower.{u1, u3, u2} R S M _inst_2 _inst_3 _inst_1] (a : R), (IsSMulRegular.{u3, u2} S M _inst_3 (HSMul.hSMul.{u1, u3, u3} R S S (instHSMul.{u1, u3} R S _inst_2) a s)) -> (IsSMulRegular.{u3, u2} S M _inst_3 s)
 Case conversion may be inaccurate. Consider using '#align is_smul_regular.of_smul IsSMulRegular.of_smulₓ'. -/
@@ -110,7 +106,7 @@ theorem of_smul (a : R) (ab : IsSMulRegular M (a • s)) : IsSMulRegular M s :=
 
 /- warning: is_smul_regular.smul_iff -> IsSMulRegular.smul_iff is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} {S : Type.{u2}} {M : Type.{u3}} {a : R} [_inst_1 : HasSmul.{u1, u3} R M] [_inst_2 : HasSmul.{u1, u2} R S] [_inst_3 : HasSmul.{u2, u3} S M] [_inst_4 : IsScalarTower.{u1, u2, u3} R S M _inst_2 _inst_3 _inst_1] (b : S), (IsSMulRegular.{u1, u3} R M _inst_1 a) -> (Iff (IsSMulRegular.{u2, u3} S M _inst_3 (HasSmul.smul.{u1, u2} R S _inst_2 a b)) (IsSMulRegular.{u2, u3} S M _inst_3 b))
+  forall {R : Type.{u1}} {S : Type.{u2}} {M : Type.{u3}} {a : R} [_inst_1 : SMul.{u1, u3} R M] [_inst_2 : SMul.{u1, u2} R S] [_inst_3 : SMul.{u2, u3} S M] [_inst_4 : IsScalarTower.{u1, u2, u3} R S M _inst_2 _inst_3 _inst_1] (b : S), (IsSMulRegular.{u1, u3} R M _inst_1 a) -> (Iff (IsSMulRegular.{u2, u3} S M _inst_3 (SMul.smul.{u1, u2} R S _inst_2 a b)) (IsSMulRegular.{u2, u3} S M _inst_3 b))
 but is expected to have type
   forall {R : Type.{u3}} {S : Type.{u1}} {M : Type.{u2}} {a : R} [_inst_1 : SMul.{u3, u2} R M] [_inst_2 : SMul.{u3, u1} R S] [_inst_3 : SMul.{u1, u2} S M] [_inst_4 : IsScalarTower.{u3, u1, u2} R S M _inst_2 _inst_3 _inst_1] (b : S), (IsSMulRegular.{u3, u2} R M _inst_1 a) -> (Iff (IsSMulRegular.{u1, u2} S M _inst_3 (HSMul.hSMul.{u3, u1, u1} R S S (instHSMul.{u3, u1} R S _inst_2) a b)) (IsSMulRegular.{u1, u2} S M _inst_3 b))
 Case conversion may be inaccurate. Consider using '#align is_smul_regular.smul_iff IsSMulRegular.smul_iffₓ'. -/
@@ -136,7 +132,7 @@ theorem isRightRegular [Mul R] {a : R} (h : IsSMulRegular R (MulOpposite.op a)) 
 
 /- warning: is_smul_regular.mul -> IsSMulRegular.mul is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} {M : Type.{u2}} {a : R} {b : R} [_inst_1 : HasSmul.{u1, u2} R M] [_inst_5 : Mul.{u1} R] [_inst_6 : IsScalarTower.{u1, u1, u2} R R M (Mul.toSMul.{u1} R _inst_5) _inst_1 _inst_1], (IsSMulRegular.{u1, u2} R M _inst_1 a) -> (IsSMulRegular.{u1, u2} R M _inst_1 b) -> (IsSMulRegular.{u1, u2} R M _inst_1 (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R _inst_5) a b))
+  forall {R : Type.{u1}} {M : Type.{u2}} {a : R} {b : R} [_inst_1 : SMul.{u1, u2} R M] [_inst_5 : Mul.{u1} R] [_inst_6 : IsScalarTower.{u1, u1, u2} R R M (Mul.toSMul.{u1} R _inst_5) _inst_1 _inst_1], (IsSMulRegular.{u1, u2} R M _inst_1 a) -> (IsSMulRegular.{u1, u2} R M _inst_1 b) -> (IsSMulRegular.{u1, u2} R M _inst_1 (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R _inst_5) a b))
 but is expected to have type
   forall {R : Type.{u2}} {M : Type.{u1}} {a : R} {b : R} [_inst_1 : SMul.{u2, u1} R M] [_inst_5 : Mul.{u2} R] [_inst_6 : IsScalarTower.{u2, u2, u1} R R M (Mul.toSMul.{u2} R _inst_5) _inst_1 _inst_1], (IsSMulRegular.{u2, u1} R M _inst_1 a) -> (IsSMulRegular.{u2, u1} R M _inst_1 b) -> (IsSMulRegular.{u2, u1} R M _inst_1 (HMul.hMul.{u2, u2, u2} R R R (instHMul.{u2} R _inst_5) a b))
 Case conversion may be inaccurate. Consider using '#align is_smul_regular.mul IsSMulRegular.mulₓ'. -/
@@ -147,7 +143,7 @@ theorem mul [Mul R] [IsScalarTower R R M] (ra : IsSMulRegular M a) (rb : IsSMulR
 
 /- warning: is_smul_regular.of_mul -> IsSMulRegular.of_mul is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} {M : Type.{u2}} {a : R} {b : R} [_inst_1 : HasSmul.{u1, u2} R M] [_inst_5 : Mul.{u1} R] [_inst_6 : IsScalarTower.{u1, u1, u2} R R M (Mul.toSMul.{u1} R _inst_5) _inst_1 _inst_1], (IsSMulRegular.{u1, u2} R M _inst_1 (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R _inst_5) a b)) -> (IsSMulRegular.{u1, u2} R M _inst_1 b)
+  forall {R : Type.{u1}} {M : Type.{u2}} {a : R} {b : R} [_inst_1 : SMul.{u1, u2} R M] [_inst_5 : Mul.{u1} R] [_inst_6 : IsScalarTower.{u1, u1, u2} R R M (Mul.toSMul.{u1} R _inst_5) _inst_1 _inst_1], (IsSMulRegular.{u1, u2} R M _inst_1 (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R _inst_5) a b)) -> (IsSMulRegular.{u1, u2} R M _inst_1 b)
 but is expected to have type
   forall {R : Type.{u2}} {M : Type.{u1}} {a : R} {b : R} [_inst_1 : SMul.{u2, u1} R M] [_inst_5 : Mul.{u2} R] [_inst_6 : IsScalarTower.{u2, u2, u1} R R M (Mul.toSMul.{u2} R _inst_5) _inst_1 _inst_1], (IsSMulRegular.{u2, u1} R M _inst_1 (HMul.hMul.{u2, u2, u2} R R R (instHMul.{u2} R _inst_5) a b)) -> (IsSMulRegular.{u2, u1} R M _inst_1 b)
 Case conversion may be inaccurate. Consider using '#align is_smul_regular.of_mul IsSMulRegular.of_mulₓ'. -/
@@ -159,7 +155,7 @@ theorem of_mul [Mul R] [IsScalarTower R R M] (ab : IsSMulRegular M (a * b)) : Is
 
 /- warning: is_smul_regular.mul_iff_right -> IsSMulRegular.mul_iff_right is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} {M : Type.{u2}} {a : R} {b : R} [_inst_1 : HasSmul.{u1, u2} R M] [_inst_5 : Mul.{u1} R] [_inst_6 : IsScalarTower.{u1, u1, u2} R R M (Mul.toSMul.{u1} R _inst_5) _inst_1 _inst_1], (IsSMulRegular.{u1, u2} R M _inst_1 a) -> (Iff (IsSMulRegular.{u1, u2} R M _inst_1 (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R _inst_5) a b)) (IsSMulRegular.{u1, u2} R M _inst_1 b))
+  forall {R : Type.{u1}} {M : Type.{u2}} {a : R} {b : R} [_inst_1 : SMul.{u1, u2} R M] [_inst_5 : Mul.{u1} R] [_inst_6 : IsScalarTower.{u1, u1, u2} R R M (Mul.toSMul.{u1} R _inst_5) _inst_1 _inst_1], (IsSMulRegular.{u1, u2} R M _inst_1 a) -> (Iff (IsSMulRegular.{u1, u2} R M _inst_1 (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R _inst_5) a b)) (IsSMulRegular.{u1, u2} R M _inst_1 b))
 but is expected to have type
   forall {R : Type.{u2}} {M : Type.{u1}} {a : R} {b : R} [_inst_1 : SMul.{u2, u1} R M] [_inst_5 : Mul.{u2} R] [_inst_6 : IsScalarTower.{u2, u2, u1} R R M (Mul.toSMul.{u2} R _inst_5) _inst_1 _inst_1], (IsSMulRegular.{u2, u1} R M _inst_1 a) -> (Iff (IsSMulRegular.{u2, u1} R M _inst_1 (HMul.hMul.{u2, u2, u2} R R R (instHMul.{u2} R _inst_5) a b)) (IsSMulRegular.{u2, u1} R M _inst_1 b))
 Case conversion may be inaccurate. Consider using '#align is_smul_regular.mul_iff_right IsSMulRegular.mul_iff_rightₓ'. -/
@@ -171,7 +167,7 @@ theorem mul_iff_right [Mul R] [IsScalarTower R R M] (ha : IsSMulRegular M a) :
 
 /- warning: is_smul_regular.mul_and_mul_iff -> IsSMulRegular.mul_and_mul_iff is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} {M : Type.{u2}} {a : R} {b : R} [_inst_1 : HasSmul.{u1, u2} R M] [_inst_5 : Mul.{u1} R] [_inst_6 : IsScalarTower.{u1, u1, u2} R R M (Mul.toSMul.{u1} R _inst_5) _inst_1 _inst_1], Iff (And (IsSMulRegular.{u1, u2} R M _inst_1 (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R _inst_5) a b)) (IsSMulRegular.{u1, u2} R M _inst_1 (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R _inst_5) b a))) (And (IsSMulRegular.{u1, u2} R M _inst_1 a) (IsSMulRegular.{u1, u2} R M _inst_1 b))
+  forall {R : Type.{u1}} {M : Type.{u2}} {a : R} {b : R} [_inst_1 : SMul.{u1, u2} R M] [_inst_5 : Mul.{u1} R] [_inst_6 : IsScalarTower.{u1, u1, u2} R R M (Mul.toSMul.{u1} R _inst_5) _inst_1 _inst_1], Iff (And (IsSMulRegular.{u1, u2} R M _inst_1 (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R _inst_5) a b)) (IsSMulRegular.{u1, u2} R M _inst_1 (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R _inst_5) b a))) (And (IsSMulRegular.{u1, u2} R M _inst_1 a) (IsSMulRegular.{u1, u2} R M _inst_1 b))
 but is expected to have type
   forall {R : Type.{u2}} {M : Type.{u1}} {a : R} {b : R} [_inst_1 : SMul.{u2, u1} R M] [_inst_5 : Mul.{u2} R] [_inst_6 : IsScalarTower.{u2, u2, u1} R R M (Mul.toSMul.{u2} R _inst_5) _inst_1 _inst_1], Iff (And (IsSMulRegular.{u2, u1} R M _inst_1 (HMul.hMul.{u2, u2, u2} R R R (instHMul.{u2} R _inst_5) a b)) (IsSMulRegular.{u2, u1} R M _inst_1 (HMul.hMul.{u2, u2, u2} R R R (instHMul.{u2} R _inst_5) b a))) (And (IsSMulRegular.{u2, u1} R M _inst_1 a) (IsSMulRegular.{u2, u1} R M _inst_1 b))
 Case conversion may be inaccurate. Consider using '#align is_smul_regular.mul_and_mul_iff IsSMulRegular.mul_and_mul_iffₓ'. -/
@@ -187,7 +183,7 @@ theorem mul_and_mul_iff [Mul R] [IsScalarTower R R M] :
     exact ⟨ha.mul hb, hb.mul ha⟩
 #align is_smul_regular.mul_and_mul_iff IsSMulRegular.mul_and_mul_iff
 
-end HasSmul
+end SMul
 
 section Monoid
 
@@ -255,11 +251,11 @@ end Monoid
 
 section MonoidSmul
 
-variable [Monoid S] [HasSmul R M] [HasSmul R S] [MulAction S M] [IsScalarTower R S M]
+variable [Monoid S] [SMul R M] [SMul R S] [MulAction S M] [IsScalarTower R S M]
 
 /- warning: is_smul_regular.of_smul_eq_one -> IsSMulRegular.of_smul_eq_one is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} {S : Type.{u2}} {M : Type.{u3}} {a : R} {s : S} [_inst_1 : Monoid.{u2} S] [_inst_2 : HasSmul.{u1, u3} R M] [_inst_3 : HasSmul.{u1, u2} R S] [_inst_4 : MulAction.{u2, u3} S M _inst_1] [_inst_5 : IsScalarTower.{u1, u2, u3} R S M _inst_3 (MulAction.toHasSmul.{u2, u3} S M _inst_1 _inst_4) _inst_2], (Eq.{succ u2} S (HasSmul.smul.{u1, u2} R S _inst_3 a s) (OfNat.ofNat.{u2} S 1 (OfNat.mk.{u2} S 1 (One.one.{u2} S (MulOneClass.toHasOne.{u2} S (Monoid.toMulOneClass.{u2} S _inst_1)))))) -> (IsSMulRegular.{u2, u3} S M (MulAction.toHasSmul.{u2, u3} S M _inst_1 _inst_4) s)
+  forall {R : Type.{u1}} {S : Type.{u2}} {M : Type.{u3}} {a : R} {s : S} [_inst_1 : Monoid.{u2} S] [_inst_2 : SMul.{u1, u3} R M] [_inst_3 : SMul.{u1, u2} R S] [_inst_4 : MulAction.{u2, u3} S M _inst_1] [_inst_5 : IsScalarTower.{u1, u2, u3} R S M _inst_3 (MulAction.toHasSmul.{u2, u3} S M _inst_1 _inst_4) _inst_2], (Eq.{succ u2} S (SMul.smul.{u1, u2} R S _inst_3 a s) (OfNat.ofNat.{u2} S 1 (OfNat.mk.{u2} S 1 (One.one.{u2} S (MulOneClass.toHasOne.{u2} S (Monoid.toMulOneClass.{u2} S _inst_1)))))) -> (IsSMulRegular.{u2, u3} S M (MulAction.toHasSmul.{u2, u3} S M _inst_1 _inst_4) s)
 but is expected to have type
   forall {R : Type.{u2}} {S : Type.{u3}} {M : Type.{u1}} {a : R} {s : S} [_inst_1 : Monoid.{u3} S] [_inst_2 : SMul.{u2, u1} R M] [_inst_3 : SMul.{u2, u3} R S] [_inst_4 : MulAction.{u3, u1} S M _inst_1] [_inst_5 : IsScalarTower.{u2, u3, u1} R S M _inst_3 (MulAction.toSMul.{u3, u1} S M _inst_1 _inst_4) _inst_2], (Eq.{succ u3} S (HSMul.hSMul.{u2, u3, u3} R S S (instHSMul.{u2, u3} R S _inst_3) a s) (OfNat.ofNat.{u3} S 1 (One.toOfNat1.{u3} S (Monoid.toOne.{u3} S _inst_1)))) -> (IsSMulRegular.{u3, u1} S M (MulAction.toSMul.{u3, u1} S M _inst_1 _inst_4) s)
 Case conversion may be inaccurate. Consider using '#align is_smul_regular.of_smul_eq_one IsSMulRegular.of_smul_eq_oneₓ'. -/
@@ -314,29 +310,37 @@ theorem not_zero_iff : ¬IsSMulRegular M (0 : R) ↔ Nontrivial M :=
   exact Iff.rfl
 #align is_smul_regular.not_zero_iff IsSMulRegular.not_zero_iff
 
-#print IsSMulRegular.zero /-
+/- warning: is_smul_regular.zero -> IsSMulRegular.zero is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u1}} {M : Type.{u2}} [_inst_1 : MonoidWithZero.{u1} R] [_inst_3 : Zero.{u2} M] [_inst_4 : MulActionWithZero.{u1, u2} R M _inst_1 _inst_3] [sM : Subsingleton.{succ u2} M], IsSMulRegular.{u1, u2} R M (SMulZeroClass.toHasSmul.{u1, u2} R M _inst_3 (SMulWithZero.toSmulZeroClass.{u1, u2} R M (MulZeroClass.toHasZero.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R _inst_1))) _inst_3 (MulActionWithZero.toSMulWithZero.{u1, u2} R M _inst_1 _inst_3 _inst_4))) (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R _inst_1))))))
+but is expected to have type
+  forall {R : Type.{u1}} {M : Type.{u2}} [_inst_1 : MonoidWithZero.{u1} R] [_inst_3 : Zero.{u2} M] [_inst_4 : MulActionWithZero.{u1, u2} R M _inst_1 _inst_3] [sM : Subsingleton.{succ u2} M], IsSMulRegular.{u1, u2} R M (SMulZeroClass.toSMul.{u1, u2} R M _inst_3 (SMulWithZero.toSMulZeroClass.{u1, u2} R M (MonoidWithZero.toZero.{u1} R _inst_1) _inst_3 (MulActionWithZero.toSMulWithZero.{u1, u2} R M _inst_1 _inst_3 _inst_4))) (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MonoidWithZero.toZero.{u1} R _inst_1)))
+Case conversion may be inaccurate. Consider using '#align is_smul_regular.zero IsSMulRegular.zeroₓ'. -/
 /-- The element `0` is `M`-regular when `M` is trivial. -/
 theorem zero [sM : Subsingleton M] : IsSMulRegular M (0 : R) :=
   zero_iff_subsingleton.mpr sM
 #align is_smul_regular.zero IsSMulRegular.zero
--/
 
-#print IsSMulRegular.not_zero /-
+/- warning: is_smul_regular.not_zero -> IsSMulRegular.not_zero is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u1}} {M : Type.{u2}} [_inst_1 : MonoidWithZero.{u1} R] [_inst_3 : Zero.{u2} M] [_inst_4 : MulActionWithZero.{u1, u2} R M _inst_1 _inst_3] [nM : Nontrivial.{u2} M], Not (IsSMulRegular.{u1, u2} R M (SMulZeroClass.toHasSmul.{u1, u2} R M _inst_3 (SMulWithZero.toSmulZeroClass.{u1, u2} R M (MulZeroClass.toHasZero.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R _inst_1))) _inst_3 (MulActionWithZero.toSMulWithZero.{u1, u2} R M _inst_1 _inst_3 _inst_4))) (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (MulZeroOneClass.toMulZeroClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R _inst_1)))))))
+but is expected to have type
+  forall {R : Type.{u1}} {M : Type.{u2}} [_inst_1 : MonoidWithZero.{u1} R] [_inst_3 : Zero.{u2} M] [_inst_4 : MulActionWithZero.{u1, u2} R M _inst_1 _inst_3] [nM : Nontrivial.{u2} M], Not (IsSMulRegular.{u1, u2} R M (SMulZeroClass.toSMul.{u1, u2} R M _inst_3 (SMulWithZero.toSMulZeroClass.{u1, u2} R M (MonoidWithZero.toZero.{u1} R _inst_1) _inst_3 (MulActionWithZero.toSMulWithZero.{u1, u2} R M _inst_1 _inst_3 _inst_4))) (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MonoidWithZero.toZero.{u1} R _inst_1))))
+Case conversion may be inaccurate. Consider using '#align is_smul_regular.not_zero IsSMulRegular.not_zeroₓ'. -/
 /-- The `0` element is not `M`-regular, on a non-trivial module. -/
 theorem not_zero [nM : Nontrivial M] : ¬IsSMulRegular M (0 : R) :=
   not_zero_iff.mpr nM
 #align is_smul_regular.not_zero IsSMulRegular.not_zero
--/
 
 end MonoidWithZero
 
 section CommSemigroup
 
-variable [CommSemigroup R] [HasSmul R M] [IsScalarTower R R M]
+variable [CommSemigroup R] [SMul R M] [IsScalarTower R R M]
 
 /- warning: is_smul_regular.mul_iff -> IsSMulRegular.mul_iff is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} {M : Type.{u2}} {a : R} {b : R} [_inst_1 : CommSemigroup.{u1} R] [_inst_2 : HasSmul.{u1, u2} R M] [_inst_3 : IsScalarTower.{u1, u1, u2} R R M (Mul.toSMul.{u1} R (Semigroup.toHasMul.{u1} R (CommSemigroup.toSemigroup.{u1} R _inst_1))) _inst_2 _inst_2], Iff (IsSMulRegular.{u1, u2} R M _inst_2 (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Semigroup.toHasMul.{u1} R (CommSemigroup.toSemigroup.{u1} R _inst_1))) a b)) (And (IsSMulRegular.{u1, u2} R M _inst_2 a) (IsSMulRegular.{u1, u2} R M _inst_2 b))
+  forall {R : Type.{u1}} {M : Type.{u2}} {a : R} {b : R} [_inst_1 : CommSemigroup.{u1} R] [_inst_2 : SMul.{u1, u2} R M] [_inst_3 : IsScalarTower.{u1, u1, u2} R R M (Mul.toSMul.{u1} R (Semigroup.toHasMul.{u1} R (CommSemigroup.toSemigroup.{u1} R _inst_1))) _inst_2 _inst_2], Iff (IsSMulRegular.{u1, u2} R M _inst_2 (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Semigroup.toHasMul.{u1} R (CommSemigroup.toSemigroup.{u1} R _inst_1))) a b)) (And (IsSMulRegular.{u1, u2} R M _inst_2 a) (IsSMulRegular.{u1, u2} R M _inst_2 b))
 but is expected to have type
   forall {R : Type.{u2}} {M : Type.{u1}} {a : R} {b : R} [_inst_1 : CommSemigroup.{u2} R] [_inst_2 : SMul.{u2, u1} R M] [_inst_3 : IsScalarTower.{u2, u2, u1} R R M (Mul.toSMul.{u2} R (Semigroup.toMul.{u2} R (CommSemigroup.toSemigroup.{u2} R _inst_1))) _inst_2 _inst_2], Iff (IsSMulRegular.{u2, u1} R M _inst_2 (HMul.hMul.{u2, u2, u2} R R R (instHMul.{u2} R (Semigroup.toMul.{u2} R (CommSemigroup.toSemigroup.{u2} R _inst_1))) a b)) (And (IsSMulRegular.{u2, u1} R M _inst_2 a) (IsSMulRegular.{u2, u1} R M _inst_2 b))
 Case conversion may be inaccurate. Consider using '#align is_smul_regular.mul_iff IsSMulRegular.mul_iffₓ'. -/

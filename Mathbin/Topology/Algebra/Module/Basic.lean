@@ -5,7 +5,7 @@ Authors: Jan-David Salchow, Sébastien Gouëzel, Jean Lo, Yury Kudryashov, Fréd
   Heather Macbeth
 
 ! This file was ported from Lean 3 source module topology.algebra.module.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -583,7 +583,7 @@ protected theorem map_smul [Module R₁ M₂] (f : M₁ →L[R₁] M₂) (c : R�
 #align continuous_linear_map.map_smul ContinuousLinearMap.map_smul
 
 @[simp]
-theorem map_smul_of_tower {R S : Type _} [Semiring S] [HasSmul R M₁] [Module S M₁] [HasSmul R M₂]
+theorem map_smul_of_tower {R S : Type _} [Semiring S] [SMul R M₁] [Module S M₁] [SMul R M₂]
     [Module S M₂] [LinearMap.CompatibleSmul M₁ M₂ R S] (f : M₁ →L[S] M₂) (c : R) (x : M₁) :
     f (c • x) = c • f x :=
   LinearMap.CompatibleSmul.map_smul f c x
@@ -673,7 +673,7 @@ theorem coe_smul' (c : S₂) (f : M₁ →SL[σ₁₂] M₂) : ⇑(c • f) = c 
   rfl
 #align continuous_linear_map.coe_smul' ContinuousLinearMap.coe_smul'
 
-instance [HasSmul S₂ T₂] [IsScalarTower S₂ T₂ M₂] : IsScalarTower S₂ T₂ (M₁ →SL[σ₁₂] M₂) :=
+instance [SMul S₂ T₂] [IsScalarTower S₂ T₂ M₂] : IsScalarTower S₂ T₂ (M₁ →SL[σ₁₂] M₂) :=
   ⟨fun a b f => ext fun x => smul_assoc a b (f x)⟩
 
 instance [SMulCommClass S₂ T₂ M₂] : SMulCommClass S₂ T₂ (M₁ →SL[σ₁₂] M₂) :=

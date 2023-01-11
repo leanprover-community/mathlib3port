@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module group_theory.group_action.sub_mul_action
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,7 +43,7 @@ variable {S : Type u'} {T : Type u''} {R : Type u} {M : Type v}
 
 /-- `smul_mem_class S R M` says `S` is a type of subsets `s ≤ M` that are closed under the
 scalar action of `R` on `M`. -/
-class SmulMemClass (S : Type _) (R M : outParam <| Type _) [HasSmul R M] [SetLike S M] where
+class SmulMemClass (S : Type _) (R M : outParam <| Type _) [SMul R M] [SetLike S M] where
   smul_mem : ∀ {s : S} (r : R) {m : M}, m ∈ s → r • m ∈ s
 #align smul_mem_class SmulMemClass
 
@@ -57,7 +57,7 @@ attribute [to_additive] SmulMemClass
 
 namespace SetLike
 
-variable [HasSmul R M] [SetLike S M] [hS : SmulMemClass S R M] (s : S)
+variable [SMul R M] [SetLike S M] [hS : SmulMemClass S R M] (s : S)
 
 include hS
 
@@ -66,7 +66,7 @@ open SmulMemClass
 -- lower priority so other instances are found first
 /-- A subset closed under the scalar action inherits that action. -/
 @[to_additive "A subset closed under the additive action inherits that action."]
-instance (priority := 900) hasSmul : HasSmul R s :=
+instance (priority := 900) hasSmul : SMul R s :=
   ⟨fun r x => ⟨r • x.1, smul_mem r x.2⟩⟩
 #align set_like.has_smul SetLike.hasSmul
 
@@ -90,14 +90,14 @@ theorem smul_def (r : R) (x : s) : r • x = ⟨r • x, smul_mem r x.2⟩ :=
 end SetLike
 
 /-- A sub_mul_action is a set which is closed under scalar multiplication.  -/
-structure SubMulAction (R : Type u) (M : Type v) [HasSmul R M] : Type v where
+structure SubMulAction (R : Type u) (M : Type v) [SMul R M] : Type v where
   carrier : Set M
   smul_mem' : ∀ (c : R) {x : M}, x ∈ carrier → c • x ∈ carrier
 #align sub_mul_action SubMulAction
 
 namespace SubMulAction
 
-variable [HasSmul R M]
+variable [SMul R M]
 
 instance : SetLike (SubMulAction R M) M :=
   ⟨SubMulAction.carrier, fun p q h => by cases p <;> cases q <;> congr ⟩
@@ -142,9 +142,9 @@ end SubMulAction
 
 namespace SubMulAction
 
-section HasSmul
+section SMul
 
-variable [HasSmul R M]
+variable [SMul R M]
 
 variable (p : SubMulAction R M)
 
@@ -154,7 +154,7 @@ theorem smul_mem (r : R) (h : x ∈ p) : r • x ∈ p :=
   p.smul_mem' r h
 #align sub_mul_action.smul_mem SubMulAction.smul_mem
 
-instance : HasSmul R p where smul c x := ⟨c • x.1, smul_mem _ c x.2⟩
+instance : SMul R p where smul c x := ⟨c • x.1, smul_mem _ c x.2⟩
 
 variable {p}
 
@@ -183,7 +183,7 @@ theorem subtype_eq_val : (SubMulAction.subtype p : p → M) = Subtype.val :=
   rfl
 #align sub_mul_action.subtype_eq_val SubMulAction.subtype_eq_val
 
-end HasSmul
+end SMul
 
 namespace SmulMemClass
 
@@ -217,7 +217,7 @@ variable [Monoid R] [MulAction R M]
 
 section
 
-variable [HasSmul S R] [HasSmul S M] [IsScalarTower S R M]
+variable [SMul S R] [SMul S M] [IsScalarTower S R M]
 
 variable (p : SubMulAction R M)
 
@@ -227,13 +227,13 @@ theorem smul_of_tower_mem (s : S) {x : M} (h : x ∈ p) : s • x ∈ p :=
   exact p.smul_mem _ h
 #align sub_mul_action.smul_of_tower_mem SubMulAction.smul_of_tower_mem
 
-instance hasSmul' : HasSmul S p where smul c x := ⟨c • x.1, smul_of_tower_mem _ c x.2⟩
+instance hasSmul' : SMul S p where smul c x := ⟨c • x.1, smul_of_tower_mem _ c x.2⟩
 #align sub_mul_action.has_smul' SubMulAction.hasSmul'
 
 instance : IsScalarTower S R p where smul_assoc s r x := Subtype.ext <| smul_assoc s r ↑x
 
-instance is_scalar_tower' {S' : Type _} [HasSmul S' R] [HasSmul S' S] [HasSmul S' M]
-    [IsScalarTower S' R M] [IsScalarTower S' S M] : IsScalarTower S' S p
+instance is_scalar_tower' {S' : Type _} [SMul S' R] [SMul S' S] [SMul S' M] [IsScalarTower S' R M]
+    [IsScalarTower S' S M] : IsScalarTower S' S p
     where smul_assoc s r x := Subtype.ext <| smul_assoc s r ↑x
 #align sub_mul_action.is_scalar_tower' SubMulAction.is_scalar_tower'
 
@@ -243,19 +243,19 @@ theorem coe_smul_of_tower (s : S) (x : p) : ((s • x : p) : M) = s • ↑x :=
 #align sub_mul_action.coe_smul_of_tower SubMulAction.coe_smul_of_tower
 
 @[simp]
-theorem smul_mem_iff' {G} [Group G] [HasSmul G R] [MulAction G M] [IsScalarTower G R M] (g : G)
+theorem smul_mem_iff' {G} [Group G] [SMul G R] [MulAction G M] [IsScalarTower G R M] (g : G)
     {x : M} : g • x ∈ p ↔ x ∈ p :=
   ⟨fun h => inv_smul_smul g x ▸ p.smul_of_tower_mem g⁻¹ h, p.smul_of_tower_mem g⟩
 #align sub_mul_action.smul_mem_iff' SubMulAction.smul_mem_iff'
 
-instance [HasSmul Sᵐᵒᵖ R] [HasSmul Sᵐᵒᵖ M] [IsScalarTower Sᵐᵒᵖ R M] [IsCentralScalar S M] :
+instance [SMul Sᵐᵒᵖ R] [SMul Sᵐᵒᵖ M] [IsScalarTower Sᵐᵒᵖ R M] [IsCentralScalar S M] :
     IsCentralScalar S p where op_smul_eq_smul r x := Subtype.ext <| op_smul_eq_smul r x
 
 end
 
 section
 
-variable [Monoid S] [HasSmul S R] [MulAction S M] [IsScalarTower S R M]
+variable [Monoid S] [SMul S R] [MulAction S M] [IsScalarTower S R M]
 
 variable (p : SubMulAction R M)
 
@@ -364,7 +364,7 @@ namespace SubMulAction
 
 variable [GroupWithZero S] [Monoid R] [MulAction R M]
 
-variable [HasSmul S R] [MulAction S M] [IsScalarTower S R M]
+variable [SMul S R] [MulAction S M] [IsScalarTower S R M]
 
 variable (p : SubMulAction R M) {s : S} {x y : M}
 

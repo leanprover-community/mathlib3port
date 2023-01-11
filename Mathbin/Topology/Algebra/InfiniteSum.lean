@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.algebra.infinite_sum
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1745,6 +1745,8 @@ theorem summable_abs_iff [LinearOrderedAddCommGroup β] [UniformSpace β] [Unifo
 #align summable_abs_iff summable_abs_iff
 
 alias summable_abs_iff ↔ Summable.of_abs Summable.abs
+#align summable.of_abs Summable.of_abs
+#align summable.abs Summable.abs
 
 theorem finite_of_summable_const [LinearOrderedAddCommGroup β] [Archimedean β] [TopologicalSpace β]
     [OrderClosedTopology β] {b : β} (hb : 0 < b) (hf : Summable fun a : α => b) :

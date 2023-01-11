@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.hausdorff_dimension
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -179,6 +179,7 @@ theorem dimH_subsingleton {s : Set X} (h : s.Subsingleton) : dimH s = 0 :=
 #align dimH_subsingleton dimH_subsingleton
 
 alias dimH_subsingleton ← Set.Subsingleton.dimH_zero
+#align set.subsingleton.dimH_zero Set.Subsingleton.dimH_zero
 
 @[simp]
 theorem dimH_empty : dimH (∅ : Set X) = 0 :=
@@ -225,12 +226,14 @@ theorem dimH_countable {s : Set X} (hs : s.Countable) : dimH s = 0 :=
 #align dimH_countable dimH_countable
 
 alias dimH_countable ← Set.Countable.dimH_zero
+#align set.countable.dimH_zero Set.Countable.dimH_zero
 
 theorem dimH_finite {s : Set X} (hs : s.Finite) : dimH s = 0 :=
   hs.Countable.dimH_zero
 #align dimH_finite dimH_finite
 
 alias dimH_finite ← Set.Finite.dimH_zero
+#align set.finite.dimH_zero Set.Finite.dimH_zero
 
 @[simp]
 theorem dimH_coe_finset (s : Finset X) : dimH (s : Set X) = 0 :=
@@ -238,6 +241,7 @@ theorem dimH_coe_finset (s : Finset X) : dimH (s : Set X) = 0 :=
 #align dimH_coe_finset dimH_coe_finset
 
 alias dimH_coe_finset ← Finset.dimH_zero
+#align finset.dimH_zero Finset.dimH_zero
 
 /-!
 ### Hausdorff dimension as the supremum of local Hausdorff dimensions

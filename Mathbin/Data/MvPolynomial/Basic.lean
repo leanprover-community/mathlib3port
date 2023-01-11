@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Johan Commelin, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.mv_polynomial.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -120,7 +120,7 @@ instance [Monoid R] [CommSemiring S₁] [DistribMulAction R S₁] [FaithfulSMul 
 instance [Semiring R] [CommSemiring S₁] [Module R S₁] : Module R (MvPolynomial σ S₁) :=
   AddMonoidAlgebra.module
 
-instance [Monoid R] [Monoid S₁] [CommSemiring S₂] [HasSmul R S₁] [DistribMulAction R S₂]
+instance [Monoid R] [Monoid S₁] [CommSemiring S₂] [SMul R S₁] [DistribMulAction R S₂]
     [DistribMulAction S₁ S₂] [IsScalarTower R S₁ S₂] : IsScalarTower R S₁ (MvPolynomial σ S₂) :=
   AddMonoidAlgebra.is_scalar_tower
 
@@ -528,6 +528,11 @@ theorem support_zero : (0 : MvPolynomial σ R).support = ∅ :=
   rfl
 #align mv_polynomial.support_zero MvPolynomial.support_zero
 
+theorem support_smul [DistribMulAction R S₁] {a : R} {f : MvPolynomial σ S₁} :
+    (a • f).support ⊆ f.support :=
+  Finsupp.support_smul
+#align mv_polynomial.support_smul MvPolynomial.support_smul
+
 theorem support_sum {α : Type _} {s : Finset α} {f : α → MvPolynomial σ R} :
     (∑ x in s, f x).support ⊆ s.bUnion fun x => (f x).support :=
   Finsupp.support_finset_sum
@@ -843,6 +848,12 @@ theorem constant_coeff_X (i : σ) : constantCoeff (x i : MvPolynomial σ R) = 0 
 #align mv_polynomial.constant_coeff_X MvPolynomial.constant_coeff_X
 
 variable {R}
+
+@[simp]
+theorem constant_coeff_smul [DistribMulAction R S₁] (a : R) (f : MvPolynomial σ S₁) :
+    constantCoeff (a • f) = a • constantCoeff f :=
+  rfl
+#align mv_polynomial.constant_coeff_smul MvPolynomial.constant_coeff_smul
 
 theorem constant_coeff_monomial [DecidableEq σ] (d : σ →₀ ℕ) (r : R) :
     constantCoeff (monomial d r) = if d = 0 then r else 0 := by

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.fintype.card
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -299,7 +299,7 @@ theorem Fintype.card_compl_set [Fintype α] (s : Set α) [Fintype s] [Fintype �
 
 @[simp]
 theorem Fintype.card_fin (n : ℕ) : Fintype.card (Fin n) = n :=
-  List.length_fin_range n
+  List.length_finRange n
 #align fintype.card_fin Fintype.card_fin
 
 @[simp]
@@ -642,11 +642,15 @@ theorem injective_iff_surjective_of_equiv {f : α → β} (e : α ≃ β) : Inje
 #align finite.injective_iff_surjective_of_equiv Finite.injective_iff_surjective_of_equiv
 
 alias injective_iff_bijective ↔ _root_.function.injective.bijective_of_finite _
+#align function.injective.bijective_of_finite Function.Injective.bijective_of_finite
 
 alias surjective_iff_bijective ↔ _root_.function.surjective.bijective_of_finite _
+#align function.surjective.bijective_of_finite Function.Surjective.bijective_of_finite
 
 alias injective_iff_surjective_of_equiv ↔
   _root_.function.injective.surjective_of_fintype _root_.function.surjective.injective_of_fintype
+#align function.injective.surjective_of_fintype Function.Injective.surjective_of_fintype
+#align function.surjective.injective_of_fintype Function.Surjective.injective_of_fintype
 
 end Finite
 

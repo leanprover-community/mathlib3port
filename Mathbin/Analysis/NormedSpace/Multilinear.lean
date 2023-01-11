@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.normed_space.multilinear
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -899,7 +899,7 @@ theorem norm_mk_pi_algebra_fin_succ_le : ‖ContinuousMultilinearMap.mkPiAlgebra
   simp only [ContinuousMultilinearMap.mk_pi_algebra_fin_apply, one_mul, List.of_fn_eq_map,
     Fin.prod_univ_def, Multiset.coe_map, Multiset.coe_prod]
   refine' (List.norm_prod_le' _).trans_eq _
-  · rw [Ne.def, List.map_eq_nil, List.fin_range_eq_nil]
+  · rw [Ne.def, List.map_eq_nil, List.finRange_eq_nil]
     exact Nat.succ_ne_zero _
   rw [List.map_map]
 #align

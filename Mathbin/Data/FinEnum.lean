@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module data.fin_enum
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -53,7 +53,7 @@ def ofNodupList [DecidableEq α] (xs : List α) (h : ∀ x : α, x ∈ xs) (h' :
   Equiv :=
     ⟨fun x => ⟨xs.indexOf x, by rw [List.indexOf_lt_length] <;> apply h⟩, fun ⟨i, h⟩ =>
       xs.nthLe _ h, fun x => by simp [of_nodup_list._match_1], fun ⟨i, h⟩ => by
-      simp [of_nodup_list._match_1, *] <;> rw [List.nth_le_index_of] <;> apply List.nodup_dedup⟩
+      simp [of_nodup_list._match_1, *] <;> rw [List.nthLe_index_of] <;> apply List.nodup_dedup⟩
 #align fin_enum.of_nodup_list FinEnum.ofNodupList
 
 /-- create a `fin_enum` instance from an exhaustive list; duplicates are removed -/
@@ -75,7 +75,7 @@ theorem mem_to_list [FinEnum α] (x : α) : x ∈ toList α := by
 
 @[simp]
 theorem nodup_to_list [FinEnum α] : List.Nodup (toList α) := by
-  simp [to_list] <;> apply List.Nodup.map <;> [apply Equiv.injective, apply List.nodup_fin_range]
+  simp [to_list] <;> apply List.Nodup.map <;> [apply Equiv.injective, apply List.nodup_finRange]
 #align fin_enum.nodup_to_list FinEnum.nodup_to_list
 
 /-- create a `fin_enum` instance using a surjection -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module linear_algebra.ray
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -401,6 +401,8 @@ theorem same_ray_neg_iff : SameRay R (-x) (-y) ↔ SameRay R x y := by
 #align same_ray_neg_iff same_ray_neg_iff
 
 alias same_ray_neg_iff ↔ SameRay.of_neg SameRay.neg
+#align same_ray.of_neg SameRay.of_neg
+#align same_ray.neg SameRay.neg
 
 theorem same_ray_neg_swap : SameRay R (-x) y ↔ SameRay R x (-y) := by
   rw [← same_ray_neg_iff, neg_neg]

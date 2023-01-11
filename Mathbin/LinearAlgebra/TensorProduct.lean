@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro
 
 ! This file was ported from Lean 3 source module linear_algebra.tensor_product
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -195,7 +195,7 @@ end
 
 /-- Note that this provides the default `compatible_smul R R M N` instance through
 `mul_action.is_scalar_tower.left`. -/
-instance (priority := 100) CompatibleSmul.isScalarTower [HasSmul R' R] [IsScalarTower R' R M]
+instance (priority := 100) CompatibleSmul.isScalarTower [SMul R' R] [IsScalarTower R' R M]
     [DistribMulAction R' N] [IsScalarTower R' R N] : CompatibleSmul R R' M N :=
   ⟨fun r m n => by
     conv_lhs => rw [← one_smul R m]
@@ -211,11 +211,11 @@ theorem smul_tmul [DistribMulAction R' N] [CompatibleSmul R R' M N] (r : R') (m 
 #align tensor_product.smul_tmul TensorProduct.smul_tmul
 
 /-- Auxiliary function to defining scalar multiplication on tensor product. -/
-def Smul.aux {R' : Type _} [HasSmul R' M] (r : R') : FreeAddMonoid (M × N) →+ M ⊗[R] N :=
+def Smul.aux {R' : Type _} [SMul R' M] (r : R') : FreeAddMonoid (M × N) →+ M ⊗[R] N :=
   FreeAddMonoid.lift fun p : M × N => (r • p.1) ⊗ₜ p.2
 #align tensor_product.smul.aux TensorProduct.Smul.aux
 
-theorem Smul.aux_of {R' : Type _} [HasSmul R' M] (r : R') (m : M) (n : N) :
+theorem Smul.aux_of {R' : Type _} [SMul R' M] (r : R') (m : M) (n : N) :
     Smul.aux r (FreeAddMonoid.of (m, n)) = (r • m) ⊗ₜ[R] n :=
   rfl
 #align tensor_product.smul.aux_of TensorProduct.Smul.aux_of
@@ -236,7 +236,7 @@ action. Two natural ways in which this situation arises are:
 Note that in the special case that `R = R'`, since `R` is commutative, we just get the usual scalar
 action on a tensor product of two modules. This special case is important enough that, for
 performance reasons, we define it explicitly below. -/
-instance leftHasSmul : HasSmul R' (M ⊗[R] N) :=
+instance leftHasSmul : SMul R' (M ⊗[R] N) :=
   ⟨fun r =>
     (addConGen (TensorProduct.Eqv R M N)).lift (Smul.aux r : _ →+ M ⊗[R] N) <|
       AddCon.add_con_gen_le fun x y hxy =>
@@ -256,7 +256,7 @@ instance leftHasSmul : HasSmul R' (M ⊗[R] N) :=
           (AddCon.ker_rel _).2 <| by simp_rw [AddMonoidHom.map_add, add_comm]⟩
 #align tensor_product.left_has_smul TensorProduct.leftHasSmul
 
-instance : HasSmul R (M ⊗[R] N) :=
+instance : SMul R (M ⊗[R] N) :=
   TensorProduct.leftHasSmul
 
 protected theorem smul_zero (r : R') : (r • 0 : M ⊗[R] N) = 0 :=
@@ -348,7 +348,7 @@ section
 -- Like `R'`, `R'₂` provides a `distrib_mul_action R'₂ (M ⊗[R] N)`
 variable {R'₂ : Type _} [Monoid R'₂] [DistribMulAction R'₂ M]
 
-variable [SMulCommClass R R'₂ M] [HasSmul R'₂ R']
+variable [SMulCommClass R R'₂ M] [SMul R'₂ R']
 
 /-- `is_scalar_tower R'₂ R' M` implies `is_scalar_tower R'₂ R' (M ⊗[R] N)` -/
 instance is_scalar_tower_left [IsScalarTower R'₂ R' M] : IsScalarTower R'₂ R' (M ⊗[R] N) :=
@@ -374,7 +374,7 @@ end
 
 /-- A short-cut instance for the common case, where the requirements for the `compatible_smul`
 instances are sufficient. -/
-instance is_scalar_tower [HasSmul R' R] [IsScalarTower R' R M] : IsScalarTower R' R (M ⊗[R] N) :=
+instance is_scalar_tower [SMul R' R] [IsScalarTower R' R M] : IsScalarTower R' R (M ⊗[R] N) :=
   TensorProduct.is_scalar_tower_left
 #align tensor_product.is_scalar_tower TensorProduct.is_scalar_tower
 

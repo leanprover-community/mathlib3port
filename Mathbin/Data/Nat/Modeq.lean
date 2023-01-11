@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.modeq
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -113,7 +113,21 @@ theorem modEq_iff_dvd : a ≡ b [MOD n] ↔ (n : ℤ) ∣ b - a := by
     Int.emod_eq_emod_iff_emod_sub_eq_zero, Int.dvd_iff_emod_eq_zero]
 #align nat.modeq_iff_dvd Nat.modEq_iff_dvd
 
+/- warning: nat.modeq.dvd -> Nat.ModEq.dvd is a dubious translation:
+lean 3 declaration is
+  forall {n : Nat} {a : Nat} {b : Nat}, (Nat.ModEq n a b) -> (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.hasSub) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) b) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) a)))
+but is expected to have type
+  forall {n : Nat} {a : Nat} {b : Nat}, (Nat.ModEq n a b) -> (Dvd.dvd.{0} Int Int.instDvdInt (Nat.cast.{0} Int Int.instNatCastInt n) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) (Nat.cast.{0} Int Int.instNatCastInt b) (Nat.cast.{0} Int Int.instNatCastInt a)))
+Case conversion may be inaccurate. Consider using '#align nat.modeq.dvd Nat.ModEq.dvdₓ'. -/
+/- warning: nat.modeq_of_dvd -> Nat.modEq_of_dvd is a dubious translation:
+lean 3 declaration is
+  forall {n : Nat} {a : Nat} {b : Nat}, (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.hasSub) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) b) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) a))) -> (Nat.ModEq n a b)
+but is expected to have type
+  forall {n : Nat} {a : Nat} {b : Nat}, (Dvd.dvd.{0} Int Int.instDvdInt (Nat.cast.{0} Int Int.instNatCastInt n) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) (Nat.cast.{0} Int Int.instNatCastInt b) (Nat.cast.{0} Int Int.instNatCastInt a))) -> (Nat.ModEq n a b)
+Case conversion may be inaccurate. Consider using '#align nat.modeq_of_dvd Nat.modEq_of_dvdₓ'. -/
 alias modeq_iff_dvd ↔ modeq.dvd modeq_of_dvd
+#align nat.modeq.dvd Nat.ModEq.dvd
+#align nat.modeq_of_dvd Nat.modEq_of_dvd
 
 #print Nat.modEq_iff_dvd' /-
 /-- A variant of `modeq_iff_dvd` with `nat` divisibility -/

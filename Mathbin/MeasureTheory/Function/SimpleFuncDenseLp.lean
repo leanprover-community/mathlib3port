@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yury Kudryashov, Heather Macbeth
 
 ! This file was ported from Lean 3 source module measure_theory.function.simple_func_dense_lp
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -506,7 +506,7 @@ variable [NormedField 𝕜] [NormedSpace 𝕜 E]
 
 /-- If `E` is a normed space, `Lp.simple_func E p μ` is a `has_smul`. Not declared as an
 instance as it is (as of writing) used only in the construction of the Bochner integral. -/
-protected def hasSmul : HasSmul 𝕜 (lp.simpleFunc E p μ) :=
+protected def hasSmul : SMul 𝕜 (lp.simpleFunc E p μ) :=
   ⟨fun k f =>
     ⟨k • f, by
       rcases f with ⟨f, ⟨s, hs⟩⟩

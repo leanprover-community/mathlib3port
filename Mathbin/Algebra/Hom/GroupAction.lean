@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module algebra.hom.group_action
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,11 +44,11 @@ assert_not_exists Submonoid
 
 variable (M' : Type _)
 
-variable (X : Type _) [HasSmul M' X]
+variable (X : Type _) [SMul M' X]
 
-variable (Y : Type _) [HasSmul M' Y]
+variable (Y : Type _) [SMul M' Y]
 
-variable (Z : Type _) [HasSmul M' Z]
+variable (Z : Type _) [SMul M' Z]
 
 variable (M : Type _) [Monoid M]
 
@@ -86,7 +86,7 @@ notation:25 X " →[" M:25 "] " Y:0 => MulActionHom M X Y
 scalar multiplication by `M`.
 
 You should extend this class when you extend `mul_action_hom`. -/
-class SmulHomClass (F : Type _) (M X Y : outParam <| Type _) [HasSmul M X] [HasSmul M Y] extends
+class SmulHomClass (F : Type _) (M X Y : outParam <| Type _) [SMul M X] [SMul M Y] extends
   FunLike F X fun _ => Y where
   map_smul : ∀ (f : F) (c : M) (x : X), f (c • x) = c • f x
 #align smul_hom_class SmulHomClass

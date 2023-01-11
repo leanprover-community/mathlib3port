@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Mario Carneiro
 
 ! This file was ported from Lean 3 source module order.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -134,42 +134,62 @@ attribute [simp] le_refl
 attribute [ext] LE
 
 alias le_trans ← LE.le.trans
+#align has_le.le.trans LE.le.trans
 
 alias le_trans' ← LE.le.trans'
+#align has_le.le.trans' LE.le.trans'
 
 alias lt_of_le_of_lt ← LE.le.trans_lt
+#align has_le.le.trans_lt LE.le.trans_lt
 
 alias lt_of_le_of_lt' ← LE.le.trans_lt'
+#align has_le.le.trans_lt' LE.le.trans_lt'
 
 alias le_antisymm ← LE.le.antisymm
+#align has_le.le.antisymm LE.le.antisymm
 
 alias ge_antisymm ← LE.le.antisymm'
+#align has_le.le.antisymm' LE.le.antisymm'
 
 alias lt_of_le_of_ne ← LE.le.lt_of_ne
+#align has_le.le.lt_of_ne LE.le.lt_of_ne
 
 alias lt_of_le_of_ne' ← LE.le.lt_of_ne'
+#align has_le.le.lt_of_ne' LE.le.lt_of_ne'
 
 alias lt_of_le_not_le ← LE.le.lt_of_not_le
+#align has_le.le.lt_of_not_le LE.le.lt_of_not_le
 
 alias lt_or_eq_of_le ← LE.le.lt_or_eq
+#align has_le.le.lt_or_eq LE.le.lt_or_eq
 
 alias Decidable.lt_or_eq_of_le ← LE.le.lt_or_eq_dec
+#align has_le.le.lt_or_eq_dec LE.le.lt_or_eq_dec
 
 alias le_of_lt ← LT.lt.le
+#align has_lt.lt.le LT.lt.le
 
 alias lt_trans ← LT.lt.trans
+#align has_lt.lt.trans LT.lt.trans
 
 alias lt_trans' ← LT.lt.trans'
+#align has_lt.lt.trans' LT.lt.trans'
 
 alias lt_of_lt_of_le ← LT.lt.trans_le
+#align has_lt.lt.trans_le LT.lt.trans_le
 
 alias lt_of_lt_of_le' ← LT.lt.trans_le'
+#align has_lt.lt.trans_le' LT.lt.trans_le'
 
 alias ne_of_lt ← LT.lt.ne
+#align has_lt.lt.ne LT.lt.ne
 
 alias lt_asymm ← LT.lt.asymm LT.lt.not_lt
+#align has_lt.lt.asymm LT.lt.asymm
+#align has_lt.lt.not_lt LT.lt.not_lt
 
 alias le_of_eq ← Eq.le
+#align eq.le Eq.le
 
 attribute [nolint decidable_classical] LE.le.lt_or_eq_dec
 
@@ -240,20 +260,28 @@ theorem lt_of_eq_of_lt' : b = c → a < b → a < c :=
 -/
 
 alias le_of_le_of_eq ← LE.le.trans_eq
+#align has_le.le.trans_eq LE.le.trans_eq
 
 alias le_of_le_of_eq' ← LE.le.trans_eq'
+#align has_le.le.trans_eq' LE.le.trans_eq'
 
 alias lt_of_lt_of_eq ← LT.lt.trans_eq
+#align has_lt.lt.trans_eq LT.lt.trans_eq
 
 alias lt_of_lt_of_eq' ← LT.lt.trans_eq'
+#align has_lt.lt.trans_eq' LT.lt.trans_eq'
 
 alias le_of_eq_of_le ← Eq.trans_le
+#align eq.trans_le Eq.trans_le
 
 alias le_of_eq_of_le' ← Eq.trans_ge
+#align eq.trans_ge Eq.trans_ge
 
 alias lt_of_eq_of_lt ← Eq.trans_lt
+#align eq.trans_lt Eq.trans_lt
 
 alias lt_of_eq_of_lt' ← Eq.trans_gt
+#align eq.trans_gt Eq.trans_gt
 
 end
 
@@ -431,6 +459,7 @@ theorem not_le_of_lt [Preorder α] {a b : α} (h : a < b) : ¬b ≤ a :=
 -/
 
 alias not_le_of_lt ← LT.lt.not_le
+#align has_lt.lt.not_le LT.lt.not_le
 
 #print not_lt_of_le /-
 theorem not_lt_of_le [Preorder α] {a b : α} (h : a ≤ b) : ¬b < a := fun hba => hba.not_le h
@@ -438,6 +467,7 @@ theorem not_lt_of_le [Preorder α] {a b : α} (h : a ≤ b) : ¬b < a := fun hba
 -/
 
 alias not_lt_of_le ← LE.le.not_lt
+#align has_le.le.not_lt LE.le.not_lt
 
 #print ne_of_not_le /-
 theorem ne_of_not_le [Preorder α] {a b : α} (h : ¬a ≤ b) : a ≠ b := fun hab => h (le_of_eq hab)
@@ -493,10 +523,13 @@ theorem eq_or_gt_of_le [PartialOrder α] {a b : α} (h : a ≤ b) : b = a ∨ a 
 -/
 
 alias Decidable.eq_or_lt_of_le ← LE.le.eq_or_lt_dec
+#align has_le.le.eq_or_lt_dec LE.le.eq_or_lt_dec
 
 alias eq_or_lt_of_le ← LE.le.eq_or_lt
+#align has_le.le.eq_or_lt LE.le.eq_or_lt
 
 alias eq_or_gt_of_le ← LE.le.eq_or_gt
+#align has_le.le.eq_or_gt LE.le.eq_or_gt
 
 attribute [nolint decidable_classical] LE.le.eq_or_lt_dec
 
@@ -513,8 +546,10 @@ theorem eq_of_ge_of_not_gt [PartialOrder α] {a b : α} (hab : a ≤ b) (hba : �
 -/
 
 alias eq_of_le_of_not_lt ← LE.le.eq_of_not_lt
+#align has_le.le.eq_of_not_lt LE.le.eq_of_not_lt
 
 alias eq_of_ge_of_not_gt ← LE.le.eq_of_not_gt
+#align has_le.le.eq_of_not_gt LE.le.eq_of_not_gt
 
 #print Ne.le_iff_lt /-
 theorem Ne.le_iff_lt [PartialOrder α] {a b : α} (h : a ≠ b) : a ≤ b ↔ a < b :=
@@ -1092,13 +1127,35 @@ theorem strongLT_of_le_of_strongLT (hab : a ≤ b) (hbc : b ≺ c) : a ≺ c := 
   (hab _).trans_lt <| hbc _
 #align strong_lt_of_le_of_strong_lt strongLT_of_le_of_strongLT
 
+/- warning: strong_lt.le -> StrongLT.le is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {π : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Preorder.{u2} (π i)] {a : forall (i : ι), π i} {b : forall (i : ι), π i}, (StrongLT.{u1, u2} ι (fun (i : ι) => π i) (fun (i : ι) => Preorder.toLT.{u2} (π i) (_inst_1 i)) a b) -> (LE.le.{max u1 u2} (forall (i : ι), π i) (Pi.hasLe.{u1, u2} ι (fun (i : ι) => π i) (fun (i : ι) => Preorder.toLE.{u2} (π i) (_inst_1 i))) a b)
+but is expected to have type
+  forall {ι : Type.{u2}} {π : ι -> Type.{u1}} [_inst_1 : forall (i : ι), Preorder.{u1} (π i)] {a : forall (i : ι), π i} {b : forall (i : ι), π i}, (StrongLT.{u2, u1} ι (fun (i : ι) => π i) (fun (i : ι) => Preorder.toLT.{u1} (π i) (_inst_1 i)) a b) -> (LE.le.{max u2 u1} (forall (i : ι), π i) (Pi.hasLe.{u2, u1} ι (fun (i : ι) => π i) (fun (i : ι) => Preorder.toLE.{u1} (π i) (_inst_1 i))) a b)
+Case conversion may be inaccurate. Consider using '#align strong_lt.le StrongLT.leₓ'. -/
 alias le_of_strongLT ← StrongLT.le
+#align strong_lt.le StrongLT.le
 
+/- warning: strong_lt.lt -> StrongLT.lt is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {π : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Preorder.{u2} (π i)] {a : forall (i : ι), π i} {b : forall (i : ι), π i} [_inst_2 : Nonempty.{succ u1} ι], (StrongLT.{u1, u2} ι (fun (i : ι) => π i) (fun (i : ι) => Preorder.toLT.{u2} (π i) (_inst_1 i)) a b) -> (LT.lt.{max u1 u2} (forall (i : ι), π i) (Preorder.toLT.{max u1 u2} (forall (i : ι), π i) (Pi.preorder.{u1, u2} ι (fun (i : ι) => π i) (fun (i : ι) => _inst_1 i))) a b)
+but is expected to have type
+  forall {ι : Type.{u2}} {π : ι -> Type.{u1}} [_inst_1 : forall (i : ι), Preorder.{u1} (π i)] {a : forall (i : ι), π i} {b : forall (i : ι), π i} [_inst_2 : Nonempty.{succ u2} ι], (StrongLT.{u2, u1} ι (fun (i : ι) => π i) (fun (i : ι) => Preorder.toLT.{u1} (π i) (_inst_1 i)) a b) -> (LT.lt.{max u2 u1} (forall (i : ι), π i) (Preorder.toLT.{max u2 u1} (forall (i : ι), π i) (Pi.preorder.{u2, u1} ι (fun (i : ι) => π i) (fun (i : ι) => _inst_1 i))) a b)
+Case conversion may be inaccurate. Consider using '#align strong_lt.lt StrongLT.ltₓ'. -/
 alias lt_of_strongLT ← StrongLT.lt
+#align strong_lt.lt StrongLT.lt
 
+/- warning: strong_lt.trans_le -> StrongLT.trans_le is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {π : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Preorder.{u2} (π i)] {a : forall (i : ι), π i} {b : forall (i : ι), π i} {c : forall (i : ι), π i}, (StrongLT.{u1, u2} ι (fun (i : ι) => π i) (fun (i : ι) => Preorder.toLT.{u2} (π i) (_inst_1 i)) a b) -> (LE.le.{max u1 u2} (forall (i : ι), π i) (Pi.hasLe.{u1, u2} ι (fun (i : ι) => π i) (fun (i : ι) => Preorder.toLE.{u2} (π i) (_inst_1 i))) b c) -> (StrongLT.{u1, u2} ι (fun (i : ι) => π i) (fun (i : ι) => Preorder.toLT.{u2} (π i) (_inst_1 i)) a c)
+but is expected to have type
+  forall {ι : Type.{u2}} {π : ι -> Type.{u1}} [_inst_1 : forall (i : ι), Preorder.{u1} (π i)] {a : forall (i : ι), π i} {b : forall (i : ι), π i} {c : forall (i : ι), π i}, (StrongLT.{u2, u1} ι (fun (i : ι) => π i) (fun (i : ι) => Preorder.toLT.{u1} (π i) (_inst_1 i)) a b) -> (LE.le.{max u2 u1} (forall (i : ι), π i) (Pi.hasLe.{u2, u1} ι (fun (i : ι) => π i) (fun (i : ι) => Preorder.toLE.{u1} (π i) (_inst_1 i))) b c) -> (StrongLT.{u2, u1} ι (fun (i : ι) => π i) (fun (i : ι) => Preorder.toLT.{u1} (π i) (_inst_1 i)) a c)
+Case conversion may be inaccurate. Consider using '#align strong_lt.trans_le StrongLT.trans_leₓ'. -/
 alias strongLT_of_strongLT_of_le ← StrongLT.trans_le
+#align strong_lt.trans_le StrongLT.trans_le
 
 alias strongLT_of_le_of_strongLT ← LE.le.trans_strong_lt
+#align has_le.le.trans_strong_lt LE.le.trans_strong_lt
 
 end Pi
 
@@ -1706,7 +1763,7 @@ instance : LinearOrder PUnit := by
 lean 3 declaration is
   forall (a : PUnit.{succ u1}) (b : PUnit.{succ u1}), Eq.{succ u1} PUnit.{succ u1} (LinearOrder.max.{u1} PUnit.{succ u1} PUnit.linearOrder.{u1} a b) PUnit.unit.{succ u1}
 but is expected to have type
-  forall (a : PUnit.{succ u1}) (b : PUnit.{succ u1}) {star : PUnit.{succ u1}}, Eq.{succ u1} PUnit.{succ u1} (Max.max.{u1} PUnit.{succ u1} (LinearOrder.toMax.{u1} PUnit.{succ u1} PUnit.instLinearOrderPUnit.{u1}) a b) star
+  forall (a : PUnit.{succ u1}) (b : PUnit.{succ u1}) {star : PUnit.{succ u1}}, Eq.{succ u1} PUnit.{succ u1} (Max.max.{u1} PUnit.{succ u1} (LinearOrder.toMax.{u1} PUnit.{succ u1} PUnit.linearOrder.{u1}) a b) star
 Case conversion may be inaccurate. Consider using '#align punit.max_eq PUnit.max_eqₓ'. -/
 theorem max_eq : max a b = star :=
   rfl
@@ -1716,33 +1773,25 @@ theorem max_eq : max a b = star :=
 lean 3 declaration is
   forall (a : PUnit.{succ u1}) (b : PUnit.{succ u1}), Eq.{succ u1} PUnit.{succ u1} (LinearOrder.min.{u1} PUnit.{succ u1} PUnit.linearOrder.{u1} a b) PUnit.unit.{succ u1}
 but is expected to have type
-  forall (a : PUnit.{succ u1}) (b : PUnit.{succ u1}) {star : PUnit.{succ u1}}, Eq.{succ u1} PUnit.{succ u1} (Min.min.{u1} PUnit.{succ u1} (LinearOrder.toMin.{u1} PUnit.{succ u1} PUnit.instLinearOrderPUnit.{u1}) a b) star
+  forall (a : PUnit.{succ u1}) (b : PUnit.{succ u1}) {star : PUnit.{succ u1}}, Eq.{succ u1} PUnit.{succ u1} (Min.min.{u1} PUnit.{succ u1} (LinearOrder.toMin.{u1} PUnit.{succ u1} PUnit.linearOrder.{u1}) a b) star
 Case conversion may be inaccurate. Consider using '#align punit.min_eq PUnit.min_eqₓ'. -/
 theorem min_eq : min a b = star :=
   rfl
 #align punit.min_eq PUnit.min_eq
 
-/- warning: punit.le -> PUnit.le is a dubious translation:
-lean 3 declaration is
-  forall (a : PUnit.{succ u1}) (b : PUnit.{succ u1}), LE.le.{u1} PUnit.{succ u1} (Preorder.toLE.{u1} PUnit.{succ u1} (PartialOrder.toPreorder.{u1} PUnit.{succ u1} (LinearOrder.toPartialOrder.{u1} PUnit.{succ u1} PUnit.linearOrder.{u1}))) a b
-but is expected to have type
-  forall (a : PUnit.{succ u1}) (b : PUnit.{succ u1}), LE.le.{u1} PUnit.{succ u1} (Preorder.toLE.{u1} PUnit.{succ u1} (PartialOrder.toPreorder.{u1} PUnit.{succ u1} (LinearOrder.toPartialOrder.{u1} PUnit.{succ u1} PUnit.instLinearOrderPUnit.{u1}))) a b
-Case conversion may be inaccurate. Consider using '#align punit.le PUnit.leₓ'. -/
+#print PUnit.le /-
 @[simp]
 protected theorem le : a ≤ b :=
   trivial
 #align punit.le PUnit.le
+-/
 
-/- warning: punit.not_lt -> PUnit.not_lt is a dubious translation:
-lean 3 declaration is
-  forall (a : PUnit.{succ u1}) (b : PUnit.{succ u1}), Not (LT.lt.{u1} PUnit.{succ u1} (Preorder.toLT.{u1} PUnit.{succ u1} (PartialOrder.toPreorder.{u1} PUnit.{succ u1} (LinearOrder.toPartialOrder.{u1} PUnit.{succ u1} PUnit.linearOrder.{u1}))) a b)
-but is expected to have type
-  forall (a : PUnit.{succ u1}) (b : PUnit.{succ u1}), Not (LT.lt.{u1} PUnit.{succ u1} (Preorder.toLT.{u1} PUnit.{succ u1} (PartialOrder.toPreorder.{u1} PUnit.{succ u1} (LinearOrder.toPartialOrder.{u1} PUnit.{succ u1} PUnit.instLinearOrderPUnit.{u1}))) a b)
-Case conversion may be inaccurate. Consider using '#align punit.not_lt PUnit.not_ltₓ'. -/
+#print PUnit.not_lt /-
 @[simp]
 theorem not_lt : ¬a < b :=
   not_false
 #align punit.not_lt PUnit.not_lt
+-/
 
 instance : DenselyOrdered PUnit :=
   ⟨fun _ _ => False.elim⟩

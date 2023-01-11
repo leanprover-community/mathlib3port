@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module algebra.order.sub.defs
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -439,7 +439,14 @@ Case conversion may be inaccurate. Consider using '#align tsub_nonpos tsub_nonpo
 theorem tsub_nonpos : a - b ≤ 0 ↔ a ≤ b := by rw [tsub_le_iff_left, add_zero]
 #align tsub_nonpos tsub_nonpos
 
+/- warning: tsub_nonpos_of_le -> tsub_nonpos_of_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : AddCommMonoid.{u1} α] [_inst_3 : Sub.{u1} α] [_inst_4 : OrderedSub.{u1} α (Preorder.toLE.{u1} α _inst_1) (AddZeroClass.toHasAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α _inst_2))) _inst_3] {a : α} {b : α}, (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a b) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α _inst_3) a b) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (AddZeroClass.toHasZero.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α _inst_2)))))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : AddCommMonoid.{u1} α] [_inst_3 : Sub.{u1} α] [_inst_4 : OrderedSub.{u1} α (Preorder.toLE.{u1} α _inst_1) (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α _inst_2))) _inst_3] {a : α} {b : α}, (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a b) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α _inst_3) a b) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (AddMonoid.toZero.{u1} α (AddCommMonoid.toAddMonoid.{u1} α _inst_2)))))
+Case conversion may be inaccurate. Consider using '#align tsub_nonpos_of_le tsub_nonpos_of_leₓ'. -/
 alias tsub_nonpos ↔ _ tsub_nonpos_of_le
+#align tsub_nonpos_of_le tsub_nonpos_of_le
 
 end Preorder
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Stevens, Bolton Bailey
 
 ! This file was ported from Lean 3 source module number_theory.bertrand
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -234,6 +234,7 @@ theorem exists_prime_lt_and_le_two_mul (n : ℕ) (hn0 : n ≠ 0) :
 #align nat.exists_prime_lt_and_le_two_mul Nat.exists_prime_lt_and_le_two_mul
 
 alias Nat.exists_prime_lt_and_le_two_mul ← bertrand
+#align nat.bertrand Nat.bertrand
 
 end Nat
 

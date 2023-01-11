@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.finset.locally_finite
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -86,10 +86,13 @@ theorem Ioo_eq_empty_iff [DenselyOrdered α] : ioo a b = ∅ ↔ ¬a < b := by
 #align finset.Ioo_eq_empty_iff Finset.Ioo_eq_empty_iff
 
 alias Icc_eq_empty_iff ↔ _ Icc_eq_empty
+#align finset.Icc_eq_empty Finset.Icc_eq_empty
 
 alias Ico_eq_empty_iff ↔ _ Ico_eq_empty
+#align finset.Ico_eq_empty Finset.Ico_eq_empty
 
 alias Ioc_eq_empty_iff ↔ _ Ioc_eq_empty
+#align finset.Ioc_eq_empty Finset.Ioc_eq_empty
 
 @[simp]
 theorem Ioo_eq_empty (h : ¬a < b) : ioo a b = ∅ :=

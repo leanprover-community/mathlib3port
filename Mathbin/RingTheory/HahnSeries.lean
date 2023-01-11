@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module ring_theory.hahn_series
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -501,7 +501,7 @@ section DistribMulAction
 
 variable [PartialOrder Γ] {V : Type _} [Monoid R] [AddMonoid V] [DistribMulAction R V]
 
-instance : HasSmul R (HahnSeries Γ V) :=
+instance : SMul R (HahnSeries Γ V) :=
   ⟨fun r x =>
     { coeff := r • x.coeff
       is_pwo_support' := x.is_pwo_support.mono (Function.support_smul_subset_right r x.coeff) }⟩
@@ -529,7 +529,7 @@ instance : DistribMulAction R (HahnSeries Γ V)
 
 variable {S : Type _} [Monoid S] [DistribMulAction S V]
 
-instance [HasSmul R S] [IsScalarTower R S V] : IsScalarTower R S (HahnSeries Γ V) :=
+instance [SMul R S] [IsScalarTower R S V] : IsScalarTower R S (HahnSeries Γ V) :=
   ⟨fun r s a => by
     ext
     simp⟩
@@ -1603,7 +1603,7 @@ section Semiring
 
 variable [OrderedCancelAddCommMonoid Γ] [Semiring R] {α : Type _}
 
-instance : HasSmul (HahnSeries Γ R) (SummableFamily Γ R α)
+instance : SMul (HahnSeries Γ R) (SummableFamily Γ R α)
     where smul x s :=
     { toFun := fun a => x * s a
       is_pwo_Union_support' :=

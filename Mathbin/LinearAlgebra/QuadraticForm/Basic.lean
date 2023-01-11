@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Kexing Ying, Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.quadratic_form.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -373,14 +373,14 @@ section SemiringOperators
 
 variable [Semiring R] [AddCommMonoid M] [Module R M]
 
-section HasSmul
+section SMul
 
 variable [Monoid S] [DistribMulAction S R] [SMulCommClass S R R]
 
 /-- `quadratic_form R M` inherits the scalar action from any algebra over `R`.
 
 When `R` is commutative, this provides an `R`-action via `algebra.id`. -/
-instance : HasSmul S (QuadraticForm R M) :=
+instance : SMul S (QuadraticForm R M) :=
   ⟨fun a Q =>
     { toFun := a • Q
       to_fun_smul := fun b x => by rw [Pi.smul_apply, map_smul, Pi.smul_apply, mul_smul_comm]
@@ -398,7 +398,7 @@ theorem smul_apply (a : S) (Q : QuadraticForm R M) (x : M) : (a • Q) x = a •
   rfl
 #align quadratic_form.smul_apply QuadraticForm.smul_apply
 
-end HasSmul
+end SMul
 
 instance : Zero (QuadraticForm R M) :=
   ⟨{  toFun := fun x => 0

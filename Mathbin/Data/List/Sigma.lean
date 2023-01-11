@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Sean Leather
 
 ! This file was ported from Lean 3 source module data.list.sigma
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -89,7 +89,7 @@ def Nodupkeys (l : List (Sigma β)) : Prop :=
 #align list.nodupkeys List.Nodupkeys
 
 theorem nodupkeys_iff_pairwise {l} : Nodupkeys l ↔ Pairwise (fun s s' : Sigma β => s.1 ≠ s'.1) l :=
-  pairwise_map _
+  pairwise_map' _
 #align list.nodupkeys_iff_pairwise List.nodupkeys_iff_pairwise
 
 theorem Nodupkeys.pairwise_ne {l} (h : Nodupkeys l) :
@@ -355,7 +355,7 @@ theorem lookup_all_eq_lookup (a : α) {l : List (Sigma β)} (h : l.Nodupkeys) :
 #align list.lookup_all_eq_lookup List.lookup_all_eq_lookup
 
 theorem lookup_all_nodup (a : α) {l : List (Sigma β)} (h : l.Nodupkeys) : (lookupAll a l).Nodup :=
-  by rw [lookup_all_eq_lookup a h] <;> apply Option.to_list_nodup
+  by rw [lookup_all_eq_lookup a h] <;> apply Option.toList_nodup
 #align list.lookup_all_nodup List.lookup_all_nodup
 
 theorem perm_lookup_all (a : α) {l₁ l₂ : List (Sigma β)} (nd₁ : l₁.Nodupkeys) (nd₂ : l₂.Nodupkeys)

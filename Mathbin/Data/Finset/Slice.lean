@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Alena Gusakov, Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.finset.slice
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -59,6 +59,7 @@ theorem sized_union : (A ∪ B).Sized r ↔ A.Sized r ∧ B.Sized r :=
 #align set.sized_union Set.sized_union
 
 alias sized_union ↔ _ sized.union
+#align set.sized.union Set.Sized.union
 
 --TODO: A `forall_Union` lemma would be handy here.
 @[simp]
@@ -111,6 +112,7 @@ theorem subset_powerset_len_univ_iff : 𝒜 ⊆ powersetLen r univ ↔ (𝒜 : S
 #align finset.subset_powerset_len_univ_iff Finset.subset_powerset_len_univ_iff
 
 alias subset_powerset_len_univ_iff ↔ _ _root_.set.sized.subset_powerset_len_univ
+#align set.sized.subset_powerset_len_univ Set.Sized.subset_powerset_len_univ
 
 theorem Set.Sized.card_le (h𝒜 : (𝒜 : Set (Finset α)).Sized r) :
     card 𝒜 ≤ (Fintype.card α).choose r :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.algebra.module.multilinear
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -148,13 +148,13 @@ theorem to_multilinear_map_zero : (0 : ContinuousMultilinearMap R M₁ M₂).toM
 #align
   continuous_multilinear_map.to_multilinear_map_zero ContinuousMultilinearMap.to_multilinear_map_zero
 
-section HasSmul
+section SMul
 
 variable {R' R'' A : Type _} [Monoid R'] [Monoid R''] [Semiring A] [∀ i, Module A (M₁ i)]
   [Module A M₂] [DistribMulAction R' M₂] [HasContinuousConstSmul R' M₂] [SMulCommClass A R' M₂]
   [DistribMulAction R'' M₂] [HasContinuousConstSmul R'' M₂] [SMulCommClass A R'' M₂]
 
-instance : HasSmul R' (ContinuousMultilinearMap A M₁ M₂) :=
+instance : SMul R' (ContinuousMultilinearMap A M₁ M₂) :=
   ⟨fun c f => { c • f.toMultilinearMap with cont := f.cont.const_smul c }⟩
 
 @[simp]
@@ -173,7 +173,7 @@ theorem to_multilinear_map_smul (c : R') (f : ContinuousMultilinearMap A M₁ M�
 instance [SMulCommClass R' R'' M₂] : SMulCommClass R' R'' (ContinuousMultilinearMap A M₁ M₂) :=
   ⟨fun c₁ c₂ f => ext fun x => smul_comm _ _ _⟩
 
-instance [HasSmul R' R''] [IsScalarTower R' R'' M₂] :
+instance [SMul R' R''] [IsScalarTower R' R'' M₂] :
     IsScalarTower R' R'' (ContinuousMultilinearMap A M₁ M₂) :=
   ⟨fun c₁ c₂ f => ext fun x => smul_assoc _ _ _⟩
 
@@ -184,7 +184,7 @@ instance [DistribMulAction R'ᵐᵒᵖ M₂] [IsCentralScalar R' M₂] :
 instance : MulAction R' (ContinuousMultilinearMap A M₁ M₂) :=
   Function.Injective.mulAction toMultilinearMap to_multilinear_map_inj fun _ _ => rfl
 
-end HasSmul
+end SMul
 
 section HasContinuousAdd
 
@@ -398,7 +398,7 @@ end ApplySum
 
 section RestrictScalar
 
-variable (R) {A : Type _} [Semiring A] [HasSmul R A] [∀ i : ι, Module A (M₁ i)] [Module A M₂]
+variable (R) {A : Type _} [Semiring A] [SMul R A] [∀ i : ι, Module A (M₁ i)] [Module A M₂]
   [∀ i, IsScalarTower R A (M₁ i)] [IsScalarTower R A M₂]
 
 /-- Reinterpret an `A`-multilinear map as an `R`-multilinear map, if `A` is an algebra over `R`

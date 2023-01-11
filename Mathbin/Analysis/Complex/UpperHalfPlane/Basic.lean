@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Kontorovich, Heather Macbeth, Marc Masdeu
 
 ! This file was ported from Lean 3 source module analysis.complex.upper_half_plane.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -259,7 +259,7 @@ instance sLAction {R : Type _} [CommRing R] [Algebra R ℝ] : MulAction SL(2, R)
 instance : Coe SL(2, ℤ) GL(2, ℝ)⁺ :=
   ⟨fun g => ((g : SL(2, ℝ)) : GL(2, ℝ)⁺)⟩
 
-instance sLOnGLPos : HasSmul SL(2, ℤ) GL(2, ℝ)⁺ :=
+instance sLOnGLPos : SMul SL(2, ℤ) GL(2, ℝ)⁺ :=
   ⟨fun s g => s * g⟩
 #align upper_half_plane.SL_on_GL_pos UpperHalfPlane.sLOnGLPos
 
@@ -275,7 +275,7 @@ instance SL_to_GL_tower : IsScalarTower SL(2, ℤ) GL(2, ℝ)⁺ ℍ
     apply mul_smul'
 #align upper_half_plane.SL_to_GL_tower UpperHalfPlane.SL_to_GL_tower
 
-instance subgroupGLPos : HasSmul Γ GL(2, ℝ)⁺ :=
+instance subgroupGLPos : SMul Γ GL(2, ℝ)⁺ :=
   ⟨fun s g => s * g⟩
 #align upper_half_plane.subgroup_GL_pos UpperHalfPlane.subgroupGLPos
 
@@ -291,7 +291,7 @@ instance subgroup_on_GL_pos : IsScalarTower Γ GL(2, ℝ)⁺ ℍ
     apply mul_smul'
 #align upper_half_plane.subgroup_on_GL_pos UpperHalfPlane.subgroup_on_GL_pos
 
-instance subgroupSL : HasSmul Γ SL(2, ℤ) :=
+instance subgroupSL : SMul Γ SL(2, ℤ) :=
   ⟨fun s g => s * g⟩
 #align upper_half_plane.subgroup_SL UpperHalfPlane.subgroupSL
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.group.action
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,7 +45,7 @@ class VaddInvariantMeasure (M α : Type _) [VAdd M α] {_ : MeasurableSpace α} 
 measurable set `s : set α` and `c : M`, the measure of its preimage under `λ x, c • x` is equal to
 the measure of `s`. -/
 @[to_additive]
-class SmulInvariantMeasure (M α : Type _) [HasSmul M α] {_ : MeasurableSpace α} (μ : Measure α) :
+class SmulInvariantMeasure (M α : Type _) [SMul M α] {_ : MeasurableSpace α} (μ : Measure α) :
   Prop where
   measure_preimage_smul : ∀ (c : M) ⦃s : Set α⦄, MeasurableSet s → μ ((fun x => c • x) ⁻¹' s) = μ s
 #align measure_theory.smul_invariant_measure MeasureTheory.SmulInvariantMeasure
@@ -53,11 +53,11 @@ class SmulInvariantMeasure (M α : Type _) [HasSmul M α] {_ : MeasurableSpace �
 namespace SmulInvariantMeasure
 
 @[to_additive]
-instance zero [MeasurableSpace α] [HasSmul M α] : SmulInvariantMeasure M α 0 :=
+instance zero [MeasurableSpace α] [SMul M α] : SmulInvariantMeasure M α 0 :=
   ⟨fun _ _ _ => rfl⟩
 #align measure_theory.smul_invariant_measure.zero MeasureTheory.SmulInvariantMeasure.zero
 
-variable [HasSmul M α] {m : MeasurableSpace α} {μ ν : Measure α}
+variable [SMul M α] {m : MeasurableSpace α} {μ ν : Measure α}
 
 @[to_additive]
 instance add [SmulInvariantMeasure M α μ] [SmulInvariantMeasure M α ν] :
@@ -82,7 +82,7 @@ end SmulInvariantMeasure
 
 section HasMeasurableSmul
 
-variable {m : MeasurableSpace α} [MeasurableSpace M] [HasSmul M α] [HasMeasurableSmul M α] (c : M)
+variable {m : MeasurableSpace α} [MeasurableSpace M] [SMul M α] [HasMeasurableSmul M α] (c : M)
   (μ : Measure α) [SmulInvariantMeasure M α μ]
 
 @[simp, to_additive]
@@ -114,7 +114,7 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
         "@["
         [(Term.attrInstance
           (Term.attrKind [])
-          (to_additive "to_additive" [] [] (to_additiveRest [] [] [])))]
+          (to_additive "to_additive" [] [] (to_additiveRest [] [] [] [])))]
         "]")]
       []
       []

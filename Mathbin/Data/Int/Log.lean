@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module data.int.log
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -142,7 +142,7 @@ theorem log_zpow {b : ℕ} (hb : 1 < b) (z : ℤ) : log b (b ^ z : R) = z :=
       Nat.cast_pow, Nat.floor_coe, Nat.log_pow hb]
     exact_mod_cast hb.le
   · rw [log_of_right_le_one _ (zpow_le_one_of_nonpos _ <| neg_nonpos.mpr (Int.coe_nat_nonneg _)),
-      zpow_neg, inv_inv, zpow_ofNat, ← Nat.cast_pow, Nat.ceil_nat_cast, Nat.clog_pow _ _ hb]
+      zpow_neg, inv_inv, zpow_ofNat, ← Nat.cast_pow, Nat.ceil_natCast, Nat.clog_pow _ _ hb]
     exact_mod_cast hb.le
 #align int.log_zpow Int.log_zpow
 

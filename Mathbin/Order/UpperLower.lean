@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Sara Rousta
 
 ! This file was ported from Lean 3 source module order.upper_lower
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -198,12 +198,16 @@ theorem is_upper_set_preimage_to_dual_iff {s : Set αᵒᵈ} :
 #align is_upper_set_preimage_to_dual_iff is_upper_set_preimage_to_dual_iff
 
 alias is_lower_set_preimage_of_dual_iff ↔ _ IsUpperSet.of_dual
+#align is_upper_set.of_dual IsUpperSet.of_dual
 
 alias is_upper_set_preimage_of_dual_iff ↔ _ IsLowerSet.of_dual
+#align is_lower_set.of_dual IsLowerSet.of_dual
 
 alias is_lower_set_preimage_to_dual_iff ↔ _ IsUpperSet.to_dual
+#align is_upper_set.to_dual IsUpperSet.to_dual
 
 alias is_upper_set_preimage_to_dual_iff ↔ _ IsLowerSet.to_dual
+#align is_lower_set.to_dual IsLowerSet.to_dual
 
 end LE
 
@@ -232,8 +236,10 @@ theorem is_lower_set_iff_Iic_subset : IsLowerSet s ↔ ∀ ⦃a⦄, a ∈ s → 
 #align is_lower_set_iff_Iic_subset is_lower_set_iff_Iic_subset
 
 alias is_upper_set_iff_Ici_subset ↔ IsUpperSet.Ici_subset _
+#align is_upper_set.Ici_subset IsUpperSet.Ici_subset
 
 alias is_lower_set_iff_Iic_subset ↔ IsLowerSet.Iic_subset _
+#align is_lower_set.Iic_subset IsLowerSet.Iic_subset
 
 theorem IsUpperSet.ord_connected (h : IsUpperSet s) : s.OrdConnected :=
   ⟨fun a ha b _ => Icc_subset_Ici_self.trans <| h.Ici_subset ha⟩
@@ -386,8 +392,10 @@ theorem is_lower_set_iff_Iio_subset : IsLowerSet s ↔ ∀ ⦃a⦄, a ∈ s → 
 #align is_lower_set_iff_Iio_subset is_lower_set_iff_Iio_subset
 
 alias is_upper_set_iff_Ioi_subset ↔ IsUpperSet.Ioi_subset _
+#align is_upper_set.Ioi_subset IsUpperSet.Ioi_subset
 
 alias is_lower_set_iff_Iio_subset ↔ IsLowerSet.Iio_subset _
+#align is_lower_set.Iio_subset IsLowerSet.Iio_subset
 
 end PartialOrder
 

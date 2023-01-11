@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Mario Carneiro, Kevin Buzzard, Yury Kudryashov, Fréd�
   Heather Macbeth
 
 ! This file was ported from Lean 3 source module linear_algebra.span
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -89,7 +89,7 @@ theorem span_eq_span (hs : s ⊆ span R t) (ht : t ⊆ span R s) : span R s = sp
 
 /-- A version of `submodule.span_eq` for when the span is by a smaller ring. -/
 @[simp]
-theorem span_coe_eq_restrict_scalars [Semiring S] [HasSmul S R] [Module S M] [IsScalarTower S R M] :
+theorem span_coe_eq_restrict_scalars [Semiring S] [SMul S R] [Module S M] [IsScalarTower S R M] :
     span S (p : Set M) = p.restrictScalars S :=
   span_eq (p.restrictScalars S)
 #align submodule.span_coe_eq_restrict_scalars Submodule.span_coe_eq_restrict_scalars
@@ -102,6 +102,7 @@ theorem map_span [RingHomSurjective σ₁₂] (f : M →ₛₗ[σ₁₂] M₂) (
 #align submodule.map_span Submodule.map_span
 
 alias Submodule.map_span ← _root_.linear_map.map_span
+#align linear_map.map_span LinearMap.map_span
 
 theorem map_span_le [RingHomSurjective σ₁₂] (f : M →ₛₗ[σ₁₂] M₂) (s : Set M) (N : Submodule R₂ M₂) :
     map f (span R s) ≤ N ↔ ∀ m ∈ s, f m ∈ N :=
@@ -111,6 +112,7 @@ theorem map_span_le [RingHomSurjective σ₁₂] (f : M →ₛₗ[σ₁₂] M₂
 #align submodule.map_span_le Submodule.map_span_le
 
 alias Submodule.map_span_le ← _root_.linear_map.map_span_le
+#align linear_map.map_span_le LinearMap.map_span_le
 
 @[simp]
 theorem span_insert_zero : span R (insert (0 : M) s) = span R s :=
@@ -129,6 +131,7 @@ theorem span_preimage_le (f : M →ₛₗ[σ₁₂] M₂) (s : Set M₂) :
 #align submodule.span_preimage_le Submodule.span_preimage_le
 
 alias Submodule.span_preimage_le ← _root_.linear_map.span_preimage_le
+#align linear_map.span_preimage_le LinearMap.span_preimage_le
 
 theorem closure_subset_span {s : Set M} : (AddSubmonoid.closure s : Set M) ⊆ span R s :=
   (@AddSubmonoid.closure_le _ _ _ (span R s).toAddSubmonoid).mpr subset_span
@@ -441,15 +444,15 @@ theorem span_singleton_eq_range (y : M) : ↑(R ∙ y) = range ((· • y) : R �
   Set.ext fun x => mem_span_singleton
 #align submodule.span_singleton_eq_range Submodule.span_singleton_eq_range
 
-theorem span_singleton_smul_le {S} [Monoid S] [HasSmul S R] [MulAction S M] [IsScalarTower S R M]
+theorem span_singleton_smul_le {S} [Monoid S] [SMul S R] [MulAction S M] [IsScalarTower S R M]
     (r : S) (x : M) : (R ∙ r • x) ≤ R ∙ x :=
   by
   rw [span_le, Set.singleton_subset_iff, SetLike.mem_coe]
   exact smul_of_tower_mem _ _ (mem_span_singleton_self _)
 #align submodule.span_singleton_smul_le Submodule.span_singleton_smul_le
 
-theorem span_singleton_group_smul_eq {G} [Group G] [HasSmul G R] [MulAction G M]
-    [IsScalarTower G R M] (g : G) (x : M) : (R ∙ g • x) = R ∙ x :=
+theorem span_singleton_group_smul_eq {G} [Group G] [SMul G R] [MulAction G M] [IsScalarTower G R M]
+    (g : G) (x : M) : (R ∙ g • x) = R ∙ x :=
   by
   refine' le_antisymm (span_singleton_smul_le R g x) _
   convert span_singleton_smul_le R g⁻¹ (g • x)
@@ -515,21 +518,21 @@ theorem span_span : span R (span R s : Set M) = span R s :=
 variable (R S s)
 
 /-- If `R` is "smaller" ring than `S` then the span by `R` is smaller than the span by `S`. -/
-theorem span_le_restrict_scalars [Semiring S] [HasSmul R S] [Module S M] [IsScalarTower R S M] :
+theorem span_le_restrict_scalars [Semiring S] [SMul R S] [Module S M] [IsScalarTower R S M] :
     span R s ≤ (span S s).restrictScalars R :=
   Submodule.span_le.2 Submodule.subset_span
 #align submodule.span_le_restrict_scalars Submodule.span_le_restrict_scalars
 
 /-- A version of `submodule.span_le_restrict_scalars` with coercions. -/
 @[simp]
-theorem span_subset_span [Semiring S] [HasSmul R S] [Module S M] [IsScalarTower R S M] :
+theorem span_subset_span [Semiring S] [SMul R S] [Module S M] [IsScalarTower R S M] :
     ↑(span R s) ⊆ (span S s : Set M) :=
   span_le_restrict_scalars R S s
 #align submodule.span_subset_span Submodule.span_subset_span
 
 /-- Taking the span by a large ring of the span by the small ring is the same as taking the span
 by just the large ring. -/
-theorem span_span_of_tower [Semiring S] [HasSmul R S] [Module S M] [IsScalarTower R S M] :
+theorem span_span_of_tower [Semiring S] [SMul R S] [Module S M] [IsScalarTower R S M] :
     span S (span R s : Set M) = span S s :=
   le_antisymm (span_le.2 <| span_subset_span R S s) (span_mono subset_span)
 #align submodule.span_span_of_tower Submodule.span_span_of_tower

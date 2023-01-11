@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Johan Commelin, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.mv_polynomial.variables
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -658,6 +658,11 @@ theorem total_degree_mul (a b : MvPolynomial σ R) :
     · intro a b₁ b₂
       rfl
 #align mv_polynomial.total_degree_mul MvPolynomial.total_degree_mul
+
+theorem total_degree_smul_le [CommSemiring S] [DistribMulAction R S] (a : R)
+    (f : MvPolynomial σ S) : (a • f).totalDegree ≤ f.totalDegree :=
+  Finset.sup_mono support_smul
+#align mv_polynomial.total_degree_smul_le MvPolynomial.total_degree_smul_le
 
 theorem total_degree_pow (a : MvPolynomial σ R) (n : ℕ) : (a ^ n).totalDegree ≤ n * a.totalDegree :=
   by

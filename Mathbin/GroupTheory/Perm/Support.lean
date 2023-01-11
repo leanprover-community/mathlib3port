@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Aaron Anderson, Yakov Pechersky
 
 ! This file was ported from Lean 3 source module group_theory.perm.support
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -677,6 +677,14 @@ theorem card_support_prod_list_of_pairwise_disjoint {l : List (Perm α)} (h : l.
 end Card
 
 end Support
+
+@[simp]
+theorem support_subtype_perm [DecidableEq α] {s : Finset α} (f : Perm α) (h) :
+    (f.subtypePerm h : Perm { x // x ∈ s }).support = s.attach.filter fun x => f x ≠ x :=
+  by
+  ext
+  simp [Subtype.ext_iff]
+#align equiv.perm.support_subtype_perm Equiv.Perm.support_subtype_perm
 
 end Equiv.Perm
 

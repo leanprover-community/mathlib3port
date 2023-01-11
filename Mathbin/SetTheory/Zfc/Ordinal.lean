@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández Palacios
 
 ! This file was ported from Lean 3 source module set_theory.zfc.ordinal
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,6 +55,7 @@ theorem is_transitive_iff_mem_trans : z.IsTransitive ↔ ∀ {x y : SetCat}, x �
 #align Set.is_transitive_iff_mem_trans SetCat.is_transitive_iff_mem_trans
 
 alias is_transitive_iff_mem_trans ↔ is_transitive.mem_trans _
+#align Set.is_transitive.mem_trans SetCat.IsTransitive.mem_trans
 
 protected theorem IsTransitive.inter (hx : x.IsTransitive) (hy : y.IsTransitive) :
     (x ∩ y).IsTransitive := fun z hz w hw =>
@@ -85,12 +86,14 @@ theorem is_transitive_iff_sUnion_subset : x.IsTransitive ↔ ⋃₀ x ⊆ x :=
 #align Set.is_transitive_iff_sUnion_subset SetCat.is_transitive_iff_sUnion_subset
 
 alias is_transitive_iff_sUnion_subset ↔ is_transitive.sUnion_subset _
+#align Set.is_transitive.sUnion_subset SetCat.IsTransitive.sUnion_subset
 
 theorem is_transitive_iff_subset_powerset : x.IsTransitive ↔ x ⊆ powerset x :=
   ⟨fun h y hy => mem_powerset.2 <| h.subset_of_mem hy, fun H y hy z hz => mem_powerset.1 (H hy) hz⟩
 #align Set.is_transitive_iff_subset_powerset SetCat.is_transitive_iff_subset_powerset
 
 alias is_transitive_iff_subset_powerset ↔ is_transitive.subset_powerset _
+#align Set.is_transitive.subset_powerset SetCat.IsTransitive.subset_powerset
 
 end SetCat
 

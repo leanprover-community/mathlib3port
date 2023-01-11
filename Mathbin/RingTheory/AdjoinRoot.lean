@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Chris Hughes
 
 ! This file was ported from Lean 3 source module ring_theory.adjoin_root
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -110,7 +110,7 @@ def of : R →+* AdjoinRoot f :=
 instance [CommSemiring S] [Algebra S R] : Algebra S (AdjoinRoot f) :=
   Ideal.Quotient.algebra S
 
-instance [CommSemiring S] [CommSemiring K] [HasSmul S K] [Algebra S R] [Algebra K R]
+instance [CommSemiring S] [CommSemiring K] [SMul S K] [Algebra S R] [Algebra K R]
     [IsScalarTower S K R] : IsScalarTower S K (AdjoinRoot f) :=
   Submodule.Quotient.is_scalar_tower _ _
 

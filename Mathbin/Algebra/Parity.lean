@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 
 ! This file was ported from Lean 3 source module algebra.parity
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -110,7 +110,15 @@ Case conversion may be inaccurate. Consider using '#align is_square_iff_exists_s
 theorem isSquare_iff_exists_sq (m : α) : IsSquare m ↔ ∃ c, m = c ^ 2 := by simp [IsSquare, pow_two]
 #align is_square_iff_exists_sq isSquare_iff_exists_sq
 
+/- warning: is_square.exists_sq -> IsSquare.exists_sq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] (m : α), (IsSquare.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)) m) -> (Exists.{succ u1} α (fun (c : α) => Eq.{succ u1} α m (HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α _inst_1)) c (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] (m : α), (IsSquare.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)) m) -> (Exists.{succ u1} α (fun (c : α) => Eq.{succ u1} α m (HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α _inst_1)) c (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))))
+Case conversion may be inaccurate. Consider using '#align is_square.exists_sq IsSquare.exists_sqₓ'. -/
 alias isSquare_iff_exists_sq ↔ IsSquare.exists_sq is_square_of_exists_sq
+#align is_square.exists_sq IsSquare.exists_sq
+#align is_square_of_exists_sq is_square_of_exists_sq
 
 attribute
   [to_additive Even.exists_two_nsmul
@@ -231,7 +239,14 @@ theorem isSquare_inv : IsSquare a⁻¹ ↔ IsSquare a :=
   · exact ((isSquare_op_iff a).mpr h).map (MulEquiv.inv' α).symm
 #align is_square_inv isSquare_inv
 
+/- warning: is_square.inv -> IsSquare.inv is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DivisionMonoid.{u1} α] {a : α}, (IsSquare.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (DivisionMonoid.toDivInvMonoid.{u1} α _inst_1)))) a) -> (IsSquare.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (DivisionMonoid.toDivInvMonoid.{u1} α _inst_1)))) (Inv.inv.{u1} α (DivInvMonoid.toHasInv.{u1} α (DivisionMonoid.toDivInvMonoid.{u1} α _inst_1)) a))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DivisionMonoid.{u1} α] {a : α}, (IsSquare.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (DivisionMonoid.toDivInvMonoid.{u1} α _inst_1)))) a) -> (IsSquare.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (DivisionMonoid.toDivInvMonoid.{u1} α _inst_1)))) (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α _inst_1))) a))
+Case conversion may be inaccurate. Consider using '#align is_square.inv IsSquare.invₓ'. -/
 alias isSquare_inv ↔ _ IsSquare.inv
+#align is_square.inv IsSquare.inv
 
 attribute [to_additive] IsSquare.inv
 
@@ -334,6 +349,7 @@ theorem even_iff_exists_bit0 [Add α] {a : α} : Even a ↔ ∃ b, a = bit0 b :=
 -/
 
 alias even_iff_exists_bit0 ↔ Even.exists_bit0 _
+#align even.exists_bit0 Even.exists_bit0
 
 section Semiring
 
@@ -459,7 +475,14 @@ theorem odd_iff_exists_bit1 {a : α} : Odd a ↔ ∃ b, a = bit1 b :=
     rfl
 #align odd_iff_exists_bit1 odd_iff_exists_bit1
 
+/- warning: odd.exists_bit1 -> Odd.exists_bit1 is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Semiring.{u1} α] {a : α}, (Odd.{u1} α _inst_1 a) -> (Exists.{succ u1} α (fun (b : α) => Eq.{succ u1} α a (bit1.{u1} α (AddMonoidWithOne.toOne.{u1} α (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} α (NonAssocSemiring.toAddCommMonoidWithOne.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1)))) (Distrib.toHasAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1)))) b)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Semiring.{u1} α] {a : α}, (Odd.{u1} α _inst_1 a) -> (Exists.{succ u1} α (fun (b : α) => Eq.{succ u1} α a (bit1.{u1} α (Semiring.toOne.{u1} α _inst_1) (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1)))) b)))
+Case conversion may be inaccurate. Consider using '#align odd.exists_bit1 Odd.exists_bit1ₓ'. -/
 alias odd_iff_exists_bit1 ↔ Odd.exists_bit1 _
+#align odd.exists_bit1 Odd.exists_bit1
 
 /- warning: odd_bit1 -> odd_bit1 is a dubious translation:
 lean 3 declaration is

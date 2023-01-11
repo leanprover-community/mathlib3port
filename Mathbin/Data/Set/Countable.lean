@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module data.set.countable
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,6 +52,8 @@ theorem to_countable (s : Set α) [Countable s] : s.Countable :=
 
 /-- Restate `set.countable` as a `countable` instance. -/
 alias countable_coe_iff ↔ _root_.countable.to_set countable.to_subtype
+#align countable.to_set Countable.to_set
+#align set.countable.to_subtype Set.Countable.to_subtype
 
 protected theorem countable_iff_exists_injective {s : Set α} :
     s.Countable ↔ ∃ f : s → ℕ, Injective f :=
@@ -111,6 +113,7 @@ protected theorem countable_iff_exists_surjective {s : Set α} (hs : s.Nonempty)
 #align set.countable_iff_exists_surjective Set.countable_iff_exists_surjective
 
 alias Set.countable_iff_exists_surjective ↔ countable.exists_surjective _
+#align set.countable.exists_surjective Set.Countable.exists_surjective
 
 theorem countable_univ [Countable α] : (univ : Set α).Countable :=
   to_countable univ
@@ -215,8 +218,10 @@ theorem Countable.sUnion_iff {s : Set (Set α)} (hs : s.Countable) :
 #align set.countable.sUnion_iff Set.Countable.sUnion_iff
 
 alias countable.bUnion_iff ↔ _ countable.bUnion
+#align set.countable.bUnion Set.Countable.bUnion
 
 alias countable.sUnion_iff ↔ _ countable.sUnion
+#align set.countable.sUnion Set.Countable.sUnion
 
 @[simp]
 theorem countable_union {s t : Set α} : (s ∪ t).Countable ↔ s.Countable ∧ t.Countable := by

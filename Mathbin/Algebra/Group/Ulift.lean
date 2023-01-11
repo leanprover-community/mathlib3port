@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.group.ulift
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -95,30 +95,26 @@ theorem inv_down [Inv α] : x⁻¹.down = x.down⁻¹ :=
 #align ulift.inv_down ULift.inv_down
 -/
 
-/- warning: ulift.has_smul -> ULift.smul is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : HasSmul.{u1, u2} α β], HasSmul.{u1, max u2 u3} α (ULift.{u3, u2} β)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SMul.{u1, u2} α β], SMul.{u1, max u2 u3} α (ULift.{u3, u2} β)
-Case conversion may be inaccurate. Consider using '#align ulift.has_smul ULift.smulₓ'. -/
+#print ULift.smul /-
 @[to_additive]
-instance smul [HasSmul α β] : HasSmul α (ULift β) :=
+instance smul [SMul α β] : SMul α (ULift β) :=
   ⟨fun n x => up (n • x.down)⟩
 #align ulift.has_smul ULift.smul
+-/
 
 /- warning: ulift.smul_down -> ULift.smul_down is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u3}} [_inst_1 : HasSmul.{u1, u3} α β] (a : α) (b : ULift.{u2, u3} β), Eq.{succ u3} β (ULift.down.{u2, u3} β (HasSmul.smul.{u1, max u3 u2} α (ULift.{u2, u3} β) (ULift.smul.{u1, u3, u2} α β _inst_1) a b)) (HasSmul.smul.{u1, u3} α β _inst_1 a (ULift.down.{u2, u3} β b))
+  forall {α : Type.{u1}} {β : Type.{u3}} [_inst_1 : SMul.{u1, u3} α β] (a : α) (b : ULift.{u2, u3} β), Eq.{succ u3} β (ULift.down.{u2, u3} β (SMul.smul.{u1, max u3 u2} α (ULift.{u2, u3} β) (ULift.smul.{u1, u3, u2} α β _inst_1) a b)) (SMul.smul.{u1, u3} α β _inst_1 a (ULift.down.{u2, u3} β b))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : SMul.{u2, u1} α β] (a : α) (b : ULift.{u3, u1} β), Eq.{succ u1} β (ULift.down.{u3, u1} β (HSMul.hSMul.{u2, max u3 u1, max u3 u1} α (ULift.{u3, u1} β) (ULift.{u3, u1} β) (instHSMul.{u2, max u3 u1} α (ULift.{u3, u1} β) (ULift.smul.{u2, u1, u3} α β _inst_1)) a b)) (HSMul.hSMul.{u2, u1, u1} α β β (instHSMul.{u2, u1} α β _inst_1) a (ULift.down.{u3, u1} β b))
 Case conversion may be inaccurate. Consider using '#align ulift.smul_down ULift.smul_downₓ'. -/
 @[simp, to_additive]
-theorem smul_down [HasSmul α β] (a : α) (b : ULift.{v} β) : (a • b).down = a • b.down :=
+theorem smul_down [SMul α β] (a : α) (b : ULift.{v} β) : (a • b).down = a • b.down :=
   rfl
 #align ulift.smul_down ULift.smul_down
 
 #print ULift.pow /-
-@[to_additive HasSmul, to_additive_reorder 1]
+@[to_additive SMul, to_additive_reorder 1]
 instance pow [Pow α β] : Pow (ULift α) β :=
   ⟨fun x n => up (x.down ^ n)⟩
 #align ulift.has_pow ULift.pow

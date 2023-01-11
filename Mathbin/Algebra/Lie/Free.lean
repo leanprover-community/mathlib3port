@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.free
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -127,7 +127,7 @@ def FreeLieAlgebra :=
 namespace FreeLieAlgebra
 
 instance {S : Type _} [Monoid S] [DistribMulAction S R] [IsScalarTower S R R] :
-    HasSmul S (FreeLieAlgebra R X) where smul t := Quot.map ((· • ·) t) (Rel.smulOfTower t)
+    SMul S (FreeLieAlgebra R X) where smul t := Quot.map ((· • ·) t) (Rel.smulOfTower t)
 
 instance {S : Type _} [Monoid S] [DistribMulAction S R] [DistribMulAction Sᵐᵒᵖ R]
     [IsScalarTower S R R] [IsCentralScalar S R] : IsCentralScalar S (FreeLieAlgebra R X)

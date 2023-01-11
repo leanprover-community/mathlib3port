@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä, Moritz Doll
 
 ! This file was ported from Lean 3 source module topology.algebra.module.weak_dual
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -97,7 +97,7 @@ instance (priority := 100) module' [CommSemiring 𝕜] [CommSemiring 𝕝] [AddC
 #align weak_bilin.module' WeakBilin.module'
 
 instance [CommSemiring 𝕜] [CommSemiring 𝕝] [AddCommGroup E] [Module 𝕜 E] [AddCommGroup F]
-    [Module 𝕜 F] [HasSmul 𝕝 𝕜] [Module 𝕝 E] [s : IsScalarTower 𝕝 𝕜 E] (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜) :
+    [Module 𝕜 F] [SMul 𝕝 𝕜] [Module 𝕝 E] [s : IsScalarTower 𝕝 𝕜 E] (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜) :
     IsScalarTower 𝕝 𝕜 (WeakBilin B) :=
   s
 

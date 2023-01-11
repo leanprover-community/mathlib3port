@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.heyting.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -931,9 +931,23 @@ Case conversion may be inaccurate. Consider using '#align sdiff_sup_self sdiff_s
 theorem sdiff_sup_self (a b : α) : b \ a ⊔ a = b ⊔ a := by rw [sup_comm, sup_sdiff_self, sup_comm]
 #align sdiff_sup_self sdiff_sup_self
 
+/- warning: sup_sdiff_self_left -> sup_sdiff_self_left is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : GeneralizedCoheytingAlgebra.{u1} α] (a : α) (b : α), Eq.{succ u1} α (HasSup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α _inst_1))) (SDiff.sdiff.{u1} α (GeneralizedCoheytingAlgebra.toHasSdiff.{u1} α _inst_1) b a) a) (HasSup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α _inst_1))) b a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : GeneralizedCoheytingAlgebra.{u1} α] (a : α) (b : α), Eq.{succ u1} α (HasSup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α _inst_1))) (SDiff.sdiff.{u1} α (GeneralizedCoheytingAlgebra.toSDiff.{u1} α _inst_1) b a) a) (HasSup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α _inst_1))) b a)
+Case conversion may be inaccurate. Consider using '#align sup_sdiff_self_left sup_sdiff_self_leftₓ'. -/
 alias sdiff_sup_self ← sup_sdiff_self_left
+#align sup_sdiff_self_left sup_sdiff_self_left
 
+/- warning: sup_sdiff_self_right -> sup_sdiff_self_right is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : GeneralizedCoheytingAlgebra.{u1} α] (a : α) (b : α), Eq.{succ u1} α (HasSup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α _inst_1))) a (SDiff.sdiff.{u1} α (GeneralizedCoheytingAlgebra.toHasSdiff.{u1} α _inst_1) b a)) (HasSup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α _inst_1))) a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : GeneralizedCoheytingAlgebra.{u1} α] (a : α) (b : α), Eq.{succ u1} α (HasSup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α _inst_1))) a (SDiff.sdiff.{u1} α (GeneralizedCoheytingAlgebra.toSDiff.{u1} α _inst_1) b a)) (HasSup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α _inst_1))) a b)
+Case conversion may be inaccurate. Consider using '#align sup_sdiff_self_right sup_sdiff_self_rightₓ'. -/
 alias sup_sdiff_self ← sup_sdiff_self_right
+#align sup_sdiff_self_right sup_sdiff_self_right
 
 /- warning: sup_sdiff_eq_sup -> sup_sdiff_eq_sup is a dubious translation:
 lean 3 declaration is
@@ -1481,12 +1495,16 @@ theorem le_compl_comm : a ≤ bᶜ ↔ b ≤ aᶜ := by
 -/
 
 alias le_compl_iff_disjoint_right ↔ _ Disjoint.le_compl_right
+#align disjoint.le_compl_right Disjoint.le_compl_right
 
 alias le_compl_iff_disjoint_left ↔ _ Disjoint.le_compl_left
+#align disjoint.le_compl_left Disjoint.le_compl_left
 
 alias le_compl_comm ← le_compl_iff_le_compl
+#align le_compl_iff_le_compl le_compl_iff_le_compl
 
 alias le_compl_comm ↔ le_compl_of_le_compl _
+#align le_compl_of_le_compl le_compl_of_le_compl
 
 #print disjoint_compl_left /-
 theorem disjoint_compl_left : Disjoint (aᶜ) a :=
@@ -1823,9 +1841,23 @@ theorem hnot_le_comm : ￢a ≤ b ↔ ￢b ≤ a := by
   rw [hnot_le_iff_codisjoint_right, hnot_le_iff_codisjoint_left]
 #align hnot_le_comm hnot_le_comm
 
+/- warning: codisjoint.hnot_le_right -> Codisjoint.hnot_le_right is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : CoheytingAlgebra.{u1} α] {a : α} {b : α}, (Codisjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (BoundedOrder.toOrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) (CoheytingAlgebra.toBoundedOrder.{u1} α _inst_1)) a b) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) (HNot.hnot.{u1} α (CoheytingAlgebra.toHasHnot.{u1} α _inst_1) a) b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : CoheytingAlgebra.{u1} α] {a : α} {b : α}, (Codisjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (BoundedOrder.toOrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) (CoheytingAlgebra.toBoundedOrder.{u1} α _inst_1)) a b) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) (HNot.hnot.{u1} α (CoheytingAlgebra.toHNot.{u1} α _inst_1) a) b)
+Case conversion may be inaccurate. Consider using '#align codisjoint.hnot_le_right Codisjoint.hnot_le_rightₓ'. -/
 alias hnot_le_iff_codisjoint_right ↔ _ Codisjoint.hnot_le_right
+#align codisjoint.hnot_le_right Codisjoint.hnot_le_right
 
+/- warning: codisjoint.hnot_le_left -> Codisjoint.hnot_le_left is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : CoheytingAlgebra.{u1} α] {a : α} {b : α}, (Codisjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (BoundedOrder.toOrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) (CoheytingAlgebra.toBoundedOrder.{u1} α _inst_1)) b a) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) (HNot.hnot.{u1} α (CoheytingAlgebra.toHasHnot.{u1} α _inst_1) a) b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : CoheytingAlgebra.{u1} α] {a : α} {b : α}, (Codisjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (BoundedOrder.toOrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) (CoheytingAlgebra.toBoundedOrder.{u1} α _inst_1)) b a) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) (HNot.hnot.{u1} α (CoheytingAlgebra.toHNot.{u1} α _inst_1) a) b)
+Case conversion may be inaccurate. Consider using '#align codisjoint.hnot_le_left Codisjoint.hnot_le_leftₓ'. -/
 alias hnot_le_iff_codisjoint_left ↔ _ Codisjoint.hnot_le_left
+#align codisjoint.hnot_le_left Codisjoint.hnot_le_left
 
 /- warning: codisjoint_hnot_right -> codisjoint_hnot_right is a dubious translation:
 lean 3 declaration is

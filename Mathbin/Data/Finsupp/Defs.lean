@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Scott Morrison
 
 ! This file was ported from Lean 3 source module data.finsupp.defs
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1123,7 +1123,7 @@ variable [AddMonoid M]
 
 /-- Note the general `finsupp.has_smul` instance doesn't apply as `ℕ` is not distributive
 unless `β i`'s addition is commutative. -/
-instance hasNatScalar : HasSmul ℕ (α →₀ M) :=
+instance hasNatScalar : SMul ℕ (α →₀ M) :=
   ⟨fun n v => v.mapRange ((· • ·) n) (nsmul_zero _)⟩
 #align finsupp.has_nat_scalar Finsupp.hasNatScalar
 
@@ -1183,7 +1183,7 @@ theorem map_range_sub' [AddGroup G] [SubtractionMonoid H] [AddMonoidHomClass β 
 
 /-- Note the general `finsupp.has_smul` instance doesn't apply as `ℤ` is not distributive
 unless `β i`'s addition is commutative. -/
-instance hasIntScalar [AddGroup G] : HasSmul ℤ (α →₀ G) :=
+instance hasIntScalar [AddGroup G] : SMul ℤ (α →₀ G) :=
   ⟨fun n v => v.mapRange ((· • ·) n) (zsmul_zero _)⟩
 #align finsupp.has_int_scalar Finsupp.hasIntScalar
 

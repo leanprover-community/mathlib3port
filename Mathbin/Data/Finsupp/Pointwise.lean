@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module data.finsupp.pointwise
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -98,7 +98,7 @@ instance [NonUnitalCommRing β] : NonUnitalCommRing (α →₀ β) :=
 -- TODO can this be generalized in the direction of `pi.has_smul'`
 -- (i.e. dependent functions and finsupps)
 -- TODO in theory this could be generalised, we only really need `smul_zero` for the definition
-instance pointwiseScalar [Semiring β] : HasSmul (α → β) (α →₀ β)
+instance pointwiseScalar [Semiring β] : SMul (α → β) (α →₀ β)
     where smul f g :=
     Finsupp.ofSupportFinite (fun a => f a • g a)
       (by

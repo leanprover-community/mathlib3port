@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Jalex Stark, Kyle Miller, Alena Gusakov, Hunter Monroe
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -399,8 +399,10 @@ theorem edge_set_injective : Injective (edgeSet : SimpleGraph V → Set (Sym2 V)
 #align simple_graph.edge_set_injective SimpleGraph.edge_set_injective
 
 alias edge_set_subset_edge_set ↔ _ edge_set_mono
+#align simple_graph.edge_set_mono SimpleGraph.edge_set_mono
 
 alias edge_set_ssubset_edge_set ↔ _ edge_set_strict_mono
+#align simple_graph.edge_set_strict_mono SimpleGraph.edge_set_strict_mono
 
 attribute [mono] edge_set_mono edge_set_strict_mono
 
@@ -835,8 +837,10 @@ theorem edge_finset_ssubset_edge_finset : G₁.edgeFinset ⊂ G₂.edgeFinset �
 #align simple_graph.edge_finset_ssubset_edge_finset SimpleGraph.edge_finset_ssubset_edge_finset
 
 alias edge_finset_subset_edge_finset ↔ _ edge_finset_mono
+#align simple_graph.edge_finset_mono SimpleGraph.edge_finset_mono
 
 alias edge_finset_ssubset_edge_finset ↔ _ edge_finset_strict_mono
+#align simple_graph.edge_finset_strict_mono SimpleGraph.edge_finset_strict_mono
 
 attribute [mono] edge_finset_mono edge_finset_strict_mono
 
@@ -1156,6 +1160,7 @@ theorem delete_far_iff :
 #align simple_graph.delete_far_iff SimpleGraph.delete_far_iff
 
 alias delete_far_iff ↔ delete_far.le_card_sub_card _
+#align simple_graph.delete_far.le_card_sub_card SimpleGraph.DeleteFar.le_card_sub_card
 
 theorem DeleteFar.mono (h : G.DeleteFar p r₂) (hr : r₁ ≤ r₂) : G.DeleteFar p r₁ := fun s hs hG =>
   hr.trans <| h hs hG

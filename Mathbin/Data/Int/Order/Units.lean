@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.int.order.units
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,7 +52,14 @@ theorem units_sq (u : ℤˣ) : u ^ 2 = 1 := by
   rw [Units.ext_iff, Units.val_pow_eq_pow_val, Units.val_one, is_unit_sq u.is_unit]
 #align int.units_sq Int.units_sq
 
+/- warning: int.units_pow_two -> Int.units_pow_two is a dubious translation:
+lean 3 declaration is
+  forall (u : Units.{0} Int Int.monoid), Eq.{1} (Units.{0} Int Int.monoid) (HPow.hPow.{0, 0, 0} (Units.{0} Int Int.monoid) Nat (Units.{0} Int Int.monoid) (instHPow.{0, 0} (Units.{0} Int Int.monoid) Nat (Monoid.Pow.{0} (Units.{0} Int Int.monoid) (DivInvMonoid.toMonoid.{0} (Units.{0} Int Int.monoid) (Group.toDivInvMonoid.{0} (Units.{0} Int Int.monoid) (Units.group.{0} Int Int.monoid))))) u (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (OfNat.ofNat.{0} (Units.{0} Int Int.monoid) 1 (OfNat.mk.{0} (Units.{0} Int Int.monoid) 1 (One.one.{0} (Units.{0} Int Int.monoid) (MulOneClass.toHasOne.{0} (Units.{0} Int Int.monoid) (Units.mulOneClass.{0} Int Int.monoid)))))
+but is expected to have type
+  forall (u : Units.{0} Int Int.instMonoidInt), Eq.{1} (Units.{0} Int Int.instMonoidInt) (HPow.hPow.{0, 0, 0} (Units.{0} Int Int.instMonoidInt) Nat (Units.{0} Int Int.instMonoidInt) (instHPow.{0, 0} (Units.{0} Int Int.instMonoidInt) Nat (Monoid.Pow.{0} (Units.{0} Int Int.instMonoidInt) (DivInvMonoid.toMonoid.{0} (Units.{0} Int Int.instMonoidInt) (Group.toDivInvMonoid.{0} (Units.{0} Int Int.instMonoidInt) (Units.instGroupUnits.{0} Int Int.instMonoidInt))))) u (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (OfNat.ofNat.{0} (Units.{0} Int Int.instMonoidInt) 1 (One.toOfNat1.{0} (Units.{0} Int Int.instMonoidInt) (InvOneClass.toOne.{0} (Units.{0} Int Int.instMonoidInt) (DivInvOneMonoid.toInvOneClass.{0} (Units.{0} Int Int.instMonoidInt) (DivisionMonoid.toDivInvOneMonoid.{0} (Units.{0} Int Int.instMonoidInt) (DivisionCommMonoid.toDivisionMonoid.{0} (Units.{0} Int Int.instMonoidInt) (CommGroup.toDivisionCommMonoid.{0} (Units.{0} Int Int.instMonoidInt) (Units.instCommGroupUnitsToMonoid.{0} Int Int.instCommMonoidInt))))))))
+Case conversion may be inaccurate. Consider using '#align int.units_pow_two Int.units_pow_twoₓ'. -/
 alias units_sq ← units_pow_two
+#align int.units_pow_two Int.units_pow_two
 
 /- warning: int.units_mul_self -> Int.units_mul_self is a dubious translation:
 lean 3 declaration is

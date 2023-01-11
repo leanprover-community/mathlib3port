@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lu-Ming Zhang
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.symmetric
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -114,7 +114,7 @@ theorem IsSymm.sub {A B : Matrix n n α} [Sub α] (hA : A.IsSymm) (hB : B.IsSymm
 #align matrix.is_symm.sub Matrix.IsSymm.sub
 
 @[simp]
-theorem IsSymm.smul [HasSmul R α] {A : Matrix n n α} (h : A.IsSymm) (k : R) : (k • A).IsSymm :=
+theorem IsSymm.smul [SMul R α] {A : Matrix n n α} (h : A.IsSymm) (k : R) : (k • A).IsSymm :=
   (transpose_smul _ _).trans (congr_arg _ h)
 #align matrix.is_symm.smul Matrix.IsSymm.smul
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module algebra.order.to_interval_mod
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,32 +42,32 @@ include hα
 
 /-- The unique integer such that this multiple of `b`, added to `x`, is in `Ico a (a + b)`. -/
 def toIcoDiv (a : α) {b : α} (hb : 0 < b) (x : α) : ℤ :=
-  (exists_unique_add_zsmul_mem_Ico hb x a).some
+  (existsUnique_add_zsmul_mem_Ico hb x a).some
 #align to_Ico_div toIcoDiv
 
 theorem add_to_Ico_div_zsmul_mem_Ico (a : α) {b : α} (hb : 0 < b) (x : α) :
     x + toIcoDiv a hb x • b ∈ Set.Ico a (a + b) :=
-  (exists_unique_add_zsmul_mem_Ico hb x a).some_spec.1
+  (existsUnique_add_zsmul_mem_Ico hb x a).some_spec.1
 #align add_to_Ico_div_zsmul_mem_Ico add_to_Ico_div_zsmul_mem_Ico
 
 theorem eq_to_Ico_div_of_add_zsmul_mem_Ico {a b x : α} (hb : 0 < b) {y : ℤ}
     (hy : x + y • b ∈ Set.Ico a (a + b)) : y = toIcoDiv a hb x :=
-  (exists_unique_add_zsmul_mem_Ico hb x a).some_spec.2 y hy
+  (existsUnique_add_zsmul_mem_Ico hb x a).some_spec.2 y hy
 #align eq_to_Ico_div_of_add_zsmul_mem_Ico eq_to_Ico_div_of_add_zsmul_mem_Ico
 
 /-- The unique integer such that this multiple of `b`, added to `x`, is in `Ioc a (a + b)`. -/
 def toIocDiv (a : α) {b : α} (hb : 0 < b) (x : α) : ℤ :=
-  (exists_unique_add_zsmul_mem_Ioc hb x a).some
+  (existsUnique_add_zsmul_mem_Ioc hb x a).some
 #align to_Ioc_div toIocDiv
 
 theorem add_to_Ioc_div_zsmul_mem_Ioc (a : α) {b : α} (hb : 0 < b) (x : α) :
     x + toIocDiv a hb x • b ∈ Set.Ioc a (a + b) :=
-  (exists_unique_add_zsmul_mem_Ioc hb x a).some_spec.1
+  (existsUnique_add_zsmul_mem_Ioc hb x a).some_spec.1
 #align add_to_Ioc_div_zsmul_mem_Ioc add_to_Ioc_div_zsmul_mem_Ioc
 
 theorem eq_to_Ioc_div_of_add_zsmul_mem_Ioc {a b x : α} (hb : 0 < b) {y : ℤ}
     (hy : x + y • b ∈ Set.Ioc a (a + b)) : y = toIocDiv a hb x :=
-  (exists_unique_add_zsmul_mem_Ioc hb x a).some_spec.2 y hy
+  (existsUnique_add_zsmul_mem_Ioc hb x a).some_spec.2 y hy
 #align eq_to_Ioc_div_of_add_zsmul_mem_Ioc eq_to_Ioc_div_of_add_zsmul_mem_Ioc
 
 /-- Reduce `x` to the interval `Ico a (a + b)`. -/
@@ -175,32 +175,28 @@ theorem to_Ioc_div_zsmul_sub_to_Ioc_mod (a : α) {b : α} (hb : 0 < b) (x : α) 
 #align to_Ioc_div_zsmul_sub_to_Ioc_mod to_Ioc_div_zsmul_sub_to_Ioc_mod
 
 theorem to_Ico_mod_eq_iff {a b x y : α} (hb : 0 < b) :
-    toIcoMod a hb x = y ↔ a ≤ y ∧ y < a + b ∧ ∃ z : ℤ, y - x = z • b :=
+    toIcoMod a hb x = y ↔ y ∈ Set.Ico a (a + b) ∧ ∃ z : ℤ, y - x = z • b :=
   by
   refine'
-    ⟨fun h =>
-      ⟨h ▸ left_le_to_Ico_mod a hb x, h ▸ to_Ico_mod_lt_right a hb x, toIcoDiv a hb x,
-        h ▸ to_Ico_mod_sub_self a hb x⟩,
+    ⟨fun h => ⟨h ▸ to_Ico_mod_mem_Ico a hb x, toIcoDiv a hb x, h ▸ to_Ico_mod_sub_self a hb x⟩,
       fun h => _⟩
-  rcases h with ⟨ha, hab, z, hz⟩
+  rcases h with ⟨hy, z, hz⟩
   rw [sub_eq_iff_eq_add'] at hz
   subst hz
-  rw [eq_to_Ico_div_of_add_zsmul_mem_Ico hb (Set.mem_Ico.2 ⟨ha, hab⟩)]
+  rw [eq_to_Ico_div_of_add_zsmul_mem_Ico hb hy]
   rfl
 #align to_Ico_mod_eq_iff to_Ico_mod_eq_iff
 
 theorem to_Ioc_mod_eq_iff {a b x y : α} (hb : 0 < b) :
-    toIocMod a hb x = y ↔ a < y ∧ y ≤ a + b ∧ ∃ z : ℤ, y - x = z • b :=
+    toIocMod a hb x = y ↔ y ∈ Set.Ioc a (a + b) ∧ ∃ z : ℤ, y - x = z • b :=
   by
   refine'
-    ⟨fun h =>
-      ⟨h ▸ left_lt_to_Ioc_mod a hb x, h ▸ to_Ioc_mod_le_right a hb x, toIocDiv a hb x,
-        h ▸ to_Ioc_mod_sub_self a hb x⟩,
+    ⟨fun h => ⟨h ▸ to_Ioc_mod_mem_Ioc a hb x, toIocDiv a hb x, h ▸ to_Ioc_mod_sub_self a hb x⟩,
       fun h => _⟩
-  rcases h with ⟨ha, hab, z, hz⟩
+  rcases h with ⟨hy, z, hz⟩
   rw [sub_eq_iff_eq_add'] at hz
   subst hz
-  rw [eq_to_Ioc_div_of_add_zsmul_mem_Ioc hb (Set.mem_Ioc.2 ⟨ha, hab⟩)]
+  rw [eq_to_Ioc_div_of_add_zsmul_mem_Ioc hb hy]
   rfl
 #align to_Ioc_mod_eq_iff to_Ioc_mod_eq_iff
 
@@ -221,16 +217,16 @@ theorem to_Ioc_div_apply_left (a : α) {b : α} (hb : 0 < b) : toIocDiv a hb a =
 @[simp]
 theorem to_Ico_mod_apply_left (a : α) {b : α} (hb : 0 < b) : toIcoMod a hb a = a :=
   by
-  rw [to_Ico_mod_eq_iff hb]
-  refine' ⟨le_refl _, lt_add_of_pos_right _ hb, 0, _⟩
+  rw [to_Ico_mod_eq_iff hb, Set.left_mem_Ico]
+  refine' ⟨lt_add_of_pos_right _ hb, 0, _⟩
   simp
 #align to_Ico_mod_apply_left to_Ico_mod_apply_left
 
 @[simp]
 theorem to_Ioc_mod_apply_left (a : α) {b : α} (hb : 0 < b) : toIocMod a hb a = a + b :=
   by
-  rw [to_Ioc_mod_eq_iff hb]
-  refine' ⟨lt_add_of_pos_right _ hb, le_refl _, 1, _⟩
+  rw [to_Ioc_mod_eq_iff hb, Set.right_mem_Ioc]
+  refine' ⟨lt_add_of_pos_right _ hb, 1, _⟩
   simp
 #align to_Ioc_mod_apply_left to_Ioc_mod_apply_left
 
@@ -248,15 +244,15 @@ theorem to_Ioc_div_apply_right (a : α) {b : α} (hb : 0 < b) : toIocDiv a hb (a
 
 theorem to_Ico_mod_apply_right (a : α) {b : α} (hb : 0 < b) : toIcoMod a hb (a + b) = a :=
   by
-  rw [to_Ico_mod_eq_iff hb]
-  refine' ⟨le_refl _, lt_add_of_pos_right _ hb, -1, _⟩
+  rw [to_Ico_mod_eq_iff hb, Set.left_mem_Ico]
+  refine' ⟨lt_add_of_pos_right _ hb, -1, _⟩
   simp
 #align to_Ico_mod_apply_right to_Ico_mod_apply_right
 
 theorem to_Ioc_mod_apply_right (a : α) {b : α} (hb : 0 < b) : toIocMod a hb (a + b) = a + b :=
   by
-  rw [to_Ioc_mod_eq_iff hb]
-  refine' ⟨lt_add_of_pos_right _ hb, le_refl _, 0, _⟩
+  rw [to_Ioc_mod_eq_iff hb, Set.right_mem_Ioc]
+  refine' ⟨lt_add_of_pos_right _ hb, 0, _⟩
   simp
 #align to_Ioc_mod_apply_right to_Ioc_mod_apply_right
 
@@ -597,9 +593,7 @@ include hα
                    (Term.proj (Term.app `to_Ico_mod_eq_iff [`hb]) "." (fieldIdx "2"))
                    [(Term.anonymousCtor
                      "⟨"
-                     [(Term.proj (Term.proj `hi "." (fieldIdx "1")) "." `le)
-                      ","
-                      (Term.proj `hi "." (fieldIdx "2"))
+                     [(Term.app `Set.Ioo_subset_Ico_self [`hi])
                       ","
                       `i
                       ","
@@ -612,9 +606,7 @@ include hα
                     (Term.proj (Term.app `to_Ioc_mod_eq_iff [`hb]) "." (fieldIdx "2"))
                     [(Term.anonymousCtor
                       "⟨"
-                      [(Term.proj `hi "." (fieldIdx "1"))
-                       ","
-                       (Term.proj (Term.proj `hi "." (fieldIdx "2")) "." `le)
+                      [(Term.app `Set.Ioo_subset_Ioc_self [`hi])
                        ","
                        `i
                        ","
@@ -661,7 +653,9 @@ include hα
                 ","
                 (Tactic.rwRule [] `eq_comm)
                 ","
-                (Tactic.rwRule [] `to_Ioc_mod_eq_iff)]
+                (Tactic.rwRule [] `to_Ioc_mod_eq_iff)
+                ","
+                (Tactic.rwRule [] `Set.right_mem_Ioc)]
                "]")
               [])
              []
@@ -670,8 +664,6 @@ include hα
               (Term.anonymousCtor
                "⟨"
                [(Term.app `lt_add_of_pos_right [`a `hb])
-                ","
-                `le_rfl
                 ","
                 («term_+_» (Term.app `toIcoDiv [`a `hb `x]) "+" (num "1"))
                 ","
@@ -756,9 +748,7 @@ include hα
                   (Term.proj (Term.app `to_Ico_mod_eq_iff [`hb]) "." (fieldIdx "2"))
                   [(Term.anonymousCtor
                     "⟨"
-                    [(Term.proj (Term.proj `hi "." (fieldIdx "1")) "." `le)
-                     ","
-                     (Term.proj `hi "." (fieldIdx "2"))
+                    [(Term.app `Set.Ioo_subset_Ico_self [`hi])
                      ","
                      `i
                      ","
@@ -771,9 +761,7 @@ include hα
                    (Term.proj (Term.app `to_Ioc_mod_eq_iff [`hb]) "." (fieldIdx "2"))
                    [(Term.anonymousCtor
                      "⟨"
-                     [(Term.proj `hi "." (fieldIdx "1"))
-                      ","
-                      (Term.proj (Term.proj `hi "." (fieldIdx "2")) "." `le)
+                     [(Term.app `Set.Ioo_subset_Ioc_self [`hi])
                       ","
                       `i
                       ","
@@ -820,7 +808,9 @@ include hα
                ","
                (Tactic.rwRule [] `eq_comm)
                ","
-               (Tactic.rwRule [] `to_Ioc_mod_eq_iff)]
+               (Tactic.rwRule [] `to_Ioc_mod_eq_iff)
+               ","
+               (Tactic.rwRule [] `Set.right_mem_Ioc)]
               "]")
              [])
             []
@@ -829,8 +819,6 @@ include hα
              (Term.anonymousCtor
               "⟨"
               [(Term.app `lt_add_of_pos_right [`a `hb])
-               ","
-               `le_rfl
                ","
                («term_+_» (Term.app `toIcoDiv [`a `hb `x]) "+" (num "1"))
                ","
@@ -1064,15 +1052,19 @@ theorem
             fun
               ⟨ i , hi ⟩
                 =>
-                to_Ico_mod_eq_iff hb . 2 ⟨ hi . 1 . le , hi . 2 , i , add_sub_cancel' x _ ⟩ . trans
-                  to_Ioc_mod_eq_iff hb . 2 ⟨ hi . 1 , hi . 2 . le , i , add_sub_cancel' x _ ⟩ . symm
+                to_Ico_mod_eq_iff hb . 2 ⟨ Set.Ioo_subset_Ico_self hi , i , add_sub_cancel' x _ ⟩
+                    .
+                    trans
+                  to_Ioc_mod_eq_iff hb . 2 ⟨ Set.Ioo_subset_Ioc_self hi , i , add_sub_cancel' x _ ⟩
+                    .
+                    symm
         tfae_have 2 → 3
         · intro h rw [ h , Ne , add_right_eq_self ] exact hb.ne'
         tfae_have 3 → 4
         ·
           refine' mt fun h => _
-            rw [ h , eq_comm , to_Ioc_mod_eq_iff ]
-            refine' ⟨ lt_add_of_pos_right a hb , le_rfl , toIcoDiv a hb x + 1 , _ ⟩
+            rw [ h , eq_comm , to_Ioc_mod_eq_iff , Set.right_mem_Ioc ]
+            refine' ⟨ lt_add_of_pos_right a hb , toIcoDiv a hb x + 1 , _ ⟩
             conv_lhs => rw [ ← h , toIcoMod , add_assoc , ← add_one_zsmul , add_sub_cancel' ]
         tfae_have 4 → 1
         · have h' := to_Ico_mod_mem_Ico a hb x exact fun h => ⟨ _ , h' . 1 . lt_of_ne' h , h' . 2 ⟩
@@ -1100,7 +1092,7 @@ theorem mem_Ioo_mod_iff_to_Ioc_mod_ne_right : MemIooMod a b x ↔ toIocMod a hb 
   by
   rw [mem_Ioo_mod_iff_to_Ico_mod_eq_to_Ioc_mod, to_Ico_mod_eq_iff hb]
   obtain ⟨h₁, h₂⟩ := to_Ioc_mod_mem_Ioc a hb x
-  exact ⟨fun h => h.2.1.Ne, fun h => ⟨h₁.le, h₂.lt_of_ne h, _, add_sub_cancel' x _⟩⟩
+  exact ⟨fun h => h.1.2.Ne, fun h => ⟨⟨h₁.le, h₂.lt_of_ne h⟩, _, add_sub_cancel' x _⟩⟩
 #align mem_Ioo_mod_iff_to_Ioc_mod_ne_right mem_Ioo_mod_iff_to_Ioc_mod_ne_right
 
 theorem mem_Ioo_mod_iff_to_Ico_div_eq_to_Ioc_div :
@@ -1124,7 +1116,8 @@ theorem mem_Ioo_mod_iff_sub_ne_zsmul : MemIooMod a b x ↔ ∀ z : ℤ, a - x �
   push_neg; constructor <;> intro h
   · rw [← h]
     exact ⟨_, add_sub_cancel' x _⟩
-  · exact (to_Ico_mod_eq_iff hb).2 ⟨le_rfl, lt_add_of_pos_right a hb, h⟩
+  · rw [to_Ico_mod_eq_iff, Set.left_mem_Ico]
+    exact ⟨lt_add_of_pos_right a hb, h⟩
 #align mem_Ioo_mod_iff_sub_ne_zsmul mem_Ioo_mod_iff_sub_ne_zsmul
 
 theorem mem_Ioo_mod_iff_eq_mod_zmultiples :
@@ -1144,17 +1137,17 @@ theorem Ico_eq_locus_Ioc_eq_Union_Ioo :
 
 end IcoIoc
 
-theorem to_Ico_mod_eq_self {a b x : α} (hb : 0 < b) : toIcoMod a hb x = x ↔ a ≤ x ∧ x < a + b :=
+theorem to_Ico_mod_eq_self {a b x : α} (hb : 0 < b) : toIcoMod a hb x = x ↔ x ∈ Set.Ico a (a + b) :=
   by
-  rw [to_Ico_mod_eq_iff]
-  refine' ⟨fun h => ⟨h.1, h.2.1⟩, fun h => ⟨h.1, h.2, 0, _⟩⟩
+  rw [to_Ico_mod_eq_iff, and_iff_left]
+  refine' ⟨0, _⟩
   simp
 #align to_Ico_mod_eq_self to_Ico_mod_eq_self
 
-theorem to_Ioc_mod_eq_self {a b x : α} (hb : 0 < b) : toIocMod a hb x = x ↔ a < x ∧ x ≤ a + b :=
+theorem to_Ioc_mod_eq_self {a b x : α} (hb : 0 < b) : toIocMod a hb x = x ↔ x ∈ Set.Ioc a (a + b) :=
   by
-  rw [to_Ioc_mod_eq_iff]
-  refine' ⟨fun h => ⟨h.1, h.2.1⟩, fun h => ⟨h.1, h.2, 0, _⟩⟩
+  rw [to_Ioc_mod_eq_iff, and_iff_left]
+  refine' ⟨0, _⟩
   simp
 #align to_Ioc_mod_eq_self to_Ioc_mod_eq_self
 

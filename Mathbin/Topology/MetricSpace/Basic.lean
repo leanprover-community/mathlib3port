@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Robert Y. Lewis, Johannes Hölzl, Mario Carneiro, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1642,6 +1642,7 @@ theorem Filter.Tendsto.congr_dist {ι : Type _} {f₁ f₂ : ι → α} {p : Fil
 #align filter.tendsto.congr_dist Filter.Tendsto.congr_dist
 
 alias Filter.Tendsto.congr_dist ← tendsto_of_tendsto_of_dist
+#align tendsto_of_tendsto_of_dist tendsto_of_tendsto_of_dist
 
 theorem tendsto_iff_of_dist {ι : Type _} {f₁ f₂ : ι → α} {p : Filter ι} {a : α}
     (h : Tendsto (fun x => dist (f₁ x) (f₂ x)) p (𝓝 0)) : Tendsto f₁ p (𝓝 a) ↔ Tendsto f₂ p (𝓝 a) :=
@@ -2378,6 +2379,7 @@ theorem finite_cover_balls_of_compact {α : Type u} [PseudoMetricSpace α] {s : 
 #align finite_cover_balls_of_compact finite_cover_balls_of_compact
 
 alias finite_cover_balls_of_compact ← IsCompact.finite_cover_balls
+#align is_compact.finite_cover_balls IsCompact.finite_cover_balls
 
 end Compact
 
@@ -2648,6 +2650,7 @@ theorem bounded_closure_of_bounded (h : Bounded s) : Bounded (closure s) :=
 #align metric.bounded_closure_of_bounded Metric.bounded_closure_of_bounded
 
 alias bounded_closure_of_bounded ← bounded.closure
+#align metric.bounded.closure Metric.Bounded.closure
 
 @[simp]
 theorem bounded_closure_iff : Bounded (closure s) ↔ Bounded s :=
@@ -2715,6 +2718,7 @@ theorem bounded_of_finite {s : Set α} (h : s.Finite) : Bounded s :=
 #align metric.bounded_of_finite Metric.bounded_of_finite
 
 alias bounded_of_finite ← _root_.set.finite.bounded
+#align set.finite.bounded Set.Finite.bounded
 
 /-- A singleton is bounded -/
 theorem bounded_singleton {x : α} : Bounded ({x} : Set α) :=

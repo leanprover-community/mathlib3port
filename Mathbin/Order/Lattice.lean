@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.lattice
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -226,8 +226,11 @@ theorem right_eq_sup : b = a ⊔ b ↔ a ≤ b :=
 -/
 
 alias sup_eq_left ↔ _ sup_of_le_left
+#align sup_of_le_left sup_of_le_left
 
 alias sup_eq_right ↔ le_of_sup_eq sup_of_le_right
+#align le_of_sup_eq le_of_sup_eq
+#align sup_of_le_right sup_of_le_right
 
 attribute [simp] sup_of_le_left sup_of_le_right
 
@@ -577,8 +580,11 @@ theorem right_eq_inf : b = a ⊓ b ↔ b ≤ a :=
 -/
 
 alias inf_eq_left ↔ le_of_inf_eq inf_of_le_left
+#align le_of_inf_eq le_of_inf_eq
+#align inf_of_le_left inf_of_le_left
 
 alias inf_eq_right ↔ _ inf_of_le_right
+#align inf_of_le_right inf_of_le_right
 
 attribute [simp] inf_of_le_left inf_of_le_right
 

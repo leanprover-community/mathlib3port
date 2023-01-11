@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module linear_algebra.multilinear.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -193,12 +193,12 @@ theorem zero_apply (m : ∀ i, M₁ i) : (0 : MultilinearMap R M₁ M₂) m = 0 
   rfl
 #align multilinear_map.zero_apply MultilinearMap.zero_apply
 
-section HasSmul
+section SMul
 
 variable {R' A : Type _} [Monoid R'] [Semiring A] [∀ i, Module A (M₁ i)] [DistribMulAction R' M₂]
   [Module A M₂] [SMulCommClass A R' M₂]
 
-instance : HasSmul R' (MultilinearMap A M₁ M₂) :=
+instance : SMul R' (MultilinearMap A M₁ M₂) :=
   ⟨fun c f =>
     ⟨fun m => c • f m, fun m i x y => by simp [smul_add], fun l i x d => by simp [← smul_comm x c]⟩⟩
 
@@ -211,7 +211,7 @@ theorem coe_smul (c : R') (f : MultilinearMap A M₁ M₂) : ⇑(c • f) = c �
   rfl
 #align multilinear_map.coe_smul MultilinearMap.coe_smul
 
-end HasSmul
+end SMul
 
 instance : AddCommMonoid (MultilinearMap R M₁ M₂) :=
   coe_injective.AddCommMonoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
@@ -671,7 +671,7 @@ def codRestrict (f : MultilinearMap R M₁ M₂) (p : Submodule R M₂) (h : ∀
 
 section RestrictScalar
 
-variable (R) {A : Type _} [Semiring A] [HasSmul R A] [∀ i : ι, Module A (M₁ i)] [Module A M₂]
+variable (R) {A : Type _} [Semiring A] [SMul R A] [∀ i : ι, Module A (M₁ i)] [Module A M₂]
   [∀ i, IsScalarTower R A (M₁ i)] [IsScalarTower R A M₂]
 
 /-- Reinterpret an `A`-multilinear map as an `R`-multilinear map, if `A` is an algebra over `R`
@@ -997,14 +997,14 @@ protected def mkPiAlgebraFin : MultilinearMap R (fun i : Fin n => A) A
   map_add' := by
     intro m i x y
     have : (List.finRange n).indexOf i < n := by
-      simpa using List.indexOf_lt_length.2 (List.mem_fin_range i)
-    simp [List.of_fn_eq_map, (List.nodup_fin_range n).map_update, List.prod_update_nth, add_mul,
-      this, mul_add, add_mul]
+      simpa using List.indexOf_lt_length.2 (List.mem_finRange i)
+    simp [List.of_fn_eq_map, (List.nodup_finRange n).map_update, List.prod_set, add_mul, this,
+      mul_add, add_mul]
   map_smul' := by
     intro m i c x
     have : (List.finRange n).indexOf i < n := by
-      simpa using List.indexOf_lt_length.2 (List.mem_fin_range i)
-    simp [List.of_fn_eq_map, (List.nodup_fin_range n).map_update, List.prod_update_nth, this]
+      simpa using List.indexOf_lt_length.2 (List.mem_finRange i)
+    simp [List.of_fn_eq_map, (List.nodup_finRange n).map_update, List.prod_set, this]
 #align multilinear_map.mk_pi_algebra_fin MultilinearMap.mkPiAlgebraFin
 
 variable {R A n}

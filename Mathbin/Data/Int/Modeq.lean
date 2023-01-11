@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.int.modeq
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -130,7 +130,21 @@ theorem modEq_iff_add_fac {a b n : ℤ} : a ≡ b [ZMOD n] ↔ ∃ t, b = a + n 
 #align int.modeq_iff_add_fac Int.modEq_iff_add_fac
 -/
 
+/- warning: int.modeq.dvd -> Int.ModEq.dvd is a dubious translation:
+lean 3 declaration is
+  forall {n : Int} {a : Int} {b : Int}, (Int.ModEq n a b) -> (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) n (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.hasSub) b a))
+but is expected to have type
+  forall {n : Int} {a : Int} {b : Int}, (Int.ModEq n a b) -> (Dvd.dvd.{0} Int Int.instDvdInt n (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) b a))
+Case conversion may be inaccurate. Consider using '#align int.modeq.dvd Int.ModEq.dvdₓ'. -/
+/- warning: int.modeq_of_dvd -> Int.modEq_of_dvd is a dubious translation:
+lean 3 declaration is
+  forall {n : Int} {a : Int} {b : Int}, (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) n (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.hasSub) b a)) -> (Int.ModEq n a b)
+but is expected to have type
+  forall {n : Int} {a : Int} {b : Int}, (Dvd.dvd.{0} Int Int.instDvdInt n (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) b a)) -> (Int.ModEq n a b)
+Case conversion may be inaccurate. Consider using '#align int.modeq_of_dvd Int.modEq_of_dvdₓ'. -/
 alias modeq_iff_dvd ↔ modeq.dvd modeq_of_dvd
+#align int.modeq.dvd Int.ModEq.dvd
+#align int.modeq_of_dvd Int.modEq_of_dvd
 
 #print Int.mod_modEq /-
 theorem mod_modEq (a n) : a % n ≡ a [ZMOD n] :=

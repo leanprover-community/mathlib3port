@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.defs
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -202,11 +202,11 @@ instance : Add (𝕎 R) :=
 instance : Sub (𝕎 R) :=
   ⟨fun x y => eval (wittSub p) ![x, y]⟩
 
-instance hasNatScalar : HasSmul ℕ (𝕎 R) :=
+instance hasNatScalar : SMul ℕ (𝕎 R) :=
   ⟨fun n x => eval (wittNsmul p n) ![x]⟩
 #align witt_vector.has_nat_scalar WittVector.hasNatScalar
 
-instance hasIntScalar : HasSmul ℤ (𝕎 R) :=
+instance hasIntScalar : SMul ℤ (𝕎 R) :=
   ⟨fun n x => eval (wittZsmul p n) ![x]⟩
 #align witt_vector.has_int_scalar WittVector.hasIntScalar
 
@@ -393,12 +393,12 @@ theorem neg_coeff (x : 𝕎 R) (n : ℕ) : (-x).coeff n = peval (wittNeg p n) ![
 
 theorem nsmul_coeff (m : ℕ) (x : 𝕎 R) (n : ℕ) :
     (m • x).coeff n = peval (wittNsmul p m n) ![x.coeff] := by
-  simp [HasSmul.smul, eval, Matrix.cons_fin_one]
+  simp [SMul.smul, eval, Matrix.cons_fin_one]
 #align witt_vector.nsmul_coeff WittVector.nsmul_coeff
 
 theorem zsmul_coeff (m : ℤ) (x : 𝕎 R) (n : ℕ) :
     (m • x).coeff n = peval (wittZsmul p m n) ![x.coeff] := by
-  simp [HasSmul.smul, eval, Matrix.cons_fin_one]
+  simp [SMul.smul, eval, Matrix.cons_fin_one]
 #align witt_vector.zsmul_coeff WittVector.zsmul_coeff
 
 theorem pow_coeff (m : ℕ) (x : 𝕎 R) (n : ℕ) : (x ^ m).coeff n = peval (wittPow p m n) ![x.coeff] :=

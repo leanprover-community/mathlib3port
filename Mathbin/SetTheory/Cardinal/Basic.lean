@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module set_theory.cardinal.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -163,6 +163,7 @@ theorem mk_congr (e : α ≃ β) : (#α) = (#β) :=
 #align cardinal.mk_congr Cardinal.mk_congr
 
 alias mk_congr ← _root_.equiv.cardinal_eq
+#align equiv.cardinal_eq Equiv.cardinal_eq
 
 /-- Lift a function between `Type*`s to a function between `cardinal`s. -/
 def map (f : Type u → Type v) (hf : ∀ α β, α ≃ β → f α ≃ f β) : Cardinal.{u} → Cardinal.{v} :=
@@ -400,6 +401,7 @@ theorem mk_le_one_iff_set_subsingleton {s : Set α} : (#s) ≤ 1 ↔ s.Subsingle
 #align cardinal.mk_le_one_iff_set_subsingleton Cardinal.mk_le_one_iff_set_subsingleton
 
 alias mk_le_one_iff_set_subsingleton ↔ _ _root_.set.subsingleton.cardinal_mk_le_one
+#align set.subsingleton.cardinal_mk_le_one Set.Subsingleton.cardinal_mk_le_one
 
 instance : Add Cardinal.{u} :=
   ⟨(map₂ Sum) fun α β γ δ => Equiv.sumCongr⟩
@@ -1334,6 +1336,7 @@ theorem lt_aleph_0_iff_set_finite {S : Set α} : (#S) < ℵ₀ ↔ S.Finite :=
 #align cardinal.lt_aleph_0_iff_set_finite Cardinal.lt_aleph_0_iff_set_finite
 
 alias lt_aleph_0_iff_set_finite ↔ _ _root_.set.finite.lt_aleph_0
+#align set.finite.lt_aleph_0 Set.Finite.lt_aleph_0
 
 @[simp]
 theorem lt_aleph_0_iff_subtype_finite {p : α → Prop} : (#{ x // p x }) < ℵ₀ ↔ { x | p x }.Finite :=
@@ -1355,6 +1358,7 @@ theorem le_aleph_0_iff_set_countable {s : Set α} : (#s) ≤ ℵ₀ ↔ s.Counta
 #align cardinal.le_aleph_0_iff_set_countable Cardinal.le_aleph_0_iff_set_countable
 
 alias le_aleph_0_iff_set_countable ↔ _ _root_.set.countable.le_aleph_0
+#align set.countable.le_aleph_0 Set.Countable.le_aleph_0
 
 @[simp]
 theorem le_aleph_0_iff_subtype_countable {p : α → Prop} :

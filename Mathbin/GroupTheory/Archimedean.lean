@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth, Patrick Massot
 
 ! This file was ported from Lean 3 source module group_theory.archimedean
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,7 +48,7 @@ theorem AddSubgroup.cyclic_of_min {H : AddSubgroup G} {a : G}
   refine' le_antisymm _ (H.closure_le.mpr <| by simp [a_in])
   intro g g_in
   obtain ⟨k, ⟨nonneg, lt⟩, _⟩ : ∃! k, 0 ≤ g - k • a ∧ g - k • a < a :=
-    exists_unique_zsmul_near_of_pos' a_pos g
+    existsUnique_zsmul_near_of_pos' a_pos g
   have h_zero : g - k • a = 0 := by
     by_contra h
     have h : a ≤ g - k • a := by

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module algebra.order.smul
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -136,12 +136,13 @@ theorem smul_pos_iff_of_pos (hc : 0 < c) : 0 < c • a ↔ 0 < a :=
 #align smul_pos_iff_of_pos smul_pos_iff_of_pos
 
 alias smul_pos_iff_of_pos ↔ _ smul_pos
+#align smul_pos smul_pos
 
-theorem monotone_smul_left (hc : 0 ≤ c) : Monotone (HasSmul.smul c : M → M) := fun a b h =>
+theorem monotone_smul_left (hc : 0 ≤ c) : Monotone (SMul.smul c : M → M) := fun a b h =>
   smul_le_smul_of_nonneg h hc
 #align monotone_smul_left monotone_smul_left
 
-theorem strict_mono_smul_left (hc : 0 < c) : StrictMono (HasSmul.smul c : M → M) := fun a b h =>
+theorem strict_mono_smul_left (hc : 0 < c) : StrictMono (SMul.smul c : M → M) := fun a b h =>
   smul_lt_smul_of_pos h hc
 #align strict_mono_smul_left strict_mono_smul_left
 
@@ -328,7 +329,7 @@ end OrderedSmul
 
 section NoZeroSMulDivisors
 
-variable [Zero R] [Zero M] [HasSmul R M] [NoZeroSMulDivisors R M] {a : R} {b : M}
+variable [Zero R] [Zero M] [SMul R M] [NoZeroSMulDivisors R M] {a : R} {b : M}
 
 private theorem smul_ne_zero_of_pos_of_ne_zero [Preorder R] (ha : 0 < a) (hb : b ≠ 0) : a • b ≠ 0 :=
   smul_ne_zero ha.ne' hb

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module analysis.convex.side
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -201,12 +201,14 @@ theorem w_same_side_comm {s : AffineSubspace R P} {x y : P} : s.WSameSide x y �
 #align affine_subspace.w_same_side_comm AffineSubspace.w_same_side_comm
 
 alias w_same_side_comm ↔ w_same_side.symm _
+#align affine_subspace.w_same_side.symm AffineSubspace.WSameSide.symm
 
 theorem s_same_side_comm {s : AffineSubspace R P} {x y : P} : s.SSameSide x y ↔ s.SSameSide y x :=
   by rw [s_same_side, s_same_side, w_same_side_comm, and_comm' (x ∉ s)]
 #align affine_subspace.s_same_side_comm AffineSubspace.s_same_side_comm
 
 alias s_same_side_comm ↔ s_same_side.symm _
+#align affine_subspace.s_same_side.symm AffineSubspace.SSameSide.symm
 
 theorem w_opp_side_comm {s : AffineSubspace R P} {x y : P} : s.WOppSide x y ↔ s.WOppSide y x :=
   by
@@ -220,12 +222,14 @@ theorem w_opp_side_comm {s : AffineSubspace R P} {x y : P} : s.WOppSide x y ↔ 
 #align affine_subspace.w_opp_side_comm AffineSubspace.w_opp_side_comm
 
 alias w_opp_side_comm ↔ w_opp_side.symm _
+#align affine_subspace.w_opp_side.symm AffineSubspace.WOppSide.symm
 
 theorem s_opp_side_comm {s : AffineSubspace R P} {x y : P} : s.SOppSide x y ↔ s.SOppSide y x := by
   rw [s_opp_side, s_opp_side, w_opp_side_comm, and_comm' (x ∉ s)]
 #align affine_subspace.s_opp_side_comm AffineSubspace.s_opp_side_comm
 
 alias s_opp_side_comm ↔ s_opp_side.symm _
+#align affine_subspace.s_opp_side.symm AffineSubspace.SOppSide.symm
 
 theorem not_w_same_side_bot (x y : P) : ¬(⊥ : AffineSubspace R P).WSameSide x y := by
   simp [w_same_side, not_mem_bot]

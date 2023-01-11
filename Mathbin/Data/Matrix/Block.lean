@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ellen Arlt, Blair Shi, Sean Leather, Mario Carneiro, Johan Commelin
 
 ! This file was ported from Lean 3 source module data.matrix.block
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -200,10 +200,9 @@ theorem to_square_block_def (M : Matrix m m α) (b : m → β) (k : β) :
   rfl
 #align matrix.to_square_block_def Matrix.to_square_block_def
 
-theorem from_blocks_smul [HasSmul R α] (x : R) (A : Matrix n l α) (B : Matrix n m α)
-    (C : Matrix o l α) (D : Matrix o m α) :
-    x • fromBlocks A B C D = fromBlocks (x • A) (x • B) (x • C) (x • D) := by ext (i j);
-  rcases i with ⟨⟩ <;> rcases j with ⟨⟩ <;> simp [from_blocks]
+theorem from_blocks_smul [SMul R α] (x : R) (A : Matrix n l α) (B : Matrix n m α) (C : Matrix o l α)
+    (D : Matrix o m α) : x • fromBlocks A B C D = fromBlocks (x • A) (x • B) (x • C) (x • D) := by
+  ext (i j); rcases i with ⟨⟩ <;> rcases j with ⟨⟩ <;> simp [from_blocks]
 #align matrix.from_blocks_smul Matrix.from_blocks_smul
 
 theorem from_blocks_neg [Neg R] (A : Matrix n l R) (B : Matrix n m R) (C : Matrix o l R)

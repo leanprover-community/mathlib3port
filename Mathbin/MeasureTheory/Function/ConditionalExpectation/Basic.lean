@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.function.conditional_expectation.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -134,7 +134,7 @@ theorem sub [AddGroup β] [TopologicalAddGroup β] {f g : α → β} (hfm : AeSt
   rw [hx1, hx2]
 #align measure_theory.ae_strongly_measurable'.sub MeasureTheory.AeStronglyMeasurable'.sub
 
-theorem constSmul [HasSmul 𝕜 β] [HasContinuousConstSmul 𝕜 β] (c : 𝕜)
+theorem constSmul [SMul 𝕜 β] [HasContinuousConstSmul 𝕜 β] (c : 𝕜)
     (hf : AeStronglyMeasurable' m f μ) : AeStronglyMeasurable' m (c • f) μ :=
   by
   rcases hf with ⟨f', h_f'_meas, hff'⟩

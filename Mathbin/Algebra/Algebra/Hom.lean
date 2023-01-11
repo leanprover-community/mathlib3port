@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.algebra.hom
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -382,8 +382,8 @@ theorem of_linear_map_id (map_one) (map_mul) :
   ext fun _ => rfl
 #align alg_hom.of_linear_map_id AlgHom.of_linear_map_id
 
-theorem map_smul_of_tower {R'} [HasSmul R' A] [HasSmul R' B] [LinearMap.CompatibleSmul A B R' R]
-    (r : R') (x : A) : φ (r • x) = r • φ x :=
+theorem map_smul_of_tower {R'} [SMul R' A] [SMul R' B] [LinearMap.CompatibleSmul A B R' R] (r : R')
+    (x : A) : φ (r • x) = r • φ x :=
   φ.toLinearMap.map_smul_of_tower r x
 #align alg_hom.map_smul_of_tower AlgHom.map_smul_of_tower
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module field_theory.ratfunc
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -410,27 +410,27 @@ theorem mul_inv_cancel : ∀ {p : Ratfunc K} (hp : p ≠ 0), p * p⁻¹ = 1
       _root_.mul_inv_cancel this
 #align ratfunc.mul_inv_cancel Ratfunc.mul_inv_cancel
 
-section HasSmul
+section SMul
 
 omit hdomain
 
 variable {R : Type _}
 
 /-- Scalar multiplication of rational functions. -/
-protected irreducible_def smul [HasSmul R (FractionRing K[X])] : R → Ratfunc K → Ratfunc K
+protected irreducible_def smul [SMul R (FractionRing K[X])] : R → Ratfunc K → Ratfunc K
   | r, ⟨p⟩ => ⟨r • p⟩
 #align ratfunc.smul Ratfunc.smul
 
 -- cannot reproduce
 @[nolint fails_quickly]
-instance [HasSmul R (FractionRing K[X])] : HasSmul R (Ratfunc K) :=
+instance [SMul R (FractionRing K[X])] : SMul R (Ratfunc K) :=
   ⟨Ratfunc.smul⟩
 
-theorem of_fraction_ring_smul [HasSmul R (FractionRing K[X])] (c : R) (p : FractionRing K[X]) :
-    of_fraction_ring (c • p) = c • of_fraction_ring p := by unfold HasSmul.smul Ratfunc.smul
+theorem of_fraction_ring_smul [SMul R (FractionRing K[X])] (c : R) (p : FractionRing K[X]) :
+    of_fraction_ring (c • p) = c • of_fraction_ring p := by unfold SMul.smul Ratfunc.smul
 #align ratfunc.of_fraction_ring_smul Ratfunc.of_fraction_ring_smul
 
-theorem to_fraction_ring_smul [HasSmul R (FractionRing K[X])] (c : R) (p : Ratfunc K) :
+theorem to_fraction_ring_smul [SMul R (FractionRing K[X])] (c : R) (p : Ratfunc K) :
     toFractionRing (c • p) = c • toFractionRing p :=
   by
   cases p
@@ -467,7 +467,7 @@ theorem mk_smul (c : R) (p q : K[X]) : Ratfunc.mk (c • p) q = c • Ratfunc.mk
 instance : IsScalarTower R K[X] (Ratfunc K) :=
   ⟨fun c p q => q.inductionOn' fun q r _ => by rw [← mk_smul, smul_assoc, mk_smul, mk_smul]⟩
 
-end HasSmul
+end SMul
 
 variable (K)
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module order.filter.ennreal
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,8 +69,8 @@ theorem limsup_const_mul_of_ne_top {u : α → ℝ≥0∞} {a : ℝ≥0∞} (ha_
   have hg_bij : Function.Bijective g :=
     function.bijective_iff_has_inverse.mpr
       ⟨fun x => a⁻¹ * x,
-        ⟨fun x => by simp [← mul_assoc, inv_mul_cancel ha_zero ha_top], fun x => by
-          simp [g, ← mul_assoc, mul_inv_cancel ha_zero ha_top]⟩⟩
+        ⟨fun x => by simp [← mul_assoc, Ennreal.inv_mul_cancel ha_zero ha_top], fun x => by
+          simp [g, ← mul_assoc, Ennreal.mul_inv_cancel ha_zero ha_top]⟩⟩
   have hg_mono : StrictMono g :=
     Monotone.strictMono_of_injective (fun _ _ _ => by rwa [mul_le_mul_left ha_zero ha_top]) hg_bij.1
   let g_iso := StrictMono.orderIsoOfSurjective g hg_mono hg_bij.2

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Jakob von Raumer
 
 ! This file was ported from Lean 3 source module category_theory.is_connected
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -353,7 +353,7 @@ theorem zigzag_is_connected [Nonempty J] (h : ∀ j₁ j₂ : J, Zigzag j₁ j�
 
 theorem exists_zigzag' [IsConnected J] (j₁ j₂ : J) :
     ∃ l, List.Chain Zag j₁ l ∧ List.getLast (j₁ :: l) (List.cons_ne_nil _ _) = j₂ :=
-  List.exists_chain_of_relation_refl_trans_gen (is_connected_zigzag _ _)
+  List.exists_chain_of_relationReflTransGen (is_connected_zigzag _ _)
 #align category_theory.exists_zigzag' CategoryTheory.exists_zigzag'
 
 /-- If any two objects in an nonempty category are linked by a sequence of (potentially reversed)
@@ -368,7 +368,7 @@ theorem is_connected_of_zigzag [Nonempty J]
   apply zigzag_is_connected
   intro j₁ j₂
   rcases h j₁ j₂ with ⟨l, hl₁, hl₂⟩
-  apply List.relation_refl_trans_gen_of_exists_chain l hl₁ hl₂
+  apply List.relationReflTransGen_of_exists_chain l hl₁ hl₂
 #align category_theory.is_connected_of_zigzag CategoryTheory.is_connected_of_zigzag
 
 /-- If `discrete α` is connected, then `α` is (type-)equivalent to `punit`. -/

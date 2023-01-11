@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module topology.locally_constant.algebra
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -264,17 +264,17 @@ instance [CommRing Y] : CommRing (LocallyConstant X Y) :=
 
 variable {R : Type _}
 
-instance [HasSmul R Y] : HasSmul R (LocallyConstant X Y)
+instance [SMul R Y] : SMul R (LocallyConstant X Y)
     where smul r f :=
     { toFun := r • f
       IsLocallyConstant := ((is_locally_constant f).comp ((· • ·) r) : _) }
 
 @[simp]
-theorem coe_smul [HasSmul R Y] (r : R) (f : LocallyConstant X Y) : ⇑(r • f) = r • f :=
+theorem coe_smul [SMul R Y] (r : R) (f : LocallyConstant X Y) : ⇑(r • f) = r • f :=
   rfl
 #align locally_constant.coe_smul LocallyConstant.coe_smul
 
-theorem smul_apply [HasSmul R Y] (r : R) (f : LocallyConstant X Y) (x : X) : (r • f) x = r • f x :=
+theorem smul_apply [SMul R Y] (r : R) (f : LocallyConstant X Y) (x : X) : (r • f) x = r • f x :=
   rfl
 #align locally_constant.smul_apply LocallyConstant.smul_apply
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.graded_monoid
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -148,12 +148,6 @@ namespace Gmonoid
 
 variable {A} [AddMonoid ι] [GhasMul A] [GhasOne A]
 
-/- warning: graded_monoid.gmonoid.gnpow_rec -> GradedMonoid.Gmonoid.gnpowRec is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u1}} {A : ι -> Type.{u2}} [_inst_1 : AddMonoid.{u1} ι] [_inst_2 : GradedMonoid.GhasMul.{u1, u2} ι A (AddZeroClass.toHasAdd.{u1} ι (AddMonoid.toAddZeroClass.{u1} ι _inst_1))] [_inst_3 : GradedMonoid.GhasOne.{u1, u2} ι A (AddZeroClass.toHasZero.{u1} ι (AddMonoid.toAddZeroClass.{u1} ι _inst_1))] (n : Nat) {i : ι}, (A i) -> (A (HasSmul.smul.{0, u1} Nat ι (AddMonoid.SMul.{u1} ι _inst_1) n i))
-but is expected to have type
-  PUnit.{max (succ (succ u1)) (succ (succ u2))}
-Case conversion may be inaccurate. Consider using '#align graded_monoid.gmonoid.gnpow_rec GradedMonoid.Gmonoid.gnpowRecₓ'. -/
 /-- A default implementation of power on a graded monoid, like `npow_rec`.
 `gmonoid.gnpow` should be used instead. -/
 def gnpowRec : ∀ (n : ℕ) {i}, A i → A (n • i)
@@ -275,7 +269,7 @@ variable [AddZeroClass ι] [GhasMul A]
 /-- `(•) : A 0 → A i → A i` is the value provided in `graded_monoid.ghas_mul.mul`, composed with
 an `eq.rec` to turn `A (0 + i)` into `A i`.
 -/
-instance GradeZero.hasSmul (i : ι) : HasSmul (A 0) (A i)
+instance GradeZero.hasSmul (i : ι) : SMul (A 0) (A i)
     where smul x y := (zero_add i).rec (GhasMul.mul x y)
 #align graded_monoid.grade_zero.has_smul GradedMonoid.GradeZero.hasSmul
 

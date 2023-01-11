@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.functor.fully_faithful
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -430,6 +430,7 @@ theorem Faithful.of_comp_iso {H : C ⥤ E} [ℋ : Faithful H] (h : F ⋙ G ≅ H
 -/
 
 alias faithful.of_comp_iso ← _root_.category_theory.iso.faithful_of_comp
+#align category_theory.iso.faithful_of_comp CategoryTheory.Iso.faithful_of_comp
 
 #print CategoryTheory.Faithful.of_comp_eq /-
 -- We could prove this from `faithful.of_comp_iso` using `eq_to_iso`,
@@ -440,6 +441,7 @@ theorem Faithful.of_comp_eq {H : C ⥤ E} [ℋ : Faithful H] (h : F ⋙ G = H) :
 -/
 
 alias faithful.of_comp_eq ← _root_.eq.faithful_of_comp
+#align eq.faithful_of_comp Eq.faithful_of_comp
 
 variable (F G)
 

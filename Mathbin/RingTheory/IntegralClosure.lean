@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module ring_theory.integral_closure
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -405,6 +405,7 @@ theorem RingHom.Finite.to_is_integral (h : f.Finite) : f.IsIntegral :=
 #align ring_hom.finite.to_is_integral RingHom.Finite.to_is_integral
 
 alias RingHom.Finite.to_is_integral ← RingHom.IsIntegral.of_finite
+#align ring_hom.is_integral.of_finite RingHom.IsIntegral.of_finite
 
 theorem RingHom.IsIntegral.to_finite (h : f.IsIntegral) (h' : f.FiniteType) : f.Finite :=
   by
@@ -417,6 +418,7 @@ theorem RingHom.IsIntegral.to_finite (h : f.IsIntegral) (h' : f.FiniteType) : f.
 #align ring_hom.is_integral.to_finite RingHom.IsIntegral.to_finite
 
 alias RingHom.IsIntegral.to_finite ← RingHom.Finite.of_is_integral_of_finite_type
+#align ring_hom.finite.of_is_integral_of_finite_type RingHom.Finite.of_is_integral_of_finite_type
 
 /-- finite = integral + finite type -/
 theorem RingHom.finite_iff_is_integral_and_finite_type : f.Finite ↔ f.IsIntegral ∧ f.FiniteType :=

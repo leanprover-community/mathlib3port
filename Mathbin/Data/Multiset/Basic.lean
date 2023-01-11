@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.multiset.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -503,6 +503,7 @@ theorem subset_of_le : s ≤ t → s ⊆ t :=
 #align multiset.subset_of_le Multiset.subset_of_le
 
 alias subset_of_le ← le.subset
+#align multiset.le.subset Multiset.Le.subset
 
 theorem mem_of_le (h : s ≤ t) : a ∈ s → a ∈ t :=
   mem_of_subset (subset_of_le h)
@@ -1797,16 +1798,16 @@ theorem zero_inter (s : Multiset α) : 0 ∩ s = 0 :=
 
 @[simp]
 theorem cons_inter_of_pos {a} (s : Multiset α) {t} : a ∈ t → (a ::ₘ s) ∩ t = a ::ₘ s ∩ t.erase a :=
-  (Quotient.induction_on₂ s t) fun l₁ l₂ h => congr_arg coe <| cons_bag_inter_of_pos _ h
+  (Quotient.induction_on₂ s t) fun l₁ l₂ h => congr_arg coe <| cons_bagInter_of_pos _ h
 #align multiset.cons_inter_of_pos Multiset.cons_inter_of_pos
 
 @[simp]
 theorem cons_inter_of_neg {a} (s : Multiset α) {t} : a ∉ t → (a ::ₘ s) ∩ t = s ∩ t :=
-  (Quotient.induction_on₂ s t) fun l₁ l₂ h => congr_arg coe <| cons_bag_inter_of_neg _ h
+  (Quotient.induction_on₂ s t) fun l₁ l₂ h => congr_arg coe <| cons_bagInter_of_neg _ h
 #align multiset.cons_inter_of_neg Multiset.cons_inter_of_neg
 
 theorem inter_le_left (s t : Multiset α) : s ∩ t ≤ s :=
-  (Quotient.induction_on₂ s t) fun l₁ l₂ => (bag_inter_sublist_left _ _).Subperm
+  (Quotient.induction_on₂ s t) fun l₁ l₂ => (bagInter_sublist_left _ _).Subperm
 #align multiset.inter_le_left Multiset.inter_le_left
 
 theorem inter_le_right (s : Multiset α) : ∀ t, s ∩ t ≤ t :=

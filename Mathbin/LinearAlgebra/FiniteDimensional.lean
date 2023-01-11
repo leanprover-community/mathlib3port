@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module linear_algebra.finite_dimensional
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1492,7 +1492,7 @@ theorem surjective_of_nonzero_of_finrank_eq_one {W A : Type _} [Semiring A] [Mod
 #align surjective_of_nonzero_of_finrank_eq_one surjective_of_nonzero_of_finrank_eq_one
 
 /-- Any `K`-algebra module that is 1-dimensional over `K` is simple. -/
-theorem is_simple_module_of_finrank_eq_one {A} [Semiring A] [Module A V] [HasSmul K A]
+theorem is_simple_module_of_finrank_eq_one {A} [Semiring A] [Module A V] [SMul K A]
     [IsScalarTower K A V] (h : finrank K V = 1) : IsSimpleOrder (Submodule A V) :=
   by
   haveI := nontrivial_of_finrank_eq_succ h
@@ -1521,6 +1521,8 @@ theorem Subalgebra.finite_dimensional_to_submodule {S : Subalgebra F E} :
 
 alias Subalgebra.finite_dimensional_to_submodule ↔
   FiniteDimensional.of_subalgebra_to_submodule FiniteDimensional.subalgebra_to_submodule
+#align finite_dimensional.of_subalgebra_to_submodule FiniteDimensional.of_subalgebra_to_submodule
+#align finite_dimensional.subalgebra_to_submodule FiniteDimensional.subalgebra_to_submodule
 
 instance FiniteDimensional.finite_dimensional_subalgebra [FiniteDimensional F E]
     (S : Subalgebra F E) : FiniteDimensional F S :=
@@ -1577,8 +1579,10 @@ theorem Subalgebra.bot_eq_top_iff_finrank_eq_one [Nontrivial E] :
 #align subalgebra.bot_eq_top_iff_finrank_eq_one Subalgebra.bot_eq_top_iff_finrank_eq_one
 
 alias Subalgebra.bot_eq_top_iff_dim_eq_one ↔ _ Subalgebra.bot_eq_top_of_dim_eq_one
+#align subalgebra.bot_eq_top_of_dim_eq_one Subalgebra.bot_eq_top_of_dim_eq_one
 
 alias Subalgebra.bot_eq_top_iff_finrank_eq_one ↔ _ Subalgebra.bot_eq_top_of_finrank_eq_one
+#align subalgebra.bot_eq_top_of_finrank_eq_one Subalgebra.bot_eq_top_of_finrank_eq_one
 
 attribute [simp] Subalgebra.bot_eq_top_of_finrank_eq_one Subalgebra.bot_eq_top_of_dim_eq_one
 

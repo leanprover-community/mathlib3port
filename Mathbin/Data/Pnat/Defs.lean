@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Neil Strickland
 
 ! This file was ported from Lean 3 source module data.pnat.defs
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -119,7 +119,7 @@ def toPNat' (n : ℕ) : ℕ+ :=
 lean 3 declaration is
   forall (n : Nat), Eq.{1} Nat ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) (Nat.toPNat' n)) (ite.{1} Nat (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) n) (Nat.decidableLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) n) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))
 but is expected to have type
-  forall (n : Nat), Eq.{1} Nat (Subtype.val.{1} Nat (fun (n : Nat) => LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) (Nat.toPNat' n)) (ite.{1} Nat (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) (Nat.decLt (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))
+  forall (n : Nat), Eq.{1} Nat (PNat.val (Nat.toPNat' n)) (ite.{1} Nat (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) (Nat.decLt (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))
 Case conversion may be inaccurate. Consider using '#align nat.to_pnat'_coe Nat.toPNat'_coeₓ'. -/
 @[simp]
 theorem toPNat'_coe : ∀ n : ℕ, (toPNat' n : ℕ) = ite (0 < n) n 1
@@ -315,7 +315,7 @@ def div (m k : ℕ+) : ℕ :=
 lean 3 declaration is
   forall (m : PNat) (k : PNat), Eq.{1} Nat ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) (PNat.mod m k)) (ite.{1} Nat (Eq.{1} Nat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) m) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) k)) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Nat.decidableEq (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) m) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) k)) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) k) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) m) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) k)))
 but is expected to have type
-  forall (m : PNat) (k : PNat), Eq.{1} Nat (Subtype.val.{1} Nat (fun (n : Nat) => LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) (PNat.mod m k)) (ite.{1} Nat (Eq.{1} Nat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) (Subtype.val.{1} Nat (fun (n : Nat) => LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) m) (Subtype.val.{1} Nat (fun (n : Nat) => LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) k)) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (instDecidableEqNat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) (Subtype.val.{1} Nat (fun (n : Nat) => LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) m) (Subtype.val.{1} Nat (fun (n : Nat) => LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) k)) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Subtype.val.{1} Nat (fun (n : Nat) => LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) k) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) (Subtype.val.{1} Nat (fun (n : Nat) => LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) m) (Subtype.val.{1} Nat (fun (n : Nat) => LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) k)))
+  forall (m : PNat) (k : PNat), Eq.{1} Nat (PNat.val (PNat.mod m k)) (ite.{1} Nat (Eq.{1} Nat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) (PNat.val m) (PNat.val k)) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (instDecidableEqNat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) (PNat.val m) (PNat.val k)) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (PNat.val k) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) (PNat.val m) (PNat.val k)))
 Case conversion may be inaccurate. Consider using '#align pnat.mod_coe PNat.mod_coeₓ'. -/
 theorem mod_coe (m k : ℕ+) :
     (mod m k : ℕ) = ite ((m : ℕ) % (k : ℕ) = 0) (k : ℕ) ((m : ℕ) % (k : ℕ)) :=
@@ -332,7 +332,7 @@ theorem mod_coe (m k : ℕ+) :
 lean 3 declaration is
   forall (m : PNat) (k : PNat), Eq.{1} Nat (PNat.div m k) (ite.{1} Nat (Eq.{1} Nat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) m) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) k)) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Nat.decidableEq (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) m) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) k)) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Nat.pred (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.hasDiv) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) m) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) k))) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.hasDiv) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) m) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) k)))
 but is expected to have type
-  forall (m : PNat) (k : PNat), Eq.{1} Nat (PNat.div m k) (ite.{1} Nat (Eq.{1} Nat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) (Subtype.val.{1} Nat (fun (n : Nat) => LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) m) (Subtype.val.{1} Nat (fun (n : Nat) => LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) k)) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (instDecidableEqNat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) (Subtype.val.{1} Nat (fun (n : Nat) => LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) m) (Subtype.val.{1} Nat (fun (n : Nat) => LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) k)) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Nat.pred (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) (Subtype.val.{1} Nat (fun (n : Nat) => LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) m) (Subtype.val.{1} Nat (fun (n : Nat) => LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) k))) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) (Subtype.val.{1} Nat (fun (n : Nat) => LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) m) (Subtype.val.{1} Nat (fun (n : Nat) => LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) k)))
+  forall (m : PNat) (k : PNat), Eq.{1} Nat (PNat.div m k) (ite.{1} Nat (Eq.{1} Nat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) (PNat.val m) (PNat.val k)) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (instDecidableEqNat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) (PNat.val m) (PNat.val k)) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Nat.pred (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) (PNat.val m) (PNat.val k))) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) (PNat.val m) (PNat.val k)))
 Case conversion may be inaccurate. Consider using '#align pnat.div_coe PNat.div_coeₓ'. -/
 theorem div_coe (m k : ℕ+) :
     (div m k : ℕ) = ite ((m : ℕ) % (k : ℕ) = 0) ((m : ℕ) / (k : ℕ)).pred ((m : ℕ) / (k : ℕ)) :=
@@ -356,16 +356,20 @@ end PNat
 
 section CanLift
 
-instance Nat.canLiftPnat : CanLift ℕ ℕ+ coe ((· < ·) 0) :=
+#print Nat.canLiftPNat /-
+instance Nat.canLiftPNat : CanLift ℕ ℕ+ coe ((· < ·) 0) :=
   ⟨fun n hn => ⟨Nat.toPNat' n, PNat.toPNat'_coe hn⟩⟩
-#align nat.can_lift_pnat Nat.canLiftPnat
+#align nat.can_lift_pnat Nat.canLiftPNat
+-/
 
-instance Int.canLiftPnat : CanLift ℤ ℕ+ coe ((· < ·) 0) :=
+#print Int.canLiftPNat /-
+instance Int.canLiftPNat : CanLift ℤ ℕ+ coe ((· < ·) 0) :=
   ⟨fun n hn =>
     ⟨Nat.toPNat' (Int.natAbs n), by
       rw [coe_coe, Nat.toPNat'_coe, if_pos (Int.natAbs_pos_of_ne_zero hn.ne'),
         Int.natAbs_of_nonneg hn.le]⟩⟩
-#align int.can_lift_pnat Int.canLiftPnat
+#align int.can_lift_pnat Int.canLiftPNat
+-/
 
 end CanLift
 

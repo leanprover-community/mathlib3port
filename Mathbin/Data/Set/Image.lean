@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura
 
 ! This file was ported from Lean 3 source module data.set.image
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1183,7 +1183,14 @@ theorem range_iff_surjective : range f = univ ↔ Surjective f :=
   eq_univ_iff_forall
 #align set.range_iff_surjective Set.range_iff_surjective
 
+/- warning: function.surjective.range_eq -> Function.Surjective.range_eq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {f : ι -> α}, (Function.Surjective.{u2, succ u1} ι α f) -> (Eq.{succ u1} (Set.{u1} α) (Set.range.{u1, u2} α ι f) (Set.univ.{u1} α))
+but is expected to have type
+  forall {α : Type.{u2}} {ι : Sort.{u1}} {f : ι -> α}, (Function.Surjective.{u1, succ u2} ι α f) -> (Eq.{succ u2} (Set.{u2} α) (Set.range.{u2, u1} α ι f) (Set.univ.{u2} α))
+Case conversion may be inaccurate. Consider using '#align function.surjective.range_eq Function.Surjective.range_eqₓ'. -/
 alias range_iff_surjective ↔ _ _root_.function.surjective.range_eq
+#align function.surjective.range_eq Function.Surjective.range_eq
 
 #print Set.image_univ /-
 @[simp]

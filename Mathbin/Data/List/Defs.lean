@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Parikshit Khanna, Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.list.defs
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -304,13 +304,17 @@ def find? (p : α → Prop) [DecidablePred p] : List α → Option α
   | a :: l => if p a then some a else find l
 #align list.find List.find?
 
-#print List.findM /-
+/- warning: list.mfind -> List.findM is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {m : Type.{u1} -> Type.{u2}} [_inst_1 : Monad.{u1, u2} m] [_inst_2 : Alternative.{u1, u2} m], (α -> (m PUnit.{succ u1})) -> (List.{u1} α) -> (m α)
+but is expected to have type
+  forall {α : Type.{u1}} {m : Type.{u1} -> Type.{u2}} [_inst_1 : Alternative.{u1, u2} m], (α -> (m PUnit.{succ u1})) -> (List.{u1} α) -> (m α)
+Case conversion may be inaccurate. Consider using '#align list.mfind List.findMₓ'. -/
 /-- `mfind tac l` returns the first element of `l` on which `tac` succeeds, and
 fails otherwise. -/
 def findM {α} {m : Type u → Type v} [Monad m] [Alternative m] (tac : α → m PUnit) : List α → m α :=
   List.firstM fun a => tac a $> a
 #align list.mfind List.findM
--/
 
 #print List.findM?' /-
 /-- `mbfind' p l` returns the first element `a` of `l` for which `p a` returns

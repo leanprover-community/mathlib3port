@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module logic.function.iterate
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -309,6 +309,7 @@ theorem iterate_add_eq_iterate (hf : Injective f) : (f^[m + n]) a = (f^[n]) a â†
 -/
 
 alias iterate_add_eq_iterate â†” iterate_cancel_of_add _
+#align function.iterate_cancel_of_add Function.iterate_cancel_of_add
 
 #print Function.iterate_cancel /-
 theorem iterate_cancel (hf : Injective f) (ha : (f^[m]) a = (f^[n]) a) : (f^[m - n]) a = a :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Pierre-Alexandre Bazin
 
 ! This file was ported from Lean 3 source module algebra.module.torsion
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -214,7 +214,7 @@ def IsTorsionBySet (s : Set R) :=
 
 /-- A `S`-torsion module is a module where every element is `a`-torsion for some `a` in `S`. -/
 @[reducible]
-def IsTorsion' (S : Type _) [HasSmul S M] :=
+def IsTorsion' (S : Type _) [SMul S M] :=
   ∀ ⦃x : M⦄, ∃ a : S, a • x = 0
 #align module.is_torsion' Module.IsTorsion'
 
@@ -531,7 +531,7 @@ variable {I : Ideal R} (hM : IsTorsionBySet R M I)
 include hM
 
 /-- can't be an instance because hM can't be inferred -/
-def IsTorsionBySet.hasSmul : HasSmul (R ⧸ I) M
+def IsTorsionBySet.hasSmul : SMul (R ⧸ I) M
     where smul b x :=
     (Quotient.liftOn' b (· • x)) fun b₁ b₂ h =>
       by
@@ -554,9 +554,8 @@ def IsTorsionBySet.module : Module (R ⧸ I) M :=
     (IsTorsionBySet.mk_smul hM)
 #align module.is_torsion_by_set.module Module.IsTorsionBySet.module
 
-instance IsTorsionBySet.is_scalar_tower {S : Type _} [HasSmul S R] [HasSmul S M]
-    [IsScalarTower S R M] [IsScalarTower S R R] :
-    @IsScalarTower S (R ⧸ I) M _ (IsTorsionBySet.module hM).toHasSmul _
+instance IsTorsionBySet.is_scalar_tower {S : Type _} [SMul S R] [SMul S M] [IsScalarTower S R M]
+    [IsScalarTower S R R] : @IsScalarTower S (R ⧸ I) M _ (IsTorsionBySet.module hM).toHasSmul _
     where smul_assoc b d x := (Quotient.inductionOn' d) fun c => (smul_assoc b c x : _)
 #align module.is_torsion_by_set.is_scalar_tower Module.IsTorsionBySet.is_scalar_tower
 
@@ -582,7 +581,7 @@ theorem torsionBySet.mk_smul (I : Ideal R) (b : R) (x : torsionBySet R M I) :
   rfl
 #align submodule.torsion_by_set.mk_smul Submodule.torsionBySet.mk_smul
 
-instance (I : Ideal R) {S : Type _} [HasSmul S R] [HasSmul S M] [IsScalarTower S R M]
+instance (I : Ideal R) {S : Type _} [SMul S R] [SMul S M] [IsScalarTower S R M]
     [IsScalarTower S R R] : IsScalarTower S (R ⧸ I) (torsionBySet R M I) :=
   inferInstance
 
@@ -597,8 +596,8 @@ theorem torsionBy.mk_smul (a b : R) (x : torsionBy R M a) :
   rfl
 #align submodule.torsion_by.mk_smul Submodule.torsionBy.mk_smul
 
-instance (a : R) {S : Type _} [HasSmul S R] [HasSmul S M] [IsScalarTower S R M]
-    [IsScalarTower S R R] : IsScalarTower S (R ⧸ R ∙ a) (torsionBy R M a) :=
+instance (a : R) {S : Type _} [SMul S R] [SMul S M] [IsScalarTower S R M] [IsScalarTower S R R] :
+    IsScalarTower S (R ⧸ R ∙ a) (torsionBy R M a) :=
   inferInstance
 
 end Submodule
@@ -626,7 +625,7 @@ theorem mem_torsion_iff (x : M) : x ∈ torsion R M ↔ ∃ a : R⁰, a • x = 
 #align submodule.mem_torsion_iff Submodule.mem_torsion_iff
 
 @[simps]
-instance : HasSmul S (torsion' R M S) :=
+instance : SMul S (torsion' R M S) :=
   ⟨fun s x =>
     ⟨s • x, by
       obtain ⟨x, a, h⟩ := x
@@ -812,7 +811,7 @@ theorem exists_is_torsion_by {p : R} (hM : IsTorsion' M <| Submonoid.powers p) (
     Set.range_subset_iff]
   intro i; change _ • _ = _
   have : p_order hM (s i) ≤ p_order hM (s <| Option.get hoj) :=
-    List.le_of_mem_argmax (List.mem_fin_range i) (Option.get_mem hoj)
+    List.le_of_mem_argmax (List.mem_finRange i) (Option.get_mem hoj)
   rw [← Nat.sub_add_cancel this, pow_add, mul_smul, pow_p_order_smul, smul_zero]
 #align submodule.exists_is_torsion_by Submodule.exists_is_torsion_by
 

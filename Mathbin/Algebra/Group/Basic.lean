@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Simon Hudon, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.group.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1430,9 +1430,23 @@ theorem div_eq_one : a / b = 1 ↔ a = b :=
   ⟨eq_of_div_eq_one, fun h => by rw [h, div_self']⟩
 #align div_eq_one div_eq_one
 
+/- warning: div_eq_one_of_eq -> div_eq_one_of_eq is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {a : G} {b : G}, (Eq.{succ u1} G a b) -> (Eq.{succ u1} G (HDiv.hDiv.{u1, u1, u1} G G G (instHDiv.{u1} G (DivInvMonoid.toHasDiv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) a b) (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))))))
+but is expected to have type
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {a : G} {b : G}, (Eq.{succ u1} G a b) -> (Eq.{succ u1} G (HDiv.hDiv.{u1, u1, u1} G G G (instHDiv.{u1} G (DivInvMonoid.toDiv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) a b) (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_1)))))))
+Case conversion may be inaccurate. Consider using '#align div_eq_one_of_eq div_eq_one_of_eqₓ'. -/
 alias div_eq_one ↔ _ div_eq_one_of_eq
+#align div_eq_one_of_eq div_eq_one_of_eq
 
+/- warning: sub_eq_zero_of_eq -> sub_eq_zero_of_eq is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} [_inst_1 : AddGroup.{u1} G] {a : G} {b : G}, (Eq.{succ u1} G a b) -> (Eq.{succ u1} G (HSub.hSub.{u1, u1, u1} G G G (instHSub.{u1} G (SubNegMonoid.toHasSub.{u1} G (AddGroup.toSubNegMonoid.{u1} G _inst_1))) a b) (OfNat.ofNat.{u1} G 0 (OfNat.mk.{u1} G 0 (Zero.zero.{u1} G (AddZeroClass.toHasZero.{u1} G (AddMonoid.toAddZeroClass.{u1} G (SubNegMonoid.toAddMonoid.{u1} G (AddGroup.toSubNegMonoid.{u1} G _inst_1))))))))
+but is expected to have type
+  forall {G : Type.{u1}} [_inst_1 : AddGroup.{u1} G] {a : G} {b : G}, (Eq.{succ u1} G a b) -> (Eq.{succ u1} G (HSub.hSub.{u1, u1, u1} G G G (instHSub.{u1} G (SubNegMonoid.toSub.{u1} G (AddGroup.toSubNegMonoid.{u1} G _inst_1))) a b) (OfNat.ofNat.{u1} G 0 (Zero.toOfNat0.{u1} G (NegZeroClass.toZero.{u1} G (SubNegZeroMonoid.toNegZeroClass.{u1} G (SubtractionMonoid.toSubNegZeroMonoid.{u1} G (AddGroup.toSubtractionMonoid.{u1} G _inst_1)))))))
+Case conversion may be inaccurate. Consider using '#align sub_eq_zero_of_eq sub_eq_zero_of_eqₓ'. -/
 alias sub_eq_zero ↔ _ sub_eq_zero_of_eq
+#align sub_eq_zero_of_eq sub_eq_zero_of_eq
 
 /- warning: div_ne_one -> div_ne_one is a dubious translation:
 lean 3 declaration is

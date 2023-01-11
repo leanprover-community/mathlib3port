@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module analysis.convex.extreme
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,9 +52,9 @@ open Set
 
 variable (𝕜 : Type _) {E : Type _}
 
-section HasSmul
+section SMul
 
-variable [OrderedSemiring 𝕜] [AddCommMonoid E] [HasSmul 𝕜 E]
+variable [OrderedSemiring 𝕜] [AddCommMonoid E] [SMul 𝕜 E]
 
 /-- A set `B` is an extreme subset of `A` if `B ⊆ A` and all points of `B` only belong to open
 segments whose ends are in `B`. -/
@@ -190,7 +190,7 @@ theorem IsExtreme.extreme_points_eq (hAB : IsExtreme 𝕜 A B) :
     (inter_extreme_points_subset_extreme_points_of_subset hAB.1)
 #align is_extreme.extreme_points_eq IsExtreme.extreme_points_eq
 
-end HasSmul
+end SMul
 
 section OrderedSemiring
 

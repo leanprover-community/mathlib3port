@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Sébastien Gouëzel, Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1148,6 +1148,7 @@ theorem norm_add_sq {x y : E} : ‖x + y‖ ^ 2 = ‖x‖ ^ 2 + 2 * re ⟪x, y�
 #align norm_add_sq norm_add_sq
 
 alias norm_add_sq ← norm_add_pow_two
+#align norm_add_pow_two norm_add_pow_two
 
 /-- Expand the square -/
 theorem norm_add_sq_real {x y : F} : ‖x + y‖ ^ 2 = ‖x‖ ^ 2 + 2 * ⟪x, y⟫_ℝ + ‖y‖ ^ 2 :=
@@ -1157,6 +1158,7 @@ theorem norm_add_sq_real {x y : F} : ‖x + y‖ ^ 2 = ‖x‖ ^ 2 + 2 * ⟪x, y
 #align norm_add_sq_real norm_add_sq_real
 
 alias norm_add_sq_real ← norm_add_pow_two_real
+#align norm_add_pow_two_real norm_add_pow_two_real
 
 /-- Expand the square -/
 theorem norm_add_mul_self {x y : E} : ‖x + y‖ * ‖x + y‖ = ‖x‖ * ‖x‖ + 2 * re ⟪x, y⟫ + ‖y‖ * ‖y‖ :=
@@ -1189,6 +1191,7 @@ theorem norm_sub_sq {x y : E} : ‖x - y‖ ^ 2 = ‖x‖ ^ 2 - 2 * re ⟪x, y�
 #align norm_sub_sq norm_sub_sq
 
 alias norm_sub_sq ← norm_sub_pow_two
+#align norm_sub_pow_two norm_sub_pow_two
 
 /-- Expand the square -/
 theorem norm_sub_sq_real {x y : F} : ‖x - y‖ ^ 2 = ‖x‖ ^ 2 - 2 * ⟪x, y⟫_ℝ + ‖y‖ ^ 2 :=
@@ -1196,6 +1199,7 @@ theorem norm_sub_sq_real {x y : F} : ‖x - y‖ ^ 2 = ‖x‖ ^ 2 - 2 * ⟪x, y
 #align norm_sub_sq_real norm_sub_sq_real
 
 alias norm_sub_sq_real ← norm_sub_pow_two_real
+#align norm_sub_pow_two_real norm_sub_pow_two_real
 
 /-- Expand the square -/
 theorem norm_sub_mul_self {x y : E} : ‖x - y‖ * ‖x - y‖ = ‖x‖ * ‖x‖ - 2 * re ⟪x, y⟫ + ‖y‖ * ‖y‖ :=

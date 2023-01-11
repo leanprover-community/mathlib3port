@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module measure_theory.integral.lebesgue
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -587,15 +587,15 @@ theorem map_mul [Mul β] [Mul γ] {g : β → γ} (hg : ∀ x y, g (x * y) = g x
 
 variable {K : Type _}
 
-instance [HasSmul K β] : HasSmul K (α →ₛ β) :=
+instance [SMul K β] : SMul K (α →ₛ β) :=
   ⟨fun k f => f.map ((· • ·) k)⟩
 
 @[simp]
-theorem coe_smul [HasSmul K β] (c : K) (f : α →ₛ β) : ⇑(c • f) = c • f :=
+theorem coe_smul [SMul K β] (c : K) (f : α →ₛ β) : ⇑(c • f) = c • f :=
   rfl
 #align measure_theory.simple_func.coe_smul MeasureTheory.SimpleFunc.coe_smul
 
-theorem smul_apply [HasSmul K β] (k : K) (f : α →ₛ β) (a : α) : (k • f) a = k • f a :=
+theorem smul_apply [SMul K β] (k : K) (f : α →ₛ β) (a : α) : (k • f) a = k • f a :=
   rfl
 #align measure_theory.simple_func.smul_apply MeasureTheory.SimpleFunc.smul_apply
 
@@ -668,7 +668,7 @@ instance [CommGroup β] : CommGroup (α →ₛ β) :=
 instance [Semiring K] [AddCommMonoid β] [Module K β] : Module K (α →ₛ β) :=
   Function.Injective.module K ⟨fun f => show α → β from f, coe_zero, coe_add⟩ coe_injective coe_smul
 
-theorem smul_eq_map [HasSmul K β] (k : K) (f : α →ₛ β) : k • f = f.map ((· • ·) k) :=
+theorem smul_eq_map [SMul K β] (k : K) (f : α →ₛ β) : k • f = f.map ((· • ·) k) :=
   rfl
 #align measure_theory.simple_func.smul_eq_map MeasureTheory.SimpleFunc.smul_eq_map
 

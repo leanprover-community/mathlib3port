@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module algebra.group_with_zero.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -193,7 +193,14 @@ theorem subsingleton_iff_zero_eq_one : (0 : M₀) = 1 ↔ Subsingleton M₀ :=
   ⟨fun h => @Unique.subsingleton _ (uniqueOfZeroEqOne h), fun h => @Subsingleton.elim _ h _ _⟩
 #align subsingleton_iff_zero_eq_one subsingleton_iff_zero_eq_one
 
+/- warning: subsingleton_of_zero_eq_one -> subsingleton_of_zero_eq_one is a dubious translation:
+lean 3 declaration is
+  forall {M₀ : Type.{u1}} [_inst_1 : MulZeroOneClass.{u1} M₀], (Eq.{succ u1} M₀ (OfNat.ofNat.{u1} M₀ 0 (OfNat.mk.{u1} M₀ 0 (Zero.zero.{u1} M₀ (MulZeroClass.toHasZero.{u1} M₀ (MulZeroOneClass.toMulZeroClass.{u1} M₀ _inst_1))))) (OfNat.ofNat.{u1} M₀ 1 (OfNat.mk.{u1} M₀ 1 (One.one.{u1} M₀ (MulOneClass.toHasOne.{u1} M₀ (MulZeroOneClass.toMulOneClass.{u1} M₀ _inst_1)))))) -> (Subsingleton.{succ u1} M₀)
+but is expected to have type
+  forall {M₀ : Type.{u1}} [_inst_1 : MulZeroOneClass.{u1} M₀], (Eq.{succ u1} M₀ (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroOneClass.toZero.{u1} M₀ _inst_1))) (OfNat.ofNat.{u1} M₀ 1 (One.toOfNat1.{u1} M₀ (MulOneClass.toOne.{u1} M₀ (MulZeroOneClass.toMulOneClass.{u1} M₀ _inst_1))))) -> (Subsingleton.{succ u1} M₀)
+Case conversion may be inaccurate. Consider using '#align subsingleton_of_zero_eq_one subsingleton_of_zero_eq_oneₓ'. -/
 alias subsingleton_iff_zero_eq_one ↔ subsingleton_of_zero_eq_one _
+#align subsingleton_of_zero_eq_one subsingleton_of_zero_eq_one
 
 /- warning: eq_of_zero_eq_one -> eq_of_zero_eq_one is a dubious translation:
 lean 3 declaration is

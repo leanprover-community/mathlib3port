@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.algebra.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -115,7 +115,7 @@ set_option extends_priority 200
 See the implementation notes in this file for discussion of the details of this definition.
 -/
 @[nolint has_nonempty_instance]
-class Algebra (R : Type u) (A : Type v) [CommSemiring R] [Semiring A] extends HasSmul R A,
+class Algebra (R : Type u) (A : Type v) [CommSemiring R] [Semiring A] extends SMul R A,
   R →+* A where
   commutes' : ∀ r x, to_fun r * x = x * to_fun r
   smul_def' : ∀ r x, r • x = to_fun r * x
@@ -718,7 +718,7 @@ end LinearMap
 
 @[simp]
 theorem Rat.smul_one_eq_coe {A : Type _} [DivisionRing A] [Algebra ℚ A] (m : ℚ) :
-    @HasSmul.smul Algebra.toHasSmul m (1 : A) = ↑m := by rw [Algebra.smul_def, mul_one, eq_ratCast]
+    @SMul.smul Algebra.toHasSmul m (1 : A) = ↑m := by rw [Algebra.smul_def, mul_one, eq_ratCast]
 #align rat.smul_one_eq_coe Rat.smul_one_eq_coe
 
 section Nat
@@ -984,7 +984,7 @@ section Module
 
 open Module
 
-variable (R S M N : Type _) [Semiring R] [Semiring S] [HasSmul R S]
+variable (R S M N : Type _) [Semiring R] [Semiring S] [SMul R S]
 
 variable [AddCommMonoid M] [Module R M] [Module S M] [IsScalarTower R S M]
 

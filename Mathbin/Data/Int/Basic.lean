@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.int.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -220,7 +220,7 @@ theorem coe_nat_inj' {m n : ℕ} : (↑m : ℤ) = ↑n ↔ m = n :=
 lean 3 declaration is
   StrictMono.{0, 0} Nat Int (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.linearOrder)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))))
 but is expected to have type
-  StrictMono.{0, 0} Nat Int (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.instLinearOrderInt)) (fun (x._@.Mathlib.Data.Int.Basic._hyg.869 : Nat) => Nat.cast.{0} Int Int.instNatCastInt x._@.Mathlib.Data.Int.Basic._hyg.869)
+  StrictMono.{0, 0} Nat Int (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.instLinearOrderInt)) (fun (x._@.Mathlib.Data.Int.Basic._hyg.872 : Nat) => Nat.cast.{0} Int Int.instNatCastInt x._@.Mathlib.Data.Int.Basic._hyg.872)
 Case conversion may be inaccurate. Consider using '#align int.coe_nat_strict_mono Int.coe_nat_strictMonoₓ'. -/
 theorem coe_nat_strictMono : StrictMono (coe : ℕ → ℤ) := fun _ _ => Int.ofNat_lt.2
 #align int.coe_nat_strict_mono Int.coe_nat_strictMono

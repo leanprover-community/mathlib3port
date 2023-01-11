@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Martin Dvorak, Kyle Miller, Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.cross_product
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -78,6 +78,7 @@ theorem cross_anticomm (v w : Fin 3 → R) : -(v ×₃ w) = w ×₃ v := by simp
 #align cross_anticomm cross_anticomm
 
 alias cross_anticomm ← neg_cross
+#align neg_cross neg_cross
 
 @[simp]
 theorem cross_anticomm' (v w : Fin 3 → R) : v ×₃ w + w ×₃ v = 0 := by

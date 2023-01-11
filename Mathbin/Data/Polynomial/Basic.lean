@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module data.polynomial.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -310,7 +310,7 @@ instance {S₁ S₂} [Monoid S₁] [Monoid S₂] [DistribMulAction S₁ R] [Dist
     rintro _ _ ⟨⟩
     simp_rw [← of_finsupp_smul, smul_comm]⟩
 
-instance {S₁ S₂} [HasSmul S₁ S₂] [Monoid S₁] [Monoid S₂] [DistribMulAction S₁ R]
+instance {S₁ S₂} [SMul S₁ S₂] [Monoid S₁] [Monoid S₂] [DistribMulAction S₁ R]
     [DistribMulAction S₂ R] [IsScalarTower S₁ S₂ R] : IsScalarTower S₁ S₂ R[X] :=
   ⟨by
     rintro _ _ ⟨⟩

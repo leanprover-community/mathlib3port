@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module number_theory.arithmetic_function
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -234,13 +234,13 @@ instance [AddGroup R] : AddGroup (ArithmeticFunction R) :=
 instance [AddCommGroup R] : AddCommGroup (ArithmeticFunction R) :=
   { ArithmeticFunction.addCommMonoid, ArithmeticFunction.addGroup with }
 
-section HasSmul
+section SMul
 
-variable {M : Type _} [Zero R] [AddCommMonoid M] [HasSmul R M]
+variable {M : Type _} [Zero R] [AddCommMonoid M] [SMul R M]
 
 /-- The Dirichlet convolution of two arithmetic functions `f` and `g` is another arithmetic function
   such that `(f * g) n` is the sum of `f x * g y` over all `(x,y)` such that `x * y = n`. -/
-instance : HasSmul (ArithmeticFunction R) (ArithmeticFunction M) :=
+instance : SMul (ArithmeticFunction R) (ArithmeticFunction M) :=
   ⟨fun f g => ⟨fun n => ∑ x in divisorsAntidiagonal n, f x.fst • g x.snd, by simp⟩⟩
 
 @[simp]
@@ -249,7 +249,7 @@ theorem smul_apply {f : ArithmeticFunction R} {g : ArithmeticFunction M} {n : �
   rfl
 #align nat.arithmetic_function.smul_apply Nat.ArithmeticFunction.smul_apply
 
-end HasSmul
+end SMul
 
 /-- The Dirichlet convolution of two arithmetic functions `f` and `g` is another arithmetic function
   such that `(f * g) n` is the sum of `f x * g y` over all `(x,y)` such that `x * y = n`. -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.separation
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2205,6 +2205,7 @@ theorem is_preirreducible_iff_subsingleton [T2Space α] {S : Set α} :
 #align is_preirreducible_iff_subsingleton is_preirreducible_iff_subsingleton
 
 alias is_preirreducible_iff_subsingleton ↔ IsPreirreducible.subsingleton _
+#align is_preirreducible.subsingleton IsPreirreducible.subsingleton
 
 attribute [protected] IsPreirreducible.subsingleton
 
@@ -3237,6 +3238,7 @@ theorem specializes_comm {a b : α} : a ⤳ b ↔ b ⤳ a := by
 #align specializes_comm specializes_comm
 
 alias specializes_comm ↔ Specializes.symm _
+#align specializes.symm Specializes.symm
 
 theorem specializes_iff_inseparable {a b : α} : a ⤳ b ↔ Inseparable a b :=
   ⟨fun h => h.antisymm h.symm, le_of_eq⟩

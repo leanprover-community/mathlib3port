@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jean Lo
 
 ! This file was ported from Lean 3 source module dynamics.flow
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -124,6 +124,7 @@ protected theorem continuous {β : Type _} [TopologicalSpace β] {t : β → τ}
 #align flow.continuous Flow.continuous
 
 alias Flow.continuous ← _root_.continuous.flow
+#align continuous.flow Continuous.flow
 
 theorem map_add (t₁ t₂ : τ) (x : α) : ϕ (t₁ + t₂) x = ϕ t₁ (ϕ t₂ x) :=
   ϕ.map_add' _ _ _

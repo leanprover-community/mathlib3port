@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yury G. Kudryashov, Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.monoid_algebra.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -307,8 +307,8 @@ instance [Monoid R] [Semiring k] [DistribMulAction R k] [FaithfulSMul R k] [None
     FaithfulSMul R (MonoidAlgebra k G) :=
   Finsupp.has_faithful_smul
 
-instance [Monoid R] [Monoid S] [Semiring k] [DistribMulAction R k] [DistribMulAction S k]
-    [HasSmul R S] [IsScalarTower R S k] : IsScalarTower R S (MonoidAlgebra k G) :=
+instance [Monoid R] [Monoid S] [Semiring k] [DistribMulAction R k] [DistribMulAction S k] [SMul R S]
+    [IsScalarTower R S k] : IsScalarTower R S (MonoidAlgebra k G) :=
   Finsupp.is_scalar_tower G k
 
 instance [Monoid R] [Monoid S] [Semiring k] [DistribMulAction R k] [DistribMulAction S k]
@@ -1258,8 +1258,8 @@ instance [Monoid R] [Semiring k] [DistribMulAction R k] [FaithfulSMul R k] [None
 instance [Semiring R] [Semiring k] [Module R k] : Module R (AddMonoidAlgebra k G) :=
   Finsupp.module G k
 
-instance [Monoid R] [Monoid S] [Semiring k] [DistribMulAction R k] [DistribMulAction S k]
-    [HasSmul R S] [IsScalarTower R S k] : IsScalarTower R S (AddMonoidAlgebra k G) :=
+instance [Monoid R] [Monoid S] [Semiring k] [DistribMulAction R k] [DistribMulAction S k] [SMul R S]
+    [IsScalarTower R S k] : IsScalarTower R S (AddMonoidAlgebra k G) :=
   Finsupp.is_scalar_tower G k
 
 instance [Monoid R] [Monoid S] [Semiring k] [DistribMulAction R k] [DistribMulAction S k]

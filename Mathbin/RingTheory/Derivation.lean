@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri, Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.derivation
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -157,9 +157,8 @@ theorem map_sum {ι : Type _} (s : Finset ι) (f : ι → A) : D (∑ i in s, f 
 #align derivation.map_sum Derivation.map_sum
 
 @[simp]
-theorem map_smul_of_tower {S : Type _} [HasSmul S A] [HasSmul S M]
-    [LinearMap.CompatibleSmul A M S R] (D : Derivation R A M) (r : S) (a : A) :
-    D (r • a) = r • D a :=
+theorem map_smul_of_tower {S : Type _} [SMul S A] [SMul S M] [LinearMap.CompatibleSmul A M S R]
+    (D : Derivation R A M) (r : S) (a : A) : D (r • a) = r • D a :=
   D.toLinearMap.map_smul_of_tower r a
 #align derivation.map_smul_of_tower Derivation.map_smul_of_tower
 
@@ -250,7 +249,7 @@ section Scalar
 
 variable {S : Type _} [Monoid S] [DistribMulAction S M] [SMulCommClass R S M] [SMulCommClass S A M]
 
-instance (priority := 100) : HasSmul S (Derivation R A M) :=
+instance (priority := 100) : SMul S (Derivation R A M) :=
   ⟨fun r D =>
     { toLinearMap := r • D
       map_one_eq_zero' := by rw [LinearMap.smul_apply, coe_fn_coe, D.map_one_eq_zero, smul_zero]

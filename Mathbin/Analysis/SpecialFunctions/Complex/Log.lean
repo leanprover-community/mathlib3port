@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Benjamin Davidson
 
 ! This file was ported from Lean 3 source module analysis.special_functions.complex.log
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -143,7 +143,7 @@ theorem exp_eq_one_iff {x : ℂ} : exp x = 1 ↔ ∃ n : ℤ, x = n * (2 * π * 
   by
   constructor
   · intro h
-    rcases exists_unique_add_zsmul_mem_Ioc Real.two_pi_pos x.im (-π) with ⟨n, hn, -⟩
+    rcases existsUnique_add_zsmul_mem_Ioc Real.two_pi_pos x.im (-π) with ⟨n, hn, -⟩
     use -n
     rw [Int.cast_neg, neg_mul, eq_neg_iff_add_eq_zero]
     have : (x + n * (2 * π * I)).im ∈ Ioc (-π) π := by simpa [two_mul, mul_add] using hn
@@ -177,6 +177,7 @@ theorem countable_preimage_exp {s : Set ℂ} : (exp ⁻¹' s).Countable ↔ s.Co
 #align complex.countable_preimage_exp Complex.countable_preimage_exp
 
 alias countable_preimage_exp ↔ _ _root_.set.countable.preimage_cexp
+#align set.countable.preimage_cexp Set.Countable.preimage_cexp
 
 theorem tendsto_log_nhds_within_im_neg_of_re_neg_of_im_zero {z : ℂ} (hre : z.re < 0)
     (him : z.im = 0) : Tendsto log (𝓝[{ z : ℂ | z.im < 0 }] z) (𝓝 <| Real.log (abs z) - π * I) :=

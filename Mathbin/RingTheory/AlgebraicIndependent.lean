@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module ring_theory.algebraic_independent
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -207,6 +207,7 @@ theorem algebraic_independent_subtype_range {ι} {f : ι → A} (hf : Injective 
 #align algebraic_independent_subtype_range algebraic_independent_subtype_range
 
 alias algebraic_independent_subtype_range ↔ AlgebraicIndependent.of_subtype_range _
+#align algebraic_independent.of_subtype_range AlgebraicIndependent.of_subtype_range
 
 theorem algebraic_independent_image {ι} {s : Set ι} {f : ι → A} (hf : Set.InjOn f s) :
     (AlgebraicIndependent R fun x : s => f x) ↔ AlgebraicIndependent R fun x : f '' s => (x : A) :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Mario Carneiro, Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module order.rel_classes
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -794,19 +794,26 @@ theorem superset_antisymm [IsAntisymm α (· ⊆ ·)] (h : a ⊆ b) (h' : b ⊆ 
 -/
 
 alias subset_of_eq_of_subset ← Eq.trans_subset
+#align eq.trans_subset Eq.trans_subset
 
 alias subset_of_subset_of_eq ← HasSubset.Subset.trans_eq
+#align has_subset.subset.trans_eq HasSubset.Subset.trans_eq
 
 alias subset_of_eq ← Eq.subset'
+#align eq.subset' Eq.subset'
 
 --TODO: Fix it and kill `eq.subset`
 alias superset_of_eq ← Eq.superset
+#align eq.superset Eq.superset
 
 alias subset_trans ← HasSubset.Subset.trans
+#align has_subset.subset.trans HasSubset.Subset.trans
 
 alias subset_antisymm ← HasSubset.Subset.antisymm
+#align has_subset.subset.antisymm HasSubset.Subset.antisymm
 
 alias superset_antisymm ← HasSubset.Subset.antisymm'
+#align has_subset.subset.antisymm' HasSubset.Subset.antisymm'
 
 #print subset_antisymm_iff /-
 theorem subset_antisymm_iff [IsRefl α (· ⊆ ·)] [IsAntisymm α (· ⊆ ·)] : a = b ↔ a ⊆ b ∧ b ⊆ a :=
@@ -870,18 +877,25 @@ theorem ssubset_asymm [IsAsymm α (· ⊂ ·)] {a b : α} (h : a ⊂ b) : ¬b �
 -/
 
 alias ssubset_of_eq_of_ssubset ← Eq.trans_ssubset
+#align eq.trans_ssubset Eq.trans_ssubset
 
 alias ssubset_of_ssubset_of_eq ← HasSSubset.SSubset.trans_eq
+#align has_ssubset.ssubset.trans_eq HasSSubset.SSubset.trans_eq
 
 alias ssubset_irrfl ← HasSSubset.SSubset.false
+#align has_ssubset.ssubset.false HasSSubset.SSubset.false
 
 alias ne_of_ssubset ← HasSSubset.SSubset.ne
+#align has_ssubset.ssubset.ne HasSSubset.SSubset.ne
 
 alias ne_of_ssuperset ← HasSSubset.SSubset.ne'
+#align has_ssubset.ssubset.ne' HasSSubset.SSubset.ne'
 
 alias ssubset_trans ← HasSSubset.SSubset.trans
+#align has_ssubset.ssubset.trans HasSSubset.SSubset.trans
 
 alias ssubset_asymm ← HasSSubset.SSubset.asymm
+#align has_ssubset.ssubset.asymm HasSSubset.SSubset.asymm
 
 end Ssubset
 
@@ -919,12 +933,16 @@ theorem ssubset_of_subset_not_subset (h₁ : a ⊆ b) (h₂ : ¬b ⊆ a) : a ⊂
 -/
 
 alias subset_of_ssubset ← HasSSubset.SSubset.subset
+#align has_ssubset.ssubset.subset HasSSubset.SSubset.subset
 
 alias not_subset_of_ssubset ← HasSSubset.SSubset.not_subset
+#align has_ssubset.ssubset.not_subset HasSSubset.SSubset.not_subset
 
 alias not_ssubset_of_subset ← HasSubset.Subset.not_ssubset
+#align has_subset.subset.not_ssubset HasSubset.Subset.not_ssubset
 
 alias ssubset_of_subset_not_subset ← HasSubset.Subset.ssubset_of_not_subset
+#align has_subset.subset.ssubset_of_not_subset HasSubset.Subset.ssubset_of_not_subset
 
 #print ssubset_of_subset_of_ssubset /-
 theorem ssubset_of_subset_of_ssubset [IsTrans α (· ⊆ ·)] (h₁ : a ⊆ b) (h₂ : b ⊂ c) : a ⊂ c :=
@@ -963,16 +981,22 @@ theorem ssubset_or_eq_of_subset [IsAntisymm α (· ⊆ ·)] (h : a ⊆ b) : a �
 -/
 
 alias ssubset_of_subset_of_ssubset ← HasSubset.Subset.trans_ssubset
+#align has_subset.subset.trans_ssubset HasSubset.Subset.trans_ssubset
 
 alias ssubset_of_ssubset_of_subset ← HasSSubset.SSubset.trans_subset
+#align has_ssubset.ssubset.trans_subset HasSSubset.SSubset.trans_subset
 
 alias ssubset_of_subset_of_ne ← HasSubset.Subset.ssubset_of_ne
+#align has_subset.subset.ssubset_of_ne HasSubset.Subset.ssubset_of_ne
 
 alias ssubset_of_ne_of_subset ← Ne.ssubset_of_subset
+#align ne.ssubset_of_subset Ne.ssubset_of_subset
 
 alias eq_or_ssubset_of_subset ← HasSubset.Subset.eq_or_ssubset
+#align has_subset.subset.eq_or_ssubset HasSubset.Subset.eq_or_ssubset
 
 alias ssubset_or_eq_of_subset ← HasSubset.Subset.ssubset_or_eq
+#align has_subset.subset.ssubset_or_eq HasSubset.Subset.ssubset_or_eq
 
 #print ssubset_iff_subset_ne /-
 theorem ssubset_iff_subset_ne [IsAntisymm α (· ⊆ ·)] : a ⊂ b ↔ a ⊆ b ∧ a ≠ b :=

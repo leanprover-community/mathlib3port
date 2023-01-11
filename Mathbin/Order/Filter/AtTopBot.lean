@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jeremy Avigad, Yury Kudryashov, Patrick Massot
 
 ! This file was ported from Lean 3 source module order.filter.at_top_bot
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1307,12 +1307,16 @@ theorem tendsto_at_bot_at_bot_iff_of_monotone [Nonempty α] [SemilatticeInf α] 
 #align filter.tendsto_at_bot_at_bot_iff_of_monotone Filter.tendsto_at_bot_at_bot_iff_of_monotone
 
 alias tendsto_at_top_at_top_of_monotone ← _root_.monotone.tendsto_at_top_at_top
+#align monotone.tendsto_at_top_at_top Monotone.tendsto_at_top_at_top
 
 alias tendsto_at_bot_at_bot_of_monotone ← _root_.monotone.tendsto_at_bot_at_bot
+#align monotone.tendsto_at_bot_at_bot Monotone.tendsto_at_bot_at_bot
 
 alias tendsto_at_top_at_top_iff_of_monotone ← _root_.monotone.tendsto_at_top_at_top_iff
+#align monotone.tendsto_at_top_at_top_iff Monotone.tendsto_at_top_at_top_iff
 
 alias tendsto_at_bot_at_bot_iff_of_monotone ← _root_.monotone.tendsto_at_bot_at_bot_iff
+#align monotone.tendsto_at_bot_at_bot_iff Monotone.tendsto_at_bot_at_bot_iff
 
 theorem comap_embedding_at_top [Preorder β] [Preorder γ] {e : β → γ}
     (hm : ∀ b₁ b₂, e b₁ ≤ e b₂ ↔ b₁ ≤ b₂) (hu : ∀ c, ∃ b, c ≤ e b) : comap e atTop = at_top :=
@@ -1369,6 +1373,7 @@ theorem tendsto_at_top_finset_of_monotone [Preorder β] {f : β → Finset α} (
 #align filter.tendsto_at_top_finset_of_monotone Filter.tendsto_at_top_finset_of_monotone
 
 alias tendsto_at_top_finset_of_monotone ← _root_.monotone.tendsto_at_top_finset
+#align monotone.tendsto_at_top_finset Monotone.tendsto_at_top_finset
 
 theorem tendsto_finset_image_at_top_at_top {i : β → γ} {j : γ → β} (h : Function.LeftInverse j i) :
     Tendsto (Finset.image j) atTop atTop :=

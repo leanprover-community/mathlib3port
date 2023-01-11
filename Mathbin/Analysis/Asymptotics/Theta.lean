@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.asymptotics.theta
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -133,8 +133,12 @@ theorem is_Theta_norm_right : (f =Θ[l] fun x => ‖g' x‖) ↔ f =Θ[l] g' := 
 #align asymptotics.is_Theta_norm_right Asymptotics.is_Theta_norm_right
 
 alias is_Theta_norm_left ↔ is_Theta.of_norm_left is_Theta.norm_left
+#align asymptotics.is_Theta.of_norm_left Asymptotics.IsTheta.of_norm_left
+#align asymptotics.is_Theta.norm_left Asymptotics.IsTheta.norm_left
 
 alias is_Theta_norm_right ↔ is_Theta.of_norm_right is_Theta.norm_right
+#align asymptotics.is_Theta.of_norm_right Asymptotics.IsTheta.of_norm_right
+#align asymptotics.is_Theta.norm_right Asymptotics.IsTheta.norm_right
 
 theorem is_Theta_of_norm_eventually_eq (h : (fun x => ‖f x‖) =ᶠ[l] fun x => ‖g x‖) : f =Θ[l] g :=
   ⟨IsO.of_bound 1 <| by simpa only [one_mul] using h.le,
@@ -259,6 +263,8 @@ theorem is_Theta_const_smul_left [NormedSpace 𝕜 E'] {c : 𝕜} (hc : c ≠ 0)
 #align asymptotics.is_Theta_const_smul_left Asymptotics.is_Theta_const_smul_left
 
 alias is_Theta_const_smul_left ↔ is_Theta.of_const_smul_left is_Theta.const_smul_left
+#align asymptotics.is_Theta.of_const_smul_left Asymptotics.IsTheta.of_const_smul_left
+#align asymptotics.is_Theta.const_smul_left Asymptotics.IsTheta.const_smul_left
 
 theorem is_Theta_const_smul_right [NormedSpace 𝕜 F'] {c : 𝕜} (hc : c ≠ 0) :
     (f =Θ[l] fun x => c • g' x) ↔ f =Θ[l] g' :=
@@ -266,6 +272,8 @@ theorem is_Theta_const_smul_right [NormedSpace 𝕜 F'] {c : 𝕜} (hc : c ≠ 0
 #align asymptotics.is_Theta_const_smul_right Asymptotics.is_Theta_const_smul_right
 
 alias is_Theta_const_smul_right ↔ is_Theta.of_const_smul_right is_Theta.const_smul_right
+#align asymptotics.is_Theta.of_const_smul_right Asymptotics.IsTheta.of_const_smul_right
+#align asymptotics.is_Theta.const_smul_right Asymptotics.IsTheta.const_smul_right
 
 theorem is_Theta_const_mul_left {c : 𝕜} {f : α → 𝕜} (hc : c ≠ 0) :
     (fun x => c * f x) =Θ[l] g ↔ f =Θ[l] g := by
@@ -273,6 +281,8 @@ theorem is_Theta_const_mul_left {c : 𝕜} {f : α → 𝕜} (hc : c ≠ 0) :
 #align asymptotics.is_Theta_const_mul_left Asymptotics.is_Theta_const_mul_left
 
 alias is_Theta_const_mul_left ↔ is_Theta.of_const_mul_left is_Theta.const_mul_left
+#align asymptotics.is_Theta.of_const_mul_left Asymptotics.IsTheta.of_const_mul_left
+#align asymptotics.is_Theta.const_mul_left Asymptotics.IsTheta.const_mul_left
 
 theorem is_Theta_const_mul_right {c : 𝕜} {g : α → 𝕜} (hc : c ≠ 0) :
     (f =Θ[l] fun x => c * g x) ↔ f =Θ[l] g := by
@@ -280,6 +290,8 @@ theorem is_Theta_const_mul_right {c : 𝕜} {g : α → 𝕜} (hc : c ≠ 0) :
 #align asymptotics.is_Theta_const_mul_right Asymptotics.is_Theta_const_mul_right
 
 alias is_Theta_const_mul_right ↔ is_Theta.of_const_mul_right is_Theta.const_mul_right
+#align asymptotics.is_Theta.of_const_mul_right Asymptotics.IsTheta.of_const_mul_right
+#align asymptotics.is_Theta.const_mul_right Asymptotics.IsTheta.const_mul_right
 
 end Asymptotics
 

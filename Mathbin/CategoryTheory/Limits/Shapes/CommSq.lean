@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Joël Riou
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.comm_sq
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1046,8 +1046,10 @@ theorem Functor.mapIsPushout [PreservesColimit (span f g) F] (s : IsPushout f g 
 #align category_theory.functor.map_is_pushout CategoryTheory.Functor.mapIsPushout
 
 alias functor.map_is_pullback ← is_pullback.map
+#align category_theory.is_pullback.map CategoryTheory.IsPullback.map
 
 alias functor.map_is_pushout ← is_pushout.map
+#align category_theory.is_pushout.map CategoryTheory.IsPushout.map
 
 theorem IsPullback.ofMap [ReflectsLimit (cospan h i) F] (e : f ≫ h = g ≫ i)
     (H : IsPullback (F.map f) (F.map g) (F.map h) (F.map i)) : IsPullback f g h i :=

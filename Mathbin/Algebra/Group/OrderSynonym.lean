@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Yaël Dillies
 
 ! This file was ported from Lean 3 source module algebra.group.order_synonym
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,19 +45,15 @@ instance [h : Div α] : Div αᵒᵈ :=
   h
 
 @[to_additive]
-instance [h : HasSmul α β] : HasSmul α βᵒᵈ :=
+instance [h : SMul α β] : SMul α βᵒᵈ :=
   h
 
-/- warning: order_dual.has_smul' -> instSMulOrderDual' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [h : HasSmul.{u1, u2} α β], HasSmul.{u1, u2} (OrderDual.{u1} α) β
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [h : SMul.{u1, u2} α β], SMul.{u1, u2} (OrderDual.{u1} α) β
-Case conversion may be inaccurate. Consider using '#align order_dual.has_smul' instSMulOrderDual'ₓ'. -/
+#print instSMulOrderDual' /-
 @[to_additive]
-instance instSMulOrderDual' [h : HasSmul α β] : HasSmul αᵒᵈ β :=
+instance instSMulOrderDual' [h : SMul α β] : SMul αᵒᵈ β :=
   h
 #align order_dual.has_smul' instSMulOrderDual'
+-/
 
 #print instPowOrderDual /-
 @[to_additive instSMulOrderDual]
@@ -198,22 +194,22 @@ theorem ofDual_div [Div α] (a b : αᵒᵈ) : ofDual (a / b) = ofDual a / ofDua
 -/
 
 @[simp, to_additive]
-theorem to_dual_smul [HasSmul α β] (a : α) (b : β) : toDual (a • b) = a • toDual b :=
+theorem to_dual_smul [SMul α β] (a : α) (b : β) : toDual (a • b) = a • toDual b :=
   rfl
 #align to_dual_smul to_dual_smul
 
 @[simp, to_additive]
-theorem of_dual_smul [HasSmul α β] (a : α) (b : βᵒᵈ) : ofDual (a • b) = a • ofDual b :=
+theorem of_dual_smul [SMul α β] (a : α) (b : βᵒᵈ) : ofDual (a • b) = a • ofDual b :=
   rfl
 #align of_dual_smul of_dual_smul
 
 @[simp, to_additive]
-theorem to_dual_smul' [HasSmul α β] (a : α) (b : β) : toDual a • b = a • b :=
+theorem to_dual_smul' [SMul α β] (a : α) (b : β) : toDual a • b = a • b :=
   rfl
 #align to_dual_smul' to_dual_smul'
 
 @[simp, to_additive]
-theorem of_dual_smul' [HasSmul α β] (a : αᵒᵈ) (b : β) : ofDual a • b = a • b :=
+theorem of_dual_smul' [SMul α β] (a : αᵒᵈ) (b : β) : ofDual a • b = a • b :=
   rfl
 #align of_dual_smul' of_dual_smul'
 
@@ -281,19 +277,15 @@ instance [h : Div α] : Div (Lex α) :=
   h
 
 @[to_additive]
-instance [h : HasSmul α β] : HasSmul α (Lex β) :=
+instance [h : SMul α β] : SMul α (Lex β) :=
   h
 
-/- warning: lex.has_smul' -> instSMulLex' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [h : HasSmul.{u1, u2} α β], HasSmul.{u1, u2} (Lex.{u1} α) β
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [h : SMul.{u1, u2} α β], SMul.{u1, u2} (Lex.{u1} α) β
-Case conversion may be inaccurate. Consider using '#align lex.has_smul' instSMulLex'ₓ'. -/
+#print instSMulLex' /-
 @[to_additive]
-instance instSMulLex' [h : HasSmul α β] : HasSmul (Lex α) β :=
+instance instSMulLex' [h : SMul α β] : SMul (Lex α) β :=
   h
 #align lex.has_smul' instSMulLex'
+-/
 
 #print instPowLex /-
 @[to_additive instSMulLex]
@@ -434,22 +426,22 @@ theorem ofLex_div [Div α] (a b : Lex α) : ofLex (a / b) = ofLex a / ofLex b :=
 -/
 
 @[simp, to_additive]
-theorem to_lex_smul [HasSmul α β] (a : α) (b : β) : toLex (a • b) = a • toLex b :=
+theorem to_lex_smul [SMul α β] (a : α) (b : β) : toLex (a • b) = a • toLex b :=
   rfl
 #align to_lex_smul to_lex_smul
 
 @[simp, to_additive]
-theorem of_lex_smul [HasSmul α β] (a : α) (b : Lex β) : ofLex (a • b) = a • ofLex b :=
+theorem of_lex_smul [SMul α β] (a : α) (b : Lex β) : ofLex (a • b) = a • ofLex b :=
   rfl
 #align of_lex_smul of_lex_smul
 
 @[simp, to_additive]
-theorem to_lex_smul' [HasSmul α β] (a : α) (b : β) : toLex a • b = a • b :=
+theorem to_lex_smul' [SMul α β] (a : α) (b : β) : toLex a • b = a • b :=
   rfl
 #align to_lex_smul' to_lex_smul'
 
 @[simp, to_additive]
-theorem of_lex_smul' [HasSmul α β] (a : Lex α) (b : β) : ofLex a • b = a • b :=
+theorem of_lex_smul' [SMul α β] (a : Lex α) (b : β) : ofLex a • b = a • b :=
   rfl
 #align of_lex_smul' of_lex_smul'
 

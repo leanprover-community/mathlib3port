@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module field_theory.intermediate_field
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -365,7 +365,7 @@ theorem coe_prod {ι : Type _} [Fintype ι] (f : ι → S) : (↑(∏ i, f i) : 
 /-! `intermediate_field`s inherit structure from their `subalgebra` coercions. -/
 
 
-instance module' {R} [Semiring R] [HasSmul R K] [Module R L] [IsScalarTower R K L] : Module R S :=
+instance module' {R} [Semiring R] [SMul R K] [Module R L] [IsScalarTower R K L] : Module R S :=
   S.toSubalgebra.module'
 #align intermediate_field.module' IntermediateField.module'
 
@@ -373,18 +373,18 @@ instance module : Module K S :=
   S.toSubalgebra.Module
 #align intermediate_field.module IntermediateField.module
 
-instance is_scalar_tower {R} [Semiring R] [HasSmul R K] [Module R L] [IsScalarTower R K L] :
+instance is_scalar_tower {R} [Semiring R] [SMul R K] [Module R L] [IsScalarTower R K L] :
     IsScalarTower R K S :=
   S.toSubalgebra.IsScalarTower
 #align intermediate_field.is_scalar_tower IntermediateField.is_scalar_tower
 
 @[simp]
-theorem coe_smul {R} [Semiring R] [HasSmul R K] [Module R L] [IsScalarTower R K L] (r : R) (x : S) :
+theorem coe_smul {R} [Semiring R] [SMul R K] [Module R L] [IsScalarTower R K L] (r : R) (x : S) :
     ↑(r • x) = (r • x : L) :=
   rfl
 #align intermediate_field.coe_smul IntermediateField.coe_smul
 
-instance algebra' {K'} [CommSemiring K'] [HasSmul K' K] [Algebra K' L] [IsScalarTower K' K L] :
+instance algebra' {K'} [CommSemiring K'] [SMul K' K] [Algebra K' L] [IsScalarTower K' K L] :
     Algebra K' S :=
   S.toSubalgebra.algebra'
 #align intermediate_field.algebra' IntermediateField.algebra'

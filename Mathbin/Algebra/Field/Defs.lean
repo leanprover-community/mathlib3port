@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Lewis, Leonardo de Moura, Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.field.defs
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -199,19 +199,15 @@ theorem cast_def : ∀ r : ℚ, (r : K) = r.num / r.denom
   | ⟨a, b, h1, h2⟩ => (cast_mk' _ _ _ _).trans (div_eq_mul_inv _ _).symm
 #align rat.cast_def Rat.cast_def
 
-/- warning: rat.smul_division_ring -> Rat.smulDivisionRing is a dubious translation:
-lean 3 declaration is
-  forall {K : Type.{u1}} [_inst_1 : DivisionRing.{u1} K], HasSmul.{0, u1} Rat K
-but is expected to have type
-  forall {K : Type.{u1}} [_inst_1 : DivisionRing.{u1} K], SMul.{0, u1} Rat K
-Case conversion may be inaccurate. Consider using '#align rat.smul_division_ring Rat.smulDivisionRingₓ'. -/
-instance (priority := 100) smulDivisionRing : HasSmul ℚ K :=
+#print Rat.smulDivisionRing /-
+instance (priority := 100) smulDivisionRing : SMul ℚ K :=
   ⟨DivisionRing.qsmul⟩
 #align rat.smul_division_ring Rat.smulDivisionRing
+-/
 
 /- warning: rat.smul_def -> Rat.smul_def is a dubious translation:
 lean 3 declaration is
-  forall {K : Type.{u1}} [_inst_1 : DivisionRing.{u1} K] (a : Rat) (x : K), Eq.{succ u1} K (HasSmul.smul.{0, u1} Rat K (Rat.smulDivisionRing.{u1} K _inst_1) a x) (HMul.hMul.{u1, u1, u1} K K K (instHMul.{u1} K (Distrib.toHasMul.{u1} K (Ring.toDistrib.{u1} K (DivisionRing.toRing.{u1} K _inst_1)))) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Rat K (HasLiftT.mk.{1, succ u1} Rat K (CoeTCₓ.coe.{1, succ u1} Rat K (Rat.castCoe.{u1} K (DivisionRing.toHasRatCast.{u1} K _inst_1)))) a) x)
+  forall {K : Type.{u1}} [_inst_1 : DivisionRing.{u1} K] (a : Rat) (x : K), Eq.{succ u1} K (SMul.smul.{0, u1} Rat K (Rat.smulDivisionRing.{u1} K _inst_1) a x) (HMul.hMul.{u1, u1, u1} K K K (instHMul.{u1} K (Distrib.toHasMul.{u1} K (Ring.toDistrib.{u1} K (DivisionRing.toRing.{u1} K _inst_1)))) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Rat K (HasLiftT.mk.{1, succ u1} Rat K (CoeTCₓ.coe.{1, succ u1} Rat K (Rat.castCoe.{u1} K (DivisionRing.toHasRatCast.{u1} K _inst_1)))) a) x)
 but is expected to have type
   forall {K : Type.{u1}} [_inst_1 : DivisionRing.{u1} K] (a : Rat) (x : K), Eq.{succ u1} K (HSMul.hSMul.{0, u1, u1} Rat K K (instHSMul.{0, u1} Rat K (Rat.smulDivisionRing.{u1} K _inst_1)) a x) (HMul.hMul.{u1, u1, u1} K K K (instHMul.{u1} K (NonUnitalNonAssocRing.toMul.{u1} K (NonAssocRing.toNonUnitalNonAssocRing.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K _inst_1))))) (RatCast.ratCast.{u1} K (DivisionRing.toRatCast.{u1} K _inst_1) a) x)
 Case conversion may be inaccurate. Consider using '#align rat.smul_def Rat.smul_defₓ'. -/

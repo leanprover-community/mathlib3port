@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.finset.lattice
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -100,6 +100,7 @@ protected theorem sup_le_iff {a : α} : s.sup f ≤ a ↔ ∀ b ∈ s, f b ≤ a
 #align finset.sup_le_iff Finset.sup_le_iff
 
 alias Finset.sup_le_iff ↔ _ sup_le
+#align finset.sup_le Finset.sup_le
 
 attribute [protected] sup_le
 
@@ -375,6 +376,7 @@ protected theorem le_inf_iff {a : α} : a ≤ s.inf f ↔ ∀ b ∈ s, a ≤ f b
 #align finset.le_inf_iff Finset.le_inf_iff
 
 alias Finset.le_inf_iff ↔ _ le_inf
+#align finset.le_inf Finset.le_inf
 
 attribute [protected] le_inf
 

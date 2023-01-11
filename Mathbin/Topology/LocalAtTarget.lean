@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module topology.local_at_target
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,6 +40,7 @@ theorem Set.restrict_preimage_inducing (s : Set β) (h : Inducing f) :
 #align set.restrict_preimage_inducing Set.restrict_preimage_inducing
 
 alias Set.restrict_preimage_inducing ← Inducing.restrict_preimage
+#align inducing.restrict_preimage Inducing.restrict_preimage
 
 theorem Set.restrict_preimage_embedding (s : Set β) (h : Embedding f) :
     Embedding (s.restrictPreimage f) :=
@@ -47,6 +48,7 @@ theorem Set.restrict_preimage_embedding (s : Set β) (h : Embedding f) :
 #align set.restrict_preimage_embedding Set.restrict_preimage_embedding
 
 alias Set.restrict_preimage_embedding ← Embedding.restrict_preimage
+#align embedding.restrict_preimage Embedding.restrict_preimage
 
 theorem Set.restrict_preimage_open_embedding (s : Set β) (h : OpenEmbedding f) :
     OpenEmbedding (s.restrictPreimage f) :=
@@ -55,6 +57,7 @@ theorem Set.restrict_preimage_open_embedding (s : Set β) (h : OpenEmbedding f) 
 #align set.restrict_preimage_open_embedding Set.restrict_preimage_open_embedding
 
 alias Set.restrict_preimage_open_embedding ← OpenEmbedding.restrict_preimage
+#align open_embedding.restrict_preimage OpenEmbedding.restrict_preimage
 
 theorem Set.restrict_preimage_closed_embedding (s : Set β) (h : ClosedEmbedding f) :
     ClosedEmbedding (s.restrictPreimage f) :=
@@ -63,6 +66,7 @@ theorem Set.restrict_preimage_closed_embedding (s : Set β) (h : ClosedEmbedding
 #align set.restrict_preimage_closed_embedding Set.restrict_preimage_closed_embedding
 
 alias Set.restrict_preimage_closed_embedding ← ClosedEmbedding.restrict_preimage
+#align closed_embedding.restrict_preimage ClosedEmbedding.restrict_preimage
 
 theorem Set.restrict_preimage_is_closed_map (s : Set β) (H : IsClosedMap f) :
     IsClosedMap (s.restrictPreimage f) :=

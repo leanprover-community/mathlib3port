@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.with_bot
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -495,7 +495,14 @@ theorem monotone_map_iff [Preorder α] [Preorder β] {f : α → β} :
   monotone_iff.trans <| by simp [Monotone]
 #align with_bot.monotone_map_iff WithBot.monotone_map_iff
 
+/- warning: monotone.with_bot_map -> Monotone.withBot_map is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β}, (Monotone.{u1, u2} α β _inst_1 _inst_2 f) -> (Monotone.{u1, u2} (WithBot.{u1} α) (WithBot.{u2} β) (WithBot.preorder.{u1} α _inst_1) (WithBot.preorder.{u2} β _inst_2) (WithBot.map.{u1, u2} α β f))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : α -> β}, (Monotone.{u2, u1} α β _inst_1 _inst_2 f) -> (Monotone.{u2, u1} (WithBot.{u2} α) (WithBot.{u1} β) (WithBot.preorder.{u2} α _inst_1) (WithBot.preorder.{u1} β _inst_2) (WithBot.map.{u2, u1} α β f))
+Case conversion may be inaccurate. Consider using '#align monotone.with_bot_map Monotone.withBot_mapₓ'. -/
 alias monotone_map_iff ↔ _ _root_.monotone.with_bot_map
+#align monotone.with_bot_map Monotone.withBot_map
 
 /- warning: with_bot.strict_mono_iff -> WithBot.strictMono_iff is a dubious translation:
 lean 3 declaration is
@@ -523,7 +530,14 @@ theorem strictMono_map_iff [Preorder α] [Preorder β] {f : α → β} :
   strictMono_iff.trans <| by simp [StrictMono, bot_lt_coe]
 #align with_bot.strict_mono_map_iff WithBot.strictMono_map_iff
 
+/- warning: strict_mono.with_bot_map -> StrictMono.withBot_map is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β}, (StrictMono.{u1, u2} α β _inst_1 _inst_2 f) -> (StrictMono.{u1, u2} (WithBot.{u1} α) (WithBot.{u2} β) (WithBot.preorder.{u1} α _inst_1) (WithBot.preorder.{u2} β _inst_2) (WithBot.map.{u1, u2} α β f))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : α -> β}, (StrictMono.{u2, u1} α β _inst_1 _inst_2 f) -> (StrictMono.{u2, u1} (WithBot.{u2} α) (WithBot.{u1} β) (WithBot.preorder.{u2} α _inst_1) (WithBot.preorder.{u1} β _inst_2) (WithBot.map.{u2, u1} α β f))
+Case conversion may be inaccurate. Consider using '#align strict_mono.with_bot_map StrictMono.withBot_mapₓ'. -/
 alias strict_mono_map_iff ↔ _ _root_.strict_mono.with_bot_map
+#align strict_mono.with_bot_map StrictMono.withBot_map
 
 /- warning: with_bot.map_le_iff -> WithBot.map_le_iff is a dubious translation:
 lean 3 declaration is
@@ -1678,7 +1692,14 @@ theorem monotone_map_iff [Preorder α] [Preorder β] {f : α → β} :
   monotone_iff.trans <| by simp [Monotone]
 #align with_top.monotone_map_iff WithTop.monotone_map_iff
 
+/- warning: monotone.with_top_map -> Monotone.withTop_map is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β}, (Monotone.{u1, u2} α β _inst_1 _inst_2 f) -> (Monotone.{u1, u2} (WithTop.{u1} α) (WithTop.{u2} β) (WithTop.preorder.{u1} α _inst_1) (WithTop.preorder.{u2} β _inst_2) (WithTop.map.{u1, u2} α β f))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : α -> β}, (Monotone.{u2, u1} α β _inst_1 _inst_2 f) -> (Monotone.{u2, u1} (WithTop.{u2} α) (WithTop.{u1} β) (WithTop.preorder.{u2} α _inst_1) (WithTop.preorder.{u1} β _inst_2) (WithTop.map.{u2, u1} α β f))
+Case conversion may be inaccurate. Consider using '#align monotone.with_top_map Monotone.withTop_mapₓ'. -/
 alias monotone_map_iff ↔ _ _root_.monotone.with_top_map
+#align monotone.with_top_map Monotone.withTop_map
 
 /- warning: with_top.strict_mono_iff -> WithTop.strictMono_iff is a dubious translation:
 lean 3 declaration is
@@ -1706,7 +1727,14 @@ theorem strictMono_map_iff [Preorder α] [Preorder β] {f : α → β} :
   strictMono_iff.trans <| by simp [StrictMono, coe_lt_top]
 #align with_top.strict_mono_map_iff WithTop.strictMono_map_iff
 
+/- warning: strict_mono.with_top_map -> StrictMono.withTop_map is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β}, (StrictMono.{u1, u2} α β _inst_1 _inst_2 f) -> (StrictMono.{u1, u2} (WithTop.{u1} α) (WithTop.{u2} β) (WithTop.preorder.{u1} α _inst_1) (WithTop.preorder.{u2} β _inst_2) (WithTop.map.{u1, u2} α β f))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : α -> β}, (StrictMono.{u2, u1} α β _inst_1 _inst_2 f) -> (StrictMono.{u2, u1} (WithTop.{u2} α) (WithTop.{u1} β) (WithTop.preorder.{u2} α _inst_1) (WithTop.preorder.{u1} β _inst_2) (WithTop.map.{u2, u1} α β f))
+Case conversion may be inaccurate. Consider using '#align strict_mono.with_top_map StrictMono.withTop_mapₓ'. -/
 alias strict_mono_map_iff ↔ _ _root_.strict_mono.with_top_map
+#align strict_mono.with_top_map StrictMono.withTop_map
 
 /- warning: with_top.map_le_iff -> WithTop.map_le_iff is a dubious translation:
 lean 3 declaration is
@@ -1781,7 +1809,7 @@ instance [DistribLattice α] : DistribLattice (WithTop α) :=
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (LE.le.{u1} α _inst_1)], DecidableRel.{succ u1} (WithTop.{u1} α) (LE.le.{u1} (WithTop.{u1} α) (WithTop.hasLe.{u1} α _inst_1))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.9687 : α) (x._@.Mathlib.Order.WithBot._hyg.9689 : α) => LE.le.{u1} α _inst_1 x._@.Mathlib.Order.WithBot._hyg.9687 x._@.Mathlib.Order.WithBot._hyg.9689)], DecidableRel.{succ u1} (WithTop.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.9707 : WithTop.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.9709 : WithTop.{u1} α) => LE.le.{u1} (WithTop.{u1} α) (WithTop.le.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.9707 x._@.Mathlib.Order.WithBot._hyg.9709)
+  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.9690 : α) (x._@.Mathlib.Order.WithBot._hyg.9692 : α) => LE.le.{u1} α _inst_1 x._@.Mathlib.Order.WithBot._hyg.9690 x._@.Mathlib.Order.WithBot._hyg.9692)], DecidableRel.{succ u1} (WithTop.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.9710 : WithTop.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.9712 : WithTop.{u1} α) => LE.le.{u1} (WithTop.{u1} α) (WithTop.le.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.9710 x._@.Mathlib.Order.WithBot._hyg.9712)
 Case conversion may be inaccurate. Consider using '#align with_top.decidable_le WithTop.decidableLEₓ'. -/
 instance decidableLE [LE α] [@DecidableRel α (· ≤ ·)] : @DecidableRel (WithTop α) (· ≤ ·) :=
   fun _ _ => decidable_of_decidable_of_iff (WithBot.decidableLE _ _) toDual_le_toDual_iff
@@ -1791,7 +1819,7 @@ instance decidableLE [LE α] [@DecidableRel α (· ≤ ·)] : @DecidableRel (Wit
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (LT.lt.{u1} α _inst_1)], DecidableRel.{succ u1} (WithTop.{u1} α) (LT.lt.{u1} (WithTop.{u1} α) (WithTop.hasLt.{u1} α _inst_1))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.9742 : α) (x._@.Mathlib.Order.WithBot._hyg.9744 : α) => LT.lt.{u1} α _inst_1 x._@.Mathlib.Order.WithBot._hyg.9742 x._@.Mathlib.Order.WithBot._hyg.9744)], DecidableRel.{succ u1} (WithTop.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.9762 : WithTop.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.9764 : WithTop.{u1} α) => LT.lt.{u1} (WithTop.{u1} α) (WithTop.lt.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.9762 x._@.Mathlib.Order.WithBot._hyg.9764)
+  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.9745 : α) (x._@.Mathlib.Order.WithBot._hyg.9747 : α) => LT.lt.{u1} α _inst_1 x._@.Mathlib.Order.WithBot._hyg.9745 x._@.Mathlib.Order.WithBot._hyg.9747)], DecidableRel.{succ u1} (WithTop.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.9765 : WithTop.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.9767 : WithTop.{u1} α) => LT.lt.{u1} (WithTop.{u1} α) (WithTop.lt.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.9765 x._@.Mathlib.Order.WithBot._hyg.9767)
 Case conversion may be inaccurate. Consider using '#align with_top.decidable_lt WithTop.decidableLTₓ'. -/
 instance decidableLT [LT α] [@DecidableRel α (· < ·)] : @DecidableRel (WithTop α) (· < ·) :=
   fun _ _ => decidable_of_decidable_of_iff (WithBot.decidableLT _ _) toDual_lt_toDual_iff
@@ -1801,7 +1829,7 @@ instance decidableLT [LT α] [@DecidableRel α (· < ·)] : @DecidableRel (WithT
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : IsTotal.{u1} α (LE.le.{u1} α _inst_1)], IsTotal.{u1} (WithTop.{u1} α) (LE.le.{u1} (WithTop.{u1} α) (WithTop.hasLe.{u1} α _inst_1))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : IsTotal.{u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.9797 : α) (x._@.Mathlib.Order.WithBot._hyg.9799 : α) => LE.le.{u1} α _inst_1 x._@.Mathlib.Order.WithBot._hyg.9797 x._@.Mathlib.Order.WithBot._hyg.9799)], IsTotal.{u1} (WithTop.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.9817 : WithTop.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.9819 : WithTop.{u1} α) => LE.le.{u1} (WithTop.{u1} α) (WithTop.le.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.9817 x._@.Mathlib.Order.WithBot._hyg.9819)
+  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : IsTotal.{u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.9800 : α) (x._@.Mathlib.Order.WithBot._hyg.9802 : α) => LE.le.{u1} α _inst_1 x._@.Mathlib.Order.WithBot._hyg.9800 x._@.Mathlib.Order.WithBot._hyg.9802)], IsTotal.{u1} (WithTop.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.9820 : WithTop.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.9822 : WithTop.{u1} α) => LE.le.{u1} (WithTop.{u1} α) (WithTop.le.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.9820 x._@.Mathlib.Order.WithBot._hyg.9822)
 Case conversion may be inaccurate. Consider using '#align with_top.is_total_le WithTop.isTotal_leₓ'. -/
 instance isTotal_le [LE α] [IsTotal α (· ≤ ·)] : IsTotal (WithTop α) (· ≤ ·) :=
   ⟨fun _ _ => by

@@ -5,7 +5,7 @@ Authors: Nathaniel Thomas, Jeremy Avigad, Johannes Hölzl, Mario Carneiro, Anne 
   Frédéric Dupuis, Heather Macbeth
 
 ! This file was ported from Lean 3 source module algebra.module.linear_map
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -401,21 +401,21 @@ This typeclass is generated automatically from a `is_scalar_tower` instance, but
 we can also add an instance for `add_comm_group.int_module`, allowing `z •` to be moved even if
 `R` does not support negation.
 -/
-class CompatibleSmul (R S : Type _) [Semiring S] [HasSmul R M] [Module S M] [HasSmul R M₂]
+class CompatibleSmul (R S : Type _) [Semiring S] [SMul R M] [Module S M] [SMul R M₂]
   [Module S M₂] where
   map_smul : ∀ (fₗ : M →ₗ[S] M₂) (c : R) (x : M), fₗ (c • x) = c • fₗ x
 #align linear_map.compatible_smul LinearMap.CompatibleSmul
 
 variable {M M₂}
 
-instance (priority := 100) IsScalarTower.compatibleSmul {R S : Type _} [Semiring S] [HasSmul R S]
-    [HasSmul R M] [Module S M] [IsScalarTower R S M] [HasSmul R M₂] [Module S M₂]
-    [IsScalarTower R S M₂] : CompatibleSmul M M₂ R S :=
+instance (priority := 100) IsScalarTower.compatibleSmul {R S : Type _} [Semiring S] [SMul R S]
+    [SMul R M] [Module S M] [IsScalarTower R S M] [SMul R M₂] [Module S M₂] [IsScalarTower R S M₂] :
+    CompatibleSmul M M₂ R S :=
   ⟨fun fₗ c x => by rw [← smul_one_smul S c x, ← smul_one_smul S c (fₗ x), map_smul]⟩
 #align linear_map.is_scalar_tower.compatible_smul LinearMap.IsScalarTower.compatibleSmul
 
 @[simp]
-theorem map_smul_of_tower {R S : Type _} [Semiring S] [HasSmul R M] [Module S M] [HasSmul R M₂]
+theorem map_smul_of_tower {R S : Type _} [Semiring S] [SMul R M] [Module S M] [SMul R M₂]
     [Module S M₂] [CompatibleSmul M M₂ R S] (fₗ : M →ₗ[S] M₂) (c : R) (x : M) :
     fₗ (c • x) = c • fₗ x :=
   CompatibleSmul.map_smul fₗ c x
@@ -812,7 +812,7 @@ theorem AddMonoidHom.coe_to_rat_linear_map [AddCommGroup M] [Module ℚ M] [AddC
 
 namespace LinearMap
 
-section HasSmul
+section SMul
 
 variable [Semiring R] [Semiring R₂] [Semiring R₃]
 
@@ -828,7 +828,7 @@ variable [Monoid S₃] [DistribMulAction S₃ M₃] [SMulCommClass R₃ S₃ M�
 
 variable [Monoid T] [DistribMulAction T M₂] [SMulCommClass R₂ T M₂]
 
-instance : HasSmul S (M →ₛₗ[σ₁₂] M₂) :=
+instance : SMul S (M →ₛₗ[σ₁₂] M₂) :=
   ⟨fun a f =>
     { toFun := a • f
       map_add' := fun x y => by simp only [Pi.smul_apply, f.map_add, smul_add]
@@ -848,13 +848,13 @@ instance [SMulCommClass S T M₂] : SMulCommClass S T (M →ₛₗ[σ₁₂] M�
 
 -- example application of this instance: if S -> T -> R are homomorphisms of commutative rings and
 -- M and M₂ are R-modules then the S-module and T-module structures on Hom_R(M,M₂) are compatible.
-instance [HasSmul S T] [IsScalarTower S T M₂] : IsScalarTower S T (M →ₛₗ[σ₁₂] M₂)
+instance [SMul S T] [IsScalarTower S T M₂] : IsScalarTower S T (M →ₛₗ[σ₁₂] M₂)
     where smul_assoc _ _ _ := ext fun _ => smul_assoc _ _ _
 
 instance [DistribMulAction Sᵐᵒᵖ M₂] [SMulCommClass R₂ Sᵐᵒᵖ M₂] [IsCentralScalar S M₂] :
     IsCentralScalar S (M →ₛₗ[σ₁₂] M₂) where op_smul_eq_smul a b := ext fun x => op_smul_eq_smul _ _
 
-end HasSmul
+end SMul
 
 /-! ### Arithmetic on the codomain -/
 
@@ -997,7 +997,7 @@ variable [Module R M] [Module R₂ M₂] [Module R₃ M₃]
 
 variable {σ₁₂ : R →+* R₂} {σ₂₃ : R₂ →+* R₃} {σ₁₃ : R →+* R₃} [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃]
 
-section HasSmul
+section SMul
 
 variable [Monoid S] [DistribMulAction S M₂] [SMulCommClass R₂ S M₂]
 
@@ -1028,7 +1028,7 @@ theorem comp_smul [Module R M₂] [Module R M₃] [SMulCommClass R S M₂] [Dist
   ext fun x => g.map_smul_of_tower _ _
 #align linear_map.comp_smul LinearMap.comp_smul
 
-end HasSmul
+end SMul
 
 section Module
 
@@ -1142,12 +1142,12 @@ instance Module.EndCat.is_scalar_tower : IsScalarTower S (Module.EndCat R M) (Mo
   ⟨smul_comp⟩
 #align module.End.is_scalar_tower Module.EndCat.is_scalar_tower
 
-instance Module.EndCat.smul_comm_class [HasSmul S R] [IsScalarTower S R M] :
+instance Module.EndCat.smul_comm_class [SMul S R] [IsScalarTower S R M] :
     SMulCommClass S (Module.EndCat R M) (Module.EndCat R M) :=
   ⟨fun s _ _ => (comp_smul _ s _).symm⟩
 #align module.End.smul_comm_class Module.EndCat.smul_comm_class
 
-instance Module.EndCat.smul_comm_class' [HasSmul S R] [IsScalarTower S R M] :
+instance Module.EndCat.smul_comm_class' [SMul S R] [IsScalarTower S R M] :
     SMulCommClass (Module.EndCat R M) S (Module.EndCat R M) :=
   SMulCommClass.symm _ _ _
 #align module.End.smul_comm_class' Module.EndCat.smul_comm_class'
@@ -1211,9 +1211,8 @@ variable [Monoid S] [DistribMulAction S M] [SMulCommClass S R M]
 
 This is a stronger version of `distrib_mul_action.to_add_monoid_hom`. -/
 @[simps]
-def toLinearMap (s : S) : M →ₗ[R] M
-    where
-  toFun := HasSmul.smul s
+def toLinearMap (s : S) : M →ₗ[R] M where
+  toFun := SMul.smul s
   map_add' := smul_add s
   map_smul' a b := smul_comm _ _ _
 #align distrib_mul_action.to_linear_map DistribMulAction.toLinearMap

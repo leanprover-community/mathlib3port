@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.algebra.monoid
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -566,7 +566,7 @@ Notably, this instances applies when `R = A`, or when `[algebra R A]` is availab
 @[to_additive
       "If `R` acts on `A` via `A`, then continuous addition implies\ncontinuous affine addition by constants."]
 instance (priority := 100) IsScalarTower.has_continuous_const_smul {R A : Type _} [Monoid A]
-    [HasSmul R A] [IsScalarTower R A A] [TopologicalSpace A] [HasContinuousMul A] :
+    [SMul R A] [IsScalarTower R A A] [TopologicalSpace A] [HasContinuousMul A] :
     HasContinuousConstSmul R A
     where continuous_const_smul q :=
     by
@@ -581,7 +581,7 @@ Notably, this instances applies when `R = Aᵐᵒᵖ` -/
 @[to_additive
       "If the action of `R` on `A` commutes with left-addition, then\ncontinuous addition implies continuous affine addition by constants.\n\nNotably, this instances applies when `R = Aᵃᵒᵖ`. "]
 instance (priority := 100) SMulCommClass.has_continuous_const_smul {R A : Type _} [Monoid A]
-    [HasSmul R A] [SMulCommClass R A A] [TopologicalSpace A] [HasContinuousMul A] :
+    [SMul R A] [SMulCommClass R A A] [TopologicalSpace A] [HasContinuousMul A] :
     HasContinuousConstSmul R A
     where continuous_const_smul q :=
     by

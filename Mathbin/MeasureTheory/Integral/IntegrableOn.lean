@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.integral.integrable_on
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -373,6 +373,7 @@ theorem IntegrableAtFilter.inf_ae_iff {l : Filter α} :
 #align measure_theory.integrable_at_filter.inf_ae_iff MeasureTheory.IntegrableAtFilter.inf_ae_iff
 
 alias integrable_at_filter.inf_ae_iff ↔ integrable_at_filter.of_inf_ae _
+#align measure_theory.integrable_at_filter.of_inf_ae MeasureTheory.IntegrableAtFilter.ofInfAe
 
 /-- If `μ` is a measure finite at filter `l` and `f` is a function such that its norm is bounded
 above at `l`, then `f` is integrable at `l`. -/
@@ -401,6 +402,7 @@ theorem Measure.FiniteAtFilter.integrableAtFilterOfTendstoAe {l : Filter α}
 
 alias measure.finite_at_filter.integrable_at_filter_of_tendsto_ae ←
   _root_.filter.tendsto.integrable_at_filter_ae
+#align filter.tendsto.integrable_at_filter_ae Filter.Tendsto.integrableAtFilterAe
 
 theorem Measure.FiniteAtFilter.integrableAtFilterOfTendsto {l : Filter α} [IsMeasurablyGenerated l]
     (hfm : StronglyMeasurableAtFilter f l μ) (hμ : μ.FiniteAtFilter l) {b}
@@ -411,6 +413,7 @@ theorem Measure.FiniteAtFilter.integrableAtFilterOfTendsto {l : Filter α} [IsMe
 
 alias measure.finite_at_filter.integrable_at_filter_of_tendsto ←
   _root_.filter.tendsto.integrable_at_filter
+#align filter.tendsto.integrable_at_filter Filter.Tendsto.integrableAtFilter
 
 theorem integrable_add_of_disjoint {f g : α → E} (h : Disjoint (support f) (support g))
     (hf : StronglyMeasurable f) (hg : StronglyMeasurable g) :

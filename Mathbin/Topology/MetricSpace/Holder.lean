@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.holder
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -89,6 +89,7 @@ theorem holder_on_with_one {C : ℝ≥0} {f : X → Y} {s : Set X} :
 #align holder_on_with_one holder_on_with_one
 
 alias holder_on_with_one ↔ _ LipschitzOnWith.holder_on_with
+#align lipschitz_on_with.holder_on_with LipschitzOnWith.holder_on_with
 
 @[simp]
 theorem holder_with_one {C : ℝ≥0} {f : X → Y} : HolderWith C 1 f ↔ LipschitzWith C f :=
@@ -96,6 +97,7 @@ theorem holder_with_one {C : ℝ≥0} {f : X → Y} : HolderWith C 1 f ↔ Lipsc
 #align holder_with_one holder_with_one
 
 alias holder_with_one ↔ _ LipschitzWith.holder_with
+#align lipschitz_with.holder_with LipschitzWith.holder_with
 
 theorem holder_with_id : HolderWith 1 1 (id : X → X) :=
   LipschitzWith.id.HolderWith

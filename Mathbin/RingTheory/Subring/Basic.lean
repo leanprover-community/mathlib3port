@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ashvni Narayanan
 
 ! This file was ported from Lean 3 source module ring_theory.subring.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1411,29 +1411,29 @@ namespace Subring
 variable {α β : Type _}
 
 /-- The action by a subring is the action by the underlying ring. -/
-instance [HasSmul R α] (S : Subring R) : HasSmul S α :=
+instance [SMul R α] (S : Subring R) : SMul S α :=
   S.toSubsemiring.HasSmul
 
-theorem smul_def [HasSmul R α] {S : Subring R} (g : S) (m : α) : g • m = (g : R) • m :=
+theorem smul_def [SMul R α] {S : Subring R} (g : S) (m : α) : g • m = (g : R) • m :=
   rfl
 #align subring.smul_def Subring.smul_def
 
-instance smul_comm_class_left [HasSmul R β] [HasSmul α β] [SMulCommClass R α β] (S : Subring R) :
+instance smul_comm_class_left [SMul R β] [SMul α β] [SMulCommClass R α β] (S : Subring R) :
     SMulCommClass S α β :=
   S.toSubsemiring.smul_comm_class_left
 #align subring.smul_comm_class_left Subring.smul_comm_class_left
 
-instance smul_comm_class_right [HasSmul α β] [HasSmul R β] [SMulCommClass α R β] (S : Subring R) :
+instance smul_comm_class_right [SMul α β] [SMul R β] [SMulCommClass α R β] (S : Subring R) :
     SMulCommClass α S β :=
   S.toSubsemiring.smul_comm_class_right
 #align subring.smul_comm_class_right Subring.smul_comm_class_right
 
 /-- Note that this provides `is_scalar_tower S R R` which is needed by `smul_mul_assoc`. -/
-instance [HasSmul α β] [HasSmul R α] [HasSmul R β] [IsScalarTower R α β] (S : Subring R) :
+instance [SMul α β] [SMul R α] [SMul R β] [IsScalarTower R α β] (S : Subring R) :
     IsScalarTower S α β :=
   S.toSubsemiring.IsScalarTower
 
-instance [HasSmul R α] [FaithfulSMul R α] (S : Subring R) : FaithfulSMul S α :=
+instance [SMul R α] [FaithfulSMul R α] (S : Subring R) : FaithfulSMul S α :=
   S.toSubsemiring.HasFaithfulSmul
 
 /-- The action by a subring is the action by the underlying ring. -/

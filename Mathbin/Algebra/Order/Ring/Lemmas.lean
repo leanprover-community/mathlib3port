@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa, Yuyang Zhao
 
 ! This file was ported from Lean 3 source module algebra.order.ring.lemmas
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -226,12 +226,16 @@ theorem le_of_mul_le_mul_right [MulPosMonoRev α] (bc : b * a ≤ c * a) (a0 : 0
 -/
 
 alias lt_of_mul_lt_mul_left ← lt_of_mul_lt_mul_of_nonneg_left
+#align lt_of_mul_lt_mul_of_nonneg_left lt_of_mul_lt_mul_of_nonneg_left
 
 alias lt_of_mul_lt_mul_right ← lt_of_mul_lt_mul_of_nonneg_right
+#align lt_of_mul_lt_mul_of_nonneg_right lt_of_mul_lt_mul_of_nonneg_right
 
 alias le_of_mul_le_mul_left ← le_of_mul_le_mul_of_pos_left
+#align le_of_mul_le_mul_of_pos_left le_of_mul_le_mul_of_pos_left
 
 alias le_of_mul_le_mul_right ← le_of_mul_le_mul_of_pos_right
+#align le_of_mul_le_mul_of_pos_right le_of_mul_le_mul_of_pos_right
 
 #print mul_lt_mul_left /-
 @[simp]
@@ -418,7 +422,14 @@ theorem Left.mul_pos [PosMulStrictMono α] (ha : 0 < a) (hb : 0 < b) : 0 < a * b
   simpa only [mul_zero] using mul_lt_mul_of_pos_left hb ha
 #align left.mul_pos Left.mul_pos
 
+/- warning: mul_pos -> mul_pos is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {a : α} {b : α} [_inst_1 : MulZeroClass.{u1} α] [_inst_2 : Preorder.{u1} α] [_inst_3 : PosMulStrictMono.{u1} α (MulZeroClass.toHasMul.{u1} α _inst_1) (MulZeroClass.toHasZero.{u1} α _inst_1) _inst_2], (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_2) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (MulZeroClass.toHasZero.{u1} α _inst_1)))) a) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_2) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (MulZeroClass.toHasZero.{u1} α _inst_1)))) b) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_2) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (MulZeroClass.toHasZero.{u1} α _inst_1)))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulZeroClass.toHasMul.{u1} α _inst_1)) a b))
+but is expected to have type
+  forall {α : Type.{u1}} {a : α} {b : α} [_inst_1 : MulZeroClass.{u1} α] [_inst_2 : Preorder.{u1} α] [_inst_3 : PosMulStrictMono.{u1} α (MulZeroClass.toMul.{u1} α _inst_1) (MulZeroClass.toZero.{u1} α _inst_1) _inst_2], (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_2) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MulZeroClass.toZero.{u1} α _inst_1))) a) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_2) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MulZeroClass.toZero.{u1} α _inst_1))) b) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_2) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MulZeroClass.toZero.{u1} α _inst_1))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulZeroClass.toMul.{u1} α _inst_1)) a b))
+Case conversion may be inaccurate. Consider using '#align mul_pos mul_posₓ'. -/
 alias Left.mul_pos ← mul_pos
+#align mul_pos mul_pos
 
 /- warning: mul_neg_of_pos_of_neg -> mul_neg_of_pos_of_neg is a dubious translation:
 lean 3 declaration is
@@ -488,7 +499,14 @@ theorem Left.mul_nonneg [PosMulMono α] (ha : 0 ≤ a) (hb : 0 ≤ b) : 0 ≤ a 
   simpa only [mul_zero] using mul_le_mul_of_nonneg_left hb ha
 #align left.mul_nonneg Left.mul_nonneg
 
+/- warning: mul_nonneg -> mul_nonneg is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {a : α} {b : α} [_inst_1 : MulZeroClass.{u1} α] [_inst_2 : Preorder.{u1} α] [_inst_3 : PosMulMono.{u1} α (MulZeroClass.toHasMul.{u1} α _inst_1) (MulZeroClass.toHasZero.{u1} α _inst_1) _inst_2], (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_2) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (MulZeroClass.toHasZero.{u1} α _inst_1)))) a) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_2) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (MulZeroClass.toHasZero.{u1} α _inst_1)))) b) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_2) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (MulZeroClass.toHasZero.{u1} α _inst_1)))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulZeroClass.toHasMul.{u1} α _inst_1)) a b))
+but is expected to have type
+  forall {α : Type.{u1}} {a : α} {b : α} [_inst_1 : MulZeroClass.{u1} α] [_inst_2 : Preorder.{u1} α] [_inst_3 : PosMulMono.{u1} α (MulZeroClass.toMul.{u1} α _inst_1) (MulZeroClass.toZero.{u1} α _inst_1) _inst_2], (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_2) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MulZeroClass.toZero.{u1} α _inst_1))) a) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_2) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MulZeroClass.toZero.{u1} α _inst_1))) b) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_2) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MulZeroClass.toZero.{u1} α _inst_1))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulZeroClass.toMul.{u1} α _inst_1)) a b))
+Case conversion may be inaccurate. Consider using '#align mul_nonneg mul_nonnegₓ'. -/
 alias Left.mul_nonneg ← mul_nonneg
+#align mul_nonneg mul_nonneg
 
 /- warning: mul_nonpos_of_nonneg_of_nonpos -> mul_nonpos_of_nonneg_of_nonpos is a dubious translation:
 lean 3 declaration is

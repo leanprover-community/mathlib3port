@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.operations
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,7 +34,7 @@ variable [CommSemiring R] [AddCommMonoid M] [Module R M]
 
 open Pointwise
 
-instance hasSmul' : HasSmul (Ideal R) (Submodule R M) :=
+instance hasSmul' : SMul (Ideal R) (Submodule R M) :=
   ⟨Submodule.map₂ (LinearMap.lsmul R M)⟩
 #align submodule.has_smul' Submodule.hasSmul'
 
@@ -874,6 +874,7 @@ theorem radical_eq_iff : I.radical = I ↔ I.IsRadical := by
 #align ideal.radical_eq_iff Ideal.radical_eq_iff
 
 alias radical_eq_iff ↔ _ is_radical.radical
+#align ideal.is_radical.radical Ideal.IsRadical.radical
 
 variable (R)
 
@@ -2410,7 +2411,7 @@ instance Quotient.algebra {I : Ideal A} : Algebra R₁ (A ⧸ I) :=
 #align ideal.quotient.algebra Ideal.Quotient.algebra
 
 -- Lean can struggle to find this instance later if we don't provide this shortcut
-instance Quotient.is_scalar_tower [HasSmul R₁ R₂] [IsScalarTower R₁ R₂ A] (I : Ideal A) :
+instance Quotient.is_scalar_tower [SMul R₁ R₂] [IsScalarTower R₁ R₂ A] (I : Ideal A) :
     IsScalarTower R₁ R₂ (A ⧸ I) := by infer_instance
 #align ideal.quotient.is_scalar_tower Ideal.Quotient.is_scalar_tower
 

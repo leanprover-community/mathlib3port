@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module data.real.nnreal
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -239,14 +239,14 @@ theorem smul_def {M : Type _} [MulAction ℝ M] (c : ℝ≥0) (x : M) : c • x 
   rfl
 #align nnreal.smul_def Nnreal.smul_def
 
-instance {M N : Type _} [MulAction ℝ M] [MulAction ℝ N] [HasSmul M N] [IsScalarTower ℝ M N] :
+instance {M N : Type _} [MulAction ℝ M] [MulAction ℝ N] [SMul M N] [IsScalarTower ℝ M N] :
     IsScalarTower ℝ≥0 M N where smul_assoc r := (smul_assoc (r : ℝ) : _)
 
-instance smul_comm_class_left {M N : Type _} [MulAction ℝ N] [HasSmul M N] [SMulCommClass ℝ M N] :
+instance smul_comm_class_left {M N : Type _} [MulAction ℝ N] [SMul M N] [SMulCommClass ℝ M N] :
     SMulCommClass ℝ≥0 M N where smul_comm r := (smul_comm (r : ℝ) : _)
 #align nnreal.smul_comm_class_left Nnreal.smul_comm_class_left
 
-instance smul_comm_class_right {M N : Type _} [MulAction ℝ N] [HasSmul M N] [SMulCommClass M ℝ N] :
+instance smul_comm_class_right {M N : Type _} [MulAction ℝ N] [SMul M N] [SMulCommClass M ℝ N] :
     SMulCommClass M ℝ≥0 N where smul_comm m r := (smul_comm m (r : ℝ) : _)
 #align nnreal.smul_comm_class_right Nnreal.smul_comm_class_right
 

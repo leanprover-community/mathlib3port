@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module algebra.order.sub.canonical
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -682,7 +682,14 @@ theorem tsub_eq_zero_iff_le : a - b = 0 ↔ a ≤ b := by
   rw [← nonpos_iff_eq_zero, tsub_le_iff_left, add_zero]
 #align tsub_eq_zero_iff_le tsub_eq_zero_iff_le
 
+/- warning: tsub_eq_zero_of_le -> tsub_eq_zero_of_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : CanonicallyOrderedAddMonoid.{u1} α] [_inst_2 : Sub.{u1} α] [_inst_3 : OrderedSub.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommMonoid.toPartialOrder.{u1} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u1} α _inst_1)))) (AddZeroClass.toHasAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (OrderedAddCommMonoid.toAddCommMonoid.{u1} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u1} α _inst_1))))) _inst_2] {a : α} {b : α}, (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommMonoid.toPartialOrder.{u1} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u1} α _inst_1)))) a b) -> (Eq.{succ u1} α (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α _inst_2) a b) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (AddZeroClass.toHasZero.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (OrderedAddCommMonoid.toAddCommMonoid.{u1} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u1} α _inst_1)))))))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : CanonicallyOrderedAddMonoid.{u1} α] [_inst_2 : Sub.{u1} α] [_inst_3 : OrderedSub.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommMonoid.toPartialOrder.{u1} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u1} α _inst_1)))) (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (OrderedAddCommMonoid.toAddCommMonoid.{u1} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u1} α _inst_1))))) _inst_2] {a : α} {b : α}, (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommMonoid.toPartialOrder.{u1} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u1} α _inst_1)))) a b) -> (Eq.{succ u1} α (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α _inst_2) a b) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (AddMonoid.toZero.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (OrderedAddCommMonoid.toAddCommMonoid.{u1} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u1} α _inst_1)))))))
+Case conversion may be inaccurate. Consider using '#align tsub_eq_zero_of_le tsub_eq_zero_of_leₓ'. -/
 alias tsub_eq_zero_iff_le ↔ _ tsub_eq_zero_of_le
+#align tsub_eq_zero_of_le tsub_eq_zero_of_le
 
 attribute [simp] tsub_eq_zero_of_le
 

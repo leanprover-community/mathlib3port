@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module algebra.order.upper_lower
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -133,7 +133,7 @@ instance : Div (UpperSet α) :=
   ⟨fun s t => ⟨image2 (· / ·) s t, s.2.div_right⟩⟩
 
 @[to_additive]
-instance : HasSmul α (UpperSet α) :=
+instance : SMul α (UpperSet α) :=
   ⟨fun a s => ⟨(· • ·) a '' s, s.2.smul⟩⟩
 
 @[simp, norm_cast, to_additive]
@@ -205,7 +205,7 @@ instance : Div (LowerSet α) :=
   ⟨fun s t => ⟨image2 (· / ·) s t, s.2.div_right⟩⟩
 
 @[to_additive]
-instance : HasSmul α (LowerSet α) :=
+instance : SMul α (LowerSet α) :=
   ⟨fun a s => ⟨(· • ·) a '' s, s.2.smul⟩⟩
 
 @[simp, norm_cast, to_additive]

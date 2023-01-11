@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Kenny Lau, Johan Commelin, Mario Carneiro, Kevin Buzza
 Amelia Livingston, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module group_theory.submonoid.membership
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -502,8 +502,8 @@ def closureCommMonoidOfComm {s : Set M} (hcomm : ∀ (a) (_ : a ∈ s) (b) (_ : 
 end Submonoid
 
 @[to_additive]
-theorem IsScalarTower.of_mclosure_eq_top {N α} [Monoid M] [MulAction M N] [HasSmul N α]
-    [MulAction M α] {s : Set M} (htop : Submonoid.closure s = ⊤)
+theorem IsScalarTower.of_mclosure_eq_top {N α} [Monoid M] [MulAction M N] [SMul N α] [MulAction M α]
+    {s : Set M} (htop : Submonoid.closure s = ⊤)
     (hs : ∀ x ∈ s, ∀ (y : N) (z : α), (x • y) • z = x • y • z) : IsScalarTower M N α :=
   by
   refine' ⟨fun x => Submonoid.induction_of_closure_eq_top_left htop x _ _⟩
@@ -515,7 +515,7 @@ theorem IsScalarTower.of_mclosure_eq_top {N α} [Monoid M] [MulAction M N] [HasS
 #align is_scalar_tower.of_mclosure_eq_top IsScalarTower.of_mclosure_eq_top
 
 @[to_additive]
-theorem SMulCommClass.of_mclosure_eq_top {N α} [Monoid M] [HasSmul N α] [MulAction M α] {s : Set M}
+theorem SMulCommClass.of_mclosure_eq_top {N α} [Monoid M] [SMul N α] [MulAction M α] {s : Set M}
     (htop : Submonoid.closure s = ⊤) (hs : ∀ x ∈ s, ∀ (y : N) (z : α), x • y • z = y • x • z) :
     SMulCommClass M N α :=
   by

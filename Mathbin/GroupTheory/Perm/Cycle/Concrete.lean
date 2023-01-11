@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 
 ! This file was ported from Lean 3 source module group_theory.perm.cycle.concrete
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -274,7 +274,7 @@ theorem mem_to_list_iff {y : α} : y ∈ toList p x ↔ SameCycle p x y ∧ x �
     rw [← support_cycle_of_eq_nil_iff] at hx
     simp [hx]
   · rintro ⟨h, hx⟩
-    simpa using same_cycle.nat_of_mem_support _ h hx
+    simpa using h.exists_pow_eq_of_mem_support hx
 #align equiv.perm.mem_to_list_iff Equiv.Perm.mem_to_list_iff
 
 theorem nodup_to_list (p : Perm α) (x : α) : Nodup (toList p x) :=
@@ -315,7 +315,7 @@ theorem nodup_to_list (p : Perm α) (x : α) : Nodup (toList p x) :=
 theorem next_to_list_eq_apply (p : Perm α) (x y : α) (hy : y ∈ toList p x) :
     next (toList p x) y hy = p y := by
   rw [mem_to_list_iff] at hy
-  obtain ⟨k, hk, hk'⟩ := hy.left.nat_of_mem_support _ hy.right
+  obtain ⟨k, hk, hk'⟩ := hy.left.exists_pow_eq_of_mem_support hy.right
   rw [← nth_le_to_list p x k (by simpa using hk)] at hk'
   simp_rw [← hk']
   rw [next_nth_le _ (nodup_to_list _ _), nth_le_to_list, nth_le_to_list, ← mul_apply, ← pow_succ,
@@ -327,7 +327,7 @@ theorem to_list_pow_apply_eq_rotate (p : Perm α) (x : α) (k : ℕ) :
     p.toList ((p ^ k) x) = (p.toList x).rotate k :=
   by
   apply ext_le
-  · simp
+  · simp only [length_to_list, cycle_of_self_apply_pow, length_rotate]
   · intro n hn hn'
     rw [nth_le_to_list, nth_le_rotate, nth_le_to_list, length_to_list,
       pow_mod_card_support_cycle_of_self_apply, pow_add, mul_apply]
@@ -336,7 +336,7 @@ theorem to_list_pow_apply_eq_rotate (p : Perm α) (x : α) (k : ℕ) :
 theorem SameCycle.to_list_is_rotated {f : Perm α} {x y : α} (h : SameCycle f x y) :
     toList f x ~r toList f y := by
   by_cases hx : x ∈ f.support
-  · obtain ⟨_ | k, hk, hy⟩ := h.nat_of_mem_support _ hx
+  · obtain ⟨_ | k, hk, hy⟩ := h.exists_pow_eq_of_mem_support hx
     · simp only [coe_one, id.def, pow_zero] at hy
       simp [hy]
     use k.succ
@@ -349,7 +349,7 @@ theorem pow_apply_mem_to_list_iff_mem_support {n : ℕ} : (p ^ n) x ∈ p.toList
   by
   rw [mem_to_list_iff, and_iff_right_iff_imp]
   refine' fun _ => same_cycle.symm _
-  rw [same_cycle_pow_left_iff]
+  rw [same_cycle_pow_left]
 #align
   equiv.perm.pow_apply_mem_to_list_iff_mem_support Equiv.Perm.pow_apply_mem_to_list_iff_mem_support
 
@@ -396,7 +396,7 @@ theorem form_perm_to_list (f : Perm α) (x : α) : formPerm (toList f x) = f.cyc
       form_perm_nil]
   ext y
   by_cases hy : same_cycle f x y
-  · obtain ⟨k, hk, rfl⟩ := hy.nat_of_mem_support _ (mem_support.mpr hx)
+  · obtain ⟨k, hk, rfl⟩ := hy.exists_pow_eq_of_mem_support (mem_support.mpr hx)
     rw [cycle_of_apply_apply_pow_self, List.form_perm_apply_mem_eq_next (nodup_to_list f x),
       next_to_list_eq_apply, pow_succ, mul_apply]
     rw [mem_to_list_iff]

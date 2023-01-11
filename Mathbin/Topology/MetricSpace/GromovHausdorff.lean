@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.gromov_hausdorff
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1030,7 +1030,7 @@ theorem totally_bounded {t : Set GHSpace} {C : ℝ} {u : ℕ → ℝ} {K : ℕ �
           floor_nonneg.2 (mul_nonneg (le_of_lt (inv_pos.2 εpos)) dist_nonneg)
         have D' : 0 ≤ ⌊ε⁻¹ * dist (Ψ x) (Ψ y)⌋ :=
           floor_nonneg.2 (mul_nonneg (le_of_lt (inv_pos.2 εpos)) dist_nonneg)
-        rw [← Int.toNat_of_nonneg D, ← Int.toNat_of_nonneg D', Int.floor_to_nat, Int.floor_to_nat,
+        rw [← Int.toNat_of_nonneg D, ← Int.toNat_of_nonneg D', Int.floor_toNat, Int.floor_toNat,
           this]
       -- deduce that the distances coincide up to `ε`, by a straightforward computation
       -- that should be automated

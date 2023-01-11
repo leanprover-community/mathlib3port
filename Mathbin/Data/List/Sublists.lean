@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.list.sublists
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -401,8 +401,12 @@ theorem nodup_sublists' {l : List α} : Nodup (sublists' l) ↔ Nodup l := by
 #align list.nodup_sublists' List.nodup_sublists'
 
 alias nodup_sublists ↔ nodup.of_sublists nodup.sublists
+#align list.nodup.of_sublists List.Nodup.of_sublists
+#align list.nodup.sublists List.Nodup.sublists
 
 alias nodup_sublists' ↔ nodup.of_sublists' nodup.sublists'
+#align list.nodup.of_sublists' List.Nodup.of_sublists'
+#align list.nodup.sublists' List.Nodup.sublists'
 
 attribute [protected] nodup.sublists nodup.sublists'
 

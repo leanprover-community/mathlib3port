@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -898,7 +898,7 @@ theorem neg_apply (f : M →ₗ⁅R,L⁆ N) (m : M) : (-f) m = -f m :=
   rfl
 #align lie_module_hom.neg_apply LieModuleHom.neg_apply
 
-instance hasNsmul : HasSmul ℕ (M →ₗ⁅R,L⁆ N)
+instance hasNsmul : SMul ℕ (M →ₗ⁅R,L⁆ N)
     where smul n f := { n • (f : M →ₗ[R] N) with map_lie' := fun x m => by simp }
 #align lie_module_hom.has_nsmul LieModuleHom.hasNsmul
 
@@ -911,7 +911,7 @@ theorem nsmul_apply (n : ℕ) (f : M →ₗ⁅R,L⁆ N) (m : M) : (n • f) m = 
   rfl
 #align lie_module_hom.nsmul_apply LieModuleHom.nsmul_apply
 
-instance hasZsmul : HasSmul ℤ (M →ₗ⁅R,L⁆ N)
+instance hasZsmul : SMul ℤ (M →ₗ⁅R,L⁆ N)
     where smul z f := { z • (f : M →ₗ[R] N) with map_lie' := fun x m => by simp }
 #align lie_module_hom.has_zsmul LieModuleHom.hasZsmul
 
@@ -928,8 +928,7 @@ instance : AddCommGroup (M →ₗ⁅R,L⁆ N) :=
   coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => coe_nsmul _ _)
     fun _ _ => coe_zsmul _ _
 
-instance : HasSmul R (M →ₗ⁅R,L⁆ N)
-    where smul t f := { t • (f : M →ₗ[R] N) with map_lie' := by simp }
+instance : SMul R (M →ₗ⁅R,L⁆ N) where smul t f := { t • (f : M →ₗ[R] N) with map_lie' := by simp }
 
 @[norm_cast, simp]
 theorem coe_smul (t : R) (f : M →ₗ⁅R,L⁆ N) : ⇑(t • f) = t • f :=

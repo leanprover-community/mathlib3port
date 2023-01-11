@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.algebra.mul_action
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,7 +46,7 @@ open Filter
 /-- Class `has_continuous_smul M X` says that the scalar multiplication `(•) : M → X → X`
 is continuous in both arguments. We use the same class for all kinds of multiplicative actions,
 including (semi)modules and algebras. -/
-class HasContinuousSmul (M X : Type _) [HasSmul M X] [TopologicalSpace M] [TopologicalSpace X] :
+class HasContinuousSmul (M X : Type _) [SMul M X] [TopologicalSpace M] [TopologicalSpace X] :
   Prop where
   continuous_smul : Continuous fun p : M × X => p.1 • p.2
 #align has_continuous_smul HasContinuousSmul
@@ -69,9 +69,9 @@ section Main
 
 variable {M X Y α : Type _} [TopologicalSpace M] [TopologicalSpace X] [TopologicalSpace Y]
 
-section HasSmul
+section SMul
 
-variable [HasSmul M X] [HasContinuousSmul M X]
+variable [SMul M X] [HasContinuousSmul M X]
 
 @[to_additive]
 instance (priority := 100) HasContinuousSmul.has_continuous_const_smul : HasContinuousConstSmul M X
@@ -118,7 +118,7 @@ theorem Continuous.smul (hf : Continuous f) (hg : Continuous g) : Continuous fun
 /-- If a scalar action is central, then its right action is continuous when its left action is. -/
 @[to_additive
       "If an additive action is central, then its right action is continuous when its left\naction is."]
-instance HasContinuousSmul.op [HasSmul Mᵐᵒᵖ X] [IsCentralScalar M X] : HasContinuousSmul Mᵐᵒᵖ X :=
+instance HasContinuousSmul.op [SMul Mᵐᵒᵖ X] [IsCentralScalar M X] : HasContinuousSmul Mᵐᵒᵖ X :=
   ⟨by
     suffices Continuous fun p : M × X => MulOpposite.op p.fst • p.snd from
       this.comp (MulOpposite.continuous_unop.prod_map continuous_id)
@@ -131,7 +131,7 @@ instance MulOpposite.has_continuous_smul : HasContinuousSmul M Xᵐᵒᵖ :=
       continuous_smul.comp <| continuous_id.prod_map MulOpposite.continuous_unop⟩
 #align mul_opposite.has_continuous_smul MulOpposite.has_continuous_smul
 
-end HasSmul
+end SMul
 
 section Monoid
 
@@ -147,13 +147,13 @@ instance Units.has_continuous_smul : HasContinuousSmul Mˣ X
 end Monoid
 
 @[to_additive]
-instance [HasSmul M X] [HasSmul M Y] [HasContinuousSmul M X] [HasContinuousSmul M Y] :
+instance [SMul M X] [SMul M Y] [HasContinuousSmul M X] [HasContinuousSmul M Y] :
     HasContinuousSmul M (X × Y) :=
   ⟨(continuous_fst.smul (continuous_fst.comp continuous_snd)).prod_mk
       (continuous_fst.smul (continuous_snd.comp continuous_snd))⟩
 
 @[to_additive]
-instance {ι : Type _} {γ : ι → Type _} [∀ i, TopologicalSpace (γ i)] [∀ i, HasSmul M (γ i)]
+instance {ι : Type _} {γ : ι → Type _} [∀ i, TopologicalSpace (γ i)] [∀ i, SMul M (γ i)]
     [∀ i, HasContinuousSmul M (γ i)] : HasContinuousSmul M (∀ i, γ i) :=
   ⟨continuous_pi fun i =>
       (continuous_fst.smul continuous_snd).comp <|
@@ -163,7 +163,7 @@ end Main
 
 section LatticeOps
 
-variable {ι : Sort _} {M X : Type _} [TopologicalSpace M] [HasSmul M X]
+variable {ι : Sort _} {M X : Type _} [TopologicalSpace M] [SMul M X]
 
 @[to_additive]
 theorem has_continuous_smul_Inf {ts : Set (TopologicalSpace X)}

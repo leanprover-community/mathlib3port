@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Floris van Doorn, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module order.filter.small_sets
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -168,6 +168,8 @@ theorem eventually_small_sets_forall {p : α → Prop} :
 #align filter.eventually_small_sets_forall Filter.eventually_small_sets_forall
 
 alias eventually_small_sets_forall ↔ eventually.of_small_sets eventually.small_sets
+#align filter.eventually.of_small_sets Filter.Eventually.of_small_sets
+#align filter.eventually.small_sets Filter.Eventually.small_sets
 
 @[simp]
 theorem eventually_small_sets_subset {s : Set α} : (∀ᶠ t in l.smallSets, t ⊆ s) ↔ s ∈ l :=

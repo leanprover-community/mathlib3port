@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Sébastien Gouëzel, Eric Wieser
 
 ! This file was ported from Lean 3 source module data.complex.module
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,11 +56,11 @@ variable {R : Type _} {S : Type _}
 
 section
 
-variable [HasSmul R ℝ]
+variable [SMul R ℝ]
 
 /- The useless `0` multiplication in `smul` is to make sure that
 `restrict_scalars.module ℝ ℂ ℂ = complex.module` definitionally. -/
-instance : HasSmul R ℂ where smul r x := ⟨r • x.re - 0 * x.im, r • x.im + 0 * x.re⟩
+instance : SMul R ℂ where smul r x := ⟨r • x.re - 0 * x.im, r • x.im + 0 * x.re⟩
 
 theorem smul_re (r : R) (z : ℂ) : (r • z).re = r • z.re := by simp [(· • ·)]
 #align complex.smul_re Complex.smul_re
@@ -75,13 +75,13 @@ theorem real_smul {x : ℝ} {z : ℂ} : x • z = x * z :=
 
 end
 
-instance [HasSmul R ℝ] [HasSmul S ℝ] [SMulCommClass R S ℝ] : SMulCommClass R S ℂ
+instance [SMul R ℝ] [SMul S ℝ] [SMulCommClass R S ℝ] : SMulCommClass R S ℂ
     where smul_comm r s x := by ext <;> simp [smul_re, smul_im, smul_comm]
 
-instance [HasSmul R S] [HasSmul R ℝ] [HasSmul S ℝ] [IsScalarTower R S ℝ] : IsScalarTower R S ℂ
+instance [SMul R S] [SMul R ℝ] [SMul S ℝ] [IsScalarTower R S ℝ] : IsScalarTower R S ℂ
     where smul_assoc r s x := by ext <;> simp [smul_re, smul_im, smul_assoc]
 
-instance [HasSmul R ℝ] [HasSmul Rᵐᵒᵖ ℝ] [IsCentralScalar R ℝ] : IsCentralScalar R ℂ
+instance [SMul R ℝ] [SMul Rᵐᵒᵖ ℝ] [IsCentralScalar R ℝ] : IsCentralScalar R ℂ
     where op_smul_eq_smul r x := by ext <;> simp [smul_re, smul_im, op_smul_eq_smul]
 
 instance [Monoid R] [MulAction R ℝ] : MulAction R ℂ
@@ -232,7 +232,7 @@ theorem Complex.coe_smul {E : Type _} [AddCommGroup E] [Module ℂ E] (x : ℝ) 
 /-- The scalar action of `ℝ` on a `ℂ`-module `E` induced by `module.complex_to_real` commutes with
 another scalar action of `M` on `E` whenever the action of `ℂ` commutes with the action of `M`. -/
 instance (priority := 900) SMulCommClass.complex_to_real {M E : Type _} [AddCommGroup E]
-    [Module ℂ E] [HasSmul M E] [SMulCommClass ℂ M E] : SMulCommClass ℝ M E
+    [Module ℂ E] [SMul M E] [SMulCommClass ℂ M E] : SMulCommClass ℝ M E
     where smul_comm r _ _ := (smul_comm (r : ℂ) _ _ : _)
 #align smul_comm_class.complex_to_real SMulCommClass.complex_to_real
 

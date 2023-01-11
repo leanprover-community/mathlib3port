@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Shing Tak Lam, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.digits
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -203,13 +203,13 @@ theorem of_digits_eq_sum_map_with_index_aux (b : ℕ) (l : List ℕ) :
 theorem of_digits_eq_sum_map_with_index (b : ℕ) (L : List ℕ) :
     ofDigits b L = (L.mapWithIndex fun i a => a * b ^ i).Sum :=
   by
-  rw [List.map_with_index_eq_enum_map, List.enum_eq_zip_range, List.map_uncurry_zip_eq_zip_with,
+  rw [List.map_with_index_eq_enum_map, List.enum_eq_zip_range, List.map_uncurry_zip_eq_zipWith,
     of_digits_eq_foldr]
   induction' L with hd tl hl
   · simp
   ·
-    simpa [List.range_succ_eq_map, List.zip_with_map_left,
-      of_digits_eq_sum_map_with_index_aux] using Or.inl hl
+    simpa [List.range_succ_eq_map, List.zipWith_map_left, of_digits_eq_sum_map_with_index_aux] using
+      Or.inl hl
 #align nat.of_digits_eq_sum_map_with_index Nat.of_digits_eq_sum_map_with_index
 
 @[simp]

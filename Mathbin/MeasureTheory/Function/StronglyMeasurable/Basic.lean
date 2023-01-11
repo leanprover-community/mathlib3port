@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.function.strongly_measurable.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -210,7 +210,7 @@ protected theorem tendsto_approx {m : MeasurableSpace α} (hf : StronglyMeasurab
 /-- Similar to `strongly_measurable.approx`, but enforces that the norm of every function in the
 sequence is less than `c` everywhere. If `‖f x‖ ≤ c` this sequence of simple functions verifies
 `tendsto (λ n, hf.approx_bounded n x) at_top (𝓝 (f x))`. -/
-noncomputable def approxBounded {m : MeasurableSpace α} [HasNorm β] [HasSmul ℝ β]
+noncomputable def approxBounded {m : MeasurableSpace α} [HasNorm β] [SMul ℝ β]
     (hf : StronglyMeasurable f) (c : ℝ) : ℕ → SimpleFunc α β := fun n =>
   (hf.approx n).map fun x => min 1 (c / ‖x‖) • x
 #align
@@ -474,25 +474,25 @@ protected theorem div [Div β] [HasContinuousDiv β] (hf : StronglyMeasurable f)
 #align measure_theory.strongly_measurable.div MeasureTheory.StronglyMeasurable.div
 
 @[to_additive]
-protected theorem smul {𝕜} [TopologicalSpace 𝕜] [HasSmul 𝕜 β] [HasContinuousSmul 𝕜 β] {f : α → 𝕜}
+protected theorem smul {𝕜} [TopologicalSpace 𝕜] [SMul 𝕜 β] [HasContinuousSmul 𝕜 β] {f : α → 𝕜}
     {g : α → β} (hf : StronglyMeasurable f) (hg : StronglyMeasurable g) :
     StronglyMeasurable fun x => f x • g x :=
   continuous_smul.comp_strongly_measurable (hf.prod_mk hg)
 #align measure_theory.strongly_measurable.smul MeasureTheory.StronglyMeasurable.smul
 
-protected theorem const_smul {𝕜} [HasSmul 𝕜 β] [HasContinuousConstSmul 𝕜 β]
-    (hf : StronglyMeasurable f) (c : 𝕜) : StronglyMeasurable (c • f) :=
+protected theorem const_smul {𝕜} [SMul 𝕜 β] [HasContinuousConstSmul 𝕜 β] (hf : StronglyMeasurable f)
+    (c : 𝕜) : StronglyMeasurable (c • f) :=
   ⟨fun n => c • hf.approx n, fun x => (hf.tendsto_approx x).const_smul c⟩
 #align measure_theory.strongly_measurable.const_smul MeasureTheory.StronglyMeasurable.const_smul
 
-protected theorem const_smul' {𝕜} [HasSmul 𝕜 β] [HasContinuousConstSmul 𝕜 β]
+protected theorem const_smul' {𝕜} [SMul 𝕜 β] [HasContinuousConstSmul 𝕜 β]
     (hf : StronglyMeasurable f) (c : 𝕜) : StronglyMeasurable fun x => c • f x :=
   hf.const_smul c
 #align measure_theory.strongly_measurable.const_smul' MeasureTheory.StronglyMeasurable.const_smul'
 
 @[to_additive]
-protected theorem smul_const {𝕜} [TopologicalSpace 𝕜] [HasSmul 𝕜 β] [HasContinuousSmul 𝕜 β]
-    {f : α → 𝕜} (hf : StronglyMeasurable f) (c : β) : StronglyMeasurable fun x => f x • c :=
+protected theorem smul_const {𝕜} [TopologicalSpace 𝕜] [SMul 𝕜 β] [HasContinuousSmul 𝕜 β] {f : α → 𝕜}
+    (hf : StronglyMeasurable f) (c : β) : StronglyMeasurable fun x => f x • c :=
   continuous_smul.comp_strongly_measurable (hf.prod_mk strongly_measurable_const)
 #align measure_theory.strongly_measurable.smul_const MeasureTheory.StronglyMeasurable.smul_const
 
@@ -1391,27 +1391,26 @@ protected theorem div [Group β] [TopologicalGroup β] (hf : AeStronglyMeasurabl
 #align measure_theory.ae_strongly_measurable.div MeasureTheory.AeStronglyMeasurable.div
 
 @[to_additive]
-protected theorem smul {𝕜} [TopologicalSpace 𝕜] [HasSmul 𝕜 β] [HasContinuousSmul 𝕜 β] {f : α → 𝕜}
+protected theorem smul {𝕜} [TopologicalSpace 𝕜] [SMul 𝕜 β] [HasContinuousSmul 𝕜 β] {f : α → 𝕜}
     {g : α → β} (hf : AeStronglyMeasurable f μ) (hg : AeStronglyMeasurable g μ) :
     AeStronglyMeasurable (fun x => f x • g x) μ :=
   continuous_smul.compAeStronglyMeasurable (hf.prod_mk hg)
 #align measure_theory.ae_strongly_measurable.smul MeasureTheory.AeStronglyMeasurable.smul
 
-protected theorem constSmul {𝕜} [HasSmul 𝕜 β] [HasContinuousConstSmul 𝕜 β]
+protected theorem constSmul {𝕜} [SMul 𝕜 β] [HasContinuousConstSmul 𝕜 β]
     (hf : AeStronglyMeasurable f μ) (c : 𝕜) : AeStronglyMeasurable (c • f) μ :=
   ⟨c • hf.mk f, hf.strongly_measurable_mk.const_smul c, hf.ae_eq_mk.const_smul c⟩
 #align measure_theory.ae_strongly_measurable.const_smul MeasureTheory.AeStronglyMeasurable.constSmul
 
-protected theorem constSmul' {𝕜} [HasSmul 𝕜 β] [HasContinuousConstSmul 𝕜 β]
+protected theorem constSmul' {𝕜} [SMul 𝕜 β] [HasContinuousConstSmul 𝕜 β]
     (hf : AeStronglyMeasurable f μ) (c : 𝕜) : AeStronglyMeasurable (fun x => c • f x) μ :=
   hf.const_smul c
 #align
   measure_theory.ae_strongly_measurable.const_smul' MeasureTheory.AeStronglyMeasurable.constSmul'
 
 @[to_additive]
-protected theorem smulConst {𝕜} [TopologicalSpace 𝕜] [HasSmul 𝕜 β] [HasContinuousSmul 𝕜 β]
-    {f : α → 𝕜} (hf : AeStronglyMeasurable f μ) (c : β) :
-    AeStronglyMeasurable (fun x => f x • c) μ :=
+protected theorem smulConst {𝕜} [TopologicalSpace 𝕜] [SMul 𝕜 β] [HasContinuousSmul 𝕜 β] {f : α → 𝕜}
+    (hf : AeStronglyMeasurable f μ) (c : β) : AeStronglyMeasurable (fun x => f x • c) μ :=
   continuous_smul.compAeStronglyMeasurable (hf.prod_mk aeStronglyMeasurableConst)
 #align measure_theory.ae_strongly_measurable.smul_const MeasureTheory.AeStronglyMeasurable.smulConst
 

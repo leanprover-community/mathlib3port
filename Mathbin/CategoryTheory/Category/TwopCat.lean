@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module category_theory.category.Twop
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -53,6 +53,7 @@ theorem coe_of {X : Type _} (to_two_pointing : TwoPointing X) : ↥(of to_two_po
 #align Twop.coe_of TwopCat.coe_of
 
 alias of ← _root_.two_pointing.Twop
+#align two_pointing.Twop TwoPointing.twop
 
 instance : Inhabited TwopCat :=
   ⟨of TwoPointing.bool⟩

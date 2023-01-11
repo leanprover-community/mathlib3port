@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jan-David Salchow, Sébastien Gouëzel, Jean Lo
 
 ! This file was ported from Lean 3 source module analysis.normed_space.operator_norm
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1438,6 +1438,7 @@ protected theorem ContinuousLinearMap.has_sum {f : ι → M} (φ : M →SL[σ] M
 #align continuous_linear_map.has_sum ContinuousLinearMap.has_sum
 
 alias ContinuousLinearMap.has_sum ← HasSum.mapL
+#align has_sum.mapL HasSum.mapL
 
 protected theorem ContinuousLinearMap.summable {f : ι → M} (φ : M →SL[σ] M₂) (hf : Summable f) :
     Summable fun b : ι => φ (f b) :=
@@ -1445,6 +1446,7 @@ protected theorem ContinuousLinearMap.summable {f : ι → M} (φ : M →SL[σ] 
 #align continuous_linear_map.summable ContinuousLinearMap.summable
 
 alias ContinuousLinearMap.summable ← Summable.mapL
+#align summable.mapL Summable.mapL
 
 protected theorem ContinuousLinearMap.map_tsum [T2Space M₂] {f : ι → M} (φ : M →SL[σ] M₂)
     (hf : Summable f) : φ (∑' z, f z) = ∑' z, φ (f z) :=

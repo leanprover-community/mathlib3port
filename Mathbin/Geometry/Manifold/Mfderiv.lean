@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module geometry.manifold.mfderiv
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1027,12 +1027,16 @@ theorem unique_mdiff_within_at_iff_unique_diff_within_at :
 
 alias unique_mdiff_within_at_iff_unique_diff_within_at ↔
   UniqueMdiffWithinAt.uniqueDiffWithinAt UniqueDiffWithinAt.unique_mdiff_within_at
+#align unique_mdiff_within_at.unique_diff_within_at UniqueMdiffWithinAt.uniqueDiffWithinAt
+#align unique_diff_within_at.unique_mdiff_within_at UniqueDiffWithinAt.unique_mdiff_within_at
 
 theorem unique_mdiff_on_iff_unique_diff_on : UniqueMdiffOn 𝓘(𝕜, E) s ↔ UniqueDiffOn 𝕜 s := by
   simp [UniqueMdiffOn, UniqueDiffOn, unique_mdiff_within_at_iff_unique_diff_within_at]
 #align unique_mdiff_on_iff_unique_diff_on unique_mdiff_on_iff_unique_diff_on
 
 alias unique_mdiff_on_iff_unique_diff_on ↔ UniqueMdiffOn.unique_diff_on UniqueDiffOn.unique_mdiff_on
+#align unique_mdiff_on.unique_diff_on UniqueMdiffOn.unique_diff_on
+#align unique_diff_on.unique_mdiff_on UniqueDiffOn.unique_mdiff_on
 
 @[simp, mfld_simps]
 theorem written_in_ext_chart_model_space : writtenInExtChartAt 𝓘(𝕜, E) 𝓘(𝕜, E') x f = f :=
@@ -1047,6 +1051,8 @@ theorem has_mfderiv_within_at_iff_has_fderiv_within_at {f'} :
 
 alias has_mfderiv_within_at_iff_has_fderiv_within_at ↔
   HasMfderivWithinAt.hasFderivWithinAt HasFderivWithinAt.hasMfderivWithinAt
+#align has_mfderiv_within_at.has_fderiv_within_at HasMfderivWithinAt.hasFderivWithinAt
+#align has_fderiv_within_at.has_mfderiv_within_at HasFderivWithinAt.hasMfderivWithinAt
 
 theorem has_mfderiv_at_iff_has_fderiv_at {f'} :
     HasMfderivAt 𝓘(𝕜, E) 𝓘(𝕜, E') f x f' ↔ HasFderivAt f f' x := by
@@ -1055,6 +1061,8 @@ theorem has_mfderiv_at_iff_has_fderiv_at {f'} :
 #align has_mfderiv_at_iff_has_fderiv_at has_mfderiv_at_iff_has_fderiv_at
 
 alias has_mfderiv_at_iff_has_fderiv_at ↔ HasMfderivAt.hasFderivAt HasFderivAt.hasMfderivAt
+#align has_mfderiv_at.has_fderiv_at HasMfderivAt.hasFderivAt
+#align has_fderiv_at.has_mfderiv_at HasFderivAt.hasMfderivAt
 
 /-- For maps between vector spaces, `mdifferentiable_within_at` and `fdifferentiable_within_at`
 coincide -/
@@ -1068,6 +1076,10 @@ theorem mdifferentiable_within_at_iff_differentiable_within_at :
 
 alias mdifferentiable_within_at_iff_differentiable_within_at ↔
   MdifferentiableWithinAt.differentiable_within_at DifferentiableWithinAt.mdifferentiable_within_at
+#align
+  mdifferentiable_within_at.differentiable_within_at MdifferentiableWithinAt.differentiable_within_at
+#align
+  differentiable_within_at.mdifferentiable_within_at DifferentiableWithinAt.mdifferentiable_within_at
 
 /-- For maps between vector spaces, `mdifferentiable_at` and `differentiable_at` coincide -/
 theorem mdifferentiable_at_iff_differentiable_at :
@@ -1079,6 +1091,8 @@ theorem mdifferentiable_at_iff_differentiable_at :
 
 alias mdifferentiable_at_iff_differentiable_at ↔
   MdifferentiableAt.differentiable_at DifferentiableAt.mdifferentiable_at
+#align mdifferentiable_at.differentiable_at MdifferentiableAt.differentiable_at
+#align differentiable_at.mdifferentiable_at DifferentiableAt.mdifferentiable_at
 
 /-- For maps between vector spaces, `mdifferentiable_on` and `differentiable_on` coincide -/
 theorem mdifferentiable_on_iff_differentiable_on :
@@ -1089,6 +1103,8 @@ theorem mdifferentiable_on_iff_differentiable_on :
 
 alias mdifferentiable_on_iff_differentiable_on ↔
   MdifferentiableOn.differentiable_on DifferentiableOn.mdifferentiable_on
+#align mdifferentiable_on.differentiable_on MdifferentiableOn.differentiable_on
+#align differentiable_on.mdifferentiable_on DifferentiableOn.mdifferentiable_on
 
 /-- For maps between vector spaces, `mdifferentiable` and `differentiable` coincide -/
 theorem mdifferentiable_iff_differentiable :
@@ -1098,6 +1114,8 @@ theorem mdifferentiable_iff_differentiable :
 
 alias mdifferentiable_iff_differentiable ↔
   Mdifferentiable.differentiable Differentiable.mdifferentiable
+#align mdifferentiable.differentiable Mdifferentiable.differentiable
+#align differentiable.mdifferentiable Differentiable.mdifferentiable
 
 /-- For maps between vector spaces, `mfderiv_within` and `fderiv_within` coincide -/
 @[simp]

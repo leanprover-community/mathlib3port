@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Neil Strickland
 
 ! This file was ported from Lean 3 source module data.pnat.prime
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -518,7 +518,7 @@ theorem gcd_eq_left {m n : ℕ+} : m ∣ n → m.gcd n = m :=
 lean 3 declaration is
   forall {m : PNat} {n : PNat} (k : Nat) (l : Nat), (PNat.Coprime m n) -> (PNat.Coprime (HPow.hPow.{0, 0, 0} PNat Nat PNat (instHPow.{0, 0} PNat Nat (Monoid.Pow.{0} PNat (RightCancelMonoid.toMonoid.{0} PNat (CancelMonoid.toRightCancelMonoid.{0} PNat (CancelCommMonoid.toCancelMonoid.{0} PNat (OrderedCancelCommMonoid.toCancelCommMonoid.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid))))))) m k) (HPow.hPow.{0, 0, 0} PNat Nat PNat (instHPow.{0, 0} PNat Nat (Monoid.Pow.{0} PNat (RightCancelMonoid.toMonoid.{0} PNat (CancelMonoid.toRightCancelMonoid.{0} PNat (CancelCommMonoid.toCancelMonoid.{0} PNat (OrderedCancelCommMonoid.toCancelCommMonoid.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid))))))) n l))
 but is expected to have type
-  forall {m : PNat} {n : PNat} (k : Nat) (l : Nat), (PNat.Coprime m n) -> (Nat.coprime (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) (Subtype.val.{1} Nat (fun (n : Nat) => LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) m) k) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) (Subtype.val.{1} Nat (fun (n : Nat) => LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) n) l))
+  forall {m : PNat} {n : PNat} (k : Nat) (l : Nat), (PNat.Coprime m n) -> (Nat.coprime (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) (PNat.val m) k) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) (PNat.val n) l))
 Case conversion may be inaccurate. Consider using '#align pnat.coprime.pow PNat.Coprime.powₓ'. -/
 theorem Coprime.pow {m n : ℕ+} (k l : ℕ) (h : m.Coprime n) : (m ^ k).Coprime (n ^ l) := by
   rw [← coprime_coe] at *; simp only [pow_coe]; apply Nat.Coprime.pow; apply h

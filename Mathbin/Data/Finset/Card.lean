@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.finset.card
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -79,6 +79,7 @@ theorem card_pos : 0 < s.card ↔ s.Nonempty :=
 #align finset.card_pos Finset.card_pos
 
 alias card_pos ↔ _ nonempty.card_pos
+#align finset.nonempty.card_pos Finset.Nonempty.card_pos
 
 theorem card_ne_zero_of_mem (h : a ∈ s) : s.card ≠ 0 :=
   (not_congr card_eq_zero).2 <| ne_empty_of_mem h

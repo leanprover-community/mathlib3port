@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 
 ! This file was ported from Lean 3 source module analysis.locally_convex.balanced_core_hull
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,9 +54,9 @@ section SemiNormedRing
 
 variable [SemiNormedRing 𝕜]
 
-section HasSmul
+section SMul
 
-variable (𝕜) [HasSmul 𝕜 E] {s t : Set E} {x : E}
+variable (𝕜) [SMul 𝕜 E] {s t : Set E} {x : E}
 
 /-- The largest balanced subset of `s`.-/
 def balancedCore (s : Set E) :=
@@ -122,7 +122,7 @@ theorem Balanced.hull_subset_of_subset (ht : Balanced 𝕜 t) (h : s ⊆ t) : ba
   exact ht.smul_mem hr (h hy)
 #align balanced.hull_subset_of_subset Balanced.hull_subset_of_subset
 
-end HasSmul
+end SMul
 
 section Module
 

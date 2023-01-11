@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 
 ! This file was ported from Lean 3 source module number_theory.modular_forms.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -198,9 +198,9 @@ theorem zero_apply (z : ℍ) : (0 : ModularForm Γ k) z = 0 :=
 
 section
 
-variable {α : Type _} [HasSmul α ℂ] [IsScalarTower α ℂ ℂ]
+variable {α : Type _} [SMul α ℂ] [IsScalarTower α ℂ ℂ]
 
-instance hasSmul : HasSmul α (ModularForm Γ k) :=
+instance hasSmul : SMul α (ModularForm Γ k) :=
   ⟨fun c f =>
     { c • (f : SlashInvariantForm Γ k) with
       toFun := c • f
@@ -343,9 +343,9 @@ theorem zero_apply (z : ℍ) : (0 : CuspForm Γ k) z = 0 :=
 
 section
 
-variable {α : Type _} [HasSmul α ℂ] [IsScalarTower α ℂ ℂ]
+variable {α : Type _} [SMul α ℂ] [IsScalarTower α ℂ ℂ]
 
-instance hasSmul : HasSmul α (CuspForm Γ k) :=
+instance hasSmul : SMul α (CuspForm Γ k) :=
   ⟨fun c f =>
     { c • (f : SlashInvariantForm Γ k) with
       toFun := c • f

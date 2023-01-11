@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module analysis.convex.between
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -280,12 +280,14 @@ theorem wbtw_comm {x y z : P} : Wbtw R x y z ↔ Wbtw R z y x := by
 #align wbtw_comm wbtw_comm
 
 alias wbtw_comm ↔ Wbtw.symm _
+#align wbtw.symm Wbtw.symm
 
 theorem sbtw_comm {x y z : P} : Sbtw R x y z ↔ Sbtw R z y x := by
   rw [Sbtw, Sbtw, wbtw_comm, ← and_assoc', ← and_assoc', and_right_comm]
 #align sbtw_comm sbtw_comm
 
 alias sbtw_comm ↔ Sbtw.symm _
+#align sbtw.symm Sbtw.symm
 
 variable (R)
 

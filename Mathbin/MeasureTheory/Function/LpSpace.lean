@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.function.lp_space
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -561,6 +561,7 @@ theorem Memℒp.ofLe {f : α → E} {g : α → F} (hg : Memℒp g p μ) (hf : A
 #align measure_theory.mem_ℒp.of_le MeasureTheory.Memℒp.ofLe
 
 alias mem_ℒp.of_le ← mem_ℒp.mono
+#align measure_theory.mem_ℒp.mono MeasureTheory.Memℒp.mono
 
 theorem Memℒp.mono' {f : α → E} {g : α → ℝ} (hg : Memℒp g p μ) (hf : AeStronglyMeasurable f μ)
     (h : ∀ᵐ a ∂μ, ‖f a‖ ≤ g a) : Memℒp f p μ :=

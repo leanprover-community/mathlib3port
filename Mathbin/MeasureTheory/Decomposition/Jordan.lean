@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module measure_theory.decomposition.jordan
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -82,12 +82,12 @@ instance : InvolutiveNeg (JordanDecomposition α)
   neg j := ⟨j.negPart, j.posPart, j.MutuallySingular.symm⟩
   neg_neg j := JordanDecomposition.ext _ _ rfl rfl
 
-instance : HasSmul ℝ≥0 (JordanDecomposition α)
+instance : SMul ℝ≥0 (JordanDecomposition α)
     where smul r j :=
     ⟨r • j.posPart, r • j.negPart,
       MutuallySingular.smul _ (MutuallySingular.smul _ j.MutuallySingular.symm).symm⟩
 
-instance hasSmulReal : HasSmul ℝ (JordanDecomposition α)
+instance hasSmulReal : SMul ℝ (JordanDecomposition α)
     where smul r j := if hr : 0 ≤ r then r.toNnreal • j else -((-r).toNnreal • j)
 #align
   measure_theory.jordan_decomposition.has_smul_real MeasureTheory.JordanDecomposition.hasSmulReal

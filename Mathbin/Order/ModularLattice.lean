@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.modular_lattice
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -121,8 +121,10 @@ theorem covby_sup_of_inf_covby_of_inf_covby_right : a ⊓ b ⋖ a → a ⊓ b �
 -/
 
 alias covby_sup_of_inf_covby_of_inf_covby_left ← Covby.sup_of_inf_of_inf_left
+#align covby.sup_of_inf_of_inf_left Covby.sup_of_inf_of_inf_left
 
 alias covby_sup_of_inf_covby_of_inf_covby_right ← Covby.sup_of_inf_of_inf_right
+#align covby.sup_of_inf_of_inf_right Covby.sup_of_inf_of_inf_right
 
 instance : IsWeakLowerModularLattice (OrderDual α) :=
   ⟨fun a b ha hb => (ha.ofDual.sup_of_inf_of_inf_left hb.ofDual).toDual⟩
@@ -148,8 +150,10 @@ theorem inf_covby_of_covby_sup_of_covby_sup_right : a ⋖ a ⊔ b → b ⋖ a �
 -/
 
 alias inf_covby_of_covby_sup_of_covby_sup_left ← Covby.inf_of_sup_of_sup_left
+#align covby.inf_of_sup_of_sup_left Covby.inf_of_sup_of_sup_left
 
 alias inf_covby_of_covby_sup_of_covby_sup_right ← Covby.inf_of_sup_of_sup_right
+#align covby.inf_of_sup_of_sup_right Covby.inf_of_sup_of_sup_right
 
 instance : IsWeakUpperModularLattice (OrderDual α) :=
   ⟨fun a b ha hb => (ha.ofDual.inf_of_sup_of_sup_left hb.ofDual).toDual⟩
@@ -175,8 +179,10 @@ theorem covby_sup_of_inf_covby_right : a ⊓ b ⋖ b → a ⋖ a ⊔ b :=
 -/
 
 alias covby_sup_of_inf_covby_left ← Covby.sup_of_inf_left
+#align covby.sup_of_inf_left Covby.sup_of_inf_left
 
 alias covby_sup_of_inf_covby_right ← Covby.sup_of_inf_right
+#align covby.sup_of_inf_right Covby.sup_of_inf_right
 
 #print IsUpperModularLattice.to_isWeakUpperModularLattice /-
 -- See note [lower instance priority]
@@ -211,8 +217,10 @@ theorem inf_covby_of_covby_sup_right : b ⋖ a ⊔ b → a ⊓ b ⋖ a :=
 -/
 
 alias inf_covby_of_covby_sup_left ← Covby.inf_of_sup_left
+#align covby.inf_of_sup_left Covby.inf_of_sup_left
 
 alias inf_covby_of_covby_sup_right ← Covby.inf_of_sup_right
+#align covby.inf_of_sup_right Covby.inf_of_sup_right
 
 #print IsLowerModularLattice.to_isWeakLowerModularLattice /-
 -- See note [lower instance priority]
@@ -327,7 +335,7 @@ theorem wellFounded_lt_exact_sequence {β γ : Type _} [PartialOrder β] [Preord
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : IsModularLattice.{u1} α _inst_1] {β : Type.{u2}} {γ : Type.{u3}} [_inst_3 : Preorder.{u2} β] [_inst_4 : PartialOrder.{u3} γ], (WellFounded.{succ u2} β (GT.gt.{u2} β (Preorder.toLT.{u2} β _inst_3))) -> (WellFounded.{succ u3} γ (GT.gt.{u3} γ (Preorder.toLT.{u3} γ (PartialOrder.toPreorder.{u3} γ _inst_4)))) -> (forall (K : α) (f₁ : β -> α) (f₂ : α -> β) (g₁ : γ -> α) (g₂ : α -> γ), (GaloisCoinsertion.{u2, u1} β α _inst_3 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))) f₁ f₂) -> (GaloisInsertion.{u1, u3} α γ (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u3} γ _inst_4) g₂ g₁) -> (forall (a : α), Eq.{succ u1} α (f₁ (f₂ a)) (HasInf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)) a K)) -> (forall (a : α), Eq.{succ u1} α (g₁ (g₂ a)) (HasSup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α _inst_1)) a K)) -> (WellFounded.{succ u1} α (GT.gt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))))))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : IsModularLattice.{u1} α _inst_1] {β : Type.{u3}} {γ : Type.{u2}} [_inst_3 : Preorder.{u3} β] [_inst_4 : PartialOrder.{u2} γ], (WellFounded.{succ u3} β (fun (x._@.Mathlib.Order.ModularLattice._hyg.1820 : β) (x._@.Mathlib.Order.ModularLattice._hyg.1822 : β) => GT.gt.{u3} β (Preorder.toLT.{u3} β _inst_3) x._@.Mathlib.Order.ModularLattice._hyg.1820 x._@.Mathlib.Order.ModularLattice._hyg.1822)) -> (WellFounded.{succ u2} γ (fun (x._@.Mathlib.Order.ModularLattice._hyg.1843 : γ) (x._@.Mathlib.Order.ModularLattice._hyg.1845 : γ) => GT.gt.{u2} γ (Preorder.toLT.{u2} γ (PartialOrder.toPreorder.{u2} γ _inst_4)) x._@.Mathlib.Order.ModularLattice._hyg.1843 x._@.Mathlib.Order.ModularLattice._hyg.1845)) -> (forall (K : α) (f₁ : β -> α) (f₂ : α -> β) (g₁ : γ -> α) (g₂ : α -> γ), (GaloisCoinsertion.{u3, u1} β α _inst_3 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))) f₁ f₂) -> (GaloisInsertion.{u1, u2} α γ (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} γ _inst_4) g₂ g₁) -> (forall (a : α), Eq.{succ u1} α (f₁ (f₂ a)) (HasInf.inf.{u1} α (Lattice.toHasInf.{u1} α _inst_1) a K)) -> (forall (a : α), Eq.{succ u1} α (g₁ (g₂ a)) (HasSup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α _inst_1)) a K)) -> (WellFounded.{succ u1} α (fun (x._@.Mathlib.Order.ModularLattice._hyg.1919 : α) (x._@.Mathlib.Order.ModularLattice._hyg.1921 : α) => GT.gt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) x._@.Mathlib.Order.ModularLattice._hyg.1919 x._@.Mathlib.Order.ModularLattice._hyg.1921)))
+  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : IsModularLattice.{u1} α _inst_1] {β : Type.{u3}} {γ : Type.{u2}} [_inst_3 : Preorder.{u3} β] [_inst_4 : PartialOrder.{u2} γ], (WellFounded.{succ u3} β (fun (x._@.Mathlib.Order.ModularLattice._hyg.1823 : β) (x._@.Mathlib.Order.ModularLattice._hyg.1825 : β) => GT.gt.{u3} β (Preorder.toLT.{u3} β _inst_3) x._@.Mathlib.Order.ModularLattice._hyg.1823 x._@.Mathlib.Order.ModularLattice._hyg.1825)) -> (WellFounded.{succ u2} γ (fun (x._@.Mathlib.Order.ModularLattice._hyg.1846 : γ) (x._@.Mathlib.Order.ModularLattice._hyg.1848 : γ) => GT.gt.{u2} γ (Preorder.toLT.{u2} γ (PartialOrder.toPreorder.{u2} γ _inst_4)) x._@.Mathlib.Order.ModularLattice._hyg.1846 x._@.Mathlib.Order.ModularLattice._hyg.1848)) -> (forall (K : α) (f₁ : β -> α) (f₂ : α -> β) (g₁ : γ -> α) (g₂ : α -> γ), (GaloisCoinsertion.{u3, u1} β α _inst_3 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))) f₁ f₂) -> (GaloisInsertion.{u1, u2} α γ (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} γ _inst_4) g₂ g₁) -> (forall (a : α), Eq.{succ u1} α (f₁ (f₂ a)) (HasInf.inf.{u1} α (Lattice.toHasInf.{u1} α _inst_1) a K)) -> (forall (a : α), Eq.{succ u1} α (g₁ (g₂ a)) (HasSup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α _inst_1)) a K)) -> (WellFounded.{succ u1} α (fun (x._@.Mathlib.Order.ModularLattice._hyg.1922 : α) (x._@.Mathlib.Order.ModularLattice._hyg.1924 : α) => GT.gt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) x._@.Mathlib.Order.ModularLattice._hyg.1922 x._@.Mathlib.Order.ModularLattice._hyg.1924)))
 Case conversion may be inaccurate. Consider using '#align well_founded_gt_exact_sequence wellFounded_gt_exact_sequenceₓ'. -/
 /-- A generalization of the theorem that if `N` is a submodule of `M` and
   `N` and `M / N` are both Noetherian, then `M` is Noetherian.  -/

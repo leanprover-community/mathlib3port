@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.cont_diff
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -559,6 +559,8 @@ theorem cont_diff_within_at_insert {y : E} :
 #align cont_diff_within_at_insert cont_diff_within_at_insert
 
 alias cont_diff_within_at_insert ↔ ContDiffWithinAt.of_insert ContDiffWithinAt.insert'
+#align cont_diff_within_at.of_insert ContDiffWithinAt.of_insert
+#align cont_diff_within_at.insert' ContDiffWithinAt.insert'
 
 theorem ContDiffWithinAt.insert (h : ContDiffWithinAt 𝕜 n f s x) :
     ContDiffWithinAt 𝕜 n f (insert x s) x :=

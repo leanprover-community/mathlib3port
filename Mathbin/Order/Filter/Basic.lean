@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jeremy Avigad
 
 ! This file was ported from Lean 3 source module order.filter.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -193,6 +193,7 @@ theorem bInter_finset_mem {β : Type v} {s : β → Set α} (is : Finset β) :
 #align filter.bInter_finset_mem Filter.bInter_finset_mem
 
 alias bInter_finset_mem ← _root_.finset.Inter_mem_sets
+#align finset.Inter_mem_sets Finset.Inter_mem_sets
 
 attribute [protected] Finset.Inter_mem_sets
 
@@ -1256,6 +1257,7 @@ theorem eventually_all_finite {ι} {I : Set ι} (hI : I.Finite) {l} {p : ι → 
 #align filter.eventually_all_finite Filter.eventually_all_finite
 
 alias eventually_all_finite ← _root_.set.finite.eventually_all
+#align set.finite.eventually_all Set.Finite.eventually_all
 
 attribute [protected] Set.Finite.eventually_all
 
@@ -1266,6 +1268,7 @@ theorem eventually_all_finset {ι} (I : Finset ι) {l} {p : ι → α → Prop} 
 #align filter.eventually_all_finset Filter.eventually_all_finset
 
 alias eventually_all_finset ← _root_.finset.eventually_all
+#align finset.eventually_all Finset.eventually_all
 
 attribute [protected] Finset.eventually_all
 
@@ -1546,6 +1549,8 @@ theorem eventually_eq_set {s t : Set α} {l : Filter α} : s =ᶠ[l] t ↔ ∀�
 #align filter.eventually_eq_set Filter.eventually_eq_set
 
 alias eventually_eq_set ↔ eventually_eq.mem_iff eventually.set_eq
+#align filter.eventually_eq.mem_iff Filter.EventuallyEq.mem_iff
+#align filter.eventually.set_eq Filter.Eventually.set_eq
 
 @[simp]
 theorem eventually_eq_univ {s : Set α} {l : Filter α} : s =ᶠ[l] univ ↔ s ∈ l := by
@@ -1629,13 +1634,13 @@ theorem EventuallyEq.div [Div β] {f f' g g' : α → β} {l : Filter α} (h : f
 #align filter.eventually_eq.div Filter.EventuallyEq.div
 
 @[to_additive]
-theorem EventuallyEq.const_smul {𝕜} [HasSmul 𝕜 β] {l : Filter α} {f g : α → β} (h : f =ᶠ[l] g)
+theorem EventuallyEq.const_smul {𝕜} [SMul 𝕜 β] {l : Filter α} {f g : α → β} (h : f =ᶠ[l] g)
     (c : 𝕜) : (fun x => c • f x) =ᶠ[l] fun x => c • g x :=
   h.fun_comp fun x => c • x
 #align filter.eventually_eq.const_smul Filter.EventuallyEq.const_smul
 
 @[to_additive]
-theorem EventuallyEq.smul {𝕜} [HasSmul 𝕜 β] {l : Filter α} {f f' : α → 𝕜} {g g' : α → β}
+theorem EventuallyEq.smul {𝕜} [SMul 𝕜 β] {l : Filter α} {f f' : α → 𝕜} {g g' : α → β}
     (hf : f =ᶠ[l] f') (hg : g =ᶠ[l] g') : (fun x => f x • g x) =ᶠ[l] fun x => f' x • g' x :=
   hf.comp₂ (· • ·) hg
 #align filter.eventually_eq.smul Filter.EventuallyEq.smul
@@ -2997,6 +3002,7 @@ theorem tendsto_iff_comap {f : α → β} {l₁ : Filter α} {l₂ : Filter β} 
 #align filter.tendsto_iff_comap Filter.tendsto_iff_comap
 
 alias tendsto_iff_comap ↔ tendsto.le_comap _
+#align filter.tendsto.le_comap Filter.Tendsto.le_comap
 
 protected theorem Tendsto.disjoint {f : α → β} {la₁ la₂ : Filter α} {lb₁ lb₂ : Filter β}
     (h₁ : Tendsto f la₁ lb₁) (hd : Disjoint lb₁ lb₂) (h₂ : Tendsto f la₂ lb₂) : Disjoint la₁ la₂ :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module topology.continuous_function.zero_at_infty
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -236,7 +236,7 @@ theorem coe_nsmul_rec : ∀ n, ⇑(nsmulRec n f) = n • f
   | n + 1 => by rw [nsmulRec, succ_nsmul, coe_add, coe_nsmul_rec]
 #align zero_at_infty_continuous_map.coe_nsmul_rec ZeroAtInftyContinuousMap.coe_nsmul_rec
 
-instance hasNatScalar : HasSmul ℕ C₀(α, β) :=
+instance hasNatScalar : SMul ℕ C₀(α, β) :=
   ⟨fun n f => ⟨n • f, by simpa [coe_nsmul_rec] using zero_at_infty (nsmulRec n f)⟩⟩
 #align zero_at_infty_continuous_map.has_nat_scalar ZeroAtInftyContinuousMap.hasNatScalar
 
@@ -282,7 +282,7 @@ theorem coe_zsmul_rec : ∀ z, ⇑(zsmulRec z f) = z • f
   | -[n+1] => by rw [zsmulRec, negSucc_zsmul, coe_neg, coe_nsmul_rec]
 #align zero_at_infty_continuous_map.coe_zsmul_rec ZeroAtInftyContinuousMap.coe_zsmul_rec
 
-instance hasIntScalar : HasSmul ℤ C₀(α, β) :=
+instance hasIntScalar : SMul ℤ C₀(α, β) :=
   ⟨fun n f => ⟨n • f, by simpa using zero_at_infty (zsmulRec n f)⟩⟩
 #align zero_at_infty_continuous_map.has_int_scalar ZeroAtInftyContinuousMap.hasIntScalar
 
@@ -296,7 +296,7 @@ instance [AddCommGroup β] [TopologicalAddGroup β] : AddCommGroup C₀(α, β) 
     rfl
 
 instance [Zero β] {R : Type _} [Zero R] [SMulWithZero R β] [HasContinuousConstSmul R β] :
-    HasSmul R C₀(α, β) :=
+    SMul R C₀(α, β) :=
   ⟨fun r f => ⟨r • f, by simpa [smul_zero] using (zero_at_infty f).const_smul r⟩⟩
 
 @[simp]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Adam Topaz
 
 ! This file was ported from Lean 3 source module algebra.free_algebra
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -105,7 +105,7 @@ def hasOne : One (Pre R X) :=
 /-- Scalar multiplication defined as multiplication by the image of elements from `R`.
 Note: Used for notation only.
 -/
-def hasSmul : HasSmul R (Pre R X) :=
+def hasSmul : SMul R (Pre R X) :=
   ⟨fun r m => mul (of_scalar r) m⟩
 #align free_algebra.pre.has_smul FreeAlgebra.Pre.hasSmul
 
@@ -209,7 +209,7 @@ instance : Semiring (FreeAlgebra R X)
 instance : Inhabited (FreeAlgebra R X) :=
   ⟨0⟩
 
-instance : HasSmul R (FreeAlgebra R X)
+instance : SMul R (FreeAlgebra R X)
     where smul r := Quot.map ((· * ·) ↑r) fun a b => Rel.mul_compat_right
 
 instance : Algebra R (FreeAlgebra R X)

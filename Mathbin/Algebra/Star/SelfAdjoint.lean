@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module algebra.star.self_adjoint
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -189,15 +189,15 @@ theorem zpow {x : R} (hx : IsSelfAdjoint x) (n : ℤ) : IsSelfAdjoint (x ^ n) :=
 
 end Field
 
-section HasSmul
+section SMul
 
 variable [Star R] [TrivialStar R] [AddGroup A] [StarAddMonoid A]
 
-theorem smul [HasSmul R A] [StarModule R A] (r : R) {x : A} (hx : IsSelfAdjoint x) :
+theorem smul [SMul R A] [StarModule R A] (r : R) {x : A} (hx : IsSelfAdjoint x) :
     IsSelfAdjoint (r • x) := by simp only [is_self_adjoint_iff, star_smul, star_trivial, hx.star_eq]
 #align is_self_adjoint.smul IsSelfAdjoint.smul
 
-end HasSmul
+end SMul
 
 end IsSelfAdjoint
 
@@ -346,7 +346,7 @@ theorem coe_rat_cast (x : ℚ) : ↑(x : selfAdjoint R) = (x : R) :=
   rfl
 #align self_adjoint.coe_rat_cast selfAdjoint.coe_rat_cast
 
-instance hasQsmul : HasSmul ℚ (selfAdjoint R) :=
+instance hasQsmul : SMul ℚ (selfAdjoint R) :=
   ⟨fun a x => ⟨a • x, by rw [Rat.smul_def] <;> exact (rat_cast_mem a).mul x.prop⟩⟩
 #align self_adjoint.has_qsmul selfAdjoint.hasQsmul
 
@@ -363,16 +363,15 @@ instance : Field (selfAdjoint R) :=
 
 end Field
 
-section HasSmul
+section SMul
 
 variable [Star R] [TrivialStar R] [AddGroup A] [StarAddMonoid A]
 
-instance [HasSmul R A] [StarModule R A] : HasSmul R (selfAdjoint A) :=
+instance [SMul R A] [StarModule R A] : SMul R (selfAdjoint A) :=
   ⟨fun r x => ⟨r • x, x.Prop.smul r⟩⟩
 
 @[simp, norm_cast]
-theorem coe_smul [HasSmul R A] [StarModule R A] (r : R) (x : selfAdjoint A) :
-    ↑(r • x) = r • (x : A) :=
+theorem coe_smul [SMul R A] [StarModule R A] (r : R) (x : selfAdjoint A) : ↑(r • x) = r • (x : A) :=
   rfl
 #align self_adjoint.coe_smul selfAdjoint.coe_smul
 
@@ -382,7 +381,7 @@ instance [Monoid R] [MulAction R A] [StarModule R A] : MulAction R (selfAdjoint 
 instance [Monoid R] [DistribMulAction R A] [StarModule R A] : DistribMulAction R (selfAdjoint A) :=
   Function.Injective.distribMulAction (selfAdjoint A).Subtype Subtype.coe_injective coe_smul
 
-end HasSmul
+end SMul
 
 section Module
 
@@ -444,7 +443,7 @@ instance (x : skewAdjoint R) : IsStarNormal (x : R) :=
 
 end Ring
 
-section HasSmul
+section SMul
 
 variable [Star R] [TrivialStar R] [AddCommGroup A] [StarAddMonoid A]
 
@@ -453,7 +452,7 @@ theorem smul_mem [Monoid R] [DistribMulAction R A] [StarModule R A] (r : R) {x :
   rw [mem_iff, star_smul, star_trivial, mem_iff.mp h, smul_neg r]
 #align skew_adjoint.smul_mem skewAdjoint.smul_mem
 
-instance [Monoid R] [DistribMulAction R A] [StarModule R A] : HasSmul R (skewAdjoint A) :=
+instance [Monoid R] [DistribMulAction R A] [StarModule R A] : SMul R (skewAdjoint A) :=
   ⟨fun r x => ⟨r • x, smul_mem r x.Prop⟩⟩
 
 @[simp, norm_cast]
@@ -468,7 +467,7 @@ instance [Monoid R] [DistribMulAction R A] [StarModule R A] : DistribMulAction R
 instance [Semiring R] [Module R A] [StarModule R A] : Module R (skewAdjoint A) :=
   Function.Injective.module R (skewAdjoint A).Subtype Subtype.coe_injective coe_smul
 
-end HasSmul
+end SMul
 
 end skewAdjoint
 

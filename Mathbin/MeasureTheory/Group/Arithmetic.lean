@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.group.arithmetic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -515,7 +515,7 @@ class HasMeasurableVadd (M α : Type _) [VAdd M α] [MeasurableSpace M] [Measura
 /-- We say that the action of `M` on `α` `has_measurable_smul` if for each `c` the map `x ↦ c • x`
 is a measurable function and for each `x` the map `c ↦ c • x` is a measurable function. -/
 @[to_additive]
-class HasMeasurableSmul (M α : Type _) [HasSmul M α] [MeasurableSpace M] [MeasurableSpace α] :
+class HasMeasurableSmul (M α : Type _) [SMul M α] [MeasurableSpace M] [MeasurableSpace α] :
   Prop where
   measurable_const_smul : ∀ c : M, Measurable ((· • ·) c : α → α)
   measurable_smul_const : ∀ x : α, Measurable fun c : M => c • x
@@ -531,7 +531,7 @@ class HasMeasurableVadd₂ (M α : Type _) [VAdd M α] [MeasurableSpace M] [Meas
 /-- We say that the action of `M` on `α` `has_measurable_smul₂` if the map
 `(c, x) ↦ c • x` is a measurable function. -/
 @[to_additive HasMeasurableVadd₂]
-class HasMeasurableSmul₂ (M α : Type _) [HasSmul M α] [MeasurableSpace M] [MeasurableSpace α] :
+class HasMeasurableSmul₂ (M α : Type _) [SMul M α] [MeasurableSpace M] [MeasurableSpace α] :
   Prop where
   measurable_smul : Measurable (Function.uncurry (· • ·) : M × α → α)
 #align has_measurable_smul₂ HasMeasurableSmul₂
@@ -571,8 +571,8 @@ instance Subgroup.has_measurable_smul {G α} [MeasurableSpace G] [MeasurableSpac
 
 section Smul
 
-variable {M β α : Type _} [MeasurableSpace M] [MeasurableSpace β] [HasSmul M β]
-  {m : MeasurableSpace α} {f : α → M} {g : α → β}
+variable {M β α : Type _} [MeasurableSpace M] [MeasurableSpace β] [SMul M β] {m : MeasurableSpace α}
+  {f : α → M} {g : α → β}
 
 include m
 
@@ -635,7 +635,7 @@ theorem AeMeasurable.constSmul (hf : AeMeasurable g μ) (c : M) : AeMeasurable (
 omit m
 
 @[to_additive]
-instance Pi.has_measurable_smul {ι : Type _} {α : ι → Type _} [∀ i, HasSmul M (α i)]
+instance Pi.has_measurable_smul {ι : Type _} {α : ι → Type _} [∀ i, SMul M (α i)]
     [∀ i, MeasurableSpace (α i)] [∀ i, HasMeasurableSmul M (α i)] :
     HasMeasurableSmul M (∀ i, α i) :=
   ⟨fun g => measurable_pi_iff.mpr fun i => (measurable_pi_apply i).const_smul _, fun g =>
@@ -762,8 +762,8 @@ instance {M : Type _} [Mul M] [MeasurableSpace M] [HasMeasurableMul₂ M] : HasM
       ((measurable_mul_unop.comp measurable_snd).mul (measurable_mul_unop.comp measurable_fst))⟩
 
 /-- If a scalar is central, then its right action is measurable when its left action is. -/
-instance HasMeasurableSmul.op {M α} [MeasurableSpace M] [MeasurableSpace α] [HasSmul M α]
-    [HasSmul Mᵐᵒᵖ α] [IsCentralScalar M α] [HasMeasurableSmul M α] : HasMeasurableSmul Mᵐᵒᵖ α :=
+instance HasMeasurableSmul.op {M α} [MeasurableSpace M] [MeasurableSpace α] [SMul M α] [SMul Mᵐᵒᵖ α]
+    [IsCentralScalar M α] [HasMeasurableSmul M α] : HasMeasurableSmul Mᵐᵒᵖ α :=
   ⟨MulOpposite.rec' fun c =>
       show Measurable fun x => op c • x by
         simpa only [op_smul_eq_smul] using measurable_const_smul c,
@@ -773,8 +773,8 @@ instance HasMeasurableSmul.op {M α} [MeasurableSpace M] [MeasurableSpace α] [H
 #align has_measurable_smul.op HasMeasurableSmul.op
 
 /-- If a scalar is central, then its right action is measurable when its left action is. -/
-instance HasMeasurableSmul₂.op {M α} [MeasurableSpace M] [MeasurableSpace α] [HasSmul M α]
-    [HasSmul Mᵐᵒᵖ α] [IsCentralScalar M α] [HasMeasurableSmul₂ M α] : HasMeasurableSmul₂ Mᵐᵒᵖ α :=
+instance HasMeasurableSmul₂.op {M α} [MeasurableSpace M] [MeasurableSpace α] [SMul M α]
+    [SMul Mᵐᵒᵖ α] [IsCentralScalar M α] [HasMeasurableSmul₂ M α] : HasMeasurableSmul₂ Mᵐᵒᵖ α :=
   ⟨show Measurable fun x : Mᵐᵒᵖ × α => op (unop x.1) • x.2
       by
       simp_rw [op_smul_eq_smul]

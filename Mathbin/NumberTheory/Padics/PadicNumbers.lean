@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module number_theory.padics.padic_numbers
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -87,7 +87,7 @@ constant. -/
 theorem stationary {f : CauSeq ℚ (padicNorm p)} (hf : ¬f ≈ 0) :
     ∃ N, ∀ m n, N ≤ m → N ≤ n → padicNorm p (f n) = padicNorm p (f m) :=
   have : ∃ ε > 0, ∃ N1, ∀ j ≥ N1, ε ≤ padicNorm p (f j) :=
-    CauSeq.abv_pos_of_not_lim_zero <| not_lim_zero_of_not_congr_zero hf
+    CauSeq.abv_pos_of_not_limZero <| not_limZero_of_not_congr_zero hf
   let ⟨ε, hε, N1, hN1⟩ := this
   let ⟨N2, hN2⟩ := CauSeq.cauchy₂ f hε
   ⟨max N1 N2, fun n m hn hm =>
@@ -165,7 +165,7 @@ theorem norm_eq_norm_app_of_nonzero {f : PadicSeq p} (hf : ¬f ≈ 0) :
 #align padic_seq.norm_eq_norm_app_of_nonzero PadicSeq.norm_eq_norm_app_of_nonzero
 
 theorem not_lim_zero_const_of_nonzero {q : ℚ} (hq : q ≠ 0) : ¬LimZero (const (padicNorm p) q) :=
-  fun h' => hq <| const_lim_zero.1 h'
+  fun h' => hq <| const_limZero.1 h'
 #align padic_seq.not_lim_zero_const_of_nonzero PadicSeq.not_lim_zero_const_of_nonzero
 
 theorem not_equiv_zero_const_of_nonzero {q : ℚ} (hq : q ≠ 0) : ¬const (padicNorm p) q ≈ 0 :=
@@ -229,7 +229,7 @@ theorem norm_eq_pow_val {f : PadicSeq p} (hf : ¬f ≈ 0) : f.norm = p ^ (-f.Val
   by
   rw [norm, Valuation, dif_neg hf, dif_neg hf, padicNorm, if_neg]
   intro H
-  apply CauSeq.not_lim_zero_of_not_congr_zero hf
+  apply CauSeq.not_limZero_of_not_congr_zero hf
   intro ε hε
   use stationary_point hf
   intro n hn
@@ -537,7 +537,7 @@ theorem mk_eq {f g : PadicSeq p} : mk f = mk g ↔ f ≈ g :=
 #align padic.mk_eq Padic.mk_eq
 
 theorem const_equiv {q r : ℚ} : const (padicNorm p) q ≈ const (padicNorm p) r ↔ q = r :=
-  ⟨fun heq => eq_of_sub_eq_zero <| const_lim_zero.1 HEq, fun heq => by
+  ⟨fun heq => eq_of_sub_eq_zero <| const_limZero.1 HEq, fun heq => by
     rw [HEq] <;> apply Setoid.refl _⟩
 #align padic.const_equiv Padic.const_equiv
 
@@ -1109,7 +1109,7 @@ theorem norm_eq_pow_val {x : ℚ_[p]} : x ≠ 0 → ‖x‖ = p ^ (-x.Valuation)
   rw [PadicSeq.norm_eq_pow_val]
   change ↑((p : ℚ) ^ (-PadicSeq.valuation f)) = (p : ℝ) ^ (-PadicSeq.valuation f)
   · rw [Rat.cast_zpow, Rat.cast_coe_nat]
-  · apply CauSeq.not_lim_zero_of_not_congr_zero
+  · apply CauSeq.not_limZero_of_not_congr_zero
     contrapose! hf
     apply Quotient.sound
     simpa using hf

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module order.filter.extr
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -218,10 +218,16 @@ theorem is_extr_filter_dual_iff : IsExtrFilter (to_dual ∘ f) l a ↔ IsExtrFil
 #align is_extr_filter_dual_iff is_extr_filter_dual_iff
 
 alias is_min_filter_dual_iff ↔ IsMinFilter.undual IsMaxFilter.dual
+#align is_min_filter.undual IsMinFilter.undual
+#align is_max_filter.dual IsMaxFilter.dual
 
 alias is_max_filter_dual_iff ↔ IsMaxFilter.undual IsMinFilter.dual
+#align is_max_filter.undual IsMaxFilter.undual
+#align is_min_filter.dual IsMinFilter.dual
 
 alias is_extr_filter_dual_iff ↔ IsExtrFilter.undual IsExtrFilter.dual
+#align is_extr_filter.undual IsExtrFilter.undual
+#align is_extr_filter.dual IsExtrFilter.dual
 
 theorem is_min_on_dual_iff : IsMinOn (to_dual ∘ f) s a ↔ IsMaxOn f s a :=
   Iff.rfl
@@ -236,10 +242,16 @@ theorem is_extr_on_dual_iff : IsExtrOn (to_dual ∘ f) s a ↔ IsExtrOn f s a :=
 #align is_extr_on_dual_iff is_extr_on_dual_iff
 
 alias is_min_on_dual_iff ↔ IsMinOn.undual IsMaxOn.dual
+#align is_min_on.undual IsMinOn.undual
+#align is_max_on.dual IsMaxOn.dual
 
 alias is_max_on_dual_iff ↔ IsMaxOn.undual IsMinOn.dual
+#align is_max_on.undual IsMaxOn.undual
+#align is_min_on.dual IsMinOn.dual
 
 alias is_extr_on_dual_iff ↔ IsExtrOn.undual IsExtrOn.dual
+#align is_extr_on.undual IsExtrOn.undual
+#align is_extr_on.dual IsExtrOn.dual
 
 /-! ### Operations on the filter/set -/
 

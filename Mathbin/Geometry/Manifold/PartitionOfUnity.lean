@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module geometry.manifold.partition_of_unity
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -222,6 +222,8 @@ theorem is_subordinate_to_partition_of_unity :
   smooth_partition_of_unity.is_subordinate_to_partition_of_unity SmoothPartitionOfUnity.is_subordinate_to_partition_of_unity
 
 alias is_subordinate_to_partition_of_unity ↔ _ is_subordinate.to_partition_of_unity
+#align
+  smooth_partition_of_unity.is_subordinate.to_partition_of_unity SmoothPartitionOfUnity.IsSubordinate.to_partition_of_unity
 
 /-- If `f` is a smooth partition of unity on a set `s : set M` subordinate to a family of open sets
 `U : ι → set M` and `g : ι → M → F` is a family of functions such that `g i` is $C^n$ smooth on
@@ -437,6 +439,8 @@ theorem is_subordinate_to_bump_covering {f : SmoothBumpCovering ι I M s} {U : M
   smooth_bump_covering.is_subordinate_to_bump_covering SmoothBumpCovering.is_subordinate_to_bump_covering
 
 alias is_subordinate_to_bump_covering ↔ _ is_subordinate.to_bump_covering
+#align
+  smooth_bump_covering.is_subordinate.to_bump_covering SmoothBumpCovering.IsSubordinate.to_bump_covering
 
 /-- Every `smooth_bump_covering` defines a smooth partition of unity. -/
 def toSmoothPartitionOfUnity : SmoothPartitionOfUnity ι I M s :=

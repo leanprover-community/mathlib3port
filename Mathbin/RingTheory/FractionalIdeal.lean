@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Filippo A. E. Nuccio
 
 ! This file was ported from Lean 3 source module ring_theory.fractional_ideal
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -484,7 +484,7 @@ theorem IsFractional.nsmul {I : Submodule R P} :
     exact h.sup (_root_.is_fractional.nsmul n h)
 #align is_fractional.nsmul IsFractional.nsmul
 
-instance : HasSmul ℕ (FractionalIdeal S P) where smul n I := ⟨n • I, I.IsFractional.nsmul n⟩
+instance : SMul ℕ (FractionalIdeal S P) where smul n I := ⟨n • I, I.IsFractional.nsmul n⟩
 
 @[norm_cast]
 theorem coe_nsmul (n : ℕ) (I : FractionalIdeal S P) : (↑(n • I) : Submodule R P) = n • I :=

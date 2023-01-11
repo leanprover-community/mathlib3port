@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.enat.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -96,6 +96,7 @@ theorem coe_to_nat_eq_self : ↑n.toNat = n ↔ n ≠ ⊤ :=
 #align enat.coe_to_nat_eq_self Enat.coe_to_nat_eq_self
 
 alias coe_to_nat_eq_self ↔ _ coe_to_nat
+#align enat.coe_to_nat Enat.coe_to_nat
 
 theorem coe_to_nat_le_self (n : ℕ∞) : ↑(toNat n) ≤ n :=
   WithTop.recTopCoe le_top (fun k => le_rfl) n

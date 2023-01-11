@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jean Lo, Yaël Dillies, Moritz Doll
 
 ! This file was ported from Lean 3 source module analysis.seminorm
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,7 +47,7 @@ variable {R R' 𝕜 𝕜₂ 𝕜₃ E E₂ E₃ F G ι : Type _}
 
 /-- A seminorm on a module over a normed ring is a function to the reals that is positive
 semidefinite, positive homogeneous, and subadditive. -/
-structure Seminorm (𝕜 : Type _) (E : Type _) [SemiNormedRing 𝕜] [AddGroup E] [HasSmul 𝕜 E] extends
+structure Seminorm (𝕜 : Type _) (E : Type _) [SemiNormedRing 𝕜] [AddGroup E] [SMul 𝕜 E] extends
   AddGroupSeminorm E where
   smul' : ∀ (a : 𝕜) (x : E), to_fun (a • x) = ‖a‖ * to_fun x
 #align seminorm Seminorm
@@ -58,7 +58,7 @@ attribute [nolint doc_blame] Seminorm.toAddGroupSeminorm
 
 You should extend this class when you extend `seminorm`. -/
 class SeminormClass (F : Type _) (𝕜 E : outParam <| Type _) [SemiNormedRing 𝕜] [AddGroup E]
-  [HasSmul 𝕜 E] extends AddGroupSeminormClass F E ℝ where
+  [SMul 𝕜 E] extends AddGroupSeminormClass F E ℝ where
   map_smul_eq_mul (f : F) (a : 𝕜) (x : E) : f (a • x) = ‖a‖ * f x
 #align seminorm_class SeminormClass
 
@@ -111,9 +111,9 @@ section AddGroup
 
 variable [AddGroup E]
 
-section HasSmul
+section SMul
 
-variable [HasSmul 𝕜 E]
+variable [SMul 𝕜 E]
 
 instance seminormClass : SeminormClass (Seminorm 𝕜 E) 𝕜 E
     where
@@ -153,7 +153,7 @@ instance : Inhabited (Seminorm 𝕜 E) :=
 variable (p : Seminorm 𝕜 E) (c : 𝕜) (x y : E) (r : ℝ)
 
 /-- Any action on `ℝ` which factors through `ℝ≥0` applies to a seminorm. -/
-instance [HasSmul R ℝ] [HasSmul R ℝ≥0] [IsScalarTower R ℝ≥0 ℝ] : HasSmul R (Seminorm 𝕜 E)
+instance [SMul R ℝ] [SMul R ℝ≥0] [IsScalarTower R ℝ≥0 ℝ] : SMul R (Seminorm 𝕜 E)
     where smul r p :=
     { r • p.toAddGroupSeminorm with
       toFun := fun x => r • p x
@@ -162,17 +162,17 @@ instance [HasSmul R ℝ] [HasSmul R ℝ≥0] [IsScalarTower R ℝ≥0 ℝ] : Has
         simp only [← smul_one_smul ℝ≥0 r (_ : ℝ), Nnreal.smul_def, smul_eq_mul]
         rw [map_smul_eq_mul, mul_left_comm] }
 
-instance [HasSmul R ℝ] [HasSmul R ℝ≥0] [IsScalarTower R ℝ≥0 ℝ] [HasSmul R' ℝ] [HasSmul R' ℝ≥0]
-    [IsScalarTower R' ℝ≥0 ℝ] [HasSmul R R'] [IsScalarTower R R' ℝ] :
-    IsScalarTower R R' (Seminorm 𝕜 E) where smul_assoc r a p := ext fun x => smul_assoc r a (p x)
+instance [SMul R ℝ] [SMul R ℝ≥0] [IsScalarTower R ℝ≥0 ℝ] [SMul R' ℝ] [SMul R' ℝ≥0]
+    [IsScalarTower R' ℝ≥0 ℝ] [SMul R R'] [IsScalarTower R R' ℝ] : IsScalarTower R R' (Seminorm 𝕜 E)
+    where smul_assoc r a p := ext fun x => smul_assoc r a (p x)
 
-theorem coe_smul [HasSmul R ℝ] [HasSmul R ℝ≥0] [IsScalarTower R ℝ≥0 ℝ] (r : R) (p : Seminorm 𝕜 E) :
+theorem coe_smul [SMul R ℝ] [SMul R ℝ≥0] [IsScalarTower R ℝ≥0 ℝ] (r : R) (p : Seminorm 𝕜 E) :
     ⇑(r • p) = r • p :=
   rfl
 #align seminorm.coe_smul Seminorm.coe_smul
 
 @[simp]
-theorem smul_apply [HasSmul R ℝ] [HasSmul R ℝ≥0] [IsScalarTower R ℝ≥0 ℝ] (r : R) (p : Seminorm 𝕜 E)
+theorem smul_apply [SMul R ℝ] [SMul R ℝ≥0] [IsScalarTower R ℝ≥0 ℝ] (r : R) (p : Seminorm 𝕜 E)
     (x : E) : (r • p) x = r • p x :=
   rfl
 #align seminorm.smul_apply Seminorm.smul_apply
@@ -200,7 +200,7 @@ instance : AddMonoid (Seminorm 𝕜 E) :=
 instance : OrderedCancelAddCommMonoid (Seminorm 𝕜 E) :=
   FunLike.coe_injective.OrderedCancelAddCommMonoid _ rfl coe_add fun p n => coe_smul n p
 
-instance [Monoid R] [MulAction R ℝ] [HasSmul R ℝ≥0] [IsScalarTower R ℝ≥0 ℝ] :
+instance [Monoid R] [MulAction R ℝ] [SMul R ℝ≥0] [IsScalarTower R ℝ≥0 ℝ] :
     MulAction R (Seminorm 𝕜 E) :=
   FunLike.coe_injective.MulAction _ coe_smul
 
@@ -219,12 +219,11 @@ theorem coe_fn_add_monoid_hom_injective : Function.Injective (coeFnAddMonoidHom 
 
 variable {𝕜 E}
 
-instance [Monoid R] [DistribMulAction R ℝ] [HasSmul R ℝ≥0] [IsScalarTower R ℝ≥0 ℝ] :
+instance [Monoid R] [DistribMulAction R ℝ] [SMul R ℝ≥0] [IsScalarTower R ℝ≥0 ℝ] :
     DistribMulAction R (Seminorm 𝕜 E) :=
   (coe_fn_add_monoid_hom_injective 𝕜 E).DistribMulAction _ coe_smul
 
-instance [Semiring R] [Module R ℝ] [HasSmul R ℝ≥0] [IsScalarTower R ℝ≥0 ℝ] :
-    Module R (Seminorm 𝕜 E) :=
+instance [Semiring R] [Module R ℝ] [SMul R ℝ≥0] [IsScalarTower R ℝ≥0 ℝ] : Module R (Seminorm 𝕜 E) :=
   (coe_fn_add_monoid_hom_injective 𝕜 E).Module R _ coe_smul
 
 instance : HasSup (Seminorm 𝕜 E)
@@ -245,8 +244,8 @@ theorem sup_apply (p q : Seminorm 𝕜 E) (x : E) : (p ⊔ q) x = p x ⊔ q x :=
   rfl
 #align seminorm.sup_apply Seminorm.sup_apply
 
-theorem smul_sup [HasSmul R ℝ] [HasSmul R ℝ≥0] [IsScalarTower R ℝ≥0 ℝ] (r : R)
-    (p q : Seminorm 𝕜 E) : r • (p ⊔ q) = r • p ⊔ r • q :=
+theorem smul_sup [SMul R ℝ] [SMul R ℝ≥0] [IsScalarTower R ℝ≥0 ℝ] (r : R) (p q : Seminorm 𝕜 E) :
+    r • (p ⊔ q) = r • p ⊔ r • q :=
   have real.smul_max : ∀ x y : ℝ, r • max x y = max (r • x) (r • y) := fun x y => by
     simpa only [← smul_eq_mul, ← Nnreal.smul_def, smul_one_smul ℝ≥0 r (_ : ℝ)] using
       mul_max_of_nonneg x y (r • 1 : ℝ≥0).Prop
@@ -267,7 +266,7 @@ theorem lt_def (p q : Seminorm 𝕜 E) : p < q ↔ (p : E → ℝ) < q :=
 instance : SemilatticeSup (Seminorm 𝕜 E) :=
   Function.Injective.semilatticeSup _ FunLike.coe_injective coe_sup
 
-end HasSmul
+end SMul
 
 end AddGroup
 
@@ -287,7 +286,7 @@ variable [AddCommGroup F] [AddCommGroup G]
 
 variable [Module 𝕜 E] [Module 𝕜₂ E₂] [Module 𝕜₃ E₃] [Module 𝕜 F] [Module 𝕜 G]
 
-variable [HasSmul R ℝ] [HasSmul R ℝ≥0] [IsScalarTower R ℝ≥0 ℝ]
+variable [SMul R ℝ] [SMul R ℝ≥0] [IsScalarTower R ℝ≥0 ℝ]
 
 /-- Composition of a seminorm with a linear map is a seminorm. -/
 def comp (p : Seminorm 𝕜₂ E₂) (f : E →ₛₗ[σ₁₂] E₂) : Seminorm 𝕜 E :=
@@ -485,9 +484,8 @@ noncomputable instance : Lattice (Seminorm 𝕜 E) :=
     le_inf := fun a b c hab hac x =>
       le_cinfᵢ fun u => (le_map_add_map_sub a _ _).trans <| add_le_add (hab _) (hac _) }
 
-theorem smul_inf [HasSmul R ℝ] [HasSmul R ℝ≥0] [IsScalarTower R ℝ≥0 ℝ] (r : R)
-    (p q : Seminorm 𝕜 E) : r • (p ⊓ q) = r • p ⊓ r • q :=
-  by
+theorem smul_inf [SMul R ℝ] [SMul R ℝ≥0] [IsScalarTower R ℝ≥0 ℝ] (r : R) (p q : Seminorm 𝕜 E) :
+    r • (p ⊓ q) = r • p ⊓ r • q := by
   ext
   simp_rw [smul_apply, inf_apply, smul_apply, ← smul_one_smul ℝ≥0 r (_ : ℝ), Nnreal.smul_def,
     smul_eq_mul, Real.mul_infi_of_nonneg (Subtype.prop _), mul_add]
@@ -611,9 +609,9 @@ section AddCommGroup
 
 variable [AddCommGroup E]
 
-section HasSmul
+section SMul
 
-variable [HasSmul 𝕜 E] (p : Seminorm 𝕜 E)
+variable [SMul 𝕜 E] (p : Seminorm 𝕜 E)
 
 /-- The ball of radius `r` at `x` with respect to seminorm `p` is the set of elements `y` with
 `p (y - x) < r`. -/
@@ -767,7 +765,7 @@ theorem vadd_closed_ball (p : Seminorm 𝕜 E) : x +ᵥ p.closedBall y r = p.clo
   vadd_closed_ball x y r
 #align seminorm.vadd_closed_ball Seminorm.vadd_closed_ball
 
-end HasSmul
+end SMul
 
 section Module
 
@@ -1022,9 +1020,9 @@ section Convex
 
 variable [NormedField 𝕜] [AddCommGroup E] [NormedSpace ℝ 𝕜] [Module 𝕜 E]
 
-section HasSmul
+section SMul
 
-variable [HasSmul ℝ E] [IsScalarTower ℝ 𝕜 E] (p : Seminorm 𝕜 E)
+variable [SMul ℝ E] [IsScalarTower ℝ 𝕜 E] (p : Seminorm 𝕜 E)
 
 /-- A seminorm is convex. Also see `convex_on_norm`. -/
 protected theorem convex_on : ConvexOn ℝ univ p :=
@@ -1040,7 +1038,7 @@ protected theorem convex_on : ConvexOn ℝ univ p :=
     
 #align seminorm.convex_on Seminorm.convex_on
 
-end HasSmul
+end SMul
 
 section Module
 
@@ -1069,7 +1067,7 @@ end Convex
 section RestrictScalars
 
 variable (𝕜) {𝕜' : Type _} [NormedField 𝕜] [SemiNormedRing 𝕜'] [NormedAlgebra 𝕜 𝕜']
-  [NormOneClass 𝕜'] [AddCommGroup E] [Module 𝕜' E] [HasSmul 𝕜 E] [IsScalarTower 𝕜 𝕜' E]
+  [NormOneClass 𝕜'] [AddCommGroup E] [Module 𝕜' E] [SMul 𝕜 E] [IsScalarTower 𝕜 𝕜' E]
 
 /-- Reinterpret a seminorm over a field `𝕜'` as a seminorm over a smaller field `𝕜`. This will
 typically be used with `is_R_or_C 𝕜'` and `𝕜 = ℝ`. -/

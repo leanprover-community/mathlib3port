@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module algebra.star.star_alg_hom
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -654,8 +654,8 @@ end StarAlgHom
 multiplication and the star operation, which allows for considering both unital and non-unital
 equivalences with a single structure. Currently, `alg_equiv` requires unital algebras, which is
 why this structure does not extend it. -/
-structure StarAlgEquiv (R A B : Type _) [Add A] [Mul A] [HasSmul R A] [Star A] [Add B] [Mul B]
-  [HasSmul R B] [Star B] extends A ≃+* B where
+structure StarAlgEquiv (R A B : Type _) [Add A] [Mul A] [SMul R A] [Star A] [Add B] [Mul B]
+  [SMul R B] [Star B] extends A ≃+* B where
   map_star' : ∀ a : A, to_fun (star a) = star (to_fun a)
   map_smul' : ∀ (r : R) (a : A), to_fun (r • a) = r • to_fun a
 #align star_alg_equiv StarAlgEquiv
@@ -675,7 +675,7 @@ add_decl_doc StarAlgEquiv.toRingEquiv
 
 You should also extend this typeclass when you extend `star_alg_equiv`. -/
 class StarAlgEquivClass (F : Type _) (R : outParam (Type _)) (A : outParam (Type _))
-  (B : outParam (Type _)) [Add A] [Mul A] [HasSmul R A] [Star A] [Add B] [Mul B] [HasSmul R B]
+  (B : outParam (Type _)) [Add A] [Mul A] [SMul R A] [Star A] [Add B] [Mul B] [SMul R B]
   [Star B] extends RingEquivClass F A B where
   map_star : ∀ (f : F) (a : A), f (star a) = star (f a)
   map_smul : ∀ (f : F) (r : R) (a : A), f (r • a) = r • f a
@@ -687,8 +687,8 @@ attribute [nolint dangerous_instance] StarAlgEquivClass.toRingEquivClass
 namespace StarAlgEquivClass
 
 -- See note [lower instance priority]
-instance (priority := 50) {F R A B : Type _} [Add A] [Mul A] [HasSmul R A] [Star A] [Add B] [Mul B]
-    [HasSmul R B] [Star B] [hF : StarAlgEquivClass F R A B] : StarHomClass F A B :=
+instance (priority := 50) {F R A B : Type _} [Add A] [Mul A] [SMul R A] [Star A] [Add B] [Mul B]
+    [SMul R B] [Star B] [hF : StarAlgEquivClass F R A B] : StarHomClass F A B :=
   { hF with
     coe := fun f => f
     coe_injective' := FunLike.coe_injective }
@@ -697,8 +697,8 @@ instance (priority := 50) {F R A B : Type _} [Add A] [Mul A] [HasSmul R A] [Star
 attribute [nolint dangerous_instance] StarAlgEquivClass.starHomClass
 
 -- See note [lower instance priority]
-instance (priority := 50) {F R A B : Type _} [Add A] [Mul A] [Star A] [HasSmul R A] [Add B] [Mul B]
-    [HasSmul R B] [Star B] [hF : StarAlgEquivClass F R A B] : SmulHomClass F R A B :=
+instance (priority := 50) {F R A B : Type _} [Add A] [Mul A] [Star A] [SMul R A] [Add B] [Mul B]
+    [SMul R B] [Star B] [hF : StarAlgEquivClass F R A B] : SmulHomClass F R A B :=
   { hF with
     coe := fun f => f
     coe_injective' := FunLike.coe_injective }
@@ -732,8 +732,8 @@ namespace StarAlgEquiv
 
 section Basic
 
-variable {F R A B C : Type _} [Add A] [Mul A] [HasSmul R A] [Star A] [Add B] [Mul B] [HasSmul R B]
-  [Star B] [Add C] [Mul C] [HasSmul R C] [Star C]
+variable {F R A B C : Type _} [Add A] [Mul A] [SMul R A] [Star A] [Add B] [Mul B] [SMul R B]
+  [Star B] [Add C] [Mul C] [SMul R C] [Star C]
 
 instance : StarAlgEquivClass (A ≃⋆ₐ[R] B) R A B
     where

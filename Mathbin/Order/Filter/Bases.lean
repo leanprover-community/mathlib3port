@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Johannes Hölzl, Mario Carneiro, Patrick Massot
 
 ! This file was ported from Lean 3 source module order.filter.bases
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -718,6 +718,7 @@ theorem disjoint_principal_principal {s t : Set α} : Disjoint (𝓟 s) (𝓟 t)
 #align filter.disjoint_principal_principal Filter.disjoint_principal_principal
 
 alias disjoint_principal_principal ↔ _ _root_.disjoint.filter_principal
+#align disjoint.filter_principal Disjoint.filter_principal
 
 @[simp]
 theorem disjoint_pure_pure {x y : α} : Disjoint (pure x : Filter α) (pure y) ↔ x ≠ y := by

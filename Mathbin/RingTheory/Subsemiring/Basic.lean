@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module ring_theory.subsemiring.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1338,29 +1338,29 @@ section NonAssocSemiring
 variable [NonAssocSemiring R']
 
 /-- The action by a subsemiring is the action by the underlying semiring. -/
-instance [HasSmul R' α] (S : Subsemiring R') : HasSmul S α :=
+instance [SMul R' α] (S : Subsemiring R') : SMul S α :=
   S.toSubmonoid.HasSmul
 
-theorem smul_def [HasSmul R' α] {S : Subsemiring R'} (g : S) (m : α) : g • m = (g : R') • m :=
+theorem smul_def [SMul R' α] {S : Subsemiring R'} (g : S) (m : α) : g • m = (g : R') • m :=
   rfl
 #align subsemiring.smul_def Subsemiring.smul_def
 
-instance smul_comm_class_left [HasSmul R' β] [HasSmul α β] [SMulCommClass R' α β]
-    (S : Subsemiring R') : SMulCommClass S α β :=
+instance smul_comm_class_left [SMul R' β] [SMul α β] [SMulCommClass R' α β] (S : Subsemiring R') :
+    SMulCommClass S α β :=
   S.toSubmonoid.smul_comm_class_left
 #align subsemiring.smul_comm_class_left Subsemiring.smul_comm_class_left
 
-instance smul_comm_class_right [HasSmul α β] [HasSmul R' β] [SMulCommClass α R' β]
-    (S : Subsemiring R') : SMulCommClass α S β :=
+instance smul_comm_class_right [SMul α β] [SMul R' β] [SMulCommClass α R' β] (S : Subsemiring R') :
+    SMulCommClass α S β :=
   S.toSubmonoid.smul_comm_class_right
 #align subsemiring.smul_comm_class_right Subsemiring.smul_comm_class_right
 
 /-- Note that this provides `is_scalar_tower S R R` which is needed by `smul_mul_assoc`. -/
-instance [HasSmul α β] [HasSmul R' α] [HasSmul R' β] [IsScalarTower R' α β] (S : Subsemiring R') :
+instance [SMul α β] [SMul R' α] [SMul R' β] [IsScalarTower R' α β] (S : Subsemiring R') :
     IsScalarTower S α β :=
   S.toSubmonoid.IsScalarTower
 
-instance [HasSmul R' α] [FaithfulSMul R' α] (S : Subsemiring R') : FaithfulSMul S α :=
+instance [SMul R' α] [FaithfulSMul R' α] (S : Subsemiring R') : FaithfulSMul S α :=
   S.toSubmonoid.HasFaithfulSmul
 
 /-- The action by a subsemiring is the action by the underlying semiring. -/

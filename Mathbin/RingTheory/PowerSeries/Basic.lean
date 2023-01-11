@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Kenny Lau
 
 ! This file was ported from Lean 3 source module ring_theory.power_series.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -111,7 +111,7 @@ instance [Nontrivial R] : Nontrivial (MvPowerSeries σ R) :=
 instance {A} [Semiring R] [AddCommMonoid A] [Module R A] : Module R (MvPowerSeries σ A) :=
   Pi.module _ _ _
 
-instance {A S} [Semiring R] [Semiring S] [AddCommMonoid A] [Module R A] [Module S A] [HasSmul R S]
+instance {A S} [Semiring R] [Semiring S] [AddCommMonoid A] [Module R A] [Module S A] [SMul R S]
     [IsScalarTower R S A] : IsScalarTower R S (MvPowerSeries σ A) :=
   Pi.isScalarTower
 
@@ -1224,7 +1224,7 @@ instance [Nontrivial R] : Nontrivial (PowerSeries R) := by infer_instance
 instance {A} [Semiring R] [AddCommMonoid A] [Module R A] : Module R (PowerSeries A) := by
   infer_instance
 
-instance {A S} [Semiring R] [Semiring S] [AddCommMonoid A] [Module R A] [Module S A] [HasSmul R S]
+instance {A S} [Semiring R] [Semiring S] [AddCommMonoid A] [Module R A] [Module S A] [SMul R S]
     [IsScalarTower R S A] : IsScalarTower R S (PowerSeries A) :=
   Pi.isScalarTower
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module data.set.pairwise
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -87,6 +87,7 @@ theorem pairwise_disjoint_mono [SemilatticeInf α] [OrderBot α] (hs : Pairwise 
 #align pairwise_disjoint.mono pairwise_disjoint_mono
 
 alias Function.injective_iff_pairwise_ne ↔ Function.Injective.pairwise_ne _
+#align function.injective.pairwise_ne Function.Injective.pairwise_ne
 
 namespace Set
 
@@ -139,6 +140,7 @@ theorem pairwise_iff_of_refl [IsRefl α r] : s.Pairwise r ↔ ∀ ⦃a⦄, a ∈
 -/
 
 alias pairwise_iff_of_refl ↔ pairwise.of_refl _
+#align set.pairwise.of_refl Set.Pairwise.of_refl
 
 /- warning: set.nonempty.pairwise_iff_exists_forall -> Set.Nonempty.pairwise_iff_exists_forall is a dubious translation:
 lean 3 declaration is
@@ -307,7 +309,14 @@ theorem pairwise_bot_iff : s.Pairwise (⊥ : α → α → Prop) ↔ (s : Set α
   ⟨fun h a ha b hb => h.Eq ha hb id, fun h => h.Pairwise _⟩
 #align set.pairwise_bot_iff Set.pairwise_bot_iff
 
+/- warning: set.pairwise.subsingleton -> Set.Pairwise.subsingleton is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {s : Set.{u1} α}, (Set.Pairwise.{u1} α s (Bot.bot.{u1} (α -> α -> Prop) (Pi.hasBot.{u1, u1} α (fun (ᾰ : α) => α -> Prop) (fun (i : α) => Pi.hasBot.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => CompleteLattice.toHasBot.{0} Prop Prop.completeLattice))))) -> (Set.Subsingleton.{u1} α s)
+but is expected to have type
+  forall {α : Type.{u1}} {s : Set.{u1} α}, (Set.Pairwise.{u1} α s (Bot.bot.{u1} (α -> α -> Prop) (Pi.instBotForAll.{u1, u1} α (fun (ᾰ : α) => α -> Prop) (fun (i : α) => Pi.instBotForAll.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => CompleteLattice.toBot.{0} Prop Prop.completeLattice))))) -> (Set.Subsingleton.{u1} α s)
+Case conversion may be inaccurate. Consider using '#align set.pairwise.subsingleton Set.Pairwise.subsingletonₓ'. -/
 alias pairwise_bot_iff ↔ pairwise.subsingleton _
+#align set.pairwise.subsingleton Set.Pairwise.subsingleton
 
 #print Set.InjOn.pairwise_image /-
 theorem InjOn.pairwise_image {s : Set ι} (h : s.InjOn f) :
@@ -356,6 +365,8 @@ theorem pairwise_subtype_iff_pairwise_set (s : Set α) (r : α → α → Prop) 
 -/
 
 alias pairwise_subtype_iff_pairwise_set ↔ Pairwise.set_of_subtype Set.Pairwise.subtype
+#align pairwise.set_of_subtype Pairwise.set_of_subtype
+#align set.pairwise.subtype Set.Pairwise.subtype
 
 namespace Set
 

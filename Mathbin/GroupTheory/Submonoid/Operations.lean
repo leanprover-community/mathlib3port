@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Kenny Lau, Johan Commelin, Mario Carneiro, Kevin Buzza
 Amelia Livingston, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module group_theory.submonoid.operations
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -835,17 +835,13 @@ namespace SubmonoidClass
 
 variable {A : Type _} [SetLike A M] [hA : SubmonoidClass A M] (S' : A)
 
-/- warning: add_submonoid_class.has_nsmul -> AddSubmonoidClass.nSMul is a dubious translation:
-lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_5 : AddMonoid.{u1} M] {A : Type.{u2}} [_inst_6 : SetLike.{u2, u1} A M] [_inst_7 : AddSubmonoidClass.{u2, u1} A M (AddMonoid.toAddZeroClass.{u1} M _inst_5) _inst_6] (S : A), HasSmul.{0, u1} Nat (coeSort.{succ u2, succ (succ u1)} A Type.{u1} (SetLike.hasCoeToSort.{u2, u1} A M _inst_6) S)
-but is expected to have type
-  forall {M : Type.{u1}} [_inst_5 : AddMonoid.{u1} M] {A : Type.{u2}} [_inst_6 : SetLike.{u2, u1} A M] [_inst_7 : AddSubmonoidClass.{u2, u1} A M (AddMonoid.toAddZeroClass.{u1} M _inst_5) _inst_6] (S : A), SMul.{0, u1} Nat (Subtype.{succ u1} M (fun (x : M) => Membership.mem.{u1, u2} M A (SetLike.instMembership.{u2, u1} A M _inst_6) x S))
-Case conversion may be inaccurate. Consider using '#align add_submonoid_class.has_nsmul AddSubmonoidClass.nSMulₓ'. -/
+#print AddSubmonoidClass.nSMul /-
 /-- An `add_submonoid` of an `add_monoid` inherits a scalar multiplication. -/
 instance AddSubmonoidClass.nSMul {M} [AddMonoid M] {A : Type _} [SetLike A M]
-    [AddSubmonoidClass A M] (S : A) : HasSmul ℕ S :=
+    [AddSubmonoidClass A M] (S : A) : SMul ℕ S :=
   ⟨fun n a => ⟨n • a.1, nsmul_mem a.2 n⟩⟩
 #align add_submonoid_class.has_nsmul AddSubmonoidClass.nSMul
+-/
 
 #print SubmonoidClass.nPow /-
 /-- A submonoid of a monoid inherits a power operator. -/
@@ -2246,50 +2242,50 @@ section MulOneClass
 variable [MulOneClass M']
 
 @[to_additive]
-instance [HasSmul M' α] (S : Submonoid M') : HasSmul S α :=
+instance [SMul M' α] (S : Submonoid M') : SMul S α :=
   SMul.comp _ S.Subtype
 
 /- warning: submonoid.smul_comm_class_left -> Submonoid.smulCommClass_left is a dubious translation:
 lean 3 declaration is
-  forall {M' : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_4 : MulOneClass.{u1} M'] [_inst_5 : HasSmul.{u1, u3} M' β] [_inst_6 : HasSmul.{u2, u3} α β] [_inst_7 : SMulCommClass.{u1, u2, u3} M' α β _inst_5 _inst_6] (S : Submonoid.{u1} M' _inst_4), SMulCommClass.{u1, u2, u3} (coeSort.{succ u1, succ (succ u1)} (Submonoid.{u1} M' _inst_4) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Submonoid.{u1} M' _inst_4) M' (Submonoid.setLike.{u1} M' _inst_4)) S) α β (Submonoid.hasSmul.{u1, u3} M' β _inst_4 _inst_5 S) _inst_6
+  forall {M' : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_4 : MulOneClass.{u1} M'] [_inst_5 : SMul.{u1, u3} M' β] [_inst_6 : SMul.{u2, u3} α β] [_inst_7 : SMulCommClass.{u1, u2, u3} M' α β _inst_5 _inst_6] (S : Submonoid.{u1} M' _inst_4), SMulCommClass.{u1, u2, u3} (coeSort.{succ u1, succ (succ u1)} (Submonoid.{u1} M' _inst_4) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Submonoid.{u1} M' _inst_4) M' (Submonoid.setLike.{u1} M' _inst_4)) S) α β (Submonoid.hasSmul.{u1, u3} M' β _inst_4 _inst_5 S) _inst_6
 but is expected to have type
   forall {M' : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_4 : MulOneClass.{u1} M'] [_inst_5 : SMul.{u1, u3} M' β] [_inst_6 : SMul.{u2, u3} α β] [_inst_7 : SMulCommClass.{u1, u2, u3} M' α β _inst_5 _inst_6] (S : Submonoid.{u1} M' _inst_4), SMulCommClass.{u1, u2, u3} (Subtype.{succ u1} M' (fun (x : M') => Membership.mem.{u1, u1} M' (Submonoid.{u1} M' _inst_4) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M' _inst_4) M' (Submonoid.instSetLikeSubmonoid.{u1} M' _inst_4)) x S)) α β (Submonoid.instSMulSubtypeMemSubmonoidInstMembershipInstSetLikeSubmonoid.{u1, u3} M' β _inst_4 _inst_5 S) _inst_6
 Case conversion may be inaccurate. Consider using '#align submonoid.smul_comm_class_left Submonoid.smulCommClass_leftₓ'. -/
 @[to_additive]
-instance smulCommClass_left [HasSmul M' β] [HasSmul α β] [SMulCommClass M' α β] (S : Submonoid M') :
+instance smulCommClass_left [SMul M' β] [SMul α β] [SMulCommClass M' α β] (S : Submonoid M') :
     SMulCommClass S α β :=
   ⟨fun a => (smul_comm (a : M') : _)⟩
 #align submonoid.smul_comm_class_left Submonoid.smulCommClass_left
 
 /- warning: submonoid.smul_comm_class_right -> Submonoid.smulCommClass_right is a dubious translation:
 lean 3 declaration is
-  forall {M' : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_4 : MulOneClass.{u1} M'] [_inst_5 : HasSmul.{u2, u3} α β] [_inst_6 : HasSmul.{u1, u3} M' β] [_inst_7 : SMulCommClass.{u2, u1, u3} α M' β _inst_5 _inst_6] (S : Submonoid.{u1} M' _inst_4), SMulCommClass.{u2, u1, u3} α (coeSort.{succ u1, succ (succ u1)} (Submonoid.{u1} M' _inst_4) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Submonoid.{u1} M' _inst_4) M' (Submonoid.setLike.{u1} M' _inst_4)) S) β _inst_5 (Submonoid.hasSmul.{u1, u3} M' β _inst_4 _inst_6 S)
+  forall {M' : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_4 : MulOneClass.{u1} M'] [_inst_5 : SMul.{u2, u3} α β] [_inst_6 : SMul.{u1, u3} M' β] [_inst_7 : SMulCommClass.{u2, u1, u3} α M' β _inst_5 _inst_6] (S : Submonoid.{u1} M' _inst_4), SMulCommClass.{u2, u1, u3} α (coeSort.{succ u1, succ (succ u1)} (Submonoid.{u1} M' _inst_4) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Submonoid.{u1} M' _inst_4) M' (Submonoid.setLike.{u1} M' _inst_4)) S) β _inst_5 (Submonoid.hasSmul.{u1, u3} M' β _inst_4 _inst_6 S)
 but is expected to have type
   forall {M' : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_4 : MulOneClass.{u1} M'] [_inst_5 : SMul.{u2, u3} α β] [_inst_6 : SMul.{u1, u3} M' β] [_inst_7 : SMulCommClass.{u2, u1, u3} α M' β _inst_5 _inst_6] (S : Submonoid.{u1} M' _inst_4), SMulCommClass.{u2, u1, u3} α (Subtype.{succ u1} M' (fun (x : M') => Membership.mem.{u1, u1} M' (Submonoid.{u1} M' _inst_4) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M' _inst_4) M' (Submonoid.instSetLikeSubmonoid.{u1} M' _inst_4)) x S)) β _inst_5 (Submonoid.instSMulSubtypeMemSubmonoidInstMembershipInstSetLikeSubmonoid.{u1, u3} M' β _inst_4 _inst_6 S)
 Case conversion may be inaccurate. Consider using '#align submonoid.smul_comm_class_right Submonoid.smulCommClass_rightₓ'. -/
 @[to_additive]
-instance smulCommClass_right [HasSmul α β] [HasSmul M' β] [SMulCommClass α M' β]
-    (S : Submonoid M') : SMulCommClass α S β :=
+instance smulCommClass_right [SMul α β] [SMul M' β] [SMulCommClass α M' β] (S : Submonoid M') :
+    SMulCommClass α S β :=
   ⟨fun a s => (smul_comm a (s : M') : _)⟩
 #align submonoid.smul_comm_class_right Submonoid.smulCommClass_right
 
 /-- Note that this provides `is_scalar_tower S M' M'` which is needed by `smul_mul_assoc`. -/
-instance [HasSmul α β] [HasSmul M' α] [HasSmul M' β] [IsScalarTower M' α β] (S : Submonoid M') :
+instance [SMul α β] [SMul M' α] [SMul M' β] [IsScalarTower M' α β] (S : Submonoid M') :
     IsScalarTower S α β :=
   ⟨fun a => (smul_assoc (a : M') : _)⟩
 
 /- warning: submonoid.smul_def -> Submonoid.smul_def is a dubious translation:
 lean 3 declaration is
-  forall {M' : Type.{u1}} {α : Type.{u2}} [_inst_4 : MulOneClass.{u1} M'] [_inst_5 : HasSmul.{u1, u2} M' α] {S : Submonoid.{u1} M' _inst_4} (g : coeSort.{succ u1, succ (succ u1)} (Submonoid.{u1} M' _inst_4) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Submonoid.{u1} M' _inst_4) M' (Submonoid.setLike.{u1} M' _inst_4)) S) (m : α), Eq.{succ u2} α (HasSmul.smul.{u1, u2} (coeSort.{succ u1, succ (succ u1)} (Submonoid.{u1} M' _inst_4) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Submonoid.{u1} M' _inst_4) M' (Submonoid.setLike.{u1} M' _inst_4)) S) α (Submonoid.hasSmul.{u1, u2} M' α _inst_4 _inst_5 S) g m) (HasSmul.smul.{u1, u2} M' α _inst_5 ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Submonoid.{u1} M' _inst_4) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Submonoid.{u1} M' _inst_4) M' (Submonoid.setLike.{u1} M' _inst_4)) S) M' (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Submonoid.{u1} M' _inst_4) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Submonoid.{u1} M' _inst_4) M' (Submonoid.setLike.{u1} M' _inst_4)) S) M' (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Submonoid.{u1} M' _inst_4) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Submonoid.{u1} M' _inst_4) M' (Submonoid.setLike.{u1} M' _inst_4)) S) M' (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Submonoid.{u1} M' _inst_4) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Submonoid.{u1} M' _inst_4) M' (Submonoid.setLike.{u1} M' _inst_4)) S) M' (coeSubtype.{succ u1} M' (fun (x : M') => Membership.Mem.{u1, u1} M' (Submonoid.{u1} M' _inst_4) (SetLike.hasMem.{u1, u1} (Submonoid.{u1} M' _inst_4) M' (Submonoid.setLike.{u1} M' _inst_4)) x S))))) g) m)
+  forall {M' : Type.{u1}} {α : Type.{u2}} [_inst_4 : MulOneClass.{u1} M'] [_inst_5 : SMul.{u1, u2} M' α] {S : Submonoid.{u1} M' _inst_4} (g : coeSort.{succ u1, succ (succ u1)} (Submonoid.{u1} M' _inst_4) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Submonoid.{u1} M' _inst_4) M' (Submonoid.setLike.{u1} M' _inst_4)) S) (m : α), Eq.{succ u2} α (SMul.smul.{u1, u2} (coeSort.{succ u1, succ (succ u1)} (Submonoid.{u1} M' _inst_4) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Submonoid.{u1} M' _inst_4) M' (Submonoid.setLike.{u1} M' _inst_4)) S) α (Submonoid.hasSmul.{u1, u2} M' α _inst_4 _inst_5 S) g m) (SMul.smul.{u1, u2} M' α _inst_5 ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Submonoid.{u1} M' _inst_4) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Submonoid.{u1} M' _inst_4) M' (Submonoid.setLike.{u1} M' _inst_4)) S) M' (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Submonoid.{u1} M' _inst_4) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Submonoid.{u1} M' _inst_4) M' (Submonoid.setLike.{u1} M' _inst_4)) S) M' (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Submonoid.{u1} M' _inst_4) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Submonoid.{u1} M' _inst_4) M' (Submonoid.setLike.{u1} M' _inst_4)) S) M' (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Submonoid.{u1} M' _inst_4) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Submonoid.{u1} M' _inst_4) M' (Submonoid.setLike.{u1} M' _inst_4)) S) M' (coeSubtype.{succ u1} M' (fun (x : M') => Membership.Mem.{u1, u1} M' (Submonoid.{u1} M' _inst_4) (SetLike.hasMem.{u1, u1} (Submonoid.{u1} M' _inst_4) M' (Submonoid.setLike.{u1} M' _inst_4)) x S))))) g) m)
 but is expected to have type
   forall {M' : Type.{u2}} {α : Type.{u1}} [_inst_4 : MulOneClass.{u2} M'] [_inst_5 : SMul.{u2, u1} M' α] {S : Submonoid.{u2} M' _inst_4} (g : Subtype.{succ u2} M' (fun (x : M') => Membership.mem.{u2, u2} M' (Submonoid.{u2} M' _inst_4) (SetLike.instMembership.{u2, u2} (Submonoid.{u2} M' _inst_4) M' (Submonoid.instSetLikeSubmonoid.{u2} M' _inst_4)) x S)) (m : α), Eq.{succ u1} α (HSMul.hSMul.{u2, u1, u1} (Subtype.{succ u2} M' (fun (x : M') => Membership.mem.{u2, u2} M' (Submonoid.{u2} M' _inst_4) (SetLike.instMembership.{u2, u2} (Submonoid.{u2} M' _inst_4) M' (Submonoid.instSetLikeSubmonoid.{u2} M' _inst_4)) x S)) α α (instHSMul.{u2, u1} (Subtype.{succ u2} M' (fun (x : M') => Membership.mem.{u2, u2} M' (Submonoid.{u2} M' _inst_4) (SetLike.instMembership.{u2, u2} (Submonoid.{u2} M' _inst_4) M' (Submonoid.instSetLikeSubmonoid.{u2} M' _inst_4)) x S)) α (Submonoid.instSMulSubtypeMemSubmonoidInstMembershipInstSetLikeSubmonoid.{u2, u1} M' α _inst_4 _inst_5 S)) g m) (HSMul.hSMul.{u2, u1, u1} M' α α (instHSMul.{u2, u1} M' α _inst_5) (Subtype.val.{succ u2} M' (fun (x : M') => Membership.mem.{u2, u2} M' (Set.{u2} M') (Set.instMembershipSet.{u2} M') x (SetLike.coe.{u2, u2} (Submonoid.{u2} M' _inst_4) M' (Submonoid.instSetLikeSubmonoid.{u2} M' _inst_4) S)) g) m)
 Case conversion may be inaccurate. Consider using '#align submonoid.smul_def Submonoid.smul_defₓ'. -/
 @[to_additive]
-theorem smul_def [HasSmul M' α] {S : Submonoid M'} (g : S) (m : α) : g • m = (g : M') • m :=
+theorem smul_def [SMul M' α] {S : Submonoid M'} (g : S) (m : α) : g • m = (g : M') • m :=
   rfl
 #align submonoid.smul_def Submonoid.smul_def
 
-instance [HasSmul M' α] [FaithfulSMul M' α] (S : Submonoid M') : FaithfulSMul S α :=
+instance [SMul M' α] [FaithfulSMul M' α] (S : Submonoid M') : FaithfulSMul S α :=
   ⟨fun x y h => Subtype.ext <| eq_of_smul_eq_smul h⟩
 
 end MulOneClass

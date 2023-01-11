@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kyle Miller
 
 ! This file was ported from Lean 3 source module data.set.finite
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -76,6 +76,7 @@ theorem finite_def {s : Set α} : s.Finite ↔ Nonempty (Fintype s) :=
 #align set.finite_def Set.finite_def
 
 alias finite_def ↔ finite.nonempty_fintype _
+#align set.finite.nonempty_fintype Set.Finite.nonempty_fintype
 
 theorem finite_coe_iff {s : Set α} : Finite s ↔ s.Finite := by
   rw [finite_iff_nonempty_fintype, finite_def]
@@ -208,8 +209,10 @@ protected theorem to_finset_ssubset_to_finset : hs.toFinset ⊂ ht.toFinset ↔ 
 #align set.finite.to_finset_ssubset_to_finset Set.Finite.to_finset_ssubset_to_finset
 
 alias finite.to_finset_subset_to_finset ↔ _ to_finset_mono
+#align set.finite.to_finset_mono Set.Finite.to_finset_mono
 
 alias finite.to_finset_ssubset_to_finset ↔ _ to_finset_strict_mono
+#align set.finite.to_finset_strict_mono Set.Finite.to_finset_strict_mono
 
 attribute [protected] to_finset_mono to_finset_strict_mono
 
@@ -741,6 +744,7 @@ theorem finite_univ_iff : (@univ α).Finite ↔ Finite α :=
 #align set.finite_univ_iff Set.finite_univ_iff
 
 alias finite_univ_iff ↔ _root_.finite.of_finite_univ _
+#align finite.of_finite_univ Finite.of_finite_univ
 
 theorem Finite.union {s t : Set α} (hs : s.Finite) (ht : t.Finite) : (s ∪ t).Finite :=
   by
@@ -1278,6 +1282,7 @@ theorem infinite_coe_iff {s : Set α} : Infinite s ↔ s.Infinite :=
 #align set.infinite_coe_iff Set.infinite_coe_iff
 
 alias infinite_coe_iff ↔ _ infinite.to_subtype
+#align set.infinite.to_subtype Set.Infinite.to_subtype
 
 /-- Embedding of `ℕ` into an infinite set. -/
 noncomputable def Infinite.natEmbedding (s : Set α) (h : s.Infinite) : ℕ ↪ s :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Jeremy Avigad
 
 ! This file was ported from Lean 3 source module topology.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -529,6 +529,8 @@ theorem closure_nonempty_iff {s : Set α} : (closure s).Nonempty ↔ s.Nonempty 
 #align closure_nonempty_iff closure_nonempty_iff
 
 alias closure_nonempty_iff ↔ Set.Nonempty.of_closure Set.Nonempty.closure
+#align set.nonempty.of_closure Set.Nonempty.of_closure
+#align set.nonempty.closure Set.Nonempty.closure
 
 @[simp]
 theorem closure_univ : closure (univ : Set α) = univ :=
@@ -652,6 +654,8 @@ theorem dense_closure {s : Set α} : Dense (closure s) ↔ Dense s := by
 #align dense_closure dense_closure
 
 alias dense_closure ↔ Dense.of_closure Dense.closure
+#align dense.of_closure Dense.of_closure
+#align dense.closure Dense.closure
 
 @[simp]
 theorem dense_univ : Dense (univ : Set α) := fun x => subset_closure trivial
@@ -671,6 +675,7 @@ theorem dense_iff_inter_open {s : Set α} :
 #align dense_iff_inter_open dense_iff_inter_open
 
 alias dense_iff_inter_open ↔ Dense.inter_open_nonempty _
+#align dense.inter_open_nonempty Dense.inter_open_nonempty
 
 theorem Dense.exists_mem_open {s : Set α} (hs : Dense s) {U : Set α} (ho : IsOpen U)
     (hne : U.Nonempty) : ∃ x ∈ s, x ∈ U :=
@@ -1334,6 +1339,7 @@ theorem mem_closure_iff_frequently {s : Set α} {a : α} : a ∈ closure s ↔ �
 #align mem_closure_iff_frequently mem_closure_iff_frequently
 
 alias mem_closure_iff_frequently ↔ _ Filter.Frequently.mem_closure
+#align filter.frequently.mem_closure Filter.Frequently.mem_closure
 
 /-- A set `s` is closed iff for every point `x`, if there is a point `y` close to `x` that belongs
 to `s` then `x` is in `s`. -/

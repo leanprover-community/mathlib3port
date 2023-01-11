@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wrenna Robson
 
 ! This file was ported from Lean 3 source module information_theory.hamming
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -150,13 +150,13 @@ theorem hamming_dist_comp (f : ∀ i, γ i → β i) {x y : ∀ i, γ i} (hf : �
   exact card_mono ((monotone_filter_right _) fun i H1 H2 => H1 <| hf i H2)
 #align hamming_dist_comp hamming_dist_comp
 
-theorem hamming_dist_smul_le_hamming_dist [∀ i, HasSmul α (β i)] {k : α} {x y : ∀ i, β i} :
+theorem hamming_dist_smul_le_hamming_dist [∀ i, SMul α (β i)] {k : α} {x y : ∀ i, β i} :
     hammingDist (k • x) (k • y) ≤ hammingDist x y :=
   hamming_dist_comp_le_hamming_dist fun i => (· • ·) k
 #align hamming_dist_smul_le_hamming_dist hamming_dist_smul_le_hamming_dist
 
 /-- Corresponds to `dist_smul` with the discrete norm on `α`. -/
-theorem hamming_dist_smul [∀ i, HasSmul α (β i)] {k : α} {x y : ∀ i, β i}
+theorem hamming_dist_smul [∀ i, SMul α (β i)] {k : α} {x y : ∀ i, β i}
     (hk : ∀ i, IsSMulRegular (β i) k) : hammingDist (k • x) (k • y) = hammingDist x y :=
   hamming_dist_comp (fun i => (· • ·) k) hk
 #align hamming_dist_smul hamming_dist_smul
@@ -296,7 +296,7 @@ instance [∀ i, Add (β i)] : Add (Hamming β) :=
 instance [∀ i, Sub (β i)] : Sub (Hamming β) :=
   Pi.instSub
 
-instance [∀ i, HasSmul α (β i)] : HasSmul α (Hamming β) :=
+instance [∀ i, SMul α (β i)] : SMul α (Hamming β) :=
   Pi.instSMul
 
 instance [Zero α] [∀ i, Zero (β i)] [∀ i, SMulWithZero α (β i)] : SMulWithZero α (Hamming β) :=
@@ -405,13 +405,13 @@ theorem of_hamming_sub [∀ i, Sub (β i)] {x y : Hamming β} :
 #align hamming.of_hamming_sub Hamming.of_hamming_sub
 
 @[simp]
-theorem to_hamming_smul [∀ i, HasSmul α (β i)] {r : α} {x : ∀ i, β i} :
+theorem to_hamming_smul [∀ i, SMul α (β i)] {r : α} {x : ∀ i, β i} :
     toHamming (r • x) = r • toHamming x :=
   rfl
 #align hamming.to_hamming_smul Hamming.to_hamming_smul
 
 @[simp]
-theorem of_hamming_smul [∀ i, HasSmul α (β i)] {r : α} {x : Hamming β} :
+theorem of_hamming_smul [∀ i, SMul α (β i)] {r : α} {x : Hamming β} :
     ofHamming (r • x) = r • ofHamming x :=
   rfl
 #align hamming.of_hamming_smul Hamming.of_hamming_smul

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Riccardo Brasca
 
 ! This file was ported from Lean 3 source module analysis.normed.group.quotient
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -607,7 +607,7 @@ theorem Submodule.Quotient.norm_mk_le (m : M) : ‖(Submodule.Quotient.mk m : M 
   quotient_norm_mk_le S.toAddSubgroup m
 #align submodule.quotient.norm_mk_le Submodule.Quotient.norm_mk_le
 
-instance Submodule.Quotient.normedSpace (𝕜 : Type _) [NormedField 𝕜] [NormedSpace 𝕜 M] [HasSmul 𝕜 R]
+instance Submodule.Quotient.normedSpace (𝕜 : Type _) [NormedField 𝕜] [NormedSpace 𝕜 M] [SMul 𝕜 R]
     [IsScalarTower 𝕜 R M] : NormedSpace 𝕜 (M ⧸ S) :=
   { Submodule.Quotient.module' S with
     norm_smul_le := fun k x =>

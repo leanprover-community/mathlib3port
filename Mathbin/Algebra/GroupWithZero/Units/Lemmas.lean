@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module algebra.group_with_zero.units.lemmas
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -567,12 +567,12 @@ variable {a b : G₀}
 
 /- warning: units.smul_mk0 -> Units.smul_mk0 is a dubious translation:
 lean 3 declaration is
-  forall {G₀ : Type.{u1}} [_inst_2 : GroupWithZero.{u1} G₀] {α : Type.{u2}} [_inst_3 : HasSmul.{u1, u2} G₀ α] {g : G₀} (hg : Ne.{succ u1} G₀ g (OfNat.ofNat.{u1} G₀ 0 (OfNat.mk.{u1} G₀ 0 (Zero.zero.{u1} G₀ (MulZeroClass.toHasZero.{u1} G₀ (MulZeroOneClass.toMulZeroClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2)))))))) (a : α), Eq.{succ u2} α (HasSmul.smul.{u1, u2} (Units.{u1} G₀ (MonoidWithZero.toMonoid.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))) α (Units.hasSmul.{u1, u2} G₀ α (MonoidWithZero.toMonoid.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2)) _inst_3) (Units.mk0.{u1} G₀ _inst_2 g hg) a) (HasSmul.smul.{u1, u2} G₀ α _inst_3 g a)
+  forall {G₀ : Type.{u1}} [_inst_2 : GroupWithZero.{u1} G₀] {α : Type.{u2}} [_inst_3 : SMul.{u1, u2} G₀ α] {g : G₀} (hg : Ne.{succ u1} G₀ g (OfNat.ofNat.{u1} G₀ 0 (OfNat.mk.{u1} G₀ 0 (Zero.zero.{u1} G₀ (MulZeroClass.toHasZero.{u1} G₀ (MulZeroOneClass.toMulZeroClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2)))))))) (a : α), Eq.{succ u2} α (SMul.smul.{u1, u2} (Units.{u1} G₀ (MonoidWithZero.toMonoid.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))) α (Units.hasSmul.{u1, u2} G₀ α (MonoidWithZero.toMonoid.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2)) _inst_3) (Units.mk0.{u1} G₀ _inst_2 g hg) a) (SMul.smul.{u1, u2} G₀ α _inst_3 g a)
 but is expected to have type
   forall {G₀ : Type.{u1}} [_inst_2 : GroupWithZero.{u1} G₀] {α : Type.{u2}} [_inst_3 : SMul.{u1, u2} G₀ α] {g : G₀} (hg : Ne.{succ u1} G₀ g (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (MonoidWithZero.toZero.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) (a : α), Eq.{succ u2} α (HSMul.hSMul.{u1, u2, u2} (Units.{u1} G₀ (MonoidWithZero.toMonoid.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))) α α (instHSMul.{u1, u2} (Units.{u1} G₀ (MonoidWithZero.toMonoid.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))) α (Units.instSMulUnits.{u1, u2} G₀ α (MonoidWithZero.toMonoid.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2)) _inst_3)) (Units.mk0.{u1} G₀ _inst_2 g hg) a) (HSMul.hSMul.{u1, u2, u2} G₀ α α (instHSMul.{u1, u2} G₀ α _inst_3) g a)
 Case conversion may be inaccurate. Consider using '#align units.smul_mk0 Units.smul_mk0ₓ'. -/
 @[simp]
-theorem smul_mk0 {α : Type _} [HasSmul G₀ α] {g : G₀} (hg : g ≠ 0) (a : α) : mk0 g hg • a = g • a :=
+theorem smul_mk0 {α : Type _} [SMul G₀ α] {g : G₀} (hg : g ≠ 0) (a : α) : mk0 g hg • a = g • a :=
   rfl
 #align units.smul_mk0 Units.smul_mk0
 

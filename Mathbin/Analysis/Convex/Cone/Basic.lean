@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module analysis.convex.cone.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -79,7 +79,7 @@ variable (𝕜 E) [OrderedSemiring 𝕜]
 
 /-- A convex cone is a subset `s` of a `𝕜`-module such that `a • x + b • y ∈ s` whenever `a, b > 0`
 and `x, y ∈ s`. -/
-structure ConvexCone [AddCommMonoid E] [HasSmul 𝕜 E] where
+structure ConvexCone [AddCommMonoid E] [SMul 𝕜 E] where
   carrier : Set E
   smul_mem' : ∀ ⦃c : 𝕜⦄, 0 < c → ∀ ⦃x : E⦄, x ∈ carrier → c • x ∈ carrier
   add_mem' : ∀ ⦃x⦄ (hx : x ∈ carrier) ⦃y⦄ (hy : y ∈ carrier), x + y ∈ carrier
@@ -95,9 +95,9 @@ section OrderedSemiring
 
 variable [OrderedSemiring 𝕜] [AddCommMonoid E]
 
-section HasSmul
+section SMul
 
-variable [HasSmul 𝕜 E] (S T : ConvexCone 𝕜 E)
+variable [SMul 𝕜 E] (S T : ConvexCone 𝕜 E)
 
 instance : SetLike (ConvexCone 𝕜 E) E where
   coe := carrier
@@ -219,7 +219,7 @@ instance : CompleteLattice (ConvexCone 𝕜 E) :=
 instance : Inhabited (ConvexCone 𝕜 E) :=
   ⟨⊥⟩
 
-end HasSmul
+end SMul
 
 section Module
 
@@ -344,7 +344,7 @@ variable [OrderedSemiring 𝕜]
 
 section AddCommMonoid
 
-variable [AddCommMonoid E] [HasSmul 𝕜 E] (S : ConvexCone 𝕜 E)
+variable [AddCommMonoid E] [SMul 𝕜 E] (S : ConvexCone 𝕜 E)
 
 /-- A convex cone is pointed if it includes `0`. -/
 def Pointed (S : ConvexCone 𝕜 E) : Prop :=
@@ -376,7 +376,7 @@ end AddCommMonoid
 
 section AddCommGroup
 
-variable [AddCommGroup E] [HasSmul 𝕜 E] (S : ConvexCone 𝕜 E)
+variable [AddCommGroup E] [SMul 𝕜 E] (S : ConvexCone 𝕜 E)
 
 /-- A convex cone is flat if it contains some nonzero vector `x` and its opposite `-x`. -/
 def Flat : Prop :=

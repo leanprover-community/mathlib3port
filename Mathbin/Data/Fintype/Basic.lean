@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.fintype.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -689,8 +689,10 @@ theorem to_finset_subset [Fintype s] {t : Finset α} : s.toFinset ⊆ t ↔ s �
 #align set.to_finset_subset Set.to_finset_subset
 
 alias to_finset_subset_to_finset ↔ _ to_finset_mono
+#align set.to_finset_mono Set.to_finset_mono
 
 alias to_finset_ssubset_to_finset ↔ _ to_finset_strict_mono
+#align set.to_finset_strict_mono Set.to_finset_strict_mono
 
 @[simp]
 theorem disjoint_to_finset [Fintype s] [Fintype t] :
@@ -824,10 +826,9 @@ theorem Finset.to_finset_coe (s : Finset α) [Fintype ↥(s : Set α)] : (s : Se
 #align finset.to_finset_coe Finset.to_finset_coe
 
 instance (n : ℕ) : Fintype (Fin n) :=
-  ⟨⟨List.finRange n, List.nodup_fin_range n⟩, List.mem_fin_range⟩
+  ⟨⟨List.finRange n, List.nodup_finRange n⟩, List.mem_finRange⟩
 
-theorem Fin.univ_def (n : ℕ) :
-    (univ : Finset (Fin n)) = ⟨List.finRange n, List.nodup_fin_range n⟩ :=
+theorem Fin.univ_def (n : ℕ) : (univ : Finset (Fin n)) = ⟨List.finRange n, List.nodup_finRange n⟩ :=
   rfl
 #align fin.univ_def Fin.univ_def
 

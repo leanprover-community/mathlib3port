@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang, Jujian Zhang
 
 ! This file was ported from Lean 3 source module algebra.module.localized_module
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -196,7 +196,7 @@ private theorem add_zero' (x : LocalizedModule S M) : x + 0 = x :=
     x
 #align localized_module.add_zero' localized_module.add_zero'
 
-instance hasNatSmul : HasSmul ℕ (LocalizedModule S M) where smul n := nsmulRec n
+instance hasNatSmul : SMul ℕ (LocalizedModule S M) where smul n := nsmulRec n
 #align localized_module.has_nat_smul LocalizedModule.hasNatSmul
 
 private theorem nsmul_zero' (x : LocalizedModule S M) : (0 : ℕ) • x = 0 :=
@@ -332,7 +332,7 @@ theorem mk_mul_mk {A : Type _} [Semiring A] [Algebra R A] {a₁ a₂ : A} {s₁ 
   rfl
 #align localized_module.mk_mul_mk LocalizedModule.mk_mul_mk
 
-instance : HasSmul (Localization S) (LocalizedModule S M)
+instance : SMul (Localization S) (LocalizedModule S M)
     where smul f x :=
     Localization.liftOn f
       (fun r s =>
@@ -357,7 +357,7 @@ instance : HasSmul (Localization S) (LocalizedModule S M)
 
 theorem mk_smul_mk (r : R) (m : M) (s t : S) : Localization.mk r s • mk m t = mk (r • m) (s * t) :=
   by
-  unfold HasSmul.smul
+  unfold SMul.smul
   rw [Localization.lift_on_mk, lift_on_mk]
 #align localized_module.mk_smul_mk LocalizedModule.mk_smul_mk
 

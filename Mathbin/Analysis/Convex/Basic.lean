@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Yury Kudriashov, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.convex.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,9 +46,9 @@ section AddCommMonoid
 
 variable [AddCommMonoid E] [AddCommMonoid F]
 
-section HasSmul
+section SMul
 
-variable (𝕜) [HasSmul 𝕜 E] [HasSmul 𝕜 F] (s : Set E) {x : E}
+variable (𝕜) [SMul 𝕜 E] [SMul 𝕜 F] (s : Set E) {x : E}
 
 /-- Convexity of sets. -/
 def Convex : Prop :=
@@ -86,6 +86,7 @@ theorem convex_iff_pointwise_add_subset :
 #align convex_iff_pointwise_add_subset convex_iff_pointwise_add_subset
 
 alias convex_iff_pointwise_add_subset ↔ Convex.set_combo_subset _
+#align convex.set_combo_subset Convex.set_combo_subset
 
 theorem convex_empty : Convex 𝕜 (∅ : Set E) := fun x => False.elim
 #align convex_empty convex_empty
@@ -116,7 +117,7 @@ theorem Convex.prod {s : Set E} {t : Set F} (hs : Convex 𝕜 s) (ht : Convex �
     Convex 𝕜 (s ×ˢ t) := fun x hx => (hs hx.1).Prod (ht hx.2)
 #align convex.prod Convex.prod
 
-theorem convex_pi {ι : Type _} {E : ι → Type _} [∀ i, AddCommMonoid (E i)] [∀ i, HasSmul 𝕜 (E i)]
+theorem convex_pi {ι : Type _} {E : ι → Type _} [∀ i, AddCommMonoid (E i)] [∀ i, SMul 𝕜 (E i)]
     {s : Set ι} {t : ∀ i, Set (E i)} (ht : ∀ ⦃i⦄, i ∈ s → Convex 𝕜 (t i)) : Convex 𝕜 (s.pi t) :=
   fun x hx => star_convex_pi fun i hi => ht hi <| hx _ hi
 #align convex_pi convex_pi
@@ -139,7 +140,7 @@ theorem DirectedOn.convex_sUnion {c : Set (Set E)} (hdir : DirectedOn (· ⊆ ·
   exact (directedOn_iff_directed.1 hdir).convex_Union fun A => hc A.2
 #align directed_on.convex_sUnion DirectedOn.convex_sUnion
 
-end HasSmul
+end SMul
 
 section Module
 
@@ -610,6 +611,7 @@ theorem convex_iff_ord_connected [LinearOrderedField 𝕜] {s : Set 𝕜} : Conv
 #align convex_iff_ord_connected convex_iff_ord_connected
 
 alias convex_iff_ord_connected ↔ Convex.ord_connected _
+#align convex.ord_connected Convex.ord_connected
 
 end
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module group_theory.free_group
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1100,7 +1100,7 @@ theorem reduce.red : Red L (reduce L) :=
         "@["
         [(Term.attrInstance
           (Term.attrKind [])
-          (to_additive "to_additive" [] [] (to_additiveRest [] [] [])))]
+          (to_additive "to_additive" [] [] (to_additiveRest [] [] [] [])))]
         "]")]
       []
       []
@@ -1538,8 +1538,10 @@ theorem reduce.eq_of_red (H : Red L₁ L₂) : reduce L₁ = reduce L₂ :=
 #align free_group.reduce.eq_of_red FreeGroup.reduce.eq_of_red
 
 alias reduce.eq_of_red ← red.reduce_eq
+#align free_group.red.reduce_eq FreeGroup.Red.reduce_eq
 
 alias FreeAddGroup.reduce.eq_of_red ← free_add_group.red.reduce_eq
+#align free_group.free_add_group.red.reduce_eq FreeGroup.FreeAddGroup.Red.reduce_eq
 
 @[to_additive]
 theorem Red.reduce_right (h : Red L₁ L₂) : Red L₁ (reduce L₂) :=

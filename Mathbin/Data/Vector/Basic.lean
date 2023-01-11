@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.vector.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -220,7 +220,7 @@ theorem nodup_iff_nth_inj {v : Vector α n} : v.toList.Nodup ↔ Function.Inject
   by
   cases' v with l hl
   subst hl
-  simp only [List.nodup_iff_nth_le_inj]
+  simp only [List.nodup_iff_nthLe_inj]
   constructor
   · intro h i j hij
     cases i
@@ -619,7 +619,7 @@ theorem nth_update_nth_eq_if {v : Vector α n} {i j : Fin n} (a : α) :
 theorem prod_update_nth [Monoid α] (v : Vector α n) (i : Fin n) (a : α) :
     (v.updateNth i a).toList.Prod = (v.take i).toList.Prod * a * (v.drop (i + 1)).toList.Prod :=
   by
-  refine' (List.prod_update_nth v.to_list i a).trans _
+  refine' (List.prod_set v.to_list i a).trans _
   have : ↑i < v.to_list.length := lt_of_lt_of_le i.2 (le_of_eq v.2.symm)
   simp_all
 #align vector.prod_update_nth Vector.prod_update_nth
@@ -628,7 +628,7 @@ theorem prod_update_nth [Monoid α] (v : Vector α n) (i : Fin n) (a : α) :
 theorem prod_update_nth' [CommGroup α] (v : Vector α n) (i : Fin n) (a : α) :
     (v.updateNth i a).toList.Prod = v.toList.Prod * (v.nth i)⁻¹ * a :=
   by
-  refine' (List.prod_update_nth' v.to_list i a).trans _
+  refine' (List.prod_set' v.to_list i a).trans _
   have : ↑i < v.to_list.length := lt_of_lt_of_le i.2 (le_of_eq v.2.symm)
   simp [this, nth_eq_nth_le, mul_assoc]
 #align vector.prod_update_nth' Vector.prod_update_nth'

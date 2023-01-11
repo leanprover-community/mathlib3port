@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 
 ! This file was ported from Lean 3 source module number_theory.modular_forms.slash_actions
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -35,7 +35,7 @@ local notation "GL(" n ", " R ")" "⁺" => Matrix.gLPos (Fin n) R
 local notation "SL(" n ", " R ")" => Matrix.SpecialLinearGroup (Fin n) R
 
 /-- A general version of the slash action of the space of modular forms.-/
-class SlashAction (β G α γ : Type _) [Group G] [Zero α] [HasSmul γ α] [Add α] where
+class SlashAction (β G α γ : Type _) [Group G] [Zero α] [SMul γ α] [Add α] where
   map : β → G → α → α
   zero_slash : ∀ (k : β) (g : G), map k g 0 = 0
   slash_one : ∀ (k : β) (a : α), map k 1 a = a
@@ -45,7 +45,7 @@ class SlashAction (β G α γ : Type _) [Group G] [Zero α] [HasSmul γ α] [Add
 #align slash_action SlashAction
 
 /-- Slash_action induced by a monoid homomorphism.-/
-def monoidHomSlashAction {β G H α γ : Type _} [Group G] [Zero α] [HasSmul γ α] [Add α] [Group H]
+def monoidHomSlashAction {β G H α γ : Type _} [Group G] [Zero α] [SMul γ α] [Add α] [Group H]
     [SlashAction β G α γ] (h : H →* G) : SlashAction β H α γ
     where
   map k g := SlashAction.map γ k (h g)
@@ -103,7 +103,7 @@ theorem slash_one (k : ℤ) (f : ℍ → ℂ) : f ∣[k]1 = f :=
   funext <| by simp [slash]
 #align modular_form.slash_one ModularForm.slash_one
 
-variable {α : Type _} [HasSmul α ℂ] [IsScalarTower α ℂ ℂ]
+variable {α : Type _} [SMul α ℂ] [IsScalarTower α ℂ ℂ]
 
 @[simp]
 theorem smul_slash (k : ℤ) (A : GL(2, ℝ)⁺) (f : ℍ → ℂ) (c : α) : (c • f) ∣[k]A = c • f ∣[k]A :=

@@ -5,7 +5,7 @@ Authors: Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Amelia Livingston, 
 Neil Strickland, Aaron Anderson
 
 ! This file was ported from Lean 3 source module algebra.divisibility.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,7 +62,14 @@ theorem Dvd.intro (c : α) (h : a * c = b) : a ∣ b :=
   Exists.intro c h
 #align dvd.intro Dvd.intro
 
+/- warning: dvd_of_mul_right_eq -> dvd_of_mul_right_eq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Semigroup.{u1} α] {a : α} {b : α} (c : α), (Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (Semigroup.toHasMul.{u1} α _inst_1)) a c) b) -> (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α _inst_1) a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Semigroup.{u1} α] {a : α} {b : α} (c : α), (Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (Semigroup.toMul.{u1} α _inst_1)) a c) b) -> (Dvd.dvd.{u1} α (semigroupDvd.{u1} α _inst_1) a b)
+Case conversion may be inaccurate. Consider using '#align dvd_of_mul_right_eq dvd_of_mul_right_eqₓ'. -/
 alias Dvd.intro ← dvd_of_mul_right_eq
+#align dvd_of_mul_right_eq dvd_of_mul_right_eq
 
 /- warning: exists_eq_mul_right_of_dvd -> exists_eq_mul_right_of_dvd is a dubious translation:
 lean 3 declaration is
@@ -94,6 +101,7 @@ theorem dvd_trans : a ∣ b → b ∣ c → a ∣ c
 -/
 
 alias dvd_trans ← Dvd.Dvd.trans
+#align has_dvd.dvd.trans Dvd.Dvd.trans
 
 instance : IsTrans α (· ∣ ·) :=
   ⟨fun a b c => dvd_trans⟩
@@ -120,6 +128,7 @@ theorem dvd_mul_of_dvd_left (h : a ∣ b) (c : α) : a ∣ b * c :=
 #align dvd_mul_of_dvd_left dvd_mul_of_dvd_left
 
 alias dvd_mul_of_dvd_left ← Dvd.Dvd.mul_right
+#align has_dvd.dvd.mul_right Dvd.Dvd.mul_right
 
 /- warning: dvd_of_mul_right_dvd -> dvd_of_mul_right_dvd is a dubious translation:
 lean 3 declaration is
@@ -215,7 +224,14 @@ theorem Dvd.intro_left (c : α) (h : c * a = b) : a ∣ b :=
   Dvd.intro _ (by rw [mul_comm] at h; apply h)
 #align dvd.intro_left Dvd.intro_left
 
+/- warning: dvd_of_mul_left_eq -> dvd_of_mul_left_eq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : CommSemigroup.{u1} α] {a : α} {b : α} (c : α), (Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (Semigroup.toHasMul.{u1} α (CommSemigroup.toSemigroup.{u1} α _inst_1))) c a) b) -> (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α (CommSemigroup.toSemigroup.{u1} α _inst_1)) a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : CommSemigroup.{u1} α] {a : α} {b : α} (c : α), (Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (Semigroup.toMul.{u1} α (CommSemigroup.toSemigroup.{u1} α _inst_1))) c a) b) -> (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (CommSemigroup.toSemigroup.{u1} α _inst_1)) a b)
+Case conversion may be inaccurate. Consider using '#align dvd_of_mul_left_eq dvd_of_mul_left_eqₓ'. -/
 alias Dvd.intro_left ← dvd_of_mul_left_eq
+#align dvd_of_mul_left_eq dvd_of_mul_left_eq
 
 /- warning: exists_eq_mul_left_of_dvd -> exists_eq_mul_left_of_dvd is a dubious translation:
 lean 3 declaration is
@@ -271,6 +287,7 @@ theorem dvd_mul_of_dvd_right (h : a ∣ b) (c : α) : a ∣ c * b := by rw [mul_
 #align dvd_mul_of_dvd_right dvd_mul_of_dvd_right
 
 alias dvd_mul_of_dvd_right ← Dvd.Dvd.mul_left
+#align has_dvd.dvd.mul_left Dvd.Dvd.mul_left
 
 attribute [local simp] mul_assoc mul_comm mul_left_comm
 

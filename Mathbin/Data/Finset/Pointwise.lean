@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.finset.pointwise
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -207,6 +207,8 @@ theorem inv_nonempty_iff : s⁻¹.Nonempty ↔ s.Nonempty :=
 #align finset.inv_nonempty_iff Finset.inv_nonempty_iff
 
 alias inv_nonempty_iff ↔ nonempty.inv nonempty.of_inv
+#align finset.nonempty.inv Finset.Nonempty.inv
+#align finset.nonempty.of_inv Finset.Nonempty.of_inv
 
 @[to_additive, mono]
 theorem inv_subset_inv (h : s ⊆ t) : s⁻¹ ⊆ t⁻¹ :=
@@ -602,7 +604,7 @@ variable [DecidableEq α] [DecidableEq β]
 
 /-- Repeated pointwise addition (not the same as pointwise repeated addition!) of a `finset`. See
 note [pointwise nat action]. -/
-protected def hasNsmul [Zero α] [Add α] : HasSmul ℕ (Finset α) :=
+protected def hasNsmul [Zero α] [Add α] : SMul ℕ (Finset α) :=
   ⟨nsmulRec⟩
 #align finset.has_nsmul Finset.hasNsmul
 
@@ -615,7 +617,7 @@ protected def hasNpow [One α] [Mul α] : Pow (Finset α) ℕ :=
 
 /-- Repeated pointwise addition/subtraction (not the same as pointwise repeated
 addition/subtraction!) of a `finset`. See note [pointwise nat action]. -/
-protected def hasZsmul [Zero α] [Add α] [Neg α] : HasSmul ℤ (Finset α) :=
+protected def hasZsmul [Zero α] [Add α] [Neg α] : SMul ℤ (Finset α) :=
   ⟨zsmulRec⟩
 #align finset.has_zsmul Finset.hasZsmul
 
@@ -869,7 +871,7 @@ theorem is_unit_iff : IsUnit s ↔ ∃ a, s = {a} ∧ IsUnit a :=
 
 @[simp, to_additive]
 theorem is_unit_coe : IsUnit (s : Set α) ↔ IsUnit s := by
-  simp_rw [is_unit_iff, Set.is_unit_iff, coe_eq_singleton]
+  simp_rw [is_unit_iff, Set.isUnit_iff, coe_eq_singleton]
 #align finset.is_unit_coe Finset.is_unit_coe
 
 end DivisionMonoid
@@ -1065,13 +1067,13 @@ end Group
 /-! ### Scalar addition/multiplication of finsets -/
 
 
-section HasSmul
+section SMul
 
-variable [DecidableEq β] [HasSmul α β] {s s₁ s₂ : Finset α} {t t₁ t₂ u : Finset β} {a : α} {b : β}
+variable [DecidableEq β] [SMul α β] {s s₁ s₂ : Finset α} {t t₁ t₂ u : Finset β} {a : α} {b : β}
 
 /-- The pointwise product of two finsets `s` and `t`: `s • t = {x • y | x ∈ s, y ∈ t}`. -/
 @[to_additive "The pointwise sum of two finsets `s` and\n`t`: `s +ᵥ t = {x +ᵥ y | x ∈ s, y ∈ t}`."]
-protected def hasSmul : HasSmul (Finset α) (Finset β) :=
+protected def hasSmul : SMul (Finset α) (Finset β) :=
   ⟨image₂ (· • ·)⟩
 #align finset.has_smul Finset.hasSmul
 
@@ -1205,7 +1207,7 @@ theorem subset_smul {s : Set α} {t : Set β} :
   subset_image₂
 #align finset.subset_smul Finset.subset_smul
 
-end HasSmul
+end SMul
 
 /-! ### Scalar subtraction of finsets -/
 
@@ -1348,13 +1350,13 @@ open Pointwise
 /-! ### Translation/scaling of finsets -/
 
 
-section HasSmul
+section SMul
 
-variable [DecidableEq β] [HasSmul α β] {s s₁ s₂ t u : Finset β} {a : α} {b : β}
+variable [DecidableEq β] [SMul α β] {s s₁ s₂ t u : Finset β} {a : α} {b : β}
 
 /-- The scaling of a finset `s` by a scalar `a`: `a • s = {a • x | x ∈ s}`. -/
 @[to_additive "The translation of a finset `s` by a vector `a`:\n`a +ᵥ s = {a +ᵥ x | x ∈ s}`."]
-protected def hasSmulFinset : HasSmul α (Finset β) :=
+protected def hasSmulFinset : SMul α (Finset β) :=
   ⟨fun a => image <| (· • ·) a⟩
 #align finset.has_smul_finset Finset.hasSmulFinset
 
@@ -1442,7 +1444,7 @@ theorem bUnion_smul_finset (s : Finset α) (t : Finset β) : s.bUnion (· • t)
   bUnion_image_left
 #align finset.bUnion_smul_finset Finset.bUnion_smul_finset
 
-end HasSmul
+end SMul
 
 open Pointwise
 
@@ -1451,32 +1453,32 @@ section Instances
 variable [DecidableEq γ]
 
 @[to_additive]
-instance smul_comm_class_finset [HasSmul α γ] [HasSmul β γ] [SMulCommClass α β γ] :
+instance smul_comm_class_finset [SMul α γ] [SMul β γ] [SMulCommClass α β γ] :
     SMulCommClass α β (Finset γ) :=
   ⟨fun _ _ => commute.finset_image <| smul_comm _ _⟩
 #align finset.smul_comm_class_finset Finset.smul_comm_class_finset
 
 @[to_additive]
-instance smul_comm_class_finset' [HasSmul α γ] [HasSmul β γ] [SMulCommClass α β γ] :
+instance smul_comm_class_finset' [SMul α γ] [SMul β γ] [SMulCommClass α β γ] :
     SMulCommClass α (Finset β) (Finset γ) :=
   ⟨fun a s t => coe_injective <| by simp only [coe_smul_finset, coe_smul, smul_comm]⟩
 #align finset.smul_comm_class_finset' Finset.smul_comm_class_finset'
 
 @[to_additive]
-instance smul_comm_class_finset'' [HasSmul α γ] [HasSmul β γ] [SMulCommClass α β γ] :
+instance smul_comm_class_finset'' [SMul α γ] [SMul β γ] [SMulCommClass α β γ] :
     SMulCommClass (Finset α) β (Finset γ) :=
   haveI := SMulCommClass.symm α β γ
   SMulCommClass.symm _ _ _
 #align finset.smul_comm_class_finset'' Finset.smul_comm_class_finset''
 
 @[to_additive]
-instance smul_comm_class [HasSmul α γ] [HasSmul β γ] [SMulCommClass α β γ] :
+instance smul_comm_class [SMul α γ] [SMul β γ] [SMulCommClass α β γ] :
     SMulCommClass (Finset α) (Finset β) (Finset γ) :=
   ⟨fun s t u => coe_injective <| by simp_rw [coe_smul, smul_comm]⟩
 #align finset.smul_comm_class Finset.smul_comm_class
 
 @[to_additive]
-instance is_scalar_tower [HasSmul α β] [HasSmul α γ] [HasSmul β γ] [IsScalarTower α β γ] :
+instance is_scalar_tower [SMul α β] [SMul α γ] [SMul β γ] [IsScalarTower α β γ] :
     IsScalarTower α β (Finset γ) :=
   ⟨fun a b s => by simp only [← image_smul, image_image, smul_assoc]⟩
 #align finset.is_scalar_tower Finset.is_scalar_tower
@@ -1484,18 +1486,18 @@ instance is_scalar_tower [HasSmul α β] [HasSmul α γ] [HasSmul β γ] [IsScal
 variable [DecidableEq β]
 
 @[to_additive]
-instance is_scalar_tower' [HasSmul α β] [HasSmul α γ] [HasSmul β γ] [IsScalarTower α β γ] :
+instance is_scalar_tower' [SMul α β] [SMul α γ] [SMul β γ] [IsScalarTower α β γ] :
     IsScalarTower α (Finset β) (Finset γ) :=
   ⟨fun a s t => coe_injective <| by simp only [coe_smul_finset, coe_smul, smul_assoc]⟩
 #align finset.is_scalar_tower' Finset.is_scalar_tower'
 
 @[to_additive]
-instance is_scalar_tower'' [HasSmul α β] [HasSmul α γ] [HasSmul β γ] [IsScalarTower α β γ] :
+instance is_scalar_tower'' [SMul α β] [SMul α γ] [SMul β γ] [IsScalarTower α β γ] :
     IsScalarTower (Finset α) (Finset β) (Finset γ) :=
   ⟨fun a s t => coe_injective <| by simp only [coe_smul_finset, coe_smul, smul_assoc]⟩
 #align finset.is_scalar_tower'' Finset.is_scalar_tower''
 
-instance is_central_scalar [HasSmul α β] [HasSmul αᵐᵒᵖ β] [IsCentralScalar α β] :
+instance is_central_scalar [SMul α β] [SMul αᵐᵒᵖ β] [IsCentralScalar α β] :
     IsCentralScalar α (Finset β) :=
   ⟨fun a s => coe_injective <| by simp only [coe_smul_finset, coe_smul, op_smul_eq_smul]⟩
 #align finset.is_central_scalar Finset.is_central_scalar
@@ -1541,7 +1543,7 @@ scoped[Pointwise]
 instance [DecidableEq α] [Zero α] [Mul α] [NoZeroDivisors α] : NoZeroDivisors (Finset α) :=
   coe_injective.NoZeroDivisors _ coe_zero coe_mul
 
-instance [Zero α] [Zero β] [HasSmul α β] [NoZeroSMulDivisors α β] :
+instance [Zero α] [Zero β] [SMul α β] [NoZeroSMulDivisors α β] :
     NoZeroSMulDivisors (Finset α) (Finset β) :=
   ⟨fun s t h => by
     by_contra' H
@@ -1553,7 +1555,7 @@ instance [Zero α] [Zero β] [HasSmul α β] [NoZeroSMulDivisors α β] :
     exact
       (eq_zero_or_eq_zero_of_smul_eq_zero <| mem_zero.1 <| this <| smul_mem_smul hs ht).elim ha hb⟩
 
-instance no_zero_smul_divisors_finset [Zero α] [Zero β] [HasSmul α β] [NoZeroSMulDivisors α β] :
+instance no_zero_smul_divisors_finset [Zero α] [Zero β] [SMul α β] [NoZeroSMulDivisors α β] :
     NoZeroSMulDivisors α (Finset β) :=
   coe_injective.NoZeroSmulDivisors _ coe_zero coe_smul_finset
 #align finset.no_zero_smul_divisors_finset Finset.no_zero_smul_divisors_finset

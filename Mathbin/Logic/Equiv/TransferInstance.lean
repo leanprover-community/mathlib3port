@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module logic.equiv.transfer_instance
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -90,17 +90,17 @@ theorem inv_def [Inv β] (x : α) : @Inv.inv _ (Equiv.hasInv e) x = e.symm (e x)
 
 /-- Transfer `has_smul` across an `equiv` -/
 @[reducible]
-protected def hasSmul (R : Type _) [HasSmul R β] : HasSmul R α :=
+protected def hasSmul (R : Type _) [SMul R β] : SMul R α :=
   ⟨fun r x => e.symm (r • e x)⟩
 #align equiv.has_smul Equiv.hasSmul
 
-theorem smul_def {R : Type _} [HasSmul R β] (r : R) (x : α) :
-    @HasSmul.smul _ _ (e.HasSmul R) r x = e.symm (r • e x) :=
+theorem smul_def {R : Type _} [SMul R β] (r : R) (x : α) :
+    @SMul.smul _ _ (e.HasSmul R) r x = e.symm (r • e x) :=
   rfl
 #align equiv.smul_def Equiv.smul_def
 
 /-- Transfer `has_pow` across an `equiv` -/
-@[reducible, to_additive HasSmul]
+@[reducible, to_additive SMul]
 protected def hasPow (N : Type _) [Pow β N] : Pow α N :=
   ⟨fun x n => e.symm (e x ^ n)⟩
 #align equiv.has_pow Equiv.hasPow

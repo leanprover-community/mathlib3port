@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module analysis.normed_space.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -280,7 +280,7 @@ instance Pi.normedSpace {E : ι → Type _} [Fintype ι] [∀ i, SeminormedAddCo
 #align pi.normed_space Pi.normedSpace
 
 /-- A subspace of a normed space is also a normed space, with the restriction of the norm. -/
-instance Submodule.normedSpace {𝕜 R : Type _} [HasSmul 𝕜 R] [NormedField 𝕜] [Ring R] {E : Type _}
+instance Submodule.normedSpace {𝕜 R : Type _} [SMul 𝕜 R] [NormedField 𝕜] [Ring R] {E : Type _}
     [SeminormedAddCommGroup E] [NormedSpace 𝕜 E] [Module R E] [IsScalarTower 𝕜 R E]
     (s : Submodule R E) : NormedSpace 𝕜 s where norm_smul_le c x := le_of_eq <| norm_smul c (x : E)
 #align submodule.normed_space Submodule.normedSpace

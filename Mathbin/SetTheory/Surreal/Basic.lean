@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Scott Morrison
 
 ! This file was ported from Lean 3 source module set_theory.surreal.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -148,12 +148,14 @@ theorem le_of_lf {x y : Pgame} (h : x ⧏ y) (ox : Numeric x) (oy : Numeric y) :
 #align pgame.le_of_lf Pgame.le_of_lf
 
 alias le_of_lf ← lf.le
+#align pgame.lf.le Pgame.Lf.le
 
 theorem lt_of_lf {x y : Pgame} (h : x ⧏ y) (ox : Numeric x) (oy : Numeric y) : x < y :=
   (lt_or_fuzzy_of_lf h).resolve_right (not_fuzzy_of_le (h.le ox oy))
 #align pgame.lt_of_lf Pgame.lt_of_lf
 
 alias lt_of_lf ← lf.lt
+#align pgame.lf.lt Pgame.Lf.lt
 
 theorem lf_iff_lt {x y : Pgame} (ox : Numeric x) (oy : Numeric y) : x ⧏ y ↔ x < y :=
   ⟨fun h => h.lt ox oy, lf_of_lt⟩

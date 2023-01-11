@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Vladimir Goryachev, Kyle Miller, Scott Morrison, Eric Rodriguez
 
 ! This file was ported from Lean 3 source module data.nat.count
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -118,8 +118,10 @@ theorem count_succ_eq_count_iff {n : ℕ} : count p (n + 1) = count p n ↔ ¬p 
 #align nat.count_succ_eq_count_iff Nat.count_succ_eq_count_iff
 
 alias count_succ_eq_succ_count_iff ↔ _ count_succ_eq_succ_count
+#align nat.count_succ_eq_succ_count Nat.count_succ_eq_succ_count
 
 alias count_succ_eq_count_iff ↔ _ count_succ_eq_count
+#align nat.count_succ_eq_count Nat.count_succ_eq_count
 
 theorem count_le_cardinal (n : ℕ) : (count p n : Cardinal) ≤ Cardinal.mk { k | p k } :=
   by

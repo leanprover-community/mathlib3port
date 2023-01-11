@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module dynamics.fixed_points.basic
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -144,7 +144,7 @@ protected theorem perm_inv (h : IsFixedPt e x) : IsFixedPt (⇑e⁻¹) x :=
 #print Function.IsFixedPt.perm_pow /-
 protected theorem perm_pow (h : IsFixedPt e x) (n : ℕ) : IsFixedPt (⇑(e ^ n)) x :=
   by
-  rw [← Equiv.Perm.iterate_eq_pow]
+  rw [Equiv.Perm.coe_pow]
   exact h.iterate _
 #align function.is_fixed_pt.perm_pow Function.IsFixedPt.perm_pow
 -/

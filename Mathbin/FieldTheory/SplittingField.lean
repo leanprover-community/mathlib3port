@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module field_theory.splitting_field
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -160,7 +160,7 @@ instance algebra (n : ℕ) :
 #align polynomial.splitting_field_aux.algebra Polynomial.SplittingFieldAux.algebra
 
 instance is_scalar_tower (n : ℕ) :
-    ∀ (R₁ R₂ : Type _) {K : Type u} [CommSemiring R₁] [CommSemiring R₂] [HasSmul R₁ R₂] [Field K],
+    ∀ (R₁ R₂ : Type _) {K : Type u} [CommSemiring R₁] [CommSemiring R₂] [SMul R₁ R₂] [Field K],
       ∀ [Algebra R₁ K] [Algebra R₂ K],
         ∀ [IsScalarTower R₁ R₂ K] {f : K[X]}, IsScalarTower R₁ R₂ (splitting_field_aux n f) :=
   (Nat.recOn n fun R₁ R₂ K _ _ _ _ _ _ _ _ => ‹IsScalarTower R₁ R₂ K›)

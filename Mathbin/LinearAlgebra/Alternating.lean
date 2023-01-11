@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser, Zhangir Azerbayev
 
 ! This file was ported from Lean 3 source module linear_algebra.alternating
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -230,11 +230,11 @@ as `multilinear_map`
 -/
 
 
-section HasSmul
+section SMul
 
 variable {S : Type _} [Monoid S] [DistribMulAction S N] [SMulCommClass R S N]
 
-instance : HasSmul S (AlternatingMap R M N ι) :=
+instance : SMul S (AlternatingMap R M N ι) :=
   ⟨fun c f =>
     { (c • f : MultilinearMap R (fun i : ι => M) N) with
       map_eq_zero_of_eq' := fun v i j h hij => by simp [f.map_eq_zero_of_eq v h hij] }⟩
@@ -258,7 +258,7 @@ instance [DistribMulAction Sᵐᵒᵖ N] [IsCentralScalar S N] :
     IsCentralScalar S (AlternatingMap R M N ι) :=
   ⟨fun c f => ext fun x => op_smul_eq_smul _ _⟩
 
-end HasSmul
+end SMul
 
 instance : Add (AlternatingMap R M N ι) :=
   ⟨fun a b =>
@@ -867,8 +867,8 @@ abbrev ModSumCongr (α β : Type _) :=
 #align equiv.perm.mod_sum_congr Equiv.Perm.ModSumCongr
 
 theorem ModSumCongr.swap_smul_involutive {α β : Type _} [DecidableEq (Sum α β)] (i j : Sum α β) :
-    Function.Involutive (HasSmul.smul (Equiv.swap i j) : ModSumCongr α β → ModSumCongr α β) :=
-  fun σ => by
+    Function.Involutive (SMul.smul (Equiv.swap i j) : ModSumCongr α β → ModSumCongr α β) := fun σ =>
+  by
   apply σ.induction_on' fun σ => _
   exact _root_.congr_arg Quotient.mk' (Equiv.swap_mul_involutive i j σ)
 #align equiv.perm.mod_sum_congr.swap_smul_involutive Equiv.Perm.ModSumCongr.swap_smul_involutive

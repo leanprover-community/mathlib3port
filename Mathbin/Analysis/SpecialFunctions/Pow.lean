@@ -5,7 +5,7 @@ Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Sébasti
   Rémy Degenne, David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.special_functions.pow
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2091,8 +2091,9 @@ theorem inv_rpow (x : ℝ≥0∞) (y : ℝ) : x⁻¹ ^ y = (x ^ y)⁻¹ :=
   replace hy := hy.lt_or_lt
   rcases eq_or_ne x 0 with (rfl | h0); · cases hy <;> simp [*]
   rcases eq_or_ne x ⊤ with (rfl | h_top); · cases hy <;> simp [*]
-  apply eq_inv_of_mul_eq_one_left
-  rw [← mul_rpow_of_ne_zero (inv_ne_zero.2 h_top) h0, inv_mul_cancel h0 h_top, one_rpow]
+  apply Ennreal.eq_inv_of_mul_eq_one_left
+  rw [← mul_rpow_of_ne_zero (Ennreal.inv_ne_zero.2 h_top) h0, Ennreal.inv_mul_cancel h0 h_top,
+    one_rpow]
 #align ennreal.inv_rpow Ennreal.inv_rpow
 
 theorem div_rpow_of_nonneg (x y : ℝ≥0∞) {z : ℝ} (hz : 0 ≤ z) : (x / y) ^ z = x ^ z / y ^ z := by
@@ -2237,7 +2238,7 @@ theorem rpow_pos {p : ℝ} {x : ℝ≥0∞} (hx_pos : 0 < x) (hx_ne_top : x ≠ 
   by
   cases' lt_or_le 0 p with hp_pos hp_nonpos
   · exact rpow_pos_of_nonneg hx_pos (le_of_lt hp_pos)
-  · rw [← neg_neg p, rpow_neg, inv_pos]
+  · rw [← neg_neg p, rpow_neg, Ennreal.inv_pos]
     exact rpow_ne_top_of_nonneg (right.nonneg_neg_iff.mpr hp_nonpos) hx_ne_top
 #align ennreal.rpow_pos Ennreal.rpow_pos
 

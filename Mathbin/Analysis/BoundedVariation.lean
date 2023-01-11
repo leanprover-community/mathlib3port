@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.bounded_variation
-! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
+! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -87,13 +87,18 @@ theorem nonempty_monotone_mem {s : Set α} (hs : s.Nonempty) :
   exact ⟨⟨fun i => x, fun i j hij => le_rfl, fun i => hx⟩⟩
 #align evariation_on.nonempty_monotone_mem evariationOn.nonempty_monotone_mem
 
-theorem eq_of_eq_on {f f' : α → E} {s : Set α} (h : Set.EqOn f f' s) :
+theorem eq_of_edist_zero_on {f f' : α → E} {s : Set α} (h : ∀ ⦃x⦄, x ∈ s → edist (f x) (f' x) = 0) :
     evariationOn f s = evariationOn f' s :=
   by
   dsimp only [evariationOn]
   congr 1 with p : 1
   congr 1 with i : 1
-  congr 1 <;> exact h (p.2.2.2 _)
+  rw [edist_congr_right (h <| p.snd.prop.2 (i + 1)), edist_congr_left (h <| p.snd.prop.2 i)]
+#align evariation_on.eq_of_edist_zero_on evariationOn.eq_of_edist_zero_on
+
+theorem eq_of_eq_on {f f' : α → E} {s : Set α} (h : Set.EqOn f f' s) :
+    evariationOn f s = evariationOn f' s :=
+  eq_of_edist_zero_on fun x xs => by rw [h xs, edist_self]
 #align evariation_on.eq_of_eq_on evariationOn.eq_of_eq_on
 
 theorem sum_le (f : α → E) {s : Set α} (n : ℕ) {u : ℕ → α} (hu : Monotone u) (us : ∀ i, u i ∈ s) :
@@ -181,21 +186,6 @@ theorem HasBoundedVariationOn.has_locally_bounded_variation_on {f : α → E} {s
 #align
   has_bounded_variation_on.has_locally_bounded_variation_on HasBoundedVariationOn.has_locally_bounded_variation_on
 
-theorem constant_on {f : α → E} {s : Set α} (hf : (f '' s).Subsingleton) : evariationOn f s = 0 :=
-  by
-  apply le_antisymm _ (zero_le _)
-  apply supᵢ_le _
-  rintro ⟨n, ⟨u, hu, ut⟩⟩
-  have : ∀ i, f (u i) = f (u 0) := fun i => hf ⟨u i, ut i, rfl⟩ ⟨u 0, ut 0, rfl⟩
-  simp [Subtype.coe_mk, le_zero_iff, Finset.sum_eq_zero_iff, Finset.mem_range, this]
-#align evariation_on.constant_on evariationOn.constant_on
-
-@[simp]
-protected theorem subsingleton (f : α → E) {s : Set α} (hs : s.Subsingleton) :
-    evariationOn f s = 0 :=
-  constant_on (hs.image f)
-#align evariation_on.subsingleton evariationOn.subsingleton
-
 theorem edist_le (f : α → E) {s : Set α} {x y : α} (hx : x ∈ s) (hy : y ∈ s) :
     edist (f x) (f y) ≤ evariationOn f s :=
   by
@@ -218,6 +208,34 @@ theorem edist_le (f : α → E) {s : Set α} {x y : α} (hx : x ∈ s) (hy : y �
   convert sum_le f 1 hu us
   simp [u, edist_comm]
 #align evariation_on.edist_le evariationOn.edist_le
+
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+theorem eq_zero_iff (f : α → E) {s : Set α} :
+    evariationOn f s = 0 ↔ ∀ (x) (_ : x ∈ s) (y) (_ : y ∈ s), edist (f x) (f y) = 0 :=
+  by
+  constructor
+  · rintro h x xs y ys
+    rw [← le_zero_iff, ← h]
+    exact edist_le f xs ys
+  · rintro h
+    dsimp only [evariationOn]
+    rw [Ennreal.supr_eq_zero]
+    rintro ⟨n, u, um, us⟩
+    exact Finset.sum_eq_zero fun i hi => h _ (us i.succ) _ (us i)
+#align evariation_on.eq_zero_iff evariationOn.eq_zero_iff
+
+theorem constant_on {f : α → E} {s : Set α} (hf : (f '' s).Subsingleton) : evariationOn f s = 0 :=
+  by
+  rw [eq_zero_iff]
+  rintro x xs y ys
+  rw [hf ⟨x, xs, rfl⟩ ⟨y, ys, rfl⟩, edist_self]
+#align evariation_on.constant_on evariationOn.constant_on
+
+@[simp]
+protected theorem subsingleton (f : α → E) {s : Set α} (hs : s.Subsingleton) :
+    evariationOn f s = 0 :=
+  constant_on (hs.image f)
+#align evariation_on.subsingleton evariationOn.subsingleton
 
 theorem lower_continuous_aux {ι : Type _} {F : ι → α → E} {p : Filter ι} {f : α → E} {s : Set α}
     (Ffs : ∀ x ∈ s, Tendsto (fun i => F i x) p (𝓝 (f x))) {v : ℝ≥0∞} (hv : v < evariationOn f s) :
@@ -466,9 +484,9 @@ theorem add_point (f : α → E) {s : Set α} {x : α} (hx : x ∈ s) (u : ℕ �
         by
         rw [Finset.sum_Ico_consecutive, Finset.sum_Ico_consecutive, Finset.range_eq_Ico]
         · exact zero_le _
-        · linarith
+        · exact Nat.succ_le_succ hN.left
         · exact zero_le _
-        · linarith
+        · exact N.pred_le.trans N.le_succ
       
 #align evariation_on.add_point evariationOn.add_point
 
@@ -502,7 +520,8 @@ theorem add_le_union (f : α → E) {s t : Set α} (h : ∀ x ∈ s, ∀ y ∈ t
     split_ifs
     · exact hu hij
     · apply h _ (us _) _ (vt _)
-    · linarith
+    · exfalso
+      exact h_1 (hij.trans h_2)
     · apply hv (tsub_le_tsub hij le_rfl)
   calc
     ((∑ i in Finset.range n, edist (f (u (i + 1))) (f (u i))) +
@@ -514,17 +533,17 @@ theorem add_le_union (f : α → E) {s t : Set α} (h : ∀ x ∈ s, ∀ y ∈ t
       congr 1
       · apply Finset.sum_congr rfl fun i hi => _
         simp only [Finset.mem_range] at hi
-        have : i + 1 ≤ n := by linarith
+        have : i + 1 ≤ n := Nat.succ_le_of_lt hi
         simp [hi.le, this]
       · apply Finset.sum_congr rfl fun i hi => _
         simp only [Finset.mem_range] at hi
-        have A : ¬n + 1 + i + 1 ≤ n := by linarith
         have B : ¬n + 1 + i ≤ n := by linarith
+        have A : ¬n + 1 + i + 1 ≤ n := fun h => B ((n + 1 + i).le_succ.trans h)
         have C : n + 1 + i - n = i + 1 :=
           by
           rw [tsub_eq_iff_eq_add_of_le]
           · abel
-          · linarith
+          · exact n.le_succ.trans (n.succ.le_add_right i)
         simp only [A, B, C, Nat.succ_sub_succ_eq_sub, if_false, add_tsub_cancel_left]
     _ =
         (∑ i in Finset.range n, edist (f (w (i + 1))) (f (w i))) +
@@ -542,11 +561,11 @@ theorem add_le_union (f : α → E) {s t : Set α} (h : ∀ x ∈ s, ∀ y ∈ t
         rintro i hi
         simp only [Finset.mem_union, Finset.mem_range, Finset.mem_Ico] at hi⊢
         cases hi
-        · linarith
+        · exact lt_of_lt_of_le hi (n.le_succ.trans (n.succ.le_add_right m))
         · exact hi.2
       · apply Finset.disjoint_left.2 fun i hi h'i => _
         simp only [Finset.mem_Ico, Finset.mem_range] at hi h'i
-        linarith [h'i.1]
+        exact hi.not_lt (Nat.lt_of_succ_le h'i.left)
     _ ≤ evariationOn f (s ∪ t) := sum_le f _ hw wst
     
 #align evariation_on.add_le_union evariationOn.add_le_union
