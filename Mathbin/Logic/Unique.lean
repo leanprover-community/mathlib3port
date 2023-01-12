@@ -140,16 +140,12 @@ instance inhabitedFinOneAdd (n : ℕ) : Inhabited (Fin (1 + n)) :=
 #align inhabited_fin_one_add inhabitedFinOneAdd
 -/
 
-/- warning: fin.default_eq_zero -> Fin.default_eq_zero is a dubious translation:
-lean 3 declaration is
-  forall (n : Nat), Eq.{1} (Fin (Nat.succ n)) (Inhabited.default.{1} (Fin (Nat.succ n)) (Fin.inhabited n)) (OfNat.ofNat.{0} (Fin (Nat.succ n)) 0 (OfNat.mk.{0} (Fin (Nat.succ n)) 0 (Zero.zero.{0} (Fin (Nat.succ n)) (Fin.hasZero n))))
-but is expected to have type
-  forall (n : Nat), Eq.{1} (Fin (Nat.succ n)) (Inhabited.default.{1} (Fin (Nat.succ n)) (instInhabitedFinSucc n)) (OfNat.ofNat.{0} (Fin (Nat.succ n)) 0 (Fin.instOfNatFinHAddNatInstHAddInstAddNatOfNat n 0))
-Case conversion may be inaccurate. Consider using '#align fin.default_eq_zero Fin.default_eq_zeroₓ'. -/
+#print Fin.default_eq_zero /-
 @[simp]
 theorem Fin.default_eq_zero (n : ℕ) : (default : Fin n.succ) = 0 :=
   rfl
 #align fin.default_eq_zero Fin.default_eq_zero
+-/
 
 #print Fin.unique /-
 instance Fin.unique : Unique (Fin 1) :=
