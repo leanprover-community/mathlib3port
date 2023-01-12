@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 
 ! This file was ported from Lean 3 source module analysis.locally_convex.bounded
-! leanprover-community/mathlib commit ccad6d5093bd2f5c6ca621fc74674cce51355af6
+! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -300,8 +300,8 @@ theorem is_vonN_bounded_iff (s : Set E) : Bornology.IsVonNBounded 𝕜 s ↔ Bor
     rcases h (Metric.ball_mem_nhds 0 zero_lt_one) with ⟨ρ, hρ, hρball⟩
     rcases NormedField.exists_lt_norm 𝕜 ρ with ⟨a, ha⟩
     specialize hρball a ha.le
-    rw [← ball_norm_seminorm 𝕜 E, Seminorm.smul_ball_zero (hρ.trans ha), ball_norm_seminorm,
-      mul_one] at hρball
+    rw [← ball_norm_seminorm 𝕜 E, Seminorm.smul_ball_zero (norm_pos_iff.1 <| hρ.trans ha),
+      ball_norm_seminorm, mul_one] at hρball
     exact ⟨‖a‖, hρball.trans Metric.ball_subset_closed_ball⟩
   · exact fun ⟨C, hC⟩ => (is_vonN_bounded_closed_ball 𝕜 E C).Subset hC
 #align normed_space.is_vonN_bounded_iff NormedSpace.is_vonN_bounded_iff

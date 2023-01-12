@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.multiset.basic
-! leanprover-community/mathlib commit ccad6d5093bd2f5c6ca621fc74674cce51355af6
+! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2472,11 +2472,7 @@ theorem count_repeat_self (a : α) (n : ℕ) : count a (repeat a n) = n := by si
 #align multiset.count_repeat_self Multiset.count_repeat_self
 
 theorem count_repeat (a b : α) (n : ℕ) : count a (repeat b n) = if a = b then n else 0 :=
-  by
-  split_ifs with h₁
-  · rw [h₁, count_repeat_self]
-  · rw [count_eq_zero]
-    apply mt eq_of_mem_repeat h₁
+  count_repeat a b n
 #align multiset.count_repeat Multiset.count_repeat
 
 @[simp]

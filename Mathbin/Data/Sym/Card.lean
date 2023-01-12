@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta, Huỳnh Trần Khanh, Stuart Presnell
 
 ! This file was ported from Lean 3 source module data.sym.card
-! leanprover-community/mathlib commit ccad6d5093bd2f5c6ca621fc74674cce51355af6
+! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -97,7 +97,7 @@ protected def e2 {n k : ℕ} : { s : Sym (Fin n.succ.succ) k // ↑0 ∉ s } ≃
     simp only [Fin.zero_succ_above, map_map, comp_app]
     nth_rw_rhs 1 [← map_id' s]
     refine' Sym.map_congr fun v hv => _
-    rw [← Fin.zero_succ_above v, ← Fin.cast_succ_zero, Fin.pred_above_succ_above 0 v]
+    rw [← Fin.zero_succ_above v, ← @Fin.cast_succ_zero n.succ, Fin.pred_above_succ_above 0 v]
 #align sym.E2 Sym.e2
 
 theorem card_sym_fin_eq_multichoose (n k : ℕ) : card (Sym (Fin n) k) = multichoose n k :=

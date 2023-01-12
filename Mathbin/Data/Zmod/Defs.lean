@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 
 ! This file was ported from Lean 3 source module data.zmod.defs
-! leanprover-community/mathlib commit ccad6d5093bd2f5c6ca621fc74674cce51355af6
+! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,33 +45,31 @@ to register the ring structure on `zmod n` as type class instance.
 
 open Nat.ModEq Int
 
-/-- Multiplicative commutative semigroup structure on `fin (n+1)`. -/
-instance (n : ℕ) : CommSemigroup (Fin (n + 1)) :=
+/-- Multiplicative commutative semigroup structure on `fin n`. -/
+instance (n : ℕ) : CommSemigroup (Fin n) :=
   {
     Fin.hasMul with
     mul_assoc := fun ⟨a, ha⟩ ⟨b, hb⟩ ⟨c, hc⟩ =>
       Fin.eq_of_veq
         (calc
-          a * b % (n + 1) * c ≡ a * b * c [MOD n + 1] := (Nat.mod_modEq _ _).mul_right _
-          _ ≡ a * (b * c) [MOD n + 1] := by rw [mul_assoc]
-          _ ≡ a * (b * c % (n + 1)) [MOD n + 1] := (Nat.mod_modEq _ _).symm.mul_left _
+          a * b % n * c ≡ a * b * c [MOD n] := (Nat.mod_modEq _ _).mul_right _
+          _ ≡ a * (b * c) [MOD n] := by rw [mul_assoc]
+          _ ≡ a * (b * c % n) [MOD n] := (Nat.mod_modEq _ _).symm.mul_left _
           )
-    mul_comm := fun ⟨a, _⟩ ⟨b, _⟩ =>
-      Fin.eq_of_veq (show a * b % (n + 1) = b * a % (n + 1) by rw [mul_comm]) }
+    mul_comm := Fin.mul_comm }
 
-private theorem left_distrib_aux (n : ℕ) : ∀ a b c : Fin (n + 1), a * (b + c) = a * b + a * c :=
+private theorem left_distrib_aux (n : ℕ) : ∀ a b c : Fin n, a * (b + c) = a * b + a * c :=
   fun ⟨a, ha⟩ ⟨b, hb⟩ ⟨c, hc⟩ =>
   Fin.eq_of_veq
     (calc
-      a * ((b + c) % (n + 1)) ≡ a * (b + c) [MOD n + 1] := (Nat.mod_modEq _ _).mul_left _
-      _ ≡ a * b + a * c [MOD n + 1] := by rw [mul_add]
-      _ ≡ a * b % (n + 1) + a * c % (n + 1) [MOD n + 1] :=
-        (Nat.mod_modEq _ _).symm.add (Nat.mod_modEq _ _).symm
+      a * ((b + c) % n) ≡ a * (b + c) [MOD n] := (Nat.mod_modEq _ _).mul_left _
+      _ ≡ a * b + a * c [MOD n] := by rw [mul_add]
+      _ ≡ a * b % n + a * c % n [MOD n] := (Nat.mod_modEq _ _).symm.add (Nat.mod_modEq _ _).symm
       )
 #align fin.left_distrib_aux fin.left_distrib_aux
 
-/-- Commutative ring structure on `fin (n+1)`. -/
-instance (n : ℕ) : CommRing (Fin (n + 1)) :=
+/-- Commutative ring structure on `fin n`. -/
+instance (n : ℕ) [NeZero n] : CommRing (Fin n) :=
   { Fin.addMonoidWithOne, Fin.addCommGroup n,
     Fin.commSemigroup n with
     one_mul := Fin.one_mul

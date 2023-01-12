@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Parikshit Khanna, Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.list.count
-! leanprover-community/mathlib commit ccad6d5093bd2f5c6ca621fc74674cce51355af6
+! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Data.List.BigOperators.Basic
 
 /-!
 # Counting in lists
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file proves basic properties of `list.countp` and `list.count`, which count the number of
 elements of a list satisfying a predicate and equal to a given element respectively. Their
@@ -405,13 +408,23 @@ theorem count_eq_length {a : α} {l} : count a l = l.length ↔ ∀ b ∈ l, a =
   countp_eq_length _
 #align list.count_eq_length List.count_eq_length
 
-#print List.count_repeat /-
 @[simp]
-theorem count_repeat (a : α) (n : ℕ) : count a (repeat a n) = n := by
+theorem count_repeat_self (a : α) (n : ℕ) : count a (repeat a n) = n := by
   rw [count, countp_eq_length_filter, filter_eq_self.2, length_repeat] <;>
     exact fun b m => (eq_of_mem_repeat m).symm
+#align list.count_repeat_self List.count_repeat_self
+
+/- warning: list.count_repeat -> List.count_repeat is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (a : α) (b : α) (n : Nat), Eq.{1} Nat (List.count.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a (List.repeat.{u1} α b n)) (ite.{1} Nat (Eq.{succ u1} α a b) (_inst_1 a b) n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (a : α) (b : Nat), Eq.{1} Nat (List.count.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) a (List.repeat.{u1} α a b)) b
+Case conversion may be inaccurate. Consider using '#align list.count_repeat List.count_repeatₓ'. -/
+theorem count_repeat (a b : α) (n : ℕ) : count a (repeat b n) = if a = b then n else 0 :=
+  by
+  split_ifs with h
+  exacts[h ▸ count_repeat_self _ _, count_eq_zero_of_not_mem (mt eq_of_mem_repeat h)]
 #align list.count_repeat List.count_repeat
--/
 
 #print List.le_count_iff_repeat_sublist /-
 theorem le_count_iff_repeat_sublist {a : α} {l : List α} {n : ℕ} :
@@ -423,7 +436,7 @@ theorem le_count_iff_repeat_sublist {a : α} {l : List α} {n : ℕ} :
         eq_repeat.2
           ⟨by simp only [count, countp_eq_length_filter], fun b m => (of_mem_filter m).symm⟩
       rw [← this] <;> apply filter_sublist,
-    fun h => by simpa only [count_repeat] using h.count_le a⟩
+    fun h => by simpa only [count_repeat_self] using h.count_le a⟩
 #align list.le_count_iff_repeat_sublist List.le_count_iff_repeat_sublist
 -/
 

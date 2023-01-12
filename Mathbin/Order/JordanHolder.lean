@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module order.jordan_holder
-! leanprover-community/mathlib commit ccad6d5093bd2f5c6ca621fc74674cce51355af6
+! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -576,7 +576,7 @@ theorem snoc_cast_succ (s : CompositionSeries X) (x : X) (hsat : IsMaximal s.top
 
 @[simp]
 theorem bot_snoc (s : CompositionSeries X) (x : X) (hsat : IsMaximal s.top x) :
-    (snoc s x hsat).bot = s.bot := by rw [bot, bot, ← Fin.cast_succ_zero, snoc_cast_succ]
+    (snoc s x hsat).bot = s.bot := by rw [bot, bot, ← snoc_cast_succ s _ _ 0, Fin.cast_succ_zero]
 #align composition_series.bot_snoc CompositionSeries.bot_snoc
 
 theorem mem_snoc {s : CompositionSeries X} {x y : X} {hsat : IsMaximal s.top x} :

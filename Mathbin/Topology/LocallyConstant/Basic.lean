@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module topology.locally_constant.basic
-! leanprover-community/mathlib commit ccad6d5093bd2f5c6ca621fc74674cce51355af6
+! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1012,8 +1012,8 @@ def ofClopen {X : Type _} [TopologicalSpace X] {U : Set X} [∀ x, Decidable (x 
     fin_cases e
     · convert hU.1 using 1
       ext
-      simp only [Nat.one_ne_zero, mem_singleton_iff, Fin.one_eq_zero_iff, mem_preimage,
-        ite_eq_left_iff]
+      simp only [mem_singleton_iff, Fin.one_eq_zero_iff, mem_preimage, ite_eq_left_iff,
+        Nat.succ_succ_ne_one]
       tauto
     · rw [← is_closed_compl_iff]
       convert hU.2
@@ -1026,8 +1026,8 @@ theorem of_clopen_fiber_zero {X : Type _} [TopologicalSpace X] {U : Set X} [∀ 
     (hU : IsClopen U) : ofClopen hU ⁻¹' ({0} : Set (Fin 2)) = U :=
   by
   ext
-  simp only [of_clopen, Nat.one_ne_zero, mem_singleton_iff, Fin.one_eq_zero_iff, coe_mk,
-    mem_preimage, ite_eq_left_iff]
+  simp only [of_clopen, mem_singleton_iff, Fin.one_eq_zero_iff, coe_mk, mem_preimage,
+    ite_eq_left_iff, Nat.succ_succ_ne_one]
   tauto
 #align locally_constant.of_clopen_fiber_zero LocallyConstant.of_clopen_fiber_zero
 
@@ -1036,8 +1036,8 @@ theorem of_clopen_fiber_one {X : Type _} [TopologicalSpace X] {U : Set X} [∀ x
     (hU : IsClopen U) : ofClopen hU ⁻¹' ({1} : Set (Fin 2)) = Uᶜ :=
   by
   ext
-  simp only [of_clopen, Nat.one_ne_zero, mem_singleton_iff, coe_mk, Fin.zero_eq_one_iff,
-    mem_preimage, ite_eq_right_iff, mem_compl_iff]
+  simp only [of_clopen, mem_singleton_iff, coe_mk, Fin.zero_eq_one_iff, mem_preimage,
+    ite_eq_right_iff, mem_compl_iff, Nat.succ_succ_ne_one]
   tauto
 #align locally_constant.of_clopen_fiber_one LocallyConstant.of_clopen_fiber_one
 

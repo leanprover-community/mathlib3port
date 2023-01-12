@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Chris Hughes
 
 ! This file was ported from Lean 3 source module ring_theory.adjoin_root
-! leanprover-community/mathlib commit ccad6d5093bd2f5c6ca621fc74674cce51355af6
+! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -387,7 +387,6 @@ theorem mk_surjective (hg : g.Monic) : Function.Surjective (mk g) :=
 
 /-- The elements `1, root g, ..., root g ^ (d - 1)` form a basis for `adjoin_root g`,
 where `g` is a monic polynomial of degree `d`. -/
-@[simps]
 def powerBasisAux' (hg : g.Monic) : Basis (Fin g.natDegree) R (AdjoinRoot g) :=
   Basis.ofEquivFun
     { toFun := fun f i => (modByMonicHom hg f).coeff i
@@ -422,6 +421,9 @@ def powerBasisAux' (hg : g.Monic) : Basis (Fin g.natDegree) R (AdjoinRoot g) :=
               rw [degree_eq_nat_degree hg.ne_zero, WithBot.coe_lt_coe]
               exact j.2 }
 #align adjoin_root.power_basis_aux' AdjoinRoot.powerBasisAux'
+
+-- This was moved after the definition to prevent a timeout
+attribute [simps] power_basis_aux'
 
 /-- The power basis `1, root g, ..., root g ^ (d - 1)` for `adjoin_root g`,
 where `g` is a monic polynomial of degree `d`. -/

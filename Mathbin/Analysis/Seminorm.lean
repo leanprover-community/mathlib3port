@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jean Lo, Yaël Dillies, Moritz Doll
 
 ! This file was ported from Lean 3 source module analysis.seminorm
-! leanprover-community/mathlib commit ccad6d5093bd2f5c6ca621fc74674cce51355af6
+! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -928,50 +928,28 @@ section NormedField
 variable [NormedField 𝕜] [AddCommGroup E] [Module 𝕜 E] (p : Seminorm 𝕜 E) {A B : Set E} {a : 𝕜}
   {r : ℝ} {x : E}
 
-theorem smul_ball_zero {p : Seminorm 𝕜 E} {k : 𝕜} {r : ℝ} (hk : 0 < ‖k‖) :
+theorem smul_ball_zero {p : Seminorm 𝕜 E} {k : 𝕜} {r : ℝ} (hk : k ≠ 0) :
     k • p.ball 0 r = p.ball 0 (‖k‖ * r) := by
   ext
-  rw [Set.mem_smul_set, Seminorm.mem_ball_zero]
-  constructor <;> intro h
-  · rcases h with ⟨y, hy, h⟩
-    rw [← h, map_smul_eq_mul]
-    rw [Seminorm.mem_ball_zero] at hy
-    exact (mul_lt_mul_left hk).mpr hy
-  refine' ⟨k⁻¹ • x, _, _⟩
-  · rw [Seminorm.mem_ball_zero, map_smul_eq_mul, norm_inv, ← mul_lt_mul_left hk, ← mul_assoc, ←
-      div_eq_mul_inv ‖k‖ ‖k‖, div_self (ne_of_gt hk), one_mul]
-    exact h
-  rw [← smul_assoc, smul_eq_mul, ← div_eq_mul_inv, div_self (norm_pos_iff.mp hk), one_smul]
+  rw [mem_smul_set_iff_inv_smul_mem₀ hk, p.mem_ball_zero, p.mem_ball_zero, map_smul_eq_mul,
+    norm_inv, ← div_eq_inv_mul, div_lt_iff (norm_pos_iff.2 hk), mul_comm]
 #align seminorm.smul_ball_zero Seminorm.smul_ball_zero
 
 theorem ball_zero_absorbs_ball_zero (p : Seminorm 𝕜 E) {r₁ r₂ : ℝ} (hr₁ : 0 < r₁) :
     Absorbs 𝕜 (p.ball 0 r₁) (p.ball 0 r₂) :=
   by
-  by_cases hr₂ : r₂ ≤ 0
-  · rw [ball_eq_emptyset p hr₂]
-    exact absorbs_empty
-  rw [not_le] at hr₂
-  rcases exists_between hr₁ with ⟨r, hr, hr'⟩
-  refine' ⟨r₂ / r, div_pos hr₂ hr, _⟩
-  simp_rw [Set.subset_def]
-  intro a ha x hx
-  have ha' : 0 < ‖a‖ := lt_of_lt_of_le (div_pos hr₂ hr) ha
-  rw [smul_ball_zero ha', p.mem_ball_zero]
+  rcases exists_pos_lt_mul hr₁ r₂ with ⟨r, hr₀, hr⟩
+  refine' ⟨r, hr₀, fun a ha x hx => _⟩
+  rw [smul_ball_zero (norm_pos_iff.1 <| hr₀.trans_le ha), p.mem_ball_zero]
   rw [p.mem_ball_zero] at hx
-  rw [div_le_iff hr] at ha
-  exact hx.trans (lt_of_le_of_lt ha ((mul_lt_mul_left ha').mpr hr'))
+  exact hx.trans (hr.trans_le <| mul_le_mul_of_nonneg_right ha hr₁.le)
 #align seminorm.ball_zero_absorbs_ball_zero Seminorm.ball_zero_absorbs_ball_zero
 
 /-- Seminorm-balls at the origin are absorbent. -/
 protected theorem absorbent_ball_zero (hr : 0 < r) : Absorbent 𝕜 (ball p (0 : E) r) :=
-  by
-  rw [absorbent_iff_nonneg_lt]
-  rintro x
-  have hxr : 0 ≤ p x / r := by positivity
-  refine' ⟨p x / r, hxr, fun a ha => _⟩
-  have ha₀ : 0 < ‖a‖ := hxr.trans_lt ha
-  refine' ⟨a⁻¹ • x, _, smul_inv_smul₀ (norm_pos_iff.1 ha₀) x⟩
-  rwa [mem_ball_zero, map_smul_eq_mul, norm_inv, inv_mul_lt_iff ha₀, ← div_lt_iff hr]
+  absorbent_iff_forall_absorbs_singleton.2 fun x =>
+    (p.ball_zero_absorbs_ball_zero hr).mono_right <|
+      singleton_subset_iff.2 <| p.mem_ball_zero.2 <| lt_add_one _
 #align seminorm.absorbent_ball_zero Seminorm.absorbent_ball_zero
 
 /-- Closed seminorm-balls at the origin are absorbent. -/
@@ -1107,8 +1085,7 @@ theorem continuous_at_zero [NormOneClass 𝕜] [NormedAlgebra ℝ 𝕜] [Module 
   suffices (p.restrict_scalars ℝ).ball 0 ε ∈ (𝓝 0 : Filter E) by
     rwa [Seminorm.ball_zero_eq_preimage_ball] at this
   have := (set_smul_mem_nhds_zero_iff hε.ne.symm).mpr hp
-  rwa [Seminorm.smul_ball_zero (norm_pos_iff.mpr hε.ne.symm), Real.norm_of_nonneg hε.le, mul_one] at
-    this
+  rwa [Seminorm.smul_ball_zero hε.ne', Real.norm_of_nonneg hε.le, mul_one] at this
 #align seminorm.continuous_at_zero Seminorm.continuous_at_zero
 
 protected theorem uniform_continuous_of_continuous_at_zero [UniformSpace E] [UniformAddGroup E]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.adjugate
-! leanprover-community/mathlib commit ccad6d5093bd2f5c6ca621fc74674cce51355af6
+! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -402,9 +402,13 @@ theorem adjugate_fin_two (A : Matrix (Fin 2) (Fin 2) α) :
   ext (i j)
   rw [adjugate_apply, det_fin_two]
   fin_cases i <;> fin_cases j <;>
-    simp only [Nat.one_ne_zero, one_mul, Fin.one_eq_zero_iff, Pi.single_eq_same, zero_mul,
-      Fin.zero_eq_one_iff, sub_zero, Pi.single_eq_of_ne, Ne.def, not_false_iff, update_row_self,
-      update_row_ne, cons_val_zero, mul_zero, mul_one, zero_sub, cons_val_one, head_cons, of_apply]
+    simp only [one_mul, Fin.one_eq_zero_iff, Pi.single_eq_same, mul_zero, sub_zero,
+      Pi.single_eq_of_ne, Ne.def, not_false_iff, update_row_self, update_row_ne, cons_val_zero,
+      of_apply, Nat.succ_succ_ne_one, Pi.single_eq_of_ne, update_row_self, Pi.single_eq_of_ne,
+      Ne.def, Fin.zero_eq_one_iff, Nat.succ_succ_ne_one, not_false_iff, update_row_ne,
+      Fin.one_eq_zero_iff, zero_mul, Pi.single_eq_same, one_mul, zero_sub, of_apply, cons_val',
+      cons_val_fin_one, cons_val_one, head_fin_const, neg_inj, eq_self_iff_true, cons_val_zero,
+      head_cons, mul_one]
 #align matrix.adjugate_fin_two Matrix.adjugate_fin_two
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/

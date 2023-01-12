@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module data.real.basic
-! leanprover-community/mathlib commit ccad6d5093bd2f5c6ca621fc74674cce51355af6
+! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -399,6 +399,10 @@ theorem rat_cast_lt {x y : ℚ} : (x : ℝ) < (y : ℝ) ↔ x < y :=
 protected theorem zero_lt_one : (0 : ℝ) < 1 := by
   convert rat_cast_lt.2 zero_lt_one <;> simp [← of_cauchy_rat_cast, of_cauchy_one, of_cauchy_zero]
 #align real.zero_lt_one Real.zero_lt_one
+
+protected theorem fact_zero_lt_one : Fact ((0 : ℝ) < 1) :=
+  ⟨Real.zero_lt_one⟩
+#align real.fact_zero_lt_one Real.fact_zero_lt_one
 
 protected theorem mul_pos {a b : ℝ} : 0 < a → 0 < b → 0 < a * b :=
   by

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module order.category.NonemptyFinLinOrd
-! leanprover-community/mathlib commit ccad6d5093bd2f5c6ca621fc74674cce51355af6
+! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -172,7 +172,7 @@ theorem epi_iff_surjective {A B : NonemptyFinLinOrdCat.{u}} (f : A ⟶ B) :
       · exfalso
         exact hm a (eq_of_le_of_not_lt h₂ h₁)
     simpa only [OrderHom.coe_fun_mk, lt_self_iff_false, if_false, le_refl, if_true, ULift.up_inj,
-      Fin.one_eq_zero_iff] using h
+      Fin.one_eq_zero_iff, Nat.succ_succ_ne_one] using h
   · intro h
     exact concrete_category.epi_of_surjective f h
 #align NonemptyFinLinOrd.epi_iff_surjective NonemptyFinLinOrdCat.epi_iff_surjective

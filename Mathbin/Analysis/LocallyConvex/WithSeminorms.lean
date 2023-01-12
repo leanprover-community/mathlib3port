@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll, Anatole Dedecker
 
 ! This file was ported from Lean 3 source module analysis.locally_convex.with_seminorms
-! leanprover-community/mathlib commit ccad6d5093bd2f5c6ca621fc74674cce51355af6
+! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -521,7 +521,7 @@ theorem WithSeminorms.is_vonN_bounded_iff_finset_seminorm_bounded {s : Set E}
     rcases h with ⟨r, hr, h⟩
     cases' NormedField.exists_lt_norm 𝕜 r with a ha
     specialize h a (le_of_lt ha)
-    rw [Seminorm.smul_ball_zero (lt_trans hr ha), mul_one] at h
+    rw [Seminorm.smul_ball_zero (norm_pos_iff.1 <| hr.trans ha), mul_one] at h
     refine' ⟨‖a‖, lt_trans hr ha, _⟩
     intro x hx
     specialize h hx

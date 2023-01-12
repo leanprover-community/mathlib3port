@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky, Mario Carneiro
 
 ! This file was ported from Lean 3 source module tactic.norm_fin
-! leanprover-community/mathlib commit ccad6d5093bd2f5c6ca621fc74674cce51355af6
+! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -72,17 +72,17 @@ theorem NormalizeFinLt.of {n a b} (h : NormalizeFinLt n a b) : NormalizeFin n a 
   h.trans <| Eq.symm <| Nat.mod_eq_of_lt h.lt
 #align tactic.norm_fin.normalize_fin_lt.of Tactic.NormFin.NormalizeFinLt.of
 
-theorem NormalizeFin.zero (n) : NormalizeFin (n + 1) 0 0 :=
+theorem NormalizeFin.zero (n : ℕ) [NeZero n] : NormalizeFin n 0 0 :=
   by
   rw [normalize_fin]
   norm_num
 #align tactic.norm_fin.normalize_fin.zero Tactic.NormFin.NormalizeFin.zero
 
-theorem NormalizeFinLt.zero (n) : NormalizeFinLt (n + 1) 0 0 :=
+theorem NormalizeFinLt.zero (n : ℕ) [NeZero n] : NormalizeFinLt n 0 0 :=
   refl _
 #align tactic.norm_fin.normalize_fin_lt.zero Tactic.NormFin.NormalizeFinLt.zero
 
-theorem NormalizeFin.one (n) : NormalizeFin (n + 1) 1 1 :=
+theorem NormalizeFin.one (n : ℕ) [NeZero n] : NormalizeFin n 1 1 :=
   refl _
 #align tactic.norm_fin.normalize_fin.one Tactic.NormFin.NormalizeFin.one
 
@@ -101,8 +101,8 @@ theorem NormalizeFin.bit0 {n} {a : Fin n} {a' : ℕ} (h : NormalizeFin n a a') :
   h.add h rfl
 #align tactic.norm_fin.normalize_fin.bit0 Tactic.NormFin.NormalizeFin.bit0
 
-theorem NormalizeFin.bit1 {n} {a : Fin (n + 1)} {a' : ℕ} (h : NormalizeFin (n + 1) a a') :
-    NormalizeFin (n + 1) (bit1 a) (bit1 a') :=
+theorem NormalizeFin.bit1 {n : ℕ} [NeZero n] {a : Fin n} {a' : ℕ} (h : NormalizeFin n a a') :
+    NormalizeFin n (bit1 a) (bit1 a') :=
   h.bit0.add (NormalizeFin.one _) rfl
 #align tactic.norm_fin.normalize_fin.bit1 Tactic.NormFin.NormalizeFin.bit1
 
@@ -240,9 +240,9 @@ unsafe def eval_fin_m.run {α} (m : eval_fin_m α) : tactic α := do
 direct expr pattern match because expr pattern matches generate very large terms under the
 hood so going via an intermediate inductive type like this is more efficient. -/
 unsafe inductive match_fin_result
-  | zero (n : expr)-- `(0 : fin (n+1))`
+  | zero (n : expr) (n0 : expr)-- `(0 : fin n)`
 
-  | one (n : expr)-- `(1 : fin (n+1))`
+  | one (n : expr) (n0 : expr)-- `(1 : fin n)`
 
   | add (n a b : expr)-- `(a + b : fin n)`
 
@@ -250,7 +250,7 @@ unsafe inductive match_fin_result
 
   | bit0 (n a : expr)-- `(bit0 a : fin n)`
 
-  | bit1 (n a : expr)-- `(bit1 a : fin (n+1))`
+  | bit1 (n a : expr) (n0 : expr)-- `(bit1 a : fin n)`
 
   | succ (n a : expr)-- `(fin.succ a : fin n.succ)`
 
@@ -290,12 +290,12 @@ unsafe def match_fin_coe_fn (a : expr) : expr → Option match_fin_result
 /-- Match a fin expression to a `match_fin_result`, for easier pattern matching in the
 evaluator. -/
 unsafe def match_fin : expr → Option match_fin_result
-  | q(@Zero.zero _ (@Fin.hasZero $(n))) => some (zero n)
-  | q(@One.one _ (@Fin.hasOne $(n))) => some (one n)
+  | q(@Zero.zero _ (@Fin.hasZeroOfNeZero $(n) $(n0))) => some (zero n n0)
+  | q(@One.one _ (@Fin.hasOneOfNeZero $(n) $(n0))) => some (one n n0)
   | q(@Add.add (Fin $(n)) _ $(a) $(b)) => some (add n a b)
   | q(@Mul.mul (Fin $(n)) _ $(a) $(b)) => some (mul n a b)
   | q(@bit0 (Fin $(n)) _ $(a)) => some (bit0 n a)
-  | q(@bit1 _ (@Fin.hasOne $(n)) _ $(a)) => some (bit1 n a)
+  | q(@bit1 _ (@Fin.hasOneOfNeZero $(n) $(n0)) _ $(a)) => some (bit1 n a n0)
   | q(@Fin.succ $(n) $(a)) => some (succ n a)
   | q(@Fin.castLt $(n) $(m) $(a) $(h)) => some (cast_lt n m a h)
   | expr.app q(@coeFn _ _ _ $(f)) a => match_fin_coe_fn a f
@@ -393,8 +393,8 @@ unsafe def eval_fin : expr → eval_fin_m (expr × expr)
   | a => do
     let m ← match_fin a
     match m with
-      | match_fin_result.zero n => pure (q((0 : ℕ)), q(NormalizeFin.zero).mk_app [n])
-      | match_fin_result.one n => pure (q((1 : ℕ)), q(NormalizeFin.one).mk_app [n])
+      | match_fin_result.zero n n0 => pure (q((0 : ℕ)), q(NormalizeFin.zero).mk_app [n, n0])
+      | match_fin_result.one n n0 => pure (q((1 : ℕ)), q(NormalizeFin.one).mk_app [n, n0])
       | match_fin_result.add n a b => do
         let (a', pa) ← eval_fin a
         let (b', pb) ← eval_fin b
@@ -408,9 +408,9 @@ unsafe def eval_fin : expr → eval_fin_m (expr × expr)
       | match_fin_result.bit0 n a => do
         let (a', pa) ← eval_fin a
         pure (q(@bit0 ℕ _).mk_app [a'], q(@NormalizeFin.bit0).mk_app [n, a, a', pa])
-      | match_fin_result.bit1 n a => do
+      | match_fin_result.bit1 n a n0 => do
         let (a', pa) ← eval_fin a
-        pure (q(@bit1 ℕ _ _).mk_app [a'], q(@NormalizeFin.bit1).mk_app [n, a, a', pa])
+        pure (q(@bit1 ℕ _ _).mk_app [a'], q(@NormalizeFin.bit1).mk_app [n, n0, a, a', pa])
       | match_fin_result.cast m n nm a => do
         let (a', pa) ← (eval_fin a).reset
         pure (a', q(@NormalizeFin.cast).mk_app [n, m, nm, a, a', pa])
@@ -500,9 +500,13 @@ unsafe def mk_fin_numeral (n m : expr) : expr → Option (expr × expr)
   | a =>
     match match_numeral a with
     | zero =>
-      some (expr.app q(@Zero.zero (Fin $(n))) q(@Fin.hasZero $(m)), expr.app q(NormalizeFin.zero) m)
+      some
+        (expr.app q(@Zero.zero (Fin $(n))) q(@Fin.hasZero $(m)),
+          q(NormalizeFin.zero).mk_app [n, q(@NeZero.succ $(m))])
     | one =>
-      some (expr.app q(@One.one (Fin $(n))) q(@Fin.hasOne $(m)), expr.app q(NormalizeFin.one) m)
+      some
+        (expr.app q(@One.one (Fin $(n))) q(@Fin.hasOne $(m)),
+          q(NormalizeFin.one).mk_app [n, q(@NeZero.succ $(m))])
     | bit0 a => do
       let (a', p) ← mk_fin_numeral a
       some (q((bit0 $(a') : Fin $(n))), q(@NormalizeFin.bit0).mk_app [n, a', a, p])
@@ -510,7 +514,7 @@ unsafe def mk_fin_numeral (n m : expr) : expr → Option (expr × expr)
       let (a', p) ← mk_fin_numeral a
       some
           (q(@bit1 (Fin $(n))).mk_app [q(@Fin.hasOne $(m)), q(@Fin.hasAdd $(n)), a'],
-            q(@NormalizeFin.bit1).mk_app [m, a', a, p])
+            q(@NormalizeFin.bit1).mk_app [n, q(@NeZero.succ $(m)), a', a, p])
     | _ => none
 #align tactic.norm_fin.mk_fin_numeral tactic.norm_fin.mk_fin_numeral
 

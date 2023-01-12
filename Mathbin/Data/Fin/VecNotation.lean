@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module data.fin.vec_notation
-! leanprover-community/mathlib commit ccad6d5093bd2f5c6ca621fc74674cce51355af6
+! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -157,6 +157,17 @@ theorem range_cons (x : α) (u : Fin n → α) : Set.range (vecCons x u) = {x} �
 theorem range_empty (u : Fin 0 → α) : Set.range u = ∅ :=
   Set.range_eq_empty _
 #align matrix.range_empty Matrix.range_empty
+
+@[simp]
+theorem range_cons_empty (x : α) (u : Fin 0 → α) : Set.range (Matrix.vecCons x u) = {x} := by
+  rw [range_cons, range_empty, Set.union_empty]
+#align matrix.range_cons_empty Matrix.range_cons_empty
+
+@[simp]
+theorem range_cons_cons_empty (x y : α) (u : Fin 0 → α) :
+    Set.range (vecCons x <| vecCons y u) = {x, y} := by
+  rw [range_cons, range_cons_empty, Set.singleton_union]
+#align matrix.range_cons_cons_empty Matrix.range_cons_cons_empty
 
 @[simp]
 theorem vec_cons_const (a : α) : (vecCons a fun k : Fin n => a) = fun _ => a :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 
 ! This file was ported from Lean 3 source module analysis.locally_convex.abs_convex
-! leanprover-community/mathlib commit ccad6d5093bd2f5c6ca621fc74674cce51355af6
+! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -170,32 +170,24 @@ variable [SMulCommClass ℝ 𝕜 E] [LocallyConvexSpace ℝ E]
 theorem withGaugeSeminormFamily : WithSeminorms (gaugeSeminormFamily 𝕜 E) :=
   by
   refine' SeminormFamily.withSeminormsOfHasBasis _ _
-  refine'
-    Filter.HasBasis.to_has_basis (nhds_basis_abs_convex_open 𝕜 E) (fun s hs => _) fun s hs => _
+  refine' (nhds_basis_abs_convex_open 𝕜 E).to_has_basis (fun s hs => _) fun s hs => _
   · refine' ⟨s, ⟨_, rfl.subset⟩⟩
-    rw [SeminormFamily.basis_sets_iff]
-    refine' ⟨{⟨s, hs⟩}, 1, one_pos, _⟩
-    simp only [Finset.sup_singleton]
-    rw [gauge_seminorm_family_ball]
-    simp only [Subtype.coe_mk]
+    convert (gaugeSeminormFamily _ _).basis_sets_singleton_mem ⟨s, hs⟩ one_pos
+    rw [gauge_seminorm_family_ball, Subtype.coe_mk]
   refine' ⟨s, ⟨_, rfl.subset⟩⟩
   rw [SeminormFamily.basis_sets_iff] at hs
-  rcases hs with ⟨t, r, hr, hs⟩
-  rw [Seminorm.ball_finset_sup_eq_Inter _ _ _ hr] at hs
-  rw [hs]
+  rcases hs with ⟨t, r, hr, rfl⟩
+  rw [Seminorm.ball_finset_sup_eq_Inter _ _ _ hr]
   -- We have to show that the intersection contains zero, is open, balanced, and convex
   refine'
     ⟨mem_Inter₂.mpr fun _ _ => by simp [Seminorm.mem_ball_zero, hr],
-      is_open_bInter (to_finite _) fun _ _ => _,
+      is_open_bInter (to_finite _) fun S _ => _,
       balanced_Inter₂ fun _ _ => Seminorm.balanced_ball_zero _ _,
       convex_Inter₂ fun _ _ => Seminorm.convex_ball _ _ _⟩
   -- The only nontrivial part is to show that the ball is open
   have hr' : r = ‖(r : 𝕜)‖ * 1 := by simp [abs_of_pos hr]
-  have hr'' : (r : 𝕜) ≠ 0 := by simp [ne_of_gt hr]
-  rw [hr']
-  rw [← Seminorm.smul_ball_zero (norm_pos_iff.mpr hr'')]
-  refine' IsOpen.smul₀ _ hr''
-  rw [gauge_seminorm_family_ball]
-  exact AbsConvexOpenSets.coe_is_open _
+  have hr'' : (r : 𝕜) ≠ 0 := by simp [hr.ne']
+  rw [hr', ← Seminorm.smul_ball_zero hr'', gauge_seminorm_family_ball]
+  exact S.coe_is_open.smul₀ hr''
 #align with_gauge_seminorm_family withGaugeSeminormFamily
 

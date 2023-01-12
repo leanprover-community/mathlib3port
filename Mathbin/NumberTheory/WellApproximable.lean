@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module number_theory.well_approximable
-! leanprover-community/mathlib commit ccad6d5093bd2f5c6ca621fc74674cce51355af6
+! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -167,7 +167,7 @@ namespace UnitAddCircle
 theorem mem_approx_add_order_of_iff {δ : ℝ} {x : UnitAddCircle} {n : ℕ} (hn : 0 < n) :
     x ∈ approxAddOrderOf UnitAddCircle n δ ↔ ∃ m < n, gcd m n = 1 ∧ ‖x - ↑((m : ℝ) / n)‖ < δ :=
   by
-  haveI : Fact ((0 : ℝ) < 1) := ⟨zero_lt_one⟩
+  haveI := Real.fact_zero_lt_one
   simp only [mem_approx_add_order_of_iff, mem_set_of_eq, ball, exists_prop, dist_eq_norm,
     AddCircle.add_order_of_eq_pos_iff hn, mul_one]
   constructor

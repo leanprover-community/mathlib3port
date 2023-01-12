@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Sébastien Gouëzel, Eric Wieser
 
 ! This file was ported from Lean 3 source module data.complex.module
-! leanprover-community/mathlib commit ccad6d5093bd2f5c6ca621fc74674cce51355af6
+! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -176,10 +176,9 @@ theorem coe_basis_one_I : ⇑basis_one_I = ![1, i] :=
     Basis.apply_eq_iff.mpr <|
       Finsupp.ext fun j => by
         fin_cases i <;> fin_cases j <;>
-          simp only [coe_basis_one_I_repr, Finsupp.single_eq_same, Finsupp.single_eq_of_ne,
-            Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons, Nat.one_ne_zero,
-            Fin.one_eq_zero_iff, Fin.zero_eq_one_iff, Ne.def, not_false_iff, one_re, one_im, I_re,
-            I_im]
+          simp only [coe_basis_one_I_repr, Finsupp.single_eq_of_ne, Matrix.cons_val_zero,
+            Matrix.cons_val_one, Matrix.head_cons, Fin.one_eq_zero_iff, Ne.def, not_false_iff, I_re,
+            Nat.succ_succ_ne_one, one_im, I_im, one_re, Finsupp.single_eq_same, Fin.zero_eq_one_iff]
 #align complex.coe_basis_one_I Complex.coe_basis_one_I
 
 instance : FiniteDimensional ℝ ℂ :=

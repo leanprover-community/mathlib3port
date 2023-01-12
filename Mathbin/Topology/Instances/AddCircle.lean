@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module topology.instances.add_circle
-! leanprover-community/mathlib commit ccad6d5093bd2f5c6ca621fc74674cce51355af6
+! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -539,11 +539,7 @@ instance : SecondCountableTopology (AddCircle p) :=
 
 end AddCircle
 
-private theorem fact_zero_lt_one : Fact ((0 : ℝ) < 1) :=
-  ⟨zero_lt_one⟩
-#align fact_zero_lt_one fact_zero_lt_one
-
-attribute [local instance] fact_zero_lt_one
+attribute [local instance] Real.fact_zero_lt_one
 
 /- ./././Mathport/Syntax/Translate/Command.lean:315:31: unsupported: @[derive] abbrev -/
 /-- The unit circle `ℝ ⧸ ℤ`. -/

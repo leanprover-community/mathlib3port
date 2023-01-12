@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Paul Lezeau
 
 ! This file was ported from Lean 3 source module ring_theory.chain_of_divisors
-! leanprover-community/mathlib commit ccad6d5093bd2f5c6ca621fc74674cce51355af6
+! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -125,7 +125,7 @@ theorem eq_second_of_chain_of_prime_dvd {p q r : Associates M} {n : ℕ} (hn : n
   · contradiction
   obtain ⟨i, rfl⟩ := h₂.1 (dvd_trans hp' hr)
   refine' congr_arg c ((eq_of_ge_of_not_gt _) fun hi => _)
-  · rw [Fin.le_iff_coe_le_coe, Fin.coe_one, Nat.succ_le_iff, ← Fin.coe_zero, ←
+  · rw [Fin.le_iff_coe_le_coe, Fin.coe_one, Nat.succ_le_iff, ← Fin.coe_zero (n.succ + 1), ←
       Fin.lt_iff_coe_lt_coe, Fin.pos_iff_ne_zero]
     rintro rfl
     exact hp.not_unit (first_of_chain_is_unit h₁ @h₂)
@@ -136,7 +136,7 @@ theorem eq_second_of_chain_of_prime_dvd {p q r : Associates M} {n : ℕ} (hn : n
       (DvdNotUnit.not_unit
         (Associates.dvdNotUnit_iff_lt.2 (h₁ (show (0 : Fin (n + 2)) < j from _))))
       _ hp.irreducible
-  · simpa [← Fin.succ_zero_eq_one, Fin.succ_lt_succ_iff] using hi
+  · simpa [Fin.succ_lt_succ_iff, Fin.lt_iff_coe_lt_coe] using hi
   · refine' Associates.dvdNotUnit_iff_lt.2 (h₁ _)
     simpa only [Fin.coe_eq_cast_succ] using Fin.lt_succ
 #align divisor_chain.eq_second_of_chain_of_prime_dvd DivisorChain.eq_second_of_chain_of_prime_dvd

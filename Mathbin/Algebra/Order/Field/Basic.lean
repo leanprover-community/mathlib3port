@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Lewis, Leonardo de Moura, Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module algebra.order.field.basic
-! leanprover-community/mathlib commit ccad6d5093bd2f5c6ca621fc74674cce51355af6
+! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1218,6 +1218,11 @@ theorem exists_pos_mul_lt {a : α} (h : 0 < a) (b : α) : ∃ c : α, 0 < c ∧ 
   rw [← lt_div_iff this, div_div_cancel' h.ne']
   exact lt_max_iff.2 (Or.inl <| lt_add_one _)
 #align exists_pos_mul_lt exists_pos_mul_lt
+
+theorem exists_pos_lt_mul {a : α} (h : 0 < a) (b : α) : ∃ c : α, 0 < c ∧ b < c * a :=
+  let ⟨c, hc₀, hc⟩ := exists_pos_mul_lt h b
+  ⟨c⁻¹, inv_pos.2 hc₀, by rwa [← div_eq_inv_mul, lt_div_iff hc₀]⟩
+#align exists_pos_lt_mul exists_pos_lt_mul
 
 /- warning: monotone.div_const -> Monotone.div_const is a dubious translation:
 lean 3 declaration is

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module data.bitvec.basic
-! leanprover-community/mathlib commit ccad6d5093bd2f5c6ca621fc74674cce51355af6
+! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -101,7 +101,7 @@ theorem of_nat_to_nat {n : ℕ} (v : Bitvec n) : Bitvec.ofNat _ v.toNat = v :=
 #align bitvec.of_nat_to_nat Bitvec.of_nat_to_nat
 
 theorem to_fin_val {n : ℕ} (v : Bitvec n) : (toFin v : ℕ) = v.toNat := by
-  rw [to_fin, Fin.coe_of_nat_eq_mod', Nat.mod_eq_of_lt] <;> apply to_nat_lt
+  rw [to_fin, Fin.of_nat'_eq_coe, Fin.coe_of_nat_eq_mod', Nat.mod_eq_of_lt] <;> apply to_nat_lt
 #align bitvec.to_fin_val Bitvec.to_fin_val
 
 theorem to_fin_le_to_fin_of_le {n} {v₀ v₁ : Bitvec n} (h : v₀ ≤ v₁) : v₀.toFin ≤ v₁.toFin :=

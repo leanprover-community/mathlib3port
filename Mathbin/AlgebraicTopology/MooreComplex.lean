@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebraic_topology.Moore_complex
-! leanprover-community/mathlib commit ccad6d5093bd2f5c6ca621fc74674cce51355af6
+! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -104,12 +104,12 @@ theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 :=
     cases n <;>
     dsimp
   · simp only [subobject.factor_thru_arrow_assoc]
-    slice_lhs 2 3 => erw [← X.δ_comp_δ (Fin.zero_le 0)]
+    slice_lhs 2 3 => erw [← X.δ_comp_δ (Fin.zero_le (0 : Fin (0 + 2)))]
     rw [← factor_thru_arrow _ _ (finset_inf_arrow_factors Finset.univ _ (0 : Fin 2) (by simp))]
     slice_lhs 2 3 => rw [kernel_subobject_arrow_comp]
     simp
   · simp [factor_thru_right]
-    slice_lhs 2 3 => erw [← X.δ_comp_δ (Fin.zero_le 0)]
+    slice_lhs 2 3 => erw [← X.δ_comp_δ (Fin.zero_le (0 : Fin (n.succ + 2)))]
     rw [←
       factor_thru_arrow _ _ (finset_inf_arrow_factors Finset.univ _ (0 : Fin (n + 3)) (by simp))]
     slice_lhs 2 3 => rw [kernel_subobject_arrow_comp]
