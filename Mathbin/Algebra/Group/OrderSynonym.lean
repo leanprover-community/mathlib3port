@@ -193,15 +193,27 @@ theorem ofDual_div [Div α] (a b : αᵒᵈ) : ofDual (a / b) = ofDual a / ofDua
 #align of_dual_div ofDual_div
 -/
 
+/- warning: to_dual_smul -> toDual_smul is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SMul.{u1, u2} α β] (a : α) (b : β), Eq.{succ u2} (OrderDual.{u2} β) (coeFn.{succ u2, succ u2} (Equiv.{succ u2, succ u2} β (OrderDual.{u2} β)) (fun (_x : Equiv.{succ u2, succ u2} β (OrderDual.{u2} β)) => β -> (OrderDual.{u2} β)) (Equiv.hasCoeToFun.{succ u2, succ u2} β (OrderDual.{u2} β)) (OrderDual.toDual.{u2} β) (SMul.smul.{u1, u2} α β _inst_1 a b)) (SMul.smul.{u1, u2} α (OrderDual.{u2} β) (instSMulOrderDual.{u1, u2} α β _inst_1) a (coeFn.{succ u2, succ u2} (Equiv.{succ u2, succ u2} β (OrderDual.{u2} β)) (fun (_x : Equiv.{succ u2, succ u2} β (OrderDual.{u2} β)) => β -> (OrderDual.{u2} β)) (Equiv.hasCoeToFun.{succ u2, succ u2} β (OrderDual.{u2} β)) (OrderDual.toDual.{u2} β) b))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : SMul.{u2, u1} α β] (a : α) (b : β), Eq.{succ u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => OrderDual.{u1} β) (HSMul.hSMul.{u2, u1, u1} α β β (instHSMul.{u2, u1} α β _inst_1) a b)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => OrderDual.{u1} β) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (OrderDual.{u1} β) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (OrderDual.{u1} β) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} β (OrderDual.{u1} β)))) (OrderDual.toDual.{u1} β) (HSMul.hSMul.{u2, u1, u1} α β β (instHSMul.{u2, u1} α β _inst_1) a b)) (HSMul.hSMul.{u2, u1, u1} α ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => OrderDual.{u1} β) b) ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => OrderDual.{u1} β) b) (instHSMul.{u2, u1} α ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => OrderDual.{u1} β) b) (instSMulOrderDual.{u2, u1} α β _inst_1)) a (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => OrderDual.{u1} β) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (OrderDual.{u1} β) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (OrderDual.{u1} β) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} β (OrderDual.{u1} β)))) (OrderDual.toDual.{u1} β) b))
+Case conversion may be inaccurate. Consider using '#align to_dual_smul toDual_smulₓ'. -/
 @[simp, to_additive]
-theorem to_dual_smul [SMul α β] (a : α) (b : β) : toDual (a • b) = a • toDual b :=
+theorem toDual_smul [SMul α β] (a : α) (b : β) : toDual (a • b) = a • toDual b :=
   rfl
-#align to_dual_smul to_dual_smul
+#align to_dual_smul toDual_smul
 
+/- warning: of_dual_smul -> ofDual_smul is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SMul.{u1, u2} α β] (a : α) (b : OrderDual.{u2} β), Eq.{succ u2} β (coeFn.{succ u2, succ u2} (Equiv.{succ u2, succ u2} (OrderDual.{u2} β) β) (fun (_x : Equiv.{succ u2, succ u2} (OrderDual.{u2} β) β) => (OrderDual.{u2} β) -> β) (Equiv.hasCoeToFun.{succ u2, succ u2} (OrderDual.{u2} β) β) (OrderDual.ofDual.{u2} β) (SMul.smul.{u1, u2} α (OrderDual.{u2} β) (instSMulOrderDual.{u1, u2} α β _inst_1) a b)) (SMul.smul.{u1, u2} α β _inst_1 a (coeFn.{succ u2, succ u2} (Equiv.{succ u2, succ u2} (OrderDual.{u2} β) β) (fun (_x : Equiv.{succ u2, succ u2} (OrderDual.{u2} β) β) => (OrderDual.{u2} β) -> β) (Equiv.hasCoeToFun.{succ u2, succ u2} (OrderDual.{u2} β) β) (OrderDual.ofDual.{u2} β) b))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : SMul.{u2, u1} α β] (a : α) (b : OrderDual.{u1} β), Eq.{succ u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : OrderDual.{u1} β) => β) (HSMul.hSMul.{u2, u1, u1} α (OrderDual.{u1} β) (OrderDual.{u1} β) (instHSMul.{u2, u1} α (OrderDual.{u1} β) (instSMulOrderDual.{u2, u1} α β _inst_1)) a b)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} β) β) (OrderDual.{u1} β) (fun (_x : OrderDual.{u1} β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : OrderDual.{u1} β) => β) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} β) β) (OrderDual.{u1} β) β (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} β) β) (OrderDual.{u1} β) β (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (OrderDual.{u1} β) β))) (OrderDual.ofDual.{u1} β) (HSMul.hSMul.{u2, u1, u1} α (OrderDual.{u1} β) (OrderDual.{u1} β) (instHSMul.{u2, u1} α (OrderDual.{u1} β) (instSMulOrderDual.{u2, u1} α β _inst_1)) a b)) (HSMul.hSMul.{u2, u1, u1} α ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : OrderDual.{u1} β) => β) b) ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : OrderDual.{u1} β) => β) b) (instHSMul.{u2, u1} α ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : OrderDual.{u1} β) => β) b) _inst_1) a (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} β) β) (OrderDual.{u1} β) (fun (_x : OrderDual.{u1} β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : OrderDual.{u1} β) => β) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} β) β) (OrderDual.{u1} β) β (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} β) β) (OrderDual.{u1} β) β (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (OrderDual.{u1} β) β))) (OrderDual.ofDual.{u1} β) b))
+Case conversion may be inaccurate. Consider using '#align of_dual_smul ofDual_smulₓ'. -/
 @[simp, to_additive]
-theorem of_dual_smul [SMul α β] (a : α) (b : βᵒᵈ) : ofDual (a • b) = a • ofDual b :=
+theorem ofDual_smul [SMul α β] (a : α) (b : βᵒᵈ) : ofDual (a • b) = a • ofDual b :=
   rfl
-#align of_dual_smul of_dual_smul
+#align of_dual_smul ofDual_smul
 
 @[simp, to_additive]
 theorem to_dual_smul' [SMul α β] (a : α) (b : β) : toDual a • b = a • b :=
@@ -219,7 +231,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Pow.{u2, u1} α β] (a : α) (b : β), Eq.{succ u2} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => OrderDual.{u2} α) (HPow.hPow.{u2, u1, u2} α β α (instHPow.{u2, u1} α β _inst_1) a b)) (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => OrderDual.{u2} α) _x) (EmbeddingLike.toFunLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (OrderDual.{u2} α) (EquivLike.toEmbeddingLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (OrderDual.{u2} α) (Equiv.instEquivLikeEquiv.{succ u2, succ u2} α (OrderDual.{u2} α)))) (OrderDual.toDual.{u2} α) (HPow.hPow.{u2, u1, u2} α β α (instHPow.{u2, u1} α β _inst_1) a b)) (HPow.hPow.{u2, u1, u2} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => OrderDual.{u2} α) a) β ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => OrderDual.{u2} α) a) (instHPow.{u2, u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => OrderDual.{u2} α) a) β (instPowOrderDual.{u2, u1} α β _inst_1)) (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => OrderDual.{u2} α) _x) (EmbeddingLike.toFunLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (OrderDual.{u2} α) (EquivLike.toEmbeddingLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (OrderDual.{u2} α) (Equiv.instEquivLikeEquiv.{succ u2, succ u2} α (OrderDual.{u2} α)))) (OrderDual.toDual.{u2} α) a) b)
 Case conversion may be inaccurate. Consider using '#align to_dual_pow toDual_powₓ'. -/
-@[simp, to_additive to_dual_smul, to_additive_reorder 1 4]
+@[simp, to_additive toDual_smul, to_additive_reorder 1 4]
 theorem toDual_pow [Pow α β] (a : α) (b : β) : toDual (a ^ b) = toDual a ^ b :=
   rfl
 #align to_dual_pow toDual_pow
@@ -230,7 +242,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Pow.{u2, u1} α β] (a : OrderDual.{u2} α) (b : β), Eq.{succ u2} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : OrderDual.{u2} α) => α) (HPow.hPow.{u2, u1, u2} (OrderDual.{u2} α) β (OrderDual.{u2} α) (instHPow.{u2, u1} (OrderDual.{u2} α) β (instPowOrderDual.{u2, u1} α β _inst_1)) a b)) (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (OrderDual.{u2} α) α) (OrderDual.{u2} α) (fun (_x : OrderDual.{u2} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : OrderDual.{u2} α) => α) _x) (EmbeddingLike.toFunLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (OrderDual.{u2} α) α) (OrderDual.{u2} α) α (EquivLike.toEmbeddingLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (OrderDual.{u2} α) α) (OrderDual.{u2} α) α (Equiv.instEquivLikeEquiv.{succ u2, succ u2} (OrderDual.{u2} α) α))) (OrderDual.ofDual.{u2} α) (HPow.hPow.{u2, u1, u2} (OrderDual.{u2} α) β (OrderDual.{u2} α) (instHPow.{u2, u1} (OrderDual.{u2} α) β (instPowOrderDual.{u2, u1} α β _inst_1)) a b)) (HPow.hPow.{u2, u1, u2} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : OrderDual.{u2} α) => α) a) β ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : OrderDual.{u2} α) => α) a) (instHPow.{u2, u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : OrderDual.{u2} α) => α) a) β _inst_1) (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (OrderDual.{u2} α) α) (OrderDual.{u2} α) (fun (_x : OrderDual.{u2} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : OrderDual.{u2} α) => α) _x) (EmbeddingLike.toFunLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (OrderDual.{u2} α) α) (OrderDual.{u2} α) α (EquivLike.toEmbeddingLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (OrderDual.{u2} α) α) (OrderDual.{u2} α) α (Equiv.instEquivLikeEquiv.{succ u2, succ u2} (OrderDual.{u2} α) α))) (OrderDual.ofDual.{u2} α) a) b)
 Case conversion may be inaccurate. Consider using '#align of_dual_pow ofDual_powₓ'. -/
-@[simp, to_additive of_dual_smul, to_additive_reorder 1 4]
+@[simp, to_additive ofDual_smul, to_additive_reorder 1 4]
 theorem ofDual_pow [Pow α β] (a : αᵒᵈ) (b : β) : ofDual (a ^ b) = ofDual a ^ b :=
   rfl
 #align of_dual_pow ofDual_pow
@@ -425,15 +437,27 @@ theorem ofLex_div [Div α] (a b : Lex α) : ofLex (a / b) = ofLex a / ofLex b :=
 #align of_lex_div ofLex_div
 -/
 
+/- warning: to_lex_smul -> toLex_smul is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SMul.{u1, u2} α β] (a : α) (b : β), Eq.{succ u2} (Lex.{u2} β) (coeFn.{succ u2, succ u2} (Equiv.{succ u2, succ u2} β (Lex.{u2} β)) (fun (_x : Equiv.{succ u2, succ u2} β (Lex.{u2} β)) => β -> (Lex.{u2} β)) (Equiv.hasCoeToFun.{succ u2, succ u2} β (Lex.{u2} β)) (toLex.{u2} β) (SMul.smul.{u1, u2} α β _inst_1 a b)) (SMul.smul.{u1, u2} α (Lex.{u2} β) (instSMulLex.{u1, u2} α β _inst_1) a (coeFn.{succ u2, succ u2} (Equiv.{succ u2, succ u2} β (Lex.{u2} β)) (fun (_x : Equiv.{succ u2, succ u2} β (Lex.{u2} β)) => β -> (Lex.{u2} β)) (Equiv.hasCoeToFun.{succ u2, succ u2} β (Lex.{u2} β)) (toLex.{u2} β) b))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : SMul.{u2, u1} α β] (a : α) (b : β), Eq.{succ u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => Lex.{u1} β) (HSMul.hSMul.{u2, u1, u1} α β β (instHSMul.{u2, u1} α β _inst_1) a b)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (Lex.{u1} β)) β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => Lex.{u1} β) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (Lex.{u1} β)) β (Lex.{u1} β) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (Lex.{u1} β)) β (Lex.{u1} β) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} β (Lex.{u1} β)))) (toLex.{u1} β) (HSMul.hSMul.{u2, u1, u1} α β β (instHSMul.{u2, u1} α β _inst_1) a b)) (HSMul.hSMul.{u2, u1, u1} α ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => Lex.{u1} β) b) ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => Lex.{u1} β) b) (instHSMul.{u2, u1} α ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => Lex.{u1} β) b) (instSMulLex.{u2, u1} α β _inst_1)) a (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (Lex.{u1} β)) β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => Lex.{u1} β) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (Lex.{u1} β)) β (Lex.{u1} β) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (Lex.{u1} β)) β (Lex.{u1} β) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} β (Lex.{u1} β)))) (toLex.{u1} β) b))
+Case conversion may be inaccurate. Consider using '#align to_lex_smul toLex_smulₓ'. -/
 @[simp, to_additive]
-theorem to_lex_smul [SMul α β] (a : α) (b : β) : toLex (a • b) = a • toLex b :=
+theorem toLex_smul [SMul α β] (a : α) (b : β) : toLex (a • b) = a • toLex b :=
   rfl
-#align to_lex_smul to_lex_smul
+#align to_lex_smul toLex_smul
 
+/- warning: of_lex_smul -> ofLex_smul is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SMul.{u1, u2} α β] (a : α) (b : Lex.{u2} β), Eq.{succ u2} β (coeFn.{succ u2, succ u2} (Equiv.{succ u2, succ u2} (Lex.{u2} β) β) (fun (_x : Equiv.{succ u2, succ u2} (Lex.{u2} β) β) => (Lex.{u2} β) -> β) (Equiv.hasCoeToFun.{succ u2, succ u2} (Lex.{u2} β) β) (ofLex.{u2} β) (SMul.smul.{u1, u2} α (Lex.{u2} β) (instSMulLex.{u1, u2} α β _inst_1) a b)) (SMul.smul.{u1, u2} α β _inst_1 a (coeFn.{succ u2, succ u2} (Equiv.{succ u2, succ u2} (Lex.{u2} β) β) (fun (_x : Equiv.{succ u2, succ u2} (Lex.{u2} β) β) => (Lex.{u2} β) -> β) (Equiv.hasCoeToFun.{succ u2, succ u2} (Lex.{u2} β) β) (ofLex.{u2} β) b))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : SMul.{u2, u1} α β] (a : α) (b : Lex.{u1} β), Eq.{succ u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Lex.{u1} β) => β) (HSMul.hSMul.{u2, u1, u1} α (Lex.{u1} β) (Lex.{u1} β) (instHSMul.{u2, u1} α (Lex.{u1} β) (instSMulLex.{u2, u1} α β _inst_1)) a b)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (Lex.{u1} β) β) (Lex.{u1} β) (fun (_x : Lex.{u1} β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Lex.{u1} β) => β) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (Lex.{u1} β) β) (Lex.{u1} β) β (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (Lex.{u1} β) β) (Lex.{u1} β) β (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (Lex.{u1} β) β))) (ofLex.{u1} β) (HSMul.hSMul.{u2, u1, u1} α (Lex.{u1} β) (Lex.{u1} β) (instHSMul.{u2, u1} α (Lex.{u1} β) (instSMulLex.{u2, u1} α β _inst_1)) a b)) (HSMul.hSMul.{u2, u1, u1} α ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Lex.{u1} β) => β) b) ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Lex.{u1} β) => β) b) (instHSMul.{u2, u1} α ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Lex.{u1} β) => β) b) _inst_1) a (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (Lex.{u1} β) β) (Lex.{u1} β) (fun (_x : Lex.{u1} β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Lex.{u1} β) => β) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (Lex.{u1} β) β) (Lex.{u1} β) β (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (Lex.{u1} β) β) (Lex.{u1} β) β (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (Lex.{u1} β) β))) (ofLex.{u1} β) b))
+Case conversion may be inaccurate. Consider using '#align of_lex_smul ofLex_smulₓ'. -/
 @[simp, to_additive]
-theorem of_lex_smul [SMul α β] (a : α) (b : Lex β) : ofLex (a • b) = a • ofLex b :=
+theorem ofLex_smul [SMul α β] (a : α) (b : Lex β) : ofLex (a • b) = a • ofLex b :=
   rfl
-#align of_lex_smul of_lex_smul
+#align of_lex_smul ofLex_smul
 
 @[simp, to_additive]
 theorem to_lex_smul' [SMul α β] (a : α) (b : β) : toLex a • b = a • b :=
@@ -451,7 +475,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Pow.{u2, u1} α β] (a : α) (b : β), Eq.{succ u2} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => Lex.{u2} α) (HPow.hPow.{u2, u1, u2} α β α (instHPow.{u2, u1} α β _inst_1) a b)) (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (Lex.{u2} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => Lex.{u2} α) _x) (EmbeddingLike.toFunLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (Lex.{u2} α)) α (Lex.{u2} α) (EquivLike.toEmbeddingLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (Lex.{u2} α)) α (Lex.{u2} α) (Equiv.instEquivLikeEquiv.{succ u2, succ u2} α (Lex.{u2} α)))) (toLex.{u2} α) (HPow.hPow.{u2, u1, u2} α β α (instHPow.{u2, u1} α β _inst_1) a b)) (HPow.hPow.{u2, u1, u2} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => Lex.{u2} α) a) β ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => Lex.{u2} α) a) (instHPow.{u2, u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => Lex.{u2} α) a) β (instPowLex.{u2, u1} α β _inst_1)) (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (Lex.{u2} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => Lex.{u2} α) _x) (EmbeddingLike.toFunLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (Lex.{u2} α)) α (Lex.{u2} α) (EquivLike.toEmbeddingLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (Lex.{u2} α)) α (Lex.{u2} α) (Equiv.instEquivLikeEquiv.{succ u2, succ u2} α (Lex.{u2} α)))) (toLex.{u2} α) a) b)
 Case conversion may be inaccurate. Consider using '#align to_lex_pow toLex_powₓ'. -/
-@[simp, to_additive to_lex_smul, to_additive_reorder 1 4]
+@[simp, to_additive toLex_smul, to_additive_reorder 1 4]
 theorem toLex_pow [Pow α β] (a : α) (b : β) : toLex (a ^ b) = toLex a ^ b :=
   rfl
 #align to_lex_pow toLex_pow
@@ -462,7 +486,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Pow.{u2, u1} α β] (a : Lex.{u2} α) (b : β), Eq.{succ u2} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Lex.{u2} α) => α) (HPow.hPow.{u2, u1, u2} (Lex.{u2} α) β (Lex.{u2} α) (instHPow.{u2, u1} (Lex.{u2} α) β (instPowLex.{u2, u1} α β _inst_1)) a b)) (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (Lex.{u2} α) α) (Lex.{u2} α) (fun (_x : Lex.{u2} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Lex.{u2} α) => α) _x) (EmbeddingLike.toFunLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (Lex.{u2} α) α) (Lex.{u2} α) α (EquivLike.toEmbeddingLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (Lex.{u2} α) α) (Lex.{u2} α) α (Equiv.instEquivLikeEquiv.{succ u2, succ u2} (Lex.{u2} α) α))) (ofLex.{u2} α) (HPow.hPow.{u2, u1, u2} (Lex.{u2} α) β (Lex.{u2} α) (instHPow.{u2, u1} (Lex.{u2} α) β (instPowLex.{u2, u1} α β _inst_1)) a b)) (HPow.hPow.{u2, u1, u2} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Lex.{u2} α) => α) a) β ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Lex.{u2} α) => α) a) (instHPow.{u2, u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Lex.{u2} α) => α) a) β _inst_1) (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (Lex.{u2} α) α) (Lex.{u2} α) (fun (_x : Lex.{u2} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Lex.{u2} α) => α) _x) (EmbeddingLike.toFunLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (Lex.{u2} α) α) (Lex.{u2} α) α (EquivLike.toEmbeddingLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (Lex.{u2} α) α) (Lex.{u2} α) α (Equiv.instEquivLikeEquiv.{succ u2, succ u2} (Lex.{u2} α) α))) (ofLex.{u2} α) a) b)
 Case conversion may be inaccurate. Consider using '#align of_lex_pow ofLex_powₓ'. -/
-@[simp, to_additive of_lex_smul, to_additive_reorder 1 4]
+@[simp, to_additive ofLex_smul, to_additive_reorder 1 4]
 theorem ofLex_pow [Pow α β] (a : Lex α) (b : β) : ofLex (a ^ b) = ofLex a ^ b :=
   rfl
 #align of_lex_pow ofLex_pow
@@ -473,7 +497,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Pow.{u2, u1} α β] (a : α) (b : β), Eq.{succ u2} α (HPow.hPow.{u2, u1, u2} α ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => Lex.{u1} β) b) α (instHPow.{u2, u1} α ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => Lex.{u1} β) b) (instPowLex'.{u2, u1} α β _inst_1)) a (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (Lex.{u1} β)) β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => Lex.{u1} β) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (Lex.{u1} β)) β (Lex.{u1} β) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (Lex.{u1} β)) β (Lex.{u1} β) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} β (Lex.{u1} β)))) (toLex.{u1} β) b)) (HPow.hPow.{u2, u1, u2} α β α (instHPow.{u2, u1} α β _inst_1) a b)
 Case conversion may be inaccurate. Consider using '#align pow_to_lex pow_toLexₓ'. -/
-@[simp, to_additive to_lex_smul, to_additive_reorder 1 4]
+@[simp, to_additive toLex_smul, to_additive_reorder 1 4]
 theorem pow_toLex [Pow α β] (a : α) (b : β) : a ^ toLex b = a ^ b :=
   rfl
 #align pow_to_lex pow_toLex
@@ -484,7 +508,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Pow.{u2, u1} α β] (a : α) (b : Lex.{u1} β), Eq.{succ u2} α (HPow.hPow.{u2, u1, u2} α ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Lex.{u1} β) => β) b) α (instHPow.{u2, u1} α ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Lex.{u1} β) => β) b) _inst_1) a (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (Lex.{u1} β) β) (Lex.{u1} β) (fun (_x : Lex.{u1} β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Lex.{u1} β) => β) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (Lex.{u1} β) β) (Lex.{u1} β) β (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (Lex.{u1} β) β) (Lex.{u1} β) β (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (Lex.{u1} β) β))) (ofLex.{u1} β) b)) (HPow.hPow.{u2, u1, u2} α (Lex.{u1} β) α (instHPow.{u2, u1} α (Lex.{u1} β) (instPowLex'.{u2, u1} α β _inst_1)) a b)
 Case conversion may be inaccurate. Consider using '#align pow_of_lex pow_ofLexₓ'. -/
-@[simp, to_additive of_lex_smul, to_additive_reorder 1 4]
+@[simp, to_additive ofLex_smul, to_additive_reorder 1 4]
 theorem pow_ofLex [Pow α β] (a : α) (b : Lex β) : a ^ ofLex b = a ^ b :=
   rfl
 #align pow_of_lex pow_ofLex
