@@ -101,8 +101,8 @@ theorem fin_rotate_succ {n : ℕ} : finRotate n.succ = decomposeFin.symm (1, fin
   split_ifs with h
   · simp [h]
   ·
-    rw [Fin.coe_succ, Function.Injective.map_swap Fin.coe_injective, Fin.coe_succ, coe_fin_rotate,
-      if_neg h, Fin.coe_zero, Fin.coe_one,
+    rw [Fin.val_succ, Function.Injective.map_swap Fin.val_injective, Fin.val_succ, coe_fin_rotate,
+      if_neg h, Fin.val_zero, Fin.val_one,
       swap_apply_of_ne_of_ne (Nat.succ_ne_zero _) (Nat.succ_succ_ne_one _)]
 #align fin_rotate_succ fin_rotate_succ
 
@@ -133,10 +133,10 @@ theorem is_cycle_fin_rotate {n : ℕ} : IsCycle (finRotate (n + 2)) :=
   refine' ⟨0, by decide, fun x hx' => ⟨x, _⟩⟩
   clear hx'
   cases' x with x hx
-  rw [coe_coe, zpow_ofNat, Fin.ext_iff, Fin.coe_mk]
+  rw [coe_coe, zpow_ofNat, Fin.ext_iff, Fin.val_mk]
   induction' x with x ih; · rfl
   rw [pow_succ, perm.mul_apply, coe_fin_rotate_of_ne_last, ih (lt_trans x.lt_succ_self hx)]
-  rw [Ne.def, Fin.ext_iff, ih (lt_trans x.lt_succ_self hx), Fin.coe_last]
+  rw [Ne.def, Fin.ext_iff, ih (lt_trans x.lt_succ_self hx), Fin.val_last]
   exact ne_of_lt (Nat.lt_of_succ_lt_succ hx)
 #align is_cycle_fin_rotate is_cycle_fin_rotate
 
@@ -198,7 +198,7 @@ theorem cycle_range_of_le {n : ℕ} {i j : Fin n.succ} (h : j ≤ i) :
   simp only [Fin.ext_iff, coe_last, coe_mk, coe_zero, Fin.eta, apply_ite coe, cast_le_mk]
   split_ifs with heq
   · rfl
-  · rw [Fin.coe_add_one_of_lt]
+  · rw [Fin.val_add_one_of_lt]
     exact lt_of_lt_of_le (lt_of_le_of_ne h (mt (congr_arg coe) HEq)) (le_last i)
 #align fin.cycle_range_of_le Fin.cycle_range_of_le
 
@@ -280,19 +280,19 @@ theorem succ_above_cycle_range {n : ℕ} (i j : Fin n) :
   rcases lt_trichotomy j i with (hlt | heq | hgt)
   · have : (j + 1).cast_succ = j.succ := by
       ext
-      rw [coe_cast_succ, coe_succ, Fin.coe_add_one_of_lt (lt_of_lt_of_le hlt i.le_last)]
-    rw [Fin.cycle_range_of_lt hlt, Fin.succ_above_below, this, swap_apply_of_ne_of_ne]
+      rw [coe_cast_succ, coe_succ, Fin.val_add_one_of_lt (lt_of_lt_of_le hlt i.le_last)]
+    rw [Fin.cycle_range_of_lt hlt, Fin.succAbove_below, this, swap_apply_of_ne_of_ne]
     · apply Fin.succ_ne_zero
     · exact (Fin.succ_injective _).Ne hlt.ne
-    · rw [Fin.lt_iff_coe_lt_coe]
+    · rw [Fin.lt_iff_val_lt_val]
       simpa [this] using hlt
-  · rw [HEq, Fin.cycle_range_self, Fin.succ_above_below, swap_apply_right, Fin.cast_succ_zero]
-    · rw [Fin.cast_succ_zero]
+  · rw [HEq, Fin.cycle_range_self, Fin.succAbove_below, swap_apply_right, Fin.castSucc_zero]
+    · rw [Fin.castSucc_zero]
       apply Fin.succ_pos
-  · rw [Fin.cycle_range_of_gt hgt, Fin.succ_above_above, swap_apply_of_ne_of_ne]
+  · rw [Fin.cycle_range_of_gt hgt, Fin.succAbove_above, swap_apply_of_ne_of_ne]
     · apply Fin.succ_ne_zero
     · apply (Fin.succ_injective _).Ne hgt.ne.symm
-    · simpa [Fin.le_iff_coe_le_coe] using hgt
+    · simpa [Fin.le_iff_val_le_val] using hgt
 #align fin.succ_above_cycle_range Fin.succ_above_cycle_range
 
 @[simp]
@@ -300,8 +300,8 @@ theorem cycle_range_succ_above {n : ℕ} (i : Fin (n + 1)) (j : Fin n) :
     i.cycleRange (i.succAbove j) = j.succ :=
   by
   cases' lt_or_ge j.cast_succ i with h h
-  · rw [Fin.succ_above_below _ _ h, Fin.cycle_range_of_lt h, Fin.coe_succ_eq_succ]
-  · rw [Fin.succ_above_above _ _ h, Fin.cycle_range_of_gt (fin.le_cast_succ_iff.mp h)]
+  · rw [Fin.succAbove_below _ _ h, Fin.cycle_range_of_lt h, Fin.coeSucc_eq_succ]
+  · rw [Fin.succAbove_above _ _ h, Fin.cycle_range_of_gt (fin.le_cast_succ_iff.mp h)]
 #align fin.cycle_range_succ_above Fin.cycle_range_succ_above
 
 @[simp]

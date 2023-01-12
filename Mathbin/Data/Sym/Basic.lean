@@ -545,7 +545,7 @@ theorem fill_filter_ne [DecidableEq α] (a : α) (m : Sym α n) :
     (m.filterNe a).2.fill a (m.filterNe a).1 = m :=
   Subtype.ext
     (by
-      dsimp only [coe_fill, filter_ne, Subtype.coe_mk, Fin.coe_mk]
+      dsimp only [coe_fill, filter_ne, Subtype.coe_mk, Fin.val_mk]
       ext b; rw [count_add, count_filter, Sym.coe_repeat, count_repeat]
       obtain rfl | h := eq_or_ne a b
       · rw [if_pos rfl, if_neg (not_not.2 rfl), zero_add]

@@ -119,7 +119,7 @@ theorem apply_composition_ones (p : FormalMultilinearSeries 𝕜 E F) (n : ℕ) 
   intro j hjn hj1
   obtain rfl : j = 0 := by linarith
   refine' congr_arg v _
-  rw [Fin.ext_iff, Fin.coe_cast_le, Composition.ones_embedding, Fin.coe_mk]
+  rw [Fin.ext_iff, Fin.coe_castLe, Composition.ones_embedding, Fin.val_mk]
 #align
   formal_multilinear_series.apply_composition_ones FormalMultilinearSeries.apply_composition_ones
 
@@ -443,7 +443,7 @@ theorem comp_id (p : FormalMultilinearSeries 𝕜 E F) : p.comp (id 𝕜 E) = p 
     intros
     rw [apply_composition_ones]
     refine' congr_arg v _
-    rw [Fin.ext_iff, Fin.coe_cast_le, Fin.coe_mk, Fin.coe_mk]
+    rw [Fin.ext_iff, Fin.coe_castLe, Fin.val_mk, Fin.val_mk]
   show
     ∀ b : Composition n,
       b ∈ Finset.univ → b ≠ Composition.ones n → comp_along_composition p (id 𝕜 E) b = 0
@@ -1173,7 +1173,7 @@ theorem size_up_to_size_up_to_add (a : Composition n) (b : Composition a.length)
     have D : size_up_to b i + j < length a := lt_of_lt_of_le C (b.size_up_to_le _)
     have : size_up_to b i + Nat.succ j = (size_up_to b i + j).succ := rfl
     rw [this, size_up_to_succ _ D, IHj A, size_up_to_succ _ B]
-    simp only [sigma_composition_aux, add_assoc, add_left_inj, Fin.coe_mk]
+    simp only [sigma_composition_aux, add_assoc, add_left_inj, Fin.val_mk]
     rw [nth_le_of_eq (nth_le_split_wrt_composition _ _ _), nth_le_drop', nth_le_take _ _ C]
 #align composition.size_up_to_size_up_to_add Composition.size_up_to_size_up_to_add
 

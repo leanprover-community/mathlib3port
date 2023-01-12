@@ -124,9 +124,9 @@ theorem of_fn_succ' {n} (f : Fin (succ n) → α) :
   induction' n with n IH
   · rw [of_fn_zero, concat_nil, of_fn_succ, of_fn_zero]
     rfl
-  · rw [of_fn_succ, IH, of_fn_succ, concat_cons, Fin.cast_succ_zero]
+  · rw [of_fn_succ, IH, of_fn_succ, concat_cons, Fin.castSucc_zero]
     congr 3
-    simp_rw [Fin.cast_succ_fin_succ]
+    simp_rw [Fin.castSucc_fin_succ]
 #align list.of_fn_succ' List.of_fn_succ'
 
 @[simp]
@@ -151,7 +151,7 @@ theorem of_fn_add {m n} (f : Fin (m + n) → α) :
       (List.ofFn fun i => f (Fin.castAdd n i)) ++ List.ofFn fun j => f (Fin.natAdd m j) :=
   by
   induction' n with n IH
-  · rw [of_fn_zero, append_nil, Fin.cast_add_zero, Fin.cast_refl]
+  · rw [of_fn_zero, append_nil, Fin.castAdd_zero, Fin.cast_refl]
     rfl
   · rw [of_fn_succ', of_fn_succ', IH, append_concat]
     rfl
@@ -198,7 +198,7 @@ theorem of_fn_nth_le : ∀ l : List α, (ofFn fun i => nthLe l i i.2) = l
   | a :: l => by
     rw [of_fn_succ]
     congr
-    simp only [Fin.coe_succ]
+    simp only [Fin.val_succ]
     exact of_fn_nth_le l
 #align list.of_fn_nth_le List.of_fn_nth_le
 

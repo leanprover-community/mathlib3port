@@ -188,7 +188,7 @@ theorem discr_prime_pow [hcycl : IsCyclotomicExtension {p ^ k} K L] [hp : Fact (
         PNat.one_coe, totient_two, pow_zero, mul_one, mul_zero]
       rw [power_basis_dim, hζ.eq_neg_one_of_two_right, show (-1 : L) = algebraMap K L (-1) by simp,
         minpoly.eq_X_sub_C_of_algebra_map_inj _ (algebraMap K L).Injective, nat_degree_X_sub_C]
-      simp only [discr, trace_matrix, Matrix.det_unique, Fin.default_eq_zero, Fin.coe_zero,
+      simp only [discr, trace_matrix, Matrix.det_unique, Fin.default_eq_zero, Fin.val_zero,
         pow_zero, trace_form_apply, mul_one]
       rw [← (algebraMap K L).map_one, trace_algebra_map, finrank _ hirr, hp, hk]
       · simp

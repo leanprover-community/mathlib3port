@@ -36,7 +36,7 @@ theorem zsmul_mem_zmultiples_iff_exists_sub_div {r : R} {z : ℤ} (hz : z ≠ 0)
     refine' ⟨⟨(k % z).toNat, _⟩, k / z, _⟩
     · rw [← Int.ofNat_lt, Int.toNat_of_nonneg (Int.emod_nonneg _ hz)]
       exact (Int.emod_lt _ hz).trans_eq (Int.abs_eq_natAbs _)
-    rw [Fin.coe_mk, Int.toNat_of_nonneg (Int.emod_nonneg _ hz), Int.div_add_mod]
+    rw [Fin.val_mk, Int.toNat_of_nonneg (Int.emod_nonneg _ hz), Int.div_add_mod]
   · rintro ⟨k, n, h⟩
     exact ⟨_, h⟩
 #align

@@ -353,7 +353,7 @@ def GradeBoundedOrder.liftRight [GradeBoundedOrder 𝕆 β] (f : α → β) (hf 
 inferrable. -/
 @[reducible]
 def GradeOrder.finToNat (n : ℕ) [GradeOrder (Fin n) α] : GradeOrder ℕ α :=
-  (GradeOrder.liftLeft (_ : Fin n → ℕ) Fin.coe_strict_mono) fun _ _ => Covby.coe_fin
+  (GradeOrder.liftLeft (_ : Fin n → ℕ) Fin.val_strictMono) fun _ _ => Covby.coe_fin
 #align grade_order.fin_to_nat GradeOrder.finToNat
 
 -- See note [reducible non-instances]
@@ -361,7 +361,7 @@ def GradeOrder.finToNat (n : ℕ) [GradeOrder (Fin n) α] : GradeOrder ℕ α :=
 inferrable. -/
 @[reducible]
 def GradeMinOrder.finToNat (n : ℕ) [GradeMinOrder (Fin n) α] : GradeMinOrder ℕ α :=
-  (GradeMinOrder.liftLeft (_ : Fin n → ℕ) Fin.coe_strict_mono fun _ _ => Covby.coe_fin) fun a h =>
+  (GradeMinOrder.liftLeft (_ : Fin n → ℕ) Fin.val_strictMono fun _ _ => Covby.coe_fin) fun a h =>
     by
     cases n
     · exact ((@Fin.elim0 fun _ => False) <| grade (Fin 0) a).elim

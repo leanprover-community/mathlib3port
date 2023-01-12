@@ -723,13 +723,13 @@ theorem realize_iff : (φ.Iff ψ).realize v ↔ (φ.realize v ↔ ψ.realize v) 
 theorem realize_relabel {φ : L.Formula α} {g : α → β} {v : β → M} :
     (φ.relabel g).realize v ↔ φ.realize (v ∘ g) :=
   by
-  rw [realize, realize, relabel, bounded_formula.realize_relabel, iff_eq_eq, Fin.cast_add_zero]
+  rw [realize, realize, relabel, bounded_formula.realize_relabel, iff_eq_eq, Fin.castAdd_zero]
   exact congr rfl (funext finZeroElim)
 #align first_order.language.formula.realize_relabel FirstOrder.Language.Formula.realize_relabel
 
 theorem realize_relabel_sum_inr (φ : L.Formula (Fin n)) {v : Empty → M} {x : Fin n → M} :
     (BoundedFormula.relabel Sum.inr φ).realize v x ↔ φ.realize x := by
-  rw [bounded_formula.realize_relabel, formula.realize, Sum.elim_comp_inr, Fin.cast_add_zero,
+  rw [bounded_formula.realize_relabel, formula.realize, Sum.elim_comp_inr, Fin.castAdd_zero,
     cast_refl, OrderIso.coe_refl, Function.comp.right_id,
     Subsingleton.elim (x ∘ (nat_add n : Fin 0 → Fin n)) default]
 #align

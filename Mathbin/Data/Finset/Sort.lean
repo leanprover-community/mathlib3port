@@ -210,7 +210,7 @@ theorem range_order_emb_of_fin (s : Finset α) {k : ℕ} (h : s.card = k) :
 /-- The bijection `order_emb_of_fin s h` sends `0` to the minimum of `s`. -/
 theorem order_emb_of_fin_zero {s : Finset α} {k : ℕ} (h : s.card = k) (hz : 0 < k) :
     orderEmbOfFin s h ⟨0, hz⟩ = s.min' (card_pos.mp (h.symm ▸ hz)) := by
-  simp only [order_emb_of_fin_apply, Fin.coe_mk, sorted_zero_eq_min']
+  simp only [order_emb_of_fin_apply, Fin.val_mk, sorted_zero_eq_min']
 #align finset.order_emb_of_fin_zero Finset.order_emb_of_fin_zero
 
 /-- The bijection `order_emb_of_fin s h` sends `k-1` to the maximum of `s`. -/
@@ -231,7 +231,7 @@ the increasing bijection `order_emb_of_fin s h`. -/
 theorem order_emb_of_fin_unique {s : Finset α} {k : ℕ} (h : s.card = k) {f : Fin k → α}
     (hfs : ∀ x, f x ∈ s) (hmono : StrictMono f) : f = s.orderEmbOfFin h :=
   by
-  apply Fin.strict_mono_unique hmono (s.order_emb_of_fin h).StrictMono
+  apply Fin.strictMono_unique hmono (s.order_emb_of_fin h).StrictMono
   rw [range_order_emb_of_fin, ← Set.image_univ, ← coe_univ, ← coe_image, coe_inj]
   refine' eq_of_subset_of_card_le (fun x hx => _) _
   · rcases mem_image.1 hx with ⟨x, hx, rfl⟩

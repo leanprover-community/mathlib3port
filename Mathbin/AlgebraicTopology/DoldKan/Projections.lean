@@ -128,7 +128,7 @@ theorem comp_P_eq_self {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFa
       have hnaq : n = a + q := by linarith
       simp only [v.of_succ.comp_Hσ_eq hnaq, neg_eq_zero, ← assoc]
       have eq :=
-        v ⟨a, by linarith⟩ (by simp only [hnaq, Fin.coe_mk, Nat.succ_eq_add_one, add_assoc])
+        v ⟨a, by linarith⟩ (by simp only [hnaq, Fin.val_mk, Nat.succ_eq_add_one, add_assoc])
       simp only [Fin.succ_mk] at eq
       simp only [Eq, zero_comp]
 #align

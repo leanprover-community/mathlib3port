@@ -249,7 +249,7 @@ a virtual point at the right of the last block, to make for a nice equiv with
 `composition_as_set n`. -/
 def boundary : Fin (c.length + 1) ↪o Fin (n + 1) :=
   (OrderEmbedding.ofStrictMono fun i => ⟨c.sizeUpTo i, Nat.lt_succ_of_le (c.size_up_to_le i)⟩) <|
-    Fin.strict_mono_iff_lt_succ.2 fun ⟨i, hi⟩ => c.size_up_to_strict_mono hi
+    Fin.strictMono_iff_lt_succ.2 fun ⟨i, hi⟩ => c.size_up_to_strict_mono hi
 #align composition.boundary Composition.boundary
 
 @[simp]
@@ -820,7 +820,7 @@ def compositionAsSetEquiv (n : ℕ) : CompositionAsSet n ≃ Finset (Fin (n - 1)
         exact Nat.pred_lt_pred i_ne_zero this
       · convert i_mem
         rw [Fin.ext_iff]
-        simp only [Fin.coe_mk, A]
+        simp only [Fin.val_mk, A]
       · simp [A]
   right_inv := by
     intro s
@@ -831,11 +831,11 @@ def compositionAsSetEquiv (n : ℕ) : CompositionAsSet n ≃ Finset (Fin (n - 1)
       rw [add_comm]
       apply (Nat.succ_pred_eq_of_pos _).symm
       exact (zero_le i.val).trans_lt (i.2.trans_le (Nat.sub_le n 1))
-    simp only [Fin.ext_iff, exists_prop, Fin.coe_zero, add_comm, Set.mem_to_finset,
-      Set.mem_setOf_eq, Fin.coe_last]
+    simp only [Fin.ext_iff, exists_prop, Fin.val_zero, add_comm, Set.mem_to_finset,
+      Set.mem_setOf_eq, Fin.val_last]
     erw [Set.mem_setOf_eq]
     simp only [this, false_or_iff, add_right_inj, add_eq_zero_iff, one_ne_zero, false_and_iff,
-      Fin.coe_mk]
+      Fin.val_mk]
     constructor
     · rintro ⟨j, js, hj⟩
       convert js

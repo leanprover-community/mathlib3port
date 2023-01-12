@@ -337,14 +337,14 @@ theorem init_def {n : ℕ} {α : Fin (n + 1) → Type _} {q : ∀ i, α i} :
 /-- Adding an element at the end of an `n`-tuple, to get an `n+1`-tuple. The name `snoc` comes from
 `cons` (i.e., adding an element to the left of a tuple) read in reverse order. -/
 def snoc (p : ∀ i : Fin n, α i.cast_succ) (x : α (last n)) (i : Fin (n + 1)) : α i :=
-  if h : i.val < n then cast (by rw [Fin.cast_succ_cast_lt i h]) (p (castLt i h))
+  if h : i.val < n then cast (by rw [Fin.castSucc_cast_lt i h]) (p (castLt i h))
   else cast (by rw [eq_last_of_not_lt h]) x
 #align fin.snoc Fin.snoc
 
 @[simp]
 theorem init_snoc : init (snoc p x) = p := by
   ext i
-  have h' := Fin.cast_lt_cast_succ i i.is_lt
+  have h' := Fin.cast_lt_castSucc i i.is_lt
   simp [init, snoc, i.is_lt, h']
   convert cast_eq rfl (p i)
 #align fin.init_snoc Fin.init_snoc
@@ -353,7 +353,7 @@ theorem init_snoc : init (snoc p x) = p := by
 theorem snoc_cast_succ : snoc p x i.cast_succ = p i :=
   by
   have : i.cast_succ.val < n := i.is_lt
-  have h' := Fin.cast_lt_cast_succ i i.is_lt
+  have h' := Fin.cast_lt_castSucc i i.is_lt
   simp [snoc, this, h']
   convert cast_eq rfl (p i)
 #align fin.snoc_cast_succ Fin.snoc_cast_succ
@@ -531,7 +531,7 @@ def succAboveCases {α : Fin (n + 1) → Sort u} (i : Fin (n + 1)) (x : α i)
     (p : ∀ j : Fin n, α (i.succAbove j)) (j : Fin (n + 1)) : α j :=
   if hj : j = i then Eq.ndrec x hj.symm
   else
-    if hlt : j < i then Eq.recOn (succ_above_cast_lt hlt) (p _)
+    if hlt : j < i then Eq.recOn (succAbove_castLt hlt) (p _)
     else Eq.recOn (succ_above_pred <| (Ne.lt_or_lt hj).resolve_left hlt) (p _)
 #align fin.succ_above_cases Fin.succAboveCases
 
@@ -590,18 +590,18 @@ theorem eq_insert_nth_iff {i : Fin (n + 1)} {x : α i} {p : ∀ j, α (i.succAbo
 
 theorem insert_nth_apply_below {i j : Fin (n + 1)} (h : j < i) (x : α i)
     (p : ∀ k, α (i.succAbove k)) :
-    i.insertNth x p j = Eq.recOn (succ_above_cast_lt h) (p <| j.castLt _) := by
+    i.insertNth x p j = Eq.recOn (succAbove_castLt h) (p <| j.castLt _) := by
   rw [insert_nth, succ_above_cases, dif_neg h.ne, dif_pos h]
 #align fin.insert_nth_apply_below Fin.insert_nth_apply_below
 
 theorem insert_nth_apply_above {i j : Fin (n + 1)} (h : i < j) (x : α i)
     (p : ∀ k, α (i.succAbove k)) :
-    i.insertNth x p j = Eq.recOn (succ_above_pred h) (p <| j.pred _) := by
+    i.insertNth x p j = Eq.recOn (succAbove_pred h) (p <| j.pred _) := by
   rw [insert_nth, succ_above_cases, dif_neg h.ne', dif_neg h.not_lt]
 #align fin.insert_nth_apply_above Fin.insert_nth_apply_above
 
 theorem insert_nth_zero (x : α 0) (p : ∀ j : Fin n, α (succAbove 0 j)) :
-    insertNth 0 x p = cons x fun j => cast (congr_arg α (congr_fun succ_above_zero j)) (p j) :=
+    insertNth 0 x p = cons x fun j => cast (congr_arg α (congr_fun succAbove_zero j)) (p j) :=
   by
   refine' insert_nth_eq_iff.2 ⟨by simp, _⟩
   ext j
@@ -614,7 +614,7 @@ theorem insert_nth_zero' (x : β) (p : Fin n → β) : @insertNth _ (fun _ => β
 #align fin.insert_nth_zero' Fin.insert_nth_zero'
 
 theorem insert_nth_last (x : α (last n)) (p : ∀ j : Fin n, α ((last n).succAbove j)) :
-    insertNth (last n) x p = snoc (fun j => cast (congr_arg α (succ_above_last_apply j)) (p j)) x :=
+    insertNth (last n) x p = snoc (fun j => cast (congr_arg α (succAbove_last_apply j)) (p j)) x :=
   by
   refine' insert_nth_eq_iff.2 ⟨by simp, _⟩
   ext j

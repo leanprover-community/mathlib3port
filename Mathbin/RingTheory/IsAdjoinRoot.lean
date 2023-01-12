@@ -395,7 +395,7 @@ theorem mod_by_monic_hom_root (h : IsAdjoinRootMonic S f) (hdeg : 1 < natDegree 
 Auxiliary definition for `is_adjoin_root_monic.power_basis`. -/
 def basis (h : IsAdjoinRootMonic S f) : Basis (Fin (natDegree f)) R S :=
   Basis.of_repr
-    { toFun := fun x => (h.modByMonicHom x).toFinsupp.comapDomain coe (Fin.coe_injective.InjOn _)
+    { toFun := fun x => (h.modByMonicHom x).toFinsupp.comapDomain coe (Fin.val_injective.InjOn _)
       invFun := fun g => h.map (of_finsupp (g.mapDomain coe))
       left_inv := fun x => by
         cases subsingleton_or_nontrivial R
@@ -418,7 +418,7 @@ def basis (h : IsAdjoinRootMonic S f) : Basis (Fin (natDegree f)) R S :=
         ext i
         simp only [h.mod_by_monic_hom_map, Finsupp.comap_domain_apply, Polynomial.to_finsupp_apply]
         rw [(Polynomial.mod_by_monic_eq_self_iff h.monic).mpr, Polynomial.coeff,
-          Finsupp.map_domain_apply Fin.coe_injective]
+          Finsupp.map_domain_apply Fin.val_injective]
         rw [degree_eq_nat_degree h.monic.ne_zero, degree_lt_iff_coeff_zero]
         intro m hm
         rw [Polynomial.coeff, Finsupp.map_domain_notin_range]
@@ -426,9 +426,9 @@ def basis (h : IsAdjoinRootMonic S f) : Basis (Fin (natDegree f)) R S :=
         rintro i rfl
         exact i.prop.not_le hm
       map_add' := fun x y => by
-        simp only [map_add, Finsupp.comap_domain_add_of_injective Fin.coe_injective, to_finsupp_add]
+        simp only [map_add, Finsupp.comap_domain_add_of_injective Fin.val_injective, to_finsupp_add]
       map_smul' := fun c x => by
-        simp only [map_smul, Finsupp.comap_domain_smul_of_injective Fin.coe_injective,
+        simp only [map_smul, Finsupp.comap_domain_smul_of_injective Fin.val_injective,
           RingHom.id_apply, to_finsupp_smul] }
 #align is_adjoin_root_monic.basis IsAdjoinRootMonic.basis
 
@@ -437,12 +437,12 @@ theorem basis_apply (h : IsAdjoinRootMonic S f) (i) : h.Basis i = h.root ^ (i : 
   Basis.apply_eq_iff.mpr <|
     show
       (h.modByMonicHom (h.toIsAdjoinRoot.root ^ (i : ℕ))).toFinsupp.comapDomain coe
-          (Fin.coe_injective.InjOn _) =
+          (Fin.val_injective.InjOn _) =
         Finsupp.single _ _
       by
       ext j
       rw [Finsupp.comap_domain_apply, mod_by_monic_hom_root_pow]
-      · rw [X_pow_eq_monomial, to_finsupp_monomial, Finsupp.single_apply_left Fin.coe_injective]
+      · rw [X_pow_eq_monomial, to_finsupp_monomial, Finsupp.single_apply_left Fin.val_injective]
       · exact i.is_lt
 #align is_adjoin_root_monic.basis_apply IsAdjoinRootMonic.basis_apply
 
@@ -475,7 +475,7 @@ theorem basis_repr (h : IsAdjoinRootMonic S f) (x : S) (i : Fin (natDegree f)) :
 #align is_adjoin_root_monic.basis_repr IsAdjoinRootMonic.basis_repr
 
 theorem basis_one (h : IsAdjoinRootMonic S f) (hdeg : 1 < natDegree f) :
-    h.Basis ⟨1, hdeg⟩ = h.root := by rw [h.basis_apply, Fin.coe_mk, pow_one]
+    h.Basis ⟨1, hdeg⟩ = h.root := by rw [h.basis_apply, Fin.val_mk, pow_one]
 #align is_adjoin_root_monic.basis_one IsAdjoinRootMonic.basis_one
 
 /-- `is_adjoin_root_monic.lift_polyₗ` lifts a linear map on polynomials to a linear map on `S`. -/
@@ -534,11 +534,11 @@ theorem coeff_root_pow (h : IsAdjoinRootMonic S f) {n} (hn : n < natDegree f) :
   ·
     calc
       h.basis.repr (h.root ^ n) ⟨i, _⟩ = h.basis.repr (h.basis ⟨n, hn⟩) ⟨i, hi⟩ := by
-        rw [h.basis_apply, Fin.coe_mk]
+        rw [h.basis_apply, Fin.val_mk]
       _ = Pi.single ((⟨n, hn⟩ : Fin _) : ℕ) (1 : (fun _ => R) _) ↑(⟨i, _⟩ : Fin _) := by
         rw [h.basis.repr_self, ← Finsupp.single_eq_pi_single,
-          Finsupp.single_apply_left Fin.coe_injective]
-      _ = Pi.single n 1 i := by rw [Fin.coe_mk, Fin.coe_mk]
+          Finsupp.single_apply_left Fin.val_injective]
+      _ = Pi.single n 1 i := by rw [Fin.val_mk, Fin.val_mk]
       
   · refine' (Pi.single_eq_of_ne _ (1 : (fun _ => R) _)).symm
     rintro rfl

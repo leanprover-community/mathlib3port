@@ -274,7 +274,7 @@ variable {n : ℕ} [NeZero n]
 
 /-- generate a `fin` randomly -/
 protected def random : RandG g (Fin n) :=
-  ⟨fun ⟨g⟩ => Prod.map ofNat' up <| randNat g 0 n⟩
+  ⟨fun ⟨g⟩ => Prod.map ofNat'' up <| randNat g 0 n⟩
 #align fin.random Fin.random
 
 end Fin

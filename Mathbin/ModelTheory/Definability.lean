@@ -188,7 +188,7 @@ theorem Definable.image_comp_sum_inl_fin (m : ℕ) {s : Set (Sum α (Fin m) → 
   refine' ⟨(bounded_formula.relabel id φ).exs, _⟩
   ext x
   simp only [Set.mem_image, mem_set_of_eq, bounded_formula.realize_exs,
-    bounded_formula.realize_relabel, Function.comp.right_id, Fin.cast_add_zero, Fin.cast_refl]
+    bounded_formula.realize_relabel, Function.comp.right_id, Fin.castAdd_zero, Fin.cast_refl]
   constructor
   · rintro ⟨y, hy, rfl⟩
     exact

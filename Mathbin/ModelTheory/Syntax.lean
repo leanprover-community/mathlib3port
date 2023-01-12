@@ -512,10 +512,10 @@ theorem cast_le_rfl {n} (h : n ≤ n) (φ : L.BoundedFormula α n) : φ.castLe h
   by
   induction' φ with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 _ _ ih3
   · rfl
-  · simp [Fin.cast_le_of_eq]
-  · simp [Fin.cast_le_of_eq]
-  · simp [Fin.cast_le_of_eq, ih1, ih2]
-  · simp [Fin.cast_le_of_eq, ih3]
+  · simp [Fin.castLe_of_eq]
+  · simp [Fin.castLe_of_eq]
+  · simp [Fin.castLe_of_eq, ih1, ih2]
+  · simp [Fin.castLe_of_eq, ih3]
 #align
   first_order.language.bounded_formula.cast_le_rfl FirstOrder.Language.BoundedFormula.cast_le_rfl
 
@@ -745,8 +745,8 @@ theorem relabel_sum_inl (φ : L.BoundedFormula α n) :
   simp only [relabel, relabel_aux_sum_inl]
   induction' φ with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 _ _ ih3
   · rfl
-  · simp [Fin.nat_add_zero, cast_le_of_eq, map_term_rel]
-  · simp [Fin.nat_add_zero, cast_le_of_eq, map_term_rel]
+  · simp [Fin.natAdd_zero, cast_le_of_eq, map_term_rel]
+  · simp [Fin.natAdd_zero, cast_le_of_eq, map_term_rel]
   · simp [map_term_rel, ih1, ih2]
   · simp [map_term_rel, ih3, cast_le]
 #align

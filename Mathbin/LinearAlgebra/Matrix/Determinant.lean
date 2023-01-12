@@ -547,11 +547,11 @@ theorem det_eq_of_forall_row_eq_smul_add_pred_aux {n : ℕ} (k : Fin (n + 1)) :
     by_cases hi : i = k.succ
     · simp [hi, hM', hsucc, update_row_self]
     rw [update_row_ne hi, hM', update_row_ne hi]
-  have k_ne_succ : k.cast_succ ≠ k.succ := (Fin.cast_succ_lt_succ k).Ne
+  have k_ne_succ : k.cast_succ ≠ k.succ := (Fin.castSucc_lt_succ k).Ne
   have M_k : M k.cast_succ = M' k.cast_succ := (update_row_ne k_ne_succ).symm
   rw [hM, M_k, det_update_row_add_smul_self M' k_ne_succ.symm, ih (Function.update c k 0)]
   · intro i hi
-    rw [Fin.lt_iff_coe_lt_coe, Fin.coe_cast_succ, Fin.coe_succ, Nat.lt_succ_iff] at hi
+    rw [Fin.lt_iff_val_lt_val, Fin.coe_castSucc, Fin.val_succ, Nat.lt_succ_iff] at hi
     rw [Function.update_apply]
     split_ifs with hik
     · rfl
@@ -566,7 +566,7 @@ theorem det_eq_of_forall_row_eq_smul_add_pred_aux {n : ℕ} (k : Fin (n + 1)) :
   · simp [hc i (fin.succ_lt_succ_iff.mpr hik2)]
   rw [update_row_ne]
   apply ne_of_lt
-  rwa [Fin.lt_iff_coe_lt_coe, Fin.coe_cast_succ, Fin.coe_succ, Nat.lt_succ_iff, ← not_lt]
+  rwa [Fin.lt_iff_val_lt_val, Fin.coe_castSucc, Fin.val_succ, Nat.lt_succ_iff, ← not_lt]
 #align
   matrix.det_eq_of_forall_row_eq_smul_add_pred_aux Matrix.det_eq_of_forall_row_eq_smul_add_pred_aux
 
@@ -744,15 +744,15 @@ theorem det_succ_column_zero {n : ℕ} (A : Matrix (Fin n.succ) (Fin n.succ) R) 
   refine' Finset.sum_congr rfl fun i _ => Fin.cases _ (fun i => _) i
   ·
     simp only [Fin.prod_univ_succ, Matrix.det_apply, Finset.mul_sum,
-      Equiv.Perm.decompose_fin_symm_apply_zero, Fin.coe_zero, one_mul,
+      Equiv.Perm.decompose_fin_symm_apply_zero, Fin.val_zero, one_mul,
       Equiv.Perm.decomposeFin.symm_sign, Equiv.swap_self, if_true, id.def, eq_self_iff_true,
-      Equiv.Perm.decompose_fin_symm_apply_succ, Fin.succ_above_zero, Equiv.coe_refl, pow_zero,
+      Equiv.Perm.decompose_fin_symm_apply_succ, Fin.succAbove_zero, Equiv.coe_refl, pow_zero,
       mul_smul_comm, of_apply]
   -- `univ_perm_fin_succ` gives a different embedding of `perm (fin n)` into
   -- `perm (fin n.succ)` than the determinant of the submatrix we want,
   -- permute `A` so that we get the correct one.
   have : (-1 : R) ^ (i : ℕ) = i.cycle_range.sign := by simp [Fin.sign_cycle_range]
-  rw [Fin.coe_succ, pow_succ, this, mul_assoc, mul_assoc, mul_left_comm ↑(Equiv.Perm.sign _), ←
+  rw [Fin.val_succ, pow_succ, this, mul_assoc, mul_assoc, mul_left_comm ↑(Equiv.Perm.sign _), ←
     det_permute, Matrix.det_apply, Finset.mul_sum, Finset.mul_sum]
   -- now we just need to move the corresponding parts to the same place
   refine' Finset.sum_congr rfl fun σ _ => _

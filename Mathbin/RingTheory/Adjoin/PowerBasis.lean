@@ -130,7 +130,7 @@ theorem repr_gen_pow_is_integral [IsDomain S]
   simp only [LinearEquiv.map_sum, LinearEquiv.map_smulₛₗ, RingHom.id_apply, Finset.sum_apply']
   refine' IsIntegral.sum _ fun j hj => _
   replace hj := Finset.mem_range.1 hj
-  rw [← Fin.coe_mk hj, ← B.basis_eq_pow, Algebra.smul_def, IsScalarTower.algebra_map_apply R S A, ←
+  rw [← Fin.val_mk hj, ← B.basis_eq_pow, Algebra.smul_def, IsScalarTower.algebra_map_apply R S A, ←
     Algebra.smul_def, LinearEquiv.map_smul]
   simp only [algebra_map_smul, Finsupp.coe_smul, Pi.smul_apply, B.basis.repr_self_apply]
   by_cases hij : (⟨j, hj⟩ : Fin _) = i
@@ -174,7 +174,7 @@ theorem repr_pow_is_integral [IsDomain S] {x : A} (hx : ∀ i, IsIntegral R (B.B
   revert hx
   refine' Nat.case_strong_induction_on n _ fun n hn => _
   · intro hx i
-    rw [pow_zero, ← pow_zero B.gen, ← Fin.coe_mk B.dim_pos, ← B.basis_eq_pow,
+    rw [pow_zero, ← pow_zero B.gen, ← Fin.val_mk B.dim_pos, ← B.basis_eq_pow,
       B.basis.repr_self_apply]
     split_ifs
     · exact is_integral_one

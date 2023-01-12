@@ -172,6 +172,12 @@ attribute [class] list_short
 
 attribute [instance] list_short.nil list_short.cons
 
+/- warning: pgame.list_short_nth_le -> Pgame.listShortNthLe is a dubious translation:
+lean 3 declaration is
+  forall (L : List.{succ u1} Pgame.{u1}) [_inst_1 : Pgame.ListShort.{u1} L] (i : Fin (List.length.{succ u1} Pgame.{u1} L)), Pgame.Short.{u1} (List.nthLe.{succ u1} Pgame.{u1} L ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Fin (List.length.{succ u1} Pgame.{u1} L)) Nat (HasLiftT.mk.{1, 1} (Fin (List.length.{succ u1} Pgame.{u1} L)) Nat (CoeTCₓ.coe.{1, 1} (Fin (List.length.{succ u1} Pgame.{u1} L)) Nat (coeBase.{1, 1} (Fin (List.length.{succ u1} Pgame.{u1} L)) Nat (Fin.coeToNat (List.length.{succ u1} Pgame.{u1} L))))) i) (Pgame.ListShortNthLe._proof_1.{u1} L i))
+but is expected to have type
+  PUnit.{succ (succ u1)}
+Case conversion may be inaccurate. Consider using '#align pgame.list_short_nth_le Pgame.listShortNthLeₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance listShortNthLe :

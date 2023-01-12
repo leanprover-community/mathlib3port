@@ -225,7 +225,7 @@ theorem Finset.prod_fin_eq_prod_range [CommMonoid β] {n : ℕ} (c : Fin n → �
   by
   rw [← Fin.prod_univ_eq_prod_range, Finset.prod_congr rfl]
   rintro ⟨i, hi⟩ _
-  simp only [Fin.coe_eq_val, hi, dif_pos]
+  simp only [[anonymous], hi, dif_pos]
 #align finset.prod_fin_eq_prod_range Finset.prod_fin_eq_prod_range
 
 @[to_additive]

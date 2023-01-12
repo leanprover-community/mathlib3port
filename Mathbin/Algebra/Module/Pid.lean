@@ -242,7 +242,7 @@ theorem torsion_by_prime_power_decomposition (hN : Module.IsTorsion' N (Submonoi
         rw [Submodule.map_span, Submodule.map_top, range_mkq] at hs'
         simp only [mkq_apply] at hs'
         simp only [s']
-        rw [Set.range_comp (_ ∘ s), Fin.range_succ_above]
+        rw [Set.range_comp (_ ∘ s), Fin.range_succAbove]
         rw [← Set.range_comp, ← Set.insert_image_compl_eq_range _ j, Function.comp_apply,
           (quotient.mk_eq_zero _).mpr (Submodule.mem_span_singleton_self _), span_insert_zero] at
           hs'

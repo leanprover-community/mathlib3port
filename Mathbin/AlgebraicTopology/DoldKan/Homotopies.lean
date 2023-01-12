@@ -175,8 +175,8 @@ theorem Hσ_eq_zero (q : ℕ) : (hσ q : K[X] ⟶ K[X]).f 0 = 0 :=
   · rw [hσ'_eq (show 0 = 0 + 0 by rfl) (c_mk 1 0 rfl)]
     simp only [pow_zero, Fin.mk_zero, one_zsmul, eq_to_hom_refl, category.comp_id]
     erw [ChainComplex.of_d]
-    simp only [alternating_face_map_complex.obj_d, Fin.sum_univ_two, Fin.coe_zero, pow_zero,
-      one_zsmul, Fin.coe_one, pow_one, comp_add, neg_smul, one_zsmul, comp_neg, add_neg_eq_zero]
+    simp only [alternating_face_map_complex.obj_d, Fin.sum_univ_two, Fin.val_zero, pow_zero,
+      one_zsmul, Fin.val_one, pow_one, comp_add, neg_smul, one_zsmul, comp_neg, add_neg_eq_zero]
     erw [δ_comp_σ_self, δ_comp_σ_succ]
   · rw [hσ'_eq_zero (Nat.succ_pos q) (c_mk 1 0 rfl), zero_comp]
 #align algebraic_topology.dold_kan.Hσ_eq_zero AlgebraicTopology.DoldKan.Hσ_eq_zero

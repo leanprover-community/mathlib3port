@@ -78,7 +78,7 @@ def mkUnit {a : Units k} {A : 𝕎 k} (hA : A.coeff 0 = a) : Units (𝕎 k) :=
       linear_combination (norm := skip) -H_coeff * H
       have ha : (a : k) ^ p ^ (n + 1) = ↑(a ^ p ^ (n + 1)) := by norm_cast
       have ha_inv : (↑a⁻¹ : k) ^ p ^ (n + 1) = ↑(a ^ p ^ (n + 1))⁻¹ := by exact_mod_cast inv_pow _ _
-      simp only [nth_remainder_spec, inverse_coeff, succ_nth_val_units, hA, Fin.val_eq_coe,
+      simp only [nth_remainder_spec, inverse_coeff, succ_nth_val_units, hA, [anonymous],
         one_coeff_eq_of_pos, Nat.succ_pos', H_coeff, ha_inv, ha, inv_pow]
       ring!)
 #align witt_vector.mk_unit WittVector.mkUnit

@@ -72,7 +72,7 @@ theorem comp_δ_eq_zero {Y : C} {n : ℕ} {q : ℕ} {φ : Y ⟶ X _[n + 1]} (v :
   subst hi
   apply v i
   rw [← @Nat.add_le_add_iff_right 1, add_assoc]
-  simpa only [Fin.coe_succ, add_assoc, add_comm 1] using hj₂
+  simpa only [Fin.val_succ, add_assoc, add_comm 1] using hj₂
 #align
   algebraic_topology.dold_kan.higher_faces_vanish.comp_δ_eq_zero AlgebraicTopology.DoldKan.HigherFacesVanish.comp_δ_eq_zero
 
@@ -107,11 +107,11 @@ theorem comp_Hσ_eq {Y : C} {n a q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFac
   swap
   · rintro ⟨k, hk⟩
     suffices φ ≫ X.δ (⟨a + 2 + k, by linarith⟩ : Fin (n + 2)) = 0 by
-      simp only [this, Fin.nat_add_mk, Fin.cast_mk, zero_comp, smul_zero]
+      simp only [this, Fin.natAdd_mk, Fin.cast_mk, zero_comp, smul_zero]
     convert
       v ⟨a + k + 1, by linarith⟩
         (by
-          rw [Fin.coe_mk]
+          rw [Fin.val_mk]
           linarith)
     rw [Nat.succ_eq_add_one]
     linarith
@@ -125,7 +125,7 @@ theorem comp_Hσ_eq {Y : C} {n a q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFac
       dsimp at h
       linarith
     · dsimp
-      simp only [Fin.coe_pred, Fin.coe_mk, succ_add_sub_one]
+      simp only [Fin.coe_pred, Fin.val_mk, succ_add_sub_one]
       linarith
     · dsimp
       linarith
@@ -135,8 +135,8 @@ theorem comp_Hσ_eq {Y : C} {n a q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFac
     skip
     rw [Fin.sum_univ_cast_succ, Fin.sum_univ_cast_succ]
   rw [Fin.sum_univ_cast_succ]
-  simp only [Fin.last, Fin.cast_le_mk, Fin.coe_cast, Fin.cast_mk, Fin.coe_cast_le, Fin.coe_mk,
-    Fin.cast_succ_mk, Fin.coe_cast_succ]
+  simp only [Fin.last, Fin.castLe_mk, Fin.coe_cast, Fin.cast_mk, Fin.coe_castLe, Fin.val_mk,
+    Fin.castSucc_mk, Fin.coe_castSucc]
   /- the purpose of the following `simplif` is to create three subgoals in order
       to finish the proof -/
   have simplif :
@@ -150,7 +150,7 @@ theorem comp_Hσ_eq {Y : C} {n a q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFac
     use a
     linarith
   · -- d+e = 0
-    rw [assoc, assoc, X.δ_comp_σ_self' (Fin.cast_succ_mk _ _ _).symm,
+    rw [assoc, assoc, X.δ_comp_σ_self' (Fin.castSucc_mk _ _ _).symm,
       X.δ_comp_σ_succ' (Fin.succ_mk _ _ _).symm]
     simp only [comp_id, pow_add _ (a + 1) 1, pow_one, mul_neg, mul_one, neg_smul, add_right_neg]
   · -- c+a = 0
@@ -158,8 +158,8 @@ theorem comp_Hσ_eq {Y : C} {n a q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFac
     apply Finset.sum_eq_zero
     rintro ⟨i, hi⟩ h₀
     have hia : (⟨i, by linarith⟩ : Fin (n + 2)) ≤ Fin.castSucc (⟨a, by linarith⟩ : Fin (n + 1)) :=
-      by simpa only [Fin.le_iff_coe_le_coe, Fin.coe_mk, Fin.cast_succ_mk, ← lt_succ_iff] using hi
-    simp only [Fin.coe_mk, Fin.cast_le_mk, Fin.cast_succ_mk, Fin.succ_mk, assoc, Fin.cast_mk, ←
+      by simpa only [Fin.le_iff_val_le_val, Fin.val_mk, Fin.castSucc_mk, ← lt_succ_iff] using hi
+    simp only [Fin.val_mk, Fin.castLe_mk, Fin.castSucc_mk, Fin.succ_mk, assoc, Fin.cast_mk, ←
       δ_comp_σ_of_le X hia, add_eq_zero_iff_eq_neg, ← neg_zsmul]
     congr
     ring
@@ -177,9 +177,9 @@ theorem comp_Hσ_eq_zero {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : Higher
       Fin.mk_zero, one_zsmul, eq_to_hom_refl, comp_id, comp_sum,
       alternating_face_map_complex.obj_d_eq]
     rw [← Fin.sum_congr' _ (show 2 + (n + 1) = n + 1 + 2 by linarith), Fin.sum_trunc]
-    · simp only [Fin.sum_univ_cast_succ, Fin.sum_univ_zero, zero_add, Fin.last, Fin.cast_le_mk,
-        Fin.cast_mk, Fin.cast_succ_mk]
-      simp only [Fin.mk_zero, Fin.coe_zero, pow_zero, one_zsmul, Fin.mk_one, Fin.coe_one, pow_one,
+    · simp only [Fin.sum_univ_cast_succ, Fin.sum_univ_zero, zero_add, Fin.last, Fin.castLe_mk,
+        Fin.cast_mk, Fin.castSucc_mk]
+      simp only [Fin.mk_zero, Fin.val_zero, pow_zero, one_zsmul, Fin.mk_one, Fin.val_one, pow_one,
         neg_smul, comp_neg]
       erw [δ_comp_σ_self, δ_comp_σ_succ, add_right_neg]
     · intro j
@@ -189,9 +189,9 @@ theorem comp_Hσ_eq_zero {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : Higher
         dsimp at h
         linarith
       · dsimp
-        simp only [Fin.cast_nat_add, Fin.coe_pred, Fin.coe_add_nat, add_succ_sub_one]
+        simp only [Fin.cast_natAdd, Fin.coe_pred, Fin.coe_addNat, add_succ_sub_one]
         linarith
-      · rw [Fin.lt_iff_coe_lt_coe]
+      · rw [Fin.lt_iff_val_lt_val]
         dsimp
         linarith
 #align
@@ -220,7 +220,7 @@ theorem induction {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFacesVa
   · simp only [hj₂, Fin.eta, δ_comp_σ_succ, comp_id]
     congr
     ext
-    simp only [Fin.coe_succ, Fin.coe_mk]
+    simp only [Fin.val_succ, Fin.val_mk]
   -- now, we assume j ≠ a (i.e. a < j)
   have haj : a < j := (Ne.le_iff_lt hj₂).mp (by linarith)
   have hj₃ := j.is_lt
@@ -230,13 +230,13 @@ theorem induction {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFacesVa
     linarith
   rw [X.δ_comp_σ_of_gt', j.pred_succ]
   swap
-  · rw [Fin.lt_iff_coe_lt_coe]
-    simpa only [Fin.coe_mk, Fin.coe_succ, add_lt_add_iff_right] using haj
+  · rw [Fin.lt_iff_val_lt_val]
+    simpa only [Fin.val_mk, Fin.val_succ, add_lt_add_iff_right] using haj
   obtain ham' | ham'' := ham.lt_or_eq
   · -- case where `a<m`
     rw [← X.δ_comp_δ''_assoc]
     swap
-    · rw [Fin.le_iff_coe_le_coe]
+    · rw [Fin.le_iff_val_le_val]
       dsimp
       linarith
     simp only [← assoc, v j (by linarith), zero_comp]

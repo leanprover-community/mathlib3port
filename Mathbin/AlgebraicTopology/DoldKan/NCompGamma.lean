@@ -77,7 +77,7 @@ theorem P_infty_comp_map_mono_eq_zero (X : SimplicialObject C) {n : ℕ} {Δ' : 
       rw [assoc, ← SimplexCategory.δ_comp_δ'' (Fin.zero_le _)]
       simp only [op_comp, X.map_comp, assoc, P_infty_f]
       erw [(higher_faces_vanish.of_P _ _).comp_δ_eq_zero_assoc _ j₂.succ_ne_zero, zero_comp]
-      rw [Fin.coe_succ]
+      rw [Fin.val_succ]
       linarith
     · simp only [op_comp, X.map_comp, assoc, P_infty_f]
       erw [(higher_faces_vanish.of_P _ _).comp_δ_eq_zero_assoc _ hj₁, zero_comp]
@@ -85,7 +85,7 @@ theorem P_infty_comp_map_mono_eq_zero (X : SimplicialObject C) {n : ℕ} {Δ' : 
       exact
         hj₁
           (by
-            simp only [Fin.ext_iff, Fin.coe_zero]
+            simp only [Fin.ext_iff, Fin.val_zero]
             linarith)
 #align
   algebraic_topology.dold_kan.P_infty_comp_map_mono_eq_zero AlgebraicTopology.DoldKan.P_infty_comp_map_mono_eq_zero
@@ -123,7 +123,7 @@ theorem Γ₀_obj_termwise_map_mono_comp_P_infty (X : SimplicialObject C) {Δ Δ
             exact hb'),
         zsmul_zero]
     · simp only [Finset.mem_univ, not_true, IsEmpty.forall_iff]
-    · simpa only [hi.eq_δ₀, Fin.coe_zero, pow_zero, one_zsmul]
+    · simpa only [hi.eq_δ₀, Fin.val_zero, pow_zero, one_zsmul]
   -- The case `i ≠ δ 0`
   · rw [Γ₀.obj.termwise.map_mono_eq_zero _ i _ hi, zero_comp]
     swap

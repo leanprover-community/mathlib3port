@@ -276,7 +276,7 @@ theorem normal_closure_swap_mul_swap_five :
   have h5 : g1 * g2 * g1⁻¹ * g2⁻¹ = ⟨finRotate 5, fin_rotate_bit1_mem_alternating_group⟩ :=
     by
     rw [Subtype.ext_iff]
-    simp only [Fin.coe_mk, Subgroup.coe_mul, Subgroup.coe_inv, Fin.coe_mk]
+    simp only [Fin.val_mk, Subgroup.coe_mul, Subgroup.coe_inv, Fin.val_mk]
     decide
   rw [eq_top_iff, ← normal_closure_fin_rotate_five]
   refine' normal_closure_le_normal _

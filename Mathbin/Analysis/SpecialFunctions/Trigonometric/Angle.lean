@@ -161,8 +161,8 @@ theorem nsmul_eq_iff {ψ θ : Angle} {n : ℕ} (hz : n ≠ 0) :
 #align real.angle.nsmul_eq_iff Real.Angle.nsmul_eq_iff
 
 theorem two_zsmul_eq_iff {ψ θ : Angle} : (2 : ℤ) • ψ = (2 : ℤ) • θ ↔ ψ = θ ∨ ψ = θ + π := by
-  rw [zsmul_eq_iff two_ne_zero, Int.nat_abs_bit0, Int.natAbs_one, Fin.exists_fin_two, Fin.coe_zero,
-    Fin.coe_one, zero_smul, add_zero, one_smul, Int.cast_two,
+  rw [zsmul_eq_iff two_ne_zero, Int.nat_abs_bit0, Int.natAbs_one, Fin.exists_fin_two, Fin.val_zero,
+    Fin.val_one, zero_smul, add_zero, one_smul, Int.cast_two,
     mul_div_cancel_left (_ : ℝ) two_ne_zero]
 #align real.angle.two_zsmul_eq_iff Real.Angle.two_zsmul_eq_iff
 

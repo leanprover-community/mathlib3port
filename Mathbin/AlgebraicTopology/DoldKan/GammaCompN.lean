@@ -43,7 +43,7 @@ def Γ₀NondegComplexIso (K : ChainComplex C ℕ) : (Γ₀.splitting K).nondegC
       simp only [id_comp, comp_id, alternating_face_map_complex.obj_d_eq, preadditive.sum_comp,
         preadditive.comp_sum]
       rw [Fintype.sum_eq_single (0 : Fin (n + 2))]
-      · simp only [Fin.coe_zero, pow_zero, one_zsmul]
+      · simp only [Fin.val_zero, pow_zero, one_zsmul]
         erw [Γ₀.obj.map_mono_on_summand_id_assoc, Γ₀.obj.termwise.map_mono_δ₀,
           splitting.ι_π_summand_eq_id, comp_id]
       · intro i hi

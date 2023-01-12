@@ -162,7 +162,7 @@ theorem out_truncate_fun (x : 𝕎 R) : (truncateFun n x).out = init n x :=
   ext i
   dsimp [TruncatedWittVector.out, init, select]
   split_ifs with hi; swap; · rfl
-  rw [coeff_truncate_fun, Fin.coe_mk]
+  rw [coeff_truncate_fun, Fin.val_mk]
 #align witt_vector.out_truncate_fun WittVector.out_truncate_fun
 
 end WittVector
@@ -441,7 +441,7 @@ theorem coeff_truncate {m : ℕ} (hm : n ≤ m) (i : Fin n) (x : TruncatedWittVe
     (truncate hm x).coeff i = x.coeff (Fin.castLe hm i) :=
   by
   obtain ⟨y, rfl⟩ := WittVector.truncate_surjective p _ _ x
-  simp only [truncate_witt_vector_truncate, WittVector.coeff_truncate, Fin.coe_cast_le]
+  simp only [truncate_witt_vector_truncate, WittVector.coeff_truncate, Fin.coe_castLe]
 #align truncated_witt_vector.coeff_truncate TruncatedWittVector.coeff_truncate
 
 section Fintype
@@ -509,7 +509,7 @@ theorem truncate_lift_fun (s : S) : WittVector.truncate n (liftFun f s) = f n s 
   rw [← f_compat (i + 1) n i.is_lt, RingHom.comp_apply, TruncatedWittVector.coeff_truncate]
   -- this is a bit unfortunate
   congr with _
-  simp only [Fin.coe_last, Fin.coe_cast_le]
+  simp only [Fin.val_last, Fin.coe_castLe]
 #align witt_vector.truncate_lift_fun WittVector.truncate_lift_fun
 
 variable (f)

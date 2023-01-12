@@ -56,22 +56,22 @@ theorem Ioo_eq_finset_subtype : ioo a b = (ioo (a : ℕ) b).Fin n :=
 #align fin.Ioo_eq_finset_subtype Fin.Ioo_eq_finset_subtype
 
 @[simp]
-theorem map_subtype_embedding_Icc : (icc a b).map Fin.coeEmbedding = icc a b := by
+theorem map_subtype_embedding_Icc : (icc a b).map Fin.valEmbedding = icc a b := by
   simp [Icc_eq_finset_subtype, Finset.fin, Finset.map_map, Icc_filter_lt_of_lt_right]
 #align fin.map_subtype_embedding_Icc Fin.map_subtype_embedding_Icc
 
 @[simp]
-theorem map_subtype_embedding_Ico : (ico a b).map Fin.coeEmbedding = ico a b := by
+theorem map_subtype_embedding_Ico : (ico a b).map Fin.valEmbedding = ico a b := by
   simp [Ico_eq_finset_subtype, Finset.fin, Finset.map_map]
 #align fin.map_subtype_embedding_Ico Fin.map_subtype_embedding_Ico
 
 @[simp]
-theorem map_subtype_embedding_Ioc : (ioc a b).map Fin.coeEmbedding = ioc a b := by
+theorem map_subtype_embedding_Ioc : (ioc a b).map Fin.valEmbedding = ioc a b := by
   simp [Ioc_eq_finset_subtype, Finset.fin, Finset.map_map, Ioc_filter_lt_of_lt_right]
 #align fin.map_subtype_embedding_Ioc Fin.map_subtype_embedding_Ioc
 
 @[simp]
-theorem map_subtype_embedding_Ioo : (ioo a b).map Fin.coeEmbedding = ioo a b := by
+theorem map_subtype_embedding_Ioo : (ioo a b).map Fin.valEmbedding = ioo a b := by
   simp [Ioo_eq_finset_subtype, Finset.fin, Finset.map_map]
 #align fin.map_subtype_embedding_Ioo Fin.map_subtype_embedding_Ioo
 
@@ -136,7 +136,7 @@ theorem Iio_eq_finset_subtype : iio b = (iio (b : ℕ)).Fin n :=
 #align fin.Iio_eq_finset_subtype Fin.Iio_eq_finset_subtype
 
 @[simp]
-theorem map_subtype_embedding_Ici : (ici a).map Fin.coeEmbedding = icc a (n - 1) :=
+theorem map_subtype_embedding_Ici : (ici a).map Fin.valEmbedding = icc a (n - 1) :=
   by
   ext x
   simp only [exists_prop, embedding.coe_subtype, mem_Ici, mem_map, mem_Icc]
@@ -149,7 +149,7 @@ theorem map_subtype_embedding_Ici : (ici a).map Fin.coeEmbedding = icc a (n - 1)
 #align fin.map_subtype_embedding_Ici Fin.map_subtype_embedding_Ici
 
 @[simp]
-theorem map_subtype_embedding_Ioi : (ioi a).map Fin.coeEmbedding = ioc a (n - 1) :=
+theorem map_subtype_embedding_Ioi : (ioi a).map Fin.valEmbedding = ioc a (n - 1) :=
   by
   ext x
   simp only [exists_prop, embedding.coe_subtype, mem_Ioi, mem_map, mem_Ioc]
@@ -162,12 +162,12 @@ theorem map_subtype_embedding_Ioi : (ioi a).map Fin.coeEmbedding = ioc a (n - 1)
 #align fin.map_subtype_embedding_Ioi Fin.map_subtype_embedding_Ioi
 
 @[simp]
-theorem map_subtype_embedding_Iic : (iic b).map Fin.coeEmbedding = iic b := by
+theorem map_subtype_embedding_Iic : (iic b).map Fin.valEmbedding = iic b := by
   simp [Iic_eq_finset_subtype, Finset.fin, Finset.map_map, Iic_filter_lt_of_lt_right]
 #align fin.map_subtype_embedding_Iic Fin.map_subtype_embedding_Iic
 
 @[simp]
-theorem map_subtype_embedding_Iio : (iio b).map Fin.coeEmbedding = iio b := by
+theorem map_subtype_embedding_Iio : (iio b).map Fin.valEmbedding = iio b := by
   simp [Iio_eq_finset_subtype, Finset.fin, Finset.map_map]
 #align fin.map_subtype_embedding_Iio Fin.map_subtype_embedding_Iio
 

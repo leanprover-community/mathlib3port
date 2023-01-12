@@ -746,7 +746,7 @@ theorem fin_mono {n} : Monotone (Finset.fin n) := fun s t h x => by simpa using 
 #align finset.fin_mono Finset.fin_mono
 
 @[simp]
-theorem fin_map {n} {s : Finset ℕ} : (s.Fin n).map Fin.coeEmbedding = s.filter (· < n) := by
+theorem fin_map {n} {s : Finset ℕ} : (s.Fin n).map Fin.valEmbedding = s.filter (· < n) := by
   simp [Finset.fin, Finset.map_map]
 #align finset.fin_map Finset.fin_map
 

@@ -2686,7 +2686,7 @@ theorem nat_of_done {val : ℕ} (h : nat cb n = done n' val) :
     -- `char.to_nat c - '0'.to_nat`, must be equal to the resulting value, `lhd` in our case.
     simp only [digit_eq_done, Buffer.read_eq_nth_le_to_list, hx, Buffer.length_to_list,
       true_and_iff, add_left_inj, List.length, List.nthLe, eq_self_iff_true, exists_and_left,
-      Fin.coe_mk] at hp
+      Fin.val_mk] at hp
     rcases hp with ⟨_, hn, rfl, _, _⟩
     -- But we already know the list corresponding to `cb : char_buffer` from position `n` and on
     -- is equal to `(chd :: ctl) : list char`, so our `c` above must satisfy `c = chd`.

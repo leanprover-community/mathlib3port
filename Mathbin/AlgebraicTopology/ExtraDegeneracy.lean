@@ -182,7 +182,7 @@ theorem shift_fun_succ {n : ℕ} {X : Type _} [Zero X] (f : Fin n → X) (i : Fi
   dsimp [shift_fun]
   split_ifs
   · exfalso
-    simpa only [Fin.ext_iff, Fin.coe_succ] using h
+    simpa only [Fin.ext_iff, Fin.val_succ] using h
   · simp only [Fin.pred_succ]
 #align sSet.augmented.standard_simplex.shift_fun_succ SSet.Augmented.standardSimplex.shift_fun_succ
 
@@ -229,10 +229,10 @@ def extraDegeneracy (Δ : SimplexCategory) :
     dsimp [simplicial_object.δ, SimplexCategory.δ, SSet.standardSimplex]
     by_cases j = 0
     · subst h
-      simp only [Fin.succ_succ_above_zero, shift_fun_0]
+      simp only [Fin.succ_succAbove_zero, shift_fun_0]
     · cases' Fin.eq_succ_of_ne_zero h with k hk
       subst hk
-      simp only [Fin.succ_succ_above_succ, shift_fun_succ]
+      simp only [Fin.succ_succAbove_succ, shift_fun_succ]
   s_comp_σ' n i := by
     ext (φ j) : 4
     dsimp [simplicial_object.σ, SimplexCategory.σ, SSet.standardSimplex]
@@ -241,7 +241,7 @@ def extraDegeneracy (Δ : SimplexCategory) :
       simpa only [shift_fun_0] using shift_fun_0 φ.to_order_hom
     · cases' Fin.eq_succ_of_ne_zero h with k hk
       subst hk
-      simp only [Fin.succ_pred_above_succ, shift_fun_succ]
+      simp only [Fin.succ_predAbove_succ, shift_fun_succ]
 #align
   sSet.augmented.standard_simplex.extra_degeneracy SSet.Augmented.standardSimplex.extraDegeneracy
 
@@ -304,7 +304,7 @@ theorem ExtraDegeneracy.s_comp_π_succ (n : ℕ) (i : Fin (n + 1)) :
   simp only [wide_pullback.lift_π]
   split_ifs
   · exfalso
-    simpa only [Fin.ext_iff, Fin.coe_succ, Fin.coe_zero, Nat.succ_ne_zero] using h
+    simpa only [Fin.ext_iff, Fin.val_succ, Fin.val_zero, Nat.succ_ne_zero] using h
   · congr
     apply Fin.pred_succ
 #align
@@ -343,12 +343,12 @@ noncomputable def extraDegeneracy : SimplicialObject.Augmented.ExtraDegeneracy f
     · simp only [assoc, wide_pullback.lift_π]
       by_cases j = 0
       · subst h
-        erw [Fin.succ_succ_above_zero, extra_degeneracy.s_comp_π_0, extra_degeneracy.s_comp_π_0]
+        erw [Fin.succ_succAbove_zero, extra_degeneracy.s_comp_π_0, extra_degeneracy.s_comp_π_0]
         dsimp
         simp only [wide_pullback.lift_base_assoc]
       · cases' Fin.eq_succ_of_ne_zero h with k hk
         subst hk
-        erw [Fin.succ_succ_above_succ, extra_degeneracy.s_comp_π_succ,
+        erw [Fin.succ_succAbove_succ, extra_degeneracy.s_comp_π_succ,
           extra_degeneracy.s_comp_π_succ]
         dsimp
         simp only [wide_pullback.lift_π]
@@ -367,7 +367,7 @@ noncomputable def extraDegeneracy : SimplicialObject.Augmented.ExtraDegeneracy f
         simp only [wide_pullback.lift_base_assoc]
       · cases' Fin.eq_succ_of_ne_zero h with k hk
         subst hk
-        erw [Fin.succ_pred_above_succ, extra_degeneracy.s_comp_π_succ,
+        erw [Fin.succ_predAbove_succ, extra_degeneracy.s_comp_π_succ,
           extra_degeneracy.s_comp_π_succ]
         dsimp
         simp only [wide_pullback.lift_π]
@@ -422,16 +422,16 @@ noncomputable def homotopyEquiv {C : Type _} [Category C] [Preadditive C] [HasZe
         · rw [Homotopy.prev_d_chain_complex, Homotopy.d_next_zero_chain_complex, zero_add]
           dsimp [ChainComplex.fromSingle₀Equiv, ChainComplex.toSingle₀Equiv]
           simp only [zero_add, eq_self_iff_true, preadditive.neg_comp, comp_id, if_true,
-            alternating_face_map_complex.obj_d_eq, Fin.sum_univ_two, Fin.coe_zero, pow_zero,
-            one_zsmul, Fin.coe_one, pow_one, neg_smul, preadditive.comp_add, ← s₀_comp_δ₁,
+            alternating_face_map_complex.obj_d_eq, Fin.sum_univ_two, Fin.val_zero, pow_zero,
+            one_zsmul, Fin.val_one, pow_one, neg_smul, preadditive.comp_add, ← s₀_comp_δ₁,
             s_comp_δ₀, preadditive.comp_neg, neg_add_rev, neg_neg, neg_add_cancel_right,
             neg_add_cancel_comm]
         · rw [Homotopy.prev_d_chain_complex, Homotopy.d_next_succ_chain_complex]
           dsimp [ChainComplex.toSingle₀Equiv, ChainComplex.fromSingle₀Equiv]
           simp only [zero_comp, alternating_face_map_complex.obj_d_eq, eq_self_iff_true,
             preadditive.neg_comp, comp_id, if_true, preadditive.comp_neg,
-            @Fin.sum_univ_succ _ _ (i + 2), preadditive.comp_add, Fin.coe_zero, pow_zero, one_zsmul,
-            s_comp_δ₀, Fin.coe_succ, pow_add, pow_one, mul_neg, neg_zsmul, preadditive.comp_sum,
+            @Fin.sum_univ_succ _ _ (i + 2), preadditive.comp_add, Fin.val_zero, pow_zero, one_zsmul,
+            s_comp_δ₀, Fin.val_succ, pow_add, pow_one, mul_neg, neg_zsmul, preadditive.comp_sum,
             preadditive.sum_comp, neg_neg, mul_one, preadditive.comp_zsmul, preadditive.zsmul_comp,
             s_comp_δ, zsmul_neg]
           rw [add_comm (-𝟙 _), add_assoc, add_assoc, add_left_neg, add_zero, Finset.sum_neg_distrib,

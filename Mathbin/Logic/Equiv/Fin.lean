@@ -155,12 +155,12 @@ theorem fin_succ_equiv'_succ_above {n : ℕ} (i : Fin (n + 1)) (j : Fin n) :
 
 theorem fin_succ_equiv'_below {n : ℕ} {i : Fin (n + 1)} {m : Fin n} (h : m.cast_succ < i) :
     (finSuccEquiv' i) m.cast_succ = some m := by
-  rw [← Fin.succ_above_below _ _ h, fin_succ_equiv'_succ_above]
+  rw [← Fin.succAbove_below _ _ h, fin_succ_equiv'_succ_above]
 #align fin_succ_equiv'_below fin_succ_equiv'_below
 
 theorem fin_succ_equiv'_above {n : ℕ} {i : Fin (n + 1)} {m : Fin n} (h : i ≤ m.cast_succ) :
     (finSuccEquiv' i) m.succ = some m := by
-  rw [← Fin.succ_above_above _ _ h, fin_succ_equiv'_succ_above]
+  rw [← Fin.succAbove_above _ _ h, fin_succ_equiv'_succ_above]
 #align fin_succ_equiv'_above fin_succ_equiv'_above
 
 @[simp]
@@ -176,12 +176,12 @@ theorem fin_succ_equiv'_symm_some {n : ℕ} (i : Fin (n + 1)) (j : Fin n) :
 
 theorem fin_succ_equiv'_symm_some_below {n : ℕ} {i : Fin (n + 1)} {m : Fin n}
     (h : m.cast_succ < i) : (finSuccEquiv' i).symm (some m) = m.cast_succ :=
-  Fin.succ_above_below i m h
+  Fin.succAbove_below i m h
 #align fin_succ_equiv'_symm_some_below fin_succ_equiv'_symm_some_below
 
 theorem fin_succ_equiv'_symm_some_above {n : ℕ} {i : Fin (n + 1)} {m : Fin n}
     (h : i ≤ m.cast_succ) : (finSuccEquiv' i).symm (some m) = m.succ :=
-  Fin.succ_above_above i m h
+  Fin.succAbove_above i m h
 #align fin_succ_equiv'_symm_some_above fin_succ_equiv'_symm_some_above
 
 theorem fin_succ_equiv'_symm_coe_below {n : ℕ} {i : Fin (n + 1)} {m : Fin n} (h : m.cast_succ < i) :
@@ -218,7 +218,7 @@ theorem fin_succ_equiv_symm_none {n : ℕ} : (finSuccEquiv n).symm none = 0 :=
 
 @[simp]
 theorem fin_succ_equiv_symm_some {n : ℕ} (m : Fin n) : (finSuccEquiv n).symm (some m) = m.succ :=
-  congr_fun Fin.succ_above_zero m
+  congr_fun Fin.succAbove_zero m
 #align fin_succ_equiv_symm_some fin_succ_equiv_symm_some
 
 @[simp]
@@ -233,31 +233,31 @@ theorem fin_succ_equiv'_zero {n : ℕ} : finSuccEquiv' (0 : Fin (n + 1)) = finSu
 
 theorem fin_succ_equiv'_last_apply {n : ℕ} {i : Fin (n + 1)} (h : i ≠ Fin.last n) :
     finSuccEquiv' (Fin.last n) i =
-      Fin.castLt i (lt_of_le_of_ne (Fin.le_last _) (Fin.coe_injective.ne_iff.2 h) : ↑i < n) :=
+      Fin.castLt i (lt_of_le_of_ne (Fin.le_last _) (Fin.val_injective.ne_iff.2 h) : ↑i < n) :=
   by
   have h' : ↑i < n := lt_of_le_of_ne (Fin.le_last _) (fin.coe_injective.ne_iff.2 h)
-  conv_lhs => rw [← Fin.cast_succ_cast_lt i h']
+  conv_lhs => rw [← Fin.castSucc_cast_lt i h']
   convert fin_succ_equiv'_below _
-  rw [Fin.cast_succ_cast_lt i h']
+  rw [Fin.castSucc_cast_lt i h']
   exact h'
 #align fin_succ_equiv'_last_apply fin_succ_equiv'_last_apply
 
 theorem fin_succ_equiv'_ne_last_apply {i j : Fin (n + 1)} (hi : i ≠ Fin.last n) (hj : j ≠ i) :
     finSuccEquiv' i j =
-      (i.castLt (lt_of_le_of_ne (Fin.le_last _) (Fin.coe_injective.ne_iff.2 hi) : ↑i < n)).predAbove
+      (i.castLt (lt_of_le_of_ne (Fin.le_last _) (Fin.val_injective.ne_iff.2 hi) : ↑i < n)).predAbove
         j :=
   by
   rw [Fin.predAbove]
   have hi' : ↑i < n := lt_of_le_of_ne (Fin.le_last _) (fin.coe_injective.ne_iff.2 hi)
   rcases hj.lt_or_lt with (hij | hij)
-  · simp only [hij.not_lt, Fin.cast_succ_cast_lt, not_false_iff, dif_neg]
+  · simp only [hij.not_lt, Fin.castSucc_cast_lt, not_false_iff, dif_neg]
     convert fin_succ_equiv'_below _
     · simp
     · exact hij
-  · simp only [hij, Fin.cast_succ_cast_lt, dif_pos]
+  · simp only [hij, Fin.castSucc_cast_lt, dif_pos]
     convert fin_succ_equiv'_above _
     · simp
-    · simp [Fin.le_cast_succ_iff, hij]
+    · simp [Fin.le_castSucc_iff, hij]
 #align fin_succ_equiv'_ne_last_apply fin_succ_equiv'_ne_last_apply
 
 /-- `succ_above` as an order isomorphism between `fin n` and `{x : fin (n + 1) // x ≠ p}`. -/
@@ -274,7 +274,7 @@ theorem fin_succ_above_equiv_apply (p : Fin (n + 1)) (i : Fin n) :
 theorem fin_succ_above_equiv_symm_apply_last (x : { x : Fin (n + 1) // x ≠ Fin.last n }) :
     (finSuccAboveEquiv (Fin.last n)).symm x =
       Fin.castLt (x : Fin (n + 1))
-        (lt_of_le_of_ne (Fin.le_last _) (Fin.coe_injective.ne_iff.2 x.property)) :=
+        (lt_of_le_of_ne (Fin.le_last _) (Fin.val_injective.ne_iff.2 x.property)) :=
   by
   rw [← Option.some_inj, ← Option.coe_def]
   simpa [finSuccAboveEquiv, OrderIso.symm] using fin_succ_equiv'_last_apply x.property
@@ -283,7 +283,7 @@ theorem fin_succ_above_equiv_symm_apply_last (x : { x : Fin (n + 1) // x ≠ Fin
 theorem fin_succ_above_equiv_symm_apply_ne_last {p : Fin (n + 1)} (h : p ≠ Fin.last n)
     (x : { x : Fin (n + 1) // x ≠ p }) :
     (finSuccAboveEquiv p).symm x =
-      (p.castLt (lt_of_le_of_ne (Fin.le_last _) (Fin.coe_injective.ne_iff.2 h))).predAbove x :=
+      (p.castLt (lt_of_le_of_ne (Fin.le_last _) (Fin.val_injective.ne_iff.2 h))).predAbove x :=
   by
   rw [← Option.some_inj, ← Option.coe_def]
   simpa [finSuccAboveEquiv, OrderIso.symm] using fin_succ_equiv'_ne_last_apply h x.property
@@ -472,7 +472,7 @@ theorem fin_rotate_succ_apply {n : ℕ} (i : Fin n.succ) : finRotate n.succ i = 
   rcases i.le_last.eq_or_lt with (rfl | h)
   · simp [fin_rotate_last]
   · cases i
-    simp only [Fin.lt_iff_coe_lt_coe, Fin.coe_last, Fin.coe_mk] at h
+    simp only [Fin.lt_iff_val_lt_val, Fin.val_last, Fin.val_mk] at h
     simp [fin_rotate_of_lt h, Fin.eq_iff_veq, Fin.add_def, Nat.mod_eq_of_lt (Nat.succ_lt_succ h)]
 #align fin_rotate_succ_apply fin_rotate_succ_apply
 
@@ -486,12 +486,12 @@ theorem coe_fin_rotate_of_ne_last {n : ℕ} {i : Fin n.succ} (h : i ≠ Fin.last
   by
   rw [fin_rotate_succ_apply]
   have : (i : ℕ) < n := lt_of_le_of_ne (nat.succ_le_succ_iff.mp i.2) (fin.coe_injective.ne h)
-  exact Fin.coe_add_one_of_lt this
+  exact Fin.val_add_one_of_lt this
 #align coe_fin_rotate_of_ne_last coe_fin_rotate_of_ne_last
 
 theorem coe_fin_rotate {n : ℕ} (i : Fin n.succ) :
     (finRotate n.succ i : ℕ) = if i = Fin.last n then 0 else i + 1 := by
-  rw [fin_rotate_succ_apply, Fin.coe_add_one i]
+  rw [fin_rotate_succ_apply, Fin.val_add_one i]
 #align coe_fin_rotate coe_fin_rotate
 
 /-- Equivalence between `fin m × fin n` and `fin (m * n)` -/

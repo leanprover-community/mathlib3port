@@ -297,7 +297,7 @@ theorem reverse_nth_zero {v : Vector α (n + 1)} : v.reverse.head = v.last :=
   have : 0 = v.to_list.length - 1 - n := by
     simp only [Nat.add_succ_sub_one, add_zero, to_list_length, tsub_self, List.length_reverse]
   rw [← nth_zero, last_def, nth_eq_nth_le, nth_eq_nth_le]
-  simp_rw [to_list_reverse, Fin.val_eq_coe, Fin.coe_last, Fin.coe_zero, this]
+  simp_rw [to_list_reverse, [anonymous], Fin.val_last, Fin.val_zero, this]
   rw [List.nthLe_reverse]
 #align vector.reverse_nth_zero Vector.reverse_nth_zero
 
@@ -370,7 +370,7 @@ theorem scanl_head : (scanl f b v).head = b :=
   · have : v = nil := by simp only [eq_iff_true_of_subsingleton]
     simp only [this, scanl_nil, cons_head]
   · rw [← cons_head_tail v]
-    simp only [← nth_zero, nth_eq_nth_le, to_list_scanl, to_list_cons, List.scanl, Fin.val_zero',
+    simp only [← nth_zero, nth_eq_nth_le, to_list_scanl, to_list_cons, List.scanl, Fin.val_zero,
       List.nthLe]
 #align vector.scanl_head Vector.scanl_head
 
@@ -392,9 +392,9 @@ theorem scanl_nth (i : Fin n) :
     simpa only [scanl_singleton, i0, nth_zero]
   · rw [← cons_head_tail v, scanl_cons, nth_cons_succ]
     refine' Fin.cases _ _ i
-    · simp only [nth_zero, scanl_head, Fin.cast_succ_zero, cons_head]
+    · simp only [nth_zero, scanl_head, Fin.castSucc_zero, cons_head]
     · intro i'
-      simp only [hn, Fin.cast_succ_fin_succ, nth_cons_succ]
+      simp only [hn, Fin.castSucc_fin_succ, nth_cons_succ]
 #align vector.scanl_nth Vector.scanl_nth
 
 end Scan
@@ -577,7 +577,7 @@ theorem insert_nth_comm (a b : α) (i j : Fin (n + 1)) (h : i ≤ j) :
       (v.insertNth a i).insertNth b j.succ = (v.insertNth b j).insertNth a i.cast_succ
   | ⟨l, hl⟩ => by
     refine' Subtype.eq _
-    simp only [insert_nth_val, Fin.coe_succ, Fin.castSucc, Fin.val_eq_coe, Fin.coe_cast_add]
+    simp only [insert_nth_val, Fin.val_succ, Fin.castSucc, [anonymous], Fin.coe_castAdd]
     apply List.insertNth_comm
     · assumption
     · rw [hl]

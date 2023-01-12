@@ -103,35 +103,35 @@ theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 :=
   apply Finset.sum_bij φ
   · -- φ(S) is contained in Sᶜ
     intro ij hij
-    simp only [Finset.mem_univ, Finset.compl_filter, Finset.mem_filter, true_and_iff, Fin.coe_succ,
-      Fin.coe_cast_lt] at hij⊢
+    simp only [Finset.mem_univ, Finset.compl_filter, Finset.mem_filter, true_and_iff, Fin.val_succ,
+      Fin.coe_castLt] at hij⊢
     linarith
   · -- identification of corresponding terms in both sums
     rintro ⟨i, j⟩ hij
     simp only [term, d_l, d_r, φ, comp_zsmul, zsmul_comp, ← neg_smul, ← mul_smul, pow_add, neg_mul,
-      mul_one, Fin.coe_cast_lt, Fin.coe_succ, pow_one, mul_neg, neg_neg]
+      mul_one, Fin.coe_castLt, Fin.val_succ, pow_one, mul_neg, neg_neg]
     let jj : Fin (n + 2) := (φ (i, j) hij).1
     have ineq : jj ≤ i := by
-      rw [← Fin.coe_fin_le]
+      rw [← Fin.val_fin_le]
       simpa using hij
-    rw [CategoryTheory.SimplicialObject.δ_comp_δ X ineq, Fin.cast_succ_cast_lt, mul_comm]
+    rw [CategoryTheory.SimplicialObject.δ_comp_δ X ineq, Fin.castSucc_cast_lt, mul_comm]
   · -- φ : S → Sᶜ is injective
     rintro ⟨i, j⟩ ⟨i', j'⟩ hij hij' h
     rw [Prod.mk.inj_iff]
     refine' ⟨by simpa using congr_arg Prod.snd h, _⟩
     have h1 := congr_arg Fin.castSucc (congr_arg Prod.fst h)
-    simpa [Fin.cast_succ_cast_lt] using h1
+    simpa [Fin.castSucc_cast_lt] using h1
   · -- φ : S → Sᶜ is surjective
     rintro ⟨i', j'⟩ hij'
     simp only [true_and_iff, Finset.mem_univ, Finset.compl_filter, not_le, Finset.mem_filter] at
       hij'
     refine' ⟨(j'.pred _, Fin.castSucc i'), _, _⟩
     · intro H
-      simpa only [H, Nat.not_lt_zero, Fin.coe_zero] using hij'
+      simpa only [H, Nat.not_lt_zero, Fin.val_zero] using hij'
     ·
-      simpa only [true_and_iff, Finset.mem_univ, Fin.coe_cast_succ, Fin.coe_pred,
+      simpa only [true_and_iff, Finset.mem_univ, Fin.coe_castSucc, Fin.coe_pred,
         Finset.mem_filter] using Nat.le_pred_of_lt hij'
-    · simp only [Prod.mk.inj_iff, Fin.succ_pred, Fin.cast_lt_cast_succ]
+    · simp only [Prod.mk.inj_iff, Fin.succ_pred, Fin.cast_lt_castSucc]
       constructor <;> rfl
 #align
   algebraic_topology.alternating_face_map_complex.d_squared AlgebraicTopology.AlternatingFaceMapComplex.d_squared
@@ -262,8 +262,8 @@ def ε [Limits.HasZeroObject C] :
     equiv_rw ChainComplex.toSingle₀Equiv _ _
     refine' ⟨X.hom.app (op [0]), _⟩
     dsimp
-    simp only [alternating_face_map_complex_obj_d, obj_d, Fin.sum_univ_two, Fin.coe_zero, pow_zero,
-      one_zsmul, Fin.coe_one, pow_one, neg_smul, add_comp, simplicial_object.δ_naturality, neg_comp]
+    simp only [alternating_face_map_complex_obj_d, obj_d, Fin.sum_univ_two, Fin.val_zero, pow_zero,
+      one_zsmul, Fin.val_one, pow_one, neg_smul, add_comp, simplicial_object.δ_naturality, neg_comp]
     apply add_right_neg
   naturality' X Y f := by
     ext

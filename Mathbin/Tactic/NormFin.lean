@@ -55,7 +55,7 @@ theorem NormalizeFinLt.coe {n} {a : Fin n} {b : ℕ} (h : NormalizeFinLt n a b) 
   h
 #align tactic.norm_fin.normalize_fin_lt.coe Tactic.NormFin.NormalizeFinLt.coe
 
-theorem normalize_fin_iff {n : ℕ} [NeZero n] {a b} : NormalizeFin n a b ↔ a = Fin.ofNat' b :=
+theorem normalize_fin_iff {n : ℕ} [NeZero n] {a b} : NormalizeFin n a b ↔ a = Fin.ofNat'' b :=
   Iff.symm (Fin.eq_iff_veq _ _)
 #align tactic.norm_fin.normalize_fin_iff Tactic.NormFin.normalize_fin_iff
 

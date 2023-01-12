@@ -37,8 +37,8 @@ namespace Finset
 theorem prod_range [CommMonoid β] {n : ℕ} (f : ℕ → β) :
     (∏ i in Finset.range n, f i) = ∏ i : Fin n, f i :=
   prod_bij' (fun k w => ⟨k, mem_range.mp w⟩) (fun a ha => mem_univ _)
-    (fun a ha => congr_arg _ (Fin.coe_mk _).symm) (fun a m => a) (fun a m => mem_range.mpr a.Prop)
-    (fun a ha => Fin.coe_mk _) fun a ha => Fin.eta _ _
+    (fun a ha => congr_arg _ (Fin.val_mk _).symm) (fun a m => a) (fun a m => mem_range.mpr a.Prop)
+    (fun a ha => Fin.val_mk _) fun a ha => Fin.eta _ _
 #align finset.prod_range Finset.prod_range
 
 end Finset
@@ -244,10 +244,10 @@ theorem partial_prod_right_inv {G : Type _} [Group G] (g : G) (f : Fin n → G) 
   induction' i with i hi generalizing hn
   · simp [← Fin.succ_mk, partial_prod_succ]
   · specialize hi (lt_trans (Nat.lt_succ_self i) hn)
-    simp only [mul_inv_rev, Fin.coe_eq_cast_succ, Fin.succ_mk, Fin.cast_succ_mk, smul_eq_mul,
+    simp only [mul_inv_rev, Fin.coe_eq_castSucc, Fin.succ_mk, Fin.castSucc_mk, smul_eq_mul,
       Pi.smul_apply] at hi⊢
     rw [← Fin.succ_mk _ _ (lt_trans (Nat.lt_succ_self _) hn), ← Fin.succ_mk]
-    simp only [partial_prod_succ, mul_inv_rev, Fin.cast_succ_mk]
+    simp only [partial_prod_succ, mul_inv_rev, Fin.castSucc_mk]
     assoc_rw [hi, inv_mul_cancel_left]
 #align fin.partial_prod_right_inv Fin.partial_prod_right_inv
 

@@ -841,12 +841,12 @@ theorem Fin.image_succ_above_univ {n : ℕ} (i : Fin (n + 1)) : univ.image i.suc
 
 @[simp]
 theorem Fin.image_succ_univ (n : ℕ) : (univ : Finset (Fin n)).image Fin.succ = {0}ᶜ := by
-  rw [← Fin.succ_above_zero, Fin.image_succ_above_univ]
+  rw [← Fin.succAbove_zero, Fin.image_succ_above_univ]
 #align fin.image_succ_univ Fin.image_succ_univ
 
 @[simp]
 theorem Fin.image_cast_succ (n : ℕ) : (univ : Finset (Fin n)).image Fin.castSucc = {Fin.last n}ᶜ :=
-  by rw [← Fin.succ_above_last, Fin.image_succ_above_univ]
+  by rw [← Fin.succAbove_last, Fin.image_succ_above_univ]
 #align fin.image_cast_succ Fin.image_cast_succ
 
 /- The following three lemmas use `finset.cons` instead of `insert` and `finset.map` instead of

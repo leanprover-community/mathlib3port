@@ -225,8 +225,7 @@ def upperSubLower.{u} {G : Type u} [AddCommGroup G] (I₀ : Box (Fin (n + 1))) (
       refine' i.succ_above_cases _ _ j
       · intro x hx
         simp only [box.split_lower_def hx, box.split_upper_def hx, update_same, ←
-          WithBot.some_eq_coe, Option.elim', box.face, (· ∘ ·),
-          update_noteq (Fin.succ_above_ne _ _)]
+          WithBot.some_eq_coe, Option.elim', box.face, (· ∘ ·), update_noteq (Fin.succAbove_ne _ _)]
         abel
       · clear j
         intro j x hx
@@ -238,7 +237,7 @@ def upperSubLower.{u} {G : Type u} [AddCommGroup G] (I₀ : Box (Fin (n + 1))) (
         have hx' : x ∈ Ioo ((J.face i).lower j) ((J.face i).upper j) := hx
         simp only [box.split_lower_def hx, box.split_upper_def hx, box.split_lower_def hx',
           box.split_upper_def hx', ← WithBot.some_eq_coe, Option.elim', box.face_mk,
-          update_noteq (Fin.succ_above_ne _ _).symm, sub_add_sub_comm,
+          update_noteq (Fin.succAbove_ne _ _).symm, sub_add_sub_comm,
           update_comp_eq_of_injective _ i.succ_above.injective j x, ← hf]
         simp only [box.face])
 #align box_integral.box_additive_map.upper_sub_lower BoxIntegral.BoxAdditiveMap.upperSubLower

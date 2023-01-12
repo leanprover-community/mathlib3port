@@ -86,7 +86,7 @@ theorem val_nat_cast {n : ℕ} (a : ℕ) : (a : Zmod n).val = a % n :=
   cases n
   · rw [Nat.mod_zero]
     exact Int.natAbs_ofNat a
-  rw [← Fin.of_nat_eq_coe]
+  rw [← Fin.ofNat_eq_val]
   rfl
 #align zmod.val_nat_cast Zmod.val_nat_cast
 
@@ -187,7 +187,7 @@ theorem nat_cast_zmod_val {n : ℕ} [NeZero n] (a : Zmod n) : (a.val : Zmod n) =
   by
   cases n
   · cases NeZero.ne 0 rfl
-  · apply Fin.coe_coe_eq_self
+  · apply Fin.cast_val_eq_self
 #align zmod.nat_cast_zmod_val Zmod.nat_cast_zmod_val
 
 theorem nat_cast_right_inverse [NeZero n] : Function.RightInverse val (coe : ℕ → Zmod n) :=
@@ -205,7 +205,7 @@ theorem int_cast_zmod_cast (a : Zmod n) : ((a : ℤ) : Zmod n) = a :=
   by
   cases n
   · rw [Int.cast_id a, Int.cast_id a]
-  · rw [coe_coe, Int.cast_ofNat, Fin.coe_coe_eq_self]
+  · rw [coe_coe, Int.cast_ofNat, Fin.cast_val_eq_self]
 #align zmod.int_cast_zmod_cast Zmod.int_cast_zmod_cast
 
 theorem int_cast_right_inverse : Function.RightInverse (coe : Zmod n → ℤ) (coe : ℤ → Zmod n) :=
@@ -265,7 +265,7 @@ theorem coe_add_eq_ite {n : ℕ} (a b : Zmod n) :
   by
   cases n
   · simp
-  simp only [coe_coe, Fin.coe_add_eq_ite, ← Int.ofNat_add, ← Int.ofNat_succ, Int.ofNat_le]
+  simp only [coe_coe, Fin.val_add_eq_ite, ← Int.ofNat_add, ← Int.ofNat_succ, Int.ofNat_le]
   split_ifs with h
   · exact Int.ofNat_sub h
   · rfl
@@ -299,7 +299,7 @@ theorem cast_add (h : m ∣ n) (a b : Zmod n) : ((a + b : Zmod n) : R) = a + b :
   · apply Int.cast_add
   simp only [coe_coe]
   symm
-  erw [Fin.coe_add, ← Nat.cast_add, ← sub_eq_zero, ← Nat.cast_sub (Nat.mod_le _ _),
+  erw [Fin.val_add, ← Nat.cast_add, ← sub_eq_zero, ← Nat.cast_sub (Nat.mod_le _ _),
     @CharP.cast_eq_zero_iff R _ m]
   exact h.trans (Nat.dvd_sub_mod _)
 #align zmod.cast_add Zmod.cast_add
@@ -450,7 +450,7 @@ def ringEquivCongr {m n : ℕ} (h : m = n) : Zmod m ≃+* Zmod n :=
           rw [Fin.coe_cast, Fin.coe_mul, Fin.coe_mul, Fin.coe_cast, Fin.coe_cast, ← h]
         map_add' := fun a b => by
           rw [OrderIso.toFun_eq_coe]; ext
-          rw [Fin.coe_cast, Fin.coe_add, Fin.coe_add, Fin.coe_cast, Fin.coe_cast, ← h] }
+          rw [Fin.coe_cast, Fin.val_add, Fin.val_add, Fin.coe_cast, Fin.coe_cast, ← h] }
 #align zmod.ring_equiv_congr Zmod.ringEquivCongr
 
 end CharEq
@@ -506,7 +506,7 @@ theorem val_neg_one (n : ℕ) : (-1 : Zmod n.succ).val = n :=
   rw [val, Fin.coe_neg]
   cases n
   · rw [Nat.mod_one]
-  · rw [Fin.coe_one, Nat.succ_add_sub_one, Nat.mod_eq_of_lt (Nat.lt.base _)]
+  · rw [Fin.val_one, Nat.succ_add_sub_one, Nat.mod_eq_of_lt (Nat.lt.base _)]
 #align zmod.val_neg_one Zmod.val_neg_one
 
 /-- `-1 : zmod n` lifts to `n - 1 : R`. This avoids the characteristic assumption in `cast_neg`. -/
@@ -526,7 +526,7 @@ theorem cast_sub_one {R : Type _} [Ring R] {n : ℕ} (k : Zmod n) :
     · rw [Int.cast_sub, Int.cast_one]
     · rw [← Zmod.nat_cast_val, Zmod.val, Fin.coe_sub_one, if_neg]
       · rw [Nat.cast_sub, Nat.cast_one, coe_coe]
-        rwa [Fin.ext_iff, Fin.coe_zero, ← Ne, ← Nat.one_le_iff_ne_zero] at hk
+        rwa [Fin.ext_iff, Fin.val_zero, ← Ne, ← Nat.one_le_iff_ne_zero] at hk
       · exact hk
 #align zmod.cast_sub_one Zmod.cast_sub_one
 

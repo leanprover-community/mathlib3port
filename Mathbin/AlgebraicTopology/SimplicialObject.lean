@@ -114,7 +114,7 @@ theorem δ_comp_δ' {n} {i : Fin (n + 2)} {j : Fin (n + 3)} (H : i.cast_succ < j
 
 @[reassoc.1]
 theorem δ_comp_δ'' {n} {i : Fin (n + 3)} {j : Fin (n + 2)} (H : i ≤ j.cast_succ) :
-    X.δ j.succ ≫ X.δ (i.cast_lt (Nat.lt_of_le_of_lt (Fin.le_iff_coe_le_coe.mp H) j.is_lt)) =
+    X.δ j.succ ≫ X.δ (i.cast_lt (Nat.lt_of_le_of_lt (Fin.le_iff_val_le_val.mp H) j.is_lt)) =
       X.δ i ≫ X.δ j :=
   by
   dsimp [δ]
@@ -197,7 +197,7 @@ theorem δ_comp_σ_of_gt' {n} {i : Fin (n + 3)} {j : Fin (n + 2)} (H : j.succ < 
           (j.cast_lt
             ((add_lt_add_iff_right 1).mp
               (lt_of_lt_of_le
-                (by simpa only [Fin.val_eq_coe, ← Fin.coe_succ] using fin.lt_iff_coe_lt_coe.mp H)
+                (by simpa only [[anonymous], ← Fin.val_succ] using fin.lt_iff_coe_lt_coe.mp H)
                 i.is_le))) :=
   by
   dsimp [δ, σ]
@@ -489,7 +489,7 @@ theorem δ_comp_δ' {n} {i : Fin (n + 2)} {j : Fin (n + 3)} (H : i.cast_succ < j
 
 @[reassoc.1]
 theorem δ_comp_δ'' {n} {i : Fin (n + 3)} {j : Fin (n + 2)} (H : i ≤ j.cast_succ) :
-    X.δ (i.cast_lt (Nat.lt_of_le_of_lt (Fin.le_iff_coe_le_coe.mp H) j.is_lt)) ≫ X.δ j.succ =
+    X.δ (i.cast_lt (Nat.lt_of_le_of_lt (Fin.le_iff_val_le_val.mp H) j.is_lt)) ≫ X.δ j.succ =
       X.δ j ≫ X.δ i :=
   by
   dsimp [δ]
@@ -574,7 +574,7 @@ theorem δ_comp_σ_of_gt' {n} {i : Fin (n + 3)} {j : Fin (n + 2)} (H : j.succ < 
           (j.cast_lt
             ((add_lt_add_iff_right 1).mp
               (lt_of_lt_of_le
-                (by simpa only [Fin.val_eq_coe, ← Fin.coe_succ] using fin.lt_iff_coe_lt_coe.mp H)
+                (by simpa only [[anonymous], ← Fin.val_succ] using fin.lt_iff_coe_lt_coe.mp H)
                 i.is_le))) ≫
         X.δ (i.pred fun hi => by simpa only [Fin.not_lt_zero, hi] using H) :=
   by

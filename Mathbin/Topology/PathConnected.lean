@@ -1070,7 +1070,7 @@ theorem IsPathConnected.exists_path_through_family {X : Type _} [TopologicalSpac
     simp only [p', hk, dif_pos]
     congr
     ext
-    rw [Fin.coe_coe_of_lt hk]
+    rw [Fin.val_cast_of_lt hk]
     norm_cast
   use γ.cast (hpp' 0 n.zero_lt_succ) (hpp' n n.lt_succ_self)
   simp only [γ.cast_coe]

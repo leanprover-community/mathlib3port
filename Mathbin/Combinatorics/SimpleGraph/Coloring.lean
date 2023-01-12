@@ -242,7 +242,7 @@ theorem colorable_iff_exists_bdd_nat_coloring (n : ℕ) :
   constructor
   · rintro hc
     have C : G.coloring (Fin n) := hc.to_coloring (by simp)
-    let f := embedding.complete_graph Fin.coeEmbedding
+    let f := embedding.complete_graph Fin.valEmbedding
     use f.to_hom.comp C
     intro v
     cases' C with color valid

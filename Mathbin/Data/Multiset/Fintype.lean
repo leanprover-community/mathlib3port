@@ -169,7 +169,7 @@ def Multiset.coeEmbedding (m : Multiset α) : m ↪ α × ℕ
   toFun x := (x, x.2)
   inj' := by
     rintro ⟨x, i, hi⟩ ⟨y, j, hj⟩
-    simp only [Prod.mk.inj_iff, Sigma.mk.inj_iff, and_imp, Multiset.coe_eq, Fin.coe_mk]
+    simp only [Prod.mk.inj_iff, Sigma.mk.inj_iff, and_imp, Multiset.coe_eq, Fin.val_mk]
     rintro rfl rfl
     exact ⟨rfl, HEq.rfl⟩
 #align multiset.coe_embedding Multiset.coeEmbedding
@@ -209,7 +209,7 @@ theorem Multiset.map_univ_coe_embedding (m : Multiset α) :
   by
   ext ⟨x, i⟩
   simp only [Fin.exists_iff, Finset.mem_map, Finset.mem_univ, Multiset.coe_embedding_apply,
-    Prod.mk.inj_iff, exists_true_left, Multiset.exists_coe, Multiset.coe_mk, Fin.coe_mk,
+    Prod.mk.inj_iff, exists_true_left, Multiset.exists_coe, Multiset.coe_mk, Fin.val_mk,
     exists_prop, exists_eq_right_right, exists_eq_right, Multiset.mem_to_enum_finset, iff_self_iff,
     true_and_iff]
 #align multiset.map_univ_coe_embedding Multiset.map_univ_coe_embedding

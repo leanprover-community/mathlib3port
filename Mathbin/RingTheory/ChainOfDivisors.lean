@@ -73,7 +73,7 @@ theorem exists_chain_of_prime_pow {p : Associates M} {n : ℕ} (hn : n ≠ 0) (h
       c 1 = p ∧ StrictMono c ∧ ∀ {r : Associates M}, r ≤ p ^ n ↔ ∃ i, r = c i :=
   by
   refine' ⟨fun i => p ^ (i : ℕ), _, fun n m h => _, fun y => ⟨fun h => _, _⟩⟩
-  · rw [Fin.coe_one', Nat.mod_eq_of_lt, pow_one]
+  · rw [Fin.val_one', Nat.mod_eq_of_lt, pow_one]
     exact Nat.lt_succ_of_le (nat.one_le_iff_ne_zero.mpr hn)
   ·
     exact
@@ -114,7 +114,7 @@ theorem second_of_chain_is_irreducible {q : Associates M} {n : ℕ} (hn : n ≠ 
   obtain ⟨⟨i, hi⟩, rfl⟩ := h₂.1 (hb.le.trans (h₂.2 ⟨1, rfl⟩))
   cases i
   · exact (Associates.isUnit_iff_eq_one _).mp (first_of_chain_is_unit h₁ @h₂)
-  · simpa [Fin.lt_iff_coe_lt_coe] using h₁.lt_iff_lt.mp hb
+  · simpa [Fin.lt_iff_val_lt_val] using h₁.lt_iff_lt.mp hb
 #align divisor_chain.second_of_chain_is_irreducible DivisorChain.second_of_chain_is_irreducible
 
 theorem eq_second_of_chain_of_prime_dvd {p q r : Associates M} {n : ℕ} (hn : n ≠ 0)
@@ -125,8 +125,8 @@ theorem eq_second_of_chain_of_prime_dvd {p q r : Associates M} {n : ℕ} (hn : n
   · contradiction
   obtain ⟨i, rfl⟩ := h₂.1 (dvd_trans hp' hr)
   refine' congr_arg c ((eq_of_ge_of_not_gt _) fun hi => _)
-  · rw [Fin.le_iff_coe_le_coe, Fin.coe_one, Nat.succ_le_iff, ← Fin.coe_zero (n.succ + 1), ←
-      Fin.lt_iff_coe_lt_coe, Fin.pos_iff_ne_zero]
+  · rw [Fin.le_iff_val_le_val, Fin.val_one, Nat.succ_le_iff, ← Fin.val_zero (n.succ + 1), ←
+      Fin.lt_iff_val_lt_val, Fin.pos_iff_ne_zero]
     rintro rfl
     exact hp.not_unit (first_of_chain_is_unit h₁ @h₂)
   obtain rfl | ⟨j, rfl⟩ := i.eq_zero_or_eq_succ
@@ -136,9 +136,9 @@ theorem eq_second_of_chain_of_prime_dvd {p q r : Associates M} {n : ℕ} (hn : n
       (DvdNotUnit.not_unit
         (Associates.dvdNotUnit_iff_lt.2 (h₁ (show (0 : Fin (n + 2)) < j from _))))
       _ hp.irreducible
-  · simpa [Fin.succ_lt_succ_iff, Fin.lt_iff_coe_lt_coe] using hi
+  · simpa [Fin.succ_lt_succ_iff, Fin.lt_iff_val_lt_val] using hi
   · refine' Associates.dvdNotUnit_iff_lt.2 (h₁ _)
-    simpa only [Fin.coe_eq_cast_succ] using Fin.lt_succ
+    simpa only [Fin.coe_eq_castSucc] using Fin.lt_succ
 #align divisor_chain.eq_second_of_chain_of_prime_dvd DivisorChain.eq_second_of_chain_of_prime_dvd
 
 theorem card_subset_divisors_le_length_of_chain {q : Associates M} {n : ℕ}
@@ -220,7 +220,7 @@ theorem eq_pow_second_of_chain_of_has_chain {q : Associates M} {n : ℕ} (hn : n
     obtain ⟨u, hu, hu'⟩ := (dvd_prime_pow (show Prime (c 1) from _) i).1 this
     refine' finset.mem_image.mpr ⟨u, Finset.mem_univ _, _⟩
     · rw [associated_iff_eq] at hu'
-      rw [Fin.coe_coe_of_lt (Nat.lt_succ_of_le hu), hu']
+      rw [Fin.val_cast_of_lt (Nat.lt_succ_of_le hu), hu']
     · rw [← irreducible_iff_prime]
       exact second_of_chain_is_irreducible hn h₁ (@h₂) hq
 #align

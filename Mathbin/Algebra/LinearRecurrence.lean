@@ -94,7 +94,7 @@ theorem is_sol_mk_sol (init : Fin E.order → α) : E.IsSolution (E.mkSol init) 
 theorem mk_sol_eq_init (init : Fin E.order → α) : ∀ n : Fin E.order, E.mkSol init n = init n :=
   fun n => by
   rw [mk_sol]
-  simp only [n.is_lt, dif_pos, Fin.mk_coe, Fin.eta]
+  simp only [n.is_lt, dif_pos, Fin.mk_val, Fin.eta]
 #align linear_recurrence.mk_sol_eq_init LinearRecurrence.mk_sol_eq_init
 
 /-- If `u` is a solution to `E` and `init` designates its first `E.order` values,

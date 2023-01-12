@@ -330,7 +330,7 @@ def iterateShrink {α} [ToString α] [Sampleable α] (p : α → Prop) [Decidabl
 #align slim_check.iterate_shrink SlimCheck.iterateShrink
 
 instance Fin.sampleable {n : ℕ} [NeZero n] : Sampleable (Fin n) :=
-  (Sampleable.lift ℕ Fin.ofNat' Fin.val) fun i => (mod_le _ _ : i % n ≤ i)
+  (Sampleable.lift ℕ Fin.ofNat'' Fin.val) fun i => (mod_le _ _ : i % n ≤ i)
 #align slim_check.fin.sampleable SlimCheck.Fin.sampleable
 
 instance (priority := 100) Fin.sampleable' {n} : Sampleable (Fin (succ n)) :=

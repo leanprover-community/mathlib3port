@@ -301,9 +301,9 @@ theorem Submodule.basis_of_pid_aux [Finite ι] {O : Type _} [AddCommGroup O] [Mo
   intro i
   rw [Basis.coe_mk_fin_cons_of_le, Basis.coe_mk_fin_cons_of_le]
   refine' Fin.cases _ (fun i => _) i
-  · simp only [Fin.cons_zero, Fin.cast_le_zero]
+  · simp only [Fin.cons_zero, Fin.castLe_zero]
     exact a_smul_y'.symm
-  · rw [Fin.cast_le_succ]
+  · rw [Fin.castLe_succ]
     simp only [Fin.cons_succ, coe_of_le, h i]
 #align submodule.basis_of_pid_aux Submodule.basis_of_pid_aux
 

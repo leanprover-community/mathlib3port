@@ -304,7 +304,7 @@ theorem integral_divergence_of_has_fderiv_within_at_off_countable (hle : a ≤ b
     rintro j -
     rcases eq_or_ne i j with (rfl | hne)
     · simp [hi]
-    · rcases Fin.exists_succ_above_eq hne with ⟨i, rfl⟩
+    · rcases Fin.exists_succAbove_eq hne with ⟨i, rfl⟩
       have : (pi Set.univ fun k : Fin n => Ioc (a <| j.succ_above k) (b <| j.succ_above k)) = ∅ :=
         univ_pi_eq_empty hi'
       rw [this, integral_empty, integral_empty, sub_self]

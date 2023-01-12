@@ -733,7 +733,7 @@ theorem fin_equiv_powers_apply [Finite G] {x : G} {n : Fin (orderOf x)} :
 theorem fin_equiv_powers_symm_apply [Finite G] (x : G) (n : ℕ) {hn : ∃ m : ℕ, x ^ m = x ^ n} :
     (finEquivPowers x).symm ⟨x ^ n, hn⟩ = ⟨n % orderOf x, Nat.mod_lt _ (order_of_pos x)⟩ := by
   rw [Equiv.symm_apply_eq, fin_equiv_powers_apply, Subtype.mk_eq_mk, pow_eq_mod_order_of,
-    Fin.coe_mk]
+    Fin.val_mk]
 #align fin_equiv_powers_symm_apply fin_equiv_powers_symm_apply
 
 /-- The equivalence between `submonoid.powers` of two elements `x, y` of the same order, mapping

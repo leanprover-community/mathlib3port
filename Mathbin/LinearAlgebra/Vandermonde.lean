@@ -97,7 +97,7 @@ theorem det_vandermonde {n : ℕ} (v : Fin n → R) :
               (Fin.succAbove 0 i)) :=
       by
       simp_rw [det_succ_column_zero, Fin.sum_univ_succ, of_apply, Matrix.cons_val_zero, submatrix,
-        of_apply, Matrix.cons_val_succ, Fin.coe_zero, pow_zero, one_mul, sub_self, mul_zero,
+        of_apply, Matrix.cons_val_succ, Fin.val_zero, pow_zero, one_mul, sub_self, mul_zero,
         zero_mul, Finset.sum_const_zero, add_zero]
     _ =
         det
@@ -108,7 +108,7 @@ theorem det_vandermonde {n : ℕ} (v : Fin n → R) :
       by
       congr
       ext (i j)
-      rw [Fin.succ_above_zero, Matrix.cons_val_succ, Fin.coe_succ, mul_comm]
+      rw [Fin.succAbove_zero, Matrix.cons_val_succ, Fin.val_succ, mul_comm]
       exact (geom_sum₂_mul (v i.succ) (v 0) (j + 1 : ℕ)).symm
     _ =
         (∏ i : Fin n, v (Fin.succ i) - v 0) *
@@ -133,7 +133,7 @@ theorem det_vandermonde {n : ℕ} (v : Fin n → R) :
     · intro j
       simp
     · intro i j
-      simp only [smul_eq_mul, Pi.add_apply, Fin.coe_succ, Fin.coe_cast_succ, Pi.smul_apply]
+      simp only [smul_eq_mul, Pi.add_apply, Fin.val_succ, Fin.coe_castSucc, Pi.smul_apply]
       rw [Finset.sum_range_succ, add_comm, tsub_self, pow_zero, mul_one, Finset.mul_sum]
       congr 1
       refine' Finset.sum_congr rfl fun i' hi' => _

@@ -59,7 +59,7 @@ theorem iff {j : ℕ} {i : Fin (j + 2)} : Isδ₀ (SimplexCategory.δ i) ↔ i =
   constructor
   · rintro ⟨h₁, h₂⟩
     by_contra
-    exact h₂ (Fin.succ_above_ne_zero_zero h)
+    exact h₂ (Fin.succAbove_ne_zero_zero h)
   · rintro rfl
     exact ⟨rfl, Fin.succ_ne_zero _⟩
 #align algebraic_topology.dold_kan.is_δ₀.iff AlgebraicTopology.DoldKan.Isδ₀.iff

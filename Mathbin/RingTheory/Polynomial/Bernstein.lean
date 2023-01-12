@@ -281,7 +281,7 @@ theorem linear_independent_aux (n k : ℕ) (h : k ≤ n + 1) :
       -- but vanishes for everything in the span.
       clear ih
       simp only [Nat.succ_eq_add_one, add_le_add_iff_right] at h
-      simp only [Fin.coe_last, Fin.init_def]
+      simp only [Fin.val_last, Fin.init_def]
       dsimp
       apply not_mem_span_of_apply_not_mem_span_image (@Polynomial.derivative ℚ _ ^ (n - k))
       simp only [not_exists, not_and, Submodule.mem_map, Submodule.span_image]
@@ -297,7 +297,7 @@ theorem linear_independent_aux (n k : ℕ) (h : k ≤ n + 1) :
       apply span_induction m
       · simp
         rintro ⟨a, w⟩
-        simp only [Fin.coe_mk]
+        simp only [Fin.val_mk]
         rw [iterate_derivative_at_1_eq_zero_of_lt ℚ n ((tsub_lt_tsub_iff_left_of_le h).mpr w)]
       · simp
       · intro x y hx hy

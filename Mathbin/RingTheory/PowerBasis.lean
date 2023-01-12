@@ -194,7 +194,7 @@ theorem dim_le_nat_degree_of_root (h : PowerBasis A S) {p : A[X]} (ne_zero : p �
   convert root
   ext i
   split_ifs with hi
-  · simp_rw [coe_basis, p_coeff, Fin.coe_mk]
+  · simp_rw [coe_basis, p_coeff, Fin.val_mk]
   · rw [coeff_eq_zero_of_nat_degree_lt (lt_of_lt_of_le hlt (le_of_not_gt hi)), zero_smul]
 #align power_basis.dim_le_nat_degree_of_root PowerBasis.dim_le_nat_degree_of_root
 
@@ -283,7 +283,7 @@ theorem constr_pow_aeval (pb : PowerBasis A S) {y : S'} (hy : aeval y (minpoly A
   rw [Finset.mem_range] at hi
   rw [LinearMap.map_smul]
   congr
-  rw [← Fin.coe_mk hi, ← pb.basis_eq_pow ⟨i, hi⟩, Basis.constr_basis]
+  rw [← Fin.val_mk hi, ← pb.basis_eq_pow ⟨i, hi⟩, Basis.constr_basis]
 #align power_basis.constr_pow_aeval PowerBasis.constr_pow_aeval
 
 theorem constr_pow_gen (pb : PowerBasis A S) {y : S'} (hy : aeval y (minpoly A pb.gen) = 0) :
@@ -466,7 +466,7 @@ theorem IsIntegral.linear_independent_pow [Algebra K S] {x : S} (hx : IsIntegral
     rw [Finset.sum_eq_single, if_pos rfl]
     · intro b _ hb
       rw [if_neg (mt (fun h => _) hb)]
-      exact Fin.coe_injective h
+      exact Fin.val_injective h
     · intro hi
       rw [if_pos rfl]
       exact finsupp.not_mem_support_iff.mp hi

@@ -256,11 +256,11 @@ theorem cons_append (ho : o + 1 = m + 1 + n) (x : α) (u : Fin m → α) (v : Fi
   split_ifs with h
   · rcases i with ⟨⟨⟩ | i, hi⟩
     · simp
-    · simp only [Nat.succ_eq_add_one, add_lt_add_iff_right, Fin.coe_mk] at h
+    · simp only [Nat.succ_eq_add_one, add_lt_add_iff_right, Fin.val_mk] at h
       simp [h]
   · rcases i with ⟨⟨⟩ | i, hi⟩
     · simpa using h
-    · rw [not_lt, Fin.coe_mk, Nat.succ_eq_add_one, add_le_add_iff_right] at h
+    · rw [not_lt, Fin.val_mk, Nat.succ_eq_add_one, add_le_add_iff_right] at h
       simp [h]
 #align matrix.cons_append Matrix.cons_append
 
@@ -281,11 +281,11 @@ theorem vec_alt0_append (v : Fin n → α) : vecAlt0 rfl (Fin.append rfl v v) = 
   ext i
   simp_rw [Function.comp, bit0, vec_alt0, Fin.append]
   split_ifs with h <;> congr
-  · rw [Fin.coe_mk] at h
-    simp only [Fin.ext_iff, Fin.coe_add, Fin.coe_mk]
+  · rw [Fin.val_mk] at h
+    simp only [Fin.ext_iff, Fin.val_add, Fin.val_mk]
     exact (Nat.mod_eq_of_lt h).symm
-  · rw [Fin.coe_mk, not_lt] at h
-    simp only [Fin.ext_iff, Fin.coe_add, Fin.coe_mk, Nat.mod_eq_sub_mod h]
+  · rw [Fin.val_mk, not_lt] at h
+    simp only [Fin.ext_iff, Fin.val_add, Fin.val_mk, Nat.mod_eq_sub_mod h]
     refine' (Nat.mod_eq_of_lt _).symm
     rw [tsub_lt_iff_left h]
     exact add_lt_add i.property i.property
@@ -299,13 +299,13 @@ theorem vec_alt1_append (v : Fin (n + 1) → α) : vecAlt1 rfl (Fin.append rfl v
   · simp
     congr
   · split_ifs with h <;> simp_rw [bit1, bit0] <;> congr
-    · simp only [Fin.ext_iff, Fin.coe_add, Fin.coe_mk]
-      rw [Fin.coe_mk] at h
-      rw [Fin.coe_one]
+    · simp only [Fin.ext_iff, Fin.val_add, Fin.val_mk]
+      rw [Fin.val_mk] at h
+      rw [Fin.val_one]
       rw [Nat.mod_eq_of_lt (Nat.lt_of_succ_lt h)]
       rw [Nat.mod_eq_of_lt h]
-    · rw [Fin.coe_mk, not_lt] at h
-      simp only [Fin.ext_iff, Fin.coe_add, Fin.coe_mk, Nat.mod_add_mod, Fin.coe_one,
+    · rw [Fin.val_mk, not_lt] at h
+      simp only [Fin.ext_iff, Fin.val_add, Fin.val_mk, Nat.mod_add_mod, Fin.val_one,
         Nat.mod_eq_sub_mod h]
       refine' (Nat.mod_eq_of_lt _).symm
       rw [tsub_lt_iff_left h]

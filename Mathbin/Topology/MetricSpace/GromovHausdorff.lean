@@ -779,7 +779,7 @@ instance : SecondCountableTopology GHSpace :=
       rcases mem_Union₂.1 this with ⟨y, ys, hy⟩
       let i : ℕ := E q ⟨y, ys⟩
       let hi := ((E q) ⟨y, ys⟩).is_lt
-      have ihi_eq : (⟨i, hi⟩ : Fin (N q)) = (E q) ⟨y, ys⟩ := by rw [Fin.ext_iff, Fin.coe_mk]
+      have ihi_eq : (⟨i, hi⟩ : Fin (N q)) = (E q) ⟨y, ys⟩ := by rw [Fin.ext_iff, Fin.val_mk]
       have hiq : i < N q := hi
       have hip : i < N p := by rwa [Npq.symm] at hiq
       let z := (E p).symm ⟨i, hip⟩
@@ -813,7 +813,7 @@ instance : SecondCountableTopology GHSpace :=
       have hjp : j < N p := ((E p) y).2
       have hjq : j < N q := by rwa [Npq] at hjp
       have j' : j = ((E q) (Ψ y)).1 := by
-        simp only [Equiv.apply_symm_apply, Fin.val_eq_coe, Fin.coe_cast]
+        simp only [Equiv.apply_symm_apply, [anonymous], Fin.coe_cast]
       -- Express `dist x y` in terms of `F p`
       have : (F p).2 ((E p) x) ((E p) y) = floor (ε⁻¹ * dist x y) := by
         simp only [F, (E p).symm_apply_apply]
@@ -947,7 +947,7 @@ theorem totally_bounded {t : Set GHSpace} {C : ℝ} {u : ℕ → ℝ} {K : ℕ �
       rcases mem_Union₂.1 this with ⟨y, ys, hy⟩
       let i : ℕ := E q ⟨y, ys⟩
       let hi := ((E q) ⟨y, ys⟩).2
-      have ihi_eq : (⟨i, hi⟩ : Fin (N q)) = (E q) ⟨y, ys⟩ := by rw [Fin.ext_iff, Fin.coe_mk]
+      have ihi_eq : (⟨i, hi⟩ : Fin (N q)) = (E q) ⟨y, ys⟩ := by rw [Fin.ext_iff, Fin.val_mk]
       have hiq : i < N q := hi
       have hip : i < N p := by rwa [Npq.symm] at hiq
       let z := (E p).symm ⟨i, hip⟩

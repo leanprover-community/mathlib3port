@@ -27,17 +27,17 @@ variable {α : Type u}
 @[simp]
 theorem map_coe_fin_range (n : ℕ) : (finRange n).map coe = List.range n :=
   by
-  simp_rw [fin_range, map_pmap, Fin.coe_mk, pmap_eq_map]
+  simp_rw [fin_range, map_pmap, Fin.val_mk, pmap_eq_map]
   exact List.map_id _
 #align list.map_coe_fin_range List.map_coe_fin_range
 
 theorem fin_range_succ_eq_map (n : ℕ) : finRange n.succ = 0 :: (finRange n).map Fin.succ :=
   by
-  apply map_injective_iff.mpr Fin.coe_injective
-  rw [map_cons, map_coe_fin_range, range_succ_eq_map, Fin.coe_zero, ← map_coe_fin_range, map_map,
+  apply map_injective_iff.mpr Fin.val_injective
+  rw [map_cons, map_coe_fin_range, range_succ_eq_map, Fin.val_zero, ← map_coe_fin_range, map_map,
     map_map, Function.comp, Function.comp]
   congr 2 with x
-  exact (Fin.coe_succ _).symm
+  exact (Fin.val_succ _).symm
 #align list.fin_range_succ_eq_map List.fin_range_succ_eq_map
 
 @[simp]

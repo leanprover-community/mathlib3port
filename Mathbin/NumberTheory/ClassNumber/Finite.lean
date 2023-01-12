@@ -177,7 +177,7 @@ variable [Infinite R]
 
 /-- In the following results, we need a large set of distinct elements of `R`. -/
 noncomputable def distinctElems : Fin (cardM bS adm).succ ↪ R :=
-  Fin.coeEmbedding.trans (Infinite.natEmbedding R)
+  Fin.valEmbedding.trans (Infinite.natEmbedding R)
 #align class_group.distinct_elems ClassGroup.distinctElems
 
 variable [DecidableEq R]

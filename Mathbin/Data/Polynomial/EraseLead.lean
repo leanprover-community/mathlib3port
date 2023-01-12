@@ -335,13 +335,13 @@ theorem card_support_eq {n : ℕ} :
     · intro i j hij
       have hi : i ∈ Set.range (Fin.castSucc : Fin n ↪o Fin (n + 1)) :=
         by
-        rw [Fin.range_cast_succ, Set.mem_def]
+        rw [Fin.range_castSucc, Set.mem_def]
         exact lt_of_lt_of_le hij (nat.lt_succ_iff.mp j.2)
       obtain ⟨i, rfl⟩ := hi
       rw [fin.cast_succ.injective.extend_apply]
       by_cases hj : ∃ j₀, Fin.castSucc j₀ = j
       · obtain ⟨j, rfl⟩ := hj
-        rwa [fin.cast_succ.injective.extend_apply, hk.lt_iff_lt, ← Fin.cast_succ_lt_cast_succ_iff]
+        rwa [fin.cast_succ.injective.extend_apply, hk.lt_iff_lt, ← Fin.castSucc_lt_castSucc_iff]
       · rw [Function.extend_apply' _ _ _ hj]
         apply lt_nat_degree_of_mem_erase_lead_support
         rw [mem_support_iff, hf, finset_sum_coeff]

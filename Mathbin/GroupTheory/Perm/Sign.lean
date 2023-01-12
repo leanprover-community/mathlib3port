@@ -319,7 +319,7 @@ def finPairsLt (n : ℕ) : Finset (Σa : Fin n, Fin n) :=
 #align equiv.perm.fin_pairs_lt Equiv.Perm.finPairsLt
 
 theorem mem_fin_pairs_lt {n : ℕ} {a : Σa : Fin n, Fin n} : a ∈ finPairsLt n ↔ a.2 < a.1 := by
-  simp only [fin_pairs_lt, Fin.lt_iff_coe_lt_coe, true_and_iff, mem_attach_fin, mem_range, mem_univ,
+  simp only [fin_pairs_lt, Fin.lt_iff_val_lt_val, true_and_iff, mem_attach_fin, mem_range, mem_univ,
     mem_sigma]
 #align equiv.perm.mem_fin_pairs_lt Equiv.Perm.mem_fin_pairs_lt
 
