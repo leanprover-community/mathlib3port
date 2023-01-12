@@ -293,7 +293,7 @@ theorem mul_assoc : ∀ a b c : G, a * b * c = a * (b * c) :=
 lean 3 declaration is
   forall {G : Type.{u1}} [_inst_1 : Semigroup.{u1} G], IsAssociative.{u1} G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (Semigroup.toHasMul.{u1} G _inst_1)))
 but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Semigroup.{u1} G], IsAssociative.{u1} G (fun (x._@.Mathlib.Algebra.Group.Defs._hyg.3288 : G) (x._@.Mathlib.Algebra.Group.Defs._hyg.3290 : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (Semigroup.toMul.{u1} G _inst_1)) x._@.Mathlib.Algebra.Group.Defs._hyg.3288 x._@.Mathlib.Algebra.Group.Defs._hyg.3290)
+  forall {G : Type.{u1}} [_inst_1 : Semigroup.{u1} G], IsAssociative.{u1} G (fun (x._@.Mathlib.Algebra.Group.Defs._hyg.3270 : G) (x._@.Mathlib.Algebra.Group.Defs._hyg.3272 : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (Semigroup.toMul.{u1} G _inst_1)) x._@.Mathlib.Algebra.Group.Defs._hyg.3270 x._@.Mathlib.Algebra.Group.Defs._hyg.3272)
 Case conversion may be inaccurate. Consider using '#align semigroup.to_is_associative Semigroup.to_isAssociativeₓ'. -/
 @[to_additive]
 instance Semigroup.to_isAssociative : IsAssociative G (· * ·) :=
@@ -339,7 +339,7 @@ theorem mul_comm : ∀ a b : G, a * b = b * a :=
 lean 3 declaration is
   forall {G : Type.{u1}} [_inst_1 : CommSemigroup.{u1} G], IsCommutative.{u1} G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (Semigroup.toHasMul.{u1} G (CommSemigroup.toSemigroup.{u1} G _inst_1))))
 but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : CommSemigroup.{u1} G], IsCommutative.{u1} G (fun (x._@.Mathlib.Algebra.Group.Defs._hyg.3392 : G) (x._@.Mathlib.Algebra.Group.Defs._hyg.3394 : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (Semigroup.toMul.{u1} G (CommSemigroup.toSemigroup.{u1} G _inst_1))) x._@.Mathlib.Algebra.Group.Defs._hyg.3392 x._@.Mathlib.Algebra.Group.Defs._hyg.3394)
+  forall {G : Type.{u1}} [_inst_1 : CommSemigroup.{u1} G], IsCommutative.{u1} G (fun (x._@.Mathlib.Algebra.Group.Defs._hyg.3374 : G) (x._@.Mathlib.Algebra.Group.Defs._hyg.3376 : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (Semigroup.toMul.{u1} G (CommSemigroup.toSemigroup.{u1} G _inst_1))) x._@.Mathlib.Algebra.Group.Defs._hyg.3374 x._@.Mathlib.Algebra.Group.Defs._hyg.3376)
 Case conversion may be inaccurate. Consider using '#align comm_semigroup.to_is_commutative CommSemigroup.to_isCommutativeₓ'. -/
 @[to_additive]
 instance CommSemigroup.to_isCommutative : IsCommutative G (· * ·) :=
