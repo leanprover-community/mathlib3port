@@ -33,7 +33,7 @@ open Pointwise
 /-- The type `ℝ` of real numbers constructed as equivalence classes of Cauchy sequences of rational
 numbers. -/
 structure Real where of_cauchy ::
-  cauchy : CauSeq.Completion.CauchyCat (abs : ℚ → ℚ)
+  cauchy : CauSeq.Completion.Cauchy (abs : ℚ → ℚ)
 #align real Real
 
 -- mathport name: exprℝ
@@ -46,7 +46,7 @@ namespace CauSeq.Completion
 -- this can't go in `data.real.cau_seq_completion` as the structure on `rat` isn't available
 @[simp]
 theorem of_rat_rat {abv : ℚ → ℚ} [IsAbsoluteValue abv] (q : ℚ) :
-    ofRat (q : ℚ) = (q : @CauchyCat _ _ _ _ abv _) :=
+    ofRat (q : ℚ) = (q : @Cauchy _ _ _ _ abv _) :=
   rfl
 #align cau_seq.completion.of_rat_rat CauSeq.Completion.of_rat_rat
 
@@ -67,7 +67,7 @@ theorem ext_cauchy {x y : Real} : x.cauchy = y.cauchy → x = y :=
 #align real.ext_cauchy Real.ext_cauchy
 
 /-- The real numbers are isomorphic to the quotient of Cauchy sequences on the rationals. -/
-def equivCauchy : ℝ ≃ CauSeq.Completion.CauchyCat abs :=
+def equivCauchy : ℝ ≃ CauSeq.Completion.Cauchy abs :=
   ⟨Real.cauchy, Real.of_cauchy, fun ⟨_⟩ => rfl, fun _ => rfl⟩
 #align real.equiv_Cauchy Real.equivCauchy
 
@@ -232,7 +232,7 @@ instance : CommRing ℝ := by
 
 /-- `real.equiv_Cauchy` as a ring equivalence. -/
 @[simps]
-def ringEquivCauchy : ℝ ≃+* CauSeq.Completion.CauchyCat abs :=
+def ringEquivCauchy : ℝ ≃+* CauSeq.Completion.Cauchy abs :=
   { equivCauchy with
     toFun := cauchy
     invFun := of_cauchy

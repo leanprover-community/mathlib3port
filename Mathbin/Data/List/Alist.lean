@@ -171,12 +171,12 @@ theorem lookup_eq_none {a : α} {s : Alist β} : lookup a s = none ↔ a ∉ s :
 
 theorem mem_lookup_iff {a : α} {b : β a} {s : Alist β} :
     b ∈ lookup a s ↔ Sigma.mk a b ∈ s.entries :=
-  mem_lookup_iff s.Nodupkeys
+  mem_dlookup_iff s.Nodupkeys
 #align alist.mem_lookup_iff Alist.mem_lookup_iff
 
 theorem perm_lookup {a : α} {s₁ s₂ : Alist β} (p : s₁.entries ~ s₂.entries) :
     s₁.lookup a = s₂.lookup a :=
-  perm_lookup _ s₁.Nodupkeys s₂.Nodupkeys p
+  perm_dlookup _ s₁.Nodupkeys s₂.Nodupkeys p
 #align alist.perm_lookup Alist.perm_lookup
 
 instance (a : α) (s : Alist β) : Decidable (a ∈ s) :=
@@ -242,12 +242,12 @@ theorem perm_erase {a : α} {s₁ s₂ : Alist β} :
 
 @[simp]
 theorem lookup_erase (a) (s : Alist β) : lookup a (erase a s) = none :=
-  lookup_kerase a s.Nodupkeys
+  dlookup_kerase a s.Nodupkeys
 #align alist.lookup_erase Alist.lookup_erase
 
 @[simp]
 theorem lookup_erase_ne {a a'} {s : Alist β} (h : a ≠ a') : lookup a (erase a' s) = lookup a s :=
-  lookup_kerase_ne h
+  dlookup_kerase_ne h
 #align alist.lookup_erase_ne Alist.lookup_erase_ne
 
 theorem erase_erase (a a' : α) (s : Alist β) : (s.erase a).erase a' = (s.erase a').erase a :=
@@ -301,7 +301,7 @@ theorem lookup_insert {a} {b : β a} (s : Alist β) : lookup a (insert a b s) = 
 @[simp]
 theorem lookup_insert_ne {a a'} {b' : β a'} {s : Alist β} (h : a ≠ a') :
     lookup a (insert a' b' s) = lookup a s :=
-  lookup_kinsert_ne h
+  dlookup_kinsert_ne h
 #align alist.lookup_insert_ne Alist.lookup_insert_ne
 
 @[simp]
@@ -448,7 +448,7 @@ theorem union_comm_of_disjoint {s₁ s₂ : Alist β} (h : Disjoint s₁ s₂) :
       · right
         refine' ⟨_, h'⟩
         apply h
-        rw [keys, ← List.lookup_is_some, h']
+        rw [keys, ← List.dlookup_is_some, h']
         exact rfl
       · left
         rw [h'.2]
@@ -457,7 +457,7 @@ theorem union_comm_of_disjoint {s₁ s₂ : Alist β} (h : Disjoint s₁ s₂) :
         refine' ⟨_, h'⟩
         intro h''
         apply h _ h''
-        rw [keys, ← List.lookup_is_some, h']
+        rw [keys, ← List.dlookup_is_some, h']
         exact rfl
       · left
         rw [h'.2])

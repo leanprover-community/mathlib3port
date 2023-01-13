@@ -130,7 +130,7 @@ protected def shrink : ShrinkFn (TotalFunction α β)
     (Sampleable.shrink (m, x)).map fun ⟨⟨m', x'⟩, h⟩ =>
       ⟨⟨List.dedupkeys m', x'⟩,
         lt_of_le_of_lt
-          (by unfold_wf <;> refine' @List.sizeof_dedupkeys _ _ _ (@sampleable.wf _ _) _) h⟩
+          (by unfold_wf <;> refine' @List.sizeOf_dedupkeys _ _ _ (@sampleable.wf _ _) _) h⟩
 #align slim_check.total_function.shrink SlimCheck.TotalFunction.shrink
 
 variable [Repr α] [Repr β]
@@ -180,16 +180,16 @@ def applyFinsupp (tf : TotalFunction α β) : α →₀ β
       List.mem_to_finset, exists_eq_right, Sigma.exists, Ne.def, zero_default]
     constructor
     · rintro ⟨od, hval, hod⟩
-      have := List.mem_lookup (List.nodupkeys_dedupkeys A) hval
-      rw [(_ : List.lookup a A = od)]
+      have := List.mem_dlookup (List.nodupkeys_dedupkeys A) hval
+      rw [(_ : List.dlookup a A = od)]
       · simpa
-      · simpa [List.lookup_dedupkeys, WithTop.some_eq_coe]
+      · simpa [List.dlookup_dedupkeys, WithTop.some_eq_coe]
     · intro h
       use (A.lookup a).getOrElse (0 : β)
-      rw [← List.lookup_dedupkeys] at h⊢
-      simp only [h, ← List.mem_lookup_iff A.nodupkeys_dedupkeys, and_true_iff, not_false_iff,
+      rw [← List.dlookup_dedupkeys] at h⊢
+      simp only [h, ← List.mem_dlookup_iff A.nodupkeys_dedupkeys, and_true_iff, not_false_iff,
         Option.mem_def]
-      cases List.lookup a A.dedupkeys
+      cases List.dlookup a A.dedupkeys
       · simpa using h
       · simp
 #align slim_check.total_function.apply_finsupp SlimCheck.TotalFunction.applyFinsupp
@@ -298,7 +298,7 @@ def List.applyId [DecidableEq α] (xs : List (α × α)) (x : α) : α :=
 @[simp]
 theorem List.apply_id_cons [DecidableEq α] (xs : List (α × α)) (x y z : α) :
     List.applyId ((y, z)::xs) x = if y = x then z else List.applyId xs x := by
-  simp only [list.apply_id, List.lookup, eq_rec_constant, Prod.toSigma, List.map] <;> split_ifs <;>
+  simp only [list.apply_id, List.dlookup, eq_rec_constant, Prod.toSigma, List.map] <;> split_ifs <;>
     rfl
 #align
   slim_check.injective_function.list.apply_id_cons SlimCheck.InjectiveFunction.List.apply_id_cons

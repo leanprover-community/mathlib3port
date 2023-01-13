@@ -480,7 +480,7 @@ end PadicSeq
 /-- The `p`-adic numbers `ℚ_[p]` are the Cauchy completion of `ℚ` with respect to the `p`-adic norm.
 -/
 def Padic (p : ℕ) [Fact p.Prime] :=
-  @CauSeq.Completion.CauchyCat _ _ _ _ (padicNorm p) _
+  @CauSeq.Completion.Cauchy _ _ _ _ (padicNorm p) _
 #align padic Padic
 
 -- mathport name: «exprℚ_[ ]»

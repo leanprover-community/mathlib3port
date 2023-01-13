@@ -1570,7 +1570,7 @@ variable [LeftCancelSemigroup α] [DecidableEq α] (s t : Finset α) (a : α)
 @[to_additive]
 theorem pairwise_disjoint_smul_iff {s : Set α} {t : Finset α} :
     s.PairwiseDisjoint (· • t) ↔ (s ×ˢ t : Set (α × α)).InjOn fun p => p.1 * p.2 := by
-  simp_rw [← pairwise_disjoint_coe, coe_smul_finset, Set.pairwise_disjoint_smul_iff]
+  simp_rw [← pairwise_disjoint_coe, coe_smul_finset, Set.pairwiseDisjoint_smul_iff]
 #align finset.pairwise_disjoint_smul_iff Finset.pairwise_disjoint_smul_iff
 
 @[simp, to_additive]
