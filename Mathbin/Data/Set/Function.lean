@@ -837,13 +837,17 @@ theorem MapsTo.iterate_restrict {f : α → α} {s : Set α} (h : MapsTo f s s) 
 #align set.maps_to.iterate_restrict Set.MapsTo.iterate_restrict
 -/
 
-theorem maps_to_of_subsingleton' [Subsingleton β] (f : α → β) (h : s.Nonempty → t.Nonempty) :
+#print Set.mapsTo_of_subsingleton' /-
+theorem mapsTo_of_subsingleton' [Subsingleton β] (f : α → β) (h : s.Nonempty → t.Nonempty) :
     MapsTo f s t := fun a ha => Subsingleton.mem_iff_nonempty.2 <| h ⟨a, ha⟩
-#align set.maps_to_of_subsingleton' Set.maps_to_of_subsingleton'
+#align set.maps_to_of_subsingleton' Set.mapsTo_of_subsingleton'
+-/
 
-theorem maps_to_of_subsingleton [Subsingleton α] (f : α → α) (s : Set α) : MapsTo f s s :=
-  maps_to_of_subsingleton' _ id
-#align set.maps_to_of_subsingleton Set.maps_to_of_subsingleton
+#print Set.mapsTo_of_subsingleton /-
+theorem mapsTo_of_subsingleton [Subsingleton α] (f : α → α) (s : Set α) : MapsTo f s s :=
+  mapsTo_of_subsingleton' _ id
+#align set.maps_to_of_subsingleton Set.mapsTo_of_subsingleton
+-/
 
 /- warning: set.maps_to.mono -> Set.MapsTo.mono is a dubious translation:
 lean 3 declaration is
@@ -986,10 +990,22 @@ theorem maps_image_to (f : α → β) (g : γ → α) (s : Set γ) (t : Set β) 
 #align set.maps_image_to Set.maps_image_to
 -/
 
+/- warning: set.maps_to.comp_left -> Set.MapsTo.comp_left is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {s : Set.{u1} α} {t : Set.{u2} β} {f : α -> β} (g : β -> γ), (Set.MapsTo.{u1, u2} α β f s t) -> (Set.MapsTo.{u1, u3} α γ (Function.comp.{succ u1, succ u2, succ u3} α β γ g f) s (Set.image.{u2, u3} β γ g t))
+but is expected to have type
+  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} {s : Set.{u3} α} {t : Set.{u2} β} {f : α -> β} (g : β -> γ), (Set.MapsTo.{u3, u2} α β f s t) -> (Set.MapsTo.{u3, u1} α γ (Function.comp.{succ u3, succ u2, succ u1} α β γ g f) s (Set.image.{u2, u1} β γ g t))
+Case conversion may be inaccurate. Consider using '#align set.maps_to.comp_left Set.MapsTo.comp_leftₓ'. -/
 theorem MapsTo.comp_left (g : β → γ) (hf : MapsTo f s t) : MapsTo (g ∘ f) s (g '' t) := fun x hx =>
   ⟨f x, hf hx, rfl⟩
 #align set.maps_to.comp_left Set.MapsTo.comp_left
 
+/- warning: set.maps_to.comp_right -> Set.MapsTo.comp_right is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {g : β -> γ} {s : Set.{u2} β} {t : Set.{u3} γ}, (Set.MapsTo.{u2, u3} β γ g s t) -> (forall (f : α -> β), Set.MapsTo.{u1, u3} α γ (Function.comp.{succ u1, succ u2, succ u3} α β γ g f) (Set.preimage.{u1, u2} α β f s) t)
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u3}} {γ : Type.{u2}} {g : β -> γ} {s : Set.{u3} β} {t : Set.{u2} γ}, (Set.MapsTo.{u3, u2} β γ g s t) -> (forall (f : α -> β), Set.MapsTo.{u1, u2} α γ (Function.comp.{succ u1, succ u3, succ u2} α β γ g f) (Set.preimage.{u1, u3} α β f s) t)
+Case conversion may be inaccurate. Consider using '#align set.maps_to.comp_right Set.MapsTo.comp_rightₓ'. -/
 theorem MapsTo.comp_right {s : Set β} {t : Set γ} (hg : MapsTo g s t) (f : α → β) :
     MapsTo (g ∘ f) (f ⁻¹' s) t := fun x hx => hg hx
 #align set.maps_to.comp_right Set.MapsTo.comp_right
@@ -1257,9 +1273,11 @@ theorem injOn_of_injective (h : Injective f) (s : Set α) : InjOn f s := fun x h
 alias inj_on_of_injective ← _root_.function.injective.inj_on
 #align function.injective.inj_on Function.Injective.inj_on
 
-theorem inj_on_id (s : Set α) : InjOn id s :=
+#print Set.injOn_id /-
+theorem injOn_id (s : Set α) : InjOn id s :=
   injective_id.InjOn _
-#align set.inj_on_id Set.inj_on_id
+#align set.inj_on_id Set.injOn_id
+-/
 
 /- warning: set.inj_on.comp -> Set.InjOn.comp is a dubious translation:
 lean 3 declaration is
@@ -1271,15 +1289,23 @@ theorem InjOn.comp (hg : InjOn g t) (hf : InjOn f s) (h : MapsTo f s t) : InjOn 
   fun x hx y hy heq => hf hx hy <| hg (h hx) (h hy) HEq
 #align set.inj_on.comp Set.InjOn.comp
 
+#print Set.InjOn.iterate /-
 theorem InjOn.iterate {f : α → α} {s : Set α} (h : InjOn f s) (hf : MapsTo f s s) :
     ∀ n, InjOn (f^[n]) s
-  | 0 => inj_on_id _
+  | 0 => injOn_id _
   | n + 1 => (inj_on.iterate n).comp h hf
 #align set.inj_on.iterate Set.InjOn.iterate
+-/
 
-theorem inj_on_of_subsingleton [Subsingleton α] (f : α → β) (s : Set α) : InjOn f s :=
+/- warning: set.inj_on_of_subsingleton -> Set.injOn_of_subsingleton is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Subsingleton.{succ u1} α] (f : α -> β) (s : Set.{u1} α), Set.InjOn.{u1, u2} α β f s
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Subsingleton.{succ u2} α] (f : α -> β) (s : Set.{u2} α), Set.InjOn.{u2, u1} α β f s
+Case conversion may be inaccurate. Consider using '#align set.inj_on_of_subsingleton Set.injOn_of_subsingletonₓ'. -/
+theorem injOn_of_subsingleton [Subsingleton α] (f : α → β) (s : Set α) : InjOn f s :=
   (injective_of_subsingleton _).InjOn _
-#align set.inj_on_of_subsingleton Set.inj_on_of_subsingleton
+#align set.inj_on_of_subsingleton Set.injOn_of_subsingleton
 
 /- warning: function.injective.inj_on_range -> Function.Injective.injOn_range is a dubious translation:
 lean 3 declaration is
@@ -1469,10 +1495,16 @@ theorem surjOn_empty (f : α → β) (s : Set α) : SurjOn f s ∅ :=
   empty_subset _
 #align set.surj_on_empty Set.surjOn_empty
 
+/- warning: set.surj_on_singleton -> Set.surjOn_singleton is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {f : α -> β} {b : β}, Iff (Set.SurjOn.{u1, u2} α β f s (Singleton.singleton.{u2, u2} β (Set.{u2} β) (Set.hasSingleton.{u2} β) b)) (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) b (Set.image.{u1, u2} α β f s))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {f : α -> β} {b : β}, Iff (Set.SurjOn.{u2, u1} α β f s (Singleton.singleton.{u1, u1} β (Set.{u1} β) (Set.instSingletonSet.{u1} β) b)) (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) b (Set.image.{u2, u1} α β f s))
+Case conversion may be inaccurate. Consider using '#align set.surj_on_singleton Set.surjOn_singletonₓ'. -/
 @[simp]
-theorem surj_on_singleton : SurjOn f s {b} ↔ b ∈ f '' s :=
+theorem surjOn_singleton : SurjOn f s {b} ↔ b ∈ f '' s :=
   singleton_subset_iff
-#align set.surj_on_singleton Set.surj_on_singleton
+#align set.surj_on_singleton Set.surjOn_singleton
 
 /- warning: set.surj_on_image -> Set.surjOn_image is a dubious translation:
 lean 3 declaration is
@@ -1572,8 +1604,10 @@ theorem SurjOn.inter (h₁ : SurjOn f s₁ t) (h₂ : SurjOn f s₂ t) (h : InjO
   inter_self t ▸ h₁.inter_inter h₂ h
 #align set.surj_on.inter Set.SurjOn.inter
 
-theorem surj_on_id (s : Set α) : SurjOn id s s := by simp [surj_on]
-#align set.surj_on_id Set.surj_on_id
+#print Set.surjOn_id /-
+theorem surjOn_id (s : Set α) : SurjOn id s s := by simp [surj_on]
+#align set.surj_on_id Set.surjOn_id
+-/
 
 /- warning: set.surj_on.comp -> Set.SurjOn.comp is a dubious translation:
 lean 3 declaration is
@@ -1585,28 +1619,46 @@ theorem SurjOn.comp (hg : SurjOn g t p) (hf : SurjOn f s t) : SurjOn (g ∘ f) s
   Subset.trans hg <| Subset.trans (image_subset g hf) <| image_comp g f s ▸ Subset.refl _
 #align set.surj_on.comp Set.SurjOn.comp
 
+#print Set.SurjOn.iterate /-
 theorem SurjOn.iterate {f : α → α} {s : Set α} (h : SurjOn f s s) : ∀ n, SurjOn (f^[n]) s s
-  | 0 => surj_on_id _
+  | 0 => surjOn_id _
   | n + 1 => (surj_on.iterate n).comp h
 #align set.surj_on.iterate Set.SurjOn.iterate
+-/
 
+/- warning: set.surj_on.comp_left -> Set.SurjOn.comp_left is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {s : Set.{u1} α} {t : Set.{u2} β} {f : α -> β}, (Set.SurjOn.{u1, u2} α β f s t) -> (forall (g : β -> γ), Set.SurjOn.{u1, u3} α γ (Function.comp.{succ u1, succ u2, succ u3} α β γ g f) s (Set.image.{u2, u3} β γ g t))
+but is expected to have type
+  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} {s : Set.{u3} α} {t : Set.{u2} β} {f : α -> β}, (Set.SurjOn.{u3, u2} α β f s t) -> (forall (g : β -> γ), Set.SurjOn.{u3, u1} α γ (Function.comp.{succ u3, succ u2, succ u1} α β γ g f) s (Set.image.{u2, u1} β γ g t))
+Case conversion may be inaccurate. Consider using '#align set.surj_on.comp_left Set.SurjOn.comp_leftₓ'. -/
 theorem SurjOn.comp_left (hf : SurjOn f s t) (g : β → γ) : SurjOn (g ∘ f) s (g '' t) :=
   by
   rw [surj_on, image_comp g f]
   exact image_subset _ hf
 #align set.surj_on.comp_left Set.SurjOn.comp_left
 
+/- warning: set.surj_on.comp_right -> Set.SurjOn.comp_right is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {f : α -> β} {g : β -> γ} {s : Set.{u2} β} {t : Set.{u3} γ}, (Function.Surjective.{succ u1, succ u2} α β f) -> (Set.SurjOn.{u2, u3} β γ g s t) -> (Set.SurjOn.{u1, u3} α γ (Function.comp.{succ u1, succ u2, succ u3} α β γ g f) (Set.preimage.{u1, u2} α β f s) t)
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u3}} {γ : Type.{u2}} {f : α -> β} {g : β -> γ} {s : Set.{u3} β} {t : Set.{u2} γ}, (Function.Surjective.{succ u1, succ u3} α β f) -> (Set.SurjOn.{u3, u2} β γ g s t) -> (Set.SurjOn.{u1, u2} α γ (Function.comp.{succ u1, succ u3, succ u2} α β γ g f) (Set.preimage.{u1, u3} α β f s) t)
+Case conversion may be inaccurate. Consider using '#align set.surj_on.comp_right Set.SurjOn.comp_rightₓ'. -/
 theorem SurjOn.comp_right {s : Set β} {t : Set γ} (hf : Surjective f) (hg : SurjOn g s t) :
     SurjOn (g ∘ f) (f ⁻¹' s) t := by rwa [surj_on, image_comp g f, image_preimage_eq _ hf]
 #align set.surj_on.comp_right Set.SurjOn.comp_right
 
-theorem surj_on_of_subsingleton' [Subsingleton β] (f : α → β) (h : t.Nonempty → s.Nonempty) :
+#print Set.surjOn_of_subsingleton' /-
+theorem surjOn_of_subsingleton' [Subsingleton β] (f : α → β) (h : t.Nonempty → s.Nonempty) :
     SurjOn f s t := fun a ha => Subsingleton.mem_iff_nonempty.2 <| (h ⟨a, ha⟩).image _
-#align set.surj_on_of_subsingleton' Set.surj_on_of_subsingleton'
+#align set.surj_on_of_subsingleton' Set.surjOn_of_subsingleton'
+-/
 
-theorem surj_on_of_subsingleton [Subsingleton α] (f : α → α) (s : Set α) : SurjOn f s s :=
-  surj_on_of_subsingleton' _ id
-#align set.surj_on_of_subsingleton Set.surj_on_of_subsingleton
+#print Set.surjOn_of_subsingleton /-
+theorem surjOn_of_subsingleton [Subsingleton α] (f : α → α) (s : Set α) : SurjOn f s s :=
+  surjOn_of_subsingleton' _ id
+#align set.surj_on_of_subsingleton Set.surjOn_of_subsingleton
+-/
 
 /- warning: set.surjective_iff_surj_on_univ -> Set.surjective_iff_surjOn_univ is a dubious translation:
 lean 3 declaration is
@@ -1769,9 +1821,15 @@ theorem bijOn_empty (f : α → β) : BijOn f ∅ ∅ :=
   ⟨mapsTo_empty f ∅, injOn_empty f, surjOn_empty f ∅⟩
 #align set.bij_on_empty Set.bijOn_empty
 
+/- warning: set.bij_on_singleton -> Set.bijOn_singleton is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {a : α} {b : β}, Iff (Set.BijOn.{u1, u2} α β f (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) a) (Singleton.singleton.{u2, u2} β (Set.{u2} β) (Set.hasSingleton.{u2} β) b)) (Eq.{succ u2} β (f a) b)
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {a : α} {b : β}, Iff (Set.BijOn.{u2, u1} α β f (Singleton.singleton.{u2, u2} α (Set.{u2} α) (Set.instSingletonSet.{u2} α) a) (Singleton.singleton.{u1, u1} β (Set.{u1} β) (Set.instSingletonSet.{u1} β) b)) (Eq.{succ u1} β (f a) b)
+Case conversion may be inaccurate. Consider using '#align set.bij_on_singleton Set.bijOn_singletonₓ'. -/
 @[simp]
-theorem bij_on_singleton : BijOn f {a} {b} ↔ f a = b := by simp [bij_on, eq_comm]
-#align set.bij_on_singleton Set.bij_on_singleton
+theorem bijOn_singleton : BijOn f {a} {b} ↔ f a = b := by simp [bij_on, eq_comm]
+#align set.bij_on_singleton Set.bijOn_singleton
 
 /- warning: set.bij_on.inter_maps_to -> Set.BijOn.inter_mapsTo is a dubious translation:
 lean 3 declaration is
@@ -1870,9 +1928,11 @@ theorem BijOn.image_eq (h : BijOn f s t) : f '' s = t :=
   h.SurjOn.image_eq_of_maps_to h.MapsTo
 #align set.bij_on.image_eq Set.BijOn.image_eq
 
-theorem bij_on_id (s : Set α) : BijOn id s s :=
+#print Set.bijOn_id /-
+theorem bijOn_id (s : Set α) : BijOn id s s :=
   ⟨s.maps_to_id, s.inj_on_id, s.surj_on_id⟩
-#align set.bij_on_id Set.bij_on_id
+#align set.bij_on_id Set.bijOn_id
+-/
 
 /- warning: set.bij_on.comp -> Set.BijOn.comp is a dubious translation:
 lean 3 declaration is
@@ -1884,19 +1944,29 @@ theorem BijOn.comp (hg : BijOn g t p) (hf : BijOn f s t) : BijOn (g ∘ f) s p :
   BijOn.mk (hg.MapsTo.comp hf.MapsTo) (hg.InjOn.comp hf.InjOn hf.MapsTo) (hg.SurjOn.comp hf.SurjOn)
 #align set.bij_on.comp Set.BijOn.comp
 
+#print Set.BijOn.iterate /-
 theorem BijOn.iterate {f : α → α} {s : Set α} (h : BijOn f s s) : ∀ n, BijOn (f^[n]) s s
   | 0 => s.bij_on_id
   | n + 1 => (bij_on.iterate n).comp h
 #align set.bij_on.iterate Set.BijOn.iterate
+-/
 
-theorem bij_on_of_subsingleton' [Subsingleton α] [Subsingleton β] (f : α → β)
+/- warning: set.bij_on_of_subsingleton' -> Set.bijOn_of_subsingleton' is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {t : Set.{u2} β} [_inst_1 : Subsingleton.{succ u1} α] [_inst_2 : Subsingleton.{succ u2} β] (f : α -> β), (Iff (Set.Nonempty.{u1} α s) (Set.Nonempty.{u2} β t)) -> (Set.BijOn.{u1, u2} α β f s t)
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t : Set.{u1} β} [_inst_1 : Subsingleton.{succ u2} α] [_inst_2 : Subsingleton.{succ u1} β] (f : α -> β), (Iff (Set.Nonempty.{u2} α s) (Set.Nonempty.{u1} β t)) -> (Set.BijOn.{u2, u1} α β f s t)
+Case conversion may be inaccurate. Consider using '#align set.bij_on_of_subsingleton' Set.bijOn_of_subsingleton'ₓ'. -/
+theorem bijOn_of_subsingleton' [Subsingleton α] [Subsingleton β] (f : α → β)
     (h : s.Nonempty ↔ t.Nonempty) : BijOn f s t :=
-  ⟨maps_to_of_subsingleton' _ h.1, inj_on_of_subsingleton _ _, surj_on_of_subsingleton' _ h.2⟩
-#align set.bij_on_of_subsingleton' Set.bij_on_of_subsingleton'
+  ⟨mapsTo_of_subsingleton' _ h.1, injOn_of_subsingleton _ _, surjOn_of_subsingleton' _ h.2⟩
+#align set.bij_on_of_subsingleton' Set.bijOn_of_subsingleton'
 
-theorem bij_on_of_subsingleton [Subsingleton α] (f : α → α) (s : Set α) : BijOn f s s :=
-  bij_on_of_subsingleton' _ Iff.rfl
-#align set.bij_on_of_subsingleton Set.bij_on_of_subsingleton
+#print Set.bijOn_of_subsingleton /-
+theorem bijOn_of_subsingleton [Subsingleton α] (f : α → α) (s : Set α) : BijOn f s s :=
+  bijOn_of_subsingleton' _ Iff.rfl
+#align set.bij_on_of_subsingleton Set.bijOn_of_subsingleton
+-/
 
 /- warning: set.bij_on.bijective -> Set.BijOn.bijective is a dubious translation:
 lean 3 declaration is
@@ -1926,6 +1996,12 @@ theorem bijective_iff_bijOn_univ : Bijective f ↔ BijOn f univ univ :=
     ⟨Iff.mpr injective_iff_injOn_univ inj, Iff.mpr surjective_iff_surjOn_univ surj⟩
 #align set.bijective_iff_bij_on_univ Set.bijective_iff_bijOn_univ
 
+/- warning: function.bijective.bij_on_univ -> Function.Bijective.bij_on_univ is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β}, (Function.Bijective.{succ u1, succ u2} α β f) -> (Set.BijOn.{u1, u2} α β f (Set.univ.{u1} α) (Set.univ.{u2} β))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β}, (Function.Bijective.{succ u2, succ u1} α β f) -> (Set.BijOn.{u2, u1} α β f (Set.univ.{u2} α) (Set.univ.{u1} β))
+Case conversion may be inaccurate. Consider using '#align function.bijective.bij_on_univ Function.Bijective.bij_on_univₓ'. -/
 alias bijective_iff_bij_on_univ ↔ _root_.function.bijective.bij_on_univ _
 #align function.bijective.bij_on_univ Function.Bijective.bij_on_univ
 
@@ -2035,8 +2111,10 @@ theorem LeftInvOn.mapsTo (h : LeftInvOn f' f s) (hf : SurjOn f s t) : MapsTo f' 
   rwa [← hx, h hs]
 #align set.left_inv_on.maps_to Set.LeftInvOn.mapsTo
 
-theorem left_inv_on_id (s : Set α) : LeftInvOn id id s := fun a _ => rfl
-#align set.left_inv_on_id Set.left_inv_on_id
+#print Set.leftInvOn_id /-
+theorem leftInvOn_id (s : Set α) : LeftInvOn id id s := fun a _ => rfl
+#align set.left_inv_on_id Set.leftInvOn_id
+-/
 
 /- warning: set.left_inv_on.comp -> Set.LeftInvOn.comp is a dubious translation:
 lean 3 declaration is
@@ -2203,8 +2281,10 @@ theorem RightInvOn.mapsTo (h : RightInvOn f' f t) (hf : SurjOn f' t s) : MapsTo 
   h.MapsTo hf
 #align set.right_inv_on.maps_to Set.RightInvOn.mapsTo
 
-theorem right_inv_on_id (s : Set α) : RightInvOn id id s := fun a _ => rfl
-#align set.right_inv_on_id Set.right_inv_on_id
+#print Set.rightInvOn_id /-
+theorem rightInvOn_id (s : Set α) : RightInvOn id id s := fun a _ => rfl
+#align set.right_inv_on_id Set.rightInvOn_id
+-/
 
 /- warning: set.right_inv_on.comp -> Set.RightInvOn.comp is a dubious translation:
 lean 3 declaration is
@@ -2291,10 +2371,18 @@ theorem InvOn.symm (h : InvOn f' f s t) : InvOn f f' t s :=
   ⟨h.right, h.left⟩
 #align set.inv_on.symm Set.InvOn.symm
 
-theorem inv_on_id (s : Set α) : InvOn id id s s :=
+#print Set.invOn_id /-
+theorem invOn_id (s : Set α) : InvOn id id s s :=
   ⟨s.left_inv_on_id, s.right_inv_on_id⟩
-#align set.inv_on_id Set.inv_on_id
+#align set.inv_on_id Set.invOn_id
+-/
 
+/- warning: set.inv_on.comp -> Set.InvOn.comp is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {s : Set.{u1} α} {t : Set.{u2} β} {p : Set.{u3} γ} {f : α -> β} {g : β -> γ} {f' : β -> α} {g' : γ -> β}, (Set.InvOn.{u1, u2} α β f' f s t) -> (Set.InvOn.{u2, u3} β γ g' g t p) -> (Set.MapsTo.{u1, u2} α β f s t) -> (Set.MapsTo.{u3, u2} γ β g' p t) -> (Set.InvOn.{u1, u3} α γ (Function.comp.{succ u3, succ u2, succ u1} γ β α f' g') (Function.comp.{succ u1, succ u2, succ u3} α β γ g f) s p)
+but is expected to have type
+  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} {s : Set.{u3} α} {t : Set.{u2} β} {p : Set.{u1} γ} {f : α -> β} {g : β -> γ} {f' : β -> α} {g' : γ -> β}, (Set.InvOn.{u3, u2} α β f' f s t) -> (Set.InvOn.{u2, u1} β γ g' g t p) -> (Set.MapsTo.{u3, u2} α β f s t) -> (Set.MapsTo.{u1, u2} γ β g' p t) -> (Set.InvOn.{u3, u1} α γ (Function.comp.{succ u1, succ u2, succ u3} γ β α f' g') (Function.comp.{succ u3, succ u2, succ u1} α β γ g f) s p)
+Case conversion may be inaccurate. Consider using '#align set.inv_on.comp Set.InvOn.compₓ'. -/
 theorem InvOn.comp (hf : InvOn f' f s t) (hg : InvOn g' g t p) (fst : MapsTo f s t)
     (g'pt : MapsTo g' p t) : InvOn (f' ∘ g') (g ∘ f) s p :=
   ⟨hf.1.comp hg.1 fst, hf.2.comp hg.2 g'pt⟩
@@ -2323,13 +2411,17 @@ theorem InvOn.bijOn (h : InvOn f' f s t) (hf : MapsTo f s t) (hf' : MapsTo f' t 
   ⟨hf, h.left.InjOn, h.right.SurjOn hf'⟩
 #align set.inv_on.bij_on Set.InvOn.bijOn
 
+#print Set.BijOn.symm /-
 theorem BijOn.symm {g : β → α} (h : InvOn f g t s) (hf : BijOn f s t) : BijOn g t s :=
   ⟨h.2.MapsTo hf.SurjOn, h.1.InjOn, h.2.SurjOn hf.MapsTo⟩
 #align set.bij_on.symm Set.BijOn.symm
+-/
 
-theorem bij_on_comm {g : β → α} (h : InvOn f g t s) : BijOn f s t ↔ BijOn g t s :=
+#print Set.bijOn_comm /-
+theorem bijOn_comm {g : β → α} (h : InvOn f g t s) : BijOn f s t ↔ BijOn g t s :=
   ⟨BijOn.symm h, BijOn.symm h.symm⟩
-#align set.bij_on_comm Set.bij_on_comm
+#align set.bij_on_comm Set.bijOn_comm
+-/
 
 end Set
 
@@ -2596,30 +2688,42 @@ namespace Set
 
 variable {δ : α → Sort y} (s : Set α) (f g : ∀ i, δ i)
 
-#print Set.piecewise_empty /-
+/- warning: set.piecewise_empty -> Set.piecewise_empty is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {δ : α -> Sort.{u2}} (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : forall (i : α), Decidable (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) i (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.hasEmptyc.{u1} α)))], Eq.{imax (succ u1) u2} (forall (i : α), δ i) (Set.piecewise.{u1, u2} α (fun (i : α) => δ i) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.hasEmptyc.{u1} α)) f g (fun (j : α) => _inst_1 j)) g
+but is expected to have type
+  forall {α : Type.{u2}} {δ : α -> Sort.{u1}} (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : forall (i : α), Decidable (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) i (EmptyCollection.emptyCollection.{u2} (Set.{u2} α) (Set.instEmptyCollectionSet.{u2} α)))], Eq.{imax (succ u2) u1} (forall (i : α), δ i) (Set.piecewise.{u2, u1} α (fun (i : α) => δ i) (EmptyCollection.emptyCollection.{u2} (Set.{u2} α) (Set.instEmptyCollectionSet.{u2} α)) f g (fun (j : α) => _inst_1 j)) g
+Case conversion may be inaccurate. Consider using '#align set.piecewise_empty Set.piecewise_emptyₓ'. -/
 @[simp]
 theorem piecewise_empty [∀ i : α, Decidable (i ∈ (∅ : Set α))] : piecewise ∅ f g = g :=
   by
   ext i
   simp [piecewise]
 #align set.piecewise_empty Set.piecewise_empty
--/
 
-#print Set.piecewise_univ /-
+/- warning: set.piecewise_univ -> Set.piecewise_univ is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {δ : α -> Sort.{u2}} (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : forall (i : α), Decidable (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) i (Set.univ.{u1} α))], Eq.{imax (succ u1) u2} (forall (i : α), δ i) (Set.piecewise.{u1, u2} α (fun (i : α) => δ i) (Set.univ.{u1} α) f g (fun (j : α) => _inst_1 j)) f
+but is expected to have type
+  forall {α : Type.{u2}} {δ : α -> Sort.{u1}} (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : forall (i : α), Decidable (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) i (Set.univ.{u2} α))], Eq.{imax (succ u2) u1} (forall (i : α), δ i) (Set.piecewise.{u2, u1} α (fun (i : α) => δ i) (Set.univ.{u2} α) f g (fun (j : α) => _inst_1 j)) f
+Case conversion may be inaccurate. Consider using '#align set.piecewise_univ Set.piecewise_univₓ'. -/
 @[simp]
 theorem piecewise_univ [∀ i : α, Decidable (i ∈ (Set.univ : Set α))] : piecewise Set.univ f g = f :=
   by
   ext i
   simp [piecewise]
 #align set.piecewise_univ Set.piecewise_univ
--/
 
-#print Set.piecewise_insert_self /-
+/- warning: set.piecewise_insert_self -> Set.piecewise_insert_self is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {δ : α -> Sort.{u2}} (s : Set.{u1} α) (f : forall (i : α), δ i) (g : forall (i : α), δ i) {j : α} [_inst_1 : forall (i : α), Decidable (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) i (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.hasInsert.{u1} α) j s))], Eq.{u2} (δ j) (Set.piecewise.{u1, u2} α (fun (i : α) => δ i) (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.hasInsert.{u1} α) j s) f g (fun (j : α) => _inst_1 j) j) (f j)
+but is expected to have type
+  forall {α : Type.{u2}} {δ : α -> Sort.{u1}} (s : Set.{u2} α) (f : forall (i : α), δ i) (g : forall (i : α), δ i) {j : α} [_inst_1 : forall (i : α), Decidable (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) i (Insert.insert.{u2, u2} α (Set.{u2} α) (Set.instInsertSet.{u2} α) j s))], Eq.{u1} (δ j) (Set.piecewise.{u2, u1} α (fun (i : α) => δ i) (Insert.insert.{u2, u2} α (Set.{u2} α) (Set.instInsertSet.{u2} α) j s) f g (fun (j : α) => _inst_1 j) j) (f j)
+Case conversion may be inaccurate. Consider using '#align set.piecewise_insert_self Set.piecewise_insert_selfₓ'. -/
 @[simp]
 theorem piecewise_insert_self {j : α} [∀ i, Decidable (i ∈ insert j s)] :
     (insert j s).piecewise f g j = f j := by simp [piecewise]
 #align set.piecewise_insert_self Set.piecewise_insert_self
--/
 
 variable [∀ j, Decidable (j ∈ s)]
 
@@ -2633,7 +2737,12 @@ instance Compl.decidableMem (j : α) : Decidable (j ∈ sᶜ) :=
   Not.decidable
 #align set.compl.decidable_mem Set.Compl.decidableMem
 
-#print Set.piecewise_insert /-
+/- warning: set.piecewise_insert -> Set.piecewise_insert is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {δ : α -> Sort.{u2}} (s : Set.{u1} α) (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : forall (j : α), Decidable (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) j s)] [_inst_2 : DecidableEq.{succ u1} α] (j : α) [_inst_3 : forall (i : α), Decidable (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) i (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.hasInsert.{u1} α) j s))], Eq.{imax (succ u1) u2} (forall (i : α), δ i) (Set.piecewise.{u1, u2} α (fun (i : α) => δ i) (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.hasInsert.{u1} α) j s) f g (fun (j : α) => _inst_3 j)) (Function.update.{succ u1, u2} α (fun (i : α) => δ i) (fun (a : α) (b : α) => _inst_2 a b) (Set.piecewise.{u1, u2} α (fun (a : α) => δ a) s f g (fun (j : α) => _inst_1 j)) j (f j))
+but is expected to have type
+  forall {α : Type.{u2}} {δ : α -> Sort.{u1}} (s : Set.{u2} α) (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) j s)] [_inst_2 : DecidableEq.{succ u2} α] (j : α) [_inst_3 : forall (i : α), Decidable (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) i (Insert.insert.{u2, u2} α (Set.{u2} α) (Set.instInsertSet.{u2} α) j s))], Eq.{imax (succ u2) u1} (forall (i : α), δ i) (Set.piecewise.{u2, u1} α (fun (i : α) => δ i) (Insert.insert.{u2, u2} α (Set.{u2} α) (Set.instInsertSet.{u2} α) j s) f g (fun (j : α) => _inst_3 j)) (Function.update.{succ u2, u1} α (fun (i : α) => δ i) (fun (a : α) (b : α) => _inst_2 a b) (Set.piecewise.{u2, u1} α (fun (a : α) => δ a) s f g (fun (j : α) => _inst_1 j)) j (f j))
+Case conversion may be inaccurate. Consider using '#align set.piecewise_insert Set.piecewise_insertₓ'. -/
 theorem piecewise_insert [DecidableEq α] (j : α) [∀ i, Decidable (i ∈ insert j s)] :
     (insert j s).piecewise f g = Function.update (s.piecewise f g) j (f j) :=
   by
@@ -2644,21 +2753,28 @@ theorem piecewise_insert [DecidableEq α] (j : α) [∀ i, Decidable (i ∈ inse
     simp
   · by_cases h' : i ∈ s <;> simp [h, h']
 #align set.piecewise_insert Set.piecewise_insert
--/
 
-#print Set.piecewise_eq_of_mem /-
+/- warning: set.piecewise_eq_of_mem -> Set.piecewise_eq_of_mem is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {δ : α -> Sort.{u2}} (s : Set.{u1} α) (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : forall (j : α), Decidable (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) j s)] {i : α}, (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) i s) -> (Eq.{u2} (δ i) (Set.piecewise.{u1, u2} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j) i) (f i))
+but is expected to have type
+  forall {α : Type.{u2}} {δ : α -> Sort.{u1}} (s : Set.{u2} α) (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) j s)] {i : α}, (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) i s) -> (Eq.{u1} (δ i) (Set.piecewise.{u2, u1} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j) i) (f i))
+Case conversion may be inaccurate. Consider using '#align set.piecewise_eq_of_mem Set.piecewise_eq_of_memₓ'. -/
 @[simp]
 theorem piecewise_eq_of_mem {i : α} (hi : i ∈ s) : s.piecewise f g i = f i :=
   if_pos hi
 #align set.piecewise_eq_of_mem Set.piecewise_eq_of_mem
--/
 
-#print Set.piecewise_eq_of_not_mem /-
+/- warning: set.piecewise_eq_of_not_mem -> Set.piecewise_eq_of_not_mem is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {δ : α -> Sort.{u2}} (s : Set.{u1} α) (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : forall (j : α), Decidable (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) j s)] {i : α}, (Not (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) i s)) -> (Eq.{u2} (δ i) (Set.piecewise.{u1, u2} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j) i) (g i))
+but is expected to have type
+  forall {α : Type.{u2}} {δ : α -> Sort.{u1}} (s : Set.{u2} α) (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) j s)] {i : α}, (Not (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) i s)) -> (Eq.{u1} (δ i) (Set.piecewise.{u2, u1} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j) i) (g i))
+Case conversion may be inaccurate. Consider using '#align set.piecewise_eq_of_not_mem Set.piecewise_eq_of_not_memₓ'. -/
 @[simp]
 theorem piecewise_eq_of_not_mem {i : α} (hi : i ∉ s) : s.piecewise f g i = g i :=
   if_neg hi
 #align set.piecewise_eq_of_not_mem Set.piecewise_eq_of_not_mem
--/
 
 /- warning: set.piecewise_singleton -> Set.piecewise_singleton is a dubious translation:
 lean 3 declaration is
@@ -2722,18 +2838,22 @@ theorem piecewise_le_piecewise {δ : α → Type _} [∀ i, Preorder (δ i)] {s 
 #align set.piecewise_le_piecewise Set.piecewise_le_piecewise
 -/
 
-#print Set.piecewise_insert_of_ne /-
+/- warning: set.piecewise_insert_of_ne -> Set.piecewise_insert_of_ne is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {δ : α -> Sort.{u2}} (s : Set.{u1} α) (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : forall (j : α), Decidable (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) j s)] {i : α} {j : α}, (Ne.{succ u1} α i j) -> (forall [_inst_2 : forall (i : α), Decidable (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) i (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.hasInsert.{u1} α) j s))], Eq.{u2} (δ i) (Set.piecewise.{u1, u2} α (fun (i : α) => δ i) (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.hasInsert.{u1} α) j s) f g (fun (j : α) => _inst_2 j) i) (Set.piecewise.{u1, u2} α δ s f g (fun (j : α) => _inst_1 j) i))
+but is expected to have type
+  forall {α : Type.{u2}} {δ : α -> Sort.{u1}} (s : Set.{u2} α) (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) j s)] {i : α} {j : α}, (Ne.{succ u2} α i j) -> (forall [_inst_2 : forall (i : α), Decidable (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) i (Insert.insert.{u2, u2} α (Set.{u2} α) (Set.instInsertSet.{u2} α) j s))], Eq.{u1} (δ i) (Set.piecewise.{u2, u1} α (fun (i : α) => δ i) (Insert.insert.{u2, u2} α (Set.{u2} α) (Set.instInsertSet.{u2} α) j s) f g (fun (j : α) => _inst_2 j) i) (Set.piecewise.{u2, u1} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j) i))
+Case conversion may be inaccurate. Consider using '#align set.piecewise_insert_of_ne Set.piecewise_insert_of_neₓ'. -/
 @[simp]
 theorem piecewise_insert_of_ne {i j : α} (h : i ≠ j) [∀ i, Decidable (i ∈ insert j s)] :
     (insert j s).piecewise f g i = s.piecewise f g i := by simp [piecewise, h]
 #align set.piecewise_insert_of_ne Set.piecewise_insert_of_ne
--/
 
 /- warning: set.piecewise_compl -> Set.piecewise_compl is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {δ : α -> Sort.{u2}} (s : Set.{u1} α) (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : forall (j : α), Decidable (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) j s)] [_inst_2 : forall (i : α), Decidable (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) i (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s))], Eq.{imax (succ u1) u2} (forall (i : α), δ i) (Set.piecewise.{u1, u2} α (fun (i : α) => δ i) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s) f g (fun (j : α) => _inst_2 j)) (Set.piecewise.{u1, u2} α (fun (i : α) => δ i) s g f (fun (j : α) => _inst_1 j))
 but is expected to have type
-  forall {α : Type.{u1}} {δ : α -> Sort.{u2}} (s : Set.{u1} α) (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) j s)] [_inst_2 : forall (i : α), Decidable (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) i (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s))], Eq.{imax (succ u1) u2} (forall (i : α), δ i) (Set.piecewise.{u1, u2} α (fun (i : α) => δ i) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s) f g (fun (j : α) => _inst_2 j)) (Set.piecewise.{u1, u2} α (fun (i : α) => δ i) s g f (fun (j : α) => _inst_1 j))
+  forall {α : Type.{u2}} {δ : α -> Sort.{u1}} (s : Set.{u2} α) (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) j s)] [_inst_2 : forall (i : α), Decidable (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) i (HasCompl.compl.{u2} (Set.{u2} α) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α)) s))], Eq.{imax (succ u2) u1} (forall (i : α), δ i) (Set.piecewise.{u2, u1} α (fun (i : α) => δ i) (HasCompl.compl.{u2} (Set.{u2} α) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α)) s) f g (fun (j : α) => _inst_2 j)) (Set.piecewise.{u2, u1} α (fun (i : α) => δ i) s g f (fun (j : α) => _inst_1 j))
 Case conversion may be inaccurate. Consider using '#align set.piecewise_compl Set.piecewise_complₓ'. -/
 @[simp]
 theorem piecewise_compl [∀ i, Decidable (i ∈ sᶜ)] : sᶜ.piecewise f g = s.piecewise g f :=
@@ -2812,7 +2932,7 @@ theorem piecewise_preimage (f g : α → β) (t) : s.piecewise f g ⁻¹' t = s.
 lean 3 declaration is
   forall {α : Type.{u1}} {δ : α -> Sort.{u2}} (s : Set.{u1} α) (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : forall (j : α), Decidable (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) j s)] {δ' : α -> Sort.{u3}} (h : forall (i : α), (δ i) -> (δ' i)) {x : α}, Eq.{u3} (δ' x) (h x (Set.piecewise.{u1, u2} α δ s f g (fun (j : α) => _inst_1 j) x)) (Set.piecewise.{u1, u3} α δ' s (fun (x : α) => h x (f x)) (fun (x : α) => h x (g x)) (fun (j : α) => _inst_1 j) x)
 but is expected to have type
-  forall {α : Type.{u1}} {δ : α -> Sort.{u3}} (s : Set.{u1} α) (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) j s)] {δ' : α -> Sort.{u2}} (h : forall (i : α), (δ i) -> (δ' i)) {x : α}, Eq.{u2} (δ' x) (h x (Set.piecewise.{u1, u3} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j) x)) (Set.piecewise.{u1, u2} α (fun (x : α) => δ' x) s (fun (x : α) => h x (f x)) (fun (x : α) => h x (g x)) (fun (j : α) => _inst_1 j) x)
+  forall {α : Type.{u2}} {δ : α -> Sort.{u1}} (s : Set.{u2} α) (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) j s)] {δ' : α -> Sort.{u3}} (h : forall (i : α), (δ i) -> (δ' i)) {x : α}, Eq.{u3} (δ' x) (h x (Set.piecewise.{u2, u1} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j) x)) (Set.piecewise.{u2, u3} α (fun (x : α) => δ' x) s (fun (x : α) => h x (f x)) (fun (x : α) => h x (g x)) (fun (j : α) => _inst_1 j) x)
 Case conversion may be inaccurate. Consider using '#align set.apply_piecewise Set.apply_piecewiseₓ'. -/
 theorem apply_piecewise {δ' : α → Sort _} (h : ∀ i, δ i → δ' i) {x : α} :
     h x (s.piecewise f g x) = s.piecewise (fun x => h x (f x)) (fun x => h x (g x)) x := by
@@ -2823,7 +2943,7 @@ theorem apply_piecewise {δ' : α → Sort _} (h : ∀ i, δ i → δ' i) {x : �
 lean 3 declaration is
   forall {α : Type.{u1}} {δ : α -> Sort.{u2}} (s : Set.{u1} α) (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : forall (j : α), Decidable (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) j s)] {δ' : α -> Sort.{u3}} {δ'' : α -> Sort.{u4}} (f' : forall (i : α), δ' i) (g' : forall (i : α), δ' i) (h : forall (i : α), (δ i) -> (δ' i) -> (δ'' i)) {x : α}, Eq.{u4} (δ'' x) (h x (Set.piecewise.{u1, u2} α δ s f g (fun (j : α) => _inst_1 j) x) (Set.piecewise.{u1, u3} α δ' s f' g' (fun (j : α) => _inst_1 j) x)) (Set.piecewise.{u1, u4} α δ'' s (fun (x : α) => h x (f x) (f' x)) (fun (x : α) => h x (g x) (g' x)) (fun (j : α) => _inst_1 j) x)
 but is expected to have type
-  forall {α : Type.{u1}} {δ : α -> Sort.{u4}} (s : Set.{u1} α) (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) j s)] {δ' : α -> Sort.{u3}} {δ'' : α -> Sort.{u2}} (f' : forall (i : α), δ' i) (g' : forall (i : α), δ' i) (h : forall (i : α), (δ i) -> (δ' i) -> (δ'' i)) {x : α}, Eq.{u2} (δ'' x) (h x (Set.piecewise.{u1, u4} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j) x) (Set.piecewise.{u1, u3} α (fun (i : α) => δ' i) s f' g' (fun (j : α) => _inst_1 j) x)) (Set.piecewise.{u1, u2} α (fun (x : α) => δ'' x) s (fun (x : α) => h x (f x) (f' x)) (fun (x : α) => h x (g x) (g' x)) (fun (j : α) => _inst_1 j) x)
+  forall {α : Type.{u2}} {δ : α -> Sort.{u1}} (s : Set.{u2} α) (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) j s)] {δ' : α -> Sort.{u4}} {δ'' : α -> Sort.{u3}} (f' : forall (i : α), δ' i) (g' : forall (i : α), δ' i) (h : forall (i : α), (δ i) -> (δ' i) -> (δ'' i)) {x : α}, Eq.{u3} (δ'' x) (h x (Set.piecewise.{u2, u1} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j) x) (Set.piecewise.{u2, u4} α (fun (i : α) => δ' i) s f' g' (fun (j : α) => _inst_1 j) x)) (Set.piecewise.{u2, u3} α (fun (x : α) => δ'' x) s (fun (x : α) => h x (f x) (f' x)) (fun (x : α) => h x (g x) (g' x)) (fun (j : α) => _inst_1 j) x)
 Case conversion may be inaccurate. Consider using '#align set.apply_piecewise₂ Set.apply_piecewise₂ₓ'. -/
 theorem apply_piecewise₂ {δ' δ'' : α → Sort _} (f' g' : ∀ i, δ' i) (h : ∀ i, δ i → δ' i → δ'' i)
     {x : α} :
@@ -2836,7 +2956,7 @@ theorem apply_piecewise₂ {δ' δ'' : α → Sort _} (f' g' : ∀ i, δ' i) (h 
 lean 3 declaration is
   forall {α : Type.{u1}} {δ : α -> Sort.{u2}} (s : Set.{u1} α) (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : forall (j : α), Decidable (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) j s)] {δ' : α -> Sort.{u3}} (h : forall (i : α), (δ i) -> (δ' i)), Eq.{imax (succ u1) u3} (forall (i : α), δ' i) (Set.piecewise.{u1, u3} α (fun (x : α) => δ' x) s (fun (x : α) => h x (f x)) (fun (x : α) => h x (g x)) (fun (j : α) => _inst_1 j)) (fun (x : α) => h x (Set.piecewise.{u1, u2} α δ s f g (fun (j : α) => _inst_1 j) x))
 but is expected to have type
-  forall {α : Type.{u1}} {δ : α -> Sort.{u3}} (s : Set.{u1} α) (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) j s)] {δ' : α -> Sort.{u2}} (h : forall (i : α), (δ i) -> (δ' i)), Eq.{imax (succ u1) u2} (forall (i : α), δ' i) (Set.piecewise.{u1, u2} α (fun (x : α) => δ' x) s (fun (x : α) => h x (f x)) (fun (x : α) => h x (g x)) (fun (j : α) => _inst_1 j)) (fun (x : α) => h x (Set.piecewise.{u1, u3} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j) x))
+  forall {α : Type.{u2}} {δ : α -> Sort.{u1}} (s : Set.{u2} α) (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) j s)] {δ' : α -> Sort.{u3}} (h : forall (i : α), (δ i) -> (δ' i)), Eq.{imax (succ u2) u3} (forall (i : α), δ' i) (Set.piecewise.{u2, u3} α (fun (x : α) => δ' x) s (fun (x : α) => h x (f x)) (fun (x : α) => h x (g x)) (fun (j : α) => _inst_1 j)) (fun (x : α) => h x (Set.piecewise.{u2, u1} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j) x))
 Case conversion may be inaccurate. Consider using '#align set.piecewise_op Set.piecewise_opₓ'. -/
 theorem piecewise_op {δ' : α → Sort _} (h : ∀ i, δ i → δ' i) :
     (s.piecewise (fun x => h x (f x)) fun x => h x (g x)) = fun x => h x (s.piecewise f g x) :=
@@ -2847,7 +2967,7 @@ theorem piecewise_op {δ' : α → Sort _} (h : ∀ i, δ i → δ' i) :
 lean 3 declaration is
   forall {α : Type.{u1}} {δ : α -> Sort.{u2}} (s : Set.{u1} α) (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : forall (j : α), Decidable (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) j s)] {δ' : α -> Sort.{u3}} {δ'' : α -> Sort.{u4}} (f' : forall (i : α), δ' i) (g' : forall (i : α), δ' i) (h : forall (i : α), (δ i) -> (δ' i) -> (δ'' i)), Eq.{imax (succ u1) u4} (forall (i : α), δ'' i) (Set.piecewise.{u1, u4} α (fun (x : α) => δ'' x) s (fun (x : α) => h x (f x) (f' x)) (fun (x : α) => h x (g x) (g' x)) (fun (j : α) => _inst_1 j)) (fun (x : α) => h x (Set.piecewise.{u1, u2} α δ s f g (fun (j : α) => _inst_1 j) x) (Set.piecewise.{u1, u3} α δ' s f' g' (fun (j : α) => _inst_1 j) x))
 but is expected to have type
-  forall {α : Type.{u1}} {δ : α -> Sort.{u4}} (s : Set.{u1} α) (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) j s)] {δ' : α -> Sort.{u3}} {δ'' : α -> Sort.{u2}} (f' : forall (i : α), δ' i) (g' : forall (i : α), δ' i) (h : forall (i : α), (δ i) -> (δ' i) -> (δ'' i)), Eq.{imax (succ u1) u2} (forall (i : α), δ'' i) (Set.piecewise.{u1, u2} α (fun (x : α) => δ'' x) s (fun (x : α) => h x (f x) (f' x)) (fun (x : α) => h x (g x) (g' x)) (fun (j : α) => _inst_1 j)) (fun (x : α) => h x (Set.piecewise.{u1, u4} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j) x) (Set.piecewise.{u1, u3} α (fun (i : α) => δ' i) s f' g' (fun (j : α) => _inst_1 j) x))
+  forall {α : Type.{u2}} {δ : α -> Sort.{u1}} (s : Set.{u2} α) (f : forall (i : α), δ i) (g : forall (i : α), δ i) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) j s)] {δ' : α -> Sort.{u4}} {δ'' : α -> Sort.{u3}} (f' : forall (i : α), δ' i) (g' : forall (i : α), δ' i) (h : forall (i : α), (δ i) -> (δ' i) -> (δ'' i)), Eq.{imax (succ u2) u3} (forall (i : α), δ'' i) (Set.piecewise.{u2, u3} α (fun (x : α) => δ'' x) s (fun (x : α) => h x (f x) (f' x)) (fun (x : α) => h x (g x) (g' x)) (fun (j : α) => _inst_1 j)) (fun (x : α) => h x (Set.piecewise.{u2, u1} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j) x) (Set.piecewise.{u2, u4} α (fun (i : α) => δ' i) s f' g' (fun (j : α) => _inst_1 j) x))
 Case conversion may be inaccurate. Consider using '#align set.piecewise_op₂ Set.piecewise_op₂ₓ'. -/
 theorem piecewise_op₂ {δ' δ'' : α → Sort _} (f' g' : ∀ i, δ' i) (h : ∀ i, δ i → δ' i → δ'' i) :
     (s.piecewise (fun x => h x (f x) (f' x)) fun x => h x (g x) (g' x)) = fun x =>
@@ -2855,14 +2975,18 @@ theorem piecewise_op₂ {δ' δ'' : α → Sort _} (f' g' : ∀ i, δ' i) (h : �
   funext fun x => (apply_piecewise₂ _ _ _ _ _ _).symm
 #align set.piecewise_op₂ Set.piecewise_op₂
 
-#print Set.piecewise_same /-
+/- warning: set.piecewise_same -> Set.piecewise_same is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {δ : α -> Sort.{u2}} (s : Set.{u1} α) (f : forall (i : α), δ i) [_inst_1 : forall (j : α), Decidable (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) j s)], Eq.{imax (succ u1) u2} (forall (i : α), δ i) (Set.piecewise.{u1, u2} α (fun (i : α) => δ i) s f f (fun (j : α) => _inst_1 j)) f
+but is expected to have type
+  forall {α : Type.{u2}} {δ : α -> Sort.{u1}} (s : Set.{u2} α) (f : forall (i : α), δ i) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) j s)], Eq.{imax (succ u2) u1} (forall (i : α), δ i) (Set.piecewise.{u2, u1} α (fun (i : α) => δ i) s f f (fun (j : α) => _inst_1 j)) f
+Case conversion may be inaccurate. Consider using '#align set.piecewise_same Set.piecewise_sameₓ'. -/
 @[simp]
 theorem piecewise_same : s.piecewise f f = f :=
   by
   ext x
   by_cases hx : x ∈ s <;> simp [hx]
 #align set.piecewise_same Set.piecewise_same
--/
 
 /- warning: set.range_piecewise -> Set.range_piecewise is a dubious translation:
 lean 3 declaration is
@@ -3273,44 +3397,80 @@ namespace Set
 
 variable {p : β → Prop} [DecidablePred p] {f : α ≃ Subtype p} {g g₁ g₂ : Perm α} {s t : Set α}
 
-protected theorem MapsTo.extend_domain (h : MapsTo g s t) :
+/- warning: set.maps_to.extend_domain -> Set.MapsTo.extendDomain is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {p : β -> Prop} [_inst_1 : DecidablePred.{succ u2} β p] {f : Equiv.{succ u1, succ u2} α (Subtype.{succ u2} β p)} {g : Equiv.Perm.{succ u1} α} {s : Set.{u1} α} {t : Set.{u1} α}, (Set.MapsTo.{u1, u1} α α (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) g) s t) -> (Set.MapsTo.{u2, u2} β β (coeFn.{succ u2, succ u2} (Equiv.Perm.{succ u2} β) (fun (_x : Equiv.{succ u2, succ u2} β β) => β -> β) (Equiv.hasCoeToFun.{succ u2, succ u2} β β) (Equiv.Perm.extendDomain.{u1, u2} α β g p (fun (a : β) => _inst_1 a) f)) (Set.image.{u1, u2} α β (Function.comp.{succ u1, succ u2, succ u2} α (Subtype.{succ u2} β p) β ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Subtype.{succ u2} β p) β (HasLiftT.mk.{succ u2, succ u2} (Subtype.{succ u2} β p) β (CoeTCₓ.coe.{succ u2, succ u2} (Subtype.{succ u2} β p) β (coeBase.{succ u2, succ u2} (Subtype.{succ u2} β p) β (coeSubtype.{succ u2} β (fun (x : β) => p x)))))) (coeFn.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1), max (succ u1) (succ u2)} (Equiv.{succ u1, succ u2} α (Subtype.{succ u2} β p)) (fun (_x : Equiv.{succ u1, succ u2} α (Subtype.{succ u2} β p)) => α -> (Subtype.{succ u2} β p)) (Equiv.hasCoeToFun.{succ u1, succ u2} α (Subtype.{succ u2} β p)) f)) s) (Set.image.{u1, u2} α β (Function.comp.{succ u1, succ u2, succ u2} α (Subtype.{succ u2} β p) β ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Subtype.{succ u2} β p) β (HasLiftT.mk.{succ u2, succ u2} (Subtype.{succ u2} β p) β (CoeTCₓ.coe.{succ u2, succ u2} (Subtype.{succ u2} β p) β (coeBase.{succ u2, succ u2} (Subtype.{succ u2} β p) β (coeSubtype.{succ u2} β (fun (x : β) => p x)))))) (coeFn.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1), max (succ u1) (succ u2)} (Equiv.{succ u1, succ u2} α (Subtype.{succ u2} β p)) (fun (_x : Equiv.{succ u1, succ u2} α (Subtype.{succ u2} β p)) => α -> (Subtype.{succ u2} β p)) (Equiv.hasCoeToFun.{succ u1, succ u2} α (Subtype.{succ u2} β p)) f)) t))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} {p : β -> Prop} [_inst_1 : DecidablePred.{succ u1} β p] {f : Equiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)} {g : Equiv.Perm.{succ u2} α} {s : Set.{u2} α} {t : Set.{u2} α}, (Set.MapsTo.{u2, u2} α α (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.Perm.{succ u2} α) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => α) _x) (EmbeddingLike.toFunLike.{succ u2, succ u2, succ u2} (Equiv.Perm.{succ u2} α) α α (EquivLike.toEmbeddingLike.{succ u2, succ u2, succ u2} (Equiv.Perm.{succ u2} α) α α (Equiv.instEquivLikeEquiv.{succ u2, succ u2} α α))) g) s t) -> (Set.MapsTo.{u1, u1} β β (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} β) β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => β) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} β) β β (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} β) β β (Equiv.instEquivLikeEquiv.{succ u1, succ u1} β β))) (Equiv.Perm.extendDomain.{u2, u1} α β g p (fun (a : β) => _inst_1 a) f)) (Set.image.{u2, u1} α β (Function.comp.{succ u2, succ u1, succ u1} α (Subtype.{succ u1} β p) β (Subtype.val.{succ u1} β p) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => Subtype.{succ u1} β p) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)) α (Subtype.{succ u1} β p) (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)) α (Subtype.{succ u1} β p) (Equiv.instEquivLikeEquiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)))) f)) s) (Set.image.{u2, u1} α β (Function.comp.{succ u2, succ u1, succ u1} α (Subtype.{succ u1} β p) β (Subtype.val.{succ u1} β p) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => Subtype.{succ u1} β p) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)) α (Subtype.{succ u1} β p) (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)) α (Subtype.{succ u1} β p) (Equiv.instEquivLikeEquiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)))) f)) t))
+Case conversion may be inaccurate. Consider using '#align set.maps_to.extend_domain Set.MapsTo.extendDomainₓ'. -/
+protected theorem MapsTo.extendDomain (h : MapsTo g s t) :
     MapsTo (g.extendDomain f) (coe ∘ f '' s) (coe ∘ f '' t) :=
   by
   rintro _ ⟨a, ha, rfl⟩
   exact ⟨_, h ha, by rw [extend_domain_apply_image]⟩
-#align set.maps_to.extend_domain Set.MapsTo.extend_domain
+#align set.maps_to.extend_domain Set.MapsTo.extendDomain
 
-protected theorem SurjOn.extend_domain (h : SurjOn g s t) :
+/- warning: set.surj_on.extend_domain -> Set.SurjOn.extendDomain is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {p : β -> Prop} [_inst_1 : DecidablePred.{succ u2} β p] {f : Equiv.{succ u1, succ u2} α (Subtype.{succ u2} β p)} {g : Equiv.Perm.{succ u1} α} {s : Set.{u1} α} {t : Set.{u1} α}, (Set.SurjOn.{u1, u1} α α (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) g) s t) -> (Set.SurjOn.{u2, u2} β β (coeFn.{succ u2, succ u2} (Equiv.Perm.{succ u2} β) (fun (_x : Equiv.{succ u2, succ u2} β β) => β -> β) (Equiv.hasCoeToFun.{succ u2, succ u2} β β) (Equiv.Perm.extendDomain.{u1, u2} α β g p (fun (a : β) => _inst_1 a) f)) (Set.image.{u1, u2} α β (Function.comp.{succ u1, succ u2, succ u2} α (Subtype.{succ u2} β p) β ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Subtype.{succ u2} β p) β (HasLiftT.mk.{succ u2, succ u2} (Subtype.{succ u2} β p) β (CoeTCₓ.coe.{succ u2, succ u2} (Subtype.{succ u2} β p) β (coeBase.{succ u2, succ u2} (Subtype.{succ u2} β p) β (coeSubtype.{succ u2} β (fun (x : β) => p x)))))) (coeFn.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1), max (succ u1) (succ u2)} (Equiv.{succ u1, succ u2} α (Subtype.{succ u2} β p)) (fun (_x : Equiv.{succ u1, succ u2} α (Subtype.{succ u2} β p)) => α -> (Subtype.{succ u2} β p)) (Equiv.hasCoeToFun.{succ u1, succ u2} α (Subtype.{succ u2} β p)) f)) s) (Set.image.{u1, u2} α β (Function.comp.{succ u1, succ u2, succ u2} α (Subtype.{succ u2} β p) β ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Subtype.{succ u2} β p) β (HasLiftT.mk.{succ u2, succ u2} (Subtype.{succ u2} β p) β (CoeTCₓ.coe.{succ u2, succ u2} (Subtype.{succ u2} β p) β (coeBase.{succ u2, succ u2} (Subtype.{succ u2} β p) β (coeSubtype.{succ u2} β (fun (x : β) => p x)))))) (coeFn.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1), max (succ u1) (succ u2)} (Equiv.{succ u1, succ u2} α (Subtype.{succ u2} β p)) (fun (_x : Equiv.{succ u1, succ u2} α (Subtype.{succ u2} β p)) => α -> (Subtype.{succ u2} β p)) (Equiv.hasCoeToFun.{succ u1, succ u2} α (Subtype.{succ u2} β p)) f)) t))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} {p : β -> Prop} [_inst_1 : DecidablePred.{succ u1} β p] {f : Equiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)} {g : Equiv.Perm.{succ u2} α} {s : Set.{u2} α} {t : Set.{u2} α}, (Set.SurjOn.{u2, u2} α α (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.Perm.{succ u2} α) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => α) _x) (EmbeddingLike.toFunLike.{succ u2, succ u2, succ u2} (Equiv.Perm.{succ u2} α) α α (EquivLike.toEmbeddingLike.{succ u2, succ u2, succ u2} (Equiv.Perm.{succ u2} α) α α (Equiv.instEquivLikeEquiv.{succ u2, succ u2} α α))) g) s t) -> (Set.SurjOn.{u1, u1} β β (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} β) β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => β) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} β) β β (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} β) β β (Equiv.instEquivLikeEquiv.{succ u1, succ u1} β β))) (Equiv.Perm.extendDomain.{u2, u1} α β g p (fun (a : β) => _inst_1 a) f)) (Set.image.{u2, u1} α β (Function.comp.{succ u2, succ u1, succ u1} α (Subtype.{succ u1} β p) β (Subtype.val.{succ u1} β p) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => Subtype.{succ u1} β p) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)) α (Subtype.{succ u1} β p) (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)) α (Subtype.{succ u1} β p) (Equiv.instEquivLikeEquiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)))) f)) s) (Set.image.{u2, u1} α β (Function.comp.{succ u2, succ u1, succ u1} α (Subtype.{succ u1} β p) β (Subtype.val.{succ u1} β p) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => Subtype.{succ u1} β p) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)) α (Subtype.{succ u1} β p) (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)) α (Subtype.{succ u1} β p) (Equiv.instEquivLikeEquiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)))) f)) t))
+Case conversion may be inaccurate. Consider using '#align set.surj_on.extend_domain Set.SurjOn.extendDomainₓ'. -/
+protected theorem SurjOn.extendDomain (h : SurjOn g s t) :
     SurjOn (g.extendDomain f) (coe ∘ f '' s) (coe ∘ f '' t) :=
   by
   rintro _ ⟨a, ha, rfl⟩
   obtain ⟨b, hb, rfl⟩ := h ha
   exact ⟨_, ⟨_, hb, rfl⟩, by rw [extend_domain_apply_image]⟩
-#align set.surj_on.extend_domain Set.SurjOn.extend_domain
+#align set.surj_on.extend_domain Set.SurjOn.extendDomain
 
-protected theorem BijOn.extend_domain (h : Set.BijOn g s t) :
+/- warning: set.bij_on.extend_domain -> Set.BijOn.extendDomain is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {p : β -> Prop} [_inst_1 : DecidablePred.{succ u2} β p] {f : Equiv.{succ u1, succ u2} α (Subtype.{succ u2} β p)} {g : Equiv.Perm.{succ u1} α} {s : Set.{u1} α} {t : Set.{u1} α}, (Set.BijOn.{u1, u1} α α (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) g) s t) -> (Set.BijOn.{u2, u2} β β (coeFn.{succ u2, succ u2} (Equiv.Perm.{succ u2} β) (fun (_x : Equiv.{succ u2, succ u2} β β) => β -> β) (Equiv.hasCoeToFun.{succ u2, succ u2} β β) (Equiv.Perm.extendDomain.{u1, u2} α β g p (fun (a : β) => _inst_1 a) f)) (Set.image.{u1, u2} α β (Function.comp.{succ u1, succ u2, succ u2} α (Subtype.{succ u2} β p) β ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Subtype.{succ u2} β p) β (HasLiftT.mk.{succ u2, succ u2} (Subtype.{succ u2} β p) β (CoeTCₓ.coe.{succ u2, succ u2} (Subtype.{succ u2} β p) β (coeBase.{succ u2, succ u2} (Subtype.{succ u2} β p) β (coeSubtype.{succ u2} β (fun (x : β) => p x)))))) (coeFn.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1), max (succ u1) (succ u2)} (Equiv.{succ u1, succ u2} α (Subtype.{succ u2} β p)) (fun (_x : Equiv.{succ u1, succ u2} α (Subtype.{succ u2} β p)) => α -> (Subtype.{succ u2} β p)) (Equiv.hasCoeToFun.{succ u1, succ u2} α (Subtype.{succ u2} β p)) f)) s) (Set.image.{u1, u2} α β (Function.comp.{succ u1, succ u2, succ u2} α (Subtype.{succ u2} β p) β ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Subtype.{succ u2} β p) β (HasLiftT.mk.{succ u2, succ u2} (Subtype.{succ u2} β p) β (CoeTCₓ.coe.{succ u2, succ u2} (Subtype.{succ u2} β p) β (coeBase.{succ u2, succ u2} (Subtype.{succ u2} β p) β (coeSubtype.{succ u2} β (fun (x : β) => p x)))))) (coeFn.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1), max (succ u1) (succ u2)} (Equiv.{succ u1, succ u2} α (Subtype.{succ u2} β p)) (fun (_x : Equiv.{succ u1, succ u2} α (Subtype.{succ u2} β p)) => α -> (Subtype.{succ u2} β p)) (Equiv.hasCoeToFun.{succ u1, succ u2} α (Subtype.{succ u2} β p)) f)) t))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} {p : β -> Prop} [_inst_1 : DecidablePred.{succ u1} β p] {f : Equiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)} {g : Equiv.Perm.{succ u2} α} {s : Set.{u2} α} {t : Set.{u2} α}, (Set.BijOn.{u2, u2} α α (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.Perm.{succ u2} α) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => α) _x) (EmbeddingLike.toFunLike.{succ u2, succ u2, succ u2} (Equiv.Perm.{succ u2} α) α α (EquivLike.toEmbeddingLike.{succ u2, succ u2, succ u2} (Equiv.Perm.{succ u2} α) α α (Equiv.instEquivLikeEquiv.{succ u2, succ u2} α α))) g) s t) -> (Set.BijOn.{u1, u1} β β (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} β) β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => β) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} β) β β (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} β) β β (Equiv.instEquivLikeEquiv.{succ u1, succ u1} β β))) (Equiv.Perm.extendDomain.{u2, u1} α β g p (fun (a : β) => _inst_1 a) f)) (Set.image.{u2, u1} α β (Function.comp.{succ u2, succ u1, succ u1} α (Subtype.{succ u1} β p) β (Subtype.val.{succ u1} β p) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => Subtype.{succ u1} β p) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)) α (Subtype.{succ u1} β p) (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)) α (Subtype.{succ u1} β p) (Equiv.instEquivLikeEquiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)))) f)) s) (Set.image.{u2, u1} α β (Function.comp.{succ u2, succ u1, succ u1} α (Subtype.{succ u1} β p) β (Subtype.val.{succ u1} β p) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => Subtype.{succ u1} β p) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)) α (Subtype.{succ u1} β p) (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)) α (Subtype.{succ u1} β p) (Equiv.instEquivLikeEquiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)))) f)) t))
+Case conversion may be inaccurate. Consider using '#align set.bij_on.extend_domain Set.BijOn.extendDomainₓ'. -/
+protected theorem BijOn.extendDomain (h : Set.BijOn g s t) :
     BijOn (g.extendDomain f) (coe ∘ f '' s) (coe ∘ f '' t) :=
   ⟨h.MapsTo.extendDomain, (g.extendDomain f).Injective.InjOn _, h.SurjOn.extendDomain⟩
-#align set.bij_on.extend_domain Set.BijOn.extend_domain
+#align set.bij_on.extend_domain Set.BijOn.extendDomain
 
-protected theorem LeftInvOn.extend_domain (h : LeftInvOn g₁ g₂ s) :
+/- warning: set.left_inv_on.extend_domain -> Set.LeftInvOn.extendDomain is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {p : β -> Prop} [_inst_1 : DecidablePred.{succ u2} β p] {f : Equiv.{succ u1, succ u2} α (Subtype.{succ u2} β p)} {g₁ : Equiv.Perm.{succ u1} α} {g₂ : Equiv.Perm.{succ u1} α} {s : Set.{u1} α}, (Set.LeftInvOn.{u1, u1} α α (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) g₁) (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) g₂) s) -> (Set.LeftInvOn.{u2, u2} β β (coeFn.{succ u2, succ u2} (Equiv.Perm.{succ u2} β) (fun (_x : Equiv.{succ u2, succ u2} β β) => β -> β) (Equiv.hasCoeToFun.{succ u2, succ u2} β β) (Equiv.Perm.extendDomain.{u1, u2} α β g₁ p (fun (a : β) => _inst_1 a) f)) (coeFn.{succ u2, succ u2} (Equiv.Perm.{succ u2} β) (fun (_x : Equiv.{succ u2, succ u2} β β) => β -> β) (Equiv.hasCoeToFun.{succ u2, succ u2} β β) (Equiv.Perm.extendDomain.{u1, u2} α β g₂ p (fun (a : β) => _inst_1 a) f)) (Set.image.{u1, u2} α β (Function.comp.{succ u1, succ u2, succ u2} α (Subtype.{succ u2} β p) β ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Subtype.{succ u2} β p) β (HasLiftT.mk.{succ u2, succ u2} (Subtype.{succ u2} β p) β (CoeTCₓ.coe.{succ u2, succ u2} (Subtype.{succ u2} β p) β (coeBase.{succ u2, succ u2} (Subtype.{succ u2} β p) β (coeSubtype.{succ u2} β (fun (x : β) => p x)))))) (coeFn.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1), max (succ u1) (succ u2)} (Equiv.{succ u1, succ u2} α (Subtype.{succ u2} β p)) (fun (_x : Equiv.{succ u1, succ u2} α (Subtype.{succ u2} β p)) => α -> (Subtype.{succ u2} β p)) (Equiv.hasCoeToFun.{succ u1, succ u2} α (Subtype.{succ u2} β p)) f)) s))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} {p : β -> Prop} [_inst_1 : DecidablePred.{succ u1} β p] {f : Equiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)} {g₁ : Equiv.Perm.{succ u2} α} {g₂ : Equiv.Perm.{succ u2} α} {s : Set.{u2} α}, (Set.LeftInvOn.{u2, u2} α α (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.Perm.{succ u2} α) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => α) _x) (EmbeddingLike.toFunLike.{succ u2, succ u2, succ u2} (Equiv.Perm.{succ u2} α) α α (EquivLike.toEmbeddingLike.{succ u2, succ u2, succ u2} (Equiv.Perm.{succ u2} α) α α (Equiv.instEquivLikeEquiv.{succ u2, succ u2} α α))) g₁) (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.Perm.{succ u2} α) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => α) _x) (EmbeddingLike.toFunLike.{succ u2, succ u2, succ u2} (Equiv.Perm.{succ u2} α) α α (EquivLike.toEmbeddingLike.{succ u2, succ u2, succ u2} (Equiv.Perm.{succ u2} α) α α (Equiv.instEquivLikeEquiv.{succ u2, succ u2} α α))) g₂) s) -> (Set.LeftInvOn.{u1, u1} β β (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} β) β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => β) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} β) β β (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} β) β β (Equiv.instEquivLikeEquiv.{succ u1, succ u1} β β))) (Equiv.Perm.extendDomain.{u2, u1} α β g₁ p (fun (a : β) => _inst_1 a) f)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} β) β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => β) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} β) β β (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} β) β β (Equiv.instEquivLikeEquiv.{succ u1, succ u1} β β))) (Equiv.Perm.extendDomain.{u2, u1} α β g₂ p (fun (a : β) => _inst_1 a) f)) (Set.image.{u2, u1} α β (Function.comp.{succ u2, succ u1, succ u1} α (Subtype.{succ u1} β p) β (Subtype.val.{succ u1} β p) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => Subtype.{succ u1} β p) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)) α (Subtype.{succ u1} β p) (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)) α (Subtype.{succ u1} β p) (Equiv.instEquivLikeEquiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)))) f)) s))
+Case conversion may be inaccurate. Consider using '#align set.left_inv_on.extend_domain Set.LeftInvOn.extendDomainₓ'. -/
+protected theorem LeftInvOn.extendDomain (h : LeftInvOn g₁ g₂ s) :
     LeftInvOn (g₁.extendDomain f) (g₂.extendDomain f) (coe ∘ f '' s) :=
   by
   rintro _ ⟨a, ha, rfl⟩
   simp_rw [extend_domain_apply_image, h ha]
-#align set.left_inv_on.extend_domain Set.LeftInvOn.extend_domain
+#align set.left_inv_on.extend_domain Set.LeftInvOn.extendDomain
 
-protected theorem RightInvOn.extend_domain (h : RightInvOn g₁ g₂ t) :
+/- warning: set.right_inv_on.extend_domain -> Set.RightInvOn.extendDomain is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {p : β -> Prop} [_inst_1 : DecidablePred.{succ u2} β p] {f : Equiv.{succ u1, succ u2} α (Subtype.{succ u2} β p)} {g₁ : Equiv.Perm.{succ u1} α} {g₂ : Equiv.Perm.{succ u1} α} {t : Set.{u1} α}, (Set.RightInvOn.{u1, u1} α α (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) g₁) (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) g₂) t) -> (Set.RightInvOn.{u2, u2} β β (coeFn.{succ u2, succ u2} (Equiv.Perm.{succ u2} β) (fun (_x : Equiv.{succ u2, succ u2} β β) => β -> β) (Equiv.hasCoeToFun.{succ u2, succ u2} β β) (Equiv.Perm.extendDomain.{u1, u2} α β g₁ p (fun (a : β) => _inst_1 a) f)) (coeFn.{succ u2, succ u2} (Equiv.Perm.{succ u2} β) (fun (_x : Equiv.{succ u2, succ u2} β β) => β -> β) (Equiv.hasCoeToFun.{succ u2, succ u2} β β) (Equiv.Perm.extendDomain.{u1, u2} α β g₂ p (fun (a : β) => _inst_1 a) f)) (Set.image.{u1, u2} α β (Function.comp.{succ u1, succ u2, succ u2} α (Subtype.{succ u2} β p) β ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Subtype.{succ u2} β p) β (HasLiftT.mk.{succ u2, succ u2} (Subtype.{succ u2} β p) β (CoeTCₓ.coe.{succ u2, succ u2} (Subtype.{succ u2} β p) β (coeBase.{succ u2, succ u2} (Subtype.{succ u2} β p) β (coeSubtype.{succ u2} β (fun (x : β) => p x)))))) (coeFn.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1), max (succ u1) (succ u2)} (Equiv.{succ u1, succ u2} α (Subtype.{succ u2} β p)) (fun (_x : Equiv.{succ u1, succ u2} α (Subtype.{succ u2} β p)) => α -> (Subtype.{succ u2} β p)) (Equiv.hasCoeToFun.{succ u1, succ u2} α (Subtype.{succ u2} β p)) f)) t))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} {p : β -> Prop} [_inst_1 : DecidablePred.{succ u1} β p] {f : Equiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)} {g₁ : Equiv.Perm.{succ u2} α} {g₂ : Equiv.Perm.{succ u2} α} {t : Set.{u2} α}, (Set.RightInvOn.{u2, u2} α α (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.Perm.{succ u2} α) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => α) _x) (EmbeddingLike.toFunLike.{succ u2, succ u2, succ u2} (Equiv.Perm.{succ u2} α) α α (EquivLike.toEmbeddingLike.{succ u2, succ u2, succ u2} (Equiv.Perm.{succ u2} α) α α (Equiv.instEquivLikeEquiv.{succ u2, succ u2} α α))) g₁) (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.Perm.{succ u2} α) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => α) _x) (EmbeddingLike.toFunLike.{succ u2, succ u2, succ u2} (Equiv.Perm.{succ u2} α) α α (EquivLike.toEmbeddingLike.{succ u2, succ u2, succ u2} (Equiv.Perm.{succ u2} α) α α (Equiv.instEquivLikeEquiv.{succ u2, succ u2} α α))) g₂) t) -> (Set.RightInvOn.{u1, u1} β β (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} β) β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => β) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} β) β β (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} β) β β (Equiv.instEquivLikeEquiv.{succ u1, succ u1} β β))) (Equiv.Perm.extendDomain.{u2, u1} α β g₁ p (fun (a : β) => _inst_1 a) f)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} β) β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => β) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} β) β β (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} β) β β (Equiv.instEquivLikeEquiv.{succ u1, succ u1} β β))) (Equiv.Perm.extendDomain.{u2, u1} α β g₂ p (fun (a : β) => _inst_1 a) f)) (Set.image.{u2, u1} α β (Function.comp.{succ u2, succ u1, succ u1} α (Subtype.{succ u1} β p) β (Subtype.val.{succ u1} β p) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => Subtype.{succ u1} β p) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)) α (Subtype.{succ u1} β p) (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)) α (Subtype.{succ u1} β p) (Equiv.instEquivLikeEquiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)))) f)) t))
+Case conversion may be inaccurate. Consider using '#align set.right_inv_on.extend_domain Set.RightInvOn.extendDomainₓ'. -/
+protected theorem RightInvOn.extendDomain (h : RightInvOn g₁ g₂ t) :
     RightInvOn (g₁.extendDomain f) (g₂.extendDomain f) (coe ∘ f '' t) :=
   by
   rintro _ ⟨a, ha, rfl⟩
   simp_rw [extend_domain_apply_image, h ha]
-#align set.right_inv_on.extend_domain Set.RightInvOn.extend_domain
+#align set.right_inv_on.extend_domain Set.RightInvOn.extendDomain
 
-protected theorem InvOn.extend_domain (h : InvOn g₁ g₂ s t) :
+/- warning: set.inv_on.extend_domain -> Set.InvOn.extendDomain is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {p : β -> Prop} [_inst_1 : DecidablePred.{succ u2} β p] {f : Equiv.{succ u1, succ u2} α (Subtype.{succ u2} β p)} {g₁ : Equiv.Perm.{succ u1} α} {g₂ : Equiv.Perm.{succ u1} α} {s : Set.{u1} α} {t : Set.{u1} α}, (Set.InvOn.{u1, u1} α α (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) g₁) (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) g₂) s t) -> (Set.InvOn.{u2, u2} β β (coeFn.{succ u2, succ u2} (Equiv.Perm.{succ u2} β) (fun (_x : Equiv.{succ u2, succ u2} β β) => β -> β) (Equiv.hasCoeToFun.{succ u2, succ u2} β β) (Equiv.Perm.extendDomain.{u1, u2} α β g₁ p (fun (a : β) => _inst_1 a) f)) (coeFn.{succ u2, succ u2} (Equiv.Perm.{succ u2} β) (fun (_x : Equiv.{succ u2, succ u2} β β) => β -> β) (Equiv.hasCoeToFun.{succ u2, succ u2} β β) (Equiv.Perm.extendDomain.{u1, u2} α β g₂ p (fun (a : β) => _inst_1 a) f)) (Set.image.{u1, u2} α β (Function.comp.{succ u1, succ u2, succ u2} α (Subtype.{succ u2} β p) β ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Subtype.{succ u2} β p) β (HasLiftT.mk.{succ u2, succ u2} (Subtype.{succ u2} β p) β (CoeTCₓ.coe.{succ u2, succ u2} (Subtype.{succ u2} β p) β (coeBase.{succ u2, succ u2} (Subtype.{succ u2} β p) β (coeSubtype.{succ u2} β (fun (x : β) => p x)))))) (coeFn.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1), max (succ u1) (succ u2)} (Equiv.{succ u1, succ u2} α (Subtype.{succ u2} β p)) (fun (_x : Equiv.{succ u1, succ u2} α (Subtype.{succ u2} β p)) => α -> (Subtype.{succ u2} β p)) (Equiv.hasCoeToFun.{succ u1, succ u2} α (Subtype.{succ u2} β p)) f)) s) (Set.image.{u1, u2} α β (Function.comp.{succ u1, succ u2, succ u2} α (Subtype.{succ u2} β p) β ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Subtype.{succ u2} β p) β (HasLiftT.mk.{succ u2, succ u2} (Subtype.{succ u2} β p) β (CoeTCₓ.coe.{succ u2, succ u2} (Subtype.{succ u2} β p) β (coeBase.{succ u2, succ u2} (Subtype.{succ u2} β p) β (coeSubtype.{succ u2} β (fun (x : β) => p x)))))) (coeFn.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1), max (succ u1) (succ u2)} (Equiv.{succ u1, succ u2} α (Subtype.{succ u2} β p)) (fun (_x : Equiv.{succ u1, succ u2} α (Subtype.{succ u2} β p)) => α -> (Subtype.{succ u2} β p)) (Equiv.hasCoeToFun.{succ u1, succ u2} α (Subtype.{succ u2} β p)) f)) t))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} {p : β -> Prop} [_inst_1 : DecidablePred.{succ u1} β p] {f : Equiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)} {g₁ : Equiv.Perm.{succ u2} α} {g₂ : Equiv.Perm.{succ u2} α} {s : Set.{u2} α} {t : Set.{u2} α}, (Set.InvOn.{u2, u2} α α (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.Perm.{succ u2} α) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => α) _x) (EmbeddingLike.toFunLike.{succ u2, succ u2, succ u2} (Equiv.Perm.{succ u2} α) α α (EquivLike.toEmbeddingLike.{succ u2, succ u2, succ u2} (Equiv.Perm.{succ u2} α) α α (Equiv.instEquivLikeEquiv.{succ u2, succ u2} α α))) g₁) (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.Perm.{succ u2} α) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => α) _x) (EmbeddingLike.toFunLike.{succ u2, succ u2, succ u2} (Equiv.Perm.{succ u2} α) α α (EquivLike.toEmbeddingLike.{succ u2, succ u2, succ u2} (Equiv.Perm.{succ u2} α) α α (Equiv.instEquivLikeEquiv.{succ u2, succ u2} α α))) g₂) s t) -> (Set.InvOn.{u1, u1} β β (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} β) β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => β) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} β) β β (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} β) β β (Equiv.instEquivLikeEquiv.{succ u1, succ u1} β β))) (Equiv.Perm.extendDomain.{u2, u1} α β g₁ p (fun (a : β) => _inst_1 a) f)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} β) β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => β) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} β) β β (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} β) β β (Equiv.instEquivLikeEquiv.{succ u1, succ u1} β β))) (Equiv.Perm.extendDomain.{u2, u1} α β g₂ p (fun (a : β) => _inst_1 a) f)) (Set.image.{u2, u1} α β (Function.comp.{succ u2, succ u1, succ u1} α (Subtype.{succ u1} β p) β (Subtype.val.{succ u1} β p) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => Subtype.{succ u1} β p) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)) α (Subtype.{succ u1} β p) (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)) α (Subtype.{succ u1} β p) (Equiv.instEquivLikeEquiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)))) f)) s) (Set.image.{u2, u1} α β (Function.comp.{succ u2, succ u1, succ u1} α (Subtype.{succ u1} β p) β (Subtype.val.{succ u1} β p) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => Subtype.{succ u1} β p) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)) α (Subtype.{succ u1} β p) (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)) α (Subtype.{succ u1} β p) (Equiv.instEquivLikeEquiv.{succ u2, succ u1} α (Subtype.{succ u1} β p)))) f)) t))
+Case conversion may be inaccurate. Consider using '#align set.inv_on.extend_domain Set.InvOn.extendDomainₓ'. -/
+protected theorem InvOn.extendDomain (h : InvOn g₁ g₂ s t) :
     InvOn (g₁.extendDomain f) (g₂.extendDomain f) (coe ∘ f '' s) (coe ∘ f '' t) :=
   ⟨h.1.extendDomain, h.2.extendDomain⟩
-#align set.inv_on.extend_domain Set.InvOn.extend_domain
+#align set.inv_on.extend_domain Set.InvOn.extendDomain
 
 end Set
 
@@ -3318,32 +3478,52 @@ namespace Equiv
 
 variable (e : α ≃ β) {s : Set α} {t : Set β}
 
-theorem bij_on' (h₁ : MapsTo e s t) (h₂ : MapsTo e.symm t s) : BijOn e s t :=
+/- warning: equiv.bij_on' -> Equiv.bijOn' is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} (e : Equiv.{succ u1, succ u2} α β) {s : Set.{u1} α} {t : Set.{u2} β}, (Set.MapsTo.{u1, u2} α β (coeFn.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1), max (succ u1) (succ u2)} (Equiv.{succ u1, succ u2} α β) (fun (_x : Equiv.{succ u1, succ u2} α β) => α -> β) (Equiv.hasCoeToFun.{succ u1, succ u2} α β) e) s t) -> (Set.MapsTo.{u2, u1} β α (coeFn.{max 1 (max (succ u2) (succ u1)) (succ u1) (succ u2), max (succ u2) (succ u1)} (Equiv.{succ u2, succ u1} β α) (fun (_x : Equiv.{succ u2, succ u1} β α) => β -> α) (Equiv.hasCoeToFun.{succ u2, succ u1} β α) (Equiv.symm.{succ u1, succ u2} α β e)) t s) -> (Set.BijOn.{u1, u2} α β (coeFn.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1), max (succ u1) (succ u2)} (Equiv.{succ u1, succ u2} α β) (fun (_x : Equiv.{succ u1, succ u2} α β) => α -> β) (Equiv.hasCoeToFun.{succ u1, succ u2} α β) e) s t)
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} (e : Equiv.{succ u2, succ u1} α β) {s : Set.{u2} α} {t : Set.{u1} β}, (Set.MapsTo.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α β) α β (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α β) α β (Equiv.instEquivLikeEquiv.{succ u2, succ u1} α β))) e) s t) -> (Set.MapsTo.{u1, u2} β α (FunLike.coe.{max (succ u2) (succ u1), succ u1, succ u2} (Equiv.{succ u1, succ u2} β α) β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => α) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u1, succ u2} (Equiv.{succ u1, succ u2} β α) β α (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u1, succ u2} (Equiv.{succ u1, succ u2} β α) β α (Equiv.instEquivLikeEquiv.{succ u1, succ u2} β α))) (Equiv.symm.{succ u2, succ u1} α β e)) t s) -> (Set.BijOn.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α β) α β (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α β) α β (Equiv.instEquivLikeEquiv.{succ u2, succ u1} α β))) e) s t)
+Case conversion may be inaccurate. Consider using '#align equiv.bij_on' Equiv.bijOn'ₓ'. -/
+theorem bijOn' (h₁ : MapsTo e s t) (h₂ : MapsTo e.symm t s) : BijOn e s t :=
   ⟨h₁, e.Injective.InjOn _, fun b hb => ⟨e.symm b, h₂ hb, apply_symm_apply _ _⟩⟩
-#align equiv.bij_on' Equiv.bij_on'
+#align equiv.bij_on' Equiv.bijOn'
 
-protected theorem bij_on (h : ∀ a, e a ∈ t ↔ a ∈ s) : BijOn e s t :=
-  (e.bij_on' fun a => (h _).2) fun b hb => (h _).1 <| by rwa [apply_symm_apply]
-#align equiv.bij_on Equiv.bij_on
+#print Equiv.bijOn /-
+protected theorem bijOn (h : ∀ a, e a ∈ t ↔ a ∈ s) : BijOn e s t :=
+  (e.bijOn' fun a => (h _).2) fun b hb => (h _).1 <| by rwa [apply_symm_apply]
+#align equiv.bij_on Equiv.bijOn
+-/
 
-theorem inv_on : InvOn e e.symm t s :=
+#print Equiv.invOn /-
+theorem invOn : InvOn e e.symm t s :=
   ⟨e.right_inverse_symm.LeftInvOn _, e.left_inverse_symm.LeftInvOn _⟩
-#align equiv.inv_on Equiv.inv_on
+#align equiv.inv_on Equiv.invOn
+-/
 
-theorem bij_on_image : BijOn e s (e '' s) :=
+/- warning: equiv.bij_on_image -> Equiv.bijOn_image is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} (e : Equiv.{succ u1, succ u2} α β) {s : Set.{u1} α}, Set.BijOn.{u1, u2} α β (coeFn.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1), max (succ u1) (succ u2)} (Equiv.{succ u1, succ u2} α β) (fun (_x : Equiv.{succ u1, succ u2} α β) => α -> β) (Equiv.hasCoeToFun.{succ u1, succ u2} α β) e) s (Set.image.{u1, u2} α β (coeFn.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1), max (succ u1) (succ u2)} (Equiv.{succ u1, succ u2} α β) (fun (_x : Equiv.{succ u1, succ u2} α β) => α -> β) (Equiv.hasCoeToFun.{succ u1, succ u2} α β) e) s)
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} (e : Equiv.{succ u2, succ u1} α β) {s : Set.{u2} α}, Set.BijOn.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α β) α β (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α β) α β (Equiv.instEquivLikeEquiv.{succ u2, succ u1} α β))) e) s (Set.image.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α β) α β (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α β) α β (Equiv.instEquivLikeEquiv.{succ u2, succ u1} α β))) e) s)
+Case conversion may be inaccurate. Consider using '#align equiv.bij_on_image Equiv.bijOn_imageₓ'. -/
+theorem bijOn_image : BijOn e s (e '' s) :=
   (e.Injective.InjOn _).bij_on_image
-#align equiv.bij_on_image Equiv.bij_on_image
+#align equiv.bij_on_image Equiv.bijOn_image
 
-theorem bij_on_symm_image : BijOn e.symm (e '' s) s :=
+#print Equiv.bijOn_symm_image /-
+theorem bijOn_symm_image : BijOn e.symm (e '' s) s :=
   e.bij_on_image.symm e.InvOn
-#align equiv.bij_on_symm_image Equiv.bij_on_symm_image
+#align equiv.bij_on_symm_image Equiv.bijOn_symm_image
+-/
 
 variable {e}
 
+#print Equiv.bijOn_symm /-
 @[simp]
-theorem bij_on_symm : BijOn e.symm t s ↔ BijOn e s t :=
-  bij_on_comm e.symm.InvOn
-#align equiv.bij_on_symm Equiv.bij_on_symm
+theorem bijOn_symm : BijOn e.symm t s ↔ BijOn e s t :=
+  bijOn_comm e.symm.InvOn
+#align equiv.bij_on_symm Equiv.bijOn_symm
+-/
 
 alias bij_on_symm ↔ _root_.set.bij_on.of_equiv_symm _root_.set.bij_on.equiv_symm
 #align set.bij_on.of_equiv_symm Set.BijOn.of_equiv_symm
@@ -3351,11 +3531,13 @@ alias bij_on_symm ↔ _root_.set.bij_on.of_equiv_symm _root_.set.bij_on.equiv_sy
 
 variable [DecidableEq α] {a b : α}
 
-theorem bij_on_swap (ha : a ∈ s) (hb : b ∈ s) : BijOn (swap a b) s s :=
+#print Equiv.bijOn_swap /-
+theorem bijOn_swap (ha : a ∈ s) (hb : b ∈ s) : BijOn (swap a b) s s :=
   (swap a b).BijOn fun x => by
     obtain rfl | hxa := eq_or_ne x a <;> obtain rfl | hxb := eq_or_ne x b <;>
       simp [*, swap_apply_of_ne_of_ne]
-#align equiv.bij_on_swap Equiv.bij_on_swap
+#align equiv.bij_on_swap Equiv.bijOn_swap
+-/
 
 end Equiv
 

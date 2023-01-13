@@ -784,7 +784,7 @@ theorem is_cycle_on_empty : f.IsCycleOn ∅ := by simp [is_cycle_on]
 
 @[simp]
 theorem is_cycle_on_one : (1 : Perm α).IsCycleOn s ↔ s.Subsingleton := by
-  simp [is_cycle_on, Set.bij_on_id, Set.Subsingleton]
+  simp [is_cycle_on, Set.bijOn_id, Set.Subsingleton]
 #align equiv.perm.is_cycle_on_one Equiv.Perm.is_cycle_on_one
 
 alias is_cycle_on_one ↔ is_cycle_on.subsingleton _root_.set.subsingleton.is_cycle_on_one
@@ -816,7 +816,7 @@ theorem IsCycleOn.conj (h : f.IsCycleOn s) : (g * f * g⁻¹).IsCycleOn ((g : Pe
 #align equiv.perm.is_cycle_on.conj Equiv.Perm.IsCycleOn.conj
 
 theorem is_cycle_on_swap [DecidableEq α] (hab : a ≠ b) : (swap a b).IsCycleOn {a, b} :=
-  ⟨bij_on_swap (by simp) (by simp), fun x hx y hy =>
+  ⟨bijOn_swap (by simp) (by simp), fun x hx y hy =>
     by
     rw [Set.mem_insert_iff, Set.mem_singleton_iff] at hx hy
     obtain rfl | rfl := hx <;> obtain rfl | rfl := hy

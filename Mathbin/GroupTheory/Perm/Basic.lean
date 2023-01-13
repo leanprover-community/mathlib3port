@@ -164,10 +164,12 @@ theorem coe_pow (f : Perm α) (n : ℕ) : ⇑(f ^ n) = f^[n] :=
 #align equiv.perm.coe_pow Equiv.Perm.coe_pow
 -/
 
+#print Equiv.Perm.iterate_eq_pow /-
 @[simp]
 theorem iterate_eq_pow (f : Perm α) (n : ℕ) : f^[n] = ⇑(f ^ n) :=
   (coe_pow _ _).symm
 #align equiv.perm.iterate_eq_pow Equiv.Perm.iterate_eq_pow
+-/
 
 #print Equiv.Perm.eq_inv_iff_eq /-
 theorem eq_inv_iff_eq {f : Perm α} {x y : α} : x = f⁻¹ y ↔ f x = y :=
@@ -188,15 +190,19 @@ theorem zpow_apply_comm {α : Type _} (σ : Perm α) (m n : ℤ) {x : α} :
 #align equiv.perm.zpow_apply_comm Equiv.Perm.zpow_apply_comm
 -/
 
+#print Equiv.Perm.image_inv /-
 @[simp]
 theorem image_inv (f : Perm α) (s : Set α) : ⇑f⁻¹ '' s = f ⁻¹' s :=
   f⁻¹.image_eq_preimage _
 #align equiv.perm.image_inv Equiv.Perm.image_inv
+-/
 
+#print Equiv.Perm.preimage_inv /-
 @[simp]
 theorem preimage_inv (f : Perm α) (s : Set α) : ⇑f⁻¹ ⁻¹' s = f '' s :=
   (f.image_eq_preimage _).symm
 #align equiv.perm.preimage_inv Equiv.Perm.preimage_inv
+-/
 
 /-! Lemmas about mixing `perm` with `equiv`. Because we have multiple ways to express
 `equiv.refl`, `equiv.symm`, and `equiv.trans`, we want simp lemmas for every combination.
@@ -891,7 +897,7 @@ theorem mul_swap_mul_self (i j : α) (σ : Perm α) : σ * Equiv.swap i j * Equi
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (i : α) (j : α), Function.Involutive.{succ u1} (Equiv.Perm.{succ u1} α) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toHasMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) i j))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (i : α) (j : α), Function.Involutive.{succ u1} (Equiv.Perm.{succ u1} α) ((fun (x._@.Mathlib.GroupTheory.Perm.Basic._hyg.3760 : Equiv.Perm.{succ u1} α) (x._@.Mathlib.GroupTheory.Perm.Basic._hyg.3762 : Equiv.Perm.{succ u1} α) => HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) x._@.Mathlib.GroupTheory.Perm.Basic._hyg.3760 x._@.Mathlib.GroupTheory.Perm.Basic._hyg.3762) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) i j))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (i : α) (j : α), Function.Involutive.{succ u1} (Equiv.Perm.{succ u1} α) ((fun (x._@.Mathlib.GroupTheory.Perm.Basic._hyg.3863 : Equiv.Perm.{succ u1} α) (x._@.Mathlib.GroupTheory.Perm.Basic._hyg.3865 : Equiv.Perm.{succ u1} α) => HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) x._@.Mathlib.GroupTheory.Perm.Basic._hyg.3863 x._@.Mathlib.GroupTheory.Perm.Basic._hyg.3865) (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) i j))
 Case conversion may be inaccurate. Consider using '#align equiv.swap_mul_involutive Equiv.swap_mul_involutiveₓ'. -/
 /-- A stronger version of `mul_right_injective` -/
 @[simp]
@@ -1094,37 +1100,51 @@ variable {α : Type _} {f : Perm α} {s t : Set α}
 
 @[simp]
 theorem bij_on_perm_inv : BijOn (⇑f⁻¹) t s ↔ BijOn f s t :=
-  Equiv.bij_on_symm
+  Equiv.bijOn_symm
 #align set.bij_on_perm_inv Set.bij_on_perm_inv
 
+/- warning: set.bij_on.perm_inv -> Set.BijOn.perm_inv is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {f : Equiv.Perm.{succ u1} α} {s : Set.{u1} α} {t : Set.{u1} α}, (Set.BijOn.{u1, u1} α α (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) f) s t) -> (Set.BijOn.{u1, u1} α α (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toHasInv.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) f)) t s)
+but is expected to have type
+  forall {α : Type.{u1}} {f : Equiv.Perm.{succ u1} α} {s : Set.{u1} α}, (Set.BijOn.{u1, u1} α α (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (a : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => α) a) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α α (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α α (Equiv.instEquivLikeEquiv.{succ u1, succ u1} α α))) f) s s) -> (Set.BijOn.{u1, u1} α α (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (a : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => α) a) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α α (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α α (Equiv.instEquivLikeEquiv.{succ u1, succ u1} α α))) (Inv.inv.{u1} (Equiv.Perm.{succ u1} α) (InvOneClass.toInv.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) f)) s s)
+Case conversion may be inaccurate. Consider using '#align set.bij_on.perm_inv Set.BijOn.perm_invₓ'. -/
 alias bij_on_perm_inv ↔ bij_on.of_perm_inv bij_on.perm_inv
 #align set.bij_on.of_perm_inv Set.BijOn.of_perm_inv
 #align set.bij_on.perm_inv Set.BijOn.perm_inv
 
+#print Set.MapsTo.perm_pow /-
 theorem MapsTo.perm_pow : MapsTo f s s → ∀ n : ℕ, MapsTo (⇑(f ^ n)) s s :=
   by
   simp_rw [Equiv.Perm.coe_pow]
   exact maps_to.iterate
 #align set.maps_to.perm_pow Set.MapsTo.perm_pow
+-/
 
+#print Set.SurjOn.perm_pow /-
 theorem SurjOn.perm_pow : SurjOn f s s → ∀ n : ℕ, SurjOn (⇑(f ^ n)) s s :=
   by
   simp_rw [Equiv.Perm.coe_pow]
   exact surj_on.iterate
 #align set.surj_on.perm_pow Set.SurjOn.perm_pow
+-/
 
+#print Set.BijOn.perm_pow /-
 theorem BijOn.perm_pow : BijOn f s s → ∀ n : ℕ, BijOn (⇑(f ^ n)) s s :=
   by
   simp_rw [Equiv.Perm.coe_pow]
   exact bij_on.iterate
 #align set.bij_on.perm_pow Set.BijOn.perm_pow
+-/
 
+#print Set.BijOn.perm_zpow /-
 theorem BijOn.perm_zpow (hf : BijOn f s s) : ∀ n : ℤ, BijOn (⇑(f ^ n)) s s
   | Int.ofNat n => hf.perm_pow _
   | Int.negSucc n => by
     rw [zpow_negSucc]
     exact (hf.perm_pow _).perm_inv
 #align set.bij_on.perm_zpow Set.BijOn.perm_zpow
+-/
 
 end Set
 
