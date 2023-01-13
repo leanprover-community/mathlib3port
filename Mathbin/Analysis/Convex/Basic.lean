@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Yury Kudriashov, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.convex.basic
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -330,9 +330,9 @@ section LinearOrderedAddCommMonoid
 
 variable [LinearOrderedAddCommMonoid β] [Module 𝕜 β] [OrderedSmul 𝕜 β]
 
-theorem convex_interval (r s : β) : Convex 𝕜 (interval r s) :=
+theorem convex_uIcc (r s : β) : Convex 𝕜 (uIcc r s) :=
   convex_Icc _ _
-#align convex_interval convex_interval
+#align convex_uIcc convex_uIcc
 
 end LinearOrderedAddCommMonoid
 
@@ -607,7 +607,7 @@ theorem Set.OrdConnected.convex [OrderedSemiring 𝕜] [LinearOrderedAddCommMono
 #align set.ord_connected.convex Set.OrdConnected.convex
 
 theorem convex_iff_ord_connected [LinearOrderedField 𝕜] {s : Set 𝕜} : Convex 𝕜 s ↔ s.OrdConnected :=
-  by simp_rw [convex_iff_segment_subset, segment_eq_interval, ord_connected_iff_interval_subset]
+  by simp_rw [convex_iff_segment_subset, segment_eq_uIcc, ord_connected_iff_uIcc_subset]
 #align convex_iff_ord_connected convex_iff_ord_connected
 
 alias convex_iff_ord_connected ↔ Convex.ord_connected _

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.integral.divergence_theorem
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -463,9 +463,9 @@ theorem integral_eq_of_has_deriv_within_at_off_countable (f f' : ℝ → E) {a b
     (Hi : IntervalIntegrable f' volume a b) : (∫ x in a..b, f' x) = f b - f a :=
   by
   cases' le_total a b with hab hab
-  · simp only [interval_of_le hab, min_eq_left hab, max_eq_right hab] at *
+  · simp only [uIcc_of_le hab, min_eq_left hab, max_eq_right hab] at *
     exact integral_eq_of_has_deriv_within_at_off_countable_of_le f f' hab hs Hc Hd Hi
-  · simp only [interval_of_ge hab, min_eq_right hab, max_eq_left hab] at *
+  · simp only [uIcc_of_ge hab, min_eq_right hab, max_eq_left hab] at *
     rw [intervalIntegral.integral_symm, neg_eq_iff_neg_eq, neg_sub, eq_comm]
     exact integral_eq_of_has_deriv_within_at_off_countable_of_le f f' hab hs Hc Hd Hi.symm
 #align
@@ -568,7 +568,7 @@ theorem integral2_divergence_prod_of_has_fderiv_within_at_off_countable (f g : �
   by
   wlog (discharger := tactic.skip) h₁ : a₁ ≤ b₁ := le_total a₁ b₁ using a₁ b₁, b₁ a₁
   wlog (discharger := tactic.skip) h₂ : a₂ ≤ b₂ := le_total a₂ b₂ using a₂ b₂, b₂ a₂
-  · simp only [interval_of_le h₁, interval_of_le h₂, min_eq_left, max_eq_right, h₁, h₂] at
+  · simp only [uIcc_of_le h₁, uIcc_of_le h₂, min_eq_left, max_eq_right, h₁, h₂] at
       Hcf Hcg Hdf Hdg Hi
     calc
       (∫ x in a₁..b₁, ∫ y in a₂..b₂, f' (x, y) (1, 0) + g' (x, y) (0, 1)) =
@@ -586,12 +586,12 @@ theorem integral2_divergence_prod_of_has_fderiv_within_at_off_countable (f g : �
               (a₁, a₂) (b₁, b₂) ⟨h₁, h₂⟩ s <;>
           assumption
       
-  · rw [interval_swap b₂ a₂, min_comm b₂ a₂, max_comm b₂ a₂] at this
+  · rw [uIcc_comm b₂ a₂, min_comm b₂ a₂, max_comm b₂ a₂] at this
     intro Hcf Hcg Hdf Hdg Hi
     simp only [intervalIntegral.integral_symm b₂ a₂, intervalIntegral.integral_neg]
     refine' (congr_arg Neg.neg (this Hcf Hcg Hdf Hdg Hi)).trans _
     abel
-  · rw [interval_swap b₁ a₁, min_comm b₁ a₁, max_comm b₁ a₁] at this
+  · rw [uIcc_comm b₁ a₁, min_comm b₁ a₁, max_comm b₁ a₁] at this
     intro Hcf Hcg Hdf Hdg Hi
     simp only [intervalIntegral.integral_symm b₁ a₁]
     refine' (congr_arg Neg.neg (this Hcf Hcg Hdf Hdg Hi)).trans _

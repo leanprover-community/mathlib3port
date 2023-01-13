@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module measure_theory.integral.integral_eq_improper
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -729,7 +729,7 @@ theorem integral_comp_smul_deriv_Ioi {f f' : ℝ → ℝ} {g : ℝ → E} {a : �
       rw [min_eq_left hb.le]
       exact Ioo_subset_Ioi_self
     have i2 : [a, b] ⊆ Ici a := by
-      rw [interval_of_le hb.le]
+      rw [uIcc_of_le hb.le]
       exact Icc_subset_Ici_self
     refine'
       intervalIntegral.integral_comp_smul_deriv''' (hf.mono i2)
@@ -737,7 +737,7 @@ theorem integral_comp_smul_deriv_Ioi {f f' : ℝ → ℝ} {g : ℝ → E} {a : �
         (hg1.mono_set <| image_subset _ _) (hg2.mono_set i2)
     · rw [min_eq_left hb.le]
       exact Ioo_subset_Ioi_self
-    · rw [interval_of_le hb.le]
+    · rw [uIcc_of_le hb.le]
       exact Icc_subset_Ici_self
   rw [integrable_on_Ici_iff_integrable_on_Ioi] at hg2
   have t2 := interval_integral_tendsto_integral_Ioi _ hg2 tendsto_id

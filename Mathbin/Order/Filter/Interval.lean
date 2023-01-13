@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module order.filter.interval
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -244,33 +244,32 @@ section LinearOrder
 
 variable [LinearOrder α]
 
-instance tendsto_Icc_interval_interval {a b : α} : TendstoIxxClass Icc (𝓟 [a, b]) (𝓟 [a, b]) :=
+instance tendsto_Icc_uIcc_uIcc {a b : α} : TendstoIxxClass Icc (𝓟 [a, b]) (𝓟 [a, b]) :=
   Filter.tendsto_Icc_Icc_Icc
-#align filter.tendsto_Icc_interval_interval Filter.tendsto_Icc_interval_interval
+#align filter.tendsto_Icc_uIcc_uIcc Filter.tendsto_Icc_uIcc_uIcc
 
-instance tendsto_Ioc_interval_interval {a b : α} : TendstoIxxClass Ioc (𝓟 [a, b]) (𝓟 [a, b]) :=
+instance tendsto_Ioc_uIcc_uIcc {a b : α} : TendstoIxxClass Ioc (𝓟 [a, b]) (𝓟 [a, b]) :=
   Filter.tendsto_Ioc_Icc_Icc
-#align filter.tendsto_Ioc_interval_interval Filter.tendsto_Ioc_interval_interval
+#align filter.tendsto_Ioc_uIcc_uIcc Filter.tendsto_Ioc_uIcc_uIcc
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-instance tendsto_interval_of_Icc {l : Filter α} [TendstoIxxClass Icc l l] :
-    TendstoIxxClass interval l l :=
+instance tendsto_uIcc_of_Icc {l : Filter α} [TendstoIxxClass Icc l l] : TendstoIxxClass uIcc l l :=
   by
   refine' ⟨fun s hs => mem_map.2 <| mem_prod_self_iff.2 _⟩
   obtain ⟨t, htl, hts⟩ : ∃ t ∈ l, ∀ p ∈ (t : Set α) ×ˢ t, Icc (p : α × α).1 p.2 ∈ s
   exact mem_prod_self_iff.1 (mem_map.1 (tendsto_fst.Icc tendsto_snd hs))
   refine' ⟨t, htl, fun p hp => _⟩
   cases le_total p.1 p.2
-  · rw [mem_preimage, interval_of_le h]
+  · rw [mem_preimage, uIcc_of_le h]
     exact hts p hp
-  · rw [mem_preimage, interval_of_ge h]
+  · rw [mem_preimage, uIcc_of_ge h]
     exact hts ⟨p.2, p.1⟩ ⟨hp.2, hp.1⟩
-#align filter.tendsto_interval_of_Icc Filter.tendsto_interval_of_Icc
+#align filter.tendsto_uIcc_of_Icc Filter.tendsto_uIcc_of_Icc
 
-theorem Tendsto.interval {l : Filter α} [TendstoIxxClass Icc l l] {f g : β → α} {lb : Filter β}
+theorem Tendsto.uIcc {l : Filter α} [TendstoIxxClass Icc l l] {f g : β → α} {lb : Filter β}
     (hf : Tendsto f lb l) (hg : Tendsto g lb l) : Tendsto (fun x => [f x, g x]) lb l.smallSets :=
   TendstoIxxClass.tendsto_Ixx.comp <| hf.prod_mk hg
-#align filter.tendsto.interval Filter.Tendsto.interval
+#align filter.tendsto.uIcc Filter.Tendsto.uIcc
 
 end LinearOrder
 

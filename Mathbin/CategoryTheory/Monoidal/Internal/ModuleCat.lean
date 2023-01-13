@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.internal.Module
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -76,10 +76,7 @@ instance (A : Mon_ (ModuleCat.{u} R)) : Algebra R A.x :=
       have h₁ := LinearMap.congr_fun A.one_mul (r ⊗ₜ a)
       have h₂ := LinearMap.congr_fun A.mul_one (a ⊗ₜ r)
       exact h₁.trans h₂.symm
-    smul_def' := fun r a =>
-      by
-      convert (LinearMap.congr_fun A.one_mul (r ⊗ₜ a)).symm
-      simp }
+    smul_def' := fun r a => (LinearMap.congr_fun A.one_mul (r ⊗ₜ a)).symm }
 
 @[simp]
 theorem algebra_map (A : Mon_ (ModuleCat.{u} R)) (r : R) : algebraMap R A.x r = A.one r :=
@@ -140,14 +137,8 @@ def inverse : AlgebraCat.{u} R ⥤ Mon_ (ModuleCat.{u} R)
   obj := inverseObj
   map A B f :=
     { Hom := f.toLinearMap
-      one_hom' := by
-        ext
-        dsimp
-        simp only [RingHom.map_one, AlgHom.map_one]
-      mul_hom' := by
-        ext
-        dsimp
-        simp only [LinearMap.mul'_apply, RingHom.map_mul, AlgHom.map_mul] }
+      one_hom' := LinearMap.ext f.commutes
+      mul_hom' := TensorProduct.ext <| LinearMap.ext₂ <| map_mul f }
 #align Module.Mon_Module_equivalence_Algebra.inverse ModuleCat.MonModuleEquivalenceAlgebra.inverse
 
 end MonModuleEquivalenceAlgebra
@@ -172,7 +163,7 @@ def monModuleEquivalenceAlgebra : Mon_ (ModuleCat.{u} R) ≌ AlgebraCat R
               mul_hom' := by
                 ext
                 dsimp at *
-                simp only [LinearMap.mul'_apply, Mon_.X.ring_mul] }
+                rfl }
           inv :=
             { Hom :=
                 { toFun := id
@@ -181,7 +172,7 @@ def monModuleEquivalenceAlgebra : Mon_ (ModuleCat.{u} R) ≌ AlgebraCat R
               mul_hom' := by
                 ext
                 dsimp at *
-                simp only [LinearMap.mul'_apply, Mon_.X.ring_mul] } })
+                rfl } })
       (by tidy)
   counitIso :=
     NatIso.ofComponents
@@ -191,7 +182,7 @@ def monModuleEquivalenceAlgebra : Mon_ (ModuleCat.{u} R) ≌ AlgebraCat R
               map_zero' := rfl
               map_add' := fun x y => rfl
               map_one' := (algebraMap R A).map_one
-              map_mul' := fun x y => LinearMap.mul'_apply
+              map_mul' := fun x y => @LinearMap.mul'_apply R _ _ _ _ _ _ x y
               commutes' := fun r => rfl }
           inv :=
             { toFun := id

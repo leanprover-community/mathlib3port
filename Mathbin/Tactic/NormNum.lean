@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Mario Carneiro
 
 ! This file was ported from Lean 3 source module tactic.norm_num
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1400,12 +1400,17 @@ unsafe def prove_zpow (ic zc nc : instance_cache) (a : expr) (na : ℚ) (b : exp
 
 /-- Evaluates expressions of the form `a ^ b`, `monoid.npow a b` or `nat.pow a b`. -/
 unsafe def eval_pow : expr → tactic (expr × expr)
-  | q(@Pow.pow $(α) _ $(m) $(e₁) $(e₂)) => do
+  | q(@Pow.pow $(α) $(β) $(m) $(e₁) $(e₂)) => do
     let n₁ ← e₁.to_rat
     let c ← mk_instance_cache α
-    match m with
-      | q(@Monoid.Pow $(_) $(_)) => Prod.snd <$> prove_pow e₁ n₁ c e₂
-      | q(@DivInvMonoid.Pow $(_) $(_)) => do
+    match β with
+      | q(ℕ) => do
+        let (c, m') ← c `` Monoid.Pow []
+        is_def_eq m m'
+        Prod.snd <$> prove_pow e₁ n₁ c e₂
+      | q(ℤ) => do
+        let (c, m') ← c `` DivInvMonoid.Pow []
+        is_def_eq m m'
         let zc ← mk_instance_cache q(ℤ)
         let nc ← mk_instance_cache q(ℕ)
         (Prod.snd ∘ Prod.snd ∘ Prod.snd) <$> prove_zpow c zc nc e₁ n₁ e₂

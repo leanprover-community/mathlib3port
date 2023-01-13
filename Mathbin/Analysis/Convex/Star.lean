@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.convex.star
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -479,8 +479,7 @@ theorem Set.OrdConnected.star_convex [OrderedSemiring 𝕜] [OrderedAddCommMonoi
 
 theorem star_convex_iff_ord_connected [LinearOrderedField 𝕜] {x : 𝕜} {s : Set 𝕜} (hx : x ∈ s) :
     StarConvex 𝕜 x s ↔ s.OrdConnected := by
-  simp_rw [ord_connected_iff_interval_subset_left hx, star_convex_iff_segment_subset,
-    segment_eq_interval]
+  simp_rw [ord_connected_iff_uIcc_subset_left hx, star_convex_iff_segment_subset, segment_eq_uIcc]
 #align star_convex_iff_ord_connected star_convex_iff_ord_connected
 
 alias star_convex_iff_ord_connected ↔ StarConvex.ord_connected _

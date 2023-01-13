@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.power_basis
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -253,18 +253,7 @@ end minpoly
 
 section Equiv
 
-variable [Algebra A S] {S' : Type _} [CommRing S'] [Algebra A S']
-
-theorem nat_degree_lt_nat_degree {p q : R[X]} (hp : p ≠ 0) (hpq : p.degree < q.degree) :
-    p.natDegree < q.natDegree := by
-  by_cases hq : q = 0;
-  · rw [hq, degree_zero] at hpq
-    have := not_lt_bot hpq
-    contradiction
-  rwa [degree_eq_nat_degree hp, degree_eq_nat_degree hq, WithBot.coe_lt_coe] at hpq
-#align power_basis.nat_degree_lt_nat_degree PowerBasis.nat_degree_lt_nat_degree
-
-variable [IsDomain A]
+variable [Algebra A S] {S' : Type _} [CommRing S'] [Algebra A S'] [IsDomain A]
 
 theorem constr_pow_aeval (pb : PowerBasis A S) {y : S'} (hy : aeval y (minpoly A pb.gen) = 0)
     (f : A[X]) : pb.Basis.constr A (fun i => y ^ (i : ℕ)) (aeval pb.gen f) = aeval y f :=

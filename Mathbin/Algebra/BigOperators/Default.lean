@@ -1,6 +1,6 @@
 /- Import this file to pull in everything about "big operators".
 ! This file was ported from Lean 3 source module algebra.big_operators.default
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

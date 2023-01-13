@@ -4,11 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module linear_algebra.affine_space.finite_dimensional
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.LinearAlgebra.AffineSpace.Independent
+import Mathbin.LinearAlgebra.AffineSpace.Basis
 import Mathbin.LinearAlgebra.FiniteDimensional
 
 /-!
@@ -802,4 +802,54 @@ theorem coplanar_triple (p₁ p₂ p₃ : P) : Coplanar k ({p₁, p₂, p₃} : 
 #align coplanar_triple coplanar_triple
 
 end DivisionRing
+
+namespace AffineBasis
+
+universe u₁ u₂ u₃ u₄
+
+variable {ι : Type u₁} {k : Type u₂} {V : Type u₃} {P : Type u₄}
+
+variable [AddCommGroup V] [affine_space V P]
+
+section DivisionRing
+
+variable [DivisionRing k] [Module k V]
+
+include V
+
+protected theorem finite_dimensional [Finite ι] (b : AffineBasis ι k P) : FiniteDimensional k V :=
+  let ⟨i⟩ := b.Nonempty
+  FiniteDimensional.of_fintype_basis (b.basisOf i)
+#align affine_basis.finite_dimensional AffineBasis.finite_dimensional
+
+protected theorem finite [FiniteDimensional k V] (b : AffineBasis ι k P) : Finite ι :=
+  finite_of_fin_dim_affine_independent k b.ind
+#align affine_basis.finite AffineBasis.finite
+
+protected theorem finite_set [FiniteDimensional k V] {s : Set ι} (b : AffineBasis s k P) :
+    s.Finite :=
+  finite_set_of_fin_dim_affine_independent k b.ind
+#align affine_basis.finite_set AffineBasis.finite_set
+
+theorem card_eq_finrank_add_one [Fintype ι] (b : AffineBasis ι k P) :
+    Fintype.card ι = FiniteDimensional.finrank k V + 1 :=
+  haveI := b.finite_dimensional
+  b.ind.affine_span_eq_top_iff_card_eq_finrank_add_one.mp b.tot
+#align affine_basis.card_eq_finrank_add_one AffineBasis.card_eq_finrank_add_one
+
+variable {k V P}
+
+theorem exists_affine_basis_of_finite_dimensional [Fintype ι] [FiniteDimensional k V]
+    (h : Fintype.card ι = FiniteDimensional.finrank k V + 1) : Nonempty (AffineBasis ι k P) :=
+  by
+  obtain ⟨s, b, hb⟩ := AffineBasis.exists_affine_basis k V P
+  lift s to Finset P using b.finite_set
+  refine' ⟨b.comp_equiv <| Fintype.equivOfCardEq _⟩
+  rw [h, ← b.card_eq_finrank_add_one]
+#align
+  affine_basis.exists_affine_basis_of_finite_dimensional AffineBasis.exists_affine_basis_of_finite_dimensional
+
+end DivisionRing
+
+end AffineBasis
 

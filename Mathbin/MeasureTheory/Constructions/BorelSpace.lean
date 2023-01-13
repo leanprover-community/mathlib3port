@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.constructions.borel_space
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -537,9 +537,9 @@ instance nhds_within_Iio_is_measurably_generated : (𝓝[Iio b] a).IsMeasurablyG
   measurable_set_Iio.nhds_within_is_measurably_generated _
 #align nhds_within_Iio_is_measurably_generated nhds_within_Iio_is_measurably_generated
 
-instance nhds_within_interval_is_measurably_generated : IsMeasurablyGenerated (𝓝[[a, b]] x) :=
+instance nhds_within_uIcc_is_measurably_generated : IsMeasurablyGenerated (𝓝[[a, b]] x) :=
   nhds_within_Icc_is_measurably_generated
-#align nhds_within_interval_is_measurably_generated nhds_within_interval_is_measurably_generated
+#align nhds_within_uIcc_is_measurably_generated nhds_within_uIcc_is_measurably_generated
 
 @[measurability]
 theorem measurable_set_lt' [SecondCountableTopology α] : MeasurableSet { p : α × α | p.1 < p.2 } :=
@@ -786,17 +786,17 @@ end LinearOrder
 
 section LinearOrder
 
-variable [LinearOrder α] [OrderClosedTopology α]
+variable [LinearOrder α] [OrderClosedTopology α] {a b : α}
 
 @[measurability]
-theorem measurable_set_interval {a b : α} : MeasurableSet (interval a b) :=
+theorem measurable_set_uIcc : MeasurableSet (uIcc a b) :=
   measurable_set_Icc
-#align measurable_set_interval measurable_set_interval
+#align measurable_set_uIcc measurable_set_uIcc
 
 @[measurability]
-theorem measurable_set_interval_oc {a b : α} : MeasurableSet (intervalOC a b) :=
+theorem measurable_set_uIoc : MeasurableSet (uIoc a b) :=
   measurable_set_Ioc
-#align measurable_set_interval_oc measurable_set_interval_oc
+#align measurable_set_uIoc measurable_set_uIoc
 
 variable [SecondCountableTopology α]
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.algebra.order.compact
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -125,10 +125,10 @@ instance {α β : Type _} [Preorder α] [TopologicalSpace α] [CompactIccSpace �
   ⟨fun a b => (Icc_prod_eq a b).symm ▸ is_compact_Icc.Prod is_compact_Icc⟩
 
 /-- An unordered closed interval is compact. -/
-theorem is_compact_interval {α : Type _} [LinearOrder α] [TopologicalSpace α] [CompactIccSpace α]
-    {a b : α} : IsCompact (interval a b) :=
+theorem is_compact_uIcc {α : Type _} [LinearOrder α] [TopologicalSpace α] [CompactIccSpace α]
+    {a b : α} : IsCompact (uIcc a b) :=
   is_compact_Icc
-#align is_compact_interval is_compact_interval
+#align is_compact_uIcc is_compact_uIcc
 
 -- See note [lower instance priority]
 /-- A complete linear order is a compact space.
@@ -407,23 +407,23 @@ theorem image_Icc (hab : a ≤ b) (h : ContinuousOn f <| Icc a b) :
     (is_compact_Icc.image_of_continuous_on h)
 #align continuous_on.image_Icc ContinuousOn.image_Icc
 
-theorem image_interval_eq_Icc (h : ContinuousOn f <| [a, b]) :
+theorem image_uIcc_eq_Icc (h : ContinuousOn f <| [a, b]) :
     f '' [a, b] = Icc (infₛ (f '' [a, b])) (supₛ (f '' [a, b])) :=
   by
   cases' le_total a b with h2 h2
-  · simp_rw [interval_of_le h2] at h⊢
+  · simp_rw [uIcc_of_le h2] at h⊢
     exact h.image_Icc h2
-  · simp_rw [interval_of_ge h2] at h⊢
+  · simp_rw [uIcc_of_ge h2] at h⊢
     exact h.image_Icc h2
-#align continuous_on.image_interval_eq_Icc ContinuousOn.image_interval_eq_Icc
+#align continuous_on.image_uIcc_eq_Icc ContinuousOn.image_uIcc_eq_Icc
 
-theorem image_interval (h : ContinuousOn f <| [a, b]) :
+theorem image_uIcc (h : ContinuousOn f <| [a, b]) :
     f '' [a, b] = [infₛ (f '' [a, b]), supₛ (f '' [a, b])] :=
   by
-  refine' h.image_interval_eq_Icc.trans (interval_of_le _).symm
-  refine' cinfₛ_le_csupₛ _ _ (nonempty_interval.image _) <;> rw [h.image_interval_eq_Icc]
+  refine' h.image_uIcc_eq_Icc.trans (uIcc_of_le _).symm
+  refine' cinfₛ_le_csupₛ _ _ (nonempty_uIcc.image _) <;> rw [h.image_uIcc_eq_Icc]
   exacts[bddBelow_Icc, bddAbove_Icc]
-#align continuous_on.image_interval ContinuousOn.image_interval
+#align continuous_on.image_uIcc ContinuousOn.image_uIcc
 
 theorem Inf_image_Icc_le (h : ContinuousOn f <| Icc a b) (hc : c ∈ Icc a b) :
     infₛ (f '' Icc a b) ≤ f c :=

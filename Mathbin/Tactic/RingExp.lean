@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tim Baanen
 
 ! This file was ported from Lean 3 source module tactic.ring_exp
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1541,23 +1541,20 @@ open ExType
         e @ q( @ Pow.pow _ _ $ ( hp_instance ) $ ( ps ) $ ( qs ) )
         =>
         do
-          let ps' ← eval ps
+          let ctx ← get_context
+            let ps' ← eval ps
             let qs' ← in_exponent <| eval qs
             let psqs ← pow ps' qs'
             let psqs_pf ← psqs . proof_term
             (
                 do
-                  let
-                      has_pow_pf
-                        ←
-                        match
-                          hp_instance
-                          with
-                          | q( Monoid.Pow ) => lift <| mk_eq_refl e
-                            |
-                              _
-                              =>
-                              lift <| fail "has_pow instance must be nat.has_pow or monoid.has_pow"
+                  lift
+                      (
+                        is_def_eq hp_instance ctx
+                          <|>
+                          fail "has_pow instance must be nat.has_pow or monoid.has_pow"
+                        )
+                    let has_pow_pf ← lift <| mk_eq_refl e
                     let pf ← lift <| mk_eq_trans has_pow_pf psqs_pf
                     pure <| psqs e pf
                 )

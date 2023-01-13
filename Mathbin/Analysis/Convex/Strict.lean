@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.convex.strict
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -206,13 +206,13 @@ theorem strict_convex_Ioc (r s : β) : StrictConvex 𝕜 (Ioc r s) :=
   ordConnected_Ioc.StrictConvex
 #align strict_convex_Ioc strict_convex_Ioc
 
-theorem strict_convex_interval (r s : β) : StrictConvex 𝕜 (interval r s) :=
+theorem strict_convex_uIcc (r s : β) : StrictConvex 𝕜 (uIcc r s) :=
   strict_convex_Icc _ _
-#align strict_convex_interval strict_convex_interval
+#align strict_convex_uIcc strict_convex_uIcc
 
-theorem strict_convex_interval_oc (r s : β) : StrictConvex 𝕜 (intervalOC r s) :=
+theorem strict_convex_uIoc (r s : β) : StrictConvex 𝕜 (uIoc r s) :=
   strict_convex_Ioc _ _
-#align strict_convex_interval_oc strict_convex_interval_oc
+#align strict_convex_uIoc strict_convex_uIoc
 
 end LinearOrderedCancelAddCommMonoid
 

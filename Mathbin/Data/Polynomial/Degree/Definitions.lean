@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module data.polynomial.degree.definitions
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -231,6 +231,12 @@ theorem nat_degree_le_nat_degree [Semiring S] {q : S[X]} (hpq : p.degree ≤ q.d
     p.natDegree ≤ q.natDegree :=
   WithBot.giUnbot'Bot.gc.monotone_l hpq
 #align polynomial.nat_degree_le_nat_degree Polynomial.nat_degree_le_nat_degree
+
+theorem nat_degree_lt_nat_degree {p q : R[X]} (hp : p ≠ 0) (hpq : p.degree < q.degree) :
+    p.natDegree < q.natDegree := by
+  by_cases hq : q = 0; · exact (not_lt_bot <| hq.subst hpq).elim
+  rwa [degree_eq_nat_degree hp, degree_eq_nat_degree hq, WithBot.coe_lt_coe] at hpq
+#align polynomial.nat_degree_lt_nat_degree Polynomial.nat_degree_lt_nat_degree
 
 @[simp]
 theorem degree_C (ha : a ≠ 0) : degree (c a) = (0 : WithBot ℕ) := by

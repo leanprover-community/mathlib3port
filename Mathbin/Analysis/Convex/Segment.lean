@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Yury Kudriashov, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.convex.segment
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -469,23 +469,23 @@ section LinearOrderedAddCommMonoid
 
 variable [LinearOrderedAddCommMonoid E] [Module 𝕜 E] [OrderedSmul 𝕜 E] {𝕜} {a b : 𝕜}
 
-theorem segment_subset_interval (x y : E) : [x -[𝕜] y] ⊆ interval x y :=
+theorem segment_subset_uIcc (x y : E) : [x -[𝕜] y] ⊆ uIcc x y :=
   by
   cases le_total x y
-  · rw [interval_of_le h]
+  · rw [uIcc_of_le h]
     exact segment_subset_Icc h
-  · rw [interval_of_ge h, segment_symm]
+  · rw [uIcc_of_ge h, segment_symm]
     exact segment_subset_Icc h
-#align segment_subset_interval segment_subset_interval
+#align segment_subset_uIcc segment_subset_uIcc
 
 theorem Convex.min_le_combo (x y : E) (ha : 0 ≤ a) (hb : 0 ≤ b) (hab : a + b = 1) :
     min x y ≤ a • x + b • y :=
-  (segment_subset_interval x y ⟨_, _, ha, hb, hab, rfl⟩).1
+  (segment_subset_uIcc x y ⟨_, _, ha, hb, hab, rfl⟩).1
 #align convex.min_le_combo Convex.min_le_combo
 
 theorem Convex.combo_le_max (x y : E) (ha : 0 ≤ a) (hb : 0 ≤ b) (hab : a + b = 1) :
     a • x + b • y ≤ max x y :=
-  (segment_subset_interval x y ⟨_, _, ha, hb, hab, rfl⟩).2
+  (segment_subset_uIcc x y ⟨_, _, ha, hb, hab, rfl⟩).2
 #align convex.combo_le_max Convex.combo_le_max
 
 end LinearOrderedAddCommMonoid
@@ -539,9 +539,9 @@ theorem open_segment_eq_Ioo' (hxy : x ≠ y) : openSegment 𝕜 x y = Ioo (min x
   · rw [open_segment_symm, open_segment_eq_Ioo h, max_eq_left h.le, min_eq_right h.le]
 #align open_segment_eq_Ioo' open_segment_eq_Ioo'
 
-theorem segment_eq_interval (x y : 𝕜) : [x -[𝕜] y] = interval x y :=
+theorem segment_eq_uIcc (x y : 𝕜) : [x -[𝕜] y] = uIcc x y :=
   segment_eq_Icc' _ _
-#align segment_eq_interval segment_eq_interval
+#align segment_eq_uIcc segment_eq_uIcc
 
 /-- A point is in an `Icc` iff it can be expressed as a convex combination of the endpoints. -/
 theorem Convex.mem_Icc (h : x ≤ y) :

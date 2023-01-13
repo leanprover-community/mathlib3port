@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module tactic.abel
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -230,6 +230,15 @@ unsafe def eval_neg (c : context) : normal_expr → tactic (normal_expr × expr)
     return (term' c (n', -n.2) x a', c `` term_neg c [n.1, x, a, n', a', h₁, h₂])
 #align tactic.abel.eval_neg tactic.abel.eval_neg
 
+def natSmulInst {α} [AddCommMonoid α] : SMul ℕ α := by infer_instance
+#align tactic.abel.nat_smul_inst Tactic.Abel.natSmulInst
+
+def natSmulInstg {α} [AddCommGroup α] : SMul ℕ α := by infer_instance
+#align tactic.abel.nat_smul_instg Tactic.Abel.natSmulInstg
+
+def intSmulInstg {α} [AddCommGroup α] : SMul ℤ α := by infer_instance
+#align tactic.abel.int_smul_instg Tactic.Abel.intSmulInstg
+
 def smul {α} [AddCommMonoid α] (n : ℕ) (x : α) : α :=
   n • x
 #align tactic.abel.smul Tactic.Abel.smul
@@ -382,13 +391,24 @@ unsafe
             let ( e' , p ) ← eval <| c . iapp ` ` smul [ e₁ , e₂ ]
             return ( e' , c ` ` unfold_zsmul c [ e₁ , e₂ , e' , p ] )
       |
-        e @ q( @ SMul.smul Nat _ AddMonoid.SMul $ ( e₁ ) $ ( e₂ ) )
+        e @ q( @ SMul.smul Nat $ ( α ) $ ( inst ) $ ( e₁ ) $ ( e₂ ) )
         =>
-        eval_smul' c eval false e e₁ e₂
+        do
+          let inst' := c . iapp ` ` nat_smul_inst [ ]
+            condM
+              ( succeeds ( is_def_eq inst inst' ) )
+                ( eval_smul' c eval ff e e₁ e₂ )
+                ( eval_atom c e )
       |
-        e @ q( @ SMul.smul Int _ SubNegMonoid.hasSmulInt $ ( e₁ ) $ ( e₂ ) )
+        e @ q( @ SMul.smul Int $ ( α ) $ ( inst ) $ ( e₁ ) $ ( e₂ ) )
         =>
-        eval_smul' c eval true e e₁ e₂
+        do
+          let tt ← pure c . is_group | eval_atom c e
+            let inst' := c . app ` ` int_smul_instg c . inst [ ]
+            condM
+              ( succeeds ( is_def_eq inst inst' ) )
+                ( eval_smul' c eval tt e e₁ e₂ )
+                ( eval_atom c e )
       | e @ q( smul $ ( e₁ ) $ ( e₂ ) ) => eval_smul' c eval false e e₁ e₂
       | e @ q( smulg $ ( e₁ ) $ ( e₂ ) ) => eval_smul' c eval true e e₁ e₂
       |

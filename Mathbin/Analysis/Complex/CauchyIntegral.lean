@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.complex.cauchy_integral
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -192,7 +192,7 @@ theorem integral_boundary_rect_of_has_fderiv_at_real_off_countable (f : ℂ → 
     simp [F', he₁, he₂, ← sub_eq_neg_add]
   set R : Set (ℝ × ℝ) := [z.re, w.re] ×ˢ [w.im, z.im]
   set t : Set (ℝ × ℝ) := e ⁻¹' s
-  rw [interval_swap z.im] at Hc Hi
+  rw [uIcc_comm z.im] at Hc Hi
   rw [min_comm z.im, max_comm z.im] at Hd
   have hR : e ⁻¹' ([z.re, w.re] ×ℂ [w.im, z.im]) = R := rfl
   have htc : ContinuousOn F R := Hc.comp e.continuous_on hR.ge
@@ -253,7 +253,7 @@ theorem integral_boundary_rect_of_differentiable_on_real (f : ℂ → E) (z w : 
     Hd.ContinuousOn
     (fun x hx =>
       Hd.HasFderivAt <| by
-        simpa only [← mem_interior_iff_mem_nhds, interior_re_prod_im, interval, interior_Icc] using
+        simpa only [← mem_interior_iff_mem_nhds, interior_re_prod_im, uIcc, interior_Icc] using
           hx.1)
     Hi
 #align

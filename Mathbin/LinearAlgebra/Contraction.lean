@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash, Antoine Labelle
 
 ! This file was ported from Lean 3 source module linear_algebra.contraction
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,21 +63,18 @@ def dualTensorHom : Module.Dual R M ⊗ N →ₗ[R] M →ₗ[R] N :=
 variable {R M N P Q}
 
 @[simp]
-theorem contract_left_apply (f : Module.Dual R M) (m : M) : contractLeft R M (f ⊗ₜ m) = f m := by
-  apply uncurry_apply
+theorem contract_left_apply (f : Module.Dual R M) (m : M) : contractLeft R M (f ⊗ₜ m) = f m :=
+  rfl
 #align contract_left_apply contract_left_apply
 
 @[simp]
-theorem contract_right_apply (f : Module.Dual R M) (m : M) : contractRight R M (m ⊗ₜ f) = f m := by
-  apply uncurry_apply
+theorem contract_right_apply (f : Module.Dual R M) (m : M) : contractRight R M (m ⊗ₜ f) = f m :=
+  rfl
 #align contract_right_apply contract_right_apply
 
 @[simp]
 theorem dual_tensor_hom_apply (f : Module.Dual R M) (m : M) (n : N) :
     dualTensorHom R M N (f ⊗ₜ n) m = f m • n :=
-  by
-  dsimp only [dualTensorHom]
-  rw [uncurry_apply]
   rfl
 #align dual_tensor_hom_apply dual_tensor_hom_apply
 
@@ -255,6 +252,7 @@ theorem ltensor_hom_equiv_hom_ltensor_to_linear_map :
   have h : Function.Surjective e.to_linear_map := e.surjective
   refine' (cancel_right h).1 _
   ext (p f q m)
+  dsimp [ltensorHomEquivHomLtensor]
   simp only [ltensorHomEquivHomLtensor, dualTensorHomEquiv, compr₂_apply, mk_apply, coe_comp,
     LinearEquiv.coe_to_linear_map, Function.comp_apply, map_tmul, LinearEquiv.coe_coe,
     dual_tensor_hom_equiv_of_basis_apply, LinearEquiv.trans_apply, congr_tmul,

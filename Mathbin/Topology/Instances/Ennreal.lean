@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.instances.ennreal
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -915,9 +915,15 @@ protected theorem tsum_sigma' {β : α → Type _} (f : (Σa, β a) → ℝ≥0�
   tsum_sigma' (fun b => Ennreal.summable) Ennreal.summable
 #align ennreal.tsum_sigma' Ennreal.tsum_sigma'
 
-protected theorem tsum_prod {f : α → β → ℝ≥0∞} : (∑' p : α × β, f p.1 p.2) = ∑' a, ∑' b, f a b :=
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
+protected theorem tsum_prod {f : α → β → ℝ≥0∞} : (∑' p : α × β, f p.1 p.2) = ∑' (a) (b), f a b :=
   (tsum_prod' Ennreal.summable) fun _ => Ennreal.summable
 #align ennreal.tsum_prod Ennreal.tsum_prod
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
+protected theorem tsum_prod' {f : α × β → ℝ≥0∞} : (∑' p : α × β, f p) = ∑' (a) (b), f (a, b) :=
+  (tsum_prod' Ennreal.summable) fun _ => Ennreal.summable
+#align ennreal.tsum_prod' Ennreal.tsum_prod'
 
 protected theorem tsum_comm {f : α → β → ℝ≥0∞} : (∑' a, ∑' b, f a b) = ∑' b, ∑' a, f a b :=
   tsum_comm' Ennreal.summable (fun _ => Ennreal.summable) fun _ => Ennreal.summable

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.special_functions.non_integrable
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,7 +70,7 @@ theorem not_interval_integrable_of_tendsto_norm_at_top_of_deriv_is_O_filter {f :
     have h :
       ∀ᶠ x : ℝ × ℝ in l.prod l,
         ∀ y ∈ [x.1, x.2], (DifferentiableAt ℝ f y ∧ ‖deriv f y‖ ≤ C * ‖g y‖) ∧ y ∈ [a, b] :=
-      (tendsto_fst.interval tendsto_snd).Eventually ((hd.and hC.bound).And hl).smallSets
+      (tendsto_fst.uIcc tendsto_snd).Eventually ((hd.and hC.bound).And hl).smallSets
     rcases mem_prod_self_iff.1 h with ⟨s, hsl, hs⟩
     simp only [prod_subset_iff, mem_set_of_eq] at hs
     exact
@@ -89,8 +89,8 @@ theorem not_interval_integrable_of_tendsto_norm_at_top_of_deriv_is_O_filter {f :
   replace hg : ∀ x ∈ Ι c d, ‖deriv f x‖ ≤ C * ‖g x‖
   exact fun z hz => hg c hc d hd z ⟨hz.1.le, hz.2⟩
   have hg_ae : ∀ᵐ x ∂volume.restrict (Ι c d), ‖deriv f x‖ ≤ C * ‖g x‖ :=
-    (ae_restrict_mem measurable_set_interval_oc).mono hg
-  have hsub' : Ι c d ⊆ Ι a b := interval_oc_subset_interval_oc_of_interval_subset_interval hsub
+    (ae_restrict_mem measurable_set_uIoc).mono hg
+  have hsub' : Ι c d ⊆ Ι a b := uIoc_subset_uIoc_of_uIcc_subset_uIcc hsub
   have hfi : IntervalIntegrable (deriv f) volume c d :=
     (hgi.mono_set hsub).monoFun' (aeStronglyMeasurableDeriv _ _) hg_ae
   refine' hlt.not_le (sub_le_iff_le_add'.1 _)
@@ -100,7 +100,7 @@ theorem not_interval_integrable_of_tendsto_norm_at_top_of_deriv_is_O_filter {f :
     _ = ‖∫ x in Ι c d, deriv f x‖ := norm_integral_eq_norm_integral_Ioc _
     _ ≤ ∫ x in Ι c d, ‖deriv f x‖ := norm_integral_le_integral_norm _
     _ ≤ ∫ x in Ι c d, C * ‖g x‖ :=
-      set_integral_mono_on hfi.norm.def (hgi.def.mono_set hsub') measurable_set_interval_oc hg
+      set_integral_mono_on hfi.norm.def (hgi.def.mono_set hsub') measurable_set_uIoc hg
     _ ≤ ∫ x in Ι a b, C * ‖g x‖ :=
       set_integral_mono_set hgi.def ((ae_of_all _) fun x => mul_nonneg hC₀ (norm_nonneg _))
         hsub'.eventually_le

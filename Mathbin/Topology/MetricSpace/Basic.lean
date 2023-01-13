@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Robert Y. Lewis, Johannes Hölzl, Mario Carneiro, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.basic
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1532,24 +1532,23 @@ theorem Real.nndist_eq' (x y : ℝ) : nndist x y = Real.nnabs (y - x) :=
 theorem Real.dist_0_eq_abs (x : ℝ) : dist x 0 = |x| := by simp [Real.dist_eq]
 #align real.dist_0_eq_abs Real.dist_0_eq_abs
 
-theorem Real.dist_left_le_of_mem_interval {x y z : ℝ} (h : y ∈ interval x z) :
-    dist x y ≤ dist x z := by simpa only [dist_comm x] using abs_sub_left_of_mem_interval h
-#align real.dist_left_le_of_mem_interval Real.dist_left_le_of_mem_interval
+theorem Real.dist_left_le_of_mem_uIcc {x y z : ℝ} (h : y ∈ uIcc x z) : dist x y ≤ dist x z := by
+  simpa only [dist_comm x] using abs_sub_left_of_mem_uIcc h
+#align real.dist_left_le_of_mem_uIcc Real.dist_left_le_of_mem_uIcc
 
-theorem Real.dist_right_le_of_mem_interval {x y z : ℝ} (h : y ∈ interval x z) :
-    dist y z ≤ dist x z := by simpa only [dist_comm _ z] using abs_sub_right_of_mem_interval h
-#align real.dist_right_le_of_mem_interval Real.dist_right_le_of_mem_interval
+theorem Real.dist_right_le_of_mem_uIcc {x y z : ℝ} (h : y ∈ uIcc x z) : dist y z ≤ dist x z := by
+  simpa only [dist_comm _ z] using abs_sub_right_of_mem_uIcc h
+#align real.dist_right_le_of_mem_uIcc Real.dist_right_le_of_mem_uIcc
 
-theorem Real.dist_le_of_mem_interval {x y x' y' : ℝ} (hx : x ∈ interval x' y')
-    (hy : y ∈ interval x' y') : dist x y ≤ dist x' y' :=
-  abs_sub_le_of_subinterval <|
-    interval_subset_interval (by rwa [interval_swap]) (by rwa [interval_swap])
-#align real.dist_le_of_mem_interval Real.dist_le_of_mem_interval
+theorem Real.dist_le_of_mem_uIcc {x y x' y' : ℝ} (hx : x ∈ uIcc x' y') (hy : y ∈ uIcc x' y') :
+    dist x y ≤ dist x' y' :=
+  abs_sub_le_of_uIcc_subset_uIcc <| uIcc_subset_uIcc (by rwa [uIcc_comm]) (by rwa [uIcc_comm])
+#align real.dist_le_of_mem_uIcc Real.dist_le_of_mem_uIcc
 
 theorem Real.dist_le_of_mem_Icc {x y x' y' : ℝ} (hx : x ∈ Icc x' y') (hy : y ∈ Icc x' y') :
     dist x y ≤ y' - x' := by
   simpa only [Real.dist_eq, abs_of_nonpos (sub_nonpos.2 <| hx.1.trans hx.2), neg_sub] using
-    Real.dist_le_of_mem_interval (Icc_subset_interval hx) (Icc_subset_interval hy)
+    Real.dist_le_of_mem_uIcc (Icc_subset_uIcc hx) (Icc_subset_uIcc hy)
 #align real.dist_le_of_mem_Icc Real.dist_le_of_mem_Icc
 
 theorem Real.dist_le_of_mem_Icc_01 {x y : ℝ} (hx : x ∈ Icc (0 : ℝ) 1) (hy : y ∈ Icc (0 : ℝ) 1) :
@@ -2355,8 +2354,8 @@ theorem Real.dist_le_of_mem_pi_Icc {x y x' y' : β → ℝ} (hx : x ∈ icc x' y
   by
   refine'
       (dist_pi_le_iff dist_nonneg).2 fun b =>
-        (Real.dist_le_of_mem_interval _ _).trans (dist_le_pi_dist _ _ b) <;>
-    refine' Icc_subset_interval _
+        (Real.dist_le_of_mem_uIcc _ _).trans (dist_le_pi_dist _ _ b) <;>
+    refine' Icc_subset_uIcc _
   exacts[⟨hx.1 _, hx.2 _⟩, ⟨hy.1 _, hy.2 _⟩]
 #align real.dist_le_of_mem_pi_Icc Real.dist_le_of_mem_pi_Icc
 

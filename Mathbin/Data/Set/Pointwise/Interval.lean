@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Patrick Massot
 
 ! This file was ported from Lean 3 source module data.set.pointwise.interval
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -418,75 +418,75 @@ section LinearOrderedAddCommGroup
 variable [LinearOrderedAddCommGroup α] (a b c d : α)
 
 @[simp]
-theorem preimage_const_add_interval : (fun x => a + x) ⁻¹' [b, c] = [b - a, c - a] := by
+theorem preimage_const_add_uIcc : (fun x => a + x) ⁻¹' [b, c] = [b - a, c - a] := by
   simp only [← Icc_min_max, preimage_const_add_Icc, min_sub_sub_right, max_sub_sub_right]
-#align set.preimage_const_add_interval Set.preimage_const_add_interval
+#align set.preimage_const_add_uIcc Set.preimage_const_add_uIcc
 
 @[simp]
-theorem preimage_add_const_interval : (fun x => x + a) ⁻¹' [b, c] = [b - a, c - a] := by
-  simpa only [add_comm] using preimage_const_add_interval a b c
-#align set.preimage_add_const_interval Set.preimage_add_const_interval
+theorem preimage_add_const_uIcc : (fun x => x + a) ⁻¹' [b, c] = [b - a, c - a] := by
+  simpa only [add_comm] using preimage_const_add_uIcc a b c
+#align set.preimage_add_const_uIcc Set.preimage_add_const_uIcc
 
 @[simp]
-theorem preimage_neg_interval : -[a, b] = [-a, -b] := by
+theorem preimage_neg_uIcc : -[a, b] = [-a, -b] := by
   simp only [← Icc_min_max, preimage_neg_Icc, min_neg_neg, max_neg_neg]
-#align set.preimage_neg_interval Set.preimage_neg_interval
+#align set.preimage_neg_uIcc Set.preimage_neg_uIcc
 
 @[simp]
-theorem preimage_sub_const_interval : (fun x => x - a) ⁻¹' [b, c] = [b + a, c + a] := by
+theorem preimage_sub_const_uIcc : (fun x => x - a) ⁻¹' [b, c] = [b + a, c + a] := by
   simp [sub_eq_add_neg]
-#align set.preimage_sub_const_interval Set.preimage_sub_const_interval
+#align set.preimage_sub_const_uIcc Set.preimage_sub_const_uIcc
 
 @[simp]
-theorem preimage_const_sub_interval : (fun x => a - x) ⁻¹' [b, c] = [a - b, a - c] :=
+theorem preimage_const_sub_uIcc : (fun x => a - x) ⁻¹' [b, c] = [a - b, a - c] :=
   by
   simp_rw [← Icc_min_max, preimage_const_sub_Icc]
   simp only [sub_eq_add_neg, min_add_add_left, max_add_add_left, min_neg_neg, max_neg_neg]
-#align set.preimage_const_sub_interval Set.preimage_const_sub_interval
+#align set.preimage_const_sub_uIcc Set.preimage_const_sub_uIcc
 
 @[simp]
-theorem image_const_add_interval : (fun x => a + x) '' [b, c] = [a + b, a + c] := by simp [add_comm]
-#align set.image_const_add_interval Set.image_const_add_interval
+theorem image_const_add_uIcc : (fun x => a + x) '' [b, c] = [a + b, a + c] := by simp [add_comm]
+#align set.image_const_add_uIcc Set.image_const_add_uIcc
 
 @[simp]
-theorem image_add_const_interval : (fun x => x + a) '' [b, c] = [b + a, c + a] := by simp
-#align set.image_add_const_interval Set.image_add_const_interval
+theorem image_add_const_uIcc : (fun x => x + a) '' [b, c] = [b + a, c + a] := by simp
+#align set.image_add_const_uIcc Set.image_add_const_uIcc
 
 @[simp]
-theorem image_const_sub_interval : (fun x => a - x) '' [b, c] = [a - b, a - c] := by
+theorem image_const_sub_uIcc : (fun x => a - x) '' [b, c] = [a - b, a - c] := by
   simp [sub_eq_add_neg, image_comp (fun x => a + x) fun x => -x]
-#align set.image_const_sub_interval Set.image_const_sub_interval
+#align set.image_const_sub_uIcc Set.image_const_sub_uIcc
 
 @[simp]
-theorem image_sub_const_interval : (fun x => x - a) '' [b, c] = [b - a, c - a] := by
+theorem image_sub_const_uIcc : (fun x => x - a) '' [b, c] = [b - a, c - a] := by
   simp [sub_eq_add_neg, add_comm]
-#align set.image_sub_const_interval Set.image_sub_const_interval
+#align set.image_sub_const_uIcc Set.image_sub_const_uIcc
 
-theorem image_neg_interval : Neg.neg '' [a, b] = [-a, -b] := by simp
-#align set.image_neg_interval Set.image_neg_interval
+theorem image_neg_uIcc : Neg.neg '' [a, b] = [-a, -b] := by simp
+#align set.image_neg_uIcc Set.image_neg_uIcc
 
 variable {a b c d}
 
 /-- If `[c, d]` is a subinterval of `[a, b]`, then the distance between `c` and `d` is less than or
 equal to that of `a` and `b` -/
-theorem abs_sub_le_of_subinterval (h : [c, d] ⊆ [a, b]) : |d - c| ≤ |b - a| :=
+theorem abs_sub_le_of_uIcc_subset_uIcc (h : [c, d] ⊆ [a, b]) : |d - c| ≤ |b - a| :=
   by
   rw [← max_sub_min_eq_abs, ← max_sub_min_eq_abs]
-  rw [interval_subset_interval_iff_le] at h
+  rw [uIcc_subset_uIcc_iff_le] at h
   exact sub_le_sub h.2 h.1
-#align set.abs_sub_le_of_subinterval Set.abs_sub_le_of_subinterval
+#align set.abs_sub_le_of_uIcc_subset_uIcc Set.abs_sub_le_of_uIcc_subset_uIcc
 
 /-- If `c ∈ [a, b]`, then the distance between `a` and `c` is less than or equal to
 that of `a` and `b`  -/
-theorem abs_sub_left_of_mem_interval (h : c ∈ [a, b]) : |c - a| ≤ |b - a| :=
-  abs_sub_le_of_subinterval (interval_subset_interval_left h)
-#align set.abs_sub_left_of_mem_interval Set.abs_sub_left_of_mem_interval
+theorem abs_sub_left_of_mem_uIcc (h : c ∈ [a, b]) : |c - a| ≤ |b - a| :=
+  abs_sub_le_of_uIcc_subset_uIcc <| uIcc_subset_uIcc_left h
+#align set.abs_sub_left_of_mem_uIcc Set.abs_sub_left_of_mem_uIcc
 
 /-- If `x ∈ [a, b]`, then the distance between `c` and `b` is less than or equal to
 that of `a` and `b`  -/
-theorem abs_sub_right_of_mem_interval (h : c ∈ [a, b]) : |b - c| ≤ |b - a| :=
-  abs_sub_le_of_subinterval (interval_subset_interval_right h)
-#align set.abs_sub_right_of_mem_interval Set.abs_sub_right_of_mem_interval
+theorem abs_sub_right_of_mem_uIcc (h : c ∈ [a, b]) : |b - c| ≤ |b - a| :=
+  abs_sub_le_of_uIcc_subset_uIcc <| uIcc_subset_uIcc_right h
+#align set.abs_sub_right_of_mem_uIcc Set.abs_sub_right_of_mem_uIcc
 
 end LinearOrderedAddCommGroup
 
@@ -678,47 +678,47 @@ theorem preimage_const_mul_Icc_of_neg (a b : α) {c : α} (h : c < 0) :
 #align set.preimage_const_mul_Icc_of_neg Set.preimage_const_mul_Icc_of_neg
 
 @[simp]
-theorem preimage_mul_const_interval (ha : a ≠ 0) (b c : α) :
+theorem preimage_mul_const_uIcc (ha : a ≠ 0) (b c : α) :
     (fun x => x * a) ⁻¹' [b, c] = [b / a, c / a] :=
   (lt_or_gt_of_ne ha).elim
     (fun h => by
       simp [← Icc_min_max, h, h.le, min_div_div_right_of_nonpos, max_div_div_right_of_nonpos])
     fun ha : 0 < a => by simp [← Icc_min_max, ha, ha.le, min_div_div_right, max_div_div_right]
-#align set.preimage_mul_const_interval Set.preimage_mul_const_interval
+#align set.preimage_mul_const_uIcc Set.preimage_mul_const_uIcc
 
 @[simp]
-theorem preimage_const_mul_interval (ha : a ≠ 0) (b c : α) :
+theorem preimage_const_mul_uIcc (ha : a ≠ 0) (b c : α) :
     (fun x => a * x) ⁻¹' [b, c] = [b / a, c / a] := by
-  simp only [← preimage_mul_const_interval ha, mul_comm]
-#align set.preimage_const_mul_interval Set.preimage_const_mul_interval
+  simp only [← preimage_mul_const_uIcc ha, mul_comm]
+#align set.preimage_const_mul_uIcc Set.preimage_const_mul_uIcc
 
 @[simp]
-theorem preimage_div_const_interval (ha : a ≠ 0) (b c : α) :
+theorem preimage_div_const_uIcc (ha : a ≠ 0) (b c : α) :
     (fun x => x / a) ⁻¹' [b, c] = [b * a, c * a] := by
-  simp only [div_eq_mul_inv, preimage_mul_const_interval (inv_ne_zero ha), inv_inv]
-#align set.preimage_div_const_interval Set.preimage_div_const_interval
+  simp only [div_eq_mul_inv, preimage_mul_const_uIcc (inv_ne_zero ha), inv_inv]
+#align set.preimage_div_const_uIcc Set.preimage_div_const_uIcc
 
 @[simp]
-theorem image_mul_const_interval (a b c : α) : (fun x => x * a) '' [b, c] = [b * a, c * a] :=
+theorem image_mul_const_uIcc (a b c : α) : (fun x => x * a) '' [b, c] = [b * a, c * a] :=
   if ha : a = 0 then by simp [ha]
   else
     calc
       (fun x => x * a) '' [b, c] = (fun x => x * a⁻¹) ⁻¹' [b, c] :=
         (Units.mk0 a ha).mul_right.image_eq_preimage _
       _ = (fun x => x / a) ⁻¹' [b, c] := by simp only [div_eq_mul_inv]
-      _ = [b * a, c * a] := preimage_div_const_interval ha _ _
+      _ = [b * a, c * a] := preimage_div_const_uIcc ha _ _
       
-#align set.image_mul_const_interval Set.image_mul_const_interval
+#align set.image_mul_const_uIcc Set.image_mul_const_uIcc
 
 @[simp]
-theorem image_const_mul_interval (a b c : α) : (fun x => a * x) '' [b, c] = [a * b, a * c] := by
-  simpa only [mul_comm] using image_mul_const_interval a b c
-#align set.image_const_mul_interval Set.image_const_mul_interval
+theorem image_const_mul_uIcc (a b c : α) : (fun x => a * x) '' [b, c] = [a * b, a * c] := by
+  simpa only [mul_comm] using image_mul_const_uIcc a b c
+#align set.image_const_mul_uIcc Set.image_const_mul_uIcc
 
 @[simp]
-theorem image_div_const_interval (a b c : α) : (fun x => x / a) '' [b, c] = [b / a, c / a] := by
-  simp only [div_eq_mul_inv, image_mul_const_interval]
-#align set.image_div_const_interval Set.image_div_const_interval
+theorem image_div_const_uIcc (a b c : α) : (fun x => x / a) '' [b, c] = [b / a, c / a] := by
+  simp only [div_eq_mul_inv, image_mul_const_uIcc]
+#align set.image_div_const_uIcc Set.image_div_const_uIcc
 
 theorem image_mul_right_Icc' (a b : α) {c : α} (h : 0 < c) :
     (fun x => x * c) '' Icc a b = Icc (a * c) (b * c) :=

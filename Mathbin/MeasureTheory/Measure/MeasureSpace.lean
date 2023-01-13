@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module measure_theory.measure.measure_space
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -119,11 +119,11 @@ instance ae_is_measurably_generated : IsMeasurablyGenerated μ.ae :=
     ⟨tᶜ, compl_mem_ae_iff.2 htμ, htm.compl, compl_subset_comm.1 hst⟩⟩
 #align measure_theory.ae_is_measurably_generated MeasureTheory.ae_is_measurably_generated
 
-/-- See also `measure_theory.ae_restrict_interval_oc_iff`. -/
-theorem ae_interval_oc_iff [LinearOrder α] {a b : α} {P : α → Prop} :
+/-- See also `measure_theory.ae_restrict_uIoc_iff`. -/
+theorem ae_uIoc_iff [LinearOrder α] {a b : α} {P : α → Prop} :
     (∀ᵐ x ∂μ, x ∈ Ι a b → P x) ↔ (∀ᵐ x ∂μ, x ∈ Ioc a b → P x) ∧ ∀ᵐ x ∂μ, x ∈ Ioc b a → P x := by
-  simp only [interval_oc_eq_union, mem_union, or_imp, eventually_and]
-#align measure_theory.ae_interval_oc_iff MeasureTheory.ae_interval_oc_iff
+  simp only [uIoc_eq_union, mem_union, or_imp, eventually_and]
+#align measure_theory.ae_uIoc_iff MeasureTheory.ae_uIoc_iff
 
 theorem measure_union (hd : Disjoint s₁ s₂) (h : MeasurableSet s₂) : μ (s₁ ∪ s₂) = μ s₁ + μ s₂ :=
   measure_union₀ h.NullMeasurableSet hd.AeDisjoint
@@ -2868,17 +2868,17 @@ theorem ae_eq_restrict_bUnion_finset_iff (s : ι → Set α) (t : Finset ι) (f 
 #align
   measure_theory.ae_eq_restrict_bUnion_finset_iff MeasureTheory.ae_eq_restrict_bUnion_finset_iff
 
-theorem ae_restrict_interval_oc_eq [LinearOrder α] (a b : α) :
+theorem ae_restrict_uIoc_eq [LinearOrder α] (a b : α) :
     (μ.restrict (Ι a b)).ae = (μ.restrict (Ioc a b)).ae ⊔ (μ.restrict (Ioc b a)).ae := by
-  simp only [interval_oc_eq_union, ae_restrict_union_eq]
-#align measure_theory.ae_restrict_interval_oc_eq MeasureTheory.ae_restrict_interval_oc_eq
+  simp only [uIoc_eq_union, ae_restrict_union_eq]
+#align measure_theory.ae_restrict_uIoc_eq MeasureTheory.ae_restrict_uIoc_eq
 
-/-- See also `measure_theory.ae_interval_oc_iff`. -/
-theorem ae_restrict_interval_oc_iff [LinearOrder α] {a b : α} {P : α → Prop} :
+/-- See also `measure_theory.ae_uIoc_iff`. -/
+theorem ae_restrict_uIoc_iff [LinearOrder α] {a b : α} {P : α → Prop} :
     (∀ᵐ x ∂μ.restrict (Ι a b), P x) ↔
       (∀ᵐ x ∂μ.restrict (Ioc a b), P x) ∧ ∀ᵐ x ∂μ.restrict (Ioc b a), P x :=
-  by rw [ae_restrict_interval_oc_eq, eventually_sup]
-#align measure_theory.ae_restrict_interval_oc_iff MeasureTheory.ae_restrict_interval_oc_iff
+  by rw [ae_restrict_uIoc_eq, eventually_sup]
+#align measure_theory.ae_restrict_uIoc_iff MeasureTheory.ae_restrict_uIoc_iff
 
 theorem ae_restrict_iff {p : α → Prop} (hp : MeasurableSet { x | p x }) :
     (∀ᵐ x ∂μ.restrict s, p x) ↔ ∀ᵐ x ∂μ, x ∈ s → p x :=
@@ -3473,9 +3473,9 @@ end
 
 open Interval
 
-theorem interval_oc_ae_eq_interval [LinearOrder α] {a b : α} : Ι a b =ᵐ[μ] [a, b] :=
+theorem uIoc_ae_eq_interval [LinearOrder α] {a b : α} : Ι a b =ᵐ[μ] [a, b] :=
   Ioc_ae_eq_Icc
-#align measure_theory.interval_oc_ae_eq_interval MeasureTheory.interval_oc_ae_eq_interval
+#align measure_theory.uIoc_ae_eq_interval MeasureTheory.uIoc_ae_eq_interval
 
 end NoAtoms
 

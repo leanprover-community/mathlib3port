@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro
 
 ! This file was ported from Lean 3 source module linear_algebra.tensor_product
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -479,7 +479,7 @@ def liftAux : M ⊗[R] N →+ P :=
 #align tensor_product.lift_aux TensorProduct.liftAux
 
 theorem lift_aux_tmul (m n) : liftAux f (m ⊗ₜ n) = f m n :=
-  zero_add _
+  rfl
 #align tensor_product.lift_aux_tmul TensorProduct.lift_aux_tmul
 
 variable {f}
@@ -505,12 +505,12 @@ variable {f}
 
 @[simp]
 theorem lift.tmul (x y) : lift f (x ⊗ₜ y) = f x y :=
-  zero_add _
+  rfl
 #align tensor_product.lift.tmul TensorProduct.lift.tmul
 
 @[simp]
 theorem lift.tmul' (x y) : (lift f).1 (x ⊗ₜ y) = f x y :=
-  lift.tmul _ _
+  rfl
 #align tensor_product.lift.tmul' TensorProduct.lift.tmul'
 
 theorem ext' {g h : M ⊗[R] N →ₗ[R] P} (H : ∀ x y, g (x ⊗ₜ y) = h (x ⊗ₜ y)) : g = h :=
@@ -790,12 +790,12 @@ variable [AddCommMonoid Q'] [Module R Q']
 
 theorem map_comp (f₂ : P →ₗ[R] P') (f₁ : M →ₗ[R] P) (g₂ : Q →ₗ[R] Q') (g₁ : N →ₗ[R] Q) :
     map (f₂.comp f₁) (g₂.comp g₁) = (map f₂ g₂).comp (map f₁ g₁) :=
-  ext' fun _ _ => by simp only [LinearMap.comp_apply, map_tmul]
+  ext' fun _ _ => rfl
 #align tensor_product.map_comp TensorProduct.map_comp
 
 theorem lift_comp_map (i : P →ₗ[R] Q →ₗ[R] Q') (f : M →ₗ[R] P) (g : N →ₗ[R] Q) :
     (lift i).comp (map f g) = lift ((i.comp f).compl₂ g) :=
-  ext' fun _ _ => by simp only [lift.tmul, map_tmul, LinearMap.compl₂_apply, LinearMap.comp_apply]
+  ext' fun _ _ => rfl
 #align tensor_product.lift_comp_map TensorProduct.lift_comp_map
 
 attribute [local ext] ext
@@ -896,8 +896,8 @@ theorem rtensor_hom_to_hom_rtensor_apply (f : M →ₗ[R] P) (q : Q) (m : M) :
 
 @[simp]
 theorem hom_tensor_hom_map_apply (f : M →ₗ[R] P) (g : N →ₗ[R] Q) :
-    homTensorHomMap R M N P Q (f ⊗ₜ g) = map f g := by
-  simp only [hom_tensor_hom_map, lift.tmul, map_bilinear_apply]
+    homTensorHomMap R M N P Q (f ⊗ₜ g) = map f g :=
+  rfl
 #align tensor_product.hom_tensor_hom_map_apply TensorProduct.hom_tensor_hom_map_apply
 
 end

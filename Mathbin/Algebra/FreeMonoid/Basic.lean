@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.free_monoid.basic
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -293,6 +293,23 @@ theorem hom_eq ⦃f g : FreeMonoid α →* M⦄ (h : ∀ x, f (of x) = g (of x))
       simp only [h, hxs, MonoidHom.map_mul]
 #align free_monoid.hom_eq FreeMonoid.hom_eq
 
+#print FreeMonoid.prodAux /-
+/-- A variant of `list.prod` that has `[x].prod = x` true definitionally.
+
+The purpose is to make `free_monoid.lift_eval_of` true by `rfl`. -/
+@[to_additive
+      "A variant of `list.sum` that has `[x].sum = x` true definitionally.\n\nThe purpose is to make `free_add_monoid.lift_eval_of` true by `rfl`."]
+def prodAux {M} [Monoid M] (l : List M) : M :=
+  l.recOn 1 fun x xs (_ : M) => List.foldl (· * ·) x xs
+#align free_monoid.prod_aux FreeMonoid.prodAux
+-/
+
+@[to_additive]
+theorem prod_aux_eq : ∀ l : List M, FreeMonoid.prodAux l = l.Prod
+  | [] => rfl
+  | x :: xs => congr_arg (fun x => List.foldl (· * ·) x xs) (one_mul _).symm
+#align free_monoid.prod_aux_eq FreeMonoid.prod_aux_eq
+
 /- warning: free_monoid.lift -> FreeMonoid.lift is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {M : Type.{u2}} [_inst_1 : Monoid.{u2} M], Equiv.{max (succ u1) (succ u2), max (succ u2) (succ u1)} (α -> M) (MonoidHom.{u1, u2} (FreeMonoid.{u1} α) M (Monoid.toMulOneClass.{u1} (FreeMonoid.{u1} α) (RightCancelMonoid.toMonoid.{u1} (FreeMonoid.{u1} α) (CancelMonoid.toRightCancelMonoid.{u1} (FreeMonoid.{u1} α) (FreeMonoid.cancelMonoid.{u1} α)))) (Monoid.toMulOneClass.{u2} M _inst_1))
@@ -305,11 +322,11 @@ Case conversion may be inaccurate. Consider using '#align free_monoid.lift FreeM
 def lift : (α → M) ≃ (FreeMonoid α →* M)
     where
   toFun f :=
-    ⟨fun l => (l.toList.map f).Prod, rfl, fun l₁ l₂ => by
-      simp only [to_list_mul, List.map_append, List.prod_append]⟩
+    ⟨fun l => FreeMonoid.prodAux (l.toList.map f), rfl, fun l₁ l₂ => by
+      simp only [prod_aux_eq, to_list_mul, List.map_append, List.prod_append]⟩
   invFun f x := f (of x)
-  left_inv f := funext fun x => one_mul (f x)
-  right_inv f := hom_eq fun x => one_mul (f (of x))
+  left_inv f := rfl
+  right_inv f := hom_eq fun x => rfl
 #align free_monoid.lift FreeMonoid.lift
 
 /- warning: free_monoid.lift_symm_apply -> FreeMonoid.lift_symm_apply is a dubious translation:
@@ -331,7 +348,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align free_monoid.lift_apply FreeMonoid.lift_applyₓ'. -/
 @[to_additive]
 theorem lift_apply (f : α → M) (l : FreeMonoid α) : lift f l = (l.toList.map f).Prod :=
-  rfl
+  prod_aux_eq _
 #align free_monoid.lift_apply FreeMonoid.lift_apply
 
 /- warning: free_monoid.lift_comp_of -> FreeMonoid.lift_comp_of is a dubious translation:
@@ -342,7 +359,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align free_monoid.lift_comp_of FreeMonoid.lift_comp_ofₓ'. -/
 @[to_additive]
 theorem lift_comp_of (f : α → M) : lift f ∘ of = f :=
-  lift.symm_apply_apply f
+  rfl
 #align free_monoid.lift_comp_of FreeMonoid.lift_comp_of
 
 /- warning: free_monoid.lift_eval_of -> FreeMonoid.lift_eval_of is a dubious translation:
@@ -353,7 +370,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align free_monoid.lift_eval_of FreeMonoid.lift_eval_ofₓ'. -/
 @[simp, to_additive]
 theorem lift_eval_of (f : α → M) (x : α) : lift f (of x) = f x :=
-  congr_fun (lift_comp_of f) x
+  rfl
 #align free_monoid.lift_eval_of FreeMonoid.lift_eval_of
 
 /- warning: free_monoid.lift_restrict -> FreeMonoid.lift_restrict is a dubious translation:

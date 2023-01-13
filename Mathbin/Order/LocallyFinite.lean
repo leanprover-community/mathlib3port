@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.locally_finite
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -35,7 +35,7 @@ In a `locally_finite_order`,
 * `finset.Ico`: Closed-open interval as a finset.
 * `finset.Ioc`: Open-closed interval as a finset.
 * `finset.Ioo`: Open-open interval as a finset.
-* `finset.interval`: Unordered closed interval as a finset.
+* `finset.uIcc`: Unordered closed interval as a finset.
 * `multiset.Icc`: Closed-closed interval as a multiset.
 * `multiset.Ico`: Closed-open interval as a multiset.
 * `multiset.Ioc`: Open-closed interval as a multiset.
@@ -475,25 +475,25 @@ section Lattice
 
 variable [Lattice α] [LocallyFiniteOrder α] {a b x : α}
 
-/-- `finset.interval a b` is the set of elements lying between `a` and `b`, with `a` and `b`
-included. Note that we define it more generally in a lattice as `finset.Icc (a ⊓ b) (a ⊔ b)`. In a
-product type, `finset.interval` corresponds to the bounding box of the two elements. -/
-def interval (a b : α) : Finset α :=
+/-- `finset.uIcc a b` is the set of elements lying between `a` and `b`, with `a` and `b` included.
+Note that we define it more generally in a lattice as `finset.Icc (a ⊓ b) (a ⊔ b)`. In a
+product type, `finset.uIcc` corresponds to the bounding box of the two elements. -/
+def uIcc (a b : α) : Finset α :=
   icc (a ⊓ b) (a ⊔ b)
-#align finset.interval Finset.interval
+#align finset.uIcc Finset.uIcc
 
--- mathport name: finset.interval
-scoped[FinsetInterval] notation "[" a ", " b "]" => Finset.interval a b
+-- mathport name: finset.uIcc
+scoped[FinsetInterval] notation "[" a ", " b "]" => Finset.uIcc a b
 
 @[simp]
-theorem mem_interval : x ∈ interval a b ↔ a ⊓ b ≤ x ∧ x ≤ a ⊔ b :=
+theorem mem_uIcc : x ∈ uIcc a b ↔ a ⊓ b ≤ x ∧ x ≤ a ⊔ b :=
   mem_Icc
-#align finset.mem_interval Finset.mem_interval
+#align finset.mem_uIcc Finset.mem_uIcc
 
 @[simp, norm_cast]
-theorem coe_interval (a b : α) : ([a, b] : Set α) = Set.interval a b :=
+theorem coe_uIcc (a b : α) : ([a, b] : Set α) = Set.uIcc a b :=
   coe_Icc _ _
-#align finset.coe_interval Finset.coe_interval
+#align finset.coe_uIcc Finset.coe_uIcc
 
 end Lattice
 
@@ -1010,25 +1010,25 @@ namespace Prod
 variable [Lattice α] [Lattice β]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem interval_eq [LocallyFiniteOrder α] [LocallyFiniteOrder β]
+theorem uIcc_eq [LocallyFiniteOrder α] [LocallyFiniteOrder β]
     [DecidableRel ((· ≤ ·) : α × β → α × β → Prop)] (p q : α × β) :
-    Finset.interval p q = Finset.interval p.1 q.1 ×ˢ Finset.interval p.2 q.2 :=
+    Finset.uIcc p q = Finset.uIcc p.1 q.1 ×ˢ Finset.uIcc p.2 q.2 :=
   rfl
-#align prod.interval_eq Prod.interval_eq
+#align prod.uIcc_eq Prod.uIcc_eq
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem interval_mk_mk [LocallyFiniteOrder α] [LocallyFiniteOrder β]
+theorem uIcc_mk_mk [LocallyFiniteOrder α] [LocallyFiniteOrder β]
     [DecidableRel ((· ≤ ·) : α × β → α × β → Prop)] (a₁ a₂ : α) (b₁ b₂ : β) :
-    Finset.interval (a₁, b₁) (a₂, b₂) = Finset.interval a₁ a₂ ×ˢ Finset.interval b₁ b₂ :=
+    Finset.uIcc (a₁, b₁) (a₂, b₂) = Finset.uIcc a₁ a₂ ×ˢ Finset.uIcc b₁ b₂ :=
   rfl
-#align prod.interval_mk_mk Prod.interval_mk_mk
+#align prod.uIcc_mk_mk Prod.uIcc_mk_mk
 
-theorem card_interval [LocallyFiniteOrder α] [LocallyFiniteOrder β]
+theorem card_uIcc [LocallyFiniteOrder α] [LocallyFiniteOrder β]
     [DecidableRel ((· ≤ ·) : α × β → α × β → Prop)] (p q : α × β) :
-    (Finset.interval p q).card = (Finset.interval p.1 q.1).card * (Finset.interval p.2 q.2).card :=
+    (Finset.uIcc p q).card = (Finset.uIcc p.1 q.1).card * (Finset.uIcc p.2 q.2).card :=
   Prod.card_Icc _ _
-#align prod.card_interval Prod.card_interval
+#align prod.card_uIcc Prod.card_uIcc
 
 end Prod
 

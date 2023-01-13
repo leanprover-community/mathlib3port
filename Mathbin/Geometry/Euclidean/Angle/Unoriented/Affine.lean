@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Manuel Candales
 
 ! This file was ported from Lean 3 source module geometry.euclidean.angle.unoriented.affine
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -482,6 +482,45 @@ theorem collinear_iff_eq_or_eq_or_angle_eq_zero_or_angle_eq_pi {p₁ p₂ p₃ :
       exact h.wbtw.collinear
 #align
   euclidean_geometry.collinear_iff_eq_or_eq_or_angle_eq_zero_or_angle_eq_pi EuclideanGeometry.collinear_iff_eq_or_eq_or_angle_eq_zero_or_angle_eq_pi
+
+/-- If the angle between three points is 0, they are collinear. -/
+theorem collinear_of_angle_eq_zero {p₁ p₂ p₃ : P} (h : ∠ p₁ p₂ p₃ = 0) :
+    Collinear ℝ ({p₁, p₂, p₃} : Set P) :=
+  collinear_iff_eq_or_eq_or_angle_eq_zero_or_angle_eq_pi.2 <| Or.inr <| Or.inr <| Or.inl h
+#align euclidean_geometry.collinear_of_angle_eq_zero EuclideanGeometry.collinear_of_angle_eq_zero
+
+/-- If the angle between three points is π, they are collinear. -/
+theorem collinear_of_angle_eq_pi {p₁ p₂ p₃ : P} (h : ∠ p₁ p₂ p₃ = π) :
+    Collinear ℝ ({p₁, p₂, p₃} : Set P) :=
+  collinear_iff_eq_or_eq_or_angle_eq_zero_or_angle_eq_pi.2 <| Or.inr <| Or.inr <| Or.inr h
+#align euclidean_geometry.collinear_of_angle_eq_pi EuclideanGeometry.collinear_of_angle_eq_pi
+
+/-- If three points are not collinear, the angle between them is nonzero. -/
+theorem angle_ne_zero_of_not_collinear {p₁ p₂ p₃ : P} (h : ¬Collinear ℝ ({p₁, p₂, p₃} : Set P)) :
+    ∠ p₁ p₂ p₃ ≠ 0 :=
+  mt collinear_of_angle_eq_zero h
+#align
+  euclidean_geometry.angle_ne_zero_of_not_collinear EuclideanGeometry.angle_ne_zero_of_not_collinear
+
+/-- If three points are not collinear, the angle between them is not π. -/
+theorem angle_ne_pi_of_not_collinear {p₁ p₂ p₃ : P} (h : ¬Collinear ℝ ({p₁, p₂, p₃} : Set P)) :
+    ∠ p₁ p₂ p₃ ≠ π :=
+  mt collinear_of_angle_eq_pi h
+#align
+  euclidean_geometry.angle_ne_pi_of_not_collinear EuclideanGeometry.angle_ne_pi_of_not_collinear
+
+/-- If three points are not collinear, the angle between them is positive. -/
+theorem angle_pos_of_not_collinear {p₁ p₂ p₃ : P} (h : ¬Collinear ℝ ({p₁, p₂, p₃} : Set P)) :
+    0 < ∠ p₁ p₂ p₃ :=
+  (angle_nonneg _ _ _).lt_of_ne (angle_ne_zero_of_not_collinear h).symm
+#align euclidean_geometry.angle_pos_of_not_collinear EuclideanGeometry.angle_pos_of_not_collinear
+
+/-- If three points are not collinear, the angle between them is less than π. -/
+theorem angle_lt_pi_of_not_collinear {p₁ p₂ p₃ : P} (h : ¬Collinear ℝ ({p₁, p₂, p₃} : Set P)) :
+    ∠ p₁ p₂ p₃ < π :=
+  (angle_le_pi _ _ _).lt_of_ne <| angle_ne_pi_of_not_collinear h
+#align
+  euclidean_geometry.angle_lt_pi_of_not_collinear EuclideanGeometry.angle_lt_pi_of_not_collinear
 
 end EuclideanGeometry
 

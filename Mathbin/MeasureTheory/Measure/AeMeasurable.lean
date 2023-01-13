@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.measure.ae_measurable
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -253,11 +253,11 @@ protected theorem nullMeasurable (h : AeMeasurable f μ) : NullMeasurable f μ :
 
 end AeMeasurable
 
-theorem ae_measurable_interval_oc_iff [LinearOrder α] {f : α → β} {a b : α} :
+theorem ae_measurable_uIoc_iff [LinearOrder α] {f : α → β} {a b : α} :
     (AeMeasurable f <| μ.restrict <| Ι a b) ↔
       (AeMeasurable f <| μ.restrict <| Ioc a b) ∧ (AeMeasurable f <| μ.restrict <| Ioc b a) :=
-  by rw [interval_oc_eq_union, ae_measurable_union_iff]
-#align ae_measurable_interval_oc_iff ae_measurable_interval_oc_iff
+  by rw [uIoc_eq_union, ae_measurable_union_iff]
+#align ae_measurable_uIoc_iff ae_measurable_uIoc_iff
 
 theorem ae_measurable_iff_measurable [μ.IsComplete] : AeMeasurable f μ ↔ Measurable f :=
   ⟨fun h => h.NullMeasurable.measurable_of_complete, fun h => h.AeMeasurable⟩

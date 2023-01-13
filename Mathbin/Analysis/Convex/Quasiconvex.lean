@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.convex.quasiconvex
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -148,20 +148,20 @@ theorem quasiconcave_on_iff_min_le :
   @quasiconvex_on_iff_le_max 𝕜 E βᵒᵈ _ _ _ _ _ _
 #align quasiconcave_on_iff_min_le quasiconcave_on_iff_min_le
 
-theorem quasilinear_on_iff_mem_interval :
+theorem quasilinear_on_iff_mem_uIcc :
     QuasilinearOn 𝕜 s f ↔
       Convex 𝕜 s ∧
         ∀ ⦃x⦄,
           x ∈ s →
             ∀ ⦃y⦄,
               y ∈ s →
-                ∀ ⦃a b : 𝕜⦄, 0 ≤ a → 0 ≤ b → a + b = 1 → f (a • x + b • y) ∈ interval (f x) (f y) :=
+                ∀ ⦃a b : 𝕜⦄, 0 ≤ a → 0 ≤ b → a + b = 1 → f (a • x + b • y) ∈ uIcc (f x) (f y) :=
   by
   rw [QuasilinearOn, quasiconvex_on_iff_le_max, quasiconcave_on_iff_min_le, and_and_and_comm,
     and_self_iff]
   apply and_congr_right'
   simp_rw [← forall_and, ← Icc_min_max, mem_Icc, and_comm']
-#align quasilinear_on_iff_mem_interval quasilinear_on_iff_mem_interval
+#align quasilinear_on_iff_mem_uIcc quasilinear_on_iff_mem_uIcc
 
 theorem QuasiconvexOn.convex_lt (hf : QuasiconvexOn 𝕜 s f) (r : β) :
     Convex 𝕜 ({ x ∈ s | f x < r }) :=
@@ -260,7 +260,7 @@ variable [LinearOrderedField 𝕜] [LinearOrderedAddCommMonoid β] {s : Set 𝕜
 theorem QuasilinearOn.monotone_on_or_antitone_on (hf : QuasilinearOn 𝕜 s f) :
     MonotoneOn f s ∨ AntitoneOn f s :=
   by
-  simp_rw [monotone_on_or_antitone_on_iff_interval, ← segment_eq_interval]
+  simp_rw [monotone_on_or_antitone_on_iff_uIcc, ← segment_eq_uIcc]
   rintro a ha b hb c hc h
   refine' ⟨((hf.2 _).segment_subset _ _ h).2, ((hf.1 _).segment_subset _ _ h).2⟩ <;> simp [*]
 #align quasilinear_on.monotone_on_or_antitone_on QuasilinearOn.monotone_on_or_antitone_on

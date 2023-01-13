@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis, Keeley Hoek
 
 ! This file was ported from Lean 3 source module data.fin.basic
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -4080,26 +4080,15 @@ theorem coe_clamp (n m : ℕ) : (clamp n m : ℕ) = min n m :=
   Nat.mod_eq_of_lt <| Nat.lt_succ_iff.mpr <| min_le_right _ _
 #align fin.coe_clamp Fin.coe_clamp
 
-/- warning: fin.coe_of_nat_eq_mod' -> Fin.coe_ofNat_eq_mod' is a dubious translation:
-lean 3 declaration is
-  forall (m : Nat) (n : Nat) [I : NeZero.{0} Nat Nat.hasZero m], Eq.{1} Nat ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Fin m) Nat (HasLiftT.mk.{1, 1} (Fin m) Nat (CoeTCₓ.coe.{1, 1} (Fin m) Nat (coeBase.{1, 1} (Fin m) Nat (Fin.coeToNat m)))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (Fin m) (HasLiftT.mk.{1, 1} Nat (Fin m) (CoeTCₓ.coe.{1, 1} Nat (Fin m) (Nat.castCoe.{0} (Fin m) (AddMonoidWithOne.toNatCast.{0} (Fin m) (Fin.addMonoidWithOne m I))))) n)) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) n m)
-but is expected to have type
-  forall (m : Nat) (n : Nat) [I : NeZero.{0} Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) m], Eq.{1} Nat (Fin.val m (Fin.ofNat' m n (Nat.pos_of_ne_zero m (NeZero.ne.{0} Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) m I)))) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) n m)
-Case conversion may be inaccurate. Consider using '#align fin.coe_of_nat_eq_mod' Fin.coe_ofNat_eq_mod'ₓ'. -/
-@[simp]
-theorem coe_ofNat_eq_mod' (m n : ℕ) [I : NeZero m] : ((n : Fin m) : ℕ) = n % m :=
-  rfl
-#align fin.coe_of_nat_eq_mod' Fin.coe_ofNat_eq_mod'
-
 /- warning: fin.coe_of_nat_eq_mod -> Fin.coe_of_nat_eq_mod is a dubious translation:
 lean 3 declaration is
-  forall (m : Nat) (n : Nat), Eq.{1} Nat ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Fin (Nat.succ m)) Nat (HasLiftT.mk.{1, 1} (Fin (Nat.succ m)) Nat (CoeTCₓ.coe.{1, 1} (Fin (Nat.succ m)) Nat (coeBase.{1, 1} (Fin (Nat.succ m)) Nat (Fin.coeToNat (Nat.succ m))))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (Fin (Nat.succ m)) (HasLiftT.mk.{1, 1} Nat (Fin (Nat.succ m)) (CoeTCₓ.coe.{1, 1} Nat (Fin (Nat.succ m)) (Nat.castCoe.{0} (Fin (Nat.succ m)) (AddMonoidWithOne.toNatCast.{0} (Fin (Nat.succ m)) (Fin.addMonoidWithOne (Nat.succ m) (NeZero.succ m)))))) n)) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) n (Nat.succ m))
+  forall (m : Nat) (n : Nat) [_inst_1 : NeZero.{0} Nat Nat.hasZero m], Eq.{1} Nat ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Fin m) Nat (HasLiftT.mk.{1, 1} (Fin m) Nat (CoeTCₓ.coe.{1, 1} (Fin m) Nat (coeBase.{1, 1} (Fin m) Nat (Fin.coeToNat m)))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (Fin m) (HasLiftT.mk.{1, 1} Nat (Fin m) (CoeTCₓ.coe.{1, 1} Nat (Fin m) (Nat.castCoe.{0} (Fin m) (AddMonoidWithOne.toNatCast.{0} (Fin m) (Fin.addMonoidWithOne m _inst_1))))) n)) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) n m)
 but is expected to have type
   forall (m : Nat) (n : Nat), Eq.{1} Nat (Fin.val (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) m (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (Nat.cast.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) m (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (AddMonoidWithOne.toNatCast.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) m (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Fin.instAddMonoidWithOneFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) m (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (NeZero.succ m))) n)) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) n (Nat.succ m))
 Case conversion may be inaccurate. Consider using '#align fin.coe_of_nat_eq_mod Fin.coe_of_nat_eq_modₓ'. -/
 @[simp]
-theorem coe_of_nat_eq_mod (m n : ℕ) : ((n : Fin (succ m)) : ℕ) = n % succ m := by
-  rw [← of_nat_eq_coe] <;> rfl
+theorem coe_of_nat_eq_mod (m n : ℕ) [NeZero m] : ((n : Fin m) : ℕ) = n % m :=
+  rfl
 #align fin.coe_of_nat_eq_mod Fin.coe_of_nat_eq_mod
 
 section Mul

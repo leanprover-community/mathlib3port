@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial_algebra
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -83,7 +83,7 @@ def toFunLinear : A ⊗[R] R[X] →ₗ[R] A[X] :=
 @[simp]
 theorem to_fun_linear_tmul_apply (a : A) (p : R[X]) :
     toFunLinear R A (a ⊗ₜ[R] p) = toFunBilinear R A a p :=
-  lift.tmul _ _
+  rfl
 #align poly_equiv_tensor.to_fun_linear_tmul_apply PolyEquivTensor.to_fun_linear_tmul_apply
 
 -- We apparently need to provide the decidable instance here
@@ -139,9 +139,7 @@ def toFunAlgHom : A ⊗[R] R[X] →ₐ[R] A[X] :=
 @[simp]
 theorem to_fun_alg_hom_apply_tmul (a : A) (p : R[X]) :
     toFunAlgHom R A (a ⊗ₜ[R] p) = p.Sum fun n r => monomial n (a * (algebraMap R A) r) :=
-  by
-  dsimp [to_fun_alg_hom]
-  rw [to_fun_linear_tmul_apply, to_fun_bilinear_apply_eq_sum]
+  to_fun_bilinear_apply_eq_sum R A _ _
 #align poly_equiv_tensor.to_fun_alg_hom_apply_tmul PolyEquivTensor.to_fun_alg_hom_apply_tmul
 
 /-- (Implementation detail.)

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.integral.interval_average
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,7 +40,7 @@ variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace 
 notation3"⨍ "(...)" in "a".."b", "r:(scoped f => average Measure.restrict volume Ι a b f) => r
 
 theorem interval_average_symm (f : ℝ → E) (a b : ℝ) : (⨍ x in a..b, f x) = ⨍ x in b..a, f x := by
-  rw [set_average_eq, set_average_eq, interval_oc_swap]
+  rw [set_average_eq, set_average_eq, uIoc_swap]
 #align interval_average_symm interval_average_symm
 
 theorem interval_average_eq (f : ℝ → E) (a b : ℝ) :
@@ -48,10 +48,10 @@ theorem interval_average_eq (f : ℝ → E) (a b : ℝ) :
   by
   cases' le_or_lt a b with h h
   ·
-    rw [set_average_eq, interval_oc_of_le h, Real.volume_Ioc, intervalIntegral.integral_of_le h,
+    rw [set_average_eq, uIoc_of_le h, Real.volume_Ioc, intervalIntegral.integral_of_le h,
       Ennreal.to_real_of_real (sub_nonneg.2 h)]
   ·
-    rw [set_average_eq, interval_oc_of_lt h, Real.volume_Ioc, intervalIntegral.integral_of_ge h.le,
+    rw [set_average_eq, uIoc_of_lt h, Real.volume_Ioc, intervalIntegral.integral_of_ge h.le,
       Ennreal.to_real_of_real (sub_nonneg.2 h.le), smul_neg, ← neg_smul, ← inv_neg, neg_sub]
 #align interval_average_eq interval_average_eq
 

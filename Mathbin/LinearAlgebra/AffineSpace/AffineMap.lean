@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module linear_algebra.affine_space.affine_map
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -686,8 +686,8 @@ theorem decomp' (f : V1 →ᵃ[k] V2) : (f.linear : V1 → V2) = f - fun z => f 
 
 omit V1
 
-theorem image_interval {k : Type _} [LinearOrderedField k] (f : k →ᵃ[k] k) (a b : k) :
-    f '' Set.interval a b = Set.interval (f a) (f b) :=
+theorem image_uIcc {k : Type _} [LinearOrderedField k] (f : k →ᵃ[k] k) (a b : k) :
+    f '' Set.uIcc a b = Set.uIcc (f a) (f b) :=
   by
   have : ⇑f = (fun x => x + f 0) ∘ fun x => x * (f 1 - f 0) :=
     by
@@ -696,8 +696,8 @@ theorem image_interval {k : Type _} [LinearOrderedField k] (f : k →ᵃ[k] k) (
     rw [← f.linear_map_vsub, ← f.linear.map_smul, ← f.map_vadd]
     simp only [vsub_eq_sub, add_zero, mul_one, vadd_eq_add, sub_zero, smul_eq_mul]
   rw [this, Set.image_comp]
-  simp only [Set.image_add_const_interval, Set.image_mul_const_interval]
-#align affine_map.image_interval AffineMap.image_interval
+  simp only [Set.image_add_const_uIcc, Set.image_mul_const_uIcc]
+#align affine_map.image_uIcc AffineMap.image_uIcc
 
 section
 

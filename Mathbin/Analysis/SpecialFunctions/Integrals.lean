@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Benjamin Davidson
 
 ! This file was ported from Lean 3 source module analysis.special_functions.integrals
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -77,7 +77,7 @@ theorem intervalIntegrableRpow' {r : ℝ} (h : -1 < r) :
   have : ∀ c : ℝ, 0 ≤ c → IntervalIntegrable (fun x => x ^ r) volume 0 c :=
     by
     intro c hc
-    rw [interval_integrable_iff, interval_oc_of_le hc]
+    rw [interval_integrable_iff, uIoc_of_le hc]
     have hderiv : ∀ x ∈ Ioo 0 c, HasDerivAt (fun x : ℝ => x ^ (r + 1) / (r + 1)) (x ^ r) x :=
       by
       intro x hx
@@ -99,7 +99,7 @@ theorem intervalIntegrableRpow' {r : ℝ} (h : -1 < r) :
     rw [interval_integrable_iff] at m⊢
     refine' m.congr_fun _ measurable_set_Ioc
     intro x hx
-    rw [interval_oc_of_le (by linarith : 0 ≤ -c)] at hx
+    rw [uIoc_of_le (by linarith : 0 ≤ -c)] at hx
     simp only [Pi.smul_apply, Algebra.id.smul_eq_mul, log_neg_eq_log, mul_comm,
       rpow_def_of_pos hx.1, rpow_def_of_neg (by linarith [hx.1] : -x < 0)]
 #align interval_integral.interval_integrable_rpow' intervalIntegral.intervalIntegrableRpow'
@@ -332,7 +332,7 @@ theorem integral_cpow {r : ℂ} (ha : 0 < a) (hb : 0 < b) (hr : r ≠ -1) :
     (∫ x : ℝ in a..b, (x : ℂ) ^ r) = (b ^ (r + 1) - a ^ (r + 1)) / (r + 1) :=
   by
   rw [sub_div]
-  suffices ∀ x ∈ Set.interval a b, HasDerivAt (fun z : ℂ => z ^ (r + 1) / (r + 1)) (x ^ r) x by
+  suffices ∀ x ∈ Set.uIcc a b, HasDerivAt (fun z : ℂ => z ^ (r + 1) / (r + 1)) (x ^ r) x by
     exact
       integral_eq_sub_of_has_deriv_at (fun x hx => (this x hx).comp_of_real)
         (interval_integrable_cpow ha hb)
@@ -365,36 +365,35 @@ theorem integral_pow : (∫ x in a..b, x ^ n) = (b ^ (n + 1) - a ^ (n + 1)) / (n
 
 /-- Integral of `|x - a| ^ n` over `Ι a b`. This integral appears in the proof of the
 Picard-Lindelöf/Cauchy-Lipschitz theorem. -/
-theorem integral_pow_abs_sub_interval_oc :
-    (∫ x in Ι a b, |x - a| ^ n) = |b - a| ^ (n + 1) / (n + 1) :=
+theorem integral_pow_abs_sub_uIoc : (∫ x in Ι a b, |x - a| ^ n) = |b - a| ^ (n + 1) / (n + 1) :=
   by
   cases' le_or_lt a b with hab hab
   ·
     calc
       (∫ x in Ι a b, |x - a| ^ n) = ∫ x in a..b, |x - a| ^ n := by
-        rw [interval_oc_of_le hab, ← integral_of_le hab]
+        rw [uIoc_of_le hab, ← integral_of_le hab]
       _ = ∫ x in 0 ..b - a, x ^ n :=
         by
         simp only [integral_comp_sub_right fun x => |x| ^ n, sub_self]
         refine' integral_congr fun x hx => congr_arg₂ Pow.pow (abs_of_nonneg <| _) rfl
-        rw [interval_of_le (sub_nonneg.2 hab)] at hx
+        rw [uIcc_of_le (sub_nonneg.2 hab)] at hx
         exact hx.1
       _ = |b - a| ^ (n + 1) / (n + 1) := by simp [abs_of_nonneg (sub_nonneg.2 hab)]
       
   ·
     calc
       (∫ x in Ι a b, |x - a| ^ n) = ∫ x in b..a, |x - a| ^ n := by
-        rw [interval_oc_of_lt hab, ← integral_of_le hab.le]
+        rw [uIoc_of_lt hab, ← integral_of_le hab.le]
       _ = ∫ x in b - a..0, (-x) ^ n :=
         by
         simp only [integral_comp_sub_right fun x => |x| ^ n, sub_self]
         refine' integral_congr fun x hx => congr_arg₂ Pow.pow (abs_of_nonpos <| _) rfl
-        rw [interval_of_le (sub_nonpos.2 hab.le)] at hx
+        rw [uIcc_of_le (sub_nonpos.2 hab.le)] at hx
         exact hx.2
       _ = |b - a| ^ (n + 1) / (n + 1) := by
         simp [integral_comp_neg fun x => x ^ n, abs_of_neg (sub_neg.2 hab)]
       
-#align integral_pow_abs_sub_interval_oc integral_pow_abs_sub_interval_oc
+#align integral_pow_abs_sub_uIoc integral_pow_abs_sub_uIoc
 
 @[simp]
 theorem integral_id : (∫ x in a..b, x) = (b ^ 2 - a ^ 2) / 2 := by simpa using integral_pow 1
@@ -414,17 +413,17 @@ theorem integral_inv (h : (0 : ℝ) ∉ [a, b]) : (∫ x in a..b, x⁻¹) = log 
   have h' := fun x hx => ne_of_mem_of_not_mem hx h
   rw [integral_deriv_eq_sub' _ deriv_log' (fun x hx => differentiable_at_log (h' x hx))
       (continuous_on_inv₀.mono <| subset_compl_singleton_iff.mpr h),
-    log_div (h' b right_mem_interval) (h' a left_mem_interval)]
+    log_div (h' b right_mem_uIcc) (h' a left_mem_uIcc)]
 #align integral_inv integral_inv
 
 @[simp]
 theorem integral_inv_of_pos (ha : 0 < a) (hb : 0 < b) : (∫ x in a..b, x⁻¹) = log (b / a) :=
-  integral_inv <| not_mem_interval_of_lt ha hb
+  integral_inv <| not_mem_uIcc_of_lt ha hb
 #align integral_inv_of_pos integral_inv_of_pos
 
 @[simp]
 theorem integral_inv_of_neg (ha : a < 0) (hb : b < 0) : (∫ x in a..b, x⁻¹) = log (b / a) :=
-  integral_inv <| not_mem_interval_of_gt ha hb
+  integral_inv <| not_mem_uIcc_of_gt ha hb
 #align integral_inv_of_neg integral_inv_of_neg
 
 theorem integral_one_div (h : (0 : ℝ) ∉ [a, b]) : (∫ x : ℝ in a..b, 1 / x) = log (b / a) := by
@@ -479,13 +478,13 @@ theorem integral_log (h : (0 : ℝ) ∉ [a, b]) :
 @[simp]
 theorem integral_log_of_pos (ha : 0 < a) (hb : 0 < b) :
     (∫ x in a..b, log x) = b * log b - a * log a - b + a :=
-  integral_log <| not_mem_interval_of_lt ha hb
+  integral_log <| not_mem_uIcc_of_lt ha hb
 #align integral_log_of_pos integral_log_of_pos
 
 @[simp]
 theorem integral_log_of_neg (ha : a < 0) (hb : b < 0) :
     (∫ x in a..b, log x) = b * log b - a * log a - b + a :=
-  integral_log <| not_mem_interval_of_gt ha hb
+  integral_log <| not_mem_uIcc_of_gt ha hb
 #align integral_log_of_neg integral_log_of_neg
 
 @[simp]

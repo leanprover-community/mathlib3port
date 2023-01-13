@@ -1832,6 +1832,7 @@ import Mathbin.GroupTheory.GroupAction.Sigma
 import Mathbin.GroupTheory.GroupAction.SubMulAction
 import Mathbin.GroupTheory.GroupAction.SubMulAction.Pointwise
 import Mathbin.GroupTheory.GroupAction.Sum
+import Mathbin.GroupTheory.GroupAction.Support
 import Mathbin.GroupTheory.GroupAction.Units
 import Mathbin.GroupTheory.Index
 import Mathbin.GroupTheory.IsFreeGroup
@@ -1890,6 +1891,7 @@ import Mathbin.LinearAlgebra.AffineSpace.Basis
 import Mathbin.LinearAlgebra.AffineSpace.Combination
 import Mathbin.LinearAlgebra.AffineSpace.FiniteDimensional
 import Mathbin.LinearAlgebra.AffineSpace.Independent
+import Mathbin.LinearAlgebra.AffineSpace.Matrix
 import Mathbin.LinearAlgebra.AffineSpace.Midpoint
 import Mathbin.LinearAlgebra.AffineSpace.Ordered
 import Mathbin.LinearAlgebra.AffineSpace.Pointwise

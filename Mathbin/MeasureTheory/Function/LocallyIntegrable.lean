@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module measure_theory.function.locally_integrable
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -242,20 +242,20 @@ theorem Continuous.integrableOnIoc [Preorder X] [CompactIccSpace X] (hf : Contin
   hf.integrableOnIcc.monoSet Ioc_subset_Icc_self
 #align continuous.integrable_on_Ioc Continuous.integrableOnIoc
 
-theorem ContinuousOn.integrableOnInterval [LinearOrder X] [CompactIccSpace X]
+theorem ContinuousOn.integrableOnUIcc [LinearOrder X] [CompactIccSpace X]
     (hf : ContinuousOn f [a, b]) : IntegrableOn f [a, b] μ :=
   hf.integrableOnIcc
-#align continuous_on.integrable_on_interval ContinuousOn.integrableOnInterval
+#align continuous_on.integrable_on_uIcc ContinuousOn.integrableOnUIcc
 
-theorem Continuous.integrableOnInterval [LinearOrder X] [CompactIccSpace X] (hf : Continuous f) :
+theorem Continuous.integrableOnUIcc [LinearOrder X] [CompactIccSpace X] (hf : Continuous f) :
     IntegrableOn f [a, b] μ :=
   hf.integrableOnIcc
-#align continuous.integrable_on_interval Continuous.integrableOnInterval
+#align continuous.integrable_on_uIcc Continuous.integrableOnUIcc
 
-theorem Continuous.integrableOnIntervalOc [LinearOrder X] [CompactIccSpace X] (hf : Continuous f) :
+theorem Continuous.integrableOnUIoc [LinearOrder X] [CompactIccSpace X] (hf : Continuous f) :
     IntegrableOn f (Ι a b) μ :=
   hf.integrableOnIoc
-#align continuous.integrable_on_interval_oc Continuous.integrableOnIntervalOc
+#align continuous.integrable_on_uIoc Continuous.integrableOnUIoc
 
 /-- A continuous function with compact support is integrable on the whole space. -/
 theorem Continuous.integrableOfHasCompactSupport (hf : Continuous f) (hcf : HasCompactSupport f) :

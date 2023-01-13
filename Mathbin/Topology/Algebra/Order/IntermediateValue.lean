@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Alistair Tucker
 
 ! This file was ported from Lean 3 source module topology.algebra.order.intermediate_value
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -460,14 +460,13 @@ theorem is_preconnected_Icc : IsPreconnected (Icc a b) :=
         exact is_preconnected_Icc_aux y x t s h ht hs hab hy hx)
 #align is_preconnected_Icc is_preconnected_Icc
 
-theorem is_preconnected_interval : IsPreconnected (interval a b) :=
+theorem is_preconnected_uIcc : IsPreconnected (uIcc a b) :=
   is_preconnected_Icc
-#align is_preconnected_interval is_preconnected_interval
+#align is_preconnected_uIcc is_preconnected_uIcc
 
 theorem Set.OrdConnected.is_preconnected {s : Set α} (h : s.OrdConnected) : IsPreconnected s :=
   is_preconnected_of_forall_pair fun x hx y hy =>
-    ⟨interval x y, h.interval_subset hx hy, left_mem_interval, right_mem_interval,
-      is_preconnected_interval⟩
+    ⟨uIcc x y, h.uIcc_subset hx hy, left_mem_uIcc, right_mem_uIcc, is_preconnected_uIcc⟩
 #align set.ord_connected.is_preconnected Set.OrdConnected.is_preconnected
 
 theorem is_preconnected_iff_ord_connected {s : Set α} : IsPreconnected s ↔ OrdConnected s :=
@@ -590,10 +589,10 @@ theorem intermediate_value_Icc' {a b : α} (hab : a ≤ b) {f : α → δ}
 #align intermediate_value_Icc' intermediate_value_Icc'
 
 /-- **Intermediate Value Theorem** for continuous functions on closed intervals, unordered case. -/
-theorem intermediate_value_interval {a b : α} {f : α → δ} (hf : ContinuousOn f (interval a b)) :
-    interval (f a) (f b) ⊆ f '' interval a b := by
-  cases le_total (f a) (f b) <;> simp [*, is_preconnected_interval.intermediate_value]
-#align intermediate_value_interval intermediate_value_interval
+theorem intermediate_value_uIcc {a b : α} {f : α → δ} (hf : ContinuousOn f (uIcc a b)) :
+    uIcc (f a) (f b) ⊆ f '' uIcc a b := by
+  cases le_total (f a) (f b) <;> simp [*, is_preconnected_uIcc.intermediate_value]
+#align intermediate_value_uIcc intermediate_value_uIcc
 
 theorem intermediate_value_Ico {a b : α} (hab : a ≤ b) {f : α → δ} (hf : ContinuousOn f (Icc a b)) :
     Ico (f a) (f b) ⊆ f '' Ico a b :=
@@ -656,11 +655,10 @@ theorem ContinuousOn.surj_on_Icc {s : Set α} [hs : OrdConnected s] {f : α → 
 
 /-- **Intermediate value theorem**: if `f` is continuous on an order-connected set `s` and `a`,
 `b` are two points of this set, then `f` sends `s` to a superset of `[f x, f y]`. -/
-theorem ContinuousOn.surj_on_interval {s : Set α} [hs : OrdConnected s] {f : α → δ}
-    (hf : ContinuousOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) :
-    SurjOn f s (interval (f a) (f b)) := by
-  cases' le_total (f a) (f b) with hab hab <;> simp [hf.surj_on_Icc, *]
-#align continuous_on.surj_on_interval ContinuousOn.surj_on_interval
+theorem ContinuousOn.surj_on_uIcc {s : Set α} [hs : OrdConnected s] {f : α → δ}
+    (hf : ContinuousOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) : SurjOn f s (uIcc (f a) (f b)) :=
+  by cases' le_total (f a) (f b) with hab hab <;> simp [hf.surj_on_Icc, *]
+#align continuous_on.surj_on_uIcc ContinuousOn.surj_on_uIcc
 
 /-- A continuous function which tendsto `at_top` `at_top` and to `at_bot` `at_bot` is surjective. -/
 theorem Continuous.surjective {f : α → δ} (hf : Continuous f) (h_top : Tendsto f atTop atTop)

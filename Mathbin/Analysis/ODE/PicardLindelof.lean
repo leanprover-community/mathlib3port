@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Winston Yin
 
 ! This file was ported from Lean 3 source module analysis.ODE.picard_lindelof
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -335,19 +335,19 @@ theorem dist_next_apply_le_of_le {f₁ f₂ : FunSpace v} {n : ℕ} {d : ℝ}
     ‖∫ τ in Ι (v.t₀ : ℝ) t, f₁.v_comp τ - f₂.v_comp τ‖ ≤
         ∫ τ in Ι (v.t₀ : ℝ) t, v.L * ((v.L * |τ - v.t₀|) ^ n / n ! * d) :=
       by
-      refine' norm_integral_le_of_norm_le (Continuous.integrableOnIntervalOc _) _
+      refine' norm_integral_le_of_norm_le (Continuous.integrableOnUIoc _) _
       · continuity
       · refine' (ae_restrict_mem measurable_set_Ioc).mono fun τ hτ => _
         refine'
           (v.lipschitz_on_with (v.proj τ).2).norm_sub_le_of_le (f₁.mem_closed_ball _)
             (f₂.mem_closed_ball _) ((h _).trans_eq _)
         rw [v.proj_of_mem]
-        exact interval_subset_Icc v.t₀.2 t.2 <| Ioc_subset_Icc_self hτ
+        exact uIcc_subset_Icc v.t₀.2 t.2 <| Ioc_subset_Icc_self hτ
     _ = (v.L * |t - v.t₀|) ^ (n + 1) / (n + 1)! * d := _
     
   simp_rw [mul_pow, div_eq_mul_inv, mul_assoc, MeasureTheory.integral_mul_left,
-    MeasureTheory.integral_mul_right, integral_pow_abs_sub_interval_oc, div_eq_mul_inv,
-    pow_succ (v.L : ℝ), Nat.factorial_succ, Nat.cast_mul, Nat.cast_succ, mul_inv, mul_assoc]
+    MeasureTheory.integral_mul_right, integral_pow_abs_sub_uIoc, div_eq_mul_inv, pow_succ (v.L : ℝ),
+    Nat.factorial_succ, Nat.cast_mul, Nat.cast_succ, mul_inv, mul_assoc]
 #align
   picard_lindelof.fun_space.dist_next_apply_le_of_le PicardLindelof.FunSpace.dist_next_apply_le_of_le
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Sébastien Gouëzel, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.measure.lebesgue
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -141,7 +141,7 @@ instance hasNoAtomsVolume : HasNoAtoms (volume : Measure ℝ) :=
 #align real.has_no_atoms_volume Real.hasNoAtomsVolume
 
 @[simp]
-theorem volume_interval {a b : ℝ} : volume (interval a b) = ofReal (|b - a|) := by
+theorem volume_interval {a b : ℝ} : volume (uIcc a b) = ofReal (|b - a|) := by
   rw [← Icc_min_max, volume_Icc, max_sub_min_eq_abs]
 #align real.volume_interval Real.volume_interval
 

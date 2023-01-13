@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 
 ! This file was ported from Lean 3 source module measure_theory.integral.circle_transform
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -153,8 +153,7 @@ theorem continuous_on_abs_circle_transform_bounding_function {R r : ℝ} (hr : r
   complex.continuous_on_abs_circle_transform_bounding_function Complex.continuous_on_abs_circle_transform_bounding_function
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr is_compact.prod, ",", expr proper_space.is_compact_closed_ball z r, ",", expr is_compact_interval, "]"],
-  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr is_compact.prod, ",", expr proper_space.is_compact_closed_ball z r, ",", expr is_compact_uIcc, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -166,9 +165,9 @@ theorem abs_circle_transform_bounding_function_le {R r : ℝ} (hr : r < R) (hr' 
   have cts := continuous_on_abs_circle_transform_bounding_function hr z
   have comp : IsCompact (closed_ball z r ×ˢ [0, 2 * π]) := by
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr is_compact.prod, \",\", expr proper_space.is_compact_closed_ball z r, \",\", expr is_compact_interval, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr is_compact.prod, \",\", expr proper_space.is_compact_closed_ball z r, \",\", expr is_compact_uIcc, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
   have none : (closed_ball z r ×ˢ [0, 2 * π]).Nonempty :=
-    (nonempty_closed_ball.2 hr').Prod nonempty_interval
+    (nonempty_closed_ball.2 hr').Prod nonempty_uIcc
   have :=
     IsCompact.exists_forall_ge comp none
       (cts.mono
@@ -208,7 +207,7 @@ theorem circle_transform_deriv_bound {R : ℝ} (hR : 0 < R) {z x : ℂ} {f : ℂ
     periodic.exists_mem_Ico₀ (circle_transform_deriv_periodic R z v f) Real.two_pi_pos y
   have hy2 : y1 ∈ [0, 2 * π] := by
     convert Ico_subset_Icc_self hy1
-    simp [interval_of_le real.two_pi_pos.le]
+    simp [uIcc_of_le real.two_pi_pos.le]
   have :=
     mul_le_mul (hab ⟨⟨v, y1⟩, ⟨ball_subset_closed_ball (H hv), hy2⟩⟩)
       (HX2 (circleMap z R y1) (circle_map_mem_sphere z hR.le y1)) (complex.abs.nonneg _)

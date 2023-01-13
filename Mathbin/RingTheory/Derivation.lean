@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri, Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.derivation
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -722,7 +722,7 @@ def Derivation.tensorProductTo (D : Derivation R S M) : S ⊗[R] S →ₗ[S] M :
 
 theorem Derivation.tensor_product_to_tmul (D : Derivation R S M) (s t : S) :
     D.tensorProductTo (s ⊗ₜ t) = s • D t :=
-  TensorProduct.lift.tmul s t
+  rfl
 #align derivation.tensor_product_to_tmul Derivation.tensor_product_to_tmul
 
 theorem Derivation.tensor_product_to_mul (D : Derivation R S M) (x y : S ⊗[R] S) :
@@ -1073,7 +1073,7 @@ theorem KaehlerDifferential.End_equiv_aux (f : S →ₐ[R] S ⊗ S ⧸ KaehlerDi
     rfl
   have e₂ :
     x = KaehlerDifferential.quotientCotangentIdealRingEquiv R S (IsScalarTower.toAlgHom R S _ x) :=
-    ((tensor_product.lmul'_apply_tmul x 1).trans (mul_one x)).symm
+    (mul_one x).symm
   constructor
   · intro e
     exact

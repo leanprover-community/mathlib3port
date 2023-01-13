@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Fabian Glöckle
 
 ! This file was ported from Lean 3 source module linear_algebra.dual
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -931,7 +931,7 @@ def LinearMap.dualMap (f : M₁ →ₗ[R] M₂) : Dual R M₂ →ₗ[R] Dual R M
 @[simp]
 theorem LinearMap.dual_map_apply (f : M₁ →ₗ[R] M₂) (g : Dual R M₂) (x : M₁) :
     f.dualMap g x = g (f x) :=
-  LinearMap.lcomp_apply f g x
+  rfl
 #align linear_map.dual_map_apply LinearMap.dual_map_apply
 
 @[simp]
@@ -963,7 +963,7 @@ def LinearEquiv.dualMap (f : M₁ ≃ₗ[R] M₂) : Dual R M₂ ≃ₗ[R] Dual R
 @[simp]
 theorem LinearEquiv.dual_map_apply (f : M₁ ≃ₗ[R] M₂) (g : Dual R M₂) (x : M₁) :
     f.dualMap g x = g (f x) :=
-  LinearMap.lcomp_apply f g x
+  rfl
 #align linear_equiv.dual_map_apply LinearEquiv.dual_map_apply
 
 @[simp]
@@ -1119,9 +1119,8 @@ variable {R M N}
 
 @[simp]
 theorem dual_distrib_apply (f : Dual R M) (g : Dual R N) (m : M) (n : N) :
-    dualDistrib R M N (f ⊗ₜ g) (m ⊗ₜ n) = f m * g n := by
-  simp only [dual_distrib, coe_comp, Function.comp_apply, hom_tensor_hom_map_apply,
-    comp_right_apply, LinearEquiv.coe_coe, map_tmul, lid_tmul, Algebra.id.smul_eq_mul]
+    dualDistrib R M N (f ⊗ₜ g) (m ⊗ₜ n) = f m * g n :=
+  rfl
 #align tensor_product.dual_distrib_apply TensorProduct.dual_distrib_apply
 
 end

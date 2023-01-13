@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Chris Hughes
 
 ! This file was ported from Lean 3 source module ring_theory.adjoin_root
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -165,6 +165,11 @@ theorem mk_eq_mk {g h : R[X]} : mk f g = mk f h ↔ f ∣ g - h :=
 #align adjoin_root.mk_eq_mk AdjoinRoot.mk_eq_mk
 
 @[simp]
+theorem mk_eq_zero {g : R[X]} : mk f g = 0 ↔ f ∣ g :=
+  mk_eq_mk.trans <| by rw [sub_zero]
+#align adjoin_root.mk_eq_zero AdjoinRoot.mk_eq_zero
+
+@[simp]
 theorem mk_self : mk f f = 0 :=
   Quotient.sound' <| QuotientAddGroup.left_rel_apply.mpr (mem_span_singleton.2 <| by simp)
 #align adjoin_root.mk_self AdjoinRoot.mk_self
@@ -178,6 +183,16 @@ theorem mk_C (x : R) : mk f (c x) = x :=
 theorem mk_X : mk f x = root f :=
   rfl
 #align adjoin_root.mk_X AdjoinRoot.mk_X
+
+theorem mk_ne_zero_of_degree_lt (hf : Monic f) {g : R[X]} (h0 : g ≠ 0) (hd : degree g < degree f) :
+    mk f g ≠ 0 :=
+  mk_eq_zero.Not.2 <| hf.not_dvd_of_degree_lt h0 hd
+#align adjoin_root.mk_ne_zero_of_degree_lt AdjoinRoot.mk_ne_zero_of_degree_lt
+
+theorem mk_ne_zero_of_nat_degree_lt (hf : Monic f) {g : R[X]} (h0 : g ≠ 0)
+    (hd : natDegree g < natDegree f) : mk f g ≠ 0 :=
+  mk_eq_zero.Not.2 <| hf.not_dvd_of_nat_degree_lt h0 hd
+#align adjoin_root.mk_ne_zero_of_nat_degree_lt AdjoinRoot.mk_ne_zero_of_nat_degree_lt
 
 @[simp]
 theorem aeval_eq (p : R[X]) : aeval (root f) p = mk f p :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.function.strongly_measurable.basic
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1769,14 +1769,14 @@ theorem ae_strongly_measurable_union_iff [PseudoMetrizableSpace β] {s t : Set �
   by simp only [union_eq_Union, ae_strongly_measurable_Union_iff, Bool.forall_bool, cond, and_comm]
 #align ae_strongly_measurable_union_iff ae_strongly_measurable_union_iff
 
-theorem ae_strongly_measurable_interval_oc_iff [LinearOrder α] [PseudoMetrizableSpace β] {f : α → β}
+theorem ae_strongly_measurable_uIoc_iff [LinearOrder α] [PseudoMetrizableSpace β] {f : α → β}
     {a b : α} :
-    AeStronglyMeasurable f (μ.restrict <| intervalOC a b) ↔
+    AeStronglyMeasurable f (μ.restrict <| uIoc a b) ↔
       AeStronglyMeasurable f (μ.restrict <| Ioc a b) ∧
         AeStronglyMeasurable f (μ.restrict <| Ioc b a) :=
-  by rw [interval_oc_eq_union, ae_strongly_measurable_union_iff]
+  by rw [uIoc_eq_union, ae_strongly_measurable_union_iff]
 #align
-  measure_theory.ae_strongly_measurable.ae_strongly_measurable_interval_oc_iff MeasureTheory.AeStronglyMeasurable.ae_strongly_measurable_interval_oc_iff
+  measure_theory.ae_strongly_measurable.ae_strongly_measurable_uIoc_iff MeasureTheory.AeStronglyMeasurable.ae_strongly_measurable_uIoc_iff
 
 theorem smulMeasure {R : Type _} [Monoid R] [DistribMulAction R ℝ≥0∞] [IsScalarTower R ℝ≥0∞ ℝ≥0∞]
     (h : AeStronglyMeasurable f μ) (c : R) : AeStronglyMeasurable f (c • μ) :=

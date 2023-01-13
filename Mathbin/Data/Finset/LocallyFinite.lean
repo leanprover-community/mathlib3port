@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.finset.locally_finite
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -835,86 +835,83 @@ section Lattice
 
 variable [Lattice α] [LocallyFiniteOrder α] {a a₁ a₂ b b₁ b₂ c x : α}
 
-theorem interval_to_dual (a b : α) : [toDual a, toDual b] = [a, b].map toDual.toEmbedding :=
+theorem uIcc_to_dual (a b : α) : [toDual a, toDual b] = [a, b].map toDual.toEmbedding :=
   Icc_to_dual _ _
-#align finset.interval_to_dual Finset.interval_to_dual
+#align finset.uIcc_to_dual Finset.uIcc_to_dual
 
 @[simp]
-theorem interval_of_le (h : a ≤ b) : [a, b] = icc a b := by
-  rw [interval, inf_eq_left.2 h, sup_eq_right.2 h]
-#align finset.interval_of_le Finset.interval_of_le
+theorem uIcc_of_le (h : a ≤ b) : [a, b] = icc a b := by rw [uIcc, inf_eq_left.2 h, sup_eq_right.2 h]
+#align finset.uIcc_of_le Finset.uIcc_of_le
 
 @[simp]
-theorem interval_of_ge (h : b ≤ a) : [a, b] = icc b a := by
-  rw [interval, inf_eq_right.2 h, sup_eq_left.2 h]
-#align finset.interval_of_ge Finset.interval_of_ge
+theorem uIcc_of_ge (h : b ≤ a) : [a, b] = icc b a := by rw [uIcc, inf_eq_right.2 h, sup_eq_left.2 h]
+#align finset.uIcc_of_ge Finset.uIcc_of_ge
 
-theorem interval_swap (a b : α) : [a, b] = [b, a] := by rw [interval, interval, inf_comm, sup_comm]
-#align finset.interval_swap Finset.interval_swap
-
-@[simp]
-theorem interval_self : [a, a] = {a} := by simp [interval]
-#align finset.interval_self Finset.interval_self
+theorem uIcc_comm (a b : α) : [a, b] = [b, a] := by rw [uIcc, uIcc, inf_comm, sup_comm]
+#align finset.uIcc_comm Finset.uIcc_comm
 
 @[simp]
-theorem nonempty_interval : Finset.Nonempty [a, b] :=
+theorem uIcc_self : [a, a] = {a} := by simp [uIcc]
+#align finset.uIcc_self Finset.uIcc_self
+
+@[simp]
+theorem nonempty_uIcc : Finset.Nonempty [a, b] :=
   nonempty_Icc.2 inf_le_sup
-#align finset.nonempty_interval Finset.nonempty_interval
+#align finset.nonempty_uIcc Finset.nonempty_uIcc
 
-theorem Icc_subset_interval : icc a b ⊆ [a, b] :=
+theorem Icc_subset_uIcc : icc a b ⊆ [a, b] :=
   Icc_subset_Icc inf_le_left le_sup_right
-#align finset.Icc_subset_interval Finset.Icc_subset_interval
+#align finset.Icc_subset_uIcc Finset.Icc_subset_uIcc
 
-theorem Icc_subset_interval' : icc b a ⊆ [a, b] :=
+theorem Icc_subset_uIcc' : icc b a ⊆ [a, b] :=
   Icc_subset_Icc inf_le_right le_sup_left
-#align finset.Icc_subset_interval' Finset.Icc_subset_interval'
+#align finset.Icc_subset_uIcc' Finset.Icc_subset_uIcc'
 
 @[simp]
-theorem left_mem_interval : a ∈ [a, b] :=
+theorem left_mem_uIcc : a ∈ [a, b] :=
   mem_Icc.2 ⟨inf_le_left, le_sup_left⟩
-#align finset.left_mem_interval Finset.left_mem_interval
+#align finset.left_mem_uIcc Finset.left_mem_uIcc
 
 @[simp]
-theorem right_mem_interval : b ∈ [a, b] :=
+theorem right_mem_uIcc : b ∈ [a, b] :=
   mem_Icc.2 ⟨inf_le_right, le_sup_right⟩
-#align finset.right_mem_interval Finset.right_mem_interval
+#align finset.right_mem_uIcc Finset.right_mem_uIcc
 
-theorem mem_interval_of_le (ha : a ≤ x) (hb : x ≤ b) : x ∈ [a, b] :=
-  Icc_subset_interval <| mem_Icc.2 ⟨ha, hb⟩
-#align finset.mem_interval_of_le Finset.mem_interval_of_le
+theorem mem_uIcc_of_le (ha : a ≤ x) (hb : x ≤ b) : x ∈ [a, b] :=
+  Icc_subset_uIcc <| mem_Icc.2 ⟨ha, hb⟩
+#align finset.mem_uIcc_of_le Finset.mem_uIcc_of_le
 
-theorem mem_interval_of_ge (hb : b ≤ x) (ha : x ≤ a) : x ∈ [a, b] :=
-  Icc_subset_interval' <| mem_Icc.2 ⟨hb, ha⟩
-#align finset.mem_interval_of_ge Finset.mem_interval_of_ge
+theorem mem_uIcc_of_ge (hb : b ≤ x) (ha : x ≤ a) : x ∈ [a, b] :=
+  Icc_subset_uIcc' <| mem_Icc.2 ⟨hb, ha⟩
+#align finset.mem_uIcc_of_ge Finset.mem_uIcc_of_ge
 
-theorem interval_subset_interval (h₁ : a₁ ∈ [a₂, b₂]) (h₂ : b₁ ∈ [a₂, b₂]) : [a₁, b₁] ⊆ [a₂, b₂] :=
+theorem uIcc_subset_uIcc (h₁ : a₁ ∈ [a₂, b₂]) (h₂ : b₁ ∈ [a₂, b₂]) : [a₁, b₁] ⊆ [a₂, b₂] :=
   by
-  rw [mem_interval] at h₁ h₂
+  rw [mem_uIcc] at h₁ h₂
   exact Icc_subset_Icc (le_inf h₁.1 h₂.1) (sup_le h₁.2 h₂.2)
-#align finset.interval_subset_interval Finset.interval_subset_interval
+#align finset.uIcc_subset_uIcc Finset.uIcc_subset_uIcc
 
-theorem interval_subset_Icc (ha : a₁ ∈ icc a₂ b₂) (hb : b₁ ∈ icc a₂ b₂) : [a₁, b₁] ⊆ icc a₂ b₂ :=
+theorem uIcc_subset_Icc (ha : a₁ ∈ icc a₂ b₂) (hb : b₁ ∈ icc a₂ b₂) : [a₁, b₁] ⊆ icc a₂ b₂ :=
   by
   rw [mem_Icc] at ha hb
   exact Icc_subset_Icc (le_inf ha.1 hb.1) (sup_le ha.2 hb.2)
-#align finset.interval_subset_Icc Finset.interval_subset_Icc
+#align finset.uIcc_subset_Icc Finset.uIcc_subset_Icc
 
-theorem interval_subset_interval_iff_mem : [a₁, b₁] ⊆ [a₂, b₂] ↔ a₁ ∈ [a₂, b₂] ∧ b₁ ∈ [a₂, b₂] :=
-  ⟨fun h => ⟨h left_mem_interval, h right_mem_interval⟩, fun h => interval_subset_interval h.1 h.2⟩
-#align finset.interval_subset_interval_iff_mem Finset.interval_subset_interval_iff_mem
+theorem uIcc_subset_uIcc_iff_mem : [a₁, b₁] ⊆ [a₂, b₂] ↔ a₁ ∈ [a₂, b₂] ∧ b₁ ∈ [a₂, b₂] :=
+  ⟨fun h => ⟨h left_mem_uIcc, h right_mem_uIcc⟩, fun h => uIcc_subset_uIcc h.1 h.2⟩
+#align finset.uIcc_subset_uIcc_iff_mem Finset.uIcc_subset_uIcc_iff_mem
 
-theorem interval_subset_interval_iff_le' :
-    [a₁, b₁] ⊆ [a₂, b₂] ↔ a₂ ⊓ b₂ ≤ a₁ ⊓ b₁ ∧ a₁ ⊔ b₁ ≤ a₂ ⊔ b₂ :=
+theorem uIcc_subset_uIcc_iff_le' : [a₁, b₁] ⊆ [a₂, b₂] ↔ a₂ ⊓ b₂ ≤ a₁ ⊓ b₁ ∧ a₁ ⊔ b₁ ≤ a₂ ⊔ b₂ :=
   Icc_subset_Icc_iff inf_le_sup
-#align finset.interval_subset_interval_iff_le' Finset.interval_subset_interval_iff_le'
+#align finset.uIcc_subset_uIcc_iff_le' Finset.uIcc_subset_uIcc_iff_le'
 
-theorem interval_subset_interval_right (h : x ∈ [a, b]) : [x, b] ⊆ [a, b] :=
-  interval_subset_interval h right_mem_interval
-#align finset.interval_subset_interval_right Finset.interval_subset_interval_right
+theorem uIcc_subset_uIcc_right (h : x ∈ [a, b]) : [x, b] ⊆ [a, b] :=
+  uIcc_subset_uIcc h right_mem_uIcc
+#align finset.uIcc_subset_uIcc_right Finset.uIcc_subset_uIcc_right
 
-theorem interval_subset_interval_left (h : x ∈ [a, b]) : [a, x] ⊆ [a, b] :=
-  interval_subset_interval left_mem_interval h
-#align finset.interval_subset_interval_left Finset.interval_subset_interval_left
+theorem uIcc_subset_uIcc_left (h : x ∈ [a, b]) : [a, x] ⊆ [a, b] :=
+  uIcc_subset_uIcc left_mem_uIcc h
+#align finset.uIcc_subset_uIcc_left Finset.uIcc_subset_uIcc_left
 
 end Lattice
 
@@ -922,27 +919,27 @@ section DistribLattice
 
 variable [DistribLattice α] [LocallyFiniteOrder α] {a a₁ a₂ b b₁ b₂ c x : α}
 
-theorem eq_of_mem_interval_of_mem_interval : a ∈ [b, c] → b ∈ [a, c] → a = b :=
+theorem eq_of_mem_uIcc_of_mem_uIcc : a ∈ [b, c] → b ∈ [a, c] → a = b :=
   by
-  simp_rw [mem_interval]
-  exact Set.eq_of_mem_interval_of_mem_interval
-#align finset.eq_of_mem_interval_of_mem_interval Finset.eq_of_mem_interval_of_mem_interval
+  simp_rw [mem_uIcc]
+  exact Set.eq_of_mem_uIcc_of_mem_uIcc
+#align finset.eq_of_mem_uIcc_of_mem_uIcc Finset.eq_of_mem_uIcc_of_mem_uIcc
 
-theorem eq_of_mem_interval_of_mem_interval' : b ∈ [a, c] → c ∈ [a, b] → b = c :=
+theorem eq_of_mem_uIcc_of_mem_uIcc' : b ∈ [a, c] → c ∈ [a, b] → b = c :=
   by
-  simp_rw [mem_interval]
-  exact Set.eq_of_mem_interval_of_mem_interval'
-#align finset.eq_of_mem_interval_of_mem_interval' Finset.eq_of_mem_interval_of_mem_interval'
+  simp_rw [mem_uIcc]
+  exact Set.eq_of_mem_uIcc_of_mem_uIcc'
+#align finset.eq_of_mem_uIcc_of_mem_uIcc' Finset.eq_of_mem_uIcc_of_mem_uIcc'
 
-theorem interval_injective_right (a : α) : Injective fun b => [b, a] := fun b c h =>
+theorem uIcc_injective_right (a : α) : Injective fun b => [b, a] := fun b c h =>
   by
   rw [ext_iff] at h
-  exact eq_of_mem_interval_of_mem_interval ((h _).1 left_mem_interval) ((h _).2 left_mem_interval)
-#align finset.interval_injective_right Finset.interval_injective_right
+  exact eq_of_mem_uIcc_of_mem_uIcc ((h _).1 left_mem_uIcc) ((h _).2 left_mem_uIcc)
+#align finset.uIcc_injective_right Finset.uIcc_injective_right
 
-theorem interval_injective_left (a : α) : Injective (interval a) := by
-  simpa only [interval_swap] using interval_injective_right a
-#align finset.interval_injective_left Finset.interval_injective_left
+theorem uIcc_injective_left (a : α) : Injective (uIcc a) := by
+  simpa only [uIcc_comm] using uIcc_injective_right a
+#align finset.uIcc_injective_left Finset.uIcc_injective_left
 
 end DistribLattice
 
@@ -954,46 +951,46 @@ theorem Icc_min_max : icc (min a b) (max a b) = [a, b] :=
   rfl
 #align finset.Icc_min_max Finset.Icc_min_max
 
-theorem interval_of_not_le (h : ¬a ≤ b) : [a, b] = icc b a :=
-  interval_of_ge <| le_of_not_ge h
-#align finset.interval_of_not_le Finset.interval_of_not_le
+theorem uIcc_of_not_le (h : ¬a ≤ b) : [a, b] = icc b a :=
+  uIcc_of_ge <| le_of_not_ge h
+#align finset.uIcc_of_not_le Finset.uIcc_of_not_le
 
-theorem interval_of_not_ge (h : ¬b ≤ a) : [a, b] = icc a b :=
-  interval_of_le <| le_of_not_ge h
-#align finset.interval_of_not_ge Finset.interval_of_not_ge
+theorem uIcc_of_not_ge (h : ¬b ≤ a) : [a, b] = icc a b :=
+  uIcc_of_le <| le_of_not_ge h
+#align finset.uIcc_of_not_ge Finset.uIcc_of_not_ge
 
-theorem interval_eq_union : [a, b] = icc a b ∪ icc b a :=
+theorem uIcc_eq_union : [a, b] = icc a b ∪ icc b a :=
   coe_injective <| by
     push_cast
-    exact Set.interval_eq_union
-#align finset.interval_eq_union Finset.interval_eq_union
+    exact Set.uIcc_eq_union
+#align finset.uIcc_eq_union Finset.uIcc_eq_union
 
-theorem mem_interval' : a ∈ [b, c] ↔ b ≤ a ∧ a ≤ c ∨ c ≤ a ∧ a ≤ b := by simp [interval_eq_union]
-#align finset.mem_interval' Finset.mem_interval'
+theorem mem_uIcc' : a ∈ [b, c] ↔ b ≤ a ∧ a ≤ c ∨ c ≤ a ∧ a ≤ b := by simp [uIcc_eq_union]
+#align finset.mem_uIcc' Finset.mem_uIcc'
 
-theorem not_mem_interval_of_lt : c < a → c < b → c ∉ [a, b] :=
+theorem not_mem_uIcc_of_lt : c < a → c < b → c ∉ [a, b] :=
   by
-  rw [mem_interval]
-  exact Set.not_mem_interval_of_lt
-#align finset.not_mem_interval_of_lt Finset.not_mem_interval_of_lt
+  rw [mem_uIcc]
+  exact Set.not_mem_uIcc_of_lt
+#align finset.not_mem_uIcc_of_lt Finset.not_mem_uIcc_of_lt
 
-theorem not_mem_interval_of_gt : a < c → b < c → c ∉ [a, b] :=
+theorem not_mem_uIcc_of_gt : a < c → b < c → c ∉ [a, b] :=
   by
-  rw [mem_interval]
-  exact Set.not_mem_interval_of_gt
-#align finset.not_mem_interval_of_gt Finset.not_mem_interval_of_gt
+  rw [mem_uIcc]
+  exact Set.not_mem_uIcc_of_gt
+#align finset.not_mem_uIcc_of_gt Finset.not_mem_uIcc_of_gt
 
-theorem interval_subset_interval_iff_le :
+theorem uIcc_subset_uIcc_iff_le :
     [a₁, b₁] ⊆ [a₂, b₂] ↔ min a₂ b₂ ≤ min a₁ b₁ ∧ max a₁ b₁ ≤ max a₂ b₂ :=
-  interval_subset_interval_iff_le'
-#align finset.interval_subset_interval_iff_le Finset.interval_subset_interval_iff_le
+  uIcc_subset_uIcc_iff_le'
+#align finset.uIcc_subset_uIcc_iff_le Finset.uIcc_subset_uIcc_iff_le
 
 /-- A sort of triangle inequality. -/
-theorem interval_subset_interval_union_interval : [a, c] ⊆ [a, b] ∪ [b, c] :=
+theorem uIcc_subset_uIcc_union_uIcc : [a, c] ⊆ [a, b] ∪ [b, c] :=
   coe_subset.1 <| by
     push_cast
-    exact Set.interval_subset_interval_union_interval
-#align finset.interval_subset_interval_union_interval Finset.interval_subset_interval_union_interval
+    exact Set.uIcc_subset_uIcc_union_uIcc
+#align finset.uIcc_subset_uIcc_union_uIcc Finset.uIcc_subset_uIcc_union_uIcc
 
 end LinearOrder
 

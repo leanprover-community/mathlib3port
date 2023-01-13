@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, David Kurniadi Angdinata
 
 ! This file was ported from Lean 3 source module algebraic_geometry.elliptic_curve.weierstrass
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -609,12 +609,10 @@ noncomputable def xClass : W.CoordinateRing :=
 #align weierstrass_curve.X_class WeierstrassCurve.xClass
 
 theorem X_class_ne_zero [Nontrivial R] : W.xClass x ≠ 0 :=
-  by
-  intro hx
-  cases' ideal.mem_span_singleton'.mp (ideal.quotient.eq_zero_iff_mem.mp hx) with p hp
-  apply_fun degree  at hp
-  rw [W.monic_polynomial.degree_mul, degree_polynomial, degree_C <| X_sub_C_ne_zero x] at hp
-  cases p.degree <;> cases hp
+  AdjoinRoot.mk_ne_zero_of_nat_degree_lt W.monic_polynomial (C_ne_zero.2 <| X_sub_C_ne_zero x) <|
+    by
+    rw [nat_degree_polynomial, nat_degree_C]
+    norm_num1
 #align weierstrass_curve.X_class_ne_zero WeierstrassCurve.X_class_ne_zero
 
 /-- The class of the element $Y - y(X)$ in $R[W]$ for some $y(X) \in R[X]$. -/
@@ -624,12 +622,10 @@ noncomputable def yClass : W.CoordinateRing :=
 #align weierstrass_curve.Y_class WeierstrassCurve.yClass
 
 theorem Y_class_ne_zero [Nontrivial R] : W.yClass y ≠ 0 :=
-  by
-  intro hy
-  cases' ideal.mem_span_singleton'.mp (ideal.quotient.eq_zero_iff_mem.mp hy) with p hp
-  apply_fun degree  at hp
-  rw [W.monic_polynomial.degree_mul, degree_polynomial, degree_X_sub_C] at hp
-  cases p.degree <;> cases hp
+  AdjoinRoot.mk_ne_zero_of_nat_degree_lt W.monic_polynomial (X_sub_C_ne_zero _) <|
+    by
+    rw [nat_degree_polynomial, nat_degree_X_sub_C]
+    norm_num1
 #align weierstrass_curve.Y_class_ne_zero WeierstrassCurve.Y_class_ne_zero
 
 /-- The ideal $\langle X - x \rangle$ of $R[W]$ for some $x \in R$. -/

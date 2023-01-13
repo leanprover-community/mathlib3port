@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.connected
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1784,4 +1784,19 @@ theorem preconnected_space_of_forall_constant
   ⟨is_preconnected_of_forall_constant fun f hf x hx y hy =>
       hs f (continuous_iff_continuous_on_univ.mpr hf) x y⟩
 #align preconnected_space_of_forall_constant preconnected_space_of_forall_constant
+
+/-- Refinement of `is_preconnected.constant` only assuming the map factors through a
+discrete subset of the target. -/
+theorem IsPreconnected.constant_of_maps_to [TopologicalSpace β] {S : Set α} (hS : IsPreconnected S)
+    {T : Set β} [DiscreteTopology T] {f : α → β} (hc : ContinuousOn f S) (hTm : MapsTo f S T)
+    {x y : α} (hx : x ∈ S) (hy : y ∈ S) : f x = f y :=
+  by
+  let F : S → T := fun x : S => ⟨f x.val, hTm x.property⟩
+  suffices F ⟨x, hx⟩ = F ⟨y, hy⟩ by
+    rw [← Subtype.coe_inj] at this
+    exact this
+  exact
+    (is_preconnected_iff_preconnected_space.mp hS).constant
+      (continuous_induced_rng.mpr <| continuous_on_iff_continuous_restrict.mp hc)
+#align is_preconnected.constant_of_maps_to IsPreconnected.constant_of_maps_to
 

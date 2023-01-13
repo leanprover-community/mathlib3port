@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.algebra.bilinear
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -95,8 +95,8 @@ theorem mul_left_right_apply (a b x : A) : mulLeftRight R (a, b) x = a * x * b :
 #align linear_map.mul_left_right_apply LinearMap.mul_left_right_apply
 
 @[simp]
-theorem mul'_apply {a b : A} : mul' R A (a ⊗ₜ b) = a * b := by
-  simp only [LinearMap.mul', TensorProduct.lift.tmul, mul_apply']
+theorem mul'_apply {a b : A} : mul' R A (a ⊗ₜ b) = a * b :=
+  rfl
 #align linear_map.mul'_apply LinearMap.mul'_apply
 
 @[simp]

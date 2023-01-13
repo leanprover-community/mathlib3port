@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.tensor_product
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -150,7 +150,7 @@ def lift (f : M →ₗ[A] N →ₗ[R] P) : M ⊗[R] N →ₗ[A] P :=
 
 @[simp]
 theorem lift_tmul (f : M →ₗ[A] N →ₗ[R] P) (x : M) (y : N) : lift f (x ⊗ₜ y) = f x y :=
-  lift.tmul' x y
+  rfl
 #align tensor_product.algebra_tensor_module.lift_tmul TensorProduct.AlgebraTensorModule.lift_tmul
 
 variable (R A M N P)
@@ -953,17 +953,17 @@ theorem lmul'_to_linear_map : (lmul' R : _ →ₐ[R] S).toLinearMap = LinearMap.
 
 @[simp]
 theorem lmul'_apply_tmul (a b : S) : lmul' R (a ⊗ₜ[R] b) = a * b :=
-  LinearMap.mul'_apply
+  rfl
 #align algebra.tensor_product.lmul'_apply_tmul Algebra.TensorProduct.lmul'_apply_tmul
 
 @[simp]
 theorem lmul'_comp_include_left : (lmul' R : _ →ₐ[R] S).comp includeLeft = AlgHom.id R S :=
-  AlgHom.ext fun _ => (lmul'_apply_tmul _ _).trans (mul_one _)
+  AlgHom.ext <| _root_.mul_one
 #align algebra.tensor_product.lmul'_comp_include_left Algebra.TensorProduct.lmul'_comp_include_left
 
 @[simp]
 theorem lmul'_comp_include_right : (lmul' R : _ →ₐ[R] S).comp includeRight = AlgHom.id R S :=
-  AlgHom.ext fun _ => (lmul'_apply_tmul _ _).trans (one_mul _)
+  AlgHom.ext <| _root_.one_mul
 #align
   algebra.tensor_product.lmul'_comp_include_right Algebra.TensorProduct.lmul'_comp_include_right
 
@@ -1145,8 +1145,8 @@ def moduleAux : A ⊗[R] B →ₗ[R] M →ₗ[R] M :=
         simp only [RingHom.id_apply, LinearMap.smul_apply, smul_assoc] }
 #align tensor_product.algebra.module_aux TensorProduct.Algebra.moduleAux
 
-theorem module_aux_apply (a : A) (b : B) (m : M) : moduleAux (a ⊗ₜ[R] b) m = a • b • m := by
-  simp [module_aux]
+theorem module_aux_apply (a : A) (b : B) (m : M) : moduleAux (a ⊗ₜ[R] b) m = a • b • m :=
+  rfl
 #align tensor_product.algebra.module_aux_apply TensorProduct.Algebra.module_aux_apply
 
 variable [SMulCommClass A B M]
@@ -1202,7 +1202,7 @@ protected def module : Module (A ⊗[R] B) M
 attribute [local instance] TensorProduct.Algebra.module
 
 theorem smul_def (a : A) (b : B) (m : M) : a ⊗ₜ[R] b • m = a • b • m :=
-  module_aux_apply a b m
+  rfl
 #align tensor_product.algebra.smul_def TensorProduct.Algebra.smul_def
 
 end TensorProduct.Algebra

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module data.polynomial.monic
-! leanprover-community/mathlib commit 7c523cb78f4153682c2929e3006c863bfef463d0
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -154,7 +154,7 @@ theorem Monic.of_mul_monic_right (hq : q.Monic) (hpq : (p * q).Monic) : p.Monic 
 namespace Monic
 
 @[simp]
-theorem nat_degree_eq_zero_iff_eq_one {p : R[X]} (hp : p.Monic) : p.natDegree = 0 ↔ p = 1 :=
+theorem nat_degree_eq_zero_iff_eq_one (hp : p.Monic) : p.natDegree = 0 ↔ p = 1 :=
   by
   constructor <;> intro h
   swap
@@ -170,11 +170,11 @@ theorem nat_degree_eq_zero_iff_eq_one {p : R[X]} (hp : p.Monic) : p.natDegree = 
 #align polynomial.monic.nat_degree_eq_zero_iff_eq_one Polynomial.Monic.nat_degree_eq_zero_iff_eq_one
 
 @[simp]
-theorem degree_le_zero_iff_eq_one {p : R[X]} (hp : p.Monic) : p.degree ≤ 0 ↔ p = 1 := by
+theorem degree_le_zero_iff_eq_one (hp : p.Monic) : p.degree ≤ 0 ↔ p = 1 := by
   rw [← hp.nat_degree_eq_zero_iff_eq_one, nat_degree_eq_zero_iff_degree_le_zero]
 #align polynomial.monic.degree_le_zero_iff_eq_one Polynomial.Monic.degree_le_zero_iff_eq_one
 
-theorem nat_degree_mul {p q : R[X]} (hp : p.Monic) (hq : q.Monic) :
+theorem nat_degree_mul (hp : p.Monic) (hq : q.Monic) :
     (p * q).natDegree = p.natDegree + q.natDegree :=
   by
   nontriviality R
@@ -182,7 +182,7 @@ theorem nat_degree_mul {p q : R[X]} (hp : p.Monic) (hq : q.Monic) :
   simp [hp.leading_coeff, hq.leading_coeff]
 #align polynomial.monic.nat_degree_mul Polynomial.Monic.nat_degree_mul
 
-theorem degree_mul_comm {p : R[X]} (hp : p.Monic) (q : R[X]) : (p * q).degree = (q * p).degree :=
+theorem degree_mul_comm (hp : p.Monic) (q : R[X]) : (p * q).degree = (q * p).degree :=
   by
   by_cases h : q = 0
   · simp [h]
@@ -191,15 +191,14 @@ theorem degree_mul_comm {p : R[X]} (hp : p.Monic) (q : R[X]) : (p * q).degree = 
   · rwa [hp.leading_coeff, one_mul, leading_coeff_ne_zero]
 #align polynomial.monic.degree_mul_comm Polynomial.Monic.degree_mul_comm
 
-theorem nat_degree_mul' {p q : R[X]} (hp : p.Monic) (hq : q ≠ 0) :
+theorem nat_degree_mul' (hp : p.Monic) (hq : q ≠ 0) :
     (p * q).natDegree = p.natDegree + q.natDegree :=
   by
   rw [nat_degree_mul', add_comm]
   simpa [hp.leading_coeff, leading_coeff_ne_zero]
 #align polynomial.monic.nat_degree_mul' Polynomial.Monic.nat_degree_mul'
 
-theorem nat_degree_mul_comm {p : R[X]} (hp : p.Monic) (q : R[X]) :
-    (p * q).natDegree = (q * p).natDegree :=
+theorem nat_degree_mul_comm (hp : p.Monic) (q : R[X]) : (p * q).natDegree = (q * p).natDegree :=
   by
   by_cases h : q = 0
   · simp [h]
@@ -207,7 +206,18 @@ theorem nat_degree_mul_comm {p : R[X]} (hp : p.Monic) (q : R[X]) :
   simpa [hp.leading_coeff, leading_coeff_ne_zero]
 #align polynomial.monic.nat_degree_mul_comm Polynomial.Monic.nat_degree_mul_comm
 
-theorem next_coeff_mul {p q : R[X]} (hp : Monic p) (hq : Monic q) :
+theorem not_dvd_of_nat_degree_lt (hp : Monic p) (h0 : q ≠ 0) (hl : natDegree q < natDegree p) :
+    ¬p ∣ q := by
+  rintro ⟨r, rfl⟩
+  rw [hp.nat_degree_mul' <| right_ne_zero_of_mul h0] at hl
+  exact hl.not_le (Nat.le_add_right _ _)
+#align polynomial.monic.not_dvd_of_nat_degree_lt Polynomial.Monic.not_dvd_of_nat_degree_lt
+
+theorem not_dvd_of_degree_lt (hp : Monic p) (h0 : q ≠ 0) (hl : degree q < degree p) : ¬p ∣ q :=
+  Monic.not_dvd_of_nat_degree_lt hp h0 <| nat_degree_lt_nat_degree h0 hl
+#align polynomial.monic.not_dvd_of_degree_lt Polynomial.Monic.not_dvd_of_degree_lt
+
+theorem next_coeff_mul (hp : Monic p) (hq : Monic q) :
     nextCoeff (p * q) = nextCoeff p + nextCoeff q :=
   by
   nontriviality
