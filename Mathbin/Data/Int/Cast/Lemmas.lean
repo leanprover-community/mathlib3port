@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.int.cast.lemmas
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -404,7 +404,7 @@ if `f 1 = g 1`. -/
 theorem ext_int [AddMonoid A] {f g : ℤ →+ A} (h1 : f 1 = g 1) : f = g :=
   have : f.comp (Int.ofNatHom : ℕ →+ ℤ) = g.comp (Int.ofNatHom : ℕ →+ ℤ) := ext_nat' _ _ h1
   have : ∀ n : ℕ, f n = g n := ext_iff.1 this
-  ext fun n => (Int.casesOn n this) fun n => eq_on_neg _ _ (this <| n + 1)
+  ext fun n => Int.casesOn n this fun n => eq_on_neg _ _ (this <| n + 1)
 #align add_monoid_hom.ext_int AddMonoidHom.ext_int
 
 variable [AddGroupWithOne A]
@@ -509,7 +509,7 @@ Case conversion may be inaccurate. Consider using '#align ext_int' ext_int'ₓ'.
 /-- If two `monoid_with_zero_hom`s agree on `-1` and the _positive_ naturals then they are equal. -/
 theorem ext_int' [MonoidWithZero α] [MonoidWithZeroHomClass F ℤ α] {f g : F}
     (h_neg_one : f (-1) = g (-1)) (h_pos : ∀ n : ℕ, 0 < n → f n = g n) : f = g :=
-  (FunLike.ext _ _) fun n =>
+  FunLike.ext _ _ fun n =>
     haveI :=
       FunLike.congr_fun
         (@MonoidWithZeroHom.ext_int _ _ (f : ℤ →*₀ α) (g : ℤ →*₀ α) h_neg_one <|

@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.asymptotics.asymptotics
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
+import Mathbin.Analysis.Normed.Group.InfiniteSum
 import Mathbin.Analysis.NormedSpace.Basic
 import Mathbin.Topology.Algebra.Order.LiminfLimsup
 import Mathbin.Topology.LocalHomeomorph
@@ -217,7 +218,7 @@ theorem IsO.is_O_with : f =O[l] g → ∃ c : ℝ, IsOWith c l f g :=
 
 theorem IsOWith.weaken (h : IsOWith c l f g') (hc : c ≤ c') : IsOWith c' l f g' :=
   is_O_with.of_bound <|
-    (mem_of_superset h.bound) fun x hx =>
+    mem_of_superset h.bound fun x hx =>
       calc
         ‖f x‖ ≤ c * ‖g' x‖ := hx
         _ ≤ _ := mul_le_mul_of_nonneg_right hc (norm_nonneg _)
@@ -256,7 +257,7 @@ theorem is_O_iff_eventually : f =O[l] g' ↔ ∀ᶠ c in at_top, ∀ᶠ x in l, 
 
 theorem IsO.exists_mem_basis {ι} {p : ι → Prop} {s : ι → Set α} (h : f =O[l] g')
     (hb : l.HasBasis p s) : ∃ (c : ℝ)(hc : 0 < c)(i : ι)(hi : p i), ∀ x ∈ s i, ‖f x‖ ≤ c * ‖g' x‖ :=
-  (flip Exists₂Cat.imp h.exists_pos) fun c hc h => by
+  flip Exists₂Cat.imp h.exists_pos fun c hc h => by
     simpa only [is_O_with_iff, hb.eventually_iff, exists_prop] using h
 #align asymptotics.is_O.exists_mem_basis Asymptotics.IsO.exists_mem_basis
 
@@ -572,7 +573,7 @@ theorem is_O_with_of_le' (hfg : ∀ x, ‖f x‖ ≤ c * ‖g x‖) : IsOWith c 
 #align asymptotics.is_O_with_of_le' Asymptotics.is_O_with_of_le'
 
 theorem is_O_with_of_le (hfg : ∀ x, ‖f x‖ ≤ ‖g x‖) : IsOWith 1 l f g :=
-  (is_O_with_of_le' l) fun x => by
+  is_O_with_of_le' l fun x => by
     rw [one_mul]
     exact hfg x
 #align asymptotics.is_O_with_of_le Asymptotics.is_O_with_of_le
@@ -588,7 +589,7 @@ theorem is_O_of_le (hfg : ∀ x, ‖f x‖ ≤ ‖g x‖) : f =O[l] g :=
 end
 
 theorem is_O_with_refl (f : α → E) (l : Filter α) : IsOWith 1 l f f :=
-  (is_O_with_of_le l) fun _ => le_rfl
+  is_O_with_of_le l fun _ => le_rfl
 #align asymptotics.is_O_with_refl Asymptotics.is_O_with_refl
 
 theorem is_O_refl (f : α → E) (l : Filter α) : f =O[l] f :=
@@ -997,11 +998,11 @@ alias is_o_neg_left ↔ is_o.of_neg_right is_o.neg_left
 
 
 theorem is_O_with_fst_prod : IsOWith 1 l f' fun x => (f' x, g' x) :=
-  (is_O_with_of_le l) fun x => le_max_left _ _
+  is_O_with_of_le l fun x => le_max_left _ _
 #align asymptotics.is_O_with_fst_prod Asymptotics.is_O_with_fst_prod
 
 theorem is_O_with_snd_prod : IsOWith 1 l g' fun x => (f' x, g' x) :=
-  (is_O_with_of_le l) fun x => le_max_right _ _
+  is_O_with_of_le l fun x => le_max_right _ _
 #align asymptotics.is_O_with_snd_prod Asymptotics.is_O_with_snd_prod
 
 theorem is_O_fst_prod : f' =O[l] fun x => (f' x, g' x) :=
@@ -1134,7 +1135,7 @@ theorem is_o_prod_left : (fun x => (f' x, g' x)) =o[l] k' ↔ f' =o[l] k' ∧ g'
 #align asymptotics.is_o_prod_left Asymptotics.is_o_prod_left
 
 theorem IsOWith.eq_zero_imp (h : IsOWith c l f'' g'') : ∀ᶠ x in l, g'' x = 0 → f'' x = 0 :=
-  (Eventually.mono h.bound) fun x hx hg => norm_le_zero_iff.1 <| by simpa [hg] using hx
+  Eventually.mono h.bound fun x hx hg => norm_le_zero_iff.1 <| by simpa [hg] using hx
 #align asymptotics.is_O_with.eq_zero_imp Asymptotics.IsOWith.eq_zero_imp
 
 theorem IsO.eq_zero_imp (h : f'' =O[l] g'') : ∀ᶠ x in l, g'' x = 0 → f'' x = 0 :=
@@ -1553,7 +1554,7 @@ theorem IsO.trans_tendsto (hfg : f'' =o[l] g'') (hg : Tendsto g'' l (𝓝 0)) : 
 
 theorem is_O_with_const_mul_self (c : R) (f : α → R) (l : Filter α) :
     IsOWith ‖c‖ l (fun x => c * f x) f :=
-  (is_O_with_of_le' _) fun x => norm_mul_le _ _
+  is_O_with_of_le' _ fun x => norm_mul_le _ _
 #align asymptotics.is_O_with_const_mul_self Asymptotics.is_O_with_const_mul_self
 
 theorem is_O_const_mul_self (c : R) (f : α → R) (l : Filter α) : (fun x => c * f x) =O[l] f :=
@@ -2263,7 +2264,7 @@ theorem is_o_pow_sub_sub (x₀ : E') {m : ℕ} (h : 1 < m) :
 theorem IsOWith.right_le_sub_of_lt_1 {f₁ f₂ : α → E'} (h : IsOWith c l f₁ f₂) (hc : c < 1) :
     IsOWith (1 / (1 - c)) l f₂ fun x => f₂ x - f₁ x :=
   is_O_with.of_bound <|
-    (mem_of_superset h.bound) fun x hx =>
+    mem_of_superset h.bound fun x hx =>
       by
       simp only [mem_set_of_eq] at hx⊢
       rw [mul_comm, one_div, ← div_eq_mul_inv, le_div_iff, mul_sub, mul_one, mul_comm]

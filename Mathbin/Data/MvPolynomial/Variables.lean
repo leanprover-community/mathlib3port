@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Johan Commelin, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.mv_polynomial.variables
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -154,7 +154,7 @@ theorem degrees_mul (p q : MvPolynomial σ R) : (p * q).degrees ≤ p.degrees + 
   by
   refine' Finset.sup_le fun b hb => _
   have := support_mul p q hb
-  simp only [Finset.mem_bUnion, Finset.mem_singleton] at this
+  simp only [Finset.mem_bunionᵢ, Finset.mem_singleton] at this
   rcases this with ⟨a₁, h₁, a₂, h₂, rfl⟩
   rw [Finsupp.to_multiset_add]
   exact add_le_add (Finset.le_sup h₁) (Finset.le_sup h₂)
@@ -267,7 +267,7 @@ def vars (p : MvPolynomial σ R) : Finset σ :=
 
 @[simp]
 theorem vars_0 : (0 : MvPolynomial σ R).vars = ∅ := by
-  rw [vars, degrees_zero, Multiset.to_finset_zero]
+  rw [vars, degrees_zero, Multiset.toFinset_zero]
 #align mv_polynomial.vars_0 MvPolynomial.vars_0
 
 @[simp]
@@ -277,7 +277,7 @@ theorem vars_monomial (h : r ≠ 0) : (monomial s r).vars = s.support := by
 
 @[simp]
 theorem vars_C : (c r : MvPolynomial σ R).vars = ∅ := by
-  rw [vars, degrees_C, Multiset.to_finset_zero]
+  rw [vars, degrees_C, Multiset.toFinset_zero]
 #align mv_polynomial.vars_C MvPolynomial.vars_C
 
 @[simp]
@@ -286,13 +286,13 @@ theorem vars_X [Nontrivial R] : (x n : MvPolynomial σ R).vars = {n} := by
 #align mv_polynomial.vars_X MvPolynomial.vars_X
 
 theorem mem_vars (i : σ) : i ∈ p.vars ↔ ∃ (d : σ →₀ ℕ)(H : d ∈ p.support), i ∈ d.support := by
-  simp only [vars, Multiset.mem_to_finset, mem_degrees, mem_support_iff, exists_prop]
+  simp only [vars, Multiset.mem_toFinset, mem_degrees, mem_support_iff, exists_prop]
 #align mv_polynomial.mem_vars MvPolynomial.mem_vars
 
 theorem mem_support_not_mem_vars_zero {f : MvPolynomial σ R} {x : σ →₀ ℕ} (H : x ∈ f.support)
     {v : σ} (h : v ∉ vars f) : x v = 0 :=
   by
-  rw [vars, Multiset.mem_to_finset] at h
+  rw [vars, Multiset.mem_toFinset] at h
   rw [← Finsupp.not_mem_support_iff]
   contrapose! h
   unfold degrees
@@ -300,13 +300,13 @@ theorem mem_support_not_mem_vars_zero {f : MvPolynomial σ R} {x : σ →₀ ℕ
   rw [Finset.sup_insert]
   simp only [Multiset.mem_union, Multiset.sup_eq_union]
   left
-  rwa [← to_finset_to_multiset, Multiset.mem_to_finset] at h
+  rwa [← to_finset_to_multiset, Multiset.mem_toFinset] at h
 #align mv_polynomial.mem_support_not_mem_vars_zero MvPolynomial.mem_support_not_mem_vars_zero
 
 theorem vars_add_subset (p q : MvPolynomial σ R) : (p + q).vars ⊆ p.vars ∪ q.vars :=
   by
   intro x hx
-  simp only [vars, Finset.mem_union, Multiset.mem_to_finset] at hx⊢
+  simp only [vars, Finset.mem_union, Multiset.mem_toFinset] at hx⊢
   simpa using Multiset.mem_of_le (degrees_add _ _) hx
 #align mv_polynomial.vars_add_subset MvPolynomial.vars_add_subset
 
@@ -314,8 +314,8 @@ theorem vars_add_of_disjoint (h : Disjoint p.vars q.vars) : (p + q).vars = p.var
   by
   apply Finset.Subset.antisymm (vars_add_subset p q)
   intro x hx
-  simp only [vars, Multiset.disjoint_to_finset] at h hx⊢
-  rw [degrees_add_of_disjoint h, Multiset.to_finset_union]
+  simp only [vars, Multiset.disjoint_toFinset] at h hx⊢
+  rw [degrees_add_of_disjoint h, Multiset.toFinset_union]
   exact hx
 #align mv_polynomial.vars_add_of_disjoint MvPolynomial.vars_add_of_disjoint
 
@@ -368,7 +368,7 @@ theorem vars_prod {ι : Type _} {s : Finset ι} (f : ι → MvPolynomial σ R) :
   apply s.induction_on
   · simp
   · intro a s hs hsub
-    simp only [hs, Finset.bUnion_insert, Finset.prod_insert, not_false_iff]
+    simp only [hs, Finset.bunionᵢ_insert, Finset.prod_insert, not_false_iff]
     apply Finset.Subset.trans (vars_mul _ _)
     exact Finset.union_subset_union (Finset.Subset.refl _) hsub
 #align mv_polynomial.vars_prod MvPolynomial.vars_prod
@@ -395,29 +395,29 @@ section Sum
 
 variable {ι : Type _} (t : Finset ι) (φ : ι → MvPolynomial σ R)
 
-theorem vars_sum_subset : (∑ i in t, φ i).vars ⊆ Finset.bUnion t fun i => (φ i).vars :=
+theorem vars_sum_subset : (∑ i in t, φ i).vars ⊆ Finset.bunionᵢ t fun i => (φ i).vars :=
   by
   apply t.induction_on
   · simp
   · intro a s has hsum
-    rw [Finset.bUnion_insert, Finset.sum_insert has]
+    rw [Finset.bunionᵢ_insert, Finset.sum_insert has]
     refine'
       Finset.Subset.trans (vars_add_subset _ _) (Finset.union_subset_union (Finset.Subset.refl _) _)
     assumption
 #align mv_polynomial.vars_sum_subset MvPolynomial.vars_sum_subset
 
 theorem vars_sum_of_disjoint (h : Pairwise <| (Disjoint on fun i => (φ i).vars)) :
-    (∑ i in t, φ i).vars = Finset.bUnion t fun i => (φ i).vars :=
+    (∑ i in t, φ i).vars = Finset.bunionᵢ t fun i => (φ i).vars :=
   by
   apply t.induction_on
   · simp
   · intro a s has hsum
-    rw [Finset.bUnion_insert, Finset.sum_insert has, vars_add_of_disjoint, hsum]
+    rw [Finset.bunionᵢ_insert, Finset.sum_insert has, vars_add_of_disjoint, hsum]
     unfold Pairwise on_fun at h
     rw [hsum]
     simp only [Finset.disjoint_iff_ne] at h⊢
     intro v hv v2 hv2
-    rw [Finset.mem_bUnion] at hv2
+    rw [Finset.mem_bunionᵢ] at hv2
     rcases hv2 with ⟨i, his, hi⟩
     refine' h _ _ hv _ hi
     rintro rfl
@@ -449,7 +449,7 @@ theorem vars_monomial_single (i : σ) {e : ℕ} {r : R} (he : e ≠ 0) (hr : r �
 theorem vars_eq_support_bUnion_support : p.vars = p.support.bUnion Finsupp.support :=
   by
   ext i
-  rw [mem_vars, Finset.mem_bUnion]
+  rw [mem_vars, Finset.mem_bunionᵢ]
 #align mv_polynomial.vars_eq_support_bUnion_support MvPolynomial.vars_eq_support_bUnion_support
 
 end Map
@@ -649,7 +649,7 @@ theorem total_degree_mul (a b : MvPolynomial σ R) :
     (a * b).totalDegree ≤ a.totalDegree + b.totalDegree :=
   Finset.sup_le fun n hn => by
     have := AddMonoidAlgebra.support_mul a b hn
-    simp only [Finset.mem_bUnion, Finset.mem_singleton] at this
+    simp only [Finset.mem_bunionᵢ, Finset.mem_singleton] at this
     rcases this with ⟨a₁, h₁, a₂, h₂, rfl⟩
     rw [Finsupp.sum_add_index']
     · exact add_le_add (Finset.le_sup h₁) (Finset.le_sup h₂)
@@ -699,7 +699,7 @@ theorem total_degree_list_prod :
 theorem total_degree_multiset_prod (s : Multiset (MvPolynomial σ R)) :
     s.Prod.totalDegree ≤ (s.map MvPolynomial.totalDegree).Sum :=
   by
-  refine' Quotient.induction_on s fun l => _
+  refine' Quotient.inductionOn s fun l => _
   rw [Multiset.quot_mk_to_coe, Multiset.coe_prod, Multiset.coe_map, Multiset.coe_sum]
   exact total_degree_list_prod l
 #align mv_polynomial.total_degree_multiset_prod MvPolynomial.total_degree_multiset_prod
@@ -873,7 +873,7 @@ theorem vars_bind₁ (f : σ → MvPolynomial τ R) (φ : MvPolynomial σ R) :
       _
     
   -- proof below
-  · apply Finset.bUnion_mono
+  · apply Finset.bunionᵢ_mono
     intro d hd
     calc
       (C (coeff d φ) * ∏ i : σ in d.support, f i ^ d i).vars ≤
@@ -884,24 +884,24 @@ theorem vars_bind₁ (f : σ → MvPolynomial τ R) (φ : MvPolynomial σ R) :
       _ ≤ d.support.bUnion fun i : σ => (f i ^ d i).vars := vars_prod _
       _ ≤ d.support.bUnion fun i : σ => (f i).vars := _
       
-    apply Finset.bUnion_mono
+    apply Finset.bunionᵢ_mono
     intro i hi
     apply vars_pow
   · intro j
-    simp_rw [Finset.mem_bUnion]
+    simp_rw [Finset.mem_bunionᵢ]
     rintro ⟨d, hd, ⟨i, hi, hj⟩⟩
     exact ⟨i, (mem_vars _).mpr ⟨d, hd, hi⟩, hj⟩
 #align mv_polynomial.vars_bind₁ MvPolynomial.vars_bind₁
 
 theorem mem_vars_bind₁ (f : σ → MvPolynomial τ R) (φ : MvPolynomial σ R) {j : τ}
     (h : j ∈ (bind₁ f φ).vars) : ∃ i : σ, i ∈ φ.vars ∧ j ∈ (f i).vars := by
-  simpa only [exists_prop, Finset.mem_bUnion, mem_support_iff, Ne.def] using vars_bind₁ f φ h
+  simpa only [exists_prop, Finset.mem_bunionᵢ, mem_support_iff, Ne.def] using vars_bind₁ f φ h
 #align mv_polynomial.mem_vars_bind₁ MvPolynomial.mem_vars_bind₁
 
 theorem vars_rename (f : σ → τ) (φ : MvPolynomial σ R) : (rename f φ).vars ⊆ φ.vars.image f :=
   by
   intro i hi
-  simp only [vars, exists_prop, Multiset.mem_to_finset, Finset.mem_image] at hi⊢
+  simp only [vars, exists_prop, Multiset.mem_toFinset, Finset.mem_image] at hi⊢
   simpa only [Multiset.mem_map] using degrees_rename _ _ hi
 #align mv_polynomial.vars_rename MvPolynomial.vars_rename
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.class_group
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,20 +62,22 @@ irreducible_def toPrincipalIdeal : Kˣ →* (FractionalIdeal R⁰ K)ˣ :=
     map_one' := ext (by simp only [span_singleton_one, Units.val_mk, Units.val_one]) }
 #align to_principal_ideal toPrincipalIdeal
 
-attribute [local semireducible] toPrincipalIdeal
-
 variable {R K}
 
 @[simp]
 theorem coe_to_principal_ideal (x : Kˣ) :
     (toPrincipalIdeal R K x : FractionalIdeal R⁰ K) = spanSingleton _ x :=
+  by
+  simp only [toPrincipalIdeal]
   rfl
 #align coe_to_principal_ideal coe_to_principal_ideal
 
 @[simp]
 theorem to_principal_ideal_eq_iff {I : (FractionalIdeal R⁰ K)ˣ} {x : Kˣ} :
     toPrincipalIdeal R K x = I ↔ spanSingleton R⁰ (x : K) = I :=
-  Units.ext_iff
+  by
+  simp only [toPrincipalIdeal]
+  exact Units.ext_iff
 #align to_principal_ideal_eq_iff to_principal_ideal_eq_iff
 
 theorem mem_principal_ideals_iff {I : (FractionalIdeal R⁰ K)ˣ} :

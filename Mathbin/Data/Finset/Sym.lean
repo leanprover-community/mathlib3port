@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.finset.sym
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -166,20 +166,20 @@ theorem sym_empty (n : ℕ) : (∅ : Finset α).Sym (n + 1) = ∅ :=
   rfl
 #align finset.sym_empty Finset.sym_empty
 
-theorem repeat_mem_sym (ha : a ∈ s) (n : ℕ) : Sym.repeat a n ∈ s.Sym n :=
-  mem_sym_iff.2 fun b hb => by rwa [(Sym.mem_repeat.1 hb).2]
-#align finset.repeat_mem_sym Finset.repeat_mem_sym
+theorem replicate_mem_sym (ha : a ∈ s) (n : ℕ) : Sym.replicate n a ∈ s.Sym n :=
+  mem_sym_iff.2 fun b hb => by rwa [(Sym.mem_replicate.1 hb).2]
+#align finset.replicate_mem_sym Finset.replicate_mem_sym
 
 protected theorem Nonempty.sym (h : s.Nonempty) (n : ℕ) : (s.Sym n).Nonempty :=
   let ⟨a, ha⟩ := h
-  ⟨_, repeat_mem_sym ha n⟩
+  ⟨_, replicate_mem_sym ha n⟩
 #align finset.nonempty.sym Finset.Nonempty.sym
 
 @[simp]
-theorem sym_singleton (a : α) (n : ℕ) : ({a} : Finset α).Sym n = {Sym.repeat a n} :=
-  eq_singleton_iff_nonempty_unique_mem.2
-    ⟨(singleton_nonempty _).Sym n, fun s hs =>
-      Sym.eq_repeat_iff.2 fun b hb => eq_of_mem_singleton <| mem_sym_iff.1 hs _ hb⟩
+theorem sym_singleton (a : α) (n : ℕ) : ({a} : Finset α).Sym n = {Sym.replicate n a} :=
+  eq_singleton_iff_unique_mem.2
+    ⟨replicate_mem_sym (mem_singleton.2 rfl) _, fun s hs =>
+      Sym.eq_replicate_iff.2 fun b hb => eq_of_mem_singleton <| mem_sym_iff.1 hs _ hb⟩
 #align finset.sym_singleton Finset.sym_singleton
 
 theorem eq_empty_of_sym_eq_empty (h : s.Sym n = ∅) : s = ∅ :=

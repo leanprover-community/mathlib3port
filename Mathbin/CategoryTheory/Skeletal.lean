@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.skeletal
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -153,7 +153,7 @@ instance ThinSkeleton.preorder : Preorder (ThinSkeleton C)
   le_refl := by
     refine' Quotient.ind fun a => _
     exact ⟨𝟙 _⟩
-  le_trans a b c := (Quotient.induction_on₃ a b c) fun A B C => Nonempty.map2 (· ≫ ·)
+  le_trans a b c := Quotient.induction_on₃ a b c fun A B C => Nonempty.map2 (· ≫ ·)
 #align category_theory.thin_skeleton.preorder CategoryTheory.ThinSkeleton.preorder
 
 /-- The functor from a category to its thin skeleton. -/
@@ -185,8 +185,8 @@ variable {C} {D}
 @[simps]
 def map (F : C ⥤ D) : ThinSkeleton C ⥤ ThinSkeleton D
     where
-  obj := (Quotient.map F.obj) fun X₁ X₂ ⟨hX⟩ => ⟨F.mapIso hX⟩
-  map X Y := (Quotient.recOnSubsingleton₂ X Y) fun x y k => homOfLe (k.le.elim fun t => ⟨F.map t⟩)
+  obj := Quotient.map F.obj fun X₁ X₂ ⟨hX⟩ => ⟨F.mapIso hX⟩
+  map X Y := Quotient.recOnSubsingleton₂ X Y fun x y k => homOfLe (k.le.elim fun t => ⟨F.map t⟩)
 #align category_theory.thin_skeleton.map CategoryTheory.ThinSkeleton.map
 
 theorem comp_to_thin_skeleton (F : C ⥤ D) : F ⋙ toThinSkeleton D = toThinSkeleton C ⋙ map F :=
@@ -210,11 +210,11 @@ def map₂ (F : C ⥤ D ⥤ E) : ThinSkeleton C ⥤ ThinSkeleton D ⥤ ThinSkele
         Quotient.map₂ (fun X Y => (F.obj X).obj Y)
           (fun X₁ X₂ ⟨hX⟩ Y₁ Y₂ ⟨hY⟩ => ⟨(F.obj X₁).mapIso hY ≪≫ (F.mapIso hX).app Y₂⟩) x y
       map := fun y₁ y₂ =>
-        (Quotient.recOnSubsingleton x) fun X =>
-          (Quotient.recOnSubsingleton₂ y₁ y₂) fun Y₁ Y₂ hY =>
+        Quotient.recOnSubsingleton x fun X =>
+          Quotient.recOnSubsingleton₂ y₁ y₂ fun Y₁ Y₂ hY =>
             homOfLe (hY.le.elim fun g => ⟨(F.obj X).map g⟩) }
   map x₁ x₂ :=
-    (Quotient.recOnSubsingleton₂ x₁ x₂) fun X₁ X₂ f =>
+    Quotient.recOnSubsingleton₂ x₁ x₂ fun X₁ X₂ f =>
       {
         app := fun y =>
           Quotient.recOnSubsingleton y fun Y => homOfLe (f.le.elim fun f' => ⟨(F.map f').app Y⟩) }
@@ -236,7 +236,7 @@ noncomputable def fromThinSkeleton : ThinSkeleton C ⥤ C
     where
   obj := Quotient.out
   map x y :=
-    (Quotient.recOnSubsingleton₂ x y) fun X Y f =>
+    Quotient.recOnSubsingleton₂ x y fun X Y f =>
       (Nonempty.some (Quotient.mk_out X)).Hom ≫ f.le.some ≫ (Nonempty.some (Quotient.mk_out Y)).inv
 #align category_theory.thin_skeleton.from_thin_skeleton CategoryTheory.ThinSkeleton.fromThinSkeleton
 
@@ -276,7 +276,7 @@ instance thinSkeletonPartialOrder : PartialOrder (ThinSkeleton C) :=
   category_theory.thin_skeleton.thin_skeleton_partial_order CategoryTheory.ThinSkeleton.thinSkeletonPartialOrder
 
 theorem skeletal : Skeletal (ThinSkeleton C) := fun X Y =>
-  (Quotient.induction_on₂ X Y) fun x y h => h.elim fun i => i.1.le.antisymm i.2.le
+  Quotient.induction_on₂ X Y fun x y h => h.elim fun i => i.1.le.antisymm i.2.le
 #align category_theory.thin_skeleton.skeletal CategoryTheory.ThinSkeleton.skeletal
 
 theorem map_comp_eq (F : E ⥤ D) (G : D ⥤ C) : map (F ⋙ G) = map F ⋙ map G :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kevin Buzzard, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module linear_algebra.isomorphisms
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -171,9 +171,8 @@ def quotientQuotientEquivQuotient : ((M ⧸ S) ⧸ T.map S.mkq) ≃ₗ[R] M ⧸ 
       h with
     toFun := quotientQuotientEquivQuotientAux S T h
     invFun := mapq _ _ (mkq S) (le_comap_map _ _)
-    left_inv := fun x =>
-      (Quotient.inductionOn' x) fun x => (Quotient.inductionOn' x) fun x => by simp
-    right_inv := fun x => (Quotient.inductionOn' x) fun x => by simp }
+    left_inv := fun x => Quotient.inductionOn' x fun x => Quotient.inductionOn' x fun x => by simp
+    right_inv := fun x => Quotient.inductionOn' x fun x => by simp }
 #align submodule.quotient_quotient_equiv_quotient Submodule.quotientQuotientEquivQuotient
 
 /-- Corollary of the third isomorphism theorem: `[S : T] [M : S] = [M : T]` -/

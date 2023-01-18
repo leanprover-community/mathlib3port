@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module data.fin.vec_notation
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -53,7 +53,7 @@ section MatrixNotation
 
 /-- `![]` is the vector with no entries. -/
 def vecEmpty : Fin 0 → α :=
-  finZeroElim
+  Fin.elim0'
 #align matrix.vec_empty Matrix.vecEmpty
 
 /-- `vec_cons h t` prepends an entry `h` to a vector `t`.
@@ -237,22 +237,50 @@ addition on `fin n`).
 -/
 
 
-@[simp]
-theorem empty_append (v : Fin n → α) : Fin.append (zero_add _).symm ![] v = v :=
-  by
-  ext
-  simp [Fin.append]
-#align matrix.empty_append Matrix.empty_append
+/-- `vec_append ho u v` appends two vectors of lengths `m` and `n` to produce
+one of length `o = m + n`. This is a variant of `fin.append` with an additional `ho` argument,
+which provides control of definitional equality for the vector length.
 
-@[simp]
-theorem cons_append (ho : o + 1 = m + 1 + n) (x : α) (u : Fin m → α) (v : Fin n → α) :
-    Fin.append ho (vecCons x u) v =
-      vecCons x
-        (Fin.append (by rwa [add_assoc, add_comm 1, ← add_assoc, add_right_cancel_iff] at ho) u
-          v) :=
+This turns out to be helpful when providing simp lemmas to reduce `![a, b, c] n`, and also means
+that `vec_append ho u v 0` is valid. `fin.append u v 0` is not valid in this case because there is
+no `has_zero (fin (m + n))` instance. -/
+def vecAppend {α : Type _} {o : ℕ} (ho : o = m + n) (u : Fin m → α) (v : Fin n → α) : Fin o → α :=
+  Fin.append u v ∘ Fin.cast ho
+#align matrix.vec_append Matrix.vecAppend
+
+theorem vec_append_eq_ite {α : Type _} {o : ℕ} (ho : o = m + n) (u : Fin m → α) (v : Fin n → α) :
+    vecAppend ho u v = fun i =>
+      if h : (i : ℕ) < m then u ⟨i, h⟩
+      else v ⟨(i : ℕ) - m, (tsub_lt_iff_left (le_of_not_lt h)).2 (ho ▸ i.property)⟩ :=
   by
   ext i
-  simp_rw [Fin.append]
+  rw [vec_append, Fin.append, Function.comp_apply, Fin.addCases]
+  congr with hi
+  simp only [eq_rec_constant]
+  rfl
+#align matrix.vec_append_eq_ite Matrix.vec_append_eq_ite
+
+@[simp]
+theorem vec_append_apply_zero {α : Type _} {o : ℕ} (ho : o + 1 = m + 1 + n) (u : Fin (m + 1) → α)
+    (v : Fin n → α) : vecAppend ho u v 0 = u 0 :=
+  rfl
+#align matrix.vec_append_apply_zero Matrix.vec_append_apply_zero
+
+@[simp]
+theorem empty_vec_append (v : Fin n → α) : vecAppend (zero_add _).symm ![] v = v :=
+  by
+  ext
+  simp [vec_append_eq_ite]
+#align matrix.empty_vec_append Matrix.empty_vec_append
+
+@[simp]
+theorem cons_vec_append (ho : o + 1 = m + 1 + n) (x : α) (u : Fin m → α) (v : Fin n → α) :
+    vecAppend ho (vecCons x u) v =
+      vecCons x
+        (vecAppend (by rwa [add_assoc, add_comm 1, ← add_assoc, add_right_cancel_iff] at ho) u v) :=
+  by
+  ext i
+  simp_rw [vec_append_eq_ite]
   split_ifs with h
   · rcases i with ⟨⟨⟩ | i, hi⟩
     · simp
@@ -262,7 +290,7 @@ theorem cons_append (ho : o + 1 = m + 1 + n) (x : α) (u : Fin m → α) (v : Fi
     · simpa using h
     · rw [not_lt, Fin.val_mk, Nat.succ_eq_add_one, add_le_add_iff_right] at h
       simp [h]
-#align matrix.cons_append Matrix.cons_append
+#align matrix.cons_vec_append Matrix.cons_vec_append
 
 /-- `vec_alt0 v` gives a vector with half the length of `v`, with
 only alternate elements (even-numbered). -/
@@ -276,10 +304,10 @@ def vecAlt1 (hm : m = n + n) (v : Fin m → α) (k : Fin n) : α :=
   v ⟨(k : ℕ) + k + 1, hm.symm ▸ Nat.add_succ_lt_add k.property k.property⟩
 #align matrix.vec_alt1 Matrix.vecAlt1
 
-theorem vec_alt0_append (v : Fin n → α) : vecAlt0 rfl (Fin.append rfl v v) = v ∘ bit0 :=
+theorem vec_alt0_vec_append (v : Fin n → α) : vecAlt0 rfl (vecAppend rfl v v) = v ∘ bit0 :=
   by
   ext i
-  simp_rw [Function.comp, bit0, vec_alt0, Fin.append]
+  simp_rw [Function.comp, bit0, vec_alt0, vec_append_eq_ite]
   split_ifs with h <;> congr
   · rw [Fin.val_mk] at h
     simp only [Fin.ext_iff, Fin.val_add, Fin.val_mk]
@@ -289,12 +317,12 @@ theorem vec_alt0_append (v : Fin n → α) : vecAlt0 rfl (Fin.append rfl v v) = 
     refine' (Nat.mod_eq_of_lt _).symm
     rw [tsub_lt_iff_left h]
     exact add_lt_add i.property i.property
-#align matrix.vec_alt0_append Matrix.vec_alt0_append
+#align matrix.vec_alt0_vec_append Matrix.vec_alt0_vec_append
 
-theorem vec_alt1_append (v : Fin (n + 1) → α) : vecAlt1 rfl (Fin.append rfl v v) = v ∘ bit1 :=
+theorem vec_alt1_vec_append (v : Fin (n + 1) → α) : vecAlt1 rfl (vecAppend rfl v v) = v ∘ bit1 :=
   by
   ext i
-  simp_rw [Function.comp, vec_alt1, Fin.append]
+  simp_rw [Function.comp, vec_alt1, vec_append_eq_ite]
   cases n
   · simp
     congr
@@ -310,7 +338,7 @@ theorem vec_alt1_append (v : Fin (n + 1) → α) : vecAlt1 rfl (Fin.append rfl v
       refine' (Nat.mod_eq_of_lt _).symm
       rw [tsub_lt_iff_left h]
       exact Nat.add_succ_lt_add i.property i.property
-#align matrix.vec_alt1_append Matrix.vec_alt1_append
+#align matrix.vec_alt1_vec_append Matrix.vec_alt1_vec_append
 
 @[simp]
 theorem vec_head_vec_alt0 (hm : m + 2 = n + 1 + (n + 1)) (v : Fin (m + 2) → α) :
@@ -325,14 +353,14 @@ theorem vec_head_vec_alt1 (hm : m + 2 = n + 1 + (n + 1)) (v : Fin (m + 2) → α
 
 @[simp]
 theorem cons_vec_bit0_eq_alt0 (x : α) (u : Fin n → α) (i : Fin (n + 1)) :
-    vecCons x u (bit0 i) = vecAlt0 rfl (Fin.append rfl (vecCons x u) (vecCons x u)) i := by
-  rw [vec_alt0_append]
+    vecCons x u (bit0 i) = vecAlt0 rfl (vecAppend rfl (vecCons x u) (vecCons x u)) i := by
+  rw [vec_alt0_vec_append]
 #align matrix.cons_vec_bit0_eq_alt0 Matrix.cons_vec_bit0_eq_alt0
 
 @[simp]
 theorem cons_vec_bit1_eq_alt1 (x : α) (u : Fin n → α) (i : Fin (n + 1)) :
-    vecCons x u (bit1 i) = vecAlt1 rfl (Fin.append rfl (vecCons x u) (vecCons x u)) i := by
-  rw [vec_alt1_append]
+    vecCons x u (bit1 i) = vecAlt1 rfl (vecAppend rfl (vecCons x u) (vecCons x u)) i := by
+  rw [vec_alt1_vec_append]
 #align matrix.cons_vec_bit1_eq_alt1 Matrix.cons_vec_bit1_eq_alt1
 
 @[simp]

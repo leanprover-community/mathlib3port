@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kyle Miller
 
 ! This file was ported from Lean 3 source module data.set.finite
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -155,12 +155,12 @@ variable {s t : Set α} {a : α} {hs : s.Finite} {ht : t.Finite}
 
 @[simp]
 protected theorem mem_to_finset (h : s.Finite) : a ∈ h.toFinset ↔ a ∈ s :=
-  @mem_to_finset _ _ h.Fintype _
+  @mem_toFinset _ _ h.Fintype _
 #align set.finite.mem_to_finset Set.Finite.mem_to_finset
 
 @[simp]
 protected theorem coe_to_finset (h : s.Finite) : (h.toFinset : Set α) = s :=
-  @coe_to_finset _ _ h.Fintype
+  @coe_toFinset _ _ h.Fintype
 #align set.finite.coe_to_finset Set.Finite.coe_to_finset
 
 @[simp]
@@ -175,7 +175,7 @@ theorem coe_sort_to_finset (h : s.Finite) : ↥h.toFinset = ↥s := by
 
 @[simp]
 protected theorem to_finset_inj : hs.toFinset = ht.toFinset ↔ s = t :=
-  @to_finset_inj _ _ _ hs.Fintype ht.Fintype
+  @toFinset_inj _ _ _ hs.Fintype ht.Fintype
 #align set.finite.to_finset_inj Set.Finite.to_finset_inj
 
 @[simp]
@@ -227,7 +227,7 @@ protected theorem to_finset_set_of [Fintype α] (p : α → Prop) [DecidablePred
 @[simp]
 theorem disjoint_to_finset {hs : s.Finite} {ht : t.Finite} :
     Disjoint hs.toFinset ht.toFinset ↔ Disjoint s t :=
-  @disjoint_to_finset _ _ _ hs.Fintype ht.Fintype
+  @disjoint_toFinset _ _ _ hs.Fintype ht.Fintype
 #align set.finite.disjoint_to_finset Set.Finite.disjoint_to_finset
 
 protected theorem to_finset_inter [DecidableEq α] (hs : s.Finite) (ht : t.Finite)
@@ -255,7 +255,7 @@ protected theorem to_finset_symm_diff [DecidableEq α] (hs : s.Finite) (ht : t.F
     (h : (s ∆ t).Finite) : h.toFinset = hs.toFinset ∆ ht.toFinset :=
   by
   ext
-  simp [mem_symm_diff, Finset.mem_symm_diff]
+  simp [mem_symm_diff, Finset.mem_symmDiff]
 #align set.finite.to_finset_symm_diff Set.Finite.to_finset_symm_diff
 
 protected theorem to_finset_compl [DecidableEq α] [Fintype α] (hs : s.Finite) (h : sᶜ.Finite) :
@@ -281,13 +281,13 @@ protected theorem to_finset_univ [Fintype α] (h : (Set.univ : Set α).Finite) :
 
 @[simp]
 protected theorem to_finset_eq_empty {h : s.Finite} : h.toFinset = ∅ ↔ s = ∅ :=
-  @to_finset_eq_empty _ _ h.Fintype
+  @toFinset_eq_empty _ _ h.Fintype
 #align set.finite.to_finset_eq_empty Set.Finite.to_finset_eq_empty
 
 @[simp]
 protected theorem to_finset_eq_univ [Fintype α] {h : s.Finite} :
     h.toFinset = Finset.univ ↔ s = univ :=
-  @to_finset_eq_univ _ _ _ h.Fintype
+  @toFinset_eq_univ _ _ _ h.Fintype
 #align set.finite.to_finset_eq_univ Set.Finite.to_finset_eq_univ
 
 protected theorem to_finset_image [DecidableEq β] (f : α → β) (hs : s.Finite)
@@ -466,7 +466,7 @@ instance fintypeImage [DecidableEq β] (s : Set α) (f : α → β) [Fintype s] 
 then `s` has a `fintype` structure as well. -/
 def fintypeOfFintypeImage (s : Set α) {f : α → β} {g} (I : IsPartialInv f g) [Fintype (f '' s)] :
     Fintype s :=
-  (Fintype.ofFinset ⟨_, (f '' s).toFinset.2.filterMap g <| injective_of_isPartialInv_right I⟩)
+  Fintype.ofFinset ⟨_, (f '' s).toFinset.2.filterMap g <| injective_of_isPartialInv_right I⟩
     fun a =>
     by
     suffices (∃ b x, f x = b ∧ g b = some a ∧ x ∈ s) ↔ a ∈ s by
@@ -562,7 +562,7 @@ namespace Multiset
 
 @[simp]
 theorem finite_to_set (s : Multiset α) : { x | x ∈ s }.Finite := by
-  classical simpa only [← Multiset.mem_to_finset] using s.to_finset.finite_to_set
+  classical simpa only [← Multiset.mem_toFinset] using s.to_finset.finite_to_set
 #align multiset.finite_to_set Multiset.finite_to_set
 
 @[simp]
@@ -964,7 +964,7 @@ theorem finite_mem_finset (s : Finset α) : { a | a ∈ s }.Finite :=
 #align set.finite_mem_finset Set.finite_mem_finset
 
 theorem Subsingleton.finite {s : Set α} (h : s.Subsingleton) : s.Finite :=
-  h.induction_on finite_empty finite_singleton
+  h.inductionOn finite_empty finite_singleton
 #align set.subsingleton.finite Set.Subsingleton.finite
 
 theorem finite_preimage_inl_and_inr {s : Set (Sum α β)} :
@@ -981,7 +981,7 @@ theorem exists_finite_iff_finset {p : Set α → Prop} :
 
 /-- There are finitely many subsets of a given finite set -/
 theorem Finite.finite_subsets {α : Type u} {a : Set α} (h : a.Finite) : { b | b ⊆ a }.Finite :=
-  ⟨(Fintype.ofFinset ((Finset.powerset h.toFinset).map Finset.coeEmb.1)) fun s => by
+  ⟨Fintype.ofFinset ((Finset.powerset h.toFinset).map Finset.coeEmb.1) fun s => by
       simpa [← @exists_finite_iff_finset α fun t => t ⊆ a ∧ t = s, finite.subset_to_finset, ←
         and_assoc] using h.subset⟩
 #align set.finite.finite_subsets Set.Finite.finite_subsets
@@ -993,7 +993,7 @@ theorem Finite.pi {δ : Type _} [Finite δ] {κ : δ → Type _} {t : ∀ d, Set
   cases nonempty_fintype δ
   lift t to ∀ d, Finset (κ d) using ht
   classical
-    rw [← Fintype.coe_pi_finset]
+    rw [← Fintype.coe_piFinset]
     apply Finset.finite_to_set
 #align set.finite.pi Set.Finite.pi
 
@@ -1165,7 +1165,7 @@ are totally bounded.)
 theorem seq_of_forall_finite_exists {γ : Type _} {P : γ → Set γ → Prop}
     (h : ∀ t : Set γ, t.Finite → ∃ c, P c t) : ∃ u : ℕ → γ, ∀ n, P (u n) (u '' Iio n) :=
   ⟨fun n =>
-    (@Nat.strongRecOn' (fun _ => γ) n) fun n ih =>
+    @Nat.strongRecOn' (fun _ => γ) n fun n ih =>
       Classical.choose <| h (range fun m : Iio n => ih m.1 m.2) (finite_range _),
     fun n => by
     classical
@@ -1211,7 +1211,7 @@ theorem card_image_of_inj_on {s : Set α} [Fintype s] {f : α → β} [Fintype (
   calc
     Fintype.card (f '' s) = (s.to_finset.image f).card := Fintype.card_of_finset' _ (by simp)
     _ = s.to_finset.card :=
-      Finset.card_image_of_inj_on fun x hx y hy hxy =>
+      Finset.card_image_of_injOn fun x hx y hy hxy =>
         H x (mem_to_finset.1 hx) y (mem_to_finset.1 hy) hxy
     _ = Fintype.card s := (Fintype.card_of_finset' _ fun a => mem_to_finset).symm
     
@@ -1229,7 +1229,7 @@ theorem card_singleton (a : α) : Fintype.card ({a} : Set α) = 1 :=
 
 theorem card_lt_card {s t : Set α} [Fintype s] [Fintype t] (h : s ⊂ t) :
     Fintype.card s < Fintype.card t :=
-  (Fintype.card_lt_of_injective_not_surjective (Set.inclusion h.1) (Set.inclusion_injective h.1))
+  Fintype.card_lt_of_injective_not_surjective (Set.inclusion h.1) (Set.inclusion_injective h.1)
     fun hst => (ssubset_iff_subset_ne.1 h).2 (eq_of_inclusion_surjective hst)
 #align set.card_lt_card Set.card_lt_card
 
@@ -1374,7 +1374,7 @@ theorem not_inj_on_infinite_finite_image {f : α → β} {s : Set α} (h_inf : s
   haveI : Infinite s := infinite_coe_iff.mpr h_inf
   have :=
     not_injective_infinite_finite
-      (((f '' s).codRestrict (s.restrict f)) fun x => ⟨x, x.property, rfl⟩)
+      ((f '' s).codRestrict (s.restrict f) fun x => ⟨x, x.property, rfl⟩)
   contrapose! this
   rwa [injective_cod_restrict, ← inj_on_iff_injective]
 #align set.not_inj_on_infinite_finite_image Set.not_inj_on_infinite_finite_image
@@ -1571,7 +1571,7 @@ variable [SemilatticeSup α] [Nonempty α] {s : Set α}
 
 /-- A finite set is bounded above.-/
 protected theorem Finite.bdd_above (hs : s.Finite) : BddAbove s :=
-  (Finite.induction_on hs bddAbove_empty) fun a s _ _ h => h.insert a
+  Finite.induction_on hs bddAbove_empty fun a s _ _ h => h.insert a
 #align set.finite.bdd_above Set.Finite.bdd_above
 
 /-- A finite union of sets which are all bounded above is still bounded above.-/

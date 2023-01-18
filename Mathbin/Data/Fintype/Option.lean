@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.fintype.option
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,7 +42,7 @@ theorem Fintype.card_option {α : Type _} [Fintype α] :
 /-- If `option α` is a `fintype` then so is `α` -/
 def fintypeOfOption {α : Type _} [Fintype (Option α)] : Fintype α :=
   ⟨Finset.eraseNone (Fintype.elems (Option α)), fun x =>
-    mem_erase_none.mpr (Fintype.complete (some x))⟩
+    mem_eraseNone.mpr (Fintype.complete (some x))⟩
 #align fintype_of_option fintypeOfOption
 
 /-- A type is a `fintype` if its successor (using `option`) is a `fintype`. -/

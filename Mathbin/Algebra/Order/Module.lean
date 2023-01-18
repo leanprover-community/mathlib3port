@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis, Yaël Dillies
 
 ! This file was ported from Lean 3 source module algebra.order.module
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,7 +36,7 @@ instance [Semiring k] [OrderedAddCommMonoid M] [Module k M] : Module k Mᵒᵈ
 
 section Semiring
 
-variable [OrderedSemiring k] [OrderedAddCommGroup M] [Module k M] [OrderedSmul k M] {a b : M}
+variable [OrderedSemiring k] [OrderedAddCommGroup M] [Module k M] [OrderedSMul k M] {a b : M}
   {c : k}
 
 /- can be generalized from `module k M` to `distrib_mul_action_with_zero k M` once it exists.
@@ -52,7 +52,7 @@ end Semiring
 
 section Ring
 
-variable [OrderedRing k] [OrderedAddCommGroup M] [Module k M] [OrderedSmul k M] {a b : M} {c : k}
+variable [OrderedRing k] [OrderedAddCommGroup M] [Module k M] [OrderedSMul k M] {a b : M} {c : k}
 
 theorem smul_lt_smul_of_neg (h : a < b) (hc : c < 0) : c • b < c • a :=
   by
@@ -168,7 +168,7 @@ end Ring
 
 section Field
 
-variable [LinearOrderedField k] [OrderedAddCommGroup M] [Module k M] [OrderedSmul k M] {a b : M}
+variable [LinearOrderedField k] [OrderedAddCommGroup M] [Module k M] [OrderedSMul k M] {a b : M}
   {c : k}
 
 theorem smul_le_smul_iff_of_neg (hc : c < 0) : c • a ≤ c • b ↔ b ≤ a :=
@@ -221,7 +221,7 @@ end Field
 
 section OrderedRing
 
-variable [OrderedRing k] [OrderedAddCommGroup M] [Module k M] [OrderedSmul k M] {s : Set M} {c : k}
+variable [OrderedRing k] [OrderedAddCommGroup M] [Module k M] [OrderedSMul k M] {s : Set M} {c : k}
 
 theorem smul_lower_bounds_subset_upper_bounds_smul (hc : c ≤ 0) :
     c • lowerBounds s ⊆ upperBounds (c • s) :=
@@ -245,7 +245,7 @@ end OrderedRing
 
 section LinearOrderedField
 
-variable [LinearOrderedField k] [OrderedAddCommGroup M] [Module k M] [OrderedSmul k M] {s : Set M}
+variable [LinearOrderedField k] [OrderedAddCommGroup M] [Module k M] [OrderedSMul k M] {s : Set M}
   {c : k}
 
 @[simp]

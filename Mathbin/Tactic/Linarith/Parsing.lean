@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module tactic.linarith.parsing
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -73,12 +73,12 @@ unsafe def sum.one : sum :=
 
 /-- `sum.scale_by_monom s m` multiplies every monomial in `s` by `m`. -/
 unsafe def sum.scale_by_monom (s : sum) (m : monom) : sum :=
-  (s.fold mk_rb_map) fun m' coeff sm => sm.insert (m.add m') coeff
+  s.fold mk_rb_map fun m' coeff sm => sm.insert (m.add m') coeff
 #align linarith.sum.scale_by_monom linarith.sum.scale_by_monom
 
 /-- `sum.mul s1 s2` distributes the multiplication of two sums.` -/
 unsafe def sum.mul (s1 s2 : sum) : sum :=
-  (s1.fold mk_rb_map) fun mn coeff sm => sm.add <| (s2.scale_by_monom mn).scale coeff
+  s1.fold mk_rb_map fun mn coeff sm => sm.add <| (s2.scale_by_monom mn).scale coeff
 #align linarith.sum.mul linarith.sum.mul
 
 /-- The `n`th power of `s : sum` is the `n`-fold product of `s`, with `s.pow 0 = sum.one`. -/
@@ -192,7 +192,7 @@ but each monomial key is replaced with its index according to `map`.
 If any new monomials are encountered, they are assigned variable numbers and `map` is updated.
  -/
 unsafe def sum_to_lf (s : sum) (m : rb_map monom ℕ) : rb_map monom ℕ × rb_map ℕ ℤ :=
-  (s.fold (m, mk_rb_map)) fun mn coeff ⟨map, out⟩ =>
+  s.fold (m, mk_rb_map) fun mn coeff ⟨map, out⟩ =>
     match map.find mn with
     | some n => ⟨map, out.insert n coeff⟩
     | none =>

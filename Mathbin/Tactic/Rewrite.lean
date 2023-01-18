@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module tactic.rewrite
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -211,7 +211,7 @@ private unsafe def assoc_rw_goal (rs : List rw_rule) : tactic Unit :=
 #align tactic.interactive.assoc_rw_goal tactic.interactive.assoc_rw_goal
 
 private unsafe def uses_hyp (e : expr) (h : expr) : Bool :=
-  (e.fold false) fun t _ r => r || t = h
+  e.fold false fun t _ r => r || t = h
 #align tactic.interactive.uses_hyp tactic.interactive.uses_hyp
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `eq_lemmas -/

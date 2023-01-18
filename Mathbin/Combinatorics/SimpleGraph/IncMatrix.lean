@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gabriel Moise, Yaël Dillies, Kyle Miller
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.inc_matrix
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -124,7 +124,7 @@ variable [Fintype α] [NonAssocSemiring R] {a b : α} {e : Sym2 α}
 
 theorem sum_inc_matrix_apply [DecidableEq α] [DecidableRel G.Adj] :
     (∑ e, G.incMatrix R a e) = G.degree a := by
-  simp [inc_matrix_apply', sum_boole, Set.filter_mem_univ_eq_to_finset]
+  simp [inc_matrix_apply', sum_boole, Set.filter_mem_univ_eq_toFinset]
 #align simple_graph.sum_inc_matrix_apply SimpleGraph.sum_inc_matrix_apply
 
 theorem inc_matrix_mul_transpose_diag [DecidableEq α] [DecidableRel G.Adj] :

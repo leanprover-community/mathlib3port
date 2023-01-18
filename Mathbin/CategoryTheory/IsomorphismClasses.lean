@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module category_theory.isomorphism_classes
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,7 +47,7 @@ end Category
 def isomorphismClasses : Cat.{v, u} ⥤ Type u
     where
   obj C := Quotient (isIsomorphicSetoid C.α)
-  map C D F := (Quot.map F.obj) fun X Y ⟨f⟩ => ⟨F.mapIso f⟩
+  map C D F := Quot.map F.obj fun X Y ⟨f⟩ => ⟨F.mapIso f⟩
 #align category_theory.isomorphism_classes CategoryTheory.isomorphismClasses
 
 theorem Groupoid.is_isomorphic_iff_nonempty_hom {C : Type u} [Groupoid.{v} C] {X Y : C} :

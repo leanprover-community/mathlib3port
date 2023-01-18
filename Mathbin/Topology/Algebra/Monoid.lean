@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.algebra.monoid
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -371,7 +371,7 @@ variable [TopologicalSpace M] [Monoid M] [HasContinuousMul M]
 theorem Submonoid.top_closure_mul_self_subset (s : Submonoid M) :
     closure (s : Set M) * closure s ⊆ closure s :=
   image2_subset_iff.2 fun x hx y hy =>
-    (map_mem_closure₂ continuous_mul hx hy) fun a ha b hb => s.mul_mem ha hb
+    map_mem_closure₂ continuous_mul hx hy fun a ha b hb => s.mul_mem ha hb
 #align submonoid.top_closure_mul_self_subset Submonoid.top_closure_mul_self_subset
 
 @[to_additive]
@@ -487,7 +487,7 @@ theorem tendsto_list_prod {f : ι → α → M} {x : Filter α} {a : ι → M} :
 theorem continuous_list_prod {f : ι → X → M} (l : List ι) (h : ∀ i ∈ l, Continuous (f i)) :
     Continuous fun a => (l.map fun i => f i a).Prod :=
   continuous_iff_continuous_at.2 fun x =>
-    (tendsto_list_prod l) fun c hc => continuous_iff_continuous_at.1 (h c hc) x
+    tendsto_list_prod l fun c hc => continuous_iff_continuous_at.1 (h c hc) x
 #align continuous_list_prod continuous_list_prod
 
 @[to_additive]
@@ -719,7 +719,7 @@ theorem LocallyFinite.exists_finset_mul_support {M : Type _} [CommMonoid M] {f :
     ∃ I : Finset ι, ∀ᶠ x in 𝓝 x₀, (mulSupport fun i => f i x) ⊆ I :=
   by
   rcases hf x₀ with ⟨U, hxU, hUf⟩
-  refine' ⟨hUf.to_finset, (mem_of_superset hxU) fun y hy i hi => _⟩
+  refine' ⟨hUf.to_finset, mem_of_superset hxU fun y hy i hi => _⟩
   rw [hUf.coe_to_finset]
   exact ⟨y, hi, hy⟩
 #align locally_finite.exists_finset_mul_support LocallyFinite.exists_finset_mul_support
@@ -729,7 +729,7 @@ theorem finprod_eventually_eq_prod {M : Type _} [CommMonoid M] {f : ι → X →
     (hf : LocallyFinite fun i => mulSupport (f i)) (x : X) :
     ∃ s : Finset ι, ∀ᶠ y in 𝓝 x, (∏ᶠ i, f i y) = ∏ i in s, f i y :=
   let ⟨I, hI⟩ := hf.exists_finset_mul_support x
-  ⟨I, hI.mono fun y hy => (finprod_eq_prod_of_mul_support_subset _) fun i hi => hy hi⟩
+  ⟨I, hI.mono fun y hy => finprod_eq_prod_of_mul_support_subset _ fun i hi => hy hi⟩
 #align finprod_eventually_eq_prod finprod_eventually_eq_prod
 
 @[to_additive]

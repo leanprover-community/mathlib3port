@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Joey van Langen, Casper Putz
 
 ! This file was ported from Lean 3 source module field_theory.finite.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -72,7 +72,7 @@ theorem card_image_polynomial_eval [DecidableEq R] [Fintype R] {p : R[X]} (hp : 
     calc
       _ = (p - c a).roots.toFinset.card :=
         congr_arg card (by simp [Finset.ext_iff, mem_roots_sub_C hp])
-      _ ≤ (p - c a).roots.card := Multiset.to_finset_card_le _
+      _ ≤ (p - c a).roots.card := Multiset.toFinset_card_le _
       _ ≤ _ := card_roots_sub_C' hp
       
 #align finite_field.card_image_polynomial_eval FiniteField.card_image_polynomial_eval
@@ -307,9 +307,9 @@ theorem roots_X_pow_card_sub_X : roots (X ^ q - X : K[X]) = Finset.univ.val := b
       by
       rw [eq_univ_iff_forall]
       intro x
-      rw [Multiset.mem_to_finset, mem_roots aux, is_root.def, eval_sub, eval_pow, eval_X,
+      rw [Multiset.mem_toFinset, mem_roots aux, is_root.def, eval_sub, eval_pow, eval_X,
         sub_eq_zero, pow_card]
-    rw [← this, Multiset.to_finset_val, eq_comm, Multiset.dedup_eq_self]
+    rw [← this, Multiset.toFinset_val, eq_comm, Multiset.dedup_eq_self]
     apply nodup_roots
     rw [separable_def]
     convert is_coprime_one_right.neg_right using 1

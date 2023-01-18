@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Hanting Zhang
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.vieta
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,7 +52,7 @@ theorem prod_X_add_C_eq_sum_esymm (s : Multiset R) :
     rw [esymm, ← sum_hom', ← sum_map_mul_right, map_congr (Eq.refl _)]
     intro _ ht
     rw [mem_powerset_len] at ht
-    simp [ht, map_const, prod_repeat, prod_hom', map_id', card_sub]
+    simp [ht, map_const, prod_replicate, prod_hom', map_id', card_sub]
 #align multiset.prod_X_add_C_eq_sum_esymm Multiset.prod_X_add_C_eq_sum_esymm
 
 /-- Vieta's formula for the coefficients of the product of linear terms `X + λ` where `λ` runs
@@ -93,10 +93,10 @@ variable {R : Type _} [CommRing R]
 
 theorem esymm_neg (s : Multiset R) (k : ℕ) : (map Neg.neg s).esymm k = (-1) ^ k * esymm s k :=
   by
-  rw [esymm, esymm, ← Multiset.sum_map_mul_left, Multiset.powerset_len_map, Multiset.map_map,
+  rw [esymm, esymm, ← Multiset.sum_map_mul_left, Multiset.powersetLen_map, Multiset.map_map,
     map_congr (Eq.refl _)]
   intro x hx
-  rw [(mem_powerset_len.mp hx).right.symm, ← prod_repeat, ← Multiset.map_const]
+  rw [(mem_powerset_len.mp hx).right.symm, ← prod_replicate, ← Multiset.map_const]
   nth_rw 3 [← map_id' x]
   rw [← prod_map_mul, map_congr (Eq.refl _)]
   exact fun z _ => neg_one_mul z

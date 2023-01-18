@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module linear_algebra.affine_space.combination
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1076,7 +1076,7 @@ theorem weighted_vsub_mem_vector_span {s : Finset ι} {w : ι → k} (h : (∑ i
   classical
     rcases isEmpty_or_nonempty ι with (hι | ⟨⟨i0⟩⟩)
     · skip
-      simp [Finset.eq_empty_of_is_empty s]
+      simp [Finset.eq_empty_of_isEmpty s]
     · rw [vector_span_range_eq_span_range_vsub_right k p i0, ← Set.image_univ,
         Finsupp.mem_span_image_iff_total,
         Finset.weighted_vsub_eq_weighted_vsub_of_point_of_sum_eq_zero s w p h (p i0),

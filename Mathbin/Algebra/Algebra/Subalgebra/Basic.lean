@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.algebra.subalgebra.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -371,7 +371,7 @@ instance [Semiring R'] [SMul R' R] [Module R' A] [IsScalarTower R' R A] : IsScal
 instance algebra' [CommSemiring R'] [SMul R' R] [Algebra R' A] [IsScalarTower R' R A] :
     Algebra R' S :=
   {
-    ((algebraMap R' A).codRestrict S) fun x =>
+    (algebraMap R' A).codRestrict S fun x =>
       by
       rw [Algebra.algebra_map_eq_smul_one, ← smul_one_smul R x (1 : A), ←
         Algebra.algebra_map_eq_smul_one]

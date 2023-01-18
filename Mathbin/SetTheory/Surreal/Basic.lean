@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Scott Morrison
 
 ! This file was ported from Lean 3 source module set_theory.surreal.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -224,7 +224,7 @@ theorem numeric_zero : Numeric 0 :=
 #align pgame.numeric_zero Pgame.numeric_zero
 
 theorem numeric_one : Numeric 1 :=
-  (numeric_of_is_empty_right_moves 1) fun _ => numeric_zero
+  numeric_of_is_empty_right_moves 1 fun _ => numeric_zero
 #align pgame.numeric_one Pgame.numeric_one
 
 theorem Numeric.neg : ∀ {x : Pgame} (o : Numeric x), Numeric (-x)

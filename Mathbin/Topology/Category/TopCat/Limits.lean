@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Scott Morrison, Mario Carneiro, Andrew Yang
 
 ! This file was ported from Lean 3 source module topology.category.Top.limits
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1050,7 +1050,7 @@ theorem is_topological_basis_cofiltered_limit (T : ∀ j, Set (Set (F.obj j)))
           · intro P he hh
             simpa
           · intro a E ha hh1 hh2 hh3 hh4 hh5
-            rw [Finset.set_bInter_insert]
+            rw [Finset.set_binterᵢ_insert]
             refine' hh4 _ _ (hh5 _ (Finset.mem_insert_self _ _)) (hh1 _ hh3 hh4 _)
             intro e he
             exact hh5 e (Finset.mem_insert_of_mem he)

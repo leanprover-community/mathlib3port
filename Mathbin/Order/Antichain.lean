@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.antichain
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -444,7 +444,7 @@ theorem mono (hs : IsStrongAntichain r₁ s) (h : r₂ ≤ r₁) : IsStrongAntic
 #print IsStrongAntichain.eq /-
 theorem eq (hs : IsStrongAntichain r s) {a b c : α} (ha : a ∈ s) (hb : b ∈ s) (hac : r a c)
     (hbc : r b c) : a = b :=
-  (hs.Eq ha hb) fun h => False.elim <| (h c).elim (not_not_intro hac) (not_not_intro hbc)
+  hs.Eq ha hb fun h => False.elim <| (h c).elim (not_not_intro hac) (not_not_intro hbc)
 #align is_strong_antichain.eq IsStrongAntichain.eq
 -/
 
@@ -550,7 +550,7 @@ namespace IsWeakAntichain
 lean 3 declaration is
   forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Preorder.{u2} (α i)] {s : Set.{max u1 u2} (forall (i : ι), α i)} {t : Set.{max u1 u2} (forall (i : ι), α i)}, (IsWeakAntichain.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i) s) -> (HasSubset.Subset.{max u1 u2} (Set.{max u1 u2} (forall (i : ι), α i)) (Set.hasSubset.{max u1 u2} (forall (i : ι), α i)) t s) -> (IsWeakAntichain.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i) t)
 but is expected to have type
-  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : forall (i : ι), Preorder.{u1} (α i)] {s : Set.{max u2 u1} (forall (i : ι), α i)} {t : Set.{max u2 u1} (forall (i : ι), α i)}, (IsWeakAntichain.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i) s) -> (HasSubset.Subset.{max u2 u1} (Set.{max u2 u1} (forall (i : ι), α i)) (Set.instHasSubsetSet_1.{max u2 u1} (forall (i : ι), α i)) t s) -> (IsWeakAntichain.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i) t)
+  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : forall (i : ι), Preorder.{u1} (α i)] {s : Set.{max u2 u1} (forall (i : ι), α i)} {t : Set.{max u2 u1} (forall (i : ι), α i)}, (IsWeakAntichain.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i) s) -> (HasSubset.Subset.{max u2 u1} (Set.{max u2 u1} (forall (i : ι), α i)) (Set.instHasSubsetSet.{max u2 u1} (forall (i : ι), α i)) t s) -> (IsWeakAntichain.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i) t)
 Case conversion may be inaccurate. Consider using '#align is_weak_antichain.subset IsWeakAntichain.subsetₓ'. -/
 protected theorem subset (hs : IsWeakAntichain s) : t ⊆ s → IsWeakAntichain t :=
   hs.Subset

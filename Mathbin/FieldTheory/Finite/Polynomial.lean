@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module field_theory.finite.polynomial
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -105,8 +105,8 @@ theorem indicator_mem_restrict_degree (c : σ → K) :
   rw [mem_restrict_degree_iff_sup, indicator]
   intro n
   refine' le_trans (Multiset.count_le_of_le _ <| degrees_indicator _) (le_of_eq _)
-  simp_rw [← Multiset.coe_count_add_monoid_hom, (Multiset.countAddMonoidHom n).map_sum,
-    AddMonoidHom.map_nsmul, Multiset.coe_count_add_monoid_hom, nsmul_eq_mul, Nat.cast_id]
+  simp_rw [← Multiset.coe_countAddMonoidHom, (Multiset.countAddMonoidHom n).map_sum,
+    AddMonoidHom.map_nsmul, Multiset.coe_countAddMonoidHom, nsmul_eq_mul, Nat.cast_id]
   trans
   refine' Finset.sum_eq_single n _ _
   · intro b hb ne
@@ -221,7 +221,7 @@ theorem dim_R [Fintype σ] : Module.rank K (R σ K) = Fintype.card (σ → K) :=
       rw [Finsupp.dim_eq, dim_self, mul_one]
     _ = (#{ s : σ → ℕ | ∀ n : σ, s n < Fintype.card K }) :=
       by
-      refine' Quotient.sound ⟨(Equiv.subtypeEquiv Finsupp.equivFunOnFinite) fun f => _⟩
+      refine' Quotient.sound ⟨Equiv.subtypeEquiv Finsupp.equivFunOnFinite fun f => _⟩
       refine' forall_congr' fun n => le_tsub_iff_right _
       exact Fintype.card_pos_iff.2 ⟨0⟩
     _ = (#σ → { n // n < Fintype.card K }) :=

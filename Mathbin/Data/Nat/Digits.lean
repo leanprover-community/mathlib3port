@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Shing Tak Lam, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.digits
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,7 +43,7 @@ def digitsAux0 : ℕ → List ℕ
 
 /-- (Impl.) An auxiliary definition for `digits`, to help get the desired definitional unfolding. -/
 def digitsAux1 (n : ℕ) : List ℕ :=
-  List.repeat 1 n
+  List.replicate n 1
 #align nat.digits_aux_1 Nat.digitsAux1
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -75,7 +75,7 @@ In any base, we have `of_digits b L = L.foldr (λ x y, x + b * y) 0`.
 * For any `2 ≤ b`, we have `l < b` for any `l ∈ digits b n`,
   and the last digit is not zero.
   This uniquely specifies the behaviour of `digits b`.
-* For `b = 1`, we define `digits 1 n = list.repeat 1 n`.
+* For `b = 1`, we define `digits 1 n = list.replicate n 1`.
 * For `b = 0`, we define `digits 0 n = [n]`, except `digits 0 0 = []`.
 
 Note this differs from the existing `nat.to_digits` in core, which is used for printing numerals.
@@ -108,7 +108,7 @@ theorem digits_zero_succ' : ∀ {n : ℕ} (w : 0 < n), digits 0 n = [n]
 #align nat.digits_zero_succ' Nat.digits_zero_succ'
 
 @[simp]
-theorem digits_one (n : ℕ) : digits 1 n = List.repeat 1 n :=
+theorem digits_one (n : ℕ) : digits 1 n = List.replicate n 1 :=
   rfl
 #align nat.digits_one Nat.digits_one
 
@@ -141,7 +141,7 @@ theorem digits_of_lt (b x : ℕ) (w₁ : 0 < x) (w₂ : x < b) : digits b x = [x
   cases b
   · cases w₂
   · cases b
-    · interval_cases x
+    · interval_cases
     · cases x
       · cases w₁
       · rw [digits_add_two_add_one, Nat.div_eq_of_lt w₂, digits_zero, Nat.mod_eq_of_lt w₂]
@@ -403,8 +403,7 @@ theorem last_digit_ne_zero (b : ℕ) {m : ℕ} (hm : m ≠ 0) :
     · simp
   · cases m
     · cases hm rfl
-    simp_rw [digits_one, List.getLast_repeat_succ 1 m]
-    norm_num
+    simpa only [digits_one, List.getLast_replicate_succ m 1] using one_ne_zero
   revert hm
   apply Nat.strong_induction_on m
   intro n IH hn
@@ -789,8 +788,8 @@ unsafe def eval : expr → tactic (expr × expr)
           if b = 1 then do
             let ic ← mk_instance_cache q(ℕ)
             let (_, pn0) ← norm_num.prove_pos ic en
-            let s ← simp_lemmas.add_simp simp_lemmas.mk `list.repeat
-            let (rhs, p2, _) ← simplify s [] q(List.repeat 1 $(en))
+            let s ← simp_lemmas.add_simp simp_lemmas.mk `list.replicate
+            let (rhs, p2, _) ← simplify s [] q(List.replicate $(en) 1)
             let p ← mk_eq_trans q(Nat.digits_one $(en)) p2
             return (rhs, p)
           else do

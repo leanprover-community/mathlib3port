@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yury Kudryashov, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.measure.stieltjes
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -175,8 +175,8 @@ theorem length_subadditive_Icc_Ioo {a b : ℝ} {c d : ℕ → ℝ} (ss : Icc a b
         (fun (i : ℕ) (_ : i ∈ univ) => @is_open_Ioo _ _ _ _ (c i) (d i)) (by simpa using ss) with
       ⟨s, su, hf, hs⟩
     have e : (⋃ i ∈ (↑hf.to_finset : Set ℕ), Ioo (c i) (d i)) = ⋃ i ∈ s, Ioo (c i) (d i) := by
-      simp only [ext_iff, exists_prop, Finset.set_bUnion_coe, mem_Union, forall_const, iff_self_iff,
-        finite.mem_to_finset]
+      simp only [ext_iff, exists_prop, Finset.set_bunionᵢ_coe, mem_Union, forall_const,
+        iff_self_iff, finite.mem_to_finset]
     rw [Ennreal.tsum_eq_supr_sum]
     refine' le_trans _ (le_supᵢ _ hf.to_finset)
     exact this hf.to_finset _ (by simpa only [e] )

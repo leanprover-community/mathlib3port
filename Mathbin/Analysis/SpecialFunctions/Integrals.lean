@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Benjamin Davidson
 
 ! This file was ported from Lean 3 source module analysis.special_functions.integrals
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -58,8 +58,7 @@ theorem intervalIntegrablePow : IntervalIntegrable (fun x => x ^ n) μ a b :=
 
 theorem intervalIntegrableZpow {n : ℤ} (h : 0 ≤ n ∨ (0 : ℝ) ∉ [a, b]) :
     IntervalIntegrable (fun x => x ^ n) μ a b :=
-  ((continuous_on_id.zpow₀ n) fun x hx =>
-      h.symm.imp (ne_of_mem_of_not_mem hx) id).IntervalIntegrable
+  (continuous_on_id.zpow₀ n fun x hx => h.symm.imp (ne_of_mem_of_not_mem hx) id).IntervalIntegrable
 #align interval_integral.interval_integrable_zpow intervalIntegral.intervalIntegrableZpow
 
 theorem intervalIntegrableRpow {r : ℝ} (h : 0 ≤ r ∨ (0 : ℝ) ∉ [a, b]) :
@@ -164,7 +163,7 @@ theorem IntervalIntegrable.log (hf : ContinuousOn f [a, b]) (h : ∀ x : ℝ, x 
 
 @[simp]
 theorem intervalIntegrableLog (h : (0 : ℝ) ∉ [a, b]) : IntervalIntegrable log μ a b :=
-  (IntervalIntegrable.log continuous_on_id) fun x hx => ne_of_mem_of_not_mem hx h
+  IntervalIntegrable.log continuous_on_id fun x hx => ne_of_mem_of_not_mem hx h
 #align interval_integral.interval_integrable_log intervalIntegral.intervalIntegrableLog
 
 @[simp]
@@ -360,7 +359,7 @@ theorem integral_zpow {n : ℤ} (h : 0 ≤ n ∨ n ≠ -1 ∧ (0 : ℝ) ∉ [a, 
 
 @[simp]
 theorem integral_pow : (∫ x in a..b, x ^ n) = (b ^ (n + 1) - a ^ (n + 1)) / (n + 1) := by
-  simpa using integral_zpow (Or.inl (Int.coe_nat_nonneg n))
+  simpa only [← Int.ofNat_succ, zpow_ofNat] using integral_zpow (Or.inl (Int.coe_nat_nonneg n))
 #align integral_pow integral_pow
 
 /-- Integral of `|x - a| ^ n` over `Ι a b`. This integral appears in the proof of the

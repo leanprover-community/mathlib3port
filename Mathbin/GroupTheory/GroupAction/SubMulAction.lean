@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module group_theory.group_action.sub_mul_action
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -86,6 +86,14 @@ theorem mk_smul_mk (r : R) (x : M) (hx : x ∈ s) : r • (⟨x, hx⟩ : s) = �
 theorem smul_def (r : R) (x : s) : r • x = ⟨r • x, smul_mem r x.2⟩ :=
   rfl
 #align set_like.smul_def SetLike.smul_def
+
+omit hS
+
+@[simp]
+theorem forall_smul_mem_iff {R M S : Type _} [Monoid R] [MulAction R M] [SetLike S M]
+    [SmulMemClass S R M] {N : S} {x : M} : (∀ a : R, a • x ∈ N) ↔ x ∈ N :=
+  ⟨fun h => by simpa using h 1, fun h a => SmulMemClass.smul_mem a h⟩
+#align set_like.forall_smul_mem_iff SetLike.forall_smul_mem_iff
 
 end SetLike
 

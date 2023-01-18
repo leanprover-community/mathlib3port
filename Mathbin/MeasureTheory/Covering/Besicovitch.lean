@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.covering.besicovitch
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -686,7 +686,7 @@ theorem exist_finset_disjoint_balls_large_measure (μ : Measure α) [IsFiniteMea
   -- use `s` (which might not be measurable), but its measurable superset `o`. Since their measures
   -- are the same, this does not spoil the estimates
   · suffices H : μ (o \ ⋃ x ∈ w, closed_ball (↑x) (r ↑x)) ≤ N / (N + 1) * μ s
-    · rw [Finset.set_bUnion_finset_image]
+    · rw [Finset.set_bunionᵢ_finset_image]
       exact le_trans (measure_mono (diff_subset_diff so (subset.refl _))) H
     rw [← diff_inter_self_eq_diff,
       measure_diff_le_iff_le_add _ (inter_subset_right _ _) (measure_lt_top μ _).Ne]
@@ -702,7 +702,7 @@ theorem exist_finset_disjoint_balls_large_measure (μ : Measure α) [IsFiniteMea
         refine' add_le_add _ le_rfl
         rw [div_eq_mul_inv, one_mul, mul_comm, ← div_eq_mul_inv]
         apply hw.le.trans (le_of_eq _)
-        rw [← Finset.set_bUnion_coe, inter_comm _ o, inter_Union₂, Finset.set_bUnion_coe,
+        rw [← Finset.set_bunionᵢ_coe, inter_comm _ o, inter_Union₂, Finset.set_bunionᵢ_coe,
           measure_bUnion_finset]
         · have : (w : Set (u i)).PairwiseDisjoint fun b : u i => closed_ball (b : α) (r (b : α)) :=
             by
@@ -809,7 +809,7 @@ theorem exists_disjoint_closed_ball_covering_ae_of_finite_measure_aux (μ : Meas
       · intro p hp q hq hpq
         rcases(mem_image _ _ _).1 hq with ⟨q', q'v, rfl⟩
         apply disjoint_of_subset_left _ (hr q' (vs' q'v)).2
-        rw [hB, ← Finset.set_bUnion_coe]
+        rw [hB, ← Finset.set_bunionᵢ_coe]
         exact subset_bUnion_of_mem hp
     · intro p hp
       rcases Finset.mem_union.1 hp with (h'p | h'p)
@@ -822,7 +822,7 @@ theorem exists_disjoint_closed_ball_covering_ae_of_finite_measure_aux (μ : Meas
       · rcases Finset.mem_image.1 h'p with ⟨p', p'v, rfl⟩
         exact (hr p' (vs' p'v)).1.1
     · convert hμv using 2
-      rw [Finset.set_bUnion_union, ← diff_diff, Finset.set_bUnion_finset_image]
+      rw [Finset.set_bunionᵢ_union, ← diff_diff, Finset.set_bunionᵢ_finset_image]
   /- Define `F` associating to a finite good covering the above enlarged good covering, covering
     a proportion `1/(N+1)` of leftover points. Iterating `F`, one will get larger and larger good
     coverings, missing in the end only a measure-zero set. -/

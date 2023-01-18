@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module algebra.gcd_monoid.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -110,8 +110,8 @@ def normalize : α →*₀ α where
   map_zero' := by simp
   map_one' := by rw [normUnit_one, Units.val_one, mul_one]
   map_mul' x y :=
-    (by_cases fun hx : x = 0 => by rw [hx, zero_mul, zero_mul, zero_mul]) fun hx =>
-      (by_cases fun hy : y = 0 => by rw [hy, mul_zero, zero_mul, mul_zero]) fun hy => by
+    by_cases (fun hx : x = 0 => by rw [hx, zero_mul, zero_mul, zero_mul]) fun hx =>
+      by_cases (fun hy : y = 0 => by rw [hy, mul_zero, zero_mul, mul_zero]) fun hy => by
         simp only [norm_unit_mul hx hy, Units.val_mul] <;> simp only [mul_assoc, mul_left_comm y]
 #align normalize normalize
 -/
@@ -327,7 +327,7 @@ attribute [local instance] Associated.setoid
 #print Associates.out /-
 /-- Maps an element of `associates` back to the normalized element of its associate class -/
 protected def out : Associates α → α :=
-  (Quotient.lift (normalize : α → α)) fun a b ⟨u, hu⟩ =>
+  Quotient.lift (normalize : α → α) fun a b ⟨u, hu⟩ =>
     hu ▸ normalize_eq_normalize ⟨_, rfl⟩ (Units.mul_right_dvd.2 <| dvd_refl a)
 #align associates.out Associates.out
 -/
@@ -361,7 +361,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CancelCommMonoidWithZero.{u1} α] [_inst_2 : NormalizationMonoid.{u1} α _inst_1] (a : Associates.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1)))) (b : Associates.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1)))), Eq.{succ u1} α (Associates.out.{u1} α _inst_1 _inst_2 (HMul.hMul.{u1, u1, u1} (Associates.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1)))) (Associates.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1)))) (Associates.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1)))) (instHMul.{u1} (Associates.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1)))) (Associates.instMulAssociatesToMonoid.{u1} α (CommMonoidWithZero.toCommMonoid.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1)))) a b)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulZeroClass.toMul.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1)))))) (Associates.out.{u1} α _inst_1 _inst_2 a) (Associates.out.{u1} α _inst_1 _inst_2 b))
 Case conversion may be inaccurate. Consider using '#align associates.out_mul Associates.out_mulₓ'. -/
 theorem out_mul (a b : Associates α) : (a * b).out = a.out * b.out :=
-  (Quotient.induction_on₂ a b) fun a b => by
+  Quotient.induction_on₂ a b fun a b => by
     simp only [Associates.quotient_mk_eq_mk, out_mk, mk_mul_mk, normalize.map_mul]
 #align associates.out_mul Associates.out_mul
 
@@ -372,7 +372,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CancelCommMonoidWithZero.{u1} α] [_inst_2 : NormalizationMonoid.{u1} α _inst_1] (a : α) (b : Associates.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1)))), Iff (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (MonoidWithZero.toSemigroupWithZero.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) a (Associates.out.{u1} α _inst_1 _inst_2 b)) (LE.le.{u1} (Associates.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1)))) (Preorder.toLE.{u1} (Associates.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1)))) (Associates.instPreorderAssociatesToMonoid.{u1} α (CommMonoidWithZero.toCommMonoid.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1)))) (Associates.mk.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))) a) b)
 Case conversion may be inaccurate. Consider using '#align associates.dvd_out_iff Associates.dvd_out_iffₓ'. -/
 theorem dvd_out_iff (a : α) (b : Associates α) : a ∣ b.out ↔ Associates.mk a ≤ b :=
-  Quotient.induction_on b <| by
+  Quotient.inductionOn b <| by
     simp [Associates.out_mk, Associates.quotient_mk_eq_mk, mk_le_mk_iff_dvd_iff]
 #align associates.dvd_out_iff Associates.dvd_out_iff
 
@@ -383,7 +383,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CancelCommMonoidWithZero.{u1} α] [_inst_2 : NormalizationMonoid.{u1} α _inst_1] (a : α) (b : Associates.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1)))), Iff (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (MonoidWithZero.toSemigroupWithZero.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) (Associates.out.{u1} α _inst_1 _inst_2 b) a) (LE.le.{u1} (Associates.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1)))) (Preorder.toLE.{u1} (Associates.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1)))) (Associates.instPreorderAssociatesToMonoid.{u1} α (CommMonoidWithZero.toCommMonoid.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1)))) b (Associates.mk.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))) a))
 Case conversion may be inaccurate. Consider using '#align associates.out_dvd_iff Associates.out_dvd_iffₓ'. -/
 theorem out_dvd_iff (a : α) (b : Associates α) : b.out ∣ a ↔ b ≤ Associates.mk a :=
-  Quotient.induction_on b <| by
+  Quotient.inductionOn b <| by
     simp [Associates.out_mk, Associates.quotient_mk_eq_mk, mk_le_mk_iff_dvd_iff]
 #align associates.out_dvd_iff Associates.out_dvd_iff
 
@@ -406,13 +406,13 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align associates.normalize_out Associates.normalize_outₓ'. -/
 @[simp]
 theorem normalize_out (a : Associates α) : normalize a.out = a.out :=
-  Quotient.induction_on a normalize_idem
+  Quotient.inductionOn a normalize_idem
 #align associates.normalize_out Associates.normalize_out
 
 #print Associates.mk_out /-
 @[simp]
 theorem mk_out (a : Associates α) : Associates.mk a.out = a :=
-  Quotient.induction_on a mk_normalize
+  Quotient.inductionOn a mk_normalize
 #align associates.mk_out Associates.mk_out
 -/
 
@@ -678,8 +678,7 @@ Case conversion may be inaccurate. Consider using '#align gcd_mul_left gcd_mul_l
 @[simp]
 theorem gcd_mul_left [NormalizedGCDMonoid α] (a b c : α) :
     gcd (a * b) (a * c) = normalize a * gcd b c :=
-  (by_cases (by rintro rfl <;> simp only [zero_mul, gcd_zero_left, normalize_zero]))
-    fun ha : a ≠ 0 =>
+  by_cases (by rintro rfl <;> simp only [zero_mul, gcd_zero_left, normalize_zero]) fun ha : a ≠ 0 =>
     suffices gcd (a * b) (a * c) = normalize (a * gcd b c) by
       simpa only [normalize.map_mul, normalize_gcd]
     let ⟨d, Eq⟩ := dvd_gcd (dvd_mul_right a b) (dvd_mul_right a c)
@@ -741,7 +740,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align gcd_eq_left_iff gcd_eq_left_iffₓ'. -/
 theorem gcd_eq_left_iff [NormalizedGCDMonoid α] (a b : α) (h : normalize a = a) :
     gcd a b = a ↔ a ∣ b :=
-  (Iff.intro fun eq => Eq ▸ gcd_dvd_right _ _) fun hab =>
+  Iff.intro (fun eq => Eq ▸ gcd_dvd_right _ _) fun hab =>
     dvd_antisymm_of_normalize_eq (normalize_gcd _ _) h (gcd_dvd_left _ _) (dvd_gcd (dvd_refl a) hab)
 #align gcd_eq_left_iff gcd_eq_left_iff
 
@@ -1279,8 +1278,7 @@ Case conversion may be inaccurate. Consider using '#align lcm_mul_left lcm_mul_l
 @[simp]
 theorem lcm_mul_left [NormalizedGCDMonoid α] (a b c : α) :
     lcm (a * b) (a * c) = normalize a * lcm b c :=
-  (by_cases (by rintro rfl <;> simp only [zero_mul, lcm_zero_left, normalize_zero]))
-    fun ha : a ≠ 0 =>
+  by_cases (by rintro rfl <;> simp only [zero_mul, lcm_zero_left, normalize_zero]) fun ha : a ≠ 0 =>
     suffices lcm (a * b) (a * c) = normalize (a * lcm b c) by
       simpa only [normalize.map_mul, normalize_lcm]
     have : a ∣ lcm (a * b) (a * c) := (dvd_mul_right _ _).trans (dvd_lcm_left _ _)
@@ -1312,7 +1310,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align lcm_eq_left_iff lcm_eq_left_iffₓ'. -/
 theorem lcm_eq_left_iff [NormalizedGCDMonoid α] (a b : α) (h : normalize a = a) :
     lcm a b = a ↔ b ∣ a :=
-  (Iff.intro fun eq => Eq ▸ dvd_lcm_right _ _) fun hab =>
+  Iff.intro (fun eq => Eq ▸ dvd_lcm_right _ _) fun hab =>
     dvd_antisymm_of_normalize_eq (normalize_lcm _ _) h (lcm_dvd (dvd_refl a) hab) (dvd_lcm_left _ _)
 #align lcm_eq_left_iff lcm_eq_left_iff
 
@@ -1715,7 +1713,7 @@ noncomputable def gcdMonoidOfLCM [DecidableEq α] (lcm : α → α → α)
       have h0 : lcm a b ≠ 0 := by
         intro con
         have h := lcm_dvd (Dvd.intro b rfl) (Dvd.intro_left a rfl)
-        rw [con, zero_dvd_iff, mul_eq_zero] at h
+        rw [Con, zero_dvd_iff, mul_eq_zero] at h
         cases h <;> tauto
       rw [← mul_dvd_mul_iff_left h0, ← Classical.choose_spec (exists_gcd a b), mul_comm,
         mul_dvd_mul_iff_right h]
@@ -1728,7 +1726,7 @@ noncomputable def gcdMonoidOfLCM [DecidableEq α] (lcm : α → α → α)
       have h0 : lcm a b ≠ 0 := by
         intro con
         have h := lcm_dvd (Dvd.intro b rfl) (Dvd.intro_left a rfl)
-        rw [con, zero_dvd_iff, mul_eq_zero] at h
+        rw [Con, zero_dvd_iff, mul_eq_zero] at h
         cases h <;> tauto
       rw [← mul_dvd_mul_iff_left h0, ← Classical.choose_spec (exists_gcd a b),
         mul_dvd_mul_iff_right h_1]
@@ -1740,7 +1738,7 @@ noncomputable def gcdMonoidOfLCM [DecidableEq α] (lcm : α → α → α)
       have h0 : lcm c b ≠ 0 := by
         intro con
         have h := lcm_dvd (Dvd.intro b rfl) (Dvd.intro_left c rfl)
-        rw [con, zero_dvd_iff, mul_eq_zero] at h
+        rw [Con, zero_dvd_iff, mul_eq_zero] at h
         cases h <;> tauto
       rw [← mul_dvd_mul_iff_left h0, ← Classical.choose_spec (exists_gcd c b)]
       rcases ab with ⟨d, rfl⟩
@@ -1785,7 +1783,7 @@ noncomputable def normalizedGCDMonoidOfLCM [NormalizationMonoid α] [DecidableEq
       have h0 : lcm a b ≠ 0 := by
         intro con
         have h := lcm_dvd (Dvd.intro b rfl) (Dvd.intro_left a rfl)
-        rw [con, zero_dvd_iff, mul_eq_zero] at h
+        rw [Con, zero_dvd_iff, mul_eq_zero] at h
         cases h <;> tauto
       apply mul_left_cancel₀ h0
       refine' trans _ (Classical.choose_spec (exists_gcd a b))
@@ -1803,7 +1801,7 @@ noncomputable def normalizedGCDMonoidOfLCM [NormalizationMonoid α] [DecidableEq
       have h0 : lcm a b ≠ 0 := by
         intro con
         have h := lcm_dvd (Dvd.intro b rfl) (Dvd.intro_left a rfl)
-        rw [con, zero_dvd_iff, mul_eq_zero] at h
+        rw [Con, zero_dvd_iff, mul_eq_zero] at h
         cases h <;> tauto
       rw [← mul_dvd_mul_iff_left h0, ← Classical.choose_spec (exists_gcd a b), normalize_dvd_iff,
         mul_comm, mul_dvd_mul_iff_right h]
@@ -1816,7 +1814,7 @@ noncomputable def normalizedGCDMonoidOfLCM [NormalizationMonoid α] [DecidableEq
       have h0 : lcm a b ≠ 0 := by
         intro con
         have h := lcm_dvd (Dvd.intro b rfl) (Dvd.intro_left a rfl)
-        rw [con, zero_dvd_iff, mul_eq_zero] at h
+        rw [Con, zero_dvd_iff, mul_eq_zero] at h
         cases h <;> tauto
       rw [← mul_dvd_mul_iff_left h0, ← Classical.choose_spec (exists_gcd a b), normalize_dvd_iff,
         mul_dvd_mul_iff_right h_1]
@@ -1828,7 +1826,7 @@ noncomputable def normalizedGCDMonoidOfLCM [NormalizationMonoid α] [DecidableEq
       have h0 : lcm c b ≠ 0 := by
         intro con
         have h := lcm_dvd (Dvd.intro b rfl) (Dvd.intro_left c rfl)
-        rw [con, zero_dvd_iff, mul_eq_zero] at h
+        rw [Con, zero_dvd_iff, mul_eq_zero] at h
         cases h <;> tauto
       rw [← mul_dvd_mul_iff_left h0, ←
         Classical.choose_spec

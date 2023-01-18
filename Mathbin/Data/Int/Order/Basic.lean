@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.int.order.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -78,16 +78,22 @@ theorem abs_eq_natAbs : ∀ a : ℤ, |a| = natAbs a
 lean 3 declaration is
   forall (n : Int), Eq.{1} Int ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Int.natAbs n)) (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.hasNeg (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (LinearOrder.toLattice.{0} Int Int.linearOrder)))) n)
 but is expected to have type
-  forall (n : Nat), Eq.{1} Int (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.instNegInt (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (DistribLattice.toLattice.{0} Int (instDistribLattice.{0} Int Int.instLinearOrderInt))))) (Nat.cast.{0} Int Int.instNatCastInt n)) (Nat.cast.{0} Int Int.instNatCastInt n)
+  forall (n : Int), Eq.{1} Int (Nat.cast.{0} Int Int.instNatCastInt (Int.natAbs n)) (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.instNegInt (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (DistribLattice.toLattice.{0} Int (instDistribLattice.{0} Int Int.instLinearOrderInt))))) n)
 Case conversion may be inaccurate. Consider using '#align int.coe_nat_abs Int.coe_natAbsₓ'. -/
 @[simp, norm_cast]
 theorem coe_natAbs (n : ℤ) : (n.natAbs : ℤ) = |n| :=
   n.abs_eq_nat_abs.symm
 #align int.coe_nat_abs Int.coe_natAbs
 
-theorem Nat.cast_nat_abs {α : Type _} [AddGroupWithOne α] (n : ℤ) : (n.natAbs : α) = ↑(|n|) := by
+/- warning: nat.cast_nat_abs -> Nat.cast_natAbs is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : AddGroupWithOne.{u1} α] (n : Int), Eq.{succ u1} α ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat α (HasLiftT.mk.{1, succ u1} Nat α (CoeTCₓ.coe.{1, succ u1} Nat α (Nat.castCoe.{u1} α (AddMonoidWithOne.toNatCast.{u1} α (AddGroupWithOne.toAddMonoidWithOne.{u1} α _inst_1))))) (Int.natAbs n)) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int α (HasLiftT.mk.{1, succ u1} Int α (CoeTCₓ.coe.{1, succ u1} Int α (Int.castCoe.{u1} α (AddGroupWithOne.toHasIntCast.{u1} α _inst_1)))) (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.hasNeg (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (LinearOrder.toLattice.{0} Int Int.linearOrder)))) n))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : AddGroupWithOne.{u1} α] (n : Int), Eq.{succ u1} α (Nat.cast.{u1} α (AddMonoidWithOne.toNatCast.{u1} α (AddGroupWithOne.toAddMonoidWithOne.{u1} α _inst_1)) (Int.natAbs n)) (Int.cast.{u1} α (AddGroupWithOne.toIntCast.{u1} α _inst_1) (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.instNegInt (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (DistribLattice.toLattice.{0} Int (instDistribLattice.{0} Int Int.instLinearOrderInt))))) n))
+Case conversion may be inaccurate. Consider using '#align nat.cast_nat_abs Nat.cast_natAbsₓ'. -/
+theorem Nat.cast_natAbs {α : Type _} [AddGroupWithOne α] (n : ℤ) : (n.natAbs : α) = ↑(|n|) := by
   rw [← Int.coe_natAbs, Int.cast_ofNat]
-#align nat.cast_nat_abs Nat.cast_nat_abs
+#align nat.cast_nat_abs Nat.cast_natAbs
 
 /- warning: int.nat_abs_abs -> Int.natAbs_abs is a dubious translation:
 lean 3 declaration is
@@ -124,6 +130,12 @@ theorem coe_nat_ne_zero_iff_pos {n : ℕ} : (n : ℤ) ≠ 0 ↔ 0 < n :=
 #align int.coe_nat_ne_zero_iff_pos Int.coe_nat_ne_zero_iff_pos
 -/
 
+/- warning: int.abs_coe_nat -> Int.abs_coe_nat is a dubious translation:
+lean 3 declaration is
+  forall (n : Nat), Eq.{1} Int (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.hasNeg (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (LinearOrder.toLattice.{0} Int Int.linearOrder)))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n)
+but is expected to have type
+  forall (n : Nat), Eq.{1} Int (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.instNegInt (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (DistribLattice.toLattice.{0} Int (instDistribLattice.{0} Int Int.instLinearOrderInt))))) (Nat.cast.{0} Int Int.instNatCastInt n)) (Nat.cast.{0} Int Int.instNatCastInt n)
+Case conversion may be inaccurate. Consider using '#align int.abs_coe_nat Int.abs_coe_natₓ'. -/
 @[norm_cast]
 theorem abs_coe_nat (n : ℕ) : |(n : ℤ)| = n :=
   abs_of_nonneg (coe_nat_nonneg n)

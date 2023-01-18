@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.nat.multiplicity
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -121,7 +121,7 @@ theorem multiplicity_factorial {p : ℕ} (hp : p.Prime) :
         rw [sum_add_distrib, sum_boole]
         simp
       _ = (∑ i in ico 1 b, (n + 1) / p ^ i : ℕ) :=
-        congr_arg coe <| (Finset.sum_congr rfl) fun _ _ => (succ_div _ _).symm
+        congr_arg coe <| Finset.sum_congr rfl fun _ _ => (succ_div _ _).symm
       
 #align nat.prime.multiplicity_factorial Nat.Prime.multiplicity_factorial
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.normed.group.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -638,7 +638,7 @@ theorem coe_norm_group_seminorm : ⇑(normGroupSeminorm E) = norm :=
 
 variable {E}
 
-namespace Isometric
+namespace IsometryEquiv
 
 -- TODO This material is superseded by similar constructions such as
 -- `affine_isometry_equiv.const_vadd`; deduplicate
@@ -646,29 +646,29 @@ namespace Isometric
 @[to_additive "Addition `y ↦ y + x` as an `isometry`"]
 protected def mulRight (x : E) : E ≃ᵢ E :=
   { Equiv.mulRight x with isometry_to_fun := Isometry.of_dist_eq fun y z => dist_mul_right _ _ _ }
-#align isometric.mul_right Isometric.mulRight
+#align isometry_equiv.mul_right IsometryEquiv.mulRight
 
 @[simp, to_additive]
-theorem mul_right_to_equiv (x : E) : (Isometric.mulRight x).toEquiv = Equiv.mulRight x :=
+theorem mul_right_to_equiv (x : E) : (IsometryEquiv.mulRight x).toEquiv = Equiv.mulRight x :=
   rfl
-#align isometric.mul_right_to_equiv Isometric.mul_right_to_equiv
+#align isometry_equiv.mul_right_to_equiv IsometryEquiv.mul_right_to_equiv
 
 @[simp, to_additive]
-theorem coe_mul_right (x : E) : (Isometric.mulRight x : E → E) = fun y => y * x :=
+theorem coe_mul_right (x : E) : (IsometryEquiv.mulRight x : E → E) = fun y => y * x :=
   rfl
-#align isometric.coe_mul_right Isometric.coe_mul_right
+#align isometry_equiv.coe_mul_right IsometryEquiv.coe_mul_right
 
 @[to_additive]
-theorem mul_right_apply (x y : E) : (Isometric.mulRight x : E → E) y = y * x :=
+theorem mul_right_apply (x y : E) : (IsometryEquiv.mulRight x : E → E) y = y * x :=
   rfl
-#align isometric.mul_right_apply Isometric.mul_right_apply
+#align isometry_equiv.mul_right_apply IsometryEquiv.mul_right_apply
 
 @[simp, to_additive]
-theorem mul_right_symm (x : E) : (Isometric.mulRight x).symm = Isometric.mulRight x⁻¹ :=
+theorem mul_right_symm (x : E) : (IsometryEquiv.mulRight x).symm = IsometryEquiv.mulRight x⁻¹ :=
   ext fun y => rfl
-#align isometric.mul_right_symm Isometric.mul_right_symm
+#align isometry_equiv.mul_right_symm IsometryEquiv.mul_right_symm
 
-end Isometric
+end IsometryEquiv
 
 @[to_additive]
 theorem NormedCommGroup.tendsto_nhds_one {f : α → E} {l : Filter α} :
@@ -1375,7 +1375,7 @@ theorem dist_prod_prod_le_of_le (s : Finset ι) {f a : ι → E} {d : ι → ℝ
 @[to_additive]
 theorem dist_prod_prod_le (s : Finset ι) (f a : ι → E) :
     dist (∏ b in s, f b) (∏ b in s, a b) ≤ ∑ b in s, dist (f b) (a b) :=
-  (dist_prod_prod_le_of_le s) fun _ _ => le_rfl
+  dist_prod_prod_le_of_le s fun _ _ => le_rfl
 #align dist_prod_prod_le dist_prod_prod_le
 
 @[to_additive]
@@ -1469,7 +1469,7 @@ theorem smul_ball'' : a • ball b r = ball (a • b) r :=
     mul_assoc]
 #align smul_ball'' smul_ball''
 
-namespace Isometric
+namespace IsometryEquiv
 
 /-- Multiplication `y ↦ x * y` as an `isometry`. -/
 @[to_additive "Addition `y ↦ x + y` as an `isometry`"]
@@ -1477,22 +1477,22 @@ protected def mulLeft (x : E) : E ≃ᵢ E
     where
   isometry_to_fun := Isometry.of_dist_eq fun y z => dist_mul_left _ _ _
   toEquiv := Equiv.mulLeft x
-#align isometric.mul_left Isometric.mulLeft
+#align isometry_equiv.mul_left IsometryEquiv.mulLeft
 
 @[simp, to_additive]
-theorem mul_left_to_equiv (x : E) : (Isometric.mulLeft x).toEquiv = Equiv.mulLeft x :=
+theorem mul_left_to_equiv (x : E) : (IsometryEquiv.mulLeft x).toEquiv = Equiv.mulLeft x :=
   rfl
-#align isometric.mul_left_to_equiv Isometric.mul_left_to_equiv
+#align isometry_equiv.mul_left_to_equiv IsometryEquiv.mul_left_to_equiv
 
 @[simp, to_additive]
-theorem coe_mul_left (x : E) : ⇑(Isometric.mulLeft x) = (· * ·) x :=
+theorem coe_mul_left (x : E) : ⇑(IsometryEquiv.mulLeft x) = (· * ·) x :=
   rfl
-#align isometric.coe_mul_left Isometric.coe_mul_left
+#align isometry_equiv.coe_mul_left IsometryEquiv.coe_mul_left
 
 @[simp, to_additive]
-theorem mul_left_symm (x : E) : (Isometric.mulLeft x).symm = Isometric.mulLeft x⁻¹ :=
+theorem mul_left_symm (x : E) : (IsometryEquiv.mulLeft x).symm = IsometryEquiv.mulLeft x⁻¹ :=
   ext fun y => rfl
-#align isometric.mul_left_symm Isometric.mul_left_symm
+#align isometry_equiv.mul_left_symm IsometryEquiv.mul_left_symm
 
 variable (E)
 
@@ -1502,26 +1502,26 @@ protected def inv : E ≃ᵢ E
     where
   isometry_to_fun := Isometry.of_dist_eq fun x y => dist_inv_inv _ _
   toEquiv := Equiv.inv E
-#align isometric.inv Isometric.inv
+#align isometry_equiv.inv IsometryEquiv.inv
 
 variable {E}
 
 @[simp, to_additive]
-theorem inv_symm : (Isometric.inv E).symm = Isometric.inv E :=
+theorem inv_symm : (IsometryEquiv.inv E).symm = IsometryEquiv.inv E :=
   rfl
-#align isometric.inv_symm Isometric.inv_symm
+#align isometry_equiv.inv_symm IsometryEquiv.inv_symm
 
 @[simp, to_additive]
-theorem inv_to_equiv : (Isometric.inv E).toEquiv = Equiv.inv E :=
+theorem inv_to_equiv : (IsometryEquiv.inv E).toEquiv = Equiv.inv E :=
   rfl
-#align isometric.inv_to_equiv Isometric.inv_to_equiv
+#align isometry_equiv.inv_to_equiv IsometryEquiv.inv_to_equiv
 
 @[simp, to_additive]
-theorem coe_inv : ⇑(Isometric.inv E) = Inv.inv :=
+theorem coe_inv : ⇑(IsometryEquiv.inv E) = Inv.inv :=
   rfl
-#align isometric.coe_inv Isometric.coe_inv
+#align isometry_equiv.coe_inv IsometryEquiv.coe_inv
 
-end Isometric
+end IsometryEquiv
 
 open Finset
 
@@ -2308,7 +2308,7 @@ theorem pi_nnnorm_const' [Nonempty ι] (a : E) : ‖fun i : ι => a‖₊ = ‖a
 @[to_additive Pi.sum_norm_apply_le_norm
       "The $L^1$ norm is less than the $L^\\infty$ norm scaled by\nthe cardinality."]
 theorem Pi.sum_norm_apply_le_norm' : (∑ i, ‖f i‖) ≤ Fintype.card ι • ‖f‖ :=
-  (Finset.sum_le_card_nsmul _ _ _) fun i hi => norm_le_pi_norm' _ i
+  Finset.sum_le_card_nsmul _ _ _ fun i hi => norm_le_pi_norm' _ i
 #align pi.sum_norm_apply_le_norm' Pi.sum_norm_apply_le_norm'
 
 /-- The $L^1$ norm is less than the $L^\infty$ norm scaled by the cardinality. -/

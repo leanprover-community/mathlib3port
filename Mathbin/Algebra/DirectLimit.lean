@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Chris Hughes
 
 ! This file was ported from Lean 3 source module algebra.direct_limit
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -116,8 +116,8 @@ theorem of_f {i j hij x} : of R ι G f j (f i j hij x) = of R ι G f i x :=
 some component of the directed system. -/
 theorem exists_of [Nonempty ι] [IsDirected ι (· ≤ ·)] (z : DirectLimit G f) :
     ∃ i x, of R ι G f i x = z :=
-  (Nonempty.elim (by infer_instance)) fun ind : ι =>
-    (Quotient.inductionOn' z) fun z =>
+  Nonempty.elim (by infer_instance) fun ind : ι =>
+    Quotient.inductionOn' z fun z =>
       DirectSum.induction_on z ⟨ind, 0, LinearMap.map_zero _⟩ (fun i x => ⟨i, x, rfl⟩)
         fun p q ⟨i, x, ihx⟩ ⟨j, y, ihy⟩ =>
         let ⟨k, hik, hjk⟩ := exists_ge_ge i j
@@ -161,7 +161,7 @@ theorem lift_unique [Nonempty ι] [IsDirected ι (· ≤ ·)] (F : DirectLimit G
     F x =
       lift R ι G f (fun i => F.comp <| of R ι G f i)
         (fun i j hij x => by rw [LinearMap.comp_apply, of_f] <;> rfl) x :=
-  (DirectLimit.inductionOn x) fun i x => by rw [lift_of] <;> rfl
+  DirectLimit.inductionOn x fun i x => by rw [lift_of] <;> rfl
 #align module.direct_limit.lift_unique Module.DirectLimit.lift_unique
 
 section Totalize
@@ -213,7 +213,7 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : DirectS
     ∃ j,
       (∀ k ∈ x.support, k ≤ j) ∧
         DirectSum.toModule R ι (G j) (fun i => totalize G f i j) x = (0 : G j) :=
-  (Nonempty.elim (by infer_instance)) fun ind : ι =>
+  Nonempty.elim (by infer_instance) fun ind : ι =>
     span_induction ((Quotient.mk_eq_zero _).1 H)
       (fun x ⟨i, j, hij, y, hxy⟩ =>
         let ⟨k, hik, hjk⟩ := exists_ge_ge i j
@@ -344,7 +344,7 @@ theorem lift_of (i x) : lift G f P g Hg (of G f i x) = g i x :=
 
 theorem lift_unique [Nonempty ι] [IsDirected ι (· ≤ ·)] (F : DirectLimit G f →+ P) (x) :
     F x = lift G f P (fun i => F.comp (of G f i).toAddMonoidHom) (fun i j hij x => by simp) x :=
-  (DirectLimit.induction_on x) fun i x => by simp
+  DirectLimit.induction_on x fun i x => by simp
 #align add_comm_group.direct_limit.lift_unique AddCommGroup.DirectLimit.lift_unique
 
 end DirectLimit
@@ -404,8 +404,8 @@ theorem of_f {i j} (hij) (x) : of G f j (f i j hij x) = of G f i x :=
 some component of the directed system. -/
 theorem exists_of [Nonempty ι] [IsDirected ι (· ≤ ·)] (z : DirectLimit G f) :
     ∃ i x, of G f i x = z :=
-  (Nonempty.elim (by infer_instance)) fun ind : ι =>
-    (Quotient.inductionOn' z) fun x =>
+  Nonempty.elim (by infer_instance) fun ind : ι =>
+    Quotient.inductionOn' z fun x =>
       FreeAbelianGroup.induction_on x ⟨ind, 0, (of _ _ ind).map_zero⟩
         (fun s =>
           Multiset.induction_on s ⟨ind, 1, (of _ _ ind).map_one⟩ fun a s ih =>
@@ -666,7 +666,7 @@ theorem lift_of (i x) : lift G f P g Hg (of G f i x) = g i x :=
 
 theorem lift_unique [Nonempty ι] [IsDirected ι (· ≤ ·)] (F : DirectLimit G f →+* P) (x) :
     F x = lift G f P (fun i => F.comp <| of G f i) (fun i j hij x => by simp) x :=
-  (DirectLimit.induction_on x) fun i x => by simp
+  DirectLimit.induction_on x fun i x => by simp
 #align ring.direct_limit.lift_unique Ring.DirectLimit.lift_unique
 
 end DirectLimit
@@ -688,7 +688,7 @@ namespace DirectLimit
 instance nontrivial [DirectedSystem G fun i j h => f' i j h] :
     Nontrivial (Ring.DirectLimit G fun i j h => f' i j h) :=
   ⟨⟨0, 1,
-      (Nonempty.elim (by infer_instance)) fun i : ι =>
+      Nonempty.elim (by infer_instance) fun i : ι =>
         by
         change (0 : Ring.DirectLimit G fun i j h => f' i j h) ≠ 1
         rw [← (Ring.DirectLimit.of _ _ _).map_one]
@@ -698,7 +698,7 @@ instance nontrivial [DirectedSystem G fun i j h => f' i j h] :
 #align field.direct_limit.nontrivial Field.DirectLimit.nontrivial
 
 theorem exists_inv {p : Ring.DirectLimit G f} : p ≠ 0 → ∃ y, p * y = 1 :=
-  (Ring.DirectLimit.induction_on p) fun i x H =>
+  Ring.DirectLimit.induction_on p fun i x H =>
     ⟨Ring.DirectLimit.of G f i x⁻¹, by
       erw [← (Ring.DirectLimit.of _ _ _).map_mul,
         mul_inv_cancel fun h : x = 0 => H <| by rw [h, (Ring.DirectLimit.of _ _ _).map_zero],

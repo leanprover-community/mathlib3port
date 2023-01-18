@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module data.fun_like.equiv
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -328,7 +328,7 @@ theorem comp_bijective (f : α → β) (e : F) : Function.Bijective (e ∘ f) �
 #print EquivLike.subsingleton_dom /-
 /-- This is not an instance to avoid slowing down every single `subsingleton` typeclass search.-/
 theorem subsingleton_dom [Subsingleton β] : Subsingleton F :=
-  ⟨fun f g => (FunLike.ext f g) fun x => (right_inv f).Injective <| Subsingleton.elim _ _⟩
+  ⟨fun f g => FunLike.ext f g fun x => (right_inv f).Injective <| Subsingleton.elim _ _⟩
 #align equiv_like.subsingleton_dom EquivLike.subsingleton_dom
 -/
 

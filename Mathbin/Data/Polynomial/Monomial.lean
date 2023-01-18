@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module data.polynomial.monomial
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,7 +37,7 @@ theorem monomial_one_eq_iff [Nontrivial R] {i j : ℕ} :
 #align polynomial.monomial_one_eq_iff Polynomial.monomial_one_eq_iff
 
 instance [Nontrivial R] : Infinite R[X] :=
-  (Infinite.of_injective fun i => monomial i 1) fun m n h => by simpa [monomial_one_eq_iff] using h
+  Infinite.of_injective (fun i => monomial i 1) fun m n h => by simpa [monomial_one_eq_iff] using h
 
 theorem card_support_le_one_iff_monomial {f : R[X]} :
     Finset.card f.support ≤ 1 ↔ ∃ n a, f = monomial n a :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.order.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -894,7 +894,7 @@ theorem lt_mem_nhds {a b : α} (h : a < b) : ∀ᶠ x in 𝓝 b, a < x :=
 #align lt_mem_nhds lt_mem_nhds
 
 theorem le_mem_nhds {a b : α} (h : a < b) : ∀ᶠ x in 𝓝 b, a ≤ x :=
-  ((𝓝 b).sets_of_superset (lt_mem_nhds h)) fun b hb => le_of_lt hb
+  (𝓝 b).sets_of_superset (lt_mem_nhds h) fun b hb => le_of_lt hb
 #align le_mem_nhds le_mem_nhds
 
 theorem gt_mem_nhds {a b : α} (h : a < b) : ∀ᶠ x in 𝓝 a, x < b :=
@@ -902,7 +902,7 @@ theorem gt_mem_nhds {a b : α} (h : a < b) : ∀ᶠ x in 𝓝 a, x < b :=
 #align gt_mem_nhds gt_mem_nhds
 
 theorem ge_mem_nhds {a b : α} (h : a < b) : ∀ᶠ x in 𝓝 a, x ≤ b :=
-  ((𝓝 a).sets_of_superset (gt_mem_nhds h)) fun b hb => le_of_lt hb
+  (𝓝 a).sets_of_superset (gt_mem_nhds h) fun b hb => le_of_lt hb
 #align ge_mem_nhds ge_mem_nhds
 
 theorem nhds_eq_order (a : α) : 𝓝 a = (⨅ b ∈ Iio a, 𝓟 (Ioi b)) ⊓ ⨅ b ∈ Ioi a, 𝓟 (Iio b) := by
@@ -3457,7 +3457,7 @@ theorem IsLUB.is_lub_of_tendsto [Preorder γ] [TopologicalSpace γ] [OrderClosed
   haveI := ha.nhds_within_ne_bot hs
   ⟨ha.mem_upper_bounds_of_tendsto hf hb, fun b' hb' =>
     le_of_tendsto hb
-      ((mem_of_superset self_mem_nhds_within) fun x hx => hb' <| mem_image_of_mem _ hx)⟩
+      (mem_of_superset self_mem_nhds_within fun x hx => hb' <| mem_image_of_mem _ hx)⟩
 #align is_lub.is_lub_of_tendsto IsLUB.is_lub_of_tendsto
 
 theorem IsGLB.mem_lower_bounds_of_tendsto [Preorder γ] [TopologicalSpace γ] [OrderClosedTopology γ]
@@ -3954,19 +3954,19 @@ theorem map_coe_at_bot_of_Ioo_subset (ha : s ⊆ Ioi a) (hs : ∀ b' > a, ∃ b 
 /-- The `at_top` filter for an open interval `Ioo a b` comes from the left-neighbourhoods filter at
 the right endpoint in the ambient order. -/
 theorem comap_coe_Ioo_nhds_within_Iio (a b : α) : comap (coe : Ioo a b → α) (𝓝[<] b) = at_top :=
-  (comap_coe_nhds_within_Iio_of_Ioo_subset Ioo_subset_Iio_self) fun h =>
+  comap_coe_nhds_within_Iio_of_Ioo_subset Ioo_subset_Iio_self fun h =>
     ⟨a, nonempty_Ioo.1 h, Subset.refl _⟩
 #align comap_coe_Ioo_nhds_within_Iio comap_coe_Ioo_nhds_within_Iio
 
 /-- The `at_bot` filter for an open interval `Ioo a b` comes from the right-neighbourhoods filter at
 the left endpoint in the ambient order. -/
 theorem comap_coe_Ioo_nhds_within_Ioi (a b : α) : comap (coe : Ioo a b → α) (𝓝[>] a) = at_bot :=
-  (comap_coe_nhds_within_Ioi_of_Ioo_subset Ioo_subset_Ioi_self) fun h =>
+  comap_coe_nhds_within_Ioi_of_Ioo_subset Ioo_subset_Ioi_self fun h =>
     ⟨b, nonempty_Ioo.1 h, Subset.refl _⟩
 #align comap_coe_Ioo_nhds_within_Ioi comap_coe_Ioo_nhds_within_Ioi
 
 theorem comap_coe_Ioi_nhds_within_Ioi (a : α) : comap (coe : Ioi a → α) (𝓝[>] a) = at_bot :=
-  (comap_coe_nhds_within_Ioi_of_Ioo_subset (Subset.refl _)) fun ⟨x, hx⟩ =>
+  comap_coe_nhds_within_Ioi_of_Ioo_subset (Subset.refl _) fun ⟨x, hx⟩ =>
     ⟨x, hx, Ioo_subset_Ioi_self⟩
 #align comap_coe_Ioi_nhds_within_Ioi comap_coe_Ioi_nhds_within_Ioi
 
@@ -3976,17 +3976,17 @@ theorem comap_coe_Iio_nhds_within_Iio (a : α) : comap (coe : Iio a → α) (�
 
 @[simp]
 theorem map_coe_Ioo_at_top {a b : α} (h : a < b) : map (coe : Ioo a b → α) atTop = 𝓝[<] b :=
-  (map_coe_at_top_of_Ioo_subset Ioo_subset_Iio_self) fun _ _ => ⟨_, h, Subset.refl _⟩
+  map_coe_at_top_of_Ioo_subset Ioo_subset_Iio_self fun _ _ => ⟨_, h, Subset.refl _⟩
 #align map_coe_Ioo_at_top map_coe_Ioo_at_top
 
 @[simp]
 theorem map_coe_Ioo_at_bot {a b : α} (h : a < b) : map (coe : Ioo a b → α) atBot = 𝓝[>] a :=
-  (map_coe_at_bot_of_Ioo_subset Ioo_subset_Ioi_self) fun _ _ => ⟨_, h, Subset.refl _⟩
+  map_coe_at_bot_of_Ioo_subset Ioo_subset_Ioi_self fun _ _ => ⟨_, h, Subset.refl _⟩
 #align map_coe_Ioo_at_bot map_coe_Ioo_at_bot
 
 @[simp]
 theorem map_coe_Ioi_at_bot (a : α) : map (coe : Ioi a → α) atBot = 𝓝[>] a :=
-  (map_coe_at_bot_of_Ioo_subset (Subset.refl _)) fun b hb => ⟨b, hb, Ioo_subset_Ioi_self⟩
+  map_coe_at_bot_of_Ioo_subset (Subset.refl _) fun b hb => ⟨b, hb, Ioo_subset_Ioi_self⟩
 #align map_coe_Ioi_at_bot map_coe_Ioi_at_bot
 
 @[simp]

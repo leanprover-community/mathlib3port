@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jens Wagemaker, Anne Baanen
 
 ! This file was ported from Lean 3 source module algebra.big_operators.associated
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -33,7 +33,7 @@ namespace Prime
 variable [CommMonoidWithZero α] {p : α} (hp : Prime p)
 
 theorem exists_mem_multiset_dvd {s : Multiset α} : p ∣ s.Prod → ∃ a ∈ s, p ∣ a :=
-  (Multiset.induction_on s fun h => (hp.not_dvd_one h).elim) fun a s ih h =>
+  Multiset.induction_on s (fun h => (hp.not_dvd_one h).elim) fun a s ih h =>
     have : p ∣ a * s.Prod := by simpa using h
     match hp.dvd_or_dvd this with
     | Or.inl h => ⟨a, Multiset.mem_cons_self a s, h⟩
@@ -109,7 +109,7 @@ section CommMonoid
 variable [CommMonoid α]
 
 theorem prod_mk {p : Multiset α} : (p.map Associates.mk).Prod = Associates.mk p.Prod :=
-  (Multiset.induction_on p (by simp)) fun a s ih => by simp [ih, Associates.mk_mul_mk]
+  Multiset.induction_on p (by simp) fun a s ih => by simp [ih, Associates.mk_mul_mk]
 #align associates.prod_mk Associates.prod_mk
 
 theorem finset_prod_mk {p : Finset β} {f : β → α} :
@@ -147,7 +147,7 @@ variable [CancelCommMonoidWithZero α]
 
 theorem exists_mem_multiset_le_of_prime {s : Multiset (Associates α)} {p : Associates α}
     (hp : Prime p) : p ≤ s.Prod → ∃ a ∈ s, p ≤ a :=
-  (Multiset.induction_on s fun ⟨d, Eq⟩ => (hp.ne_one (mul_eq_one_iff.1 Eq.symm).1).elim)
+  Multiset.induction_on s (fun ⟨d, Eq⟩ => (hp.ne_one (mul_eq_one_iff.1 Eq.symm).1).elim)
     fun a s ih h =>
     have : p ≤ a * s.Prod := by simpa using h
     match Prime.le_or_le hp this with

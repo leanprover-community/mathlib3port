@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module analysis.normed_space.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,7 @@ import Mathbin.Algebra.Algebra.Pi
 import Mathbin.Algebra.Algebra.RestrictScalars
 import Mathbin.Analysis.Normed.Field.Basic
 import Mathbin.Data.Real.Sqrt
+import Mathbin.Topology.Algebra.Module.Basic
 
 /-!
 # Normed spaces
@@ -384,6 +385,14 @@ theorem range_nnnorm : range (nnnorm : E → ℝ≥0) = univ :=
 #align range_nnnorm range_nnnorm
 
 end Surj
+
+/-- If `E` is a nontrivial topological module over `ℝ`, then `E` has no isolated points.
+This is a particular case of `module.punctured_nhds_ne_bot`. -/
+instance Real.punctured_nhds_module_ne_bot {E : Type _} [AddCommGroup E] [TopologicalSpace E]
+    [HasContinuousAdd E] [Nontrivial E] [Module ℝ E] [HasContinuousSmul ℝ E] (x : E) :
+    NeBot (𝓝[≠] x) :=
+  Module.punctured_nhds_ne_bot ℝ E x
+#align real.punctured_nhds_module_ne_bot Real.punctured_nhds_module_ne_bot
 
 theorem interior_closed_ball' [NormedSpace ℝ E] [Nontrivial E] (x : E) (r : ℝ) :
     interior (closedBall x r) = ball x r :=

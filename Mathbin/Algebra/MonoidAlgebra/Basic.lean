@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yury G. Kudryashov, Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.monoid_algebra.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -234,7 +234,7 @@ def liftNcRingHom (f : k →+* R) (g : G →* R) (h_comm : ∀ x y, Commute (f x
   { liftNc (f : k →+ R) g with
     toFun := liftNc (f : k →+ R) g
     map_one' := lift_nc_one _ _
-    map_mul' := fun a b => (lift_nc_mul _ _ _ _) fun _ _ _ => h_comm _ _ }
+    map_mul' := fun a b => lift_nc_mul _ _ _ _ fun _ _ _ => h_comm _ _ }
 #align monoid_algebra.lift_nc_ring_hom MonoidAlgebra.liftNcRingHom
 
 end Semiring
@@ -357,7 +357,7 @@ theorem mul_apply_antidiagonal [Mul G] (f g : MonoidAlgebra k G) (x : G) (s : Fi
           simp only [mem_filter, mem_product, hs, and_comm'])
         fun _ _ => rfl
     _ = ∑ p in s, f p.1 * g p.2 :=
-      (sum_subset (filter_subset _ _)) fun p hps hp =>
+      sum_subset (filter_subset _ _) fun p hps hp =>
         by
         simp only [mem_filter, mem_support_iff, not_and, not_not] at hp⊢
         by_cases h1 : f p.1 = 0
@@ -748,7 +748,7 @@ variable (k G A)
 def lift : (G →* A) ≃ (MonoidAlgebra k G →ₐ[k] A)
     where
   invFun f := (f : MonoidAlgebra k G →* A).comp (of k G)
-  toFun F := (liftNcAlgHom (Algebra.ofId k A) F) fun _ _ => Algebra.commutes _ _
+  toFun F := liftNcAlgHom (Algebra.ofId k A) F fun _ _ => Algebra.commutes _ _
   left_inv f := by
     ext
     simp [lift_nc_alg_hom, lift_nc_ring_hom]
@@ -901,7 +901,7 @@ attribute [local reducible] MonoidAlgebra
 
 theorem prod_single [CommSemiring k] [CommMonoid G] {s : Finset ι} {a : ι → G} {b : ι → k} :
     (∏ i in s, single (a i) (b i)) = single (∏ i in s, a i) (∏ i in s, b i) :=
-  (Finset.cons_induction_on s rfl) fun a s has ih => by
+  Finset.cons_induction_on s rfl fun a s has ih => by
     rw [prod_cons has, ih, single_mul_single, prod_cons has, prod_cons has]
 #align monoid_algebra.prod_single MonoidAlgebra.prod_single
 
@@ -1193,7 +1193,7 @@ def liftNcRingHom (f : k →+* R) (g : Multiplicative G →* R) (h_comm : ∀ x 
   { liftNc (f : k →+ R) g with
     toFun := liftNc (f : k →+ R) g
     map_one' := lift_nc_one _ _
-    map_mul' := fun a b => (lift_nc_mul _ _ _ _) fun _ _ _ => h_comm _ _ }
+    map_mul' := fun a b => lift_nc_mul _ _ _ _ fun _ _ _ => h_comm _ _ }
 #align add_monoid_algebra.lift_nc_ring_hom AddMonoidAlgebra.liftNcRingHom
 
 end Semiring
@@ -1396,7 +1396,7 @@ theorem mul_single_apply_aux [Add G] (f : AddMonoidAlgebra k G) (r : k) (x y z :
 
 theorem mul_single_zero_apply [AddZeroClass G] (f : AddMonoidAlgebra k G) (r : k) (x : G) :
     (f * single 0 r) x = f x * r :=
-  (f.mul_single_apply_aux r _ _ _) fun a => by rw [add_zero]
+  f.mul_single_apply_aux r _ _ _ fun a => by rw [add_zero]
 #align add_monoid_algebra.mul_single_zero_apply AddMonoidAlgebra.mul_single_zero_apply
 
 theorem single_mul_apply_aux [Add G] (f : AddMonoidAlgebra k G) (r : k) (x y z : G)
@@ -1406,7 +1406,7 @@ theorem single_mul_apply_aux [Add G] (f : AddMonoidAlgebra k G) (r : k) (x y z :
 
 theorem single_zero_mul_apply [AddZeroClass G] (f : AddMonoidAlgebra k G) (r : k) (x : G) :
     (single 0 r * f : AddMonoidAlgebra k G) x = r * f x :=
-  (f.single_mul_apply_aux r _ _ _) fun a => by rw [zero_add]
+  f.single_mul_apply_aux r _ _ _ fun a => by rw [zero_add]
 #align add_monoid_algebra.single_zero_mul_apply AddMonoidAlgebra.single_zero_mul_apply
 
 theorem mul_single_apply [AddGroup G] (f : AddMonoidAlgebra k G) (r : k) (x y : G) :
@@ -1704,7 +1704,7 @@ def lift : (Multiplicative G →* A) ≃ (AddMonoidAlgebra k G →ₐ[k] A) :=
     invFun := fun f => (f : AddMonoidAlgebra k G →* A).comp (of k G)
     toFun := fun F =>
       { @MonoidAlgebra.lift k (Multiplicative G) _ _ A _ _ F with
-        toFun := (liftNcAlgHom (Algebra.ofId k A) F) fun _ _ => Algebra.commutes _ _ } }
+        toFun := liftNcAlgHom (Algebra.ofId k A) F fun _ _ => Algebra.commutes _ _ } }
 #align add_monoid_algebra.lift AddMonoidAlgebra.lift
 
 variable {k G A}
@@ -1771,7 +1771,7 @@ variable {ι : Type ui}
 
 theorem prod_single [CommSemiring k] [AddCommMonoid G] {s : Finset ι} {a : ι → G} {b : ι → k} :
     (∏ i in s, single (a i) (b i)) = single (∑ i in s, a i) (∏ i in s, b i) :=
-  (Finset.cons_induction_on s rfl) fun a s has ih => by
+  Finset.cons_induction_on s rfl fun a s has ih => by
     rw [prod_cons has, ih, single_mul_single, sum_cons has, prod_cons has]
 #align add_monoid_algebra.prod_single AddMonoidAlgebra.prod_single
 

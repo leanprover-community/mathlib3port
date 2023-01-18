@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module logic.equiv.list
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -138,7 +138,7 @@ def encodableOfList [DecidableEq α] (l : List α) (H : ∀ x, x ∈ l) : Encoda
 /-- A finite type is encodable. Because the encoding is not unique, we wrap it in `trunc` to
 preserve computability. -/
 def Fintype.truncEncodable (α : Type _) [DecidableEq α] [Fintype α] : Trunc (Encodable α) :=
-  @Quot.recOnSubsingleton _ (fun s : Multiset α => (∀ x : α, x ∈ s) → Trunc (Encodable α)) _
+  @Quot.recOnSubsingleton' _ (fun s : Multiset α => (∀ x : α, x ∈ s) → Trunc (Encodable α)) _
     Finset.univ.1 (fun l H => Trunc.mk <| encodableOfList l H) Finset.mem_univ
 #align fintype.trunc_encodable Fintype.truncEncodable
 
@@ -151,7 +151,7 @@ noncomputable def Fintype.toEncodable (α : Type _) [Fintype α] : Encodable α 
 
 /-- If `α` is encodable, then so is `vector α n`. -/
 instance Vector.encodable [Encodable α] {n} : Encodable (Vector α n) :=
-  Subtype.encodable
+  Encodable.Subtype.encodable
 #align vector.encodable Vector.encodable
 
 /-- If `α` is countable, then so is `vector α n`. -/
@@ -204,9 +204,10 @@ encoding is not unique, we wrap it in `trunc` to preserve computability. -/
 def fintypePi (α : Type _) (π : α → Type _) [DecidableEq α] [Fintype α] [∀ a, Encodable (π a)] :
     Trunc (Encodable (∀ a, π a)) :=
   (Fintype.truncEncodable α).bind fun a =>
-    (@fintypeArrow α (Σa, π a) _ _ (@Sigma.encodable _ _ a _)).bind fun f =>
+    (@fintypeArrow α (Σa, π a) _ _ (@Encodable.Sigma.encodable _ _ a _)).bind fun f =>
       Trunc.mk <|
-        @Encodable.ofEquiv _ _ (@Subtype.encodable _ _ f _) (Equiv.piEquivSubtypeSigma α π)
+        @Encodable.ofEquiv _ _ (@Encodable.Subtype.encodable _ _ f _)
+          (Equiv.piEquivSubtypeSigma α π)
 #align encodable.fintype_pi Encodable.fintypePi
 
 /-- The elements of a `fintype` as a sorted list. -/
@@ -420,9 +421,9 @@ namespace Equiv
 /-- The type lists on unit is canonically equivalent to the natural numbers. -/
 def listUnitEquiv : List Unit ≃ ℕ where
   toFun := List.length
-  invFun := List.repeat ()
+  invFun n := List.replicate n ()
   left_inv u := List.length_injective (by simp)
-  right_inv n := List.length_repeat () n
+  right_inv n := List.length_replicate n ()
 #align equiv.list_unit_equiv Equiv.listUnitEquiv
 
 /-- `list ℕ` is equivalent to `ℕ`. -/

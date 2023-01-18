@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne, Kexing Ying
 
 ! This file was ported from Lean 3 source module probability.martingale.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -399,7 +399,7 @@ theorem subMartingale [Preorder E] [CovariantClass E E (· + ·) (· ≤ ·)] (h
 section
 
 variable {F : Type _} [NormedLatticeAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F]
-  [OrderedSmul ℝ F]
+  [OrderedSMul ℝ F]
 
 theorem smulNonneg {f : ι → Ω → F} {c : ℝ} (hc : 0 ≤ c) (hf : Supermartingale f ℱ μ) :
     Supermartingale (c • f) ℱ μ :=
@@ -430,7 +430,7 @@ namespace Submartingale
 section
 
 variable {F : Type _} [NormedLatticeAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F]
-  [OrderedSmul ℝ F]
+  [OrderedSMul ℝ F]
 
 theorem smulNonneg {f : ι → Ω → F} {c : ℝ} (hc : 0 ≤ c) (hf : Submartingale f ℱ μ) :
     Submartingale (c • f) ℱ μ :=
@@ -490,8 +490,8 @@ theorem martingaleOfSetIntegralEqSucc [IsFiniteMeasure μ] {f : ℕ → Ω → �
       ∀ i, ∀ s : Set Ω, measurable_set[𝒢 i] s → (∫ ω in s, f i ω ∂μ) = ∫ ω in s, f (i + 1) ω ∂μ) :
     Martingale f 𝒢 μ :=
   martingale_iff.2
-    ⟨(supermartingaleOfSetIntegralSuccLe hadp hint) fun i s hs => (hf i s hs).ge,
-      (submartingaleOfSetIntegralLeSucc hadp hint) fun i s hs => (hf i s hs).le⟩
+    ⟨supermartingaleOfSetIntegralSuccLe hadp hint fun i s hs => (hf i s hs).ge,
+      submartingaleOfSetIntegralLeSucc hadp hint fun i s hs => (hf i s hs).le⟩
 #align measure_theory.martingale_of_set_integral_eq_succ MeasureTheory.martingaleOfSetIntegralEqSucc
 
 theorem submartingaleNat [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ} (hadp : Adapted 𝒢 f)
@@ -509,7 +509,7 @@ theorem supermartingaleNat [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ} (hadp :
     Supermartingale f 𝒢 μ := by
   rw [← neg_neg f]
   refine'
-    ((submartingale_nat hadp.neg fun i => (hint i).neg) fun i =>
+    (submartingale_nat hadp.neg (fun i => (hint i).neg) fun i =>
         eventually_le.trans _ (condexp_neg _).symm.le).neg
   filter_upwards [hf i] with x hx using neg_le_neg hx
 #align measure_theory.supermartingale_nat MeasureTheory.supermartingaleNat
@@ -517,8 +517,8 @@ theorem supermartingaleNat [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ} (hadp :
 theorem martingaleNat [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ} (hadp : Adapted 𝒢 f)
     (hint : ∀ i, Integrable (f i) μ) (hf : ∀ i, f i =ᵐ[μ] μ[f (i + 1)|𝒢 i]) : Martingale f 𝒢 μ :=
   martingale_iff.2
-    ⟨(supermartingaleNat hadp hint) fun i => (hf i).symm.le,
-      (submartingaleNat hadp hint) fun i => (hf i).le⟩
+    ⟨supermartingaleNat hadp hint fun i => (hf i).symm.le,
+      submartingaleNat hadp hint fun i => (hf i).le⟩
 #align measure_theory.martingale_nat MeasureTheory.martingaleNat
 
 theorem submartingaleOfCondexpSubNonnegNat [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ} (hadp : Adapted 𝒢 f)
@@ -548,8 +548,8 @@ theorem martingaleOfCondexpSubEqZeroNat [IsFiniteMeasure μ] {f : ℕ → Ω →
   by
   refine'
     martingale_iff.2
-      ⟨(supermartingale_of_condexp_sub_nonneg_nat hadp hint) fun i => _,
-        (submartingale_of_condexp_sub_nonneg_nat hadp hint) fun i => (hf i).symm.le⟩
+      ⟨supermartingale_of_condexp_sub_nonneg_nat hadp hint fun i => _,
+        submartingale_of_condexp_sub_nonneg_nat hadp hint fun i => (hf i).symm.le⟩
   rw [← neg_sub]
   refine' (eventually_eq.trans _ (condexp_neg _).symm).le
   filter_upwards [hf i] with x hx

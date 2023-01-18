@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.covering.vitali
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -317,7 +317,7 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
       have vnonempty : v.nonempty := by
         by_contra
         rw [nonempty_iff_ne_empty, not_not] at h
-        simp only [h, Real.Sup_empty, image_empty] at R0_def
+        simp only [h, Real.supₛ_empty, image_empty] at R0_def
         exact lt_irrefl _ (R0pos.trans_le (le_of_eq R0_def))
       obtain ⟨a, hav, R0a⟩ : ∃ a ∈ v, R0 / 2 < r a :=
         by
@@ -399,7 +399,7 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
     -- contrary to `b`
     have b'_notmem_w : b' ∉ w := by
       intro b'w
-      have b'k : B b' ⊆ k := @Finset.subset_set_bUnion_of_mem _ _ _ (fun y : v => B y) _ b'w
+      have b'k : B b' ⊆ k := @Finset.subset_set_bunionᵢ_of_mem _ _ _ (fun y : v => B y) _ b'w
       have : (ball x (R x) \ k ∩ k).Nonempty :=
         by
         apply ab.mono (inter_subset_inter _ b'k)

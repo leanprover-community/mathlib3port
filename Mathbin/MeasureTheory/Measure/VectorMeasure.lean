@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module measure_theory.measure.vector_measure
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -154,9 +154,9 @@ theorem has_sum_of_disjoint_Union [Countable β] {f : β → Set α} (hf₁ : �
   set g := fun i : ℕ => ⋃ (b : β) (H : b ∈ Encodable.decode₂ β i), f b with hg
   have hg₁ : ∀ i, MeasurableSet (g i) := fun _ =>
     MeasurableSet.Union fun b => MeasurableSet.Union fun _ => hf₁ b
-  have hg₂ : Pairwise (Disjoint on g) := Encodable.Union_decode₂_disjoint_on hf₂
+  have hg₂ : Pairwise (Disjoint on g) := Encodable.unionᵢ_decode₂_disjoint_on hf₂
   have := v.of_disjoint_Union_nat hg₁ hg₂
-  rw [hg, Encodable.Union_decode₂] at this
+  rw [hg, Encodable.unionᵢ_decode₂] at this
   have hg₃ : (fun i : β => v (f i)) = fun i => v (g (Encodable.encode i)) :=
     by
     ext
@@ -1061,7 +1061,7 @@ theorem restrict_le_restrict_countable_Union [Countable β] {f : β → Set α}
     (hf₁ : ∀ b, MeasurableSet (f b)) (hf₂ : ∀ b, v ≤[f b] w) : v ≤[⋃ b, f b] w :=
   by
   cases nonempty_encodable β
-  rw [← Encodable.Union_decode₂]
+  rw [← Encodable.unionᵢ_decode₂]
   refine' restrict_le_restrict_Union v w _ _
   · intro n
     measurability

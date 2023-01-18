@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Sébastien Gouëzel, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.measure.lebesgue
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -148,7 +148,7 @@ theorem volume_interval {a b : ℝ} : volume (uIcc a b) = ofReal (|b - a|) := by
 @[simp]
 theorem volume_Ioi {a : ℝ} : volume (Ioi a) = ∞ :=
   top_unique <|
-    (le_of_tendsto' Ennreal.tendsto_nat_nhds_top) fun n =>
+    le_of_tendsto' Ennreal.tendsto_nat_nhds_top fun n =>
       calc
         (n : ℝ≥0∞) = volume (Ioo a (a + n)) := by simp
         _ ≤ volume (Ioi a) := measure_mono Ioo_subset_Ioi_self
@@ -162,7 +162,7 @@ theorem volume_Ici {a : ℝ} : volume (Ici a) = ∞ := by simp [← measure_cong
 @[simp]
 theorem volume_Iio {a : ℝ} : volume (Iio a) = ∞ :=
   top_unique <|
-    (le_of_tendsto' Ennreal.tendsto_nat_nhds_top) fun n =>
+    le_of_tendsto' Ennreal.tendsto_nat_nhds_top fun n =>
       calc
         (n : ℝ≥0∞) = volume (Ioo (a - n) a) := by simp
         _ ≤ volume (Iio a) := measure_mono Ioo_subset_Iio_self

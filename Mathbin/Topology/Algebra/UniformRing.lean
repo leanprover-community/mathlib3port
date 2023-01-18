@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.algebra.uniform_ring
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -197,7 +197,7 @@ instance : Algebra R (Completion A) :=
       (algebraMap R
         A) with
     commutes' := fun r x =>
-      (Completion.induction_on x (is_closed_eq (continuous_mul_left _) (continuous_mul_right _)))
+      Completion.induction_on x (is_closed_eq (continuous_mul_left _) (continuous_mul_right _))
         fun a => by
         simpa only [coe_mul] using congr_arg (coe : A → completion A) (Algebra.commutes r a)
     smul_def' := fun r x => congr_fun (map_smul_eq_mul_coe A R r) x }

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.finset.preimage
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -168,7 +168,7 @@ theorem prod_preimage [CommMonoid β] (f : α → γ) (s : Finset γ) (hf : Set.
 theorem prod_preimage_of_bij [CommMonoid β] (f : α → γ) (s : Finset γ)
     (hf : Set.BijOn f (f ⁻¹' ↑s) ↑s) (g : γ → β) :
     (∏ x in s.Preimage f hf.InjOn, g (f x)) = ∏ x in s, g x :=
-  (prod_preimage _ _ hf.InjOn g) fun x hxs hxf => (hxf <| hf.subset_range hxs).elim
+  prod_preimage _ _ hf.InjOn g fun x hxs hxf => (hxf <| hf.subset_range hxs).elim
 #align finset.prod_preimage_of_bij Finset.prod_preimage_of_bij
 
 end Finset

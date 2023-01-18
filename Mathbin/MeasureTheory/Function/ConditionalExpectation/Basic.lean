@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.function.conditional_expectation.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -339,7 +339,7 @@ section CompleteSubspace
 
 /-! ## The subspace `Lp_meas` is complete.
 
-We define an `isometric` between `Lp_meas_subgroup` and the `Lp` space corresponding to the
+We define an `isometry_equiv` between `Lp_meas_subgroup` and the `Lp` space corresponding to the
 measure `μ.trim hm`. As a consequence, the completeness of `Lp` implies completeness of
 `Lp_meas_subgroup` (and `Lp_meas`). -/
 
@@ -549,7 +549,7 @@ variable (𝕜)
 
 /-- `Lp_meas_subgroup` and `Lp_meas` are isometric. -/
 def lpMeasSubgroupToLpMeasIso [hp : Fact (1 ≤ p)] : lpMeasSubgroup F m p μ ≃ᵢ lpMeas F 𝕜 m p μ :=
-  Isometric.refl (lpMeasSubgroup F m p μ)
+  IsometryEquiv.refl (lpMeasSubgroup F m p μ)
 #align measure_theory.Lp_meas_subgroup_to_Lp_meas_iso MeasureTheory.lpMeasSubgroupToLpMeasIso
 
 /-- `Lp_meas` and `Lp F p (μ.trim hm)` are isometric, with a linear equivalence. -/
@@ -1525,7 +1525,7 @@ theorem condexp_L2_indicator_nonneg (hm : m ≤ m0) (hs : MeasurableSet s) (hμs
 #align measure_theory.condexp_L2_indicator_nonneg MeasureTheory.condexp_L2_indicator_nonneg
 
 theorem condexp_ind_smul_nonneg {E} [NormedLatticeAddCommGroup E] [NormedSpace ℝ E]
-    [OrderedSmul ℝ E] [SigmaFinite (μ.trim hm)] (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (x : E)
+    [OrderedSMul ℝ E] [SigmaFinite (μ.trim hm)] (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (x : E)
     (hx : 0 ≤ x) : 0 ≤ᵐ[μ] condexpIndSmul hm hs hμs x :=
   by
   refine' eventually_le.trans_eq _ (condexp_ind_smul_ae_eq_smul hm hs hμs x).symm
@@ -1869,7 +1869,7 @@ theorem condexp_ind_of_measurable (hs : measurable_set[m] s) (hμs : μ s ≠ �
   by_cases hx_mem : x ∈ s <;> simp [hx_mem]
 #align measure_theory.condexp_ind_of_measurable MeasureTheory.condexp_ind_of_measurable
 
-theorem condexp_ind_nonneg {E} [NormedLatticeAddCommGroup E] [NormedSpace ℝ E] [OrderedSmul ℝ E]
+theorem condexp_ind_nonneg {E} [NormedLatticeAddCommGroup E] [NormedSpace ℝ E] [OrderedSMul ℝ E]
     (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (x : E) (hx : 0 ≤ x) : 0 ≤ condexpInd hm μ s x :=
   by
   rw [← coe_fn_le]
@@ -2124,7 +2124,7 @@ theorem condexp_L1_of_ae_strongly_measurable' (hfm : AeStronglyMeasurable' m f �
   measure_theory.condexp_L1_of_ae_strongly_measurable' MeasureTheory.condexp_L1_of_ae_strongly_measurable'
 
 theorem condexp_L1_mono {E} [NormedLatticeAddCommGroup E] [CompleteSpace E] [NormedSpace ℝ E]
-    [OrderedSmul ℝ E] {f g : α → E} (hf : Integrable f μ) (hg : Integrable g μ) (hfg : f ≤ᵐ[μ] g) :
+    [OrderedSMul ℝ E] {f g : α → E} (hf : Integrable f μ) (hg : Integrable g μ) (hfg : f ≤ᵐ[μ] g) :
     condexpL1 hm μ f ≤ᵐ[μ] condexpL1 hm μ g :=
   by
   rw [coe_fn_le]
@@ -2466,7 +2466,7 @@ theorem condexp_condexp_of_le {m₁ m₂ m0 : MeasurableSpace α} {μ : Measure 
 #align measure_theory.condexp_condexp_of_le MeasureTheory.condexp_condexp_of_le
 
 theorem condexp_mono {E} [NormedLatticeAddCommGroup E] [CompleteSpace E] [NormedSpace ℝ E]
-    [OrderedSmul ℝ E] {f g : α → E} (hf : Integrable f μ) (hg : Integrable g μ) (hfg : f ≤ᵐ[μ] g) :
+    [OrderedSMul ℝ E] {f g : α → E} (hf : Integrable f μ) (hg : Integrable g μ) (hfg : f ≤ᵐ[μ] g) :
     μ[f|m] ≤ᵐ[μ] μ[g|m] := by
   by_cases hm : m ≤ m0
   swap; · simp_rw [condexp_of_not_le hm]
@@ -2479,7 +2479,7 @@ theorem condexp_mono {E} [NormedLatticeAddCommGroup E] [CompleteSpace E] [Normed
 #align measure_theory.condexp_mono MeasureTheory.condexp_mono
 
 theorem condexp_nonneg {E} [NormedLatticeAddCommGroup E] [CompleteSpace E] [NormedSpace ℝ E]
-    [OrderedSmul ℝ E] {f : α → E} (hf : 0 ≤ᵐ[μ] f) : 0 ≤ᵐ[μ] μ[f|m] :=
+    [OrderedSMul ℝ E] {f : α → E} (hf : 0 ≤ᵐ[μ] f) : 0 ≤ᵐ[μ] μ[f|m] :=
   by
   by_cases hfint : integrable f μ
   · rw [(condexp_zero.symm : (0 : α → E) = μ[0|m])]
@@ -2488,7 +2488,7 @@ theorem condexp_nonneg {E} [NormedLatticeAddCommGroup E] [CompleteSpace E] [Norm
 #align measure_theory.condexp_nonneg MeasureTheory.condexp_nonneg
 
 theorem condexp_nonpos {E} [NormedLatticeAddCommGroup E] [CompleteSpace E] [NormedSpace ℝ E]
-    [OrderedSmul ℝ E] {f : α → E} (hf : f ≤ᵐ[μ] 0) : μ[f|m] ≤ᵐ[μ] 0 :=
+    [OrderedSMul ℝ E] {f : α → E} (hf : f ≤ᵐ[μ] 0) : μ[f|m] ≤ᵐ[μ] 0 :=
   by
   by_cases hfint : integrable f μ
   · rw [(condexp_zero.symm : (0 : α → E) = μ[0|m])]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: George Peter Banyard, Yaël Dillies, Kyle Miller
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.prod
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -233,7 +233,7 @@ instance boxProdFintypeNeighborSet (x : α × β) [Fintype (G.neighborSet x.1)]
       Finset.disjoint_product.mpr <| Or.inl <| neighbor_finset_disjoint_singleton _ _)
     ((Equiv.refl _).subtypeEquiv fun y =>
       by
-      simp_rw [Finset.mem_disj_union, Finset.mem_product, Finset.mem_singleton, mem_neighbor_finset,
+      simp_rw [Finset.mem_disjUnion, Finset.mem_product, Finset.mem_singleton, mem_neighbor_finset,
         mem_neighbor_set, Equiv.refl_apply, box_prod_adj]
       simp only [eq_comm, and_comm'])
 #align simple_graph.box_prod_fintype_neighbor_set SimpleGraph.boxProdFintypeNeighborSet
@@ -255,7 +255,7 @@ theorem box_prod_neighbor_finset (x : α × β) [Fintype (G.neighborSet x.1)]
 theorem box_prod_degree (x : α × β) [Fintype (G.neighborSet x.1)] [Fintype (H.neighborSet x.2)]
     [Fintype ((G □ H).neighborSet x)] : (G □ H).degree x = G.degree x.1 + H.degree x.2 :=
   by
-  rw [degree, degree, degree, box_prod_neighbor_finset, Finset.card_disj_union]
+  rw [degree, degree, degree, box_prod_neighbor_finset, Finset.card_disjUnion]
   simp_rw [Finset.card_product, Finset.card_singleton, mul_one, one_mul]
 #align simple_graph.box_prod_degree SimpleGraph.box_prod_degree
 

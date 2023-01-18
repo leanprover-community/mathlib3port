@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.box_integral.partition.subbox_induction
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -100,7 +100,7 @@ theorem subbox_induction_on {p : Box ι → Prop} (I : Box ι)
                   (∀ i, J.upper i - J.lower i = (I.upper i - I.lower i) / 2 ^ m) → p J) :
     p I :=
   by
-  refine' subbox_induction_on' I (fun J hle hs => (H_ind J hle) fun J' h' => _) H_nhds
+  refine' subbox_induction_on' I (fun J hle hs => H_ind J hle fun J' h' => _) H_nhds
   rcases mem_split_center.1 h' with ⟨s, rfl⟩
   exact hs s
 #align box_integral.box.subbox_induction_on BoxIntegral.Box.subbox_induction_on

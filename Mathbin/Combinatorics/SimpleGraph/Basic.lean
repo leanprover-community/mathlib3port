@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Jalex Stark, Kyle Miller, Alena Gusakov, Hunter Monroe
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -269,7 +269,7 @@ instance : BooleanAlgebra (SimpleGraph V) :=
     le_sup_right := fun x y v w h => Or.inr h
     le_inf := fun x y z hxy hyz v w h => ⟨hxy h, hyz h⟩
     le_sup_inf := fun a b c v w h =>
-      Or.dcases_on h.2 Or.inl <| (Or.dcases_on h.1 fun h _ => Or.inl h) fun hb hc => Or.inr ⟨hb, hc⟩
+      Or.dcases_on h.2 Or.inl <| Or.dcases_on h.1 (fun h _ => Or.inl h) fun hb hc => Or.inr ⟨hb, hc⟩
     inf_compl_le_bot := fun a v w h => False.elim <| h.2.2 h.1
     top_le_sup_compl := fun a v w ne => by
       by_cases a.adj v w
@@ -366,7 +366,7 @@ The way `edge_set` is defined is such that `mem_edge_set` is proved by `refl`.
 (That is, `⟦(v, w)⟧ ∈ G.edge_set` is definitionally equal to `G.adj v w`.)
 -/
 def edgeSet : SimpleGraph V ↪o Set (Sym2 V) :=
-  (OrderEmbedding.ofMapLeIff fun G => Sym2.fromRel G.symm) fun G G' =>
+  OrderEmbedding.ofMapLeIff (fun G => Sym2.fromRel G.symm) fun G G' =>
     ⟨fun h a b => @h ⟦(a, b)⟧, fun h e => Sym2.ind (@h) e⟩
 #align simple_graph.edge_set SimpleGraph.edgeSet
 
@@ -808,14 +808,14 @@ def edgeFinset : Finset (Sym2 V) :=
 
 @[simp, norm_cast]
 theorem coe_edge_finset : (G.edgeFinset : Set (Sym2 V)) = G.edgeSet :=
-  Set.coe_to_finset _
+  Set.coe_toFinset _
 #align simple_graph.coe_edge_finset SimpleGraph.coe_edge_finset
 
 variable {G}
 
 @[simp]
 theorem mem_edge_finset : e ∈ G.edgeFinset ↔ e ∈ G.edgeSet :=
-  Set.mem_to_finset
+  Set.mem_toFinset
 #align simple_graph.mem_edge_finset SimpleGraph.mem_edge_finset
 
 theorem not_is_diag_of_mem_edge_finset : e ∈ G.edgeFinset → ¬e.IsDiag :=
@@ -869,7 +869,7 @@ theorem edge_finset_card : G.edgeFinset.card = Fintype.card G.edgeSet :=
 
 @[simp]
 theorem edge_set_univ_card : (univ : Finset G.edgeSet).card = G.edgeFinset.card :=
-  (Fintype.card_of_subtype G.edgeFinset) fun _ => mem_edge_finset
+  Fintype.card_of_subtype G.edgeFinset fun _ => mem_edge_finset
 #align simple_graph.edge_set_univ_card SimpleGraph.edge_set_univ_card
 
 end EdgeFinset
@@ -923,7 +923,7 @@ theorem neighbor_set_union_compl_neighbor_set_eq (G : SimpleGraph V) (v : V) :
 theorem card_neighbor_set_union_compl_neighbor_set [Fintype V] (G : SimpleGraph V) (v : V)
     [h : Fintype (G.neighborSet v ∪ Gᶜ.neighborSet v : Set V)] :
     (@Set.toFinset _ (G.neighborSet v ∪ Gᶜ.neighborSet v) h).card = Fintype.card V - 1 := by
-  classical simp_rw [neighbor_set_union_compl_neighbor_set_eq, Set.to_finset_compl,
+  classical simp_rw [neighbor_set_union_compl_neighbor_set_eq, Set.toFinset_compl,
       Finset.card_compl, Set.to_finset_card, Set.card_singleton]
 #align
   simple_graph.card_neighbor_set_union_compl_neighbor_set SimpleGraph.card_neighbor_set_union_compl_neighbor_set
@@ -1300,7 +1300,7 @@ theorem neighbor_finset_def : G.neighborFinset v = (G.neighborSet v).toFinset :=
 
 @[simp]
 theorem mem_neighbor_finset (w : V) : w ∈ G.neighborFinset v ↔ G.Adj v w :=
-  Set.mem_to_finset
+  Set.mem_toFinset
 #align simple_graph.mem_neighbor_finset SimpleGraph.mem_neighbor_finset
 
 @[simp]
@@ -1336,7 +1336,7 @@ theorem degree_pos_iff_exists_adj : 0 < G.degree v ↔ ∃ w, G.Adj v w := by
 theorem degree_compl [Fintype (Gᶜ.neighborSet v)] [Fintype V] :
     Gᶜ.degree v = Fintype.card V - 1 - G.degree v := by
   classical
-    rw [← card_neighbor_set_union_compl_neighbor_set G v, Set.to_finset_union]
+    rw [← card_neighbor_set_union_compl_neighbor_set G v, Set.toFinset_union]
     simp [card_disjoint_union (set.disjoint_to_finset.mpr (compl_neighbor_set_disjoint G v))]
 #align simple_graph.degree_compl SimpleGraph.degree_compl
 
@@ -1368,7 +1368,7 @@ theorem card_incidence_finset_eq_degree [DecidableEq V] : (G.incidenceFinset v).
 @[simp]
 theorem mem_incidence_finset [DecidableEq V] (e : Sym2 V) :
     e ∈ G.incidenceFinset v ↔ e ∈ G.incidenceSet v :=
-  Set.mem_to_finset
+  Set.mem_toFinset
 #align simple_graph.mem_incidence_finset SimpleGraph.mem_incidence_finset
 
 theorem incidence_finset_eq_filter [DecidableEq V] [Fintype G.edgeSet] :
@@ -1434,8 +1434,8 @@ theorem neighbor_finset_eq_filter {v : V} [DecidableRel G.Adj] :
 
 theorem neighbor_finset_compl [DecidableEq V] [DecidableRel G.Adj] (v : V) :
     Gᶜ.neighborFinset v = G.neighborFinset vᶜ \ {v} := by
-  simp only [neighbor_finset, neighbor_set_compl, Set.to_finset_diff, Set.to_finset_compl,
-    Set.to_finset_singleton]
+  simp only [neighbor_finset, neighbor_set_compl, Set.toFinset_diff, Set.toFinset_compl,
+    Set.toFinset_singleton]
 #align simple_graph.neighbor_finset_compl SimpleGraph.neighbor_finset_compl
 
 @[simp]
@@ -1592,12 +1592,12 @@ theorem Adj.card_common_neighbors_lt_degree {G : SimpleGraph V} [DecidableRel G.
     rw [Finset.ssubset_iff]
     use w
     constructor
-    · rw [Set.mem_to_finset]
+    · rw [Set.mem_toFinset]
       apply not_mem_common_neighbors_right
     · rw [Finset.insert_subset]
       constructor
       · simpa
-      · rw [neighbor_finset, Set.to_finset_subset_to_finset]
+      · rw [neighbor_finset, Set.toFinset_subset_toFinset]
         exact G.common_neighbors_subset_neighbor_set_left _ _
 #align
   simple_graph.adj.card_common_neighbors_lt_degree SimpleGraph.Adj.card_common_neighbors_lt_degree
@@ -1605,10 +1605,10 @@ theorem Adj.card_common_neighbors_lt_degree {G : SimpleGraph V} [DecidableRel G.
 theorem card_common_neighbors_top [DecidableEq V] {v w : V} (h : v ≠ w) :
     Fintype.card ((⊤ : SimpleGraph V).commonNeighbors v w) = Fintype.card V - 2 :=
   by
-  simp only [common_neighbors_top_eq, ← Set.to_finset_card, Set.to_finset_diff]
+  simp only [common_neighbors_top_eq, ← Set.to_finset_card, Set.toFinset_diff]
   rw [Finset.card_sdiff]
   · simp [Finset.card_univ, h]
-  · simp only [Set.to_finset_subset_to_finset, Set.subset_univ]
+  · simp only [Set.toFinset_subset_toFinset, Set.subset_univ]
 #align simple_graph.card_common_neighbors_top SimpleGraph.card_common_neighbors_top
 
 end Finite

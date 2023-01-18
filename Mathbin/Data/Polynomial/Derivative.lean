@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module data.polynomial.derivative
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -300,8 +300,8 @@ theorem derivative_mul {f g : R[X]} : derivative (f * g) = derivative f * g + f 
         f.Sum fun n a =>
           g.Sum fun m b =>
             n • (c a * X ^ (n - 1)) * (c b * X ^ m) + c a * X ^ n * m • (c b * X ^ (m - 1)) :=
-      (sum_congr rfl) fun n hn =>
-        (sum_congr rfl) fun m hm => by
+      sum_congr rfl fun n hn =>
+        sum_congr rfl fun m hm => by
           cases n <;> cases m <;>
               simp_rw [add_smul, mul_smul_comm, smul_mul_assoc, X_pow_mul_assoc, ← mul_assoc, ←
                 C_mul, mul_assoc, ← pow_add] <;>
@@ -484,15 +484,15 @@ variable [CommSemiring R]
 
 theorem derivative_pow_succ (p : R[X]) (n : ℕ) :
     (p ^ (n + 1)).derivative = c ↑(n + 1) * p ^ n * p.derivative :=
-  (Nat.recOn n (by rw [pow_one, Nat.cast_one, C_1, one_mul, pow_zero, one_mul])) fun n ih => by
+  Nat.recOn n (by rw [pow_one, Nat.cast_one, C_1, one_mul, pow_zero, one_mul]) fun n ih => by
     rw [pow_succ', derivative_mul, ih, Nat.add_one, mul_right_comm, Nat.cast_add n.succ, C_add,
       add_mul, add_mul, pow_succ', ← mul_assoc, Nat.cast_one, C_1, one_mul]
 #align polynomial.derivative_pow_succ Polynomial.derivative_pow_succ
 
 theorem derivative_pow (p : R[X]) (n : ℕ) :
     (p ^ n).derivative = c ↑n * p ^ (n - 1) * p.derivative :=
-  (Nat.casesOn n (by rw [pow_zero, derivative_one, Nat.cast_zero, C_0, zero_mul, zero_mul]))
-    fun n => by rw [p.derivative_pow_succ n, n.succ_sub_one, n.cast_succ]
+  Nat.casesOn n (by rw [pow_zero, derivative_one, Nat.cast_zero, C_0, zero_mul, zero_mul]) fun n =>
+    by rw [p.derivative_pow_succ n, n.succ_sub_one, n.cast_succ]
 #align polynomial.derivative_pow Polynomial.derivative_pow
 
 theorem derivative_sq (p : R[X]) : (p ^ 2).derivative = c 2 * p * p.derivative := by

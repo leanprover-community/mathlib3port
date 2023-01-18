@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Jesse Michael Han, Floris van Doorn
 
 ! This file was ported from Lean 3 source module model_theory.syntax
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -173,7 +173,7 @@ Case conversion may be inaccurate. Consider using '#align first_order.language.t
 def restrictVar [DecidableEq α] : ∀ (t : L.term α) (f : t.varFinset → β), L.term β
   | var a, f => var (f ⟨a, mem_singleton_self a⟩)
   | func F ts, f =>
-    func F fun i => (ts i).restrictVar (f ∘ Set.inclusion (subset_bUnion_of_mem _ (mem_univ i)))
+    func F fun i => (ts i).restrictVar (f ∘ Set.inclusion (subset_bunionᵢ_of_mem _ (mem_univ i)))
 #align first_order.language.term.restrict_var FirstOrder.Language.Term.restrictVar
 
 /- warning: first_order.language.term.restrict_var_left -> FirstOrder.Language.Term.restrictVarLeft is a dubious translation:
@@ -188,7 +188,8 @@ def restrictVarLeft [DecidableEq α] {γ : Type _} :
   | var (Sum.inl a), f => var (Sum.inl (f ⟨a, mem_singleton_self a⟩))
   | var (Sum.inr a), f => var (Sum.inr a)
   | func F ts, f =>
-    func F fun i => (ts i).restrictVarLeft (f ∘ Set.inclusion (subset_bUnion_of_mem _ (mem_univ i)))
+    func F fun i =>
+      (ts i).restrictVarLeft (f ∘ Set.inclusion (subset_bunionᵢ_of_mem _ (mem_univ i)))
 #align first_order.language.term.restrict_var_left FirstOrder.Language.Term.restrictVarLeft
 
 end Term
@@ -558,7 +559,7 @@ def restrictFreeVar [DecidableEq α] :
     equal (t₁.restrictVarLeft (f ∘ Set.inclusion (subset_union_left _ _)))
       (t₂.restrictVarLeft (f ∘ Set.inclusion (subset_union_right _ _)))
   | n, Rel R ts, f =>
-    rel R fun i => (ts i).restrictVarLeft (f ∘ Set.inclusion (subset_bUnion_of_mem _ (mem_univ i)))
+    rel R fun i => (ts i).restrictVarLeft (f ∘ Set.inclusion (subset_bunionᵢ_of_mem _ (mem_univ i)))
   | n, imp φ₁ φ₂, f =>
     (φ₁.restrictFreeVar (f ∘ Set.inclusion (subset_union_left _ _))).imp
       (φ₂.restrictFreeVar (f ∘ Set.inclusion (subset_union_right _ _)))
@@ -797,12 +798,12 @@ inductive IsAtomic : L.BoundedFormula α n → Prop
 #align first_order.language.bounded_formula.is_atomic FirstOrder.Language.BoundedFormula.IsAtomic
 
 theorem not_all_is_atomic (φ : L.BoundedFormula α (n + 1)) : ¬φ.all.IsAtomic := fun con => by
-  cases con
+  cases Con
 #align
   first_order.language.bounded_formula.not_all_is_atomic FirstOrder.Language.BoundedFormula.not_all_is_atomic
 
 theorem not_ex_is_atomic (φ : L.BoundedFormula α (n + 1)) : ¬φ.ex.IsAtomic := fun con => by
-  cases con
+  cases Con
 #align
   first_order.language.bounded_formula.not_ex_is_atomic FirstOrder.Language.BoundedFormula.not_ex_is_atomic
 
@@ -861,16 +862,16 @@ theorem IsQf.cast_le {h : l ≤ n} (hφ : IsQf φ) : (φ.castLe h).IsQf :=
 
 theorem not_all_is_qf (φ : L.BoundedFormula α (n + 1)) : ¬φ.all.IsQf := fun con =>
   by
-  cases' con with _ con
-  exact φ.not_all_is_atomic con
+  cases' Con with _ con
+  exact φ.not_all_is_atomic Con
 #align
   first_order.language.bounded_formula.not_all_is_qf FirstOrder.Language.BoundedFormula.not_all_is_qf
 
 theorem not_ex_is_qf (φ : L.BoundedFormula α (n + 1)) : ¬φ.ex.IsQf := fun con =>
   by
-  cases' con with _ con _ _ con
-  · exact φ.not_ex_is_atomic con
-  · exact not_all_is_qf _ con
+  cases' Con with _ con _ _ con
+  · exact φ.not_ex_is_atomic Con
+  · exact not_all_is_qf _ Con
 #align
   first_order.language.bounded_formula.not_ex_is_qf FirstOrder.Language.BoundedFormula.not_ex_is_qf
 

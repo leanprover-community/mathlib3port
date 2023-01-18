@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.qpf.univariate.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -437,10 +437,10 @@ private theorem cofix.bisim_aux (r : Cofix F → Cofix F → Prop) (h' : ∀ x, 
     (h : ∀ x y, r x y → Quot.mk r <$> Cofix.dest x = Quot.mk r <$> Cofix.dest y) :
     ∀ x y, r x y → x = y := by
   intro x
-  apply Quot.induction_on x
+  apply Quot.inductionOn x
   clear x
   intro x y
-  apply Quot.induction_on y
+  apply Quot.inductionOn y
   clear y
   intro y rxy
   apply Quot.sound
@@ -461,8 +461,8 @@ private theorem cofix.bisim_aux (r : Cofix F → Cofix F → Prop) (h' : ∀ x, 
     let f : Quot r → Quot r' :=
       Quot.lift (Quot.lift (Quot.mk r') h₁)
         (by
-          intro c; apply Quot.induction_on c; clear c
-          intro c d; apply Quot.induction_on d; clear d
+          intro c; apply Quot.inductionOn c; clear c
+          intro c d; apply Quot.inductionOn d; clear d
           intro d rcd; apply Quot.sound; apply rcd)
     have : f ∘ Quot.mk r ∘ Quot.mk Mcongr = Quot.mk r' := rfl
     rw [← this, Pfunctor.comp_map _ _ f, Pfunctor.comp_map _ _ (Quot.mk r), abs_map, abs_map,

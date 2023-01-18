@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Justus Springer
 
 ! This file was ported from Lean 3 source module algebraic_geometry.Spec
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -230,7 +230,7 @@ theorem local_ring_hom_comp_stalk_iso {R S : CommRingCat} (f : R ⟶ S) (p : Pri
       PresheafedSpaceCat.stalkMap (SpecCat.sheafedSpaceMap f) p :=
   (stalkIso R (PrimeSpectrum.comap f p)).eq_inv_comp.mp <|
     (stalkIso S p).comp_inv_eq.mpr <|
-      (Localization.local_ring_hom_unique _ _ _ _) fun x => by
+      Localization.local_ring_hom_unique _ _ _ _ fun x => by
         rw [stalk_iso_hom, stalk_iso_inv, comp_apply, comp_apply, localization_to_stalk_of,
           stalk_map_to_stalk_apply, stalk_to_fiber_ring_hom_to_stalk]
 #align
@@ -242,7 +242,7 @@ The induced map of a ring homomorphism on the prime spectra, as a morphism of lo
 @[simps]
 def SpecCat.locallyRingedSpaceMap {R S : CommRingCat} (f : R ⟶ S) :
     SpecCat.locallyRingedSpaceObj S ⟶ SpecCat.locallyRingedSpaceObj R :=
-  (LocallyRingedSpaceCat.Hom.mk (SpecCat.sheafedSpaceMap f)) fun p =>
+  LocallyRingedSpaceCat.Hom.mk (SpecCat.sheafedSpaceMap f) fun p =>
     IsLocalRingHom.mk fun a ha =>
       by
       -- Here, we are showing that the map on prime spectra induced by `f` is really a morphism of

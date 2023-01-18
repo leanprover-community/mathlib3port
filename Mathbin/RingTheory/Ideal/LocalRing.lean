@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Chris Hughes, Mario Carneiro
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.local_ring
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,10 +64,10 @@ theorem of_nonunits_add [Nontrivial R]
 
 /-- A semiring is local if it has a unique maximal ideal. -/
 theorem of_unique_max_ideal (h : ∃! I : Ideal R, I.IsMaximal) : LocalRing R :=
-  (@of_nonunits_add _ _
-      (nontrivial_of_ne (0 : R) 1 <|
-        let ⟨I, Imax, _⟩ := h
-        fun H : 0 = 1 => Imax.1.1 <| I.eq_top_iff_one.2 <| H ▸ I.zero_mem))
+  @of_nonunits_add _ _
+    (nontrivial_of_ne (0 : R) 1 <|
+      let ⟨I, Imax, _⟩ := h
+      fun H : 0 = 1 => Imax.1.1 <| I.eq_top_iff_one.2 <| H ▸ I.zero_mem)
     fun x y hx hy H =>
     let ⟨I, Imax, Iuniq⟩ := h
     let ⟨Ix, Ixmax, Hx⟩ := exists_max_ideal_of_mem_nonunits hx
@@ -126,7 +126,7 @@ instance maximalIdeal.isMaximal : (maximalIdeal R).IsMaximal :=
 
 theorem maximal_ideal_unique : ∃! I : Ideal R, I.IsMaximal :=
   ⟨maximalIdeal R, maximalIdeal.isMaximal R, fun I hI =>
-    (hI.eq_of_le (maximalIdeal.isMaximal R).1.1) fun x hx => hI.1.1 ∘ I.eq_top_of_is_unit_mem hx⟩
+    hI.eq_of_le (maximalIdeal.isMaximal R).1.1 fun x hx => hI.1.1 ∘ I.eq_top_of_is_unit_mem hx⟩
 #align local_ring.maximal_ideal_unique LocalRing.maximal_ideal_unique
 
 variable {R}
@@ -674,7 +674,7 @@ namespace ResidueField
 
 /-- The map on residue fields induced by a local homomorphism between local rings -/
 def map (f : R →+* S) [IsLocalRingHom f] : ResidueField R →+* ResidueField S :=
-  (Ideal.Quotient.lift (maximalIdeal R) ((Ideal.Quotient.mk _).comp f)) fun a ha =>
+  Ideal.Quotient.lift (maximalIdeal R) ((Ideal.Quotient.mk _).comp f) fun a ha =>
     by
     erw [Ideal.Quotient.eq_zero_iff_mem]
     exact map_nonunit f a ha
@@ -752,6 +752,21 @@ def mapAut : RingAut R →* RingAut (LocalRing.ResidueField R)
   map_mul' e₁ e₂ := map_equiv_trans e₂ e₁
   map_one' := map_equiv_refl
 #align local_ring.residue_field.map_aut LocalRing.ResidueField.mapAut
+
+section MulSemiringAction
+
+variable (G : Type _) [Group G] [MulSemiringAction G R]
+
+/-- If `G` acts on `R` as a `mul_semiring_action`, then it also acts on `residue_field R`. -/
+instance : MulSemiringAction G (LocalRing.ResidueField R) :=
+  MulSemiringAction.compHom _ <| mapAut.comp (MulSemiringAction.toRingAut G R)
+
+@[simp]
+theorem residue_smul (g : G) (r : R) : residue R (g • r) = g • residue R r :=
+  rfl
+#align local_ring.residue_field.residue_smul LocalRing.ResidueField.residue_smul
+
+end MulSemiringAction
 
 end ResidueField
 

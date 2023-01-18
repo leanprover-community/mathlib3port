@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Jalex Stark
 
 ! This file was ported from Lean 3 source module algebra.polynomial.big_operators
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,7 +54,7 @@ theorem nat_degree_list_sum_le (l : List S[X]) : natDegree l.Sum ≤ (l.map natD
 
 theorem nat_degree_multiset_sum_le (l : Multiset S[X]) :
     natDegree l.Sum ≤ (l.map natDegree).foldr max max_left_comm 0 :=
-  Quotient.induction_on l (by simpa using nat_degree_list_sum_le)
+  Quotient.inductionOn l (by simpa using nat_degree_list_sum_le)
 #align polynomial.nat_degree_multiset_sum_le Polynomial.nat_degree_multiset_sum_le
 
 theorem nat_degree_sum_le (f : ι → S[X]) :
@@ -123,7 +123,7 @@ section CommSemiring
 variable [CommSemiring R] (f : ι → R[X]) (t : Multiset R[X])
 
 theorem nat_degree_multiset_prod_le : t.Prod.natDegree ≤ (t.map natDegree).Sum :=
-  Quotient.induction_on t (by simpa using nat_degree_list_prod_le)
+  Quotient.inductionOn t (by simpa using nat_degree_list_prod_le)
 #align polynomial.nat_degree_multiset_prod_le Polynomial.nat_degree_multiset_prod_le
 
 theorem nat_degree_prod_le : (∏ i in s, f i).natDegree ≤ ∑ i in s, (f i).natDegree := by
@@ -134,7 +134,7 @@ theorem nat_degree_prod_le : (∏ i in s, f i).natDegree ≤ ∑ i in s, (f i).n
 where the degree of the zero polynomial is ⊥.
 -/
 theorem degree_multiset_prod_le : t.Prod.degree ≤ (t.map Polynomial.degree).Sum :=
-  Quotient.induction_on t (by simpa using degree_list_prod_le)
+  Quotient.inductionOn t (by simpa using degree_list_prod_le)
 #align polynomial.degree_multiset_prod_le Polynomial.degree_multiset_prod_le
 
 theorem degree_prod_le : (∏ i in s, f i).degree ≤ ∑ i in s, (f i).degree := by
@@ -206,8 +206,8 @@ theorem nat_degree_multiset_prod_of_monic (h : ∀ f ∈ t, Monic f) :
     by
     rw [this]
     simp
-  convert prod_repeat (1 : R) t.card
-  · simp only [eq_repeat, Multiset.card_map, eq_self_iff_true, true_and_iff]
+  convert prod_replicate t.card (1 : R)
+  · simp only [eq_replicate, Multiset.card_map, eq_self_iff_true, true_and_iff]
     rintro i hi
     obtain ⟨i, hi, rfl⟩ := multiset.mem_map.mp hi
     apply h
@@ -223,7 +223,7 @@ theorem nat_degree_prod_of_monic (h : ∀ i ∈ s, (f i).Monic) :
 theorem coeff_multiset_prod_of_nat_degree_le (n : ℕ) (hl : ∀ p ∈ t, natDegree p ≤ n) :
     coeff t.Prod (t.card * n) = (t.map fun p => coeff p n).Prod :=
   by
-  induction t using Quotient.induction_on
+  induction t using Quotient.inductionOn
   simpa using coeff_list_prod_of_nat_degree_le _ _ hl
 #align
   polynomial.coeff_multiset_prod_of_nat_degree_le Polynomial.coeff_multiset_prod_of_nat_degree_le

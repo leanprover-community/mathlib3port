@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module data.dfinsupp.multiset
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -33,12 +33,12 @@ variable [DecidableEq α]
 
 /-- A computable version of `finsupp.to_multiset`. -/
 def toMultiset : (Π₀ a : α, ℕ) →+ Multiset α :=
-  Dfinsupp.sumAddHom fun a : α => Multiset.repeatAddMonoidHom a
+  Dfinsupp.sumAddHom fun a : α => Multiset.replicateAddMonoidHom a
 #align dfinsupp.to_multiset Dfinsupp.toMultiset
 
 @[simp]
 theorem to_multiset_single (a : α) (n : ℕ) :
-    toMultiset (Dfinsupp.single a n) = Multiset.repeat a n :=
+    toMultiset (Dfinsupp.single a n) = Multiset.replicate n a :=
   Dfinsupp.sum_add_hom_single _ _ _
 #align dfinsupp.to_multiset_single Dfinsupp.to_multiset_single
 
@@ -65,21 +65,21 @@ theorem to_dfinsupp_apply (s : Multiset α) (a : α) : s.toDfinsupp a = s.count 
 
 @[simp]
 theorem to_dfinsupp_support (s : Multiset α) : s.toDfinsupp.support = s.toFinset :=
-  (Finset.filter_eq_self _).mpr fun x hx => count_ne_zero.mpr <| Multiset.mem_to_finset.1 hx
+  (Finset.filter_eq_self _).mpr fun x hx => count_ne_zero.mpr <| Multiset.mem_toFinset.1 hx
 #align multiset.to_dfinsupp_support Multiset.to_dfinsupp_support
 
 @[simp]
-theorem to_dfinsupp_repeat (a : α) (n : ℕ) :
-    toDfinsupp (Multiset.repeat a n) = Dfinsupp.single a n :=
+theorem to_dfinsupp_replicate (a : α) (n : ℕ) :
+    toDfinsupp (Multiset.replicate n a) = Dfinsupp.single a n :=
   by
   ext i
   dsimp [to_dfinsupp]
-  simp [count_repeat, eq_comm]
-#align multiset.to_dfinsupp_repeat Multiset.to_dfinsupp_repeat
+  simp [count_replicate, eq_comm]
+#align multiset.to_dfinsupp_replicate Multiset.to_dfinsupp_replicate
 
 @[simp]
 theorem to_dfinsupp_singleton (a : α) : toDfinsupp {a} = Dfinsupp.single a 1 := by
-  rw [← repeat_one, to_dfinsupp_repeat]
+  rw [← replicate_one, to_dfinsupp_replicate]
 #align multiset.to_dfinsupp_singleton Multiset.to_dfinsupp_singleton
 
 /-- `multiset.to_dfinsupp` as an `add_equiv`. -/

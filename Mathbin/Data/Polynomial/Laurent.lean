@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 
 ! This file was ported from Lean 3 source module data.polynomial.laurent
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -298,7 +298,7 @@ protected theorem induction_on' {M : R[T;T⁻¹] → Prop} (p : R[T;T⁻¹])
 #align laurent_polynomial.induction_on' LaurentPolynomial.induction_on'
 
 theorem commute_T (n : ℤ) (f : R[T;T⁻¹]) : Commute (t n) f :=
-  (f.inductionOn' fun p q Tp Tq => Commute.add_right Tp Tq) fun m a =>
+  f.inductionOn' (fun p q Tp Tq => Commute.add_right Tp Tq) fun m a =>
     show t n * _ = _
       by
       rw [T, T, ← single_eq_C, single_mul_single, single_mul_single, single_mul_single]
@@ -466,7 +466,7 @@ theorem degree_zero : degree (0 : R[T;T⁻¹]) = ⊥ :=
 theorem degree_eq_bot_iff {f : R[T;T⁻¹]} : f.degree = ⊥ ↔ f = 0 :=
   by
   refine' ⟨fun h => _, fun h => by rw [h, degree_zero]⟩
-  rw [degree, Finset.max_eq_sup_with_bot] at h
+  rw [degree, Finset.max_eq_sup_withBot] at h
   ext n
   refine' not_not.mp fun f0 => _
   simp_rw [Finset.sup_eq_bot_iff, Finsupp.mem_support_iff, Ne.def, WithBot.coe_ne_bot] at h

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mitchell Rowett, Scott Morrison
 
 ! This file was ported from Lean 3 source module group_theory.coset
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -655,7 +655,7 @@ theorem quotient_subgroup_of_embedding_of_le_apply_mk (H : Subgroup α) (h : s �
       "If `s ≤ t`, then there is an map\n  `H ⧸ s.add_subgroup_of H → H ⧸ t.add_subgroup_of H`."]
 def quotientSubgroupOfMapOfLe (H : Subgroup α) (h : s ≤ t) :
     H ⧸ s.subgroupOf H → H ⧸ t.subgroupOf H :=
-  (Quotient.map' id) fun a b => by
+  Quotient.map' id fun a b => by
     simp_rw [left_rel_eq]
     apply h
 #align subgroup.quotient_subgroup_of_map_of_le Subgroup.quotientSubgroupOfMapOfLe
@@ -670,7 +670,7 @@ theorem quotient_subgroup_of_map_of_le_apply_mk (H : Subgroup α) (h : s ≤ t) 
 /-- If `s ≤ t`, then there is a map `α ⧸ s → α ⧸ t`. -/
 @[to_additive "If `s ≤ t`, then there is an map `α ⧸ s → α ⧸ t`."]
 def quotientMapOfLe (h : s ≤ t) : α ⧸ s → α ⧸ t :=
-  (Quotient.map' id) fun a b => by
+  Quotient.map' id fun a b => by
     simp_rw [left_rel_eq]
     apply h
 #align subgroup.quotient_map_of_le Subgroup.quotientMapOfLe

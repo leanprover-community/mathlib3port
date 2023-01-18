@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 
 ! This file was ported from Lean 3 source module data.sym.sym2
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -215,7 +215,7 @@ def lift₂ :
       constructor
       exacts[congr_arg₂ F eq_swap rfl, congr_arg₂ F rfl eq_swap]⟩
   left_inv f := Subtype.ext rfl
-  right_inv F := funext₂ fun a b => (Sym2.induction_on₂ a b) fun _ _ _ _ => rfl
+  right_inv F := funext₂ fun a b => Sym2.induction_on₂ a b fun _ _ _ _ => rfl
 #align sym2.lift₂ Sym2.lift₂
 
 @[simp]
@@ -431,7 +431,7 @@ theorem mk_is_diag_iff {x y : α} : IsDiag ⟦(x, y)⟧ ↔ x = y :=
 
 @[simp]
 theorem is_diag_iff_proj_eq (z : α × α) : IsDiag ⟦z⟧ ↔ z.1 = z.2 :=
-  (Prod.recOn z) fun _ _ => mk_is_diag_iff
+  Prod.recOn z fun _ _ => mk_is_diag_iff
 #align sym2.is_diag_iff_proj_eq Sym2.is_diag_iff_proj_eq
 
 @[simp]
@@ -747,7 +747,7 @@ theorem filter_image_quotient_mk_is_diag [DecidableEq α] (s : Finset α) :
     ((s ×ˢ s).image Quotient.mk'').filter IsDiag = s.diag.image Quotient.mk'' :=
   by
   ext z
-  induction z using Quotient.induction_on
+  induction z using Quotient.inductionOn
   rcases z with ⟨x, y⟩
   simp only [mem_image, mem_diag, exists_prop, mem_filter, Prod.exists, mem_product]
   constructor
@@ -765,7 +765,7 @@ theorem filter_image_quotient_mk_not_is_diag [DecidableEq α] (s : Finset α) :
       s.offDiag.image Quotient.mk'' :=
   by
   ext z
-  induction z using Quotient.induction_on
+  induction z using Quotient.inductionOn
   rcases z with ⟨x, y⟩
   simp only [mem_image, mem_off_diag, mem_filter, Prod.exists, mem_product]
   constructor

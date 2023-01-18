@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Kenny Lau, Johan Commelin, Mario Carneiro, Kevin Buzza
 Amelia Livingston, Yury Kudryashov, Yakov Pechersky, Jireh Loreaux
 
 ! This file was ported from Lean 3 source module group_theory.subsemigroup.operations
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -916,7 +916,7 @@ theorem coe_equivMapOfInjective_apply (f : M →ₙ* N) (hf : Function.Injective
 @[simp, to_additive]
 theorem closure_closure_coe_preimage {s : Set M} : closure ((coe : closure s → M) ⁻¹' s) = ⊤ :=
   eq_top_iff.2 fun x =>
-    (Subtype.recOn x) fun x hx _ =>
+    Subtype.recOn x fun x hx _ =>
       by
       refine' closure_induction' _ (fun g hg => _) (fun g₁ g₂ hg₁ hg₂ => _) hx
       · exact subset_closure hg
@@ -1224,7 +1224,7 @@ def codRestrict [SetLike σ N] [MulMemClass σ N] (f : M →ₙ* N) (S : σ) (h 
 /-- Restriction of a semigroup hom to its range interpreted as a subsemigroup. -/
 @[to_additive "Restriction of an `add_semigroup` hom to its range interpreted as a subsemigroup."]
 def srangeRestrict {N} [Mul N] (f : M →ₙ* N) : M →ₙ* f.srange :=
-  (f.codRestrict f.srange) fun x => ⟨x, rfl⟩
+  f.codRestrict f.srange fun x => ⟨x, rfl⟩
 #align mul_hom.srange_restrict MulHom.srangeRestrict
 -/
 

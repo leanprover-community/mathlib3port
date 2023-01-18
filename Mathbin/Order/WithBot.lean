@@ -4,11 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.with_bot
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Order.BoundedOrder
+import Mathbin.Data.Option.NAry
 
 /-!
 # `with_bot`, `with_top`
@@ -605,12 +606,14 @@ theorem coe_sup [SemilatticeSup α] (a b : α) : ((a ⊔ b : α) : WithBot α) =
 instance [SemilatticeInf α] : SemilatticeInf (WithBot α) :=
   { WithBot.orderBot,
     WithBot.partialOrder with
-    inf := fun o₁ o₂ => o₁.bind fun a => o₂.map fun b => a ⊓ b
-    inf_le_left := fun o₁ o₂ a ha => by
-      simp [map] at ha; rcases ha with ⟨b, rfl, c, rfl, rfl⟩
+    inf := Option.map₂ (· ⊓ ·)
+    inf_le_left := fun o₁ o₂ a ha =>
+      by
+      rcases Option.mem_map₂_iff.1 ha with ⟨a, b, rfl : _ = _, rfl : _ = _, rfl⟩
       exact ⟨_, rfl, inf_le_left⟩
-    inf_le_right := fun o₁ o₂ a ha => by
-      simp [map] at ha; rcases ha with ⟨b, rfl, c, rfl, rfl⟩
+    inf_le_right := fun o₁ o₂ a ha =>
+      by
+      rcases Option.mem_map₂_iff.1 ha with ⟨a, b, rfl : _ = _, rfl : _ = _, rfl⟩
       exact ⟨_, rfl, inf_le_right⟩
     le_inf := fun o₁ o₂ o₃ h₁ h₂ a ha => by
       cases ha
@@ -1771,14 +1774,15 @@ theorem coe_inf [SemilatticeInf α] (a b : α) : ((a ⊓ b : α) : WithTop α) =
 -/
 
 instance [SemilatticeSup α] : SemilatticeSup (WithTop α) :=
-  {
-    WithTop.partialOrder with
-    sup := fun o₁ o₂ => o₁.bind fun a => o₂.map fun b => a ⊔ b
-    le_sup_left := fun o₁ o₂ a ha => by
-      simp [map] at ha; rcases ha with ⟨b, rfl, c, rfl, rfl⟩
+  { WithTop.partialOrder with
+    sup := Option.map₂ (· ⊔ ·)
+    le_sup_left := fun o₁ o₂ a ha =>
+      by
+      rcases Option.mem_map₂_iff.1 ha with ⟨a, b, rfl : _ = _, rfl : _ = _, rfl⟩
       exact ⟨_, rfl, le_sup_left⟩
-    le_sup_right := fun o₁ o₂ a ha => by
-      simp [map] at ha; rcases ha with ⟨b, rfl, c, rfl, rfl⟩
+    le_sup_right := fun o₁ o₂ a ha =>
+      by
+      rcases Option.mem_map₂_iff.1 ha with ⟨a, b, rfl : _ = _, rfl : _ = _, rfl⟩
       exact ⟨_, rfl, le_sup_right⟩
     sup_le := fun o₁ o₂ o₃ h₁ h₂ a ha => by
       cases ha

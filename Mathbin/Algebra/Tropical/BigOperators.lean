@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 
 ! This file was ported from Lean 3 source module algebra.tropical.big_operators
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,7 +52,7 @@ theorem List.trop_sum [AddMonoid R] (l : List R) : trop l.Sum = List.prod (l.map
 
 theorem Multiset.trop_sum [AddCommMonoid R] (s : Multiset R) :
     trop s.Sum = Multiset.prod (s.map trop) :=
-  Quotient.induction_on s (by simpa using List.trop_sum)
+  Quotient.inductionOn s (by simpa using List.trop_sum)
 #align multiset.trop_sum Multiset.trop_sum
 
 theorem trop_sum [AddCommMonoid R] (s : Finset S) (f : S → R) :
@@ -73,7 +73,7 @@ theorem List.untrop_prod [AddMonoid R] (l : List (Tropical R)) :
 
 theorem Multiset.untrop_prod [AddCommMonoid R] (s : Multiset (Tropical R)) :
     untrop s.Prod = Multiset.sum (s.map untrop) :=
-  Quotient.induction_on s (by simpa using List.untrop_prod)
+  Quotient.inductionOn s (by simpa using List.untrop_prod)
 #align multiset.untrop_prod Multiset.untrop_prod
 
 theorem untrop_prod [AddCommMonoid R] (s : Finset S) (f : S → Tropical R) :

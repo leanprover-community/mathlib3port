@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.list.pairwise
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -454,12 +454,12 @@ theorem pairwise_iff_nthLe {R} :
 #align list.pairwise_iff_nth_le List.pairwise_iff_nthLe
 -/
 
-#print List.pairwise_repeat /-
-theorem pairwise_repeat {α : Type _} {r : α → α → Prop} {x : α} (hx : r x x) :
-    ∀ n : ℕ, Pairwise r (repeat x n)
+#print List.pairwise_replicate /-
+theorem pairwise_replicate {α : Type _} {r : α → α → Prop} {x : α} (hx : r x x) :
+    ∀ n : ℕ, Pairwise r (replicate n x)
   | 0 => by simp
-  | n + 1 => by simp [hx, mem_repeat, pairwise_repeat n]
-#align list.pairwise_repeat List.pairwise_repeat
+  | n + 1 => by simp [hx, mem_replicate, pairwise_replicate n]
+#align list.pairwise_replicate List.pairwise_replicate
 -/
 
 /-! ### Pairwise filtering -/

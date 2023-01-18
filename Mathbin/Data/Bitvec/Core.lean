@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joe Hendrix, Sebastian Ullrich
 
 ! This file was ported from Lean 3 source module data.bitvec.core
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -39,14 +39,14 @@ local infixl:65 "++ₜ" => Vector.append
 /-- Create a zero bitvector -/
 @[reducible]
 protected def zero (n : ℕ) : Bitvec n :=
-  repeat false n
+  replicate n false
 #align bitvec.zero Bitvec.zero
 
 /-- Create a bitvector of length `n` whose `n-1`st entry is 1 and other entries are 0. -/
 @[reducible]
 protected def one : ∀ n : ℕ, Bitvec n
   | 0 => nil
-  | succ n => repeat false n++ₜtt ::ᵥ nil
+  | succ n => replicate n false++ₜtt ::ᵥ nil
 #align bitvec.one Bitvec.one
 
 /-- Create a bitvector from another with a provably equal length. -/
@@ -69,7 +69,7 @@ variable {n : ℕ}
 /-- `shl x i` is the bitvector obtained by left-shifting `x` `i` times and padding with `ff`.
 If `x.length < i` then this will return the all-`ff`s bitvector. -/
 def shl (x : Bitvec n) (i : ℕ) : Bitvec n :=
-  Bitvec.cong (by simp) <| drop i x++ₜrepeat false (min n i)
+  Bitvec.cong (by simp) <| drop i x++ₜreplicate (min n i) false
 #align bitvec.shl Bitvec.shl
 
 /-- `fill_shr x i fill` is the bitvector obtained by right-shifting `x` `i` times and then
@@ -84,7 +84,7 @@ def fillShr (x : Bitvec n) (i : ℕ) (fill : Bool) : Bitvec n :=
           rw [min_eq_left h₁, ← add_tsub_assoc_of_le h, Nat.add_comm, add_tsub_cancel_right]
         · have h₁ := le_of_not_ge h
           rw [min_eq_left h₁, tsub_eq_zero_iff_le.mpr h₁, zero_min, Nat.add_zero]) <|
-    repeat fill (min n i)++ₜtake (n - i) x
+    replicate (min n i) fill++ₜtake (n - i) x
 #align bitvec.fill_shr Bitvec.fillShr
 
 /-- unsigned shift right -/

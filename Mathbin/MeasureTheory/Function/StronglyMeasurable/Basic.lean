@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.function.strongly_measurable.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1481,7 +1481,7 @@ theorem Multiset.aeStronglyMeasurableProd (s : Multiset (α → M))
 @[to_additive]
 theorem Finset.aeStronglyMeasurableProd' {ι : Type _} {f : ι → α → M} (s : Finset ι)
     (hf : ∀ i ∈ s, AeStronglyMeasurable (f i) μ) : AeStronglyMeasurable (∏ i in s, f i) μ :=
-  (Multiset.aeStronglyMeasurableProd' _) fun g hg =>
+  Multiset.aeStronglyMeasurableProd' _ fun g hg =>
     let ⟨i, hi, hg⟩ := Multiset.mem_map.1 hg
     hg ▸ hf _ hi
 #align finset.ae_strongly_measurable_prod' Finset.aeStronglyMeasurableProd'

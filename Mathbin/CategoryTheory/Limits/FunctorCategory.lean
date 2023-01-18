@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.limits.functor_category
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -383,7 +383,7 @@ def preservesLimitsOfEvaluation (F : D ⥤ K ⥤ C)
 
 /-- The constant functor `C ⥤ (D ⥤ C)` preserves limits. -/
 instance preservesLimitsConst : PreservesLimitsOfSize.{w', w} (const D : C ⥤ _) :=
-  (preservesLimitsOfEvaluation _) fun X =>
+  preservesLimitsOfEvaluation _ fun X =>
     preserves_limits_of_nat_iso <| iso.symm <| constCompEvaluationObj _ _
 #align category_theory.limits.preserves_limits_const CategoryTheory.Limits.preservesLimitsConst
 
@@ -425,7 +425,7 @@ def preservesColimitsOfEvaluation (F : D ⥤ K ⥤ C)
 
 /-- The constant functor `C ⥤ (D ⥤ C)` preserves colimits. -/
 instance preservesColimitsConst : PreservesColimitsOfSize.{w', w} (const D : C ⥤ _) :=
-  (preservesColimitsOfEvaluation _) fun X =>
+  preservesColimitsOfEvaluation _ fun X =>
     preserves_colimits_of_nat_iso <| iso.symm <| constCompEvaluationObj _ _
 #align category_theory.limits.preserves_colimits_const CategoryTheory.Limits.preservesColimitsConst
 

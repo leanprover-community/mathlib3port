@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Michael Howes
 
 ! This file was ported from Lean 3 source module group_theory.abelianization
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -93,7 +93,7 @@ attribute [local instance] QuotientGroup.leftRel
 instance : CommGroup (Abelianization G) :=
   { QuotientGroup.Quotient.group _ with
     mul_comm := fun x y =>
-      (Quotient.inductionOn₂' x y) fun a b =>
+      Quotient.inductionOn₂' x y fun a b =>
         Quotient.sound' <|
           QuotientGroup.left_rel_apply.mpr <|
             Subgroup.subset_closure
@@ -143,7 +143,7 @@ def lift : (G →* A) ≃ (Abelianization G →* A)
   toFun f := QuotientGroup.lift _ f fun x h => f.mem_ker.2 <| commutator_subset_ker _ h
   invFun F := F.comp of
   left_inv f := MonoidHom.ext fun x => rfl
-  right_inv F := MonoidHom.ext fun x => (QuotientGroup.induction_on x) fun z => rfl
+  right_inv F := MonoidHom.ext fun x => QuotientGroup.induction_on x fun z => rfl
 #align abelianization.lift Abelianization.lift
 
 @[simp]

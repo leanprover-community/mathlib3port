@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module number_theory.zsqrtd.gaussian_int
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -286,7 +286,7 @@ theorem mod_four_eq_three_of_nat_prime_of_prime (p : ℕ) [hp : Fact p.Prime]
   hp.1.eq_two_or_odd.elim
     (fun hp2 =>
       absurd hpi
-        ((mt irreducible_iff_prime.2) fun ⟨hu, h⟩ =>
+        (mt irreducible_iff_prime.2 fun ⟨hu, h⟩ =>
           by
           have := h ⟨1, 1⟩ ⟨1, -1⟩ (hp2.symm ▸ rfl)
           rw [← norm_eq_one_iff, ← norm_eq_one_iff] at this

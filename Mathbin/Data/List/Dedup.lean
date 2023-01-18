@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.list.dedup
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -128,14 +128,14 @@ theorem dedup_append (l₁ l₂ : List α) : dedup (l₁ ++ l₂) = l₁ ∪ ded
 #align list.dedup_append List.dedup_append
 -/
 
-#print List.repeat_dedup /-
-theorem repeat_dedup {x : α} : ∀ {k}, k ≠ 0 → (repeat x k).dedup = [x]
+#print List.replicate_dedup /-
+theorem replicate_dedup {x : α} : ∀ {k}, k ≠ 0 → (replicate k x).dedup = [x]
   | 0, h => (h rfl).elim
   | 1, _ => rfl
   | n + 2, _ => by
-    rw [repeat_succ, dedup_cons_of_mem (mem_repeat.2 ⟨n.succ_ne_zero, rfl⟩),
-      repeat_dedup n.succ_ne_zero]
-#align list.repeat_dedup List.repeat_dedup
+    rw [replicate_succ, dedup_cons_of_mem (mem_replicate.2 ⟨n.succ_ne_zero, rfl⟩),
+      replicate_dedup n.succ_ne_zero]
+#align list.replicate_dedup List.replicate_dedup
 -/
 
 #print List.count_dedup /-

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Louis Carlin, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.euclidean_domain.instances
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,7 +69,7 @@ instance (priority := 100) Field.toEuclideanDomain {K : Type _} [Field K] : Eucl
     R := fun a b => a = 0 ∧ b ≠ 0
     r_well_founded :=
       WellFounded.intro fun a =>
-        (Acc.intro _) fun b ⟨hb, hna⟩ => (Acc.intro _) fun c ⟨hc, hnb⟩ => False.elim <| hnb hb
+        Acc.intro _ fun b ⟨hb, hna⟩ => Acc.intro _ fun c ⟨hc, hnb⟩ => False.elim <| hnb hb
     remainder_lt := fun a b hnb => by simp [hnb]
     mul_left_not_lt := fun a b hnb ⟨hab, hna⟩ => Or.cases_on (mul_eq_zero.1 hab) hna hnb }
 #align field.to_euclidean_domain Field.toEuclideanDomain

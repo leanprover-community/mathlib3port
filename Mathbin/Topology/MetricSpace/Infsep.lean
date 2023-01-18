@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wrenna Robson
 
 ! This file was ported from Lean 3 source module topology.metric_space.infsep
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -205,7 +205,7 @@ theorem Finite.einfsep (hs : s.Finite) : s.einfsep = hs.offDiag.toFinset.inf (un
 
 theorem Finset.coe_einfsep [DecidableEq α] {s : Finset α} :
     (s : Set α).einfsep = s.offDiag.inf (uncurry edist) := by
-  simp_rw [einfsep_of_fintype, ← Finset.coe_off_diag, Finset.to_finset_coe]
+  simp_rw [einfsep_of_fintype, ← Finset.coe_offDiag, Finset.toFinset_coe]
 #align set.finset.coe_einfsep Set.Finset.coe_einfsep
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x y «expr ∈ » s) -/
@@ -543,9 +543,9 @@ theorem Finset.coe_infsep [DecidableEq α] (s : Finset α) :
     (s : Set α).infsep = if hs : s.offDiag.Nonempty then s.offDiag.inf' hs (uncurry dist) else 0 :=
   by
   have H : (s : Set α).Nontrivial ↔ s.off_diag.nonempty := by
-    rwa [← Set.offDiag_nonempty, ← Finset.coe_off_diag, Finset.coe_nonempty]
+    rwa [← Set.offDiag_nonempty, ← Finset.coe_offDiag, Finset.coe_nonempty]
   split_ifs with hs
-  · simp_rw [(H.mpr hs).infsep_of_fintype, ← Finset.coe_off_diag, Finset.to_finset_coe]
+  · simp_rw [(H.mpr hs).infsep_of_fintype, ← Finset.coe_offDiag, Finset.toFinset_coe]
   · exact (not_nontrivial_iff.mp (H.mp.mt hs)).infsep_zero
 #align finset.coe_infsep Finset.coe_infsep
 

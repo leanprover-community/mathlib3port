@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.operations
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -200,7 +200,7 @@ theorem bot_smul : (⊥ : Ideal R) • N = ⊥ :=
 
 @[simp]
 theorem top_smul : (⊤ : Ideal R) • N = N :=
-  (le_antisymm smul_le_right) fun r hri => one_smul R r ▸ smul_mem_smul mem_top hri
+  le_antisymm smul_le_right fun r hri => one_smul R r ▸ smul_mem_smul mem_top hri
 #align submodule.top_smul Submodule.top_smul
 
 theorem smul_sup : I • (N ⊔ P) = I • N ⊔ I • P :=
@@ -400,6 +400,22 @@ theorem infi_colon_supr (ι₁ : Sort w) (f : ι₁ → Submodule R M) (ι₂ : 
                 have := (mem_infi _).1 this j
                 this
 #align submodule.infi_colon_supr Submodule.infi_colon_supr
+
+@[simp]
+theorem mem_colon_singleton {N : Submodule R M} {x : M} {r : R} :
+    r ∈ N.colon (Submodule.span R {x}) ↔ r • x ∈ N :=
+  calc
+    r ∈ N.colon (Submodule.span R {x}) ↔ ∀ a : R, r • a • x ∈ N := by
+      simp [Submodule.mem_colon, Submodule.mem_span_singleton]
+    _ ↔ r • x ∈ N := by simp_rw [smul_comm r] <;> exact SetLike.forall_smul_mem_iff
+    
+#align submodule.mem_colon_singleton Submodule.mem_colon_singleton
+
+@[simp]
+theorem Ideal.mem_colon_singleton {I : Ideal R} {x r : R} :
+    r ∈ I.colon (Ideal.span {x}) ↔ r * x ∈ I := by
+  simp [← Ideal.submodule_span_eq, Submodule.mem_colon_singleton, smul_eq_mul]
+#align ideal.mem_colon_singleton Ideal.mem_colon_singleton
 
 end CommRing
 
@@ -667,7 +683,7 @@ theorem prod_le_inf {s : Finset ι} {f : ι → Ideal R} : s.Prod f ≤ s.inf f 
 #align ideal.prod_le_inf Ideal.prod_le_inf
 
 theorem mul_eq_inf_of_coprime (h : I ⊔ J = ⊤) : I * J = I ⊓ J :=
-  (le_antisymm mul_le_inf) fun r ⟨hri, hrj⟩ =>
+  le_antisymm mul_le_inf fun r ⟨hri, hrj⟩ =>
     let ⟨s, hsi, t, htj, hst⟩ := Submodule.mem_sup.1 ((eq_top_iff_one _).1 h)
     mul_one r ▸
       hst ▸
@@ -675,7 +691,7 @@ theorem mul_eq_inf_of_coprime (h : I ⊔ J = ⊤) : I * J = I ⊓ J :=
 #align ideal.mul_eq_inf_of_coprime Ideal.mul_eq_inf_of_coprime
 
 theorem sup_mul_eq_of_coprime_left (h : I ⊔ J = ⊤) : I ⊔ J * K = I ⊔ K :=
-  (le_antisymm (sup_le_sup_left mul_le_left _)) fun i hi =>
+  le_antisymm (sup_le_sup_left mul_le_left _) fun i hi =>
     by
     rw [eq_top_iff_one] at h; rw [Submodule.mem_sup] at h hi⊢
     obtain ⟨i1, hi1, j, hj, h⟩ := h; obtain ⟨i', hi', k, hk, hi⟩ := hi
@@ -711,7 +727,7 @@ theorem sup_infi_eq_top {s : Finset ι} {J : ι → Ideal R} (h : ∀ i, i ∈ s
     (I ⊔ ⨅ i ∈ s, J i) = ⊤ :=
   eq_top_iff.mpr <|
     le_of_eq_of_le (sup_prod_eq_top h).symm <|
-      sup_le_sup_left (le_of_le_of_eq prod_le_inf <| Finset.inf_eq_infi _ _) _
+      sup_le_sup_left (le_of_le_of_eq prod_le_inf <| Finset.inf_eq_infᵢ _ _) _
 #align ideal.sup_infi_eq_top Ideal.sup_infi_eq_top
 
 theorem prod_sup_eq_top {s : Finset ι} {J : ι → Ideal R} (h : ∀ i, i ∈ s → J i ⊔ I = ⊤) :
@@ -951,7 +967,7 @@ theorem IsPrime.radical_le_iff (hJ : IsPrime J) : radical I ≤ J ↔ I ≤ J :=
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ∉ » m) -/
 theorem radical_eq_Inf (I : Ideal R) : radical I = infₛ { J : Ideal R | I ≤ J ∧ IsPrime J } :=
-  (le_antisymm (le_infₛ fun J hJ => hJ.2.radical_le_iff.2 hJ.1)) fun r hr =>
+  le_antisymm (le_infₛ fun J hJ => hJ.2.radical_le_iff.2 hJ.1) fun r hr =>
     by_contradiction fun hri =>
       let ⟨m, (hrm : r ∉ radical m), him, hm⟩ :=
         zorn_nonempty_partialOrder₀ { K : Ideal R | r ∉ radical K }
@@ -1003,7 +1019,7 @@ instance : CommSemiring (Ideal R) :=
 variable (R)
 
 theorem top_pow (n : ℕ) : (⊤ ^ n : Ideal R) = ⊤ :=
-  (Nat.recOn n one_eq_top) fun n ih => by rw [pow_succ, ih, top_mul]
+  Nat.recOn n one_eq_top fun n ih => by rw [pow_succ, ih, top_mul]
 #align ideal.top_pow Ideal.top_pow
 
 variable {R}
@@ -1106,11 +1122,13 @@ theorem subset_union_prime' {R : Type u} [CommRing R] {s : Finset ι} {f : ι �
   suffices
     ((I : Set R) ⊆ f a ∪ f b ∪ ⋃ i ∈ (↑s : Set ι), f i) → I ≤ f a ∨ I ≤ f b ∨ ∃ i ∈ s, I ≤ f i from
     ⟨this, fun h =>
-      (Or.cases_on h fun h =>
+      Or.cases_on h
+        (fun h =>
           Set.Subset.trans h <|
             Set.Subset.trans (Set.subset_union_left _ _) (Set.subset_union_left _ _))
         fun h =>
-        (Or.cases_on h fun h =>
+        Or.cases_on h
+          (fun h =>
             Set.Subset.trans h <|
               Set.Subset.trans (Set.subset_union_right _ _) (Set.subset_union_left _ _))
           fun ⟨i, his, hi⟩ => by
@@ -1208,7 +1226,7 @@ theorem subset_union_prime' {R : Type u} [CommRing R] {s : Finset ι} {f : ι �
     · exact hri (add_sub_cancel r s ▸ (f i).sub_mem hi hsi)
     · rw [Set.mem_unionᵢ₂] at ht
       rcases ht with ⟨j, hjt, hj⟩
-      simp only [Finset.inf_eq_infi, SetLike.mem_coe, Submodule.mem_infi] at hr
+      simp only [Finset.inf_eq_infᵢ, SetLike.mem_coe, Submodule.mem_infi] at hr
       exact hs (Or.inr <| Set.mem_bunionᵢ hjt <| add_sub_cancel' r s ▸ (f j).sub_mem hj <| hr j hjt)
 #align ideal.subset_union_prime' Ideal.subset_union_prime'
 
@@ -1906,7 +1924,7 @@ def IsPrimary (I : Ideal R) : Prop :=
 #align ideal.is_primary Ideal.IsPrimary
 
 theorem IsPrime.is_primary {I : Ideal R} (hi : IsPrime I) : IsPrimary I :=
-  ⟨hi.1, fun x y hxy => ((hi.mem_or_mem hxy).imp id) fun hyi => le_radical hyi⟩
+  ⟨hi.1, fun x y hxy => (hi.mem_or_mem hxy).imp id fun hyi => le_radical hyi⟩
 #align ideal.is_prime.is_primary Ideal.IsPrime.is_primary
 
 theorem mem_radical_of_pow_mem {I : Ideal R} {x : R} {m : ℕ} (hx : x ^ m ∈ radical I) :
@@ -2145,7 +2163,7 @@ This is an isomorphism if `f` has a right inverse (`quotient_ker_equiv_of_right_
 is surjective (`quotient_ker_equiv_of_surjective`).
 -/
 def kerLift (f : R →+* S) : R ⧸ f.ker →+* S :=
-  (Ideal.Quotient.lift _ f) fun r => f.mem_ker.mp
+  Ideal.Quotient.lift _ f fun r => f.mem_ker.mp
 #align ring_hom.ker_lift RingHom.kerLift
 
 @[simp]
@@ -2155,7 +2173,7 @@ theorem ker_lift_mk (f : R →+* S) (r : R) : kerLift f (Ideal.Quotient.mk f.ker
 
 /-- The induced map from the quotient by the kernel is injective. -/
 theorem ker_lift_injective (f : R →+* S) : Function.Injective (kerLift f) := fun a b =>
-  (Quotient.inductionOn₂' a b) fun a b (h : f a = f b) =>
+  Quotient.inductionOn₂' a b fun a b (h : f a = f b) =>
     Ideal.Quotient.eq.2 <| show a - b ∈ ker f by rw [mem_ker, map_sub, h, sub_self]
 #align ring_hom.ker_lift_injective RingHom.ker_lift_injective
 
@@ -2405,7 +2423,7 @@ instance Quotient.algebra {I : Ideal A} : Algebra R₁ (A ⧸ I) :=
     toFun := fun x => Ideal.Quotient.mk I (algebraMap R₁ A x)
     smul := (· • ·)
     smul_def' := fun r x =>
-      (Quotient.inductionOn' x) fun x =>
+      Quotient.inductionOn' x fun x =>
         ((Quotient.mk I).congr_arg <| Algebra.smul_def _ _).trans (RingHom.map_mul _ _ _)
     commutes' := fun _ _ => mul_comm _ _ }
 #align ideal.quotient.algebra Ideal.Quotient.algebra

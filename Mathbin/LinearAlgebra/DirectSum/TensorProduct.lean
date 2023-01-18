@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro
 
 ! This file was ported from Lean 3 source module linear_algebra.direct_sum.tensor_product
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,11 +49,11 @@ def directSum : ((⨁ i₁, M₁ i₁) ⊗[R] ⨁ i₂, M₂ i₂) ≃ₗ[R] ⨁
   refine'
       LinearEquiv.ofLinear
         (lift <|
-          (DirectSum.toModule R _ _) fun i₁ =>
+          DirectSum.toModule R _ _ fun i₁ =>
             flip <|
-              (DirectSum.toModule R _ _) fun i₂ =>
+              DirectSum.toModule R _ _ fun i₂ =>
                 flip <| curry <| DirectSum.lof R (ι₁ × ι₂) (fun i => M₁ i.1 ⊗[R] M₂ i.2) (i₁, i₂))
-        ((DirectSum.toModule R _ _) fun i => map (DirectSum.lof R _ _ _) (DirectSum.lof R _ _ _)) _
+        (DirectSum.toModule R _ _ fun i => map (DirectSum.lof R _ _ _) (DirectSum.lof R _ _ _)) _
         _ <;>
     [ext (⟨i₁, i₂⟩x₁ x₂) : 4, ext (i₁ i₂ x₁ x₂) : 5]
   repeat'

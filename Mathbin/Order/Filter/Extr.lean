@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module order.filter.extr
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -309,12 +309,12 @@ theorem IsExtrOn.inter (hf : IsExtrOn f s a) (t) : IsExtrOn f (s ∩ t) a :=
 
 theorem IsMinFilter.comp_mono (hf : IsMinFilter f l a) {g : β → γ} (hg : Monotone g) :
     IsMinFilter (g ∘ f) l a :=
-  (mem_of_superset hf) fun x hx => hg hx
+  mem_of_superset hf fun x hx => hg hx
 #align is_min_filter.comp_mono IsMinFilter.comp_mono
 
 theorem IsMaxFilter.comp_mono (hf : IsMaxFilter f l a) {g : β → γ} (hg : Monotone g) :
     IsMaxFilter (g ∘ f) l a :=
-  (mem_of_superset hf) fun x hx => hg hx
+  mem_of_superset hf fun x hx => hg hx
 #align is_max_filter.comp_mono IsMaxFilter.comp_mono
 
 theorem IsExtrFilter.comp_mono (hf : IsExtrFilter f l a) {g : β → γ} (hg : Monotone g) :
@@ -370,13 +370,13 @@ theorem IsExtrOn.comp_antitone (hf : IsExtrOn f s a) {g : β → γ} (hg : Antit
 theorem IsMinFilter.bicomp_mono [Preorder δ] {op : β → γ → δ}
     (hop : ((· ≤ ·) ⇒ (· ≤ ·) ⇒ (· ≤ ·)) op op) (hf : IsMinFilter f l a) {g : α → γ}
     (hg : IsMinFilter g l a) : IsMinFilter (fun x => op (f x) (g x)) l a :=
-  (mem_of_superset (inter_mem hf hg)) fun x ⟨hfx, hgx⟩ => hop hfx hgx
+  mem_of_superset (inter_mem hf hg) fun x ⟨hfx, hgx⟩ => hop hfx hgx
 #align is_min_filter.bicomp_mono IsMinFilter.bicomp_mono
 
 theorem IsMaxFilter.bicomp_mono [Preorder δ] {op : β → γ → δ}
     (hop : ((· ≤ ·) ⇒ (· ≤ ·) ⇒ (· ≤ ·)) op op) (hf : IsMaxFilter f l a) {g : α → γ}
     (hg : IsMaxFilter g l a) : IsMaxFilter (fun x => op (f x) (g x)) l a :=
-  (mem_of_superset (inter_mem hf hg)) fun x ⟨hfx, hgx⟩ => hop hfx hgx
+  mem_of_superset (inter_mem hf hg) fun x ⟨hfx, hgx⟩ => hop hfx hgx
 #align is_max_filter.bicomp_mono IsMaxFilter.bicomp_mono
 
 -- No `extr` version because we need `hf` and `hg` to be of the same kind

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module tactic.monotonicity.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -143,7 +143,7 @@ unsafe instance : has_to_format MonoSelection :=
     | mono_selection.both => "both"⟩
 
 unsafe def side : lean.parser MonoSelection :=
-  (with_desc "expecting 'left', 'right' or 'both' (default)") do
+  with_desc "expecting 'left', 'right' or 'both' (default)" do
     let some n ← optional ident |
       pure MonoSelection.both
     if n = `left then pure <| mono_selection.left

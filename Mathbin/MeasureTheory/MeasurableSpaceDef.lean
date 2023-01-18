@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module measure_theory.measurable_space_def
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -111,13 +111,13 @@ theorem MeasurableSet.congr {s t : Set α} (hs : MeasurableSet s) (h : s = t) : 
 
 theorem MeasurableSet.bUnion_decode₂ [Encodable β] ⦃f : β → Set α⦄ (h : ∀ b, MeasurableSet (f b))
     (n : ℕ) : MeasurableSet (⋃ b ∈ decode₂ β n, f b) :=
-  Encodable.Union_decode₂_cases MeasurableSet.empty h
+  Encodable.unionᵢ_decode₂_cases MeasurableSet.empty h
 #align measurable_set.bUnion_decode₂ MeasurableSet.bUnion_decode₂
 
 theorem MeasurableSet.Union [Countable ι] ⦃f : ι → Set α⦄ (h : ∀ b, MeasurableSet (f b)) :
     MeasurableSet (⋃ b, f b) := by
   cases nonempty_encodable (PLift ι)
-  rw [← Union_plift_down, ← Encodable.Union_decode₂]
+  rw [← Union_plift_down, ← Encodable.unionᵢ_decode₂]
   exact ‹MeasurableSpace α›.measurable_set_Union _ (MeasurableSet.bUnion_decode₂ fun _ => h _)
 #align measurable_set.Union MeasurableSet.Union
 
@@ -302,11 +302,11 @@ theorem measurable_set_insert {a : α} {s : Set α} : MeasurableSet (insert a s)
 #align measurable_set_insert measurable_set_insert
 
 theorem Set.Subsingleton.measurable_set {s : Set α} (hs : s.Subsingleton) : MeasurableSet s :=
-  hs.induction_on MeasurableSet.empty measurable_set_singleton
+  hs.inductionOn MeasurableSet.empty measurable_set_singleton
 #align set.subsingleton.measurable_set Set.Subsingleton.measurable_set
 
 theorem Set.Finite.measurable_set {s : Set α} (hs : s.Finite) : MeasurableSet s :=
-  (Finite.induction_on hs MeasurableSet.empty) fun a s ha hsf hsm => hsm.insert _
+  Finite.induction_on hs MeasurableSet.empty fun a s ha hsf hsm => hsm.insert _
 #align set.finite.measurable_set Set.Finite.measurable_set
 
 protected theorem Finset.measurable_set (s : Finset α) : MeasurableSet (↑s : Set α) :=
@@ -383,7 +383,7 @@ theorem generate_from_le_iff {s : Set (Set α)} (m : MeasurableSpace α) :
 @[simp]
 theorem generate_from_measurable_set [MeasurableSpace α] :
     generateFrom { s : Set α | MeasurableSet s } = ‹_› :=
-  (le_antisymm (generate_from_le fun _ => id)) fun s => measurable_set_generate_from
+  le_antisymm (generate_from_le fun _ => id) fun s => measurable_set_generate_from
 #align measurable_space.generate_from_measurable_set MeasurableSpace.generate_from_measurable_set
 
 /-- If `g` is a collection of subsets of `α` such that the `σ`-algebra generated from `g` contains

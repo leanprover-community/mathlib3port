@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.measure.ae_measurable
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -253,6 +253,16 @@ protected theorem nullMeasurable (h : AeMeasurable f μ) : NullMeasurable f μ :
 
 end AeMeasurable
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x y) -/
+theorem aeMeasurableConst' (h : ∀ᵐ (x) (y) ∂μ, f x = f y) : AeMeasurable f μ :=
+  by
+  rcases eq_or_ne μ 0 with (rfl | hμ)
+  · exact aeMeasurableZeroMeasure
+  · haveI := ae_ne_bot.2 hμ
+    rcases h.exists with ⟨x, hx⟩
+    exact ⟨const α (f x), measurable_const, eventually_eq.symm hx⟩
+#align ae_measurable_const' aeMeasurableConst'
+
 theorem ae_measurable_uIoc_iff [LinearOrder α] {f : α → β} {a b : α} :
     (AeMeasurable f <| μ.restrict <| Ι a b) ↔
       (AeMeasurable f <| μ.restrict <| Ioc a b) ∧ (AeMeasurable f <| μ.restrict <| Ioc b a) :=
@@ -325,19 +335,16 @@ theorem aeMeasurableIoiOfForallIoc {β} {mβ : MeasurableSpace β} [LinearOrder 
     AeMeasurable g (μ.restrict (Ioi x)) :=
   by
   haveI : Nonempty α := ⟨x⟩
-  haveI : (at_top : Filter α).ne_bot := at_top_ne_bot
   obtain ⟨u, hu_tendsto⟩ := exists_seq_tendsto (at_top : Filter α)
   have Ioi_eq_Union : Ioi x = ⋃ n : ℕ, Ioc x (u n) :=
     by
     rw [Union_Ioc_eq_Ioi_self_iff.mpr _]
-    rw [tendsto_at_top_at_top] at hu_tendsto
-    exact fun y _ => ⟨(hu_tendsto y).some, (hu_tendsto y).some_spec (hu_tendsto y).some le_rfl⟩
+    exact fun y _ => (hu_tendsto.eventually (eventually_ge_at_top y)).exists
   rw [Ioi_eq_Union, ae_measurable_Union_iff]
   intro n
   cases lt_or_le x (u n)
   · exact g_meas (u n) h
-  · rw [Ioc_eq_empty (not_lt.mpr h)]
-    simp only [measure.restrict_empty]
+  · rw [Ioc_eq_empty (not_lt.mpr h), measure.restrict_empty]
     exact aeMeasurableZeroMeasure
 #align ae_measurable_Ioi_of_forall_Ioc aeMeasurableIoiOfForallIoc
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández Palacios
 
 ! This file was ported from Lean 3 source module set_theory.ordinal.natural_ops
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -193,8 +193,7 @@ Natural addition can equivalently be characterized as the ordinal resulting from
 corresponding coefficients in the Cantor normal forms of `a` and `b`. -/
 noncomputable def nadd : Ordinal → Ordinal → Ordinal
   | a, b =>
-    max ((blsub.{u, u} a) fun a' h => nadd a' b)
-      ((blsub.{u, u} b) fun b' h => nadd a b')decreasing_by
+    max (blsub.{u, u} a fun a' h => nadd a' b) (blsub.{u, u} b fun b' h => nadd a b')decreasing_by
   solve_by_elim [PSigma.Lex.left, PSigma.Lex.right]
 #align ordinal.nadd Ordinal.nadd
 
@@ -202,7 +201,7 @@ noncomputable def nadd : Ordinal → Ordinal → Ordinal
 scoped[NaturalOps] infixl:65 " ♯ " => Ordinal.nadd
 
 theorem nadd_def (a b : Ordinal) :
-    a ♯ b = max ((blsub.{u, u} a) fun a' h => a' ♯ b) ((blsub.{u, u} b) fun b' h => a ♯ b') := by
+    a ♯ b = max (blsub.{u, u} a fun a' h => a' ♯ b) (blsub.{u, u} b fun b' h => a ♯ b') := by
   rw [nadd]
 #align ordinal.nadd_def Ordinal.nadd_def
 

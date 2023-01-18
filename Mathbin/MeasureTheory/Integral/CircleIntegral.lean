@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.integral.circle_integral
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -205,7 +205,7 @@ theorem deriv_circle_map_ne_zero {c : ℂ} {R : ℝ} {θ : ℝ} (hR : R ≠ 0) :
 #align deriv_circle_map_ne_zero deriv_circle_map_ne_zero
 
 theorem lipschitz_with_circle_map (c : ℂ) (R : ℝ) : LipschitzWith R.nnabs (circleMap c R) :=
-  (lipschitz_with_of_nnnorm_deriv_le (differentiable_circle_map _ _)) fun θ =>
+  lipschitz_with_of_nnnorm_deriv_le (differentiable_circle_map _ _) fun θ =>
     Nnreal.coe_le_coe.1 <| by simp
 #align lipschitz_with_circle_map lipschitz_with_circle_map
 
@@ -347,7 +347,7 @@ theorem circle_integrable_sub_zpow_iff {c w : ℂ} {R : ℝ} {n : ℤ} :
     exact hn
   · rintro (rfl | H)
     exacts[circle_integrable_zero_radius,
-      (((continuous_on_id.sub continuous_on_const).zpow₀ _) fun z hz =>
+      ((continuous_on_id.sub continuous_on_const).zpow₀ _ fun z hz =>
           H.symm.imp_left fun hw => sub_ne_zero.2 <| ne_of_mem_of_not_mem hz hw).circle_integrable']
 #align circle_integrable_sub_zpow_iff circle_integrable_sub_zpow_iff
 

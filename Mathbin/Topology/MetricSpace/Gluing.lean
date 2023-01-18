@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.gluing
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -619,7 +619,7 @@ def gluePremetric (hΦ : Isometry Φ) (hΨ : Isometry Ψ) : PseudoMetricSpace (S
   dist := glueDist Φ Ψ 0
   dist_self := glue_dist_self Φ Ψ 0
   dist_comm := glue_dist_comm Φ Ψ 0
-  dist_triangle := (glue_dist_triangle Φ Ψ 0) fun p q => by rw [hΦ.dist_eq, hΨ.dist_eq] <;> simp
+  dist_triangle := glue_dist_triangle Φ Ψ 0 fun p q => by rw [hΦ.dist_eq, hΨ.dist_eq] <;> simp
 #align metric.glue_premetric Metric.gluePremetric
 
 /-- Given two isometric embeddings `Φ : Z → X` and `Ψ : Z → Y`, we define a

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module topology.sets.opens
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -332,7 +332,7 @@ theorem is_compact_element_iff (s : Opens α) :
   · introv H hU hU'
     obtain ⟨t, ht⟩ := H ι (fun i => ⟨U i, hU i⟩) (by simpa)
     refine' ⟨t, Set.Subset.trans ht _⟩
-    rw [coe_finset_sup, Finset.sup_eq_supr]
+    rw [coe_finset_sup, Finset.sup_eq_supᵢ]
     rfl
   · obtain ⟨t, ht⟩ :=
       H (fun i => U i) (fun i => (U i).Prop) (by simpa using show (s : Set α) ⊆ ↑(supᵢ U) from hU)

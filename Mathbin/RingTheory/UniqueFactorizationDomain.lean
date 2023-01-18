@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jens Wagemaker, Aaron Anderson
 
 ! This file was ported from Lean 3 source module ring_theory.unique_factorization_domain
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -739,7 +739,7 @@ theorem normalized_factors_pow {x : α} (n : ℕ) :
   unique_factorization_monoid.normalized_factors_pow UniqueFactorizationMonoid.normalized_factors_pow
 
 theorem Irreducible.normalized_factors_pow {p : α} (hp : Irreducible p) (k : ℕ) :
-    normalizedFactors (p ^ k) = Multiset.repeat (normalize p) k := by
+    normalizedFactors (p ^ k) = Multiset.replicate k (normalize p) := by
   rw [normalized_factors_pow, normalized_factors_irreducible hp, Multiset.nsmul_singleton]
 #align irreducible.normalized_factors_pow Irreducible.normalized_factors_pow
 
@@ -785,7 +785,7 @@ theorem associated_iff_normalized_factors_eq_normalized_factors {x y : α} (hx :
   unique_factorization_monoid.associated_iff_normalized_factors_eq_normalized_factors UniqueFactorizationMonoid.associated_iff_normalized_factors_eq_normalized_factors
 
 theorem normalized_factors_of_irreducible_pow {p : α} (hp : Irreducible p) (k : ℕ) :
-    normalizedFactors (p ^ k) = Multiset.repeat (normalize p) k := by
+    normalizedFactors (p ^ k) = Multiset.replicate k (normalize p) := by
   rw [normalized_factors_pow, normalized_factors_irreducible hp, Multiset.nsmul_singleton]
 #align
   unique_factorization_monoid.normalized_factors_of_irreducible_pow UniqueFactorizationMonoid.normalized_factors_of_irreducible_pow
@@ -809,7 +809,7 @@ theorem exists_associated_prime_pow_of_unique_normalized_factor {p r : α}
   by
   use (normalized_factors r).card
   have := UniqueFactorizationMonoid.normalized_factors_prod hr
-  rwa [Multiset.eq_repeat_of_mem fun b => h, Multiset.prod_repeat] at this
+  rwa [Multiset.eq_replicate_of_mem fun b => h, Multiset.prod_replicate] at this
 #align
   unique_factorization_monoid.exists_associated_prime_pow_of_unique_normalized_factor UniqueFactorizationMonoid.exists_associated_prime_pow_of_unique_normalized_factor
 
@@ -1029,8 +1029,8 @@ open multiplicity Multiset
 
 include dec_dvd
 
-theorem le_multiplicity_iff_repeat_le_normalized_factors {a b : R} {n : ℕ} (ha : Irreducible a)
-    (hb : b ≠ 0) : ↑n ≤ multiplicity a b ↔ repeat (normalize a) n ≤ normalizedFactors b :=
+theorem le_multiplicity_iff_replicate_le_normalized_factors {a b : R} {n : ℕ} (ha : Irreducible a)
+    (hb : b ≠ 0) : ↑n ≤ multiplicity a b ↔ replicate n (normalize a) ≤ normalizedFactors b :=
   by
   rw [← pow_dvd_iff_le_multiplicity]
   revert b
@@ -1039,15 +1039,15 @@ theorem le_multiplicity_iff_repeat_le_normalized_factors {a b : R} {n : ℕ} (ha
   constructor
   · rintro ⟨c, rfl⟩
     rw [Ne.def, pow_succ, mul_assoc, mul_eq_zero, Decidable.not_or_iff_and_not] at hb
-    rw [pow_succ, mul_assoc, normalized_factors_mul hb.1 hb.2, repeat_succ,
+    rw [pow_succ, mul_assoc, normalized_factors_mul hb.1 hb.2, replicate_succ,
       normalized_factors_irreducible ha, singleton_add, cons_le_cons_iff, ← ih hb.2]
     apply Dvd.intro _ rfl
   · rw [Multiset.le_iff_exists_add]
     rintro ⟨u, hu⟩
-    rw [← (normalized_factors_prod hb).dvd_iff_dvd_right, hu, prod_add, prod_repeat]
+    rw [← (normalized_factors_prod hb).dvd_iff_dvd_right, hu, prod_add, prod_replicate]
     exact (Associated.pow_pow <| associated_normalize a).Dvd.trans (Dvd.intro u.prod rfl)
 #align
-  unique_factorization_monoid.le_multiplicity_iff_repeat_le_normalized_factors UniqueFactorizationMonoid.le_multiplicity_iff_repeat_le_normalized_factors
+  unique_factorization_monoid.le_multiplicity_iff_replicate_le_normalized_factors UniqueFactorizationMonoid.le_multiplicity_iff_replicate_le_normalized_factors
 
 /-- The multiplicity of an irreducible factor of a nonzero element is exactly the number of times
 the normalized factor occurs in the `normalized_factors`.
@@ -1061,9 +1061,9 @@ theorem multiplicity_eq_count_normalized_factors {a b : R} (ha : Irreducible a) 
   apply le_antisymm
   · apply PartEnat.le_of_lt_add_one
     rw [← Nat.cast_one, ← Nat.cast_add, lt_iff_not_ge, ge_iff_le,
-      le_multiplicity_iff_repeat_le_normalized_factors ha hb, ← le_count_iff_repeat_le]
+      le_multiplicity_iff_replicate_le_normalized_factors ha hb, ← le_count_iff_replicate_le]
     simp
-  rw [le_multiplicity_iff_repeat_le_normalized_factors ha hb, ← le_count_iff_repeat_le]
+  rw [le_multiplicity_iff_replicate_le_normalized_factors ha hb, ← le_count_iff_replicate_le]
 #align
   unique_factorization_monoid.multiplicity_eq_count_normalized_factors UniqueFactorizationMonoid.multiplicity_eq_count_normalized_factors
 
@@ -1178,7 +1178,7 @@ theorem induction_on_coprime {P : α → Prop} (a : α) (h0 : P 0) (h1 : ∀ {x}
   letI : NormalizationMonoid α := UniqueFactorizationMonoid.normalizationMonoid
   refine' P_of_associated (normalized_factors_prod ha0) _
   rw [← (normalized_factors a).map_id, Finset.prod_multiset_map_count]
-  refine' induction_on_prime_power _ _ _ _ @h1 @hpr @hcp <;> simp only [Multiset.mem_to_finset]
+  refine' induction_on_prime_power _ _ _ _ @h1 @hpr @hcp <;> simp only [Multiset.mem_toFinset]
   · apply prime_of_normalized_factor
   · apply normalized_factors_eq_of_dvd
 #align
@@ -1255,13 +1255,13 @@ theorem multiplicative_of_coprime (f : α → β) (a b : α) (h0 : f 0 = 0)
       Finset.prod_subset (Finset.subset_union_right _ (normalized_factors b).toFinset), ←
       Finset.prod_mul_distrib]
     simp_rw [id.def, ← pow_add, this]
-    all_goals simp only [Multiset.mem_to_finset]
+    all_goals simp only [Multiset.mem_toFinset]
     · intro p hpab hpb
       simp [hpb]
     · intro p hpab hpa
       simp [hpa]
   refine' multiplicative_prime_power _ _ _ _ _ @h1 @hpr @hcp
-  all_goals simp only [Multiset.mem_to_finset, Finset.mem_union]
+  all_goals simp only [Multiset.mem_toFinset, Finset.mem_union]
   · rintro p (hpa | hpb) <;> apply prime_of_normalized_factor <;> assumption
   ·
     rintro p (hp | hp) q (hq | hq) hdvd <;>
@@ -1547,7 +1547,7 @@ theorem factors_mk (a : α) (h : a ≠ 0) : (Associates.mk a).factors = factors'
 
 @[simp]
 theorem factors_prod (a : Associates α) : a.factors.Prod = a :=
-  (Quotient.induction_on a) fun a =>
+  Quotient.inductionOn a fun a =>
     Decidable.byCases (fun this : Associates.mk a = 0 => by simp [quotient_mk_eq_mk, this])
       fun this : Associates.mk a ≠ 0 =>
       by
@@ -1810,10 +1810,10 @@ theorem factors_self [Nontrivial α] {p : Associates α} (hp : Irreducible p) :
 #align associates.factors_self Associates.factors_self
 
 theorem factors_prime_pow [Nontrivial α] {p : Associates α} (hp : Irreducible p) (k : ℕ) :
-    factors (p ^ k) = some (Multiset.repeat ⟨p, hp⟩ k) :=
+    factors (p ^ k) = some (Multiset.replicate k ⟨p, hp⟩) :=
   eq_of_prod_eq_prod
     (by
-      rw [Associates.factors_prod, factor_set.prod, Multiset.map_repeat, Multiset.prod_repeat,
+      rw [Associates.factors_prod, factor_set.prod, Multiset.map_replicate, Multiset.prod_replicate,
         Subtype.coe_mk])
 #align associates.factors_prime_pow Associates.factors_prime_pow
 
@@ -1823,7 +1823,7 @@ theorem prime_pow_dvd_iff_le [Nontrivial α] {m p : Associates α} (h₁ : m ≠
     {k : ℕ} : p ^ k ≤ m ↔ k ≤ count p m.factors :=
   by
   obtain ⟨a, nz, rfl⟩ := Associates.exists_non_zero_rep h₁
-  rw [factors_mk _ nz, ← WithTop.some_eq_coe, count_some, Multiset.le_count_iff_repeat_le, ←
+  rw [factors_mk _ nz, ← WithTop.some_eq_coe, count_some, Multiset.le_count_iff_replicate_le, ←
     factors_le, factors_prime_pow h₂, factors_mk _ nz]
   exact WithTop.coe_le_coe
 #align associates.prime_pow_dvd_iff_le Associates.prime_pow_dvd_iff_le
@@ -2141,7 +2141,7 @@ noncomputable def fintypeSubtypeDvd {M : Type _} [CancelCommMonoidWithZero M]
         (s.snd : M) * s.fst.prod)
       fun x => _
   simp only [exists_prop, Finset.mem_image, Finset.mem_product, Finset.mem_univ, and_true_iff,
-    Multiset.mem_to_finset, Multiset.mem_powerset, exists_eq_right, Multiset.mem_map]
+    Multiset.mem_toFinset, Multiset.mem_powerset, exists_eq_right, Multiset.mem_map]
   constructor
   · rintro ⟨s, hs, rfl⟩
     have prod_s_ne : s.fst.prod ≠ 0 := by

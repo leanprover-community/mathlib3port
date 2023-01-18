@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module measure_theory.measure.content
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -200,7 +200,7 @@ theorem inner_content_Sup_nat [T2Space G] (U : ℕ → Opens G) :
   let L : ℕ → compacts G := fun n => ⟨K' n, h1K' n⟩
   convert le_trans (h3 t L) _
   · ext1
-    rw [compacts.coe_finset_sup, Finset.sup_eq_supr]
+    rw [compacts.coe_finset_sup, Finset.sup_eq_supᵢ]
     exact h3K'
   refine' le_trans (Finset.sum_le_sum _) (Ennreal.sum_le_tsum t)
   intro i hi

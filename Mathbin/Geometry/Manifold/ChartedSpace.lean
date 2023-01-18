@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module geometry.manifold.charted_space
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -757,10 +757,10 @@ instance piChartedSpace {ι : Type _} [Fintype ι] (H : ι → Type _) [∀ i, T
     (M : ι → Type _) [∀ i, TopologicalSpace (M i)] [∀ i, ChartedSpace (H i) (M i)] :
     ChartedSpace (ModelPi H) (∀ i, M i)
     where
-  atlas := LocalHomeomorph.pi '' (Set.pi univ) fun i => atlas (H i) (M i)
+  atlas := LocalHomeomorph.pi '' Set.pi univ fun i => atlas (H i) (M i)
   chartAt f := LocalHomeomorph.pi fun i => chartAt (H i) (f i)
   mem_chart_source f i hi := mem_chart_source (H i) (f i)
-  chart_mem_atlas f := (mem_image_of_mem _) fun i hi => chart_mem_atlas (H i) (f i)
+  chart_mem_atlas f := mem_image_of_mem _ fun i hi => chart_mem_atlas (H i) (f i)
 #align pi_charted_space piChartedSpace
 
 @[simp, mfld_simps]

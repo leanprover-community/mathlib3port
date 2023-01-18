@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Parikshit Khanna, Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.list.defs
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,6 +34,15 @@ variable {α β γ δ ε ζ : Type _}
 
 instance [DecidableEq α] : SDiff (List α) :=
   ⟨List.diff⟩
+
+#print List.replicate /-
+/-- Create a list of `n` copies of `a`. Same as `function.swap list.repeat`. -/
+@[simp]
+def replicate : ℕ → α → List α
+  | 0, _ => []
+  | succ n, a => a :: replicate n a
+#align list.replicate List.replicate
+-/
 
 #print List.splitAt /-
 /-- Split a list at an index.
@@ -110,25 +119,21 @@ Case conversion may be inaccurate. Consider using '#align list.to_array List.toA
 def toArray (l : List α) : Array' l.length α where data v := l.nthLe v.1 v.2
 #align list.to_array List.toArray
 
-/- warning: list.nthd -> List.getD is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}}, α -> (List.{u1} α) -> Nat -> α
-but is expected to have type
-  forall {α : Type.{u1}}, (List.{u1} α) -> Nat -> α -> α
-Case conversion may be inaccurate. Consider using '#align list.nthd List.getDₓ'. -/
+#print List.getD /-
 /-- "default" `nth` function: returns `d` instead of `none` in the case
   that the index is out of bounds. -/
-def getD (d : α) : ∀ (l : List α) (n : ℕ), α
-  | [], _ => d
-  | x :: xs, 0 => x
-  | x :: xs, n + 1 => nthd xs n
+def getD : ∀ (l : List α) (n : ℕ) (d : α), α
+  | [], _, d => d
+  | x :: xs, 0, d => x
+  | x :: xs, n + 1, d => nthd xs n d
 #align list.nthd List.getD
+-/
 
 #print List.getI /-
 /-- "inhabited" `nth` function: returns `default` instead of `none` in the case
   that the index is out of bounds. -/
 def getI [h : Inhabited α] (l : List α) (n : Nat) : α :=
-  getD default l n
+  getD l n default
 #align list.inth List.getI
 -/
 
@@ -636,6 +641,12 @@ def tails : List α → List (List α)
 #align list.tails List.tails
 -/
 
+/- warning: list.sublists'_aux -> List.sublists'Aux is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {β : Type.{u_2}}, (List.{u_1} α) -> ((List.{u_1} α) -> (List.{u_2} β)) -> (List.{u_2} (List.{u_2} β)) -> (List.{u_2} (List.{u_2} β))
+but is expected to have type
+  forall {α : Type.{u}}, α -> (List.{u} (List.{u} α)) -> (List.{u} (List.{u} α)) -> (List.{u} (List.{u} α))
+Case conversion may be inaccurate. Consider using '#align list.sublists'_aux List.sublists'Auxₓ'. -/
 def sublists'Aux : List α → (List α → List β) → List (List β) → List (List β)
   | [], f, r => f [] :: r
   | a :: l, f, r => sublists'_aux l f (sublists'_aux l (f ∘ cons a) r)
@@ -653,6 +664,12 @@ def sublists' (l : List α) : List (List α) :=
 #align list.sublists' List.sublists'
 -/
 
+/- warning: list.sublists_aux -> List.sublistsAux is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {β : Type.{u_2}}, (List.{u_1} α) -> ((List.{u_1} α) -> (List.{u_2} β) -> (List.{u_2} β)) -> (List.{u_2} β)
+but is expected to have type
+  forall {α : Type.{u}}, α -> (List.{u} (List.{u} α)) -> (List.{u} (List.{u} α))
+Case conversion may be inaccurate. Consider using '#align list.sublists_aux List.sublistsAuxₓ'. -/
 def sublistsAux : List α → (List α → List β → List β) → List β
   | [], f => []
   | a :: l, f => f [a] (sublists_aux l fun ys r => f ys (f (a :: ys) r))
@@ -668,12 +685,10 @@ def sublists (l : List α) : List (List α) :=
 #align list.sublists List.sublists
 -/
 
-#print List.sublistsAux₁ /-
 def sublistsAux₁ : List α → (List α → List β) → List β
   | [], f => []
   | a :: l, f => f [a] ++ sublists_aux₁ l fun ys => f ys ++ f (a :: ys)
 #align list.sublists_aux₁ List.sublistsAux₁
--/
 
 section Forall₂
 
@@ -731,7 +746,7 @@ def transpose : List (List α) → List (List α)
   `L₁`, whose second element comes from `L₂`, and so on. -/
 def sections : List (List α) → List (List α)
   | [] => [[]]
-  | l :: L => (bind (sections L)) fun s => map (fun a => a :: s) l
+  | l :: L => bind (sections L) fun s => map (fun a => a :: s) l
 #align list.sections List.sections
 -/
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module algebra.associated
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -898,7 +898,7 @@ theorem associated_of_dvd_dvd [CancelMonoidWithZero α] {a b : α} (hab : a ∣ 
   · simp_all
   have hac0 : a * c ≠ 0 := by
     intro con
-    rw [con, zero_mul] at a_eq
+    rw [Con, zero_mul] at a_eq
     apply ha0 a_eq
   have : a * (c * d) = a * 1 := by rw [← mul_assoc, ← a_eq, mul_one]
   have hcd : c * d = 1 := mul_left_cancel₀ ha0 this
@@ -1194,7 +1194,7 @@ theorem quot_mk_eq_mk [Monoid α] (a : α) : Quot.mk Setoid.r a = Associates.mk 
 #print Associates.forall_associated /-
 theorem forall_associated [Monoid α] {p : Associates α → Prop} :
     (∀ a, p a) ↔ ∀ a, p (Associates.mk a) :=
-  Iff.intro (fun h a => h _) fun h a => Quotient.induction_on a h
+  Iff.intro (fun h a => h _) fun h a => Quotient.inductionOn a h
 #align associates.forall_associated Associates.forall_associated
 -/
 
@@ -1267,7 +1267,7 @@ variable [CommMonoid α]
 
 instance : Mul (Associates α) :=
   ⟨fun a' b' =>
-    (Quotient.liftOn₂ a' b' fun a b => ⟦a * b⟧) fun a₁ a₂ b₁ b₂ ⟨c₁, h₁⟩ ⟨c₂, h₂⟩ =>
+    Quotient.liftOn₂ a' b' (fun a b => ⟦a * b⟧) fun a₁ a₂ b₁ b₂ ⟨c₁, h₁⟩ ⟨c₂, h₂⟩ =>
       Quotient.sound <| ⟨c₁ * c₂, by simp [h₁.symm, h₂.symm, mul_assoc, mul_comm, mul_left_comm]⟩⟩
 
 /- warning: associates.mk_mul_mk -> Associates.mk_mul_mk is a dubious translation:
@@ -1283,13 +1283,11 @@ theorem mk_mul_mk {x y : α} : Associates.mk x * Associates.mk y = Associates.mk
 instance : CommMonoid (Associates α) where
   one := 1
   mul := (· * ·)
-  mul_one a' := (Quotient.induction_on a') fun a => show ⟦a * 1⟧ = ⟦a⟧ by simp
-  one_mul a' := (Quotient.induction_on a') fun a => show ⟦1 * a⟧ = ⟦a⟧ by simp
+  mul_one a' := Quotient.inductionOn a' fun a => show ⟦a * 1⟧ = ⟦a⟧ by simp
+  one_mul a' := Quotient.inductionOn a' fun a => show ⟦1 * a⟧ = ⟦a⟧ by simp
   mul_assoc a' b' c' :=
-    (Quotient.induction_on₃ a' b' c') fun a b c =>
-      show ⟦a * b * c⟧ = ⟦a * (b * c)⟧ by rw [mul_assoc]
-  mul_comm a' b' :=
-    (Quotient.induction_on₂ a' b') fun a b => show ⟦a * b⟧ = ⟦b * a⟧ by rw [mul_comm]
+    Quotient.induction_on₃ a' b' c' fun a b c => show ⟦a * b * c⟧ = ⟦a * (b * c)⟧ by rw [mul_assoc]
+  mul_comm a' b' := Quotient.induction_on₂ a' b' fun a b => show ⟦a * b⟧ = ⟦b * a⟧ by rw [mul_comm]
 
 instance : Preorder (Associates α) where
   le := Dvd.Dvd
@@ -1357,7 +1355,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align associates.mul_eq_one_iff Associates.mul_eq_one_iffₓ'. -/
 theorem mul_eq_one_iff {x y : Associates α} : x * y = 1 ↔ x = 1 ∧ y = 1 :=
   Iff.intro
-    ((Quotient.induction_on₂ x y) fun a b h =>
+    (Quotient.induction_on₂ x y fun a b h =>
       have : a * b ~ᵤ 1 := Quotient.exact h
       ⟨Quotient.sound <| associated_one_of_associated_mul_one this,
         Quotient.sound <| associated_one_of_associated_mul_one <| by rwa [mul_comm] at this⟩)
@@ -1486,7 +1484,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align associates.dvd_of_mk_le_mk Associates.dvd_of_mk_le_mkₓ'. -/
 theorem dvd_of_mk_le_mk {a b : α} : Associates.mk a ≤ Associates.mk b → a ∣ b
   | ⟨c', hc'⟩ =>
-    ((Quotient.induction_on c') fun c hc =>
+    (Quotient.inductionOn c' fun c hc =>
         let ⟨d, hd⟩ := (Quotient.exact hc).symm
         ⟨↑d * c,
           calc
@@ -1572,7 +1570,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : MonoidWithZero.{u1} α] {a : Associates.{u1} α (MonoidWithZero.toMonoid.{u1} α _inst_1)}, (Ne.{succ u1} (Associates.{u1} α (MonoidWithZero.toMonoid.{u1} α _inst_1)) a (OfNat.ofNat.{u1} (Associates.{u1} α (MonoidWithZero.toMonoid.{u1} α _inst_1)) 0 (Zero.toOfNat0.{u1} (Associates.{u1} α (MonoidWithZero.toMonoid.{u1} α _inst_1)) (Associates.instZeroAssociates.{u1} α (MonoidWithZero.toZero.{u1} α _inst_1) (MonoidWithZero.toMonoid.{u1} α _inst_1))))) -> (Exists.{succ u1} α (fun (a0 : α) => And (Ne.{succ u1} α a0 (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α _inst_1)))) (Eq.{succ u1} (Associates.{u1} α (MonoidWithZero.toMonoid.{u1} α _inst_1)) (Associates.mk.{u1} α (MonoidWithZero.toMonoid.{u1} α _inst_1) a0) a)))
 Case conversion may be inaccurate. Consider using '#align associates.exists_non_zero_rep Associates.exists_non_zero_repₓ'. -/
 theorem exists_non_zero_rep {a : Associates α} : a ≠ 0 → ∃ a0 : α, a0 ≠ 0 ∧ Associates.mk a0 = a :=
-  Quotient.induction_on a fun b nz => ⟨b, mt (congr_arg Quotient.mk'') nz, rfl⟩
+  Quotient.inductionOn a fun b nz => ⟨b, mt (congr_arg Quotient.mk'') nz, rfl⟩
 #align associates.exists_non_zero_rep Associates.exists_non_zero_rep
 
 end MonoidWithZero
@@ -1737,7 +1735,7 @@ instance : OrderedCommMonoid (Associates α) :=
 
 instance : NoZeroDivisors (Associates α) :=
   ⟨fun x y =>
-    (Quotient.induction_on₂ x y) fun a b h =>
+    Quotient.induction_on₂ x y fun a b h =>
       have : a * b = 0 := (associated_zero_iff_eq_zero _).1 (Quotient.exact h)
       have : a = 0 ∨ b = 0 := mul_eq_zero.1 this
       this.imp (fun h => h.symm ▸ rfl) fun h => h.symm ▸ rfl⟩
@@ -1770,14 +1768,14 @@ theorem one_or_eq_of_le_of_prime : ∀ p m : Associates α, Prime p → m ≤ p 
   | _, m, ⟨hp0, hp1, h⟩, ⟨d, rfl⟩ =>
     match h m d dvd_rfl with
     | Or.inl h =>
-      (by_cases fun this : m = 0 => by simp [this]) fun this : m ≠ 0 =>
+      by_cases (fun this : m = 0 => by simp [this]) fun this : m ≠ 0 =>
         by
         have : m * d ≤ m * 1 := by simpa using h
         have : d ≤ 1 := Associates.le_of_mul_le_mul_left m d 1 ‹m ≠ 0› this
         have : d = 1 := bot_unique this
         simp [this]
     | Or.inr h =>
-      (by_cases fun this : d = 0 => by simp [this] at hp0 <;> contradiction) fun this : d ≠ 0 =>
+      by_cases (fun this : d = 0 => by simp [this] at hp0 <;> contradiction) fun this : d ≠ 0 =>
         have : d * m ≤ d * 1 := by simpa [mul_comm] using h
         Or.inl <| bot_unique <| Associates.le_of_mul_le_mul_left d m 1 ‹d ≠ 0› this
 #align associates.one_or_eq_of_le_of_prime Associates.one_or_eq_of_le_of_prime
@@ -1922,5 +1920,5 @@ theorem dvd_prime_pow [CancelCommMonoidWithZero α] {p q : α} (hp : Prime p) (n
 
 end CancelCommMonoidWithZero
 
-assert_not_exists multiset
+assert_not_exists Multiset
 

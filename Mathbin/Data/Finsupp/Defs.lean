@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Scott Morrison
 
 ! This file was ported from Lean 3 source module data.finsupp.defs
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -703,7 +703,7 @@ bundled (defined in `data/finsupp/basic`):
 * `finsupp.map_range.linear_equiv`
 -/
 def mapRange (f : M → N) (hf : f 0 = 0) (g : α →₀ M) : α →₀ N :=
-  (onFinset g.support (f ∘ g)) fun a => by
+  onFinset g.support (f ∘ g) fun a => by
     rw [mem_support_iff, not_imp_not] <;> exact fun H => (congr_arg f H).trans hf
 #align finsupp.map_range Finsupp.mapRange
 
@@ -870,7 +870,7 @@ variable [Zero M] [Zero N] [Zero P]
 `zip_with f hf g₁ g₂` is the finitely supported function `α →₀ P` satisfying
 `zip_with f hf g₁ g₂ a = f (g₁ a) (g₂ a)`, which is well-defined when `f 0 0 = 0`. -/
 def zipWith (f : M → N → P) (hf : f 0 0 = 0) (g₁ : α →₀ M) (g₂ : α →₀ N) : α →₀ P :=
-  (onFinset (g₁.support ∪ g₂.support) fun a => f (g₁ a) (g₂ a)) fun a H =>
+  onFinset (g₁.support ∪ g₂.support) (fun a => f (g₁ a) (g₂ a)) fun a H =>
     by
     simp only [mem_union, mem_support_iff, Ne]; rw [← not_and_or]
     rintro ⟨h₁, h₂⟩; rw [h₁, h₂] at H; exact H hf
@@ -915,7 +915,7 @@ theorem support_add [DecidableEq α] {g₁ g₂ : α →₀ M} :
 
 theorem support_add_eq [DecidableEq α] {g₁ g₂ : α →₀ M} (h : Disjoint g₁.support g₂.support) :
     (g₁ + g₂).support = g₁.support ∪ g₂.support :=
-  (le_antisymm support_zip_with) fun a ha =>
+  le_antisymm support_zip_with fun a ha =>
     (Finset.mem_union.1 ha).elim
       (fun ha => by
         have : a ∉ g₂.support := disjoint_left.1 h ha
@@ -1007,7 +1007,7 @@ protected theorem induction {p : (α →₀ M) → Prop} (f : α →₀ M) (h0 :
     (ha : ∀ (a b) (f : α →₀ M), a ∉ f.support → b ≠ 0 → p f → p (single a b + f)) : p f :=
   suffices ∀ (s) (f : α →₀ M), f.support = s → p f from this _ _ rfl
   fun s =>
-  (Finset.induction_on s fun f hf => by rwa [support_eq_empty.1 hf]) fun a s has ih f hf =>
+  Finset.induction_on s (fun f hf => by rwa [support_eq_empty.1 hf]) fun a s has ih f hf =>
     by
     suffices p (single a (f a) + f.erase a) by rwa [single_add_erase] at this
     apply ha
@@ -1023,7 +1023,7 @@ theorem induction₂ {p : (α →₀ M) → Prop} (f : α →₀ M) (h0 : p 0)
     (ha : ∀ (a b) (f : α →₀ M), a ∉ f.support → b ≠ 0 → p f → p (f + single a b)) : p f :=
   suffices ∀ (s) (f : α →₀ M), f.support = s → p f from this _ _ rfl
   fun s =>
-  (Finset.induction_on s fun f hf => by rwa [support_eq_empty.1 hf]) fun a s has ih f hf =>
+  Finset.induction_on s (fun f hf => by rwa [support_eq_empty.1 hf]) fun a s has ih f hf =>
     by
     suffices p (f.erase a + single a (f a)) by rwa [erase_add_single] at this
     apply ha
@@ -1044,7 +1044,7 @@ theorem induction_linear {p : (α →₀ M) → Prop} (f : α →₀ M) (h0 : p 
 theorem add_closure_set_of_eq_single :
     AddSubmonoid.closure { f : α →₀ M | ∃ a b, f = single a b } = ⊤ :=
   top_unique fun x hx =>
-    (Finsupp.induction x (AddSubmonoid.zero_mem _)) fun a b f ha hb hf =>
+    Finsupp.induction x (AddSubmonoid.zero_mem _) fun a b f ha hb hf =>
       AddSubmonoid.add_mem _ (AddSubmonoid.subset_closure <| ⟨a, b, rfl⟩) hf
 #align finsupp.add_closure_set_of_eq_single Finsupp.add_closure_set_of_eq_single
 

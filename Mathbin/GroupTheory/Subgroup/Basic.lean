@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module group_theory.subgroup.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -93,9 +93,11 @@ subgroup, subgroups
 -/
 
 
+open Function
+
 open BigOperators
 
-variable {G : Type _} [Group G]
+variable {G G' : Type _} [Group G] [Group G']
 
 variable {A : Type _} [AddGroup A]
 
@@ -1033,7 +1035,7 @@ theorem coe_infi {ι : Sort _} {S : ι → Subgroup G} : (↑(⨅ i, S i) : Set 
 @[to_additive "The `add_subgroup`s of an `add_group` form a complete lattice."]
 instance : CompleteLattice (Subgroup G) :=
   {
-    (completeLatticeOfInf (Subgroup G)) fun s =>
+    completeLatticeOfInf (Subgroup G) fun s =>
       IsGLB.of_image (fun H K => show (H : Set G) ≤ K ↔ H ≤ K from SetLike.coe_subset_coe)
         isGLB_binfᵢ with
     bot := ⊥
@@ -1179,7 +1181,7 @@ theorem closure_induction₂ {p : G → G → Prop} {x} {y : G} (hx : x ∈ clos
 @[simp, to_additive]
 theorem closure_closure_coe_preimage {k : Set G} : closure ((coe : closure k → G) ⁻¹' k) = ⊤ :=
   eq_top_iff.2 fun x =>
-    (Subtype.recOn x) fun x hx _ =>
+    Subtype.recOn x fun x hx _ =>
       by
       refine' closure_induction' (fun g hg => _) _ (fun g₁ g₂ hg₁ hg₂ => _) (fun g hg => _) hx
       · exact subset_closure hg
@@ -2300,8 +2302,7 @@ instance center.is_commutative : (center G).IsCommutative :=
 #align subgroup.center.is_commutative Subgroup.center.is_commutative
 
 @[to_additive]
-instance map_is_commutative {G' : Type _} [Group G'] (f : G →* G') [H.IsCommutative] :
-    (H.map f).IsCommutative :=
+instance map_is_commutative (f : G →* G') [H.IsCommutative] : (H.map f).IsCommutative :=
   ⟨⟨by
       rintro ⟨-, a, ha, rfl⟩ ⟨-, b, hb, rfl⟩
       rw [Subtype.ext_iff, coe_mul, coe_mul, Subtype.coe_mk, Subtype.coe_mk, ← map_mul, ← map_mul]
@@ -2309,8 +2310,8 @@ instance map_is_commutative {G' : Type _} [Group G'] (f : G →* G') [H.IsCommut
 #align subgroup.map_is_commutative Subgroup.map_is_commutative
 
 @[to_additive]
-theorem comap_injective_is_commutative {G' : Type _} [Group G'] {f : G' →* G}
-    (hf : Function.Injective f) [H.IsCommutative] : (H.comap f).IsCommutative :=
+theorem comap_injective_is_commutative {f : G' →* G} (hf : Injective f) [H.IsCommutative] :
+    (H.comap f).IsCommutative :=
   ⟨⟨fun a b =>
       Subtype.ext
         (by
@@ -2559,7 +2560,7 @@ homomorphism `G →* N`. -/
 @[to_additive
       "The canonical surjective `add_group` homomorphism `G →+ f(G)` induced by a group\nhomomorphism `G →+ N`."]
 def rangeRestrict (f : G →* N) : G →* f.range :=
-  (codRestrict f _) fun x => ⟨x, rfl⟩
+  codRestrict f _ fun x => ⟨x, rfl⟩
 #align monoid_hom.range_restrict MonoidHom.rangeRestrict
 
 @[simp, to_additive]
@@ -3072,8 +3073,10 @@ theorem codisjoint_subgroup_of_sup (H K : Subgroup G) :
   exacts[le_sup_left, le_sup_right]
 #align subgroup.codisjoint_subgroup_of_sup Subgroup.codisjoint_subgroup_of_sup
 
-/-- A subgroup is isomorphic to its image under an injective function -/
-@[to_additive "An additive subgroup is isomorphic to its image under an injective function"]
+/-- A subgroup is isomorphic to its image under an injective function. If you have an isomorphism,
+use `mul_equiv.subgroup_map` for better definitional equalities. -/
+@[to_additive
+      "An additive subgroup is isomorphic to its image under an injective function. If you\nhave an isomorphism, use `add_equiv.add_subgroup_map` for better definitional equalities."]
 noncomputable def equivMapOfInjective (H : Subgroup G) (f : G →* N) (hf : Function.Injective f) :
     H ≃* H.map f :=
   { Equiv.Set.image f H hf with map_mul' := fun _ _ => Subtype.ext (f.map_mul _ _) }
@@ -3476,8 +3479,6 @@ end Subgroup
 
 namespace MonoidHom
 
-variable {G' : Type _} [Group G']
-
 /-- The `monoid_hom` from the preimage of a subgroup to itself. -/
 @[to_additive "the `add_monoid_hom` from the preimage of an additive subgroup to itself.", simps]
 def subgroupComap (f : G →* G') (H' : Subgroup G') : H'.comap f →* H' :=
@@ -3510,18 +3511,37 @@ def subgroupCongr (h : H = K) : H ≃* K :=
   { Equiv.setCongr <| congr_arg _ h with map_mul' := fun _ _ => rfl }
 #align mul_equiv.subgroup_congr MulEquiv.subgroupCongr
 
-/-- A `mul_equiv` `φ` between two groups `G` and `G'` induces a `mul_equiv` between
-a subgroup `H ≤ G` and the subgroup `φ(H) ≤ G'`. -/
+/-- A subgroup is isomorphic to its image under an isomorphism. If you only have an injective map,
+use `subgroup.equiv_map_of_injective`. -/
 @[to_additive
-      "An `add_equiv` `φ` between two additive groups `G` and `G'` induces an `add_equiv`\nbetween a subgroup `H ≤ G` and the subgroup `φ(H) ≤ G'`. "]
-def subgroupMap {G'} [Group G'] (e : G ≃* G') (H : Subgroup G) : H ≃* H.map e.toMonoidHom :=
-  e.submonoidMap H.toSubmonoid
+      "An additive subgroup is isomorphic to its image under an an isomorphism. If you only\nhave an injective map, use `add_subgroup.equiv_map_of_injective`."]
+def subgroupMap (e : G ≃* G') (H : Subgroup G) : H ≃* H.map (e : G →* G') :=
+  MulEquiv.submonoidMap (e : G ≃* G') H.toSubmonoid
 #align mul_equiv.subgroup_map MulEquiv.subgroupMap
+
+@[simp, to_additive]
+theorem coe_subgroup_map_apply (e : G ≃* G') (H : Subgroup G) (g : H) :
+    ((subgroupMap e H g : H.map (e : G →* G')) : G') = e g :=
+  rfl
+#align mul_equiv.coe_subgroup_map_apply MulEquiv.coe_subgroup_map_apply
+
+@[simp, to_additive]
+theorem subgroup_map_symm_apply (e : G ≃* G') (H : Subgroup G) (g : H.map (e : G →* G')) :
+    (e.subgroupMap H).symm g = ⟨e.symm g, SetLike.mem_coe.1 <| Set.mem_image_equiv.1 g.2⟩ :=
+  rfl
+#align mul_equiv.subgroup_map_symm_apply MulEquiv.subgroup_map_symm_apply
 
 end MulEquiv
 
--- TODO : ↥(⊤ : subgroup H) ≃* H ?
 namespace Subgroup
+
+@[simp, to_additive]
+theorem equiv_map_of_injective_coe_mul_equiv (H : Subgroup G) (e : G ≃* G') :
+    H.equivMapOfInjective (e : G →* G') (EquivLike.injective e) = e.subgroupMap H :=
+  by
+  ext
+  rfl
+#align subgroup.equiv_map_of_injective_coe_mul_equiv Subgroup.equiv_map_of_injective_coe_mul_equiv
 
 variable {C : Type _} [CommGroup C] {s t : Subgroup C} {x : C}
 

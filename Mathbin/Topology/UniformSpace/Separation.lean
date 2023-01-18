@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.uniform_space.separation
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -163,7 +163,7 @@ theorem eq_of_forall_symmetric {α : Type _} [UniformSpace α] [SeparatedSpace �
 
 theorem eq_of_cluster_pt_uniformity [SeparatedSpace α] {x y : α} (h : ClusterPt (x, y) (𝓤 α)) :
     x = y :=
-  (eq_of_uniformity_basis uniformity_has_basis_closed) fun V ⟨hV, hVc⟩ =>
+  eq_of_uniformity_basis uniformity_has_basis_closed fun V ⟨hV, hVc⟩ =>
     is_closed_iff_cluster_pt.1 hVc _ <| h.mono <| le_principal_iff.2 hV
 #align eq_of_cluster_pt_uniformity eq_of_cluster_pt_uniformity
 
@@ -310,7 +310,7 @@ instance separationSetoid.uniformSpace {α : Type u} [u : UniformSpace α] :
         have hts : ∀ {a₁ a₂}, (a, a₁) ∈ t → (a₁, a₂) ∈ t → ⟦a₂⟧ ∈ s := fun a₁ a₂ ha₁ ha₂ =>
           @hts (a, a₂) ⟨a₁, ha₁, ha₂⟩ rfl
         have ht' : ∀ {a₁ a₂}, a₁ ≈ a₂ → (a₁, a₂) ∈ t := fun a₁ a₂ h => interₛ_subset_of_mem ht h
-        (u.uniformity.sets_of_superset ht) fun ⟨a₁, a₂⟩ h₁ h₂ => hts (ht' <| Setoid.symm h₂) h₁,
+        u.uniformity.sets_of_superset ht fun ⟨a₁, a₂⟩ h₁ h₂ => hts (ht' <| Setoid.symm h₂) h₁,
         fun h => u.uniformity.sets_of_superset h <| by simp (config := { contextual := true })⟩
     simp [TopologicalSpace.coinduced, u.is_open_uniformity, uniformity, forall_quotient_iff]
     exact ⟨fun h a ha => (this a ha).mp <| h a ha, fun h a ha => (this a ha).mpr <| h a ha⟩
@@ -352,7 +352,7 @@ theorem comap_quotient_le_uniformity :
   fun t' ht' =>
   let ⟨t, ht, tt_t'⟩ := comp_mem_uniformity_sets ht'
   let ⟨s, hs, ss_t⟩ := comp_mem_uniformity_sets ht
-  ⟨(fun p : α × α => (⟦p.1⟧, ⟦p.2⟧)) '' s, ((𝓤 α).sets_of_superset hs) fun x hx => ⟨x, hx, rfl⟩,
+  ⟨(fun p : α × α => (⟦p.1⟧, ⟦p.2⟧)) '' s, (𝓤 α).sets_of_superset hs fun x hx => ⟨x, hx, rfl⟩,
     fun ⟨a₁, a₂⟩ ⟨⟨b₁, b₂⟩, hb, ab_eq⟩ =>
     have : ⟦b₁⟧ = ⟦a₁⟧ ∧ ⟦b₂⟧ = ⟦a₂⟧ := Prod.mk.inj ab_eq
     have : b₁ ≈ a₁ ∧ b₂ ≈ a₂ := And.imp Quotient.exact Quotient.exact this
@@ -369,7 +369,7 @@ theorem comap_quotient_eq_uniformity :
 
 instance separated_separation : SeparatedSpace (Quotient (separationSetoid α)) :=
   ⟨Set.ext fun ⟨a, b⟩ =>
-      (Quotient.induction_on₂ a b) fun a b =>
+      Quotient.induction_on₂ a b fun a b =>
         ⟨fun h =>
           have : a ≈ b := fun s hs =>
             have :

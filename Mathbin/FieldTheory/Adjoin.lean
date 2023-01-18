@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning, Patrick Lutz
 
 ! This file was ported from Lean 3 source module field_theory.adjoin
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -616,7 +616,7 @@ theorem adjoin_finset_is_compact_element (S : Finset E) :
       (adjoin_le_iff.mpr fun x hx =>
         set_like.mem_coe.mpr (adjoin_simple_le_iff.mp (le_supᵢ_of_le x (le_supᵢ_of_le hx le_rfl))))
       (supᵢ_le fun x => supᵢ_le fun hx => adjoin_simple_le_iff.mpr (subset_adjoin F S hx))
-  rw [key, ← Finset.sup_eq_supr]
+  rw [key, ← Finset.sup_eq_supᵢ]
   exact finset_sup_compact_of_compact S fun x hx => adjoin_simple_is_compact_element x
 #align
   intermediate_field.adjoin_finset_is_compact_element IntermediateField.adjoin_finset_is_compact_element

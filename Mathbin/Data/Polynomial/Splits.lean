@@ -4,12 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.polynomial.splits
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Data.List.Prime
 import Mathbin.Data.Polynomial.FieldDivision
+import Mathbin.Data.Polynomial.Lifts
 
 /-!
 # Split polynomials
@@ -337,7 +338,7 @@ theorem roots_map {f : K[X]} (hf : f.Splits <| RingHom.id K) : (f.map i).roots =
 
 theorem image_root_set [Algebra F K] [Algebra F L] {p : F[X]} (h : p.Splits (algebraMap F K))
     (f : K →ₐ[F] L) : f '' p.rootSet K = p.rootSet L := by
-  classical rw [root_set, ← Finset.coe_image, ← Multiset.to_finset_map, ← f.coe_to_ring_hom, ←
+  classical rw [root_set, ← Finset.coe_image, ← Multiset.toFinset_map, ← f.coe_to_ring_hom, ←
       roots_map (↑f) ((splits_id_iff_splits (algebraMap F K)).mpr h), map_map, f.comp_algebra_map, ←
       root_set]
 #align polynomial.image_root_set Polynomial.image_root_set
@@ -378,6 +379,17 @@ theorem eq_X_sub_C_of_splits_of_single_root {x : K} {h : K[X]} (h_splits : Split
   simp
 #align polynomial.eq_X_sub_C_of_splits_of_single_root Polynomial.eq_X_sub_C_of_splits_of_single_root
 
+theorem mem_lift_of_splits_of_roots_mem_range (R : Type _) [CommRing R] [Algebra R K] {f : K[X]}
+    (hs : f.Splits (RingHom.id K)) (hm : f.Monic) (hr : ∀ a ∈ f.roots, a ∈ (algebraMap R K).range) :
+    f ∈ Polynomial.lifts (algebraMap R K) :=
+  by
+  rw [eq_prod_roots_of_monic_of_splits_id hm hs, lifts_iff_lifts_ring]
+  refine' Subring.multiset_prod_mem _ _ fun P hP => _
+  obtain ⟨b, hb, rfl⟩ := Multiset.mem_map.1 hP
+  exact Subring.sub_mem _ (X_mem_lifts _) (C'_mem_lifts (hr _ hb))
+#align
+  polynomial.mem_lift_of_splits_of_roots_mem_range Polynomial.mem_lift_of_splits_of_roots_mem_range
+
 section UFD
 
 attribute [local instance] PrincipalIdealRing.to_unique_factorization_monoid
@@ -393,12 +405,12 @@ theorem splits_of_exists_multiset {f : K[X]} {s : Multiset L}
   else
     Or.inr fun p hp hdp => by
       rw [irreducible_iff_prime] at hp
-      rw [hs, ← Multiset.prod_to_list] at hdp
+      rw [hs, ← Multiset.prod_toList] at hdp
       obtain hd | hd := hp.2.2 _ _ hdp
       · refine' (hp.2.1 <| isUnit_of_dvd_unit hd _).elim
         exact is_unit_C.2 ((leading_coeff_ne_zero.2 hf0).IsUnit.map i)
       · obtain ⟨q, hq, hd⟩ := hp.dvd_prod_iff.1 hd
-        obtain ⟨a, ha, rfl⟩ := Multiset.mem_map.1 (Multiset.mem_to_list.1 hq)
+        obtain ⟨a, ha, rfl⟩ := Multiset.mem_map.1 (Multiset.mem_toList.1 hq)
         rw [degree_eq_degree_of_associated ((hp.dvd_prime_iff_associated <| prime_X_sub_C a).1 hd)]
         exact degree_X_sub_C a
 #align polynomial.splits_of_exists_multiset Polynomial.splits_of_exists_multiset
@@ -467,7 +479,7 @@ theorem prod_roots_eq_coeff_zero_of_monic_of_split {P : K[X]} (hmo : P.Monic)
     congr
     ext
     rw [neg_eq_neg_one_mul]
-  rw [Multiset.prod_map_mul, Multiset.map_const, Multiset.prod_repeat, Multiset.map_id',
+  rw [Multiset.prod_map_mul, Multiset.map_const, Multiset.prod_replicate, Multiset.map_id',
     splits_iff_card_roots.1 hP]
 #align
   polynomial.prod_roots_eq_coeff_zero_of_monic_of_split Polynomial.prod_roots_eq_coeff_zero_of_monic_of_split

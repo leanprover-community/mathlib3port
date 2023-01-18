@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann
 
 ! This file was ported from Lean 3 source module algebra.continued_fractions.convergents_equiv
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -123,7 +123,7 @@ squashed into position `n`. -/
 theorem squash_seq_nth_of_not_terminated {gp_n gp_succ_n : Pair K} (s_nth_eq : s.nth n = some gp_n)
     (s_succ_nth_eq : s.nth (n + 1) = some gp_succ_n) :
     (squashSeq s n).nth n = some ⟨gp_n.a, gp_n.b + gp_succ_n.a / gp_succ_n.b⟩ := by
-  simp [*, squash_seq, Seq.zip_with_nth_some (Seq.nats_nth n) s_nth_eq _]
+  simp [*, squash_seq]
 #align
   generalized_continued_fraction.squash_seq_nth_of_not_terminated GeneralizedContinuedFraction.squash_seq_nth_of_not_terminated
 
@@ -136,7 +136,7 @@ theorem squash_seq_nth_of_lt {m : ℕ} (m_lt_n : m < n) : (squashSeq s n).nth m 
     obtain ⟨gp_n, s_nth_eq⟩ : ∃ gp_n, s.nth n = some gp_n; exact s.ge_stable n.le_succ s_succ_nth_eq
     obtain ⟨gp_m, s_mth_eq⟩ : ∃ gp_m, s.nth m = some gp_m;
     exact s.ge_stable (le_of_lt m_lt_n) s_nth_eq
-    simp [*, squash_seq, Seq.zip_with_nth_some (Seq.nats_nth m) s_mth_eq _, ne_of_lt m_lt_n]
+    simp [*, squash_seq, m_lt_n.ne]
 #align
   generalized_continued_fraction.squash_seq_nth_of_lt GeneralizedContinuedFraction.squash_seq_nth_of_lt
 
@@ -156,21 +156,15 @@ theorem squash_seq_succ_n_tail_eq_squash_seq_tail_n :
     obtain ⟨gp_succ_n, s_succ_nth_eq⟩ : ∃ gp_succ_n, s.nth (n + 1) = some gp_succ_n;
     exact s.ge_stable (n + 1).le_succ s_succ_succ_nth_eq
     -- apply extensionality with `m` and continue by cases `m = n`.
-    ext m
+    ext1 m
     cases' Decidable.em (m = n) with m_eq_n m_ne_n
     · have : s.tail.nth n = some gp_succ_n := (s.nth_tail n).trans s_succ_nth_eq
-      simp [*, squash_seq, Seq.nth_tail, Seq.zip_with_nth_some (Seq.nats_nth n) this,
-        Seq.zip_with_nth_some (Seq.nats_nth (n + 1)) s_succ_nth_eq]
+      simp [*, squash_seq]
     · have : s.tail.nth m = s.nth (m + 1) := s.nth_tail m
       cases s_succ_mth_eq : s.nth (m + 1)
       all_goals have s_tail_mth_eq := this.trans s_succ_mth_eq
-      ·
-        simp only [*, squash_seq, Seq.nth_tail, Seq.zip_with_nth_none' s_succ_mth_eq,
-          Seq.zip_with_nth_none' s_tail_mth_eq]
-      ·
-        simp [*, squash_seq, Seq.nth_tail,
-          Seq.zip_with_nth_some (Seq.nats_nth (m + 1)) s_succ_mth_eq,
-          Seq.zip_with_nth_some (Seq.nats_nth m) s_tail_mth_eq]
+      · simp only [*, squash_seq, Seq.nth_tail, Seq.nth_zip_with, Option.map₂_none_right]
+      · simp [*, squash_seq]
 #align
   generalized_continued_fraction.squash_seq_succ_n_tail_eq_squash_seq_tail_n GeneralizedContinuedFraction.squash_seq_succ_n_tail_eq_squash_seq_tail_n
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Sébastien Gouëzel, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.pi_L2
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -380,7 +380,7 @@ protected theorem sum_inner_mul_inner (b : OrthonormalBasis ι 𝕜 E) (x y : E)
   rw [map_sum] at this
   convert this
   ext i
-  rw [SmulHomClass.map_smul, b.repr_apply_apply, mul_comm]
+  rw [SMulHomClass.map_smul, b.repr_apply_apply, mul_comm]
   rfl
 #align orthonormal_basis.sum_inner_mul_inner OrthonormalBasis.sum_inner_mul_inner
 
@@ -800,8 +800,8 @@ irreducible_def DirectSum.IsInternal.subordinateOrthonormalBasis
 /-- An `n`-dimensional `inner_product_space` equipped with a decomposition as an internal direct
 sum has an orthonormal basis indexed by `fin n` and subordinate to that direct sum. This function
 provides the mapping by which it is subordinate. -/
-def DirectSum.IsInternal.subordinateOrthonormalBasisIndex (a : Fin n)
-    (hV' : @OrthogonalFamily 𝕜 _ _ _ _ (fun i => V i) _ fun i => (V i).subtypeₗᵢ) : ι :=
+irreducible_def DirectSum.IsInternal.subordinateOrthonormalBasisIndex (a : Fin n)
+  (hV' : @OrthogonalFamily 𝕜 _ _ _ _ (fun i => V i) _ fun i => (V i).subtypeₗᵢ) : ι :=
   ((hV.sigmaOrthonormalBasisIndexEquiv hn hV').symm a).1
 #align
   direct_sum.is_internal.subordinate_orthonormal_basis_index DirectSum.IsInternal.subordinateOrthonormalBasisIndex
@@ -811,7 +811,8 @@ the `orthogonal_family` in question. -/
 theorem DirectSum.IsInternal.subordinate_orthonormal_basis_subordinate (a : Fin n)
     (hV' : @OrthogonalFamily 𝕜 _ _ _ _ (fun i => V i) _ fun i => (V i).subtypeₗᵢ) :
     hV.subordinateOrthonormalBasis hn hV' a ∈ V (hV.subordinateOrthonormalBasisIndex hn a hV') := by
-  simpa only [DirectSum.IsInternal.subordinateOrthonormalBasis, OrthonormalBasis.coe_reindex] using
+  simpa only [DirectSum.IsInternal.subordinateOrthonormalBasis, OrthonormalBasis.coe_reindex,
+    DirectSum.IsInternal.subordinateOrthonormalBasisIndex] using
     hV.collected_orthonormal_basis_mem hV' (fun i => stdOrthonormalBasis 𝕜 (V i))
       ((hV.sigma_orthonormal_basis_index_equiv hn hV').symm a)
 #align

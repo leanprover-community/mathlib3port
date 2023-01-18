@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.subset_properties
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -160,7 +160,7 @@ theorem IsCompact.image {f : α → β} (hs : IsCompact s) (hf : Continuous f) :
 
 theorem IsCompact.adherence_nhdset {f : Filter α} (hs : IsCompact s) (hf₂ : f ≤ 𝓟 s)
     (ht₁ : IsOpen t) (ht₂ : ∀ a ∈ s, ClusterPt a f → a ∈ t) : t ∈ f :=
-  (by_cases mem_of_eq_bot) fun this : f ⊓ 𝓟 (tᶜ) ≠ ⊥ =>
+  by_cases mem_of_eq_bot fun this : f ⊓ 𝓟 (tᶜ) ≠ ⊥ =>
     let ⟨a, ha, (hfa : ClusterPt a <| f ⊓ 𝓟 (tᶜ))⟩ := @hs ⟨this⟩ <| inf_le_of_left_le hf₂
     have : a ∈ t := ht₂ a ha hfa.of_inf_left
     have : tᶜ ∩ t ∈ 𝓝[tᶜ] a := inter_mem_nhds_within _ (IsOpen.mem_nhds ht₁ this)
@@ -200,7 +200,7 @@ theorem IsCompact.elim_directed_cover {ι : Type v} [hι : Nonempty ι] (hs : Is
 theorem IsCompact.elim_finite_subcover {ι : Type v} (hs : IsCompact s) (U : ι → Set α)
     (hUo : ∀ i, IsOpen (U i)) (hsU : s ⊆ ⋃ i, U i) : ∃ t : Finset ι, s ⊆ ⋃ i ∈ t, U i :=
   hs.elim_directed_cover _ (fun t => is_open_bUnion fun i _ => hUo i)
-    (Union_eq_Union_finset U ▸ hsU) (directed_of_sup fun t₁ t₂ h => bunionᵢ_subset_bunionᵢ_left h)
+    (unionᵢ_eq_unionᵢ_finset U ▸ hsU) (directed_of_sup fun t₁ t₂ h => bunionᵢ_subset_bunionᵢ_left h)
 #align is_compact.elim_finite_subcover IsCompact.elim_finite_subcover
 
 theorem IsCompact.elim_nhds_subcover' (hs : IsCompact s) (U : ∀ x ∈ s, Set α)
@@ -216,7 +216,7 @@ theorem IsCompact.elim_nhds_subcover (hs : IsCompact s) (U : α → Set α) (hU 
   ⟨t.image coe, fun x hx =>
     let ⟨y, hyt, hyx⟩ := Finset.mem_image.1 hx
     hyx ▸ y.2,
-    by rwa [Finset.set_bUnion_finset_image]⟩
+    by rwa [Finset.set_bunionᵢ_finset_image]⟩
 #align is_compact.elim_nhds_subcover IsCompact.elim_nhds_subcover
 
 /-- The neighborhood filter of a compact set is disjoint with a filter `l` if and only if the
@@ -362,7 +362,7 @@ theorem is_compact_of_finite_subfamily_closed
     have : (⋂ i ∈ t, Subtype.val i) ∈ f := t.Inter_mem_sets.2 fun i hi => i.2
     have : (s ∩ ⋂ i ∈ t, Subtype.val i) ∈ f := inter_mem (le_principal_iff.1 hfs) this
     have : ∅ ∈ f :=
-      (mem_of_superset this) fun x ⟨hxs, hx⟩ =>
+      mem_of_superset this fun x ⟨hxs, hx⟩ =>
         let ⟨i, hit, hxi⟩ :=
           show ∃ i ∈ t, x ∉ closure (Subtype.val i)
             by
@@ -450,7 +450,7 @@ theorem is_compact_singleton {a : α} : IsCompact ({a} : Set α) := fun f hf hfa
 #align is_compact_singleton is_compact_singleton
 
 theorem Set.Subsingleton.is_compact {s : Set α} (hs : s.Subsingleton) : IsCompact s :=
-  (Subsingleton.induction_on hs is_compact_empty) fun x => is_compact_singleton
+  Subsingleton.induction_on hs is_compact_empty fun x => is_compact_singleton
 #align set.subsingleton.is_compact Set.Subsingleton.is_compact
 
 theorem Set.Finite.is_compact_bUnion {s : Set ι} {f : ι → Set α} (hs : s.Finite)
@@ -464,7 +464,7 @@ theorem Set.Finite.is_compact_bUnion {s : Set ι} {f : ι → Set α} (hs : s.Fi
           )
     let ⟨finite_subcovers, h⟩ := axiom_of_choice this
     haveI : Fintype (Subtype s) := hs.fintype
-    let t := Finset.bUnion Finset.univ finite_subcovers
+    let t := Finset.bunionᵢ Finset.univ finite_subcovers
     have : (⋃ i ∈ s, f i) ⊆ ⋃ i ∈ t, U i :=
       Union₂_subset fun i hi =>
         calc
@@ -779,9 +779,9 @@ theorem generalized_tube_lemma {s : Set α} (hs : IsCompact s) {t : Set β} (ht 
     {n : Set (α × β)} (hn : IsOpen n) (hp : s ×ˢ t ⊆ n) :
     ∃ (u : Set α)(v : Set β), IsOpen u ∧ IsOpen v ∧ s ⊆ u ∧ t ⊆ v ∧ u ×ˢ v ⊆ n :=
   have :=
-    (nhds_contain_boxes_of_compact hs t) fun x _ =>
+    nhds_contain_boxes_of_compact hs t fun x _ =>
       NhdsContainBoxes.symm <|
-        (nhds_contain_boxes_of_compact ht {x}) fun y _ => nhds_contain_boxes_of_singleton
+        nhds_contain_boxes_of_compact ht {x} fun y _ => nhds_contain_boxes_of_singleton
   this n hn hp
 #align generalized_tube_lemma generalized_tube_lemma
 
@@ -1237,7 +1237,7 @@ instance LocallyCompactSpace.prod (α : Type _) (β : Type _) [TopologicalSpace 
     [TopologicalSpace β] [LocallyCompactSpace α] [LocallyCompactSpace β] :
     LocallyCompactSpace (α × β) :=
   have := fun x : α × β => (compact_basis_nhds x.1).prod_nhds' (compact_basis_nhds x.2)
-  (locally_compact_space_of_has_basis this) fun x s ⟨⟨_, h₁⟩, _, h₂⟩ => h₁.Prod h₂
+  locally_compact_space_of_has_basis this fun x s ⟨⟨_, h₁⟩, _, h₂⟩ => h₁.Prod h₂
 #align locally_compact_space.prod LocallyCompactSpace.prod
 
 section Pi

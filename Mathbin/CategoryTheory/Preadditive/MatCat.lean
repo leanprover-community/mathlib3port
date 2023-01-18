@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.preadditive.Mat
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -82,7 +82,7 @@ variable {C}
 /-- A morphism in `Mat_ C` is a dependently typed matrix of morphisms. -/
 @[nolint has_nonempty_instance]
 def Hom (M N : Mat_ C) : Type v₁ :=
-  Dmatrix M.ι N.ι fun i j => M.x i ⟶ N.x j
+  DMatrix M.ι N.ι fun i j => M.x i ⟶ N.x j
 #align category_theory.Mat_.hom CategoryTheory.Mat_.Hom
 
 namespace Hom
@@ -151,7 +151,7 @@ end
 instance : Preadditive (Mat_ C)
     where
   homGroup M N := by
-    change AddCommGroup (Dmatrix M.ι N.ι _)
+    change AddCommGroup (DMatrix M.ι N.ι _)
     infer_instance
   add_comp' M N K f f' g := by
     ext

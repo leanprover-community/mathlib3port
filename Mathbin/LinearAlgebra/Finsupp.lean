@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module linear_algebra.finsupp
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -552,7 +552,7 @@ theorem total_apply (l : α →₀ R) : Finsupp.total α M R v l = l.Sum fun i a
 
 theorem total_apply_of_mem_supported {l : α →₀ R} {s : Finset α}
     (hs : l ∈ supported R R (↑s : Set α)) : Finsupp.total α M R v l = s.Sum fun i => l i • v i :=
-  (Finset.sum_subset hs) fun x _ hxg =>
+  Finset.sum_subset hs fun x _ hxg =>
     show l x • v x = 0 by rw [not_mem_support_iff.1 hxg, zero_smul]
 #align finsupp.total_apply_of_mem_supported Finsupp.total_apply_of_mem_supported
 
@@ -729,7 +729,7 @@ subset of the vectors in `v`, mapping it to the span of those vectors.
 The subset is indicated by a set `s : set α` of indices.
 -/
 protected def totalOn (s : Set α) : supported R R s →ₗ[R] span R (v '' s) :=
-  (LinearMap.codRestrict _ ((Finsupp.total _ _ _ v).comp (Submodule.subtype (supported R R s))))
+  LinearMap.codRestrict _ ((Finsupp.total _ _ _ v).comp (Submodule.subtype (supported R R s)))
     fun ⟨l, hl⟩ => (mem_span_image_iff_total _).2 ⟨l, hl, rfl⟩
 #align finsupp.total_on Finsupp.totalOn
 
@@ -1107,7 +1107,7 @@ theorem mem_span_range_iff_exists_fun : x ∈ span R (range v) ↔ ∃ c : α �
   by
   simp only [Finsupp.mem_span_range_iff_exists_finsupp,
     finsupp.equiv_fun_on_finite.surjective.exists, Finsupp.equiv_fun_on_finite_apply]
-  exact exists_congr fun c => Eq.congr_left <| (Finsupp.sum_fintype _ _) fun i => zero_smul _ _
+  exact exists_congr fun c => Eq.congr_left <| Finsupp.sum_fintype _ _ fun i => zero_smul _ _
 #align mem_span_range_iff_exists_fun mem_span_range_iff_exists_fun
 
 /-- A family `v : α → V` is generating `V` iff every element `(x : V)`
@@ -1135,14 +1135,16 @@ variable (R)
 /-- Pick some representation of `x : span R w` as a linear combination in `w`,
 using the axiom of choice.
 -/
-def Span.repr (w : Set M) (x : span R w) : w →₀ R :=
+irreducible_def Span.repr (w : Set M) (x : span R w) : w →₀ R :=
   ((Finsupp.mem_span_iff_total _ _ _).mp x.2).some
 #align span.repr Span.repr
 
 @[simp]
 theorem Span.finsupp_total_repr {w : Set M} (x : span R w) :
     Finsupp.total w M R coe (Span.repr R w x) = x :=
-  ((Finsupp.mem_span_iff_total _ _ _).mp x.2).some_spec
+  by
+  rw [Span.repr]
+  exact ((Finsupp.mem_span_iff_total _ _ _).mp x.2).some_spec
 #align span.finsupp_total_repr Span.finsupp_total_repr
 
 end

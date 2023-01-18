@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Peter Nelson, Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.fintype.order
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -98,10 +98,10 @@ noncomputable def toCompleteLattice [Lattice α] [BoundedOrder α] : CompleteLat
     ‹BoundedOrder α› with
     sup := fun s => s.toFinset.sup id
     inf := fun s => s.toFinset.inf id
-    le_Sup := fun _ _ ha => Finset.le_sup (Set.mem_to_finset.mpr ha)
-    Sup_le := fun s _ ha => Finset.sup_le fun b hb => ha _ <| Set.mem_to_finset.mp hb
-    Inf_le := fun _ _ ha => Finset.inf_le (Set.mem_to_finset.mpr ha)
-    le_Inf := fun s _ ha => Finset.le_inf fun b hb => ha _ <| Set.mem_to_finset.mp hb }
+    le_Sup := fun _ _ ha => Finset.le_sup (Set.mem_toFinset.mpr ha)
+    Sup_le := fun s _ ha => Finset.sup_le fun b hb => ha _ <| Set.mem_toFinset.mp hb
+    Inf_le := fun _ _ ha => Finset.inf_le (Set.mem_toFinset.mpr ha)
+    le_Inf := fun s _ ha => Finset.le_inf fun b hb => ha _ <| Set.mem_toFinset.mp hb }
 #align fintype.to_complete_lattice Fintype.toCompleteLattice
 
 -- See note [reducible non-instances]
@@ -115,14 +115,14 @@ noncomputable def toCompleteDistribLattice [DistribLattice α] [BoundedOrder α]
     infi_sup_le_sup_Inf := fun a s =>
       by
       convert (Finset.inf_sup_distrib_left _ _ _).ge
-      convert (Finset.inf_eq_infi _ _).symm
-      simp_rw [Set.mem_to_finset]
+      convert (Finset.inf_eq_infᵢ _ _).symm
+      simp_rw [Set.mem_toFinset]
       rfl
     inf_Sup_le_supr_inf := fun a s =>
       by
       convert (Finset.sup_inf_distrib_left _ _ _).le
-      convert (Finset.sup_eq_supr _ _).symm
-      simp_rw [Set.mem_to_finset]
+      convert (Finset.sup_eq_supᵢ _ _).symm
+      simp_rw [Set.mem_toFinset]
       rfl }
 #align fintype.to_complete_distrib_lattice Fintype.toCompleteDistribLattice
 

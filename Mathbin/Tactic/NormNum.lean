@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Mario Carneiro
 
 ! This file was ported from Lean 3 source module tactic.norm_num
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2018,7 +2018,7 @@ theorem nat_mod (a b q r m : ℕ) (hm : q * b = m) (h : r + m = a) (h₂ : r < b
 #align norm_num.nat_mod NormNum.nat_mod
 
 theorem int_mod (a b q r m : ℤ) (hm : q * b = m) (h : r + m = a) (h₁ : 0 ≤ r) (h₂ : r < b) :
-    a % b = r := by rw [← h, ← hm, Int.add_mul_emod_self, Int.mod_eq_of_lt h₁ h₂]
+    a % b = r := by rw [← h, ← hm, Int.add_mul_emod_self, Int.emod_eq_of_lt h₁ h₂]
 #align norm_num.int_mod NormNum.int_mod
 
 theorem int_div_neg (a b c' c : ℤ) (h : a / b = c') (h₂ : -c' = c) : a / -b = c :=

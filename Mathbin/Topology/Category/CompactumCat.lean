@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module topology.category.Compactum
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -77,7 +77,7 @@ We also add wrappers around structures which already exist. Here are the main on
 
 universe u
 
-open CategoryTheory Filter Ultrafilter TopologicalSpace CategoryTheory.Limits HasFiniteInter
+open CategoryTheory Filter Ultrafilter TopologicalSpace CategoryTheory.Limits FiniteInter
 
 open Classical TopologicalSpace
 
@@ -264,7 +264,7 @@ private theorem cl_cl {X : CompactumCat} (A : Set X) : cl (cl A) ⊆ cl A :=
   -- C2 is closed under finite intersections (by construction!).
   have claim4 := finite_inter_closure_has_finite_inter C1
   -- C0 is closed under finite intersections by claim1.
-  have claim5 : HasFiniteInter C0 := ⟨⟨_, univ_mem, Set.preimage_univ⟩, claim1⟩
+  have claim5 : FiniteInter C0 := ⟨⟨_, univ_mem, Set.preimage_univ⟩, claim1⟩
   -- Every element of C2 is nonempty.
   have claim6 : ∀ P ∈ C2, (P : Set (Ultrafilter X)).Nonempty :=
     by

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang, Jujian Zhang
 
 ! This file was ported from Lean 3 source module algebra.module.localized_module
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -145,7 +145,7 @@ theorem zero_mk (s : S) : mk (0 : M) s = 0 :=
 
 instance : Add (LocalizedModule S M)
     where add p1 p2 :=
-    (liftOn₂ p1 p2 fun x y => mk (y.2 • x.1 + x.2 • y.1) (x.2 * y.2))
+    liftOn₂ p1 p2 (fun x y => mk (y.2 • x.1 + x.2 • y.1) (x.2 * y.2))
       fun ⟨m1, s1⟩ ⟨m2, s2⟩ ⟨m1', s1'⟩ ⟨m2', s2'⟩ ⟨u1, hu1⟩ ⟨u2, hu2⟩ =>
       mk_eq.mpr
         ⟨u1 * u2,
@@ -524,7 +524,7 @@ end
 def divBy (s : S) : LocalizedModule S M →ₗ[R] LocalizedModule S M
     where
   toFun p :=
-    (p.liftOn fun p => mk p.1 (s * p.2)) fun ⟨a, b⟩ ⟨a', b'⟩ ⟨c, eq1⟩ =>
+    p.liftOn (fun p => mk p.1 (s * p.2)) fun ⟨a, b⟩ ⟨a', b'⟩ ⟨c, eq1⟩ =>
       mk_eq.mpr ⟨c, by rw [mul_smul, mul_smul, smul_comm c, eq1, smul_comm s] <;> infer_instance⟩
   map_add' x y :=
     x.induction_on₂
@@ -538,14 +538,14 @@ def divBy (s : S) : LocalizedModule S M →ₗ[R] LocalizedModule S M
             ring])
       y
   map_smul' r x :=
-    x.induction_on <| by
+    x.inductionOn <| by
       intros
       simp [LocalizedModule.lift_on_mk, smul'_mk]
 #align localized_module.div_by LocalizedModule.divBy
 
 theorem div_by_mul_by (s : S) (p : LocalizedModule S M) :
     divBy s (algebraMap R (Module.EndCat R (LocalizedModule S M)) s p) = p :=
-  p.induction_on
+  p.inductionOn
     (by
       intro m t
       simp only [LocalizedModule.lift_on_mk, Module.algebra_map_End_apply, smul'_mk, div_by_apply]
@@ -554,7 +554,7 @@ theorem div_by_mul_by (s : S) (p : LocalizedModule S M) :
 
 theorem mul_by_div_by (s : S) (p : LocalizedModule S M) :
     algebraMap R (Module.EndCat R (LocalizedModule S M)) s (divBy s p) = p :=
-  p.induction_on
+  p.inductionOn
     (by
       intro m t
       simp only [LocalizedModule.lift_on_mk, div_by_apply, Module.algebra_map_End_apply, smul'_mk]
@@ -597,7 +597,7 @@ there is a linear map `localized_module S M → M''`.
 noncomputable def lift' (g : M →ₗ[R] M'')
     (h : ∀ x : S, IsUnit ((algebraMap R (Module.EndCat R M'')) x)) : LocalizedModule S M → M'' :=
   fun m =>
-  (m.liftOn fun p => (h <| p.2).Unit⁻¹ <| g p.1) fun ⟨m, s⟩ ⟨m', s'⟩ ⟨c, eq1⟩ =>
+  m.liftOn (fun p => (h <| p.2).Unit⁻¹ <| g p.1) fun ⟨m, s⟩ ⟨m', s'⟩ ⟨c, eq1⟩ =>
     by
     generalize_proofs h1 h2
     erw [Module.End_algebra_map_is_unit_inv_apply_eq_iff, ← h2.unit⁻¹.1.map_smul]
@@ -648,7 +648,7 @@ theorem lift'_add (g : M →ₗ[R] M'') (h : ∀ x : S, IsUnit ((algebraMap R (M
 
 theorem lift'_smul (g : M →ₗ[R] M'') (h : ∀ x : S, IsUnit ((algebraMap R (Module.EndCat R M'')) x))
     (r : R) (m) : r • LocalizedModule.lift' S g h m = LocalizedModule.lift' S g h (r • m) :=
-  m.induction_on
+  m.inductionOn
     (by
       intro a b
       rw [LocalizedModule.lift'_mk, LocalizedModule.smul'_mk, LocalizedModule.lift'_mk]
@@ -713,12 +713,12 @@ instance localizedModuleIsLocalizedModule : IsLocalizedModule S (LocalizedModule
     ⟨⟨algebraMap R (Module.EndCat R (LocalizedModule S M)) s, LocalizedModule.divBy s,
         FunLike.ext _ _ <| LocalizedModule.mul_by_div_by s,
         FunLike.ext _ _ <| LocalizedModule.div_by_mul_by s⟩,
-      (FunLike.ext _ _) fun p =>
-        p.induction_on <| by
+      FunLike.ext _ _ fun p =>
+        p.inductionOn <| by
           intros
           rfl⟩
   surj p :=
-    p.induction_on
+    p.inductionOn
       (by
         intro m t
         refine' ⟨⟨m, t⟩, _⟩

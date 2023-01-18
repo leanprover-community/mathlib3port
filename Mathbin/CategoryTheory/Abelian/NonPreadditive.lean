@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module category_theory.abelian.non_preadditive
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -113,10 +113,9 @@ instance : Epi (Abelian.factorThruImage f) :=
   let I := Abelian.image f
   let p := Abelian.factorThruImage f
   let i := kernel.ι (cokernel.π f)
-  (-- It will suffice to consider some g : I ⟶ R such that p ≫ g = 0 and show that g = 0.
-      NormalMonoCategory.epi_of_zero_cancel
-      _)
-    fun R (g : I ⟶ R) (hpg : p ≫ g = 0) =>
+  -- It will suffice to consider some g : I ⟶ R such that p ≫ g = 0 and show that g = 0.
+    NormalMonoCategory.epi_of_zero_cancel
+    _ fun R (g : I ⟶ R) (hpg : p ≫ g = 0) =>
     by
     -- Since C is abelian, u := ker g ≫ i is the kernel of some morphism h.
     let u := kernel.ι g ≫ i
@@ -163,7 +162,7 @@ instance : Mono (Abelian.factorThruCoimage f) :=
   let I := Abelian.coimage f
   let i := Abelian.factorThruCoimage f
   let p := cokernel.π (kernel.ι f)
-  (NormalEpiCategory.mono_of_cancel_zero _) fun R (g : R ⟶ I) (hgi : g ≫ i = 0) =>
+  NormalEpiCategory.mono_of_cancel_zero _ fun R (g : R ⟶ I) (hgi : g ≫ i = 0) =>
     by
     -- Since C is abelian, u := p ≫ coker g is the cokernel of some morphism h.
     let u := p ≫ cokernel.π g

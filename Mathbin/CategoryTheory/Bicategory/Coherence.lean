@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno, Junyan Xu
 
 ! This file was ported from Lean 3 source module category_theory.bicategory.coherence
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -173,9 +173,9 @@ theorem normalize_aux_congr {a b c : B} (p : Path a b) {f g : Hom b c} (η : f �
   induction η
   case vcomp => apply Eq.trans <;> assumption
   -- p ≠ nil required! See the docstring of `normalize_aux`.
-  case whisker_left _ _ _ _ _ _ _ ih => funext ; apply congr_fun ih
-  case whisker_right _ _ _ _ _ _ _ ih => funext ; apply congr_arg₂ _ (congr_fun ih p) rfl
-  all_goals funext ; rfl
+  case whisker_left _ _ _ _ _ _ _ ih => funext; apply congr_fun ih
+  case whisker_right _ _ _ _ _ _ _ ih => funext; apply congr_arg₂ _ (congr_fun ih p) rfl
+  all_goals funext; rfl
 #align
   category_theory.free_bicategory.normalize_aux_congr CategoryTheory.FreeBicategory.normalize_aux_congr
 

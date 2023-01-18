@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.roots_of_unity
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -334,13 +334,13 @@ variable [CommRing R] [IsDomain R]
 @[simp]
 theorem mem_primitive_roots {ζ : R} (h0 : 0 < k) : ζ ∈ primitiveRoots k R ↔ IsPrimitiveRoot ζ k :=
   by
-  rw [primitiveRoots, mem_filter, Multiset.mem_to_finset, mem_nth_roots h0, and_iff_right_iff_imp]
+  rw [primitiveRoots, mem_filter, Multiset.mem_toFinset, mem_nth_roots h0, and_iff_right_iff_imp]
   exact IsPrimitiveRoot.pow_eq_one
 #align mem_primitive_roots mem_primitive_roots
 
 @[simp]
 theorem primitive_roots_zero : primitiveRoots 0 R = ∅ := by
-  rw [primitiveRoots, nth_roots_zero, Multiset.to_finset_zero, Finset.filter_empty]
+  rw [primitiveRoots, nth_roots_zero, Multiset.toFinset_zero, Finset.filter_empty]
 #align primitive_roots_zero primitive_roots_zero
 
 theorem is_primitive_root_of_mem_primitive_roots {ζ : R} (h : ζ ∈ primitiveRoots k R) :
@@ -937,7 +937,7 @@ theorem nth_roots_nodup {ζ : R} {n : ℕ} (h : IsPrimitiveRoot ζ n) : (nthRoot
 @[simp]
 theorem card_nth_roots_finset {ζ : R} {n : ℕ} (h : IsPrimitiveRoot ζ n) :
     (nthRootsFinset n R).card = n := by
-  rw [nth_roots_finset, ← Multiset.to_finset_eq (nth_roots_nodup h), card_mk, h.card_nth_roots]
+  rw [nth_roots_finset, ← Multiset.toFinset_eq (nth_roots_nodup h), card_mk, h.card_nth_roots]
 #align is_primitive_root.card_nth_roots_finset IsPrimitiveRoot.card_nth_roots_finset
 
 open Nat
@@ -981,8 +981,8 @@ theorem nth_roots_one_eq_bUnion_primitive_roots' {ζ : R} {n : ℕ+} (h : IsPrim
   symm
   apply Finset.eq_of_subset_of_card_le
   · intro x
-    simp only [nth_roots_finset, ← Multiset.to_finset_eq (nth_roots_nodup h), exists_prop,
-      Finset.mem_bUnion, Finset.mem_filter, Finset.mem_range, mem_nth_roots, Finset.mem_mk,
+    simp only [nth_roots_finset, ← Multiset.toFinset_eq (nth_roots_nodup h), exists_prop,
+      Finset.mem_bunionᵢ, Finset.mem_filter, Finset.mem_range, mem_nth_roots, Finset.mem_mk,
       Nat.mem_divisors, and_true_iff, Ne.def, PNat.ne_zero, PNat.pos, not_false_iff]
     rintro ⟨a, ⟨d, hd⟩, ha⟩
     have hazero : 0 < a := by
@@ -1212,7 +1212,7 @@ theorem is_roots_of_minpoly :
   have hpos := Nat.pos_of_ne_zero hn
   intro x hx
   obtain ⟨m, hle, hcop, rfl⟩ := (is_primitive_root_iff h hpos).1 ((mem_primitive_roots hpos).1 hx)
-  simpa [Multiset.mem_to_finset,
+  simpa [Multiset.mem_toFinset,
     mem_roots (map_monic_ne_zero <| minpoly.monic <| IsIntegral h hpos)] using
     pow_is_root_minpoly h hcop
 #align is_primitive_root.is_roots_of_minpoly IsPrimitiveRoot.is_roots_of_minpoly
@@ -1228,7 +1228,7 @@ theorem totient_le_degree_minpoly : Nat.totient n ≤ (minpoly ℤ μ).natDegree
   calc
     n.totient = (primitiveRoots n K).card := h.card_primitive_roots.symm
     _ ≤ P_K.roots.toFinset.card := Finset.card_le_of_subset (is_roots_of_minpoly h)
-    _ ≤ P_K.roots.card := Multiset.to_finset_card_le _
+    _ ≤ P_K.roots.card := Multiset.toFinset_card_le _
     _ ≤ P_K.natDegree := card_roots' _
     _ ≤ P.natDegree := nat_degree_map_le _ _
     

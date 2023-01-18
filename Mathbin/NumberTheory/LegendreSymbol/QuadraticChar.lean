@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 
 ! This file was ported from Lean 3 source module number_theory.legendre_symbol.quadratic_char
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -275,16 +275,16 @@ theorem quadratic_char_card_sqrts (hF : ringChar F ≠ 2) (a : F) :
       rw [h, mul_self_eq_zero] at h₀
       have h₁ : s = [b, -b].toFinset := by
         ext x
-        simp only [Finset.mem_filter, Finset.mem_univ, true_and_iff, List.to_finset_cons,
-          List.to_finset_nil, insert_emptyc_eq, Finset.mem_insert, Finset.mem_singleton]
+        simp only [Finset.mem_filter, Finset.mem_univ, true_and_iff, List.toFinset_cons,
+          List.toFinset_nil, insert_emptyc_eq, Finset.mem_insert, Finset.mem_singleton]
         rw [← pow_two] at h
-        simp only [hs, Set.mem_to_finset, Set.mem_setOf_eq, h]
+        simp only [hs, Set.mem_toFinset, Set.mem_setOf_eq, h]
         constructor
         · exact eq_or_eq_neg_of_sq_eq_sq _ _
         · rintro (h₂ | h₂) <;> rw [h₂]
           simp only [neg_sq]
       norm_cast
-      rw [h₁, List.to_finset_cons, List.to_finset_cons, List.to_finset_nil]
+      rw [h₁, List.toFinset_cons, List.toFinset_cons, List.toFinset_nil]
       exact Finset.card_doubleton (Ne.symm (mt (Ring.eq_self_iff_eq_zero_of_char_ne_two hF).mp h₀))
     · rw [quadratic_char_neg_one_iff_not_is_square.mpr h]
       simp only [Int.coe_nat_eq_zero, Finset.card_eq_zero, Set.to_finset_card,

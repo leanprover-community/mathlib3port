@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module algebra.free
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -79,7 +79,7 @@ def recOnMul {C : FreeMagma α → Sort l} (x) (ih1 : ∀ x, C (of x))
 
 @[ext, to_additive]
 theorem hom_ext {β : Type v} [Mul β] {f g : FreeMagma α →ₙ* β} (h : f ∘ of = g ∘ of) : f = g :=
-  (FunLike.ext _ _) fun x =>
+  FunLike.ext _ _ fun x =>
     recOnMul x (congr_fun h) <| by
       intros
       simp only [map_mul, *]
@@ -392,7 +392,7 @@ instance : Semigroup (AssocQuotient α)
       ·
         rw [quot_mk_assoc, quot_mk_assoc, quot_mk_assoc_left, quot_mk_assoc_left,
           quot_mk_assoc_left, ← quot_mk_assoc c d, ← quot_mk_assoc c d, quot_mk_assoc_left]
-  mul_assoc x y z := (Quot.induction_on₃ x y z) fun p q r => quot_mk_assoc p q r
+  mul_assoc x y z := Quot.induction_on₃ x y z fun p q r => quot_mk_assoc p q r
 
 /-- Embedding from magma to its free semigroup. -/
 @[to_additive "Embedding from additive magma to its free additive semigroup."]
@@ -407,7 +407,7 @@ instance [Inhabited α] : Inhabited (AssocQuotient α) :=
 @[elab_as_elim, to_additive]
 protected theorem induction_on {C : AssocQuotient α → Prop} (x : AssocQuotient α)
     (ih : ∀ x, C (of x)) : C x :=
-  Quot.induction_on x ih
+  Quot.inductionOn x ih
 #align magma.assoc_quotient.induction_on Magma.AssocQuotient.induction_on
 
 section lift
@@ -416,7 +416,7 @@ variable {β : Type v} [Semigroup β] (f : α →ₙ* β)
 
 @[ext, to_additive]
 theorem hom_ext {f g : AssocQuotient α →ₙ* β} (h : f.comp of = g.comp of) : f = g :=
-  (FunLike.ext _ _) fun x => AssocQuotient.induction_on x <| FunLike.congr_fun h
+  FunLike.ext _ _ fun x => AssocQuotient.induction_on x <| FunLike.congr_fun h
 #align magma.assoc_quotient.hom_ext Magma.AssocQuotient.hom_ext
 
 /-- Lifts a magma homomorphism `α → β` to a semigroup homomorphism `magma.assoc_quotient α → β`
@@ -432,8 +432,8 @@ def lift : (α →ₙ* β) ≃ (AssocQuotient α →ₙ* β)
           rintro a b (⟨c, d, e⟩ | ⟨c, d, e, f⟩) <;> simp only [map_mul, mul_assoc]
       map_mul' := fun x y => Quot.induction_on₂ x y (map_mul f) }
   invFun f := f.comp of
-  left_inv f := (FunLike.ext _ _) fun x => rfl
-  right_inv f := hom_ext <| (FunLike.ext _ _) fun x => rfl
+  left_inv f := FunLike.ext _ _ fun x => rfl
+  right_inv f := hom_ext <| FunLike.ext _ _ fun x => rfl
 #align magma.assoc_quotient.lift Magma.AssocQuotient.lift
 
 @[simp, to_additive]
@@ -541,14 +541,14 @@ instance [Inhabited α] : Inhabited (FreeSemigroup α) :=
 @[elab_as_elim, to_additive "Recursor for free additive semigroup using `of` and `+`."]
 protected def recOnMul {C : FreeSemigroup α → Sort l} (x) (ih1 : ∀ x, C (of x))
     (ih2 : ∀ x y, C (of x) → C y → C (of x * y)) : C x :=
-  (FreeSemigroup.recOn x) fun f s =>
+  FreeSemigroup.recOn x fun f s =>
     List.recOn s ih1 (fun hd tl ih f => ih2 f ⟨hd, tl⟩ (ih1 f) (ih hd)) f
 #align free_semigroup.rec_on_mul FreeSemigroup.recOnMul
 
 @[ext, to_additive]
 theorem hom_ext {β : Type v} [Mul β] {f g : FreeSemigroup α →ₙ* β} (h : f ∘ of = g ∘ of) : f = g :=
-  (FunLike.ext _ _) fun x =>
-    (FreeSemigroup.recOnMul x (congr_fun h)) fun x y hx hy => by simp only [map_mul, *]
+  FunLike.ext _ _ fun x =>
+    FreeSemigroup.recOnMul x (congr_fun h) fun x y hx hy => by simp only [map_mul, *]
 #align free_semigroup.hom_ext FreeSemigroup.hom_ext
 
 section lift
@@ -610,7 +610,7 @@ theorem map_of (x) : map f (of x) = of (f x) :=
 
 @[simp, to_additive]
 theorem length_map (x) : (map f x).length = x.length :=
-  (FreeSemigroup.recOnMul x fun x => rfl) fun x y hx hy => by simp only [map_mul, length_mul, *]
+  FreeSemigroup.recOnMul x (fun x => rfl) fun x y hx hy => by simp only [map_mul, length_mul, *]
 #align free_semigroup.length_map FreeSemigroup.length_map
 
 end Map
@@ -795,7 +795,7 @@ theorem to_free_semigroup_map (f : α → β) (x : FreeMagma α) :
 
 @[simp, to_additive]
 theorem length_to_free_semigroup (x : FreeMagma α) : x.toFreeSemigroup.length = x.length :=
-  (FreeMagma.recOnMul x fun x => rfl) fun x y hx hy => by
+  FreeMagma.recOnMul x (fun x => rfl) fun x y hx hy => by
     rw [map_mul, FreeSemigroup.length_mul, length, hx, hy]
 #align free_magma.length_to_free_semigroup FreeMagma.length_to_free_semigroup
 

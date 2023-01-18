@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.separation
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -233,7 +233,7 @@ def specializationOrder (α : Type _) [TopologicalSpace α] [T0Space α] : Parti
 
 instance : T0Space (SeparationQuotient α) :=
   ⟨fun x' y' =>
-    (Quotient.inductionOn₂' x' y') fun x y h =>
+    Quotient.inductionOn₂' x' y' fun x y h =>
       SeparationQuotient.mk_eq_mk.2 <| SeparationQuotient.inducing_mk.inseparable_iff.1 h⟩
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » s) -/
@@ -1264,7 +1264,7 @@ theorem continuous_within_at_update_of_ne [T1Space α] [DecidableEq α] [Topolog
     ContinuousWithinAt (Function.update f x z) s y ↔ ContinuousWithinAt f s y :=
   EventuallyEq.congr_continuous_within_at
     (mem_nhds_within_of_mem_nhds <|
-      (mem_of_superset (is_open_ne.mem_nhds hne)) fun y' hy' => Function.update_noteq hy' _ _)
+      mem_of_superset (is_open_ne.mem_nhds hne) fun y' hy' => Function.update_noteq hy' _ _)
     (Function.update_noteq hne _ _)
 #align continuous_within_at_update_of_ne continuous_within_at_update_of_ne
 
@@ -1332,7 +1332,7 @@ theorem closure_singleton [T1Space α] {a : α} : closure ({a} : Set α) = {a} :
 
 theorem Set.Subsingleton.closure [T1Space α] {s : Set α} (hs : s.Subsingleton) :
     (closure s).Subsingleton :=
-  (hs.induction_on (by simp)) fun x => by simp
+  hs.inductionOn (by simp) fun x => by simp
 #align set.subsingleton.closure Set.Subsingleton.closure
 
 @[simp]
@@ -2118,7 +2118,7 @@ theorem IsCompact.finite_compact_cover [T2Space α] {s : Set α} (hs : IsCompact
     induction' t using Finset.induction with x t hx ih generalizing U hU s hs hsC
     · refine' ⟨fun _ => ∅, fun i => is_compact_empty, fun i => empty_subset _, _⟩
       simpa only [subset_empty_iff, Union_false, Union_empty] using hsC
-    simp only [Finset.set_bUnion_insert] at hsC
+    simp only [Finset.set_bunionᵢ_insert] at hsC
     simp only [Finset.mem_insert] at hU
     have hU' : ∀ i ∈ t, IsOpen (U i) := fun i hi => hU i (Or.inr hi)
     rcases hs.binary_compact_cover (hU x (Or.inl rfl)) (is_open_bUnion hU') hsC with
@@ -3255,7 +3255,8 @@ theorem is_closed_set_of_inseparable : IsClosed { p : α × α | Inseparable p.1
 
 protected theorem Inducing.regularSpace [TopologicalSpace β] {f : β → α} (hf : Inducing f) :
     RegularSpace β :=
-  (RegularSpace.ofBasis fun b => by
+  RegularSpace.ofBasis
+    (fun b => by
       rw [hf.nhds_eq_comap b]
       exact (closed_nhds_basis _).comap _)
     fun b s hs => hs.2.Preimage hf.Continuous

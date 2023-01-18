@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module tactic.derive_fintype
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -193,7 +193,7 @@ def FinsetAbove.union {α} {enum : α → ℕ} (n) (s : FinsetIn fun a => enum a
     rw [s.2 _ hs] at this
     exact Nat.not_succ_le_self n this
   · intro x h'
-    rcases Finset.mem_disj_union.1 h' with (h' | h')
+    rcases Finset.mem_disjUnion.1 h' with (h' | h')
     · exact ge_of_eq (s.2 _ h')
     · exact Nat.le_of_succ_le (t.2 _ h')
 #align derive_fintype.finset_above.union DeriveFintype.FinsetAbove.union

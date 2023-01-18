@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Johannes Hölzl, Yury G. Kudryashov, Patrick Massot
 
 ! This file was ported from Lean 3 source module analysis.specific_limits.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -97,7 +97,7 @@ theorem tendsto_pow_at_top_nhds_within_0_of_lt_1 {𝕜 : Type _} [LinearOrderedF
 theorem uniformity_basis_dist_pow_of_lt_1 {α : Type _} [PseudoMetricSpace α] {r : ℝ} (h₀ : 0 < r)
     (h₁ : r < 1) :
     (𝓤 α).HasBasis (fun k : ℕ => True) fun k => { p : α × α | dist p.1 p.2 < r ^ k } :=
-  (Metric.mk_uniformity_basis fun i _ => pow_pos h₀ _) fun ε ε0 =>
+  Metric.mk_uniformity_basis (fun i _ => pow_pos h₀ _) fun ε ε0 =>
     (exists_pow_lt_of_lt_one ε0 h₁).imp fun k hk => ⟨trivial, hk.le⟩
 #align uniformity_basis_dist_pow_of_lt_1 uniformity_basis_dist_pow_of_lt_1
 

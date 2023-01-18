@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module tactic.ring
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -88,13 +88,12 @@ unsafe def ring_m.run' (red : Transparency) (atoms : ref (Buffer expr)) (e : exp
   let ic ← mk_instance_cache α
   let (ic, c) ← ic.get `` CommSemiring
   let nc ← mk_instance_cache q(ℕ)
-  (using_new_ref ic) fun r =>
-      (using_new_ref nc) fun nr => ReaderT.run m ⟨α, u, c, red, r, nr, atoms⟩
+  using_new_ref ic fun r => using_new_ref nc fun nr => ReaderT.run m ⟨α, u, c, red, r, nr, atoms⟩
 #align tactic.ring.ring_m.run' tactic.ring.ring_m.run'
 
 /-- Run a `ring_m` tactic in the tactic monad. -/
 unsafe def ring_m.run (red : Transparency) (e : expr) {α} (m : ring_m α) : tactic α :=
-  (using_new_ref mkBuffer) fun atoms => ring_m.run' red atoms e m
+  using_new_ref mkBuffer fun atoms => ring_m.run' red atoms e m
 #align tactic.ring.ring_m.run tactic.ring.ring_m.run
 
 /-- Lift an instance cache tactic (probably from `norm_num`) to the `ring_m` monad. This version
@@ -639,7 +638,7 @@ theorem unfold_div {α} [DivisionRing α] (a b c : α) (h : a * b⁻¹ = c) : a 
 equality. -/
 unsafe def eval' (red : Transparency) (atoms : ref (Buffer expr))
     (norm_atom : expr → tactic (expr × expr)) (e : expr) : tactic (expr × expr) :=
-  (ring_m.run' red atoms e) do
+  ring_m.run' red atoms e do
     let (e', p) ← eval norm_atom e
     return (e', p)
 #align tactic.ring.eval' tactic.ring.eval'
@@ -761,7 +760,7 @@ unsafe def normalize' (atoms : ref (Buffer expr)) (red : Transparency)
     This results in terms like `3 * x ^ 3 * y + x + y`. -/
 unsafe def normalize (red : Transparency) (mode := NormalizeMode.horner) (recursive := true)
     (e : expr) : tactic (expr × expr) :=
-  (using_new_ref mkBuffer) fun atoms => normalize' atoms red mode recursive e
+  using_new_ref mkBuffer fun atoms => normalize' atoms red mode recursive e
 #align tactic.ring.normalize tactic.ring.normalize
 
 /-- Configuration for `ring_nf`.
@@ -809,7 +808,7 @@ open Tactic.Ring
 `SOP`. (Because these are not actually keywords we use a name parser and postprocess the result.)
 -/
 unsafe def ring.mode : lean.parser Ring.NormalizeMode :=
-  (with_desc "(SOP|raw|horner)?") do
+  with_desc "(SOP|raw|horner)?" do
     let mode ← ident ?
     match mode with
       | none => pure ring.normalize_mode.horner
@@ -829,7 +828,7 @@ unsafe def ring_nf (red : parse (tk "!")?) (SOP : parse ring.mode) (loc : parse 
   let ns ← loc.get_locals
   let transp := if red.isSome then semireducible else reducible
   let tt ←
-    (using_new_ref mkBuffer) fun atoms =>
+    using_new_ref mkBuffer fun atoms =>
         tactic.replace_at (normalize' atoms transp SOP cfg.recursive) ns loc.include_goal |
     fail "ring_nf failed to simplify"
   when loc <| try tactic.reflexivity

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module number_theory.ramification_inertia
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -156,7 +156,7 @@ theorem ramification_idx_eq_normalized_factors_count (hp0 : map f p ≠ ⊥) (hP
   refine' ramification_idx_spec (Ideal.le_of_dvd _) (mt ideal.dvd_iff_le.mpr _) <;>
     rw [dvd_iff_normalized_factors_le_normalized_factors (pow_ne_zero _ hP0) hp0,
       normalized_factors_pow, normalized_factors_irreducible hPirr, normalize_eq,
-      Multiset.nsmul_singleton, ← Multiset.le_count_iff_repeat_le]
+      Multiset.nsmul_singleton, ← Multiset.le_count_iff_replicate_le]
   · exact (Nat.lt_succ_self _).not_le
 #align
   ideal.is_dedekind_domain.ramification_idx_eq_normalized_factors_count Ideal.IsDedekindDomain.ramification_idx_eq_normalized_factors_count
@@ -202,7 +202,7 @@ noncomputable def inertiaDeg [hp : p.IsMaximal] : ℕ :=
     @finrank (R ⧸ p) (S ⧸ P) _ _ <|
       @Algebra.toModule _ _ _ _ <|
         RingHom.toAlgebra <|
-          (Ideal.Quotient.lift p (P f)) fun a ha =>
+          Ideal.Quotient.lift p (P f) fun a ha =>
             Quotient.eq_zero_iff_mem.mpr <| mem_comap.mp <| hPp.symm ▸ ha
   else 0
 #align ideal.inertia_deg Ideal.inertiaDeg
@@ -226,7 +226,7 @@ theorem inertia_deg_algebra_map [Algebra R S] [Algebra (R ⧸ p) (S ⧸ P)]
   have := comap_eq_of_scalar_tower_quotient (algebraMap (R ⧸ p) (S ⧸ P)).Injective
   rw [inertia_deg, dif_pos this]
   congr
-  refine' Algebra.algebra_ext _ _ fun x' => (Quotient.inductionOn' x') fun x => _
+  refine' Algebra.algebra_ext _ _ fun x' => Quotient.inductionOn' x' fun x => _
   change Ideal.Quotient.lift p _ _ (Ideal.Quotient.mk p x) = algebraMap _ _ (Ideal.Quotient.mk p x)
   rw [Ideal.Quotient.lift_mk, ← Ideal.Quotient.algebra_map_eq, ← IsScalarTower.algebra_map_eq, ←
     Ideal.Quotient.algebra_map_eq, ← IsScalarTower.algebra_map_apply]
@@ -612,8 +612,8 @@ theorem quotient_to_quotient_range_pow_quot_succ_mk {i : ℕ} {a : S} (a_mem : a
 theorem quotient_to_quotient_range_pow_quot_succ_injective [IsDomain S] [IsDedekindDomain S]
     [P.IsPrime] {i : ℕ} (hi : i < e) {a : S} (a_mem : a ∈ P ^ i) (a_not_mem : a ∉ P ^ (i + 1)) :
     Function.Injective (quotientToQuotientRangePowQuotSucc f p P a_mem) := fun x =>
-  (Quotient.inductionOn' x) fun x y =>
-    (Quotient.inductionOn' y) fun y h =>
+  Quotient.inductionOn' x fun x y =>
+    Quotient.inductionOn' y fun y h =>
       by
       have Pe_le_Pi1 : P ^ e ≤ P ^ (i + 1) := Ideal.pow_le_pow hi
       simp only [Submodule.Quotient.mk'_eq_mk, quotient_to_quotient_range_pow_quot_succ_mk,
@@ -654,7 +654,7 @@ theorem quotient_to_quotient_range_pow_quot_succ_surjective [IsDomain S] [IsDede
   letI := Classical.decEq (Ideal S)
   rw [sup_eq_prod_inf_factors _ (pow_ne_zero _ hP0), normalized_factors_pow,
     normalized_factors_irreducible ((Ideal.prime_iff_is_prime hP0).mpr hP).Irreducible,
-    normalize_eq, Multiset.nsmul_singleton, Multiset.inter_repeat, Multiset.prod_repeat]
+    normalize_eq, Multiset.nsmul_singleton, Multiset.inter_replicate, Multiset.prod_replicate]
   rw [← Submodule.span_singleton_le_iff_mem, Ideal.submodule_span_eq] at a_mem a_not_mem
   rwa [Ideal.count_normalized_factors_eq a_mem a_not_mem, min_eq_left i.le_succ]
   · intro ha
@@ -758,18 +758,18 @@ open Classical
 variable [IsDomain S] [IsDedekindDomain S] [Algebra R S]
 
 theorem Factors.ne_bot (P : (factors (map (algebraMap R S) p)).toFinset) : (P : Ideal S) ≠ ⊥ :=
-  (prime_of_factor _ (Multiset.mem_to_finset.mp P.2)).NeZero
+  (prime_of_factor _ (Multiset.mem_toFinset.mp P.2)).NeZero
 #align ideal.factors.ne_bot Ideal.Factors.ne_bot
 
 instance Factors.isPrime (P : (factors (map (algebraMap R S) p)).toFinset) :
     IsPrime (P : Ideal S) :=
-  Ideal.isPrimeOfPrime (prime_of_factor _ (Multiset.mem_to_finset.mp P.2))
+  Ideal.isPrimeOfPrime (prime_of_factor _ (Multiset.mem_toFinset.mp P.2))
 #align ideal.factors.is_prime Ideal.Factors.isPrime
 
 theorem Factors.ramification_idx_ne_zero (P : (factors (map (algebraMap R S) p)).toFinset) :
     ramificationIdx (algebraMap R S) p P ≠ 0 :=
-  IsDedekindDomain.ramification_idx_ne_zero (ne_zero_of_mem_factors (Multiset.mem_to_finset.mp P.2))
-    (Factors.isPrime p P) (Ideal.le_of_dvd (dvd_of_mem_factors (Multiset.mem_to_finset.mp P.2)))
+  IsDedekindDomain.ramification_idx_ne_zero (ne_zero_of_mem_factors (Multiset.mem_toFinset.mp P.2))
+    (Factors.isPrime p P) (Ideal.le_of_dvd (dvd_of_mem_factors (Multiset.mem_toFinset.mp P.2)))
 #align ideal.factors.ramification_idx_ne_zero Ideal.Factors.ramification_idx_ne_zero
 
 instance Factors.fact_ramification_idx_ne_zero (P : (factors (map (algebraMap R S) p)).toFinset) :

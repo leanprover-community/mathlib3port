@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module data.set.pointwise.big_operators
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -98,7 +98,7 @@ theorem list_prod_singleton {M : Type _} [CommMonoid M] (s : List M) :
 theorem multiset_prod_mem_multiset_prod (t : Multiset ι) (f : ι → Set α) (g : ι → α)
     (hg : ∀ i ∈ t, g i ∈ f i) : (t.map g).Prod ∈ (t.map f).Prod :=
   by
-  induction t using Quotient.induction_on
+  induction t using Quotient.inductionOn
   simp_rw [Multiset.quot_mk_to_coe, Multiset.coe_map, Multiset.coe_prod]
   exact list_prod_mem_list_prod _ _ _ hg
 #align set.multiset_prod_mem_multiset_prod Set.multiset_prod_mem_multiset_prod
@@ -108,7 +108,7 @@ theorem multiset_prod_mem_multiset_prod (t : Multiset ι) (f : ι → Set α) (g
 theorem multiset_prod_subset_multiset_prod (t : Multiset ι) (f₁ f₂ : ι → Set α)
     (hf : ∀ i ∈ t, f₁ i ⊆ f₂ i) : (t.map f₁).Prod ⊆ (t.map f₂).Prod :=
   by
-  induction t using Quotient.induction_on
+  induction t using Quotient.inductionOn
   simp_rw [Multiset.quot_mk_to_coe, Multiset.coe_map, Multiset.coe_prod]
   exact list_prod_subset_list_prod _ _ _ hf
 #align set.multiset_prod_subset_multiset_prod Set.multiset_prod_subset_multiset_prod

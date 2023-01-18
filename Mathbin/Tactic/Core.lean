@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Simon Hudon, Scott Morrison, Keeley Hoek
 
 ! This file was ported from Lean 3 source module tactic.core
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -145,7 +145,7 @@ unsafe def contains_sorry_aux (pre : Name) : Name → tactic Bool
     let decl ← get_decl nm
     let ff ← return decl.value.contains_sorry |
       return true
-    ((decl pre).mfold ff) fun n b => if b then return tt else n
+    (decl pre).mfold ff fun n b => if b then return tt else n
 #align name.contains_sorry_aux name.contains_sorry_aux
 
 /-- `nm.contains_sorry` checks whether `sorry` occurs in the value of the declaration `nm` or
@@ -247,7 +247,7 @@ private unsafe def add_local_consts_as_local_hyps_aux :
   | mappings, [] => return mappings
   | mappings, var :: rest => do
     let-- Determine if `var` contains any local variables in the lift `rest`.
-    is_dependent := (var.local_type.fold false) fun e n b => if b then b else e ∈ rest
+    is_dependent := var.local_type.fold false fun e n b => if b then b else e ∈ rest
     -- If so, then skip it---add it to the end of the variable queue.
         if is_dependent then add_local_consts_as_local_hyps_aux mappings (rest ++ [var])
       else do
@@ -951,7 +951,7 @@ protected unsafe def of_nat (c : instance_cache) (n : ℕ) : tactic (instance_ca
     let (c, one) ← c.mk_app `` One.one []
     return
         (c,
-          (n one) fun b n e =>
+          n one fun b n e =>
             if n = 0 then one
             else
               cond b ((expr.const `` bit1 [c]).mk_app [c, oi, ai, e])
@@ -2084,7 +2084,7 @@ unsafe def higher_order_attr : user_attribute Unit (Option Name)
       let t ← infer_type l >>= instantiate_mvars
       let t' ← mk_higher_order_type t
       let (_, pr) ←
-        (solve_aux t') do
+        solve_aux t' do
             intros
             applyc `` _root_.funext
             intro1

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.rat.cast
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -803,7 +803,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align monoid_with_zero_hom.ext_rat' MonoidWithZeroHom.ext_rat'ₓ'. -/
 /-- If `f` and `g` agree on the integers then they are equal `φ`. -/
 theorem ext_rat' (h : ∀ m : ℤ, f m = g m) : f = g :=
-  (FunLike.ext f g) fun r => by
+  FunLike.ext f g fun r => by
     rw [← r.num_div_denom, div_eq_mul_inv, map_mul, map_mul, h, ← Int.cast_ofNat,
       eq_on_inv₀ f g (h _)]
 #align monoid_with_zero_hom.ext_rat' MonoidWithZeroHom.ext_rat'
@@ -902,20 +902,20 @@ namespace Rat
 
 variable {K : Type _} [DivisionRing K]
 
-#print Rat.distribSmul /-
-instance (priority := 100) distribSmul : DistribSMul ℚ K
+#print Rat.distribSMul /-
+instance (priority := 100) distribSMul : DistribSMul ℚ K
     where
   smul := (· • ·)
   smul_zero a := by rw [smul_def, mul_zero]
   smul_add a x y := by simp only [smul_def, mul_add, cast_add]
-#align rat.distrib_smul Rat.distribSmul
+#align rat.distrib_smul Rat.distribSMul
 -/
 
 /- warning: rat.is_scalar_tower_right -> Rat.isScalarTower_right is a dubious translation:
 lean 3 declaration is
-  forall {K : Type.{u1}} [_inst_1 : DivisionRing.{u1} K], IsScalarTower.{0, u1, u1} Rat K K (SMulZeroClass.toHasSmul.{0, u1} Rat K (AddZeroClass.toHasZero.{u1} K (AddMonoid.toAddZeroClass.{u1} K (AddMonoidWithOne.toAddMonoid.{u1} K (AddGroupWithOne.toAddMonoidWithOne.{u1} K (NonAssocRing.toAddGroupWithOne.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K _inst_1))))))) (DistribSMul.toSmulZeroClass.{0, u1} Rat K (AddMonoid.toAddZeroClass.{u1} K (AddMonoidWithOne.toAddMonoid.{u1} K (AddGroupWithOne.toAddMonoidWithOne.{u1} K (NonAssocRing.toAddGroupWithOne.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K _inst_1)))))) (Rat.distribSmul.{u1} K _inst_1))) (Mul.toSMul.{u1} K (Distrib.toHasMul.{u1} K (Ring.toDistrib.{u1} K (DivisionRing.toRing.{u1} K _inst_1)))) (SMulZeroClass.toHasSmul.{0, u1} Rat K (AddZeroClass.toHasZero.{u1} K (AddMonoid.toAddZeroClass.{u1} K (AddMonoidWithOne.toAddMonoid.{u1} K (AddGroupWithOne.toAddMonoidWithOne.{u1} K (NonAssocRing.toAddGroupWithOne.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K _inst_1))))))) (DistribSMul.toSmulZeroClass.{0, u1} Rat K (AddMonoid.toAddZeroClass.{u1} K (AddMonoidWithOne.toAddMonoid.{u1} K (AddGroupWithOne.toAddMonoidWithOne.{u1} K (NonAssocRing.toAddGroupWithOne.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K _inst_1)))))) (Rat.distribSmul.{u1} K _inst_1)))
+  forall {K : Type.{u1}} [_inst_1 : DivisionRing.{u1} K], IsScalarTower.{0, u1, u1} Rat K K (SMulZeroClass.toHasSmul.{0, u1} Rat K (AddZeroClass.toHasZero.{u1} K (AddMonoid.toAddZeroClass.{u1} K (AddMonoidWithOne.toAddMonoid.{u1} K (AddGroupWithOne.toAddMonoidWithOne.{u1} K (NonAssocRing.toAddGroupWithOne.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K _inst_1))))))) (DistribSMul.toSmulZeroClass.{0, u1} Rat K (AddMonoid.toAddZeroClass.{u1} K (AddMonoidWithOne.toAddMonoid.{u1} K (AddGroupWithOne.toAddMonoidWithOne.{u1} K (NonAssocRing.toAddGroupWithOne.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K _inst_1)))))) (Rat.distribSMul.{u1} K _inst_1))) (Mul.toSMul.{u1} K (Distrib.toHasMul.{u1} K (Ring.toDistrib.{u1} K (DivisionRing.toRing.{u1} K _inst_1)))) (SMulZeroClass.toHasSmul.{0, u1} Rat K (AddZeroClass.toHasZero.{u1} K (AddMonoid.toAddZeroClass.{u1} K (AddMonoidWithOne.toAddMonoid.{u1} K (AddGroupWithOne.toAddMonoidWithOne.{u1} K (NonAssocRing.toAddGroupWithOne.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K _inst_1))))))) (DistribSMul.toSmulZeroClass.{0, u1} Rat K (AddMonoid.toAddZeroClass.{u1} K (AddMonoidWithOne.toAddMonoid.{u1} K (AddGroupWithOne.toAddMonoidWithOne.{u1} K (NonAssocRing.toAddGroupWithOne.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K _inst_1)))))) (Rat.distribSMul.{u1} K _inst_1)))
 but is expected to have type
-  forall {K : Type.{u1}} [_inst_1 : DivisionRing.{u1} K], IsScalarTower.{0, u1, u1} Rat K K (SMulZeroClass.toSMul.{0, u1} Rat K (MonoidWithZero.toZero.{u1} K (Semiring.toMonoidWithZero.{u1} K (DivisionSemiring.toSemiring.{u1} K (DivisionRing.toDivisionSemiring.{u1} K _inst_1)))) (DistribSMul.toSMulZeroClass.{0, u1} Rat K (AddMonoid.toAddZeroClass.{u1} K (AddMonoidWithOne.toAddMonoid.{u1} K (AddGroupWithOne.toAddMonoidWithOne.{u1} K (Ring.toAddGroupWithOne.{u1} K (DivisionRing.toRing.{u1} K _inst_1))))) (Rat.distribSmul.{u1} K _inst_1))) (MulAction.toSMul.{u1, u1} K K (MonoidWithZero.toMonoid.{u1} K (Semiring.toMonoidWithZero.{u1} K (DivisionSemiring.toSemiring.{u1} K (DivisionRing.toDivisionSemiring.{u1} K _inst_1)))) (Monoid.toMulAction.{u1} K (MonoidWithZero.toMonoid.{u1} K (Semiring.toMonoidWithZero.{u1} K (DivisionSemiring.toSemiring.{u1} K (DivisionRing.toDivisionSemiring.{u1} K _inst_1)))))) (SMulZeroClass.toSMul.{0, u1} Rat K (MonoidWithZero.toZero.{u1} K (Semiring.toMonoidWithZero.{u1} K (DivisionSemiring.toSemiring.{u1} K (DivisionRing.toDivisionSemiring.{u1} K _inst_1)))) (DistribSMul.toSMulZeroClass.{0, u1} Rat K (AddMonoid.toAddZeroClass.{u1} K (AddMonoidWithOne.toAddMonoid.{u1} K (AddGroupWithOne.toAddMonoidWithOne.{u1} K (Ring.toAddGroupWithOne.{u1} K (DivisionRing.toRing.{u1} K _inst_1))))) (Rat.distribSmul.{u1} K _inst_1)))
+  forall {K : Type.{u1}} [_inst_1 : DivisionRing.{u1} K], IsScalarTower.{0, u1, u1} Rat K K (SMulZeroClass.toSMul.{0, u1} Rat K (MonoidWithZero.toZero.{u1} K (Semiring.toMonoidWithZero.{u1} K (DivisionSemiring.toSemiring.{u1} K (DivisionRing.toDivisionSemiring.{u1} K _inst_1)))) (DistribSMul.toSMulZeroClass.{0, u1} Rat K (AddMonoid.toAddZeroClass.{u1} K (AddMonoidWithOne.toAddMonoid.{u1} K (AddGroupWithOne.toAddMonoidWithOne.{u1} K (Ring.toAddGroupWithOne.{u1} K (DivisionRing.toRing.{u1} K _inst_1))))) (Rat.distribSMul.{u1} K _inst_1))) (MulAction.toSMul.{u1, u1} K K (MonoidWithZero.toMonoid.{u1} K (Semiring.toMonoidWithZero.{u1} K (DivisionSemiring.toSemiring.{u1} K (DivisionRing.toDivisionSemiring.{u1} K _inst_1)))) (Monoid.toMulAction.{u1} K (MonoidWithZero.toMonoid.{u1} K (Semiring.toMonoidWithZero.{u1} K (DivisionSemiring.toSemiring.{u1} K (DivisionRing.toDivisionSemiring.{u1} K _inst_1)))))) (SMulZeroClass.toSMul.{0, u1} Rat K (MonoidWithZero.toZero.{u1} K (Semiring.toMonoidWithZero.{u1} K (DivisionSemiring.toSemiring.{u1} K (DivisionRing.toDivisionSemiring.{u1} K _inst_1)))) (DistribSMul.toSMulZeroClass.{0, u1} Rat K (AddMonoid.toAddZeroClass.{u1} K (AddMonoidWithOne.toAddMonoid.{u1} K (AddGroupWithOne.toAddMonoidWithOne.{u1} K (Ring.toAddGroupWithOne.{u1} K (DivisionRing.toRing.{u1} K _inst_1))))) (Rat.distribSMul.{u1} K _inst_1)))
 Case conversion may be inaccurate. Consider using '#align rat.is_scalar_tower_right Rat.isScalarTower_rightₓ'. -/
 instance isScalarTower_right : IsScalarTower ℚ K K :=
   ⟨fun a x y => by simp only [smul_def, smul_eq_mul, mul_assoc]⟩

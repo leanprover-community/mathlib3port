@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.exterior_algebra.of_alternating
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -109,8 +109,8 @@ theorem lift_alternating_apply_ι_multi {n : ℕ} (f : ∀ i, AlternatingMap R M
   by
   rw [ι_multi_apply]
   induction' n with n ih generalizing f v
-  · rw [List.of_fn_zero, List.prod_nil, lift_alternating_one, Subsingleton.elim 0 v]
-  · rw [List.of_fn_succ, List.prod_cons, lift_alternating_ι_mul, ih,
+  · rw [List.ofFn_zero, List.prod_nil, lift_alternating_one, Subsingleton.elim 0 v]
+  · rw [List.ofFn_succ, List.prod_cons, lift_alternating_ι_mul, ih,
       AlternatingMap.curry_left_apply_apply]
     congr
     exact Matrix.cons_head_tail _

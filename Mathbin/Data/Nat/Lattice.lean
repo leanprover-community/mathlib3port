@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Floris van Doorn, Gabriel Ebner, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.nat.lattice
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -169,7 +169,7 @@ theorem Inf_add {n : ℕ} {p : ℕ → Prop} (hn : n ≤ infₛ { m | p m }) :
 theorem Inf_add' {n : ℕ} {p : ℕ → Prop} (h : 0 < infₛ { m | p m }) :
     infₛ { m | p m } + n = infₛ { m | p (m - n) } :=
   by
-  convert Inf_add _
+  convert infₛ_add _
   · simp_rw [add_tsub_cancel_right]
   obtain ⟨m, hm⟩ := nonempty_of_pos_Inf h
   refine'

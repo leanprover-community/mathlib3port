@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module analysis.convex.gauge
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -89,8 +89,7 @@ theorem Absorbent.gauge_set_nonempty (absorbs : Absorbent ℝ s) :
 #align absorbent.gauge_set_nonempty Absorbent.gauge_set_nonempty
 
 theorem gauge_mono (hs : Absorbent ℝ s) (h : s ⊆ t) : gauge t ≤ gauge s := fun x =>
-  (cinfₛ_le_cinfₛ gauge_set_bdd_below hs.gauge_set_nonempty) fun r hr =>
-    ⟨hr.1, smul_set_mono h hr.2⟩
+  cinfₛ_le_cinfₛ gauge_set_bdd_below hs.gauge_set_nonempty fun r hr => ⟨hr.1, smul_set_mono h hr.2⟩
 #align gauge_mono gauge_mono
 
 theorem exists_lt_of_gauge_lt (absorbs : Absorbent ℝ s) (h : gauge s x < a) :
@@ -107,7 +106,7 @@ theorem gauge_zero : gauge s 0 = 0 := by
   rw [gauge_def']
   by_cases (0 : E) ∈ s
   · simp only [smul_zero, sep_true, h, cinfₛ_Ioi]
-  · simp only [smul_zero, sep_false, h, Real.Inf_empty]
+  · simp only [smul_zero, sep_false, h, Real.infₛ_empty]
 #align gauge_zero gauge_zero
 
 @[simp]
@@ -117,14 +116,14 @@ theorem gauge_zero' : gauge (0 : Set E) = 0 := by
   obtain rfl | hx := eq_or_ne x 0
   · simp only [cinfₛ_Ioi, mem_zero, Pi.zero_apply, eq_self_iff_true, sep_true, smul_zero]
   · simp only [mem_zero, Pi.zero_apply, inv_eq_zero, smul_eq_zero]
-    convert Real.Inf_empty
+    convert Real.infₛ_empty
     exact eq_empty_iff_forall_not_mem.2 fun r hr => hr.2.elim (ne_of_gt hr.1) hx
 #align gauge_zero' gauge_zero'
 
 @[simp]
 theorem gauge_empty : gauge (∅ : Set E) = 0 := by
   ext
-  simp only [gauge_def', Real.Inf_empty, mem_empty_iff_false, Pi.zero_apply, sep_false]
+  simp only [gauge_def', Real.infₛ_empty, mem_empty_iff_false, Pi.zero_apply, sep_false]
 #align gauge_empty gauge_empty
 
 theorem gauge_of_subset_zero (h : s ⊆ 0) : gauge s = 0 :=
@@ -135,7 +134,7 @@ theorem gauge_of_subset_zero (h : s ⊆ 0) : gauge s = 0 :=
 
 /-- The gauge is always nonnegative. -/
 theorem gauge_nonneg (x : E) : 0 ≤ gauge s x :=
-  (Real.Inf_nonneg _) fun x hx => hx.1.le
+  Real.infₛ_nonneg _ fun x hx => hx.1.le
 #align gauge_nonneg gauge_nonneg
 
 theorem gauge_neg (symmetric : ∀ x ∈ s, -x ∈ s) (x : E) : gauge s (-x) = gauge s x :=
@@ -248,7 +247,7 @@ theorem one_le_gauge_of_not_mem (hs₁ : StarConvex ℝ 0 s) (hs₂ : Absorbs �
 
 section LinearOrderedField
 
-variable {α : Type _} [LinearOrderedField α] [MulActionWithZero α ℝ] [OrderedSmul α ℝ]
+variable {α : Type _} [LinearOrderedField α] [MulActionWithZero α ℝ] [OrderedSMul α ℝ]
 
 theorem gauge_smul_of_nonneg [MulActionWithZero α E] [IsScalarTower α ℝ (Set E)] {s : Set E} {a : α}
     (ha : 0 ≤ a) (x : E) : gauge s (a • x) = a • gauge s x :=
@@ -442,7 +441,7 @@ protected theorem Seminorm.gauge_ball (p : Seminorm ℝ E) : gauge (p.ball 0 1) 
   by
   ext
   obtain hp | hp := { r : ℝ | 0 < r ∧ x ∈ r • p.ball 0 1 }.eq_empty_or_nonempty
-  · rw [gauge, hp, Real.Inf_empty]
+  · rw [gauge, hp, Real.infₛ_empty]
     by_contra
     have hpx : 0 < p x := (map_nonneg _ _).lt_of_ne h
     have hpx₂ : 0 < 2 * p x := mul_pos zero_lt_two hpx

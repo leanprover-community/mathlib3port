@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module number_theory.class_number.finite
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -82,7 +82,7 @@ theorem norm_bound_pos : 0 < normBound abv bS :=
       (injective_iff_map_eq_zero (Algebra.leftMulMatrix bS)).mp
         (Algebra.left_mul_matrix_injective bS)
     ext (j k)
-    simp [h, Dmatrix.zero_apply]
+    simp [h, DMatrix.zero_apply]
   simp only [norm_bound, Algebra.smul_def, eq_nat_cast]
   refine' mul_pos (int.coe_nat_pos.mpr (Nat.factorial_pos _)) _
   refine' pow_pos (mul_pos (int.coe_nat_pos.mpr (fintype.card_pos_iff.mpr ⟨i⟩)) _) _

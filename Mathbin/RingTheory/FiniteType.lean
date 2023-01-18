@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.finite_type
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -188,7 +188,7 @@ theorem is_noetherian_ring (R S : Type _) [CommRing R] [CommRing S] [Algebra R S
     is_noetherian_ring_of_surjective (MvPolynomial s R) S
       (MvPolynomial.aeval coe : MvPolynomial s R →ₐ[R] S)
   rw [← Set.range_iff_surjective, AlgHom.coe_to_ring_hom, ← AlgHom.coe_range, ←
-    Algebra.adjoin_range_eq_range_aeval, Subtype.range_coe_subtype, Finset.set_of_mem, hs]
+    Algebra.adjoin_range_eq_range_aeval, Subtype.range_coe_subtype, Finset.setOf_mem, hs]
   rfl
 #align algebra.finite_type.is_noetherian_ring Algebra.FiniteType.is_noetherian_ring
 
@@ -400,9 +400,9 @@ theorem exists_finset_adjoin_eq_top [h : FiniteType R (AddMonoidAlgebra R M)] :
   by
   obtain ⟨S, hS⟩ := h
   letI : DecidableEq M := Classical.decEq M
-  use Finset.bUnion S fun f => f.support
-  have : (Finset.bUnion S fun f => f.support : Set M) = ⋃ f ∈ S, (f.support : Set M) := by
-    simp only [Finset.set_bUnion_coe, Finset.coe_bUnion]
+  use Finset.bunionᵢ S fun f => f.support
+  have : (Finset.bunionᵢ S fun f => f.support : Set M) = ⋃ f ∈ S, (f.support : Set M) := by
+    simp only [Finset.set_bunionᵢ_coe, Finset.coe_bunionᵢ]
   rw [this]
   exact support_gen_of_gen' hS
 #align add_monoid_algebra.exists_finset_adjoin_eq_top AddMonoidAlgebra.exists_finset_adjoin_eq_top
@@ -570,9 +570,9 @@ theorem exists_finset_adjoin_eq_top [h : FiniteType R (MonoidAlgebra R M)] :
   by
   obtain ⟨S, hS⟩ := h
   letI : DecidableEq M := Classical.decEq M
-  use Finset.bUnion S fun f => f.support
-  have : (Finset.bUnion S fun f => f.support : Set M) = ⋃ f ∈ S, (f.support : Set M) := by
-    simp only [Finset.set_bUnion_coe, Finset.coe_bUnion]
+  use Finset.bunionᵢ S fun f => f.support
+  have : (Finset.bunionᵢ S fun f => f.support : Set M) = ⋃ f ∈ S, (f.support : Set M) := by
+    simp only [Finset.set_bunionᵢ_coe, Finset.coe_bunionᵢ]
   rw [this]
   exact support_gen_of_gen' hS
 #align monoid_algebra.exists_finset_adjoin_eq_top MonoidAlgebra.exists_finset_adjoin_eq_top

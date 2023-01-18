@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathaniel Thomas, Jeremy Avigad, Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.module.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -479,8 +479,7 @@ Case conversion may be inaccurate. Consider using '#align module.subsingleton Mo
 as an instance because Lean has no way to guess `R`. -/
 protected theorem Module.subsingleton (R M : Type _) [Semiring R] [Subsingleton R] [AddCommMonoid M]
     [Module R M] : Subsingleton M :=
-  ⟨fun x y => by
-    rw [← one_smul R x, ← one_smul R y, Subsingleton.elim (1 : R) 0, zero_smul, zero_smul]⟩
+  MulActionWithZero.subsingleton R M
 #align module.subsingleton Module.subsingleton
 
 /- warning: module.nontrivial -> Module.nontrivial is a dubious translation:
@@ -492,8 +491,7 @@ Case conversion may be inaccurate. Consider using '#align module.nontrivial Modu
 /-- A semiring is `nontrivial` provided that there exists a nontrivial module over this semiring. -/
 protected theorem Module.nontrivial (R M : Type _) [Semiring R] [Nontrivial M] [AddCommMonoid M]
     [Module R M] : Nontrivial R :=
-  (subsingleton_or_nontrivial R).resolve_left fun hR =>
-    not_subsingleton M <| Module.subsingleton R M
+  MulActionWithZero.nontrivial R M
 #align module.nontrivial Module.nontrivial
 
 #print Semiring.toModule /-
@@ -605,7 +603,7 @@ should normally have exactly one `ℕ`-module structure by design. -/
 def AddCommMonoid.natModule.unique : Unique (Module ℕ M)
     where
   default := by infer_instance
-  uniq P := (Module.ext' P _) fun n => nat_smul_eq_nsmul P n
+  uniq P := Module.ext' P _ fun n => nat_smul_eq_nsmul P n
 #align add_comm_monoid.nat_module.unique AddCommMonoid.natModule.unique
 -/
 
@@ -667,7 +665,7 @@ should normally have exactly one `ℤ`-module structure by design. -/
 def AddCommGroup.intModule.unique : Unique (Module ℤ M)
     where
   default := by infer_instance
-  uniq P := (Module.ext' P _) fun n => int_smul_eq_zsmul P n
+  uniq P := Module.ext' P _ fun n => int_smul_eq_zsmul P n
 #align add_comm_group.int_module.unique AddCommGroup.intModule.unique
 
 end AddCommGroup
@@ -758,7 +756,7 @@ theorem map_rat_smul [AddCommGroup M] [AddCommGroup M₂] [Module ℚ M] [Module
 #print subsingleton_rat_module /-
 /-- There can be at most one `module ℚ E` structure on an additive commutative group. -/
 instance subsingleton_rat_module (E : Type _) [AddCommGroup E] : Subsingleton (Module ℚ E) :=
-  ⟨fun P Q => (Module.ext' P Q) fun r x => @map_rat_smul _ _ _ _ P Q _ _ (AddMonoidHom.id E) r x⟩
+  ⟨fun P Q => Module.ext' P Q fun r x => @map_rat_smul _ _ _ _ P Q _ _ (AddMonoidHom.id E) r x⟩
 #align subsingleton_rat_module subsingleton_rat_module
 -/
 
@@ -1149,5 +1147,5 @@ theorem Int.smul_one_eq_coe {R : Type _} [Ring R] (m : ℤ) : m • (1 : R) = �
   rw [zsmul_eq_mul, mul_one]
 #align int.smul_one_eq_coe Int.smul_one_eq_coe
 
-assert_not_exists multiset
+assert_not_exists Multiset
 

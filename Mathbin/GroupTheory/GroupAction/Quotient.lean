@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Thomas Browning
 
 ! This file was ported from Lean 3 source module group_theory.group_action.quotient
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -139,7 +139,7 @@ variable (α) {β} [MulAction α β] (x : β)
 /-- The canonical map from the quotient of the stabilizer to the set. -/
 @[to_additive "The canonical map from the quotient of the stabilizer to the set. "]
 def ofQuotientStabilizer (g : α ⧸ MulAction.stabilizer α x) : β :=
-  (Quotient.liftOn' g (· • x)) fun g1 g2 H =>
+  Quotient.liftOn' g (· • x) fun g1 g2 H =>
     calc
       g1 • x = g1 • (g1⁻¹ * g2) • x := congr_arg _ (left_rel_apply.mp H).symm
       _ = g2 • x := by rw [smul_smul, mul_inv_cancel_left]
@@ -153,19 +153,19 @@ theorem of_quotient_stabilizer_mk (g : α) : ofQuotientStabilizer α x (Quotient
 
 @[to_additive]
 theorem of_quotient_stabilizer_mem_orbit (g) : ofQuotientStabilizer α x g ∈ orbit α x :=
-  (Quotient.inductionOn' g) fun g => ⟨g, rfl⟩
+  Quotient.inductionOn' g fun g => ⟨g, rfl⟩
 #align mul_action.of_quotient_stabilizer_mem_orbit MulAction.of_quotient_stabilizer_mem_orbit
 
 @[to_additive]
 theorem of_quotient_stabilizer_smul (g : α) (g' : α ⧸ MulAction.stabilizer α x) :
     ofQuotientStabilizer α x (g • g') = g • ofQuotientStabilizer α x g' :=
-  (Quotient.inductionOn' g') fun _ => mul_smul _ _ _
+  Quotient.inductionOn' g' fun _ => mul_smul _ _ _
 #align mul_action.of_quotient_stabilizer_smul MulAction.of_quotient_stabilizer_smul
 
 @[to_additive]
 theorem injective_of_quotient_stabilizer : Function.Injective (ofQuotientStabilizer α x) :=
   fun y₁ y₂ =>
-  (Quotient.inductionOn₂' y₁ y₂) fun g₁ g₂ (H : g₁ • x = g₂ • x) =>
+  Quotient.inductionOn₂' y₁ y₂ fun g₁ g₂ (H : g₁ • x = g₂ • x) =>
     Quotient.sound' <| by
       rw [left_rel_apply]
       show (g₁⁻¹ * g₂) • x = x

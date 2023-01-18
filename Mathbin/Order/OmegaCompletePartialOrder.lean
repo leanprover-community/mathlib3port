@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module order.omega_complete_partial_order
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -220,7 +220,7 @@ theorem ωSup_total {c : Chain α} {x : α} (h : ∀ i, c i ≤ x ∨ x ≤ c i)
 
 @[mono]
 theorem ωSup_le_ωSup_of_le {c₀ c₁ : Chain α} (h : c₀ ≤ c₁) : ωSup c₀ ≤ ωSup c₁ :=
-  (ωSup_le _ _) fun i => (Exists.rec_on (h i)) fun j h => le_trans h (le_ωSup _ _)
+  ωSup_le _ _ fun i => Exists.rec_on (h i) fun j h => le_trans h (le_ωSup _ _)
 #align omega_complete_partial_order.ωSup_le_ωSup_of_le OmegaCompletePartialOrder.ωSup_le_ωSup_of_le
 
 theorem ωSup_le_iff (c : Chain α) (x : α) : ωSup c ≤ x ↔ ∀ i, c i ≤ x :=
@@ -464,7 +464,7 @@ protected def ωSup (c : Chain (α × β)) : α × β :=
 instance : OmegaCompletePartialOrder (α × β)
     where
   ωSup := Prod.ωSup
-  ωSup_le := fun c ⟨x, x'⟩ h => ⟨(ωSup_le _ _) fun i => (h i).1, (ωSup_le _ _) fun i => (h i).2⟩
+  ωSup_le := fun c ⟨x, x'⟩ h => ⟨ωSup_le _ _ fun i => (h i).1, ωSup_le _ _ fun i => (h i).2⟩
   le_ωSup c i := ⟨le_ωSup (c.map OrderHom.fst) i, le_ωSup (c.map OrderHom.snd) i⟩
 
 theorem ωSup_zip (c₀ : Chain α) (c₁ : Chain β) : ωSup (c₀.zip c₁) = (ωSup c₀, ωSup c₁) :=
@@ -577,7 +577,7 @@ namespace OrderHom
 protected def ωSup (c : Chain (α →o β)) : α →o β
     where
   toFun a := ωSup (c.map (OrderHom.apply a))
-  monotone' x y h := ωSup_le_ωSup_of_le ((Chain.map_le_map _) fun a => a.Monotone h)
+  monotone' x y h := ωSup_le_ωSup_of_le (Chain.map_le_map _ fun a => a.Monotone h)
 #align omega_complete_partial_order.order_hom.ωSup OmegaCompletePartialOrder.OrderHom.ωSup
 
 @[simps ωSup_coe]
@@ -897,7 +897,7 @@ def flip {α : Type _} (f : α → β →𝒄 γ) : β →𝒄 α → γ
 /-- `part.bind` as a continuous function. -/
 @[simps (config := { rhsMd := reducible })]
 noncomputable def bind {β γ : Type v} (f : α →𝒄 Part β) (g : α →𝒄 β → Part γ) : α →𝒄 Part γ :=
-  (ofMono (OrderHom.bind ↑f ↑g)) fun c =>
+  ofMono (OrderHom.bind ↑f ↑g) fun c =>
     by
     rw [OrderHom.bind, ← OrderHom.bind, ωSup_bind, ← f.continuous, ← g.continuous]
     rfl

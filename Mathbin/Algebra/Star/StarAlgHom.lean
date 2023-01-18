@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module algebra.star.star_alg_hom
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -698,7 +698,7 @@ attribute [nolint dangerous_instance] StarAlgEquivClass.starHomClass
 
 -- See note [lower instance priority]
 instance (priority := 50) {F R A B : Type _} [Add A] [Mul A] [Star A] [SMul R A] [Add B] [Mul B]
-    [SMul R B] [Star B] [hF : StarAlgEquivClass F R A B] : SmulHomClass F R A B :=
+    [SMul R B] [Star B] [hF : StarAlgEquivClass F R A B] : SMulHomClass F R A B :=
   { hF with
     coe := fun f => f
     coe_injective' := FunLike.coe_injective }

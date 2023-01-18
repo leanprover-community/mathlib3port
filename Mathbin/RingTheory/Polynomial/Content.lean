@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.content
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -67,6 +67,10 @@ theorem IsPrimitive.ne_zero [Nontrivial R] {p : R[X]} (hp : p.IsPrimitive) : p �
   rintro rfl
   exact (hp 0 (dvd_zero (C 0))).NeZero rfl
 #align polynomial.is_primitive.ne_zero Polynomial.IsPrimitive.ne_zero
+
+theorem is_primitive_of_dvd {p q : R[X]} (hp : IsPrimitive p) (hq : q ∣ p) : IsPrimitive q :=
+  fun a ha => is_primitive_iff_is_unit_of_C_dvd.mp hp a (dvd_trans ha hq)
+#align polynomial.is_primitive_of_dvd Polynomial.is_primitive_of_dvd
 
 end Primitive
 
@@ -422,14 +426,6 @@ theorem prim_part_mul {p q : R[X]} (h0 : p * q ≠ 0) : (p * q).primPart = p.pri
   rw [content_mul, RingHom.map_mul]
   ring
 #align polynomial.prim_part_mul Polynomial.prim_part_mul
-
-theorem IsPrimitive.is_primitive_of_dvd {p q : R[X]} (hp : p.IsPrimitive) (hdvd : q ∣ p) :
-    q.IsPrimitive := by
-  rcases hdvd with ⟨r, rfl⟩
-  rw [is_primitive_iff_content_eq_one, ← normalize_content, normalize_eq_one, isUnit_iff_dvd_one]
-  apply Dvd.intro r.content
-  rwa [is_primitive_iff_content_eq_one, content_mul] at hp
-#align polynomial.is_primitive.is_primitive_of_dvd Polynomial.IsPrimitive.is_primitive_of_dvd
 
 theorem IsPrimitive.dvd_prim_part_iff_dvd {p q : R[X]} (hp : p.IsPrimitive) (hq : q ≠ 0) :
     p ∣ q.primPart ↔ p ∣ q :=

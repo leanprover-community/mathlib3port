@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.chain
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -149,16 +149,17 @@ theorem IsChain.total (h : IsChain r s) (hx : x ∈ s) (hy : y ∈ s) : x ≺ y 
 
 #print IsChain.directedOn /-
 theorem IsChain.directedOn (H : IsChain r s) : DirectedOn r s := fun x hx y hy =>
-  ((H.Total hx hy).elim fun h => ⟨y, hy, h, refl _⟩) fun h => ⟨x, hx, refl _, h⟩
+  (H.Total hx hy).elim (fun h => ⟨y, hy, h, refl _⟩) fun h => ⟨x, hx, refl _, h⟩
 #align is_chain.directed_on IsChain.directedOn
 -/
 
 #print IsChain.directed /-
 protected theorem IsChain.directed {f : β → α} {c : Set β} (h : IsChain (f ⁻¹'o r) c) :
     Directed r fun x : { a : β // a ∈ c } => f x := fun ⟨a, ha⟩ ⟨b, hb⟩ =>
-  (by_cases fun hab : a = b => by
+  by_cases
+    (fun hab : a = b => by
       simp only [hab, exists_prop, and_self_iff, Subtype.exists] <;> exact ⟨b, hb, refl _⟩)
-    fun hab => ((h ha hb hab).elim fun h => ⟨⟨b, hb⟩, h, refl _⟩) fun h => ⟨⟨a, ha⟩, refl _, h⟩
+    fun hab => (h ha hb hab).elim (fun h => ⟨⟨b, hb⟩, h, refl _⟩) fun h => ⟨⟨a, ha⟩, refl _, h⟩
 #align is_chain.directed IsChain.directed
 -/
 
@@ -303,7 +304,7 @@ private theorem chain_closure_succ_total (hc₁ : ChainClosure r c₁) (hc₂ : 
   induction hc₂ generalizing c₁ hc₁ h
   case
     succ c₂ hc₂ ih =>
-    refine' ((chain_closure_succ_total_aux hc₁ hc₂) fun c₁ => ih).imp h.antisymm' fun h₁ => _
+    refine' (chain_closure_succ_total_aux hc₁ hc₂ fun c₁ => ih).imp h.antisymm' fun h₁ => _
     obtain rfl | h₂ := ih hc₁ h₁
     · exact subset.rfl
     · exact h₂.trans subset_succChain
@@ -322,7 +323,7 @@ private theorem chain_closure_succ_total (hc₁ : ChainClosure r c₁) (hc₂ : 
 #print ChainClosure.total /-
 theorem ChainClosure.total (hc₁ : ChainClosure r c₁) (hc₂ : ChainClosure r c₂) :
     c₁ ⊆ c₂ ∨ c₂ ⊆ c₁ :=
-  ((chain_closure_succ_total_aux hc₂ hc₁) fun c₃ hc₃ => chain_closure_succ_total hc₃ hc₁).imp_left
+  (chain_closure_succ_total_aux hc₂ hc₁ fun c₃ hc₃ => chain_closure_succ_total hc₃ hc₁).imp_left
     subset_succChain.trans
 #align chain_closure.total ChainClosure.total
 -/

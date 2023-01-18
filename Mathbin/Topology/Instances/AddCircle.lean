@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module topology.instances.add_circle
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -76,13 +76,13 @@ theorem continuous_right_to_Ico_mod : ContinuousWithinAt (toIcoMod a hp) (Ici x)
   let d := toIcoDiv a hp x • p
   have hd := to_Ico_mod_mem_Ico a hp x
   simp_rw [subset_def, mem_inter_iff]
-  refine' ⟨_, ⟨l - d, min (a + p) u - d, _, fun x => id⟩, fun y => _⟩ <;>
-    simp_rw [← add_mem_Ioo_iff_left, mem_Ioo, lt_min_iff]
+  refine' ⟨_, ⟨l + d, min (a + p) u + d, _, fun x => id⟩, fun y => _⟩ <;>
+    simp_rw [← sub_mem_Ioo_iff_left, mem_Ioo, lt_min_iff]
   · exact ⟨hxI.1, hd.2, hxI.2⟩
   · rintro ⟨h, h'⟩
     apply hIs
-    rw [← to_Ico_mod_add_zsmul, (to_Ico_mod_eq_self _).2]
-    exacts[⟨h.1, h.2.2⟩, ⟨hd.1.trans (add_le_add_right h' _), h.2.1⟩]
+    rw [← to_Ico_mod_sub_zsmul, (to_Ico_mod_eq_self _).2]
+    exacts[⟨h.1, h.2.2⟩, ⟨hd.1.trans (sub_le_sub_right h' _), h.2.1⟩]
 #align continuous_right_to_Ico_mod continuous_right_to_Ico_mod
 
 theorem continuous_left_to_Ioc_mod : ContinuousWithinAt (toIocMod a hp) (Iic x) x :=
@@ -91,7 +91,7 @@ theorem continuous_left_to_Ioc_mod : ContinuousWithinAt (toIocMod a hp) (Iic x) 
       toIocMod a hp = (fun x => p - x) ∘ toIcoMod (-a) hp ∘ Neg.neg)]
   exact
     (continuous_sub_left _).ContinuousAt.comp_continuous_within_at <|
-      ((continuous_right_to_Ico_mod _ _ _).comp continuous_neg.continuous_within_at) fun y =>
+      (continuous_right_to_Ico_mod _ _ _).comp continuous_neg.continuous_within_at fun y =>
         neg_le_neg
 #align continuous_left_to_Ioc_mod continuous_left_to_Ioc_mod
 
@@ -102,7 +102,7 @@ theorem to_Ico_mod_eventually_eq_to_Ioc_mod : toIcoMod a hp =ᶠ[𝓝 x] toIocMo
       (by
         rw [Ico_eq_locus_Ioc_eq_Union_Ioo]
         exact is_open_Union fun i => is_open_Ioo) <|
-    (mem_Ioo_mod_iff_to_Ico_mod_eq_to_Ioc_mod hp).1 ((mem_Ioo_mod_iff_eq_mod_zmultiples hp).2 hx)
+    (mem_Ioo_mod_iff_to_Ico_mod_eq_to_Ioc_mod hp).1 ((mem_Ioo_mod_iff_ne_mod_zmultiples hp).2 hx)
 #align to_Ico_mod_eventually_eq_to_Ioc_mod to_Ico_mod_eventually_eq_to_Ioc_mod
 
 theorem continuous_at_to_Ico_mod : ContinuousAt (toIcoMod a hp) x :=

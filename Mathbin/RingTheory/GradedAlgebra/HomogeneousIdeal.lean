@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang, Eric Wieser
 
 ! This file was ported from Lean 3 source module ring_theory.graded_algebra.homogeneous_ideal
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -125,7 +125,7 @@ def Ideal.homogeneousCore' (I : Ideal A) : Ideal A :=
 #align ideal.homogeneous_core' Ideal.homogeneousCore'
 
 theorem Ideal.homogeneous_core'_mono : Monotone (Ideal.homogeneousCore' 𝒜) := fun I J I_le_J =>
-  Ideal.span_mono <| (Set.image_subset _) fun x => @I_le_J _
+  Ideal.span_mono <| Set.image_subset _ fun x => @I_le_J _
 #align ideal.homogeneous_core'_mono Ideal.homogeneous_core'_mono
 
 theorem Ideal.homogeneous_core'_le : I.homogeneousCore' 𝒜 ≤ I :=

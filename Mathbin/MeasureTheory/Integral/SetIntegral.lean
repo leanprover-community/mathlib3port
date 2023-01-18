@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.integral.set_integral
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -108,7 +108,7 @@ theorem integral_finset_bUnion {ι : Type _} (t : Finset ι) {s : ι → Set α}
   induction' t using Finset.induction_on with a t hat IH hs h's
   · simp
   · simp only [Finset.coe_insert, Finset.forall_mem_insert, Set.pairwise_insert,
-      Finset.set_bUnion_insert] at hs hf h's⊢
+      Finset.set_bunionᵢ_insert] at hs hf h's⊢
     rw [integral_union _ _ hf.1 (integrable_on_finset_Union.2 hf.2)]
     · rw [Finset.sum_insert hat, IH hs.2 h's.1 hf.2]
     · simp only [disjoint_Union_right]

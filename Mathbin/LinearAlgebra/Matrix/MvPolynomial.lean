@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.mv_polynomial
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,7 +46,7 @@ not, as if the `mv_polynomial.eval₂` can be pulled to the outside of a goal, i
 under cancellative assumptions. -/
 theorem mv_polynomial_X_map_eval₂ [CommSemiring R] [CommSemiring S] (f : R →+* S)
     (A : Matrix m n S) :
-    (mvPolynomialX m n R).map ((MvPolynomial.eval₂ f) fun p : m × n => A p.1 p.2) = A :=
+    (mvPolynomialX m n R).map (MvPolynomial.eval₂ f fun p : m × n => A p.1 p.2) = A :=
   ext fun i j => MvPolynomial.eval₂_X _ (fun p : m × n => A p.1 p.2) (i, j)
 #align matrix.mv_polynomial_X_map_eval₂ Matrix.mv_polynomial_X_map_eval₂
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joachim Breitner
 
 ! This file was ported from Lean 3 source module group_theory.noncomm_pi_coprod
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -76,7 +76,7 @@ namespace MonoidHom
       "The canonical homomorphism from a family of additive monoids.\n\nSee also `linear_map.lsum` for a linear version without the commutativity assumption."]
 def noncommPiCoprod : (∀ i : ι, N i) →* M
     where
-  toFun f := (Finset.univ.noncommProd fun i => ϕ i (f i)) fun i _ j _ h => hcomm h _ _
+  toFun f := Finset.univ.noncommProd (fun i => ϕ i (f i)) fun i _ j _ h => hcomm h _ _
   map_one' := by
     apply (Finset.noncomm_prod_eq_pow_card _ _ _ _ _).trans (one_pow _)
     simp

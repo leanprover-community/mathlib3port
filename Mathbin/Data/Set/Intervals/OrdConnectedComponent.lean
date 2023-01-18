@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.set.intervals.ord_connected_component
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -108,7 +108,7 @@ theorem ordConnectedComponent_univ : ordConnectedComponent univ x = univ := by
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] (s : Set.{u1} α) (t : Set.{u1} α) (x : α), Eq.{succ u1} (Set.{u1} α) (Set.ordConnectedComponent.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t) x) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (Set.ordConnectedComponent.{u1} α _inst_1 s x) (Set.ordConnectedComponent.{u1} α _inst_1 t x))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] (s : Set.{u1} α) (t : Set.{u1} α) (x : α), Eq.{succ u1} (Set.{u1} α) (Set.ordConnectedComponent.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet_1.{u1} α) s t) x) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet_1.{u1} α) (Set.ordConnectedComponent.{u1} α _inst_1 s x) (Set.ordConnectedComponent.{u1} α _inst_1 t x))
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] (s : Set.{u1} α) (t : Set.{u1} α) (x : α), Eq.{succ u1} (Set.{u1} α) (Set.ordConnectedComponent.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t) x) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (Set.ordConnectedComponent.{u1} α _inst_1 s x) (Set.ordConnectedComponent.{u1} α _inst_1 t x))
 Case conversion may be inaccurate. Consider using '#align set.ord_connected_component_inter Set.ordConnectedComponent_interₓ'. -/
 theorem ordConnectedComponent_inter (s t : Set α) (x : α) :
     ordConnectedComponent (s ∩ t) x = ordConnectedComponent s x ∩ ordConnectedComponent t x := by

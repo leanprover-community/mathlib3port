@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.G_delta
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -174,7 +174,7 @@ theorem is_Gδ_singleton (a : α) : IsGδ ({a} : Set α) :=
 #align is_Gδ_singleton is_Gδ_singleton
 
 theorem Set.Finite.is_Gδ {s : Set α} (hs : s.Finite) : IsGδ s :=
-  (Finite.induction_on hs is_Gδ_empty) fun a s _ _ hs => (is_Gδ_singleton a).union hs
+  Finite.induction_on hs is_Gδ_empty fun a s _ _ hs => (is_Gδ_singleton a).union hs
 #align set.finite.is_Gδ Set.Finite.is_Gδ
 
 end T1Space

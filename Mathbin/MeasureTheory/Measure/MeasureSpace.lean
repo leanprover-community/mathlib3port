@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module measure_theory.measure.measure_space
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -164,7 +164,7 @@ theorem measure_bUnion₀ {s : Set β} {f : β → Set α} (hs : s.Countable)
   by
   haveI := hs.to_encodable
   rw [bUnion_eq_Union]
-  exact measure_Union₀ ((hd.on_injective Subtype.coe_injective) fun x => x.2) fun x => h x x.2
+  exact measure_Union₀ (hd.on_injective Subtype.coe_injective fun x => x.2) fun x => h x x.2
 #align measure_theory.measure_bUnion₀ MeasureTheory.measure_bUnion₀
 
 theorem measure_bUnion {s : Set β} {f : β → Set α} (hs : s.Countable) (hd : s.PairwiseDisjoint f)
@@ -222,7 +222,7 @@ of the fibers `f ⁻¹' {y}`. -/
 theorem sum_measure_preimage_singleton (s : Finset β) {f : α → β}
     (hf : ∀ y ∈ s, MeasurableSet (f ⁻¹' {y})) : (∑ b in s, μ (f ⁻¹' {b})) = μ (f ⁻¹' ↑s) := by
   simp only [← measure_bUnion_finset (pairwise_disjoint_fiber _ _) hf,
-    Finset.set_bUnion_preimage_singleton]
+    Finset.set_bunionᵢ_preimage_singleton]
 #align measure_theory.sum_measure_preimage_singleton MeasureTheory.sum_measure_preimage_singleton
 
 theorem measure_diff_null' (h : μ (s₁ ∩ s₂) = 0) : μ (s₁ \ s₂) = μ s₁ :=
@@ -1138,7 +1138,7 @@ theorem le_lift_linear_apply {f : OuterMeasure α →ₗ[ℝ≥0∞] OuterMeasur
 a measurable function. -/
 def mapₗ [MeasurableSpace α] (f : α → β) : Measure α →ₗ[ℝ≥0∞] Measure β :=
   if hf : Measurable f then
-    (liftLinear (OuterMeasure.map f)) fun μ s hs t =>
+    liftLinear (OuterMeasure.map f) fun μ s hs t =>
       le_to_outer_measure_caratheodory μ _ (hf hs) (f ⁻¹' t)
   else 0
 #align measure_theory.measure.mapₗ MeasureTheory.Measure.mapₗ
@@ -1299,7 +1299,7 @@ If the linearity is not needed, please use `comap` instead, which works for a la
 functions. -/
 def comapₗ [MeasurableSpace α] (f : α → β) : Measure β →ₗ[ℝ≥0∞] Measure α :=
   if hf : Injective f ∧ ∀ s, MeasurableSet s → MeasurableSet (f '' s) then
-    (liftLinear (OuterMeasure.comap f)) fun μ s hs t =>
+    liftLinear (OuterMeasure.comap f) fun μ s hs t =>
       by
       simp only [coe_to_outer_measure, outer_measure.comap_apply, image_inter hf.1, image_diff hf.1]
       apply le_to_outer_measure_caratheodory
@@ -1495,7 +1495,7 @@ end Subtype
 
 /-- Restrict a measure `μ` to a set `s` as an `ℝ≥0∞`-linear map. -/
 def restrictₗ {m0 : MeasurableSpace α} (s : Set α) : Measure α →ₗ[ℝ≥0∞] Measure α :=
-  (liftLinear (OuterMeasure.restrict s)) fun μ s' hs' t =>
+  liftLinear (OuterMeasure.restrict s) fun μ s' hs' t =>
     by
     suffices μ (s ∩ t) = μ (s ∩ t ∩ s') + μ ((s ∩ t) \ s') by
       simpa [← Set.inter_assoc, Set.inter_comm _ s, ← inter_diff_assoc]
@@ -2269,7 +2269,7 @@ theorem count_apply_finite [MeasurableSingletonClass α] (s : Set α) (hs : s.Fi
 /-- `count` measure evaluates to infinity at infinite sets. -/
 theorem count_apply_infinite (hs : s.Infinite) : count s = ∞ :=
   by
-  refine' top_unique ((le_of_tendsto' Ennreal.tendsto_nat_nhds_top) fun n => _)
+  refine' top_unique (le_of_tendsto' Ennreal.tendsto_nat_nhds_top fun n => _)
   rcases hs.exists_subset_card_eq n with ⟨t, ht, rfl⟩
   calc
     (t.card : ℝ≥0∞) = ∑ i in t, 1 := by simp
@@ -3049,7 +3049,7 @@ theorem bsupr_measure_Iic [Preorder α] {s : Set α} (hsc : s.Countable)
   rw [← measure_bUnion_eq_supr hsc]
   · congr
     exact Union₂_eq_univ_iff.2 hst
-  · exact directedOn_iff_directed.2 ((hdir.directed_coe.mono_comp _) fun x y => Iic_subset_Iic.2)
+  · exact directedOn_iff_directed.2 (hdir.directed_coe.mono_comp _ fun x y => Iic_subset_Iic.2)
 #align measure_theory.bsupr_measure_Iic MeasureTheory.bsupr_measure_Iic
 
 variable [PartialOrder α] {a b : α}
@@ -3391,7 +3391,7 @@ variable [HasNoAtoms μ]
 
 theorem Set.Subsingleton.measure_zero {α : Type _} {m : MeasurableSpace α} {s : Set α}
     (hs : s.Subsingleton) (μ : Measure α) [HasNoAtoms μ] : μ s = 0 :=
-  hs.induction_on measure_empty measure_singleton
+  hs.inductionOn measure_empty measure_singleton
 #align set.subsingleton.measure_zero Set.Subsingleton.measure_zero
 
 theorem Measure.restrict_singleton' {a : α} : μ.restrict {a} = 0 := by
@@ -3586,7 +3586,7 @@ theorem measurable_spanning_sets (μ : Measure α) [SigmaFinite μ] (i : ℕ) :
 
 theorem measure_spanning_sets_lt_top (μ : Measure α) [SigmaFinite μ] (i : ℕ) :
     μ (spanningSets μ i) < ∞ :=
-  (measure_bUnion_lt_top (finite_le_nat i)) fun j _ => (μ.toFiniteSpanningSetsIn.Finite j).Ne
+  measure_bUnion_lt_top (finite_le_nat i) fun j _ => (μ.toFiniteSpanningSetsIn.Finite j).Ne
 #align measure_theory.measure_spanning_sets_lt_top MeasureTheory.measure_spanning_sets_lt_top
 
 theorem Union_spanning_sets (μ : Measure α) [SigmaFinite μ] : (⋃ i : ℕ, spanningSets μ i) = univ :=
@@ -3998,7 +3998,7 @@ theorem ae_of_forall_measure_lt_top_ae_restrict' {μ : Measure α} (ν : Measure
   this holds almost everywhere in sets where the measure has finite value. -/
 theorem ae_of_forall_measure_lt_top_ae_restrict {μ : Measure α} [SigmaFinite μ] (P : α → Prop)
     (h : ∀ s, MeasurableSet s → μ s < ∞ → ∀ᵐ x ∂μ.restrict s, P x) : ∀ᵐ x ∂μ, P x :=
-  (ae_of_forall_measure_lt_top_ae_restrict' μ P) fun s hs h2s _ => h s hs h2s
+  ae_of_forall_measure_lt_top_ae_restrict' μ P fun s hs h2s _ => h s hs h2s
 #align
   measure_theory.ae_of_forall_measure_lt_top_ae_restrict MeasureTheory.ae_of_forall_measure_lt_top_ae_restrict
 

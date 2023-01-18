@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex J. Best, Yaël Dillies
 
 ! This file was ported from Lean 3 source module algebra.order.complete_field
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -111,7 +111,7 @@ def cutMap (a : α) : Set β :=
 #align linear_ordered_field.cut_map LinearOrderedField.cutMap
 
 theorem cut_map_mono (h : a₁ ≤ a₂) : cutMap β a₁ ⊆ cutMap β a₂ :=
-  (image_subset _) fun _ => h.trans_lt'
+  image_subset _ fun _ => h.trans_lt'
 #align linear_ordered_field.cut_map_mono LinearOrderedField.cut_map_mono
 
 variable {β}
@@ -260,7 +260,7 @@ theorem induced_map_add (x y : α) : inducedMap α β (x + y) = inducedMap α β
   by
   rw [induced_map, cut_map_add]
   exact
-    cSup_add (cut_map_nonempty β x) (cut_map_bdd_above β x) (cut_map_nonempty β y)
+    csupₛ_add (cut_map_nonempty β x) (cut_map_bdd_above β x) (cut_map_nonempty β y)
       (cut_map_bdd_above β y)
 #align linear_ordered_field.induced_map_add LinearOrderedField.induced_map_add
 

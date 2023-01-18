@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.dot_product
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,7 +63,7 @@ theorem dot_product_eq_iff {v w : n → R} : (∀ u, dotProduct v u = dotProduct
 #align matrix.dot_product_eq_iff Matrix.dot_product_eq_iff
 
 theorem dot_product_eq_zero (v : n → R) (h : ∀ w, dotProduct v w = 0) : v = 0 :=
-  (dot_product_eq _ _) fun u => (h u).symm ▸ (zero_dot_product u).symm
+  dot_product_eq _ _ fun u => (h u).symm ▸ (zero_dot_product u).symm
 #align matrix.dot_product_eq_zero Matrix.dot_product_eq_zero
 
 theorem dot_product_eq_zero_iff {v : n → R} : (∀ w, dotProduct v w = 0) ↔ v = 0 :=

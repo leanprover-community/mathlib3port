@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module testing.slim_check.sampleable
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -323,22 +323,22 @@ It first calls `shrink x` to get a list of candidate sample,
 finds the first that satisfies `p` and recursively tries
 to shrink that one. -/
 def iterateShrink {α} [ToString α] [Sampleable α] (p : α → Prop) [DecidablePred p] : α → Option α :=
-  (WellFounded.fix WellFoundedRelation.wf) fun x f_rec => do
+  WellFounded.fix WellFoundedRelation.wf fun x f_rec => do
     (trace s! "{x} : {(Shrink x).toList}") <| pure ()
     let y ← (shrink x).find fun a => p a
     f_rec y y <|> some y
 #align slim_check.iterate_shrink SlimCheck.iterateShrink
 
 instance Fin.sampleable {n : ℕ} [NeZero n] : Sampleable (Fin n) :=
-  (Sampleable.lift ℕ Fin.ofNat'' Fin.val) fun i => (mod_le _ _ : i % n ≤ i)
+  Sampleable.lift ℕ Fin.ofNat'' Fin.val fun i => (mod_le _ _ : i % n ≤ i)
 #align slim_check.fin.sampleable SlimCheck.Fin.sampleable
 
 instance (priority := 100) Fin.sampleable' {n} : Sampleable (Fin (succ n)) :=
-  (Sampleable.lift ℕ Fin.ofNat Fin.val) fun i => (mod_le _ _ : i % succ n ≤ i)
+  Sampleable.lift ℕ Fin.ofNat Fin.val fun i => (mod_le _ _ : i % succ n ≤ i)
 #align slim_check.fin.sampleable' SlimCheck.Fin.sampleable'
 
 instance Pnat.sampleable : Sampleable ℕ+ :=
-  (Sampleable.lift ℕ Nat.succPNat PNat.natPred) fun a => by
+  Sampleable.lift ℕ Nat.succPNat PNat.natPred fun a => by
     unfold_wf <;> simp only [PNat.natPred, succ_pnat, PNat.mk_coe, tsub_zero, succ_sub_succ_eq_sub]
 #align slim_check.pnat.sampleable SlimCheck.Pnat.sampleable
 
@@ -404,7 +404,7 @@ instance Prod.sampleable : SampleableBifunctor.{u, v} Prod
 #align slim_check.prod.sampleable SlimCheck.Prod.sampleable
 
 instance Sigma.sampleable {α β} [Sampleable α] [Sampleable β] : Sampleable (Σ_ : α, β) :=
-  (Sampleable.lift (α × β) (fun ⟨x, y⟩ => ⟨x, y⟩) fun ⟨x, y⟩ => ⟨x, y⟩) fun ⟨x, y⟩ => le_rfl
+  Sampleable.lift (α × β) (fun ⟨x, y⟩ => ⟨x, y⟩) (fun ⟨x, y⟩ => ⟨x, y⟩) fun ⟨x, y⟩ => le_rfl
 #align slim_check.sigma.sampleable SlimCheck.Sigma.sampleable
 
 /-- shrinking function for sum types -/
@@ -412,10 +412,10 @@ def Sum.shrink {α β} [SizeOf α] [SizeOf β] (shrink_α : ShrinkFn α) (shrink
     ShrinkFn (Sum α β)
   | Sum.inr x =>
     (shrink_β x).map <|
-      (Subtype.map Sum.inr) fun a => by dsimp [sizeof_lt] <;> unfold_wf <;> solve_by_elim
+      Subtype.map Sum.inr fun a => by dsimp [sizeof_lt] <;> unfold_wf <;> solve_by_elim
   | Sum.inl x =>
     (shrink_α x).map <|
-      (Subtype.map Sum.inl) fun a => by dsimp [sizeof_lt] <;> unfold_wf <;> solve_by_elim
+      Subtype.map Sum.inl fun a => by dsimp [sizeof_lt] <;> unfold_wf <;> solve_by_elim
 #align slim_check.sum.shrink SlimCheck.Sum.shrink
 
 instance Sum.sampleable : SampleableBifunctor.{u, v} Sum
@@ -643,7 +643,7 @@ instance NoShrink.sampleable {α} [Sampleable α] : Sampleable (NoShrink α)
 #align slim_check.no_shrink.sampleable SlimCheck.NoShrink.sampleable
 
 instance String.sampleable : Sampleable String :=
-  { (Sampleable.lift (List Char) List.asString String.toList) fun _ => le_rfl with
+  { Sampleable.lift (List Char) List.asString String.toList fun _ => le_rfl with
     sample := do
       let x ← listOf (sample Char)
       pure x }
@@ -682,8 +682,8 @@ def recShrinkWith [SizeOf α]
     (shrink_a :
       ∀ x : α, ShrinkFn { y : α // SizeofLt y x } → List (LazyList { y : α // SizeofLt y x })) :
     ShrinkFn α :=
-  (WellFounded.fix (sizeof_measure_wf _)) fun t f_rec =>
-    LazyList.join (LazyList.ofList <| (shrink_a t) fun ⟨t', h⟩ => recShrink _ f_rec _)
+  WellFounded.fix (sizeof_measure_wf _) fun t f_rec =>
+    LazyList.join (LazyList.ofList <| shrink_a t fun ⟨t', h⟩ => recShrink _ f_rec _)
 #align slim_check.rec_shrink_with SlimCheck.recShrinkWith
 
 theorem rec_shrink_with_eq [SizeOf α]
@@ -693,7 +693,7 @@ theorem rec_shrink_with_eq [SizeOf α]
     recShrinkWith shrink_a x =
       LazyList.join
         (LazyList.ofList <|
-          (shrink_a x) fun t' => recShrink _ (fun x h' => recShrinkWith shrink_a x) _) :=
+          shrink_a x fun t' => recShrink _ (fun x h' => recShrinkWith shrink_a x) _) :=
   by
   conv_lhs => rw [rec_shrink_with, WellFounded.fix_eq]
   congr ; ext ⟨y, h⟩; rfl
@@ -813,7 +813,7 @@ instance NatLe.sampleable {y} : SlimCheck.Sampleable { x : ℕ // x ≤ y }
     let ⟨x, h⟩ ← SlimCheck.Gen.chooseNat 0 y (by decide)
     pure ⟨x, h.2⟩
   shrink := fun ⟨x, h⟩ =>
-    (fun a : Subtype _ => (Subtype.recOn a) fun x' h' => ⟨⟨x', le_trans (le_of_lt h') h⟩, h'⟩) <$>
+    (fun a : Subtype _ => Subtype.recOn a fun x' h' => ⟨⟨x', le_trans (le_of_lt h') h⟩, h'⟩) <$>
       shrink x
 #align slim_check.nat_le.sampleable SlimCheck.NatLe.sampleable
 
@@ -824,7 +824,7 @@ instance NatGe.sampleable {x} : SlimCheck.Sampleable { y : ℕ // x ≤ y }
     pure ⟨x + y, by norm_num⟩
   shrink := fun ⟨y, h⟩ =>
     (fun a : { y' // SizeOf.sizeOf y' < SizeOf.sizeOf (y - x) } =>
-        (Subtype.recOn a) fun δ h' => ⟨⟨x + δ, Nat.le_add_right _ _⟩, lt_tsub_iff_left.mp h'⟩) <$>
+        Subtype.recOn a fun δ h' => ⟨⟨x + δ, Nat.le_add_right _ _⟩, lt_tsub_iff_left.mp h'⟩) <$>
       shrink (y - x)
 #align slim_check.nat_ge.sampleable SlimCheck.NatGe.sampleable
 

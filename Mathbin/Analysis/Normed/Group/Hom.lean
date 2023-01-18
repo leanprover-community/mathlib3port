@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module analysis.normed.group.hom
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -294,8 +294,7 @@ theorem op_norm_eq_of_bounds {M : ℝ} (M_nonneg : 0 ≤ M) (h_above : ∀ x, �
 
 theorem op_norm_le_of_lipschitz {f : NormedAddGroupHom V₁ V₂} {K : ℝ≥0} (hf : LipschitzWith K f) :
     ‖f‖ ≤ K :=
-  (f.op_norm_le_bound K.2) fun x => by
-    simpa only [dist_zero_right, map_zero] using hf.dist_le_mul x 0
+  f.op_norm_le_bound K.2 fun x => by simpa only [dist_zero_right, map_zero] using hf.dist_le_mul x 0
 #align normed_add_group_hom.op_norm_le_of_lipschitz NormedAddGroupHom.op_norm_le_of_lipschitz
 
 /-- If a bounded group homomorphism map is constructed from a group homomorphism via the constructor
@@ -312,7 +311,7 @@ via the constructor `mk_normed_add_group_hom`, then its norm is bounded by the b
 given to the constructor or zero if this bound is negative. -/
 theorem mk_normed_add_group_hom_norm_le' (f : V₁ →+ V₂) {C : ℝ} (h : ∀ x, ‖f x‖ ≤ C * ‖x‖) :
     ‖f.mkNormedAddGroupHom C h‖ ≤ max C 0 :=
-  (op_norm_le_bound _ (le_max_right _ _)) fun x =>
+  op_norm_le_bound _ (le_max_right _ _) fun x =>
     (h x).trans <| mul_le_mul_of_nonneg_right (le_max_left _ _) (norm_nonneg x)
 #align
   normed_add_group_hom.mk_normed_add_group_hom_norm_le' NormedAddGroupHom.mk_normed_add_group_hom_norm_le'
@@ -329,7 +328,7 @@ alias mk_normed_add_group_hom_norm_le' ← _root_.add_monoid_hom.mk_normed_add_g
 /-- Addition of normed group homs. -/
 instance : Add (NormedAddGroupHom V₁ V₂) :=
   ⟨fun f g =>
-    ((f.toAddMonoidHom + g.toAddMonoidHom).mkNormedAddGroupHom (‖f‖ + ‖g‖)) fun v =>
+    (f.toAddMonoidHom + g.toAddMonoidHom).mkNormedAddGroupHom (‖f‖ + ‖g‖) fun v =>
       calc
         ‖f v + g v‖ ≤ ‖f v‖ + ‖g v‖ := norm_add_le _ _
         _ ≤ ‖f‖ * ‖v‖ + ‖g‖ * ‖v‖ := add_le_add (le_op_norm f v) (le_op_norm g v)
@@ -651,7 +650,7 @@ instance {R : Type _} [Semiring R] [Module R V₂] [PseudoMetricSpace R] [HasBou
 @[simps]
 protected def comp (g : NormedAddGroupHom V₂ V₃) (f : NormedAddGroupHom V₁ V₂) :
     NormedAddGroupHom V₁ V₃ :=
-  ((g.toAddMonoidHom.comp f.toAddMonoidHom).mkNormedAddGroupHom (‖g‖ * ‖f‖)) fun v =>
+  (g.toAddMonoidHom.comp f.toAddMonoidHom).mkNormedAddGroupHom (‖g‖ * ‖f‖) fun v =>
     calc
       ‖g (f v)‖ ≤ ‖g‖ * ‖f v‖ := le_op_norm _ _
       _ ≤ ‖g‖ * (‖f‖ * ‖v‖) := mul_le_mul_of_nonneg_left (le_op_norm _ _) (op_norm_nonneg _)

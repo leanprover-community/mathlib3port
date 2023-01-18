@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Chris Hughes, Mario Carneiro, Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.quotient
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -159,7 +159,7 @@ theorem quotient_ring_saturate (I : Ideal R) (s : Set R) :
 
 instance no_zero_divisors (I : Ideal R) [hI : I.IsPrime] : NoZeroDivisors (R ⧸ I)
     where eq_zero_or_eq_zero_of_mul_eq_zero a b :=
-    (Quotient.inductionOn₂' a b) fun a b hab =>
+    Quotient.inductionOn₂' a b fun a b hab =>
       (hI.mem_or_mem (eq_zero_iff_mem.1 hab)).elim (Or.inl ∘ eq_zero_iff_mem.2)
         (Or.inr ∘ eq_zero_iff_mem.2)
 #align ideal.quotient.no_zero_divisors Ideal.Quotient.no_zero_divisors
@@ -354,7 +354,7 @@ instance modulePi : Module (R ⧸ I) ((ι → R) ⧸ I.pi ι)
 noncomputable def piQuotEquiv : ((ι → R) ⧸ I.pi ι) ≃ₗ[R ⧸ I] ι → R ⧸ I
     where
   toFun x :=
-    (Quotient.liftOn' x fun f i => Ideal.Quotient.mk I (f i)) fun a b hab =>
+    Quotient.liftOn' x (fun f i => Ideal.Quotient.mk I (f i)) fun a b hab =>
       funext fun i => (Submodule.Quotient.eq' _).2 (QuotientAddGroup.left_rel_apply.mp hab i)
   map_add' := by
     rintro ⟨_⟩ ⟨_⟩
@@ -362,7 +362,7 @@ noncomputable def piQuotEquiv : ((ι → R) ⧸ I.pi ι) ≃ₗ[R ⧸ I] ι → 
   map_smul' := by
     rintro ⟨_⟩ ⟨_⟩
     rfl
-  invFun x := (Ideal.Quotient.mk (I.pi ι)) fun i => Quotient.out' (x i)
+  invFun x := Ideal.Quotient.mk (I.pi ι) fun i => Quotient.out' (x i)
   left_inv := by
     rintro ⟨x⟩
     exact Ideal.Quotient.eq.2 fun i => Ideal.Quotient.eq.1 (Quotient.out_eq' _)
@@ -462,7 +462,7 @@ theorem exists_sub_mem [Finite ι] {f : ι → Ideal R} (hf : ∀ i j, i ≠ j �
 /-- The homomorphism from `R/(⋂ i, f i)` to `∏ i, (R / f i)` featured in the Chinese
   Remainder Theorem. It is bijective if the ideals `f i` are comaximal. -/
 def quotientInfToPiQuotient (f : ι → Ideal R) : (R ⧸ ⨅ i, f i) →+* ∀ i, R ⧸ f i :=
-  (Quotient.lift (⨅ i, f i) (Pi.ringHom fun i : ι => (Quotient.mk (f i) : _))) fun r hr =>
+  Quotient.lift (⨅ i, f i) (Pi.ringHom fun i : ι => (Quotient.mk (f i) : _)) fun r hr =>
     by
     rw [Submodule.mem_infi] at hr
     ext i
@@ -472,7 +472,7 @@ def quotientInfToPiQuotient (f : ι → Ideal R) : (R ⧸ ⨅ i, f i) →+* ∀ 
 theorem quotient_inf_to_pi_quotient_bijective [Finite ι] {f : ι → Ideal R}
     (hf : ∀ i j, i ≠ j → f i ⊔ f j = ⊤) : Function.Bijective (quotientInfToPiQuotient f) :=
   ⟨fun x y =>
-    (Quotient.inductionOn₂' x y) fun r s hrs =>
+    Quotient.inductionOn₂' x y fun r s hrs =>
       Quotient.eq.2 <|
         (Submodule.mem_infi _).2 fun i =>
           Quotient.eq.1 <|
@@ -506,14 +506,14 @@ noncomputable def quotientInfEquivQuotientProd (I J : Ideal R) (coprime : I ⊔ 
 theorem quotient_inf_equiv_quotient_prod_fst (I J : Ideal R) (coprime : I ⊔ J = ⊤) (x : R ⧸ I ⊓ J) :
     (quotientInfEquivQuotientProd I J coprime x).fst =
       Ideal.Quotient.factor (I ⊓ J) I inf_le_left x :=
-  Quot.induction_on x fun x => rfl
+  Quot.inductionOn x fun x => rfl
 #align ideal.quotient_inf_equiv_quotient_prod_fst Ideal.quotient_inf_equiv_quotient_prod_fst
 
 @[simp]
 theorem quotient_inf_equiv_quotient_prod_snd (I J : Ideal R) (coprime : I ⊔ J = ⊤) (x : R ⧸ I ⊓ J) :
     (quotientInfEquivQuotientProd I J coprime x).snd =
       Ideal.Quotient.factor (I ⊓ J) J inf_le_right x :=
-  Quot.induction_on x fun x => rfl
+  Quot.inductionOn x fun x => rfl
 #align ideal.quotient_inf_equiv_quotient_prod_snd Ideal.quotient_inf_equiv_quotient_prod_snd
 
 @[simp]

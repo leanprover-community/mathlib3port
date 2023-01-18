@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Pierre-Alexandre Bazin
 
 ! This file was ported from Lean 3 source module algebra.module.dedekind_domain
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,7 +49,7 @@ theorem is_internal_prime_power_torsion_of_is_torsion_by_ideal {I : Ideal R} (hI
     refine' ⟨P.to_finset, inferInstance, prime_of_mem, fun i => P.count i, _⟩
     apply @torsion_by_set_is_internal _ _ _ _ _ _ _ _ (fun p => p ^ P.count p) _
     · convert hM
-      rw [← Finset.inf_eq_infi, IsDedekindDomain.inf_prime_pow_eq_prod, ←
+      rw [← Finset.inf_eq_infᵢ, IsDedekindDomain.inf_prime_pow_eq_prod, ←
         Finset.prod_multiset_count, ← associated_iff_eq]
       · exact factors_prod hI
       · exact prime_of_mem
@@ -61,7 +61,7 @@ theorem is_internal_prime_power_torsion_of_is_torsion_by_ideal {I : Ideal R} (hI
           rw [this, zero_min, pow_zero, Ideal.one_eq_top]
         · rw [Multiset.count_eq_zero,
             normalized_factors_of_irreducible_pow (prime_of_mem q hq).Irreducible,
-            Multiset.mem_repeat]
+            Multiset.mem_replicate]
           exact fun H => pq <| H.2.trans <| normalize_eq q
       · rw [← Ideal.zero_eq_bot]
         apply pow_ne_zero

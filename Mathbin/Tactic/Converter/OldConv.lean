@@ -6,7 +6,7 @@ Authors: Leonardo de Moura
 Converter monad for building simplifiers.
 
 ! This file was ported from Lean 3 source module tactic.converter.old_conv
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -211,7 +211,7 @@ unsafe def funext (c : old_conv Unit) : old_conv Unit := fun r lhs => do
   let expr.lam n bi d b ← return lhs
   let aux_type := expr.pi n bi d (expr.const `true [])
   let (result, _) ←
-    (solve_aux aux_type) do
+    solve_aux aux_type do
         let x ← intro1
         let c_result ← c r (b.instantiate_var x)
         let rhs := expr.lam n bi d (c_result.rhs.abstract x)

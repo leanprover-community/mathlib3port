@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Violeta Hernández Palacios, Grayson Burton, Floris van Doorn
 
 ! This file was ported from Lean 3 source module order.cover
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -753,7 +753,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align prod.mk_wcovby_mk_iff_left Prod.mk_wcovby_mk_iff_leftₓ'. -/
 theorem mk_wcovby_mk_iff_left : (a₁, b) ⩿ (a₂, b) ↔ a₁ ⩿ a₂ :=
   by
-  refine' ⟨Wcovby.fst, (And.imp mk_le_mk_iff_left.2) fun h c h₁ h₂ => _⟩
+  refine' ⟨Wcovby.fst, And.imp mk_le_mk_iff_left.2 fun h c h₁ h₂ => _⟩
   have : c.2 = b := h₂.le.2.antisymm h₁.le.2
   rw [← @Prod.mk.eta _ _ c, this, mk_lt_mk_iff_left] at h₁ h₂
   exact h h₁ h₂

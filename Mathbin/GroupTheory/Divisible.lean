@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang
 
 ! This file was ported from Lean 3 source module group_theory.divisible
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -167,7 +167,7 @@ variable (A : Type _) [AddCommGroup A]
 
 theorem smul_top_eq_top_of_divisible_by_int [DivisibleBy A ℤ] {n : ℤ} (hn : n ≠ 0) :
     n • (⊤ : AddSubgroup A) = ⊤ :=
-  (AddSubgroup.map_top_of_surjective _) fun a => ⟨DivisibleBy.div a n, DivisibleBy.div_cancel _ hn⟩
+  AddSubgroup.map_top_of_surjective _ fun a => ⟨DivisibleBy.div a n, DivisibleBy.div_cancel _ hn⟩
 #align
   add_comm_group.smul_top_eq_top_of_divisible_by_int AddCommGroup.smul_top_eq_top_of_divisible_by_int
 
@@ -255,7 +255,7 @@ If `f : A → B` is a surjective homomorphism and `A` is `α`-rootable, then `B`
       "If `f : A → B` is a surjective homomorphism and\n`A` is `α`-divisible, then `B` is also `α`-divisible."]
 noncomputable def Function.Surjective.rootableBy (hf : Function.Surjective f)
     (hpow : ∀ (a : A) (n : α), f (a ^ n) = f a ^ n) : RootableBy B α :=
-  (rootableByOfPowLeftSurj _ _) fun n hn x =>
+  rootableByOfPowLeftSurj _ _ fun n hn x =>
     let ⟨y, hy⟩ := hf x
     ⟨f <| RootableBy.root y n,
       (by rw [← hpow (RootableBy.root y n) n, RootableBy.root_cancel _ hn, hy] : _ ^ _ = x)⟩
@@ -276,7 +276,7 @@ variable (α : Type _) {A : Type _} [CommGroup A] (B : Subgroup A)
 /-- Any quotient group of a rootable group is rootable. -/
 @[to_additive QuotientAddGroup.divisibleBy "Any quotient group of a divisible group is divisible"]
 noncomputable instance QuotientGroup.rootableBy [RootableBy A ℕ] : RootableBy (A ⧸ B) ℕ :=
-  (QuotientGroup.mk_surjective.RootableBy _) fun _ _ => rfl
+  QuotientGroup.mk_surjective.RootableBy _ fun _ _ => rfl
 #align quotient_group.rootable_by QuotientGroup.rootableBy
 
 end Quotient

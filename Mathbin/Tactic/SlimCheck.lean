@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module tactic.slim_check
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -248,7 +248,7 @@ unsafe def slim_check (cfg : SlimCheckCfg := { }) : tactic Unit := do
       (← do
         dbg_trace "[testable decoration]
             {← tgt'}")
-  (when_tracing `slim_check.instance) do
+  when_tracing `slim_check.instance do
       let inst ← summarize_instance inst >>= pp
       ← do
           dbg_trace "

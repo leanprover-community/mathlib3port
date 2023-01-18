@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Kenny Lau, Johan Commelin, Mario Carneiro, Kevin Buzza
 Amelia Livingston, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module group_theory.submonoid.operations
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1236,8 +1236,10 @@ lean 3 declaration is
 but is expected to have type
   forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : MulOneClass.{u1} M] [_inst_2 : MulOneClass.{u2} N] (S : Submonoid.{u1} M _inst_1) (f : MonoidHom.{u1, u2} M N _inst_1 _inst_2), (Function.Injective.{succ u1, succ u2} M N (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (MonoidHom.{u1, u2} M N _inst_1 _inst_2) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : M) => N) _x) (MulHomClass.toFunLike.{max u1 u2, u1, u2} (MonoidHom.{u1, u2} M N _inst_1 _inst_2) M N (MulOneClass.toMul.{u1} M _inst_1) (MulOneClass.toMul.{u2} N _inst_2) (MonoidHomClass.toMulHomClass.{max u1 u2, u1, u2} (MonoidHom.{u1, u2} M N _inst_1 _inst_2) M N _inst_1 _inst_2 (MonoidHom.monoidHomClass.{u1, u2} M N _inst_1 _inst_2))) f)) -> (MulEquiv.{u1, u2} (Subtype.{succ u1} M (fun (x : M) => Membership.mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1)) x S)) (Subtype.{succ u2} N (fun (x : N) => Membership.mem.{u2, u2} N (Submonoid.{u2} N _inst_2) (SetLike.instMembership.{u2, u2} (Submonoid.{u2} N _inst_2) N (Submonoid.instSetLikeSubmonoid.{u2} N _inst_2)) x (Submonoid.map.{u1, u2, max u1 u2} M N _inst_1 _inst_2 (MonoidHom.{u1, u2} M N _inst_1 _inst_2) (MonoidHom.monoidHomClass.{u1, u2} M N _inst_1 _inst_2) f S))) (Submonoid.mul.{u1} M _inst_1 S) (Submonoid.mul.{u2} N _inst_2 (Submonoid.map.{u1, u2, max u1 u2} M N _inst_1 _inst_2 (MonoidHom.{u1, u2} M N _inst_1 _inst_2) (MonoidHom.monoidHomClass.{u1, u2} M N _inst_1 _inst_2) f S)))
 Case conversion may be inaccurate. Consider using '#align submonoid.equiv_map_of_injective Submonoid.equivMapOfInjectiveₓ'. -/
-/-- A submonoid is isomorphic to its image under an injective function -/
-@[to_additive "An additive submonoid is isomorphic to its image under an injective function"]
+/-- A subgroup is isomorphic to its image under an injective function. If you have an isomorphism,
+use `mul_equiv.submonoid_map` for better definitional equalities. -/
+@[to_additive
+      "An additive subgroup is isomorphic to its image under an injective function. If you\nhave an isomorphism, use `add_equiv.add_submonoid_map` for better definitional equalities."]
 noncomputable def equivMapOfInjective (f : M →* N) (hf : Function.Injective f) : S ≃* S.map f :=
   { Equiv.Set.image f S hf with map_mul' := fun _ _ => Subtype.ext (f.map_mul _ _) }
 #align submonoid.equiv_map_of_injective Submonoid.equivMapOfInjective
@@ -1263,7 +1265,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.closure_clos
 @[simp, to_additive]
 theorem closure_closure_coe_preimage {s : Set M} : closure ((coe : closure s → M) ⁻¹' s) = ⊤ :=
   eq_top_iff.2 fun x =>
-    (Subtype.recOn x) fun x hx _ =>
+    Subtype.recOn x fun x hx _ =>
       by
       refine' closure_induction' _ (fun g hg => _) _ (fun g₁ g₂ hg₁ hg₂ => _) hx
       · exact subset_closure hg
@@ -1419,7 +1421,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.prod_bot_sup
 @[simp, to_additive prod_bot_sup_bot_prod]
 theorem prod_bot_sup_bot_prod (s : Submonoid M) (t : Submonoid N) :
     s.Prod ⊥ ⊔ prod ⊥ t = s.Prod t :=
-  (le_antisymm (sup_le (prod_mono (le_refl s) bot_le) (prod_mono bot_le (le_refl t)))) fun p hp =>
+  le_antisymm (sup_le (prod_mono (le_refl s) bot_le) (prod_mono bot_le (le_refl t))) fun p hp =>
     Prod.fst_mul_snd p ▸
       mul_mem ((le_sup_left : s.Prod ⊥ ≤ s.Prod ⊥ ⊔ prod ⊥ t) ⟨hp.1, Set.mem_singleton 1⟩)
         ((le_sup_right : prod ⊥ t ≤ s.Prod ⊥ ⊔ prod ⊥ t) ⟨Set.mem_singleton 1, hp.2⟩)
@@ -1732,7 +1734,7 @@ Case conversion may be inaccurate. Consider using '#align monoid_hom.mrange_rest
 /-- Restriction of a monoid hom to its range interpreted as a submonoid. -/
 @[to_additive "Restriction of an `add_monoid` hom to its range interpreted as a submonoid."]
 def mrangeRestrict {N} [MulOneClass N] (f : M →* N) : M →* f.mrange :=
-  (f.codRestrict f.mrange) fun x => ⟨x, rfl⟩
+  f.codRestrict f.mrange fun x => ⟨x, rfl⟩
 #align monoid_hom.mrange_restrict MonoidHom.mrangeRestrict
 
 /- warning: monoid_hom.coe_mrange_restrict -> MonoidHom.coe_mrangeRestrict is a dubious translation:
@@ -2208,18 +2210,32 @@ Case conversion may be inaccurate. Consider using '#align mul_equiv.submonoid_ma
 a submonoid `S ≤ M` and the submonoid `φ(S) ≤ N`.
 See `monoid_hom.submonoid_map` for a variant for `monoid_hom`s. -/
 @[to_additive
-      "An `add_equiv` `φ` between two additive monoids `M` and `N` induces an `add_equiv`\nbetween a submonoid `S ≤ M` and the submonoid `φ(S) ≤ N`. See `add_monoid_hom.add_submonoid_map`\nfor a variant for `add_monoid_hom`s.",
-  simps]
+      "An `add_equiv` `φ` between two additive monoids `M` and `N` induces an `add_equiv`\nbetween a submonoid `S ≤ M` and the submonoid `φ(S) ≤ N`. See `add_monoid_hom.add_submonoid_map`\nfor a variant for `add_monoid_hom`s."]
 def submonoidMap (e : M ≃* N) (S : Submonoid M) : S ≃* S.map e.toMonoidHom :=
-  {-- we restate this for `simps` to avoid `⇑e.symm.to_equiv x`
-          e.toMonoidHom.submonoidMap
-      S,
-    e.toEquiv.image S with
-    toFun := fun x => ⟨e x, _⟩
-    invFun := fun x => ⟨e.symm x, _⟩ }
+  { (e : M ≃ N).image S with map_mul' := fun _ _ => Subtype.ext (map_mul e _ _) }
 #align mul_equiv.submonoid_map MulEquiv.submonoidMap
 
+@[simp, to_additive]
+theorem coe_submonoid_map_apply (e : M ≃* N) (S : Submonoid M) (g : S) :
+    ((submonoidMap e S g : S.map (e : M →* N)) : N) = e g :=
+  rfl
+#align mul_equiv.coe_submonoid_map_apply MulEquiv.coe_submonoid_map_apply
+
+@[simp, to_additive AddEquiv.add_submonoid_map_symm_apply]
+theorem submonoid_map_symm_apply (e : M ≃* N) (S : Submonoid M) (g : S.map (e : M →* N)) :
+    (e.submonoidMap S).symm g = ⟨e.symm g, SetLike.mem_coe.1 <| Set.mem_image_equiv.1 g.2⟩ :=
+  rfl
+#align mul_equiv.submonoid_map_symm_apply MulEquiv.submonoid_map_symm_apply
+
 end MulEquiv
+
+@[simp, to_additive]
+theorem Submonoid.equiv_map_of_injective_coe_mul_equiv (e : M ≃* N) :
+    S.equivMapOfInjective (e : M →* N) (EquivLike.injective e) = e.submonoidMap S :=
+  by
+  ext
+  rfl
+#align submonoid.equiv_map_of_injective_coe_mul_equiv Submonoid.equiv_map_of_injective_coe_mul_equiv
 
 section Actions
 

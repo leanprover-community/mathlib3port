@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.charpoly.linear_map
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -247,7 +247,7 @@ theorem LinearMap.exists_monic_and_coeff_mem_pow_and_aeval_eq_zero_of_range_le_s
     obtain ⟨s : Finset M, hs : Submodule.span R (s : Set M) = ⊤⟩ := Module.Finite.out
     obtain ⟨A, rfl, h⟩ :=
       Matrix.isRepresentation.to_End_exists_mem_ideal R (coe : s → M)
-        (by rw [Subtype.range_coe_subtype, Finset.set_of_mem, hs]) f I hI
+        (by rw [Subtype.range_coe_subtype, Finset.setOf_mem, hs]) f I hI
     refine' ⟨A.1.charpoly, A.1.charpoly_monic, _, _⟩
     · rw [A.1.charpoly_nat_degree_eq_dim]
       exact coeff_charpoly_mem_ideal_pow h

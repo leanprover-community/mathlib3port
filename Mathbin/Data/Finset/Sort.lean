@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.finset.sort
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,7 +54,7 @@ theorem sort_nodup (s : Finset α) : (sort r s).Nodup :=
 
 @[simp]
 theorem sort_to_finset [DecidableEq α] (s : Finset α) : (sort r s).toFinset = s :=
-  List.to_finset_eq (sort_nodup r s) ▸ eq_of_veq (sort_eq r s)
+  List.toFinset_eq (sort_nodup r s) ▸ eq_of_veq (sort_eq r s)
 #align finset.sort_to_finset Finset.sort_to_finset
 
 @[simp]
@@ -204,7 +204,7 @@ theorem range_order_emb_of_fin (s : Finset α) {k : ℕ} (h : s.card = k) :
   simp only [order_emb_of_fin, Set.range_comp coe (s.order_iso_of_fin h), RelEmbedding.coe_trans,
     Set.image_univ, Finset.orderEmbOfFin.equations._eqn_1, RelIso.range_eq,
     OrderEmbedding.subtype_apply, OrderIso.coe_toOrderEmbedding, eq_self_iff_true,
-    Subtype.range_coe_subtype, Finset.set_of_mem, Finset.coe_inj]
+    Subtype.range_coe_subtype, Finset.setOf_mem, Finset.coe_inj]
 #align finset.range_order_emb_of_fin Finset.range_order_emb_of_fin
 
 /-- The bijection `order_emb_of_fin s h` sends `0` to the minimum of `s`. -/
@@ -273,7 +273,7 @@ theorem order_emb_of_card_le_mem (s : Finset α) {k : ℕ} (h : k ≤ s.card) (a
 
 end SortLinearOrder
 
-instance [Repr α] : Repr (Finset α) :=
+unsafe instance [Repr α] : Repr (Finset α) :=
   ⟨fun s => repr s.1⟩
 
 end Finset

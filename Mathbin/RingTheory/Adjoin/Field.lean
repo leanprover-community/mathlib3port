@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module ring_theory.adjoin.field
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -39,12 +39,12 @@ def AlgEquiv.adjoinSingletonEquivAdjoinRootMinpoly {R : Type _} [CommRing R] [Al
   AlgEquiv.symm <|
     AlgEquiv.ofBijective
       (AlgHom.codRestrict (AdjoinRoot.liftHom _ x <| minpoly.aeval F x) _ fun p =>
-        (AdjoinRoot.induction_on _ p) fun p =>
+        AdjoinRoot.induction_on _ p fun p =>
           (Algebra.adjoin_singleton_eq_range_aeval F x).symm ▸
             (Polynomial.aeval _).mem_range.mpr ⟨p, rfl⟩)
       ⟨(AlgHom.injective_cod_restrict _ _ _).2 <|
           (injective_iff_map_eq_zero _).2 fun p =>
-            (AdjoinRoot.induction_on _ p) fun p hp =>
+            AdjoinRoot.induction_on _ p fun p hp =>
               Ideal.Quotient.eq_zero_iff_mem.2 <| Ideal.mem_span_singleton.2 <| minpoly.dvd F x hp,
         fun y =>
         let ⟨p, hp⟩ :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.analytic.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -137,15 +137,15 @@ theorem le_radius_of_bound (C : ℝ) {r : ℝ≥0} (h : ∀ n : ℕ, ‖p n‖ *
 /-- If `‖pₙ‖ rⁿ` is bounded in `n`, then the radius of `p` is at least `r`. -/
 theorem le_radius_of_bound_nnreal (C : ℝ≥0) {r : ℝ≥0} (h : ∀ n : ℕ, ‖p n‖₊ * r ^ n ≤ C) :
     (r : ℝ≥0∞) ≤ p.radius :=
-  (p.le_radius_of_bound C) fun n => by exact_mod_cast h n
+  p.le_radius_of_bound C fun n => by exact_mod_cast h n
 #align
   formal_multilinear_series.le_radius_of_bound_nnreal FormalMultilinearSeries.le_radius_of_bound_nnreal
 
 /-- If `‖pₙ‖ rⁿ = O(1)`, as `n → ∞`, then the radius of `p` is at least `r`. -/
 theorem le_radius_of_is_O (h : (fun n => ‖p n‖ * r ^ n) =O[at_top] fun n => (1 : ℝ)) :
     ↑r ≤ p.radius :=
-  (Exists.elim (is_O_one_nat_at_top_iff.1 h)) fun C hC =>
-    (p.le_radius_of_bound C) fun n => (le_abs_self _).trans (hC n)
+  Exists.elim (is_O_one_nat_at_top_iff.1 h) fun C hC =>
+    p.le_radius_of_bound C fun n => (le_abs_self _).trans (hC n)
 #align formal_multilinear_series.le_radius_of_is_O FormalMultilinearSeries.le_radius_of_is_O
 
 theorem le_radius_of_eventually_le (C) (h : ∀ᶠ n in at_top, ‖p n‖ * r ^ n ≤ C) : ↑r ≤ p.radius :=
@@ -154,7 +154,7 @@ theorem le_radius_of_eventually_le (C) (h : ∀ᶠ n in at_top, ‖p n‖ * r ^ 
   formal_multilinear_series.le_radius_of_eventually_le FormalMultilinearSeries.le_radius_of_eventually_le
 
 theorem le_radius_of_summable_nnnorm (h : Summable fun n => ‖p n‖₊ * r ^ n) : ↑r ≤ p.radius :=
-  (p.le_radius_of_bound_nnreal (∑' n, ‖p n‖₊ * r ^ n)) fun n => le_tsum' h _
+  p.le_radius_of_bound_nnreal (∑' n, ‖p n‖₊ * r ^ n) fun n => le_tsum' h _
 #align
   formal_multilinear_series.le_radius_of_summable_nnnorm FormalMultilinearSeries.le_radius_of_summable_nnnorm
 
@@ -241,7 +241,7 @@ theorem lt_radius_of_is_O (h₀ : r ≠ 0) {a : ℝ} (ha : a ∈ Ioo (-1 : ℝ) 
     simpa only [div_one] using (div_lt_div_left h₀ zero_lt_one ha.1).2 ha.2
   norm_cast  at this
   rw [← Ennreal.coe_lt_coe] at this
-  refine' this.trans_le ((p.le_radius_of_bound C) fun n => _)
+  refine' this.trans_le (p.le_radius_of_bound C fun n => _)
   rw [Nnreal.coe_div, div_pow, ← mul_div_assoc, div_le_iff (pow_pos ha.1 n)]
   exact (le_abs_self _).trans (hp n)
 #align formal_multilinear_series.lt_radius_of_is_O FormalMultilinearSeries.lt_radius_of_is_O
@@ -363,7 +363,7 @@ theorem min_radius_le_radius_add (p q : FormalMultilinearSeries 𝕜 E F) :
   refine' Ennreal.le_of_forall_nnreal_lt fun r hr => _
   rw [lt_min_iff] at hr
   have := ((p.is_o_one_of_lt_radius hr.1).add (q.is_o_one_of_lt_radius hr.2)).IsO
-  refine' (p + q).le_radius_of_is_O (((is_O_of_le _) fun n => _).trans this)
+  refine' (p + q).le_radius_of_is_O ((is_O_of_le _ fun n => _).trans this)
   rw [← add_mul, norm_mul, norm_mul, norm_norm]
   exact mul_le_mul_of_nonneg_right ((norm_add_le _ _).trans (le_abs_self _)) (norm_nonneg _)
 #align
@@ -500,7 +500,7 @@ theorem HasFpowerSeriesAt.congr (hf : HasFpowerSeriesAt f p x) (hg : f =ᶠ[𝓝
 protected theorem HasFpowerSeriesAt.eventually (hf : HasFpowerSeriesAt f p x) :
     ∀ᶠ r : ℝ≥0∞ in 𝓝[>] 0, HasFpowerSeriesOnBall f p x r :=
   let ⟨r, hr⟩ := hf
-  (mem_of_superset (Ioo_mem_nhds_within_Ioi (left_mem_Ico.2 hr.r_pos))) fun r' hr' =>
+  mem_of_superset (Ioo_mem_nhds_within_Ioi (left_mem_Ico.2 hr.r_pos)) fun r' hr' =>
     hr.mono hr'.1 hr'.2.le
 #align has_fpower_series_at.eventually HasFpowerSeriesAt.eventually
 

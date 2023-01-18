@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou
 
 ! This file was ported from Lean 3 source module measure_theory.function.l1_space
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -611,7 +611,7 @@ theorem Integrable.toAverage {f : α → β} (h : Integrable f μ) : Integrable 
 
 theorem integrable_average [IsFiniteMeasure μ] {f : α → β} :
     Integrable f ((μ univ)⁻¹ • μ) ↔ Integrable f μ :=
-  ((eq_or_ne μ 0).byCases fun h => by simp [h]) fun h =>
+  (eq_or_ne μ 0).byCases (fun h => by simp [h]) fun h =>
     integrable_smul_measure (Ennreal.inv_ne_zero.2 <| measure_ne_top _ _)
       (Ennreal.inv_ne_top.2 <| mt Measure.measure_univ_eq_zero.1 h)
 #align measure_theory.integrable_average MeasureTheory.integrable_average
@@ -1208,7 +1208,7 @@ end
 section
 
 theorem Integrable.neg {f : α →ₘ[μ] β} : Integrable f → Integrable (-f) :=
-  (inductionOn f) fun f hfm hfi => (integrable_mk _).2 ((integrable_mk hfm).1 hfi).neg
+  inductionOn f fun f hfm hfi => (integrable_mk _).2 ((integrable_mk hfm).1 hfi).neg
 #align measure_theory.ae_eq_fun.integrable.neg MeasureTheory.AeEqFun.Integrable.neg
 
 section
@@ -1236,7 +1236,7 @@ section NormedSpace
 variable {𝕜 : Type _} [NormedField 𝕜] [NormedSpace 𝕜 β]
 
 theorem Integrable.smul {c : 𝕜} {f : α →ₘ[μ] β} : Integrable f → Integrable (c • f) :=
-  (inductionOn f) fun f hfm hfi => (integrable_mk _).2 <| ((integrable_mk hfm).1 hfi).smul _
+  inductionOn f fun f hfm hfi => (integrable_mk _).2 <| ((integrable_mk hfm).1 hfi).smul _
 #align measure_theory.ae_eq_fun.integrable.smul MeasureTheory.AeEqFun.Integrable.smul
 
 end NormedSpace

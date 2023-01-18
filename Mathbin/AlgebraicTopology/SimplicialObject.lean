@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Scott Morrison, Adam Topaz
 
 ! This file was ported from Lean 3 source module algebraic_topology.simplicial_object
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -884,7 +884,7 @@ objects and augmented cosimplicial objects in the opposite category. -/
 def simplicialCosimplicialAugmentedEquiv :
     (SimplicialObject.Augmented C)ᵒᵖ ≌ CosimplicialObject.Augmented Cᵒᵖ :=
   Equivalence.mk (simplicialToCosimplicialAugmented _) (cosimplicialToSimplicialAugmented _)
-    ((NatIso.ofComponents fun X => X.unop.rightOpLeftOpIso.op) fun X Y f =>
+    (NatIso.ofComponents (fun X => X.unop.rightOpLeftOpIso.op) fun X Y f =>
       by
       dsimp
       rw [← f.op_unop]

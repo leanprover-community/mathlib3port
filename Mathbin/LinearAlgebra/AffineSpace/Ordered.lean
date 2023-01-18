@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module linear_algebra.affine_space.ordered
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,7 +47,7 @@ other arguments belong to specific domains.
 
 section OrderedRing
 
-variable [OrderedRing k] [OrderedAddCommGroup E] [Module k E] [OrderedSmul k E]
+variable [OrderedRing k] [OrderedAddCommGroup E] [Module k E] [OrderedSMul k E]
 
 variable {a a' b b' : E} {r r' : k}
 
@@ -115,7 +115,7 @@ end OrderedRing
 
 section LinearOrderedRing
 
-variable [LinearOrderedRing k] [OrderedAddCommGroup E] [Module k E] [OrderedSmul k E]
+variable [LinearOrderedRing k] [OrderedAddCommGroup E] [Module k E] [OrderedSMul k E]
   [Invertible (2 : k)] {a a' b b' : E} {r r' : k}
 
 theorem midpoint_le_midpoint (ha : a ≤ a') (hb : b ≤ b') : midpoint k a b ≤ midpoint k a' b' :=
@@ -128,7 +128,7 @@ section LinearOrderedField
 
 variable [LinearOrderedField k] [OrderedAddCommGroup E]
 
-variable [Module k E] [OrderedSmul k E]
+variable [Module k E] [OrderedSMul k E]
 
 section
 

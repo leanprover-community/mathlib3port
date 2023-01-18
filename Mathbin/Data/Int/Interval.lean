@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.int.interval
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -205,14 +205,14 @@ theorem image_Ico_mod (n a : ℤ) (h : 0 ≤ a) : (ico n (n + a)).image (· % a)
       simpa only [zero_add] using add_le_add hia.left (Int.emod_lt_of_pos n ha).le
     · refine' lt_of_lt_of_le (add_lt_add_right hi (a * (n / a + 1))) _
       rw [mul_add, mul_one, ← add_assoc, hn]
-    · rw [Int.add_mul_emod_self_left, Int.mod_eq_of_lt hia.left hia.right]
+    · rw [Int.add_mul_emod_self_left, Int.emod_eq_of_lt hia.left hia.right]
   · refine' ⟨i + a * (n / a), ⟨_, _⟩, _⟩
     · exact hn.symm.le.trans (add_le_add_right hi _)
     · rw [add_comm n a]
       refine' add_lt_add_of_lt_of_le hia.right (le_trans _ hn.le)
       simp only [zero_le, le_add_iff_nonneg_left]
       exact Int.emod_nonneg n (ne_of_gt ha)
-    · rw [Int.add_mul_emod_self_left, Int.mod_eq_of_lt hia.left hia.right]
+    · rw [Int.add_mul_emod_self_left, Int.emod_eq_of_lt hia.left hia.right]
 #align int.image_Ico_mod Int.image_Ico_mod
 
 end Int

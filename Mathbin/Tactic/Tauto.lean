@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module tactic.tauto
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,45 +34,46 @@ open Tactic.Interactive (casesm constructor_matching)
                 =>
                 all_goals'
                   <|
-                  ( iterate_at_most' 3 )
-                    do
-                      let h ← get_local h
-                        let e ← infer_type h
-                        match
-                          e
-                          with
-                          | q( ¬ _ = _ ) => replace h ` `( mt Iff.to_eq $ ( h ) )
-                            | q( _ ≠ _ ) => replace h ` `( mt Iff.to_eq $ ( h ) )
-                            | q( _ = _ ) => replace h ` `( Eq.to_iff $ ( h ) )
-                            |
-                              q( ¬ ( _ ∧ _ ) )
-                              =>
-                              replace h ` `( Decidable.not_and_distrib' . mp $ ( h ) )
-                                <|>
-                                replace h ` `( Decidable.not_and_distrib . mp $ ( h ) )
-                            | q( ¬ ( _ ∨ _ ) ) => replace h ` `( not_or . mp $ ( h ) )
-                            | q( ¬ _ ≠ _ ) => replace h ` `( Decidable.of_not_not $ ( h ) )
-                            | q( ¬ ¬ _ ) => replace h ` `( Decidable.of_not_not $ ( h ) )
-                            |
-                              q( ¬ ( _ → ( _ : Prop ) ) )
-                              =>
-                              replace h ` `( Decidable.not_imp . mp $ ( h ) )
-                            | q( ¬ ( _ ↔ _ ) ) => replace h ` `( Decidable.not_iff . mp $ ( h ) )
-                            |
-                              q( _ ↔ _ )
-                              =>
-                              replace h ` `( Decidable.iff_iff_and_or_not_and_not . mp $ ( h ) )
-                                <|>
-                                replace
-                                    h
-                                      `
-                                        `(
-                                          Decidable.iff_iff_and_or_not_and_not . mp $ ( h ) . symm
-                                          )
+                  iterate_at_most'
+                    3
+                      do
+                        let h ← get_local h
+                          let e ← infer_type h
+                          match
+                            e
+                            with
+                            | q( ¬ _ = _ ) => replace h ` `( mt Iff.to_eq $ ( h ) )
+                              | q( _ ≠ _ ) => replace h ` `( mt Iff.to_eq $ ( h ) )
+                              | q( _ = _ ) => replace h ` `( Eq.to_iff $ ( h ) )
+                              |
+                                q( ¬ ( _ ∧ _ ) )
+                                =>
+                                replace h ` `( Decidable.not_and_distrib' . mp $ ( h ) )
                                   <|>
-                                  ( ) <$ tactic.cases h
-                            | q( _ → _ ) => replace h ` `( Decidable.not_or_of_imp $ ( h ) )
-                            | _ => failed
+                                  replace h ` `( Decidable.not_and_distrib . mp $ ( h ) )
+                              | q( ¬ ( _ ∨ _ ) ) => replace h ` `( not_or . mp $ ( h ) )
+                              | q( ¬ _ ≠ _ ) => replace h ` `( Decidable.of_not_not $ ( h ) )
+                              | q( ¬ ¬ _ ) => replace h ` `( Decidable.of_not_not $ ( h ) )
+                              |
+                                q( ¬ ( _ → ( _ : Prop ) ) )
+                                =>
+                                replace h ` `( Decidable.not_imp . mp $ ( h ) )
+                              | q( ¬ ( _ ↔ _ ) ) => replace h ` `( Decidable.not_iff . mp $ ( h ) )
+                              |
+                                q( _ ↔ _ )
+                                =>
+                                replace h ` `( Decidable.iff_iff_and_or_not_and_not . mp $ ( h ) )
+                                  <|>
+                                  replace
+                                      h
+                                        `
+                                          `(
+                                            Decidable.iff_iff_and_or_not_and_not . mp $ ( h ) . symm
+                                            )
+                                    <|>
+                                    ( ) <$ tactic.cases h
+                              | q( _ → _ ) => replace h ` `( Decidable.not_or_of_imp $ ( h ) )
+                              | _ => failed
 #align tactic.distrib_not tactic.distrib_not
 
 /-!
@@ -136,7 +137,7 @@ unsafe def add_refl (r : tauto_state) (e : expr) : tactic (expr × expr) := do
 #align tactic.add_symm_proof tactic.add_symm_proof
 
 unsafe def add_edge (r : tauto_state) (x y p : expr) : tactic Unit :=
-  (modify_ref r) fun m => m.insert x (y, p)
+  modify_ref r fun m => m.insert x (y, p)
 #align tactic.add_edge tactic.add_edge
 
 /-- Retrieve the root of the hypothesis `e` from the proof forest.

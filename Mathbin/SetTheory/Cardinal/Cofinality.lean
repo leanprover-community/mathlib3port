@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Floris van Doorn, Violeta Hernández Palacios
 
 ! This file was ported from Lean 3 source module set_theory.cardinal.cofinality
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -498,7 +498,7 @@ theorem cof_zero : cof 0 = 0 :=
 
 @[simp]
 theorem cof_eq_zero {o} : cof o = 0 ↔ o = 0 :=
-  ⟨(induction_on o) fun α r _ z =>
+  ⟨induction_on o fun α r _ z =>
       let ⟨S, hl, e⟩ := cof_eq r
       type_eq_zero_iff_is_empty.2 <|
         ⟨fun a =>
@@ -530,7 +530,7 @@ theorem cof_succ (o) : cof (succ o) = 1 :=
 
 @[simp]
 theorem cof_eq_one_iff_is_succ {o} : cof.{u} o = 1 ↔ ∃ a, o = succ a :=
-  ⟨(induction_on o) fun α r _ z => by
+  ⟨induction_on o fun α r _ z => by
       skip
       rcases cof_eq r with ⟨S, hl, e⟩; rw [z] at e
       cases' mk_ne_zero_iff.1 (by rw [e] <;> exact one_ne_zero) with a
@@ -789,7 +789,7 @@ theorem cof_univ : cof univ.{u, v} = Cardinal.univ :=
       rw [univ, ← lift_cof, ← Cardinal.lift_lift, Cardinal.lift_lt, ← Se]
       refine' lt_of_not_ge fun h => _
       cases' Cardinal.lift_down h with a e
-      refine' Quotient.induction_on a (fun α e => _) e
+      refine' Quotient.inductionOn a (fun α e => _) e
       cases' Quotient.exact e with f
       have f := equiv.ulift.symm.trans f
       let g a := (f a).1
@@ -1278,7 +1278,7 @@ theorem univ_inaccessible : IsInaccessible univ.{u, v} :=
 #align cardinal.univ_inaccessible Cardinal.univ_inaccessible
 
 theorem lt_power_cof {c : Cardinal.{u}} : ℵ₀ ≤ c → c < (c^cof c.ord) :=
-  (Quotient.induction_on c) fun α h =>
+  Quotient.inductionOn c fun α h =>
     by
     rcases ord_eq α with ⟨r, wo, re⟩; skip
     have := ord_is_limit h

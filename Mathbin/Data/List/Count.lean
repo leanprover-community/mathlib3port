@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Parikshit Khanna, Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.list.count
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -408,42 +408,65 @@ theorem count_eq_length {a : α} {l} : count a l = l.length ↔ ∀ b ∈ l, a =
   countp_eq_length _
 #align list.count_eq_length List.count_eq_length
 
-#print List.count_repeat_self /-
+#print List.count_replicate_self /-
 @[simp]
-theorem count_repeat_self (a : α) (n : ℕ) : count a (repeat a n) = n := by
-  rw [count, countp_eq_length_filter, filter_eq_self.2, length_repeat] <;>
-    exact fun b m => (eq_of_mem_repeat m).symm
-#align list.count_repeat_self List.count_repeat_self
+theorem count_replicate_self (a : α) (n : ℕ) : count a (replicate n a) = n := by
+  rw [count, countp_eq_length_filter, filter_eq_self.2, length_replicate] <;>
+    exact fun b m => (eq_of_mem_replicate m).symm
+#align list.count_replicate_self List.count_replicate_self
 -/
 
-#print List.count_repeat /-
-theorem count_repeat (a b : α) (n : ℕ) : count a (repeat b n) = if a = b then n else 0 :=
+#print List.count_replicate /-
+theorem count_replicate (a b : α) (n : ℕ) : count a (replicate n b) = if a = b then n else 0 :=
   by
   split_ifs with h
-  exacts[h ▸ count_repeat_self _ _, count_eq_zero_of_not_mem (mt eq_of_mem_repeat h)]
-#align list.count_repeat List.count_repeat
+  exacts[h ▸ count_replicate_self _ _, count_eq_zero_of_not_mem <| mt eq_of_mem_replicate h]
+#align list.count_replicate List.count_replicate
 -/
 
-#print List.le_count_iff_repeat_sublist /-
-theorem le_count_iff_repeat_sublist {a : α} {l : List α} {n : ℕ} :
-    n ≤ count a l ↔ repeat a n <+ l :=
-  ⟨fun h =>
-    ((repeat_sublist_repeat a).2 h).trans <|
-      by
-      have : filter (Eq a) l = repeat a (count a l) :=
-        eq_repeat.2
-          ⟨by simp only [count, countp_eq_length_filter], fun b m => (of_mem_filter m).symm⟩
-      rw [← this] <;> apply filter_sublist,
-    fun h => by simpa only [count_repeat_self] using h.count_le a⟩
-#align list.le_count_iff_repeat_sublist List.le_count_iff_repeat_sublist
--/
+/- warning: list.filter_eq -> List.filter_eq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (l : List.{u1} α) (a : α), Eq.{succ u1} (List.{u1} α) (List.filterₓ.{u1} α (Eq.{succ u1} α a) (fun (a_1 : α) => _inst_1 a a_1) l) (List.replicate.{u1} α (List.count.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a l) a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (l : List.{u1} α) (a : α), Eq.{succ u1} (List.{u1} α) (List.filter.{u1} α (fun (a_1 : α) => Decidable.decide (Eq.{succ u1} α a a_1) (_inst_1 a a_1)) l) (List.replicate.{u1} α (List.count.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) a l) a)
+Case conversion may be inaccurate. Consider using '#align list.filter_eq List.filter_eqₓ'. -/
+theorem filter_eq (l : List α) (a : α) : l.filter (Eq a) = replicate (count a l) a := by
+  simp [eq_replicate, count, countp_eq_length_filter, @eq_comm _ _ a]
+#align list.filter_eq List.filter_eq
 
-#print List.repeat_count_eq_of_count_eq_length /-
-theorem repeat_count_eq_of_count_eq_length {a : α} {l : List α} (h : count a l = length l) :
-    repeat a (count a l) = l :=
-  (le_count_iff_repeat_sublist.mp le_rfl).eq_of_length <| (length_repeat a (count a l)).trans h
-#align list.repeat_count_eq_of_count_eq_length List.repeat_count_eq_of_count_eq_length
--/
+/- warning: list.filter_eq' -> List.filter_eq' is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (l : List.{u1} α) (a : α), Eq.{succ u1} (List.{u1} α) (List.filterₓ.{u1} α (fun (x : α) => Eq.{succ u1} α x a) (fun (a_1 : α) => _inst_1 a_1 a) l) (List.replicate.{u1} α (List.count.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a l) a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (l : List.{u1} α) (a : α), Eq.{succ u1} (List.{u1} α) (List.filter.{u1} α (fun (a_1 : α) => Decidable.decide (Eq.{succ u1} α a_1 a) (_inst_1 a_1 a)) l) (List.replicate.{u1} α (List.count.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) a l) a)
+Case conversion may be inaccurate. Consider using '#align list.filter_eq' List.filter_eq'ₓ'. -/
+theorem filter_eq' (l : List α) (a : α) : (l.filter fun x => x = a) = replicate (count a l) a := by
+  simp only [filter_eq, @eq_comm _ _ a]
+#align list.filter_eq' List.filter_eq'
+
+/- warning: list.le_count_iff_replicate_sublist -> List.le_count_iff_replicate_sublist is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {a : α} {l : List.{u1} α} {n : Nat}, Iff (LE.le.{0} Nat Nat.hasLe n (List.count.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a l)) (List.Sublist.{u1} α (List.replicate.{u1} α n a) l)
+but is expected to have type
+  forall {α : Type.{u1}} {_inst_1 : List.{u1} α} [a : DecidableEq.{succ u1} α] {l : Nat} {n : α}, Iff (LE.le.{0} Nat instLENat l (List.count.{u1} α (instBEq.{u1} α (fun (a_1 : α) (b : α) => a a_1 b)) n _inst_1)) (List.Sublist.{u1} α (List.replicate.{u1} α l n) _inst_1)
+Case conversion may be inaccurate. Consider using '#align list.le_count_iff_replicate_sublist List.le_count_iff_replicate_sublistₓ'. -/
+theorem le_count_iff_replicate_sublist {a : α} {l : List α} {n : ℕ} :
+    n ≤ count a l ↔ replicate n a <+ l :=
+  ⟨fun h => ((replicate_sublist_replicate a).2 h).trans <| filter_eq l a ▸ filter_sublist _,
+    fun h => by simpa only [count_replicate_self] using h.count_le a⟩
+#align list.le_count_iff_replicate_sublist List.le_count_iff_replicate_sublist
+
+/- warning: list.replicate_count_eq_of_count_eq_length -> List.replicate_count_eq_of_count_eq_length is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {a : α} {l : List.{u1} α}, (Eq.{1} Nat (List.count.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a l) (List.length.{u1} α l)) -> (Eq.{succ u1} (List.{u1} α) (List.replicate.{u1} α (List.count.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a l) a) l)
+but is expected to have type
+  forall {α : Type.{u1}} {_inst_1 : List.{u1} α} [a : DecidableEq.{succ u1} α] {l : α}, (Eq.{1} Nat (List.count.{u1} α (instBEq.{u1} α (fun (a_1 : α) (b : α) => a a_1 b)) l _inst_1) (List.length.{u1} α _inst_1)) -> (Eq.{succ u1} (List.{u1} α) (List.replicate.{u1} α (List.count.{u1} α (instBEq.{u1} α (fun (a_1 : α) (b : α) => a a_1 b)) l _inst_1) l) _inst_1)
+Case conversion may be inaccurate. Consider using '#align list.replicate_count_eq_of_count_eq_length List.replicate_count_eq_of_count_eq_lengthₓ'. -/
+theorem replicate_count_eq_of_count_eq_length {a : α} {l : List α} (h : count a l = length l) :
+    replicate (count a l) a = l :=
+  (le_count_iff_replicate_sublist.mp le_rfl).eq_of_length <|
+    (length_replicate (count a l) a).trans h
+#align list.replicate_count_eq_of_count_eq_length List.replicate_count_eq_of_count_eq_length
 
 /- warning: list.count_filter -> List.count_filter is a dubious translation:
 lean 3 declaration is

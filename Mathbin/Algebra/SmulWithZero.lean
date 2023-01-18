@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 
 ! This file was ported from Lean 3 source module algebra.smul_with_zero
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -93,6 +93,24 @@ theorem zero_smul (m : M) : (0 : R) • m = 0 :=
   SMulWithZero.zero_smul m
 #align zero_smul zero_smul
 -/
+
+variable {R} {a : R} {b : M}
+
+theorem smul_eq_zero_of_left (h : a = 0) (b : M) : a • b = 0 :=
+  h.symm ▸ zero_smul _ b
+#align smul_eq_zero_of_left smul_eq_zero_of_left
+
+theorem smul_eq_zero_of_right (a : R) (h : b = 0) : a • b = 0 :=
+  h.symm ▸ smul_zero a
+#align smul_eq_zero_of_right smul_eq_zero_of_right
+
+theorem left_ne_zero_of_smul : a • b ≠ 0 → a ≠ 0 :=
+  mt fun h => smul_eq_zero_of_left h b
+#align left_ne_zero_of_smul left_ne_zero_of_smul
+
+theorem right_ne_zero_of_smul : a • b ≠ 0 → b ≠ 0 :=
+  mt <| smul_eq_zero_of_right a
+#align right_ne_zero_of_smul right_ne_zero_of_smul
 
 variable {R M} [Zero R'] [Zero M'] [SMul R M']
 
@@ -213,6 +231,18 @@ Case conversion may be inaccurate. Consider using '#align monoid_with_zero.to_op
 instance MonoidWithZero.toOppositeMulActionWithZero : MulActionWithZero Rᵐᵒᵖ R :=
   { MulZeroClass.toOppositeSMulWithZero R, Monoid.toOppositeMulAction R with }
 #align monoid_with_zero.to_opposite_mul_action_with_zero MonoidWithZero.toOppositeMulActionWithZero
+
+protected theorem MulActionWithZero.subsingleton [MulActionWithZero R M] [Subsingleton R] :
+    Subsingleton M :=
+  ⟨fun x y => by
+    rw [← one_smul R x, ← one_smul R y, Subsingleton.elim (1 : R) 0, zero_smul, zero_smul]⟩
+#align mul_action_with_zero.subsingleton MulActionWithZero.subsingleton
+
+protected theorem MulActionWithZero.nontrivial [MulActionWithZero R M] [Nontrivial M] :
+    Nontrivial R :=
+  (subsingleton_or_nontrivial R).resolve_left fun hR =>
+    not_subsingleton M <| MulActionWithZero.subsingleton R M
+#align mul_action_with_zero.nontrivial MulActionWithZero.nontrivial
 
 variable {R M} [MulActionWithZero R M] [Zero M'] [SMul R M']
 

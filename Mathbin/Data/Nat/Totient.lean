@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.nat.totient
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -389,7 +389,7 @@ theorem totient_dvd_of_dvd {a b : ℕ} (h : a ∣ b) : φ a ∣ φ b :=
   have hab' : a.factorization.support ⊆ b.factorization.support :=
     by
     intro p
-    simp only [support_factorization, List.mem_to_finset]
+    simp only [support_factorization, List.mem_toFinset]
     apply factors_subset_of_dvd h hb0
   rw [totient_eq_prod_factorization ha0, totient_eq_prod_factorization hb0]
   refine' Finsupp.prod_dvd_prod_of_subset_of_dvd hab' fun p hp => mul_dvd_mul _ dvd_rfl

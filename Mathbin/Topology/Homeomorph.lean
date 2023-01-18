@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Sébastien Gouëzel, Zhouhang Zhou, Reid Barton
 
 ! This file was ported from Lean 3 source module topology.homeomorph
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -372,6 +372,10 @@ theorem image_interior (h : α ≃ₜ β) (s : Set α) : h '' interior s = inter
 theorem preimage_frontier (h : α ≃ₜ β) (s : Set β) : h ⁻¹' frontier s = frontier (h ⁻¹' s) :=
   h.IsOpenMap.preimage_frontier_eq_frontier_preimage h.Continuous _
 #align homeomorph.preimage_frontier Homeomorph.preimage_frontier
+
+theorem image_frontier (h : α ≃ₜ β) (s : Set α) : h '' frontier s = frontier (h '' s) := by
+  rw [← preimage_symm, preimage_frontier]
+#align homeomorph.image_frontier Homeomorph.image_frontier
 
 @[to_additive]
 theorem HasCompactMulSupport.comp_homeomorph {M} [One M] {f : β → M} (hf : HasCompactMulSupport f)

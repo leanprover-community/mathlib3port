@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Amelia Livingston, Bryan Gin-ge Chen
 
 ! This file was ported from Lean 3 source module data.setoid.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -237,7 +237,7 @@ instance : PartialOrder (Setoid α) where
     and top element the trivial equivalence relation. -/
 instance completeLattice : CompleteLattice (Setoid α) :=
   {
-    (completeLatticeOfInf (Setoid α)) fun s =>
+    completeLatticeOfInf (Setoid α) fun s =>
       ⟨fun r hr x y h => h _ hr, fun r hr x y h r' hr' =>
         hr hr' h⟩ with
     inf := HasInf.inf
@@ -266,7 +266,7 @@ theorem top_def : (⊤ : Setoid α).Rel = ⊤ :=
 lean 3 declaration is
   forall {α : Type.{u1}}, Eq.{succ u1} (α -> α -> Prop) (Setoid.Rel.{u1} α (Bot.bot.{u1} (Setoid.{succ u1} α) (CompleteLattice.toHasBot.{u1} (Setoid.{succ u1} α) (Setoid.completeLattice.{u1} α)))) (Eq.{succ u1} α)
 but is expected to have type
-  forall {α : Type.{u1}}, Eq.{succ u1} (α -> α -> Prop) (Setoid.Rel.{u1} α (Bot.bot.{u1} (Setoid.{succ u1} α) (CompleteLattice.toBot.{u1} (Setoid.{succ u1} α) (Setoid.completeLattice.{u1} α)))) (fun (x._@.Mathlib.Data.Setoid.Basic._hyg.1216 : α) (x._@.Mathlib.Data.Setoid.Basic._hyg.1218 : α) => Eq.{succ u1} α x._@.Mathlib.Data.Setoid.Basic._hyg.1216 x._@.Mathlib.Data.Setoid.Basic._hyg.1218)
+  forall {α : Type.{u1}}, Eq.{succ u1} (α -> α -> Prop) (Setoid.Rel.{u1} α (Bot.bot.{u1} (Setoid.{succ u1} α) (CompleteLattice.toBot.{u1} (Setoid.{succ u1} α) (Setoid.completeLattice.{u1} α)))) (fun (x._@.Mathlib.Data.Setoid.Basic._hyg.1215 : α) (x._@.Mathlib.Data.Setoid.Basic._hyg.1217 : α) => Eq.{succ u1} α x._@.Mathlib.Data.Setoid.Basic._hyg.1215 x._@.Mathlib.Data.Setoid.Basic._hyg.1217)
 Case conversion may be inaccurate. Consider using '#align setoid.bot_def Setoid.bot_defₓ'. -/
 @[simp]
 theorem bot_def : (⊥ : Setoid α).Rel = (· = ·) :=
@@ -429,7 +429,7 @@ def liftEquiv (r : Setoid α) : { f : α → β // r ≤ ker f } ≃ (Quotient r
   toFun f := Quotient.lift (f : α → β) f.2
   invFun f := ⟨f ∘ Quotient.mk'', fun x y h => by simp [ker_def, Quotient.sound h]⟩
   left_inv := fun ⟨f, hf⟩ => Subtype.eq <| funext fun x => rfl
-  right_inv f := funext fun x => (Quotient.inductionOn' x) fun x => rfl
+  right_inv f := funext fun x => Quotient.inductionOn' x fun x => rfl
 #align setoid.lift_equiv Setoid.liftEquiv
 -/
 
@@ -457,7 +457,7 @@ Case conversion may be inaccurate. Consider using '#align setoid.ker_lift_inject
 /-- Given a map f from α to β, the natural map from the quotient of α by the kernel of f is
     injective. -/
 theorem ker_lift_injective (f : α → β) : Injective (@Quotient.lift _ _ (ker f) f fun _ _ h => h) :=
-  fun x y => (Quotient.inductionOn₂' x y) fun a b h => Quotient.sound' h
+  fun x y => Quotient.inductionOn₂' x y fun a b h => Quotient.sound' h
 #align setoid.ker_lift_injective Setoid.ker_lift_injective
 
 /- warning: setoid.ker_eq_lift_of_injective -> Setoid.ker_eq_lift_of_injective is a dubious translation:
@@ -483,7 +483,7 @@ variable (r : Setoid α) (f : α → β)
     bijects with f's image. -/
 noncomputable def quotientKerEquivRange : Quotient (ker f) ≃ Set.range f :=
   Equiv.ofBijective
-    ((@Quotient.lift _ (Set.range f) (ker f) fun x => ⟨f x, Set.mem_range_self x⟩) fun _ _ h =>
+    (@Quotient.lift _ (Set.range f) (ker f) (fun x => ⟨f x, Set.mem_range_self x⟩) fun _ _ h =>
       Subtype.ext_val h)
     ⟨fun x y h => ker_lift_injective f <| by rcases x with ⟨⟩ <;> rcases y with ⟨⟩ <;> injections,
       fun ⟨w, z, hz⟩ =>
@@ -498,9 +498,9 @@ domain. -/
 def quotientKerEquivOfRightInverse (g : β → α) (hf : Function.RightInverse g f) :
     Quotient (ker f) ≃ β
     where
-  toFun a := (Quotient.liftOn' a f) fun _ _ => id
+  toFun a := Quotient.liftOn' a f fun _ _ => id
   invFun b := Quotient.mk' (g b)
-  left_inv a := (Quotient.inductionOn' a) fun a => Quotient.sound' <| hf (f a)
+  left_inv a := Quotient.inductionOn' a fun a => Quotient.sound' <| hf (f a)
   right_inv := hf
 #align setoid.quotient_ker_equiv_of_right_inverse Setoid.quotientKerEquivOfRightInverse
 -/
@@ -594,16 +594,15 @@ def quotientQuotientEquivQuotient (s : Setoid α) (h : r ≤ s) :
     Quotient (ker (Quot.mapRight h)) ≃ Quotient s
     where
   toFun x :=
-    (Quotient.liftOn' x fun w =>
-        (Quotient.liftOn' w (@Quotient.mk'' _ s)) fun x y H => Quotient.sound <| h H)
-      fun x y =>
-      (Quotient.inductionOn₂' x y) fun w z H => show @Quot.mk _ _ _ = @Quot.mk _ _ _ from H
+    Quotient.liftOn' x
+      (fun w => Quotient.liftOn' w (@Quotient.mk'' _ s) fun x y H => Quotient.sound <| h H)
+      fun x y => Quotient.inductionOn₂' x y fun w z H => show @Quot.mk _ _ _ = @Quot.mk _ _ _ from H
   invFun x :=
-    (Quotient.liftOn' x fun w => @Quotient.mk'' _ (ker <| Quot.mapRight h) <| @Quotient.mk'' _ r w)
+    Quotient.liftOn' x (fun w => @Quotient.mk'' _ (ker <| Quot.mapRight h) <| @Quotient.mk'' _ r w)
       fun x y H => Quotient.sound' <| show @Quot.mk _ _ _ = @Quot.mk _ _ _ from Quotient.sound H
   left_inv x :=
-    (Quotient.inductionOn' x) fun y => (Quotient.inductionOn' y) fun w => by show ⟦_⟧ = _ <;> rfl
-  right_inv x := (Quotient.inductionOn' x) fun y => by show ⟦_⟧ = _ <;> rfl
+    Quotient.inductionOn' x fun y => Quotient.inductionOn' y fun w => by show ⟦_⟧ = _ <;> rfl
+  right_inv x := Quotient.inductionOn' x fun y => by show ⟦_⟧ = _ <;> rfl
 #align setoid.quotient_quotient_equiv_quotient Setoid.quotientQuotientEquivQuotient
 -/
 
@@ -632,7 +631,7 @@ def correspondence (r : Setoid α) : { s // r ≤ s } ≃o Setoid (Quotient r)
       ⟨fun h =>
         let ⟨a, b, hx, hy, H⟩ := h
         hx ▸ hy ▸ H,
-        (Quotient.induction_on₂ x y) fun w z h => ⟨w, z, rfl, rfl, h⟩⟩
+        Quotient.induction_on₂ x y fun w z h => ⟨w, z, rfl, rfl, h⟩⟩
   map_rel_iff' s t :=
     ⟨fun h x y hs =>
       let ⟨a, b, hx, hy, ht⟩ := h ⟨x, y, rfl, rfl, hs⟩

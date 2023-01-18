@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module group_theory.specific_groups.alternating
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -108,7 +108,7 @@ instance normal : (alternatingGroup α).Normal :=
 #align alternating_group.normal alternatingGroup.normal
 
 theorem is_conj_of {σ τ : alternatingGroup α} (hc : IsConj (σ : Perm α) (τ : Perm α))
-    (hσ : (σ : Perm α).support.card + 2 ≤ Fintype.card α) : IsConj σ τ :=
+    (hσ : (σ : Perm α).Support.card + 2 ≤ Fintype.card α) : IsConj σ τ :=
   by
   obtain ⟨σ, hσ⟩ := σ
   obtain ⟨τ, hτ⟩ := τ
@@ -150,7 +150,7 @@ open alternatingGroup
 @[simp]
 theorem closure_three_cycles_eq_alternating :
     closure { σ : Perm α | IsThreeCycle σ } = alternatingGroup α :=
-  (closure_eq_of_le _ fun σ hσ => mem_alternating_group.2 hσ.sign) fun σ hσ =>
+  closure_eq_of_le _ (fun σ hσ => mem_alternating_group.2 hσ.sign) fun σ hσ =>
     by
     suffices hind :
       ∀ (n : ℕ) (l : List (perm α)) (hl : ∀ g, g ∈ l → is_swap g) (hn : l.length = 2 * n),
@@ -211,7 +211,7 @@ theorem is_three_cycle_sq_of_three_mem_cycle_type_five {g : Perm (Fin 5)} (h : 3
   rw [le_antisymm (two_le_of_mem_cycle_type hn) (le_trans (le_card_support_of_mem_cycle_type hn) _)]
   apply le_of_add_le_add_left
   rw [← hd.card_support_mul, h3]
-  exact (c * g').support.card_le_univ
+  exact (c * g').Support.card_le_univ
 #align
   equiv.perm.is_three_cycle_sq_of_three_mem_cycle_type_five Equiv.Perm.is_three_cycle_sq_of_three_mem_cycle_type_five
 
@@ -295,17 +295,16 @@ theorem is_conj_swap_mul_swap_of_cycle_type_two {g : Perm (Fin 5)}
     (h2 : ∀ n, n ∈ cycleType (g : Perm (Fin 5)) → n = 2) : IsConj (swap 0 4 * swap 1 3) g :=
   by
   have h := g.support.card_le_univ
-  rw [← sum_cycle_type, Multiset.eq_repeat_of_mem h2, Multiset.sum_repeat, smul_eq_mul] at h
-  rw [← Multiset.eq_repeat'] at h2
-  have h56 : 5 ≤ 3 * 2 := Nat.le_succ 5
-  have h := le_of_mul_le_mul_right (le_trans h h56) (by decide)
+  rw [← Multiset.eq_replicate_card] at h2
+  rw [← sum_cycle_type, h2, Multiset.sum_replicate, smul_eq_mul] at h
+  have h : g.cycle_type.card ≤ 3 := le_of_mul_le_mul_right (le_trans h (by decide)) (by decide)
   rw [mem_alternating_group, sign_of_cycle_type, h2] at ha
   norm_num at ha
   rw [pow_add, pow_mul, Int.units_pow_two, one_mul, Units.ext_iff, Units.val_one,
     Units.val_pow_eq_pow_val, Units.coe_neg_one, neg_one_pow_eq_one_iff_even _] at ha
   swap; · decide
   rw [is_conj_iff_cycle_type_eq, h2]
-  interval_cases Multiset.card g.cycle_type
+  interval_cases
   · exact (h1 (card_cycle_type_eq_zero.1 h_1)).elim
   · contrapose! ha
     simp [h_1]
@@ -351,7 +350,7 @@ instance is_simple_group_five : IsSimpleGroup (alternatingGroup (Fin 5)) :=
     · obtain ⟨m, hm⟩ := Multiset.exists_cons_of_mem ng
       rw [← sum_cycle_type, hm, Multiset.sum_cons]
       exact le_add_right le_rfl
-    interval_cases n
+    interval_cases
     -- This breaks into cases `n = 3`, `n = 4`, `n = 5`.
     · -- If `n = 3`, then `g` has a 3-cycle in its decomposition, so `g^2` is a 3-cycle.
       -- `g^2` is in the normal closure of `g`, so that normal closure must be $A_5$.

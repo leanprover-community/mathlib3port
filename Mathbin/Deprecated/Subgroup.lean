@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Mitchell Rowett, Scott Morrison, Johan Commelin, Mario
   Michael Howes
 
 ! This file was ported from Lean 3 source module deprecated.subgroup
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -61,7 +61,7 @@ theorem IsSubgroup.div_mem {s : Set G} (hs : IsSubgroup s) {x y : G} (hx : x ∈
 
 theorem Additive.is_add_subgroup {s : Set G} (hs : IsSubgroup s) :
     @IsAddSubgroup (Additive G) _ s :=
-  (@IsAddSubgroup.mk (Additive G) _ _ (Additive.is_add_submonoid hs.to_is_submonoid)) fun _ =>
+  @IsAddSubgroup.mk (Additive G) _ _ (Additive.is_add_submonoid hs.to_is_submonoid) fun _ =>
     hs.inv_mem
 #align additive.is_add_subgroup Additive.is_add_subgroup
 
@@ -72,7 +72,7 @@ theorem Additive.is_add_subgroup_iff {s : Set G} : @IsAddSubgroup (Additive G) _
 
 theorem Multiplicative.is_subgroup {s : Set A} (hs : IsAddSubgroup s) :
     @IsSubgroup (Multiplicative A) _ s :=
-  (@IsSubgroup.mk (Multiplicative A) _ _ (Multiplicative.is_submonoid hs.to_is_add_submonoid))
+  @IsSubgroup.mk (Multiplicative A) _ _ (Multiplicative.is_submonoid hs.to_is_add_submonoid)
     fun _ => hs.neg_mem
 #align multiplicative.is_subgroup Multiplicative.is_subgroup
 
@@ -559,7 +559,7 @@ theorem mclosure_subset {s : Set G} : Monoid.closure s ⊆ closure s :=
 
 @[to_additive]
 theorem mclosure_inv_subset {s : Set G} : Monoid.closure (Inv.inv ⁻¹' s) ⊆ closure s :=
-  (Monoid.closure_subset (closure.is_subgroup _).to_is_submonoid) fun x hx =>
+  Monoid.closure_subset (closure.is_subgroup _).to_is_submonoid fun x hx =>
     inv_inv x ▸ ((closure.is_subgroup _).inv_mem <| subset_closure hx)
 #align group.mclosure_inv_subset Group.mclosure_inv_subset
 
@@ -581,7 +581,7 @@ theorem closure_eq_mclosure {s : Set G} : closure s = Monoid.closure (s ∪ Inv.
             (mul_inv_rev x y).symm ▸ IsSubmonoid.mul_mem (Monoid.closure.is_submonoid _) ihy ihx }
       (Set.Subset.trans (Set.subset_union_left _ _) Monoid.subset_closure))
     (Monoid.closure_subset (closure.is_subgroup _).to_is_submonoid <|
-      (Set.union_subset subset_closure) fun x hx =>
+      Set.union_subset subset_closure fun x hx =>
         inv_inv x ▸ (IsSubgroup.inv_mem (closure.is_subgroup _) <| subset_closure hx))
 #align group.closure_eq_mclosure Group.closure_eq_mclosure
 

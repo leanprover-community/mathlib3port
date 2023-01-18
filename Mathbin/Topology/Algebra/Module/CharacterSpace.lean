@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module topology.algebra.module.character_space
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -222,7 +222,7 @@ variable [Ring A] [TopologicalSpace A] [Algebra 𝕜 A]
 
 /-- The `ring_hom.ker` of `φ : character_space 𝕜 A` is maximal. -/
 instance kerIsMaximal (φ : characterSpace 𝕜 A) : (RingHom.ker φ).IsMaximal :=
-  (RingHom.kerIsMaximalOfSurjective φ) fun z =>
+  RingHom.kerIsMaximalOfSurjective φ fun z =>
     ⟨algebraMap 𝕜 A z, by simp only [AlgHomClass.commutes, Algebra.id.map_eq_id, RingHom.id_apply]⟩
 #align weak_dual.ker_is_maximal WeakDual.kerIsMaximal
 

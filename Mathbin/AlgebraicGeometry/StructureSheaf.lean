@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Scott Morrison
 
 ! This file was ported from Lean 3 source module algebraic_geometry.structure_sheaf
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -896,7 +896,7 @@ theorem to_basic_open_surjective (f : R) : Function.Surjective (toBasicOpen R f)
     simp_rw [Subtype.val_eq_coe, basic_open_eq_zero_locus_compl] at ht_cover
     rw [Set.compl_subset_comm] at ht_cover
     -- Why doesn't `simp_rw` do this?
-    simp_rw [Set.compl_unionᵢ, compl_compl, ← zero_locus_Union, ← Finset.set_bUnion_coe, ←
+    simp_rw [Set.compl_unionᵢ, compl_compl, ← zero_locus_Union, ← Finset.set_bunionᵢ_coe, ←
       Set.image_eq_unionᵢ] at ht_cover
     apply vanishing_ideal_anti_mono ht_cover
     exact subset_vanishing_ideal_zero_locus {f} (Set.mem_singleton f)
@@ -924,7 +924,7 @@ theorem to_basic_open_surjective (f : R) : Function.Surjective (toBasicOpen R f)
     intro x hx
     erw [TopologicalSpace.Opens.mem_supr]
     have := ht_cover hx
-    rw [← Finset.set_bUnion_coe, Set.mem_unionᵢ₂] at this
+    rw [← Finset.set_bunionᵢ_coe, Set.mem_unionᵢ₂] at this
     rcases this with ⟨i, i_mem, x_mem⟩
     use i, i_mem
   rintro ⟨i, hi⟩

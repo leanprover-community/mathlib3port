@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Sara Rousta
 
 ! This file was ported from Lean 3 source module order.upper_lower
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -998,7 +998,7 @@ def map (f : α ≃o β) : UpperSet α ≃o UpperSet β
 
 @[simp]
 theorem symm_map (f : α ≃o β) : (map f).symm = map f.symm :=
-  (FunLike.ext _ _) fun s => ext <| Set.preimage_equiv_eq_image_symm _ _
+  FunLike.ext _ _ fun s => ext <| Set.preimage_equiv_eq_image_symm _ _
 #align upper_set.symm_map UpperSet.symm_map
 
 @[simp]
@@ -1095,7 +1095,7 @@ def map (f : α ≃o β) : LowerSet α ≃o LowerSet β
 
 @[simp]
 theorem symm_map (f : α ≃o β) : (map f).symm = map f.symm :=
-  (FunLike.ext _ _) fun s => SetLike.coe_injective <| Set.preimage_equiv_eq_image_symm _ _
+  FunLike.ext _ _ fun s => SetLike.coe_injective <| Set.preimage_equiv_eq_image_symm _ _
 #align lower_set.symm_map LowerSet.symm_map
 
 @[simp]

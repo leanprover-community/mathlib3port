@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.dense_embedding
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -330,7 +330,7 @@ theorem is_closed_property [TopologicalSpace β] {e : α → β} {p : β → Pro
 
 theorem is_closed_property2 [TopologicalSpace β] {e : α → β} {p : β → β → Prop} (he : DenseRange e)
     (hp : IsClosed { q : β × β | p q.1 q.2 }) (h : ∀ a₁ a₂, p (e a₁) (e a₂)) : ∀ b₁ b₂, p b₁ b₂ :=
-  have : ∀ q : β × β, p q.1 q.2 := (is_closed_property (he.prod_map he) hp) fun _ => h _ _
+  have : ∀ q : β × β, p q.1 q.2 := is_closed_property (he.prod_map he) hp fun _ => h _ _
   fun b₁ b₂ => this ⟨b₁, b₂⟩
 #align is_closed_property2 is_closed_property2
 
@@ -338,7 +338,7 @@ theorem is_closed_property3 [TopologicalSpace β] {e : α → β} {p : β → β
     (he : DenseRange e) (hp : IsClosed { q : β × β × β | p q.1 q.2.1 q.2.2 })
     (h : ∀ a₁ a₂ a₃, p (e a₁) (e a₂) (e a₃)) : ∀ b₁ b₂ b₃, p b₁ b₂ b₃ :=
   have : ∀ q : β × β × β, p q.1 q.2.1 q.2.2 :=
-    (is_closed_property (he.prod_map <| he.prod_map he) hp) fun _ => h _ _ _
+    is_closed_property (he.prod_map <| he.prod_map he) hp fun _ => h _ _ _
   fun b₁ b₂ b₃ => this ⟨b₁, b₂, b₃⟩
 #align is_closed_property3 is_closed_property3
 
@@ -371,7 +371,7 @@ variable {f : α → β}
 /-- Two continuous functions to a t2-space that agree on the dense range of a function are equal. -/
 theorem DenseRange.equalizer (hfd : DenseRange f) {g h : β → γ} (hg : Continuous g)
     (hh : Continuous h) (H : g ∘ f = h ∘ f) : g = h :=
-  funext fun y => hfd.induction_on y (is_closed_eq hg hh) <| congr_fun H
+  funext fun y => hfd.inductionOn y (is_closed_eq hg hh) <| congr_fun H
 #align dense_range.equalizer DenseRange.equalizer
 
 end
@@ -379,7 +379,7 @@ end
 -- Bourbaki GT III §3 no.4 Proposition 7 (generalised to any dense-inducing map to a T₃ space)
 theorem Filter.HasBasis.has_basis_of_dense_inducing [TopologicalSpace α] [TopologicalSpace β]
     [T3Space β] {ι : Type _} {s : ι → Set α} {p : ι → Prop} {x : α} (h : (𝓝 x).HasBasis p s)
-    {f : α → β} (hf : DenseInducing f) : ((𝓝 (f x)).HasBasis p) fun i => closure <| f '' s i :=
+    {f : α → β} (hf : DenseInducing f) : (𝓝 (f x)).HasBasis p fun i => closure <| f '' s i :=
   by
   rw [Filter.has_basis_iff] at h⊢
   intro T

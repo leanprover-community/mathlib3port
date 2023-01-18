@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Sébastien Gouëzel, Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,7 @@ import Mathbin.Analysis.Complex.Basic
 import Mathbin.Analysis.Convex.Uniform
 import Mathbin.Analysis.NormedSpace.Completion
 import Mathbin.Analysis.NormedSpace.BoundedLinearMaps
+import Mathbin.LinearAlgebra.BilinearForm
 
 /-!
 # Inner product space
@@ -544,6 +545,17 @@ def sesqFormOfInner : E →ₗ[𝕜] E →ₗ⋆[𝕜] 𝕜 :=
   LinearMap.mk₂'ₛₗ (RingHom.id 𝕜) (starRingEnd _) (fun x y => ⟪y, x⟫) (fun x y z => inner_add_right)
     (fun r x y => inner_smul_right) (fun x y z => inner_add_left) fun r x y => inner_smul_left
 #align sesq_form_of_inner sesqFormOfInner
+
+/-- The real inner product as a bilinear form. -/
+@[simps]
+def bilinFormOfRealInner : BilinForm ℝ F
+    where
+  bilin := inner
+  bilin_add_left x y z := inner_add_left
+  bilin_smul_left a x y := inner_smul_left
+  bilin_add_right x y z := inner_add_right
+  bilin_smul_right a x y := inner_smul_right
+#align bilin_form_of_real_inner bilinFormOfRealInner
 
 /-- An inner product with a sum on the left. -/
 theorem sum_inner {ι : Type _} (s : Finset ι) (f : ι → E) (x : E) :

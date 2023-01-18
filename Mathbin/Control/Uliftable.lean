@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module control.uliftable
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -115,7 +115,7 @@ instance : Uliftable id id where congr α β F := F
 def StateT.uliftable' {m : Type u₀ → Type v₀} {m' : Type u₁ → Type v₁} [Uliftable m m']
     (F : s ≃ s') : Uliftable (StateT s m) (StateT s' m')
     where congr α β G :=
-    StateT.equiv <| (Equiv.piCongr F) fun _ => Uliftable.congr _ _ <| Equiv.prodCongr G F
+    StateT.equiv <| Equiv.piCongr F fun _ => Uliftable.congr _ _ <| Equiv.prodCongr G F
 #align state_t.uliftable' StateTₓ.uliftable'
 
 instance {m m'} [Uliftable m m'] : Uliftable (StateT s m) (StateT (ULift s) m') :=
@@ -124,7 +124,7 @@ instance {m m'} [Uliftable m m'] : Uliftable (StateT s m) (StateT (ULift s) m') 
 /-- for specific reader monads, this function helps to create a uliftable instance -/
 def ReaderT.uliftable' {m m'} [Uliftable m m'] (F : s ≃ s') :
     Uliftable (ReaderT s m) (ReaderT s' m')
-    where congr α β G := ReaderT.equiv <| (Equiv.piCongr F) fun _ => Uliftable.congr _ _ G
+    where congr α β G := ReaderT.equiv <| Equiv.piCongr F fun _ => Uliftable.congr _ _ G
 #align reader_t.uliftable' ReaderTₓ.uliftable'
 
 instance {m m'} [Uliftable m m'] : Uliftable (ReaderT s m) (ReaderT (ULift s) m') :=

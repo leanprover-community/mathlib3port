@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.free_ring
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -59,7 +59,7 @@ protected theorem induction_on {C : FreeRing α → Prop} (z : FreeRing α) (hn1
   have hn : ∀ x, C x → C (-x) := fun x ih => neg_one_mul x ▸ hm _ _ hn1 ih
   have h1 : C 1 := neg_neg (1 : FreeRing α) ▸ hn _ hn1
   FreeAbelianGroup.induction_on z (add_left_neg (1 : FreeRing α) ▸ ha _ _ hn1 h1)
-    (fun m => (List.recOn m h1) fun a m ih => hm _ _ (hb a) ih) (fun m ih => hn _ ih) ha
+    (fun m => List.recOn m h1 fun a m ih => hm _ _ (hb a) ih) (fun m ih => hn _ ih) ha
 #align free_ring.induction_on FreeRing.induction_on
 
 section lift

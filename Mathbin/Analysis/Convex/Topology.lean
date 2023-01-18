@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.convex.topology
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -80,7 +80,7 @@ theorem bounded_std_simplex : Metric.Bounded (stdSimplex ℝ ι) :=
 theorem is_closed_std_simplex : IsClosed (stdSimplex ℝ ι) :=
   (std_simplex_eq_inter ℝ ι).symm ▸
     IsClosed.inter (is_closed_Inter fun i => is_closed_le continuous_const (continuous_apply i))
-      (is_closed_eq ((continuous_finset_sum _) fun x _ => continuous_apply x) continuous_const)
+      (is_closed_eq (continuous_finset_sum _ fun x _ => continuous_apply x) continuous_const)
 #align is_closed_std_simplex is_closed_std_simplex
 
 /-- `std_simplex ℝ ι` is compact. -/

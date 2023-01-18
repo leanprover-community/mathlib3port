@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Benjamin Davidson
 
 ! This file was ported from Lean 3 source module analysis.special_functions.complex.arg
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -457,7 +457,7 @@ theorem arg_mul_cos_add_sin_mul_I_eq_to_Ioc_mod {r : ℝ} (hr : 0 < r) (θ : ℝ
     convert to_Ioc_mod_mem_Ioc _ Real.two_pi_pos _
     ring
   convert arg_mul_cos_add_sin_mul_I hr hi using 3
-  simp [toIocMod, cos_add_int_mul_two_pi, sin_add_int_mul_two_pi]
+  simp [toIocMod, cos_sub_int_mul_two_pi, sin_sub_int_mul_two_pi]
 #align
   complex.arg_mul_cos_add_sin_mul_I_eq_to_Ioc_mod Complex.arg_mul_cos_add_sin_mul_I_eq_to_Ioc_mod
 
@@ -469,7 +469,7 @@ theorem arg_cos_add_sin_mul_I_eq_to_Ioc_mod (θ : ℝ) :
 theorem arg_mul_cos_add_sin_mul_I_sub {r : ℝ} (hr : 0 < r) (θ : ℝ) :
     arg (r * (cos θ + sin θ * I)) - θ = 2 * π * ⌊(π - θ) / (2 * π)⌋ :=
   by
-  rw [arg_mul_cos_add_sin_mul_I_eq_to_Ioc_mod hr, to_Ioc_mod_sub_self, to_Ioc_div_eq_floor,
+  rw [arg_mul_cos_add_sin_mul_I_eq_to_Ioc_mod hr, to_Ioc_mod_sub_self, to_Ioc_div_eq_neg_floor,
     zsmul_eq_mul]
   ring_nf
 #align complex.arg_mul_cos_add_sin_mul_I_sub Complex.arg_mul_cos_add_sin_mul_I_sub

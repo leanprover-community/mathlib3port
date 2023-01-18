@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 
 ! This file was ported from Lean 3 source module data.sym.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -255,30 +255,29 @@ instance uniqueZero : Unique (Sym α 0) :=
   ⟨⟨nil⟩, eq_nil_of_card_zero⟩
 #align sym.unique_zero Sym.uniqueZero
 
-/-- `repeat a n` is the sym containing only `a` with multiplicity `n`. -/
-def repeat (a : α) (n : ℕ) : Sym α n :=
-  ⟨Multiset.repeat a n, Multiset.card_repeat _ _⟩
-#align sym.repeat Sym.repeat
+/-- `replicate n a` is the sym containing only `a` with multiplicity `n`. -/
+def replicate (n : ℕ) (a : α) : Sym α n :=
+  ⟨Multiset.replicate n a, Multiset.card_replicate _ _⟩
+#align sym.replicate Sym.replicate
 
-theorem repeat_succ {a : α} {n : ℕ} : repeat a n.succ = a ::ₛ repeat a n :=
+theorem replicate_succ {a : α} {n : ℕ} : replicate n.succ a = a ::ₛ replicate n a :=
   rfl
-#align sym.repeat_succ Sym.repeat_succ
+#align sym.replicate_succ Sym.replicate_succ
 
-theorem coe_repeat : (repeat a n : Multiset α) = Multiset.repeat a n :=
+theorem coe_replicate : (replicate n a : Multiset α) = Multiset.replicate n a :=
   rfl
-#align sym.coe_repeat Sym.coe_repeat
+#align sym.coe_replicate Sym.coe_replicate
 
 @[simp]
-theorem mem_repeat : b ∈ repeat a n ↔ n ≠ 0 ∧ b = a :=
-  Multiset.mem_repeat
-#align sym.mem_repeat Sym.mem_repeat
+theorem mem_replicate : b ∈ replicate n a ↔ n ≠ 0 ∧ b = a :=
+  Multiset.mem_replicate
+#align sym.mem_replicate Sym.mem_replicate
 
-theorem eq_repeat_iff : s = repeat a n ↔ ∀ b ∈ s, b = a :=
+theorem eq_replicate_iff : s = replicate n a ↔ ∀ b ∈ s, b = a :=
   by
-  rw [Subtype.ext_iff, coe_repeat]
-  convert Multiset.eq_repeat'
-  exact s.2.symm
-#align sym.eq_repeat_iff Sym.eq_repeat_iff
+  rw [Subtype.ext_iff, coe_replicate, Multiset.eq_replicate]
+  exact and_iff_right s.2
+#align sym.eq_replicate_iff Sym.eq_replicate_iff
 
 theorem exists_mem (s : Sym α n.succ) : ∃ a, a ∈ s :=
   Multiset.card_pos_iff_exists_mem.1 <| s.2.symm ▸ n.succ_pos
@@ -290,13 +289,14 @@ theorem exists_eq_cons_of_succ (s : Sym α n.succ) : ∃ (a : α)(s' : Sym α n)
   classical exact ⟨a, s.erase a ha, (cons_erase ha).symm⟩
 #align sym.exists_eq_cons_of_succ Sym.exists_eq_cons_of_succ
 
-theorem eq_repeat {a : α} {n : ℕ} {s : Sym α n} : s = repeat a n ↔ ∀ b ∈ s, b = a :=
-  Subtype.ext_iff.trans <| Multiset.eq_repeat.trans <| and_iff_right s.Prop
-#align sym.eq_repeat Sym.eq_repeat
+theorem eq_replicate {a : α} {n : ℕ} {s : Sym α n} : s = replicate n a ↔ ∀ b ∈ s, b = a :=
+  Subtype.ext_iff.trans <| Multiset.eq_replicate.trans <| and_iff_right s.Prop
+#align sym.eq_replicate Sym.eq_replicate
 
-theorem eq_repeat_of_subsingleton [Subsingleton α] (a : α) {n : ℕ} (s : Sym α n) : s = repeat a n :=
-  eq_repeat.2 fun b hb => Subsingleton.elim _ _
-#align sym.eq_repeat_of_subsingleton Sym.eq_repeat_of_subsingleton
+theorem eq_replicate_of_subsingleton [Subsingleton α] (a : α) {n : ℕ} (s : Sym α n) :
+    s = replicate n a :=
+  eq_replicate.2 fun b hb => Subsingleton.elim _ _
+#align sym.eq_replicate_of_subsingleton Sym.eq_replicate_of_subsingleton
 
 instance [Subsingleton α] (n : ℕ) : Subsingleton (Sym α n) :=
   ⟨by
@@ -304,14 +304,14 @@ instance [Subsingleton α] (n : ℕ) : Subsingleton (Sym α n) :=
     · simp
     · intro s s'
       obtain ⟨b, -⟩ := exists_mem s
-      rw [eq_repeat_of_subsingleton b s', eq_repeat_of_subsingleton b s]⟩
+      rw [eq_replicate_of_subsingleton b s', eq_replicate_of_subsingleton b s]⟩
 
 instance inhabitedSym [Inhabited α] (n : ℕ) : Inhabited (Sym α n) :=
-  ⟨repeat default n⟩
+  ⟨replicate n default⟩
 #align sym.inhabited_sym Sym.inhabitedSym
 
 instance inhabitedSym' [Inhabited α] (n : ℕ) : Inhabited (Sym' α n) :=
-  ⟨Quotient.mk' (Vector.repeat default n)⟩
+  ⟨Quotient.mk' (Vector.replicate n default)⟩
 #align sym.inhabited_sym' Sym.inhabitedSym'
 
 instance (n : ℕ) [IsEmpty α] : IsEmpty (Sym α n.succ) :=
@@ -322,16 +322,16 @@ instance (n : ℕ) [IsEmpty α] : IsEmpty (Sym α n.succ) :=
 instance (n : ℕ) [Unique α] : Unique (Sym α n) :=
   Unique.mk' _
 
-theorem repeat_left_inj {a b : α} {n : ℕ} (h : n ≠ 0) : repeat a n = repeat b n ↔ a = b :=
-  Subtype.ext_iff.trans (Multiset.repeat_left_inj h)
-#align sym.repeat_left_inj Sym.repeat_left_inj
+theorem replicate_right_inj {a b : α} {n : ℕ} (h : n ≠ 0) : replicate n a = replicate n b ↔ a = b :=
+  Subtype.ext_iff.trans (Multiset.replicate_right_inj h)
+#align sym.replicate_right_inj Sym.replicate_right_inj
 
-theorem repeat_left_injective {n : ℕ} (h : n ≠ 0) : Function.Injective fun x : α => repeat x n :=
-  fun a b => (repeat_left_inj h).1
-#align sym.repeat_left_injective Sym.repeat_left_injective
+theorem replicate_right_injective {n : ℕ} (h : n ≠ 0) :
+    Function.Injective (replicate n : α → Sym α n) := fun a b => (replicate_right_inj h).1
+#align sym.replicate_right_injective Sym.replicate_right_injective
 
 instance (n : ℕ) [Nontrivial α] : Nontrivial (Sym α (n + 1)) :=
-  (repeat_left_injective n.succ_ne_zero).Nontrivial
+  (replicate_right_injective n.succ_ne_zero).Nontrivial
 
 /-- A function `α → β` induces a function `sym α n → sym β n` by applying it to every element of
 the underlying `n`-tuple. -/
@@ -502,19 +502,20 @@ theorem mem_append_iff {s' : Sym α m} : a ∈ s.append s' ↔ a ∈ s ∨ a ∈
 #align sym.mem_append_iff Sym.mem_append_iff
 
 /-- Fill a term `m : sym α (n - i)` with `i` copies of `a` to obtain a term of `sym α n`.
-This is a convenience wrapper for `m.append (repeat a i)` that adjusts the term using `sym.cast`. -/
+This is a convenience wrapper for `m.append (replicate i a)` that adjusts the term using
+`sym.cast`. -/
 def fill (a : α) (i : Fin (n + 1)) (m : Sym α (n - i)) : Sym α n :=
-  Sym.cast (Nat.sub_add_cancel i.is_le) (m.append (repeat a i))
+  Sym.cast (Nat.sub_add_cancel i.is_le) (m.append (replicate i a))
 #align sym.fill Sym.fill
 
 theorem coe_fill {a : α} {i : Fin (n + 1)} {m : Sym α (n - i)} :
-    (fill a i m : Multiset α) = m + repeat a i :=
+    (fill a i m : Multiset α) = m + replicate i a :=
   rfl
 #align sym.coe_fill Sym.coe_fill
 
 theorem mem_fill_iff {a b : α} {i : Fin (n + 1)} {s : Sym α (n - i)} :
     a ∈ Sym.fill b i s ↔ (i : ℕ) ≠ 0 ∧ a = b ∨ a ∈ s := by
-  rw [fill, mem_cast, mem_append_iff, or_comm', mem_repeat]
+  rw [fill, mem_cast, mem_append_iff, or_comm', mem_replicate]
 #align sym.mem_fill_iff Sym.mem_fill_iff
 
 open Multiset
@@ -546,7 +547,7 @@ theorem fill_filter_ne [DecidableEq α] (a : α) (m : Sym α n) :
   Subtype.ext
     (by
       dsimp only [coe_fill, filter_ne, Subtype.coe_mk, Fin.val_mk]
-      ext b; rw [count_add, count_filter, Sym.coe_repeat, count_repeat]
+      ext b; rw [count_add, count_filter, Sym.coe_replicate, count_replicate]
       obtain rfl | h := eq_or_ne a b
       · rw [if_pos rfl, if_neg (not_not.2 rfl), zero_add]
         rfl
@@ -561,7 +562,7 @@ theorem filter_ne_fill [DecidableEq α] (a : α) (m : Σi : Fin (n + 1), Sym α 
       dsimp only [filter_ne, Subtype.coe_mk, Subtype.val_eq_coe, coe_fill]
       rw [filter_add, filter_eq_self.2, add_right_eq_self, eq_zero_iff_forall_not_mem]
       · intro b hb
-        rw [mem_filter, Sym.mem_coe, mem_repeat] at hb
+        rw [mem_filter, Sym.mem_coe, mem_replicate] at hb
         exact hb.2 hb.1.2.symm
       · exact fun b hb => (hb.ne_of_not_mem h).symm)
 #align sym.filter_ne_fill Sym.filter_ne_fill

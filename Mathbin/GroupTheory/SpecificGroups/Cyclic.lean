@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module group_theory.specific_groups.cyclic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -245,7 +245,7 @@ theorem IsCyclic.card_pow_eq_one_le [DecidableEq α] [Fintype α] [IsCyclic α] 
         (zpowers (g ^ (Fintype.card α / Nat.gcd n (Fintype.card α))) : Set α).toFinset.card :=
       card_le_of_subset fun x hx =>
         let ⟨m, hm⟩ := show x ∈ Submonoid.powers g from mem_powers_iff_mem_zpowers.2 <| hg x
-        Set.mem_to_finset.2
+        Set.mem_toFinset.2
           ⟨(m / (Fintype.card α / Nat.gcd n (Fintype.card α)) : ℕ),
             by
             have hgmn : g ^ (m * Nat.gcd n (Fintype.card α)) = 1 := by
@@ -291,7 +291,7 @@ theorem IsCyclic.image_range_order_of (ha : ∀ x : α, x ∈ zpowers a) :
     Finset.image (fun i => a ^ i) (range (orderOf a)) = univ :=
   by
   simp_rw [← SetLike.mem_coe] at ha
-  simp only [image_range_order_of, set.eq_univ_iff_forall.mpr ha, Set.to_finset_univ]
+  simp only [image_range_order_of, set.eq_univ_iff_forall.mpr ha, Set.toFinset_univ]
 #align is_cyclic.image_range_order_of IsCyclic.image_range_order_of
 
 @[to_additive]
@@ -340,11 +340,11 @@ private theorem card_order_of_eq_totient_aux₁ :
         0 < (univ.filter fun a : α => orderOf a = d).card →
           (univ.filter fun a : α => orderOf a = d).card = φ d :=
   by
-  intro d hd hd0
+  intro d hd hpos
   induction' d using Nat.strongRec' with d IH
-  rcases d.eq_zero_or_pos with (rfl | hd_pos)
+  rcases Decidable.eq_or_ne d 0 with (rfl | hd0)
   · cases Fintype.card_ne_zero (eq_zero_of_zero_dvd hd)
-  rcases card_pos.1 hd0 with ⟨a, ha'⟩
+  rcases card_pos.1 hpos with ⟨a, ha'⟩
   have ha : orderOf a = d := (mem_filter.1 ha').2
   have h1 :
     (∑ m in d.proper_divisors, (univ.filter fun a : α => orderOf a = m).card) =
@@ -354,13 +354,13 @@ private theorem card_order_of_eq_totient_aux₁ :
     simp only [mem_filter, mem_range, mem_proper_divisors] at hm
     refine' IH m hm.2 (hm.1.trans hd) (Finset.card_pos.2 ⟨a ^ (d / m), _⟩)
     simp only [mem_filter, mem_univ, order_of_pow a, ha, true_and_iff,
-      Nat.gcd_eq_right (div_dvd_of_dvd hm.1), Nat.div_div_self hm.1 hd_pos.ne']
+      Nat.gcd_eq_right (div_dvd_of_dvd hm.1), Nat.div_div_self hm.1 hd0]
   have h2 :
     (∑ m in d.divisors, (univ.filter fun a : α => orderOf a = m).card) = ∑ m in d.divisors, φ m :=
     by
-    rw [← filter_dvd_eq_divisors hd_pos.ne', sum_card_order_of_eq_card_pow_eq_one hd_pos,
-      filter_dvd_eq_divisors hd_pos.ne', sum_totient, ← ha, card_pow_eq_one_eq_order_of_aux hn a]
-  simpa [divisors_eq_proper_divisors_insert_self_of_pos hd_pos, ← h1] using h2
+    rw [← filter_dvd_eq_divisors hd0, sum_card_order_of_eq_card_pow_eq_one hd0,
+      filter_dvd_eq_divisors hd0, sum_totient, ← ha, card_pow_eq_one_eq_order_of_aux hn a]
+  simpa [← cons_self_proper_divisors hd0, ← h1] using h2
 #align card_order_of_eq_totient_aux₁ card_order_of_eq_totient_aux₁
 
 theorem card_order_of_eq_totient_aux₂ {d : ℕ} (hd : d ∣ Fintype.card α) :
@@ -375,7 +375,7 @@ theorem card_order_of_eq_totient_aux₂ {d : ℕ} (hd : d ∣ Fintype.card α) :
   calc
     c = ∑ m in c.divisors, (univ.filter fun a : α => orderOf a = m).card :=
       by
-      simp only [← filter_dvd_eq_divisors hc0.ne', sum_card_order_of_eq_card_pow_eq_one hc0]
+      simp only [← filter_dvd_eq_divisors hc0.ne', sum_card_order_of_eq_card_pow_eq_one hc0.ne']
       apply congr_arg card
       simp
     _ = ∑ m in c.divisors.erase d, (univ.filter fun a : α => orderOf a = m).card :=

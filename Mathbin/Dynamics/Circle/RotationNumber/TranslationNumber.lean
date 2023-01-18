@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module dynamics.circle.rotation_number.translation_number
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -762,7 +762,7 @@ theorem translation_number_one : τ 1 = 0 :=
 
 theorem translation_number_eq_of_semiconj_by {f g₁ g₂ : CircleDeg1Lift} (H : SemiconjBy f g₁ g₂) :
     τ g₁ = τ g₂ :=
-  (translation_number_eq_of_dist_bounded 2) fun n =>
+  translation_number_eq_of_dist_bounded 2 fun n =>
     le_of_lt <| dist_map_zero_lt_of_semiconj_by <| H.pow_right n
 #align
   circle_deg1_lift.translation_number_eq_of_semiconj_by CircleDeg1Lift.translation_number_eq_of_semiconj_by
@@ -863,7 +863,7 @@ theorem tendsto_translation_number' (x : ℝ) :
 #align circle_deg1_lift.tendsto_translation_number' CircleDeg1Lift.tendsto_translation_number'
 
 theorem translation_number_mono : Monotone τ := fun f g h =>
-  (le_of_tendsto_of_tendsto' f.tendsto_translation_number₀ g.tendsto_translation_number₀) fun n =>
+  le_of_tendsto_of_tendsto' f.tendsto_translation_number₀ g.tendsto_translation_number₀ fun n =>
     div_le_div_of_le_of_nonneg (pow_mono h n 0) n.cast_nonneg
 #align circle_deg1_lift.translation_number_mono CircleDeg1Lift.translation_number_mono
 
@@ -885,7 +885,7 @@ theorem le_translation_number_of_add_le {z : ℝ} (hz : ∀ x, x + z ≤ f x) : 
   circle_deg1_lift.le_translation_number_of_add_le CircleDeg1Lift.le_translation_number_of_add_le
 
 theorem translation_number_le_of_le_add_int {x : ℝ} {m : ℤ} (h : f x ≤ x + m) : τ f ≤ m :=
-  (le_of_tendsto' (f.tendsto_translation_number' x)) fun n =>
+  le_of_tendsto' (f.tendsto_translation_number' x) fun n =>
     (div_le_iff' (n.cast_add_one_pos : (0 : ℝ) < _)).mpr <|
       sub_le_iff_le_add'.2 <|
         (coe_pow f (n + 1)).symm ▸
@@ -899,7 +899,7 @@ theorem translation_number_le_of_le_add_nat {x : ℝ} {m : ℕ} (h : f x ≤ x +
   circle_deg1_lift.translation_number_le_of_le_add_nat CircleDeg1Lift.translation_number_le_of_le_add_nat
 
 theorem le_translation_number_of_add_int_le {x : ℝ} {m : ℤ} (h : x + m ≤ f x) : ↑m ≤ τ f :=
-  (ge_of_tendsto' (f.tendsto_translation_number' x)) fun n =>
+  ge_of_tendsto' (f.tendsto_translation_number' x) fun n =>
     (le_div_iff (n.cast_add_one_pos : (0 : ℝ) < _)).mpr <|
       le_sub_iff_add_le'.2 <| by
         simp only [coe_pow, mul_comm (m : ℝ), ← Nat.cast_add_one, f.le_iterate_of_add_int_le_map h]

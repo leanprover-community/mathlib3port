@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module group_theory.subgroup.pointwise
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -68,16 +68,16 @@ theorem closure_to_submonoid (S : Set G) : (closure S).toSubmonoid = Submonoid.c
 theorem closure_induction_left {p : G → Prop} {x : G} (h : x ∈ closure s) (H1 : p 1)
     (Hmul : ∀ x ∈ s, ∀ (y), p y → p (x * y)) (Hinv : ∀ x ∈ s, ∀ (y), p y → p (x⁻¹ * y)) : p x :=
   let key := (closure_to_submonoid s).le
-  (Submonoid.closure_induction_left (key h) H1) fun x hx =>
-    (hx.elim (Hmul x)) fun hx y hy => (congr_arg _ <| inv_inv x).mp <| Hinv x⁻¹ hx y hy
+  Submonoid.closure_induction_left (key h) H1 fun x hx =>
+    hx.elim (Hmul x) fun hx y hy => (congr_arg _ <| inv_inv x).mp <| Hinv x⁻¹ hx y hy
 #align subgroup.closure_induction_left Subgroup.closure_induction_left
 
 @[to_additive]
 theorem closure_induction_right {p : G → Prop} {x : G} (h : x ∈ closure s) (H1 : p 1)
     (Hmul : ∀ (x), ∀ y ∈ s, p x → p (x * y)) (Hinv : ∀ (x), ∀ y ∈ s, p x → p (x * y⁻¹)) : p x :=
   let key := (closure_to_submonoid s).le
-  (Submonoid.closure_induction_right (key h) H1) fun x y hy =>
-    (hy.elim (Hmul x y)) fun hy hx => (congr_arg _ <| inv_inv y).mp <| Hinv x y⁻¹ hy hx
+  Submonoid.closure_induction_right (key h) H1 fun x y hy =>
+    hy.elim (Hmul x y) fun hy hx => (congr_arg _ <| inv_inv y).mp <| Hinv x y⁻¹ hy hx
 #align subgroup.closure_induction_right Subgroup.closure_induction_right
 
 @[simp, to_additive]
@@ -92,7 +92,7 @@ the closure of `k`. -/
       "An induction principle for additive closure membership. If `p` holds for `0` and all\nelements of `k` and their negation, and is preserved under addition, then `p` holds for all\nelements of the additive closure of `k`."]
 theorem closure_induction'' {p : G → Prop} {x} (h : x ∈ closure s) (Hk : ∀ x ∈ s, p x)
     (Hk_inv : ∀ x ∈ s, p x⁻¹) (H1 : p 1) (Hmul : ∀ x y, p x → p y → p (x * y)) : p x :=
-  (closure_induction_left h H1 fun x hx y hy => Hmul x y (Hk x hx) hy) fun x hx y =>
+  closure_induction_left h H1 (fun x hx y hy => Hmul x y (Hk x hx) hy) fun x hx y =>
     Hmul x⁻¹ y <| Hk_inv x hx
 #align subgroup.closure_induction'' Subgroup.closure_induction''
 

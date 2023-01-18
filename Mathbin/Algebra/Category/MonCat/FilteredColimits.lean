@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Justus Springer
 
 ! This file was ported from Lean 3 source module algebra.category.Mon.filtered_colimits
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -175,11 +175,11 @@ instance colimitMonoid : Monoid M :=
   { colimit_has_one,
     colimit_has_mul with
     one_mul := fun x => by
-      apply Quot.induction_on x; clear x; intro x; cases' x with j x
+      apply Quot.inductionOn x; clear x; intro x; cases' x with j x
       rw [colimit_one_eq F j, colimit_mul_mk_eq F ⟨j, 1⟩ ⟨j, x⟩ j (𝟙 j) (𝟙 j), MonoidHom.map_one,
         one_mul, F.map_id, id_apply]
     mul_one := fun x => by
-      apply Quot.induction_on x; clear x; intro x; cases' x with j x
+      apply Quot.inductionOn x; clear x; intro x; cases' x with j x
       rw [colimit_one_eq F j, colimit_mul_mk_eq F ⟨j, x⟩ ⟨j, 1⟩ j (𝟙 j) (𝟙 j), MonoidHom.map_one,
         mul_one, F.map_id, id_apply]
     mul_assoc := fun x y z => by

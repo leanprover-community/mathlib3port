@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module measure_theory.function.locally_integrable
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -287,7 +287,7 @@ theorem MonotoneOn.integrableOnOfMeasureNeTop (hmono : MonotoneOn f s) {a b : X}
     simp only [hs.lt_top, integrable_on_const, or_true_iff]
   refine'
     integrable.mono' A (aeMeasurableRestrictOfMonotoneOn h's hmono).AeStronglyMeasurable
-      ((ae_restrict_iff' h's).mpr <| (ae_of_all _) fun y hy => hC (f y) (mem_image_of_mem f hy))
+      ((ae_restrict_iff' h's).mpr <| ae_of_all _ fun y hy => hC (f y) (mem_image_of_mem f hy))
 #align monotone_on.integrable_on_of_measure_ne_top MonotoneOn.integrableOnOfMeasureNeTop
 
 theorem MonotoneOn.integrableOnIsCompact [IsFiniteMeasureOnCompacts μ] (hs : IsCompact s)

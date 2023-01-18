@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Filippo A. E. Nuccio, Eric Wieser
 
 ! This file was ported from Lean 3 source module data.matrix.kronecker
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -185,8 +185,8 @@ def kroneckerMapBilinear [CommSemiring R] [AddCommMonoid α] [AddCommMonoid β] 
     Matrix l m α →ₗ[R] Matrix n p β →ₗ[R] Matrix (l × n) (m × p) γ :=
   LinearMap.mk₂ R (kroneckerMap fun r s => f r s) (kronecker_map_add_left _ <| f.map_add₂)
     (fun r => kronecker_map_smul_left _ _ <| f.map_smul₂ _)
-    ((kronecker_map_add_right _) fun a => (f a).map_add) fun r =>
-    (kronecker_map_smul_right _ _) fun a => (f a).map_smul r
+    (kronecker_map_add_right _ fun a => (f a).map_add) fun r =>
+    kronecker_map_smul_right _ _ fun a => (f a).map_smul r
 #align matrix.kronecker_map_bilinear Matrix.kroneckerMapBilinear
 
 /-- `matrix.kronecker_map_bilinear` commutes with `⬝` if `f` commutes with `*`.

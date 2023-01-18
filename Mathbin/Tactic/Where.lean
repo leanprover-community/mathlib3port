@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Keeley Hoek
 
 ! This file was ported from Lean 3 source module tactic.where
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -73,8 +73,8 @@ unsafe def collect_by {α β γ : Type} (l : List α) (p : α → β × γ) [Dec
 /-- Sort the variables by their priority as defined by `where.binder_priority`. -/
 unsafe def sort_variable_list (l : List (Name × BinderInfo × expr)) :
     List (expr × BinderInfo × List Name) :=
-  let l := (collect_by l) fun v => (v.2.2, (v.1, v.2.1))
-  let l := l.map fun el => (el.1, (collect_by el.2) fun v => (v.2, v.1))
+  let l := collect_by l fun v => (v.2.2, (v.1, v.2.1))
+  let l := l.map fun el => (el.1, collect_by el.2 fun v => (v.2, v.1))
   (List.join <| l.map fun e => Prod.mk e.1 <$> e.2).qsort fun v u =>
     binder_less_important v.2.1 u.2.1
 #align where.sort_variable_list where.sort_variable_list

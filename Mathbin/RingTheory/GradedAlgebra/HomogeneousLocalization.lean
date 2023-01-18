@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang, Eric Wieser
 
 ! This file was ported from Lean 3 source module ring_theory.graded_algebra.homogeneous_localization
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -334,7 +334,7 @@ variable {𝒜} {x}
 numerator and denominator are of the same grading.
 -/
 def val (y : HomogeneousLocalization 𝒜 x) : at x :=
-  (Quotient.liftOn' y (NumDenomSameDeg.embedding 𝒜 x)) fun _ _ => id
+  Quotient.liftOn' y (NumDenomSameDeg.embedding 𝒜 x) fun _ _ => id
 #align homogeneous_localization.val HomogeneousLocalization.val
 
 @[simp]
@@ -346,7 +346,7 @@ theorem val_mk' (i : NumDenomSameDeg 𝒜 x) :
 variable (x)
 
 theorem val_injective : Function.Injective (@HomogeneousLocalization.val _ _ _ _ _ _ _ _ 𝒜 _ x) :=
-  fun a b => (Quotient.recOnSubsingleton₂' a b) fun a b h => Quotient.sound' h
+  fun a b => Quotient.recOnSubsingleton₂' a b fun a b h => Quotient.sound' h
 #align homogeneous_localization.val_injective HomogeneousLocalization.val_injective
 
 instance hasPow : Pow (HomogeneousLocalization 𝒜 x) ℕ
@@ -377,7 +377,7 @@ instance : SMul α (HomogeneousLocalization 𝒜 x)
 @[simp]
 theorem smul_val (y : HomogeneousLocalization 𝒜 x) (n : α) : (n • y).val = n • y.val :=
   by
-  induction y using Quotient.induction_on
+  induction y using Quotient.inductionOn
   unfold HomogeneousLocalization.val SMul.smul
   simp only [Quotient.liftOn₂'_mk, Quotient.liftOn'_mk]
   change Localization.mk _ _ = n • Localization.mk _ _
@@ -443,8 +443,8 @@ theorem one_val : (1 : HomogeneousLocalization 𝒜 x).val = 1 :=
 @[simp]
 theorem add_val (y1 y2 : HomogeneousLocalization 𝒜 x) : (y1 + y2).val = y1.val + y2.val :=
   by
-  induction y1 using Quotient.induction_on
-  induction y2 using Quotient.induction_on
+  induction y1 using Quotient.inductionOn
+  induction y2 using Quotient.inductionOn
   unfold HomogeneousLocalization.val Add.add
   simp only [Quotient.liftOn₂'_mk, Quotient.liftOn'_mk]
   change Localization.mk _ _ = Localization.mk _ _ + Localization.mk _ _
@@ -456,8 +456,8 @@ theorem add_val (y1 y2 : HomogeneousLocalization 𝒜 x) : (y1 + y2).val = y1.va
 @[simp]
 theorem mul_val (y1 y2 : HomogeneousLocalization 𝒜 x) : (y1 * y2).val = y1.val * y2.val :=
   by
-  induction y1 using Quotient.induction_on
-  induction y2 using Quotient.induction_on
+  induction y1 using Quotient.inductionOn
+  induction y2 using Quotient.inductionOn
   unfold HomogeneousLocalization.val Mul.mul
   simp only [Quotient.liftOn₂'_mk, Quotient.liftOn'_mk]
   change Localization.mk _ _ = Localization.mk _ _ * Localization.mk _ _
@@ -469,7 +469,7 @@ theorem mul_val (y1 y2 : HomogeneousLocalization 𝒜 x) : (y1 * y2).val = y1.va
 @[simp]
 theorem neg_val (y : HomogeneousLocalization 𝒜 x) : (-y).val = -y.val :=
   by
-  induction y using Quotient.induction_on
+  induction y using Quotient.inductionOn
   unfold HomogeneousLocalization.val Neg.neg
   simp only [Quotient.liftOn₂'_mk, Quotient.liftOn'_mk]
   change Localization.mk _ _ = -Localization.mk _ _
@@ -486,7 +486,7 @@ theorem sub_val (y1 y2 : HomogeneousLocalization 𝒜 x) : (y1 - y2).val = y1.va
 @[simp]
 theorem pow_val (y : HomogeneousLocalization 𝒜 x) (n : ℕ) : (y ^ n).val = y.val ^ n :=
   by
-  induction y using Quotient.induction_on
+  induction y using Quotient.inductionOn
   unfold HomogeneousLocalization.val Pow.pow
   simp only [Quotient.liftOn₂'_mk, Quotient.liftOn'_mk]
   change Localization.mk _ _ = Localization.mk _ _ ^ n
@@ -581,8 +581,8 @@ theorem eq_num_div_denom (f : HomogeneousLocalization 𝒜 x) :
 theorem ext_iff_val (f g : HomogeneousLocalization 𝒜 x) : f = g ↔ f.val = g.val :=
   { mp := fun h => h ▸ rfl
     mpr := fun h => by
-      induction f using Quotient.induction_on
-      induction g using Quotient.induction_on
+      induction f using Quotient.inductionOn
+      induction g using Quotient.inductionOn
       rw [Quotient.eq]
       unfold HomogeneousLocalization.val at h
       simpa only [Quotient.liftOn'_mk] using h }

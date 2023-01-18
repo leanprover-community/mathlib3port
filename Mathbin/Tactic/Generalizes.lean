@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jannis Limperg
 
 ! This file was ported from Lean 3 source module tactic.generalizes
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -184,7 +184,7 @@ private unsafe def generalizes_arg_parser_eq : pexpr → lean.parser (pexpr × N
 #align tactic.interactive.generalizes_arg_parser_eq tactic.interactive.generalizes_arg_parser_eq
 
 private unsafe def generalizes_arg_parser : lean.parser (Name × Option Name × pexpr) :=
-  (with_desc "(id :)? expr = id") do
+  with_desc "(id :)? expr = id" do
     let lhs ← lean.parser.pexpr 0
     (tk ":" >>
           match lhs with

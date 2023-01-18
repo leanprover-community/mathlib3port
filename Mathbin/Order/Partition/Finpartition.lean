@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module order.partition.finpartition
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -120,7 +120,7 @@ variable (α)
 protected def empty : Finpartition (⊥ : α)
     where
   parts := ∅
-  SupIndep := sup_indep_empty _
+  SupIndep := supIndep_empty _
   sup_parts := Finset.sup_empty
   not_bot_mem := not_mem_empty ⊥
 #align finpartition.empty Finpartition.empty
@@ -140,7 +140,7 @@ variable {α} {a : α}
 def indiscrete (ha : a ≠ ⊥) : Finpartition a
     where
   parts := {a}
-  SupIndep := sup_indep_singleton _ _
+  SupIndep := supIndep_singleton _ _
   sup_parts := Finset.sup_singleton
   not_bot_mem h := ha (mem_singleton.1 h).symm
 #align finpartition.indiscrete Finpartition.indiscrete
@@ -345,7 +345,7 @@ theorem card_mono {a : α} {P Q : Finpartition a} (h : P ≤ Q) : Q.parts.card �
     refine' card_le_card_of_inj_on (fun b => f _ b.2) (fun b _ => hP _ b.2) fun b hb c hc h => _
     exact
       Subtype.coe_injective
-        ((Q.disjoint.elim b.2 c.2) fun H =>
+        (Q.disjoint.elim b.2 c.2 fun H =>
           P.ne_bot (hP _ b.2) <| disjoint_self.1 <| H.mono (hf _ b.2) <| h.le.trans <| hf _ c.2)
 #align finpartition.card_mono Finpartition.card_mono
 
@@ -364,7 +364,7 @@ def bind (P : Finpartition a) (Q : ∀ i ∈ P.parts, Finpartition i) : Finparti
   SupIndep := by
     rw [sup_indep_iff_pairwise_disjoint]
     rintro a ha b hb h
-    rw [Finset.mem_coe, Finset.mem_bUnion] at ha hb
+    rw [Finset.mem_coe, Finset.mem_bunionᵢ] at ha hb
     obtain ⟨⟨A, hA⟩, -, ha⟩ := ha
     obtain ⟨⟨B, hB⟩, -, hb⟩ := hb
     obtain rfl | hAB := eq_or_ne A B
@@ -375,7 +375,7 @@ def bind (P : Finpartition a) (Q : ∀ i ∈ P.parts, Finpartition i) : Finparti
     rw [eq_comm, ← Finset.sup_attach]
     exact sup_congr rfl fun b hb => (Q b.1 b.2).sup_parts.symm
   not_bot_mem h := by
-    rw [Finset.mem_bUnion] at h
+    rw [Finset.mem_bunionᵢ] at h
     obtain ⟨⟨A, hA⟩, -, h⟩ := h
     exact (Q A hA).not_bot_mem h
 #align finpartition.bind Finpartition.bind
@@ -468,7 +468,7 @@ theorem exists_mem {a : α} (ha : a ∈ s) : ∃ t ∈ P.parts, a ∈ t :=
 #align finpartition.exists_mem Finpartition.exists_mem
 
 theorem bUnion_parts : P.parts.bUnion id = s :=
-  (sup_eq_bUnion _ _).symm.trans P.sup_parts
+  (sup_eq_bunionᵢ _ _).symm.trans P.sup_parts
 #align finpartition.bUnion_parts Finpartition.bUnion_parts
 
 theorem sum_card_parts : (∑ i in P.parts, i.card) = s.card :=
@@ -482,7 +482,7 @@ theorem sum_card_parts : (∑ i in P.parts, i.card) = s.card :=
 instance (s : Finset α) : Bot (Finpartition s) :=
   ⟨{  parts := s.map ⟨singleton, singleton_injective⟩
       SupIndep :=
-        Set.PairwiseDisjoint.sup_indep
+        Set.PairwiseDisjoint.supIndep
           (by
             rw [Finset.coe_map]
             exact finset.pairwise_disjoint_range_singleton.subset (Set.image_subset_range _ _))
@@ -523,7 +523,7 @@ section Atomise
 in the same finsets of `F`. -/
 def atomise (s : Finset α) (F : Finset (Finset α)) : Finpartition s :=
   ofErase (F.powerset.image fun Q => s.filter fun i => ∀ t ∈ F, t ∈ Q ↔ i ∈ t)
-    (Set.PairwiseDisjoint.sup_indep fun x hx y hy h =>
+    (Set.PairwiseDisjoint.supIndep fun x hx y hy h =>
       disjoint_left.mpr fun z hz1 hz2 =>
         h (by
             rw [mem_coe, mem_image] at hx hy

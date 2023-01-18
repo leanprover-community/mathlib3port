@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Anne Baanen
 
 ! This file was ported from Lean 3 source module algebra.algebra.tower
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -118,7 +118,7 @@ theorem Algebra.ext {S : Type u} {A : Type v} [CommSemiring S] [Semiring A] (h1 
           r • x) =
           r • x) :
     h1 = h2 :=
-  (Algebra.algebra_ext _ _) fun r => by
+  Algebra.algebra_ext _ _ fun r => by
     simpa only [@Algebra.smul_def _ _ _ _ h1, @Algebra.smul_def _ _ _ _ h2, mul_one] using h r 1
 #align is_scalar_tower.algebra.ext IsScalarTower.Algebra.ext
 
@@ -344,10 +344,10 @@ theorem smul_mem_span_smul' {s : Set S} (hs : span R s = ⊤) {t : Set A} {k : S
 
 theorem span_smul_of_span_eq_top {s : Set S} (hs : span R s = ⊤) (t : Set A) :
     span R (s • t) = (span S t).restrictScalars R :=
-  (le_antisymm
-      (span_le.2 fun x hx =>
-        let ⟨p, q, hps, hqt, hpqx⟩ := Set.mem_smul.1 hx
-        hpqx ▸ (span S t).smul_mem p (subset_span hqt)))
+  le_antisymm
+    (span_le.2 fun x hx =>
+      let ⟨p, q, hps, hqt, hpqx⟩ := Set.mem_smul.1 hx
+      hpqx ▸ (span S t).smul_mem p (subset_span hqt))
     fun p hp =>
     span_induction hp (fun x hx => one_smul S x ▸ smul_mem_span_smul hs (subset_span hx))
       (zero_mem _) (fun _ _ => add_mem) fun k x hx => smul_mem_span_smul' hs hx

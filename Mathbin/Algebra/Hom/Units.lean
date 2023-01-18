@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Chris Hughes, Kevin Buzzard
 
 ! This file was ported from Lean 3 source module algebra.hom.units
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -369,7 +369,7 @@ to `f : M →* Nˣ`. See also `units.lift_right` for a computable version. -/
 @[to_additive
       "If a homomorphism `f : M →+ N` sends each element to an `is_add_unit`, then it can be\nlifted to `f : M →+ add_units N`. See also `add_units.lift_right` for a computable version."]
 noncomputable def liftRight (f : M →* N) (hf : ∀ x, IsUnit (f x)) : M →* Nˣ :=
-  (Units.liftRight f fun x => (hf x).Unit) fun x => rfl
+  Units.liftRight f (fun x => (hf x).Unit) fun x => rfl
 #align is_unit.lift_right IsUnit.liftRight
 
 /- warning: is_unit.coe_lift_right -> IsUnit.coe_liftRight is a dubious translation:

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.nat.factorial.cast
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,8 +16,8 @@ import Mathbin.RingTheory.Polynomial.Pochhammer
 This file allows calculating factorials (including ascending and descending ones) as elements of a
 semiring.
 
-This is particularly crucial for `nat.desc_factorial` as substraction on `ℕ` does **not** correspond
-to substraction on a general semiring. For example, we can't rely on existing cast lemmas to prove
+This is particularly crucial for `nat.desc_factorial` as subtraction on `ℕ` does **not** correspond
+to subtraction on a general semiring. For example, we can't rely on existing cast lemmas to prove
 `↑(a.desc_factorial 2) = ↑a * (↑a - 1)`. We must use the fact that, whenever `↑(a - 1)` is not equal
 to `↑a - 1`, the other factor is `0` anyway.
 -/
@@ -59,7 +59,7 @@ section Ring
 
 variable [Ring S] (a b : ℕ)
 
-/-- Convenience lemma. The `a - 1` is not using truncated substraction, as opposed to the definition
+/-- Convenience lemma. The `a - 1` is not using truncated subtraction, as opposed to the definition
 of `nat.desc_factorial` as a natural. -/
 theorem cast_desc_factorial_two : (a.descFactorial 2 : S) = a * (a - 1) :=
   by

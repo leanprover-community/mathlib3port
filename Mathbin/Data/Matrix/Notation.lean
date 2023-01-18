@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Eric Wieser
 
 ! This file was ported from Lean 3 source module data.matrix.notation
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -116,7 +116,7 @@ unsafe def entry_parser {α : Type} (p : parser α) : parser (Σm n, Fin m → F
 @[instance]
 unsafe def sigma_sigma_fin_matrix_has_reflect {α : Type} [has_reflect α] [reflected _ α] :
     has_reflect (Σm n : ℕ, Fin m → Fin n → α) :=
-  (@sigma.reflect.{0, 0} _ _ ℕ (fun m => Σn, Fin m → Fin n → α) _ _ _) fun i =>
+  @sigma.reflect.{0, 0} _ _ ℕ (fun m => Σn, Fin m → Fin n → α) _ _ _ fun i =>
     @sigma.reflect.{0, 0} _ _ ℕ _ _ _ _ fun j => inferInstance
 #align matrix.sigma_sigma_fin_matrix_has_reflect matrix.sigma_sigma_fin_matrix_has_reflect
 

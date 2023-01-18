@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 
 ! This file was ported from Lean 3 source module data.list.cycle
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -22,8 +22,8 @@ Based on this, we define the quotient of lists by the rotation relation, called 
 
 We also define a representation of concrete cycles, available when viewing them in a goal state or
 via `#eval`, when over representatble types. For example, the cycle `(2 1 4 3)` will be shown
-as `c[1, 4, 3, 2]`. The representation of the cycle sorts the elements by the string value of the
-underlying element. This representation also supports cycles that can contain duplicates.
+as `c[2, 1, 4, 3]`. Two equal cycles may be printed differently if their internal representation
+is different.
 
 -/
 
@@ -475,7 +475,7 @@ theorem coe_nil : ↑([] : List α) = @nil α :=
 
 @[simp]
 theorem coe_eq_nil (l : List α) : (l : Cycle α) = nil ↔ l = [] :=
-  coe_eq_coe.trans is_rotated_nil_iff
+  coe_eq_coe.trans isRotated_nil_iff
 #align cycle.coe_eq_nil Cycle.coe_eq_nil
 
 /-- For consistency with `list.has_emptyc`. -/
@@ -494,7 +494,7 @@ instance : Inhabited (Cycle α) :=
 @[elab_as_elim]
 theorem induction_on {C : Cycle α → Prop} (s : Cycle α) (H0 : C nil)
     (HI : ∀ (a) (l : List α), C ↑l → C ↑(a :: l)) : C s :=
-  (Quotient.inductionOn' s) fun l => by
+  Quotient.inductionOn' s fun l => by
     apply List.recOn l <;> simp
     assumption'
 #align cycle.induction_on Cycle.induction_on
@@ -535,12 +535,12 @@ theorem reverse_coe (l : List α) : (l : Cycle α).reverse = l.reverse :=
 
 @[simp]
 theorem mem_reverse_iff {a : α} {s : Cycle α} : a ∈ s.reverse ↔ a ∈ s :=
-  Quot.induction_on s fun _ => mem_reverse'
+  Quot.inductionOn s fun _ => mem_reverse'
 #align cycle.mem_reverse_iff Cycle.mem_reverse_iff
 
 @[simp]
 theorem reverse_reverse (s : Cycle α) : s.reverse.reverse = s :=
-  Quot.induction_on s fun _ => by simp
+  Quot.inductionOn s fun _ => by simp
 #align cycle.reverse_reverse Cycle.reverse_reverse
 
 @[simp]
@@ -565,7 +565,7 @@ theorem length_nil : length (@nil α) = 0 :=
 
 @[simp]
 theorem length_reverse (s : Cycle α) : s.reverse.length = s.length :=
-  Quot.induction_on s length_reverse
+  Quot.inductionOn s length_reverse
 #align cycle.length_reverse Cycle.length_reverse
 
 /-- A `s : cycle α` that is at most one element. -/
@@ -589,7 +589,7 @@ theorem subsingleton_reverse_iff {s : Cycle α} : s.reverse.Subsingleton ↔ s.S
 theorem Subsingleton.congr {s : Cycle α} (h : Subsingleton s) :
     ∀ ⦃x⦄ (hx : x ∈ s) ⦃y⦄ (hy : y ∈ s), x = y :=
   by
-  induction' s using Quot.induction_on with l
+  induction' s using Quot.inductionOn with l
   simp only [length_subsingleton_iff, length_coe, mk_eq_coe, le_iff_lt_or_eq, Nat.lt_add_one_iff,
     length_eq_zero, length_eq_one, Nat.not_lt_zero, false_or_iff] at h
   rcases h with (rfl | ⟨z, rfl⟩) <;> simp
@@ -623,7 +623,7 @@ theorem nontrivial_reverse_iff {s : Cycle α} : s.reverse.Nontrivial ↔ s.Nontr
 theorem length_nontrivial {s : Cycle α} (h : Nontrivial s) : 2 ≤ length s :=
   by
   obtain ⟨x, y, hxy, hx, hy⟩ := h
-  induction' s using Quot.induction_on with l
+  induction' s using Quot.inductionOn with l
   rcases l with (_ | ⟨hd, _ | ⟨hd', tl⟩⟩)
   · simpa using hx
   · simp only [mem_coe_iff, mk_eq_coe, mem_singleton] at hx hy
@@ -648,12 +648,12 @@ theorem nodup_coe_iff {l : List α} : Nodup (l : Cycle α) ↔ l.Nodup :=
 
 @[simp]
 theorem nodup_reverse_iff {s : Cycle α} : s.reverse.Nodup ↔ s.Nodup :=
-  Quot.induction_on s fun _ => nodup_reverse
+  Quot.inductionOn s fun _ => nodup_reverse
 #align cycle.nodup_reverse_iff Cycle.nodup_reverse_iff
 
 theorem Subsingleton.nodup {s : Cycle α} (h : Subsingleton s) : Nodup s :=
   by
-  induction' s using Quot.induction_on with l
+  induction' s using Quot.inductionOn with l
   cases' l with hd tl
   · simp
   · have : tl = [] := by simpa [Subsingleton, length_eq_zero] using h
@@ -696,7 +696,7 @@ theorem to_multiset_eq_nil {s : Cycle α} : s.toMultiset = 0 ↔ s = Cycle.nil :
 
 /-- The lift of `list.map`. -/
 def map {β : Type _} (f : α → β) : Cycle α → Cycle β :=
-  (Quotient.map' (List.map f)) fun l₁ l₂ h => h.map _
+  Quotient.map' (List.map f) fun l₁ l₂ h => h.map _
 #align cycle.map Cycle.map
 
 @[simp]
@@ -716,7 +716,7 @@ theorem map_eq_nil {β : Type _} (f : α → β) (s : Cycle α) : map f s = nil 
 
 /-- The `multiset` of lists that can make the cycle. -/
 def lists (s : Cycle α) : Multiset (List α) :=
-  (Quotient.liftOn' s fun l => (l.cyclicPermutations : Multiset (List α))) fun l₁ l₂ h => by
+  Quotient.liftOn' s (fun l => (l.cyclicPermutations : Multiset (List α))) fun l₁ l₂ h => by
     simpa using h.cyclic_permutations.perm
 #align cycle.lists Cycle.lists
 
@@ -727,7 +727,7 @@ theorem lists_coe (l : List α) : lists (l : Cycle α) = ↑l.cyclicPermutations
 
 @[simp]
 theorem mem_lists_iff_coe_eq {s : Cycle α} {l : List α} : l ∈ s.lists ↔ (l : Cycle α) = s :=
-  (Quotient.inductionOn' s) fun l =>
+  Quotient.inductionOn' s fun l =>
     by
     rw [lists, Quotient.lift_on'_mk']
     simp
@@ -755,10 +755,10 @@ def decidableNontrivialCoe : ∀ l : List α, Decidable (Nontrivial (l : Cycle �
 #align cycle.decidable_nontrivial_coe Cycle.decidableNontrivialCoe
 
 instance {s : Cycle α} : Decidable (Nontrivial s) :=
-  Quot.recOnSubsingleton s decidableNontrivialCoe
+  Quot.recOnSubsingleton' s decidableNontrivialCoe
 
 instance {s : Cycle α} : Decidable (Nodup s) :=
-  Quot.recOnSubsingleton s List.nodupDecidable
+  Quot.recOnSubsingleton' s List.nodupDecidable
 
 instance fintypeNodupCycle [Fintype α] : Fintype { s : Cycle α // s.Nodup } :=
   Fintype.ofSurjective (fun l : { l : List α // l.Nodup } => ⟨l.val, by simpa using l.prop⟩)
@@ -833,7 +833,7 @@ theorem next_reverse_eq_prev (s : Cycle α) (hs : Nodup s) (x : α) (hx : x ∈ 
 @[simp]
 theorem next_mem (s : Cycle α) (hs : Nodup s) (x : α) (hx : x ∈ s) : s.next hs x hx ∈ s :=
   by
-  induction s using Quot.induction_on
+  induction s using Quot.inductionOn
   apply next_mem
 #align cycle.next_mem Cycle.next_mem
 
@@ -858,18 +858,19 @@ theorem next_prev (s : Cycle α) (hs : Nodup s) (x : α) (hx : x ∈ s) :
 end Decidable
 
 /-- We define a representation of concrete cycles, available when viewing them in a goal state or
-via `#eval`, when over representatble types. For example, the cycle `(2 1 4 3)` will be shown
-as `c[1, 4, 3, 2]`. The representation of the cycle sorts the elements by the string value of the
-underlying element. This representation also supports cycles that can contain duplicates.
+via `#eval`, when over representable types. For example, the cycle `(2 1 4 3)` will be shown
+as `c[2, 1, 4, 3]`. Two equal cycles may be printed differently if their internal representation
+is different.
 -/
-instance [Repr α] : Repr (Cycle α) :=
-  ⟨fun s => "c[" ++ String.intercalate ", " ((s.map repr).lists.sort (· ≤ ·)).head ++ "]"⟩
+unsafe instance [Repr α] : Repr (Cycle α) :=
+  ⟨fun s => "c[" ++ String.intercalate ", " (s.map repr).lists.unquot.head ++ "]"⟩
 
 /-- `chain R s` means that `R` holds between adjacent elements of `s`.
 
 `chain R ([a, b, c] : cycle α) ↔ R a b ∧ R b c ∧ R c a` -/
 def Chain (r : α → α → Prop) (c : Cycle α) : Prop :=
-  (Quotient.liftOn' c fun l =>
+  Quotient.liftOn' c
+    (fun l =>
       match l with
       | [] => True
       | a :: m => Chain r a (m ++ [a]))
@@ -921,7 +922,7 @@ theorem chain_ne_nil (r : α → α → Prop) {l : List α} :
 
 theorem chain_map {β : Type _} {r : α → α → Prop} (f : β → α) {s : Cycle β} :
     Chain r (s.map f) ↔ Chain (fun a b => r (f a) (f b)) s :=
-  (Quotient.inductionOn' s) fun l => by
+  Quotient.inductionOn' s fun l => by
     cases' l with a l
     rfl
     convert List.chain_map f

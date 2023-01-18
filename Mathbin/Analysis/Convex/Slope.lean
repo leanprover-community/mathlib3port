@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudriashov, Malo Jaffré
 
 ! This file was ported from Lean 3 source module analysis.convex.slope
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -113,7 +113,7 @@ theorem convex_on_of_slope_mono_adjacent (hs : Convex 𝕜 s)
       ∀ {x y z : 𝕜},
         x ∈ s → z ∈ s → x < y → y < z → (f y - f x) / (y - x) ≤ (f z - f y) / (z - y)) :
     ConvexOn 𝕜 s f :=
-  (LinearOrder.convex_on_of_lt hs) fun x hx z hz hxz a b ha hb hab =>
+  LinearOrder.convex_on_of_lt hs fun x hx z hz hxz a b ha hb hab =>
     by
     let y := a * x + b * z
     have hxy : x < y := by
@@ -161,7 +161,7 @@ theorem strict_convex_on_of_slope_strict_mono_adjacent (hs : Convex 𝕜 s)
       ∀ {x y z : 𝕜},
         x ∈ s → z ∈ s → x < y → y < z → (f y - f x) / (y - x) < (f z - f y) / (z - y)) :
     StrictConvexOn 𝕜 s f :=
-  (LinearOrder.strict_convex_on_of_lt hs) fun x hx z hz hxz a b ha hb hab =>
+  LinearOrder.strict_convex_on_of_lt hs fun x hx z hz hxz a b ha hb hab =>
     by
     let y := a * x + b * z
     have hxy : x < y := by

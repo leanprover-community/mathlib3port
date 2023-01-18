@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémi Bottinelli
 
 ! This file was ported from Lean 3 source module category_theory.groupoid.free_groupoid
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -141,14 +141,14 @@ instance : Category (FreeGroupoid V) :=
 /-- The inverse of an arrow in the free groupoid -/
 def quotInv {X Y : FreeGroupoid V} (f : X ⟶ Y) : Y ⟶ X :=
   Quot.liftOn f (fun pp => Quot.mk _ <| pp.reverse) fun pp qq con =>
-    Quot.sound <| congr_reverse pp qq con
+    Quot.sound <| congr_reverse pp qq Con
 #align category_theory.groupoid.free.quot_inv CategoryTheory.Groupoid.Free.quotInv
 
 instance : Groupoid (FreeGroupoid V)
     where
   inv X Y f := quotInv f
-  inv_comp' X Y p := (Quot.induction_on p) fun pp => congr_reverse_comp pp
-  comp_inv' X Y p := (Quot.induction_on p) fun pp => congr_comp_reverse pp
+  inv_comp' X Y p := Quot.inductionOn p fun pp => congr_reverse_comp pp
+  comp_inv' X Y p := Quot.inductionOn p fun pp => congr_comp_reverse pp
 
 /-- The inclusion of the quiver on `V` to the underlying quiver on `free_groupoid V`-/
 def of (V) [Quiver V] : V ⥤q FreeGroupoid V

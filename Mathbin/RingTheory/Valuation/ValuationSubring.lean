@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz, Junyan Xu, Jack McKoen
 
 ! This file was ported from Lean 3 source module ring_theory.valuation.valuation_subring
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -291,7 +291,7 @@ def subtype (R : ValuationSubring K) : R →+* K :=
 /-- The canonical map on value groups induced by a coarsening of valuation rings. -/
 def mapOfLe (R S : ValuationSubring K) (h : R ≤ S) : R.ValueGroup →*₀ S.ValueGroup
     where
-  toFun := (Quotient.map' id) fun x y ⟨u, hu⟩ => ⟨Units.map (R.inclusion S h).toMonoidHom u, hu⟩
+  toFun := Quotient.map' id fun x y ⟨u, hu⟩ => ⟨Units.map (R.inclusion S h).toMonoidHom u, hu⟩
   map_zero' := rfl
   map_one' := rfl
   map_mul' := by
@@ -331,7 +331,7 @@ instance primeIdealOfLe (R S : ValuationSubring K) (h : R ≤ S) : (idealOfLe R 
 
 /-- The coarsening of a valuation ring associated to a prime ideal. -/
 def ofPrime (A : ValuationSubring K) (P : Ideal A) [P.IsPrime] : ValuationSubring K :=
-  (ofLe A (Localization.subalgebra.ofField K _ P.prime_compl_le_non_zero_divisors).toSubring)
+  ofLe A (Localization.subalgebra.ofField K _ P.prime_compl_le_non_zero_divisors).toSubring
     fun a ha => Subalgebra.algebra_map_mem _ (⟨a, ha⟩ : A)
 #align valuation_subring.of_prime ValuationSubring.ofPrime
 

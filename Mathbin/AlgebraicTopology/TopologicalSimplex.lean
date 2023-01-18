@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Adam Topaz
 
 ! This file was ported from Lean 3 source module algebraic_topology.topological_simplex
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,12 +48,12 @@ theorem toTopObj.ext {x : SimplexCategory} (f g : x.toTopObj) : (f : x → ℝ�
 def toTopMap {x y : SimplexCategory} (f : x ⟶ y) : x.toTopObj → y.toTopObj := fun g =>
   ⟨fun i => ∑ j in Finset.univ.filter fun k => f k = i, g j,
     by
-    simp only [Finset.filter_congr_decidable, Finset.sum_congr, to_Top_obj, Set.mem_setOf]
+    simp only [[anonymous], Finset.sum_congr, to_Top_obj, Set.mem_setOf]
     rw [← Finset.sum_bUnion]
     convert g.2
     · rw [Finset.eq_univ_iff_forall]
       intro i
-      rw [Finset.mem_bUnion]
+      rw [Finset.mem_bunionᵢ]
       exact ⟨f i, by simp, by simp⟩
     · intro i hi j hj h
       rw [Function.onFun, disjoint_iff_inf_le]
@@ -74,7 +74,7 @@ theorem coe_to_Top_map {x y : SimplexCategory} (f : x ⟶ y) (g : x.toTopObj) (i
 theorem continuous_to_Top_map {x y : SimplexCategory} (f : x ⟶ y) : Continuous (toTopMap f) :=
   Continuous.subtype_mk
     (continuous_pi fun i =>
-      (continuous_finset_sum _) fun j hj => (continuous_apply _).comp continuous_subtype_val)
+      continuous_finset_sum _ fun j hj => (continuous_apply _).comp continuous_subtype_val)
     _
 #align simplex_category.continuous_to_Top_map SimplexCategory.continuous_to_Top_map
 

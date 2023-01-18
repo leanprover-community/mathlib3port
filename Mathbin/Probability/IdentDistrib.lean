@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module probability.ident_distrib
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -372,7 +372,7 @@ theorem Memℒp.uniformIntegrableOfIdentDistrib {ι : Type _} {f : ι → α →
   have hgℒp : mem_ℒp (g j) p μ := hℒp.ae_eq (hgeq j).symm
   exact
     uniform_integrable.ae_eq
-      ((mem_ℒp.uniform_integrable_of_ident_distrib_aux hp hp' hgℒp hgmeas) fun i =>
+      (mem_ℒp.uniform_integrable_of_ident_distrib_aux hp hp' hgℒp hgmeas fun i =>
         (ident_distrib.of_ae_eq (hgmeas i).AeMeasurable (hgeq i)).trans
           ((hf i).trans <| ident_distrib.of_ae_eq (hfmeas j).AeMeasurable (hgeq j).symm))
       hgeq

@@ -6,7 +6,7 @@ Authors: Gabriel Ebner
 Tactic to split if-then-else-expressions.
 
 ! This file was ported from Lean 3 source module tactic.split_ifs
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -19,7 +19,7 @@ namespace Tactic
 /- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 unsafe def find_if_cond : expr → Option expr
   | e =>
-    (e.fold none) fun e _ acc =>
+    e.fold none fun e _ acc =>
       Acc <|> do
         let c ←
           match e with
@@ -92,7 +92,7 @@ private unsafe def split_ifs_core (at_ : Loc) (names : ref (List Name)) : List e
 #align tactic.split_ifs_core tactic.split_ifs_core
 
 unsafe def split_ifs (names : List Name) (at_ : Loc := Loc.ns [none]) :=
-  (using_new_ref names) fun names => split_ifs_core at_ names []
+  using_new_ref names fun names => split_ifs_core at_ names []
 #align tactic.split_ifs tactic.split_ifs
 
 namespace Interactive

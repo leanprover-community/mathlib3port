@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alena Gusakov, Bhavik Mehta, Kyle Miller
 
 ! This file was ported from Lean 3 source module combinatorics.hall.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -164,7 +164,7 @@ theorem Finset.all_card_le_bUnion_card_iff_exists_injective {ι : Type u} {α : 
     rw [← Finset.card_image_of_injective s hf₁]
     apply Finset.card_le_of_subset
     intro
-    rw [Finset.mem_image, Finset.mem_bUnion]
+    rw [Finset.mem_image, Finset.mem_bunionᵢ]
     rintro ⟨x, hx, rfl⟩
     exact ⟨x, hx, hf₂ x⟩
 #align

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Hanting Zhang, Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.mv_polynomial.symmetric
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,7 +62,7 @@ def esymm (s : Multiset R) (n : ℕ) : R :=
 
 theorem Finset.esymm_map_val {σ} (f : σ → R) (s : Finset σ) (n : ℕ) :
     (s.val.map f).esymm n = (s.powersetLen n).Sum fun t => t.Prod f := by
-  simpa only [esymm, powerset_len_map, ← Finset.map_val_val_powerset_len, map_map]
+  simpa only [esymm, powerset_len_map, ← Finset.map_val_val_powersetLen, map_map]
 #align finset.esymm_map_val Finset.esymm_map_val
 
 end Multiset
@@ -204,7 +204,7 @@ theorem rename_esymm (n : ℕ) (e : σ ≃ τ) : rename e (esymm σ R n) = esymm
     rename e (esymm σ R n) = ∑ x in powersetLen n univ, ∏ i in x, x (e i) := by
       simp_rw [esymm, map_sum, map_prod, rename_X]
     _ = ∑ t in powersetLen n (univ.map e.toEmbedding), ∏ i in t, x i := by
-      simp [Finset.powerset_len_map, -Finset.map_univ_equiv]
+      simp [Finset.powersetLen_map, -Finset.map_univ_equiv]
     _ = ∑ t in powersetLen n univ, ∏ i in t, x i := by rw [Finset.map_univ_equiv]
     
 #align mv_polynomial.rename_esymm MvPolynomial.rename_esymm

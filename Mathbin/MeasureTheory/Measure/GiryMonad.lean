@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module measure_theory.measure.giry_monad
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -125,7 +125,7 @@ theorem join_zero : (0 : Measure (Measure α)).join = 0 :=
 #align measure_theory.measure.join_zero MeasureTheory.Measure.join_zero
 
 theorem measurable_join : Measurable (join : Measure (Measure α) → Measure α) :=
-  (measurable_of_measurable_coe _) fun s hs => by
+  measurable_of_measurable_coe _ fun s hs => by
     simp only [join_apply hs] <;> exact measurable_lintegral (measurable_coe hs)
 #align measure_theory.measure.measurable_join MeasureTheory.Measure.measurable_join
 

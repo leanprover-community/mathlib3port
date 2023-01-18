@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module linear_algebra.adic_completion
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -120,7 +120,7 @@ variable {M}
 protected theorem subsingleton (h : IsHausdorff (⊤ : Ideal R) M) : Subsingleton M :=
   ⟨fun x y =>
     eq_of_sub_eq_zero <|
-      (h.haus (x - y)) fun n => by
+      h.haus (x - y) fun n => by
         rw [Ideal.top_pow, top_smul]
         exact Smodeq.top⟩
 #align is_Hausdorff.subsingleton IsHausdorff.subsingleton
@@ -135,7 +135,7 @@ variable {I M}
 
 theorem infi_pow_smul (h : IsHausdorff I M) : (⨅ n : ℕ, I ^ n • ⊤ : Submodule R M) = ⊥ :=
   eq_bot_iff.2 fun x hx =>
-    (mem_bot _).2 <| (h.haus x) fun n => Smodeq.zero.2 <| (mem_infi fun n : ℕ => I ^ n • ⊤).1 hx n
+    (mem_bot _).2 <| h.haus x fun n => Smodeq.zero.2 <| (mem_infi fun n : ℕ => I ^ n • ⊤).1 hx n
 #align is_Hausdorff.infi_pow_smul IsHausdorff.infi_pow_smul
 
 end IsHausdorff
@@ -159,7 +159,7 @@ variable (I M)
 
 instance : IsHausdorff I (HausdorffificationCat I M) :=
   ⟨fun x =>
-    (Quotient.inductionOn' x) fun x hx =>
+    Quotient.inductionOn' x fun x hx =>
       (Quotient.mk_eq_zero _).2 <|
         (mem_infi _).2 fun n =>
           by
@@ -195,7 +195,7 @@ theorem lift_comp_of (f : M →ₗ[R] N) : (lift I f).comp (of I M) = f :=
 /-- Uniqueness of lift. -/
 theorem lift_eq (f : M →ₗ[R] N) (g : HausdorffificationCat I M →ₗ[R] N) (hg : g.comp (of I M) = f) :
     g = lift I f :=
-  LinearMap.ext fun x => (induction_on x) fun x => by rw [lift_of, ← hg, LinearMap.comp_apply]
+  LinearMap.ext fun x => induction_on x fun x => by rw [lift_of, ← hg, LinearMap.comp_apply]
 #align Hausdorffification.lift_eq HausdorffificationCat.lift_eq
 
 end HausdorffificationCat
@@ -268,7 +268,7 @@ theorem eval_comp_of (n : ℕ) : (eval I M n).comp (of I M) = mkq _ :=
 
 @[simp]
 theorem range_eval (n : ℕ) : (eval I M n).range = ⊤ :=
-  LinearMap.range_eq_top.2 fun x => (Quotient.inductionOn' x) fun x => ⟨of I M x, rfl⟩
+  LinearMap.range_eq_top.2 fun x => Quotient.inductionOn' x fun x => ⟨of I M x, rfl⟩
 #align adic_completion.range_eval adicCompletion.range_eval
 
 variable {I M}

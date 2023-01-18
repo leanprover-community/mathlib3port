@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module algebra.group_power.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -267,7 +267,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align commute.mul_pow Commute.mul_powₓ'. -/
 @[to_additive]
 theorem Commute.mul_pow {a b : M} (h : Commute a b) (n : ℕ) : (a * b) ^ n = a ^ n * b ^ n :=
-  (Nat.recOn n (by simp only [pow_zero, one_mul])) fun n ihn => by
+  Nat.recOn n (by simp only [pow_zero, one_mul]) fun n ihn => by
     simp only [pow_succ, ihn, ← mul_assoc, (h.pow_left n).right_comm]
 #align commute.mul_pow Commute.mul_pow
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Devon Tuma
 
 ! This file was ported from Lean 3 source module probability.probability_mass_function.monad
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -101,13 +101,13 @@ theorem bind_apply (b : β) : p.bind f b = ∑' a, p a * f a b :=
 #align pmf.bind_apply Pmf.bind_apply
 
 @[simp]
-theorem support_bind : (p.bind f).support = { b | ∃ a ∈ p.support, b ∈ (f a).support } :=
+theorem support_bind : (p.bind f).support = ⋃ a ∈ p.support, (f a).support :=
   Set.ext fun b => by simp [mem_support_iff, Ennreal.tsum_eq_zero, not_or]
 #align pmf.support_bind Pmf.support_bind
 
 theorem mem_support_bind_iff (b : β) :
     b ∈ (p.bind f).support ↔ ∃ a ∈ p.support, b ∈ (f a).support := by
-  simp only [support_bind, Set.mem_setOf_eq]
+  simp only [support_bind, Set.mem_unionᵢ, Set.mem_setOf_eq]
 #align pmf.mem_support_bind_iff Pmf.mem_support_bind_iff
 
 @[simp]
@@ -207,11 +207,11 @@ theorem bind_on_support_apply (b : β) :
 
 @[simp]
 theorem support_bind_on_support :
-    (p.bindOnSupport f).support = { b | ∃ (a : α)(h : a ∈ p.support), b ∈ (f a h).support } :=
+    (p.bindOnSupport f).support = ⋃ (a : α) (h : a ∈ p.support), (f a h).support :=
   by
   refine' Set.ext fun b => _
   simp only [Ennreal.tsum_eq_zero, not_or, mem_support_iff, bind_on_support_apply, Ne.def,
-    not_forall, mul_eq_zero]
+    not_forall, mul_eq_zero, Set.mem_unionᵢ]
   exact
     ⟨fun hb =>
       let ⟨a, ⟨ha, ha'⟩⟩ := hb
@@ -223,7 +223,7 @@ theorem support_bind_on_support :
 
 theorem mem_support_bind_on_support_iff (b : β) :
     b ∈ (p.bindOnSupport f).support ↔ ∃ (a : α)(h : a ∈ p.support), b ∈ (f a h).support := by
-  rw [support_bind_on_support, Set.mem_setOf_eq]
+  simp only [support_bind_on_support, Set.mem_setOf_eq, Set.mem_unionᵢ]
 #align pmf.mem_support_bind_on_support_iff Pmf.mem_support_bind_on_support_iff
 
 /-- `bind_on_support` reduces to `bind` if `f` doesn't depend on the additional hypothesis -/

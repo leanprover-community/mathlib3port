@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.algebra.group_completion
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -75,7 +75,7 @@ instance [UniformSpace α] [MonoidWithZero M] [Zero α] [MulActionWithZero M α]
     smul := (· • ·)
     smul_zero := fun r => by rw [← coe_zero, ← coe_smul, MulActionWithZero.smul_zero r]
     zero_smul :=
-      (ext' (continuous_const_smul _) continuous_const) fun a => by
+      ext' (continuous_const_smul _) continuous_const fun a => by
         rw [← coe_smul, zero_smul, coe_zero] }
 
 end Zero
@@ -221,7 +221,7 @@ instance [Semiring R] [Module R α] [HasUniformContinuousConstSmul R α] : Modul
     Completion.mulActionWithZero with
     smul := (· • ·)
     add_smul := fun a b =>
-      (ext' (continuous_const_smul _) ((continuous_const_smul _).add (continuous_const_smul _)))
+      ext' (continuous_const_smul _) ((continuous_const_smul _).add (continuous_const_smul _))
         fun x => by
         norm_cast
         rw [add_smul] }

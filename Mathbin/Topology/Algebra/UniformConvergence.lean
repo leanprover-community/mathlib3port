@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module topology.algebra.uniform_convergence
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -215,13 +215,13 @@ theorem UniformOnFun.has_continuous_smul_induced_of_image_bounded (h𝔖₁ : �
     refine' ⟨U, hU, ⟨S, W⟩, ⟨hS, hW⟩, _⟩
     rw [Set.smul_subset_iff]
     intro a ha u hu x hx
-    rw [SmulHomClass.map_smul]
+    rw [SMulHomClass.map_smul]
     exact hUW (⟨ha, hu x hx⟩ : (a, φ u x) ∈ U ×ˢ W)
   · rintro a ⟨S, V⟩ ⟨hS, hV⟩
     have : tendsto (fun x : E => a • x) (𝓝 0) (𝓝 <| a • 0) := tendsto_id.const_smul a
     rw [smul_zero] at this
     refine' ⟨⟨S, (· • ·) a ⁻¹' V⟩, ⟨hS, this hV⟩, fun f hf x hx => _⟩
-    rw [SmulHomClass.map_smul]
+    rw [SMulHomClass.map_smul]
     exact hf x hx
   · rintro u ⟨S, V⟩ ⟨hS, hV⟩
     rcases h u S hS hV with ⟨r, hrpos, hr⟩
@@ -231,7 +231,7 @@ theorem UniformOnFun.has_continuous_smul_induced_of_image_bounded (h𝔖₁ : �
     · rw [ha0]
       simp [mem_of_mem_nhds hV]
     · rw [mem_ball_zero_iff] at ha
-      rw [SmulHomClass.map_smul, Pi.smul_apply]
+      rw [SMulHomClass.map_smul, Pi.smul_apply]
       have : φ u x ∈ a⁻¹ • V :=
         by
         have ha0 : 0 < ‖a‖ := norm_pos_iff.mpr ha0

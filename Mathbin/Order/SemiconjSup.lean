@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module order.semiconj_Sup
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -94,7 +94,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : α -> β} {g : β -> α}, (IsOrderRightAdjoint.{u2, u1} α β _inst_1 _inst_2 f g) -> (Monotone.{u1, u2} β α _inst_2 _inst_1 g)
 Case conversion may be inaccurate. Consider using '#align is_order_right_adjoint.right_mono IsOrderRightAdjoint.right_monoₓ'. -/
 theorem right_mono [Preorder α] [Preorder β] {f : α → β} {g : β → α} (h : IsOrderRightAdjoint f g) :
-    Monotone g := fun y₁ y₂ hy => ((h y₁).mono (h y₂)) fun x hx => le_trans hx hy
+    Monotone g := fun y₁ y₂ hy => (h y₁).mono (h y₂) fun x hx => le_trans hx hy
 #align is_order_right_adjoint.right_mono IsOrderRightAdjoint.right_mono
 
 /- warning: is_order_right_adjoint.order_iso_comp -> IsOrderRightAdjoint.orderIso_comp is a dubious translation:
@@ -203,5 +203,5 @@ theorem csupₛ_div_semiconj [ConditionallyCompleteLattice α] [Group G] (f₁ f
 end Function
 
 -- Guard against import creep
-assert_not_exists finset
+assert_not_exists Finset
 

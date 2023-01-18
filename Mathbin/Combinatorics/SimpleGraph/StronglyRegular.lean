@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alena Gusakov
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.strongly_regular
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -90,7 +90,7 @@ theorem IsSRGWith.card_neighbor_finset_union_eq {v w : V} (h : G.IsSRGWith n k �
   apply @Nat.add_right_cancel _ (Fintype.card (G.common_neighbors v w))
   rw [Nat.sub_add_cancel, ← Set.to_finset_card]
   ·
-    simp [neighbor_finset, common_neighbors, Set.to_finset_inter, Finset.card_union_add_card_inter,
+    simp [neighbor_finset, common_neighbors, Set.toFinset_inter, Finset.card_union_add_card_inter,
       h.regular.degree_eq, two_mul]
   · apply le_trans (card_common_neighbors_le_degree_left _ _ _)
     simp [h.regular.degree_eq, two_mul]
@@ -149,8 +149,8 @@ theorem IsSRGWith.compl_is_regular (h : G.IsSRGWith n k ℓ μ) : Gᶜ.IsRegular
 theorem IsSRGWith.card_common_neighbors_eq_of_adj_compl (h : G.IsSRGWith n k ℓ μ) {v w : V}
     (ha : Gᶜ.Adj v w) : Fintype.card ↥(Gᶜ.commonNeighbors v w) = n - (2 * k - μ) - 2 :=
   by
-  simp only [← Set.to_finset_card, common_neighbors, Set.to_finset_inter, neighbor_set_compl,
-    Set.to_finset_diff, Set.to_finset_singleton, Set.to_finset_compl, ← neighbor_finset_def]
+  simp only [← Set.to_finset_card, common_neighbors, Set.toFinset_inter, neighbor_set_compl,
+    Set.toFinset_diff, Set.toFinset_singleton, Set.toFinset_compl, ← neighbor_finset_def]
   simp_rw [compl_neighbor_finset_sdiff_inter_eq]
   have hne : v ≠ w := ne_of_adj _ ha
   rw [compl_adj] at ha
@@ -167,8 +167,8 @@ theorem IsSRGWith.card_common_neighbors_eq_of_adj_compl (h : G.IsSRGWith n k ℓ
 theorem IsSRGWith.card_common_neighbors_eq_of_not_adj_compl (h : G.IsSRGWith n k ℓ μ) {v w : V}
     (hn : v ≠ w) (hna : ¬Gᶜ.Adj v w) : Fintype.card ↥(Gᶜ.commonNeighbors v w) = n - (2 * k - ℓ) :=
   by
-  simp only [← Set.to_finset_card, common_neighbors, Set.to_finset_inter, neighbor_set_compl,
-    Set.to_finset_diff, Set.to_finset_singleton, Set.to_finset_compl, ← neighbor_finset_def]
+  simp only [← Set.to_finset_card, common_neighbors, Set.toFinset_inter, neighbor_set_compl,
+    Set.toFinset_diff, Set.toFinset_singleton, Set.toFinset_compl, ← neighbor_finset_def]
   simp only [not_and, not_not, compl_adj] at hna
   have h2' := hna hn
   simp_rw [compl_neighbor_finset_sdiff_inter_eq, sdiff_compl_neighbor_finset_inter_eq h2']

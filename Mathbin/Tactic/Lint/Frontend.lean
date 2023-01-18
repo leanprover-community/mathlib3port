@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Robert Y. Lewis, Gabriel Ebner
 
 ! This file was ported from Lean 3 source module tactic.lint.frontend
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -116,7 +116,7 @@ unsafe def sort_results {α} (e : environment) (results : rb_map Name α) : List
   List.reverse <|
     rb_lmap.values <|
       rb_lmap.of_list <|
-        (results.fold []) fun decl linter_warning results =>
+        results.fold [] fun decl linter_warning results =>
           (((e.decl_pos decl).getOrElse ⟨0, 0⟩).line, (decl, linter_warning)) :: results
 #align sort_results sort_results
 
@@ -171,7 +171,7 @@ The first `drop_fn_chars` characters are stripped from the filename.
 unsafe def grouped_by_filename (e : environment) (results : rb_map Name String) (drop_fn_chars := 0)
     (formatter : rb_map Name String → format) : format :=
   let results :=
-    (results.fold (rb_map.mk String (rb_map Name String))) fun decl_name linter_warning results =>
+    results.fold (rb_map.mk String (rb_map Name String)) fun decl_name linter_warning results =>
       let fn := (e.decl_olean decl_name).getOrElse ""
       results.insert fn (((results.find fn).getOrElse mk_rb_map).insert decl_name linter_warning)
   let l :=

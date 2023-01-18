@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Robert Y. Lewis, Arthur Paulino
 
 ! This file was ported from Lean 3 source module tactic.lint.misc
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -351,7 +351,7 @@ open Native
   It will ignore `nm₀._proof_i` declarations.
 -/
 unsafe def expr.univ_params_grouped (e : expr) (nm₀ : Name) : rb_set (List Name) :=
-  (e.fold mk_rb_set) fun e n l =>
+  e.fold mk_rb_set fun e n l =>
     match e with
     | e@(sort u) => l.insert u.params.toList
     | e@(const nm us) =>
@@ -367,7 +367,7 @@ unsafe def expr.univ_params_grouped (e : expr) (nm₀ : Name) : rb_set (List Nam
 unsafe def bad_params : rb_set (List Name) → List Name
   | l =>
     let good_levels : name_set :=
-      (l.fold mk_name_set) fun us prev => if us.length = 1 then prev.insert us.head else prev
+      l.fold mk_name_set fun us prev => if us.length = 1 then prev.insert us.head else prev
     if good_levels.Empty then l.fold [] List.union
     else
       bad_params <|
@@ -455,7 +455,7 @@ attribute [nolint syn_taut] rfl
 Check if an expression contains `var 0` by folding over the expression and matching the binder depth
 -/
 unsafe def expr.has_zero_var (e : expr) : Bool :=
-  (e.fold false) fun e' d res =>
+  e.fold false fun e' d res =>
     res ||
       match e' with
       | var k => k = d

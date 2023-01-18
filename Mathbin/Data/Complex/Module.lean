@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Sébastien Gouëzel, Eric Wieser
 
 ! This file was ported from Lean 3 source module data.complex.module
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -141,8 +141,8 @@ section
 
 open ComplexOrder
 
-protected theorem ordered_smul : OrderedSmul ℝ ℂ :=
-  OrderedSmul.mk' fun a b r hab hr => ⟨by simp [hr, hab.1.le], by simp [hab.2]⟩
+protected theorem ordered_smul : OrderedSMul ℝ ℂ :=
+  OrderedSMul.mk' fun a b r hab hr => ⟨by simp [hr, hab.1.le], by simp [hab.2]⟩
 #align complex.ordered_smul Complex.ordered_smul
 
 scoped[ComplexOrder] attribute [instance] Complex.ordered_smul

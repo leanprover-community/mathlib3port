@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module order.initial_seg
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -256,7 +256,7 @@ Case conversion may be inaccurate. Consider using '#align initial_seg.eq_or_prin
 theorem eq_or_principal [IsWellOrder β s] (f : r ≼i s) :
     Surjective f ∨ ∃ b, ∀ x, s x b ↔ ∃ y, f y = x :=
   or_iff_not_imp_right.2 fun h b =>
-    (Acc.recOn (IsWellFounded.wf.apply b : Acc s b)) fun x H IH =>
+    Acc.recOn (IsWellFounded.wf.apply b : Acc s b) fun x H IH =>
       not_forall_not.1 fun hn =>
         h
           ⟨x, fun y =>
@@ -671,7 +671,7 @@ theorem ofIsEmpty_top (r : α → α → Prop) [IsEmpty α] {b : β} (H : ∀ b'
 /-- Principal segment from the empty relation on `pempty` to the empty relation on `punit`. -/
 @[reducible]
 def pemptyToPunit : @EmptyRelation PEmpty ≺i @EmptyRelation PUnit :=
-  (@ofIsEmpty _ _ EmptyRelation _ _ PUnit.unit) fun x => not_false
+  @ofIsEmpty _ _ EmptyRelation _ _ PUnit.unit fun x => not_false
 #align principal_seg.pempty_to_punit PrincipalSeg.pemptyToPunit
 -/
 

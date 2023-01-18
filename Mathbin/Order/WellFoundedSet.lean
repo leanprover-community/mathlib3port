@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module order.well_founded_set
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -823,7 +823,7 @@ variable [IsStrictOrder α r] {s t : Set α}
 
 instance IsStrictOrder.subset : IsStrictOrder α fun a b : α => r a b ∧ a ∈ s ∧ b ∈ s
     where
-  to_is_irrefl := ⟨fun a con => irrefl_of r a con.1⟩
+  to_is_irrefl := ⟨fun a con => irrefl_of r a Con.1⟩
   to_is_trans := ⟨fun a b c ab bc => ⟨trans_of r ab.1 bc.1, ab.2.1, bc.2.2⟩⟩
 #align set.is_strict_order.subset Set.IsStrictOrder.subset
 
@@ -936,7 +936,7 @@ section PartiallyWellOrderedOn
 variable {r : α → α → Prop} {r' : β → β → Prop} {f : α → β} {s : Set α} {t : Set α} {a : α}
 
 theorem PartiallyWellOrderedOn.mono (ht : t.PartiallyWellOrderedOn r) (h : s ⊆ t) :
-    s.PartiallyWellOrderedOn r := fun f hf => (ht f) fun n => h <| hf n
+    s.PartiallyWellOrderedOn r := fun f hf => ht f fun n => h <| hf n
 #align set.partially_well_ordered_on.mono Set.PartiallyWellOrderedOn.mono
 
 @[simp]
@@ -1285,12 +1285,12 @@ protected theorem well_founded_on [IsStrictOrder α r] (s : Finset α) :
 
 theorem well_founded_on_sup [IsStrictOrder α r] (s : Finset ι) {f : ι → Set α} :
     (s.sup f).WellFoundedOn r ↔ ∀ i ∈ s, (f i).WellFoundedOn r :=
-  (Finset.cons_induction_on s (by simp)) fun a s ha hs => by simp [-sup_set_eq_bUnion, hs]
+  Finset.cons_induction_on s (by simp) fun a s ha hs => by simp [-sup_set_eq_bUnion, hs]
 #align finset.well_founded_on_sup Finset.well_founded_on_sup
 
 theorem partially_well_ordered_on_sup (s : Finset ι) {f : ι → Set α} :
     (s.sup f).PartiallyWellOrderedOn r ↔ ∀ i ∈ s, (f i).PartiallyWellOrderedOn r :=
-  (Finset.cons_induction_on s (by simp)) fun a s ha hs => by simp [-sup_set_eq_bUnion, hs]
+  Finset.cons_induction_on s (by simp) fun a s ha hs => by simp [-sup_set_eq_bUnion, hs]
 #align finset.partially_well_ordered_on_sup Finset.partially_well_ordered_on_sup
 
 theorem is_wf_sup [Preorder α] (s : Finset ι) {f : ι → Set α} :
@@ -1306,13 +1306,13 @@ theorem is_pwo_sup [Preorder α] (s : Finset ι) {f : ι → Set α} :
 @[simp]
 theorem well_founded_on_bUnion [IsStrictOrder α r] (s : Finset ι) {f : ι → Set α} :
     (⋃ i ∈ s, f i).WellFoundedOn r ↔ ∀ i ∈ s, (f i).WellFoundedOn r := by
-  simpa only [Finset.sup_eq_supr] using s.well_founded_on_sup
+  simpa only [Finset.sup_eq_supᵢ] using s.well_founded_on_sup
 #align finset.well_founded_on_bUnion Finset.well_founded_on_bUnion
 
 @[simp]
 theorem partially_well_ordered_on_bUnion (s : Finset ι) {f : ι → Set α} :
     (⋃ i ∈ s, f i).PartiallyWellOrderedOn r ↔ ∀ i ∈ s, (f i).PartiallyWellOrderedOn r := by
-  simpa only [Finset.sup_eq_supr] using s.partially_well_ordered_on_sup
+  simpa only [Finset.sup_eq_supᵢ] using s.partially_well_ordered_on_sup
 #align finset.partially_well_ordered_on_bUnion Finset.partially_well_ordered_on_bUnion
 
 @[simp]
@@ -1427,7 +1427,7 @@ noncomputable def minBadSeqOfBadSeq (r : α → α → Prop) (rk : α → ℕ) (
       ⟨_, f, fun _ _ => rfl, hf, rfl⟩
     obtain ⟨h1, h2, h3⟩ := Classical.choose_spec (Nat.find_spec h)
     refine' ⟨Classical.choose (Nat.find_spec h), h1, by convert h2, fun g hg1 hg2 con => _⟩
-    refine' Nat.find_min h _ ⟨g, fun m mn => (h1 m mn).trans (hg1 m mn), by convert con, rfl⟩
+    refine' Nat.find_min h _ ⟨g, fun m mn => (h1 m mn).trans (hg1 m mn), by convert Con, rfl⟩
     rwa [← h3]
 #align
   set.partially_well_ordered_on.min_bad_seq_of_bad_seq Set.PartiallyWellOrderedOn.minBadSeqOfBadSeq
@@ -1495,7 +1495,7 @@ theorem partially_well_ordered_on_sublist_forall₂ (r : α → α → Prop) [Is
   rw [iff_not_exists_is_min_bad_seq List.length]
   rintro ⟨f, hf1, hf2⟩
   have hnil : ∀ n, f n ≠ List.nil := fun n con =>
-    hf1.2 n n.succ n.lt_succ_self (con.symm ▸ List.SublistForall₂.nil)
+    hf1.2 n n.succ n.lt_succ_self (Con.symm ▸ List.SublistForall₂.nil)
   obtain ⟨g, hg⟩ := h.exists_monotone_subseq (List.headI ∘ f) _
   swap;
   · simp only [Set.range_subset_iff, Function.comp_apply]
@@ -1506,7 +1506,7 @@ theorem partially_well_ordered_on_sublist_forall₂ (r : α → α → Prop) [Is
   swap;
   · simp only [if_neg (lt_irrefl (g 0)), tsub_self]
     rw [List.length_tail, ← Nat.pred_eq_sub_one]
-    exact Nat.pred_lt fun con => hnil _ (List.length_eq_zero.1 con)
+    exact Nat.pred_lt fun con => hnil _ (List.length_eq_zero.1 Con)
   rw [is_bad_seq] at hf'
   push_neg  at hf'
   obtain ⟨m, n, mn, hmn⟩ := hf' _

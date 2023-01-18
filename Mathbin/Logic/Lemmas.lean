@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module logic.lemmas
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,7 +47,7 @@ variable {α : Sort _} {p q r : Prop} [Decidable p] [Decidable q] {a b c : α}
 #print dite_dite_distrib_left /-
 theorem dite_dite_distrib_left {a : p → α} {b : ¬p → q → α} {c : ¬p → ¬q → α} :
     (dite p a fun hp => dite q (b hp) (c hp)) =
-      dite q (fun hq => (dite p a) fun hp => b hp hq) fun hq => (dite p a) fun hp => c hp hq :=
+      dite q (fun hq => dite p a fun hp => b hp hq) fun hq => dite p a fun hp => c hp hq :=
   by split_ifs <;> rfl
 #align dite_dite_distrib_left dite_dite_distrib_left
 -/

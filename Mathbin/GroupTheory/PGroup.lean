@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Thomas Browning
 
 ! This file was ported from Lean 3 source module group_theory.p_group
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,7 +63,7 @@ theorem iff_card [Fact p.Prime] [Fintype G] : IsPGroup p G ↔ ∃ n : ℕ, card
   suffices ∀ q ∈ Nat.factors (card G), q = p
     by
     use (card G).factors.length
-    rw [← List.prod_repeat, ← List.eq_repeat_of_mem this, Nat.prod_factors hG]
+    rw [← List.prod_replicate, ← List.eq_replicate_of_mem this, Nat.prod_factors hG]
   intro q hq
   obtain ⟨hq1, hq2⟩ := (Nat.mem_factors hG).mp hq
   haveI : Fact q.prime := ⟨hq1⟩
@@ -406,7 +406,7 @@ theorem cyclic_center_quotient_of_card_eq_prime_sq (hG : card G = p ^ 2) :
     rcases card_center_eq_prime_pow hG zero_lt_two with ⟨k, hk0, hk⟩
     rw [card_eq_card_quotient_mul_card_subgroup (center G), mul_comm, hk] at hG
     have hk2 := (Nat.pow_dvd_pow_iff_le_right (Fact.out p.prime).one_lt).1 ⟨_, hG.symm⟩
-    interval_cases k
+    interval_cases
     · rw [sq, pow_one, mul_right_inj' (Fact.out p.prime).NeZero] at hG
       exact is_cyclic_of_prime_card hG
     ·

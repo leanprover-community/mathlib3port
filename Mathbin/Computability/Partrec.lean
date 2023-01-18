@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module computability.partrec
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -658,11 +658,11 @@ theorem option_some_iff {f : α → σ} : (Computable fun a => some (f a)) ↔ C
 theorem bind_decode_iff {f : α → β → Option σ} :
     (Computable₂ fun a n => (decode β n).bind (f a)) ↔ Computable₂ f :=
   ⟨fun hf =>
-    (Nat.Partrec.ofEq
-        (((Partrec.nat_iff.2
-                  (Nat.Partrec.ppred.comp <| Nat.Partrec.ofPrimrec <| Primcodable.prim β)).comp
-              snd).bind
-          (Computable.comp hf fst).to₂.Partrec₂))
+    Nat.Partrec.ofEq
+      (((Partrec.nat_iff.2
+                (Nat.Partrec.ppred.comp <| Nat.Partrec.ofPrimrec <| Primcodable.prim β)).comp
+            snd).bind
+        (Computable.comp hf fst).to₂.Partrec₂)
       fun n => by
       simp <;> cases decode α n.unpair.1 <;> simp <;> cases decode β n.unpair.2 <;> simp,
     fun hf =>
@@ -759,7 +759,7 @@ theorem list_of_fn :
       (∀ i, Computable (f i)) → Computable fun a => List.ofFn fun i => f i a
   | 0, f, hf => const []
   | n + 1, f, hf => by
-    simp [List.of_fn_succ] <;> exact list_cons.comp (hf 0) (list_of_fn fun i => hf i.succ)
+    simp [List.ofFn_succ] <;> exact list_cons.comp (hf 0) (list_of_fn fun i => hf i.succ)
 #align computable.list_of_fn Computable.list_of_fn
 
 theorem vector_of_fn {n} {f : Fin n → α → σ} (hf : ∀ i, Computable (f i)) :
@@ -816,8 +816,7 @@ theorem sum_cases_left {f : α → Sum β γ} {g : α → β →. σ} {h : α �
 
 theorem fix_aux {α σ} (f : α →. Sum σ α) (a : α) (b : σ) :
     let F : α → ℕ →. Sum σ α := fun a n =>
-      (n.elim (some (Sum.inr a))) fun y IH =>
-        IH.bind fun s => Sum.casesOn s (fun _ => Part.some s) f
+      n.elim (some (Sum.inr a)) fun y IH => IH.bind fun s => Sum.casesOn s (fun _ => Part.some s) f
     (∃ n : ℕ,
         ((∃ b' : σ, Sum.inl b' ∈ F a n) ∧ ∀ {m : ℕ}, m < n → ∃ b : α, Sum.inr b ∈ F a m) ∧
           Sum.inl b ∈ F a n) ↔
@@ -863,7 +862,7 @@ theorem fix_aux {α σ} (f : α →. Sum σ α) (a : α) (b : σ) :
 
 theorem fix {f : α →. Sum σ α} (hf : Partrec f) : Partrec (Pfun.fix f) :=
   let F : α → ℕ →. Sum σ α := fun a n =>
-    (n.elim (some (Sum.inr a))) fun y IH => IH.bind fun s => Sum.casesOn s (fun _ => Part.some s) f
+    n.elim (some (Sum.inr a)) fun y IH => IH.bind fun s => Sum.casesOn s (fun _ => Part.some s) f
   have hF : Partrec₂ F :=
     Partrec.nat_elim snd (sum_inr.comp fst).Partrec
       (sum_cases_right (snd.comp snd) (snd.comp <| snd.comp fst).to₂ (hf.comp snd).to₂).to₂

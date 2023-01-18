@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module data.sigma.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -368,7 +368,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align psigma.mk.inj_iff PSigma.mk.inj_iffₓ'. -/
 theorem mk.inj_iff {a₁ a₂ : α} {b₁ : β a₁} {b₂ : β a₂} :
     @PSigma.mk α β a₁ b₁ = @PSigma.mk α β a₂ b₂ ↔ a₁ = a₂ ∧ HEq b₁ b₂ :=
-  (Iff.intro PSigma.mk.inj) fun ⟨h₁, h₂⟩ =>
+  Iff.intro PSigma.mk.inj fun ⟨h₁, h₂⟩ =>
     match a₁, a₂, b₁, b₂, h₁, h₂ with
     | _, _, _, _, Eq.refl a, HEq.refl b => rfl
 #align psigma.mk.inj_iff PSigma.mk.inj_iff

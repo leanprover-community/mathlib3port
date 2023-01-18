@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.selmer
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,8 +41,7 @@ theorem X_pow_sub_X_sub_one_irreducible_aux (z : ℂ) : ¬(z ^ n = z + 1 ∧ z ^
     by
     rw [← Nat.mod_add_div n 3, pow_add, pow_mul, h3, one_pow, mul_one]
     have : n % 3 < 3 := Nat.mod_lt n zero_lt_three
-    interval_cases n % 3 <;>
-      simp only [h, pow_zero, pow_one, eq_self_iff_true, or_true_iff, true_or_iff]
+    interval_cases <;> simp only [h, pow_zero, pow_one, eq_self_iff_true, or_true_iff, true_or_iff]
   have z_ne_zero : z ≠ 0 := fun h =>
     zero_ne_one ((zero_pow zero_lt_three).symm.trans (show (0 : ℂ) ^ 3 = 1 from h ▸ h3))
   rcases key with (key | key | key)

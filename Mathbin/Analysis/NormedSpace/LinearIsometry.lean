@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Frédéric Dupuis, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.normed_space.linear_isometry
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -649,34 +649,37 @@ protected theorem isometry : Isometry e :=
   e.toLinearIsometry.Isometry
 #align linear_isometry_equiv.isometry LinearIsometryEquiv.isometry
 
-/-- Reinterpret a `linear_isometry_equiv` as an `isometric`. -/
-def toIsometric : E ≃ᵢ E₂ :=
+/-- Reinterpret a `linear_isometry_equiv` as an `isometry_equiv`. -/
+def toIsometryEquiv : E ≃ᵢ E₂ :=
   ⟨e.toLinearEquiv.toEquiv, e.Isometry⟩
-#align linear_isometry_equiv.to_isometric LinearIsometryEquiv.toIsometric
+#align linear_isometry_equiv.to_isometry_equiv LinearIsometryEquiv.toIsometryEquiv
 
-theorem to_isometric_injective : Function.Injective (toIsometric : (E ≃ₛₗᵢ[σ₁₂] E₂) → E ≃ᵢ E₂) :=
-  fun x y h => coe_injective (congr_arg _ h : ⇑x.toIsometric = _)
-#align linear_isometry_equiv.to_isometric_injective LinearIsometryEquiv.to_isometric_injective
-
-@[simp]
-theorem to_isometric_inj {f g : E ≃ₛₗᵢ[σ₁₂] E₂} : f.toIsometric = g.toIsometric ↔ f = g :=
-  to_isometric_injective.eq_iff
-#align linear_isometry_equiv.to_isometric_inj LinearIsometryEquiv.to_isometric_inj
+theorem to_isometry_equiv_injective :
+    Function.Injective (toIsometryEquiv : (E ≃ₛₗᵢ[σ₁₂] E₂) → E ≃ᵢ E₂) := fun x y h =>
+  coe_injective (congr_arg _ h : ⇑x.toIsometryEquiv = _)
+#align
+  linear_isometry_equiv.to_isometry_equiv_injective LinearIsometryEquiv.to_isometry_equiv_injective
 
 @[simp]
-theorem coe_to_isometric : ⇑e.toIsometric = e :=
+theorem to_isometry_equiv_inj {f g : E ≃ₛₗᵢ[σ₁₂] E₂} :
+    f.toIsometryEquiv = g.toIsometryEquiv ↔ f = g :=
+  to_isometry_equiv_injective.eq_iff
+#align linear_isometry_equiv.to_isometry_equiv_inj LinearIsometryEquiv.to_isometry_equiv_inj
+
+@[simp]
+theorem coe_to_isometry_equiv : ⇑e.toIsometryEquiv = e :=
   rfl
-#align linear_isometry_equiv.coe_to_isometric LinearIsometryEquiv.coe_to_isometric
+#align linear_isometry_equiv.coe_to_isometry_equiv LinearIsometryEquiv.coe_to_isometry_equiv
 
 theorem range_eq_univ (e : E ≃ₛₗᵢ[σ₁₂] E₂) : Set.range e = Set.univ :=
   by
-  rw [← coe_to_isometric]
-  exact Isometric.range_eq_univ _
+  rw [← coe_to_isometry_equiv]
+  exact IsometryEquiv.range_eq_univ _
 #align linear_isometry_equiv.range_eq_univ LinearIsometryEquiv.range_eq_univ
 
 /-- Reinterpret a `linear_isometry_equiv` as an `homeomorph`. -/
 def toHomeomorph : E ≃ₜ E₂ :=
-  e.toIsometric.toHomeomorph
+  e.toIsometryEquiv.toHomeomorph
 #align linear_isometry_equiv.to_homeomorph LinearIsometryEquiv.toHomeomorph
 
 theorem to_homeomorph_injective : Function.Injective (toHomeomorph : (E ≃ₛₗᵢ[σ₁₂] E₂) → E ≃ₜ E₂) :=
@@ -784,9 +787,9 @@ theorem to_linear_equiv_symm : e.toLinearEquiv.symm = e.symm.toLinearEquiv :=
 #align linear_isometry_equiv.to_linear_equiv_symm LinearIsometryEquiv.to_linear_equiv_symm
 
 @[simp]
-theorem to_isometric_symm : e.toIsometric.symm = e.symm.toIsometric :=
+theorem to_isometry_equiv_symm : e.toIsometryEquiv.symm = e.symm.toIsometryEquiv :=
   rfl
-#align linear_isometry_equiv.to_isometric_symm LinearIsometryEquiv.to_isometric_symm
+#align linear_isometry_equiv.to_isometry_equiv_symm LinearIsometryEquiv.to_isometry_equiv_symm
 
 @[simp]
 theorem to_homeomorph_symm : e.toHomeomorph.symm = e.symm.toHomeomorph :=
@@ -960,7 +963,7 @@ include σ₂₁
 
 /-- Reinterpret a `linear_isometry_equiv` as a `continuous_linear_equiv`. -/
 instance : CoeTC (E ≃ₛₗᵢ[σ₁₂] E₂) (E ≃SL[σ₁₂] E₂) :=
-  ⟨fun e => ⟨e.toLinearEquiv, e.Continuous, e.toIsometric.symm.Continuous⟩⟩
+  ⟨fun e => ⟨e.toLinearEquiv, e.Continuous, e.toIsometryEquiv.symm.Continuous⟩⟩
 
 instance : CoeTC (E ≃ₛₗᵢ[σ₁₂] E₂) (E →SL[σ₁₂] E₂) :=
   ⟨fun e => ↑(e : E ≃SL[σ₁₂] E₂)⟩
@@ -1067,34 +1070,34 @@ theorem diam_image (s : Set E) : Metric.diam (e '' s) = Metric.diam s :=
 
 @[simp]
 theorem preimage_ball (x : E₂) (r : ℝ) : e ⁻¹' Metric.ball x r = Metric.ball (e.symm x) r :=
-  e.toIsometric.preimage_ball x r
+  e.toIsometryEquiv.preimage_ball x r
 #align linear_isometry_equiv.preimage_ball LinearIsometryEquiv.preimage_ball
 
 @[simp]
 theorem preimage_sphere (x : E₂) (r : ℝ) : e ⁻¹' Metric.sphere x r = Metric.sphere (e.symm x) r :=
-  e.toIsometric.preimage_sphere x r
+  e.toIsometryEquiv.preimage_sphere x r
 #align linear_isometry_equiv.preimage_sphere LinearIsometryEquiv.preimage_sphere
 
 @[simp]
 theorem preimage_closed_ball (x : E₂) (r : ℝ) :
     e ⁻¹' Metric.closedBall x r = Metric.closedBall (e.symm x) r :=
-  e.toIsometric.preimage_closed_ball x r
+  e.toIsometryEquiv.preimage_closed_ball x r
 #align linear_isometry_equiv.preimage_closed_ball LinearIsometryEquiv.preimage_closed_ball
 
 @[simp]
 theorem image_ball (x : E) (r : ℝ) : e '' Metric.ball x r = Metric.ball (e x) r :=
-  e.toIsometric.image_ball x r
+  e.toIsometryEquiv.image_ball x r
 #align linear_isometry_equiv.image_ball LinearIsometryEquiv.image_ball
 
 @[simp]
 theorem image_sphere (x : E) (r : ℝ) : e '' Metric.sphere x r = Metric.sphere (e x) r :=
-  e.toIsometric.image_sphere x r
+  e.toIsometryEquiv.image_sphere x r
 #align linear_isometry_equiv.image_sphere LinearIsometryEquiv.image_sphere
 
 @[simp]
 theorem image_closed_ball (x : E) (r : ℝ) :
     e '' Metric.closedBall x r = Metric.closedBall (e x) r :=
-  e.toIsometric.image_closed_ball x r
+  e.toIsometryEquiv.image_closed_ball x r
 #align linear_isometry_equiv.image_closed_ball LinearIsometryEquiv.image_closed_ball
 
 variable {α : Type _} [TopologicalSpace α]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.calculus.mean_value
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -231,7 +231,7 @@ theorem image_le_of_deriv_right_le_deriv_boundary {f f' : ℝ → ℝ} {a b : �
     {B B' : ℝ → ℝ} (ha : f a ≤ B a) (hB : ContinuousOn B (Icc a b))
     (hB' : ∀ x ∈ Ico a b, HasDerivWithinAt B (B' x) (Ici x) x)
     (bound : ∀ x ∈ Ico a b, f' x ≤ B' x) : ∀ ⦃x⦄, x ∈ Icc a b → f x ≤ B x :=
-  (image_le_of_liminf_slope_right_le_deriv_boundary hf ha hB hB') fun x hx r hr =>
+  image_le_of_liminf_slope_right_le_deriv_boundary hf ha hB hB' fun x hx r hr =>
     (hf' x hx).liminf_right_slope_le (lt_of_le_of_lt (bound x hx) hr)
 #align image_le_of_deriv_right_le_deriv_boundary image_le_of_deriv_right_le_deriv_boundary
 
@@ -319,8 +319,7 @@ theorem image_norm_le_of_norm_deriv_right_le_deriv_boundary' {f' : ℝ → E}
     {B B' : ℝ → ℝ} (ha : ‖f a‖ ≤ B a) (hB : ContinuousOn B (Icc a b))
     (hB' : ∀ x ∈ Ico a b, HasDerivWithinAt B (B' x) (Ici x) x)
     (bound : ∀ x ∈ Ico a b, ‖f' x‖ ≤ B' x) : ∀ ⦃x⦄, x ∈ Icc a b → ‖f x‖ ≤ B x :=
-  (image_le_of_liminf_slope_right_le_deriv_boundary (continuous_norm.comp_continuous_on hf) ha hB
-      hB')
+  image_le_of_liminf_slope_right_le_deriv_boundary (continuous_norm.comp_continuous_on hf) ha hB hB'
     fun x hx r hr => (hf' x hx).liminf_right_slope_norm_le (lt_of_le_of_lt (bound x hx) hr)
 #align
   image_norm_le_of_norm_deriv_right_le_deriv_boundary' image_norm_le_of_norm_deriv_right_le_deriv_boundary'
@@ -824,10 +823,10 @@ omit hff'
 /-- Cauchy's Mean Value Theorem, `deriv` version. -/
 theorem exists_ratio_deriv_eq_ratio_slope :
     ∃ c ∈ Ioo a b, (g b - g a) * deriv f c = (f b - f a) * deriv g c :=
-  (exists_ratio_has_deriv_at_eq_ratio_slope f (deriv f) hab hfc
-      (fun x hx => ((hfd x hx).DifferentiableAt <| IsOpen.mem_nhds is_open_Ioo hx).HasDerivAt) g
-      (deriv g) hgc)
-    fun x hx => ((hgd x hx).DifferentiableAt <| IsOpen.mem_nhds is_open_Ioo hx).HasDerivAt
+  exists_ratio_has_deriv_at_eq_ratio_slope f (deriv f) hab hfc
+    (fun x hx => ((hfd x hx).DifferentiableAt <| IsOpen.mem_nhds is_open_Ioo hx).HasDerivAt) g
+    (deriv g) hgc fun x hx =>
+    ((hgd x hx).DifferentiableAt <| IsOpen.mem_nhds is_open_Ioo hx).HasDerivAt
 #align exists_ratio_deriv_eq_ratio_slope exists_ratio_deriv_eq_ratio_slope
 
 omit hfc
@@ -1339,7 +1338,7 @@ Note that we don't require twice differentiability explicitly as it is already i
 derivative being strictly positive, except at at most one point. -/
 theorem strict_convex_on_of_deriv2_pos' {D : Set ℝ} (hD : Convex ℝ D) {f : ℝ → ℝ}
     (hf : ContinuousOn f D) (hf'' : ∀ x ∈ D, 0 < ((deriv^[2]) f) x) : StrictConvexOn ℝ D f :=
-  (strict_convex_on_of_deriv2_pos hD hf) fun x hx => hf'' x (interior_subset hx)
+  strict_convex_on_of_deriv2_pos hD hf fun x hx => hf'' x (interior_subset hx)
 #align strict_convex_on_of_deriv2_pos' strict_convex_on_of_deriv2_pos'
 
 /-- If a function `f` is continuous on a convex set `D ⊆ ℝ` and `f''` is strictly negative on `D`,
@@ -1348,7 +1347,7 @@ Note that we don't require twice differentiability explicitly as it is already i
 derivative being strictly negative, except at at most one point. -/
 theorem strict_concave_on_of_deriv2_neg' {D : Set ℝ} (hD : Convex ℝ D) {f : ℝ → ℝ}
     (hf : ContinuousOn f D) (hf'' : ∀ x ∈ D, (deriv^[2]) f x < 0) : StrictConcaveOn ℝ D f :=
-  (strict_concave_on_of_deriv2_neg hD hf) fun x hx => hf'' x (interior_subset hx)
+  strict_concave_on_of_deriv2_neg hD hf fun x hx => hf'' x (interior_subset hx)
 #align strict_concave_on_of_deriv2_neg' strict_concave_on_of_deriv2_neg'
 
 /-- If a function `f` is twice differentiable on `ℝ`, and `f''` is nonnegative on `ℝ`,
@@ -1375,7 +1374,7 @@ Note that we don't require twice differentiability explicitly as it is already i
 derivative being strictly positive, except at at most one point.  -/
 theorem strict_convex_on_univ_of_deriv2_pos {f : ℝ → ℝ} (hf : Continuous f)
     (hf'' : ∀ x, 0 < ((deriv^[2]) f) x) : StrictConvexOn ℝ univ f :=
-  (strict_convex_on_of_deriv2_pos' convex_univ hf.ContinuousOn) fun x _ => hf'' x
+  strict_convex_on_of_deriv2_pos' convex_univ hf.ContinuousOn fun x _ => hf'' x
 #align strict_convex_on_univ_of_deriv2_pos strict_convex_on_univ_of_deriv2_pos
 
 /-- If a function `f` is continuous on `ℝ`, and `f''` is strictly negative on `ℝ`,
@@ -1384,7 +1383,7 @@ Note that we don't require twice differentiability explicitly as it is already i
 derivative being strictly negative, except at at most one point.  -/
 theorem strict_concave_on_univ_of_deriv2_neg {f : ℝ → ℝ} (hf : Continuous f)
     (hf'' : ∀ x, (deriv^[2]) f x < 0) : StrictConcaveOn ℝ univ f :=
-  (strict_concave_on_of_deriv2_neg' convex_univ hf.ContinuousOn) fun x _ => hf'' x
+  strict_concave_on_of_deriv2_neg' convex_univ hf.ContinuousOn fun x _ => hf'' x
 #align strict_concave_on_univ_of_deriv2_neg strict_concave_on_univ_of_deriv2_neg
 
 /-! ### Functions `f : E → ℝ` -/

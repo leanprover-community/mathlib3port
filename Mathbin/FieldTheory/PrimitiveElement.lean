@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning, Patrick Lutz
 
 ! This file was ported from Lean 3 source module field_theory.primitive_element
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -97,7 +97,7 @@ theorem primitive_element_inf_aux_exists_c (f g : F[X]) :
   let s := (sf.bind fun α' => sg.map fun β' => -(α' - α) / (β' - β)).toFinset
   let s' := s.preimage ϕ fun x hx y hy h => ϕ.injective h
   obtain ⟨c, hc⟩ := Infinite.exists_not_mem_finset s'
-  simp_rw [Finset.mem_preimage, Multiset.mem_to_finset, Multiset.mem_bind, Multiset.mem_map] at hc
+  simp_rw [Finset.mem_preimage, Multiset.mem_toFinset, Multiset.mem_bind, Multiset.mem_map] at hc
   push_neg  at hc
   exact ⟨c, hc⟩
 #align field.primitive_element_inf_aux_exists_c Field.primitive_element_inf_aux_exists_c

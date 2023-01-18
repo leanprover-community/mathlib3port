@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Chris Hughes, Mario Carneiro
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -558,9 +558,8 @@ theorem span_singleton_lt_span_singleton [CommRing β] [IsDomain β] {x y : β} 
 
 theorem factors_decreasing [CommRing β] [IsDomain β] (b₁ b₂ : β) (h₁ : b₁ ≠ 0) (h₂ : ¬IsUnit b₂) :
     span ({b₁ * b₂} : Set β) < span {b₁} :=
-  (lt_of_le_not_le
-      (Ideal.span_le.2 <| singleton_subset_iff.2 <| Ideal.mem_span_singleton.2 ⟨b₂, rfl⟩))
-    fun h =>
+  lt_of_le_not_le
+    (Ideal.span_le.2 <| singleton_subset_iff.2 <| Ideal.mem_span_singleton.2 ⟨b₂, rfl⟩) fun h =>
     h₂ <|
       isUnit_of_dvd_one _ <|
         (mul_dvd_mul_iff_left h₁).1 <| by rwa [mul_one, ← Ideal.span_singleton_le_span_singleton]
@@ -596,7 +595,7 @@ theorem pow_multiset_sum_mem_span_pow (s : Multiset α) (n : ℕ) :
   by
   induction' s using Multiset.induction_on with a s hs
   · simp
-  simp only [Finset.coe_insert, Multiset.map_cons, Multiset.to_finset_cons, Multiset.sum_cons,
+  simp only [Finset.coe_insert, Multiset.map_cons, Multiset.toFinset_cons, Multiset.sum_cons,
     Multiset.card_cons, add_pow]
   refine' Submodule.sum_mem _ _
   intro c hc
@@ -625,7 +624,7 @@ theorem sum_pow_mem_span_pow {ι} (s : Finset ι) (f : ι → α) (n : ℕ) :
   convert pow_multiset_sum_mem_span_pow (s.1.map f) n
   · rw [Multiset.card_map]
     rfl
-  rw [Multiset.map_map, Multiset.to_finset_map, Finset.val_to_finset, Finset.coe_image]
+  rw [Multiset.map_map, Multiset.toFinset_map, Finset.val_toFinset, Finset.coe_image]
 #align ideal.sum_pow_mem_span_pow Ideal.sum_pow_mem_span_pow
 
 theorem span_pow_eq_top (s : Set α) (hs : span s = ⊤) (n : ℕ) : span ((fun x => x ^ n) '' s) = ⊤ :=

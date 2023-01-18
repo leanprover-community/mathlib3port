@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module algebra.category.BoolRing
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -100,9 +100,9 @@ instance BoolAlgCat.hasForgetToBoolRing : HasForget₂ BoolAlgCat BoolRingCat
 @[simps Functor inverse]
 def boolRingEquivBoolAlg : BoolRingCat ≌ BoolAlgCat :=
   Equivalence.mk (forget₂ BoolRingCat BoolAlgCat) (forget₂ BoolAlgCat BoolRingCat)
-    ((NatIso.ofComponents fun X => BoolRingCat.Iso.mk <| (RingEquiv.asBoolringAsBoolalg X).symm)
+    (NatIso.ofComponents (fun X => BoolRingCat.Iso.mk <| (RingEquiv.asBoolringAsBoolalg X).symm)
       fun X Y f => rfl)
-    ((NatIso.ofComponents fun X => BoolAlgCat.Iso.mk <| OrderIso.asBoolalgAsBoolring X) fun X Y f =>
+    (NatIso.ofComponents (fun X => BoolAlgCat.Iso.mk <| OrderIso.asBoolalgAsBoolring X) fun X Y f =>
       rfl)
 #align BoolRing_equiv_BoolAlg boolRingEquivBoolAlg
 

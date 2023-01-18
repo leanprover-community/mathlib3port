@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module ring_theory.perfection
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -152,7 +152,7 @@ theorem coeff_frobenius (f : Ring.Perfection R p) (n : ℕ) :
 -- `coeff_pow_p f n` also works but is slow!
 theorem coeff_iterate_frobenius (f : Ring.Perfection R p) (n m : ℕ) :
     coeff R p (n + m) ((frobenius _ p^[m]) f) = coeff R p n f :=
-  (Nat.recOn m rfl) fun m ih => by erw [Function.iterate_succ_apply', coeff_frobenius, ih]
+  Nat.recOn m rfl fun m ih => by erw [Function.iterate_succ_apply', coeff_frobenius, ih]
 #align perfection.coeff_iterate_frobenius Perfection.coeff_iterate_frobenius
 
 theorem coeff_iterate_frobenius' (f : Ring.Perfection R p) (n m : ℕ) (hmn : m ≤ n) :
@@ -174,8 +174,7 @@ theorem frobenius_pth_root : (frobenius _ p).comp (pthRoot R p) = RingHom.id _ :
 
 theorem coeff_add_ne_zero {f : Ring.Perfection R p} {n : ℕ} (hfn : coeff R p n f ≠ 0) (k : ℕ) :
     coeff R p (n + k) f ≠ 0 :=
-  (Nat.recOn k hfn) fun k ih h =>
-    ih <| by erw [← coeff_pow_p, RingHom.map_pow, h, zero_pow hp.1.Pos]
+  Nat.recOn k hfn fun k ih h => ih <| by erw [← coeff_pow_p, RingHom.map_pow, h, zero_pow hp.1.Pos]
 #align perfection.coeff_add_ne_zero Perfection.coeff_add_ne_zero
 
 theorem coeff_ne_zero_of_le {f : Ring.Perfection R p} {m n : ℕ} (hfm : coeff R p m f ≠ 0)
@@ -290,7 +289,7 @@ theorem id [PerfectRing R p] : PerfectionMap p (RingHom.id R) :=
     Surjective := fun f hf =>
       ⟨f 0, fun n =>
         show (pthRoot R p^[n]) (f 0) = f n from
-          (Nat.recOn n rfl) fun n ih =>
+          Nat.recOn n rfl fun n ih =>
             injective_pow_p p <| by rw [Function.iterate_succ_apply', pth_root_pow_p _, ih, hf]⟩ }
 #align perfection_map.id PerfectionMap.id
 
@@ -384,7 +383,7 @@ theorem map_map {π : P →+* R} (m : PerfectionMap p π) {σ : Q →+* S} (n : 
 -- Why is this slow?
 theorem map_eq_map (φ : R →+* S) :
     @map p _ R _ _ _ _ _ _ S _ _ _ _ _ _ _ (of p R) _ (of p S) φ = Perfection.map p φ :=
-  (hom_ext _ (of p S)) fun f => by rw [map_map, Perfection.coeff_map]
+  hom_ext _ (of p S) fun f => by rw [map_map, Perfection.coeff_map]
 #align perfection_map.map_eq_map PerfectionMap.map_eq_map
 
 end PerfectionMap

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.valuation.tfae
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -591,8 +591,8 @@ theorem maximalIdealIsPrincipalOfIsDedekindDomain [LocalRing R] [IsDomain R] [Is
                       []
                       "=>"
                       (Term.app
-                       (Term.app `Quotient.inductionOn' [`w])
-                       [(Term.fun "fun" (Term.basicFun [`y] [] "=>" (Term.hole "_")))]))))
+                       `Quotient.inductionOn'
+                       [`w (Term.fun "fun" (Term.basicFun [`y] [] "=>" (Term.hole "_")))]))))
                    []
                    (Std.Tactic.obtain
                     "obtain"
@@ -1314,8 +1314,8 @@ theorem maximalIdealIsPrincipalOfIsDedekindDomain [LocalRing R] [IsDomain R] [Is
                      []
                      "=>"
                      (Term.app
-                      (Term.app `Quotient.inductionOn' [`w])
-                      [(Term.fun "fun" (Term.basicFun [`y] [] "=>" (Term.hole "_")))]))))
+                      `Quotient.inductionOn'
+                      [`w (Term.fun "fun" (Term.basicFun [`y] [] "=>" (Term.hole "_")))]))))
                   []
                   (Std.Tactic.obtain
                    "obtain"
@@ -2013,8 +2013,8 @@ theorem maximalIdealIsPrincipalOfIsDedekindDomain [LocalRing R] [IsDomain R] [Is
                  []
                  "=>"
                  (Term.app
-                  (Term.app `Quotient.inductionOn' [`w])
-                  [(Term.fun "fun" (Term.basicFun [`y] [] "=>" (Term.hole "_")))]))))
+                  `Quotient.inductionOn'
+                  [`w (Term.fun "fun" (Term.basicFun [`y] [] "=>" (Term.hole "_")))]))))
               []
               (Std.Tactic.obtain
                "obtain"

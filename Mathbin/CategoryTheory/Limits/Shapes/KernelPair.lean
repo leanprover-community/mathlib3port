@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.kernel_pair
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -96,7 +96,7 @@ theorem cancel_right {f₁ : X ⟶ Y} {f₂ : Y ⟶ Z} (comm : a ≫ f₁ = b �
     (big_k : IsKernelPair (f₁ ≫ f₂) a b) : IsKernelPair f₁ a b :=
   { w := comm
     is_limit' :=
-      ⟨(PullbackCone.isLimitAux' _) fun s =>
+      ⟨PullbackCone.isLimitAux' _ fun s =>
           by
           let s' : pullback_cone (f₁ ≫ f₂) (f₁ ≫ f₂) :=
             pullback_cone.mk s.fst s.snd (s.condition_assoc _)
@@ -127,8 +127,7 @@ theorem comp_of_mono {f₁ : X ⟶ Y} {f₂ : Y ⟶ Z} [Mono f₂] (small_k : Is
     IsKernelPair (f₁ ≫ f₂) a b :=
   { w := by rw [small_k.w_assoc]
     is_limit' :=
-      ⟨(PullbackCone.isLimitAux' _) fun s =>
-          by
+      ⟨PullbackCone.isLimitAux' _ fun s => by
           refine' ⟨_, _, _, _⟩
           apply (pullback_cone.is_limit.lift' small_k.is_limit s.fst s.snd _).1
           rw [← cancel_mono f₂, assoc, s.condition, assoc]

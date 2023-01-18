@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Ken Lee, Chris Hughes
 
 ! This file was ported from Lean 3 source module ring_theory.coprime.lemmas
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -53,7 +53,7 @@ alias Nat.is_coprime_iff_coprime ↔ IsCoprime.nat_coprime Nat.Coprime.is_coprim
 #align nat.coprime.is_coprime Nat.Coprime.is_coprime
 
 theorem IsCoprime.prod_left : (∀ i ∈ t, IsCoprime (s i) x) → IsCoprime (∏ i in t, s i) x :=
-  (Finset.induction_on t fun _ => isCoprime_one_left) fun b t hbt ih H =>
+  Finset.induction_on t (fun _ => isCoprime_one_left) fun b t hbt ih H =>
     by
     rw [Finset.prod_insert hbt]
     rw [Finset.forall_mem_insert] at H
@@ -65,8 +65,8 @@ theorem IsCoprime.prod_right : (∀ i ∈ t, IsCoprime x (s i)) → IsCoprime x 
 #align is_coprime.prod_right IsCoprime.prod_right
 
 theorem IsCoprime.prod_left_iff : IsCoprime (∏ i in t, s i) x ↔ ∀ i ∈ t, IsCoprime (s i) x :=
-  (Finset.induction_on t ((iff_of_true isCoprime_one_left) fun _ => False.elim)) fun b t hbt ih =>
-    by rw [Finset.prod_insert hbt, IsCoprime.mul_left_iff, ih, Finset.forall_mem_insert]
+  Finset.induction_on t (iff_of_true isCoprime_one_left fun _ => False.elim) fun b t hbt ih => by
+    rw [Finset.prod_insert hbt, IsCoprime.mul_left_iff, ih, Finset.forall_mem_insert]
 #align is_coprime.prod_left_iff IsCoprime.prod_left_iff
 
 theorem IsCoprime.prod_right_iff : IsCoprime x (∏ i in t, s i) ↔ ∀ i ∈ t, IsCoprime x (s i) := by
@@ -96,7 +96,7 @@ theorem Finset.prod_dvd_of_coprime :
                 by
                 rintro rfl
                 exact har hir).mul_dvd
-          (Hs1 a aux1) ((ih (Hs.mono _)) fun i hi => Hs1 i <| Finset.mem_insert_of_mem hi)
+          (Hs1 a aux1) (ih (Hs.mono _) fun i hi => Hs1 i <| Finset.mem_insert_of_mem hi)
       simp only [Finset.coe_insert, Set.subset_insert])
 #align finset.prod_dvd_of_coprime Finset.prod_dvd_of_coprime
 

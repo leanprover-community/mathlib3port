@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Floris van Doorn
 
 ! This file was ported from Lean 3 source module analysis.calculus.specific_functions
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -291,9 +291,9 @@ theorem pos_of_pos (h : 0 < x) : 0 < smoothTransition x :=
 #align real.smooth_transition.pos_of_pos Real.smoothTransition.pos_of_pos
 
 protected theorem cont_diff {n} : ContDiff ℝ n smoothTransition :=
-  (expNegInvGlue.cont_diff.div
-      (expNegInvGlue.cont_diff.add <|
-        expNegInvGlue.cont_diff.comp <| cont_diff_const.sub cont_diff_id))
+  expNegInvGlue.cont_diff.div
+    (expNegInvGlue.cont_diff.add <|
+      expNegInvGlue.cont_diff.comp <| cont_diff_const.sub cont_diff_id)
     fun x => (pos_denom x).ne'
 #align real.smooth_transition.cont_diff Real.smoothTransition.cont_diff
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module category_theory.preadditive.yoneda
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,7 +65,7 @@ def preadditiveYoneda : C ⥤ Cᵒᵖ ⥤ AddCommGroupCat.{v}
         { toFun := fun g => g ≫ f
           map_zero' := Limits.zero_comp
           map_add' := fun g g' => add_comp _ _ _ _ _ _ }
-      naturality' := fun X X' g => (AddCommGroupCat.ext _ _ _ _) fun x => Category.assoc _ _ _ }
+      naturality' := fun X X' g => AddCommGroupCat.ext _ _ _ _ fun x => Category.assoc _ _ _ }
   map_id' X := by
     ext
     simp
@@ -101,7 +101,7 @@ def preadditiveCoyoneda : Cᵒᵖ ⥤ C ⥤ AddCommGroupCat.{v}
           map_zero' := Limits.comp_zero
           map_add' := fun g g' => comp_add _ _ _ _ _ _ }
       naturality' := fun Y Y' g =>
-        (AddCommGroupCat.ext _ _ _ _) fun x => Eq.symm <| Category.assoc _ _ _ }
+        AddCommGroupCat.ext _ _ _ _ fun x => Eq.symm <| Category.assoc _ _ _ }
   map_id' X := by
     ext
     simp

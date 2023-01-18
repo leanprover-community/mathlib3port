@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Moritz Doll
 
 ! This file was ported from Lean 3 source module linear_algebra.linear_pmap
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -169,7 +169,7 @@ This version works for modules over division rings. -/
 @[reducible]
 noncomputable def mkSpanSingleton {K E F : Type _} [DivisionRing K] [AddCommGroup E] [Module K E]
     [AddCommGroup F] [Module K F] (x : E) (y : F) (hx : x ≠ 0) : E →ₗ.[K] F :=
-  (mkSpanSingleton' x y) fun c hc =>
+  mkSpanSingleton' x y fun c hc =>
     (smul_eq_zero.1 hc).elim (fun hc => by rw [hc, zero_smul]) fun hx' => absurd hx' hx
 #align linear_pmap.mk_span_singleton LinearPmap.mkSpanSingleton
 
@@ -287,7 +287,7 @@ theorem le_of_eq_locus_ge {f g : E →ₗ.[R] F} (H : f.domain ≤ f.eqLocus g) 
 #align linear_pmap.le_of_eq_locus_ge LinearPmap.le_of_eq_locus_ge
 
 theorem domain_mono : StrictMono (@domain R _ E _ _ F _ _) := fun f g hlt =>
-  (lt_of_le_of_ne hlt.1.1) fun heq => ne_of_lt hlt <| eq_of_le_of_domain_eq (le_of_lt hlt) HEq
+  lt_of_le_of_ne hlt.1.1 fun heq => ne_of_lt hlt <| eq_of_le_of_domain_eq (le_of_lt hlt) HEq
 #align linear_pmap.domain_mono LinearPmap.domain_mono
 
 private theorem sup_aux (f g : E →ₗ.[R] F)

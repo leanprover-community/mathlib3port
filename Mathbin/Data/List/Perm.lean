@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.list.perm
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.Data.Nat.Factorial.Basic
 
 /-!
 # List Permutations
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file introduces the `list.perm` relation, which is true if two lists are permutations of one
 another.
@@ -107,6 +110,14 @@ theorem Perm.mem_iff {a : α} {l₁ l₂ : List α} (h : l₁ ~ l₂) : a ∈ l�
   Iff.intro (fun m => h.Subset m) fun m => h.symm.Subset m
 #align list.perm.mem_iff List.Perm.mem_iff
 -/
+
+theorem Perm.subset_congr_left {l₁ l₂ l₃ : List α} (h : l₁ ~ l₂) : l₁ ⊆ l₃ ↔ l₂ ⊆ l₃ :=
+  ⟨h.symm.Subset.trans, h.Subset.trans⟩
+#align list.perm.subset_congr_left List.Perm.subset_congr_left
+
+theorem Perm.subset_congr_right {l₁ l₂ l₃ : List α} (h : l₁ ~ l₂) : l₃ ⊆ l₁ ↔ l₃ ⊆ l₂ :=
+  ⟨fun h' => h'.trans h.Subset, fun h' => h'.trans h.symm.Subset⟩
+#align list.perm.subset_congr_right List.Perm.subset_congr_right
 
 #print List.Perm.append_right /-
 theorem Perm.append_right {l₁ l₂ : List α} (t₁ : List α) (p : l₁ ~ l₂) : l₁ ++ t₁ ~ l₂ ++ t₁ :=
@@ -218,47 +229,42 @@ theorem perm_cons_append_cons {l l₁ l₂ : List α} (a : α) (p : l ~ l₁ ++ 
 #align list.perm_cons_append_cons List.perm_cons_append_cons
 -/
 
-#print List.perm_repeat /-
+#print List.perm_replicate /-
 @[simp]
-theorem perm_repeat {a : α} {n : ℕ} {l : List α} : l ~ repeat a n ↔ l = repeat a n :=
+theorem perm_replicate {n : ℕ} {a : α} {l : List α} : l ~ replicate n a ↔ l = replicate n a :=
   ⟨fun p =>
-    eq_repeat.2 ⟨p.length_eq.trans <| length_repeat _ _, fun b m => eq_of_mem_repeat <| p.Subset m⟩,
+    eq_replicate.2
+      ⟨p.length_eq.trans <| length_replicate _ _, fun b m => eq_of_mem_replicate <| p.Subset m⟩,
     fun h => h ▸ Perm.refl _⟩
-#align list.perm_repeat List.perm_repeat
+#align list.perm_replicate List.perm_replicate
 -/
 
-#print List.repeat_perm /-
+#print List.replicate_perm /-
 @[simp]
-theorem repeat_perm {a : α} {n : ℕ} {l : List α} : repeat a n ~ l ↔ repeat a n = l :=
-  (perm_comm.trans perm_repeat).trans eq_comm
-#align list.repeat_perm List.repeat_perm
+theorem replicate_perm {n : ℕ} {a : α} {l : List α} : replicate n a ~ l ↔ replicate n a = l :=
+  (perm_comm.trans perm_replicate).trans eq_comm
+#align list.replicate_perm List.replicate_perm
 -/
 
 #print List.perm_singleton /-
 @[simp]
 theorem perm_singleton {a : α} {l : List α} : l ~ [a] ↔ l = [a] :=
-  @perm_repeat α a 1 l
+  @perm_replicate α 1 a l
 #align list.perm_singleton List.perm_singleton
 -/
 
 #print List.singleton_perm /-
 @[simp]
 theorem singleton_perm {a : α} {l : List α} : [a] ~ l ↔ [a] = l :=
-  @repeat_perm α a 1 l
+  @replicate_perm α 1 a l
 #align list.singleton_perm List.singleton_perm
 -/
 
-#print List.Perm.eq_singleton /-
-theorem Perm.eq_singleton {a : α} {l : List α} (p : l ~ [a]) : l = [a] :=
-  perm_singleton.1 p
+alias perm_singleton ↔ perm.eq_singleton _
 #align list.perm.eq_singleton List.Perm.eq_singleton
--/
 
-#print List.Perm.singleton_eq /-
-theorem Perm.singleton_eq {a : α} {l : List α} (p : [a] ~ l) : [a] = l :=
-  p.symm.eq_singleton.symm
+alias singleton_perm ↔ perm.singleton_eq _
 #align list.perm.singleton_eq List.Perm.singleton_eq
--/
 
 #print List.singleton_perm_singleton /-
 theorem singleton_perm_singleton {a b : α} : [a] ~ [b] ↔ a = b := by simp
@@ -324,7 +330,7 @@ theorem Perm.pmap {p : α → Prop} (f : ∀ a, p a → β) {l₁ l₂ : List α
 lean 3 declaration is
   forall {α : Type.{u1}} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p] {l₁ : List.{u1} α} {l₂ : List.{u1} α}, (List.Perm.{u1} α l₁ l₂) -> (List.Perm.{u1} α (List.filterₓ.{u1} α p (fun (a : α) => _inst_1 a) l₁) (List.filterₓ.{u1} α p (fun (a : α) => _inst_1 a) l₂))
 but is expected to have type
-  forall {α : Type.{u1}} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p] {l₁ : List.{u1} α} {l₂ : List.{u1} α}, (List.Perm.{u1} α l₁ l₂) -> (List.Perm.{u1} α (List.filter.{u1} α (fun (a : α) => Decidable.decide (p a) ((fun (a : α) => _inst_1 a) a)) l₁) (List.filter.{u1} α (fun (a : α) => Decidable.decide (p a) ((fun (a : α) => _inst_1 a) a)) l₂))
+  forall {α : Type.{u1}} (p : α -> Bool) {_inst_1 : List.{u1} α} {l₁ : List.{u1} α}, (List.Perm.{u1} α _inst_1 l₁) -> (List.Perm.{u1} α (List.filter.{u1} α p _inst_1) (List.filter.{u1} α p l₁))
 Case conversion may be inaccurate. Consider using '#align list.perm.filter List.Perm.filterₓ'. -/
 theorem Perm.filter (p : α → Prop) [DecidablePred p] {l₁ l₂ : List α} (s : l₁ ~ l₂) :
     filter p l₁ ~ filter p l₂ := by rw [← filter_map_eq_filter] <;> apply s.filter_map _
@@ -334,7 +340,7 @@ theorem Perm.filter (p : α → Prop) [DecidablePred p] {l₁ l₂ : List α} (s
 lean 3 declaration is
   forall {α : Type.{u1}} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p] (l : List.{u1} α), List.Perm.{u1} α (Append.append.{u1} (List.{u1} α) (List.hasAppend.{u1} α) (List.filterₓ.{u1} α p (fun (a : α) => _inst_1 a) l) (List.filterₓ.{u1} α (fun (x : α) => Not (p x)) (fun (a : α) => Not.decidable (p a) (_inst_1 a)) l)) l
 but is expected to have type
-  forall {α : Type.{u1}} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p] (l : List.{u1} α), List.Perm.{u1} α (HAppend.hAppend.{u1, u1, u1} (List.{u1} α) (List.{u1} α) (List.{u1} α) (instHAppend.{u1} (List.{u1} α) (List.instAppendList.{u1} α)) (List.filter.{u1} α (fun (a : α) => Decidable.decide (p a) ((fun (a : α) => _inst_1 a) a)) l) (List.filter.{u1} α (fun (a : α) => Decidable.decide (Not (p a)) (instDecidableNot (p a) (_inst_1 a))) l)) l
+  forall {α : Type.{u1}} (p : α -> Bool) (_inst_1 : List.{u1} α), List.Perm.{u1} α (HAppend.hAppend.{u1, u1, u1} (List.{u1} α) (List.{u1} α) (List.{u1} α) (instHAppend.{u1} (List.{u1} α) (List.instAppendList.{u1} α)) (List.filter.{u1} α p _inst_1) (List.filter.{u1} α (fun (x : α) => Decidable.decide (Not (Eq.{1} Bool (p x) Bool.true)) (instDecidableNot (Eq.{1} Bool (p x) Bool.true) (instDecidableEqBool (p x) Bool.true))) _inst_1)) _inst_1
 Case conversion may be inaccurate. Consider using '#align list.filter_append_perm List.filter_append_permₓ'. -/
 theorem filter_append_perm (p : α → Prop) [DecidablePred p] (l : List α) :
     filter p l ++ filter (fun x => ¬p x) l ~ l :=
@@ -560,7 +566,7 @@ theorem Subperm.subset {l₁ l₂ : List α} : l₁ <+~ l₂ → l₁ ⊆ l₂
 lean 3 declaration is
   forall {α : Type.{u1}} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p] {{l : List.{u1} α}} {{l' : List.{u1} α}}, (List.Subperm.{u1} α l l') -> (List.Subperm.{u1} α (List.filterₓ.{u1} α p (fun (a : α) => _inst_1 a) l) (List.filterₓ.{u1} α p (fun (a : α) => _inst_1 a) l'))
 but is expected to have type
-  forall {α : Type.{u1}} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p] {{l : List.{u1} α}} {{l' : List.{u1} α}}, (List.Subperm.{u1} α l l') -> (List.Subperm.{u1} α (List.filter.{u1} α (fun (a : α) => Decidable.decide (p a) ((fun (a : α) => _inst_1 a) a)) l) (List.filter.{u1} α (fun (a : α) => Decidable.decide (p a) ((fun (a : α) => _inst_1 a) a)) l'))
+  forall {α : Type.{u1}} (p : α -> Bool) {{_inst_1 : List.{u1} α}} {{l : List.{u1} α}}, (List.Subperm.{u1} α _inst_1 l) -> (List.Subperm.{u1} α (List.filter.{u1} α p _inst_1) (List.filter.{u1} α p l))
 Case conversion may be inaccurate. Consider using '#align list.subperm.filter List.Subperm.filterₓ'. -/
 theorem Subperm.filter (p : α → Prop) [DecidablePred p] ⦃l l' : List α⦄ (h : l <+~ l') :
     filter p l <+~ filter p l' := by
@@ -582,21 +588,34 @@ theorem Sublist.exists_perm_append : ∀ {l₁ l₂ : List α}, l₁ <+ l₂ →
 #align list.sublist.exists_perm_append List.Sublist.exists_perm_append
 -/
 
-#print List.Perm.countp_eq /-
+/- warning: list.perm.countp_eq -> List.Perm.countp_eq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p] {l₁ : List.{u1} α} {l₂ : List.{u1} α}, (List.Perm.{u1} α l₁ l₂) -> (Eq.{1} Nat (List.countp.{u1} α p (fun (a : α) => _inst_1 a) l₁) (List.countp.{u1} α p (fun (a : α) => _inst_1 a) l₂))
+but is expected to have type
+  forall {α : Type.{u1}} (p : α -> Bool) {_inst_1 : List.{u1} α} {l₁ : List.{u1} α}, (List.Perm.{u1} α _inst_1 l₁) -> (Eq.{1} Nat (List.countp.{u1} α p _inst_1) (List.countp.{u1} α p l₁))
+Case conversion may be inaccurate. Consider using '#align list.perm.countp_eq List.Perm.countp_eqₓ'. -/
 theorem Perm.countp_eq (p : α → Prop) [DecidablePred p] {l₁ l₂ : List α} (s : l₁ ~ l₂) :
     countp p l₁ = countp p l₂ := by
   rw [countp_eq_length_filter, countp_eq_length_filter] <;> exact (s.filter _).length_eq
 #align list.perm.countp_eq List.Perm.countp_eq
--/
 
-#print List.Subperm.countp_le /-
+/- warning: list.subperm.countp_le -> List.Subperm.countp_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p] {l₁ : List.{u1} α} {l₂ : List.{u1} α}, (List.Subperm.{u1} α l₁ l₂) -> (LE.le.{0} Nat Nat.hasLe (List.countp.{u1} α p (fun (a : α) => _inst_1 a) l₁) (List.countp.{u1} α p (fun (a : α) => _inst_1 a) l₂))
+but is expected to have type
+  forall {α : Type.{u1}} (p : α -> Bool) {_inst_1 : List.{u1} α} {l₁ : List.{u1} α}, (List.Subperm.{u1} α _inst_1 l₁) -> (LE.le.{0} Nat instLENat (List.countp.{u1} α p _inst_1) (List.countp.{u1} α p l₁))
+Case conversion may be inaccurate. Consider using '#align list.subperm.countp_le List.Subperm.countp_leₓ'. -/
 theorem Subperm.countp_le (p : α → Prop) [DecidablePred p] {l₁ l₂ : List α} :
     l₁ <+~ l₂ → countp p l₁ ≤ countp p l₂
   | ⟨l, p', s⟩ => p'.countp_eq p ▸ s.countp_le p
 #align list.subperm.countp_le List.Subperm.countp_le
--/
 
-#print List.Perm.countp_congr /-
+/- warning: list.perm.countp_congr -> List.Perm.countp_congr is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {l₁ : List.{u1} α} {l₂ : List.{u1} α}, (List.Perm.{u1} α l₁ l₂) -> (forall {p : α -> Prop} {p' : α -> Prop} [_inst_1 : DecidablePred.{succ u1} α p] [_inst_2 : DecidablePred.{succ u1} α p'], (forall (x : α), (Membership.Mem.{u1, u1} α (List.{u1} α) (List.hasMem.{u1} α) x l₁) -> (Eq.{1} Prop (p x) (p' x))) -> (Eq.{1} Nat (List.countp.{u1} α p (fun (a : α) => _inst_1 a) l₁) (List.countp.{u1} α p' (fun (a : α) => _inst_2 a) l₂)))
+but is expected to have type
+  forall {α : Type.{u1}} {l₁ : List.{u1} α} {l₂ : List.{u1} α}, (List.Perm.{u1} α l₁ l₂) -> (forall {p : α -> Bool} {p' : α -> Bool}, (forall (x : α), (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) x l₁) -> (Eq.{1} Bool (p x) (p' x))) -> (Eq.{1} Nat (List.countp.{u1} α p l₁) (List.countp.{u1} α p' l₂)))
+Case conversion may be inaccurate. Consider using '#align list.perm.countp_congr List.Perm.countp_congrₓ'. -/
 theorem Perm.countp_congr (s : l₁ ~ l₂) {p p' : α → Prop} [DecidablePred p] [DecidablePred p']
     (hp : ∀ x ∈ l₁, p x = p' x) : l₁.countp p = l₂.countp p' :=
   by
@@ -607,16 +626,19 @@ theorem Perm.countp_congr (s : l₁ ~ l₂) {p p' : α → Prop} [DecidablePred 
   · simp only [mem_cons_iff, forall_eq_or_imp] at hp
     simp only [countp_cons, hs hp.2, hp.1]
 #align list.perm.countp_congr List.Perm.countp_congr
--/
 
-#print List.countp_eq_countp_filter_add /-
+/- warning: list.countp_eq_countp_filter_add -> List.countp_eq_countp_filter_add is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (l : List.{u1} α) (p : α -> Prop) (q : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p] [_inst_2 : DecidablePred.{succ u1} α q], Eq.{1} Nat (List.countp.{u1} α p (fun (a : α) => _inst_1 a) l) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (List.countp.{u1} α p (fun (a : α) => _inst_1 a) (List.filterₓ.{u1} α q (fun (a : α) => _inst_2 a) l)) (List.countp.{u1} α p (fun (a : α) => _inst_1 a) (List.filterₓ.{u1} α (fun (a : α) => Not (q a)) (fun (a : α) => Not.decidable (q a) (_inst_2 a)) l)))
+but is expected to have type
+  forall {α : Type.{u1}} (l : List.{u1} α) (p : α -> Bool) (q : α -> Bool), Eq.{1} Nat (List.countp.{u1} α p l) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (List.countp.{u1} α p (List.filter.{u1} α q l)) (List.countp.{u1} α p (List.filter.{u1} α (fun (a : α) => Decidable.decide (Not (Eq.{1} Bool (q a) Bool.true)) (instDecidableNot (Eq.{1} Bool (q a) Bool.true) (instDecidableEqBool (q a) Bool.true))) l)))
+Case conversion may be inaccurate. Consider using '#align list.countp_eq_countp_filter_add List.countp_eq_countp_filter_addₓ'. -/
 theorem countp_eq_countp_filter_add (l : List α) (p q : α → Prop) [DecidablePred p]
     [DecidablePred q] : l.countp p = (l.filter q).countp p + (l.filter fun a => ¬q a).countp p :=
   by
   rw [← countp_append]
   exact perm.countp_eq _ (filter_append_perm _ _).symm
 #align list.countp_eq_countp_filter_add List.countp_eq_countp_filter_add
--/
 
 #print List.Perm.count_eq /-
 theorem Perm.count_eq [DecidableEq α] {l₁ l₂ : List α} (p : l₁ ~ l₂) (a) :
@@ -1082,13 +1104,13 @@ theorem subset_cons_diff {a : α} {l₁ l₂ : List α} : (a :: l₁).diff l₂ 
   subperm_cons_diff.Subset
 #align list.subset_cons_diff List.subset_cons_diff
 
-/- warning: list.perm.bag_inter_right -> List.Perm.bag_inter_right is a dubious translation:
+/- warning: list.perm.bag_inter_right -> List.Perm.bagInter_right is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {l₁ : List.{u1} α} {l₂ : List.{u1} α} (t : List.{u1} α), (List.Perm.{u1} α l₁ l₂) -> (List.Perm.{u1} α (List.bagInterₓ.{u1} α (fun (a : α) (b : α) => _inst_1 a b) l₁ t) (List.bagInterₓ.{u1} α (fun (a : α) (b : α) => _inst_1 a b) l₂ t))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {l₁ : List.{u1} α} {l₂ : List.{u1} α} (t : List.{u1} α), (List.Perm.{u1} α l₁ l₂) -> (List.Perm.{u1} α (List.bagInter.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) l₁ t) (List.bagInter.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) l₂ t))
-Case conversion may be inaccurate. Consider using '#align list.perm.bag_inter_right List.Perm.bag_inter_rightₓ'. -/
-theorem Perm.bag_inter_right {l₁ l₂ : List α} (t : List α) (h : l₁ ~ l₂) :
+Case conversion may be inaccurate. Consider using '#align list.perm.bag_inter_right List.Perm.bagInter_rightₓ'. -/
+theorem Perm.bagInter_right {l₁ l₂ : List α} (t : List α) (h : l₁ ~ l₂) :
     l₁.bagInter t ~ l₂.bagInter t :=
   by
   induction' h with x _ _ _ _ x y _ _ _ _ _ _ ih_1 ih_2 generalizing t; · simp
@@ -1101,33 +1123,33 @@ theorem Perm.bag_inter_right {l₁ l₂ : List α} (t : List α) (h : l₁ ~ l�
     · simp [xt, yt, mt mem_of_mem_erase, perm.cons]
     · simp [xt, yt]
   · exact (ih_1 _).trans (ih_2 _)
-#align list.perm.bag_inter_right List.Perm.bag_inter_right
+#align list.perm.bag_inter_right List.Perm.bagInter_right
 
-/- warning: list.perm.bag_inter_left -> List.Perm.bag_inter_left is a dubious translation:
+/- warning: list.perm.bag_inter_left -> List.Perm.bagInter_left is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (l : List.{u1} α) {t₁ : List.{u1} α} {t₂ : List.{u1} α}, (List.Perm.{u1} α t₁ t₂) -> (Eq.{succ u1} (List.{u1} α) (List.bagInterₓ.{u1} α (fun (a : α) (b : α) => _inst_1 a b) l t₁) (List.bagInterₓ.{u1} α (fun (a : α) (b : α) => _inst_1 a b) l t₂))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (l : List.{u1} α) {t₁ : List.{u1} α} {t₂ : List.{u1} α}, (List.Perm.{u1} α t₁ t₂) -> (Eq.{succ u1} (List.{u1} α) (List.bagInter.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) l t₁) (List.bagInter.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) l t₂))
-Case conversion may be inaccurate. Consider using '#align list.perm.bag_inter_left List.Perm.bag_inter_leftₓ'. -/
-theorem Perm.bag_inter_left (l : List α) {t₁ t₂ : List α} (p : t₁ ~ t₂) :
+Case conversion may be inaccurate. Consider using '#align list.perm.bag_inter_left List.Perm.bagInter_leftₓ'. -/
+theorem Perm.bagInter_left (l : List α) {t₁ t₂ : List α} (p : t₁ ~ t₂) :
     l.bagInter t₁ = l.bagInter t₂ :=
   by
   induction' l with a l IH generalizing t₁ t₂ p; · simp
   by_cases a ∈ t₁
   · simp [h, p.subset h, IH (p.erase _)]
   · simp [h, mt p.mem_iff.2 h, IH p]
-#align list.perm.bag_inter_left List.Perm.bag_inter_left
+#align list.perm.bag_inter_left List.Perm.bagInter_left
 
-/- warning: list.perm.bag_inter -> List.Perm.bag_inter is a dubious translation:
+/- warning: list.perm.bag_inter -> List.Perm.bagInter is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {l₁ : List.{u1} α} {l₂ : List.{u1} α} {t₁ : List.{u1} α} {t₂ : List.{u1} α}, (List.Perm.{u1} α l₁ l₂) -> (List.Perm.{u1} α t₁ t₂) -> (List.Perm.{u1} α (List.bagInterₓ.{u1} α (fun (a : α) (b : α) => _inst_1 a b) l₁ t₁) (List.bagInterₓ.{u1} α (fun (a : α) (b : α) => _inst_1 a b) l₂ t₂))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {l₁ : List.{u1} α} {l₂ : List.{u1} α} {t₁ : List.{u1} α} {t₂ : List.{u1} α}, (List.Perm.{u1} α l₁ l₂) -> (List.Perm.{u1} α t₁ t₂) -> (List.Perm.{u1} α (List.bagInter.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) l₁ t₁) (List.bagInter.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) l₂ t₂))
-Case conversion may be inaccurate. Consider using '#align list.perm.bag_inter List.Perm.bag_interₓ'. -/
-theorem Perm.bag_inter {l₁ l₂ t₁ t₂ : List α} (hl : l₁ ~ l₂) (ht : t₁ ~ t₂) :
+Case conversion may be inaccurate. Consider using '#align list.perm.bag_inter List.Perm.bagInterₓ'. -/
+theorem Perm.bagInter {l₁ l₂ t₁ t₂ : List α} (hl : l₁ ~ l₂) (ht : t₁ ~ t₂) :
     l₁.bagInter t₁ ~ l₂.bagInter t₂ :=
   ht.bag_inter_left l₂ ▸ hl.bag_inter_right _
-#align list.perm.bag_inter List.Perm.bag_inter
+#align list.perm.bag_inter List.Perm.bagInter
 
 /- warning: list.cons_perm_iff_perm_erase -> List.cons_perm_iff_perm_erase is a dubious translation:
 lean 3 declaration is
@@ -1159,6 +1181,16 @@ theorem perm_iff_count {l₁ l₂ : List α} : l₁ ~ l₂ ↔ ∀ a, count a l�
       by_cases b = a <;> simp [h] at H⊢ <;> assumption⟩
 #align list.perm_iff_count List.perm_iff_count
 -/
+
+theorem perm_replicate_append_replicate {l : List α} {a b : α} {m n : ℕ} (h : a ≠ b) :
+    l ~ replicate m a ++ replicate n b ↔ count a l = m ∧ count b l = n ∧ l ⊆ [a, b] :=
+  by
+  rw [perm_iff_count, ← Decidable.and_forall_ne a, ← Decidable.and_forall_ne b]
+  suffices l ⊆ [a, b] ↔ ∀ c, c ≠ b → c ≠ a → c ∉ l by
+    simp (config := { contextual := true }) [count_replicate, h, h.symm, this]
+  simp_rw [Ne.def, ← and_imp, ← not_or, Decidable.not_imp_not, subset_def, mem_cons_iff,
+    not_mem_nil, or_false_iff, or_comm']
+#align list.perm_replicate_append_replicate List.perm_replicate_append_replicate
 
 #print List.Subperm.cons_right /-
 theorem Subperm.cons_right {α : Type _} {l l' : List α} (x : α) (h : l <+~ l') : l <+~ x :: l' :=
@@ -1444,7 +1476,7 @@ theorem Perm.product_right {l₁ l₂ : List α} (t₁ : List β) (p : l₁ ~ l�
 #print List.Perm.product_left /-
 theorem Perm.product_left (l : List α) {t₁ t₂ : List β} (p : t₁ ~ t₂) :
     product l t₁ ~ product l t₂ :=
-  (Perm.bind_left _) fun a ha => p.map _
+  Perm.bind_left _ fun a ha => p.map _
 #align list.perm.product_left List.Perm.product_left
 -/
 

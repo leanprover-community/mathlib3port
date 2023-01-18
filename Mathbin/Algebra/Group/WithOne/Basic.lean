@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Johan Commelin
 
 ! This file was ported from Lean 3 source module algebra.group.with_one.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -68,19 +68,19 @@ def lift : (α →ₙ* β) ≃ (WithOne α →* β)
     { toFun := fun x => Option.casesOn x 1 f
       map_one' := rfl
       map_mul' := fun x y =>
-        (WithOne.cases_on x
-            (by
-              rw [one_mul]
-              exact (one_mul _).symm))
+        WithOne.cases_on x
+          (by
+            rw [one_mul]
+            exact (one_mul _).symm)
           fun x =>
-          (WithOne.cases_on y
-              (by
-                rw [mul_one]
-                exact (mul_one _).symm))
+          WithOne.cases_on y
+            (by
+              rw [mul_one]
+              exact (mul_one _).symm)
             fun y => f.map_mul x y }
   invFun F := F.toMulHom.comp coeMulHom
   left_inv f := MulHom.ext fun x => rfl
-  right_inv F := MonoidHom.ext fun x => (WithOne.cases_on x F.map_one.symm) fun x => rfl
+  right_inv F := MonoidHom.ext fun x => WithOne.cases_on x F.map_one.symm fun x => rfl
 #align with_one.lift WithOne.lift
 
 variable (f : α →ₙ* β)

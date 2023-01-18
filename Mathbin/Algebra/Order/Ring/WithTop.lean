@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.order.ring.with_top
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,18 +37,17 @@ variable [Zero α] [Mul α]
 
 instance : MulZeroClass (WithTop α) where
   zero := 0
-  mul m n := if m = 0 ∨ n = 0 then 0 else m.bind fun a => n.bind fun b => ↑(a * b)
+  mul m n := if m = 0 ∨ n = 0 then 0 else Option.map₂ (· * ·) m n
   zero_mul a := if_pos <| Or.inl rfl
   mul_zero a := if_pos <| Or.inr rfl
 
 /- warning: with_top.mul_def -> WithTop.mul_def is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Zero.{u1} α] [_inst_3 : Mul.{u1} α] {a : WithTop.{u1} α} {b : WithTop.{u1} α}, Eq.{succ u1} (WithTop.{u1} α) (HMul.hMul.{u1, u1, u1} (WithTop.{u1} α) (WithTop.{u1} α) (WithTop.{u1} α) (instHMul.{u1} (WithTop.{u1} α) (MulZeroClass.toHasMul.{u1} (WithTop.{u1} α) (WithTop.mulZeroClass.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3))) a b) (ite.{succ u1} (WithTop.{u1} α) (Or (Eq.{succ u1} (WithTop.{u1} α) a (OfNat.ofNat.{u1} (WithTop.{u1} α) 0 (OfNat.mk.{u1} (WithTop.{u1} α) 0 (Zero.zero.{u1} (WithTop.{u1} α) (WithTop.hasZero.{u1} α _inst_2))))) (Eq.{succ u1} (WithTop.{u1} α) b (OfNat.ofNat.{u1} (WithTop.{u1} α) 0 (OfNat.mk.{u1} (WithTop.{u1} α) 0 (Zero.zero.{u1} (WithTop.{u1} α) (WithTop.hasZero.{u1} α _inst_2)))))) (Or.decidable (Eq.{succ u1} (WithTop.{u1} α) a (OfNat.ofNat.{u1} (WithTop.{u1} α) 0 (OfNat.mk.{u1} (WithTop.{u1} α) 0 (Zero.zero.{u1} (WithTop.{u1} α) (WithTop.hasZero.{u1} α _inst_2))))) (Eq.{succ u1} (WithTop.{u1} α) b (OfNat.ofNat.{u1} (WithTop.{u1} α) 0 (OfNat.mk.{u1} (WithTop.{u1} α) 0 (Zero.zero.{u1} (WithTop.{u1} α) (WithTop.hasZero.{u1} α _inst_2))))) (Option.decidableEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a (OfNat.ofNat.{u1} (WithTop.{u1} α) 0 (OfNat.mk.{u1} (WithTop.{u1} α) 0 (Zero.zero.{u1} (WithTop.{u1} α) (WithTop.hasZero.{u1} α _inst_2))))) (Option.decidableEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b) b (OfNat.ofNat.{u1} (WithTop.{u1} α) 0 (OfNat.mk.{u1} (WithTop.{u1} α) 0 (Zero.zero.{u1} (WithTop.{u1} α) (WithTop.hasZero.{u1} α _inst_2)))))) (OfNat.ofNat.{u1} (WithTop.{u1} α) 0 (OfNat.mk.{u1} (WithTop.{u1} α) 0 (Zero.zero.{u1} (WithTop.{u1} α) (WithTop.hasZero.{u1} α _inst_2)))) (Option.bind.{u1, u1} α α a (fun (a : α) => Option.bind.{u1, u1} α α b (fun (b : α) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (Option.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (Option.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (Option.{u1} α) (coeOption.{u1} α))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_3) a b)))))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Zero.{u1} α] [_inst_3 : Mul.{u1} α] {a : WithTop.{u1} α} {b : WithTop.{u1} α}, Eq.{succ u1} (WithTop.{u1} α) (HMul.hMul.{u1, u1, u1} (WithTop.{u1} α) (WithTop.{u1} α) (WithTop.{u1} α) (instHMul.{u1} (WithTop.{u1} α) (MulZeroClass.toHasMul.{u1} (WithTop.{u1} α) (WithTop.mulZeroClass.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3))) a b) (ite.{succ u1} (WithTop.{u1} α) (Or (Eq.{succ u1} (WithTop.{u1} α) a (OfNat.ofNat.{u1} (WithTop.{u1} α) 0 (OfNat.mk.{u1} (WithTop.{u1} α) 0 (Zero.zero.{u1} (WithTop.{u1} α) (WithTop.hasZero.{u1} α _inst_2))))) (Eq.{succ u1} (WithTop.{u1} α) b (OfNat.ofNat.{u1} (WithTop.{u1} α) 0 (OfNat.mk.{u1} (WithTop.{u1} α) 0 (Zero.zero.{u1} (WithTop.{u1} α) (WithTop.hasZero.{u1} α _inst_2)))))) (Or.decidable (Eq.{succ u1} (WithTop.{u1} α) a (OfNat.ofNat.{u1} (WithTop.{u1} α) 0 (OfNat.mk.{u1} (WithTop.{u1} α) 0 (Zero.zero.{u1} (WithTop.{u1} α) (WithTop.hasZero.{u1} α _inst_2))))) (Eq.{succ u1} (WithTop.{u1} α) b (OfNat.ofNat.{u1} (WithTop.{u1} α) 0 (OfNat.mk.{u1} (WithTop.{u1} α) 0 (Zero.zero.{u1} (WithTop.{u1} α) (WithTop.hasZero.{u1} α _inst_2))))) (Option.decidableEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a (OfNat.ofNat.{u1} (WithTop.{u1} α) 0 (OfNat.mk.{u1} (WithTop.{u1} α) 0 (Zero.zero.{u1} (WithTop.{u1} α) (WithTop.hasZero.{u1} α _inst_2))))) (Option.decidableEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b) b (OfNat.ofNat.{u1} (WithTop.{u1} α) 0 (OfNat.mk.{u1} (WithTop.{u1} α) 0 (Zero.zero.{u1} (WithTop.{u1} α) (WithTop.hasZero.{u1} α _inst_2)))))) (OfNat.ofNat.{u1} (WithTop.{u1} α) 0 (OfNat.mk.{u1} (WithTop.{u1} α) 0 (Zero.zero.{u1} (WithTop.{u1} α) (WithTop.hasZero.{u1} α _inst_2)))) (Option.map₂.{u1, u1, u1} α α α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_3)) a b))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Zero.{u1} α] [_inst_3 : Mul.{u1} α] {a : WithTop.{u1} α} {b : WithTop.{u1} α}, Eq.{succ u1} (WithTop.{u1} α) (HMul.hMul.{u1, u1, u1} (WithTop.{u1} α) (WithTop.{u1} α) (WithTop.{u1} α) (instHMul.{u1} (WithTop.{u1} α) (MulZeroClass.toMul.{u1} (WithTop.{u1} α) (WithTop.instMulZeroClassWithTop.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3))) a b) (ite.{succ u1} (WithTop.{u1} α) (Or (Eq.{succ u1} (WithTop.{u1} α) a (OfNat.ofNat.{u1} (WithTop.{u1} α) 0 (Zero.toOfNat0.{u1} (WithTop.{u1} α) (WithTop.zero.{u1} α _inst_2)))) (Eq.{succ u1} (WithTop.{u1} α) b (OfNat.ofNat.{u1} (WithTop.{u1} α) 0 (Zero.toOfNat0.{u1} (WithTop.{u1} α) (WithTop.zero.{u1} α _inst_2))))) (instDecidableOr (Eq.{succ u1} (WithTop.{u1} α) a (OfNat.ofNat.{u1} (WithTop.{u1} α) 0 (Zero.toOfNat0.{u1} (WithTop.{u1} α) (WithTop.zero.{u1} α _inst_2)))) (Eq.{succ u1} (WithTop.{u1} α) b (OfNat.ofNat.{u1} (WithTop.{u1} α) 0 (Zero.toOfNat0.{u1} (WithTop.{u1} α) (WithTop.zero.{u1} α _inst_2)))) (WithTop.instDecidableEqWithTop.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a (OfNat.ofNat.{u1} (WithTop.{u1} α) 0 (Zero.toOfNat0.{u1} (WithTop.{u1} α) (WithTop.zero.{u1} α _inst_2)))) (WithTop.instDecidableEqWithTop.{u1} α (fun (a : α) (b : α) => _inst_1 a b) b (OfNat.ofNat.{u1} (WithTop.{u1} α) 0 (Zero.toOfNat0.{u1} (WithTop.{u1} α) (WithTop.zero.{u1} α _inst_2))))) (OfNat.ofNat.{u1} (WithTop.{u1} α) 0 (Zero.toOfNat0.{u1} (WithTop.{u1} α) (WithTop.zero.{u1} α _inst_2))) (Option.bind.{u1, u1} α α a (fun (a : α) => Option.bind.{u1, u1} α α b (fun (b : α) => Option.some.{u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_3) a b)))))
 Case conversion may be inaccurate. Consider using '#align with_top.mul_def WithTop.mul_defₓ'. -/
-theorem mul_def {a b : WithTop α} :
-    a * b = if a = 0 ∨ b = 0 then 0 else a.bind fun a => b.bind fun b => ↑(a * b) :=
+theorem mul_def {a b : WithTop α} : a * b = if a = 0 ∨ b = 0 then 0 else Option.map₂ (· * ·) a b :=
   rfl
 #align with_top.mul_def WithTop.mul_def
 
@@ -83,6 +82,13 @@ theorem top_mul_top : (⊤ * ⊤ : WithTop α) = ⊤ :=
   top_mul top_ne_zero
 #align with_top.top_mul_top WithTop.top_mul_top
 
+instance [NoZeroDivisors α] : NoZeroDivisors (WithTop α) :=
+  by
+  refine' ⟨fun a b h₁ => Decidable.by_contradiction fun h₂ => _⟩
+  rw [mul_def, if_neg h₂] at h₁
+  rcases Option.mem_map₂_iff.1 h₁ with ⟨a, b, rfl : _ = _, rfl : _ = _, hab⟩
+  exact h₂ ((eq_zero_or_eq_zero_of_mul_eq_zero hab).imp (congr_arg some) (congr_arg some))
+
 end Mul
 
 section MulZeroClass
@@ -97,11 +103,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align with_top.coe_mul WithTop.coe_mulₓ'. -/
 @[norm_cast]
 theorem coe_mul {a b : α} : (↑(a * b) : WithTop α) = a * b :=
-  (Decidable.byCases fun this : a = 0 => by simp [this]) fun ha =>
-    (Decidable.byCases fun this : b = 0 => by simp [this]) fun hb =>
-      by
-      simp [*, mul_def]
-      rfl
+  Decidable.byCases (fun this : a = 0 => by simp [this]) fun ha =>
+    Decidable.byCases (fun this : b = 0 => by simp [this]) fun hb => by simp [*, mul_def]
 #align with_top.coe_mul WithTop.coe_mul
 
 /- warning: with_top.mul_coe -> WithTop.mul_coe is a dubious translation:
@@ -196,9 +199,9 @@ protected def WithTop.MonoidWithZeroHom.withTopMap {R S : Type _} [MulZeroOneCla
       by
       have : ∀ z, map f z = 0 ↔ z = 0 := fun z =>
         (Option.map_injective hf).eq_iff' f.to_zero_hom.with_top_map.map_zero
-      rcases eq_or_ne x 0 with (rfl | hx)
+      rcases Decidable.eq_or_ne x 0 with (rfl | hx)
       · simp
-      rcases eq_or_ne y 0 with (rfl | hy)
+      rcases Decidable.eq_or_ne y 0 with (rfl | hy)
       · simp
       induction x using WithTop.recTopCoe
       · simp [hy, this]
@@ -207,11 +210,6 @@ protected def WithTop.MonoidWithZeroHom.withTopMap {R S : Type _} [MulZeroOneCla
         simp [hx, this]
       simp [← coe_mul] }
 #align monoid_with_zero_hom.with_top_map WithTop.MonoidWithZeroHom.withTopMap
-
-instance [MulZeroClass α] [NoZeroDivisors α] : NoZeroDivisors (WithTop α) :=
-  ⟨fun a b => by
-    cases a <;> cases b <;> dsimp [mul_def] <;> split_ifs <;>
-      simp_all [none_eq_top, some_eq_coe, mul_eq_zero]⟩
 
 instance [SemigroupWithZero α] [NoZeroDivisors α] : SemigroupWithZero (WithTop α) :=
   { WithTop.mulZeroClass with
@@ -234,7 +232,8 @@ instance [CommMonoidWithZero α] [NoZeroDivisors α] [Nontrivial α] :
   { WithTop.monoidWithZero with
     mul := (· * ·)
     zero := 0
-    mul_comm := fun a b => by simp only [or_comm', mul_def, Option.bind_comm a b, mul_comm] }
+    mul_comm := fun a b => by
+      simp only [or_comm', mul_def, mul_comm, @Option.map₂_comm _ _ _ _ a b _ mul_comm] }
 
 variable [CanonicallyOrderedCommSemiring α]
 
@@ -297,12 +296,11 @@ instance : MulZeroClass (WithBot α) :=
 
 /- warning: with_bot.mul_def -> WithBot.mul_def is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Zero.{u1} α] [_inst_3 : Mul.{u1} α] {a : WithBot.{u1} α} {b : WithBot.{u1} α}, Eq.{succ u1} (WithBot.{u1} α) (HMul.hMul.{u1, u1, u1} (WithBot.{u1} α) (WithBot.{u1} α) (WithBot.{u1} α) (instHMul.{u1} (WithBot.{u1} α) (MulZeroClass.toHasMul.{u1} (WithBot.{u1} α) (WithBot.mulZeroClass.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3))) a b) (ite.{succ u1} (WithBot.{u1} α) (Or (Eq.{succ u1} (WithBot.{u1} α) a (OfNat.ofNat.{u1} (WithBot.{u1} α) 0 (OfNat.mk.{u1} (WithBot.{u1} α) 0 (Zero.zero.{u1} (WithBot.{u1} α) (WithBot.hasZero.{u1} α _inst_2))))) (Eq.{succ u1} (WithBot.{u1} α) b (OfNat.ofNat.{u1} (WithBot.{u1} α) 0 (OfNat.mk.{u1} (WithBot.{u1} α) 0 (Zero.zero.{u1} (WithBot.{u1} α) (WithBot.hasZero.{u1} α _inst_2)))))) (Or.decidable (Eq.{succ u1} (WithBot.{u1} α) a (OfNat.ofNat.{u1} (WithBot.{u1} α) 0 (OfNat.mk.{u1} (WithBot.{u1} α) 0 (Zero.zero.{u1} (WithBot.{u1} α) (WithBot.hasZero.{u1} α _inst_2))))) (Eq.{succ u1} (WithBot.{u1} α) b (OfNat.ofNat.{u1} (WithBot.{u1} α) 0 (OfNat.mk.{u1} (WithBot.{u1} α) 0 (Zero.zero.{u1} (WithBot.{u1} α) (WithBot.hasZero.{u1} α _inst_2))))) (Option.decidableEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a (OfNat.ofNat.{u1} (WithBot.{u1} α) 0 (OfNat.mk.{u1} (WithBot.{u1} α) 0 (Zero.zero.{u1} (WithBot.{u1} α) (WithBot.hasZero.{u1} α _inst_2))))) (Option.decidableEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b) b (OfNat.ofNat.{u1} (WithBot.{u1} α) 0 (OfNat.mk.{u1} (WithBot.{u1} α) 0 (Zero.zero.{u1} (WithBot.{u1} α) (WithBot.hasZero.{u1} α _inst_2)))))) (OfNat.ofNat.{u1} (WithBot.{u1} α) 0 (OfNat.mk.{u1} (WithBot.{u1} α) 0 (Zero.zero.{u1} (WithBot.{u1} α) (WithBot.hasZero.{u1} α _inst_2)))) (Option.bind.{u1, u1} α α a (fun (a : α) => Option.bind.{u1, u1} α α b (fun (b : α) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (Option.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (Option.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (Option.{u1} α) (coeOption.{u1} α))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_3) a b)))))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Zero.{u1} α] [_inst_3 : Mul.{u1} α] {a : WithBot.{u1} α} {b : WithBot.{u1} α}, Eq.{succ u1} (WithBot.{u1} α) (HMul.hMul.{u1, u1, u1} (WithBot.{u1} α) (WithBot.{u1} α) (WithBot.{u1} α) (instHMul.{u1} (WithBot.{u1} α) (MulZeroClass.toHasMul.{u1} (WithBot.{u1} α) (WithBot.mulZeroClass.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3))) a b) (ite.{succ u1} (WithBot.{u1} α) (Or (Eq.{succ u1} (WithBot.{u1} α) a (OfNat.ofNat.{u1} (WithBot.{u1} α) 0 (OfNat.mk.{u1} (WithBot.{u1} α) 0 (Zero.zero.{u1} (WithBot.{u1} α) (WithBot.hasZero.{u1} α _inst_2))))) (Eq.{succ u1} (WithBot.{u1} α) b (OfNat.ofNat.{u1} (WithBot.{u1} α) 0 (OfNat.mk.{u1} (WithBot.{u1} α) 0 (Zero.zero.{u1} (WithBot.{u1} α) (WithBot.hasZero.{u1} α _inst_2)))))) (Or.decidable (Eq.{succ u1} (WithBot.{u1} α) a (OfNat.ofNat.{u1} (WithBot.{u1} α) 0 (OfNat.mk.{u1} (WithBot.{u1} α) 0 (Zero.zero.{u1} (WithBot.{u1} α) (WithBot.hasZero.{u1} α _inst_2))))) (Eq.{succ u1} (WithBot.{u1} α) b (OfNat.ofNat.{u1} (WithBot.{u1} α) 0 (OfNat.mk.{u1} (WithBot.{u1} α) 0 (Zero.zero.{u1} (WithBot.{u1} α) (WithBot.hasZero.{u1} α _inst_2))))) (Option.decidableEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a (OfNat.ofNat.{u1} (WithBot.{u1} α) 0 (OfNat.mk.{u1} (WithBot.{u1} α) 0 (Zero.zero.{u1} (WithBot.{u1} α) (WithBot.hasZero.{u1} α _inst_2))))) (Option.decidableEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b) b (OfNat.ofNat.{u1} (WithBot.{u1} α) 0 (OfNat.mk.{u1} (WithBot.{u1} α) 0 (Zero.zero.{u1} (WithBot.{u1} α) (WithBot.hasZero.{u1} α _inst_2)))))) (OfNat.ofNat.{u1} (WithBot.{u1} α) 0 (OfNat.mk.{u1} (WithBot.{u1} α) 0 (Zero.zero.{u1} (WithBot.{u1} α) (WithBot.hasZero.{u1} α _inst_2)))) (Option.map₂.{u1, u1, u1} α α α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_3)) a b))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Zero.{u1} α] [_inst_3 : Mul.{u1} α] {a : WithBot.{u1} α} {b : WithBot.{u1} α}, Eq.{succ u1} (WithBot.{u1} α) (HMul.hMul.{u1, u1, u1} (WithBot.{u1} α) (WithBot.{u1} α) (WithBot.{u1} α) (instHMul.{u1} (WithBot.{u1} α) (MulZeroClass.toMul.{u1} (WithBot.{u1} α) (WithBot.instMulZeroClassWithBot.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3))) a b) (ite.{succ u1} (WithBot.{u1} α) (Or (Eq.{succ u1} (WithBot.{u1} α) a (OfNat.ofNat.{u1} (WithBot.{u1} α) 0 (Zero.toOfNat0.{u1} (WithBot.{u1} α) (WithBot.zero.{u1} α _inst_2)))) (Eq.{succ u1} (WithBot.{u1} α) b (OfNat.ofNat.{u1} (WithBot.{u1} α) 0 (Zero.toOfNat0.{u1} (WithBot.{u1} α) (WithBot.zero.{u1} α _inst_2))))) (instDecidableOr (Eq.{succ u1} (WithBot.{u1} α) a (OfNat.ofNat.{u1} (WithBot.{u1} α) 0 (Zero.toOfNat0.{u1} (WithBot.{u1} α) (WithBot.zero.{u1} α _inst_2)))) (Eq.{succ u1} (WithBot.{u1} α) b (OfNat.ofNat.{u1} (WithBot.{u1} α) 0 (Zero.toOfNat0.{u1} (WithBot.{u1} α) (WithBot.zero.{u1} α _inst_2)))) (WithBot.instDecidableEqWithBot.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a (OfNat.ofNat.{u1} (WithBot.{u1} α) 0 (Zero.toOfNat0.{u1} (WithBot.{u1} α) (WithBot.zero.{u1} α _inst_2)))) (WithBot.instDecidableEqWithBot.{u1} α (fun (a : α) (b : α) => _inst_1 a b) b (OfNat.ofNat.{u1} (WithBot.{u1} α) 0 (Zero.toOfNat0.{u1} (WithBot.{u1} α) (WithBot.zero.{u1} α _inst_2))))) (OfNat.ofNat.{u1} (WithBot.{u1} α) 0 (Zero.toOfNat0.{u1} (WithBot.{u1} α) (WithBot.zero.{u1} α _inst_2))) (Option.bind.{u1, u1} α α a (fun (a : α) => Option.bind.{u1, u1} α α b (fun (b : α) => Option.some.{u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_3) a b)))))
 Case conversion may be inaccurate. Consider using '#align with_bot.mul_def WithBot.mul_defₓ'. -/
-theorem mul_def {a b : WithBot α} :
-    a * b = if a = 0 ∨ b = 0 then 0 else a.bind fun a => b.bind fun b => ↑(a * b) :=
+theorem mul_def {a b : WithBot α} : a * b = if a = 0 ∨ b = 0 then 0 else Option.map₂ (· * ·) a b :=
   rfl
 #align with_bot.mul_def WithBot.mul_def
 
@@ -353,11 +351,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align with_bot.coe_mul WithBot.coe_mulₓ'. -/
 @[norm_cast]
 theorem coe_mul {a b : α} : (↑(a * b) : WithBot α) = a * b :=
-  (Decidable.byCases fun this : a = 0 => by simp [this]) fun ha =>
-    (Decidable.byCases fun this : b = 0 => by simp [this]) fun hb =>
-      by
-      simp [*, mul_def]
-      rfl
+  WithTop.coe_mul
 #align with_bot.coe_mul WithBot.coe_mul
 
 /- warning: with_bot.mul_coe -> WithBot.mul_coe is a dubious translation:

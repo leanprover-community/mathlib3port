@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module topology.algebra.order.floor
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -242,7 +242,7 @@ theorem ContinuousOn.comp_fract {s : β → α} {f : β → α → γ}
 /-- A special case of `continuous_on.comp_fract`. -/
 theorem ContinuousOn.comp_fract'' {f : α → β} (h : ContinuousOn f I) (hf : f 0 = f 1) :
     Continuous (f ∘ fract) :=
-  ContinuousOn.comp_fract ((h.comp continuous_on_snd) fun x hx => (mem_prod.mp hx).2) continuous_id
+  ContinuousOn.comp_fract (h.comp continuous_on_snd fun x hx => (mem_prod.mp hx).2) continuous_id
     fun _ => hf
 #align continuous_on.comp_fract'' ContinuousOn.comp_fract''
 

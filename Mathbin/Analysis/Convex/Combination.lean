@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudriashov
 
 ! This file was ported from Lean 3 source module analysis.convex.combination
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,7 +36,7 @@ open BigOperators Classical Pointwise
 universe u u'
 
 variable {R E F ι ι' α : Type _} [LinearOrderedField R] [AddCommGroup E] [AddCommGroup F]
-  [LinearOrderedAddCommGroup α] [Module R E] [Module R F] [Module R α] [OrderedSmul R α] {s : Set E}
+  [LinearOrderedAddCommGroup α] [Module R E] [Module R F] [Module R α] [OrderedSMul R α] {s : Set E}
 
 /-- Center of mass of a finite collection of points with prescribed weights.
 Note that we require neither `0 ≤ w i` nor `∑ w = 1`. -/
@@ -132,7 +132,7 @@ theorem Finset.center_mass_subset {t' : Finset ι} (ht : t ⊆ t') (h : ∀ i �
 
 theorem Finset.center_mass_filter_ne_zero :
     (t.filter fun i => w i ≠ 0).centerMass w z = t.centerMass w z :=
-  (Finset.center_mass_subset z (filter_subset _ _)) fun i hit hit' => by
+  Finset.center_mass_subset z (filter_subset _ _) fun i hit hit' => by
     simpa only [hit, mem_filter, true_and_iff, Ne.def, not_not] using hit'
 #align finset.center_mass_filter_ne_zero Finset.center_mass_filter_ne_zero
 
@@ -344,13 +344,13 @@ theorem convex_hull_eq (s : Set E) :
     rw [Finset.center_mass_segment' _ _ _ _ _ _ hwx₁ hwy₁ _ _ hab]
     refine' ⟨_, _, _, _, _, _, _, rfl⟩
     · rintro i hi
-      rw [Finset.mem_disj_sum] at hi
+      rw [Finset.mem_disjSum] at hi
       rcases hi with (⟨j, hj, rfl⟩ | ⟨j, hj, rfl⟩) <;> simp only [Sum.elim_inl, Sum.elim_inr] <;>
         trace
           "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr mul_nonneg, \",\", expr hwx₀, \",\", expr hwy₀, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
     · simp [Finset.sum_sum_elim, finset.mul_sum.symm, *]
     · intro i hi
-      rw [Finset.mem_disj_sum] at hi
+      rw [Finset.mem_disjSum] at hi
       rcases hi with (⟨j, hj, rfl⟩ | ⟨j, hj, rfl⟩) <;>
         trace
           "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr hzx, \",\", expr hzy, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"

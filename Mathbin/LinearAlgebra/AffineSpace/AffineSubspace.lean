@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module linear_algebra.affine_space.affine_subspace
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -771,7 +771,7 @@ theorem affine_span_le {s : Set P} {Q : AffineSubspace k P} :
   (AffineSubspace.gi k V P).gc _ _
 #align affine_span_le affine_span_le
 
-variable (k V) {P}
+variable (k V) {P} {p₁ p₂ : P}
 
 /-- The affine span of a single point, coerced to a set, contains just
 that point. -/
@@ -787,9 +787,16 @@ theorem coe_affine_span_singleton (p : P) : (affineSpan k ({p} : Set P) : Set P)
 /-- A point is in the affine span of a single point if and only if
 they are equal. -/
 @[simp]
-theorem mem_affine_span_singleton (p1 p2 : P) : p1 ∈ affineSpan k ({p2} : Set P) ↔ p1 = p2 := by
+theorem mem_affine_span_singleton : p₁ ∈ affineSpan k ({p₂} : Set P) ↔ p₁ = p₂ := by
   simp [← mem_coe]
 #align affine_subspace.mem_affine_span_singleton AffineSubspace.mem_affine_span_singleton
+
+@[simp]
+theorem preimage_coe_affine_span_singleton (x : P) :
+    (coe : affineSpan k ({x} : Set P) → P) ⁻¹' {x} = univ :=
+  eq_univ_of_forall fun y => (AffineSubspace.mem_affine_span_singleton _ _).1 y.2
+#align
+  affine_subspace.preimage_coe_affine_span_singleton AffineSubspace.preimage_coe_affine_span_singleton
 
 /-- The span of a union of sets is the sup of their spans. -/
 theorem span_union (s t : Set P) : affineSpan k (s ∪ t) = affineSpan k s ⊔ affineSpan k t :=
@@ -1304,9 +1311,9 @@ theorem affine_span_induction' {s : Set P} {p : ∀ x, x ∈ affineSpan k s → 
   · exact fun y hy => ⟨subset_affine_span _ _ hy, Hs y hy⟩
   ·
     exact fun c u v w hu hv hw =>
-      (Exists.elim hu) fun hu' hu =>
-        (Exists.elim hv) fun hv' hv =>
-          (Exists.elim hw) fun hw' hw =>
+      Exists.elim hu fun hu' hu =>
+        Exists.elim hv fun hv' hv =>
+          Exists.elim hw fun hw' hw =>
             ⟨AffineSubspace.smul_vsub_vadd_mem _ _ hu' hv' hw', Hc _ _ _ _ _ _ _ hu hv hw⟩
 #align affine_span_induction' affine_span_induction'
 
@@ -1817,6 +1824,23 @@ theorem comap_supr {ι : Sort _} (f : P₁ →ᵃ[k] P₂) (s : ι → AffineSub
     (infᵢ s).comap f = ⨅ i, (s i).comap f :=
   (gc_map_comap f).u_infi
 #align affine_subspace.comap_supr AffineSubspace.comap_supr
+
+@[simp]
+theorem comap_symm (e : P₁ ≃ᵃ[k] P₂) (s : AffineSubspace k P₁) :
+    s.comap (e.symm : P₂ →ᵃ[k] P₁) = s.map e :=
+  coe_injective <| e.preimage_symm _
+#align affine_subspace.comap_symm AffineSubspace.comap_symm
+
+@[simp]
+theorem map_symm (e : P₁ ≃ᵃ[k] P₂) (s : AffineSubspace k P₂) :
+    s.map (e.symm : P₂ →ᵃ[k] P₁) = s.comap e :=
+  coe_injective <| e.image_symm _
+#align affine_subspace.map_symm AffineSubspace.map_symm
+
+theorem comap_span (f : P₁ ≃ᵃ[k] P₂) (s : Set P₂) :
+    (affineSpan k s).comap (f : P₁ →ᵃ[k] P₂) = affineSpan k (f ⁻¹' s) := by
+  rw [← map_symm, map_span, AffineEquiv.coe_coe, f.image_symm]
+#align affine_subspace.comap_span AffineSubspace.comap_span
 
 end AffineSubspace
 

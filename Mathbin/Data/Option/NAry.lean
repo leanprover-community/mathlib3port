@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.option.n_ary
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,12 +62,12 @@ theorem map₂_def {α β γ : Type _} (f : α → β → γ) (a : Option α) (b
 
 /- warning: option.map₂_some_some -> Option.map₂_some_some is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} (f : α -> β -> γ) (a : α) (b : β), Eq.{succ u3} (Option.{u3} γ) (Option.map₂.{u1, u2, u3} α β γ f (Option.some.{u1} α a) (Option.some.{u2} β b)) ((fun (a : Type.{u3}) (b : Type.{u3}) [self : HasLiftT.{succ u3, succ u3} a b] => self.0) γ (Option.{u3} γ) (HasLiftT.mk.{succ u3, succ u3} γ (Option.{u3} γ) (CoeTCₓ.coe.{succ u3, succ u3} γ (Option.{u3} γ) (coeOption.{u3} γ))) (f a b))
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} (f : α -> β -> γ) (a : α) (b : β), Eq.{succ u3} (Option.{u3} γ) (Option.map₂.{u1, u2, u3} α β γ f (Option.some.{u1} α a) (Option.some.{u2} β b)) (Option.some.{u3} γ (f a b))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} (f : α -> β -> γ) (a : α) (b : β), Eq.{succ u3} (Option.{u3} γ) (Option.map₂.{u2, u1, u3} α β γ f (Option.some.{u2} α a) (Option.some.{u1} β b)) (Option.some.{u3} γ (f a b))
 Case conversion may be inaccurate. Consider using '#align option.map₂_some_some Option.map₂_some_someₓ'. -/
 @[simp]
-theorem map₂_some_some (f : α → β → γ) (a : α) (b : β) : map₂ f (some a) (some b) = f a b :=
+theorem map₂_some_some (f : α → β → γ) (a : α) (b : β) : map₂ f (some a) (some b) = some (f a b) :=
   rfl
 #align option.map₂_some_some Option.map₂_some_some
 
@@ -390,6 +390,20 @@ theorem map_map₂_right_anticomm {f : α → β' → γ} {g : β → β'} {f' :
     (h_right_anticomm : ∀ a b, f a (g b) = g' (f' b a)) :
     map₂ f a (b.map g) = (map₂ f' b a).map g' := by cases a <;> cases b <;> simp [h_right_anticomm]
 #align option.map_map₂_right_anticomm Option.map_map₂_right_anticomm
+
+/-- If `a` is a left identity for a binary operation `f`, then `some a` is a left identity for
+`option.map₂ f`. -/
+theorem map₂_left_identity {f : α → β → β} {a : α} (h : ∀ b, f a b = b) (o : Option β) :
+    map₂ f (some a) o = o := by
+  cases o
+  exacts[rfl, congr_arg some (h _)]
+#align option.map₂_left_identity Option.map₂_left_identity
+
+/-- If `b` is a right identity for a binary operation `f`, then `some b` is a right identity for
+`option.map₂ f`. -/
+theorem map₂_right_identity {f : α → β → α} {b : β} (h : ∀ a, f a b = a) (o : Option α) :
+    map₂ f o (some b) = o := by simp [h, map₂]
+#align option.map₂_right_identity Option.map₂_right_identity
 
 end Option
 

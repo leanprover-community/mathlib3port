@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module model_theory.substructures
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -227,7 +227,7 @@ theorem coe_infi {ι : Sort _} {S : ι → L.Substructure M} : (↑(⨅ i, S i) 
 /-- Substructures of a structure form a complete lattice. -/
 instance : CompleteLattice (L.Substructure M) :=
   {
-    (completeLatticeOfInf (L.Substructure M)) fun s =>
+    completeLatticeOfInf (L.Substructure M) fun s =>
       IsGLB.of_image (fun S T => show (S : Set M) ≤ T ↔ S ≤ T from SetLike.coe_subset_coe)
         isGLB_binfᵢ with
     le := (· ≤ ·)

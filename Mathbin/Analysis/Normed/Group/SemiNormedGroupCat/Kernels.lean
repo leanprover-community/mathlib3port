@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca, Johan Commelin, Scott Morrison
 
 ! This file was ported from Lean 3 source module analysis.normed.group.SemiNormedGroup.kernels
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -122,7 +122,7 @@ instance hasLimitParallelPair {V W : SemiNormedGroupCat.{u}} (f g : V ⟶ W) :
 #align SemiNormedGroup.has_limit_parallel_pair SemiNormedGroupCat.hasLimitParallelPair
 
 instance : Limits.HasEqualizers.{u, u + 1} SemiNormedGroupCat :=
-  (@has_equalizers_of_has_limit_parallel_pair SemiNormedGroupCat _) fun V W f g =>
+  @has_equalizers_of_has_limit_parallel_pair SemiNormedGroupCat _ fun V W f g =>
     SemiNormedGroupCat.hasLimitParallelPair f g
 
 end EqualizersAndKernels

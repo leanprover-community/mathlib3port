@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 
 ! This file was ported from Lean 3 source module data.finsupp.big_operators
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,7 +51,7 @@ theorem List.support_sum_subset [AddMonoid M] (l : List (ι →₀ M)) :
 theorem Multiset.support_sum_subset [AddCommMonoid M] (s : Multiset (ι →₀ M)) :
     s.Sum.support ⊆ (s.map Finsupp.support).sup :=
   by
-  induction s using Quot.induction_on
+  induction s using Quot.inductionOn
   simpa using List.support_sum_subset _
 #align multiset.support_sum_subset Multiset.support_sum_subset
 
@@ -78,7 +78,7 @@ theorem List.mem_foldr_sup_support_iff [Zero M] {l : List (ι →₀ M)} {x : ι
 
 theorem Multiset.mem_sup_map_support_iff [Zero M] {s : Multiset (ι →₀ M)} {x : ι} :
     x ∈ (s.map Finsupp.support).sup ↔ ∃ (f : ι →₀ M)(hf : f ∈ s), x ∈ f.support :=
-  (Quot.induction_on s) fun _ => by simpa using List.mem_foldr_sup_support_iff
+  Quot.inductionOn s fun _ => by simpa using List.mem_foldr_sup_support_iff
 #align multiset.mem_sup_map_support_iff Multiset.mem_sup_map_support_iff
 
 theorem Finset.mem_sup_support_iff [Zero M] {s : Finset (ι →₀ M)} {x : ι} :
@@ -97,10 +97,10 @@ theorem List.support_sum_eq [AddMonoid M] (l : List (ι →₀ M))
     rw [Finsupp.support_add_eq, IH hl.right, Finset.sup_eq_union]
     suffices Disjoint hd.support (tl.foldr ((· ⊔ ·) ∘ Finsupp.support) ∅) by
       exact Finset.disjoint_of_subset_right (List.support_sum_subset _) this
-    · rw [← List.foldr_map, ← Finset.bot_eq_empty, List.foldr_sup_eq_sup_to_finset]
+    · rw [← List.foldr_map, ← Finset.bot_eq_empty, List.foldr_sup_eq_sup_toFinset]
       rw [Finset.disjoint_sup_right]
       intro f hf
-      simp only [List.mem_to_finset, List.mem_map'] at hf
+      simp only [List.mem_toFinset, List.mem_map'] at hf
       obtain ⟨f, hf, rfl⟩ := hf
       exact hl.left _ hf
 #align list.support_sum_eq List.support_sum_eq
@@ -108,7 +108,7 @@ theorem List.support_sum_eq [AddMonoid M] (l : List (ι →₀ M))
 theorem Multiset.support_sum_eq [AddCommMonoid M] (s : Multiset (ι →₀ M))
     (hs : s.Pairwise (Disjoint on Finsupp.support)) : s.Sum.support = (s.map Finsupp.support).sup :=
   by
-  induction s using Quot.induction_on
+  induction s using Quot.inductionOn
   obtain ⟨l, hl, hd⟩ := hs
   convert List.support_sum_eq _ _
   · simp
@@ -125,11 +125,11 @@ theorem Finset.support_sum_eq [AddCommMonoid M] (s : Finset (ι →₀ M))
     · exact (Finset.sum_val _).symm
     · obtain ⟨l, hl, hn⟩ : ∃ l : List (ι →₀ M), l.toFinset = s ∧ l.Nodup :=
         by
-        refine' ⟨s.to_list, _, Finset.nodup_to_list _⟩
+        refine' ⟨s.to_list, _, Finset.nodup_toList _⟩
         simp
       subst hl
-      rwa [List.to_finset_val, list.dedup_eq_self.mpr hn, Multiset.pairwise_coe_iff_pairwise, ←
-        List.pairwise_disjoint_iff_coe_to_finset_pairwise_disjoint hn]
+      rwa [List.toFinset_val, list.dedup_eq_self.mpr hn, Multiset.pairwise_coe_iff_pairwise, ←
+        List.pairwiseDisjoint_iff_coe_toFinset_pairwise_disjoint hn]
       intro x y hxy
       exact symmetric_disjoint hxy
 #align finset.support_sum_eq Finset.support_sum_eq

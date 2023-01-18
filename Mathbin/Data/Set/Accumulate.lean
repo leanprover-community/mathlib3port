@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module data.set.accumulate
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -58,7 +58,7 @@ theorem mem_accumulate [LE α] {x : α} {z : β} : z ∈ Accumulate s x ↔ ∃ 
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s : α -> (Set.{u2} β)} [_inst_1 : Preorder.{u1} α] {x : α}, HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) (s x) (Set.Accumulate.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) s x)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s : α -> (Set.{u1} β)} [_inst_1 : Preorder.{u2} α] {x : α}, HasSubset.Subset.{u1} (Set.{u1} β) (Set.instHasSubsetSet_1.{u1} β) (s x) (Set.Accumulate.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) s x)
+  forall {α : Type.{u2}} {β : Type.{u1}} {s : α -> (Set.{u1} β)} [_inst_1 : Preorder.{u2} α] {x : α}, HasSubset.Subset.{u1} (Set.{u1} β) (Set.instHasSubsetSet.{u1} β) (s x) (Set.Accumulate.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) s x)
 Case conversion may be inaccurate. Consider using '#align set.subset_accumulate Set.subset_accumulateₓ'. -/
 theorem subset_accumulate [Preorder α] {x : α} : s x ⊆ Accumulate s x := fun z => mem_bunionᵢ le_rfl
 #align set.subset_accumulate Set.subset_accumulate

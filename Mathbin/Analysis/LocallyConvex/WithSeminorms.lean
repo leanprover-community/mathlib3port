@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll, Anatole Dedecker
 
 ! This file was ported from Lean 3 source module analysis.locally_convex.with_seminorms
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,7 +55,7 @@ open NormedField Set Seminorm TopologicalSpace
 
 open BigOperators Nnreal Pointwise TopologicalSpace
 
-variable {𝕜 𝕜₂ E F G ι ι' : Type _}
+variable {𝕜 𝕜₂ 𝕝 𝕝₂ E F G ι ι' : Type _}
 
 section FilterBasis
 
@@ -261,16 +261,16 @@ theorem is_bounded_sup {p : ι → Seminorm 𝕜 E} {q : ι' → Seminorm 𝕜�
     obtain rfl | hs' := s'.eq_empty_or_nonempty
     · exact ⟨1, ∅, zero_lt_one, by simp [Seminorm.bot_eq_zero]⟩
     choose fₛ fC hf using hf
-    use s'.card • s'.sup fC, Finset.bUnion s' fₛ
+    use s'.card • s'.sup fC, Finset.bunionᵢ s' fₛ
     constructor
     · refine' nsmul_pos _ (ne_of_gt (Finset.Nonempty.card_pos hs'))
       cases' Finset.Nonempty.bex hs' with j hj
       exact lt_of_lt_of_le (zero_lt_iff.mpr (And.left (hf j))) (Finset.le_sup hj)
-    have hs : ∀ i : ι', i ∈ s' → (q i).comp f ≤ s'.sup fC • (Finset.bUnion s' fₛ).sup p :=
+    have hs : ∀ i : ι', i ∈ s' → (q i).comp f ≤ s'.sup fC • (Finset.bunionᵢ s' fₛ).sup p :=
       by
       intro i hi
       refine' le_trans (And.right (hf i)) (smul_le_smul _ (Finset.le_sup hi))
-      exact Finset.sup_mono (Finset.subset_bUnion_of_mem fₛ hi)
+      exact Finset.sup_mono (Finset.subset_bunionᵢ_of_mem fₛ hi)
     refine' le_trans (comp_mono f (finset_sup_le_sum q s')) _
     simp_rw [← pullback_apply, AddMonoidHom.map_sum, pullback_apply]
     refine' le_trans (Finset.sum_le_sum hs) _
@@ -426,10 +426,10 @@ theorem SeminormFamily.with_seminorms_iff_nhds_eq_infi (p : SeminormFamily 𝕜 
 #align
   seminorm_family.with_seminorms_iff_nhds_eq_infi SeminormFamily.with_seminorms_iff_nhds_eq_infi
 
-theorem WithSeminorms.continuous_seminorm [Module ℝ E] [NormedAlgebra ℝ 𝕜] [IsScalarTower ℝ 𝕜 E]
-    [HasContinuousConstSmul ℝ E] {p : SeminormFamily 𝕜 E ι} (hp : WithSeminorms p) (i : ι) :
+theorem WithSeminorms.continuous_seminorm [NontriviallyNormedField 𝕝] [Module 𝕝 E]
+    [HasContinuousConstSmul 𝕝 E] {p : SeminormFamily 𝕝 E ι} (hp : WithSeminorms p) (i : ι) :
     Continuous (p i) := by
-  refine' Seminorm.continuous _
+  refine' Seminorm.continuous one_pos _
   rw [p.with_seminorms_iff_nhds_eq_infi.mp hp, ball_zero_eq_preimage_ball]
   exact Filter.mem_infi_of_mem i (Filter.preimage_mem_comap <| Metric.ball_mem_nhds _ one_pos)
 #align with_seminorms.continuous_seminorm WithSeminorms.continuous_seminorm
@@ -581,17 +581,23 @@ section ContinuousBounded
 
 namespace Seminorm
 
-variable [NormedField 𝕜] [AddCommGroup E] [Module 𝕜 E]
+variable [NontriviallyNormedField 𝕜] [AddCommGroup E] [Module 𝕜 E]
 
-variable [NormedField 𝕜₂] [AddCommGroup F] [Module 𝕜₂ F]
+variable [NormedField 𝕝] [Module 𝕝 E]
+
+variable [NontriviallyNormedField 𝕜₂] [AddCommGroup F] [Module 𝕜₂ F]
+
+variable [NormedField 𝕝₂] [Module 𝕝₂ F]
 
 variable {σ₁₂ : 𝕜 →+* 𝕜₂} [RingHomIsometric σ₁₂]
 
+variable {τ₁₂ : 𝕝 →+* 𝕝₂} [RingHomIsometric τ₁₂]
+
 variable [Nonempty ι] [Nonempty ι']
 
-theorem continuous_of_continuous_comp {q : SeminormFamily 𝕜₂ F ι'} [TopologicalSpace E]
+theorem continuous_of_continuous_comp {q : SeminormFamily 𝕝₂ F ι'} [TopologicalSpace E]
     [TopologicalAddGroup E] [TopologicalSpace F] [TopologicalAddGroup F] (hq : WithSeminorms q)
-    (f : E →ₛₗ[σ₁₂] F) (hf : ∀ i, Continuous ((q i).comp f)) : Continuous f :=
+    (f : E →ₛₗ[τ₁₂] F) (hf : ∀ i, Continuous ((q i).comp f)) : Continuous f :=
   by
   refine' continuous_of_continuous_at_zero f _
   simp_rw [ContinuousAt, f.map_zero, q.with_seminorms_iff_nhds_eq_infi.mp hq, Filter.tendsto_infi,
@@ -601,16 +607,16 @@ theorem continuous_of_continuous_comp {q : SeminormFamily 𝕜₂ F ι'} [Topolo
   exact (map_zero _).symm
 #align seminorm.continuous_of_continuous_comp Seminorm.continuous_of_continuous_comp
 
-theorem continuous_iff_continuous_comp [NormedAlgebra ℝ 𝕜₂] [Module ℝ F] [IsScalarTower ℝ 𝕜₂ F]
-    {q : SeminormFamily 𝕜₂ F ι'} [TopologicalSpace E] [TopologicalAddGroup E] [TopologicalSpace F]
-    [TopologicalAddGroup F] [HasContinuousConstSmul ℝ F] (hq : WithSeminorms q) (f : E →ₛₗ[σ₁₂] F) :
+theorem continuous_iff_continuous_comp {q : SeminormFamily 𝕜₂ F ι'} [TopologicalSpace E]
+    [TopologicalAddGroup E] [TopologicalSpace F] [TopologicalAddGroup F]
+    [HasContinuousConstSmul 𝕜₂ F] (hq : WithSeminorms q) (f : E →ₛₗ[σ₁₂] F) :
     Continuous f ↔ ∀ i, Continuous ((q i).comp f) :=
   ⟨fun h i => Continuous.comp (hq.continuous_seminorm i) h, continuous_of_continuous_comp hq f⟩
 #align seminorm.continuous_iff_continuous_comp Seminorm.continuous_iff_continuous_comp
 
-theorem continuous_from_bounded {p : SeminormFamily 𝕜 E ι} {q : SeminormFamily 𝕜₂ F ι'}
+theorem continuous_from_bounded {p : SeminormFamily 𝕝 E ι} {q : SeminormFamily 𝕝₂ F ι'}
     [TopologicalSpace E] [TopologicalAddGroup E] (hp : WithSeminorms p) [TopologicalSpace F]
-    [TopologicalAddGroup F] (hq : WithSeminorms q) (f : E →ₛₗ[σ₁₂] F)
+    [TopologicalAddGroup F] (hq : WithSeminorms q) (f : E →ₛₗ[τ₁₂] F)
     (hf : Seminorm.IsBounded p q f) : Continuous f :=
   by
   refine' continuous_of_continuous_comp hq _ fun i => Seminorm.continuous_of_continuous_at_zero _
@@ -626,21 +632,21 @@ theorem continuous_from_bounded {p : SeminormFamily 𝕜 E ι} {q : SeminormFami
   rfl
 #align seminorm.continuous_from_bounded Seminorm.continuous_from_bounded
 
-theorem cont_with_seminorms_normed_space (F) [SeminormedAddCommGroup F] [NormedSpace 𝕜₂ F]
-    [UniformSpace E] [UniformAddGroup E] {p : ι → Seminorm 𝕜 E} (hp : WithSeminorms p)
-    (f : E →ₛₗ[σ₁₂] F)
-    (hf : ∃ (s : Finset ι)(C : ℝ≥0), C ≠ 0 ∧ (normSeminorm 𝕜₂ F).comp f ≤ C • s.sup p) :
+theorem cont_with_seminorms_normed_space (F) [SeminormedAddCommGroup F] [NormedSpace 𝕝₂ F]
+    [UniformSpace E] [UniformAddGroup E] {p : ι → Seminorm 𝕝 E} (hp : WithSeminorms p)
+    (f : E →ₛₗ[τ₁₂] F)
+    (hf : ∃ (s : Finset ι)(C : ℝ≥0), C ≠ 0 ∧ (normSeminorm 𝕝₂ F).comp f ≤ C • s.sup p) :
     Continuous f := by
   rw [← Seminorm.is_bounded_const (Fin 1)] at hf
-  exact continuous_from_bounded hp (normWithSeminorms 𝕜₂ F) f hf
+  exact continuous_from_bounded hp (normWithSeminorms 𝕝₂ F) f hf
 #align seminorm.cont_with_seminorms_normed_space Seminorm.cont_with_seminorms_normed_space
 
-theorem cont_normed_space_to_with_seminorms (E) [SeminormedAddCommGroup E] [NormedSpace 𝕜 E]
-    [UniformSpace F] [UniformAddGroup F] {q : ι → Seminorm 𝕜₂ F} (hq : WithSeminorms q)
-    (f : E →ₛₗ[σ₁₂] F) (hf : ∀ i : ι, ∃ C : ℝ≥0, C ≠ 0 ∧ (q i).comp f ≤ C • normSeminorm 𝕜 E) :
+theorem cont_normed_space_to_with_seminorms (E) [SeminormedAddCommGroup E] [NormedSpace 𝕝 E]
+    [UniformSpace F] [UniformAddGroup F] {q : ι → Seminorm 𝕝₂ F} (hq : WithSeminorms q)
+    (f : E →ₛₗ[τ₁₂] F) (hf : ∀ i : ι, ∃ C : ℝ≥0, C ≠ 0 ∧ (q i).comp f ≤ C • normSeminorm 𝕝 E) :
     Continuous f := by
   rw [← Seminorm.const_is_bounded (Fin 1)] at hf
-  exact continuous_from_bounded (normWithSeminorms 𝕜 E) hq f hf
+  exact continuous_from_bounded (normWithSeminorms 𝕝 E) hq f hf
 #align seminorm.cont_normed_space_to_with_seminorms Seminorm.cont_normed_space_to_with_seminorms
 
 end Seminorm

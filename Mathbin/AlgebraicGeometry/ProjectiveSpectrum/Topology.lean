@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang, Johan Commelin
 
 ! This file was ported from Lean 3 source module algebraic_geometry.projective_spectrum.topology
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -508,7 +508,7 @@ where `x ≤ y` if and only if `y ∈ closure {x}`.
 
 
 instance : PartialOrder (ProjectiveSpectrum 𝒜) :=
-  (PartialOrder.lift asHomogeneousIdeal) fun ⟨_, _, _⟩ ⟨_, _, _⟩ => mk.inj_eq.mpr
+  PartialOrder.lift asHomogeneousIdeal fun ⟨_, _, _⟩ ⟨_, _, _⟩ => mk.inj_eq.mpr
 
 @[simp]
 theorem as_ideal_le_as_ideal (x y : ProjectiveSpectrum 𝒜) :

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Fabian Glöckle
 
 ! This file was ported from Lean 3 source module linear_algebra.dual
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -141,7 +141,7 @@ variable (b : Basis ι R M)
 /-- The linear map from a vector space equipped with basis to its dual vector space,
 taking basis elements to corresponding dual basis elements. -/
 def toDual : M →ₗ[R] Module.Dual R M :=
-  (b.constr ℕ) fun v => (b.constr ℕ) fun w => if w = v then (1 : R) else 0
+  b.constr ℕ fun v => b.constr ℕ fun w => if w = v then (1 : R) else 0
 #align basis.to_dual Basis.toDual
 
 theorem to_dual_apply (i j : ι) : b.toDual (b i) (b j) = if i = j then 1 else 0 :=
@@ -474,7 +474,7 @@ def coeffs [DecidableEq ι] (h : DualBases e ε) (m : M) : ι →₀ R
     { i : ι | ε i m ≠ 0 }.toFinset
   mem_support_to_fun := by
     intro i
-    rw [Set.mem_to_finset]
+    rw [Set.mem_toFinset]
     exact Iff.rfl
 #align module.dual_bases.coeffs Module.DualBases.coeffs
 

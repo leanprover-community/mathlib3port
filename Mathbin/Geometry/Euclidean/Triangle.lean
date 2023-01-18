@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Manuel Candales
 
 ! This file was ported from Lean 3 source module geometry.euclidean.triangle
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -263,7 +263,7 @@ theorem angle_add_angle_sub_add_angle_sub_eq_pi {x y : V} (hx : x ≠ 0) (hy : y
     replace h3lt := lt_of_mul_lt_mul_right h3lt (le_of_lt Real.pi_pos)
     norm_cast  at h3lt
     exact h3lt
-  interval_cases n
+  interval_cases
   · rw [hn] at hcos
     simp at hcos
     norm_num at hcos

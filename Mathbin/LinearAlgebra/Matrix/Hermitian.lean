@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.hermitian
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -121,7 +121,7 @@ theorem is_hermitian_transpose_iff (A : Matrix n n α) : Aᵀ.IsHermitian ↔ A.
 #align matrix.is_hermitian_transpose_iff Matrix.is_hermitian_transpose_iff
 
 theorem IsHermitian.conj_transpose {A : Matrix n n α} (h : A.IsHermitian) : Aᴴ.IsHermitian :=
-  (h.transpose.map _) fun _ => rfl
+  h.transpose.map _ fun _ => rfl
 #align matrix.is_hermitian.conj_transpose Matrix.IsHermitian.conj_transpose
 
 @[simp]

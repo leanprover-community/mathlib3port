@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.cast.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -96,7 +96,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : NonAssocSemiring.{u1} α] (n : Nat) (x : α), Commute.{u1} α (NonUnitalNonAssocSemiring.toMul.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_1)) (Nat.cast.{u1} α (NonAssocSemiring.toNatCast.{u1} α _inst_1) n) x
 Case conversion may be inaccurate. Consider using '#align nat.cast_commute Nat.cast_commuteₓ'. -/
 theorem cast_commute [NonAssocSemiring α] (n : ℕ) (x : α) : Commute (↑n) x :=
-  (Nat.recOn n (by rw [cast_zero] <;> exact Commute.zero_left x)) fun n ihn => by
+  Nat.recOn n (by rw [cast_zero] <;> exact Commute.zero_left x) fun n ihn => by
     rw [cast_succ] <;> exact ihn.add_left (Commute.one_left x)
 #align nat.cast_commute Nat.cast_commute
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial_algebra
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,8 +65,7 @@ def toFunBilinear : A →ₗ[A] R[X] →ₗ[R] A[X] :=
 theorem to_fun_bilinear_apply_eq_sum (a : A) (p : R[X]) :
     toFunBilinear R A a p = p.Sum fun n r => monomial n (a * algebraMap R A r) :=
   by
-  dsimp [to_fun_bilinear_apply_apply, aeval_def, eval₂_eq_sum, Polynomial.sum]
-  rw [Finset.smul_sum]
+  simp only [to_fun_bilinear_apply_apply, aeval_def, eval₂_eq_sum, Polynomial.sum, Finset.smul_sum]
   congr with i : 1
   rw [← Algebra.smul_def, ← C_mul', mul_smul_comm, C_mul_X_pow_eq_monomial, ← Algebra.commutes, ←
     Algebra.smul_def, smul_monomial]
@@ -224,7 +223,7 @@ theorem poly_equiv_tensor_symm_apply_tmul (a : A) (p : R[X]) :
   to_fun_alg_hom_apply_tmul _ _ _ _
 #align poly_equiv_tensor_symm_apply_tmul poly_equiv_tensor_symm_apply_tmul
 
-open Dmatrix Matrix
+open DMatrix Matrix
 
 open BigOperators
 

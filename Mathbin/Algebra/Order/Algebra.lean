@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.order.algebra
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,7 +38,7 @@ section OrderedAlgebra
 
 variable {R A : Type _} {a b : A} {r : R}
 
-variable [OrderedCommRing R] [OrderedRing A] [Algebra R A] [OrderedSmul R A]
+variable [OrderedCommRing R] [OrderedRing A] [Algebra R A] [OrderedSMul R A]
 
 theorem algebra_map_monotone : Monotone (algebraMap R A) := fun a b h =>
   by

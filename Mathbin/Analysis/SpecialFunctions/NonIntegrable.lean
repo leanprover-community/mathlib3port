@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.special_functions.non_integrable
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -102,7 +102,7 @@ theorem not_interval_integrable_of_tendsto_norm_at_top_of_deriv_is_O_filter {f :
     _ ≤ ∫ x in Ι c d, C * ‖g x‖ :=
       set_integral_mono_on hfi.norm.def (hgi.def.mono_set hsub') measurable_set_uIoc hg
     _ ≤ ∫ x in Ι a b, C * ‖g x‖ :=
-      set_integral_mono_set hgi.def ((ae_of_all _) fun x => mul_nonneg hC₀ (norm_nonneg _))
+      set_integral_mono_set hgi.def (ae_of_all _ fun x => mul_nonneg hC₀ (norm_nonneg _))
         hsub'.eventually_le
     
 #align

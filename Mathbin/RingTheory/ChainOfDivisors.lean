@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Paul Lezeau
 
 ! This file was ported from Lean 3 source module ring_theory.chain_of_divisors
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -124,7 +124,7 @@ theorem eq_second_of_chain_of_prime_dvd {p q r : Associates M} {n : ℕ} (hn : n
   cases n
   · contradiction
   obtain ⟨i, rfl⟩ := h₂.1 (dvd_trans hp' hr)
-  refine' congr_arg c ((eq_of_ge_of_not_gt _) fun hi => _)
+  refine' congr_arg c (eq_of_ge_of_not_gt _ fun hi => _)
   · rw [Fin.le_iff_val_le_val, Fin.val_one, Nat.succ_le_iff, ← Fin.val_zero (n.succ + 1), ←
       Fin.lt_iff_val_lt_val, Fin.pos_iff_ne_zero]
     rintro rfl
@@ -162,9 +162,9 @@ theorem element_of_chain_eq_pow_second_of_chain {q r : Associates M} {n : ℕ} (
     (hr : r ∣ q) (hq : q ≠ 0) : ∃ i : Fin (n + 1), r = c 1 ^ (i : ℕ) := by
   classical
     let i := (normalized_factors r).card
-    have hi : normalized_factors r = Multiset.repeat (c 1) i :=
+    have hi : normalized_factors r = Multiset.replicate i (c 1) :=
       by
-      apply Multiset.eq_repeat_of_mem
+      apply Multiset.eq_replicate_of_mem
       intro b hb
       refine'
         eq_second_of_chain_of_prime_dvd hn h₁ (fun r' => h₂) (prime_of_normalized_factor b hb) hr
@@ -172,7 +172,7 @@ theorem element_of_chain_eq_pow_second_of_chain {q r : Associates M} {n : ℕ} (
     have H : r = c 1 ^ i :=
       by
       have := UniqueFactorizationMonoid.normalized_factors_prod (ne_zero_of_dvd_ne_zero hq hr)
-      rw [associated_iff_eq, hi, Multiset.prod_repeat] at this
+      rw [associated_iff_eq, hi, Multiset.prod_replicate] at this
       rw [this]
     refine' ⟨⟨i, _⟩, H⟩
     have : (finset.univ.image fun m : Fin (i + 1) => c 1 ^ (m : ℕ)).card = i + 1 :=

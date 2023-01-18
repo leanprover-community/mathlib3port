@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Simon Hudon
 
 ! This file was ported from Lean 3 source module data.pfunctor.multivariate.W
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -53,7 +53,7 @@ universe u v
 
 namespace Mvpfunctor
 
-open Typevec
+open TypeVec
 
 open Mvfunctor
 
@@ -74,7 +74,7 @@ instance WPath.inhabited (x : P.last.W) {i} [I : Inhabited (P.drop.B x.head i)] 
 #align mvpfunctor.W_path.inhabited Mvpfunctor.WPath.inhabited
 
 /-- Specialized destructor on `W_path` -/
-def wPathCasesOn {α : Typevec n} {a : P.A} {f : P.last.B a → P.last.W} (g' : P.drop.B a ⟹ α)
+def wPathCasesOn {α : TypeVec n} {a : P.A} {f : P.last.B a → P.last.W} (g' : P.drop.B a ⟹ α)
     (g : ∀ j : P.last.B a, P.WPath (f j) ⟹ α) : P.WPath ⟨a, f⟩ ⟹ α :=
   by
   intro i x; cases x
@@ -83,33 +83,33 @@ def wPathCasesOn {α : Typevec n} {a : P.A} {f : P.last.B a → P.last.W} (g' : 
 #align mvpfunctor.W_path_cases_on Mvpfunctor.wPathCasesOn
 
 /-- Specialized destructor on `W_path` -/
-def wPathDestLeft {α : Typevec n} {a : P.A} {f : P.last.B a → P.last.W} (h : P.WPath ⟨a, f⟩ ⟹ α) :
+def wPathDestLeft {α : TypeVec n} {a : P.A} {f : P.last.B a → P.last.W} (h : P.WPath ⟨a, f⟩ ⟹ α) :
     P.drop.B a ⟹ α := fun i c => h i (WPath.root a f i c)
 #align mvpfunctor.W_path_dest_left Mvpfunctor.wPathDestLeft
 
 /-- Specialized destructor on `W_path` -/
-def wPathDestRight {α : Typevec n} {a : P.A} {f : P.last.B a → P.last.W} (h : P.WPath ⟨a, f⟩ ⟹ α) :
+def wPathDestRight {α : TypeVec n} {a : P.A} {f : P.last.B a → P.last.W} (h : P.WPath ⟨a, f⟩ ⟹ α) :
     ∀ j : P.last.B a, P.WPath (f j) ⟹ α := fun j i c => h i (WPath.child a f i j c)
 #align mvpfunctor.W_path_dest_right Mvpfunctor.wPathDestRight
 
-theorem W_path_dest_left_W_path_cases_on {α : Typevec n} {a : P.A} {f : P.last.B a → P.last.W}
+theorem W_path_dest_left_W_path_cases_on {α : TypeVec n} {a : P.A} {f : P.last.B a → P.last.W}
     (g' : P.drop.B a ⟹ α) (g : ∀ j : P.last.B a, P.WPath (f j) ⟹ α) :
     P.wPathDestLeft (P.wPathCasesOn g' g) = g' :=
   rfl
 #align mvpfunctor.W_path_dest_left_W_path_cases_on Mvpfunctor.W_path_dest_left_W_path_cases_on
 
-theorem W_path_dest_right_W_path_cases_on {α : Typevec n} {a : P.A} {f : P.last.B a → P.last.W}
+theorem W_path_dest_right_W_path_cases_on {α : TypeVec n} {a : P.A} {f : P.last.B a → P.last.W}
     (g' : P.drop.B a ⟹ α) (g : ∀ j : P.last.B a, P.WPath (f j) ⟹ α) :
     P.wPathDestRight (P.wPathCasesOn g' g) = g :=
   rfl
 #align mvpfunctor.W_path_dest_right_W_path_cases_on Mvpfunctor.W_path_dest_right_W_path_cases_on
 
-theorem W_path_cases_on_eta {α : Typevec n} {a : P.A} {f : P.last.B a → P.last.W}
+theorem W_path_cases_on_eta {α : TypeVec n} {a : P.A} {f : P.last.B a → P.last.W}
     (h : P.WPath ⟨a, f⟩ ⟹ α) : P.wPathCasesOn (P.wPathDestLeft h) (P.wPathDestRight h) = h := by
   ext (i x) <;> cases x <;> rfl
 #align mvpfunctor.W_path_cases_on_eta Mvpfunctor.W_path_cases_on_eta
 
-theorem comp_W_path_cases_on {α β : Typevec n} (h : α ⟹ β) {a : P.A} {f : P.last.B a → P.last.W}
+theorem comp_W_path_cases_on {α β : TypeVec n} (h : α ⟹ β) {a : P.A} {f : P.last.B a → P.last.W}
     (g' : P.drop.B a ⟹ α) (g : ∀ j : P.last.B a, P.WPath (f j) ⟹ α) :
     h ⊚ P.wPathCasesOn g' g = P.wPathCasesOn (h ⊚ g') fun i => h ⊚ g i := by
   ext (i x) <;> cases x <;> rfl
@@ -126,7 +126,7 @@ def wp : Mvpfunctor n where
 
 /-- W-type of `P` -/
 @[nolint has_nonempty_instance]
-def W (α : Typevec n) : Type _ :=
+def W (α : TypeVec n) : Type _ :=
   P.wp.Obj α
 #align mvpfunctor.W Mvpfunctor.W
 
@@ -139,24 +139,24 @@ First, describe operations on `W` as a polynomial functor.
 
 
 /-- Constructor for `Wp` -/
-def wpMk {α : Typevec n} (a : P.A) (f : P.last.B a → P.last.W) (f' : P.WPath ⟨a, f⟩ ⟹ α) : P.W α :=
+def wpMk {α : TypeVec n} (a : P.A) (f : P.last.B a → P.last.W) (f' : P.WPath ⟨a, f⟩ ⟹ α) : P.W α :=
   ⟨⟨a, f⟩, f'⟩
 #align mvpfunctor.Wp_mk Mvpfunctor.wpMk
 
 /- warning: mvpfunctor.Wp_rec -> Mvpfunctor.wpRec is a dubious translation:
 lean 3 declaration is
-  forall {n : Nat} (P : Mvpfunctor.{u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) {α : Typevec.{u2} n} {C : Type.{u3}}, (forall (a : Mvpfunctor.A.{u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) P) (f : (Pfunctor.B.{u1} (Mvpfunctor.last.{u1} n P) a) -> (Pfunctor.W.{u1} (Mvpfunctor.last.{u1} n P))), (Typevec.Arrow.{u1, u2} n (Mvpfunctor.WPath.{u1} n P (WType.mk.{u1, u1} (Pfunctor.A.{u1} (Mvpfunctor.last.{u1} n P)) (Pfunctor.B.{u1} (Mvpfunctor.last.{u1} n P)) a f)) α) -> ((Pfunctor.B.{u1} (Mvpfunctor.last.{u1} n P) a) -> C) -> C) -> (forall (x : Pfunctor.W.{u1} (Mvpfunctor.last.{u1} n P)), (Typevec.Arrow.{u1, u2} n (Mvpfunctor.WPath.{u1} n P x) α) -> C)
+  forall {n : Nat} (P : Mvpfunctor.{u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) {α : TypeVec.{u2} n} {C : Type.{u3}}, (forall (a : Mvpfunctor.A.{u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) P) (f : (Pfunctor.B.{u1} (Mvpfunctor.last.{u1} n P) a) -> (Pfunctor.W.{u1} (Mvpfunctor.last.{u1} n P))), (TypeVec.Arrow.{u1, u2} n (Mvpfunctor.WPath.{u1} n P (WType.mk.{u1, u1} (Pfunctor.A.{u1} (Mvpfunctor.last.{u1} n P)) (Pfunctor.B.{u1} (Mvpfunctor.last.{u1} n P)) a f)) α) -> ((Pfunctor.B.{u1} (Mvpfunctor.last.{u1} n P) a) -> C) -> C) -> (forall (x : Pfunctor.W.{u1} (Mvpfunctor.last.{u1} n P)), (TypeVec.Arrow.{u1, u2} n (Mvpfunctor.WPath.{u1} n P x) α) -> C)
 but is expected to have type
-  forall {n : Nat} (P : Mvpfunctor.{u3} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) {α : Typevec.{u1} n} {C : Type.{u2}}, (forall (a : Mvpfunctor.A.{u3} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) P) (f : (Pfunctor.B.{u3} (Mvpfunctor.last.{u3} n P) a) -> (Pfunctor.W.{u3} (Mvpfunctor.last.{u3} n P))), (Typevec.Arrow.{u3, u1} n (Mvpfunctor.WPath.{u3} n P (WType.mk.{u3, u3} (Pfunctor.A.{u3} (Mvpfunctor.last.{u3} n P)) (Pfunctor.B.{u3} (Mvpfunctor.last.{u3} n P)) a f)) α) -> ((Pfunctor.B.{u3} (Mvpfunctor.last.{u3} n P) a) -> C) -> C) -> (forall (x : Pfunctor.W.{u3} (Mvpfunctor.last.{u3} n P)), (Typevec.Arrow.{u3, u1} n (Mvpfunctor.WPath.{u3} n P x) α) -> C)
+  forall {n : Nat} (P : Mvpfunctor.{u3} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) {α : TypeVec.{u1} n} {C : Type.{u2}}, (forall (a : Mvpfunctor.A.{u3} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) P) (f : (Pfunctor.B.{u3} (Mvpfunctor.last.{u3} n P) a) -> (Pfunctor.W.{u3} (Mvpfunctor.last.{u3} n P))), (TypeVec.Arrow.{u3, u1} n (Mvpfunctor.WPath.{u3} n P (WType.mk.{u3, u3} (Pfunctor.A.{u3} (Mvpfunctor.last.{u3} n P)) (Pfunctor.B.{u3} (Mvpfunctor.last.{u3} n P)) a f)) α) -> ((Pfunctor.B.{u3} (Mvpfunctor.last.{u3} n P) a) -> C) -> C) -> (forall (x : Pfunctor.W.{u3} (Mvpfunctor.last.{u3} n P)), (TypeVec.Arrow.{u3, u1} n (Mvpfunctor.WPath.{u3} n P x) α) -> C)
 Case conversion may be inaccurate. Consider using '#align mvpfunctor.Wp_rec Mvpfunctor.wpRecₓ'. -/
 /-- Recursor for `Wp` -/
-def wpRec {α : Typevec n} {C : Type _}
+def wpRec {α : TypeVec n} {C : Type _}
     (g : ∀ (a : P.A) (f : P.last.B a → P.last.W), P.WPath ⟨a, f⟩ ⟹ α → (P.last.B a → C) → C) :
     ∀ (x : P.last.W) (f' : P.WPath x ⟹ α), C
   | ⟨a, f⟩, f' => g a f f' fun i => Wp_rec (f i) (P.wPathDestRight f' i)
 #align mvpfunctor.Wp_rec Mvpfunctor.wpRec
 
-theorem Wp_rec_eq {α : Typevec n} {C : Type _}
+theorem Wp_rec_eq {α : TypeVec n} {C : Type _}
     (g : ∀ (a : P.A) (f : P.last.B a → P.last.W), P.WPath ⟨a, f⟩ ⟹ α → (P.last.B a → C) → C)
     (a : P.A) (f : P.last.B a → P.last.W) (f' : P.WPath ⟨a, f⟩ ⟹ α) :
     P.wpRec g ⟨a, f⟩ f' = g a f f' fun i => P.wpRec g (f i) (P.wPathDestRight f' i) :=
@@ -164,7 +164,7 @@ theorem Wp_rec_eq {α : Typevec n} {C : Type _}
 #align mvpfunctor.Wp_rec_eq Mvpfunctor.Wp_rec_eq
 
 -- Note: we could replace Prop by Type* and obtain a dependent recursor
-theorem Wp_ind {α : Typevec n} {C : ∀ x : P.last.W, P.WPath x ⟹ α → Prop}
+theorem Wp_ind {α : TypeVec n} {C : ∀ x : P.last.W, P.WPath x ⟹ α → Prop}
     (ih :
       ∀ (a : P.A) (f : P.last.B a → P.last.W) (f' : P.WPath ⟨a, f⟩ ⟹ α),
         (∀ i : P.last.B a, C (f i) (P.wPathDestRight f' i)) → C ⟨a, f⟩ f') :
@@ -181,7 +181,7 @@ Now think of W as defined inductively by the data ⟨a, f', f⟩ where
 
 
 /-- Constructor for `W` -/
-def wMk {α : Typevec n} (a : P.A) (f' : P.drop.B a ⟹ α) (f : P.last.B a → P.W α) : P.W α :=
+def wMk {α : TypeVec n} (a : P.A) (f' : P.drop.B a ⟹ α) (f : P.last.B a → P.W α) : P.W α :=
   let g : P.last.B a → P.last.W := fun i => (f i).fst
   let g' : P.WPath ⟨a, g⟩ ⟹ α := P.wPathCasesOn f' fun i => (f i).snd
   ⟨⟨a, g⟩, g'⟩
@@ -189,12 +189,12 @@ def wMk {α : Typevec n} (a : P.A) (f' : P.drop.B a ⟹ α) (f : P.last.B a → 
 
 /- warning: mvpfunctor.W_rec -> Mvpfunctor.wRec is a dubious translation:
 lean 3 declaration is
-  forall {n : Nat} (P : Mvpfunctor.{u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) {α : Typevec.{u1} n} {C : Type.{u2}}, (forall (a : Mvpfunctor.A.{u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) P), (Typevec.Arrow.{u1, u1} n (Mvpfunctor.b.{u1} n (Mvpfunctor.drop.{u1} n P) a) α) -> ((Pfunctor.B.{u1} (Mvpfunctor.last.{u1} n P) a) -> (Mvpfunctor.W.{u1} n P α)) -> ((Pfunctor.B.{u1} (Mvpfunctor.last.{u1} n P) a) -> C) -> C) -> (Mvpfunctor.W.{u1} n P α) -> C
+  forall {n : Nat} (P : Mvpfunctor.{u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) {α : TypeVec.{u1} n} {C : Type.{u2}}, (forall (a : Mvpfunctor.A.{u1} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) P), (TypeVec.Arrow.{u1, u1} n (Mvpfunctor.b.{u1} n (Mvpfunctor.drop.{u1} n P) a) α) -> ((Pfunctor.B.{u1} (Mvpfunctor.last.{u1} n P) a) -> (Mvpfunctor.W.{u1} n P α)) -> ((Pfunctor.B.{u1} (Mvpfunctor.last.{u1} n P) a) -> C) -> C) -> (Mvpfunctor.W.{u1} n P α) -> C
 but is expected to have type
-  forall {n : Nat} (P : Mvpfunctor.{u2} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) {α : Typevec.{u2} n} {C : Type.{u1}}, (forall (a : Mvpfunctor.A.{u2} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) P), (Typevec.Arrow.{u2, u2} n (Mvpfunctor.b.{u2} n (Mvpfunctor.drop.{u2} n P) a) α) -> ((Pfunctor.B.{u2} (Mvpfunctor.last.{u2} n P) a) -> (Mvpfunctor.W.{u2} n P α)) -> ((Pfunctor.B.{u2} (Mvpfunctor.last.{u2} n P) a) -> C) -> C) -> (Mvpfunctor.W.{u2} n P α) -> C
+  forall {n : Nat} (P : Mvpfunctor.{u2} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) {α : TypeVec.{u2} n} {C : Type.{u1}}, (forall (a : Mvpfunctor.A.{u2} (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) P), (TypeVec.Arrow.{u2, u2} n (Mvpfunctor.b.{u2} n (Mvpfunctor.drop.{u2} n P) a) α) -> ((Pfunctor.B.{u2} (Mvpfunctor.last.{u2} n P) a) -> (Mvpfunctor.W.{u2} n P α)) -> ((Pfunctor.B.{u2} (Mvpfunctor.last.{u2} n P) a) -> C) -> C) -> (Mvpfunctor.W.{u2} n P α) -> C
 Case conversion may be inaccurate. Consider using '#align mvpfunctor.W_rec Mvpfunctor.wRecₓ'. -/
 /-- Recursor for `W` -/
-def wRec {α : Typevec n} {C : Type _}
+def wRec {α : TypeVec n} {C : Type _}
     (g : ∀ a : P.A, P.drop.B a ⟹ α → (P.last.B a → P.W α) → (P.last.B a → C) → C) : P.W α → C
   | ⟨a, f'⟩ =>
     let g' (a : P.A) (f : P.last.B a → P.last.W) (h : P.WPath ⟨a, f⟩ ⟹ α) (h' : P.last.B a → C) :
@@ -203,7 +203,7 @@ def wRec {α : Typevec n} {C : Type _}
 #align mvpfunctor.W_rec Mvpfunctor.wRec
 
 /-- Defining equation for the recursor of `W` -/
-theorem W_rec_eq {α : Typevec n} {C : Type _}
+theorem W_rec_eq {α : TypeVec n} {C : Type _}
     (g : ∀ a : P.A, P.drop.B a ⟹ α → (P.last.B a → P.W α) → (P.last.B a → C) → C) (a : P.A)
     (f' : P.drop.B a ⟹ α) (f : P.last.B a → P.W α) :
     P.wRec g (P.wMk a f' f) = g a f' f fun i => P.wRec g (f i) :=
@@ -214,7 +214,7 @@ theorem W_rec_eq {α : Typevec n} {C : Type _}
 #align mvpfunctor.W_rec_eq Mvpfunctor.W_rec_eq
 
 /-- Induction principle for `W` -/
-theorem W_ind {α : Typevec n} {C : P.W α → Prop}
+theorem W_ind {α : TypeVec n} {C : P.W α → Prop}
     (ih :
       ∀ (a : P.A) (f' : P.drop.B a ⟹ α) (f : P.last.B a → P.W α),
         (∀ i, C (f i)) → C (P.wMk a f' f)) :
@@ -229,23 +229,23 @@ theorem W_ind {α : Typevec n} {C : P.W α → Prop}
   apply ih'
 #align mvpfunctor.W_ind Mvpfunctor.W_ind
 
-theorem W_cases {α : Typevec n} {C : P.W α → Prop}
+theorem W_cases {α : TypeVec n} {C : P.W α → Prop}
     (ih : ∀ (a : P.A) (f' : P.drop.B a ⟹ α) (f : P.last.B a → P.W α), C (P.wMk a f' f)) :
     ∀ x, C x :=
   P.W_ind fun a f' f ih' => ih a f' f
 #align mvpfunctor.W_cases Mvpfunctor.W_cases
 
 /-- W-types are functorial -/
-def wMap {α β : Typevec n} (g : α ⟹ β) : P.W α → P.W β := fun x => g <$$> x
+def wMap {α β : TypeVec n} (g : α ⟹ β) : P.W α → P.W β := fun x => g <$$> x
 #align mvpfunctor.W_map Mvpfunctor.wMap
 
-theorem W_mk_eq {α : Typevec n} (a : P.A) (f : P.last.B a → P.last.W) (g' : P.drop.B a ⟹ α)
+theorem W_mk_eq {α : TypeVec n} (a : P.A) (f : P.last.B a → P.last.W) (g' : P.drop.B a ⟹ α)
     (g : ∀ j : P.last.B a, P.WPath (f j) ⟹ α) :
     (P.wMk a g' fun i => ⟨f i, g i⟩) = ⟨⟨a, f⟩, P.wPathCasesOn g' g⟩ :=
   rfl
 #align mvpfunctor.W_mk_eq Mvpfunctor.W_mk_eq
 
-theorem W_map_W_mk {α β : Typevec n} (g : α ⟹ β) (a : P.A) (f' : P.drop.B a ⟹ α)
+theorem W_map_W_mk {α β : TypeVec n} (g : α ⟹ β) (a : P.A) (f' : P.drop.B a ⟹ α)
     (f : P.last.B a → P.W α) : g <$$> P.wMk a f' f = P.wMk a (g ⊚ f') fun i => g <$$> f i :=
   by
   show _ = P.W_mk a (g ⊚ f') (Mvfunctor.map g ∘ f)
@@ -273,12 +273,12 @@ theorem W_map_W_mk {α β : Typevec n} (g : α ⟹ β) (a : P.A) (f' : P.drop.B 
 /-- Constructor of a value of `P.obj (α ::: β)` from components.
 Useful to avoid complicated type annotation -/
 @[reducible]
-def objAppend1 {α : Typevec n} {β : Type _} (a : P.A) (f' : P.drop.B a ⟹ α) (f : P.last.B a → β) :
+def objAppend1 {α : TypeVec n} {β : Type _} (a : P.A) (f' : P.drop.B a ⟹ α) (f : P.last.B a → β) :
     P.Obj (α ::: β) :=
   ⟨a, splitFun f' f⟩
 #align mvpfunctor.obj_append1 Mvpfunctor.objAppend1
 
-theorem map_obj_append1 {α γ : Typevec n} (g : α ⟹ γ) (a : P.A) (f' : P.drop.B a ⟹ α)
+theorem map_obj_append1 {α γ : TypeVec n} (g : α ⟹ γ) (a : P.A) (f' : P.drop.B a ⟹ α)
     (f : P.last.B a → P.W α) :
     appendFun g (P.wMap g) <$$> P.objAppend1 a f' f =
       P.objAppend1 a (g ⊚ f') fun x => P.wMap g (f x) :=
@@ -294,20 +294,20 @@ the qpf axioms are expressed in terms of `map` on `P`.
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Constructor for the W-type of `P` -/
-def wMk' {α : Typevec n} : P.Obj (α ::: P.W α) → P.W α
+def wMk' {α : TypeVec n} : P.Obj (α ::: P.W α) → P.W α
   | ⟨a, f⟩ => P.wMk a (dropFun f) (lastFun f)
 #align mvpfunctor.W_mk' Mvpfunctor.wMk'
 
 /-- Destructor for the W-type of `P` -/
-def wDest' {α : Typevec.{u} n} : P.W α → P.Obj (α.append1 (P.W α)) :=
+def wDest' {α : TypeVec.{u} n} : P.W α → P.Obj (α.append1 (P.W α)) :=
   P.wRec fun a f' f _ => ⟨a, splitFun f' f⟩
 #align mvpfunctor.W_dest' Mvpfunctor.wDest'
 
-theorem W_dest'_W_mk {α : Typevec n} (a : P.A) (f' : P.drop.B a ⟹ α) (f : P.last.B a → P.W α) :
+theorem W_dest'_W_mk {α : TypeVec n} (a : P.A) (f' : P.drop.B a ⟹ α) (f : P.last.B a → P.W α) :
     P.wDest' (P.wMk a f' f) = ⟨a, splitFun f' f⟩ := by rw [W_dest', W_rec_eq]
 #align mvpfunctor.W_dest'_W_mk Mvpfunctor.W_dest'_W_mk
 
-theorem W_dest'_W_mk' {α : Typevec n} (x : P.Obj (α.append1 (P.W α))) : P.wDest' (P.wMk' x) = x :=
+theorem W_dest'_W_mk' {α : TypeVec n} (x : P.Obj (α.append1 (P.W α))) : P.wDest' (P.wMk' x) = x :=
   by cases' x with a f <;> rw [W_mk', W_dest'_W_mk, split_drop_fun_last_fun]
 #align mvpfunctor.W_dest'_W_mk' Mvpfunctor.W_dest'_W_mk'
 

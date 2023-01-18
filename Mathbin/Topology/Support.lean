@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.support
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -120,7 +120,7 @@ theorem not_mem_mul_tsupport_iff_eventually_eq : x ∉ mulTsupport f ↔ f =ᶠ[
 theorem continuous_of_mul_tsupport [TopologicalSpace β] {f : α → β}
     (hf : ∀ x ∈ mulTsupport f, ContinuousAt f x) : Continuous f :=
   continuous_iff_continuous_at.2 fun x =>
-    ((em _).elim (hf x)) fun hx =>
+    (em _).elim (hf x) fun hx =>
       (@continuous_at_const _ _ _ _ _ 1).congr (not_mem_mul_tsupport_iff_eventually_eq.mp hx).symm
 #align continuous_of_mul_tsupport continuous_of_mul_tsupport
 

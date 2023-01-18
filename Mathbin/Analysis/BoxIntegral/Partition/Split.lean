@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.box_integral.partition.split
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -253,7 +253,7 @@ theorem restrict_split (h : I ≤ J) (i : ι) (x : ℝ) : (split J i x).restrict
 
 theorem inf_split (π : Prepartition I) (i : ι) (x : ℝ) :
     π ⊓ split I i x = π.bUnion fun J => split J i x :=
-  (bUnion_congr_of_le rfl) fun J hJ => restrict_split hJ i x
+  bUnion_congr_of_le rfl fun J hJ => restrict_split hJ i x
 #align box_integral.prepartition.inf_split BoxIntegral.Prepartition.inf_split
 
 /-- Split a box along many hyperplanes `{y | y i = x}`; each hyperplane is given by the pair
@@ -279,7 +279,7 @@ theorem split_many_le_split (I : Box ι) {s : Finset (ι × ℝ)} {p : ι × ℝ
 #align box_integral.prepartition.split_many_le_split BoxIntegral.Prepartition.split_many_le_split
 
 theorem isPartitionSplitMany (I : Box ι) (s : Finset (ι × ℝ)) : IsPartition (splitMany I s) :=
-  (Finset.induction_on s (by simp only [split_many_empty, is_partition_top])) fun a s ha hs => by
+  Finset.induction_on s (by simp only [split_many_empty, is_partition_top]) fun a s ha hs => by
     simpa only [split_many_insert, inf_split] using hs.bUnion fun J hJ => is_partition_split _ _ _
 #align
   box_integral.prepartition.is_partition_split_many BoxIntegral.Prepartition.isPartitionSplitMany
@@ -337,7 +337,8 @@ theorem eventually_not_disjoint_imp_le_of_mem_split_many (s : Finset (Box ι)) :
     eventually_at_top.2
       ⟨s.bUnion fun J => finset.univ.bUnion fun i => {(i, J i), (i, J.upper i)},
         fun t ht I J hJ J' hJ' => not_disjoint_imp_le_of_subset_of_mem_split_many (fun i => _) hJ'⟩
-  exact fun p hp => ht (Finset.mem_bUnion.2 ⟨J, hJ, Finset.mem_bUnion.2 ⟨i, Finset.mem_univ _, hp⟩⟩)
+  exact fun p hp =>
+    ht (Finset.mem_bunionᵢ.2 ⟨J, hJ, Finset.mem_bunionᵢ.2 ⟨i, Finset.mem_univ _, hp⟩⟩)
 #align
   box_integral.prepartition.eventually_not_disjoint_imp_le_of_mem_split_many BoxIntegral.Prepartition.eventually_not_disjoint_imp_le_of_mem_split_many
 

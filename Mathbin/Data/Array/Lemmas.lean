@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.array.lemmas
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -165,7 +165,7 @@ theorem to_list_nth_le_aux (i : ℕ) (ih : i < n) :
         (a.revIterateAux (fun _ => (· :: ·)) j jh t).nthLe i h' = a.read ⟨i, ih⟩
   | 0, _, _, _, al => al i _ <| zero_add _
   | j + 1, jh, t, h', al =>
-    (to_list_nth_le_aux j) fun k tl hjk =>
+    to_list_nth_le_aux j fun k tl hjk =>
       show List.nthLe (a.read ⟨j, jh⟩ :: t) k tl = a.read ⟨i, ih⟩ from
         match k, hjk, tl with
         | 0, e, tl =>
@@ -194,7 +194,7 @@ theorem to_list_nth {i v} : List.get? a.toList i = some v ↔ ∃ h, a.read ⟨i
 #align array.to_list_nth Array'.to_list_nth
 
 theorem write_to_list {i v} : (a.write i v).toList = a.toList.updateNth i v :=
-  (List.ext_nthLe (by simp)) fun j h₁ h₂ =>
+  List.ext_nthLe (by simp) fun j h₁ h₂ =>
     by
     have h₃ : j < n := by simpa using h₁
     rw [to_list_nth_le _ h₃]
@@ -234,14 +234,14 @@ theorem to_list_to_array (a : Array' n α) : HEq a.toList.toArray a :=
       (@Eq.drecOn
         (fun m (e : a.toList.length = m) =>
           HEq (DArray.mk fun v => a.toList.nthLe v.1 v.2)
-            ((@DArray.mk m fun _ => α) fun v => a.toList.nthLe v.1 <| e.symm ▸ v.2))
+            (@DArray.mk m (fun _ => α) fun v => a.toList.nthLe v.1 <| e.symm ▸ v.2))
         a.to_list_length HEq.rfl) <|
     DArray.ext fun ⟨i, h⟩ => to_list_nth_le i h _
 #align array.to_list_to_array Array'.to_list_to_array
 
 @[simp]
 theorem to_array_to_list (l : List α) : l.toArray.toList = l :=
-  (List.ext_nthLe (to_list_length _)) fun n h1 h2 => to_list_nth_le _ h2 _
+  List.ext_nthLe (to_list_length _) fun n h1 h2 => to_list_nth_le _ h2 _
 #align array.to_array_to_list Array'.to_array_to_list
 
 end ToArray

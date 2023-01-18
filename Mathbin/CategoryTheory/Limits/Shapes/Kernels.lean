@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Markus Himmel
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.kernels
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -172,7 +172,7 @@ def KernelFork.IsLimit.ofι {W : C} (g : W ⟶ X) (eq : g ≫ f = 0)
 /-- Every kernel of `f` induces a kernel of `f ≫ g` if `g` is mono. -/
 def isKernelCompMono {c : KernelFork f} (i : IsLimit c) {Z} (g : Y ⟶ Z) [hg : Mono g] {h : X ⟶ Z}
     (hh : h = f ≫ g) : IsLimit (KernelFork.ofι c.ι (by simp [hh]) : KernelFork h) :=
-  (Fork.IsLimit.mk' _) fun s =>
+  Fork.IsLimit.mk' _ fun s =>
     let s' : KernelFork f := Fork.ofι s.ι (by rw [← cancel_mono g] <;> simp [← hh, s.condition])
     let l := KernelFork.IsLimit.lift' i s'.ι s'.condition
     ⟨l.1, l.2, fun m hm => by
@@ -525,7 +525,7 @@ def kernel.ofCompIso [HasKernel f] {Z : C} (l : X ⟶ Z) (i : Z ≅ Y) (h : l �
 def IsKernel.isoKernel {Z : C} (l : Z ⟶ X) {s : KernelFork f} (hs : IsLimit s) (i : Z ≅ s.x)
     (h : i.Hom ≫ Fork.ι s = l) : IsLimit (KernelFork.ofι l <| show l ≫ f = 0 by simp [← h]) :=
   IsLimit.ofIsoLimit hs <|
-    (Cones.ext i.symm) fun j => by
+    Cones.ext i.symm fun j => by
       cases j
       · exact (iso.eq_inv_comp i).2 h
       · simp
@@ -584,13 +584,13 @@ theorem CokernelCofork.π_of_π {X Y P : C} (f : X ⟶ Y) (π : Y ⟶ P) (w : f 
 
 /-- Every cokernel cofork `s` is isomorphic (actually, equal) to `cofork.of_π (cofork.π s) _`. -/
 def isoOfπ (s : Cofork f 0) : s ≅ Cofork.ofπ (Cofork.π s) (Cofork.condition s) :=
-  (Cocones.ext (Iso.refl _)) fun j => by cases j <;> tidy
+  Cocones.ext (Iso.refl _) fun j => by cases j <;> tidy
 #align category_theory.limits.iso_of_π CategoryTheory.Limits.isoOfπ
 
 /-- If `π = π'`, then `cokernel_cofork.of_π π _` and `cokernel_cofork.of_π π' _` are isomorphic. -/
 def ofπCongr {P : C} {π π' : Y ⟶ P} {w : f ≫ π = 0} (h : π = π') :
     CokernelCofork.ofπ π w ≅ CokernelCofork.ofπ π' (by rw [← h, w]) :=
-  (Cocones.ext (Iso.refl _)) fun j => by cases j <;> tidy
+  Cocones.ext (Iso.refl _) fun j => by cases j <;> tidy
 #align category_theory.limits.of_π_congr CategoryTheory.Limits.ofπCongr
 
 /-- If `s` is a colimit cokernel cofork, then every `k : Y ⟶ W` satisfying `f ≫ k = 0` induces
@@ -633,7 +633,7 @@ def CokernelCofork.IsColimit.ofπ {Z : C} (g : Y ⟶ Z) (eq : f ≫ g = 0)
 def isCokernelEpiComp {c : CokernelCofork f} (i : IsColimit c) {W} (g : W ⟶ X) [hg : Epi g]
     {h : W ⟶ Y} (hh : h = g ≫ f) :
     IsColimit (CokernelCofork.ofπ c.π (by rw [hh] <;> simp) : CokernelCofork h) :=
-  (Cofork.IsColimit.mk' _) fun s =>
+  Cofork.IsColimit.mk' _ fun s =>
     let s' : CokernelCofork f :=
       Cofork.ofπ s.π
         (by
@@ -1089,7 +1089,7 @@ def IsCokernel.cokernelIso {Z : C} (l : Y ⟶ Z) {s : CokernelCofork f} (hs : Is
     (i : s.x ≅ Z) (h : Cofork.π s ≫ i.Hom = l) :
     IsColimit (CokernelCofork.ofπ l <| show f ≫ l = 0 by simp [← h]) :=
   IsColimit.ofIsoColimit hs <|
-    (Cocones.ext i) fun j => by
+    Cocones.ext i fun j => by
       cases j
       · simp
       · exact h

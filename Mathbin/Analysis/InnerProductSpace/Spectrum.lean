@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.spectrum
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -206,7 +206,7 @@ finite-dimensional inner product space `E`.
 
 TODO Postcompose with a permutation so that these eigenvectors are listed in increasing order of
 eigenvalue. -/
-noncomputable def eigenvectorBasis : OrthonormalBasis (Fin n) 𝕜 E :=
+noncomputable irreducible_def eigenvectorBasis : OrthonormalBasis (Fin n) 𝕜 E :=
   hT.direct_sum_is_internal.subordinateOrthonormalBasis hn hT.orthogonalFamilyEigenspaces'
 #align linear_map.is_symmetric.eigenvector_basis LinearMap.IsSymmetric.eigenvectorBasis
 
@@ -214,7 +214,7 @@ noncomputable def eigenvectorBasis : OrthonormalBasis (Fin n) 𝕜 E :=
 for a self-adjoint operator `T` on `E`.
 
 TODO Postcompose with a permutation so that these eigenvalues are listed in increasing order. -/
-noncomputable def eigenvalues (i : Fin n) : ℝ :=
+noncomputable irreducible_def eigenvalues (i : Fin n) : ℝ :=
   @IsROrC.re 𝕜 _ <|
     hT.direct_sum_is_internal.subordinateOrthonormalBasisIndex hn i hT.orthogonalFamilyEigenspaces'
 #align linear_map.is_symmetric.eigenvalues LinearMap.IsSymmetric.eigenvalues
@@ -226,12 +226,15 @@ theorem has_eigenvector_eigenvector_basis (i : Fin n) :
   let μ : 𝕜 :=
     hT.direct_sum_is_internal.subordinate_orthonormal_basis_index hn i
       hT.orthogonal_family_eigenspaces'
+  simp_rw [eigenvalues]
   change has_eigenvector T (IsROrC.re μ) v
   have key : has_eigenvector T μ v :=
     by
-    have H₁ : v ∈ eigenspace T μ :=
-      hT.direct_sum_is_internal.subordinate_orthonormal_basis_subordinate hn i
-        hT.orthogonal_family_eigenspaces'
+    have H₁ : v ∈ eigenspace T μ := by
+      simp_rw [v, eigenvector_basis]
+      exact
+        hT.direct_sum_is_internal.subordinate_orthonormal_basis_subordinate hn i
+          hT.orthogonal_family_eigenspaces'
     have H₂ : v ≠ 0 := by simpa using (hT.eigenvector_basis hn).toBasis.NeZero i
     exact ⟨H₁, H₂⟩
   have re_μ : ↑(IsROrC.re μ) = μ := by

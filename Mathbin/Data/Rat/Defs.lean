@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.rat.defs
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -376,7 +376,7 @@ Case conversion may be inaccurate. Consider using '#align rat.num_denom_cases_on
 numbers of the form `n /. d` with `d ≠ 0`. -/
 @[elab_as_elim]
 def numDenCasesOn'.{u} {C : ℚ → Sort u} (a : ℚ) (H : ∀ (n : ℤ) (d : ℕ), d ≠ 0 → C (n /. d)) : C a :=
-  (numDenCasesOn a) fun n d h c => H n d h.ne'
+  numDenCasesOn a fun n d h c => H n d h.ne'
 #align rat.num_denom_cases_on' Rat.numDenCasesOn'
 
 #print Rat.add /-
@@ -559,34 +559,34 @@ variable (a b c : ℚ)
 
 #print Rat.add_zero /-
 protected theorem add_zero : a + 0 = a :=
-  (numDenCasesOn' a) fun n d h => by rw [← zero_mk d] <;> simp [h, -zero_mk]
+  numDenCasesOn' a fun n d h => by rw [← zero_mk d] <;> simp [h, -zero_mk]
 #align rat.add_zero Rat.add_zero
 -/
 
 #print Rat.zero_add /-
 protected theorem zero_add : 0 + a = a :=
-  (numDenCasesOn' a) fun n d h => by rw [← zero_mk d] <;> simp [h, -zero_mk]
+  numDenCasesOn' a fun n d h => by rw [← zero_mk d] <;> simp [h, -zero_mk]
 #align rat.zero_add Rat.zero_add
 -/
 
 #print Rat.add_comm /-
 protected theorem add_comm : a + b = b + a :=
-  (numDenCasesOn' a) fun n₁ d₁ h₁ => (numDenCasesOn' b) fun n₂ d₂ h₂ => by simp [h₁, h₂] <;> cc
+  numDenCasesOn' a fun n₁ d₁ h₁ => numDenCasesOn' b fun n₂ d₂ h₂ => by simp [h₁, h₂] <;> cc
 #align rat.add_comm Rat.add_comm
 -/
 
 #print Rat.add_assoc /-
 protected theorem add_assoc : a + b + c = a + (b + c) :=
-  (numDenCasesOn' a) fun n₁ d₁ h₁ =>
-    (numDenCasesOn' b) fun n₂ d₂ h₂ =>
-      (numDenCasesOn' c) fun n₃ d₃ h₃ => by
+  numDenCasesOn' a fun n₁ d₁ h₁ =>
+    numDenCasesOn' b fun n₂ d₂ h₂ =>
+      numDenCasesOn' c fun n₃ d₃ h₃ => by
         simp [h₁, h₂, h₃, mul_ne_zero, mul_add, mul_comm, mul_left_comm, add_left_comm, add_assoc]
 #align rat.add_assoc Rat.add_assoc
 -/
 
 #print Rat.add_left_neg /-
 protected theorem add_left_neg : -a + a = 0 :=
-  (numDenCasesOn' a) fun n d h => by simp [h]
+  numDenCasesOn' a fun n d h => by simp [h]
 #align rat.add_left_neg Rat.add_left_neg
 -/
 
@@ -634,7 +634,7 @@ theorem divInt_neg_one_one : -1 /. 1 = -1 :=
 
 #print Rat.mul_one /-
 protected theorem mul_one : a * 1 = a :=
-  (numDenCasesOn' a) fun n d h => by
+  numDenCasesOn' a fun n d h => by
     rw [← mk_one_one]
     simp [h, -mk_one_one]
 #align rat.mul_one Rat.mul_one
@@ -642,7 +642,7 @@ protected theorem mul_one : a * 1 = a :=
 
 #print Rat.one_mul /-
 protected theorem one_mul : 1 * a = a :=
-  (numDenCasesOn' a) fun n d h => by
+  numDenCasesOn' a fun n d h => by
     rw [← mk_one_one]
     simp [h, -mk_one_one]
 #align rat.one_mul Rat.one_mul
@@ -650,23 +650,23 @@ protected theorem one_mul : 1 * a = a :=
 
 #print Rat.mul_comm /-
 protected theorem mul_comm : a * b = b * a :=
-  (numDenCasesOn' a) fun n₁ d₁ h₁ => (numDenCasesOn' b) fun n₂ d₂ h₂ => by simp [h₁, h₂, mul_comm]
+  numDenCasesOn' a fun n₁ d₁ h₁ => numDenCasesOn' b fun n₂ d₂ h₂ => by simp [h₁, h₂, mul_comm]
 #align rat.mul_comm Rat.mul_comm
 -/
 
 #print Rat.mul_assoc /-
 protected theorem mul_assoc : a * b * c = a * (b * c) :=
-  (numDenCasesOn' a) fun n₁ d₁ h₁ =>
-    (numDenCasesOn' b) fun n₂ d₂ h₂ =>
-      (numDenCasesOn' c) fun n₃ d₃ h₃ => by simp [h₁, h₂, h₃, mul_ne_zero, mul_comm, mul_left_comm]
+  numDenCasesOn' a fun n₁ d₁ h₁ =>
+    numDenCasesOn' b fun n₂ d₂ h₂ =>
+      numDenCasesOn' c fun n₃ d₃ h₃ => by simp [h₁, h₂, h₃, mul_ne_zero, mul_comm, mul_left_comm]
 #align rat.mul_assoc Rat.mul_assoc
 -/
 
 #print Rat.add_mul /-
 protected theorem add_mul : (a + b) * c = a * c + b * c :=
-  (numDenCasesOn' a) fun n₁ d₁ h₁ =>
-    (numDenCasesOn' b) fun n₂ d₂ h₂ =>
-      (numDenCasesOn' c) fun n₃ d₃ h₃ => by
+  numDenCasesOn' a fun n₁ d₁ h₁ =>
+    numDenCasesOn' b fun n₂ d₂ h₂ =>
+      numDenCasesOn' c fun n₃ d₃ h₃ => by
         simp [h₁, h₂, h₃, mul_ne_zero] <;>
             refine' (div_mk_div_cancel_left (Int.coe_nat_ne_zero.2 h₃)).symm.trans _ <;>
           simp [mul_add, mul_comm, mul_assoc, mul_left_comm]
@@ -689,7 +689,7 @@ protected theorem zero_ne_one : 0 ≠ (1 : ℚ) :=
 
 #print Rat.mul_inv_cancel /-
 protected theorem mul_inv_cancel : a ≠ 0 → a * a⁻¹ = 1 :=
-  (numDenCasesOn' a) fun n d h a0 =>
+  numDenCasesOn' a fun n d h a0 =>
     by
     have n0 : n ≠ 0 :=
       mt

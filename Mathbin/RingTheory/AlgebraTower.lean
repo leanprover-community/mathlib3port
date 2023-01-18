@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module ring_theory.algebra_tower
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -127,7 +127,7 @@ theorem linear_independent_smul {ι : Type v₁} {b : ι → S} {ι' : Type w₁
       by
       rw [← hsg]
       exact
-        ((Finset.sum_subset Finset.subset_product) fun p _ hp =>
+        (Finset.sum_subset Finset.subset_product fun p _ hp =>
             show g p • b p.1 • c p.2 = 0 by rw [hg p hp, zero_smul]).symm
     rw [Finset.sum_product_right] at h1
     simp_rw [← smul_assoc, ← Finset.sum_smul] at h1

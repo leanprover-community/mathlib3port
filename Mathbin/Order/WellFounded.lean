@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Mario Carneiro
 
 ! This file was ported from Lean 3 source module order.well_founded
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,7 +60,7 @@ with respect to `r`. -/
 theorem has_min {α} {r : α → α → Prop} (H : WellFounded r) (s : Set α) :
     s.Nonempty → ∃ a ∈ s, ∀ x ∈ s, ¬r x a
   | ⟨a, ha⟩ =>
-    ((Acc.recOn (H.apply a)) fun x _ IH =>
+    (Acc.recOn (H.apply a) fun x _ IH =>
         not_imp_not.1 fun hne hx => hne <| ⟨x, hx, fun y hy hyx => hne <| IH y hyx hy⟩)
       ha
 #align well_founded.has_min WellFounded.has_min
@@ -371,7 +371,7 @@ let `bot : α`. This induction principle shows that `C (f bot)` holds, given tha
   satisfying `r c b` and `C (f c)`. -/
 theorem Acc.induction_bot' {α β} {r : α → α → Prop} {a bot : α} (ha : Acc r a) {C : β → Prop}
     {f : α → β} (ih : ∀ b, f b ≠ f bot → C (f b) → ∃ c, r c b ∧ C (f c)) : C (f a) → C (f bot) :=
-  (@Acc.recOn _ _ (fun x => C (f x) → C (f bot)) _ ha) fun x ac ih' hC =>
+  @Acc.recOn _ _ (fun x => C (f x) → C (f bot)) _ ha fun x ac ih' hC =>
     (eq_or_ne (f x) (f bot)).elim (fun h => h ▸ hC) fun h =>
       let ⟨y, hy₁, hy₂⟩ := ih x h hC
       ih' y hy₁ hy₂

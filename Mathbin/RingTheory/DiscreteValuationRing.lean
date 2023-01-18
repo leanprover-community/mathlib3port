@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard
 
 ! This file was ported from Lean 3 source module ring_theory.discrete_valuation_ring
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -218,10 +218,10 @@ theorem to_unique_factorization_monoid : UniqueFactorizationMonoid R :=
   let spec := Classical.choose_spec hR
   UniqueFactorizationMonoid.of_exists_prime_factors fun x hx =>
     by
-    use Multiset.repeat p (Classical.choose (spec.2 hx))
+    use Multiset.replicate (Classical.choose (spec.2 hx)) p
     constructor
     · intro q hq
-      have hpq := Multiset.eq_of_mem_repeat hq
+      have hpq := Multiset.eq_of_mem_replicate hq
       rw [hpq]
       refine' ⟨spec.1.NeZero, spec.1.not_unit, _⟩
       intro a b h
@@ -239,7 +239,7 @@ theorem to_unique_factorization_monoid : UniqueFactorizationMonoid R :=
       obtain ⟨m, rfl⟩ := Nat.exists_eq_succ_of_ne_zero hm
       rw [pow_succ]
       apply dvd_mul_of_dvd_left dvd_rfl _
-    · rw [Multiset.prod_repeat]
+    · rw [Multiset.prod_replicate]
       exact Classical.choose_spec (spec.2 hx)
 #align
   discrete_valuation_ring.has_unit_mul_pow_irreducible_factorization.to_unique_factorization_monoid DiscreteValuationRing.HasUnitMulPowIrreducibleFactorization.to_unique_factorization_monoid
@@ -257,10 +257,10 @@ theorem of_ufd_of_unique_irreducible [UniqueFactorizationMonoid R] (h₁ : ∃ p
   refine' ⟨fx.card, _⟩
   have H := hfx.2
   rw [← Associates.mk_eq_mk_iff_associated] at H⊢
-  rw [← H, ← Associates.prod_mk, Associates.mk_pow, ← Multiset.prod_repeat]
+  rw [← H, ← Associates.prod_mk, Associates.mk_pow, ← Multiset.prod_replicate]
   congr 1
   symm
-  rw [Multiset.eq_repeat]
+  rw [Multiset.eq_replicate]
   simp only [true_and_iff, and_imp, Multiset.card_map, eq_self_iff_true, Multiset.mem_map,
     exists_imp]
   rintro _ q hq rfl
@@ -358,9 +358,9 @@ theorem associated_pow_irreducible {x : R} (hx : x ≠ 0) {ϖ : R} (hirr : Irred
   use fx.card
   have H := hfx.2
   rw [← Associates.mk_eq_mk_iff_associated] at H⊢
-  rw [← H, ← Associates.prod_mk, Associates.mk_pow, ← Multiset.prod_repeat]
+  rw [← H, ← Associates.prod_mk, Associates.mk_pow, ← Multiset.prod_replicate]
   congr 1
-  rw [Multiset.eq_repeat]
+  rw [Multiset.eq_replicate]
   simp only [true_and_iff, and_imp, Multiset.card_map, eq_self_iff_true, Multiset.mem_map,
     exists_imp]
   rintro _ _ _ rfl
@@ -401,17 +401,17 @@ theorem ideal_eq_span_pow_irreducible {s : Ideal R} (hs : s ≠ ⊥) {ϖ : R} (h
 theorem unit_mul_pow_congr_pow {p q : R} (hp : Irreducible p) (hq : Irreducible q) (u v : Rˣ)
     (m n : ℕ) (h : ↑u * p ^ m = v * q ^ n) : m = n :=
   by
-  have key : Associated (Multiset.repeat p m).Prod (Multiset.repeat q n).Prod :=
+  have key : Associated (Multiset.replicate m p).Prod (Multiset.replicate n q).Prod :=
     by
-    rw [Multiset.prod_repeat, Multiset.prod_repeat, Associated]
+    rw [Multiset.prod_replicate, Multiset.prod_replicate, Associated]
     refine' ⟨u * v⁻¹, _⟩
     simp only [Units.val_mul]
     rw [mul_left_comm, ← mul_assoc, h, mul_right_comm, Units.mul_inv, one_mul]
   have := Multiset.card_eq_card_of_rel (UniqueFactorizationMonoid.factors_unique _ _ key)
-  · simpa only [Multiset.card_repeat]
+  · simpa only [Multiset.card_replicate]
   all_goals
     intro x hx
-    obtain rfl := Multiset.eq_of_mem_repeat hx
+    obtain rfl := Multiset.eq_of_mem_replicate hx
     assumption
 #align discrete_valuation_ring.unit_mul_pow_congr_pow DiscreteValuationRing.unit_mul_pow_congr_pow
 

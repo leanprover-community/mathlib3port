@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module algebra.big_operators.finsupp
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -59,7 +59,7 @@ variable [Zero M] [Zero M'] [CommMonoid N]
 @[to_additive]
 theorem prod_of_support_subset (f : α →₀ M) {s : Finset α} (hs : f.support ⊆ s) (g : α → M → N)
     (h : ∀ i ∈ s, g i 0 = 1) : f.Prod g = ∏ x in s, g x (f x) :=
-  (Finset.prod_subset hs) fun x hxs hx => h x hxs ▸ congr_arg (g x) <| not_mem_support_iff.1 hx
+  Finset.prod_subset hs fun x hxs hx => h x hxs ▸ congr_arg (g x) <| not_mem_support_iff.1 hx
 #align finsupp.prod_of_support_subset Finsupp.prod_of_support_subset
 
 @[to_additive]
@@ -73,7 +73,7 @@ theorem prod_single_index {a : α} {b : M} {h : α → M → N} (h_zero : h a 0 
     (single a b).Prod h = h a b :=
   calc
     (single a b).Prod h = ∏ x in {a}, h x (single a b x) :=
-      (prod_of_support_subset _ support_single_subset h) fun x hx =>
+      prod_of_support_subset _ support_single_subset h fun x hx =>
         (mem_singleton.1 hx).symm ▸ h_zero
     _ = h a b := by simp
     
@@ -82,7 +82,7 @@ theorem prod_single_index {a : α} {b : M} {h : α → M → N} (h_zero : h a 0 
 @[to_additive]
 theorem prod_map_range_index {f : M → M'} {hf : f 0 = 0} {g : α →₀ M} {h : α → M' → N}
     (h0 : ∀ a, h a 0 = 1) : (mapRange f hf g).Prod h = g.Prod fun a b => h a (f b) :=
-  (Finset.prod_subset support_map_range) fun _ _ H => by rw [not_mem_support_iff.1 H, h0]
+  Finset.prod_subset support_map_range fun _ _ H => by rw [not_mem_support_iff.1 H, h0]
 #align finsupp.prod_map_range_index Finsupp.prod_map_range_index
 
 @[simp, to_additive]
@@ -133,7 +133,7 @@ theorem sum_ite_self_eq' [DecidableEq α] {N : Type _} [AddCommMonoid N] (f : α
 @[simp]
 theorem prod_pow [Fintype α] (f : α →₀ ℕ) (g : α → N) :
     (f.Prod fun a b => g a ^ b) = ∏ a, g a ^ f a :=
-  (f.prod_fintype _) fun a => pow_zero _
+  f.prod_fintype _ fun a => pow_zero _
 #align finsupp.prod_pow Finsupp.prod_pow
 
 /-- If `g` maps a second argument of 0 to 1, then multiplying it over the
@@ -236,7 +236,7 @@ namespace Finsupp
 
 theorem single_multiset_sum [AddCommMonoid M] (s : Multiset M) (a : α) :
     single a s.Sum = (s.map (single a)).Sum :=
-  (Multiset.induction_on s (single_zero _)) fun a s ih => by
+  Multiset.induction_on s (single_zero _) fun a s ih => by
     rw [Multiset.sum_cons, single_add, ih, Multiset.map_cons, Multiset.sum_cons]
 #align finsupp.single_multiset_sum Finsupp.single_multiset_sum
 
@@ -291,13 +291,13 @@ theorem support_sum [DecidableEq β] [Zero M] [AddCommMonoid N] {f : α →₀ M
   have : ∀ c, (f.Sum fun a b => g a b c) ≠ 0 → ∃ a, f a ≠ 0 ∧ ¬(g a (f a)) c = 0 := fun a₁ h =>
     let ⟨a, ha, Ne⟩ := Finset.exists_ne_zero_of_sum_ne_zero h
     ⟨a, mem_support_iff.mp ha, Ne⟩
-  simpa only [Finset.subset_iff, mem_support_iff, Finset.mem_bUnion, sum_apply, exists_prop]
+  simpa only [Finset.subset_iff, mem_support_iff, Finset.mem_bunionᵢ, sum_apply, exists_prop]
 #align finsupp.support_sum Finsupp.support_sum
 
 theorem support_finset_sum [DecidableEq β] [AddCommMonoid M] {s : Finset α} {f : α → β →₀ M} :
     (Finset.sum s f).support ⊆ s.bUnion fun x => (f x).support :=
   by
-  rw [← Finset.sup_eq_bUnion]
+  rw [← Finset.sup_eq_bunionᵢ]
   induction' s using Finset.cons_induction_on with a s ha ih
   · rfl
   · rw [Finset.sum_cons, Finset.sup_cons]
@@ -463,7 +463,7 @@ theorem prod_emb_domain [Zero M] [CommMonoid N] {v : α →₀ M} {f : α ↪ β
 theorem prod_finset_sum_index [AddCommMonoid M] [CommMonoid N] {s : Finset ι} {g : ι → α →₀ M}
     {h : α → M → N} (h_zero : ∀ a, h a 0 = 1) (h_add : ∀ a b₁ b₂, h a (b₁ + b₂) = h a b₁ * h a b₂) :
     (∏ i in s, (g i).Prod h) = (∑ i in s, g i).Prod h :=
-  (Finset.induction_on s rfl) fun a s has ih => by
+  Finset.induction_on s rfl fun a s has ih => by
     rw [prod_insert has, ih, sum_insert has, prod_add_index' h_zero h_add]
 #align finsupp.prod_finset_sum_index Finsupp.prod_finset_sum_index
 
@@ -479,7 +479,7 @@ theorem multiset_sum_sum_index [AddCommMonoid M] [AddCommMonoid N] (f : Multiset
     (h : α → M → N) (h₀ : ∀ a, h a 0 = 0)
     (h₁ : ∀ (a : α) (b₁ b₂ : M), h a (b₁ + b₂) = h a b₁ + h a b₂) :
     f.Sum.Sum h = (f.map fun g : α →₀ M => g.Sum h).Sum :=
-  (Multiset.induction_on f rfl) fun a s ih => by
+  Multiset.induction_on f rfl fun a s ih => by
     rw [Multiset.sum_cons, Multiset.map_cons, Multiset.sum_cons, sum_add_index' h₀ h₁, ih]
 #align finsupp.multiset_sum_sum_index Finsupp.multiset_sum_sum_index
 
@@ -494,7 +494,7 @@ theorem support_sum_eq_bUnion {α : Type _} {ι : Type _} {M : Type _} [AddCommM
     simp only [hi, sum_insert, not_false_iff, bUnion_insert]
     intro hs
     rw [Finsupp.support_add_eq, hs]
-    rw [hs, Finset.disjoint_bUnion_right]
+    rw [hs, Finset.disjoint_bunionᵢ_right]
     intro j hj
     refine' h _ _ (ne_of_mem_of_not_mem hj hi).symm
 #align finsupp.support_sum_eq_bUnion Finsupp.support_sum_eq_bUnion
@@ -555,7 +555,7 @@ include h0 h1
 open Classical
 
 theorem Finsupp.sum_sum_index' : (∑ x in s, f x).Sum t = ∑ x in s, (f x).Sum t :=
-  (Finset.induction_on s rfl) fun a s has ih => by
+  Finset.induction_on s rfl fun a s has ih => by
     simp_rw [Finset.sum_insert has, Finsupp.sum_add_index' h0 h1, ih]
 #align finsupp.sum_sum_index' Finsupp.sum_sum_index'
 

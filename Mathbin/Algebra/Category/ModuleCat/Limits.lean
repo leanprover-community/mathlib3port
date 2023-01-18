@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.category.Module.limits
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -239,7 +239,7 @@ in the sense of `category_theory`. -/
 def directLimitIsColimit [Nonempty ι] [IsDirected ι (· ≤ ·)] : IsColimit (directLimitCocone G f)
     where
   desc s :=
-    (DirectLimit.lift R ι G f s.ι.app) fun i j h x =>
+    DirectLimit.lift R ι G f s.ι.app fun i j h x =>
       by
       rw [← s.w (hom_of_le h)]
       rfl

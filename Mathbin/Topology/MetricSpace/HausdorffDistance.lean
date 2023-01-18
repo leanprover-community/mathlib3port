@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.hausdorff_distance
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1418,13 +1418,13 @@ theorem IsCompact.exists_thickening_subset_open (hs : IsCompact s) (ht : IsOpen 
 
 theorem has_basis_nhds_set_thickening {K : Set α} (hK : IsCompact K) :
     (𝓝ˢ K).HasBasis (fun δ : ℝ => 0 < δ) fun δ => thickening δ K :=
-  ((has_basis_nhds_set K).to_has_basis' fun U hU => hK.exists_thickening_subset_open hU.1 hU.2)
+  (has_basis_nhds_set K).to_has_basis' (fun U hU => hK.exists_thickening_subset_open hU.1 hU.2)
     fun _ => thickening_mem_nhds_set K
 #align metric.has_basis_nhds_set_thickening Metric.has_basis_nhds_set_thickening
 
 theorem has_basis_nhds_set_cthickening {K : Set α} (hK : IsCompact K) :
     (𝓝ˢ K).HasBasis (fun δ : ℝ => 0 < δ) fun δ => cthickening δ K :=
-  ((has_basis_nhds_set K).to_has_basis' fun U hU => hK.exists_cthickening_subset_open hU.1 hU.2)
+  (has_basis_nhds_set K).to_has_basis' (fun U hU => hK.exists_cthickening_subset_open hU.1 hU.2)
     fun _ => cthickening_mem_nhds_set K
 #align metric.has_basis_nhds_set_cthickening Metric.has_basis_nhds_set_cthickening
 

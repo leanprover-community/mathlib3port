@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.limits.filtered_colimit_commutes_finite_limit
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -218,9 +218,9 @@ theorem colimit_limit_to_limit_colimit_surjective :
       finset.mem_union.mpr
         (Or.inl
           (by
-            rw [Finset.mem_bUnion]
+            rw [Finset.mem_bunionᵢ]
             refine' ⟨j, Finset.mem_univ j, _⟩
-            rw [Finset.mem_bUnion]
+            rw [Finset.mem_bunionᵢ]
             refine' ⟨j', Finset.mem_univ j', _⟩
             rw [Finset.mem_image]
             refine' ⟨f, Finset.mem_univ _, _⟩
@@ -242,18 +242,18 @@ theorem colimit_limit_to_limit_colimit_surjective :
       swap
       exact k'O
       swap
-      · rw [Finset.mem_bUnion]
+      · rw [Finset.mem_bunionᵢ]
         refine' ⟨j₁, Finset.mem_univ _, _⟩
-        rw [Finset.mem_bUnion]
+        rw [Finset.mem_bunionᵢ]
         refine' ⟨j₂, Finset.mem_univ _, _⟩
-        rw [Finset.mem_bUnion]
+        rw [Finset.mem_bunionᵢ]
         refine' ⟨f, Finset.mem_univ _, _⟩
         simp only [true_or_iff, eq_self_iff_true, and_self_iff, Finset.mem_insert, heq_iff_eq]
-      · rw [Finset.mem_bUnion]
+      · rw [Finset.mem_bunionᵢ]
         refine' ⟨j₃, Finset.mem_univ _, _⟩
-        rw [Finset.mem_bUnion]
+        rw [Finset.mem_bunionᵢ]
         refine' ⟨j₄, Finset.mem_univ _, _⟩
-        rw [Finset.mem_bUnion]
+        rw [Finset.mem_bunionᵢ]
         refine' ⟨f', Finset.mem_univ _, _⟩
         simp only [eq_self_iff_true, or_true_iff, and_self_iff, Finset.mem_insert,
           Finset.mem_singleton, heq_iff_eq]

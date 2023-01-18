@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module data.polynomial.degree.definitions
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -768,7 +768,7 @@ theorem degree_update_le (p : R[X]) (n : ℕ) (a : R) : degree (p.update n a) �
 
 theorem degree_sum_le (s : Finset ι) (f : ι → R[X]) :
     degree (∑ i in s, f i) ≤ s.sup fun b => degree (f b) :=
-  (Finset.induction_on s (by simp only [sum_empty, sup_empty, degree_zero, le_refl]))
+  Finset.induction_on s (by simp only [sum_empty, sup_empty, degree_zero, le_refl])
     fun a s has ih =>
     calc
       degree (∑ i in insert a s, f i) ≤ max (degree (f a)) (degree (∑ i in s, f i)) := by
@@ -995,7 +995,7 @@ theorem C_mul_X_pow_eq_self (h : p.support.card ≤ 1) : c p.leadingCoeff * X ^ 
 #align polynomial.C_mul_X_pow_eq_self Polynomial.C_mul_X_pow_eq_self
 
 theorem leading_coeff_pow' : leadingCoeff p ^ n ≠ 0 → leadingCoeff (p ^ n) = leadingCoeff p ^ n :=
-  (Nat.recOn n (by simp)) fun n ih h =>
+  Nat.recOn n (by simp) fun n ih h =>
     by
     have h₁ : leadingCoeff p ^ n ≠ 0 := fun h₁ => h <| by rw [pow_succ, h₁, mul_zero]
     have h₂ : leadingCoeff p * leadingCoeff (p ^ n) ≠ 0 := by rwa [pow_succ, ← ih h₁] at h

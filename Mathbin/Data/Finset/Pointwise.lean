@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.finset.pointwise
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -767,7 +767,7 @@ theorem coe_list_prod (s : List (Finset α)) : (↑s.Prod : Set α) = (s.map coe
 theorem mem_prod_list_of_fn {a : α} {s : Fin n → Finset α} :
     a ∈ (List.ofFn s).Prod ↔ ∃ f : ∀ i : Fin n, s i, (List.ofFn fun i => (f i : α)).Prod = a :=
   by
-  rw [← mem_coe, coe_list_prod, List.map_of_fn, Set.mem_prod_list_of_fn]
+  rw [← mem_coe, coe_list_prod, List.map_ofFn, Set.mem_prod_list_of_fn]
   rfl
 #align finset.mem_prod_list_of_fn Finset.mem_prod_list_of_fn
 

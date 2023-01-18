@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 
 ! This file was ported from Lean 3 source module group_theory.submonoid.centralizer
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -108,7 +108,7 @@ instance decidableMemCentralizer (a) [Decidable <| ∀ b ∈ S, b * a = a * b] :
 lean 3 declaration is
   forall {M : Type.{u1}} {S : Set.{u1} M} {T : Set.{u1} M} [_inst_1 : Monoid.{u1} M], (HasSubset.Subset.{u1} (Set.{u1} M) (Set.hasSubset.{u1} M) S T) -> (LE.le.{u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) (Preorder.toLE.{u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) (PartialOrder.toPreorder.{u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) (SetLike.partialOrder.{u1, u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) M (Submonoid.setLike.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))))) (Submonoid.centralizer.{u1} M T _inst_1) (Submonoid.centralizer.{u1} M S _inst_1))
 but is expected to have type
-  forall {M : Type.{u1}} {S : Set.{u1} M} {T : Set.{u1} M} [_inst_1 : Monoid.{u1} M], (HasSubset.Subset.{u1} (Set.{u1} M) (Set.instHasSubsetSet_1.{u1} M) S T) -> (LE.le.{u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) (Preorder.toLE.{u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) (PartialOrder.toPreorder.{u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) (CompleteSemilatticeInf.toPartialOrder.{u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) (Submonoid.instCompleteLatticeSubmonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)))))) (Submonoid.centralizer.{u1} M T _inst_1) (Submonoid.centralizer.{u1} M S _inst_1))
+  forall {M : Type.{u1}} {S : Set.{u1} M} {T : Set.{u1} M} [_inst_1 : Monoid.{u1} M], (HasSubset.Subset.{u1} (Set.{u1} M) (Set.instHasSubsetSet.{u1} M) S T) -> (LE.le.{u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) (Preorder.toLE.{u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) (PartialOrder.toPreorder.{u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) (CompleteSemilatticeInf.toPartialOrder.{u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) (Submonoid.instCompleteLatticeSubmonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)))))) (Submonoid.centralizer.{u1} M T _inst_1) (Submonoid.centralizer.{u1} M S _inst_1))
 Case conversion may be inaccurate. Consider using '#align submonoid.centralizer_le Submonoid.centralizer_leₓ'. -/
 @[to_additive]
 theorem centralizer_le (h : S ⊆ T) : centralizer T ≤ centralizer S :=
@@ -129,5 +129,5 @@ end
 end Submonoid
 
 -- Guard against import creep
-assert_not_exists finset
+assert_not_exists Finset
 

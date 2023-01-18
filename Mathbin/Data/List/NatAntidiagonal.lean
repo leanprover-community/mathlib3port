@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module data.list.nat_antidiagonal
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Data.List.Range
 
 /-!
 # Antidiagonals in ℕ × ℕ as lists
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines the antidiagonals of ℕ × ℕ as lists: the `n`-th antidiagonal is the list of
 pairs `(i, j)` such that `i + j = n`. This is useful for polynomial multiplication and more
@@ -74,7 +77,7 @@ theorem antidiagonal_zero : antidiagonal 0 = [(0, 0)] :=
 #print List.Nat.nodup_antidiagonal /-
 /-- The antidiagonal of `n` does not contain duplicate entries. -/
 theorem nodup_antidiagonal (n : ℕ) : Nodup (antidiagonal n) :=
-  (nodup_range _).map ((@LeftInverse.injective ℕ (ℕ × ℕ) Prod.fst fun i => (i, n - i)) fun i => rfl)
+  (nodup_range _).map (@LeftInverse.injective ℕ (ℕ × ℕ) Prod.fst (fun i => (i, n - i)) fun i => rfl)
 #align list.nat.nodup_antidiagonal List.Nat.nodup_antidiagonal
 -/
 

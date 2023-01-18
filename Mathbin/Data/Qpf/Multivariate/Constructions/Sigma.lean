@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module data.qpf.multivariate.constructions.sigma
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -24,17 +24,17 @@ open Mvfunctor
 
 variable {n : ℕ} {A : Type u}
 
-variable (F : A → Typevec.{u} n → Type u)
+variable (F : A → TypeVec.{u} n → Type u)
 
 /-- Dependent sum of of an `n`-ary functor. The sum can range over
 data types like `ℕ` or over `Type.{u-1}` -/
-def Sigma (v : Typevec.{u} n) : Type u :=
+def Sigma (v : TypeVec.{u} n) : Type u :=
   Σα : A, F α v
 #align mvqpf.sigma Mvqpf.Sigma
 
 /-- Dependent product of of an `n`-ary functor. The sum can range over
 data types like `ℕ` or over `Type.{u-1}` -/
-def Pi (v : Typevec.{u} n) : Type u :=
+def Pi (v : TypeVec.{u} n) : Type u :=
   ∀ α : A, F α v
 #align mvqpf.pi Mvqpf.Pi
 

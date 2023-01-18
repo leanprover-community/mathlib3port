@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.antilipschitz
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -229,7 +229,7 @@ variable [PseudoMetricSpace α] [PseudoMetricSpace β] {K : ℝ≥0} {f : α →
 
 theorem bounded_preimage (hf : AntilipschitzWith K f) {s : Set β} (hs : Bounded s) :
     Bounded (f ⁻¹' s) :=
-  (Exists.intro (K * diam s)) fun x hx y hy =>
+  Exists.intro (K * diam s) fun x hx y hy =>
     calc
       dist x y ≤ K * dist (f x) (f y) := hf.le_mul_dist x y
       _ ≤ K * diam s := mul_le_mul_of_nonneg_left (dist_le_diam_of_mem hs hx hy) K.2

@@ -6,7 +6,7 @@ Authors: Kevin Buzzard, Patrick Massot
 This file is to a certain extent based on `quotient_module.lean` by Johannes Hölzl.
 
 ! This file was ported from Lean 3 source module group_theory.quotient_group
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -178,7 +178,7 @@ group homomorphism `G/N →* H`. -/
 @[to_additive
       "An `add_group` homomorphism `φ : G →+ H` with `N ⊆ ker(φ)` descends (i.e. `lift`s)\nto a group homomorphism `G/N →* H`."]
 def lift (φ : G →* H) (HN : ∀ x ∈ N, φ x = 1) : Q →* H :=
-  ((QuotientGroup.con N).lift φ) fun x y h =>
+  (QuotientGroup.con N).lift φ fun x y h =>
     by
     simp only [QuotientGroup.con, left_rel_apply, Con.rel_mk] at h
     calc
@@ -230,7 +230,7 @@ theorem map_mk' (M : Subgroup H) [M.Normal] (f : G →* H) (h : N ≤ M.comap f)
 @[to_additive]
 theorem map_id_apply (h : N ≤ Subgroup.comap (MonoidHom.id _) N := (Subgroup.comap_id N).le) (x) :
     map N N (MonoidHom.id _) h x = x :=
-  (induction_on' x) fun x => rfl
+  induction_on' x fun x => rfl
 #align quotient_group.map_id_apply QuotientGroup.map_id_apply
 
 @[simp, to_additive]
@@ -327,7 +327,7 @@ open MonoidHom
 /-- The induced map from the quotient by the kernel to the codomain. -/
 @[to_additive "The induced map from the quotient by the kernel to the codomain."]
 def kerLift : G ⧸ ker φ →* H :=
-  (lift _ φ) fun g => φ.mem_ker.mp
+  lift _ φ fun g => φ.mem_ker.mp
 #align quotient_group.ker_lift QuotientGroup.kerLift
 
 @[simp, to_additive]
@@ -342,7 +342,7 @@ theorem ker_lift_mk' (g : G) : (kerLift φ) (mk g) = φ g :=
 
 @[to_additive]
 theorem ker_lift_injective : Injective (kerLift φ) := fun a b =>
-  (Quotient.inductionOn₂' a b) fun a b (h : φ a = φ b) =>
+  Quotient.inductionOn₂' a b fun a b (h : φ a = φ b) =>
     Quotient.sound' <| by rw [left_rel_apply, mem_ker, φ.map_mul, ← h, φ.map_inv, inv_mul_self]
 #align quotient_group.ker_lift_injective QuotientGroup.ker_lift_injective
 
@@ -351,12 +351,12 @@ theorem ker_lift_injective : Injective (kerLift φ) := fun a b =>
 /-- The induced map from the quotient by the kernel to the range. -/
 @[to_additive "The induced map from the quotient by the kernel to the range."]
 def rangeKerLift : G ⧸ ker φ →* φ.range :=
-  (lift _ φ.range_restrict) fun g hg => (mem_ker _).mp <| by rwa [ker_range_restrict]
+  lift _ φ.range_restrict fun g hg => (mem_ker _).mp <| by rwa [ker_range_restrict]
 #align quotient_group.range_ker_lift QuotientGroup.rangeKerLift
 
 @[to_additive]
 theorem range_ker_lift_injective : Injective (rangeKerLift φ) := fun a b =>
-  (Quotient.inductionOn₂' a b) fun a b (h : φ.range_restrict a = φ.range_restrict b) =>
+  Quotient.inductionOn₂' a b fun a b (h : φ.range_restrict a = φ.range_restrict b) =>
     Quotient.sound' <| by
       rw [left_rel_apply, ← ker_range_restrict, mem_ker, φ.range_restrict.map_mul, ← h,
         φ.range_restrict.map_inv, inv_mul_self]
@@ -472,7 +472,7 @@ variable (f : A →* B) (g : B →* A) (e : A ≃* B) (d : B ≃* C) (n : ℤ)
       "The map of quotients by multiples of an integer induced by an additive group\nhomomorphism."]
 def homQuotientZpowOfHom :
     A ⧸ (zpowGroupHom n : A →* A).range →* B ⧸ (zpowGroupHom n : B →* B).range :=
-  (lift _ ((mk' _).comp f)) fun g ⟨h, (hg : h ^ n = g)⟩ =>
+  lift _ ((mk' _).comp f) fun g ⟨h, (hg : h ^ n = g)⟩ =>
     (eq_one_iff _).mpr ⟨_, by simpa only [← hg, map_zpow] ⟩
 #align quotient_group.hom_quotient_zpow_of_hom QuotientGroup.homQuotientZpowOfHom
 
@@ -682,14 +682,14 @@ noncomputable def fintypeOfKerEqRange (h : g.ker = f.range) : Fintype G :=
 /-- If `ker(G →* H)` and `H` are finite, then `G` is finite. -/
 @[to_additive "If `ker(G →+ H)` and `H` are finite, then `G` is finite."]
 noncomputable def fintypeOfKerOfCodom [Fintype g.ker] : Fintype G :=
-  (fintypeOfKerLeRange ((topEquiv : _ ≃* G).toMonoidHom.comp <| inclusion le_top) g) fun x hx =>
+  fintypeOfKerLeRange ((topEquiv : _ ≃* G).toMonoidHom.comp <| inclusion le_top) g fun x hx =>
     ⟨⟨x, hx⟩, rfl⟩
 #align group.fintype_of_ker_of_codom Group.fintypeOfKerOfCodom
 
 /-- If `F` and `coker(F →* G)` are finite, then `G` is finite. -/
 @[to_additive "If `F` and `coker(F →+ G)` are finite, then `G` is finite."]
 noncomputable def fintypeOfDomOfCoker [Normal f.range] [Fintype <| G ⧸ f.range] : Fintype G :=
-  (fintypeOfKerLeRange _ (mk' f.range)) fun x => (eq_one_iff x).mp
+  fintypeOfKerLeRange _ (mk' f.range) fun x => (eq_one_iff x).mp
 #align group.fintype_of_dom_of_coker Group.fintypeOfDomOfCoker
 
 end Group

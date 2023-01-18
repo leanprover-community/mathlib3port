@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module logic.equiv.fin
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -150,7 +150,7 @@ theorem fin_succ_equiv'_at {n : ℕ} (i : Fin (n + 1)) : (finSuccEquiv' i) i = n
 @[simp]
 theorem fin_succ_equiv'_succ_above {n : ℕ} (i : Fin (n + 1)) (j : Fin n) :
     finSuccEquiv' i (i.succAbove j) = some j :=
-  @Fin.insert_nth_apply_succ_above n (fun _ => Option (Fin n)) i _ _ _
+  @Fin.insertNth_apply_succAbove n (fun _ => Option (Fin n)) i _ _ _
 #align fin_succ_equiv'_succ_above fin_succ_equiv'_succ_above
 
 theorem fin_succ_equiv'_below {n : ℕ} {i : Fin (n + 1)} {m : Fin n} (h : m.cast_succ < i) :
@@ -327,7 +327,7 @@ def Equiv.piFinSuccAboveEquiv {n : ℕ} (α : Fin (n + 1) → Type u) (i : Fin (
     where
   toFun f := (f i, fun j => f (i.succAbove j))
   invFun f := i.insertNth f.1 f.2
-  left_inv f := by simp [Fin.insert_nth_eq_iff]
+  left_inv f := by simp [Fin.insertNth_eq_iff]
   right_inv f := by simp
 #align equiv.pi_fin_succ_above_equiv Equiv.piFinSuccAboveEquiv
 

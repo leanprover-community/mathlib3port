@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Simon Hudon
 
 ! This file was ported from Lean 3 source module tactic.elide
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,7 +43,7 @@ unsafe def replace : ℕ → expr → tactic expr
 #align tactic.elide.replace tactic.elide.replace
 
 unsafe def unelide (e : expr) : expr :=
-  (expr.replace e) fun e n =>
+  expr.replace e fun e n =>
     match e with
     | expr.app (expr.app (expr.const n _) _) e' => if n = `` hidden then some e' else none
     | expr.app (expr.lam _ _ _ (expr.var 0)) e' => some e'

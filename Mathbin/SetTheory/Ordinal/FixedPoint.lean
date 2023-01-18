@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández Palacios, Mario Carneiro
 
 ! This file was ported from Lean 3 source module set_theory.ordinal.fixed_point
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -423,7 +423,7 @@ theorem sup_iterate_eq_nfp (f : Ordinal.{u} → Ordinal.{u}) :
   refine' funext fun a => le_antisymm _ (sup_le fun l => _)
   · rw [sup_le_iff]
     intro n
-    rw [← List.length_repeat Unit.unit n, ← List.foldr_const f a]
+    rw [← List.length_replicate n Unit.unit, ← List.foldr_const f a]
     apply le_sup
   · rw [List.foldr_const f a l]
     exact le_sup _ _

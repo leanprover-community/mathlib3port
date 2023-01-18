@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wrenna Robson
 
 ! This file was ported from Lean 3 source module information_theory.hamming
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -140,14 +140,14 @@ theorem hamming_dist_le_card_fintype {x y : ∀ i, β i} : hammingDist x y ≤ F
 
 theorem hamming_dist_comp_le_hamming_dist (f : ∀ i, γ i → β i) {x y : ∀ i, γ i} :
     (hammingDist (fun i => f i (x i)) fun i => f i (y i)) ≤ hammingDist x y :=
-  card_mono ((monotone_filter_right _) fun i H1 H2 => H1 <| congr_arg (f i) H2)
+  card_mono (monotone_filter_right _ fun i H1 H2 => H1 <| congr_arg (f i) H2)
 #align hamming_dist_comp_le_hamming_dist hamming_dist_comp_le_hamming_dist
 
 theorem hamming_dist_comp (f : ∀ i, γ i → β i) {x y : ∀ i, γ i} (hf : ∀ i, Injective (f i)) :
     (hammingDist (fun i => f i (x i)) fun i => f i (y i)) = hammingDist x y :=
   by
   refine' le_antisymm (hamming_dist_comp_le_hamming_dist _) _
-  exact card_mono ((monotone_filter_right _) fun i H1 H2 => H1 <| hf i H2)
+  exact card_mono (monotone_filter_right _ fun i H1 H2 => H1 <| hf i H2)
 #align hamming_dist_comp hamming_dist_comp
 
 theorem hamming_dist_smul_le_hamming_dist [∀ i, SMul α (β i)] {k : α} {x y : ∀ i, β i} :
@@ -446,7 +446,7 @@ instance : PseudoMetricSpace (Hamming β) :=
       exact_mod_cast hamming_dist_triangle
     toUniformSpace := ⊥
     uniformity_dist :=
-      (uniformity_dist_of_mem_uniformity _ _) fun s =>
+      uniformity_dist_of_mem_uniformity _ _ fun s =>
         by
         push_cast
         constructor

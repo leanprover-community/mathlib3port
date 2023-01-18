@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.limits.final
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -127,7 +127,7 @@ theorem final_of_adjunction {L : C ⥤ D} {R : D ⥤ C} (adj : L ⊣ R) : Final 
   {
     out := fun c =>
       let u : StructuredArrow c R := StructuredArrow.mk (adj.Unit.app c)
-      (@zigzag_is_connected _ _ ⟨u⟩) fun f g =>
+      @zigzag_is_connected _ _ ⟨u⟩ fun f g =>
         Relation.ReflTransGen.trans
           (Relation.ReflTransGen.single
             (show Zag f u from
@@ -142,7 +142,7 @@ theorem initial_of_adjunction {L : C ⥤ D} {R : D ⥤ C} (adj : L ⊣ R) : Init
   {
     out := fun d =>
       let u : CostructuredArrow L d := CostructuredArrow.mk (adj.counit.app d)
-      (@zigzag_is_connected _ _ ⟨u⟩) fun f g =>
+      @zigzag_is_connected _ _ ⟨u⟩ fun f g =>
         Relation.ReflTransGen.trans
           (Relation.ReflTransGen.single
             (show Zag f u from

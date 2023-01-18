@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module category_theory.abelian.pseudoelements
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -209,7 +209,7 @@ theorem pseudo_apply_mk {P Q : C} (f : P ⟶ Q) (a : Over P) : f ⟦a⟧ = ⟦a.
     with each morphism. Sadly, this is not a definitional equality, but at least it is
     true. -/
 theorem comp_apply {P Q R : C} (f : P ⟶ Q) (g : Q ⟶ R) (a : P) : (f ≫ g) a = g (f a) :=
-  (Quotient.induction_on a) fun x =>
+  Quotient.inductionOn a fun x =>
     Quotient.sound <| by
       unfold app
       rw [← category.assoc, over.coe_hom]
@@ -304,7 +304,7 @@ theorem apply_zero {P Q : C} (f : P ⟶ Q) : f 0 = 0 :=
 /-- The zero morphism maps every pseudoelement to 0. -/
 @[simp]
 theorem zero_apply {P : C} (Q : C) (a : P) : (0 : P ⟶ Q) a = 0 :=
-  (Quotient.induction_on a) fun a' =>
+  Quotient.inductionOn a fun a' =>
     by
     rw [pseudo_zero_def, pseudo_apply_mk]
     simp
@@ -336,7 +336,7 @@ theorem eq_zero_iff {P Q : C} (f : P ⟶ Q) : f = 0 ↔ ∀ a, f a = 0 :=
 /-- A monomorphism is injective on pseudoelements. -/
 theorem pseudo_injective_of_mono {P Q : C} (f : P ⟶ Q) [Mono f] : Function.Injective f :=
   fun abar abar' =>
-  (Quotient.induction_on₂ abar abar') fun a a' ha =>
+  Quotient.induction_on₂ abar abar' fun a a' ha =>
     Quotient.sound <|
       have : ⟦(a.Hom ≫ f : Over Q)⟧ = ⟦a'.Hom ≫ f⟧ := by convert ha
       match Quotient.exact this with
@@ -369,7 +369,7 @@ section
 /-- An epimorphism is surjective on pseudoelements. -/
 theorem pseudo_surjective_of_epi {P Q : C} (f : P ⟶ Q) [Epi f] : Function.Surjective f :=
   fun qbar =>
-  (Quotient.induction_on qbar) fun q =>
+  Quotient.inductionOn qbar fun q =>
     ⟨((pullback.fst : pullback f q.Hom ⟶ P) : Over P),
       Quotient.sound <|
         ⟨pullback f q.Hom, 𝟙 (pullback f q.Hom), pullback.snd, by infer_instance, by infer_instance,
@@ -407,7 +407,7 @@ theorem pseudo_exact_of_exact {P Q R : C} {f : P ⟶ Q} {g : Q ⟶ R} (h : Exact
   ⟨fun a => by
     rw [← comp_apply, h.w]
     exact zero_apply _ _, fun b' =>
-    (Quotient.induction_on b') fun b hb =>
+    Quotient.inductionOn b' fun b hb =>
       by
       have hb' : b.Hom ≫ g = 0 := (pseudo_zero_iff _).1 hb
       -- By exactness, b factors through im f = ker g via some c
@@ -449,7 +449,7 @@ section
 theorem exact_of_pseudo_exact {P Q R : C} (f : P ⟶ Q) (g : Q ⟶ R) :
     ((∀ a, g (f a) = 0) ∧ ∀ b, g b = 0 → ∃ a, f a = b) → Exact f g := fun ⟨h₁, h₂⟩ =>
   (Abelian.exact_iff _ _).2
-    ⟨(zero_morphism_ext _) fun a => by rw [comp_apply, h₁ a],
+    ⟨zero_morphism_ext _ fun a => by rw [comp_apply, h₁ a],
       by
       -- If we apply g to the pseudoelement induced by its kernel, we get 0 (of course!).
       have : g (kernel.ι g) = 0 := apply_eq_zero_of_comp_eq_zero _ _ (kernel.condition _)
@@ -489,7 +489,7 @@ end
     morphisms `g`, if `g y = 0` then `g z = g x`. -/
 theorem sub_of_eq_image {P Q : C} (f : P ⟶ Q) (x y : P) :
     f x = f y → ∃ z, f z = 0 ∧ ∀ (R : C) (g : P ⟶ R), (g : P ⟶ R) y = 0 → g z = g x :=
-  (Quotient.induction_on₂ x y) fun a a' h =>
+  Quotient.induction_on₂ x y fun a a' h =>
     match Quotient.exact h with
     | ⟨R, p, q, ep, Eq, comm⟩ =>
       let a'' : R ⟶ P := p ≫ a.Hom - q ≫ a'.Hom
@@ -521,7 +521,7 @@ variable [Limits.HasPullbacks C]
 theorem pseudo_pullback {P Q R : C} {f : P ⟶ R} {g : Q ⟶ R} {p : P} {q : Q} :
     f p = g q →
       ∃ s, (pullback.fst : pullback f g ⟶ P) s = p ∧ (pullback.snd : pullback f g ⟶ Q) s = q :=
-  (Quotient.induction_on₂ p q) fun x y h =>
+  Quotient.induction_on₂ p q fun x y h =>
     by
     obtain ⟨Z, a, b, ea, eb, comm⟩ := Quotient.exact h
     obtain ⟨l, hl₁, hl₂⟩ :=

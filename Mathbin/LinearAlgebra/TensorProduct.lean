@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro
 
 ! This file was ported from Lean 3 source module linear_algebra.tensor_product
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -115,7 +115,7 @@ instance : AddZeroClass (M ⊗[R] N) :=
 instance : AddCommSemigroup (M ⊗[R] N) :=
   { (addConGen (TensorProduct.Eqv R M N)).AddMonoid with
     add_comm := fun x y =>
-      (AddCon.induction_on₂ x y) fun x y =>
+      AddCon.induction_on₂ x y fun x y =>
         Quotient.sound' <| AddConGen.Rel.of _ _ <| Eqv.add_comm _ _ }
 
 instance : Inhabited (M ⊗[R] N) :=
@@ -140,8 +140,8 @@ notation:100 x " ⊗ₜ[" R "] " y:100 => tmul R x y
 @[elab_as_elim]
 protected theorem induction_on {C : M ⊗[R] N → Prop} (z : M ⊗[R] N) (C0 : C 0)
     (C1 : ∀ {x y}, C <| x ⊗ₜ[R] y) (Cp : ∀ {x y}, C x → C y → C (x + y)) : C z :=
-  (AddCon.induction_on z) fun x =>
-    (FreeAddMonoid.recOn x C0) fun ⟨m, n⟩ y ih =>
+  AddCon.induction_on z fun x =>
+    FreeAddMonoid.recOn x C0 fun ⟨m, n⟩ y ih =>
       by
       rw [AddCon.coe_add]
       exact Cp C1 ih
@@ -515,7 +515,7 @@ theorem lift.tmul' (x y) : (lift f).1 (x ⊗ₜ y) = f x y :=
 
 theorem ext' {g h : M ⊗[R] N →ₗ[R] P} (H : ∀ x y, g (x ⊗ₜ y) = h (x ⊗ₜ y)) : g = h :=
   LinearMap.ext fun z =>
-    (TensorProduct.induction_on z (by simp_rw [LinearMap.map_zero]) H) fun x y ihx ihy => by
+    TensorProduct.induction_on z (by simp_rw [LinearMap.map_zero]) H fun x y ihx ihy => by
       rw [g.map_add, h.map_add, ihx, ihy]
 #align tensor_product.ext' TensorProduct.ext'
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Praneeth Kolichala
 
 ! This file was ported from Lean 3 source module algebraic_topology.fundamental_groupoid.induced_maps
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -182,7 +182,7 @@ theorem apply_zero_path :
       hcast (H.apply_zero x₀).symm ≫
         (πₘ H.uliftMap).map (prodToProdTopI (𝟙 (ULift.up 0)) p) ≫ hcast (H.apply_zero x₁) :=
   by
-  apply Quotient.induction_on p
+  apply Quotient.inductionOn p
   intro p'
   apply @eq_path_of_eq_image _ _ _ _ H.ulift_map _ _ _ _ _ ((Path.refl (ULift.up _)).Prod p')
   simp
@@ -194,7 +194,7 @@ theorem apply_one_path :
       hcast (H.apply_one x₀).symm ≫
         (πₘ H.uliftMap).map (prodToProdTopI (𝟙 (ULift.up 1)) p) ≫ hcast (H.apply_one x₁) :=
   by
-  apply Quotient.induction_on p
+  apply Quotient.inductionOn p
   intro p'
   apply @eq_path_of_eq_image _ _ _ _ H.ulift_map _ _ _ _ _ ((Path.refl (ULift.up _)).Prod p')
   simp

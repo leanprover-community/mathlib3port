@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.analytic.linear
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,7 +48,7 @@ theorem fpower_series_apply_add_two (f : E →L[𝕜] F) (x : E) (n : ℕ) :
 
 @[simp]
 theorem fpower_series_radius (f : E →L[𝕜] F) (x : E) : (f.fpowerSeries x).radius = ∞ :=
-  ((f.fpowerSeries x).radius_eq_top_of_forall_image_add_eq_zero 2) fun n => rfl
+  (f.fpowerSeries x).radius_eq_top_of_forall_image_add_eq_zero 2 fun n => rfl
 #align continuous_linear_map.fpower_series_radius ContinuousLinearMap.fpower_series_radius
 
 protected theorem hasFpowerSeriesOnBall (f : E →L[𝕜] F) (x : E) :
@@ -96,7 +96,7 @@ def fpowerSeriesBilinear (f : E →L[𝕜] F →L[𝕜] G) (x : E × F) : Formal
 @[simp]
 theorem fpower_series_bilinear_radius (f : E →L[𝕜] F →L[𝕜] G) (x : E × F) :
     (f.fpowerSeriesBilinear x).radius = ∞ :=
-  ((f.fpowerSeriesBilinear x).radius_eq_top_of_forall_image_add_eq_zero 3) fun n => rfl
+  (f.fpowerSeriesBilinear x).radius_eq_top_of_forall_image_add_eq_zero 3 fun n => rfl
 #align
   continuous_linear_map.fpower_series_bilinear_radius ContinuousLinearMap.fpower_series_bilinear_radius
 

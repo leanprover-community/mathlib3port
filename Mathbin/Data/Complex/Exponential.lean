@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir
 
 ! This file was ported from Lean 3 source module data.complex.exponential
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -397,7 +397,7 @@ def exp' (z : ℂ) : CauSeq ℂ Complex.abs :=
 
 /-- The complex exponential function, defined via its Taylor series -/
 @[pp_nodot]
-def exp (z : ℂ) : ℂ :=
+irreducible_def exp (z : ℂ) : ℂ :=
   lim (exp' z)
 #align complex.exp Complex.exp
 
@@ -493,51 +493,43 @@ namespace Complex
 variable (x y : ℂ)
 
 @[simp]
-theorem exp_zero : exp 0 = 1 :=
-  lim_eq_of_equiv_const fun ε ε0 =>
-    ⟨1, fun j hj => by
-      convert ε0
-      cases j
-      · exact absurd hj (not_le_of_gt zero_lt_one)
-      · dsimp [exp']
-        induction' j with j ih
-        · dsimp [exp'] <;> simp
-        · rw [← ih (by decide)]
-          simp only [sum_range_succ, pow_succ]
-          simp⟩
+theorem exp_zero : exp 0 = 1 := by
+  rw [exp]
+  refine' lim_eq_of_equiv_const fun ε ε0 => ⟨1, fun j hj => _⟩
+  convert ε0
+  cases j
+  · exact absurd hj (not_le_of_gt zero_lt_one)
+  · dsimp [exp']
+    induction' j with j ih
+    · dsimp [exp'] <;> simp
+    · rw [← ih (by decide)]
+      simp only [sum_range_succ, pow_succ]
+      simp
 #align complex.exp_zero Complex.exp_zero
 
 theorem exp_add : exp (x + y) = exp x * exp y :=
-  show
-    lim (⟨_, is_cau_exp (x + y)⟩ : CauSeq ℂ abs) =
-      lim (show CauSeq ℂ abs from ⟨_, is_cau_exp x⟩) *
-        lim (show CauSeq ℂ abs from ⟨_, is_cau_exp y⟩)
+  by
+  have hj :
+    ∀ j : ℕ,
+      (∑ m in range j, (x + y) ^ m / m !) =
+        ∑ i in range j, ∑ k in range (i + 1), x ^ k / k ! * (y ^ (i - k) / (i - k)!) :=
     by
-    have hj :
-      ∀ j : ℕ,
-        (∑ m in range j, (x + y) ^ m / m !) =
-          ∑ i in range j, ∑ k in range (i + 1), x ^ k / k ! * (y ^ (i - k) / (i - k)!) :=
-      fun j =>
-      Finset.sum_congr rfl fun m hm =>
-        by
-        rw [add_pow, div_eq_mul_inv, sum_mul]
-        refine' Finset.sum_congr rfl fun i hi => _
-        have h₁ : (m.choose i : ℂ) ≠ 0 :=
-          Nat.cast_ne_zero.2
-            (pos_iff_ne_zero.1 (Nat.choose_pos (Nat.le_of_lt_succ (mem_range.1 hi))))
-        have h₂ :=
-          Nat.choose_mul_factorial_mul_factorial (Nat.le_of_lt_succ <| Finset.mem_range.1 hi)
-        rw [← h₂, Nat.cast_mul, Nat.cast_mul, mul_inv, mul_inv]
-        simp only [mul_left_comm (m.choose i : ℂ), mul_assoc, mul_left_comm (m.choose i : ℂ)⁻¹,
-          mul_comm (m.choose i : ℂ)]
-        rw [inv_mul_cancel h₁]
-        simp [div_eq_mul_inv, mul_comm, mul_assoc, mul_left_comm]
-    rw [lim_mul_lim] <;>
-      exact
-        Eq.symm
-          (lim_eq_lim_of_equiv
-            (by
-              dsimp <;> simp only [hj] <;> exact cauchy_product (is_cau_abs_exp x) (is_cau_exp y)))
+    intro j
+    refine' Finset.sum_congr rfl fun m hm => _
+    rw [add_pow, div_eq_mul_inv, sum_mul]
+    refine' Finset.sum_congr rfl fun i hi => _
+    have h₁ : (m.choose i : ℂ) ≠ 0 :=
+      Nat.cast_ne_zero.2 (pos_iff_ne_zero.1 (Nat.choose_pos (Nat.le_of_lt_succ (mem_range.1 hi))))
+    have h₂ := Nat.choose_mul_factorial_mul_factorial (Nat.le_of_lt_succ <| Finset.mem_range.1 hi)
+    rw [← h₂, Nat.cast_mul, Nat.cast_mul, mul_inv, mul_inv]
+    simp only [mul_left_comm (m.choose i : ℂ), mul_assoc, mul_left_comm (m.choose i : ℂ)⁻¹,
+      mul_comm (m.choose i : ℂ)]
+    rw [inv_mul_cancel h₁]
+    simp [div_eq_mul_inv, mul_comm, mul_assoc, mul_left_comm]
+  simp_rw [exp, exp', lim_mul_lim]
+  apply (lim_eq_lim_of_equiv _).symm
+  simp only [hj]
+  exact cauchy_product (is_cau_abs_exp x) (is_cau_exp y)
 #align complex.exp_add Complex.exp_add
 
 theorem exp_list_sum (l : List ℂ) : exp l.Sum = (l.map exp).Prod :=

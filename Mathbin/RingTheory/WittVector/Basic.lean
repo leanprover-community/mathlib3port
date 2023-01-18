@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -267,7 +267,7 @@ In `witt_vector.ghost_equiv` we upgrade this to an isomorphism of rings. -/
 private def ghost_equiv' [Invertible (p : R)] : 𝕎 R ≃ (ℕ → R)
     where
   toFun := ghostFun
-  invFun x := (mk p) fun n => aeval x (xInTermsOfW p R n)
+  invFun x := mk p fun n => aeval x (xInTermsOfW p R n)
   left_inv := by
     intro x
     ext n

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module field_theory.is_alg_closed.classification
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -74,7 +74,7 @@ theorem cardinal_mk_le_max : (#L) ≤ max (#R) ℵ₀ :=
     _ = Cardinal.sum fun p : R[X] => #{ x : L | x ∈ (p.map (algebraMap R L)).roots } := by
       rw [← mk_sigma] <;> rfl
     _ ≤ Cardinal.sum.{u, u} fun p : R[X] => ℵ₀ :=
-      (sum_le_sum _ _) fun p => (Multiset.finite_to_set _).lt_aleph_0.le
+      sum_le_sum _ _ fun p => (Multiset.finite_to_set _).lt_aleph_0.le
     _ = (#R[X]) * ℵ₀ := sum_const' _ _
     _ ≤ max (max (#R[X]) ℵ₀) ℵ₀ := mul_le_max _ _
     _ ≤ max (max (max (#R) ℵ₀) ℵ₀) ℵ₀ :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.determinant
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -141,7 +141,7 @@ there is no good way to generalize over universe parameters, so we can't fully s
 type that it does not depend on the choice of basis. Instead you can use the `det_aux_def'` lemma,
 or avoid mentioning a basis at all using `linear_map.det`.
 -/
-def detAux : Trunc (Basis ι A M) → (M →ₗ[A] M) →* A :=
+irreducible_def detAux : Trunc (Basis ι A M) → (M →ₗ[A] M) →* A :=
   Trunc.lift
     (fun b : Basis ι A M => detMonoidHom.comp (toMatrixAlgEquiv b : (M →ₗ[A] M) →* Matrix ι ι A))
     fun b c => MonoidHom.ext <| det_to_matrix_eq_det_to_matrix b c
@@ -153,10 +153,11 @@ See also `det_aux_def'` which allows you to vary the basis.
 -/
 theorem det_aux_def (b : Basis ι A M) (f : M →ₗ[A] M) :
     LinearMap.detAux (Trunc.mk b) f = Matrix.det (LinearMap.toMatrix b b f) :=
+  by
+  rw [det_aux]
   rfl
 #align linear_map.det_aux_def LinearMap.det_aux_def
 
--- Discourage the elaborator from unfolding `det_aux` and producing a huge term.
 theorem det_aux_def' {ι' : Type _} [Fintype ι'] [DecidableEq ι'] (tb : Trunc <| Basis ι A M)
     (b' : Basis ι' A M) (f : M →ₗ[A] M) :
     LinearMap.detAux tb f = Matrix.det (LinearMap.toMatrix b' b' f) :=

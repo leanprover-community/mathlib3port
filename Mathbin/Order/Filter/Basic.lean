@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jeremy Avigad
 
 ! This file was ported from Lean 3 source module order.filter.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -172,7 +172,7 @@ theorem univ_mem' (h : ∀ a, a ∈ s) : s ∈ f :=
 #align filter.univ_mem' Filter.univ_mem'
 
 theorem mp_mem (hs : s ∈ f) (h : { x | x ∈ s → x ∈ t } ∈ f) : t ∈ f :=
-  (mem_of_superset (inter_mem hs h)) fun x ⟨h₁, h₂⟩ => h₂ h₁
+  mem_of_superset (inter_mem hs h) fun x ⟨h₁, h₂⟩ => h₂ h₁
 #align filter.mp_mem Filter.mp_mem
 
 theorem congr_sets (h : { x | x ∈ s ↔ x ∈ t } ∈ f) : s ∈ f ↔ t ∈ f :=
@@ -313,8 +313,8 @@ def join (f : Filter (Filter α)) : Filter α
     where
   sets := { s | { t : Filter α | s ∈ t } ∈ f }
   univ_sets := by simp only [mem_set_of_eq, univ_sets, ← Filter.mem_sets, set_of_true]
-  sets_of_superset x y hx xy := (mem_of_superset hx) fun f h => mem_of_superset h xy
-  inter_sets x y hx hy := (mem_of_superset (inter_mem hx hy)) fun f ⟨h₁, h₂⟩ => inter_mem h₁ h₂
+  sets_of_superset x y hx xy := mem_of_superset hx fun f h => mem_of_superset h xy
+  inter_sets x y hx hy := mem_of_superset (inter_mem hx hy) fun f ⟨h₁, h₂⟩ => inter_mem h₁ h₂
 #align filter.join Filter.join
 
 @[simp]
@@ -900,7 +900,7 @@ theorem binfi_sets_eq {f : β → Filter α} {s : Set β} (h : DirectedOn (f ⁻
 theorem infi_sets_eq_finite {ι : Type _} (f : ι → Filter α) :
     (⨅ i, f i).sets = ⋃ t : Finset ι, (⨅ i ∈ t, f i).sets :=
   by
-  rw [infi_eq_infi_finset, infi_sets_eq]
+  rw [infᵢ_eq_infᵢ_finset, infi_sets_eq]
   exact directed_of_sup fun s₁ s₂ => binfᵢ_mono
 #align filter.infi_sets_eq_finite Filter.infi_sets_eq_finite
 
@@ -950,7 +950,7 @@ instance : Coframe (Filter α) :=
       rw [infₛ_eq_infᵢ', infᵢ_subtype']
       rintro t ⟨h₁, h₂⟩
       rw [infi_sets_eq_finite'] at h₂
-      simp only [mem_Union, (Finset.inf_eq_infi _ _).symm] at h₂
+      simp only [mem_Union, (Finset.inf_eq_infᵢ _ _).symm] at h₂
       obtain ⟨u, hu⟩ := h₂
       suffices (⨅ i, f ⊔ ↑i) ≤ f ⊔ u.inf fun i => ↑i.down by exact this ⟨h₁, hu⟩
       refine' Finset.induction_on u (le_sup_of_le_right le_top) _
@@ -961,7 +961,7 @@ instance : Coframe (Filter α) :=
 theorem mem_infi_finset {s : Finset α} {f : α → Filter β} {t : Set β} :
     (t ∈ ⨅ a ∈ s, f a) ↔ ∃ p : α → Set β, (∀ a ∈ s, p a ∈ f a) ∧ t = ⋂ a ∈ s, p a :=
   by
-  simp only [← Finset.set_bInter_coe, bInter_eq_Inter, infᵢ_subtype']
+  simp only [← Finset.set_binterᵢ_coe, bInter_eq_Inter, infᵢ_subtype']
   refine' ⟨fun h => _, _⟩
   · rcases(mem_infi_of_finite _).1 h with ⟨p, hp, rfl⟩
     refine'
@@ -1024,7 +1024,7 @@ theorem infi_sets_induct {f : ι → Filter α} {s : Set α} (hs : s ∈ infᵢ 
     (uni : p univ) (ins : ∀ {i s₁ s₂}, s₁ ∈ f i → p s₂ → p (s₁ ∩ s₂)) : p s :=
   by
   rw [mem_infi_finite'] at hs
-  simp only [← Finset.inf_eq_infi] at hs
+  simp only [← Finset.inf_eq_infᵢ] at hs
   rcases hs with ⟨is, his⟩
   revert s
   refine' Finset.induction_on is _ _
@@ -1115,7 +1115,7 @@ theorem infi_principal_finset {ι : Type w} (s : Finset ι) (f : ι → Set α) 
   by
   induction' s using Finset.induction_on with i s hi hs
   · simp
-  · rw [Finset.infi_insert, Finset.set_bInter_insert, hs, inf_principal]
+  · rw [Finset.infᵢ_insert, Finset.set_binterᵢ_insert, hs, inf_principal]
 #align filter.infi_principal_finset Filter.infi_principal_finset
 
 @[simp]
@@ -1986,7 +1986,7 @@ def comap (m : α → β) (f : Filter β) : Filter α
 variable {f : α → β} {l : Filter β} {p : α → Prop} {s : Set α}
 
 theorem mem_comap' : s ∈ comap f l ↔ { y | ∀ ⦃x⦄, f x = y → x ∈ s } ∈ l :=
-  ⟨fun ⟨t, ht, hts⟩ => (mem_of_superset ht) fun y hy x hx => hts <| mem_preimage.2 <| by rwa [hx],
+  ⟨fun ⟨t, ht, hts⟩ => mem_of_superset ht fun y hy x hx => hts <| mem_preimage.2 <| by rwa [hx],
     fun h => ⟨_, h, fun x hx => hx rfl⟩⟩
 #align filter.mem_comap' Filter.mem_comap'
 
@@ -2143,7 +2143,7 @@ theorem comap_id : comap id f = f :=
 #align filter.comap_id Filter.comap_id
 
 theorem comap_const_of_not_mem {x : β} (ht : t ∈ g) (hx : x ∉ t) : comap (fun y : α => x) g = ⊥ :=
-  empty_mem_iff_bot.1 <| mem_comap'.2 <| (mem_of_superset ht) fun x' hx' y h => hx <| h.symm ▸ hx'
+  empty_mem_iff_bot.1 <| mem_comap'.2 <| mem_of_superset ht fun x' hx' y h => hx <| h.symm ▸ hx'
 #align filter.comap_const_of_not_mem Filter.comap_const_of_not_mem
 
 theorem comap_const_of_mem {x : β} (h : ∀ t ∈ g, x ∈ t) : comap (fun y : α => x) g = ⊤ :=
@@ -2401,7 +2401,7 @@ theorem map_le_map_iff_of_inj_on {l₁ l₂ : Filter α} {f : α → β} {s : Se
     (h₂ : s ∈ l₂) (hinj : InjOn f s) : map f l₁ ≤ map f l₂ ↔ l₁ ≤ l₂ :=
   ⟨fun h t ht =>
     mp_mem h₁ <|
-      (mem_of_superset (h <| image_mem_map (inter_mem h₂ ht))) fun y ⟨x, ⟨hxs, hxt⟩, hxy⟩ hys =>
+      mem_of_superset (h <| image_mem_map (inter_mem h₂ ht)) fun y ⟨x, ⟨hxs, hxt⟩, hxy⟩ hys =>
         hinj hxs hys hxy ▸ hxt,
     fun h => map_mono h⟩
 #align filter.map_le_map_iff_of_inj_on Filter.map_le_map_iff_of_inj_on
@@ -2735,7 +2735,7 @@ theorem seq_mem_seq {f : Filter (α → β)} {g : Filter α} {s : Set (α → β
 
 theorem le_seq {f : Filter (α → β)} {g : Filter α} {h : Filter β}
     (hh : ∀ t ∈ f, ∀ u ∈ g, Set.seq t u ∈ h) : h ≤ seq f g := fun s ⟨t, ht, u, hu, hs⟩ =>
-  (mem_of_superset (hh _ ht _ hu)) fun b ⟨m, hm, a, ha, Eq⟩ => Eq ▸ hs _ hm _ ha
+  mem_of_superset (hh _ ht _ hu) fun b ⟨m, hm, a, ha, Eq⟩ => Eq ▸ hs _ hm _ ha
 #align filter.le_seq Filter.le_seq
 
 @[mono]

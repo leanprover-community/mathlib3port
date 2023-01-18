@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.group.ulift
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -143,27 +143,27 @@ def ULift.MulEquiv.ulift [Mul α] : ULift α ≃* α :=
 #print ULift.semigroup /-
 @[to_additive]
 instance semigroup [Semigroup α] : Semigroup (ULift α) :=
-  (ULift.MulEquiv.ulift.Injective.Semigroup _) fun x y => rfl
+  ULift.MulEquiv.ulift.Injective.Semigroup _ fun x y => rfl
 #align ulift.semigroup ULift.semigroup
 -/
 
 #print ULift.commSemigroup /-
 @[to_additive]
 instance commSemigroup [CommSemigroup α] : CommSemigroup (ULift α) :=
-  (Equiv.ulift.Injective.CommSemigroup _) fun x y => rfl
+  Equiv.ulift.Injective.CommSemigroup _ fun x y => rfl
 #align ulift.comm_semigroup ULift.commSemigroup
 -/
 
 #print ULift.mulOneClass /-
 @[to_additive]
 instance mulOneClass [MulOneClass α] : MulOneClass (ULift α) :=
-  (Equiv.ulift.Injective.MulOneClass _ rfl) fun x y => rfl
+  Equiv.ulift.Injective.MulOneClass _ rfl fun x y => rfl
 #align ulift.mul_one_class ULift.mulOneClass
 -/
 
 #print ULift.mulZeroOneClass /-
 instance mulZeroOneClass [MulZeroOneClass α] : MulZeroOneClass (ULift α) :=
-  (Equiv.ulift.Injective.MulZeroOneClass _ rfl rfl) fun x y => rfl
+  Equiv.ulift.Injective.MulZeroOneClass _ rfl rfl fun x y => rfl
 #align ulift.mul_zero_one_class ULift.mulZeroOneClass
 -/
 

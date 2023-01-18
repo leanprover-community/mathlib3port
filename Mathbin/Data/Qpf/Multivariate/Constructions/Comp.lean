@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Simon Hudon
 
 ! This file was ported from Lean 3 source module data.qpf.multivariate.constructions.comp
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -25,12 +25,12 @@ namespace Mvqpf
 
 open Mvfunctor
 
-variable {n m : ℕ} (F : Typevec.{u} n → Type _) [fF : Mvfunctor F] [q : Mvqpf F]
-  (G : Fin2 n → Typevec.{u} m → Type u) [fG : ∀ i, Mvfunctor <| G i] [q' : ∀ i, Mvqpf <| G i]
+variable {n m : ℕ} (F : TypeVec.{u} n → Type _) [fF : Mvfunctor F] [q : Mvqpf F]
+  (G : Fin2 n → TypeVec.{u} m → Type u) [fG : ∀ i, Mvfunctor <| G i] [q' : ∀ i, Mvqpf <| G i]
 
 /-- Composition of an `n`-ary functor with `n` `m`-ary
 functors gives us one `m`-ary functor -/
-def Comp (v : Typevec.{u} m) : Type _ :=
+def Comp (v : TypeVec.{u} m) : Type _ :=
   F fun i : Fin2 n => G i v
 #align mvqpf.comp Mvqpf.Comp
 
@@ -38,7 +38,7 @@ namespace Comp
 
 open Mvfunctor Mvpfunctor
 
-variable {F G} {α β : Typevec.{u} m} (f : α ⟹ β)
+variable {F G} {α β : TypeVec.{u} m} (f : α ⟹ β)
 
 instance [I : Inhabited (F fun i : Fin2 n => G i α)] : Inhabited (Comp F G α) :=
   I

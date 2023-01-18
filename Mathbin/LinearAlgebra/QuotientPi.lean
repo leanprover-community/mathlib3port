@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Alex J. Best
 
 ! This file was ported from Lean 3 source module linear_algebra.quotient_pi
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,7 +71,7 @@ theorem pi_quotient_lift_single [Fintype ι] [DecidableEq ι] (p : ∀ i, Submod
 /-- Lift a family of maps to a quotient of direct sums. -/
 def quotientPiLift (p : ∀ i, Submodule R (Ms i)) (f : ∀ i, Ms i →ₗ[R] Ns i)
     (hf : ∀ i, p i ≤ ker (f i)) : (∀ i, Ms i) ⧸ pi Set.univ p →ₗ[R] ∀ i, Ns i :=
-  ((pi Set.univ p).liftq (LinearMap.pi fun i => (f i).comp (proj i))) fun x hx =>
+  (pi Set.univ p).liftq (LinearMap.pi fun i => (f i).comp (proj i)) fun x hx =>
     mem_ker.mpr <| by
       ext i
       simpa using hf i (mem_pi.mp hx i (Set.mem_univ i))

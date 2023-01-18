@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 
 ! This file was ported from Lean 3 source module analysis.locally_convex.balanced_core_hull
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -263,7 +263,7 @@ theorem balanced_core_mem_nhds_zero (hU : U ∈ 𝓝 (0 : E)) : balancedCore �
   rw [norm_pos_iff] at hy₀
   have : y • V ∈ 𝓝 (0 : E) := (set_smul_mem_nhds_zero_iff hy₀).mpr hV
   -- It remains to show that `y • V ⊆ balanced_core 𝕜 U`
-  refine' Filter.mem_of_superset this ((subset_balanced_core (mem_of_mem_nhds hU)) fun a ha => _)
+  refine' Filter.mem_of_superset this (subset_balanced_core (mem_of_mem_nhds hU) fun a ha => _)
   rw [smul_smul]
   rintro _ ⟨z, hz, rfl⟩
   refine' hrVU _ _ _ hz

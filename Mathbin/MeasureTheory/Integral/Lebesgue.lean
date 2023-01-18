@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module measure_theory.integral.lebesgue
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -297,14 +297,14 @@ theorem range_indicator {s : Set α} (hs : MeasurableSet s) (hs_nonempty : s.Non
 
 theorem measurable_bind [MeasurableSpace γ] (f : α →ₛ β) (g : β → α → γ)
     (hg : ∀ b, Measurable (g b)) : Measurable fun a => g (f a) a := fun s hs =>
-  (f.measurable_set_cut fun a b => g b a ∈ s) fun b => hg b hs
+  f.measurable_set_cut (fun a b => g b a ∈ s) fun b => hg b hs
 #align measure_theory.simple_func.measurable_bind MeasureTheory.SimpleFunc.measurable_bind
 
 /-- If `f : α →ₛ β` is a simple function and `g : β → α →ₛ γ` is a family of simple functions,
 then `f.bind g` binds the first argument of `g` to `f`. In other words, `f.bind g a = g (f a) a`. -/
 def bind (f : α →ₛ β) (g : β → α →ₛ γ) : α →ₛ γ :=
   ⟨fun a => g (f a) a, fun c =>
-    (f.measurable_set_cut fun a b => g b a = c) fun b => (g b).measurable_set_preimage {c},
+    f.measurable_set_cut (fun a b => g b a = c) fun b => (g b).measurable_set_preimage {c},
     (f.finite_range.bUnion fun b _ => (g b).finite_range).Subset <| by
       rintro _ ⟨a, rfl⟩ <;> simp <;> exact ⟨a, a, rfl⟩⟩
 #align measure_theory.simple_func.bind MeasureTheory.SimpleFunc.bind
@@ -1072,7 +1072,7 @@ theorem restrict_lintegral (f : α →ₛ ℝ≥0∞) {s : Set α} (hs : Measura
     (restrict f s).lintegral μ = ∑ r in f.range, r * μ (f ⁻¹' {r} ∩ s) :=
   calc
     (restrict f s).lintegral μ = ∑ r in f.range, r * μ (restrict f s ⁻¹' {r}) :=
-      (lintegral_eq_of_subset _) fun x hx =>
+      lintegral_eq_of_subset _ fun x hx =>
         if hxs : x ∈ s then fun _ => by
           simp only [f.restrict_apply hs, indicator_of_mem hxs, mem_range_self]
         else False.elim <| hx <| by simp [*]
@@ -1692,7 +1692,7 @@ theorem lintegral_supr {f : ℕ → α → ℝ≥0∞} (hf : ∀ n, Measurable (
     _ = ∑ r in (rs.map c).range, r * μ (⋃ n, rs.map c ⁻¹' {r} ∩ { a | r ≤ f n a }) := by
       simp only [(Eq _).symm]
     _ = ∑ r in (rs.map c).range, ⨆ n, r * μ (rs.map c ⁻¹' {r} ∩ { a | r ≤ f n a }) :=
-      (Finset.sum_congr rfl) fun x hx => by
+      Finset.sum_congr rfl fun x hx => by
         rw [measure_Union_eq_supr (directed_of_sup <| mono x), Ennreal.mul_supr]
     _ = ⨆ n, ∑ r in (rs.map c).range, r * μ (rs.map c ⁻¹' {r} ∩ { a | r ≤ f n a }) :=
       by
@@ -1703,7 +1703,7 @@ theorem lintegral_supr {f : ℕ → α → ℝ≥0∞} (hf : ∀ n, Measurable (
       by
       refine' supᵢ_mono fun n => _
       rw [restrict_lintegral _ (h_meas n)]
-      · refine' le_of_eq ((Finset.sum_congr rfl) fun r hr => _)
+      · refine' le_of_eq (Finset.sum_congr rfl fun r hr => _)
         congr 2 with a
         refine' and_congr_right _
         simp (config := { contextual := true })
@@ -2145,7 +2145,7 @@ theorem lintegral_add_mul_meas_add_le_le_lintegral {f g : α → ℝ≥0∞} (hl
 theorem mul_meas_ge_le_lintegral₀ {f : α → ℝ≥0∞} (hf : AeMeasurable f μ) (ε : ℝ≥0∞) :
     ε * μ { x | ε ≤ f x } ≤ ∫⁻ a, f a ∂μ := by
   simpa only [lintegral_zero, zero_add] using
-    lintegral_add_mul_meas_add_le_le_lintegral ((ae_of_all _) fun x => zero_le (f x)) hf ε
+    lintegral_add_mul_meas_add_le_le_lintegral (ae_of_all _ fun x => zero_le (f x)) hf ε
 #align measure_theory.mul_meas_ge_le_lintegral₀ MeasureTheory.mul_meas_ge_le_lintegral₀
 
 /-- **Markov's inequality** also known as **Chebyshev's first inequality**. For a version assuming
@@ -2295,7 +2295,7 @@ theorem lintegral_infi_ae {f : ℕ → α → ℝ≥0∞} (h_meas : ∀ n, Measu
         ((∫⁻ a, f 0 a ∂μ) - ∫⁻ a, ⨅ n, f n a ∂μ) = ∫⁻ a, f 0 a - ⨅ n, f n a ∂μ :=
           (lintegral_sub (measurable_infi h_meas)
               (ne_top_of_le_ne_top h_fin <| lintegral_mono fun a => infᵢ_le _ _)
-              ((ae_of_all _) fun a => infᵢ_le _ _)).symm
+              (ae_of_all _ fun a => infᵢ_le _ _)).symm
         _ = ∫⁻ a, ⨆ n, f 0 a - f n a ∂μ := congr rfl (funext fun a => Ennreal.sub_infi)
         _ = ⨆ n, ∫⁻ a, f 0 a - f n a ∂μ :=
           lintegral_supr_ae (fun n => (h_meas 0).sub (h_meas n)) fun n =>

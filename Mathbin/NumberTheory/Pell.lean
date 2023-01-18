@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module number_theory.pell
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -302,13 +302,13 @@ theorem eq_pell_lem : ∀ (n) (b : ℤ√d), 1 ≤ b → is_pell b → b ≤ pel
         exact by
           have bm : (_ * ⟨_, _⟩ : ℤ√d a1) = 1 := Pell.is_pell_norm.1 hp
           have y0l : (0 : ℤ√d a1) < ⟨x - x, y - -y⟩ :=
-            (sub_lt_sub h1l) fun hn : (1 : ℤ√d a1) ≤ ⟨x, -y⟩ => by
+            sub_lt_sub h1l fun hn : (1 : ℤ√d a1) ≤ ⟨x, -y⟩ => by
               have t := mul_le_mul_of_nonneg_left hn (le_trans zero_le_one h1) <;>
                   rw [bm, mul_one] at t <;>
                 exact h1l t
           have yl2 : (⟨_, _⟩ : ℤ√_) < ⟨_, _⟩ :=
             show (⟨x, y⟩ - ⟨x, -y⟩ : ℤ√d a1) < ⟨a, 1⟩ - ⟨a, -1⟩ from
-              (sub_lt_sub ha) fun hn : (⟨x, -y⟩ : ℤ√d a1) ≤ ⟨a, -1⟩ => by
+              sub_lt_sub ha fun hn : (⟨x, -y⟩ : ℤ√d a1) ≤ ⟨a, -1⟩ => by
                 have t :=
                       mul_le_mul_of_nonneg_right
                         (mul_le_mul_of_nonneg_left hn (le_trans zero_le_one h1)) a1p <;>
@@ -1148,7 +1148,7 @@ theorem ysq_dvd_yy (n) : yn n * yn n ∣ yn (n * yn n) :=
 
 theorem dvd_of_ysq_dvd {n t} (h : yn n * yn n ∣ yn t) : yn n ∣ t :=
   have nt : n ∣ t := (y_dvd_iff n t).1 <| dvd_of_mul_left_dvd h
-  (n.eq_zero_or_pos.elim fun n0 => by rwa [n0] at nt⊢) fun n0l : 0 < n =>
+  n.eq_zero_or_pos.elim (fun n0 => by rwa [n0] at nt⊢) fun n0l : 0 < n =>
     by
     let ⟨k, ke⟩ := nt
     have : yn n ∣ k * xn n ^ (k - 1) :=
@@ -1353,7 +1353,7 @@ theorem eq_of_xn_modeq_lem3 {i n} (npos : 0 < n) :
       have t := xn_modeq_x2n_sub_lem a1 k2nl.le
       rw [tsub_tsub_cancel_of_le k2n] at t
       exact t.trans dvd_rfl.zero_modeq_nat
-    ((lt_trichotomy j n).elim fun jn : j < n => eq_of_xn_modeq_lem1 ij (lt_of_le_of_ne jn jnn))
+    (lt_trichotomy j n).elim (fun jn : j < n => eq_of_xn_modeq_lem1 ij (lt_of_le_of_ne jn jnn))
       fun o =>
       o.elim
         (fun jn : j = n => by
@@ -1397,7 +1397,7 @@ theorem eq_of_xn_modeq_lem3 {i n} (npos : 0 < n) :
           (lt_or_eq_of_le (Nat.le_of_succ_le_succ ij)).elim
             (fun h =>
               lt_trans
-                ((eq_of_xn_modeq_lem3 h (le_of_lt j2n) jn) fun ⟨a1, n1, i0, j2⟩ => by
+                (eq_of_xn_modeq_lem3 h (le_of_lt j2n) jn fun ⟨a1, n1, i0, j2⟩ => by
                   rw [n1, j2] at j2n <;> exact absurd j2n (by decide))
                 s)
             fun h => by rw [h] <;> exact s
@@ -1425,18 +1425,18 @@ theorem eq_of_xn_modeq_le {i j n} (ij : i ≤ j) (j2n : j ≤ 2 * n) (h : xn i �
         rw [jn] at ij'
         exact
           x0.trans
-            ((eq_of_xn_modeq_lem3 _ (Nat.pos_of_ne_zero npos) (Nat.succ_pos _) (le_trans ij j2n)
-                (ne_of_lt ij'))
-              fun ⟨a1, n1, _, i2⟩ => by rw [n1, i2] at ij' <;> exact absurd ij' (by decide))
+            (eq_of_xn_modeq_lem3 _ (Nat.pos_of_ne_zero npos) (Nat.succ_pos _) (le_trans ij j2n)
+              (ne_of_lt ij') fun ⟨a1, n1, _, i2⟩ => by
+              rw [n1, i2] at ij' <;> exact absurd ij' (by decide))
       else ne_of_lt (eq_of_xn_modeq_lem3 (Nat.pos_of_ne_zero npos) ij' j2n jn ntriv) h
 #align pell.eq_of_xn_modeq_le Pell.eq_of_xn_modeq_le
 
 theorem eq_of_xn_modeq {i j n} (i2n : i ≤ 2 * n) (j2n : j ≤ 2 * n) (h : xn i ≡ xn j [MOD xn n])
     (ntriv : a = 2 → n = 1 → (i = 0 → j ≠ 2) ∧ (i = 2 → j ≠ 0)) : i = j :=
   (le_total i j).elim
-    (fun ij => (eq_of_xn_modeq_le ij j2n h) fun ⟨a2, n1, i0, j2⟩ => (ntriv a2 n1).left i0 j2)
+    (fun ij => eq_of_xn_modeq_le ij j2n h fun ⟨a2, n1, i0, j2⟩ => (ntriv a2 n1).left i0 j2)
     fun ij =>
-    ((eq_of_xn_modeq_le ij i2n h.symm) fun ⟨a2, n1, j0, i2⟩ => (ntriv a2 n1).right i2 j0).symm
+    (eq_of_xn_modeq_le ij i2n h.symm fun ⟨a2, n1, j0, i2⟩ => (ntriv a2 n1).right i2 j0).symm
 #align pell.eq_of_xn_modeq Pell.eq_of_xn_modeq
 
 theorem eq_of_xn_modeq' {i j n} (ipos : 0 < i) (hin : i ≤ n) (j4n : j ≤ 4 * n)
@@ -1444,7 +1444,7 @@ theorem eq_of_xn_modeq' {i j n} (ipos : 0 < i) (hin : i ≤ n) (j4n : j ≤ 4 * 
   have i2n : i ≤ 2 * n := by apply le_trans hin <;> rw [two_mul] <;> apply Nat.le_add_left
   (le_or_gt j (2 * n)).imp
     (fun j2n : j ≤ 2 * n =>
-      (eq_of_xn_modeq j2n i2n h) fun a2 n1 =>
+      eq_of_xn_modeq j2n i2n h fun a2 n1 =>
         ⟨fun j0 i2 => by rw [n1, i2] at hin <;> exact absurd hin (by decide), fun j2 i0 =>
           ne_of_gt ipos i0⟩)
     fun j2n : 2 * n < j =>
@@ -1568,9 +1568,9 @@ theorem matiyasevic {a k x y} :
             (yv : yn a1 i * yn a1 i ∣ yn a1 n), (sx : xn b1 j ≡ xn a1 i [MOD xn a1 n]),
             (tk : yn b1 j ≡ k [MOD 4 * yn a1 i])⟩,
           (ky : k ≤ yn a1 i) =>
-          ((Nat.eq_zero_or_pos i).elim fun i0 => by
-              simp [i0] at ky <;> rw [i0, ky] <;> exact ⟨rfl, rfl⟩)
-            fun ipos => by
+          (Nat.eq_zero_or_pos i).elim
+            (fun i0 => by simp [i0] at ky <;> rw [i0, ky] <;> exact ⟨rfl, rfl⟩) fun ipos =>
+            by
             suffices i = k by rw [this] <;> exact ⟨rfl, rfl⟩
             clear _x o rem xy uv st _match _match _fun_match <;>
               exact

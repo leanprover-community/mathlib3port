@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module number_theory.padics.ring_homs
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -315,7 +315,7 @@ theorem ker_to_zmod : (toZmod : ℤ_[p] →+* Zmod p).ker = maximalIdeal ℤ_[p]
 
 /-- `appr n x` gives a value `v : ℕ` such that `x` and `↑v : ℤ_p` are congruent mod `p^n`.
 See `appr_spec`. -/
-noncomputable def appr : ℤ_[p] → ℕ → ℕ
+noncomputable irreducible_def appr : ℤ_[p] → ℕ → ℕ
   | x, 0 => 0
   | x, n + 1 =>
     let y := x - appr x n

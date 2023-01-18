@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.seq.seq
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -862,60 +862,17 @@ def splitAt : ℕ → Seq α → List α × Seq α
 section ZipWith
 
 /-- Combine two sequences with a function -/
-def zipWith (f : α → β → γ) : Seq α → Seq β → Seq γ
-  | ⟨f₁, a₁⟩, ⟨f₂, a₂⟩ =>
-    ⟨fun n =>
-      match f₁ n, f₂ n with
-      | some a, some b => some (f a b)
-      | _, _ => none,
-      fun n => by
-      induction' h1 : f₁ n with
-      · intro H
-        simp only [a₁ h1]
-        rfl
-      induction' h2 : f₂ n with <;> dsimp [Seq.ZipWith._match1] <;> intro H
-      · rw [a₂ h2]
-        cases f₁ (n + 1) <;> rfl
-      · rw [h1, h2] at H
-        contradiction⟩
+def zipWith (f : α → β → γ) (s₁ : Seq α) (s₂ : Seq β) : Seq γ :=
+  ⟨fun n => Option.map₂ f (s₁.nth n) (s₂.nth n), fun n hn =>
+    Option.map₂_eq_none_iff.2 <| (Option.map₂_eq_none_iff.1 hn).imp s₁.2 s₂.2⟩
 #align seq.zip_with Seq.zipWith
 
 variable {s : Seq α} {s' : Seq β} {n : ℕ}
 
-theorem zip_with_nth_some {a : α} {b : β} (s_nth_eq_some : s.nth n = some a)
-    (s_nth_eq_some' : s'.nth n = some b) (f : α → β → γ) : (zipWith f s s').nth n = some (f a b) :=
-  by
-  cases' s with st
-  have : st n = some a := s_nth_eq_some
-  cases' s' with st'
-  have : st' n = some b := s_nth_eq_some'
-  simp only [zip_with, Seq.nth, *]
-#align seq.zip_with_nth_some Seq.zip_with_nth_some
-
-theorem zip_with_nth_none (s_nth_eq_none : s.nth n = none) (f : α → β → γ) :
-    (zipWith f s s').nth n = none := by
-  cases' s with st
-  have : st n = none := s_nth_eq_none
-  cases' s' with st'
-  cases st'_nth_eq : st' n <;> simp only [zip_with, Seq.nth, *]
-#align seq.zip_with_nth_none Seq.zip_with_nth_none
-
-theorem zip_with_nth_none' (s'_nth_eq_none : s'.nth n = none) (f : α → β → γ) :
-    (zipWith f s s').nth n = none := by
-  cases' s' with st'
-  have : st' n = none := s'_nth_eq_none
-  cases' s with st
-  cases st_nth_eq : st n <;> simp only [zip_with, Seq.nth, *]
-#align seq.zip_with_nth_none' Seq.zip_with_nth_none'
-
-theorem nth_zip_with (f : α → β → γ) (s : Seq α) (t : Seq β) (n : ℕ) :
-    nth (zipWith f s t) n = Option.bind (nth s n) fun x => Option.map (f x) (nth t n) :=
-  by
-  cases' hx : nth s n with x
-  · rw [zip_with_nth_none hx, Option.none_bind']
-  cases' hy : nth t n with y
-  · rw [zip_with_nth_none' hy, Option.some_bind', Option.map_none']
-  · rw [zip_with_nth_some hx hy, Option.some_bind', Option.map_some']
+@[simp]
+theorem nth_zip_with (f : α → β → γ) (s s' n) :
+    (zipWith f s s').nth n = Option.map₂ f (s.nth n) (s'.nth n) :=
+  rfl
 #align seq.nth_zip_with Seq.nth_zip_with
 
 end ZipWith
@@ -926,7 +883,7 @@ def zip : Seq α → Seq β → Seq (α × β) :=
 #align seq.zip Seq.zip
 
 theorem nth_zip (s : Seq α) (t : Seq β) (n : ℕ) :
-    nth (zip s t) n = Option.bind (nth s n) fun x => Option.map (Prod.mk x) (nth t n) :=
+    nth (zip s t) n = Option.map₂ Prod.mk (nth s n) (nth t n) :=
   nth_zip_with _ _ _ _
 #align seq.nth_zip Seq.nth_zip
 

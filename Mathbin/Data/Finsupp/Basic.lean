@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Scott Morrison
 
 ! This file was ported from Lean 3 source module data.finsupp.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -130,10 +130,10 @@ theorem graph_eq_empty {f : α →₀ M} : f.graph = ∅ ↔ f = 0 :=
 
 /-- Produce an association list for the finsupp over its support using choice. -/
 @[simps]
-def toAlist (f : α →₀ M) : Alist fun x : α => M :=
+def toAlist (f : α →₀ M) : AList fun x : α => M :=
   ⟨f.graph.toList.map Prod.toSigma,
     by
-    rw [List.Nodupkeys, List.keys, List.map_map, Prod.fst_comp_toSigma, List.nodup_map_iff_inj_on]
+    rw [List.NodupKeys, List.keys, List.map_map, Prod.fst_comp_toSigma, List.nodup_map_iff_inj_on]
     · rintro ⟨b, m⟩ hb ⟨c, n⟩ hc (rfl : b = c)
       rw [mem_to_list, Finsupp.mem_graph_iff] at hb hc
       dsimp at hb hc
@@ -145,12 +145,12 @@ def toAlist (f : α →₀ M) : Alist fun x : α => M :=
 theorem to_alist_keys_to_finset (f : α →₀ M) : f.toAlist.keys.toFinset = f.support :=
   by
   ext
-  simp [to_alist, Alist.mem_keys, Alist.keys, List.keys]
+  simp [to_alist, AList.mem_keys, AList.keys, List.keys]
 #align finsupp.to_alist_keys_to_finset Finsupp.to_alist_keys_to_finset
 
 @[simp]
 theorem mem_to_alist {f : α →₀ M} {x : α} : x ∈ f.toAlist ↔ f x ≠ 0 := by
-  rw [Alist.mem_keys, ← List.mem_to_finset, to_alist_keys_to_finset, mem_support_iff]
+  rw [AList.mem_keys, ← List.mem_toFinset, to_alist_keys_to_finset, mem_support_iff]
 #align finsupp.mem_to_alist Finsupp.mem_to_alist
 
 end Graph
@@ -164,14 +164,14 @@ section LookupFinsupp
 
 variable [Zero M]
 
-namespace Alist
+namespace AList
 
 open List
 
 /-- Converts an association list into a finitely supported function via `alist.lookup`, sending
 absent keys to zero. -/
 @[simps]
-def lookupFinsupp (l : Alist fun x : α => M) : α →₀ M
+def lookupFinsupp (l : AList fun x : α => M) : α →₀ M
     where
   support := (l.1.filter fun x => Sigma.snd x ≠ 0).keys.toFinset
   toFun a := (l.lookup a).getOrElse 0
@@ -179,44 +179,44 @@ def lookupFinsupp (l : Alist fun x : α => M) : α →₀ M
     by
     simp_rw [mem_to_finset, List.mem_keys, List.mem_filter, ← mem_lookup_iff]
     cases lookup a l <;> simp
-#align alist.lookup_finsupp Alist.lookupFinsupp
+#align alist.lookup_finsupp AList.lookupFinsupp
 
 alias lookup_finsupp_to_fun ← lookup_finsupp_apply
-#align alist.lookup_finsupp_apply Alist.lookup_finsupp_apply
+#align alist.lookup_finsupp_apply AList.lookup_finsupp_apply
 
-theorem lookup_finsupp_eq_iff_of_ne_zero {l : Alist fun x : α => M} {a : α} {x : M} (hx : x ≠ 0) :
+theorem lookup_finsupp_eq_iff_of_ne_zero {l : AList fun x : α => M} {a : α} {x : M} (hx : x ≠ 0) :
     l.lookupFinsupp a = x ↔ x ∈ l.lookup a :=
   by
   rw [lookup_finsupp_to_fun]
   cases' lookup a l with m <;> simp [hx.symm]
-#align alist.lookup_finsupp_eq_iff_of_ne_zero Alist.lookup_finsupp_eq_iff_of_ne_zero
+#align alist.lookup_finsupp_eq_iff_of_ne_zero AList.lookup_finsupp_eq_iff_of_ne_zero
 
-theorem lookup_finsupp_eq_zero_iff {l : Alist fun x : α => M} {a : α} :
+theorem lookup_finsupp_eq_zero_iff {l : AList fun x : α => M} {a : α} :
     l.lookupFinsupp a = 0 ↔ a ∉ l ∨ (0 : M) ∈ l.lookup a :=
   by
   rw [lookup_finsupp_to_fun, ← lookup_eq_none]
   cases' lookup a l with m <;> simp
-#align alist.lookup_finsupp_eq_zero_iff Alist.lookup_finsupp_eq_zero_iff
+#align alist.lookup_finsupp_eq_zero_iff AList.lookup_finsupp_eq_zero_iff
 
 @[simp]
-theorem empty_lookup_finsupp : lookupFinsupp (∅ : Alist fun x : α => M) = 0 :=
+theorem empty_lookup_finsupp : lookupFinsupp (∅ : AList fun x : α => M) = 0 :=
   by
   ext
   simp
-#align alist.empty_lookup_finsupp Alist.empty_lookup_finsupp
+#align alist.empty_lookup_finsupp AList.empty_lookup_finsupp
 
 @[simp]
-theorem insert_lookup_finsupp (l : Alist fun x : α => M) (a : α) (m : M) :
+theorem insert_lookup_finsupp (l : AList fun x : α => M) (a : α) (m : M) :
     (l.insert a m).lookupFinsupp = l.lookupFinsupp.update a m :=
   by
   ext b
   by_cases h : b = a <;> simp [h]
-#align alist.insert_lookup_finsupp Alist.insert_lookup_finsupp
+#align alist.insert_lookup_finsupp AList.insert_lookup_finsupp
 
 @[simp]
 theorem singleton_lookup_finsupp (a : α) (m : M) :
-    (singleton a m).lookupFinsupp = Finsupp.single a m := by simp [← Alist.insert_empty]
-#align alist.singleton_lookup_finsupp Alist.singleton_lookup_finsupp
+    (singleton a m).lookupFinsupp = Finsupp.single a m := by simp [← AList.insert_empty]
+#align alist.singleton_lookup_finsupp AList.singleton_lookup_finsupp
 
 @[simp]
 theorem Finsupp.to_alist_lookup_finsupp (f : α →₀ M) : f.toAlist.lookupFinsupp = f :=
@@ -232,9 +232,9 @@ theorem Finsupp.to_alist_lookup_finsupp (f : α →₀ M) : f.toAlist.lookupFins
 
 theorem lookup_finsupp_surjective : Surjective (@lookupFinsupp α M _) := fun f =>
   ⟨_, Finsupp.to_alist_lookup_finsupp f⟩
-#align alist.lookup_finsupp_surjective Alist.lookup_finsupp_surjective
+#align alist.lookup_finsupp_surjective AList.lookup_finsupp_surjective
 
-end Alist
+end AList
 
 end LookupFinsupp
 
@@ -607,7 +607,7 @@ theorem map_domain_zero {f : α → β} : mapDomain f (0 : α →₀ M) = (0 : �
 
 theorem map_domain_congr {f g : α → β} (h : ∀ x ∈ v.support, f x = g x) :
     v.mapDomain f = v.mapDomain g :=
-  (Finset.sum_congr rfl) fun _ H => by simp only [h _ H]
+  Finset.sum_congr rfl fun _ H => by simp only [h _ H]
 #align finsupp.map_domain_congr Finsupp.map_domain_congr
 
 theorem map_domain_add {f : α → β} : mapDomain f (v₁ + v₂) = mapDomain f v₁ + mapDomain f v₂ :=
@@ -654,8 +654,8 @@ theorem map_domain_sum [Zero N] {f : α → β} {s : α →₀ N} {v : α → N 
 theorem map_domain_support [DecidableEq β] {f : α → β} {s : α →₀ M} :
     (s.mapDomain f).support ⊆ s.support.image f :=
   Finset.Subset.trans support_sum <|
-    Finset.Subset.trans (Finset.bUnion_mono fun a ha => support_single_subset) <| by
-      rw [Finset.bUnion_singleton] <;> exact subset.refl _
+    Finset.Subset.trans (Finset.bunionᵢ_mono fun a ha => support_single_subset) <| by
+      rw [Finset.bunionᵢ_singleton] <;> exact subset.refl _
 #align finsupp.map_domain_support Finsupp.map_domain_support
 
 theorem map_domain_apply' (S : Set α) {f : α → β} (x : α →₀ M) (hS : (x.support : Set α) ⊆ S)
@@ -1217,7 +1217,7 @@ theorem filter_sum (s : Finset ι) (f : ι → α →₀ M) :
 theorem filter_eq_sum (p : α → Prop) [D : DecidablePred p] (f : α →₀ M) :
     f.filter p = ∑ i in f.support.filter p, single i (f i) :=
   (f.filter p).sum_single.symm.trans <|
-    (Finset.sum_congr (by rw [Subsingleton.elim D] <;> rfl)) fun x hx => by
+    Finset.sum_congr (by rw [Subsingleton.elim D] <;> rfl) fun x hx => by
       rw [filter_apply_pos _ _ (mem_filter.1 hx).2]
 #align finsupp.filter_eq_sum Finsupp.filter_eq_sum
 
@@ -1369,9 +1369,9 @@ theorem filter_curry (f : α × β →₀ M) (p : α → Prop) :
 theorem support_curry [DecidableEq α] (f : α × β →₀ M) :
     f.curry.support ⊆ f.support.image Prod.fst :=
   by
-  rw [← Finset.bUnion_singleton]
+  rw [← Finset.bunionᵢ_singleton]
   refine' Finset.Subset.trans support_sum _
-  refine' Finset.bUnion_mono fun a _ => support_single_subset
+  refine' Finset.bunionᵢ_mono fun a _ => support_single_subset
 #align finsupp.support_curry Finsupp.support_curry
 
 end CurryUncurry
@@ -1747,7 +1747,7 @@ def DistribMulActionHom.single (a : α) : M →+[R] α →₀ M :=
 
 theorem distrib_mul_action_hom_ext {f g : (α →₀ M) →+[R] N}
     (h : ∀ (a : α) (m : M), f (single a m) = g (single a m)) : f = g :=
-  DistribMulActionHom.to_add_monoid_hom_injective <| add_hom_ext h
+  DistribMulActionHom.toAddMonoidHom_injective <| add_hom_ext h
 #align finsupp.distrib_mul_action_hom_ext Finsupp.distrib_mul_action_hom_ext
 
 /-- See note [partially-applied ext lemmas]. -/

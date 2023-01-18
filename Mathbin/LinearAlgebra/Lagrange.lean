@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Wrenna Robson
 
 ! This file was ported from Lean 3 source module linear_algebra.lagrange
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -389,7 +389,7 @@ theorem interpolate_eq_iff_values_eq_on (hvs : Set.InjOn v s) :
 
 theorem eq_interpolate {f : F[X]} (hvs : Set.InjOn v s) (degree_f_lt : f.degree < s.card) :
     f = interpolate s v fun i => f.eval (v i) :=
-  (eq_of_degrees_lt_of_eval_index_eq _ hvs degree_f_lt (degree_interpolate_lt _ hvs)) fun i hi =>
+  eq_of_degrees_lt_of_eval_index_eq _ hvs degree_f_lt (degree_interpolate_lt _ hvs) fun i hi =>
     (eval_interpolate_at_node _ hvs hi).symm
 #align lagrange.eq_interpolate Lagrange.eq_interpolate
 

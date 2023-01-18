@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Alexander Bentkamp
 
 ! This file was ported from Lean 3 source module linear_algebra.basis
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -101,6 +101,10 @@ structure Basis where of_repr ::
 #align basis Basis
 
 end
+
+instance uniqueBasis [Subsingleton R] : Unique (Basis ι R M) :=
+  ⟨⟨⟨default⟩⟩, fun ⟨b⟩ => by rw [Subsingleton.elim b]⟩
+#align unique_basis uniqueBasis
 
 namespace Basis
 
@@ -280,13 +284,12 @@ theorem ext' {f₁ f₂ : M ≃ₛₗ[σ] M₁} (h : ∀ i, f₁ (b i) = f₂ (b
 
 omit σ'
 
-/-- Two elements are equal if their coordinates are equal. -/
-theorem ext_elem {x y : M} (h : ∀ i, b.repr x i = b.repr y i) : x = y :=
-  by
-  rw [← b.total_repr x, ← b.total_repr y]
-  congr 1
-  ext i
-  exact h i
+/-- Two elements are equal iff their coordinates are equal. -/
+theorem ext_elem_iff {x y : M} : x = y ↔ ∀ i, b.repr x i = b.repr y i := by
+  simp only [← Finsupp.ext_iff, EmbeddingLike.apply_eq_iff_eq]
+#align basis.ext_elem_iff Basis.ext_elem_iff
+
+alias ext_elem_iff ↔ _ _root_.basis.ext_elem
 #align basis.ext_elem Basis.ext_elem
 
 theorem repr_eq_iff {b : Basis ι R M} {f : M →ₗ[R] ι →₀ R} :
@@ -581,7 +584,7 @@ protected theorem span_eq : span R (range b) = ⊤ :=
 theorem index_nonempty (b : Basis ι R M) [Nontrivial M] : Nonempty ι :=
   by
   obtain ⟨x, y, ne⟩ : ∃ x y : M, x ≠ y := Nontrivial.exists_pair_ne
-  obtain ⟨i, _⟩ := not_forall.mp (mt b.ext_elem Ne)
+  obtain ⟨i, _⟩ := not_forall.mp (mt b.ext_elem_iff.2 Ne)
   exact ⟨i⟩
 #align basis.index_nonempty Basis.index_nonempty
 
@@ -648,7 +651,7 @@ theorem constr_eq {g : ι → M'} {f : M →ₗ[R] M'} (h : ∀ i, g i = f (b i)
 #align basis.constr_eq Basis.constr_eq
 
 theorem constr_self (f : M →ₗ[R] M') : (b.constr S fun i => f (b i)) = f :=
-  (b.constr_eq S) fun x => rfl
+  b.constr_eq S fun x => rfl
 #align basis.constr_self Basis.constr_self
 
 theorem constr_range [Nonempty ι] {f : ι → M'} : (b.constr S f).range = span R (range f) := by
@@ -1269,7 +1272,7 @@ theorem coord_units_smul (e : Basis ι R₂ M) (w : ι → R₂ˣ) (i : ι) :
   · congr
     simp [Basis.unitsSmul, ← mul_smul]
   simp only [Basis.coord_apply, LinearMap.smul_apply, Basis.repr_self, Units.smul_def,
-    SmulHomClass.map_smul, Finsupp.single_apply]
+    SMulHomClass.map_smul, Finsupp.single_apply]
   split_ifs with h h
   · simp [h]
   · simp

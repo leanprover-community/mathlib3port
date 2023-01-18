@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Jeremy Avigad
 
 ! This file was ported from Lean 3 source module topology.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -160,7 +160,7 @@ theorem is_open_empty : IsOpen (∅ : Set α) := by
 #align is_open_empty is_open_empty
 
 theorem is_open_sInter {s : Set (Set α)} (hs : s.Finite) : (∀ t ∈ s, IsOpen t) → IsOpen (⋂₀ s) :=
-  (Finite.induction_on hs fun _ => by rw [sInter_empty] <;> exact is_open_univ)
+  Finite.induction_on hs (fun _ => by rw [sInter_empty] <;> exact is_open_univ)
     fun a s has hs ih h => by
     rw [sInter_insert] <;>
       exact IsOpen.inter (h _ <| mem_insert _ _) (ih fun t => h t ∘ mem_insert_of_mem _)
@@ -1765,7 +1765,7 @@ theorem continuous_at_id {x : α} : ContinuousAt id x :=
 
 theorem ContinuousAt.iterate {f : α → α} {x : α} (hf : ContinuousAt f x) (hx : f x = x) (n : ℕ) :
     ContinuousAt (f^[n]) x :=
-  (Nat.recOn n continuous_at_id) fun n ihn =>
+  Nat.recOn n continuous_at_id fun n ihn =>
     show ContinuousAt (f^[n] ∘ f) x from ContinuousAt.comp (hx.symm ▸ ihn) hf
 #align continuous_at.iterate ContinuousAt.iterate
 

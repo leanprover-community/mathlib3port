@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Chris Hughes
 
 ! This file was ported from Lean 3 source module ring_theory.adjoin_root
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -209,7 +209,7 @@ theorem aeval_eq (p : R[X]) : aeval (root f) p = mk f p :=
 
 theorem adjoin_root_eq_top : Algebra.adjoin R ({root f} : Set (AdjoinRoot f)) = ⊤ :=
   Algebra.eq_top_iff.2 fun x =>
-    (induction_on f x) fun p =>
+    induction_on f x fun p =>
       (Algebra.adjoin_singleton_eq_range_aeval R (root f)).symm ▸ ⟨p, aeval_eq p⟩
 #align adjoin_root.adjoin_root_eq_top AdjoinRoot.adjoin_root_eq_top
 
@@ -389,7 +389,7 @@ theorem mod_by_monic_hom_mk (hg : g.Monic) (f : R[X]) : modByMonicHom hg (mk g f
 #align adjoin_root.mod_by_monic_hom_mk AdjoinRoot.mod_by_monic_hom_mk
 
 theorem mk_left_inverse (hg : g.Monic) : Function.LeftInverse (mk g) (modByMonicHom hg) := fun f =>
-  (induction_on g f) fun f =>
+  induction_on g f fun f =>
     by
     rw [mod_by_monic_hom_mk hg, mk_eq_mk, mod_by_monic_eq_sub_mul_div _ hg, sub_sub_cancel_left,
       dvd_neg]
@@ -423,18 +423,10 @@ def powerBasisAux' (hg : g.Monic) : Basis (Fin g.natDegree) R (AdjoinRoot g) :=
         funext fun i => by
           nontriviality R
           simp only [mod_by_monic_hom_mk]
-          rw [(mod_by_monic_eq_self_iff hg).mpr, finset_sum_coeff, Finset.sum_eq_single i] <;>
-            try simp only [coeff_monomial, eq_self_iff_true, if_true]
-          · intro j _ hj
-            exact if_neg (fin.coe_injective.ne hj)
-          · intros
-            have := Finset.mem_univ i
-            contradiction
-          · refine' (degree_sum_le _ _).trans_lt ((Finset.sup_lt_iff _).mpr fun j _ => _)
-            · exact bot_lt_iff_ne_bot.mpr (mt degree_eq_bot.mp hg.ne_zero)
-            · refine' (degree_monomial_le _ _).trans_lt _
-              rw [degree_eq_nat_degree hg.ne_zero, WithBot.coe_lt_coe]
-              exact j.2 }
+          rw [(mod_by_monic_eq_self_iff hg).mpr, finset_sum_coeff]
+          · simp_rw [coeff_monomial, Fin.val_eq_val, Finset.sum_ite_eq', if_pos (Finset.mem_univ _)]
+          · simp_rw [← C_mul_X_pow_eq_monomial]
+            exact (degree_eq_nat_degree <| hg.ne_zero).symm ▸ degree_sum_fin_lt _ }
 #align adjoin_root.power_basis_aux' AdjoinRoot.powerBasisAux'
 
 -- This was moved after the definition to prevent a timeout
@@ -501,7 +493,7 @@ def powerBasisAux (hf : f ≠ 0) : Basis (Fin f.natDegree) K (AdjoinRoot f) :=
   have minpoly_eq : minpoly K (root f) = f' := minpoly_root hf
   apply @Basis.mk _ _ _ fun i : Fin f.nat_degree => root f ^ i.val
   · rw [← deg_f', ← minpoly_eq]
-    exact (is_integral_root hf).linear_independent_pow
+    exact linear_independent_pow (root f)
   · rintro y -
     rw [← deg_f', ← minpoly_eq]
     apply (is_integral_root hf).mem_span_pow
@@ -579,7 +571,7 @@ end minpoly
 
 section IsDomain
 
-variable [CommRing R] [IsDomain R] [CommRing S] [IsDomain S] [Algebra R S]
+variable [CommRing R] [CommRing S] [Algebra R S]
 
 variable (g : R[X]) (pb : PowerBasis R S)
 
@@ -597,8 +589,9 @@ def equiv' (h₁ : aeval (root g) (minpoly R pb.gen) = 0) (h₂ : aeval pb.gen g
       h₂ with
     toFun := AdjoinRoot.liftHom g pb.gen h₂
     invFun := pb.lift (root g) h₁
-    left_inv := fun x => (induction_on g x) fun f => by rw [lift_hom_mk, pb.lift_aeval, aeval_eq]
+    left_inv := fun x => induction_on g x fun f => by rw [lift_hom_mk, pb.lift_aeval, aeval_eq]
     right_inv := fun x => by
+      nontriviality S
       obtain ⟨f, hf, rfl⟩ := pb.exists_eq_aeval x
       rw [pb.lift_aeval, aeval_eq, lift_hom_mk] }
 #align adjoin_root.equiv' AdjoinRoot.equiv'
@@ -632,8 +625,7 @@ def equiv (f : F[X]) (hf : f ≠ 0) :
       by
       rw [power_basis_gen, minpoly_root hf, Polynomial.map_mul, roots_mul, Polynomial.map_C,
         roots_C, add_zero, Equiv.refl_apply]
-      · rw [← Polynomial.map_mul]
-        exact map_monic_ne_zero (monic_mul_leading_coeff_inv hf))
+      rw [← Polynomial.map_mul]; exact map_monic_ne_zero (monic_mul_leading_coeff_inv hf))
 #align adjoin_root.equiv AdjoinRoot.equiv
 
 end Field
@@ -813,7 +805,7 @@ namespace PowerBasis
 
 open AdjoinRoot AlgEquiv
 
-variable [CommRing R] [IsDomain R] [CommRing S] [IsDomain S] [Algebra R S]
+variable [CommRing R] [CommRing S] [Algebra R S]
 
 /-- Let `α` have minimal polynomial `f` over `R` and `I` be an ideal of `R`,
 then `R[α] / (I) = (R[x] / (f)) / pS = (R/p)[x] / (f mod p)`. -/

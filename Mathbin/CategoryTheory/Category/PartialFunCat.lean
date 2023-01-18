@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module category_theory.category.PartialFun
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -127,11 +127,10 @@ noncomputable def partialFunToPointed : PartialFunCat ⥤ PointedCat := by
       { obj := fun X => ⟨Option X, none⟩
         map := fun X Y f => ⟨Option.elim' none fun a => (f a).toOption, rfl⟩
         map_id' := fun X =>
-          PointedCat.Hom.ext _ _ <|
-            funext fun o => (Option.recOn o rfl) fun a => Part.some_toOption _
+          PointedCat.Hom.ext _ _ <| funext fun o => Option.recOn o rfl fun a => Part.some_toOption _
         map_comp' := fun X Y Z f g =>
           PointedCat.Hom.ext _ _ <|
-            funext fun o => (Option.recOn o rfl) fun a => Part.bind_toOption _ _ }
+            funext fun o => Option.recOn o rfl fun a => Part.bind_toOption _ _ }
 #align PartialFun_to_Pointed partialFunToPointed
 
 /-- The equivalence induced by `PartialFun_to_Pointed` and `Pointed_to_PartialFun`.
@@ -140,7 +139,8 @@ noncomputable def partialFunToPointed : PartialFunCat ⥤ PointedCat := by
 noncomputable def partialFunEquivPointed : PartialFunCat.{u} ≌ PointedCat := by
   classical exact
       equivalence.mk partialFunToPointed pointedToPartialFun
-        ((nat_iso.of_components fun X =>
+        (nat_iso.of_components
+          (fun X =>
             PartialFunCat.Iso.mk
               { toFun := fun a => ⟨some a, some_ne_none a⟩
                 invFun := fun a => get <| ne_none_iff_is_some.1 a.2
@@ -159,12 +159,13 @@ noncomputable def partialFunEquivPointed : PartialFunCat.{u} ≌ PointedCat := b
             simp_rw [Part.mem_some_iff, Subtype.mk_eq_mk, exists_prop, some_inj, exists_eq_right']
             refine' part.mem_to_option.symm.trans _
             exact eq_comm)
-        ((nat_iso.of_components fun X =>
+        (nat_iso.of_components
+          (fun X =>
             PointedCat.Iso.mk
               { toFun := Option.elim' X.point Subtype.val
                 invFun := fun a => if h : a = X.point then none else some ⟨_, h⟩
                 left_inv := fun a =>
-                  (Option.recOn a (dif_pos rfl)) fun a =>
+                  Option.recOn a (dif_pos rfl) fun a =>
                     (dif_neg a.2).trans <| by
                       simp only [Option.elim', Subtype.val_eq_coe, Subtype.coe_eta]
                 right_inv := fun a =>
@@ -178,7 +179,7 @@ noncomputable def partialFunEquivPointed : PartialFunCat.{u} ≌ PointedCat := b
           fun X Y f =>
           PointedCat.Hom.ext _ _ <|
             funext fun a =>
-              (Option.recOn a f.map_point.symm) fun a =>
+              Option.recOn a f.map_point.symm fun a =>
                 by
                 unfold_projs
                 dsimp
@@ -194,13 +195,14 @@ adding a point. -/
 @[simps]
 noncomputable def typeToPartialFunIsoPartialFunToPointed :
     typeToPartialFun ⋙ partialFunToPointed ≅ typeToPointed :=
-  (NatIso.ofComponents fun X =>
+  NatIso.ofComponents
+    (fun X =>
       { Hom := ⟨id, rfl⟩
         inv := ⟨id, rfl⟩
         hom_inv_id' := rfl
         inv_hom_id' := rfl })
     fun X Y f =>
     PointedCat.Hom.ext _ _ <|
-      funext fun a => (Option.recOn a rfl) fun a => by convert Part.some_toOption _
+      funext fun a => Option.recOn a rfl fun a => by convert Part.some_toOption _
 #align Type_to_PartialFun_iso_PartialFun_to_Pointed typeToPartialFunIsoPartialFunToPointed
 

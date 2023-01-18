@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module field_theory.perfect_closure
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -181,7 +181,7 @@ theorem lift_on_mk {L : Sort _} (f : ℕ × K → L) (hf : ∀ x y, R K p x y �
 @[elab_as_elim]
 theorem induction_on (x : PerfectClosure K p) {q : PerfectClosure K p → Prop}
     (h : ∀ x, q (mk K p x)) : q x :=
-  Quot.induction_on x h
+  Quot.inductionOn x h
 #align perfect_closure.induction_on PerfectClosure.induction_on
 
 variable (K p)
@@ -213,7 +213,7 @@ instance : Mul (PerfectClosure K p) :=
             mk K p (x.1 + y.1, (frobenius K p^[y.1]) x.2 * (frobenius K p^[x.1]) y.2))
           (mul_aux_right K p x))
       fun x1 x2 (H : R K p x1 x2) =>
-      funext fun e => (Quot.induction_on e) fun y => mul_aux_left K p x1 x2 y H⟩
+      funext fun e => Quot.inductionOn e fun y => mul_aux_left K p x1 x2 y H⟩
 
 @[simp]
 theorem mk_mul_mk (x y : ℕ × K) :
@@ -229,24 +229,24 @@ instance : CommMonoid (PerfectClosure K p) :=
         (PerfectClosure K
           p)) with
     mul_assoc := fun e f g =>
-      (Quot.induction_on e) fun ⟨m, x⟩ =>
-        (Quot.induction_on f) fun ⟨n, y⟩ =>
-          (Quot.induction_on g) fun ⟨s, z⟩ =>
+      Quot.inductionOn e fun ⟨m, x⟩ =>
+        Quot.inductionOn f fun ⟨n, y⟩ =>
+          Quot.inductionOn g fun ⟨s, z⟩ =>
             congr_arg (Quot.mk _) <| by
               simp only [add_assoc, mul_assoc, RingHom.iterate_map_mul, ← iterate_add_apply,
                 add_comm, add_left_comm]
     one := mk K p (0, 1)
     one_mul := fun e =>
-      Quot.induction_on e fun ⟨n, x⟩ =>
+      Quot.inductionOn e fun ⟨n, x⟩ =>
         congr_arg (Quot.mk _) <| by
           simp only [RingHom.iterate_map_one, iterate_zero_apply, one_mul, zero_add]
     mul_one := fun e =>
-      Quot.induction_on e fun ⟨n, x⟩ =>
+      Quot.inductionOn e fun ⟨n, x⟩ =>
         congr_arg (Quot.mk _) <| by
           simp only [RingHom.iterate_map_one, iterate_zero_apply, mul_one, add_zero]
     mul_comm := fun e f =>
-      Quot.induction_on e fun ⟨m, x⟩ =>
-        Quot.induction_on f fun ⟨n, y⟩ =>
+      Quot.inductionOn e fun ⟨m, x⟩ =>
+        Quot.inductionOn f fun ⟨n, y⟩ =>
           congr_arg (Quot.mk _) <| by simp only [add_comm, mul_comm] }
 
 theorem one_def : (1 : PerfectClosure K p) = mk K p (0, 1) :=
@@ -283,7 +283,7 @@ instance : Add (PerfectClosure K p) :=
             mk K p (x.1 + y.1, (frobenius K p^[y.1]) x.2 + (frobenius K p^[x.1]) y.2))
           (add_aux_right K p x))
       fun x1 x2 (H : R K p x1 x2) =>
-      funext fun e => (Quot.induction_on e) fun y => add_aux_left K p x1 x2 y H⟩
+      funext fun e => Quot.inductionOn e fun y => add_aux_left K p x1 x2 y H⟩
 
 @[simp]
 theorem mk_add_mk (x y : ℕ × K) :
@@ -335,27 +335,27 @@ instance : AddCommGroup (PerfectClosure K p) :=
         (PerfectClosure K
           p)) with
     add_assoc := fun e f g =>
-      (Quot.induction_on e) fun ⟨m, x⟩ =>
-        (Quot.induction_on f) fun ⟨n, y⟩ =>
-          (Quot.induction_on g) fun ⟨s, z⟩ =>
+      Quot.inductionOn e fun ⟨m, x⟩ =>
+        Quot.inductionOn f fun ⟨n, y⟩ =>
+          Quot.inductionOn g fun ⟨s, z⟩ =>
             congr_arg (Quot.mk _) <| by
               simp only [RingHom.iterate_map_add, ← iterate_add_apply, add_assoc, add_comm s _]
     zero := 0
     zero_add := fun e =>
-      Quot.induction_on e fun ⟨n, x⟩ =>
+      Quot.inductionOn e fun ⟨n, x⟩ =>
         congr_arg (Quot.mk _) <| by
           simp only [RingHom.iterate_map_zero, iterate_zero_apply, zero_add]
     add_zero := fun e =>
-      Quot.induction_on e fun ⟨n, x⟩ =>
+      Quot.inductionOn e fun ⟨n, x⟩ =>
         congr_arg (Quot.mk _) <| by
           simp only [RingHom.iterate_map_zero, iterate_zero_apply, add_zero]
     sub_eq_add_neg := fun a b => rfl
     add_left_neg := fun e =>
-      Quot.induction_on e fun ⟨n, x⟩ => by
+      Quot.inductionOn e fun ⟨n, x⟩ => by
         simp only [quot_mk_eq_mk, neg_mk, mk_add_mk, RingHom.iterate_map_neg, add_left_neg, mk_zero]
     add_comm := fun e f =>
-      Quot.induction_on e fun ⟨m, x⟩ =>
-        Quot.induction_on f fun ⟨n, y⟩ => congr_arg (Quot.mk _) <| by simp only [add_comm] }
+      Quot.inductionOn e fun ⟨m, x⟩ =>
+        Quot.inductionOn f fun ⟨n, y⟩ => congr_arg (Quot.mk _) <| by simp only [add_comm] }
 
 instance : CommRing (PerfectClosure K p) :=
   { PerfectClosure.addCommGroup K p, AddMonoidWithOne.unary,
@@ -364,17 +364,17 @@ instance : CommRing (PerfectClosure K p) :=
         (PerfectClosure K
           p)) with
     left_distrib := fun e f g =>
-      (Quot.induction_on e) fun ⟨m, x⟩ =>
-        (Quot.induction_on f) fun ⟨n, y⟩ =>
-          (Quot.induction_on g) fun ⟨s, z⟩ =>
+      Quot.inductionOn e fun ⟨m, x⟩ =>
+        Quot.inductionOn f fun ⟨n, y⟩ =>
+          Quot.inductionOn g fun ⟨s, z⟩ =>
             show Quot.mk _ _ = Quot.mk _ _ by
               simp only [add_assoc, add_comm, add_left_comm] <;> apply r.sound <;>
                 simp only [RingHom.iterate_map_mul, RingHom.iterate_map_add, ← iterate_add_apply,
                   mul_add, add_comm, add_left_comm]
     right_distrib := fun e f g =>
-      (Quot.induction_on e) fun ⟨m, x⟩ =>
-        (Quot.induction_on f) fun ⟨n, y⟩ =>
-          (Quot.induction_on g) fun ⟨s, z⟩ =>
+      Quot.inductionOn e fun ⟨m, x⟩ =>
+        Quot.inductionOn f fun ⟨n, y⟩ =>
+          Quot.inductionOn g fun ⟨s, z⟩ =>
             show Quot.mk _ _ = Quot.mk _ _ by
               simp only [add_assoc, add_comm _ s, add_left_comm _ s] <;> apply r.sound <;>
                 simp only [RingHom.iterate_map_mul, RingHom.iterate_map_add, ← iterate_add_apply,
@@ -500,7 +500,7 @@ instance : Field (PerfectClosure K p) :=
           p)) with
     exists_pair_ne := ⟨0, 1, fun H => zero_ne_one ((eq_iff _ _ _ _).1 H)⟩
     mul_inv_cancel := fun e =>
-      (induction_on e) fun ⟨m, x⟩ H =>
+      induction_on e fun ⟨m, x⟩ H =>
         have := mt (eq_iff _ _ _ _).2 H
         (eq_iff _ _ _ _).2
           (by

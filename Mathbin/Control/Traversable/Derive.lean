@@ -6,7 +6,7 @@ Authors: Simon Hudon
 Automation to construct `traversable` instances
 
 ! This file was ported from Lean 3 source module control.traversable.derive
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -143,7 +143,7 @@ unsafe def derive_functor (pre : Option Name) : tactic Unit := do
   refine ``({ map := _.. })
   let tgt ← target
   extract_def (.str (with_prefix pre n) "map") d <| mk_map n
-  (when (d d.is_trusted)) do
+  when (d d.is_trusted) do
       let tgt ← pis vs tgt
       derive_map_equations pre n vs tgt
 #align tactic.interactive.derive_functor tactic.interactive.derive_functor
@@ -311,7 +311,7 @@ unsafe def derive_traverse (pre : Option Name) : tactic Unit := do
   constructor
   let tgt ← target
   extract_def (.str (with_prefix pre n) "traverse") d <| mk_traverse n
-  (when (d d.is_trusted)) do
+  when (d d.is_trusted) do
       let tgt ← pis vs tgt
       derive_traverse_equations pre n vs tgt
 #align tactic.interactive.derive_traverse tactic.interactive.derive_traverse
@@ -358,7 +358,7 @@ open Interactive
 unsafe def get_equations_of (n : Name) : tactic (List pexpr) := do
   let e ← get_env
   let pre := .str n "equations"
-  let x := (e.fold []) fun d xs => if pre.isPrefixOf d.to_name then d.to_name :: xs else xs
+  let x := e.fold [] fun d xs => if pre.isPrefixOf d.to_name then d.to_name :: xs else xs
   x resolve_name
 #align tactic.interactive.get_equations_of tactic.interactive.get_equations_of
 

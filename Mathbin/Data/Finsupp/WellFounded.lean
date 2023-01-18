@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Junyan Xu
 
 ! This file was ported from Lean 3 source module data.finsupp.well_founded
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,7 +48,7 @@ theorem Lex.acc (x : α →₀ N) (h : ∀ a ∈ x.support, Acc (rᶜ ⊓ (· �
 #align finsupp.lex.acc Finsupp.Lex.acc
 
 theorem Lex.well_founded (hr : WellFounded <| rᶜ ⊓ (· ≠ ·)) : WellFounded (Finsupp.Lex r s) :=
-  ⟨fun x => (Lex.acc hbot hs x) fun a _ => hr.apply a⟩
+  ⟨fun x => Lex.acc hbot hs x fun a _ => hr.apply a⟩
 #align finsupp.lex.well_founded Finsupp.Lex.well_founded
 
 theorem Lex.well_founded' [IsTrichotomous α r] (hr : WellFounded r.swap) :
@@ -68,7 +68,7 @@ variable (r)
 
 theorem Lex.well_founded_of_finite [IsStrictTotalOrder α r] [Finite α] [Zero N]
     (hs : WellFounded s) : WellFounded (Finsupp.Lex r s) :=
-  InvImage.wf (@equivFunOnFinite α N _ _) ((Pi.Lex.well_founded r) fun a => hs)
+  InvImage.wf (@equivFunOnFinite α N _ _) (Pi.Lex.well_founded r fun a => hs)
 #align finsupp.lex.well_founded_of_finite Finsupp.Lex.well_founded_of_finite
 
 theorem Lex.well_founded_lt_of_finite [LinearOrder α] [Finite α] [Zero N] [LT N]

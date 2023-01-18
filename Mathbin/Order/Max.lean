@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Yury Kudryashov, Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.max
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -222,13 +222,13 @@ theorem no_top_order_iff_no_max_order (α : Type _) [LinearOrder α] : NoTopOrde
 
 #print NoMinOrder.not_acc /-
 theorem NoMinOrder.not_acc [LT α] [NoMinOrder α] (a : α) : ¬Acc (· < ·) a := fun h =>
-  (Acc.recOn h) fun x _ => (exists_lt x).recOn
+  Acc.recOn h fun x _ => (exists_lt x).recOn
 #align no_min_order.not_acc NoMinOrder.not_acc
 -/
 
 #print NoMaxOrder.not_acc /-
 theorem NoMaxOrder.not_acc [LT α] [NoMaxOrder α] (a : α) : ¬Acc (· > ·) a := fun h =>
-  (Acc.recOn h) fun x _ => (exists_gt x).recOn
+  Acc.recOn h fun x _ => (exists_gt x).recOn
 #align no_max_order.not_acc NoMaxOrder.not_acc
 -/
 

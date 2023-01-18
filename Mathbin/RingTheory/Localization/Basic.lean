@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.localization.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -849,7 +849,7 @@ Should not be confused with `add_localization.add`, which is defined as
 `⟨a, b⟩ + ⟨c, d⟩ = ⟨a + c, b + d⟩`.
 -/
 protected irreducible_def add (z w : Localization M) : Localization M :=
-  (Localization.liftOn₂ z w fun a b c d => mk ((b : R) * c + d * a) (b * d))
+  Localization.liftOn₂ z w (fun a b c d => mk ((b : R) * c + d * a) (b * d))
     fun a a' b b' c c' d d' h1 h2 =>
     mk_eq_mk_iff.2
       (by
@@ -1105,7 +1105,7 @@ namespace Localization
 
 /-- Negation in a ring localization is defined as `-⟨a, b⟩ = ⟨-a, b⟩`. -/
 protected irreducible_def neg (z : Localization M) : Localization M :=
-  (Localization.liftOn z fun a b => mk (-a) b) fun a b c d h =>
+  Localization.liftOn z (fun a b => mk (-a) b) fun a b c d h =>
     mk_eq_mk_iff.2
       (by
         rw [r_eq_r'] at h⊢

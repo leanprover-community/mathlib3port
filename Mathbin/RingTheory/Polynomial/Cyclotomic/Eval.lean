@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.cyclotomic.eval
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -84,10 +84,8 @@ theorem cyclotomic_pos {n : ℕ} (hn : 2 < n) {R} [LinearOrderedCommRing R] (x :
   dsimp at ih
   have := prod_cyclotomic_eq_geom_sum hn' R
   apply_fun eval x  at this
-  rw [divisors_eq_proper_divisors_insert_self_of_pos hn', Finset.erase_insert_of_ne hn''.ne',
-    Finset.prod_insert, eval_mul, eval_geom_sum] at this
-  swap
-  · simp only [proper_divisors.not_self_mem, mem_erase, and_false_iff, not_false_iff]
+  rw [← cons_self_proper_divisors hn'.ne', Finset.erase_cons_of_ne _ hn''.ne', Finset.prod_cons,
+    eval_mul, eval_geom_sum] at this
   rcases lt_trichotomy 0 (∑ i in Finset.range n, x ^ i) with (h | h | h)
   · apply pos_of_mul_pos_left
     · rwa [this]

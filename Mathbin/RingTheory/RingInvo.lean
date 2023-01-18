@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andreas Swerdlow, Kenny Lau
 
 ! This file was ported from Lean 3 source module ring_theory.ring_invo
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,9 +38,33 @@ structure RingInvo [Semiring R] extends R ≃+* Rᵐᵒᵖ where
   involution' : ∀ x, (to_fun (to_fun x).unop).unop = x
 #align ring_invo RingInvo
 
+/-- The equivalence of rings underlying a ring involution. -/
+add_decl_doc RingInvo.toRingEquiv
+
+/-- `ring_invo_class F R S` states that `F` is a type of ring involutions.
+You should extend this class when you extend `ring_invo`. -/
+class RingInvoClass (F : Type _) (R : outParam (Type _)) [Semiring R] extends
+  RingEquivClass F R Rᵐᵒᵖ where
+  involution : ∀ (f : F) (x), (f (f x).unop).unop = x
+#align ring_invo_class RingInvoClass
+
 namespace RingInvo
 
 variable {R} [Semiring R]
+
+instance (R : Type _) [Semiring R] : RingInvoClass (RingInvo R) R
+    where
+  coe := toFun
+  inv := invFun
+  coe_injective' e f h₁ h₂ := by
+    cases e
+    cases f
+    congr
+  map_add := map_add'
+  map_mul := map_mul'
+  left_inv := left_inv
+  right_inv := right_inv
+  involution := involution'
 
 /-- Construct a ring involution from a ring homomorphism. -/
 def mk' (f : R →+* Rᵐᵒᵖ) (involution : ∀ r, (f (f r).unop).unop = r) : RingInvo R :=
@@ -51,6 +75,8 @@ def mk' (f : R →+* Rᵐᵒᵖ) (involution : ∀ r, (f (f r).unop).unop = r) :
     involution' := involution }
 #align ring_invo.mk' RingInvo.mk'
 
+/-- Helper instance for when there's too many metavariables to apply
+`fun_like.has_coe_to_fun` directly. -/
 instance : CoeFun (RingInvo R) fun _ => R → Rᵐᵒᵖ :=
   ⟨fun f => f.toRingEquiv.toFun⟩
 

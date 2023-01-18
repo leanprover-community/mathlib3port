@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.zmod.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -489,7 +489,7 @@ theorem val_int_cast {n : ℕ} (a : ℤ) [NeZero n] : ↑(a : Zmod n).val = a % 
   by
   have hle : (0 : ℤ) ≤ ↑(a : Zmod n).val := Int.coe_nat_nonneg _
   have hlt : ↑(a : Zmod n).val < (n : ℤ) := int.coe_nat_lt.mpr (Zmod.val_lt a)
-  refine' (Int.mod_eq_of_lt hle hlt).symm.trans _
+  refine' (Int.emod_eq_of_lt hle hlt).symm.trans _
   rw [← Zmod.int_coe_eq_int_coe_iff', Int.cast_ofNat, Zmod.nat_cast_val, Zmod.cast_id]
 #align zmod.val_int_cast Zmod.val_int_cast
 
@@ -862,7 +862,7 @@ theorem neg_eq_self_iff {n : ℕ} (a : Zmod n) : -a = a ↔ a = 0 ∨ 2 * a.val 
   · rw [@mul_eq_zero ℤ, @mul_eq_zero ℕ, val_eq_zero]
     exact
       ⟨fun h => h.elim (by decide) Or.inl, fun h =>
-        Or.inr ((h.elim id) fun h => h.elim (by decide) id)⟩
+        Or.inr (h.elim id fun h => h.elim (by decide) id)⟩
   conv_lhs =>
     rw [← a.nat_cast_zmod_val, ← Nat.cast_two, ← Nat.cast_mul, nat_coe_zmod_eq_zero_iff_dvd]
   constructor

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.preadditive.schur
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -227,7 +227,7 @@ theorem finrank_hom_simple_simple_eq_zero_iff (X Y : C) [FiniteDimensional 𝕜 
       rw [h]
       simp, fun h => _⟩
   have := finrank_hom_simple_simple_le_one 𝕜 X Y
-  interval_cases finrank 𝕜 (X ⟶ Y) with h'
+  interval_cases h' : finrank 𝕜 (X ⟶ Y)
   · exact h'
   · exact False.elim (h h')
 #align

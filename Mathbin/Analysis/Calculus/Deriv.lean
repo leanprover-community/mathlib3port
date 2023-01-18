@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gabriel Ebner, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.deriv
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -511,7 +511,7 @@ theorem DifferentiableAt.deriv_within (h : DifferentiableAt 𝕜 f x)
 
 theorem HasDerivWithinAt.deriv_eq_zero (hd : HasDerivWithinAt f 0 s x)
     (H : UniqueDiffWithinAt 𝕜 s x) : deriv f x = 0 :=
-  ((em' (DifferentiableAt 𝕜 f x)).elim deriv_zero_of_not_differentiable_at) fun h =>
+  (em' (DifferentiableAt 𝕜 f x)).elim deriv_zero_of_not_differentiable_at fun h =>
     H.eq_deriv _ h.HasDerivAt.HasDerivWithinAt hd
 #align has_deriv_within_at.deriv_eq_zero HasDerivWithinAt.deriv_eq_zero
 
@@ -1227,7 +1227,7 @@ theorem HasDerivAtFilter.is_O_sub (h : HasDerivAtFilter f f' x L) :
 theorem HasDerivAtFilter.is_O_sub_rev (hf : HasDerivAtFilter f f' x L) (hf' : f' ≠ 0) :
     (fun x' => x' - x) =O[L] fun x' => f x' - f x :=
   suffices AntilipschitzWith ‖f'‖₊⁻¹ (smulRight (1 : 𝕜 →L[𝕜] 𝕜) f') from hf.is_O_sub_rev this
-  (AddMonoidHomClass.antilipschitz_of_bound (smulRight (1 : 𝕜 →L[𝕜] 𝕜) f')) fun x => by
+  AddMonoidHomClass.antilipschitz_of_bound (smulRight (1 : 𝕜 →L[𝕜] 𝕜) f') fun x => by
     simp [norm_smul, ← div_eq_inv_mul, mul_div_cancel _ (mt norm_eq_zero.1 hf')]
 #align has_deriv_at_filter.is_O_sub_rev HasDerivAtFilter.is_O_sub_rev
 

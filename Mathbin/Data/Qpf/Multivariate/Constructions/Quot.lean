@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Simon Hudon
 
 ! This file was ported from Lean 3 source module data.qpf.multivariate.constructions.quot
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -27,13 +27,13 @@ namespace Mvqpf
 
 variable {n : ℕ}
 
-variable {F : Typevec.{u} n → Type u}
+variable {F : TypeVec.{u} n → Type u}
 
 section repr
 
 variable [Mvfunctor F] [q : Mvqpf F]
 
-variable {G : Typevec.{u} n → Type u} [Mvfunctor G]
+variable {G : TypeVec.{u} n → Type u} [Mvfunctor G]
 
 variable {FG_abs : ∀ {α}, F α → G α}
 
@@ -59,11 +59,11 @@ section Rel
 variable (R : ∀ ⦃α⦄, F α → F α → Prop)
 
 /-- Functorial quotient type -/
-def Quot1 (α : Typevec n) :=
+def Quot1 (α : TypeVec n) :=
   Quot (@R α)
 #align mvqpf.quot1 Mvqpf.Quot1
 
-instance Quot1.inhabited {α : Typevec n} [Inhabited <| F α] : Inhabited (Quot1 R α) :=
+instance Quot1.inhabited {α : TypeVec n} [Inhabited <| F α] : Inhabited (Quot1 R α) :=
   ⟨Quot.mk _ default⟩
 #align mvqpf.quot1.inhabited Mvqpf.Quot1.inhabited
 
@@ -73,7 +73,7 @@ variable (Hfunc : ∀ ⦃α β⦄ (a b : F α) (f : α ⟹ β), R a b → R (f <
 
 /-- `map` of the `quot1` functor -/
 def Quot1.map ⦃α β⦄ (f : α ⟹ β) : Quot1.{u} R α → Quot1.{u} R β :=
-  (Quot.lift fun x : F α => Quot.mk _ (f <$$> x : F β)) fun a b h => Quot.sound <| Hfunc a b _ h
+  Quot.lift (fun x : F α => Quot.mk _ (f <$$> x : F β)) fun a b h => Quot.sound <| Hfunc a b _ h
 #align mvqpf.quot1.map Mvqpf.Quot1.map
 
 /-- `mvfunctor` instance for `quot1` with well-behaved `R` -/

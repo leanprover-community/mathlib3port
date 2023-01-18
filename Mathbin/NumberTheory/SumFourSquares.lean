@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module number_theory.sum_four_squares
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,7 +51,7 @@ theorem sq_add_sq_of_two_mul_sq_add_sq {m x y : ℤ} (h : 2 * m = x ^ 2 + y ^ 2)
 
 theorem exists_sq_add_sq_add_one_eq_k (p : ℕ) [hp : Fact p.Prime] :
     ∃ (a b : ℤ)(k : ℕ), a ^ 2 + b ^ 2 + 1 = k * p ∧ k < p :=
-  (hp.1.eq_two_or_odd.elim fun hp2 => hp2.symm ▸ ⟨1, 0, 1, rfl, by decide⟩) fun hp1 =>
+  hp.1.eq_two_or_odd.elim (fun hp2 => hp2.symm ▸ ⟨1, 0, 1, rfl, by decide⟩) fun hp1 =>
     let ⟨a, b, hab⟩ := Zmod.sq_add_sq p (-1)
     have hab' : (p : ℤ) ∣ a.valMinAbs ^ 2 + b.valMinAbs ^ 2 + 1 :=
       (CharP.int_cast_eq_zero_iff (Zmod p) p _).1 <| by simpa [eq_neg_iff_add_eq_zero] using hab

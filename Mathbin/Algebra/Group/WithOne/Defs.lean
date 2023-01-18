@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Johan Commelin
 
 ! This file was ported from Lean 3 source module algebra.group.with_one.defs
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -24,6 +24,12 @@ this provides an example of an adjunction is proved in `algebra.category.Mon.adj
 Another result says that adjoining to a group an element `zero` gives a `group_with_zero`. For more
 information about these structures (which are not that standard in informal mathematics, see
 `algebra.group_with_zero.basic`)
+
+## Implementation notes
+
+At various points in this file, `id $` is used in at the start of a proof field in a structure. This
+ensures that the generated `_proof_1` lemmas are stated in terms of the algebraic operations and
+not `option.map`, as the latter does not typecheck once `with_zero`/`with_one` is irreducible.
 -/
 
 
@@ -73,8 +79,8 @@ instance [Inv α] : Inv (WithOne α) :=
 @[to_additive]
 instance [InvolutiveInv α] : InvolutiveInv (WithOne α) :=
   { WithOne.inv with
-    inv_inv := fun a =>
-      (Option.map_map _ _ _).trans <| by simp_rw [inv_comp_inv, Option.map_id, id] }
+    inv_inv :=
+      id fun a => (Option.map_map _ _ _).trans <| by simp_rw [inv_comp_inv, Option.map_id, id] }
 
 @[to_additive]
 instance [Inv α] : InvOneClass (WithOne α) :=
@@ -176,16 +182,13 @@ protected theorem cases_on {P : WithOne α → Prop} : ∀ x : WithOne α, P 1 �
 #align with_one.cases_on WithOne.cases_on
 -/
 
--- the `show` statements in the proofs are important, because otherwise the generated lemmas
--- `with_one.mul_one_class._proof_{1,2}` have an ill-typed statement after `with_one` is made
--- irreducible.
 @[to_additive]
 instance [Mul α] : MulOneClass (WithOne α)
     where
   mul := (· * ·)
   one := 1
-  one_mul := show ∀ x : WithOne α, 1 * x = x from (Option.liftOrGet_isLeftId _).1
-  mul_one := show ∀ x : WithOne α, x * 1 = x from (Option.liftOrGet_isRightId _).1
+  one_mul := id <| (Option.liftOrGet_isLeftId _).1
+  mul_one := id <| (Option.liftOrGet_isRightId _).1
 
 @[to_additive]
 instance [Semigroup α] : Monoid (WithOne α) :=
@@ -227,11 +230,10 @@ theorem coe_one [One α] : ((1 : α) : WithZero α) = 1 :=
 -/
 
 instance [Mul α] : MulZeroClass (WithZero α) :=
-  {
-    WithZero.hasZero with
-    mul := fun o₁ o₂ => o₁.bind fun a => Option.map (fun b => a * b) o₂
-    zero_mul := fun a => rfl
-    mul_zero := fun a => by cases a <;> rfl }
+  { WithZero.hasZero with
+    mul := Option.map₂ (· * ·)
+    zero_mul := id <| Option.map₂_none_left (· * ·)
+    mul_zero := id <| Option.map₂_none_right (· * ·) }
 
 /- warning: with_zero.coe_mul -> WithZero.coe_mul is a dubious translation:
 lean 3 declaration is
@@ -244,60 +246,20 @@ theorem coe_mul {α : Type u} [Mul α] {a b : α} : ((a * b : α) : WithZero α)
   rfl
 #align with_zero.coe_mul WithZero.coe_mul
 
-/- warning: with_zero.zero_mul -> WithZero.zero_mul is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] (a : WithZero.{u1} α), Eq.{succ u1} (WithZero.{u1} α) (HMul.hMul.{u1, u1, u1} (WithZero.{u1} α) (WithZero.{u1} α) (WithZero.{u1} α) (instHMul.{u1} (WithZero.{u1} α) (MulZeroClass.toHasMul.{u1} (WithZero.{u1} α) (WithZero.mulZeroClass.{u1} α _inst_1))) (OfNat.ofNat.{u1} (WithZero.{u1} α) 0 (OfNat.mk.{u1} (WithZero.{u1} α) 0 (Zero.zero.{u1} (WithZero.{u1} α) (WithZero.hasZero.{u1} α)))) a) (OfNat.ofNat.{u1} (WithZero.{u1} α) 0 (OfNat.mk.{u1} (WithZero.{u1} α) 0 (Zero.zero.{u1} (WithZero.{u1} α) (WithZero.hasZero.{u1} α))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] (a : WithZero.{u1} α), Eq.{succ u1} (WithZero.{u1} α) (HMul.hMul.{u1, u1, u1} (WithZero.{u1} α) (WithZero.{u1} α) (WithZero.{u1} α) (instHMul.{u1} (WithZero.{u1} α) (MulZeroClass.toMul.{u1} (WithZero.{u1} α) (WithZero.mulZeroClass.{u1} α _inst_1))) (OfNat.ofNat.{u1} (WithZero.{u1} α) 0 (Zero.toOfNat0.{u1} (WithZero.{u1} α) (WithZero.zero.{u1} α))) a) (OfNat.ofNat.{u1} (WithZero.{u1} α) 0 (Zero.toOfNat0.{u1} (WithZero.{u1} α) (WithZero.zero.{u1} α)))
-Case conversion may be inaccurate. Consider using '#align with_zero.zero_mul WithZero.zero_mulₓ'. -/
-@[simp]
-theorem zero_mul {α : Type u} [Mul α] (a : WithZero α) : 0 * a = 0 :=
-  rfl
-#align with_zero.zero_mul WithZero.zero_mul
-
-/- warning: with_zero.mul_zero -> WithZero.mul_zero is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] (a : WithZero.{u1} α), Eq.{succ u1} (WithZero.{u1} α) (HMul.hMul.{u1, u1, u1} (WithZero.{u1} α) (WithZero.{u1} α) (WithZero.{u1} α) (instHMul.{u1} (WithZero.{u1} α) (MulZeroClass.toHasMul.{u1} (WithZero.{u1} α) (WithZero.mulZeroClass.{u1} α _inst_1))) a (OfNat.ofNat.{u1} (WithZero.{u1} α) 0 (OfNat.mk.{u1} (WithZero.{u1} α) 0 (Zero.zero.{u1} (WithZero.{u1} α) (WithZero.hasZero.{u1} α))))) (OfNat.ofNat.{u1} (WithZero.{u1} α) 0 (OfNat.mk.{u1} (WithZero.{u1} α) 0 (Zero.zero.{u1} (WithZero.{u1} α) (WithZero.hasZero.{u1} α))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] (a : WithZero.{u1} α), Eq.{succ u1} (WithZero.{u1} α) (HMul.hMul.{u1, u1, u1} (WithZero.{u1} α) (WithZero.{u1} α) (WithZero.{u1} α) (instHMul.{u1} (WithZero.{u1} α) (MulZeroClass.toMul.{u1} (WithZero.{u1} α) (WithZero.mulZeroClass.{u1} α _inst_1))) a (OfNat.ofNat.{u1} (WithZero.{u1} α) 0 (Zero.toOfNat0.{u1} (WithZero.{u1} α) (WithZero.zero.{u1} α)))) (OfNat.ofNat.{u1} (WithZero.{u1} α) 0 (Zero.toOfNat0.{u1} (WithZero.{u1} α) (WithZero.zero.{u1} α)))
-Case conversion may be inaccurate. Consider using '#align with_zero.mul_zero WithZero.mul_zeroₓ'. -/
-@[simp]
-theorem mul_zero {α : Type u} [Mul α] (a : WithZero α) : a * 0 = 0 := by cases a <;> rfl
-#align with_zero.mul_zero WithZero.mul_zero
-
 instance [Mul α] : NoZeroDivisors (WithZero α) :=
-  ⟨by
-    rintro (a | a) (b | b) h
-    exacts[Or.inl rfl, Or.inl rfl, Or.inr rfl, Option.noConfusion h]⟩
+  ⟨fun a b => id <| Option.map₂_eq_none_iff.1⟩
 
 instance [Semigroup α] : SemigroupWithZero (WithZero α) :=
-  { WithZero.mulZeroClass with
-    mul_assoc := fun a b c =>
-      match a, b, c with
-      | none, _, _ => rfl
-      | some a, none, _ => rfl
-      | some a, some b, none => rfl
-      | some a, some b, some c => congr_arg some (mul_assoc _ _ _) }
+  { WithZero.mulZeroClass with mul_assoc := id fun _ _ _ => Option.map₂_assoc mul_assoc }
 
 instance [CommSemigroup α] : CommSemigroup (WithZero α) :=
-  { WithZero.semigroupWithZero with
-    mul_comm := fun a b =>
-      match a, b with
-      | none, _ => (mul_zero _).symm
-      | some a, none => rfl
-      | some a, some b => congr_arg some (mul_comm _ _) }
+  { WithZero.semigroupWithZero with mul_comm := id fun _ _ => Option.map₂_comm mul_comm }
 
 instance [MulOneClass α] : MulZeroOneClass (WithZero α) :=
   { WithZero.mulZeroClass,
     WithZero.hasOne with
-    one_mul := fun a =>
-      match a with
-      | none => rfl
-      | some a => congr_arg some <| one_mul _
-    mul_one := fun a =>
-      match a with
-      | none => rfl
-      | some a => congr_arg some <| mul_one _ }
+    one_mul := id <| Option.map₂_left_identity one_mul
+    mul_one := id <| Option.map₂_right_identity mul_one }
 
 instance [One α] [Pow α ℕ] : Pow (WithZero α) ℕ :=
   ⟨fun x n =>
@@ -350,14 +312,14 @@ theorem inv_zero [Inv α] : (0 : WithZero α)⁻¹ = 0 :=
 
 instance [InvolutiveInv α] : InvolutiveInv (WithZero α) :=
   { WithZero.hasInv with
-    inv_inv := fun a =>
-      (Option.map_map _ _ _).trans <| by simp_rw [inv_comp_inv, Option.map_id, id] }
+    inv_inv :=
+      id fun a => (Option.map_map _ _ _).trans <| by simp_rw [inv_comp_inv, Option.map_id, id] }
 
 instance [InvOneClass α] : InvOneClass (WithZero α) :=
   { WithZero.hasOne, WithZero.hasInv with inv_one := show ((1⁻¹ : α) : WithZero α) = 1 by simp }
 
 instance [Div α] : Div (WithZero α) :=
-  ⟨fun o₁ o₂ => o₁.bind fun a => Option.map (fun b => a / b) o₂⟩
+  ⟨Option.map₂ (· / ·)⟩
 
 #print WithZero.coe_div /-
 @[norm_cast]

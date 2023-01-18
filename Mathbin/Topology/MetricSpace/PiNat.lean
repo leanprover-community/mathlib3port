@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.pi_nat
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -751,6 +751,7 @@ theorem exists_nat_nat_continuous_surjective_of_complete_space (α : Type _) [Me
       apply apply_first_diff_ne hne'
       rw [le_zero_iff.1 h]
       apply apply_eq_of_dist_lt _ le_rfl
+      rw [pow_zero]
       exact hxy
     have hn : first_diff x.1 y.1 = n + 1 := (Nat.succ_pred_eq_of_pos diff_pos).symm
     rw [dist', dist_eq_of_ne hne', hn]

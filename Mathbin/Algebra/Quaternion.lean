@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.quaternion
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -354,11 +354,10 @@ theorem smul_coe : x • (y : ℍ[R,c₁,c₂]) = ↑(x * y) := by rw [coe_mul, 
 
 /-- Quaternion conjugate. -/
 def conj : ℍ[R,c₁,c₂] ≃ₗ[R] ℍ[R,c₁,c₂] :=
-  (LinearEquiv.ofInvolutive
-      { toFun := fun a => ⟨a.1, -a.2, -a.3, -a.4⟩
-        map_add' := fun a b => by ext <;> simp [neg_add]
-        map_smul' := fun r a => by ext <;> simp })
-    fun a => by simp
+  LinearEquiv.ofInvolutive
+    { toFun := fun a => ⟨a.1, -a.2, -a.3, -a.4⟩
+      map_add' := fun a b => by ext <;> simp [neg_add]
+      map_smul' := fun r a => by ext <;> simp } fun a => by simp
 #align quaternion_algebra.conj QuaternionAlgebra.conj
 
 @[simp]

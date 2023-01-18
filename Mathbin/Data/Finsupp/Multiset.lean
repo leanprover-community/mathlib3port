@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module data.finsupp.multiset
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -89,7 +89,7 @@ theorem to_multiset_map (f : α →₀ ℕ) (g : α → β) :
   · rw [to_multiset_zero, Multiset.map_zero, map_domain_zero, to_multiset_zero]
   · intro a n f _ _ ih
     rw [to_multiset_add, Multiset.map_add, ih, map_domain_add, map_domain_single,
-      to_multiset_single, to_multiset_add, to_multiset_single, ← Multiset.coe_map_add_monoid_hom,
+      to_multiset_single, to_multiset_add, to_multiset_single, ← Multiset.coe_mapAddMonoidHom,
       (Multiset.mapAddMonoidHom g).map_nsmul]
     rfl
 #align finsupp.to_multiset_map Finsupp.to_multiset_map
@@ -110,10 +110,10 @@ theorem prod_to_multiset [CommMonoid α] (f : α →₀ ℕ) :
 theorem to_finset_to_multiset [DecidableEq α] (f : α →₀ ℕ) : f.toMultiset.toFinset = f.support :=
   by
   refine' f.induction _ _
-  · rw [to_multiset_zero, Multiset.to_finset_zero, support_zero]
+  · rw [to_multiset_zero, Multiset.toFinset_zero, support_zero]
   · intro a n f ha hn ih
-    rw [to_multiset_add, Multiset.to_finset_add, ih, to_multiset_single, support_add_eq,
-      support_single_ne_zero _ hn, Multiset.to_finset_nsmul _ _ hn, Multiset.to_finset_singleton]
+    rw [to_multiset_add, Multiset.toFinset_add, ih, to_multiset_single, support_add_eq,
+      support_single_ne_zero _ hn, Multiset.toFinset_nsmul _ _ hn, Multiset.toFinset_singleton]
     refine' Disjoint.mono_left support_single_subset _
     rwa [Finset.disjoint_singleton_left]
 #align finsupp.to_finset_to_multiset Finsupp.to_finset_to_multiset

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Keeley Hoek
 
 ! This file was ported from Lean 3 source module tactic.local_cache
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -77,7 +77,7 @@ private unsafe def get_name_aux (ns : Name) (mk_new : options → Name → tacti
   tactic.local_cache.internal.block_local.get_name_aux tactic.local_cache.internal.block_local.get_name_aux
 
 unsafe def get_name (ns : Name) : tactic Name :=
-  (get_name_aux ns) fun o opt => do
+  get_name_aux ns fun o opt => do
     let n ← mk_user_fresh_name
     tactic.set_options <| o opt n
     return n
@@ -87,7 +87,7 @@ unsafe def get_name (ns : Name) : tactic Name :=
 -- Like `get_name`, but fail if `ns` does not have a cached
 -- decl name (we create a new one above).
 unsafe def try_get_name (ns : Name) : tactic Name :=
-  (get_name_aux ns) fun o opt => fail f! "no cache for "{ns}""
+  get_name_aux ns fun o opt => fail f! "no cache for "{ns}""
 #align
   tactic.local_cache.internal.block_local.try_get_name tactic.local_cache.internal.block_local.try_get_name
 

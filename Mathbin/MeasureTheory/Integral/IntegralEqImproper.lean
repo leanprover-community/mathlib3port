@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module measure_theory.integral.integral_eq_improper
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -512,7 +512,7 @@ theorem AeCover.integral_tendsto_of_countably_generated [l.IsCountablyGenerated]
     rw [integral_indicator (hφ.measurable n)]
   tendsto_integral_filter_of_dominated_convergence (fun x => ‖f x‖)
     (eventually_of_forall fun i => hfi.AeStronglyMeasurable.indicator <| hφ.Measurable i)
-    (eventually_of_forall fun i => (ae_of_all _) fun x => norm_indicator_le_norm_self _ _) hfi.norm
+    (eventually_of_forall fun i => ae_of_all _ fun x => norm_indicator_le_norm_self _ _) hfi.norm
     (hφ.ae_tendsto_indicator f)
 #align
   measure_theory.ae_cover.integral_tendsto_of_countably_generated MeasureTheory.AeCover.integral_tendsto_of_countably_generated
@@ -799,7 +799,7 @@ theorem integral_comp_rpow_Ioi_of_pos {g : ℝ → E} {p : ℝ} (hp : 0 < p) :
     (∫ x in Ioi 0, (p * x ^ (p - 1)) • g (x ^ p)) = ∫ y in Ioi 0, g y :=
   by
   convert integral_comp_rpow_Ioi g hp.ne'
-  funext ; congr ; rw [abs_of_nonneg hp.le]
+  funext; congr ; rw [abs_of_nonneg hp.le]
 #align measure_theory.integral_comp_rpow_Ioi_of_pos MeasureTheory.integral_comp_rpow_Ioi_of_pos
 
 end IoiChangeVariables

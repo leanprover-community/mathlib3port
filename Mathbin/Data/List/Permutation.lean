@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Parikshit Khanna, Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.list.permutation
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -73,17 +73,17 @@ theorem permutationsAux2_fst (t : α) (ts : List α) (r : List β) :
     | ⟨_, zs⟩, rfl => rfl
 #align list.permutations_aux2_fst List.permutationsAux2_fst
 
-/- warning: list.permutations_aux2_snd_nil -> List.permutations_aux2_snd_nil is a dubious translation:
+/- warning: list.permutations_aux2_snd_nil -> List.permutationsAux2_snd_nil is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} (t : α) (ts : List.{u1} α) (r : List.{u2} β) (f : (List.{u1} α) -> β), Eq.{succ u2} (List.{u2} β) (Prod.snd.{u1, u2} (List.{u1} α) (List.{u2} β) (List.permutationsAux2.{u1, u2} α β t ts r (List.nil.{u1} α) f)) r
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (t : α) (ts : List.{u2} α) (r : List.{u1} β) (f : (List.{u2} α) -> β), Eq.{succ u1} (List.{u1} β) (Prod.snd.{u2, u1} (List.{u2} α) (List.{u1} β) (List.permutationsAux2.{u2, u1} α β t ts r (List.nil.{u2} α) f)) r
-Case conversion may be inaccurate. Consider using '#align list.permutations_aux2_snd_nil List.permutations_aux2_snd_nilₓ'. -/
+Case conversion may be inaccurate. Consider using '#align list.permutations_aux2_snd_nil List.permutationsAux2_snd_nilₓ'. -/
 @[simp]
-theorem permutations_aux2_snd_nil (t : α) (ts : List α) (r : List β) (f : List α → β) :
+theorem permutationsAux2_snd_nil (t : α) (ts : List α) (r : List β) (f : List α → β) :
     (permutationsAux2 t ts r [] f).2 = r :=
   rfl
-#align list.permutations_aux2_snd_nil List.permutations_aux2_snd_nil
+#align list.permutations_aux2_snd_nil List.permutationsAux2_snd_nil
 
 /- warning: list.permutations_aux2_snd_cons -> List.permutationsAux2_snd_cons is a dubious translation:
 lean 3 declaration is
@@ -123,7 +123,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.permutations_aux2_comp_append List.permutationsAux2_comp_appendₓ'. -/
 /-- The `ts` argument to `permutations_aux2` can be folded into the `f` argument. -/
 theorem permutationsAux2_comp_append {t : α} {ts ys : List α} {r : List β} (f : List α → β) :
-    ((permutationsAux2 t [] r ys) fun x => f (x ++ ts)).2 = (permutationsAux2 t ts r ys f).2 :=
+    (permutationsAux2 t [] r ys fun x => f (x ++ ts)).2 = (permutationsAux2 t ts r ys f).2 :=
   by
   induction ys generalizing f
   · simp

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module testing.slim_check.gen
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -209,7 +209,7 @@ def freq (xs : List (ℕ+ × Gen α)) (pos : 0 < xs.length) : Gen α :=
           intros
           assumption
   have : 0 ≤ s - 1 := le_tsub_of_add_le_right ha
-  (Uliftable.adaptUp Gen.{0} Gen.{u} (chooseNat 0 (s - 1) this)) fun i =>
+  Uliftable.adaptUp Gen.{0} Gen.{u} (chooseNat 0 (s - 1) this) fun i =>
     freqAux xs i.1 (by rcases i with ⟨i, h₀, h₁⟩ <;> rwa [le_tsub_iff_right] at h₁ <;> exact ha)
 #align slim_check.gen.freq SlimCheck.Gen.freq
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning, Patrick Lutz
 
 ! This file was ported from Lean 3 source module field_theory.polynomial_galois_group
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -160,7 +160,7 @@ theorem map_roots_bijective [h : Fact (p.Splits (algebraMap F E))] :
         ((splits_id_iff_splits _).mpr (is_splitting_field.splits p.splitting_field p))
     rw [map_map, AlgHom.comp_algebra_map] at key
     have hy := Subtype.mem y
-    simp only [root_set, Finset.mem_coe, Multiset.mem_to_finset, key, Multiset.mem_map] at hy
+    simp only [root_set, Finset.mem_coe, Multiset.mem_toFinset, key, Multiset.mem_map] at hy
     rcases hy with ⟨x, hx1, hx2⟩
     exact ⟨⟨x, multiset.mem_to_finset.mpr hx1⟩, Subtype.ext hx2⟩
 #align polynomial.gal.map_roots_bijective Polynomial.Gal.map_roots_bijective
@@ -415,7 +415,7 @@ theorem card_complex_roots_eq_card_real_add_card_not_gal_inv (p : ℚ[X]) :
       rw [hp, root_set_zero]
       infer_instance
     simp_rw [(gal_action_hom p ℂ _).support.eq_empty_of_is_empty, hp, root_set_zero,
-      Set.to_finset_empty, Finset.card_empty]
+      Set.toFinset_empty, Finset.card_empty]
   have inj : Function.Injective (IsScalarTower.toAlgHom ℚ ℝ ℂ) := (algebraMap ℝ ℂ).Injective
   rw [← Finset.card_image_of_injective _ Subtype.coe_injective, ←
     Finset.card_image_of_injective _ inj]
@@ -425,12 +425,12 @@ theorem card_complex_roots_eq_card_real_add_card_not_gal_inv (p : ℚ[X]) :
   change a.card = b.card + c.card
   have ha : ∀ z : ℂ, z ∈ a ↔ aeval z p = 0 := by
     intro z
-    rw [Set.mem_to_finset, mem_root_set_of_ne hp]
+    rw [Set.mem_toFinset, mem_root_set_of_ne hp]
     infer_instance
   have hb : ∀ z : ℂ, z ∈ b ↔ aeval z p = 0 ∧ z.im = 0 :=
     by
     intro z
-    simp_rw [Finset.mem_image, exists_prop, Set.mem_to_finset, mem_root_set_of_ne hp]
+    simp_rw [Finset.mem_image, exists_prop, Set.mem_toFinset, mem_root_set_of_ne hp]
     constructor
     · rintro ⟨w, hw, rfl⟩
       exact ⟨by rw [aeval_alg_hom_apply, hw, AlgHom.map_zero], rfl⟩
@@ -479,7 +479,7 @@ theorem gal_action_hom_bijective_of_prime_degree {p : ℚ[X]} (p_irr : Irreducib
   have h1 : Fintype.card (p.root_set ℂ) = p.nat_degree :=
     by
     simp_rw [root_set_def, Finset.coe_sort_coe, Fintype.card_coe]
-    rw [Multiset.to_finset_card_of_nodup, ← nat_degree_eq_card_roots]
+    rw [Multiset.toFinset_card_of_nodup, ← nat_degree_eq_card_roots]
     · exact IsAlgClosed.splits_codomain p
     · exact nodup_roots ((separable_map (algebraMap ℚ ℂ)).mpr p_irr.separable)
   have h2 : Fintype.card p.gal = Fintype.card (gal_action_hom p ℂ).range :=

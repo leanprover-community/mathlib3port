@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 
 ! This file was ported from Lean 3 source module group_theory.commensurable
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,11 +69,13 @@ theorem equivalence : Equivalence (@Commensurable G _) :=
 /-- Equivalence of `K/H ⊓ K` with `gKg⁻¹/gHg⁻¹ ⊓ gKg⁻¹`-/
 def quotConjEquiv (H K : Subgroup G) (g : ConjAct G) :
     K ⧸ H.subgroupOf K ≃ (g • K).1 ⧸ (g • H).subgroupOf (g • K) :=
-  Quotient.congr (K.equivSmul g).toEquiv fun a b => by
+  Quotient.congr (K.equivSmul g).toEquiv fun a b =>
+    by
+    dsimp
     rw [← Quotient.eq', ← Quotient.eq', QuotientGroup.eq', QuotientGroup.eq',
-      Subgroup.mem_subgroup_of, Subgroup.mem_subgroup_of, [anonymous], [anonymous], ←
-      MulEquiv.map_inv, ← MulEquiv.map_mul, Subgroup.equiv_smul_apply_coe,
-      Subgroup.smul_mem_pointwise_smul_iff]
+      Subgroup.mem_subgroup_of, Subgroup.mem_subgroup_of, ← MulEquiv.map_inv, ← MulEquiv.map_mul,
+      Subgroup.equiv_smul_apply_coe]
+    exact subgroup.smul_mem_pointwise_smul_iff.symm
 #align commensurable.quot_conj_equiv Commensurable.quotConjEquiv
 
 theorem commensurable_conj {H K : Subgroup G} (g : ConjAct G) :

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Jesse Michael Han, Floris van Doorn
 
 ! This file was ported from Lean 3 source module model_theory.semantics
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -144,7 +144,7 @@ theorem realize_restrict_var [DecidableEq α] {t : L.term α} {s : Set α} (h : 
   by
   induction' t with _ _ _ _ ih
   · rfl
-  · simp_rw [var_finset, Finset.coe_bUnion, Set.unionᵢ_subset_iff] at h
+  · simp_rw [var_finset, Finset.coe_bunionᵢ, Set.unionᵢ_subset_iff] at h
     exact congr rfl (funext fun i => ih i (h i (Finset.mem_univ i)))
 #align first_order.language.term.realize_restrict_var FirstOrder.Language.Term.realize_restrict_var
 
@@ -156,7 +156,7 @@ theorem realize_restrict_var_left [DecidableEq α] {γ : Type _} {t : L.term (Su
   by
   induction' t with a _ _ _ ih
   · cases a <;> rfl
-  · simp_rw [var_finset_left, Finset.coe_bUnion, Set.unionᵢ_subset_iff] at h
+  · simp_rw [var_finset_left, Finset.coe_bunionᵢ, Set.unionᵢ_subset_iff] at h
     exact congr rfl (funext fun i => ih i (h i (Finset.mem_univ i)))
 #align
   first_order.language.term.realize_restrict_var_left FirstOrder.Language.Term.realize_restrict_var_left

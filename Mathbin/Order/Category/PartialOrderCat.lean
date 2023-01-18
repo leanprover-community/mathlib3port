@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module order.category.PartialOrder
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -83,8 +83,8 @@ def dual : PartialOrderCat ⥤ PartialOrderCat
 @[simps Functor inverse]
 def dualEquiv : PartialOrderCat ≌ PartialOrderCat :=
   Equivalence.mk dual dual
-    ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
-    ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+    (NatIso.ofComponents (fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+    (NatIso.ofComponents (fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
 #align PartialOrder.dual_equiv PartialOrderCat.dualEquiv
 
 end PartialOrderCat
@@ -117,13 +117,13 @@ def preorderToPartialOrderForgetAdjunction :
         { toFun := fun f =>
             ⟨f ∘ toAntisymmetrization (· ≤ ·), f.mono.comp toAntisymmetrization_mono⟩
           invFun := fun f =>
-            ⟨fun a => (Quotient.liftOn' a f) fun a b h => (AntisymmRel.image h f.mono).Eq,
-              fun a b => (Quotient.inductionOn₂' a b) fun a b h => f.mono h⟩
+            ⟨fun a => Quotient.liftOn' a f fun a b h => (AntisymmRel.image h f.mono).Eq, fun a b =>
+              Quotient.inductionOn₂' a b fun a b h => f.mono h⟩
           left_inv := fun f =>
-            OrderHom.ext _ _ <| funext fun x => (Quotient.inductionOn' x) fun x => rfl
+            OrderHom.ext _ _ <| funext fun x => Quotient.inductionOn' x fun x => rfl
           right_inv := fun f => OrderHom.ext _ _ <| funext fun x => rfl }
       hom_equiv_naturality_left_symm' := fun X Y Z f g =>
-        OrderHom.ext _ _ <| funext fun x => (Quotient.inductionOn' x) fun x => rfl
+        OrderHom.ext _ _ <| funext fun x => Quotient.inductionOn' x fun x => rfl
       hom_equiv_naturality_right' := fun X Y Z f g => OrderHom.ext _ _ <| funext fun x => rfl }
 #align Preorder_to_PartialOrder_forget_adjunction preorderToPartialOrderForgetAdjunction
 
@@ -131,8 +131,8 @@ def preorderToPartialOrderForgetAdjunction :
 @[simps]
 def preorderToPartialOrderCompToDualIsoToDualCompPreorderToPartialOrder :
     preorderToPartialOrder.{u} ⋙ PartialOrderCat.dual ≅ PreorderCat.dual ⋙ preorderToPartialOrder :=
-  (NatIso.ofComponents fun X => PartialOrderCat.Iso.mk <| OrderIso.dualAntisymmetrization _)
-    fun X Y f => OrderHom.ext _ _ <| funext fun x => (Quotient.inductionOn' x) fun x => rfl
+  NatIso.ofComponents (fun X => PartialOrderCat.Iso.mk <| OrderIso.dualAntisymmetrization _)
+    fun X Y f => OrderHom.ext _ _ <| funext fun x => Quotient.inductionOn' x fun x => rfl
 #align
   Preorder_to_PartialOrder_comp_to_dual_iso_to_dual_comp_Preorder_to_PartialOrder preorderToPartialOrderCompToDualIsoToDualCompPreorderToPartialOrder
 

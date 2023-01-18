@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Mario Carneiro
 
 ! This file was ported from Lean 3 source module group_theory.perm.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -739,7 +739,7 @@ theorem ofSubtype_apply_of_mem (f : Perm (Subtype p)) (ha : p a) : ofSubtype f a
 #print Equiv.Perm.ofSubtype_apply_coe /-
 @[simp]
 theorem ofSubtype_apply_coe (f : Perm (Subtype p)) (x : Subtype p) : ofSubtype f x = f x :=
-  (Subtype.casesOn x) fun _ => ofSubtype_apply_of_mem f
+  Subtype.casesOn x fun _ => ofSubtype_apply_of_mem f
 #align equiv.perm.of_subtype_apply_coe Equiv.Perm.ofSubtype_apply_coe
 -/
 
@@ -784,7 +784,7 @@ protected def subtypeEquivSubtypePerm (p : α → Prop) [DecidablePred p] :
         Decidable.not_imp_not.1 fun ha hfa => ha <| f.Prop a ha ▸ hfa⟩
   left_inv := Equiv.Perm.subtypePerm_ofSubtype
   right_inv f :=
-    Subtype.ext ((Equiv.Perm.ofSubtype_subtypePerm _) fun a => Not.decidable_imp_symm <| f.Prop a)
+    Subtype.ext (Equiv.Perm.ofSubtype_subtypePerm _ fun a => Not.decidable_imp_symm <| f.Prop a)
 #align equiv.perm.subtype_equiv_subtype_perm Equiv.Perm.subtypeEquivSubtypePerm
 -/
 

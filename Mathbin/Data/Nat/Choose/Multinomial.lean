@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller, Pim Otte
 
 ! This file was ported from Lean 3 source module data.nat.choose.multinomial
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -254,15 +254,15 @@ theorem sum_pow_of_commute [Semiring R] (x : α → R)
       rw [sym_empty]
       infer_instance
   intro n; specialize ih (hc.mono <| s.subset_insert a)
-  rw [sum_insert ha, ((Commute.sum_right s _ _) fun b hb => _).add_pow, sum_range]; swap
+  rw [sum_insert ha, (Commute.sum_right s _ _ fun b hb => _).add_pow, sum_range]; swap
   · exact hc (mem_insert_self a s) (mem_insert_of_mem hb) (ne_of_mem_of_not_mem hb ha).symm
   simp_rw [ih, mul_sum, sum_mul, sum_sigma', univ_sigma_univ]
-  refine' ((Fintype.sum_equiv (sym_insert_equiv ha) _ _) fun m => _).symm
+  refine' (Fintype.sum_equiv (sym_insert_equiv ha) _ _ fun m => _).symm
   rw [m.1.1.multinomial_filter_ne a]
   conv in m.1.1.map _ => rw [← m.1.1.filter_add_not ((· = ·) a), Multiset.map_add]
-  simp_rw [Multiset.noncomm_prod_add, m.1.1.filter_eq, Multiset.map_repeat, m.1.2]
-  rw [Multiset.noncomm_prod_eq_pow_card _ _ _ fun _ => Multiset.eq_of_mem_repeat]
-  rw [Multiset.card_repeat, Nat.cast_mul, mul_assoc, Nat.cast_comm]
+  simp_rw [Multiset.noncomm_prod_add, m.1.1.filter_eq, Multiset.map_replicate, m.1.2]
+  rw [Multiset.noncomm_prod_eq_pow_card _ _ _ fun _ => Multiset.eq_of_mem_replicate]
+  rw [Multiset.card_replicate, Nat.cast_mul, mul_assoc, Nat.cast_comm]
   congr 1; simp_rw [← mul_assoc, Nat.cast_comm]; rfl
 #align finset.sum_pow_of_commute Finset.sum_pow_of_commute
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.rat.order
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,8 +71,8 @@ theorem divInt_nonneg (a : ℤ) {b : ℤ} (h : 0 < b) : (a /. b).Nonneg ↔ 0 �
 
 #print Rat.nonneg_add /-
 protected theorem nonneg_add {a b} : Rat.Nonneg a → Rat.Nonneg b → Rat.Nonneg (a + b) :=
-  (numDenCasesOn' a) fun n₁ d₁ h₁ =>
-    (numDenCasesOn' b) fun n₂ d₂ h₂ =>
+  numDenCasesOn' a fun n₁ d₁ h₁ =>
+    numDenCasesOn' b fun n₂ d₂ h₂ =>
       by
       have d₁0 : 0 < (d₁ : ℤ) := Int.coe_nat_pos.2 (Nat.pos_of_ne_zero h₁)
       have d₂0 : 0 < (d₂ : ℤ) := Int.coe_nat_pos.2 (Nat.pos_of_ne_zero h₂)
@@ -84,8 +84,8 @@ protected theorem nonneg_add {a b} : Rat.Nonneg a → Rat.Nonneg b → Rat.Nonne
 
 #print Rat.nonneg_mul /-
 protected theorem nonneg_mul {a b} : Rat.Nonneg a → Rat.Nonneg b → Rat.Nonneg (a * b) :=
-  (numDenCasesOn' a) fun n₁ d₁ h₁ =>
-    (numDenCasesOn' b) fun n₂ d₂ h₂ =>
+  numDenCasesOn' a fun n₁ d₁ h₁ =>
+    numDenCasesOn' b fun n₂ d₂ h₂ =>
       by
       have d₁0 : 0 < (d₁ : ℤ) := Int.coe_nat_pos.2 (Nat.pos_of_ne_zero h₁)
       have d₂0 : 0 < (d₂ : ℤ) := Int.coe_nat_pos.2 (Nat.pos_of_ne_zero h₂)
@@ -95,7 +95,7 @@ protected theorem nonneg_mul {a b} : Rat.Nonneg a → Rat.Nonneg b → Rat.Nonne
 
 #print Rat.nonneg_antisymm /-
 protected theorem nonneg_antisymm {a} : Rat.Nonneg a → Rat.Nonneg (-a) → a = 0 :=
-  (numDenCasesOn' a) fun n d h =>
+  numDenCasesOn' a fun n d h =>
     by
     have d0 : 0 < (d : ℤ) := Int.coe_nat_pos.2 (Nat.pos_of_ne_zero h)
     simp [d0, h]
@@ -357,7 +357,7 @@ end Rat
 
 -- We make some assertions here about declarations that do not need to be in the import dependencies
 -- for this file, but have been in the past.
-assert_not_exists fintype
+assert_not_exists Fintype
 
 assert_not_exists Set.Icc
 

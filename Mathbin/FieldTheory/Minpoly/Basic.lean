@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johan Commelin
 
 ! This file was ported from Lean 3 source module field_theory.minpoly.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,7 +41,7 @@ For example, if `V` is a `𝕜`-vector space for some field `𝕜` and `f : V �
 the minimal polynomial of `f` is `minpoly 𝕜 f`.
 -/
 noncomputable def minpoly (x : B) : A[X] :=
-  if hx : IsIntegral A x then WellFounded.min degree_lt_wf _ hx else 0
+  if hx : IsIntegral A x then degree_lt_wf.min _ hx else 0
 #align minpoly minpoly
 
 end MinPolyDef
@@ -59,7 +59,7 @@ theorem monic (hx : IsIntegral A x) : Monic (minpoly A x) :=
   by
   delta minpoly
   rw [dif_pos hx]
-  exact (WellFounded.min_mem degree_lt_wf _ hx).1
+  exact (degree_lt_wf.min_mem _ hx).1
 #align minpoly.monic minpoly.monic
 
 /-- A minimal polynomial is nonzero. -/
@@ -78,7 +78,7 @@ variable (A x)
 theorem aeval : aeval x (minpoly A x) = 0 :=
   by
   delta minpoly; split_ifs with hx
-  · exact (WellFounded.min_mem degree_lt_wf _ hx).2
+  · exact (degree_lt_wf.min_mem _ hx).2
   · exact aeval_zero _
 #align minpoly.aeval minpoly.aeval
 
@@ -125,9 +125,35 @@ it is the monic polynomial with smallest degree that has `x` as its root. -/
 theorem min {p : A[X]} (pmonic : p.Monic) (hp : Polynomial.aeval x p = 0) :
     degree (minpoly A x) ≤ degree p := by
   delta minpoly; split_ifs with hx
-  · exact le_of_not_lt (WellFounded.not_lt_min degree_lt_wf _ hx ⟨pmonic, hp⟩)
+  · exact le_of_not_lt (degree_lt_wf.not_lt_min _ hx ⟨pmonic, hp⟩)
   · simp only [degree_zero, bot_le]
 #align minpoly.min minpoly.min
+
+theorem unique' {p : A[X]} (hm : p.Monic) (hp : Polynomial.aeval x p = 0)
+    (hl : ∀ q : A[X], degree q < degree p → q = 0 ∨ Polynomial.aeval x q ≠ 0) : p = minpoly A x :=
+  by
+  nontriviality A
+  have hx : IsIntegral A x := ⟨p, hm, hp⟩
+  obtain h | h := hl _ ((minpoly A x).degree_mod_by_monic_lt hm)
+  swap
+  · exact (h <| (aeval_mod_by_monic_eq_self_of_root hm hp).trans <| aeval A x).elim
+  obtain ⟨r, hr⟩ := (dvd_iff_mod_by_monic_eq_zero hm).1 h
+  rw [hr]
+  have hlead := congr_arg leading_coeff hr
+  rw [mul_comm, leading_coeff_mul_monic hm, (monic hx).leadingCoeff] at hlead
+  have : nat_degree r ≤ 0 :=
+    by
+    have hr0 : r ≠ 0 := by
+      rintro rfl
+      exact NeZero hx (mul_zero p ▸ hr)
+    apply_fun nat_degree  at hr
+    rw [hm.nat_degree_mul' hr0] at hr
+    apply Nat.le_of_add_le_add_left
+    rw [add_zero]
+    exact hr.symm.trans_le (nat_degree_le_nat_degree <| min A x hm hp)
+  rw [eq_C_of_nat_degree_le_zero this, ← Nat.eq_zero_of_le_zero this, ← leading_coeff, ← hlead, C_1,
+    mul_one]
+#align minpoly.unique' minpoly.unique'
 
 @[nontriviality]
 theorem subsingleton [Subsingleton B] : minpoly A x = 1 :=
@@ -148,12 +174,12 @@ variable [CommRing A]
 
 section Ring
 
-variable [Ring B] [Algebra A B] [Nontrivial B]
+variable [Ring B] [Algebra A B]
 
 variable {x : B}
 
 /-- The degree of a minimal polynomial, as a natural number, is positive. -/
-theorem nat_degree_pos (hx : IsIntegral A x) : 0 < natDegree (minpoly A x) :=
+theorem nat_degree_pos [Nontrivial B] (hx : IsIntegral A x) : 0 < natDegree (minpoly A x) :=
   by
   rw [pos_iff_ne_zero]
   intro ndeg_eq_zero
@@ -166,7 +192,7 @@ theorem nat_degree_pos (hx : IsIntegral A x) : 0 < natDegree (minpoly A x) :=
 #align minpoly.nat_degree_pos minpoly.nat_degree_pos
 
 /-- The degree of a minimal polynomial is positive. -/
-theorem degree_pos (hx : IsIntegral A x) : 0 < degree (minpoly A x) :=
+theorem degree_pos [Nontrivial B] (hx : IsIntegral A x) : 0 < degree (minpoly A x) :=
   nat_degree_pos_iff_degree_pos.mp (nat_degree_pos hx)
 #align minpoly.degree_pos minpoly.degree_pos
 
@@ -176,37 +202,20 @@ theorem eq_X_sub_C_of_algebra_map_inj (a : A) (hf : Function.Injective (algebraM
     minpoly A (algebraMap A B a) = X - c a :=
   by
   nontriviality A
-  have hdegle : (minpoly A (algebraMap A B a)).natDegree ≤ 1 :=
-    by
-    apply WithBot.coe_le_coe.1
-    rw [← degree_eq_nat_degree (NeZero (@is_integral_algebra_map A B _ _ _ a)), WithTop.coe_one, ←
-      degree_X_sub_C a]
-    refine' min A (algebraMap A B a) (monic_X_sub_C a) _
-    simp only [aeval_C, aeval_X, AlgHom.map_sub, sub_self]
-  have hdeg : (minpoly A (algebraMap A B a)).degree = 1 :=
-    by
-    apply (degree_eq_iff_nat_degree_eq (NeZero (@is_integral_algebra_map A B _ _ _ a))).2
-    apply le_antisymm hdegle (nat_degree_pos (@is_integral_algebra_map A B _ _ _ a))
-  have hrw := eq_X_add_C_of_degree_eq_one hdeg
-  simp only [monic (@is_integral_algebra_map A B _ _ _ a), one_mul, monic.leading_coeff,
-    RingHom.map_one] at hrw
-  have h0 : (minpoly A (algebraMap A B a)).coeff 0 = -a :=
-    by
-    have hroot := aeval A (algebraMap A B a)
-    rw [hrw, add_comm] at hroot
-    simp only [aeval_C, aeval_X, aeval_add] at hroot
-    replace hroot := eq_neg_of_add_eq_zero_left hroot
-    rw [← RingHom.map_neg _ a] at hroot
-    exact hf hroot
-  rw [hrw]
-  simp only [h0, RingHom.map_neg, sub_eq_add_neg]
+  refine' (unique' A _ (monic_X_sub_C a) _ _).symm
+  · rw [map_sub, aeval_C, aeval_X, sub_self]
+  simp_rw [or_iff_not_imp_left]
+  intro q hl h0
+  rw [← nat_degree_lt_nat_degree_iff h0, nat_degree_X_sub_C, Nat.lt_one_iff] at hl
+  rw [eq_C_of_nat_degree_eq_zero hl] at h0⊢
+  rwa [aeval_C, map_ne_zero_iff _ hf, ← C_ne_zero]
 #align minpoly.eq_X_sub_C_of_algebra_map_inj minpoly.eq_X_sub_C_of_algebra_map_inj
 
 end Ring
 
 section IsDomain
 
-variable [IsDomain A] [Ring B] [Algebra A B]
+variable [Ring B] [Algebra A B]
 
 variable {x : B}
 
@@ -214,66 +223,30 @@ variable {x : B}
 theorem aeval_ne_zero_of_dvd_not_unit_minpoly {a : A[X]} (hx : IsIntegral A x) (hamonic : a.Monic)
     (hdvd : DvdNotUnit a (minpoly A x)) : Polynomial.aeval x a ≠ 0 :=
   by
-  intro ha
-  refine' not_lt_of_ge (minpoly.min A x hamonic ha) _
-  obtain ⟨hzeroa, b, hb_nunit, prod⟩ := hdvd
-  have hbmonic : b.monic := by
-    rw [monic.def]
-    have := monic hx
-    rwa [monic.def, Prod, leading_coeff_mul, monic.def.mp hamonic, one_mul] at this
-  have hzerob : b ≠ 0 := hbmonic.ne_zero
-  have degbzero : 0 < b.nat_degree := by
-    apply Nat.pos_of_ne_zero
-    intro h
-    have h₁ := eq_C_of_nat_degree_eq_zero h
-    rw [← h, ← leading_coeff, monic.def.1 hbmonic, C_1] at h₁
-    rw [h₁] at hb_nunit
-    have := isUnit_one
-    contradiction
-  rw [Prod, degree_mul, degree_eq_nat_degree hzeroa, degree_eq_nat_degree hzerob]
-  exact_mod_cast lt_add_of_pos_right _ degbzero
+  refine' fun ha => (min A x hamonic ha).not_lt (degree_lt_degree _)
+  obtain ⟨b, c, hu, he⟩ := hdvd
+  have hcm := hamonic.of_mul_monic_left (he.subst <| monic hx)
+  rw [he, hamonic.nat_degree_mul hcm]
+  apply Nat.lt_add_of_zero_lt_left _ _ (lt_of_not_le fun h => hu _)
+  rw [eq_C_of_nat_degree_le_zero h, ← Nat.eq_zero_of_le_zero h, ← leading_coeff, hcm.leading_coeff,
+    C_1]
+  exact isUnit_one
 #align minpoly.aeval_ne_zero_of_dvd_not_unit_minpoly minpoly.aeval_ne_zero_of_dvd_not_unit_minpoly
 
-variable [IsDomain B]
+variable [IsDomain A] [IsDomain B]
 
 /-- A minimal polynomial is irreducible. -/
 theorem irreducible (hx : IsIntegral A x) : Irreducible (minpoly A x) :=
   by
-  cases' irreducible_or_factor (minpoly A x) (not_is_unit A x) with hirr hred
-  · exact hirr
-  exfalso
-  obtain ⟨a, b, ha_nunit, hb_nunit, hab_eq⟩ := hred
-  have coeff_prod : a.leading_coeff * b.leading_coeff = 1 :=
-    by
-    rw [← monic.def.1 (monic hx), ← hab_eq]
-    simp only [leading_coeff_mul]
-  have hamonic : (a * C b.leading_coeff).Monic :=
-    by
-    rw [monic.def]
-    simp only [coeff_prod, leading_coeff_mul, leading_coeff_C]
-  have hbmonic : (b * C a.leading_coeff).Monic :=
-    by
-    rw [monic.def, mul_comm]
-    simp only [coeff_prod, leading_coeff_mul, leading_coeff_C]
-  have prod : minpoly A x = a * C b.leading_coeff * (b * C a.leading_coeff) :=
-    by
-    symm
-    calc
-      a * C b.leading_coeff * (b * C a.leading_coeff) =
-          a * b * (C a.leading_coeff * C b.leading_coeff) :=
-        by ring
-      _ = a * b * C (a.leading_coeff * b.leading_coeff) := by simp only [RingHom.map_mul]
-      _ = a * b := by rw [coeff_prod, C_1, mul_one]
-      _ = minpoly A x := hab_eq
-      
-  have hzero := aeval A x
-  rw [Prod, aeval_mul, mul_eq_zero] at hzero
-  cases hzero
-  · refine' aeval_ne_zero_of_dvd_not_unit_minpoly hx hamonic _ hzero
-    exact ⟨hamonic.ne_zero, _, mt isUnit_of_mul_isUnit_left hb_nunit, Prod⟩
-  · refine' aeval_ne_zero_of_dvd_not_unit_minpoly hx hbmonic _ hzero
-    rw [mul_comm] at prod
-    exact ⟨hbmonic.ne_zero, _, mt isUnit_of_mul_isUnit_left ha_nunit, Prod⟩
+  refine' (irreducible_of_monic (monic hx) <| ne_one A x).2 fun f g hf hg he => _
+  rw [← hf.is_unit_iff, ← hg.is_unit_iff]
+  by_contra' h
+  have heval := congr_arg (Polynomial.aeval x) he
+  rw [aeval A x, aeval_mul, mul_eq_zero] at heval
+  cases heval
+  · exact aeval_ne_zero_of_dvd_not_unit_minpoly hx hf ⟨hf.ne_zero, g, h.2, he.symm⟩ heval
+  · refine' aeval_ne_zero_of_dvd_not_unit_minpoly hx hg ⟨hg.ne_zero, f, h.1, _⟩ heval
+    rw [mul_comm, he]
 #align minpoly.irreducible minpoly.irreducible
 
 end IsDomain

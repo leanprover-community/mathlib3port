@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Devon Tuma
 
 ! This file was ported from Lean 3 source module probability.probability_mass_function.uniform
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -98,7 +98,7 @@ theorem to_outer_measure_uniform_of_finset_apply :
     _ = ∑ x in s.filter (· ∈ t), if x ∈ s ∧ x ∈ t then (s.card : ℝ≥0∞)⁻¹ else 0 :=
       tsum_eq_sum fun x hx => if_neg fun h => hx (Finset.mem_filter.2 h)
     _ = ∑ x in s.filter (· ∈ t), (s.card : ℝ≥0∞)⁻¹ :=
-      (Finset.sum_congr rfl) fun x hx =>
+      Finset.sum_congr rfl fun x hx =>
         by
         let this : x ∈ s ∧ x ∈ t := by simpa using hx
         simp only [this, and_self_iff, if_true]
@@ -175,7 +175,7 @@ def ofMultiset (s : Multiset α) (hs : s ≠ 0) : Pmf α :=
         _ = s.card⁻¹ * ∑ b in s.toFinset, (s.count b : ℝ≥0∞) :=
           congr_arg (fun x => s.card⁻¹ * x)
             (tsum_eq_sum fun a ha =>
-              Nat.cast_eq_zero.2 <| by rwa [Multiset.count_eq_zero, ← Multiset.mem_to_finset])
+              Nat.cast_eq_zero.2 <| by rwa [Multiset.count_eq_zero, ← Multiset.mem_toFinset])
         _ = 1 := by
           rw [← Nat.cast_sum, Multiset.to_finset_sum_count_eq s,
             Ennreal.inv_mul_cancel (Nat.cast_ne_zero.2 (hs ∘ Multiset.card_eq_zero.1))

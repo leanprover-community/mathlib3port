@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module data.sum.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -122,6 +122,7 @@ def isRight : Sum α β → Bool
 variable {x y : Sum α β}
 
 #print Sum.getLeft_eq_none_iff /-
+@[simp]
 theorem getLeft_eq_none_iff : x.getLeft = none ↔ x.isRight := by
   cases x <;>
     simp only [get_left, is_right, Bool.coe_sort_true, Bool.coe_sort_false, eq_self_iff_true]
@@ -129,11 +130,22 @@ theorem getLeft_eq_none_iff : x.getLeft = none ↔ x.isRight := by
 -/
 
 #print Sum.getRight_eq_none_iff /-
+@[simp]
 theorem getRight_eq_none_iff : x.getRight = none ↔ x.isLeft := by
   cases x <;>
     simp only [get_right, is_left, Bool.coe_sort_true, Bool.coe_sort_false, eq_self_iff_true]
 #align sum.get_right_eq_none_iff Sum.getRight_eq_none_iff
 -/
+
+@[simp]
+theorem get_left_eq_some_iff {a} : x.getLeft = some a ↔ x = inl a := by
+  cases x <;> simp only [get_left]
+#align sum.get_left_eq_some_iff Sum.get_left_eq_some_iff
+
+@[simp]
+theorem get_right_eq_some_iff {b} : x.getRight = some b ↔ x = inr b := by
+  cases x <;> simp only [get_right]
+#align sum.get_right_eq_some_iff Sum.get_right_eq_some_iff
 
 #print Sum.not_isLeft /-
 @[simp]
@@ -350,6 +362,10 @@ theorem map_id_id (α β) : Sum.map (@id α) (@id β) = id :=
   funext fun x => Sum.recOn x (fun _ => rfl) fun _ => rfl
 #align sum.map_id_id Sum.map_id_id
 
+theorem elim_map {α β γ δ ε : Sort _} {f₁ : α → β} {f₂ : β → ε} {g₁ : γ → δ} {g₂ : δ → ε} {x} :
+    Sum.elim f₂ g₂ (Sum.map f₁ g₁ x) = Sum.elim (f₂ ∘ f₁) (g₂ ∘ g₁) x := by cases x <;> rfl
+#align sum.elim_map Sum.elim_map
+
 /- warning: sum.elim_comp_map -> Sum.elim_comp_map is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} {ε : Sort.{u5}} {f₁ : α -> β} {f₂ : β -> ε} {g₁ : γ -> δ} {g₂ : δ -> ε}, Eq.{imax (max (succ u1) (succ u3)) u5} ((Sum.{u1, u3} α γ) -> ε) (Function.comp.{max (succ u1) (succ u3), max (succ u2) (succ u4), u5} (Sum.{u1, u3} α γ) (Sum.{u2, u4} β δ) ε (Sum.elim.{u2, u4, u5} β δ ε f₂ g₂) (Sum.map.{u1, u3, u2, u4} α β γ δ f₁ g₁)) (Sum.elim.{u1, u3, u5} α γ ε (Function.comp.{succ u1, succ u2, u5} α β ε f₂ f₁) (Function.comp.{succ u3, succ u4, u5} γ δ ε g₂ g₁))
@@ -357,7 +373,8 @@ but is expected to have type
   forall {α : Type.{u5}} {β : Type.{u4}} {γ : Type.{u3}} {δ : Type.{u2}} {ε : Sort.{u1}} {f₁ : α -> β} {f₂ : β -> ε} {g₁ : γ -> δ} {g₂ : δ -> ε}, Eq.{imax (max (succ u3) (succ u5)) u1} ((Sum.{u5, u3} α γ) -> ε) (Function.comp.{max (succ u3) (succ u5), max (succ u2) (succ u4), u1} (Sum.{u5, u3} α γ) (Sum.{u4, u2} β δ) ε (Sum.elim.{u4, u2, u1} β δ ε f₂ g₂) (Sum.map.{u5, u3, u4, u2} α β γ δ f₁ g₁)) (Sum.elim.{u5, u3, u1} α γ ε (Function.comp.{succ u5, succ u4, u1} α β ε f₂ f₁) (Function.comp.{succ u3, succ u2, u1} γ δ ε g₂ g₁))
 Case conversion may be inaccurate. Consider using '#align sum.elim_comp_map Sum.elim_comp_mapₓ'. -/
 theorem elim_comp_map {α β γ δ ε : Sort _} {f₁ : α → β} {f₂ : β → ε} {g₁ : γ → δ} {g₂ : δ → ε} :
-    Sum.elim f₂ g₂ ∘ Sum.map f₁ g₁ = Sum.elim (f₂ ∘ f₁) (g₂ ∘ g₁) := by ext (_ | _) <;> rfl
+    Sum.elim f₂ g₂ ∘ Sum.map f₁ g₁ = Sum.elim (f₂ ∘ f₁) (g₂ ∘ g₁) :=
+  funext fun _ => elim_map
 #align sum.elim_comp_map Sum.elim_comp_map
 
 /- warning: sum.is_left_map -> Sum.isLeft_map is a dubious translation:
@@ -462,7 +479,7 @@ Case conversion may be inaccurate. Consider using '#align sum.update_inl_comp_in
 @[simp]
 theorem update_inl_comp_inr [DecidableEq (Sum α β)] {f : Sum α β → γ} {i : α} {x : γ} :
     update f (inl i) x ∘ inr = f ∘ inr :=
-  (update_comp_eq_of_forall_ne _ _) fun _ => inr_ne_inl
+  update_comp_eq_of_forall_ne _ _ fun _ => inr_ne_inl
 #align sum.update_inl_comp_inr Sum.update_inl_comp_inr
 
 /- warning: sum.update_inl_apply_inr -> Sum.update_inl_apply_inr is a dubious translation:
@@ -486,7 +503,7 @@ Case conversion may be inaccurate. Consider using '#align sum.update_inr_comp_in
 @[simp]
 theorem update_inr_comp_inl [DecidableEq (Sum α β)] {f : Sum α β → γ} {i : β} {x : γ} :
     update f (inr i) x ∘ inl = f ∘ inl :=
-  (update_comp_eq_of_forall_ne _ _) fun _ => inl_ne_inr
+  update_comp_eq_of_forall_ne _ _ fun _ => inl_ne_inr
 #align sum.update_inr_comp_inl Sum.update_inr_comp_inl
 
 /- warning: sum.update_inr_apply_inl -> Sum.update_inr_apply_inl is a dubious translation:
@@ -683,7 +700,7 @@ but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u4}} {γ : Type.{u2}} {δ : Type.{u1}} {r₁ : α -> γ -> Prop} {r₂ : α -> γ -> Prop} {s : β -> δ -> Prop} {x : Sum.{u3, u4} α β} {y : Sum.{u2, u1} γ δ}, (forall (a : α) (b : γ), (r₁ a b) -> (r₂ a b)) -> (Sum.LiftRel.{u3, u4, u2, u1} α β γ δ r₁ s x y) -> (Sum.LiftRel.{u3, u4, u2, u1} α β γ δ r₂ s x y)
 Case conversion may be inaccurate. Consider using '#align sum.lift_rel.mono_left Sum.LiftRel.mono_leftₓ'. -/
 theorem LiftRel.mono_left (hr : ∀ a b, r₁ a b → r₂ a b) (h : LiftRel r₁ s x y) : LiftRel r₂ s x y :=
-  (h.mono hr) fun _ _ => id
+  h.mono hr fun _ _ => id
 #align sum.lift_rel.mono_left Sum.LiftRel.mono_left
 
 /- warning: sum.lift_rel.mono_right -> Sum.LiftRel.mono_right is a dubious translation:
@@ -797,7 +814,7 @@ theorem Lex.mono (hr : ∀ a b, r₁ a b → r₂ a b) (hs : ∀ a b, s₁ a b �
 
 #print Sum.Lex.mono_left /-
 theorem Lex.mono_left (hr : ∀ a b, r₁ a b → r₂ a b) (h : Lex r₁ s x y) : Lex r₂ s x y :=
-  (h.mono hr) fun _ _ => id
+  h.mono hr fun _ _ => id
 #align sum.lex.mono_left Sum.Lex.mono_left
 -/
 

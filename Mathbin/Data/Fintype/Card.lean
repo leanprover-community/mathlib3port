@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.fintype.card
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -82,7 +82,7 @@ def truncEquivFin (α) [DecidableEq α] [Fintype α] : Trunc (α ≃ Fin (card �
   by
   unfold card Finset.card
   exact
-    Quot.recOnSubsingleton (@univ α _).1
+    Quot.recOnSubsingleton' (@univ α _).1
       (fun l (h : ∀ x : α, x ∈ l) (nd : l.Nodup) =>
         Trunc.mk (nd.nthLeEquivOfForallMemList _ h).symm)
       mem_univ_val univ.2
@@ -112,7 +112,7 @@ def truncFinBijection (α) [Fintype α] : Trunc { f : Fin (card α) → α // Bi
   by
   dsimp only [card, Finset.card]
   exact
-    Quot.recOnSubsingleton (@univ α _).1
+    Quot.recOnSubsingleton' (@univ α _).1
       (fun l (h : ∀ x : α, x ∈ l) (nd : l.Nodup) => Trunc.mk (nd.nthLeBijectionOfForallMemList _ h))
       mem_univ_val univ.2
 #align fintype.trunc_fin_bijection Fintype.truncFinBijection
@@ -293,8 +293,7 @@ theorem Finset.card_compl [DecidableEq α] [Fintype α] (s : Finset α) :
 
 theorem Fintype.card_compl_set [Fintype α] (s : Set α) [Fintype s] [Fintype ↥(sᶜ)] :
     Fintype.card ↥(sᶜ) = Fintype.card α - Fintype.card s := by
-  classical rw [← Set.to_finset_card, ← Set.to_finset_card, ← Finset.card_compl,
-      Set.to_finset_compl]
+  classical rw [← Set.to_finset_card, ← Set.to_finset_card, ← Finset.card_compl, Set.toFinset_compl]
 #align fintype.card_compl_set Fintype.card_compl_set
 
 @[simp]
@@ -453,7 +452,7 @@ theorem Finite.exists_univ_list (α) [Finite α] : ∃ l : List α, l.Nodup ∧ 
 
 theorem List.Nodup.length_le_card {α : Type _} [Fintype α] {l : List α} (h : l.Nodup) :
     l.length ≤ Fintype.card α := by
-  classical exact List.to_finset_card_of_nodup h ▸ l.to_finset.card_le_univ
+  classical exact List.toFinset_card_of_nodup h ▸ l.to_finset.card_le_univ
 #align list.nodup.length_le_card List.Nodup.length_le_card
 
 namespace Fintype
@@ -748,7 +747,7 @@ theorem set_fintype_card_le_univ [Fintype α] (s : Set α) [Fintype ↥s] :
 
 theorem set_fintype_card_eq_univ_iff [Fintype α] (s : Set α) [Fintype ↥s] :
     Fintype.card s = Fintype.card α ↔ s = Set.univ := by
-  rw [← Set.to_finset_card, Finset.card_eq_iff_eq_univ, ← Set.to_finset_univ, Set.to_finset_inj]
+  rw [← Set.to_finset_card, Finset.card_eq_iff_eq_univ, ← Set.toFinset_univ, Set.toFinset_inj]
 #align set_fintype_card_eq_univ_iff set_fintype_card_eq_univ_iff
 
 namespace Function.Embedding
@@ -816,7 +815,7 @@ namespace Fintype
 
 theorem card_lt_of_surjective_not_injective [Fintype α] [Fintype β] (f : α → β)
     (h : Function.Surjective f) (h' : ¬Function.Injective f) : card β < card α :=
-  (card_lt_of_injective_not_surjective _ (Function.injective_surjInv h)) fun hg =>
+  card_lt_of_injective_not_surjective _ (Function.injective_surjInv h) fun hg =>
     have w : Function.Bijective (Function.surjInv h) := ⟨Function.injective_surjInv h, hg⟩
     h' <| h.injective_of_fintype (Equiv.ofBijective _ w).symm
 #align fintype.card_lt_of_surjective_not_injective Fintype.card_lt_of_surjective_not_injective
@@ -845,10 +844,10 @@ theorem Fintype.card_subtype [Fintype α] (p : α → Prop) [DecidablePred p] :
 theorem Fintype.card_subtype_compl [Fintype α] (p : α → Prop) [Fintype { x // p x }]
     [Fintype { x // ¬p x }] :
     Fintype.card { x // ¬p x } = Fintype.card α - Fintype.card { x // p x } := by
-  classical rw [Fintype.card_of_subtype (Set.toFinset (pᶜ)), Set.to_finset_compl p,
+  classical rw [Fintype.card_of_subtype (Set.toFinset (pᶜ)), Set.toFinset_compl p,
             Finset.card_compl, Fintype.card_of_subtype (Set.toFinset p)] <;>
           intro <;>
-        simp only [Set.mem_to_finset, Set.mem_compl_iff] <;>
+        simp only [Set.mem_toFinset, Set.mem_compl_iff] <;>
       rfl
 #align fintype.card_subtype_compl Fintype.card_subtype_compl
 
@@ -874,7 +873,7 @@ theorem Fintype.card_quotient_le [Fintype α] (s : Setoid α)
 
 theorem Fintype.card_quotient_lt [Fintype α] {s : Setoid α} [DecidableRel ((· ≈ ·) : α → α → Prop)]
     {x y : α} (h1 : x ≠ y) (h2 : x ≈ y) : Fintype.card (Quotient s) < Fintype.card α :=
-  (Fintype.card_lt_of_surjective_not_injective _ (surjective_quotient_mk _)) fun w =>
+  Fintype.card_lt_of_surjective_not_injective _ (surjective_quotient_mk _) fun w =>
     h1 (w <| Quotient.eq.mpr h2)
 #align fintype.card_quotient_lt Fintype.card_quotient_lt
 
@@ -983,7 +982,7 @@ theorem of_injective_to_set {s : Set α} (hs : s ≠ Set.univ) {f : α → s} (h
         Fintype.card α ≤ Fintype.card s := Fintype.card_le_of_injective f hf
         _ = s.to_finset.card := s.to_finset_card.symm
         _ < Fintype.card α :=
-          Finset.card_lt_card <| by rwa [Set.to_finset_ssubset_univ, Set.ssubset_univ_iff]
+          Finset.card_lt_card <| by rwa [Set.toFinset_ssubset_univ, Set.ssubset_univ_iff]
         
 #align infinite.of_injective_to_set Infinite.of_injective_to_set
 
@@ -1026,7 +1025,7 @@ instance : Infinite ℤ :=
 
 instance [Nonempty α] : Infinite (Multiset α) :=
   let ⟨x⟩ := ‹Nonempty α›
-  Infinite.of_injective (Multiset.repeat x) (Multiset.repeat_injective _)
+  Infinite.of_injective (fun n => Multiset.replicate n x) (Multiset.replicate_left_injective _)
 
 instance [Nonempty α] : Infinite (List α) :=
   Infinite.of_surjective (coe : List α → Multiset α) (surjective_quot_mk _)
@@ -1082,7 +1081,7 @@ private theorem nat_embedding_aux_injective (α : Type _) [Infinite α] :
           ((Multiset.range n).pmap (fun m (hm : m < n) => nat_embedding_aux α m) fun _ =>
               Multiset.mem_range.1).toFinset))
       _
-  refine' Multiset.mem_to_finset.2 (Multiset.mem_pmap.2 ⟨m, Multiset.mem_range.2 hmn, _⟩)
+  refine' Multiset.mem_toFinset.2 (Multiset.mem_pmap.2 ⟨m, Multiset.mem_range.2 hmn, _⟩)
   rw [h, nat_embedding_aux]
 #align infinite.nat_embedding_aux_injective infinite.nat_embedding_aux_injective
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Robert Y. Lewis, Johannes Hölzl, Mario Carneiro, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -885,7 +885,7 @@ theorem uniformity_basis_dist_pow {r : ℝ} (h0 : 0 < r) (h1 : r < 1) :
 
 theorem uniformity_basis_dist_lt {R : ℝ} (hR : 0 < R) :
     (𝓤 α).HasBasis (fun r : ℝ => 0 < r ∧ r < R) fun r => { p : α × α | dist p.1 p.2 < r } :=
-  (Metric.mk_uniformity_basis fun r => And.left) fun r hr =>
+  Metric.mk_uniformity_basis (fun r => And.left) fun r hr =>
     ⟨min r (R / 2), ⟨lt_min hr (half_pos hR), min_lt_iff.2 <| Or.inr (half_lt_self hR)⟩,
       min_le_left _ _⟩
 #align metric.uniformity_basis_dist_lt Metric.uniformity_basis_dist_lt
@@ -2316,7 +2316,7 @@ theorem ball_pi (x : ∀ b, π b) {r : ℝ} (hr : 0 < r) :
 for a version assuming `0 < r` instead of `nonempty β`. -/
 theorem ball_pi' [Nonempty β] (x : ∀ b, π b) (r : ℝ) :
     ball x r = Set.pi univ fun b => ball (x b) r :=
-  ((lt_or_le 0 r).elim (ball_pi x)) fun hr => by simp [ball_eq_empty.2 hr]
+  (lt_or_le 0 r).elim (ball_pi x) fun hr => by simp [ball_eq_empty.2 hr]
 #align ball_pi' ball_pi'
 
 /-- A closed ball in a product space is a product of closed balls. See also `metric.closed_ball_pi'`
@@ -2332,7 +2332,7 @@ theorem closed_ball_pi (x : ∀ b, π b) {r : ℝ} (hr : 0 ≤ r) :
 for a version assuming `0 ≤ r` instead of `nonempty β`. -/
 theorem closed_ball_pi' [Nonempty β] (x : ∀ b, π b) (r : ℝ) :
     closedBall x r = Set.pi univ fun b => closedBall (x b) r :=
-  ((le_or_lt 0 r).elim (closed_ball_pi x)) fun hr => by simp [closed_ball_eq_empty.2 hr]
+  (le_or_lt 0 r).elim (closed_ball_pi x) fun hr => by simp [closed_ball_eq_empty.2 hr]
 #align closed_ball_pi' closed_ball_pi'
 
 @[simp]
@@ -2455,7 +2455,7 @@ instance (priority := 100) proper_of_compact [CompactSpace α] : ProperSpace α 
 -- see Note [lower instance priority]
 /-- A proper space is locally compact -/
 instance (priority := 100) locally_compact_of_proper [ProperSpace α] : LocallyCompactSpace α :=
-  (locally_compact_space_of_has_basis fun x => nhds_basis_closed_ball) fun x ε ε0 =>
+  locally_compact_space_of_has_basis (fun x => nhds_basis_closed_ball) fun x ε ε0 =>
     is_compact_closed_ball _ _
 #align locally_compact_of_proper locally_compact_of_proper
 
@@ -2677,7 +2677,7 @@ theorem bounded_union : Bounded (s ∪ t) ↔ Bounded s ∧ Bounded t :=
 /-- A finite union of bounded sets is bounded -/
 theorem bounded_bUnion {I : Set β} {s : β → Set α} (H : I.Finite) :
     Bounded (⋃ i ∈ I, s i) ↔ ∀ i ∈ I, Bounded (s i) :=
-  (Finite.induction_on H (by simp)) fun x I _ _ IH => by simp [or_imp, forall_and, IH]
+  Finite.induction_on H (by simp) fun x I _ _ IH => by simp [or_imp, forall_and, IH]
 #align metric.bounded_bUnion Metric.bounded_bUnion
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -3044,7 +3044,7 @@ theorem diam_union' {t : Set α} (h : (s ∩ t).Nonempty) : diam (s ∪ t) ≤ d
 
 theorem diam_le_of_subset_closed_ball {r : ℝ} (hr : 0 ≤ r) (h : s ⊆ closedBall x r) :
     diam s ≤ 2 * r :=
-  (diam_le_of_forall_dist_le (mul_nonneg zero_le_two hr)) fun a ha b hb =>
+  diam_le_of_forall_dist_le (mul_nonneg zero_le_two hr) fun a ha b hb =>
     calc
       dist a b ≤ dist a x + dist b x := dist_triangle_right _ _ _
       _ ≤ r + r := add_le_add (h ha) (h hb)

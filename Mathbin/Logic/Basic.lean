@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura
 
 ! This file was ported from Lean 3 source module logic.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -503,7 +503,7 @@ theorem imp_iff_not (hb : ¬b) : a → b ↔ ¬a :=
 #print Decidable.imp_iff_right_iff /-
 theorem Decidable.imp_iff_right_iff [Decidable a] : (a → b ↔ b) ↔ a ∨ b :=
   ⟨fun H => (Decidable.em a).imp_right fun ha' => H.1 fun ha => (ha' ha).elim, fun H =>
-    (H.elim imp_iff_right) fun hb => ⟨fun hab => hb, fun _ _ => hb⟩⟩
+    H.elim imp_iff_right fun hb => ⟨fun hab => hb, fun _ _ => hb⟩⟩
 #align decidable.imp_iff_right_iff Decidable.imp_iff_right_iff
 -/
 
@@ -2275,7 +2275,7 @@ theorem forall_imp_iff_exists_imp [ha : Nonempty α] : (∀ x, p x) → b ↔ �
   let ⟨a⟩ := ha
   ⟨fun h =>
     not_forall_not.1 fun h' =>
-      by_cases (fun hb : b => (h' a) fun _ => hb) fun hb => hb <| h fun x => (not_imp.1 (h' x)).1,
+      by_cases (fun hb : b => h' a fun _ => hb) fun hb => hb <| h fun x => (not_imp.1 (h' x)).1,
     fun ⟨x, hx⟩ h => hx (h x)⟩
 #align forall_imp_iff_exists_imp forall_imp_iff_exists_imp
 -/
@@ -2410,9 +2410,15 @@ theorem forall_eq' {a' : α} : (∀ a, a' = a → p a) ↔ p a' := by simp [@eq_
 -/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (b «expr ≠ » a) -/
+theorem Decidable.and_forall_ne [DecidableEq α] (a : α) :
+    (p a ∧ ∀ (b) (_ : b ≠ a), p b) ↔ ∀ b, p b := by
+  simp only [← @forall_eq _ p a, ← forall_and, ← or_imp, Decidable.em, forall_const]
+#align decidable.and_forall_ne Decidable.and_forall_ne
+
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (b «expr ≠ » a) -/
 #print and_forall_ne /-
-theorem and_forall_ne (a : α) : (p a ∧ ∀ (b) (_ : b ≠ a), p b) ↔ ∀ b, p b := by
-  simp only [← @forall_eq _ p a, ← forall_and, ← or_imp, Classical.em, forall_const]
+theorem and_forall_ne (a : α) : (p a ∧ ∀ (b) (_ : b ≠ a), p b) ↔ ∀ b, p b :=
+  Decidable.and_forall_ne a
 #align and_forall_ne and_forall_ne
 -/
 
@@ -2940,7 +2946,7 @@ noncomputable def subtype_of_exists {α : Type _} {P : α → Prop} (h : ∃ x, 
 #print Classical.byContradiction' /-
 /-- A version of `by_contradiction` that uses types instead of propositions. -/
 protected noncomputable def byContradiction' {α : Sort _} (H : ¬(α → False)) : α :=
-  Classical.choice <| (peirce _ False) fun h => (H fun a => h ⟨a⟩).elim
+  Classical.choice <| peirce _ False fun h => (H fun a => h ⟨a⟩).elim
 #align classical.by_contradiction' Classical.byContradiction'
 -/
 

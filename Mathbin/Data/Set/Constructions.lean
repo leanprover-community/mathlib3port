@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module data.set.constructions
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Data.Finset.Basic
 
 /-!
 # Constructions involving sets of sets.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 ## Finite Intersections
 
@@ -29,30 +32,37 @@ set of subsets of `α` which is closed under finite intersections.
 
 variable {α : Type _} (S : Set (Set α))
 
+#print FiniteInter /-
 /-- A structure encapsulating the fact that a set of sets is closed under finite intersection. -/
-structure HasFiniteInter : Prop where
+structure FiniteInter : Prop where
   univ_mem : Set.univ ∈ S
   inter_mem : ∀ ⦃s⦄, s ∈ S → ∀ ⦃t⦄, t ∈ S → s ∩ t ∈ S
-#align has_finite_inter HasFiniteInter
+#align has_finite_inter FiniteInter
+-/
 
-namespace HasFiniteInter
+namespace FiniteInter
 
+#print FiniteInter.finiteInterClosure /-
 /-- The smallest set of sets containing `S` which is closed under finite intersections. -/
 inductive finiteInterClosure : Set (Set α)
   | basic {s} : s ∈ S → finite_inter_closure s
   | univ : finite_inter_closure Set.univ
   | inter {s t} : finite_inter_closure s → finite_inter_closure t → finite_inter_closure (s ∩ t)
-#align has_finite_inter.finite_inter_closure HasFiniteInter.finiteInterClosure
+#align has_finite_inter.finite_inter_closure FiniteInter.finiteInterClosure
+-/
 
-theorem finite_inter_closure_has_finite_inter : HasFiniteInter (finiteInterClosure S) :=
+#print FiniteInter.finiteInterClosure_finiteInter /-
+theorem finiteInterClosure_finiteInter : FiniteInter (finiteInterClosure S) :=
   { univ_mem := finiteInterClosure.univ
     inter_mem := fun _ h _ => finiteInterClosure.inter h }
 #align
-  has_finite_inter.finite_inter_closure_has_finite_inter HasFiniteInter.finite_inter_closure_has_finite_inter
+  has_finite_inter.finite_inter_closure_has_finite_inter FiniteInter.finiteInterClosure_finiteInter
+-/
 
 variable {S}
 
-theorem finite_inter_mem (cond : HasFiniteInter S) (F : Finset (Set α)) :
+#print FiniteInter.finiteInter_mem /-
+theorem finiteInter_mem (cond : FiniteInter S) (F : Finset (Set α)) :
     ↑F ⊆ S → ⋂₀ (↑F : Set (Set α)) ∈ S := by
   classical
     refine' Finset.induction_on F (fun _ => _) _
@@ -62,10 +72,17 @@ theorem finite_inter_mem (cond : HasFiniteInter S) (F : Finset (Set α)) :
       exact
         cond.inter_mem (h3 (Finset.mem_insert_self a s))
           (h2 fun x hx => h3 <| Finset.mem_insert_of_mem hx)
-#align has_finite_inter.finite_inter_mem HasFiniteInter.finite_inter_mem
+#align has_finite_inter.finite_inter_mem FiniteInter.finiteInter_mem
+-/
 
+/- warning: has_finite_inter.finite_inter_closure_insert -> FiniteInter.finiteInterClosure_insert is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {S : Set.{u1} (Set.{u1} α)} {A : Set.{u1} α}, (FiniteInter.{u1} α S) -> (forall (P : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) P (FiniteInter.finiteInterClosure.{u1} α (Insert.insert.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasInsert.{u1} (Set.{u1} α)) A S))) -> (Or (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) P S) (Exists.{succ u1} (Set.{u1} α) (fun (Q : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) Q S) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) Q S) => Eq.{succ u1} (Set.{u1} α) P (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) A Q))))))
+but is expected to have type
+  forall {α : Type.{u1}} {S : Set.{u1} (Set.{u1} α)} {A : Set.{u1} α}, (FiniteInter.{u1} α S) -> (forall (P : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) P (FiniteInter.finiteInterClosure.{u1} α (Insert.insert.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instInsertSet.{u1} (Set.{u1} α)) A S))) -> (Or (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) P S) (Exists.{succ u1} (Set.{u1} α) (fun (Q : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) Q S) (Eq.{succ u1} (Set.{u1} α) P (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) A Q))))))
+Case conversion may be inaccurate. Consider using '#align has_finite_inter.finite_inter_closure_insert FiniteInter.finiteInterClosure_insertₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (P «expr ∈ » finite_inter_closure[has_finite_inter.finite_inter_closure] (insert[has_insert.insert] A S)) -/
-theorem finite_inter_closure_insert {A : Set α} (cond : HasFiniteInter S) (P)
+theorem finiteInterClosure_insert {A : Set α} (cond : FiniteInter S) (P)
     (_ : P ∈ finiteInterClosure (insert A S)) : P ∈ S ∨ ∃ Q ∈ S, P = A ∩ Q :=
   by
   induction' H with S h T1 T2 _ _ h1 h2
@@ -85,7 +102,7 @@ theorem finite_inter_closure_insert {A : Set α} (cond : HasFiniteInter S) (P)
           ⟨Q ∩ R, cond.inter_mem hQ hR, by
             ext x
             constructor <;> simp (config := { contextual := true })⟩
-#align has_finite_inter.finite_inter_closure_insert HasFiniteInter.finite_inter_closure_insert
+#align has_finite_inter.finite_inter_closure_insert FiniteInter.finiteInterClosure_insert
 
-end HasFiniteInter
+end FiniteInter
 

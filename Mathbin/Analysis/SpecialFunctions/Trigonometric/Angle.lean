@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Calle Sönne
 
 ! This file was ported from Lean 3 source module analysis.special_functions.trigonometric.angle
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -503,7 +503,7 @@ theorem abs_cos_eq_of_two_zsmul_eq {θ ψ : Angle} (h : (2 : ℤ) • θ = (2 : 
 theorem coe_to_Ico_mod (θ ψ : ℝ) : ↑(toIcoMod ψ two_pi_pos θ) = (θ : Angle) :=
   by
   rw [angle_eq_iff_two_pi_dvd_sub]
-  refine' ⟨toIcoDiv ψ two_pi_pos θ, _⟩
+  refine' ⟨-toIcoDiv ψ two_pi_pos θ, _⟩
   rw [to_Ico_mod_sub_self, zsmul_eq_mul, mul_comm]
 #align real.angle.coe_to_Ico_mod Real.Angle.coe_to_Ico_mod
 
@@ -511,7 +511,7 @@ theorem coe_to_Ico_mod (θ ψ : ℝ) : ↑(toIcoMod ψ two_pi_pos θ) = (θ : An
 theorem coe_to_Ioc_mod (θ ψ : ℝ) : ↑(toIocMod ψ two_pi_pos θ) = (θ : Angle) :=
   by
   rw [angle_eq_iff_two_pi_dvd_sub]
-  refine' ⟨toIocDiv ψ two_pi_pos θ, _⟩
+  refine' ⟨-toIocDiv ψ two_pi_pos θ, _⟩
   rw [to_Ioc_mod_sub_self, zsmul_eq_mul, mul_comm]
 #align real.angle.coe_to_Ioc_mod Real.Angle.coe_to_Ioc_mod
 

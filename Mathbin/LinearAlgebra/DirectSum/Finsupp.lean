@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module linear_algebra.direct_sum.finsupp
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -83,7 +83,7 @@ theorem finsupp_tensor_finsupp_symm_single (R M N ι κ : Sort _) [CommRing R] [
     [Module R M] [AddCommGroup N] [Module R N] (i : ι × κ) (m : M) (n : N) :
     (finsuppTensorFinsupp R M N ι κ).symm (Finsupp.single i (m ⊗ₜ n)) =
       Finsupp.single i.1 m ⊗ₜ Finsupp.single i.2 n :=
-  (Prod.casesOn i) fun i k =>
+  Prod.casesOn i fun i k =>
     (LinearEquiv.symm_apply_eq _).2 (finsupp_tensor_finsupp_single _ _ _ _ _ _ _ _ _).symm
 #align finsupp_tensor_finsupp_symm_single finsupp_tensor_finsupp_symm_single
 

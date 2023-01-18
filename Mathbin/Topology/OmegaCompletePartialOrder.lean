@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module topology.omega_complete_partial_order
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,10 +50,7 @@ def IsOpen (s : Set α) : Prop :=
 #align Scott.is_open ScottCat.IsOpen
 
 theorem is_open_univ : IsOpen α univ :=
-  ⟨fun x y h hx => mem_univ _,
-    by
-    convert @CompleteLattice.top_continuous α Prop _ _
-    exact rfl⟩
+  ⟨fun x y h hx => mem_univ _, @CompleteLattice.top_continuous α Prop _ _⟩
 #align Scott.is_open_univ ScottCat.is_open_univ
 
 theorem IsOpen.inter (s t : Set α) : IsOpen α s → IsOpen α t → IsOpen α (s ∩ t) :=
@@ -68,8 +65,7 @@ theorem is_open_sUnion (s : Set (Set α)) (hs : ∀ t ∈ s, IsOpen α t) : IsOp
     simp only [supₛ_apply, set_of_bijective.surjective.exists, exists_prop, mem_preimage,
       SetCoe.exists, supᵢ_Prop_eq, mem_set_of_eq, Subtype.coe_mk, mem_sUnion]
   · intro p hp
-    convert hs (setOf p) (mem_preimage.1 hp)
-    simp only [mem_set_of_eq]
+    exact hs (setOf p) (mem_preimage.1 hp)
 #align Scott.is_open_sUnion ScottCat.is_open_sUnion
 
 end ScottCat

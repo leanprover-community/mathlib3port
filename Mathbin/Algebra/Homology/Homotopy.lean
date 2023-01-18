@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.homology.homotopy
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -39,7 +39,7 @@ section
 /-- The composition of `C.d i i' ≫ f i' i` if there is some `i'` coming after `i`,
 and `0` otherwise. -/
 def dNext (i : ι) : (∀ i j, C.x i ⟶ D.x j) →+ (C.x i ⟶ D.x i) :=
-  (AddMonoidHom.mk' fun f => C.d i (c.next i) ≫ f (c.next i) i) fun f g =>
+  AddMonoidHom.mk' (fun f => C.d i (c.next i) ≫ f (c.next i) i) fun f g =>
     Preadditive.comp_add _ _ _ _ _ _
 #align d_next dNext
 
@@ -47,7 +47,7 @@ def dNext (i : ι) : (∀ i j, C.x i ⟶ D.x j) →+ (C.x i ⟶ D.x i) :=
 Hopefully there won't be much need for this, except in `d_next_eq_d_from_from_next`
 to see that `d_next` factors through `C.d_from i`. -/
 def fromNext (i : ι) : (∀ i j, C.x i ⟶ D.x j) →+ (C.xNext i ⟶ D.x i) :=
-  (AddMonoidHom.mk' fun f => f (c.next i) i) fun f g => rfl
+  AddMonoidHom.mk' (fun f => f (c.next i) i) fun f g => rfl
 #align from_next fromNext
 
 @[simp]
@@ -78,7 +78,7 @@ theorem d_next_comp_right (f : ∀ i j, C.x i ⟶ D.x j) (g : D ⟶ E) (i : ι) 
 /-- The composition of `f j j' ≫ D.d j' j` if there is some `j'` coming before `j`,
 and `0` otherwise. -/
 def prevD (j : ι) : (∀ i j, C.x i ⟶ D.x j) →+ (C.x j ⟶ D.x j) :=
-  (AddMonoidHom.mk' fun f => f j (c.prev j) ≫ D.d (c.prev j) j) fun f g =>
+  AddMonoidHom.mk' (fun f => f j (c.prev j) ≫ D.d (c.prev j) j) fun f g =>
     Preadditive.add_comp _ _ _ _ _ _
 #align prev_d prevD
 
@@ -86,7 +86,7 @@ def prevD (j : ι) : (∀ i j, C.x i ⟶ D.x j) →+ (C.x j ⟶ D.x j) :=
 Hopefully there won't be much need for this, except in `d_next_eq_d_from_from_next`
 to see that `d_next` factors through `C.d_from i`. -/
 def toPrev (j : ι) : (∀ i j, C.x i ⟶ D.x j) →+ (C.x j ⟶ D.xPrev j) :=
-  (AddMonoidHom.mk' fun f => f j (c.prev j)) fun f g => rfl
+  AddMonoidHom.mk' (fun f => f j (c.prev j)) fun f g => rfl
 #align to_prev toPrev
 
 @[simp]

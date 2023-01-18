@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Heather Macbeth, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.inverse
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -668,7 +668,7 @@ theorem approximates_deriv_on_open_nhds (hf : HasStrictFderivAt f (f' : E →L[�
   exact fun s t => ApproximatesLinearOn.monoSet
   exact
     hf.approximates_deriv_on_nhds <|
-      (f'.subsingleton_or_nnnorm_symm_pos.imp id) fun hf' =>
+      f'.subsingleton_or_nnnorm_symm_pos.imp id fun hf' =>
         Nnreal.half_pos <| Nnreal.inv_pos.2 <| hf'
 #align
   has_strict_fderiv_at.approximates_deriv_on_open_nhds HasStrictFderivAt.approximates_deriv_on_open_nhds
@@ -684,7 +684,7 @@ of this `local_homeomorph` has derivative `f'.symm`. -/
 def toLocalHomeomorph (hf : HasStrictFderivAt f (f' : E →L[𝕜] F) a) : LocalHomeomorph E F :=
   ApproximatesLinearOn.toLocalHomeomorph f (Classical.choose hf.approximates_deriv_on_open_nhds)
     (Classical.choose_spec hf.approximates_deriv_on_open_nhds).snd
-    ((f'.subsingleton_or_nnnorm_symm_pos.imp id) fun hf' =>
+    (f'.subsingleton_or_nnnorm_symm_pos.imp id fun hf' =>
       Nnreal.half_lt_self <| ne_of_gt <| Nnreal.inv_pos.2 <| hf')
     (Classical.choose_spec hf.approximates_deriv_on_open_nhds).fst.2
 #align has_strict_fderiv_at.to_local_homeomorph HasStrictFderivAt.toLocalHomeomorph

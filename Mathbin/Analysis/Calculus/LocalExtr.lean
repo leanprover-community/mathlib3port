@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.calculus.local_extr
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -91,7 +91,7 @@ def posTangentConeAt (s : Set E) (x : E) : Set E :=
 theorem pos_tangent_cone_at_mono : Monotone fun s => posTangentConeAt s a :=
   by
   rintro s t hst y ⟨c, d, hd, hc, hcd⟩
-  exact ⟨c, d, (mem_of_superset hd) fun h hn => hst hn, hc, hcd⟩
+  exact ⟨c, d, mem_of_superset hd fun h hn => hst hn, hc, hcd⟩
 #align pos_tangent_cone_at_mono pos_tangent_cone_at_mono
 
 theorem mem_pos_tangent_cone_at_of_segment_subset {s : Set E} {x y : E} (h : segment ℝ x y ⊆ s) :
@@ -395,15 +395,15 @@ theorem card_roots_to_finset_le_card_roots_derivative_diff_roots_succ (p : ℝ[X
     p.roots.toFinset.card ≤ (p.derivative.roots.toFinset \ p.roots.toFinset).card + 1 :=
   by
   cases' eq_or_ne p.derivative 0 with hp' hp'
-  · rw [eq_C_of_derivative_eq_zero hp', roots_C, Multiset.to_finset_zero, Finset.card_empty]
+  · rw [eq_C_of_derivative_eq_zero hp', roots_C, Multiset.toFinset_zero, Finset.card_empty]
     exact zero_le _
   have hp : p ≠ 0 := ne_of_apply_ne derivative (by rwa [derivative_zero])
   refine' Finset.card_le_diff_of_interleaved fun x hx y hy hxy hxy' => _
-  rw [Multiset.mem_to_finset, mem_roots hp] at hx hy
+  rw [Multiset.mem_toFinset, mem_roots hp] at hx hy
   obtain ⟨z, hz1, hz2⟩ :=
     exists_deriv_eq_zero (fun x : ℝ => eval x p) hxy p.continuous_on (hx.trans hy.symm)
   refine' ⟨z, _, hz1⟩
-  rwa [Multiset.mem_to_finset, mem_roots hp', is_root, ← p.deriv]
+  rwa [Multiset.mem_toFinset, mem_roots hp', is_root, ← p.deriv]
 #align
   polynomial.card_roots_to_finset_le_card_roots_derivative_diff_roots_succ Polynomial.card_roots_to_finset_le_card_roots_derivative_diff_roots_succ
 
@@ -423,9 +423,9 @@ theorem card_roots_le_derivative (p : ℝ[X]) : p.roots.card ≤ p.derivative.ro
       (Multiset.to_finset_sum_count_eq _).symm
     _ = ∑ x in p.roots.toFinset, p.roots.count x - 1 + 1 :=
       Eq.symm <|
-        (Finset.sum_congr rfl) fun x hx =>
+        Finset.sum_congr rfl fun x hx =>
           tsub_add_cancel_of_le <|
-            Nat.succ_le_iff.2 <| Multiset.count_pos.2 <| Multiset.mem_to_finset.1 hx
+            Nat.succ_le_iff.2 <| Multiset.count_pos.2 <| Multiset.mem_toFinset.1 hx
     _ = (∑ x in p.roots.toFinset, p.rootMultiplicity x - 1) + p.roots.toFinset.card := by
       simp only [Finset.sum_add_distrib, Finset.card_eq_sum_ones, count_roots]
     _ ≤
@@ -443,14 +443,14 @@ theorem card_roots_le_derivative (p : ℝ[X]) : p.roots.card ≤ p.derivative.ro
       simp only [← count_roots]
       refine' add_le_add_left (add_le_add_right ((Finset.card_eq_sum_ones _).trans_le _) _) _
       refine' Finset.sum_le_sum fun x hx => Nat.succ_le_iff.2 <| _
-      rw [Multiset.count_pos, ← Multiset.mem_to_finset]
+      rw [Multiset.count_pos, ← Multiset.mem_toFinset]
       exact (Finset.mem_sdiff.1 hx).1
     _ = p.derivative.roots.card + 1 :=
       by
       rw [← add_assoc, ← Finset.sum_union Finset.disjoint_sdiff, Finset.union_sdiff_self_eq_union, ←
         Multiset.to_finset_sum_count_eq, ← Finset.sum_subset (Finset.subset_union_right _ _)]
       intro x hx₁ hx₂
-      simpa only [Multiset.mem_to_finset, Multiset.count_eq_zero] using hx₂
+      simpa only [Multiset.mem_toFinset, Multiset.count_eq_zero] using hx₂
     
 #align polynomial.card_roots_le_derivative Polynomial.card_roots_le_derivative
 

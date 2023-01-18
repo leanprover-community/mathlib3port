@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 
 ! This file was ported from Lean 3 source module data.multiset.fintype
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -113,7 +113,7 @@ instance : Fintype { p : α × ℕ | p.2 < m.count p.1 } :=
     (m.toFinset.bUnion fun x => (Finset.range (m.count x)).map ⟨Prod.mk x, Prod.mk.inj_left x⟩)
     (by
       rintro ⟨x, i⟩
-      simp only [Finset.mem_bUnion, Multiset.mem_to_finset, Finset.mem_map, Finset.mem_range,
+      simp only [Finset.mem_bunionᵢ, Multiset.mem_toFinset, Finset.mem_map, Finset.mem_range,
         Function.Embedding.coeFn_mk, Prod.mk.inj_iff, exists_prop, exists_eq_right_right,
         Set.mem_setOf_eq, and_iff_right_iff_imp]
       exact fun h => multiset.count_pos.mp (pos_of_gt h))
@@ -128,7 +128,7 @@ def Multiset.toEnumFinset (m : Multiset α) : Finset (α × ℕ) :=
 @[simp]
 theorem Multiset.mem_to_enum_finset (m : Multiset α) (p : α × ℕ) :
     p ∈ m.toEnumFinset ↔ p.2 < m.count p.1 :=
-  Set.mem_to_finset
+  Set.mem_toFinset
 #align multiset.mem_to_enum_finset Multiset.mem_to_enum_finset
 
 theorem Multiset.mem_of_mem_to_enum_finset {p : α × ℕ} (h : p ∈ m.toEnumFinset) : p.1 ∈ m :=

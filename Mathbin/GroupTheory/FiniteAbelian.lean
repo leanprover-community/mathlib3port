@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Pierre-Alexandre Bazin
 
 ! This file was ported from Lean 3 source module group_theory.finite_abelian
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -84,7 +84,7 @@ theorem equiv_direct_sum_zmod_of_fintype [Finite G] :
   · exact ⟨ι, fι, p, hp, e, ⟨f.trans AddEquiv.uniqueProd⟩⟩
   · haveI := @Fintype.prodLeft _ _ _ (Fintype.ofEquiv G f.to_equiv) _
     exact
-      ((Fintype.ofSurjective fun f : Fin n.succ →₀ ℤ => f 0) fun a =>
+      (Fintype.ofSurjective (fun f : Fin n.succ →₀ ℤ => f 0) fun a =>
             ⟨Finsupp.single 0 a, Finsupp.single_eq_same⟩).False.elim
 #align add_comm_group.equiv_direct_sum_zmod_of_fintype AddCommGroup.equiv_direct_sum_zmod_of_fintype
 

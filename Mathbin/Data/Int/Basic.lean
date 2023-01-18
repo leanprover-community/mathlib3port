@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.int.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -597,10 +597,12 @@ theorem mod_one : ∀ a : ℤ, a % 1 = 0
   | -[m+1] => show (1 - (m % 1).succ : ℤ) = 0 by rw [Nat.mod_one] <;> rfl
 #align int.mod_one Int.mod_oneₓ
 
-theorem mod_eq_of_lt {a b : ℤ} (H1 : 0 ≤ a) (H2 : a < b) : a % b = a :=
+#print Int.emod_eq_of_lt /-
+theorem emod_eq_of_lt {a b : ℤ} (H1 : 0 ≤ a) (H2 : a < b) : a % b = a :=
   match a, b, eq_ofNat_of_zero_le H1, eq_ofNat_of_zero_le (le_trans H1 (le_of_lt H2)), H2 with
   | _, _, ⟨m, rfl⟩, ⟨n, rfl⟩, H2 => congr_arg ofNat <| Nat.mod_eq_of_lt (lt_of_ofNat_lt_ofNat H2)
-#align int.mod_eq_of_lt Int.mod_eq_of_ltₓ
+#align int.mod_eq_of_lt Int.emod_eq_of_lt
+-/
 
 theorem mod_add_div_aux (m n : ℕ) : (n - (m % n + 1) - (n * (m / n) + n) : ℤ) = -[m+1] :=
   by

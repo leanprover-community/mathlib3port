@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module number_theory.divisors
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -91,12 +91,15 @@ theorem mem_proper_divisors {m : ℕ} : n ∈ properDivisors m ↔ n ∣ m ∧ n
   simp only [and_comm', ← filter_dvd_eq_proper_divisors hm, mem_filter, mem_range]
 #align nat.mem_proper_divisors Nat.mem_proper_divisors
 
-theorem divisors_eq_proper_divisors_insert_self_of_pos (h : 0 < n) :
-    divisors n = Insert.insert n (properDivisors n) := by
-  rw [divisors, proper_divisors, Ico_succ_right_eq_insert_Ico h, Finset.filter_insert,
-    if_pos (dvd_refl n)]
-#align
-  nat.divisors_eq_proper_divisors_insert_self_of_pos Nat.divisors_eq_proper_divisors_insert_self_of_pos
+theorem insert_self_proper_divisors (h : n ≠ 0) : insert n (properDivisors n) = divisors n := by
+  rw [divisors, proper_divisors, Ico_succ_right_eq_insert_Ico (one_le_iff_ne_zero.2 h),
+    Finset.filter_insert, if_pos (dvd_refl n)]
+#align nat.insert_self_proper_divisors Nat.insert_self_proper_divisors
+
+theorem cons_self_proper_divisors (h : n ≠ 0) :
+    cons n (properDivisors n) properDivisors.not_self_mem = divisors n := by
+  rw [cons_eq_insert, insert_self_proper_divisors h]
+#align nat.cons_self_proper_divisors Nat.cons_self_proper_divisors
 
 @[simp]
 theorem mem_divisors {m : ℕ} : n ∈ divisors m ↔ n ∣ m ∧ m ≠ 0 :=
@@ -292,11 +295,9 @@ theorem map_div_left_divisors :
 theorem sum_divisors_eq_sum_proper_divisors_add_self :
     (∑ i in divisors n, i) = (∑ i in properDivisors n, i) + n :=
   by
-  cases n
+  rcases Decidable.eq_or_ne n 0 with (rfl | hn)
   · simp
-  ·
-    rw [divisors_eq_proper_divisors_insert_self_of_pos (Nat.succ_pos _),
-      Finset.sum_insert proper_divisors.not_self_mem, add_comm]
+  · rw [← cons_self_proper_divisors hn, Finset.sum_cons, add_comm]
 #align
   nat.sum_divisors_eq_sum_proper_divisors_add_self Nat.sum_divisors_eq_sum_proper_divisors_add_self
 
@@ -332,9 +333,8 @@ theorem Prime.divisors {p : ℕ} (pp : p.Prime) : divisors p = {1, p} :=
 #align nat.prime.divisors Nat.Prime.divisors
 
 theorem Prime.proper_divisors {p : ℕ} (pp : p.Prime) : properDivisors p = {1} := by
-  rw [← erase_insert proper_divisors.not_self_mem, ←
-    divisors_eq_proper_divisors_insert_self_of_pos pp.pos, pp.divisors, pair_comm,
-    erase_insert fun con => pp.ne_one (mem_singleton.1 con)]
+  rw [← erase_insert proper_divisors.not_self_mem, insert_self_proper_divisors pp.ne_zero,
+    pp.divisors, pair_comm, erase_insert fun con => pp.ne_one (mem_singleton.1 Con)]
 #align nat.prime.proper_divisors Nat.Prime.proper_divisors
 
 theorem divisors_prime_pow {p : ℕ} (pp : p.Prime) (k : ℕ) :
@@ -394,8 +394,7 @@ theorem Prime.prod_proper_divisors {α : Type _} [CommMonoid α] {p : ℕ} {f : 
 @[simp, to_additive]
 theorem Prime.prod_divisors {α : Type _} [CommMonoid α] {p : ℕ} {f : ℕ → α} (h : p.Prime) :
     (∏ x in p.divisors, f x) = f p * f 1 := by
-  rw [divisors_eq_proper_divisors_insert_self_of_pos h.pos,
-    prod_insert proper_divisors.not_self_mem, h.prod_proper_divisors]
+  rw [← cons_self_proper_divisors h.ne_zero, prod_cons, h.prod_proper_divisors]
 #align nat.prime.prod_divisors Nat.Prime.prod_divisors
 
 theorem proper_divisors_eq_singleton_one_iff_prime : n.properDivisors = {1} ↔ n.Prime :=

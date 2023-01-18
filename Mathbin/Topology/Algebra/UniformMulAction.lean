@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module topology.algebra.uniform_mul_action
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -192,9 +192,9 @@ end SMul
 instance [Monoid M] [MulAction M X] [HasUniformContinuousConstSmul M X] : MulAction M (Completion X)
     where
   smul := (· • ·)
-  one_smul := (ext' (continuous_const_smul _) continuous_id) fun a => by rw [← coe_smul, one_smul]
+  one_smul := ext' (continuous_const_smul _) continuous_id fun a => by rw [← coe_smul, one_smul]
   mul_smul x y :=
-    (ext' (continuous_const_smul _) ((continuous_const_smul _).const_smul _)) fun a => by
+    ext' (continuous_const_smul _) ((continuous_const_smul _).const_smul _) fun a => by
       simp only [← coe_smul, mul_smul]
 
 end Completion

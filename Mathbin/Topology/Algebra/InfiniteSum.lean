@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.algebra.infinite_sum
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1008,15 +1008,14 @@ theorem tsum_ite_eq_extract [DecidableEq β] (hf : Summable f) (b : β) :
 end tsum
 
 /-!
-### Sums on subtypes
+### Sums on nat
 
-If `s` is a finset of `α`, we show that the summability of `f` in the whole space and on the subtype
-`univ - s` are equivalent, and relate their sums. For a function defined on `ℕ`, we deduce the
-formula `(∑ i in range k, f i) + (∑' i, f (i + k)) = (∑' i, f i)`, in `sum_add_tsum_nat_add`.
+We show the formula `(∑ i in range k, f i) + (∑' i, f (i + k)) = (∑' i, f i)`, in
+`sum_add_tsum_nat_add`, as well as several results relating sums on `ℕ` and `ℤ`.
 -/
 
 
-section Subtype
+section Nat
 
 theorem has_sum_nat_add_iff {f : ℕ → α} (k : ℕ) {a : α} :
     HasSum (fun n => f (n + k)) a ↔ HasSum f (a + ∑ i in range k, f i) :=
@@ -1103,7 +1102,62 @@ theorem HasSum.pos_add_zero_add_neg {b : α} {f : ℤ → α} (hpos : HasSum (fu
   (this (fun n => f n) hpos).nonneg_add_neg hneg
 #align has_sum.pos_add_zero_add_neg HasSum.pos_add_zero_add_neg
 
-end Subtype
+theorem summable_int_of_summable_nat {f : ℤ → α} (hp : Summable fun n : ℕ => f n)
+    (hn : Summable fun n : ℕ => f (-n)) : Summable f :=
+  (HasSum.nonneg_add_neg hp.HasSum <| Summable.has_sum <| (summable_nat_add_iff 1).mpr hn).Summable
+#align summable_int_of_summable_nat summable_int_of_summable_nat
+
+theorem HasSum.sum_nat_of_sum_int {α : Type _} [AddCommMonoid α] [TopologicalSpace α]
+    [HasContinuousAdd α] {a : α} {f : ℤ → α} (hf : HasSum f a) :
+    HasSum (fun n : ℕ => f n + f (-n)) (a + f 0) :=
+  by
+  apply (hf.add (has_sum_ite_eq (0 : ℤ) (f 0))).has_sum_of_sum_eq fun u => _
+  refine' ⟨u.image Int.natAbs, fun v' hv' => _⟩
+  let u1 := v'.image fun x : ℕ => (x : ℤ)
+  let u2 := v'.image fun x : ℕ => -(x : ℤ)
+  have A : u ⊆ u1 ∪ u2 := by
+    intro x hx
+    simp only [mem_union, mem_image, exists_prop]
+    rcases le_total 0 x with (h'x | h'x)
+    · left
+      refine' ⟨Int.natAbs x, hv' _, _⟩
+      · simp only [mem_image, exists_prop]
+        exact ⟨x, hx, rfl⟩
+      · simp only [h'x, Int.coe_natAbs, abs_eq_self]
+    · right
+      refine' ⟨Int.natAbs x, hv' _, _⟩
+      · simp only [mem_image, exists_prop]
+        exact ⟨x, hx, rfl⟩
+      · simp only [abs_of_nonpos h'x, Int.coe_natAbs, neg_neg]
+  refine' ⟨u1 ∪ u2, A, _⟩
+  calc
+    (∑ x in u1 ∪ u2, f x + ite (x = 0) (f 0) 0) = (∑ x in u1 ∪ u2, f x) + ∑ x in u1 ∩ u2, f x :=
+      by
+      rw [sum_add_distrib]
+      congr 1
+      refine' (sum_subset_zero_on_sdiff inter_subset_union _ _).symm
+      · intro x hx
+        suffices x ≠ 0 by simp only [this, if_false]
+        rintro rfl
+        simpa only [mem_sdiff, mem_union, mem_image, neg_eq_zero, or_self_iff, mem_inter,
+          and_self_iff, and_not_self_iff] using hx
+      · intro x hx
+        simp only [mem_inter, mem_image, exists_prop] at hx
+        have : x = 0 := by
+          apply le_antisymm
+          · rcases hx.2 with ⟨a, ha, rfl⟩
+            simp only [Right.neg_nonpos_iff, Nat.cast_nonneg]
+          · rcases hx.1 with ⟨a, ha, rfl⟩
+            simp only [Nat.cast_nonneg]
+        simp only [this, eq_self_iff_true, if_true]
+    _ = (∑ x in u1, f x) + ∑ x in u2, f x := sum_union_inter
+    _ = (∑ b in v', f b) + ∑ b in v', f (-b) := by
+      simp only [sum_image, Nat.cast_inj, imp_self, imp_true_iff, neg_inj]
+    _ = ∑ b in v', f b + f (-b) := sum_add_distrib.symm
+    
+#align has_sum.sum_nat_of_sum_int HasSum.sum_nat_of_sum_int
+
+end Nat
 
 end TopologicalGroup
 
@@ -1148,7 +1202,7 @@ theorem Commute.tsum_right (a) (h : ∀ b, Commute a (f b)) : Commute a (∑' b,
 #align commute.tsum_right Commute.tsum_right
 
 theorem Commute.tsum_left (a) (h : ∀ b, Commute (f b) a) : Commute (∑' b, f b) a :=
-  ((Commute.tsum_right _) fun b => (h b).symm).symm
+  (Commute.tsum_right _ fun b => (h b).symm).symm
 #align commute.tsum_left Commute.tsum_left
 
 end tsum
@@ -1248,7 +1302,7 @@ variable [OrderedAddCommMonoid α] [TopologicalSpace α] [OrderClosedTopology α
 variable {f g : β → α} {a a₁ a₂ : α}
 
 theorem has_sum_le (h : ∀ b, f b ≤ g b) (hf : HasSum f a₁) (hg : HasSum g a₂) : a₁ ≤ a₂ :=
-  (le_of_tendsto_of_tendsto' hf hg) fun s => sum_le_sum fun b _ => h b
+  le_of_tendsto_of_tendsto' hf hg fun s => sum_le_sum fun b _ => h b
 #align has_sum_le has_sum_le
 
 @[mono]
@@ -1304,7 +1358,7 @@ theorem sum_le_has_sum (s : Finset β) (hs : ∀ (b) (_ : b ∉ s), 0 ≤ f b) (
     (∑ b in s, f b) ≤ a :=
   ge_of_tendsto hf
     (eventually_at_top.2
-      ⟨s, fun t hst => (sum_le_sum_of_subset_of_nonneg hst) fun b hbt hbs => hs b hbs⟩)
+      ⟨s, fun t hst => sum_le_sum_of_subset_of_nonneg hst fun b hbt hbs => hs b hbs⟩)
 #align sum_le_has_sum sum_le_has_sum
 
 theorem is_lub_has_sum (h : ∀ b, 0 ≤ f b) (hf : HasSum f a) :
@@ -1441,11 +1495,11 @@ variable [CanonicallyOrderedAddMonoid α] [TopologicalSpace α] [OrderClosedTopo
 variable {f : β → α} {a : α}
 
 theorem le_has_sum' (hf : HasSum f a) (b : β) : f b ≤ a :=
-  (le_has_sum hf b) fun _ _ => zero_le _
+  le_has_sum hf b fun _ _ => zero_le _
 #align le_has_sum' le_has_sum'
 
 theorem le_tsum' (hf : Summable f) (b : β) : f b ≤ ∑' b, f b :=
-  (le_tsum hf b) fun _ _ => zero_le _
+  le_tsum hf b fun _ _ => zero_le _
 #align le_tsum' le_tsum'
 
 theorem has_sum_zero_iff : HasSum f 0 ↔ ∀ x, f x = 0 :=
@@ -1619,18 +1673,6 @@ theorem tsum_comm [T1Space α] {f : β → γ → α} (h : Summable (Function.un
     (∑' (c) (b), f b c) = ∑' (b) (c), f b c :=
   tsum_comm' h h.prod_factor h.prod_symm.prod_factor
 #align tsum_comm tsum_comm
-
-theorem HasSum.sum_nat_of_sum_int [T2Space α] {f : ℤ → α} (hf : HasSum f a) :
-    HasSum (fun n : ℕ => f (n + 1) + f (-n.succ)) (a - f 0) :=
-  by
-  obtain ⟨b₁, h₁⟩ : Summable fun n : ℕ => f (n + 1) :=
-    hf.summable.comp_injective fun x₁ x₂ => by simp
-  obtain ⟨b₂, h₂⟩ : Summable fun n : ℕ => f (-n.succ) :=
-    hf.summable.comp_injective fun x₁ x₂ => by simp
-  convert h₁.add h₂
-  rw [hf.unique (h₁.pos_add_zero_add_neg h₂)]
-  abel
-#align has_sum.sum_nat_of_sum_int HasSum.sum_nat_of_sum_int
 
 theorem tsum_subtype_add_tsum_subtype_compl [T2Space α] {f : β → α} (hf : Summable f) (s : Set β) :
     ((∑' x : s, f x) + ∑' x : sᶜ, f x) = ∑' x, f x :=
@@ -1901,8 +1943,8 @@ section CauchyProduct
 
 We prove two versions of the Cauchy product formula. The first one is
 `tsum_mul_tsum_eq_tsum_sum_range`, where the `n`-th term is a sum over `finset.range (n+1)`
-involving `nat` substraction.
-In order to avoid `nat` substraction, we also provide `tsum_mul_tsum_eq_tsum_sum_antidiagonal`,
+involving `nat` subtraction.
+In order to avoid `nat` subtraction, we also provide `tsum_mul_tsum_eq_tsum_sum_antidiagonal`,
 where the `n`-th term is a sum over all pairs `(k, l)` such that `k+l=n`, which corresponds to the
 `finset` `finset.nat.antidiagonal n` -/
 

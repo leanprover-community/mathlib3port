@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Riccardo Brasca
 
 ! This file was ported from Lean 3 source module analysis.normed.group.quotient
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -199,7 +199,7 @@ theorem quotient_norm_eq_zero_iff (S : AddSubgroup M) (m : M) :
     ‖mk' S m‖ = 0 ↔ m ∈ closure (S : Set M) :=
   by
   have : 0 ≤ ‖mk' S m‖ := norm_mk_nonneg S m
-  rw [← this.le_iff_eq, quotient_norm_mk_eq, Real.Inf_le_iff]
+  rw [← this.le_iff_eq, quotient_norm_mk_eq, Real.infₛ_le_iff]
   simp_rw [zero_add]
   · calc
       (∀ ε > (0 : ℝ), ∃ r ∈ (fun x => ‖m + x‖) '' (S : Set M), r < ε) ↔
@@ -226,7 +226,7 @@ theorem norm_mk_lt {S : AddSubgroup M} (x : M ⧸ S) {ε : ℝ} (hε : 0 < ε) :
     ∃ m : M, mk' S m = x ∧ ‖m‖ < ‖x‖ + ε :=
   by
   obtain ⟨_, ⟨m : M, H : mk' S m = x, rfl⟩, hnorm : ‖m‖ < ‖x‖ + ε⟩ :=
-    Real.lt_Inf_add_pos (image_norm_nonempty x) hε
+    Real.lt_infₛ_add_pos (image_norm_nonempty x) hε
   subst H
   exact ⟨m, rfl, hnorm⟩
 #align norm_mk_lt norm_mk_lt
@@ -508,7 +508,7 @@ theorem IsQuotient.norm_lift {f : NormedAddGroupHom M N} (hquot : IsQuotient f) 
     by
     rw [Set.nonempty_image_iff]
     exact ⟨0, f.ker.zero_mem⟩
-  rcases Real.lt_Inf_add_pos nonemp hε with
+  rcases Real.lt_infₛ_add_pos nonemp hε with
     ⟨_, ⟨⟨x, hx, rfl⟩, H : ‖m + x‖ < Inf ((fun m' : M => ‖m + m'‖) '' f.ker) + ε⟩⟩
   exact
     ⟨m + x, by rw [map_add, (NormedAddGroupHom.mem_ker f x).mp hx, add_zero], by rwa [hquot.norm]⟩

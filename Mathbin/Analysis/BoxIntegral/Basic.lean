@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.box_integral.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -87,8 +87,7 @@ theorem integral_sum_bUnion_tagged (f : ℝⁿ → E) (vol : ι →ᵇᵃ E →L
     (πi : ∀ J, TaggedPrepartition J) :
     integralSum f vol (π.bUnionTagged πi) = ∑ J in π.boxes, integralSum f vol (πi J) :=
   by
-  refine'
-    (π.sum_bUnion_boxes _ _).trans ((sum_congr rfl) fun J hJ => (sum_congr rfl) fun J' hJ' => _)
+  refine' (π.sum_bUnion_boxes _ _).trans (sum_congr rfl fun J hJ => sum_congr rfl fun J' hJ' => _)
   rw [π.tag_bUnion_tagged hJ hJ']
 #align box_integral.integral_sum_bUnion_tagged BoxIntegral.integral_sum_bUnion_tagged
 
@@ -96,7 +95,7 @@ theorem integral_sum_bUnion_partition (f : ℝⁿ → E) (vol : ι →ᵇᵃ E �
     (π : TaggedPrepartition I) (πi : ∀ J, Prepartition J) (hπi : ∀ J ∈ π, (πi J).IsPartition) :
     integralSum f vol (π.bUnionPrepartition πi) = integralSum f vol π :=
   by
-  refine' (π.to_prepartition.sum_bUnion_boxes _ _).trans ((sum_congr rfl) fun J hJ => _)
+  refine' (π.to_prepartition.sum_bUnion_boxes _ _).trans (sum_congr rfl fun J hJ => _)
   calc
     (∑ J' in (πi J).boxes, vol J' (f (π.tag <| π.to_prepartition.bUnion_index πi J'))) =
         ∑ J' in (πi J).boxes, vol J' (f (π.tag J)) :=
@@ -110,7 +109,7 @@ theorem integral_sum_bUnion_partition (f : ℝⁿ → E) (vol : ι →ᵇᵃ E �
 theorem integral_sum_inf_partition (f : ℝⁿ → E) (vol : ι →ᵇᵃ E →L[ℝ] F) (π : TaggedPrepartition I)
     {π' : Prepartition I} (h : π'.IsPartition) :
     integralSum f vol (π.infPrepartition π') = integralSum f vol π :=
-  (integral_sum_bUnion_partition f vol π _) fun J hJ => h.restrict (Prepartition.le_of_mem _ hJ)
+  integral_sum_bUnion_partition f vol π _ fun J hJ => h.restrict (Prepartition.le_of_mem _ hJ)
 #align box_integral.integral_sum_inf_partition BoxIntegral.integral_sum_inf_partition
 
 theorem integral_sum_fiberwise {α} (g : Box ι → α) (f : ℝⁿ → E) (vol : ι →ᵇᵃ E →L[ℝ] F)
@@ -138,7 +137,7 @@ theorem integral_sum_disj_union (f : ℝⁿ → E) (vol : ι →ᵇᵃ E →L[�
   by
   refine'
     (prepartition.sum_disj_union_boxes h _).trans
-      (congr_arg₂ (· + ·) ((sum_congr rfl) fun J hJ => _) ((sum_congr rfl) fun J hJ => _))
+      (congr_arg₂ (· + ·) (sum_congr rfl fun J hJ => _) (sum_congr rfl fun J hJ => _))
   · rw [disj_union_tag_of_mem_left _ hJ]
   · rw [disj_union_tag_of_mem_right _ hJ]
 #align box_integral.integral_sum_disj_union BoxIntegral.integral_sum_disj_union

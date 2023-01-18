@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Patrick Massot, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.group.prod
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -299,8 +299,8 @@ theorem swap_div [Div G] [Div H] (a b : G × H) : (a / b).swap = a.swap / b.swap
 instance [MulZeroClass M] [MulZeroClass N] : MulZeroClass (M × N) :=
   { Prod.hasZero,
     Prod.hasMul with
-    zero_mul := fun a => (Prod.recOn a) fun a b => mk.inj_iff.mpr ⟨zero_mul _, zero_mul _⟩
-    mul_zero := fun a => (Prod.recOn a) fun a b => mk.inj_iff.mpr ⟨mul_zero _, mul_zero _⟩ }
+    zero_mul := fun a => Prod.recOn a fun a b => mk.inj_iff.mpr ⟨zero_mul _, zero_mul _⟩
+    mul_zero := fun a => Prod.recOn a fun a b => mk.inj_iff.mpr ⟨mul_zero _, mul_zero _⟩ }
 
 @[to_additive]
 instance [Semigroup M] [Semigroup N] : Semigroup (M × N) :=
@@ -317,8 +317,8 @@ instance [SemigroupWithZero M] [SemigroupWithZero N] : SemigroupWithZero (M × N
 instance [MulOneClass M] [MulOneClass N] : MulOneClass (M × N) :=
   { Prod.hasMul,
     Prod.hasOne with
-    one_mul := fun a => (Prod.recOn a) fun a b => mk.inj_iff.mpr ⟨one_mul _, one_mul _⟩
-    mul_one := fun a => (Prod.recOn a) fun a b => mk.inj_iff.mpr ⟨mul_one _, mul_one _⟩ }
+    one_mul := fun a => Prod.recOn a fun a b => mk.inj_iff.mpr ⟨one_mul _, one_mul _⟩
+    mul_one := fun a => Prod.recOn a fun a b => mk.inj_iff.mpr ⟨mul_one _, mul_one _⟩ }
 
 @[to_additive]
 instance [Monoid M] [Monoid N] : Monoid (M × N) :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.filter.n_ary
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -444,6 +444,18 @@ theorem map_map₂_right_anticomm {m : α → β' → γ} {n : β → β'} {m' :
     map₂ m f (g.map n) = (map₂ m' g f).map n' :=
   (map_map₂_antidistrib_right fun a b => (h_right_anticomm b a).symm).symm
 #align filter.map_map₂_right_anticomm Filter.map_map₂_right_anticomm
+
+/-- If `a` is a left identity for `f : α → β → β`, then `pure a` is a left identity for
+`filter.map₂ f`. -/
+theorem map₂_left_identity {f : α → β → β} {a : α} (h : ∀ b, f a b = b) (l : Filter β) :
+    map₂ f (pure a) l = l := by rw [map₂_pure_left, show f a = id from funext h, map_id]
+#align filter.map₂_left_identity Filter.map₂_left_identity
+
+/-- If `b` is a right identity for `f : α → β → α`, then `pure b` is a right identity for
+`filter.map₂ f`. -/
+theorem map₂_right_identity {f : α → β → α} {b : β} (h : ∀ a, f a b = a) (l : Filter α) :
+    map₂ f l (pure b) = l := by rw [map₂_pure_right, funext h, map_id']
+#align filter.map₂_right_identity Filter.map₂_right_identity
 
 end Filter
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module tactic.rcases
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -916,7 +916,7 @@ unsafe inductive rcases_args
 * `rcases? expr (: n)?`
 * `rcases (h :)? expr (with patt_list (: expr)?)?`. -/
 unsafe def rcases_parse : parser rcases_args :=
-  (with_desc "('?' expr (: n)?) | ((h :)? expr (with patt)?)") do
+  with_desc "('?' expr (: n)?) | ((h :)? expr (with patt)?)" do
     let hint ← parser.optional (tk "?")
     let p ← Sum.inr <$> brackets "⟨" "⟩" (sep_by (tk ",") (parser.pexpr 0)) <|> Sum.inl <$> texpr
     match hint with
@@ -1165,7 +1165,7 @@ add_tactic_doc
 but it allows the pattern part to be empty.) -/
 unsafe def obtain_parse :
     parser ((Option rcases_patt × Option pexpr) × Option (Sum pexpr (List pexpr))) :=
-  (with_desc "patt? (: expr)? (:= expr)?") do
+  with_desc "patt? (: expr)? (:= expr)?" do
     let (pat, tp) ←
       (do
             let pat ← rcases_patt_parse

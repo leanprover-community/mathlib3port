@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.box_integral.divergence_theorem
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -112,7 +112,7 @@ theorem norm_volume_sub_integral_face_upper_sub_lower_smul_le {f : ℝⁿ⁺¹ �
     obtain rfl : f = fun y => a + f' (y - x) + g y := by simp [hg]
     convert_to ‖g (i.insert_nth (I.lower i) y) - g (i.insert_nth (I.upper i) y)‖ ≤ _
     · congr 1
-      have := Fin.insert_nth_sub_same i (I.upper i) (I.lower i) y
+      have := Fin.insertNth_sub_same i (I.upper i) (I.lower i) y
       simp only [← this, f'.map_sub]
       abel
     · have : ∀ z ∈ Icc (I.lower i) (I.upper i), i.insert_nth z y ∈ I.Icc := fun z hz =>

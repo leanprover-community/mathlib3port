@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.algebra.group.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1650,10 +1650,10 @@ variable {ι : Sort _} [Group G]
 theorem topological_group_Inf {ts : Set (TopologicalSpace G)}
     (h : ∀ t ∈ ts, @TopologicalGroup G t _) : @TopologicalGroup G (infₛ ts) _ :=
   { to_has_continuous_inv :=
-      (@has_continuous_inv_Inf _ _ _) fun t ht =>
+      @has_continuous_inv_Inf _ _ _ fun t ht =>
         @TopologicalGroup.to_has_continuous_inv G t _ <| h t ht
     to_has_continuous_mul :=
-      (@has_continuous_mul_Inf _ _ _) fun t ht =>
+      @has_continuous_mul_Inf _ _ _ fun t ht =>
         @TopologicalGroup.to_has_continuous_mul G t _ <| h t ht }
 #align topological_group_Inf topological_group_Inf
 

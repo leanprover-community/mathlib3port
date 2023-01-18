@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module order.compactly_generated
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -234,7 +234,7 @@ theorem WellFounded.is_Sup_finite_compact (h : WellFounded ((· > ·) : α → �
         exact Finset.sup_mono (t.subset_insert y)
       rw [← hm _ hy' hm']
       simp
-  · rw [← ht₂, Finset.sup_id_eq_Sup]
+  · rw [← ht₂, Finset.sup_id_eq_supₛ]
     exact supₛ_le_supₛ ht₁
 #align
   complete_lattice.well_founded.is_Sup_finite_compact CompleteLattice.WellFounded.is_Sup_finite_compact
@@ -580,7 +580,7 @@ theorem inf_Sup_eq_supr_inf_sup_finset : a ⊓ supₛ s = ⨆ (t : Finset α) (H
       rcases hc s hcinf.2 with ⟨t, ht1, ht2⟩
       exact (le_inf hcinf.1 ht2).trans (le_supᵢ₂ t ht1))
     (supᵢ_le fun t =>
-      supᵢ_le fun h => inf_le_inf_left _ ((Finset.sup_id_eq_Sup t).symm ▸ supₛ_le_supₛ h))
+      supᵢ_le fun h => inf_le_inf_left _ ((Finset.sup_id_eq_supₛ t).symm ▸ supₛ_le_supₛ h))
 #align inf_Sup_eq_supr_inf_sup_finset inf_Sup_eq_supr_inf_sup_finset
 
 theorem CompleteLattice.set_independent_iff_finite {s : Set α} :
@@ -590,12 +590,12 @@ theorem CompleteLattice.set_independent_iff_finite {s : Set α} :
     by
     rw [disjoint_iff, inf_Sup_eq_supr_inf_sup_finset, supᵢ_eq_bot]
     intro t
-    rw [supᵢ_eq_bot, Finset.sup_id_eq_Sup]
+    rw [supᵢ_eq_bot, Finset.sup_id_eq_supₛ]
     intro ht
     classical
       have h' := (h (insert a t) _ (t.mem_insert_self a)).eq_bot
       · rwa [Finset.coe_insert, Set.insert_diff_self_of_not_mem] at h'
-        exact fun con => ((Set.mem_diff a).1 (ht con)).2 (Set.mem_singleton a)
+        exact fun con => ((Set.mem_diff a).1 (ht Con)).2 (Set.mem_singleton a)
       · rw [Finset.coe_insert, Set.insert_subset]
         exact ⟨ha, Set.Subset.trans ht (Set.diff_subset _ _)⟩⟩
 #align complete_lattice.set_independent_iff_finite CompleteLattice.set_independent_iff_finite
@@ -650,7 +650,7 @@ theorem Iic_coatomic_of_compact_element {k : α} (h : IsCompactElement k) : IsCo
     right
     obtain ⟨a, a₀, ba, h⟩ := zorn_nonempty_partialOrder₀ (Set.Iio k) _ b (lt_of_le_of_ne hbk htriv)
     · refine' ⟨⟨a, le_of_lt a₀⟩, ⟨ne_of_lt a₀, fun c hck => by_contradiction fun c₀ => _⟩, ba⟩
-      cases h c.1 (lt_of_le_of_ne c.2 fun con => c₀ (Subtype.ext con)) hck.le
+      cases h c.1 (lt_of_le_of_ne c.2 fun con => c₀ (Subtype.ext Con)) hck.le
       exact lt_irrefl _ hck
     · intro S SC cC I IS
       by_cases hS : S.nonempty
@@ -687,7 +687,7 @@ instance (priority := 100) is_atomic_of_complemented_lattice [ComplementedLattic
       · exfalso
         apply hcbot
         simp only [Subtype.ext_iff, Set.Iic.coe_bot, Subtype.coe_mk] at con
-        exact con
+        exact Con
       rw [← Subtype.coe_le_coe, Subtype.coe_mk] at hac
       exact ⟨a, ha.of_is_atom_coe_Iic, hac.trans hcb⟩⟩
 #align is_atomic_of_complemented_lattice is_atomic_of_complemented_lattice
@@ -702,7 +702,7 @@ instance (priority := 100) is_atomistic_of_complemented_lattice [ComplementedLat
       apply (lt_or_eq_of_le hle).resolve_left fun con => _
       obtain ⟨c, hc⟩ := exists_is_compl (⟨Sup { a : α | IsAtom a ∧ a ≤ b }, hle⟩ : Set.Iic b)
       obtain rfl | ⟨a, ha, hac⟩ := eq_bot_or_exists_atom_le c
-      · exact ne_of_lt con (Subtype.ext_iff.1 (eq_top_of_isCompl_bot hc))
+      · exact ne_of_lt Con (Subtype.ext_iff.1 (eq_top_of_isCompl_bot hc))
       · apply ha.1
         rw [eq_bot_iff]
         apply le_trans (le_inf _ hac) hc.disjoint.le_bot
@@ -723,7 +723,7 @@ theorem complemented_lattice_of_Sup_atoms_eq_top (h : supₛ { a : α | IsAtom a
           codisjoint_iff_le_sup.mpr <| h.symm.trans_le <| supₛ_le_iff.2 fun a ha => _⟩
       rw [← inf_eq_left]
       refine' (ha.le_iff.mp inf_le_left).resolve_left fun con => ha.1 _
-      rw [eq_bot_iff, ← con]
+      rw [eq_bot_iff, ← Con]
       refine' le_inf (le_refl a) ((le_supₛ _).trans le_sup_right)
       rw [← disjoint_iff] at *
       have a_dis_Sup_s : Disjoint a (Sup s) := con.mono_right le_sup_right
@@ -745,7 +745,7 @@ theorem complemented_lattice_of_Sup_atoms_eq_top (h : supₛ { a : α | IsAtom a
               (a_dis_Sup_s.mono_right _).symm
           rw [← supₛ_insert, Set.insert_diff_singleton, Set.insert_eq_of_mem (hx.resolve_right xa)]
       · rw [supₛ_union, supₛ_singleton, ← disjoint_iff]
-        exact b_inf_Sup_s.disjoint_sup_right_of_disjoint_sup_left con.symm
+        exact b_inf_Sup_s.disjoint_sup_right_of_disjoint_sup_left Con.symm
       · rw [Set.mem_union, Set.mem_singleton_iff] at hx
         cases hx
         · exact s_atoms x hx

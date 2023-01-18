@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module tactic.linarith.datatypes
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,7 +37,7 @@ unsafe def linarith_trace {α} [has_to_tactic_format α] (s : α) : tactic Unit 
 when the `trace.linarith` option is set to true.
 -/
 unsafe def linarith_trace_proofs (s : String := "") (l : List expr) : tactic Unit :=
-  (tactic.when_tracing `linarith) do
+  tactic.when_tracing `linarith do
     tactic.trace s
     l tactic.infer_type >>= tactic.trace
 #align linarith.linarith_trace_proofs linarith.linarith_trace_proofs

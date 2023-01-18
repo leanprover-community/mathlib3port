@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module number_theory.class_number.admissible_absolute_value
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -104,10 +104,10 @@ theorem exists_approx_aux (n : ℕ) (h : abv.IsAdmissible) :
     refine'
       ⟨fun i => (finset.univ.filter fun x => t x = s).toList.nthLe i _, _, fun i₀ i₁ => ht _ _ _⟩
     · refine' i.2.trans_le _
-      rwa [Finset.length_to_list]
+      rwa [Finset.length_toList]
     · intro i j h
       ext
-      exact list.nodup_iff_nth_le_inj.mp (Finset.nodup_to_list _) _ _ _ _ h
+      exact list.nodup_iff_nth_le_inj.mp (Finset.nodup_toList _) _ _ _ _ h
     have :
       ∀ i h,
         (finset.univ.filter fun x => t x = s).toList.nthLe i h ∈

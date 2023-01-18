@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jiale Miao, Kevin Buzzard, Alexander Bentkamp
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.gram_schmidt_ortho
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -150,7 +150,7 @@ theorem mem_span_gram_schmidt (f : ι → E) {i j : ι} (hij : i ≤ j) :
   simp_rw [orthogonal_projection_singleton]
   exact
     Submodule.add_mem _ (subset_span <| mem_image_of_mem _ hij)
-      ((Submodule.sum_mem _) fun k hk =>
+      (Submodule.sum_mem _ fun k hk =>
         smul_mem (span 𝕜 (gramSchmidt 𝕜 f '' Iic j)) _ <|
           subset_span <| mem_image_of_mem (gramSchmidt 𝕜 f) <| (Finset.mem_Iio.1 hk).le.trans hij)
 #align mem_span_gram_schmidt mem_span_gram_schmidt
@@ -160,8 +160,7 @@ theorem gram_schmidt_mem_span (f : ι → E) : ∀ {j i}, i ≤ j → gramSchmid
     rw [gram_schmidt_def 𝕜 f i]
     simp_rw [orthogonal_projection_singleton]
     refine'
-      Submodule.sub_mem _ (subset_span (mem_image_of_mem _ hij))
-        ((Submodule.sum_mem _) fun k hk => _)
+      Submodule.sub_mem _ (subset_span (mem_image_of_mem _ hij)) (Submodule.sum_mem _ fun k hk => _)
     let hkj : k < j := (Finset.mem_Iio.1 hk).trans_le hij
     exact
       smul_mem _ _

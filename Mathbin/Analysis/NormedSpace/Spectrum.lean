@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module analysis.normed_space.spectrum
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -588,7 +588,7 @@ automatically bounded). See note [lower instance priority] -/
 instance (priority := 100) [AlgHomClass F 𝕜 A 𝕜] : ContinuousLinearMapClass F 𝕜 A 𝕜 :=
   { AlgHomClass.linearMapClass with
     map_continuous := fun φ =>
-      (AddMonoidHomClass.continuous_of_bound φ ‖(1 : A)‖) fun a =>
+      AddMonoidHomClass.continuous_of_bound φ ‖(1 : A)‖ fun a =>
         mul_comm ‖a‖ ‖(1 : A)‖ ▸ spectrum.norm_le_norm_mul_of_mem (apply_mem_spectrum φ _) }
 
 /-- An algebra homomorphism into the base field, as a continuous linear map (since it is

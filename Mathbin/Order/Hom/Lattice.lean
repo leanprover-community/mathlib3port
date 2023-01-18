@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.hom.lattice
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -235,14 +235,14 @@ instance (priority := 100) OrderIsoClass.toBoundedLatticeHomClass [Lattice α] [
 @[simp]
 theorem map_finset_sup [SemilatticeSup α] [OrderBot α] [SemilatticeSup β] [OrderBot β]
     [SupBotHomClass F α β] (f : F) (s : Finset ι) (g : ι → α) : f (s.sup g) = s.sup (f ∘ g) :=
-  (Finset.cons_induction_on s (map_bot f)) fun i s _ h => by
+  Finset.cons_induction_on s (map_bot f) fun i s _ h => by
     rw [Finset.sup_cons, Finset.sup_cons, map_sup, h]
 #align map_finset_sup map_finset_sup
 
 @[simp]
 theorem map_finset_inf [SemilatticeInf α] [OrderTop α] [SemilatticeInf β] [OrderTop β]
     [InfTopHomClass F α β] (f : F) (s : Finset ι) (g : ι → α) : f (s.inf g) = s.inf (f ∘ g) :=
-  (Finset.cons_induction_on s (map_top f)) fun i s _ h => by
+  Finset.cons_induction_on s (map_top f) fun i s _ h => by
     rw [Finset.inf_cons, Finset.inf_cons, map_inf, h]
 #align map_finset_inf map_finset_inf
 
@@ -459,7 +459,7 @@ instance : HasSup (SupHom α β) :=
       exact sup_sup_sup_comm _ _ _ _⟩⟩
 
 instance : SemilatticeSup (SupHom α β) :=
-  (FunLike.coe_injective.SemilatticeSup _) fun f g => rfl
+  FunLike.coe_injective.SemilatticeSup _ fun f g => rfl
 
 instance [Bot β] : Bot (SupHom α β) :=
   ⟨SupHom.const α ⊥⟩
@@ -651,7 +651,7 @@ instance : HasInf (InfHom α β) :=
       exact inf_inf_inf_comm _ _ _ _⟩⟩
 
 instance : SemilatticeInf (InfHom α β) :=
-  (FunLike.coe_injective.SemilatticeInf _) fun f g => rfl
+  FunLike.coe_injective.SemilatticeInf _ fun f g => rfl
 
 instance [Bot β] : Bot (InfHom α β) :=
   ⟨InfHom.const α ⊥⟩
@@ -828,7 +828,7 @@ instance : HasSup (SupBotHom α β) :=
   ⟨fun f g => { f.toBotHom ⊔ g.toBotHom with toSupHom := f.toSupHom ⊔ g.toSupHom }⟩
 
 instance : SemilatticeSup (SupBotHom α β) :=
-  (FunLike.coe_injective.SemilatticeSup _) fun f g => rfl
+  FunLike.coe_injective.SemilatticeSup _ fun f g => rfl
 
 instance : OrderBot (SupBotHom α β) where
   bot := ⟨⊥, rfl⟩
@@ -984,7 +984,7 @@ instance : HasInf (InfTopHom α β) :=
   ⟨fun f g => { f.toTopHom ⊓ g.toTopHom with toInfHom := f.toInfHom ⊓ g.toInfHom }⟩
 
 instance : SemilatticeInf (InfTopHom α β) :=
-  (FunLike.coe_injective.SemilatticeInf _) fun f g => rfl
+  FunLike.coe_injective.SemilatticeInf _ fun f g => rfl
 
 instance : OrderTop (InfTopHom α β) where
   top := ⟨⊤, rfl⟩

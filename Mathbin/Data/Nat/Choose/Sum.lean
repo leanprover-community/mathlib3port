@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Patrick Stevens
 
 ! This file was ported from Lean 3 source module data.nat.choose.sum
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -104,7 +104,7 @@ theorem sum_range_choose_halfway (m : Nat) : (∑ i in range (m + 1), choose (2 
   have :
     (∑ i in range (m + 1), choose (2 * m + 1) (2 * m + 1 - i)) =
       ∑ i in range (m + 1), choose (2 * m + 1) i :=
-    (sum_congr rfl) fun i hi => choose_symm <| by linarith [mem_range.1 hi]
+    sum_congr rfl fun i hi => choose_symm <| by linarith [mem_range.1 hi]
   mul_right_injective₀ two_ne_zero <|
     calc
       (2 * ∑ i in range (m + 1), choose (2 * m + 1) i) =

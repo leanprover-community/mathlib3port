@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.subobject.factor_thru
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -86,7 +86,7 @@ theorem mk_factors_self (f : X ⟶ Y) [Mono f] : (mk f).Factors f :=
 
 theorem factors_iff {X Y : C} (P : Subobject Y) (f : X ⟶ Y) :
     P.Factors f ↔ (representative.obj P).Factors f :=
-  (Quot.induction_on P) fun a => MonoOver.factors_congr _ (representativeIso _).symm
+  Quot.inductionOn P fun a => MonoOver.factors_congr _ (representativeIso _).symm
 #align category_theory.subobject.factors_iff CategoryTheory.Subobject.factors_iff
 
 theorem factors_self {X : C} (P : Subobject X) : P.Factors P.arrow :=

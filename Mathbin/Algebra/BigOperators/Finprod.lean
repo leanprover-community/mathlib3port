@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying, Kevin Buzzard, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.big_operators.finprod
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -127,7 +127,7 @@ theorem finprod_eq_prod_plift_of_mul_support_to_finset_subset {f : α → M}
 @[to_additive]
 theorem finprod_eq_prod_plift_of_mul_support_subset {f : α → M} {s : Finset (PLift α)}
     (hs : mulSupport (f ∘ PLift.down) ⊆ s) : (∏ᶠ i, f i) = ∏ i in s, f i.down :=
-  (finprod_eq_prod_plift_of_mul_support_to_finset_subset (s.finite_to_set.Subset hs)) fun x hx =>
+  finprod_eq_prod_plift_of_mul_support_to_finset_subset (s.finite_to_set.Subset hs) fun x hx =>
     by
     rw [finite.mem_to_finset] at hx
     exact hs hx
@@ -168,7 +168,7 @@ theorem finprod_eq_single (f : α → M) (a : α) (ha : ∀ (x) (_ : x ≠ a), f
 
 @[to_additive]
 theorem finprod_unique [Unique α] (f : α → M) : (∏ᶠ i, f i) = f default :=
-  (finprod_eq_single f default) fun x hx => (hx <| Unique.eq_default _).elim
+  finprod_eq_single f default fun x hx => (hx <| Unique.eq_default _).elim
 #align finprod_unique finprod_unique
 
 @[simp, to_additive]
@@ -327,7 +327,7 @@ theorem finprod_eq_prod_of_mul_support_subset (f : α → M) {s : Finset α} (h 
 @[to_additive]
 theorem finprod_eq_prod_of_mul_support_to_finset_subset (f : α → M) (hf : (mulSupport f).Finite)
     {s : Finset α} (h : hf.toFinset ⊆ s) : (∏ᶠ i, f i) = ∏ i in s, f i :=
-  (finprod_eq_prod_of_mul_support_subset _) fun x hx => h <| hf.mem_to_finset.2 hx
+  finprod_eq_prod_of_mul_support_subset _ fun x hx => h <| hf.mem_to_finset.2 hx
 #align
   finprod_eq_prod_of_mul_support_to_finset_subset finprod_eq_prod_of_mul_support_to_finset_subset
 
@@ -335,7 +335,7 @@ theorem finprod_eq_prod_of_mul_support_to_finset_subset (f : α → M) (hf : (mu
 theorem finprod_eq_finset_prod_of_mul_support_subset (f : α → M) {s : Finset α}
     (h : mulSupport f ⊆ (s : Set α)) : (∏ᶠ i, f i) = ∏ i in s, f i :=
   haveI h' : (s.finite_to_set.subset h).toFinset ⊆ s := by
-    simpa [← Finset.coe_subset, Set.coe_to_finset]
+    simpa [← Finset.coe_subset, Set.coe_toFinset]
   finprod_eq_prod_of_mul_support_to_finset_subset _ _ h'
 #align finprod_eq_finset_prod_of_mul_support_subset finprod_eq_finset_prod_of_mul_support_subset
 
@@ -401,7 +401,7 @@ theorem finprod_mem_eq_prod_of_inter_mul_support_eq (f : α → M) {s : Set α} 
 @[to_additive]
 theorem finprod_mem_eq_prod_of_subset (f : α → M) {s : Set α} {t : Finset α}
     (h₁ : s ∩ mulSupport f ⊆ t) (h₂ : ↑t ⊆ s) : (∏ᶠ i ∈ s, f i) = ∏ i in t, f i :=
-  (finprod_cond_eq_prod_of_cond_iff _) fun x hx => ⟨fun h => h₁ ⟨h, hx⟩, fun h => h₂ h⟩
+  finprod_cond_eq_prod_of_cond_iff _ fun x hx => ⟨fun h => h₁ ⟨h, hx⟩, fun h => h₂ h⟩
 #align finprod_mem_eq_prod_of_subset finprod_mem_eq_prod_of_subset
 
 @[to_additive]
@@ -901,7 +901,7 @@ theorem finprod_mem_Union [Finite ι] {t : ι → Set α} (h : Pairwise (Disjoin
   cases nonempty_fintype ι
   lift t to ι → Finset α using ht
   classical
-    rw [← bUnion_univ, ← Finset.coe_univ, ← Finset.coe_bUnion, finprod_mem_coe_finset,
+    rw [← bUnion_univ, ← Finset.coe_univ, ← Finset.coe_bunionᵢ, finprod_mem_coe_finset,
       Finset.prod_bUnion]
     · simp only [finprod_mem_coe_finset, finprod_eq_prod_of_fintype]
     · exact fun x _ y _ hxy => Finset.disjoint_coe.1 (h hxy)
@@ -969,7 +969,7 @@ multiplicative and holds on factors. -/
       "To prove a property of a finite sum, it suffices to prove that the property is\nadditive and holds on summands."]
 theorem finprod_mem_induction (p : M → Prop) (hp₀ : p 1) (hp₁ : ∀ x y, p x → p y → p (x * y))
     (hp₂ : ∀ x ∈ s, p <| f x) : p (∏ᶠ i ∈ s, f i) :=
-  (finprod_induction _ hp₀ hp₁) fun x => finprod_induction _ hp₀ hp₁ <| hp₂ x
+  finprod_induction _ hp₀ hp₁ fun x => finprod_induction _ hp₀ hp₁ <| hp₂ x
 #align finprod_mem_induction finprod_mem_induction
 
 theorem finprod_cond_nonneg {R : Type _} [OrderedCommSemiring R] {p : α → Prop} {f : α → R}

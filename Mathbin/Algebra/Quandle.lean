@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 
 ! This file was ported from Lean 3 source module algebra.quandle
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -639,13 +639,13 @@ instance (R : Type _) [Rack R] : DivInvMonoid (EnvelGroup R)
       Quotient.sound (PreEnvelGroupRel'.congr_inv ha).Rel
   mul_assoc a b c :=
     Quotient.induction_on₃ a b c fun a b c => Quotient.sound (PreEnvelGroupRel'.assoc a b c).Rel
-  one_mul a := Quotient.induction_on a fun a => Quotient.sound (PreEnvelGroupRel'.one_mul a).Rel
-  mul_one a := Quotient.induction_on a fun a => Quotient.sound (PreEnvelGroupRel'.mul_one a).Rel
+  one_mul a := Quotient.inductionOn a fun a => Quotient.sound (PreEnvelGroupRel'.one_mul a).Rel
+  mul_one a := Quotient.inductionOn a fun a => Quotient.sound (PreEnvelGroupRel'.mul_one a).Rel
 
 instance (R : Type _) [Rack R] : Group (EnvelGroup R) :=
   { EnvelGroup.divInvMonoid _ with
     mul_left_inv := fun a =>
-      Quotient.induction_on a fun a => Quotient.sound (PreEnvelGroupRel'.mul_left_inv a).Rel }
+      Quotient.inductionOn a fun a => Quotient.sound (PreEnvelGroupRel'.mul_left_inv a).Rel }
 
 instance EnvelGroup.inhabited (R : Type _) [Rack R] : Inhabited (EnvelGroup R) :=
   ⟨1⟩
@@ -719,7 +719,7 @@ def toEnvelGroup.map {R : Type _} [Rack R] {G : Type _} [Group G] :
     rfl
   right_inv F :=
     MonoidHom.ext fun x =>
-      (Quotient.induction_on x) fun x => by
+      Quotient.inductionOn x fun x => by
         induction x
         · exact F.map_one.symm
         · rfl

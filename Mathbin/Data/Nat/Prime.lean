@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.prime
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -961,7 +961,7 @@ theorem prime_iff_prime_int {p : ℕ} : p.Prime ↔ Prime (p : ℤ) :=
     fun hp =>
     Nat.prime_iff.2
       ⟨Int.coe_nat_ne_zero.1 hp.1,
-        (mt Nat.isUnit_iff.1) fun h => by simpa [h, not_prime_one] using hp, fun a b => by
+        mt Nat.isUnit_iff.1 fun h => by simpa [h, not_prime_one] using hp, fun a b => by
         simpa only [Int.coe_nat_dvd, (Int.ofNat_mul _ _).symm] using hp.2.2 a b⟩⟩
 #align nat.prime_iff_prime_int Nat.prime_iff_prime_int
 
@@ -1051,5 +1051,5 @@ theorem prime_three : Prime (3 : ℤ) :=
 
 end Int
 
-assert_not_exists multiset
+assert_not_exists Multiset
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Benjamin Davidson
 
 ! This file was ported from Lean 3 source module data.nat.parity
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -100,7 +100,7 @@ instance : DecidablePred (Even : ℕ → Prop) := fun n => decidable_of_iff _ ev
 instance : DecidablePred (Odd : ℕ → Prop) := fun n => decidable_of_iff _ odd_iff_not_even.symm
 
 theorem mod_two_add_add_odd_mod_two (m : ℕ) {n : ℕ} (hn : Odd n) : m % 2 + (m + n) % 2 = 1 :=
-  ((even_or_odd m).elim fun hm => by rw [even_iff.1 hm, odd_iff.1 (hm.add_odd hn)]) fun hm => by
+  (even_or_odd m).elim (fun hm => by rw [even_iff.1 hm, odd_iff.1 (hm.add_odd hn)]) fun hm => by
     rw [odd_iff.1 hm, even_iff.1 (hm.add_odd hn)]
 #align nat.mod_two_add_add_odd_mod_two Nat.mod_two_add_add_odd_mod_two
 

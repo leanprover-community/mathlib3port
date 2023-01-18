@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Floris van Doorn
 
 ! This file was ported from Lean 3 source module geometry.manifold.local_invariant_properties
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -290,7 +290,7 @@ theorem lift_prop_within_at_indep_chart_source_aux (g : M → H') (he : e ∈ G.
   simp_rw [LocalHomeomorph.trans_apply, e.left_inv xe]
   rw [hG.congr_iff]
   · refine' hG.congr_set _
-    refine' ((eventually_of_mem _) fun y (hy : y ∈ e'.symm ⁻¹' e.source) => _).set_eq
+    refine' (eventually_of_mem _ fun y (hy : y ∈ e'.symm ⁻¹' e.source) => _).set_eq
     · refine' (e'.symm.continuous_at <| e'.maps_to xe').preimage_mem_nhds (e.open_source.mem_nhds _)
       simp_rw [e'.left_inv xe', xe]
     simp_rw [mem_preimage, LocalHomeomorph.coe_trans_symm, LocalHomeomorph.symm_symm,

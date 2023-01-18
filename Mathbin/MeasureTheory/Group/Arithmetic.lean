@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.group.arithmetic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -889,7 +889,7 @@ theorem Finset.measurable_prod (s : Finset ι) (hf : ∀ i ∈ s, Measurable (f 
 @[measurability, to_additive]
 theorem Finset.aeMeasurableProd' (s : Finset ι) (hf : ∀ i ∈ s, AeMeasurable (f i) μ) :
     AeMeasurable (∏ i in s, f i) μ :=
-  (Multiset.aeMeasurableProd' _) fun g hg =>
+  Multiset.aeMeasurableProd' _ fun g hg =>
     let ⟨i, hi, hg⟩ := Multiset.mem_map.1 hg
     hg ▸ hf _ hi
 #align finset.ae_measurable_prod' Finset.aeMeasurableProd'

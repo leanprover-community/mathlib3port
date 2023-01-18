@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module group_theory.perm.sign
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -201,7 +201,7 @@ section Fintype
 variable [Fintype α]
 
 theorem support_pow_coprime {σ : Perm α} {n : ℕ} (h : Nat.Coprime n (orderOf σ)) :
-    (σ ^ n).support = σ.support :=
+    (σ ^ n).Support = σ.Support :=
   by
   obtain ⟨m, hm⟩ := exists_pow_eq_self_of_coprime h
   exact
@@ -627,12 +627,12 @@ theorem sign_trans_trans_symm [DecidableEq β] [Fintype β] (f : Perm β) (e : �
 theorem sign_prod_list_swap {l : List (Perm α)} (hl : ∀ g ∈ l, IsSwap g) :
     sign l.Prod = (-1) ^ l.length :=
   by
-  have h₁ : l.map sign = List.repeat (-1) l.length :=
-    List.eq_repeat.2
+  have h₁ : l.map sign = List.replicate l.length (-1) :=
+    List.eq_replicate.2
       ⟨by simp, fun u hu =>
         let ⟨g, hg⟩ := List.mem_map'.1 hu
         hg.2 ▸ (hl _ hg.1).sign_eq⟩
-  rw [← List.prod_repeat, ← h₁, List.prod_hom _ (@sign α _ _)]
+  rw [← List.prod_replicate, ← h₁, List.prod_hom _ (@sign α _ _)]
 #align equiv.perm.sign_prod_list_swap Equiv.Perm.sign_prod_list_swap
 
 variable (α)
@@ -660,7 +660,7 @@ theorem eq_sign_of_surjective_hom {s : Perm α →* ℤˣ} (hs : Surjective s) :
           let ⟨g, hg⟩ := List.mem_map'.1 ha
           hg.2 ▸ this _ (hl.2 _ hg.1)
         have : s l.Prod = 1 := by
-          rw [← l.prod_hom s, List.eq_repeat'.2 this, List.prod_repeat, one_pow]
+          rw [← l.prod_hom s, List.eq_replicate_length.2 this, List.prod_replicate, one_pow]
         rw [hl.1, hg] at this
         exact absurd this (by decide)
   MonoidHom.ext fun f => by
@@ -668,7 +668,7 @@ theorem eq_sign_of_surjective_hom {s : Perm α →* ℤˣ} (hs : Surjective s) :
     have hsl : ∀ a ∈ l.map s, a = (-1 : ℤˣ) := fun a ha =>
       let ⟨g, hg⟩ := List.mem_map'.1 ha
       hg.2 ▸ this (hl₂ _ hg.1)
-    rw [← hl₁, ← l.prod_hom s, List.eq_repeat'.2 hsl, List.length_map, List.prod_repeat,
+    rw [← hl₁, ← l.prod_hom s, List.eq_replicate_length.2 hsl, List.length_map, List.prod_replicate,
       sign_prod_list_swap hl₂]
 #align equiv.perm.eq_sign_of_surjective_hom Equiv.Perm.eq_sign_of_surjective_hom
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, E. W. Ayers
 
 ! This file was ported from Lean 3 source module category_theory.sites.grothendieck
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -462,7 +462,7 @@ instance : SemilatticeInf (J.cover X) :=
       Preorder
         _) with
     inf := fun S T => ⟨S ⊓ T, J.intersection_covering S.condition T.condition⟩
-    le_antisymm := fun S T h1 h2 => (ext _ _) fun Y f => ⟨h1 _, h2 _⟩
+    le_antisymm := fun S T h1 h2 => ext _ _ fun Y f => ⟨h1 _, h2 _⟩
     inf_le_left := fun S T Y f hf => hf.1
     inf_le_right := fun S T Y f hf => hf.2
     le_inf := fun S T W h1 h2 Y f h => ⟨h1 _ h, h2 _ h⟩ }
@@ -580,14 +580,14 @@ theorem coe_pullback {Z : C} (f : Y ⟶ X) (g : Z ⟶ Y) (S : J.cover X) :
 
 /-- The isomorphism between `S` and the pullback of `S` w.r.t. the identity. -/
 def pullbackId (S : J.cover X) : S.pullback (𝟙 X) ≅ S :=
-  eq_to_iso <| (Cover.ext _ _) fun Y f => by simp
+  eq_to_iso <| Cover.ext _ _ fun Y f => by simp
 #align
   category_theory.grothendieck_topology.cover.pullback_id CategoryTheory.GrothendieckTopology.Cover.pullbackId
 
 /-- Pulling back with respect to a composition is the composition of the pullbacks. -/
 def pullbackComp {X Y Z : C} (S : J.cover X) (f : Z ⟶ Y) (g : Y ⟶ X) :
     S.pullback (f ≫ g) ≅ (S.pullback g).pullback f :=
-  eq_to_iso <| (Cover.ext _ _) fun Y f => by simp
+  eq_to_iso <| Cover.ext _ _ fun Y f => by simp
 #align
   category_theory.grothendieck_topology.cover.pullback_comp CategoryTheory.GrothendieckTopology.Cover.pullbackComp
 

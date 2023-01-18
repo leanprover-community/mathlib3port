@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Mario Carneiro, Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.monotone.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -761,7 +761,7 @@ protected theorem StrictMono.ite' (hf : StrictMono f) (hg : StrictMono g) {p : �
 protected theorem StrictMono.ite (hf : StrictMono f) (hg : StrictMono g) {p : α → Prop}
     [DecidablePred p] (hp : ∀ ⦃x y⦄, x < y → p y → p x) (hfg : ∀ x, f x ≤ g x) :
     StrictMono fun x => if p x then f x else g x :=
-  (hf.ite' hg hp) fun x y hx hy h => (hf h).trans_le (hfg y)
+  hf.ite' hg hp fun x y hx hy h => (hf h).trans_le (hfg y)
 #align strict_mono.ite StrictMono.ite
 -/
 
@@ -778,7 +778,7 @@ protected theorem StrictAnti.ite' (hf : StrictAnti f) (hg : StrictAnti g) {p : �
 protected theorem StrictAnti.ite (hf : StrictAnti f) (hg : StrictAnti g) {p : α → Prop}
     [DecidablePred p] (hp : ∀ ⦃x y⦄, x < y → p y → p x) (hfg : ∀ x, g x ≤ f x) :
     StrictAnti fun x => if p x then f x else g x :=
-  (hf.ite' hg hp) fun x y hx hy h => (hfg y).trans_lt (hf h)
+  hf.ite' hg hp fun x y hx hy h => (hfg y).trans_lt (hf h)
 #align strict_anti.ite StrictAnti.ite
 -/
 

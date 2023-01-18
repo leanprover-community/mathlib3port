@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou
 
 ! This file was ported from Lean 3 source module algebra.indicator_function
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -568,7 +568,7 @@ theorem Finset.prod_mul_indicator_eq_prod_filter (s : Finset ι) (f : ι → α 
   refine' Eq.trans _ (mul_one _)
   exact
     congr_arg₂ (· * ·)
-      ((Finset.prod_congr rfl) fun x hx => mul_indicator_of_mem (Finset.mem_filter.1 hx).2 _)
+      (Finset.prod_congr rfl fun x hx => mul_indicator_of_mem (Finset.mem_filter.1 hx).2 _)
       (Finset.prod_eq_one fun x hx => mul_indicator_of_not_mem (Finset.mem_filter.1 hx).2 _)
 #align finset.prod_mul_indicator_eq_prod_filter Finset.prod_mul_indicator_eq_prod_filter
 
@@ -590,7 +590,7 @@ theorem mul_indicator_finset_bUnion {ι} (I : Finset ι) (s : ι → Set α) {f 
       simp
     intro a I haI ih hI
     funext
-    rw [Finset.prod_insert haI, Finset.set_bUnion_insert, mul_indicator_union_of_not_mem_inter,
+    rw [Finset.prod_insert haI, Finset.set_bunionᵢ_insert, mul_indicator_union_of_not_mem_inter,
       ih _]
     · intro i hi j hj hij
       exact hI i (Finset.mem_insert_of_mem hi) j (Finset.mem_insert_of_mem hj) hij
@@ -793,13 +793,13 @@ theorem mul_indicator_le_self (s : Set α) (f : α → M) : mulIndicator s f ≤
 @[to_additive]
 theorem mul_indicator_apply_le {a : α} {s : Set α} {f g : α → M} (hfg : a ∈ s → f a ≤ g a) :
     mulIndicator s f a ≤ g a :=
-  (mul_indicator_apply_le' hfg) fun _ => one_le _
+  mul_indicator_apply_le' hfg fun _ => one_le _
 #align set.mul_indicator_apply_le Set.mul_indicator_apply_le
 
 @[to_additive]
 theorem mul_indicator_le {s : Set α} {f g : α → M} (hfg : ∀ a ∈ s, f a ≤ g a) :
     mulIndicator s f ≤ g :=
-  (mul_indicator_le' hfg) fun _ _ => one_le _
+  mul_indicator_le' hfg fun _ _ => one_le _
 #align set.mul_indicator_le Set.mul_indicator_le
 
 end CanonicallyOrderedMonoid

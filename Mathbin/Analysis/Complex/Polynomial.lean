@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Junyan Xu
 
 ! This file was ported from Lean 3 source module analysis.complex.polynomial
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,7 +40,7 @@ theorem exists_root {f : ℂ[X]} (hf : 0 < degree f) : ∃ z : ℂ, IsRoot f z :
 #align complex.exists_root Complex.exists_root
 
 instance is_alg_closed : IsAlgClosed ℂ :=
-  (IsAlgClosed.of_exists_root _) fun p _ hp => Complex.exists_root <| degree_pos_of_irreducible hp
+  IsAlgClosed.of_exists_root _ fun p _ hp => Complex.exists_root <| degree_pos_of_irreducible hp
 #align complex.is_alg_closed Complex.is_alg_closed
 
 end Complex

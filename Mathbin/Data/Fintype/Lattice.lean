@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.fintype.lattice
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -30,7 +30,7 @@ variable [Fintype α] {s : Finset α}
 
 /-- A special case of `finset.sup_eq_supr` that omits the useless `x ∈ univ` binder. -/
 theorem sup_univ_eq_supr [CompleteLattice β] (f : α → β) : Finset.univ.sup f = supᵢ f :=
-  (sup_eq_supr _ f).trans <| congr_arg _ <| funext fun a => supᵢ_pos (mem_univ _)
+  (sup_eq_supᵢ _ f).trans <| congr_arg _ <| funext fun a => supᵢ_pos (mem_univ _)
 #align finset.sup_univ_eq_supr Finset.sup_univ_eq_supr
 
 /-- A special case of `finset.inf_eq_infi` that omits the useless `x ∈ univ` binder. -/

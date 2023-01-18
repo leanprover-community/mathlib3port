@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module data.real.cau_seq_completion
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Data.Real.CauSeq
 
 /-!
 # Cauchy completion
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file generalizes the Cauchy completion of `(ℚ, abs)` to the completion of a ring
 with absolute value.
@@ -109,7 +112,7 @@ theorem mk_eq_zero {f : CauSeq _ abv} : mk f = 0 ↔ LimZero f := by
 #align cau_seq.completion.mk_eq_zero CauSeq.Completion.mk_eq_zero
 
 instance : Add (Cauchy abv) :=
-  ⟨(Quotient.map₂ (· + ·)) fun f₁ g₁ hf f₂ g₂ hg => add_equiv_add hf hg⟩
+  ⟨Quotient.map₂ (· + ·) fun f₁ g₁ hf f₂ g₂ hg => add_equiv_add hf hg⟩
 
 /- warning: cau_seq.completion.mk_add -> CauSeq.Completion.mk_add is a dubious translation:
 lean 3 declaration is
@@ -123,7 +126,7 @@ theorem mk_add (f g : CauSeq β abv) : mk f + mk g = mk (f + g) :=
 #align cau_seq.completion.mk_add CauSeq.Completion.mk_add
 
 instance : Neg (Cauchy abv) :=
-  ⟨(Quotient.map Neg.neg) fun f₁ f₂ hf => neg_equiv_neg hf⟩
+  ⟨Quotient.map Neg.neg fun f₁ f₂ hf => neg_equiv_neg hf⟩
 
 /- warning: cau_seq.completion.mk_neg -> CauSeq.Completion.mk_neg is a dubious translation:
 lean 3 declaration is
@@ -137,7 +140,7 @@ theorem mk_neg (f : CauSeq β abv) : -mk f = mk (-f) :=
 #align cau_seq.completion.mk_neg CauSeq.Completion.mk_neg
 
 instance : Mul (Cauchy abv) :=
-  ⟨(Quotient.map₂ (· * ·)) fun f₁ g₁ hf f₂ g₂ hg => mul_equiv_mul hf hg⟩
+  ⟨Quotient.map₂ (· * ·) fun f₁ g₁ hf f₂ g₂ hg => mul_equiv_mul hf hg⟩
 
 /- warning: cau_seq.completion.mk_mul -> CauSeq.Completion.mk_mul is a dubious translation:
 lean 3 declaration is
@@ -151,7 +154,7 @@ theorem mk_mul (f g : CauSeq β abv) : mk f * mk g = mk (f * g) :=
 #align cau_seq.completion.mk_mul CauSeq.Completion.mk_mul
 
 instance : Sub (Cauchy abv) :=
-  ⟨(Quotient.map₂ Sub.sub) fun f₁ g₁ hf f₂ g₂ hg => sub_equiv_sub hf hg⟩
+  ⟨Quotient.map₂ Sub.sub fun f₁ g₁ hf f₂ g₂ hg => sub_equiv_sub hf hg⟩
 
 /- warning: cau_seq.completion.mk_sub -> CauSeq.Completion.mk_sub is a dubious translation:
 lean 3 declaration is
@@ -165,7 +168,7 @@ theorem mk_sub (f g : CauSeq β abv) : mk f - mk g = mk (f - g) :=
 #align cau_seq.completion.mk_sub CauSeq.Completion.mk_sub
 
 instance {γ : Type _} [SMul γ β] [IsScalarTower γ β β] : SMul γ (Cauchy abv) :=
-  ⟨fun c => (Quotient.map ((· • ·) c)) fun f₁ g₁ hf => smul_equiv_smul _ hf⟩
+  ⟨fun c => Quotient.map ((· • ·) c) fun f₁ g₁ hf => smul_equiv_smul _ hf⟩
 
 /- warning: cau_seq.completion.mk_smul -> CauSeq.Completion.mk_smul is a dubious translation:
 lean 3 declaration is
@@ -323,7 +326,7 @@ theorem ofRat_ratCast (q : ℚ) : ofRat (↑q : β) = (q : Cauchy abv) :=
 
 noncomputable instance : Inv (Cauchy abv) :=
   ⟨fun x =>
-    (Quotient.liftOn x fun f => mk <| if h : LimZero f then 0 else inv f h) fun f g fg =>
+    Quotient.liftOn x (fun f => mk <| if h : LimZero f then 0 else inv f h) fun f g fg =>
       by
       have := lim_zero_congr fg
       by_cases hf : lim_zero f
@@ -386,7 +389,7 @@ but is expected to have type
   forall {α : Type.{u2}} [_inst_1 : LinearOrderedField.{u2} α] {β : Type.{u1}} [_inst_2 : DivisionRing.{u1} β] {abv : β -> α} [_inst_3 : IsAbsoluteValue.{u2, u1} α (OrderedCommSemiring.toOrderedSemiring.{u2} α (StrictOrderedCommSemiring.toOrderedCommSemiring.{u2} α (LinearOrderedCommSemiring.toStrictOrderedCommSemiring.{u2} α (LinearOrderedSemifield.toLinearOrderedCommSemiring.{u2} α (LinearOrderedField.toLinearOrderedSemifield.{u2} α _inst_1))))) β (DivisionSemiring.toSemiring.{u1} β (DivisionRing.toDivisionSemiring.{u1} β _inst_2)) abv] {x : CauSeq.Completion.Cauchy.{u2, u1} α _inst_1 β (DivisionRing.toRing.{u1} β _inst_2) abv _inst_3}, (Ne.{succ u1} (CauSeq.Completion.Cauchy.{u2, u1} α _inst_1 β (DivisionRing.toRing.{u1} β _inst_2) abv _inst_3) x (OfNat.ofNat.{u1} (CauSeq.Completion.Cauchy.{u2, u1} α _inst_1 β (DivisionRing.toRing.{u1} β _inst_2) abv _inst_3) 0 (Zero.toOfNat0.{u1} (CauSeq.Completion.Cauchy.{u2, u1} α _inst_1 β (DivisionRing.toRing.{u1} β _inst_2) abv _inst_3) (CauSeq.Completion.instZeroCauchy.{u2, u1} α _inst_1 β (DivisionRing.toRing.{u1} β _inst_2) abv _inst_3)))) -> (Eq.{succ u1} (CauSeq.Completion.Cauchy.{u2, u1} α _inst_1 β (DivisionRing.toRing.{u1} β _inst_2) abv _inst_3) (HMul.hMul.{u1, u1, u1} (CauSeq.Completion.Cauchy.{u2, u1} α _inst_1 β (DivisionRing.toRing.{u1} β _inst_2) abv _inst_3) (CauSeq.Completion.Cauchy.{u2, u1} α _inst_1 β (DivisionRing.toRing.{u1} β _inst_2) abv _inst_3) (CauSeq.Completion.Cauchy.{u2, u1} α _inst_1 β (DivisionRing.toRing.{u1} β _inst_2) abv _inst_3) (instHMul.{u1} (CauSeq.Completion.Cauchy.{u2, u1} α _inst_1 β (DivisionRing.toRing.{u1} β _inst_2) abv _inst_3) (CauSeq.Completion.instMulCauchy.{u2, u1} α _inst_1 β (DivisionRing.toRing.{u1} β _inst_2) abv _inst_3)) (Inv.inv.{u1} (CauSeq.Completion.Cauchy.{u2, u1} α _inst_1 β (DivisionRing.toRing.{u1} β _inst_2) abv _inst_3) (CauSeq.Completion.instInvCauchyToRing.{u2, u1} α _inst_1 β _inst_2 abv _inst_3) x) x) (OfNat.ofNat.{u1} (CauSeq.Completion.Cauchy.{u2, u1} α _inst_1 β (DivisionRing.toRing.{u1} β _inst_2) abv _inst_3) 1 (One.toOfNat1.{u1} (CauSeq.Completion.Cauchy.{u2, u1} α _inst_1 β (DivisionRing.toRing.{u1} β _inst_2) abv _inst_3) (CauSeq.Completion.instOneCauchy.{u2, u1} α _inst_1 β (DivisionRing.toRing.{u1} β _inst_2) abv _inst_3))))
 Case conversion may be inaccurate. Consider using '#align cau_seq.completion.inv_mul_cancel CauSeq.Completion.inv_mul_cancelₓ'. -/
 protected theorem inv_mul_cancel {x : Cauchy abv} : x ≠ 0 → x⁻¹ * x = 1 :=
-  (Quotient.induction_on x) fun f hf => by
+  Quotient.inductionOn x fun f hf => by
     simp at hf; simp [hf]
     exact Quotient.sound (CauSeq.inv_mul_cancel hf)
 #align cau_seq.completion.inv_mul_cancel CauSeq.Completion.inv_mul_cancel
@@ -398,7 +401,7 @@ but is expected to have type
   forall {α : Type.{u2}} [_inst_1 : LinearOrderedField.{u2} α] {β : Type.{u1}} [_inst_2 : DivisionRing.{u1} β] {abv : β -> α} [_inst_3 : IsAbsoluteValue.{u2, u1} α (OrderedCommSemiring.toOrderedSemiring.{u2} α (StrictOrderedCommSemiring.toOrderedCommSemiring.{u2} α (LinearOrderedCommSemiring.toStrictOrderedCommSemiring.{u2} α (LinearOrderedSemifield.toLinearOrderedCommSemiring.{u2} α (LinearOrderedField.toLinearOrderedSemifield.{u2} α _inst_1))))) β (DivisionSemiring.toSemiring.{u1} β (DivisionRing.toDivisionSemiring.{u1} β _inst_2)) abv] {x : CauSeq.Completion.Cauchy.{u2, u1} α _inst_1 β (DivisionRing.toRing.{u1} β _inst_2) abv _inst_3}, (Ne.{succ u1} (CauSeq.Completion.Cauchy.{u2, u1} α _inst_1 β (DivisionRing.toRing.{u1} β _inst_2) abv _inst_3) x (OfNat.ofNat.{u1} (CauSeq.Completion.Cauchy.{u2, u1} α _inst_1 β (DivisionRing.toRing.{u1} β _inst_2) abv _inst_3) 0 (Zero.toOfNat0.{u1} (CauSeq.Completion.Cauchy.{u2, u1} α _inst_1 β (DivisionRing.toRing.{u1} β _inst_2) abv _inst_3) (CauSeq.Completion.instZeroCauchy.{u2, u1} α _inst_1 β (DivisionRing.toRing.{u1} β _inst_2) abv _inst_3)))) -> (Eq.{succ u1} (CauSeq.Completion.Cauchy.{u2, u1} α _inst_1 β (DivisionRing.toRing.{u1} β _inst_2) abv _inst_3) (HMul.hMul.{u1, u1, u1} (CauSeq.Completion.Cauchy.{u2, u1} α _inst_1 β (DivisionRing.toRing.{u1} β _inst_2) abv _inst_3) (CauSeq.Completion.Cauchy.{u2, u1} α _inst_1 β (DivisionRing.toRing.{u1} β _inst_2) abv _inst_3) (CauSeq.Completion.Cauchy.{u2, u1} α _inst_1 β (DivisionRing.toRing.{u1} β _inst_2) abv _inst_3) (instHMul.{u1} (CauSeq.Completion.Cauchy.{u2, u1} α _inst_1 β (DivisionRing.toRing.{u1} β _inst_2) abv _inst_3) (CauSeq.Completion.instMulCauchy.{u2, u1} α _inst_1 β (DivisionRing.toRing.{u1} β _inst_2) abv _inst_3)) x (Inv.inv.{u1} (CauSeq.Completion.Cauchy.{u2, u1} α _inst_1 β (DivisionRing.toRing.{u1} β _inst_2) abv _inst_3) (CauSeq.Completion.instInvCauchyToRing.{u2, u1} α _inst_1 β _inst_2 abv _inst_3) x)) (OfNat.ofNat.{u1} (CauSeq.Completion.Cauchy.{u2, u1} α _inst_1 β (DivisionRing.toRing.{u1} β _inst_2) abv _inst_3) 1 (One.toOfNat1.{u1} (CauSeq.Completion.Cauchy.{u2, u1} α _inst_1 β (DivisionRing.toRing.{u1} β _inst_2) abv _inst_3) (CauSeq.Completion.instOneCauchy.{u2, u1} α _inst_1 β (DivisionRing.toRing.{u1} β _inst_2) abv _inst_3))))
 Case conversion may be inaccurate. Consider using '#align cau_seq.completion.mul_inv_cancel CauSeq.Completion.mul_inv_cancelₓ'. -/
 protected theorem mul_inv_cancel {x : Cauchy abv} : x ≠ 0 → x * x⁻¹ = 1 :=
-  (Quotient.induction_on x) fun f hf => by
+  Quotient.inductionOn x fun f hf => by
     simp at hf; simp [hf]
     exact Quotient.sound (CauSeq.mul_inv_cancel hf)
 #align cau_seq.completion.mul_inv_cancel CauSeq.Completion.mul_inv_cancel

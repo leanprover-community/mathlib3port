@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Justus Springer
 
 ! This file was ported from Lean 3 source module topology.sheaves.stalks
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -480,7 +480,7 @@ is an epi, but this fact is not yet formalized.
 theorem app_injective_of_stalk_functor_map_injective {F : Sheaf C X} {G : Presheaf C X}
     (f : F.1 ⟶ G) (U : Opens X) (h : ∀ x : U, Function.Injective ((stalkFunctor C x.val).map f)) :
     Function.Injective (f.app (op U)) := fun s t hst =>
-  (section_ext F _ _ _) fun x =>
+  section_ext F _ _ _ fun x =>
     h x <| by rw [stalk_functor_map_germ_apply, stalk_functor_map_germ_apply, hst]
 #align
   Top.presheaf.app_injective_of_stalk_functor_map_injective TopCat.Presheaf.app_injective_of_stalk_functor_map_injective
@@ -517,7 +517,7 @@ theorem mono_of_stalk_mono {F G : Sheaf C X} (f : F ⟶ G) [∀ x, mono <| (stal
   (SheafCat.Hom.mono_iff_presheaf_mono _ _ _).mpr <|
     (NatTrans.mono_iff_mono_app _ _).mpr fun U =>
       (ConcreteCategory.mono_iff_injective_of_preserves_pullback _).mpr <|
-        (app_injective_of_stalk_functor_map_injective f.1 U.unop) fun ⟨x, hx⟩ =>
+        app_injective_of_stalk_functor_map_injective f.1 U.unop fun ⟨x, hx⟩ =>
           (ConcreteCategory.mono_iff_injective_of_preserves_pullback _).mp <| inferInstance
 #align Top.presheaf.mono_of_stalk_mono TopCat.Presheaf.mono_of_stalk_mono
 

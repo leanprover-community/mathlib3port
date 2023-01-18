@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Frédéric Dupuis, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.projection
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -591,7 +591,7 @@ theorem LinearIsometry.map_orthogonal_projection {E E' : Type _} [InnerProductSp
     [InnerProductSpace 𝕜 E'] (f : E →ₗᵢ[𝕜] E') (p : Submodule 𝕜 E) [CompleteSpace p] (x : E) :
     f (orthogonalProjection p x) = orthogonalProjection (p.map f.toLinearMap) (f x) :=
   by
-  refine' ((eq_orthogonal_projection_of_mem_of_inner_eq_zero _) fun y hy => _).symm
+  refine' (eq_orthogonal_projection_of_mem_of_inner_eq_zero _ fun y hy => _).symm
   refine' Submodule.apply_coe_mem_map _ _
   rcases hy with ⟨x', hx', rfl : f x' = y⟩
   rw [← f.map_sub, f.inner_map_map, orthogonal_projection_inner_eq_zero x x' hx']
@@ -601,7 +601,7 @@ theorem LinearIsometry.map_orthogonal_projection' {E E' : Type _} [InnerProductS
     [InnerProductSpace 𝕜 E'] (f : E →ₗᵢ[𝕜] E') (p : Submodule 𝕜 E) [CompleteSpace p] (x : E) :
     f (orthogonalProjection p x) = orthogonalProjection (p.map f) (f x) :=
   by
-  refine' ((eq_orthogonal_projection_of_mem_of_inner_eq_zero _) fun y hy => _).symm
+  refine' (eq_orthogonal_projection_of_mem_of_inner_eq_zero _ fun y hy => _).symm
   refine' Submodule.apply_coe_mem_map _ _
   rcases hy with ⟨x', hx', rfl : f x' = y⟩
   rw [← f.map_sub, f.inner_map_map, orthogonal_projection_inner_eq_zero x x' hx']

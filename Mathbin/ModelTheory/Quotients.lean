@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module model_theory.quotients
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,7 +62,7 @@ theorem fun_map_quotient_mk {n : ℕ} (f : L.Functions n) (x : Fin n → M) :
   change
     Quotient.map (@fun_map L M ps.to_structure n f) prestructure.fun_equiv (Quotient.finChoice _) =
       _
-  rw [Quotient.fin_choice_eq, Quotient.map_mk]
+  rw [Quotient.finChoice_eq, Quotient.map_mk]
 #align first_order.language.fun_map_quotient_mk FirstOrder.Language.fun_map_quotient_mk
 
 theorem rel_map_quotient_mk {n : ℕ} (r : L.Relations n) (x : Fin n → M) :
@@ -71,7 +71,7 @@ theorem rel_map_quotient_mk {n : ℕ} (r : L.Relations n) (x : Fin n → M) :
   change
     Quotient.lift (@rel_map L M ps.to_structure n r) prestructure.rel_equiv (Quotient.finChoice _) ↔
       _
-  rw [Quotient.fin_choice_eq, Quotient.lift_mk]
+  rw [Quotient.finChoice_eq, Quotient.lift_mk]
 #align first_order.language.rel_map_quotient_mk FirstOrder.Language.rel_map_quotient_mk
 
 theorem Term.realize_quotient_mk {β : Type _} (t : L.term β) (x : β → M) :

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module computability.tm_to_partrec
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -749,7 +749,7 @@ theorem step_ret_eval {k v} : eval step (stepRet k v) = cfg.halt <$> k.eval v :=
     rw [cont.eval, step_ret]; simp only [bind_pure_comp_eq_map]
     split_ifs; · exact IH
     simp only [← bind_pure_comp_eq_map, bind_assoc, cont_eval_fix (code_is_ok _)]
-    congr ; funext ; rw [bind_pure_comp_eq_map, ← IH]
+    congr ; funext; rw [bind_pure_comp_eq_map, ← IH]
     exact reaches_eval (refl_trans_gen.single rfl)
 #align turing.to_partrec.step_ret_eval Turing.ToPartrec.step_ret_eval
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Floris van Doorn, Sébastien Gouëzel, Alex J. Best
 
 ! This file was ported from Lean 3 source module data.list.big_operators.lemmas
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,7 +55,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align commute.list_sum_left Commute.list_sum_leftₓ'. -/
 theorem list_sum_left [NonUnitalNonAssocSemiring R] (b : R) (l : List R)
     (h : ∀ a ∈ l, Commute a b) : Commute l.Sum b :=
-  ((Commute.list_sum_right _ _) fun x hx => (h _ hx).symm).symm
+  (Commute.list_sum_right _ _ fun x hx => (h _ hx).symm).symm
 #align commute.list_sum_left Commute.list_sum_left
 
 end Commute
@@ -85,7 +85,7 @@ Case conversion may be inaccurate. Consider using '#align list.prod_eq_one_iff L
 theorem prod_eq_one_iff [CanonicallyOrderedMonoid M] (l : List M) :
     l.Prod = 1 ↔ ∀ x ∈ l, x = (1 : M) :=
   ⟨all_one_of_le_one_le_of_prod_eq_one fun _ _ => one_le _, fun h => by
-    rw [eq_repeat.2 ⟨rfl, h⟩, prod_repeat, one_pow]⟩
+    rw [eq_replicate.2 ⟨rfl, h⟩, prod_replicate, one_pow]⟩
 #align list.prod_eq_one_iff List.prod_eq_one_iff
 
 #print List.neg_one_mem_of_prod_eq_neg_one /-

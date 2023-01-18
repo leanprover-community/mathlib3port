@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jakob von Raumer, Kevin Klinge
 
 ! This file was ported from Lean 3 source module ring_theory.ore_localization.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -162,7 +162,7 @@ protected theorem eq_of_num_factor_eq {r r' r₁ r₂ : R} {s t : S} (h : r * t 
 under expansion on the right. -/
 def liftExpand {C : Sort _} (P : R → S → C)
     (hP : ∀ (r t : R) (s : S) (ht : (s : R) * t ∈ S), P r s = P (r * t) ⟨s * t, ht⟩) : R[S⁻¹] → C :=
-  (Quotient.lift fun p : R × S => P p.1 p.2) fun p q pq =>
+  Quotient.lift (fun p : R × S => P p.1 p.2) fun p q pq =>
     by
     cases' p with r₁ s₁
     cases' q with r₂ s₂
@@ -199,8 +199,9 @@ def lift₂Expand {C : Sort _} (P : R → S → R → S → C)
         (ht₂ : (s₂ : R) * t₂ ∈ S),
         P r₁ s₁ r₂ s₂ = P (r₁ * t₁) ⟨s₁ * t₁, ht₁⟩ (r₂ * t₂) ⟨s₂ * t₂, ht₂⟩) :
     R[S⁻¹] → R[S⁻¹] → C :=
-  (liftExpand fun r₁ s₁ =>
-      (liftExpand (P r₁ s₁)) fun r₂ t₂ s₂ ht₂ => by simp [hP r₁ 1 s₁ (by simp) r₂ t₂ s₂ ht₂])
+  liftExpand
+    (fun r₁ s₁ =>
+      liftExpand (P r₁ s₁) fun r₂ t₂ s₂ ht₂ => by simp [hP r₁ 1 s₁ (by simp) r₂ t₂ s₂ ht₂])
     fun r₁ t₁ s₁ ht₁ => by
     ext x; induction' x using OreLocalization.ind with r₂ s₂
     rw [lift_expand_of, lift_expand_of, hP r₁ t₁ s₁ ht₁ r₂ 1 s₂ (by simp)]; simp
@@ -243,7 +244,7 @@ private theorem mul'_char (r₁ r₂ : R) (s₁ s₂ : S) (u : S) (v : R) (huv :
 
 /-- The multiplication on the Ore localization of monoids. -/
 protected def mul : R[S⁻¹] → R[S⁻¹] → R[S⁻¹] :=
-  (lift₂Expand mul') fun r₂ p s₂ hp r₁ r s₁ hr =>
+  lift₂Expand mul' fun r₂ p s₂ hp r₁ r s₁ hr =>
     by
     have h₁ := ore_eq r₁ s₂
     set r₁' := ore_num r₁ s₂
@@ -421,7 +422,7 @@ to a morphism `R[S⁻¹] →* T`. -/
 def universalMulHom : R[S⁻¹] →* T
     where
   toFun x :=
-    (x.liftExpand fun r s => f r * ((fS s)⁻¹ : Units T)) fun r t s ht =>
+    x.liftExpand (fun r s => f r * ((fS s)⁻¹ : Units T)) fun r t s ht =>
       by
       have : (fS ⟨s * t, ht⟩ : T) = fS s * f t := by
         simp only [← hf, [anonymous], MonoidHom.map_mul]
@@ -882,7 +883,7 @@ variable {R : Type _} [Ring R] {S : Submonoid R} [OreSet S]
 
 /-- Negation on the Ore localization is defined via negation on the numerator. -/
 protected def neg : R[S⁻¹] → R[S⁻¹] :=
-  (liftExpand fun (r : R) (s : S) => -r /ₒ s) fun r t s ht => by
+  liftExpand (fun (r : R) (s : S) => -r /ₒ s) fun r t s ht => by
     rw [neg_mul_eq_neg_mul, ← OreLocalization.expand]
 #align ore_localization.neg OreLocalization.neg
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.instances.real
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -176,9 +176,9 @@ section
 
 theorem closure_of_rat_image_lt {q : ℚ} :
     closure ((coe : ℚ → ℝ) '' { x | q < x }) = { r | ↑q ≤ r } :=
-  (Subset.antisymm
-      ((is_closed_ge' _).closure_subset_iff.2
-        (image_subset_iff.2 fun p h => le_of_lt <| (@Rat.cast_lt ℝ _ _ _).2 h)))
+  Subset.antisymm
+    ((is_closed_ge' _).closure_subset_iff.2
+      (image_subset_iff.2 fun p h => le_of_lt <| (@Rat.cast_lt ℝ _ _ _).2 h))
     fun x hx =>
     mem_closure_iff_nhds.2 fun t ht =>
       let ⟨ε, ε0, hε⟩ := Metric.mem_nhds_iff.1 ht

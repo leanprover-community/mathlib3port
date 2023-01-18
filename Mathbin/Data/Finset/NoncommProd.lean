@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 
 ! This file was ported from Lean 3 source module data.finset.noncomm_prod
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,14 +66,14 @@ theorem noncomm_foldr_empty (h) (b : β) : noncommFoldr f (0 : Multiset α) h b 
 theorem noncomm_foldr_cons (s : Multiset α) (a : α) (h h') (b : β) :
     noncommFoldr f (a ::ₘ s) h b = f a (noncommFoldr f s h' b) :=
   by
-  induction s using Quotient.induction_on
+  induction s using Quotient.inductionOn
   simp
 #align multiset.noncomm_foldr_cons Multiset.noncomm_foldr_cons
 
 theorem noncomm_foldr_eq_foldr (s : Multiset α) (h : LeftCommutative f) (b : β) :
     noncommFoldr f s (fun x _ y _ _ => h x y) b = foldr f h b s :=
   by
-  induction s using Quotient.induction_on
+  induction s using Quotient.inductionOn
   simp
 #align multiset.noncomm_foldr_eq_foldr Multiset.noncomm_foldr_eq_foldr
 
@@ -101,14 +101,14 @@ theorem noncomm_fold_empty (h) (a : α) : noncommFold op (0 : Multiset α) h a =
 theorem noncomm_fold_cons (s : Multiset α) (a : α) (h h') (x : α) :
     noncommFold op (a ::ₘ s) h x = op a (noncommFold op s h' x) :=
   by
-  induction s using Quotient.induction_on
+  induction s using Quotient.inductionOn
   simp
 #align multiset.noncomm_fold_cons Multiset.noncomm_fold_cons
 
 theorem noncomm_fold_eq_fold (s : Multiset α) [IsCommutative α op] (a : α) :
     noncommFold op s (fun x _ y _ _ => IsCommutative.comm x y) a = fold op a s :=
   by
-  induction s using Quotient.induction_on
+  induction s using Quotient.inductionOn
   simp
 #align multiset.noncomm_fold_eq_fold Multiset.noncomm_fold_eq_fold
 
@@ -145,7 +145,7 @@ theorem noncomm_prod_empty (h) : noncommProd (0 : Multiset α) h = 1 :=
 theorem noncomm_prod_cons (s : Multiset α) (a : α) (comm) :
     noncommProd (a ::ₘ s) comm = a * noncommProd s (comm.mono fun _ => mem_cons_of_mem) :=
   by
-  induction s using Quotient.induction_on
+  induction s using Quotient.inductionOn
   simp
 #align multiset.noncomm_prod_cons Multiset.noncomm_prod_cons
 
@@ -153,7 +153,7 @@ theorem noncomm_prod_cons (s : Multiset α) (a : α) (comm) :
 theorem noncomm_prod_cons' (s : Multiset α) (a : α) (comm) :
     noncommProd (a ::ₘ s) comm = noncommProd s (comm.mono fun _ => mem_cons_of_mem) * a :=
   by
-  induction' s using Quotient.induction_on with s
+  induction' s using Quotient.inductionOn with s
   simp only [quot_mk_to_coe, cons_coe, noncomm_prod_coe, List.prod_cons]
   induction' s with hd tl IH
   · simp
@@ -191,7 +191,7 @@ theorem noncomm_prod_map_aux [MonoidHomClass F α β] (s : Multiset α)
 theorem noncomm_prod_map [MonoidHomClass F α β] (s : Multiset α) (comm) (f : F) :
     f (s.noncommProd comm) = (s.map f).noncommProd (noncomm_prod_map_aux s comm f) :=
   by
-  induction s using Quotient.induction_on
+  induction s using Quotient.inductionOn
   simpa using map_list_prod f _
 #align multiset.noncomm_prod_map Multiset.noncomm_prod_map
 
@@ -199,7 +199,7 @@ theorem noncomm_prod_map [MonoidHomClass F α β] (s : Multiset α) (comm) (f : 
 theorem noncomm_prod_eq_pow_card (s : Multiset α) (comm) (m : α) (h : ∀ x ∈ s, x = m) :
     s.noncommProd comm = m ^ s.card :=
   by
-  induction s using Quotient.induction_on
+  induction s using Quotient.inductionOn
   simp only [quot_mk_to_coe, noncomm_prod_coe, coe_card, mem_coe] at *
   exact List.prod_eq_pow_card _ m h
 #align multiset.noncomm_prod_eq_pow_card Multiset.noncomm_prod_eq_pow_card
@@ -208,7 +208,7 @@ theorem noncomm_prod_eq_pow_card (s : Multiset α) (comm) (m : α) (h : ∀ x �
 theorem noncomm_prod_eq_prod {α : Type _} [CommMonoid α] (s : Multiset α) :
     (noncommProd s fun _ _ _ _ _ => Commute.all _ _) = prod s :=
   by
-  induction s using Quotient.induction_on
+  induction s using Quotient.inductionOn
   simp
 #align multiset.noncomm_prod_eq_prod Multiset.noncomm_prod_eq_prod
 
@@ -216,7 +216,7 @@ theorem noncomm_prod_eq_prod {α : Type _} [CommMonoid α] (s : Multiset α) :
 theorem noncomm_prod_commute (s : Multiset α) (comm) (y : α) (h : ∀ x ∈ s, Commute y x) :
     Commute y (s.noncommProd comm) :=
   by
-  induction s using Quotient.induction_on
+  induction s using Quotient.inductionOn
   simp only [quot_mk_to_coe, noncomm_prod_coe]
   exact Commute.list_prod_right _ _ h
 #align multiset.noncomm_prod_commute Multiset.noncomm_prod_commute
@@ -336,8 +336,8 @@ theorem noncomm_prod_union_of_disjoint [DecidableEq α] {s t : Finset α} (h : D
   by
   obtain ⟨sl, sl', rfl⟩ := exists_list_nodup_eq s
   obtain ⟨tl, tl', rfl⟩ := exists_list_nodup_eq t
-  rw [List.disjoint_to_finset_iff_disjoint] at h
-  simp [sl', tl', noncomm_prod_to_finset, ← List.prod_append, ← List.to_finset_append,
+  rw [List.disjoint_toFinset_iff_disjoint] at h
+  simp [sl', tl', noncomm_prod_to_finset, ← List.prod_append, ← List.toFinset_append,
     sl'.append tl' h]
 #align finset.noncomm_prod_union_of_disjoint Finset.noncomm_prod_union_of_disjoint
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.bounded_variation
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -646,7 +646,7 @@ theorem comp_le_of_antitone_on (f : α → E) {s : Set α} {t : Set β} (φ : β
   rintro ⟨n, u, hu, ut⟩
   rw [← Finset.sum_range_reflect]
   refine'
-    ((Finset.sum_congr rfl) fun x hx => _).trans_le
+    (Finset.sum_congr rfl fun x hx => _).trans_le
       (le_supᵢ_of_le
         ⟨n, fun i => φ (u <| n - i), fun x y xy => hφ (ut _) (ut _) (hu <| n.sub_le_sub_left xy),
           fun i => φst (ut _)⟩
@@ -694,8 +694,7 @@ open OrderDual
 
 theorem comp_of_dual (f : α → E) (s : Set α) :
     evariationOn (f ∘ of_dual) (of_dual ⁻¹' s) = evariationOn f s :=
-  (comp_eq_of_antitone_on f ofDual (fun _ _ _ _ => id) (mapsTo_preimage _ _)) fun x hx =>
-    ⟨x, hx, rfl⟩
+  comp_eq_of_antitone_on f ofDual (fun _ _ _ _ => id) (mapsTo_preimage _ _) fun x hx => ⟨x, hx, rfl⟩
 #align evariation_on.comp_of_dual evariationOn.comp_of_dual
 
 end evariationOn

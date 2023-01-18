@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Heather Macbeth, Johannes Hölzl, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.normed.group.infinite_sum
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -125,7 +125,7 @@ theorem summable_of_norm_bounded [CompleteSpace E] {f : ι → E} (g : ι → �
 
 theorem HasSum.norm_le_of_bounded {f : ι → E} {g : ι → ℝ} {a : E} {b : ℝ} (hf : HasSum f a)
     (hg : HasSum g b) (h : ∀ i, ‖f i‖ ≤ g i) : ‖a‖ ≤ b :=
-  (le_of_tendsto_of_tendsto' hf.norm hg) fun s => (norm_sum_le_of_le _) fun i hi => h i
+  le_of_tendsto_of_tendsto' hf.norm hg fun s => norm_sum_le_of_le _ fun i hi => h i
 #align has_sum.norm_le_of_bounded HasSum.norm_le_of_bounded
 
 /-- Quantitative result associated to the direct comparison test for series:  If `∑' i, g i` is
@@ -144,7 +144,7 @@ theorem tsum_of_norm_bounded {f : ι → E} {g : ι → ℝ} {a : ℝ} (hg : Has
 that `∑' i, f i` is summable, and it might not be the case if `α` is not a complete space. -/
 theorem norm_tsum_le_tsum_norm {f : ι → E} (hf : Summable fun i => ‖f i‖) :
     ‖∑' i, f i‖ ≤ ∑' i, ‖f i‖ :=
-  (tsum_of_norm_bounded hf.HasSum) fun i => le_rfl
+  tsum_of_norm_bounded hf.HasSum fun i => le_rfl
 #align norm_tsum_le_tsum_norm norm_tsum_le_tsum_norm
 
 /-- Quantitative result associated to the direct comparison test for series: If `∑' i, g i` is

@@ -4,12 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker, Eric Wieser
 
 ! This file was ported from Lean 3 source module analysis.normed_space.exponential
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Analytic.Basic
 import Mathbin.Analysis.Complex.Basic
+import Mathbin.Analysis.Normed.Field.InfiniteSum
 import Mathbin.Data.Nat.Choose.Cast
 import Mathbin.Data.Finset.NoncommProd
 import Mathbin.Topology.Algebra.Algebra
@@ -273,7 +274,7 @@ theorem exp_add_of_commute_of_mem_ball [CharZero 𝕂] {x y : 𝔸} (hxy : Commu
     congr
     ext
     rw [hxy.add_pow' _, Finset.smul_sum]
-  refine' tsum_congr fun n => (Finset.sum_congr rfl) fun kl hkl => _
+  refine' tsum_congr fun n => Finset.sum_congr rfl fun kl hkl => _
   rw [nsmul_eq_smul_cast 𝕂, smul_smul, smul_mul_smul, ← finset.nat.mem_antidiagonal.mp hkl,
     Nat.cast_add_choose, finset.nat.mem_antidiagonal.mp hkl]
   congr 1

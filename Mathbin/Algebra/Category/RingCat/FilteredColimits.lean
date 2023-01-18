@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Justus Springer
 
 ! This file was ported from Lean 3 source module algebra.category.Ring.filtered_colimits
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -75,13 +75,13 @@ instance colimitSemiring : Semiring R :=
           AddCommMonCat.{max v
               u}) with
     mul_zero := fun x => by
-      apply Quot.induction_on x; clear x; intro x
+      apply Quot.inductionOn x; clear x; intro x
       cases' x with j x
       erw [colimit_zero_eq _ j, colimit_mul_mk_eq _ ⟨j, _⟩ ⟨j, _⟩ j (𝟙 j) (𝟙 j)]
       rw [CategoryTheory.Functor.map_id, id_apply, id_apply, mul_zero x]
       rfl
     zero_mul := fun x => by
-      apply Quot.induction_on x; clear x; intro x
+      apply Quot.inductionOn x; clear x; intro x
       cases' x with j x
       erw [colimit_zero_eq _ j, colimit_mul_mk_eq _ ⟨j, _⟩ ⟨j, _⟩ j (𝟙 j) (𝟙 j)]
       rw [CategoryTheory.Functor.map_id, id_apply, id_apply, zero_mul x]

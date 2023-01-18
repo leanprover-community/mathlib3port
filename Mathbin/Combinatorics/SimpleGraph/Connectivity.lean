@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.connectivity
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1110,7 +1110,7 @@ theorem support_rotate {u v : V} (c : G.Walk v v) (h : u ∈ c.support) :
     (c.rotate h).support.tail ~r c.support.tail :=
   by
   simp only [rotate, tail_support_append]
-  apply List.IsRotated.trans List.is_rotated_append
+  apply List.IsRotated.trans List.isRotated_append
   rw [← tail_support_append, take_spec]
 #align simple_graph.walk.support_rotate SimpleGraph.Walk.support_rotate
 
@@ -1118,7 +1118,7 @@ theorem rotate_darts {u v : V} (c : G.Walk v v) (h : u ∈ c.support) :
     (c.rotate h).darts ~r c.darts :=
   by
   simp only [rotate, darts_append]
-  apply List.IsRotated.trans List.is_rotated_append
+  apply List.IsRotated.trans List.isRotated_append
   rw [← darts_append, take_spec]
 #align simple_graph.walk.rotate_darts SimpleGraph.Walk.rotate_darts
 
@@ -1687,7 +1687,7 @@ theorem to_delete_edges_nil (s : Set (Sym2 V)) {v : V} (hp) :
 @[simp]
 theorem to_delete_edges_cons (s : Set (Sym2 V)) {u v w : V} (h : G.Adj u v) (p : G.Walk v w) (hp) :
     (Walk.cons h p).toDeleteEdges s hp =
-      Walk.cons ⟨h, hp _ (Or.inl rfl)⟩ ((p.toDeleteEdges s) fun _ he => hp _ <| Or.inr he) :=
+      Walk.cons ⟨h, hp _ (Or.inl rfl)⟩ (p.toDeleteEdges s fun _ he => hp _ <| Or.inr he) :=
   rfl
 #align simple_graph.walk.to_delete_edges_cons SimpleGraph.Walk.to_delete_edges_cons
 
@@ -2132,7 +2132,7 @@ theorem coe_finset_walk_length_eq (n : ℕ) (u v : V) :
   by
   induction' n with n ih generalizing u v
   · obtain rfl | huv := eq_or_ne u v <;> simp [finset_walk_length, set_walk_length_zero_eq_of_ne, *]
-  · simp only [finset_walk_length, set_walk_length_succ_eq, Finset.coe_bUnion, Finset.mem_coe,
+  · simp only [finset_walk_length, set_walk_length_succ_eq, Finset.coe_bunionᵢ, Finset.mem_coe,
       Finset.mem_univ, Set.unionᵢ_true]
     ext p
     simp only [mem_neighbor_set, Finset.coe_map, embedding.coe_fn_mk, Set.unionᵢ_coe_set,
@@ -2157,7 +2157,7 @@ theorem Walk.mem_finset_walk_length_iff_length_eq {n : ℕ} {u v : V} (p : G.Wal
 variable (G)
 
 instance fintypeSetWalkLength (u v : V) (n : ℕ) : Fintype { p : G.Walk u v | p.length = n } :=
-  (Fintype.ofFinset (G.finsetWalkLength n u v)) fun p => by
+  Fintype.ofFinset (G.finsetWalkLength n u v) fun p => by
     rw [← Finset.mem_coe, coe_finset_walk_length_eq]
 #align simple_graph.fintype_set_walk_length SimpleGraph.fintypeSetWalkLength
 
@@ -2172,7 +2172,7 @@ theorem set_walk_length_to_finset_eq (n : ℕ) (u v : V) :
 power of the adjacency matrix. -/
 theorem card_set_walk_length_eq (u v : V) (n : ℕ) :
     Fintype.card { p : G.Walk u v | p.length = n } = (G.finsetWalkLength n u v).card :=
-  (Fintype.card_of_finset (G.finsetWalkLength n u v)) fun p => by
+  Fintype.card_of_finset (G.finsetWalkLength n u v) fun p => by
     rw [← Finset.mem_coe, coe_finset_walk_length_eq]
 #align simple_graph.card_set_walk_length_eq SimpleGraph.card_set_walk_length_eq
 

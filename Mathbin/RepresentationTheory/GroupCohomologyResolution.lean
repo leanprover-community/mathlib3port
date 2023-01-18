@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Amelia Livingston
 
 ! This file was ported from Lean 3 source module representation_theory.group_cohomology_resolution
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -103,7 +103,7 @@ def toTensorAux : ((Fin (n + 1) → G) →₀ k) →ₗ[k] (G →₀ k) ⊗[k] (
 `(g, gg₁, gg₁g₂, ..., gg₁...gₙ)`. -/
 def ofTensorAux : (G →₀ k) ⊗[k] ((Fin n → G) →₀ k) →ₗ[k] (Fin (n + 1) → G) →₀ k :=
   TensorProduct.lift
-    ((Finsupp.lift _ _ _) fun g => Finsupp.lift _ _ _ fun f => single (g • partialProd f) (1 : k))
+    (Finsupp.lift _ _ _ fun g => Finsupp.lift _ _ _ fun f => single (g • partialProd f) (1 : k))
 #align group_cohomology.resolution.of_tensor_aux GroupCohomology.Resolution.ofTensorAux
 
 variable {k G n}
@@ -314,7 +314,7 @@ variable [Monoid G]
 isomorphic to `EG`, the universal cover of the classifying space of `G` as a simplicial `G`-set. -/
 def cechNerveTerminalFromIso :
     cechNerveTerminalFrom (ActionCat.ofMulAction G G) ≅ classifyingSpaceUniversalCover G :=
-  (NatIso.ofComponents fun n => limit.isoLimitCone (ActionCat.ofMulActionLimitCone _ _))
+  NatIso.ofComponents (fun n => limit.isoLimitCone (ActionCat.ofMulActionLimitCone _ _))
     fun m n f =>
     by
     refine' is_limit.hom_ext (ActionCat.ofMulActionLimitCone.{u, 0} _ _).2 fun j => _
@@ -329,7 +329,7 @@ def cechNerveTerminalFromIso :
 cover of the classifying space of `G` as a simplicial set. -/
 def cechNerveTerminalFromIsoCompForget :
     cechNerveTerminalFrom G ≅ classifyingSpaceUniversalCover G ⋙ forget _ :=
-  (NatIso.ofComponents fun n => Types.productIso _) fun m n f =>
+  NatIso.ofComponents (fun n => Types.productIso _) fun m n f =>
     Matrix.ext fun i j => Types.Limit.lift_π_apply _ _ _ _
 #align
   classifying_space_universal_cover.cech_nerve_terminal_from_iso_comp_forget classifyingSpaceUniversalCover.cechNerveTerminalFromIsoCompForget
@@ -341,9 +341,8 @@ open AlgebraicTopology SimplicialObject.Augmented SimplicialObject CategoryTheor
 /-- The universal cover of the classifying space of `G` as a simplicial set, augmented by the map
 from `fin 1 → G` to the terminal object in `Type u`. -/
 def compForgetAugmented : SimplicialObject.Augmented (Type u) :=
-  (SimplicialObject.augment (classifyingSpaceUniversalCover G ⋙ forget _) (terminal _)
-      (terminal.from _))
-    fun i g h => Subsingleton.elim _ _
+  SimplicialObject.augment (classifyingSpaceUniversalCover G ⋙ forget _) (terminal _)
+    (terminal.from _) fun i g h => Subsingleton.elim _ _
 #align
   classifying_space_universal_cover.comp_forget_augmented classifyingSpaceUniversalCover.compForgetAugmented
 

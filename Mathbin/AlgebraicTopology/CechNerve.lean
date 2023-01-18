@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module algebraic_topology.cech_nerve
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,9 +56,8 @@ def cechNerve : SimplicialObject C
     where
   obj n := widePullback.{0} f.right (fun i : Fin (n.unop.len + 1) => f.left) fun i => f.Hom
   map m n g :=
-    (widePullback.lift (widePullback.base _) fun i =>
-        (widePullback.π fun i => f.Hom) <| g.unop.toOrderHom i)
-      fun j => by simp
+    widePullback.lift (widePullback.base _)
+      (fun i => (widePullback.π fun i => f.Hom) <| g.unop.toOrderHom i) fun j => by simp
   map_id' x := by
     ext ⟨⟩
     · simpa
@@ -77,7 +76,7 @@ def mapCechNerve {f g : Arrow C}
     f.cechNerve ⟶ g.cechNerve
     where
   app n :=
-    (widePullback.lift (widePullback.base _ ≫ F.right) fun i => widePullback.π _ i ≫ F.left)
+    widePullback.lift (widePullback.base _ ≫ F.right) (fun i => widePullback.π _ i ≫ F.left)
       fun j => by simp
   naturality' x y f := by
     ext ⟨⟩
@@ -276,9 +275,9 @@ def cechConerve : CosimplicialObject C
     where
   obj n := widePushout f.left (fun i : Fin (n.len + 1) => f.right) fun i => f.Hom
   map m n g :=
-    (widePushout.desc (widePushout.head _) fun i =>
-        (widePushout.ι fun i => f.Hom) <| g.toOrderHom i)
-      fun i => by rw [wide_pushout.arrow_ι fun i => f.hom]
+    widePushout.desc (widePushout.head _)
+      (fun i => (widePushout.ι fun i => f.Hom) <| g.toOrderHom i) fun i => by
+      rw [wide_pushout.arrow_ι fun i => f.hom]
   map_id' x := by
     ext ⟨⟩
     · simpa
@@ -297,7 +296,7 @@ def mapCechConerve {f g : Arrow C}
     f.cechConerve ⟶ g.cechConerve
     where
   app n :=
-    (widePushout.desc (F.left ≫ widePushout.head _) fun i => F.right ≫ widePushout.ι _ i) fun i =>
+    widePushout.desc (F.left ≫ widePushout.head _) (fun i => F.right ≫ widePushout.ι _ i) fun i =>
       by rw [← arrow.w_assoc F, wide_pushout.arrow_ι fun i => g.hom]
   naturality' x y f := by
     ext
@@ -567,7 +566,8 @@ naturally isomorphic to a simplicial object sending `[n]` to `Xⁿ⁺¹` (when `
 `EG`, the universal cover of the classifying space of `G`. -/
 def iso (X : C) : (Arrow.mk (terminal.from X)).cechNerve ≅ cechNerveTerminalFrom X :=
   Iso.symm
-    ((NatIso.ofComponents fun m =>
+    (NatIso.ofComponents
+      (fun m =>
         ((limit.isLimit _).conePointUniqueUpToIso
             (wideCospan.limitCone (Fin (m.unop.len + 1)) X).2).symm)
       fun m n f =>

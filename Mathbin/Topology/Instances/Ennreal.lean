@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.instances.ennreal
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -917,12 +917,12 @@ protected theorem tsum_sigma' {β : α → Type _} (f : (Σa, β a) → ℝ≥0�
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 protected theorem tsum_prod {f : α → β → ℝ≥0∞} : (∑' p : α × β, f p.1 p.2) = ∑' (a) (b), f a b :=
-  (tsum_prod' Ennreal.summable) fun _ => Ennreal.summable
+  tsum_prod' Ennreal.summable fun _ => Ennreal.summable
 #align ennreal.tsum_prod Ennreal.tsum_prod
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 protected theorem tsum_prod' {f : α × β → ℝ≥0∞} : (∑' p : α × β, f p) = ∑' (a) (b), f (a, b) :=
-  (tsum_prod' Ennreal.summable) fun _ => Ennreal.summable
+  tsum_prod' Ennreal.summable fun _ => Ennreal.summable
 #align ennreal.tsum_prod' Ennreal.tsum_prod'
 
 protected theorem tsum_comm {f : α → β → ℝ≥0∞} : (∑' a, ∑' b, f a b) = ∑' b, ∑' a, f a b :=
@@ -943,7 +943,7 @@ protected theorem sum_le_tsum {f : α → ℝ≥0∞} (s : Finset α) : (∑ x i
 
 protected theorem tsum_eq_supr_nat' {f : ℕ → ℝ≥0∞} {N : ℕ → ℕ} (hN : Tendsto N atTop atTop) :
     (∑' i : ℕ, f i) = ⨆ i : ℕ, ∑ a in Finset.range (N i), f a :=
-  (Ennreal.tsum_eq_supr_sum' _) fun t =>
+  Ennreal.tsum_eq_supr_sum' _ fun t =>
     let ⟨n, hn⟩ := t.exists_nat_subset_range
     let ⟨k, _, hk⟩ := exists_le_of_tendsto_at_top hN 0 n
     ⟨k, Finset.Subset.trans hn (Finset.range_mono hk)⟩
@@ -1183,7 +1183,7 @@ theorem tsum_add_one_eq_top {f : ℕ → ℝ≥0∞} (hf : (∑' n, f n) = ∞) 
   apply tsum_congr
   rintro ⟨i, hi⟩
   simp only [Multiset.mem_range, not_lt] at hi
-  simp only [tsub_add_cancel_of_le hi, coe_not_mem_range_equiv, Function.comp_apply, Subtype.coe_mk]
+  simp only [tsub_add_cancel_of_le hi, coe_notMemRangeEquiv, Function.comp_apply, Subtype.coe_mk]
 #align ennreal.tsum_add_one_eq_top Ennreal.tsum_add_one_eq_top
 
 /-- A sum of extended nonnegative reals which is finite can have only finitely many terms
@@ -1780,7 +1780,7 @@ theorem diam_eq {s : Set ℝ} (h : Bounded s) : Metric.diam s = supₛ s - inf�
   by
   rw [Metric.diam, Real.ediam_eq h, Ennreal.to_real_of_real]
   rw [Real.bounded_iff_bdd_below_bdd_above] at h
-  exact sub_nonneg.2 (Real.Inf_le_Sup s h.1 h.2)
+  exact sub_nonneg.2 (Real.infₛ_le_supₛ s h.1 h.2)
 #align real.diam_eq Real.diam_eq
 
 @[simp]

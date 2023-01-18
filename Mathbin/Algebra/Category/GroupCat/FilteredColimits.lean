@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Justus Springer
 
 ! This file was ported from Lean 3 source module algebra.category.Group.filtered_colimits
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -109,7 +109,7 @@ theorem colimit_inv_mk_eq (x : Σj, F.obj j) : (G.mk x)⁻¹ = G.mk ⟨x.1, x.2�
 instance colimitGroup : Group G :=
   { G.Monoid, colimit_has_inv with
     mul_left_inv := fun x => by
-      apply Quot.induction_on x; clear x; intro x
+      apply Quot.inductionOn x; clear x; intro x
       cases' x with j x
       erw [colimit_inv_mk_eq,
         colimit_mul_mk_eq (F ⋙ forget₂ GroupCat MonCat.{max v u}) ⟨j, _⟩ ⟨j, _⟩ j (𝟙 j) (𝟙 j),

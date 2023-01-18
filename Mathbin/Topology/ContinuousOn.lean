@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.continuous_on
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -707,7 +707,7 @@ theorem continuous_on_singleton (f : α → β) (a : α) : ContinuousOn f {a} :=
 
 theorem Set.Subsingleton.continuous_on {s : Set α} (hs : s.Subsingleton) (f : α → β) :
     ContinuousOn f s :=
-  hs.induction_on (continuous_on_empty f) (continuous_on_singleton f)
+  hs.inductionOn (continuous_on_empty f) (continuous_on_singleton f)
 #align set.subsingleton.continuous_on Set.Subsingleton.continuous_on
 
 theorem nhds_within_le_comap {x : α} {s : Set α} {f : α → β} (ctsf : ContinuousWithinAt f s x) :
@@ -1289,7 +1289,7 @@ theorem IsOpen.ite' {s s' t : Set α} (hs : IsOpen s) (hs' : IsOpen s')
 
 theorem IsOpen.ite {s s' t : Set α} (hs : IsOpen s) (hs' : IsOpen s')
     (ht : s ∩ frontier t = s' ∩ frontier t) : IsOpen (t.ite s s') :=
-  (hs.ite' hs') fun x hx => by simpa [hx] using ext_iff.1 ht x
+  hs.ite' hs' fun x hx => by simpa [hx] using ext_iff.1 ht x
 #align is_open.ite IsOpen.ite
 
 theorem ite_inter_closure_eq_of_inter_frontier_eq {s s' t : Set α}

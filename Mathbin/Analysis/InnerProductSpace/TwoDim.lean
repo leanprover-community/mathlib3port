@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.two_dim
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -231,7 +231,7 @@ def rightAngleRotationAux₂ : E →ₗᵢ[ℝ] E :=
           apply @FiniteDimensional.nontrivial_of_finrank_pos ℝ
           have : finrank ℝ K ≤ Finset.card {x} :=
             by
-            rw [← Set.to_finset_singleton]
+            rw [← Set.toFinset_singleton]
             exact finrank_span_le_card ({x} : Set E)
           have : Finset.card {x} = 1 := Finset.card_singleton x
           have : finrank ℝ K + finrank ℝ Kᗮ = finrank ℝ E := K.finrank_add_finrank_orthogonal

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.verschiebung
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,7 +41,7 @@ by inserting 0 as the 0th coefficient.
 `verschiebung_fun` is the underlying function of the additive monoid hom `witt_vector.verschiebung`.
 -/
 def verschiebungFun (x : 𝕎 R) : 𝕎 R :=
-  (mk p) fun n => if n = 0 then 0 else x.coeff (n - 1)
+  mk p fun n => if n = 0 then 0 else x.coeff (n - 1)
 #align witt_vector.verschiebung_fun WittVector.verschiebungFun
 
 theorem verschiebung_fun_coeff (x : 𝕎 R) (n : ℕ) :

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module measure_theory.decomposition.unsigned_hahn
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -105,13 +105,13 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
   let f : ℕ → ℕ → Set α := fun n m => (Finset.ico n (m + 1)).inf e
   have hf : ∀ n m, MeasurableSet (f n m) := by
     intro n m
-    simp only [f, Finset.inf_eq_infi]
+    simp only [f, Finset.inf_eq_infᵢ]
     exact MeasurableSet.bInter (to_countable _) fun i _ => he₁ _
   have f_subset_f : ∀ {a b c d}, a ≤ b → c ≤ d → f a d ⊆ f b c :=
     by
     intro a b c d hab hcd
     dsimp only [f]
-    rw [Finset.inf_eq_infi, Finset.inf_eq_infi]
+    rw [Finset.inf_eq_infᵢ, Finset.inf_eq_infᵢ]
     exact bInter_subset_bInter_left (Finset.Ico_subset_Ico hab <| Nat.succ_le_succ hcd)
   have f_succ : ∀ n m, n ≤ m → f n (m + 1) = f n m ∩ e (m + 1) :=
     by

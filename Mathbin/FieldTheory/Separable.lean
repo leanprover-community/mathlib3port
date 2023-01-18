@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module field_theory.separable
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -191,7 +191,7 @@ theorem Separable.mul {f g : R[X]} (hf : f.Separable) (hg : g.Separable) (h : Is
 theorem separable_prod' {ι : Sort _} {f : ι → R[X]} {s : Finset ι} :
     (∀ x ∈ s, ∀ y ∈ s, x ≠ y → IsCoprime (f x) (f y)) →
       (∀ x ∈ s, (f x).Separable) → (∏ x in s, f x).Separable :=
-  (Finset.induction_on s fun _ _ => separable_one) fun a s has ih h1 h2 =>
+  Finset.induction_on s (fun _ _ => separable_one) fun a s has ih h1 h2 =>
     by
     simp_rw [Finset.forall_mem_insert, forall_and] at h1 h2; rw [prod_insert has]
     exact
@@ -286,7 +286,7 @@ variable {F : Type u} [Field F] {K : Type v} [Field K]
 theorem separable_iff_derivative_ne_zero {f : F[X]} (hf : Irreducible f) :
     f.Separable ↔ f.derivative ≠ 0 :=
   ⟨fun h1 h2 => hf.not_unit <| isCoprime_zero_right.1 <| h2 ▸ h1, fun h =>
-    (EuclideanDomain.is_coprime_of_dvd (mt And.right h)) fun g hg1 hg2 ⟨p, hg3⟩ hg4 =>
+    EuclideanDomain.is_coprime_of_dvd (mt And.right h) fun g hg1 hg2 ⟨p, hg3⟩ hg4 =>
       let ⟨u, hu⟩ := (hf.is_unit_or_is_unit hg3).resolve_left hg1
       have : f ∣ f.derivative := by
         conv_lhs => rw [hg3, ← hu]
@@ -433,7 +433,7 @@ theorem card_root_set_eq_nat_degree [Algebra F K] {p : F[X]} (hsep : p.Separable
     (hsplit : Splits (algebraMap F K) p) : Fintype.card (p.rootSet K) = p.natDegree :=
   by
   simp_rw [root_set_def, Finset.coe_sort_coe, Fintype.card_coe]
-  rw [Multiset.to_finset_card_of_nodup, ← nat_degree_eq_card_roots hsplit]
+  rw [Multiset.toFinset_card_of_nodup, ← nat_degree_eq_card_roots hsplit]
   exact nodup_roots hsep.map
 #align polynomial.card_root_set_eq_nat_degree Polynomial.card_root_set_eq_nat_degree
 
@@ -464,7 +464,7 @@ theorem exists_finset_of_splits (i : F →+* K) {f : F[X]} (sep : Separable f) (
   by
   obtain ⟨s, h⟩ := (splits_iff_exists_multiset _).1 sp
   use s.to_finset
-  rw [h, Finset.prod_eq_multiset_prod, ← Multiset.to_finset_eq]
+  rw [h, Finset.prod_eq_multiset_prod, ← Multiset.toFinset_eq]
   apply nodup_of_separable_prod
   apply separable.of_mul_right
   rw [← h]
@@ -593,9 +593,9 @@ theorem AlgHom.card_of_power_basis (pb : PowerBasis K S) (h_sep : (minpoly K pb.
     @Fintype.card (S →ₐ[K] L) (PowerBasis.AlgHom.fintype pb) = pb.dim :=
   by
   let s := ((minpoly K pb.gen).map (algebraMap K L)).roots.toFinset
-  have H := fun x => Multiset.mem_to_finset
+  have H := fun x => Multiset.mem_toFinset
   rw [Fintype.card_congr pb.lift_equiv', Fintype.card_of_subtype s H, ← pb.nat_degree_minpoly,
-    nat_degree_eq_card_roots h_splits, Multiset.to_finset_card_of_nodup]
+    nat_degree_eq_card_roots h_splits, Multiset.toFinset_card_of_nodup]
   exact nodup_roots ((separable_map (algebraMap K L)).mpr h_sep)
 #align alg_hom.card_of_power_basis AlgHom.card_of_power_basis
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Neil Strickland
 
 ! This file was ported from Lean 3 source module data.pnat.xgcd
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Data.Pnat.Prime
 
 /-!
 # Euclidean algorithm for ℕ
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file sets up a version of the Euclidean algorithm that only works with natural numbers.
 Given `0 < a, b`, it computes the unique `(w, x, y, z, d)` such that the following identities hold:
@@ -41,6 +44,7 @@ open Nat
 
 namespace PNat
 
+#print PNat.XgcdType /-
 /-- A term of xgcd_type is a system of six naturals.  They should
  be thought of as representing the matrix
  [[w, x], [y, z]] = [[wp + 1, x], [y, zp + 1]]
@@ -50,6 +54,7 @@ structure XgcdType where
   (wp x y zp ap bp : ℕ)
   deriving Inhabited
 #align pnat.xgcd_type PNat.XgcdType
+-/
 
 namespace XgcdType
 
@@ -69,38 +74,55 @@ instance : Repr XgcdType :=
         repr (u.bp + 1) ++
       "]]"⟩
 
+#print PNat.XgcdType.mk' /-
 def mk' (w : ℕ+) (x : ℕ) (y : ℕ) (z : ℕ+) (a : ℕ+) (b : ℕ+) : XgcdType :=
   mk w.val.pred x y z.val.pred a.val.pred b.val.pred
 #align pnat.xgcd_type.mk' PNat.XgcdType.mk'
+-/
 
+#print PNat.XgcdType.w /-
 def w : ℕ+ :=
   succPNat u.wp
 #align pnat.xgcd_type.w PNat.XgcdType.w
+-/
 
+#print PNat.XgcdType.z /-
 def z : ℕ+ :=
   succPNat u.zp
 #align pnat.xgcd_type.z PNat.XgcdType.z
+-/
 
+#print PNat.XgcdType.a /-
 def a : ℕ+ :=
   succPNat u.ap
 #align pnat.xgcd_type.a PNat.XgcdType.a
+-/
 
+#print PNat.XgcdType.b /-
 def b : ℕ+ :=
   succPNat u.bp
 #align pnat.xgcd_type.b PNat.XgcdType.b
+-/
 
+#print PNat.XgcdType.r /-
 def r : ℕ :=
   (u.ap + 1) % (u.bp + 1)
 #align pnat.xgcd_type.r PNat.XgcdType.r
+-/
 
+#print PNat.XgcdType.q /-
 def q : ℕ :=
   (u.ap + 1) / (u.bp + 1)
 #align pnat.xgcd_type.q PNat.XgcdType.q
+-/
 
+#print PNat.XgcdType.qp /-
 def qp : ℕ :=
   u.q - 1
 #align pnat.xgcd_type.qp PNat.XgcdType.qp
+-/
 
+#print PNat.XgcdType.vp /-
 /-- The map v gives the product of the matrix
  [[w, x], [y, z]] = [[wp + 1, x], [y, zp + 1]]
  and the vector [a, b] = [ap + 1, bp + 1].  The map
@@ -109,29 +131,41 @@ def qp : ℕ :=
 def vp : ℕ × ℕ :=
   ⟨u.wp + u.x + u.ap + u.wp * u.ap + u.x * u.bp, u.y + u.zp + u.bp + u.y * u.ap + u.zp * u.bp⟩
 #align pnat.xgcd_type.vp PNat.XgcdType.vp
+-/
 
+#print PNat.XgcdType.v /-
 def v : ℕ × ℕ :=
   ⟨u.w * u.a + u.x * u.b, u.y * u.a + u.z * u.b⟩
 #align pnat.xgcd_type.v PNat.XgcdType.v
+-/
 
+#print PNat.XgcdType.succ₂ /-
 def succ₂ (t : ℕ × ℕ) : ℕ × ℕ :=
   ⟨t.1.succ, t.2.succ⟩
 #align pnat.xgcd_type.succ₂ PNat.XgcdType.succ₂
+-/
 
+#print PNat.XgcdType.v_eq_succ_vp /-
 theorem v_eq_succ_vp : u.V = succ₂ u.vp := by
   ext <;> dsimp [v, vp, w, z, a, b, succ₂] <;> repeat' rw [Nat.succ_eq_add_one] <;> ring
 #align pnat.xgcd_type.v_eq_succ_vp PNat.XgcdType.v_eq_succ_vp
+-/
 
+#print PNat.XgcdType.IsSpecial /-
 /-- is_special holds if the matrix has determinant one. -/
 def IsSpecial : Prop :=
   u.wp + u.zp + u.wp * u.zp = u.x * u.y
 #align pnat.xgcd_type.is_special PNat.XgcdType.IsSpecial
+-/
 
+#print PNat.XgcdType.IsSpecial' /-
 def IsSpecial' : Prop :=
   u.w * u.z = succPNat (u.x * u.y)
 #align pnat.xgcd_type.is_special' PNat.XgcdType.IsSpecial'
+-/
 
-theorem is_special_iff : u.IsSpecial ↔ u.IsSpecial' :=
+#print PNat.XgcdType.isSpecial_iff /-
+theorem isSpecial_iff : u.IsSpecial ↔ u.IsSpecial' :=
   by
   dsimp [is_special, is_special']
   constructor <;> intro h
@@ -147,8 +181,10 @@ theorem is_special_iff : u.IsSpecial ↔ u.IsSpecial' :=
     repeat' rw [Nat.succ_eq_add_one]
     rw [← h]
     ring
-#align pnat.xgcd_type.is_special_iff PNat.XgcdType.is_special_iff
+#align pnat.xgcd_type.is_special_iff PNat.XgcdType.isSpecial_iff
+-/
 
+#print PNat.XgcdType.IsReduced /-
 /-- is_reduced holds if the two entries in the vector are the
  same.  The reduction algorithm will produce a system with this
  property, whose product vector is the same as for the original
@@ -156,15 +192,21 @@ theorem is_special_iff : u.IsSpecial ↔ u.IsSpecial' :=
 def IsReduced : Prop :=
   u.ap = u.bp
 #align pnat.xgcd_type.is_reduced PNat.XgcdType.IsReduced
+-/
 
+#print PNat.XgcdType.IsReduced' /-
 def IsReduced' : Prop :=
   u.a = u.b
 #align pnat.xgcd_type.is_reduced' PNat.XgcdType.IsReduced'
+-/
 
-theorem is_reduced_iff : u.IsReduced ↔ u.IsReduced' :=
+#print PNat.XgcdType.isReduced_iff /-
+theorem isReduced_iff : u.IsReduced ↔ u.IsReduced' :=
   succPNat_inj.symm
-#align pnat.xgcd_type.is_reduced_iff PNat.XgcdType.is_reduced_iff
+#align pnat.xgcd_type.is_reduced_iff PNat.XgcdType.isReduced_iff
+-/
 
+#print PNat.XgcdType.flip /-
 def flip : XgcdType where
   wp := u.zp
   x := u.y
@@ -173,49 +215,67 @@ def flip : XgcdType where
   ap := u.bp
   bp := u.ap
 #align pnat.xgcd_type.flip PNat.XgcdType.flip
+-/
 
+#print PNat.XgcdType.flip_w /-
 @[simp]
 theorem flip_w : (flip u).w = u.z :=
   rfl
 #align pnat.xgcd_type.flip_w PNat.XgcdType.flip_w
+-/
 
+#print PNat.XgcdType.flip_x /-
 @[simp]
 theorem flip_x : (flip u).x = u.y :=
   rfl
 #align pnat.xgcd_type.flip_x PNat.XgcdType.flip_x
+-/
 
+#print PNat.XgcdType.flip_y /-
 @[simp]
 theorem flip_y : (flip u).y = u.x :=
   rfl
 #align pnat.xgcd_type.flip_y PNat.XgcdType.flip_y
+-/
 
+#print PNat.XgcdType.flip_z /-
 @[simp]
 theorem flip_z : (flip u).z = u.w :=
   rfl
 #align pnat.xgcd_type.flip_z PNat.XgcdType.flip_z
+-/
 
+#print PNat.XgcdType.flip_a /-
 @[simp]
 theorem flip_a : (flip u).a = u.b :=
   rfl
 #align pnat.xgcd_type.flip_a PNat.XgcdType.flip_a
+-/
 
+#print PNat.XgcdType.flip_b /-
 @[simp]
 theorem flip_b : (flip u).b = u.a :=
   rfl
 #align pnat.xgcd_type.flip_b PNat.XgcdType.flip_b
+-/
 
-theorem flip_is_reduced : (flip u).IsReduced ↔ u.IsReduced :=
+#print PNat.XgcdType.flip_isReduced /-
+theorem flip_isReduced : (flip u).IsReduced ↔ u.IsReduced :=
   by
   dsimp [is_reduced, flip]
   constructor <;> intro h <;> exact h.symm
-#align pnat.xgcd_type.flip_is_reduced PNat.XgcdType.flip_is_reduced
+#align pnat.xgcd_type.flip_is_reduced PNat.XgcdType.flip_isReduced
+-/
 
-theorem flip_is_special : (flip u).IsSpecial ↔ u.IsSpecial :=
+#print PNat.XgcdType.flip_isSpecial /-
+theorem flip_isSpecial : (flip u).IsSpecial ↔ u.IsSpecial :=
   by
   dsimp [is_special, flip]
   rw [mul_comm u.x, mul_comm u.zp, add_comm u.zp]
-#align pnat.xgcd_type.flip_is_special PNat.XgcdType.flip_is_special
+#align pnat.xgcd_type.flip_is_special PNat.XgcdType.flip_isSpecial
+-/
 
+#print PNat.XgcdType.flip_v /-
 theorem flip_v : (flip u).V = u.V.swap := by
   dsimp [v]
   ext
@@ -224,12 +284,16 @@ theorem flip_v : (flip u).V = u.V.swap := by
   · simp only
     ring
 #align pnat.xgcd_type.flip_v PNat.XgcdType.flip_v
+-/
 
+#print PNat.XgcdType.rq_eq /-
 /-- Properties of division with remainder for a / b.  -/
 theorem rq_eq : u.R + (u.bp + 1) * u.q = u.ap + 1 :=
   Nat.mod_add_div (u.ap + 1) (u.bp + 1)
 #align pnat.xgcd_type.rq_eq PNat.XgcdType.rq_eq
+-/
 
+#print PNat.XgcdType.qp_eq /-
 theorem qp_eq (hr : u.R = 0) : u.q = u.qp + 1 :=
   by
   by_cases hq : u.q = 0
@@ -238,7 +302,9 @@ theorem qp_eq (hr : u.R = 0) : u.q = u.qp + 1 :=
     cases h
   · exact (Nat.succ_pred_eq_of_pos (Nat.pos_of_ne_zero hq)).symm
 #align pnat.xgcd_type.qp_eq PNat.XgcdType.qp_eq
+-/
 
+#print PNat.XgcdType.start /-
 /-- The following function provides the starting point for
  our algorithm.  We will apply an iterative reduction process
  to it, which will produce a system satisfying is_reduced.
@@ -247,13 +313,17 @@ theorem qp_eq (hr : u.R = 0) : u.q = u.qp + 1 :=
 def start (a b : ℕ+) : XgcdType :=
   ⟨0, 0, 0, 0, a - 1, b - 1⟩
 #align pnat.xgcd_type.start PNat.XgcdType.start
+-/
 
-theorem start_is_special (a b : ℕ+) : (start a b).IsSpecial :=
+#print PNat.XgcdType.start_isSpecial /-
+theorem start_isSpecial (a b : ℕ+) : (start a b).IsSpecial :=
   by
   dsimp [start, is_special]
   rfl
-#align pnat.xgcd_type.start_is_special PNat.XgcdType.start_is_special
+#align pnat.xgcd_type.start_is_special PNat.XgcdType.start_isSpecial
+-/
 
+#print PNat.XgcdType.start_v /-
 theorem start_v (a b : ℕ+) : (start a b).V = ⟨a, b⟩ :=
   by
   dsimp [start, v, xgcd_type.a, xgcd_type.b, w, z]
@@ -261,24 +331,32 @@ theorem start_v (a b : ℕ+) : (start a b).V = ⟨a, b⟩ :=
   rw [← Nat.pred_eq_sub_one, ← Nat.pred_eq_sub_one]
   rw [Nat.succ_pred_eq_of_pos a.pos, Nat.succ_pred_eq_of_pos b.pos]
 #align pnat.xgcd_type.start_v PNat.XgcdType.start_v
+-/
 
+#print PNat.XgcdType.finish /-
 def finish : XgcdType :=
   XgcdType.mk u.wp ((u.wp + 1) * u.qp + u.x) u.y (u.y * u.qp + u.zp) u.bp u.bp
 #align pnat.xgcd_type.finish PNat.XgcdType.finish
+-/
 
-theorem finish_is_reduced : u.finish.IsReduced :=
+#print PNat.XgcdType.finish_isReduced /-
+theorem finish_isReduced : u.finish.IsReduced :=
   by
   dsimp [is_reduced]
   rfl
-#align pnat.xgcd_type.finish_is_reduced PNat.XgcdType.finish_is_reduced
+#align pnat.xgcd_type.finish_is_reduced PNat.XgcdType.finish_isReduced
+-/
 
-theorem finish_is_special (hs : u.IsSpecial) : u.finish.IsSpecial :=
+#print PNat.XgcdType.finish_isSpecial /-
+theorem finish_isSpecial (hs : u.IsSpecial) : u.finish.IsSpecial :=
   by
   dsimp [is_special, finish] at hs⊢
   rw [add_mul _ _ u.y, add_comm _ (u.x * u.y), ← hs]
   ring
-#align pnat.xgcd_type.finish_is_special PNat.XgcdType.finish_is_special
+#align pnat.xgcd_type.finish_is_special PNat.XgcdType.finish_isSpecial
+-/
 
+#print PNat.XgcdType.finish_v /-
 theorem finish_v (hr : u.R = 0) : u.finish.V = u.V :=
   by
   let ha : u.r + u.b * u.q = u.a := u.rq_eq
@@ -292,13 +370,17 @@ theorem finish_v (hr : u.R = 0) : u.finish.V = u.V :=
     rw [← ha, u.qp_eq hr]
     ring
 #align pnat.xgcd_type.finish_v PNat.XgcdType.finish_v
+-/
 
+#print PNat.XgcdType.step /-
 /-- This is the main reduction step, which is used when u.r ≠ 0, or
  equivalently b does not divide a. -/
 def step : XgcdType :=
   XgcdType.mk (u.y * u.q + u.zp) u.y ((u.wp + 1) * u.q + u.x) u.wp u.bp (u.R - 1)
 #align pnat.xgcd_type.step PNat.XgcdType.step
+-/
 
+#print PNat.XgcdType.step_wf /-
 /-- We will apply the above step recursively.  The following result
  is used to ensure that the process terminates. -/
 theorem step_wf (hr : u.R ≠ 0) : SizeOf.sizeOf u.step < SizeOf.sizeOf u :=
@@ -309,14 +391,18 @@ theorem step_wf (hr : u.R ≠ 0) : SizeOf.sizeOf u.step < SizeOf.sizeOf u :=
   rw [← h₀] at h₁
   exact lt_of_succ_lt_succ h₁
 #align pnat.xgcd_type.step_wf PNat.XgcdType.step_wf
+-/
 
-theorem step_is_special (hs : u.IsSpecial) : u.step.IsSpecial :=
+#print PNat.XgcdType.step_isSpecial /-
+theorem step_isSpecial (hs : u.IsSpecial) : u.step.IsSpecial :=
   by
   dsimp [is_special, step] at hs⊢
   rw [mul_add, mul_comm u.y u.x, ← hs]
   ring
-#align pnat.xgcd_type.step_is_special PNat.XgcdType.step_is_special
+#align pnat.xgcd_type.step_is_special PNat.XgcdType.step_isSpecial
+-/
 
+#print PNat.XgcdType.step_v /-
 /-- The reduction step does not change the product vector. -/
 theorem step_v (hr : u.R ≠ 0) : u.step.V = u.V.swap :=
   by
@@ -330,7 +416,9 @@ theorem step_v (hr : u.R ≠ 0) : u.step.V = u.V.swap :=
     rw [← ha, hr]
     ring
 #align pnat.xgcd_type.step_v PNat.XgcdType.step_v
+-/
 
+#print PNat.XgcdType.reduce /-
 /-- We can now define the full reduction function, which applies
  step as long as possible, and then applies finish. Note that the
  "have" statement puts a fact in the local context, and the
@@ -344,22 +432,28 @@ def reduce : XgcdType → XgcdType
       have : SizeOf.sizeOf u.step < SizeOf.sizeOf u := u.step_wf h
       flip (reduce u.step)
 #align pnat.xgcd_type.reduce PNat.XgcdType.reduce
+-/
 
+#print PNat.XgcdType.reduce_a /-
 theorem reduce_a {u : XgcdType} (h : u.R = 0) : u.reduce = u.finish :=
   by
   rw [reduce]
   simp only
   rw [if_pos h]
 #align pnat.xgcd_type.reduce_a PNat.XgcdType.reduce_a
+-/
 
+#print PNat.XgcdType.reduce_b /-
 theorem reduce_b {u : XgcdType} (h : u.R ≠ 0) : u.reduce = u.step.reduce.flip :=
   by
   rw [reduce]
   simp only
   rw [if_neg h, step]
 #align pnat.xgcd_type.reduce_b PNat.XgcdType.reduce_b
+-/
 
-theorem reduce_reduced : ∀ u : XgcdType, u.reduce.IsReduced
+#print PNat.XgcdType.reduce_isReduced /-
+theorem reduce_isReduced : ∀ u : XgcdType, u.reduce.IsReduced
   | u =>
     dite (u.R = 0)
       (fun h => by
@@ -369,13 +463,17 @@ theorem reduce_reduced : ∀ u : XgcdType, u.reduce.IsReduced
       have : SizeOf.sizeOf u.step < SizeOf.sizeOf u := u.step_wf h
       rw [reduce_b h, flip_is_reduced]
       apply reduce_reduced
-#align pnat.xgcd_type.reduce_reduced PNat.XgcdType.reduce_reduced
+#align pnat.xgcd_type.reduce_reduced PNat.XgcdType.reduce_isReduced
+-/
 
-theorem reduce_reduced' (u : XgcdType) : u.reduce.IsReduced' :=
-  (is_reduced_iff _).mp u.reduce_reduced
-#align pnat.xgcd_type.reduce_reduced' PNat.XgcdType.reduce_reduced'
+#print PNat.XgcdType.reduce_isReduced' /-
+theorem reduce_isReduced' (u : XgcdType) : u.reduce.IsReduced' :=
+  (isReduced_iff _).mp u.reduce_reduced
+#align pnat.xgcd_type.reduce_reduced' PNat.XgcdType.reduce_isReduced'
+-/
 
-theorem reduce_special : ∀ u : XgcdType, u.IsSpecial → u.reduce.IsSpecial
+#print PNat.XgcdType.reduce_isSpecial /-
+theorem reduce_isSpecial : ∀ u : XgcdType, u.IsSpecial → u.reduce.IsSpecial
   | u =>
     dite (u.R = 0)
       (fun h hs => by
@@ -385,12 +483,16 @@ theorem reduce_special : ∀ u : XgcdType, u.IsSpecial → u.reduce.IsSpecial
       have : SizeOf.sizeOf u.step < SizeOf.sizeOf u := u.step_wf h
       rw [reduce_b h]
       exact (flip_is_special _).mpr (reduce_special _ (u.step_is_special hs))
-#align pnat.xgcd_type.reduce_special PNat.XgcdType.reduce_special
+#align pnat.xgcd_type.reduce_special PNat.XgcdType.reduce_isSpecial
+-/
 
-theorem reduce_special' (u : XgcdType) (hs : u.IsSpecial) : u.reduce.IsSpecial' :=
-  (is_special_iff _).mp (u.reduce_special hs)
-#align pnat.xgcd_type.reduce_special' PNat.XgcdType.reduce_special'
+#print PNat.XgcdType.reduce_isSpecial' /-
+theorem reduce_isSpecial' (u : XgcdType) (hs : u.IsSpecial) : u.reduce.IsSpecial' :=
+  (isSpecial_iff _).mp (u.reduce_special hs)
+#align pnat.xgcd_type.reduce_special' PNat.XgcdType.reduce_isSpecial'
+-/
 
+#print PNat.XgcdType.reduce_v /-
 theorem reduce_v : ∀ u : XgcdType, u.reduce.V = u.V
   | u =>
     dite (u.R = 0) (fun h => by rw [reduce_a h, finish_v u h]) fun h =>
@@ -398,6 +500,7 @@ theorem reduce_v : ∀ u : XgcdType, u.reduce.V = u.V
       have : SizeOf.sizeOf u.step < SizeOf.sizeOf u := u.step_wf h
       rw [reduce_b h, flip_v, reduce_v (step u), step_v u h, Prod.swap_swap]
 #align pnat.xgcd_type.reduce_v PNat.XgcdType.reduce_v
+-/
 
 end XgcdType
 
@@ -405,50 +508,76 @@ section Gcd
 
 variable (a b : ℕ+)
 
+#print PNat.xgcd /-
 def xgcd : XgcdType :=
   (XgcdType.start a b).reduce
 #align pnat.xgcd PNat.xgcd
+-/
 
+#print PNat.gcdD /-
 def gcdD : ℕ+ :=
   (xgcd a b).a
 #align pnat.gcd_d PNat.gcdD
+-/
 
+#print PNat.gcdW /-
 def gcdW : ℕ+ :=
   (xgcd a b).w
 #align pnat.gcd_w PNat.gcdW
+-/
 
+#print PNat.gcdX /-
 def gcdX : ℕ :=
   (xgcd a b).x
 #align pnat.gcd_x PNat.gcdX
+-/
 
+#print PNat.gcdY /-
 def gcdY : ℕ :=
   (xgcd a b).y
 #align pnat.gcd_y PNat.gcdY
+-/
 
+#print PNat.gcdZ /-
 def gcdZ : ℕ+ :=
   (xgcd a b).z
 #align pnat.gcd_z PNat.gcdZ
+-/
 
+#print PNat.gcdA' /-
 def gcdA' : ℕ+ :=
   succPNat ((xgcd a b).wp + (xgcd a b).x)
 #align pnat.gcd_a' PNat.gcdA'
+-/
 
+#print PNat.gcdB' /-
 def gcdB' : ℕ+ :=
   succPNat ((xgcd a b).y + (xgcd a b).zp)
 #align pnat.gcd_b' PNat.gcdB'
+-/
 
-theorem gcd_a'_coe : (gcdA' a b : ℕ) = gcdW a b + gcdX a b :=
+#print PNat.gcdA'_coe /-
+theorem gcdA'_coe : (gcdA' a b : ℕ) = gcdW a b + gcdX a b :=
   by
   dsimp [gcd_a', gcd_x, gcd_w, xgcd_type.w]
   rw [Nat.succ_eq_add_one, Nat.succ_eq_add_one, add_right_comm]
-#align pnat.gcd_a'_coe PNat.gcd_a'_coe
+#align pnat.gcd_a'_coe PNat.gcdA'_coe
+-/
 
-theorem gcd_b'_coe : (gcdB' a b : ℕ) = gcdY a b + gcdZ a b :=
+#print PNat.gcdB'_coe /-
+theorem gcdB'_coe : (gcdB' a b : ℕ) = gcdY a b + gcdZ a b :=
   by
   dsimp [gcd_b', gcd_y, gcd_z, xgcd_type.z]
   rw [Nat.succ_eq_add_one, Nat.succ_eq_add_one, add_assoc]
-#align pnat.gcd_b'_coe PNat.gcd_b'_coe
+#align pnat.gcd_b'_coe PNat.gcdB'_coe
+-/
 
+/- warning: pnat.gcd_props -> PNat.gcd_props is a dubious translation:
+lean 3 declaration is
+  forall (a : PNat) (b : PNat), let d : PNat := PNat.gcdD a b; let w : PNat := PNat.gcdW a b; let x : Nat := PNat.gcdX a b; let y : Nat := PNat.gcdY a b; let z : PNat := PNat.gcdZ a b; let a' : PNat := PNat.gcdA' a b; let b' : PNat := PNat.gcdB' a b; And (Eq.{1} PNat (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat PNat.hasMul) w z) (Nat.succPNat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) x y))) (And (Eq.{1} PNat a (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat PNat.hasMul) a' d)) (And (Eq.{1} PNat b (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat PNat.hasMul) b' d)) (And (Eq.{1} PNat (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat PNat.hasMul) z a') (Nat.succPNat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) x ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) b')))) (And (Eq.{1} PNat (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat PNat.hasMul) w b') (Nat.succPNat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) y ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) a')))) (And (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) z) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) a)) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) x ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) b)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) d))) (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) w) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) b)) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) y ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) a)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) d))))))))
+but is expected to have type
+  forall (a : PNat) (b : PNat), let d : PNat := PNat.gcdD a b; let w : PNat := PNat.gcdW a b; let x : Nat := PNat.gcdX a b; let y : Nat := PNat.gcdY a b; let z : PNat := PNat.gcdZ a b; let a' : PNat := PNat.gcdA' a b; let b' : PNat := PNat.gcdB' a b; And (Eq.{1} PNat (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat instPNatMul) w z) (Nat.succPNat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) x y))) (And (Eq.{1} PNat a (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat instPNatMul) a' d)) (And (Eq.{1} PNat b (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat instPNatMul) b' d)) (And (Eq.{1} PNat (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat instPNatMul) z a') (Nat.succPNat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) x (PNat.val b')))) (And (Eq.{1} PNat (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat instPNatMul) w b') (Nat.succPNat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) y (PNat.val a')))) (And (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) (PNat.val z) (PNat.val a)) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) x (PNat.val b)) (PNat.val d))) (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) (PNat.val w) (PNat.val b)) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) y (PNat.val a)) (PNat.val d))))))))
+Case conversion may be inaccurate. Consider using '#align pnat.gcd_props PNat.gcd_propsₓ'. -/
 theorem gcd_props :
     let d := gcdD a b
     let w := gcdW a b
@@ -504,6 +633,7 @@ theorem gcd_props :
   constructor <;> ring
 #align pnat.gcd_props PNat.gcd_props
 
+#print PNat.gcd_eq /-
 theorem gcd_eq : gcdD a b = gcd a b :=
   by
   rcases gcd_props a b with ⟨h₀, h₁, h₂, h₃, h₄, h₅, h₆⟩
@@ -517,34 +647,69 @@ theorem gcd_eq : gcdD a b = gcd a b :=
     rw [dvd_iff]
     exact (Nat.dvd_add_iff_right h₈).mpr h₇
 #align pnat.gcd_eq PNat.gcd_eq
+-/
 
+/- warning: pnat.gcd_det_eq -> PNat.gcd_det_eq is a dubious translation:
+lean 3 declaration is
+  forall (a : PNat) (b : PNat), Eq.{1} PNat (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat PNat.hasMul) (PNat.gcdW a b) (PNat.gcdZ a b)) (Nat.succPNat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) (PNat.gcdX a b) (PNat.gcdY a b)))
+but is expected to have type
+  forall (a : PNat) (b : PNat), Eq.{1} PNat (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat instPNatMul) (PNat.gcdW a b) (PNat.gcdZ a b)) (Nat.succPNat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) (PNat.gcdX a b) (PNat.gcdY a b)))
+Case conversion may be inaccurate. Consider using '#align pnat.gcd_det_eq PNat.gcd_det_eqₓ'. -/
 theorem gcd_det_eq : gcdW a b * gcdZ a b = succPNat (gcdX a b * gcdY a b) :=
   (gcd_props a b).1
 #align pnat.gcd_det_eq PNat.gcd_det_eq
 
+/- warning: pnat.gcd_a_eq -> PNat.gcd_a_eq is a dubious translation:
+lean 3 declaration is
+  forall (a : PNat) (b : PNat), Eq.{1} PNat a (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat PNat.hasMul) (PNat.gcdA' a b) (PNat.gcd a b))
+but is expected to have type
+  forall (a : PNat) (b : PNat), Eq.{1} PNat a (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat instPNatMul) (PNat.gcdA' a b) (PNat.gcd a b))
+Case conversion may be inaccurate. Consider using '#align pnat.gcd_a_eq PNat.gcd_a_eqₓ'. -/
 theorem gcd_a_eq : a = gcdA' a b * gcd a b :=
   gcd_eq a b ▸ (gcd_props a b).2.1
 #align pnat.gcd_a_eq PNat.gcd_a_eq
 
+/- warning: pnat.gcd_b_eq -> PNat.gcd_b_eq is a dubious translation:
+lean 3 declaration is
+  forall (a : PNat) (b : PNat), Eq.{1} PNat b (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat PNat.hasMul) (PNat.gcdB' a b) (PNat.gcd a b))
+but is expected to have type
+  forall (a : PNat) (b : PNat), Eq.{1} PNat b (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat instPNatMul) (PNat.gcdB' a b) (PNat.gcd a b))
+Case conversion may be inaccurate. Consider using '#align pnat.gcd_b_eq PNat.gcd_b_eqₓ'. -/
 theorem gcd_b_eq : b = gcdB' a b * gcd a b :=
   gcd_eq a b ▸ (gcd_props a b).2.2.1
 #align pnat.gcd_b_eq PNat.gcd_b_eq
 
+/- warning: pnat.gcd_rel_left' -> PNat.gcd_rel_left' is a dubious translation:
+lean 3 declaration is
+  forall (a : PNat) (b : PNat), Eq.{1} PNat (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat PNat.hasMul) (PNat.gcdZ a b) (PNat.gcdA' a b)) (Nat.succPNat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) (PNat.gcdX a b) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) (PNat.gcdB' a b))))
+but is expected to have type
+  forall (a : PNat) (b : PNat), Eq.{1} PNat (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat instPNatMul) (PNat.gcdZ a b) (PNat.gcdA' a b)) (Nat.succPNat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) (PNat.gcdX a b) (PNat.val (PNat.gcdB' a b))))
+Case conversion may be inaccurate. Consider using '#align pnat.gcd_rel_left' PNat.gcd_rel_left'ₓ'. -/
 theorem gcd_rel_left' : gcdZ a b * gcdA' a b = succPNat (gcdX a b * gcdB' a b) :=
   (gcd_props a b).2.2.2.1
 #align pnat.gcd_rel_left' PNat.gcd_rel_left'
 
+/- warning: pnat.gcd_rel_right' -> PNat.gcd_rel_right' is a dubious translation:
+lean 3 declaration is
+  forall (a : PNat) (b : PNat), Eq.{1} PNat (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat PNat.hasMul) (PNat.gcdW a b) (PNat.gcdB' a b)) (Nat.succPNat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) (PNat.gcdY a b) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) (PNat.gcdA' a b))))
+but is expected to have type
+  forall (a : PNat) (b : PNat), Eq.{1} PNat (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat instPNatMul) (PNat.gcdW a b) (PNat.gcdB' a b)) (Nat.succPNat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) (PNat.gcdY a b) (PNat.val (PNat.gcdA' a b))))
+Case conversion may be inaccurate. Consider using '#align pnat.gcd_rel_right' PNat.gcd_rel_right'ₓ'. -/
 theorem gcd_rel_right' : gcdW a b * gcdB' a b = succPNat (gcdY a b * gcdA' a b) :=
   (gcd_props a b).2.2.2.2.1
 #align pnat.gcd_rel_right' PNat.gcd_rel_right'
 
+#print PNat.gcd_rel_left /-
 theorem gcd_rel_left : (gcdZ a b * a : ℕ) = gcdX a b * b + gcd a b :=
   gcd_eq a b ▸ (gcd_props a b).2.2.2.2.2.1
 #align pnat.gcd_rel_left PNat.gcd_rel_left
+-/
 
+#print PNat.gcd_rel_right /-
 theorem gcd_rel_right : (gcdW a b * b : ℕ) = gcdY a b * a + gcd a b :=
   gcd_eq a b ▸ (gcd_props a b).2.2.2.2.2.2
 #align pnat.gcd_rel_right PNat.gcd_rel_right
+-/
 
 end Gcd
 

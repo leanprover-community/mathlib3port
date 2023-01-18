@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.order.monoid.with_top
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -113,7 +113,7 @@ section Add
 variable [Add α] {a b c d : WithTop α} {x y : α}
 
 instance : Add (WithTop α) :=
-  ⟨fun o₁ o₂ => o₁.bind fun a => o₂.map <| (· + ·) a⟩
+  ⟨Option.map₂ (· + ·)⟩
 
 #print WithTop.coe_add /-
 @[norm_cast]
@@ -395,28 +395,16 @@ protected theorem map_add {F} [Add β] [AddHomClass F α β] (f : F) (a b : With
 end Add
 
 instance [AddSemigroup α] : AddSemigroup (WithTop α) :=
-  { WithTop.add with
-    add_assoc := by
-      repeat' refine' WithTop.recTopCoe _ _ <;> try intro <;> simp [← WithTop.coe_add, add_assoc] }
+  { WithTop.add with add_assoc := fun _ _ _ => Option.map₂_assoc add_assoc }
 
 instance [AddCommSemigroup α] : AddCommSemigroup (WithTop α) :=
-  { WithTop.addSemigroup with
-    add_comm := by
-      repeat' refine' WithTop.recTopCoe _ _ <;> try intro <;> simp [← WithTop.coe_add, add_comm] }
+  { WithTop.addSemigroup with add_comm := fun _ _ => Option.map₂_comm add_comm }
 
 instance [AddZeroClass α] : AddZeroClass (WithTop α) :=
   { WithTop.hasZero,
     WithTop.add with
-    zero_add := by
-      refine' WithTop.recTopCoe _ _
-      · simp
-      · intro
-        rw [← WithTop.coe_zero, ← WithTop.coe_add, zero_add]
-    add_zero := by
-      refine' WithTop.recTopCoe _ _
-      · simp
-      · intro
-        rw [← WithTop.coe_zero, ← WithTop.coe_add, add_zero] }
+    zero_add := Option.map₂_left_identity zero_add
+    add_zero := Option.map₂_right_identity add_zero }
 
 instance [AddMonoid α] : AddMonoid (WithTop α) :=
   { WithTop.addZeroClass, WithTop.hasZero, WithTop.addSemigroup with }

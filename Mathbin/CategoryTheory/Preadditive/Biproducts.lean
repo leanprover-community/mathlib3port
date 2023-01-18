@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.preadditive.biproducts
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -446,7 +446,7 @@ def binaryBiconeIsBilimitOfColimitCoconeOfIsColimit {X Y : C} {t : Cocone (pair 
     (ht : IsColimit t) : (BinaryBicone.ofColimitCocone ht).IsBilimit :=
   isBinaryBilimitOfIsColimit (BinaryBicone.ofColimitCocone ht) <|
     IsColimit.ofIsoColimit ht <|
-      (Cocones.ext (Iso.refl _)) fun j => by
+      Cocones.ext (Iso.refl _) fun j => by
         rcases j with ⟨⟨⟩⟩
         tidy
 #align
@@ -554,9 +554,8 @@ def isBilimitBinaryBiconeOfIsSplitMonoOfCokernel {X Y : C} {f : X ⟶ Y} [IsSpli
 def BinaryBicone.isBilimitOfKernelInl {X Y : C} (b : BinaryBicone X Y)
     (hb : IsLimit b.sndKernelFork) : b.IsBilimit :=
   isBinaryBilimitOfIsLimit _ <|
-    (BinaryFan.IsLimit.mk _ (fun T f g => f ≫ b.inl + g ≫ b.inr) (fun T f g => by simp) fun T f g =>
-        by simp)
-      fun T f g m h₁ h₂ =>
+    BinaryFan.IsLimit.mk _ (fun T f g => f ≫ b.inl + g ≫ b.inr) (fun T f g => by simp)
+      (fun T f g => by simp) fun T f g m h₁ h₂ =>
       by
       have h₁' : (m - (f ≫ b.inl + g ≫ b.inr)) ≫ b.fst = 0 := by simpa using sub_eq_zero.2 h₁
       have h₂' : (m - (f ≫ b.inl + g ≫ b.inr)) ≫ b.snd = 0 := by simpa using sub_eq_zero.2 h₂
@@ -572,9 +571,8 @@ def BinaryBicone.isBilimitOfKernelInl {X Y : C} (b : BinaryBicone X Y)
 def BinaryBicone.isBilimitOfKernelInr {X Y : C} (b : BinaryBicone X Y)
     (hb : IsLimit b.fstKernelFork) : b.IsBilimit :=
   isBinaryBilimitOfIsLimit _ <|
-    (BinaryFan.IsLimit.mk _ (fun T f g => f ≫ b.inl + g ≫ b.inr) (fun t f g => by simp) fun t f g =>
-        by simp)
-      fun T f g m h₁ h₂ =>
+    BinaryFan.IsLimit.mk _ (fun T f g => f ≫ b.inl + g ≫ b.inr) (fun t f g => by simp)
+      (fun t f g => by simp) fun T f g m h₁ h₂ =>
       by
       have h₁' : (m - (f ≫ b.inl + g ≫ b.inr)) ≫ b.fst = 0 := by simpa using sub_eq_zero.2 h₁
       have h₂' : (m - (f ≫ b.inl + g ≫ b.inr)) ≫ b.snd = 0 := by simpa using sub_eq_zero.2 h₂
@@ -590,9 +588,8 @@ def BinaryBicone.isBilimitOfKernelInr {X Y : C} (b : BinaryBicone X Y)
 def BinaryBicone.isBilimitOfCokernelFst {X Y : C} (b : BinaryBicone X Y)
     (hb : IsColimit b.inrCokernelCofork) : b.IsBilimit :=
   isBinaryBilimitOfIsColimit _ <|
-    (BinaryCofan.IsColimit.mk _ (fun T f g => b.fst ≫ f + b.snd ≫ g) (fun T f g => by simp)
-        fun T f g => by simp)
-      fun T f g m h₁ h₂ =>
+    BinaryCofan.IsColimit.mk _ (fun T f g => b.fst ≫ f + b.snd ≫ g) (fun T f g => by simp)
+      (fun T f g => by simp) fun T f g m h₁ h₂ =>
       by
       have h₁' : b.inl ≫ (m - (b.fst ≫ f + b.snd ≫ g)) = 0 := by simpa using sub_eq_zero.2 h₁
       have h₂' : b.inr ≫ (m - (b.fst ≫ f + b.snd ≫ g)) = 0 := by simpa using sub_eq_zero.2 h₂
@@ -608,9 +605,8 @@ def BinaryBicone.isBilimitOfCokernelFst {X Y : C} (b : BinaryBicone X Y)
 def BinaryBicone.isBilimitOfCokernelSnd {X Y : C} (b : BinaryBicone X Y)
     (hb : IsColimit b.inlCokernelCofork) : b.IsBilimit :=
   isBinaryBilimitOfIsColimit _ <|
-    (BinaryCofan.IsColimit.mk _ (fun T f g => b.fst ≫ f + b.snd ≫ g) (fun T f g => by simp)
-        fun T f g => by simp)
-      fun T f g m h₁ h₂ =>
+    BinaryCofan.IsColimit.mk _ (fun T f g => b.fst ≫ f + b.snd ≫ g) (fun T f g => by simp)
+      (fun T f g => by simp) fun T f g m h₁ h₂ =>
       by
       have h₁' : b.inl ≫ (m - (b.fst ≫ f + b.snd ≫ g)) = 0 := by simpa using sub_eq_zero.2 h₁
       have h₂' : b.inr ≫ (m - (b.fst ≫ f + b.snd ≫ g)) = 0 := by simpa using sub_eq_zero.2 h₂

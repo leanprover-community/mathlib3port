@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jannis Limperg
 
 ! This file was ported from Lean 3 source module tactic.induction
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -225,7 +225,7 @@ unsafe def get_index_occurrences (num_params : ℕ) (ret_type : expr) : tactic (
         if i < num_params then pure occ_map
           else do
             let ret_arg_consts := ret_arg
-            (ret_arg_consts occ_map) fun c occ_map => do
+            ret_arg_consts occ_map fun c occ_map => do
                 let ret_arg_type ← infer_type ret_arg
                 let eq ← index_occurrence_type_match c ret_arg_type
                 pure <| if Eq then occ_map c i else occ_map)
@@ -1165,7 +1165,7 @@ unsafe def eliminate_hyp (generate_ihs : Bool) (major_premise : expr)
     rec_app : Name → pexpr := fun rec_suffix =>
       (unchecked_cast expr.mk_app : pexpr → List pexpr → pexpr)
         (pexpr.mk_explicit (const (iname ++ rec_suffix) []))
-        (List.repeat pexpr.mk_placeholder (major_premise_args.length + 1) ++
+        (List.replicate (major_premise_args.length + 1) pexpr.mk_placeholder ++
           [to_pexpr major_premise])
     let rec_suffix := if generate_ihs then "rec_on" else "cases_on"
     let drec_suffix := if generate_ihs then "drec_on" else "dcases_on"

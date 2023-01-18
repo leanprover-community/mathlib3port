@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module combinatorics.composition
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -152,7 +152,7 @@ def blocksFun : Fin c.length → ℕ := fun i => nthLe c.blocks i i.2
 #align composition.blocks_fun Composition.blocksFun
 
 theorem of_fn_blocks_fun : ofFn c.blocksFun = c.blocks :=
-  of_fn_nth_le _
+  ofFn_nthLe _
 #align composition.of_fn_blocks_fun Composition.of_fn_blocks_fun
 
 theorem sum_blocks_fun : (∑ i, c.blocksFun i) = n := by
@@ -492,7 +492,7 @@ theorem sigma_eq_iff_blocks_eq {c : Σn, Composition n} {c' : Σn, Composition n
 
 /-- The composition made of blocks all of size `1`. -/
 def ones (n : ℕ) : Composition n :=
-  ⟨repeat (1 : ℕ) n, fun i hi => by simp [List.eq_of_mem_repeat hi], by simp⟩
+  ⟨replicate n (1 : ℕ), fun i hi => by simp [List.eq_of_mem_replicate hi], by simp⟩
 #align composition.ones Composition.ones
 
 instance {n : ℕ} : Inhabited (Composition n) :=
@@ -500,11 +500,11 @@ instance {n : ℕ} : Inhabited (Composition n) :=
 
 @[simp]
 theorem ones_length (n : ℕ) : (ones n).length = n :=
-  List.length_repeat 1 n
+  List.length_replicate n 1
 #align composition.ones_length Composition.ones_length
 
 @[simp]
-theorem ones_blocks (n : ℕ) : (ones n).blocks = repeat (1 : ℕ) n :=
+theorem ones_blocks (n : ℕ) : (ones n).blocks = replicate n (1 : ℕ) :=
   rfl
 #align composition.ones_blocks Composition.ones_blocks
 
@@ -515,7 +515,7 @@ theorem ones_blocks_fun (n : ℕ) (i : Fin (ones n).length) : (ones n).blocksFun
 
 @[simp]
 theorem ones_size_up_to (n : ℕ) (i : ℕ) : (ones n).sizeUpTo i = min i n := by
-  simp [size_up_to, ones_blocks, take_repeat]
+  simp [size_up_to, ones_blocks, take_replicate]
 #align composition.ones_size_up_to Composition.ones_size_up_to
 
 @[simp]
@@ -530,10 +530,10 @@ theorem eq_ones_iff {c : Composition n} : c = ones n ↔ ∀ i ∈ c.blocks, i =
   by
   constructor
   · rintro rfl
-    exact fun i => eq_of_mem_repeat
+    exact fun i => eq_of_mem_replicate
   · intro H
     ext1
-    have A : c.blocks = repeat 1 c.blocks.length := eq_repeat_of_mem H
+    have A : c.blocks = replicate c.blocks.length 1 := eq_replicate_of_mem H
     have : c.blocks.length = n := by
       conv_rhs => rw [← c.blocks_sum, A]
       simp
@@ -801,7 +801,7 @@ def compositionAsSetEquiv (n : ℕ) : CompositionAsSet n ≃ Finset (Fin (n - 1)
   left_inv := by
     intro c
     ext i
-    simp only [exists_prop, add_comm, Set.mem_to_finset, true_or_iff, or_true_iff, Set.mem_setOf_eq]
+    simp only [exists_prop, add_comm, Set.mem_toFinset, true_or_iff, or_true_iff, Set.mem_setOf_eq]
     constructor
     · rintro (rfl | rfl | ⟨j, hj1, hj2⟩)
       · exact c.zero_mem
@@ -831,8 +831,8 @@ def compositionAsSetEquiv (n : ℕ) : CompositionAsSet n ≃ Finset (Fin (n - 1)
       rw [add_comm]
       apply (Nat.succ_pred_eq_of_pos _).symm
       exact (zero_le i.val).trans_lt (i.2.trans_le (Nat.sub_le n 1))
-    simp only [Fin.ext_iff, exists_prop, Fin.val_zero, add_comm, Set.mem_to_finset,
-      Set.mem_setOf_eq, Fin.val_last]
+    simp only [Fin.ext_iff, exists_prop, Fin.val_zero, add_comm, Set.mem_toFinset, Set.mem_setOf_eq,
+      Fin.val_last]
     erw [Set.mem_setOf_eq]
     simp only [this, false_or_iff, add_right_inj, add_eq_zero_iff, one_ne_zero, false_and_iff,
       Fin.val_mk]
@@ -928,7 +928,7 @@ def blocks (c : CompositionAsSet n) : List ℕ :=
 
 @[simp]
 theorem blocks_length : c.blocks.length = c.length :=
-  length_of_fn _
+  length_ofFn _
 #align composition_as_set.blocks_length CompositionAsSet.blocks_length
 
 theorem blocks_partial_sum {i : ℕ} (h : i < c.boundaries.card) :

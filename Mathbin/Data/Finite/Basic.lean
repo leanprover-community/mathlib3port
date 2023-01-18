@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 
 ! This file was ported from Lean 3 source module data.finite.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -150,7 +150,7 @@ instance Function.Embedding.finite {α β : Sort _} [Finite β] : Finite (α ↪
 #align function.embedding.finite Function.Embedding.finite
 
 instance Equiv.finite_right {α β : Sort _} [Finite β] : Finite (α ≃ β) :=
-  (Finite.of_injective Equiv.toEmbedding) fun e₁ e₂ h => Equiv.ext <| by convert FunLike.congr_fun h
+  Finite.of_injective Equiv.toEmbedding fun e₁ e₂ h => Equiv.ext <| by convert FunLike.congr_fun h
 #align equiv.finite_right Equiv.finite_right
 
 instance Equiv.finite_left {α β : Sort _} [Finite α] : Finite (α ≃ β) :=

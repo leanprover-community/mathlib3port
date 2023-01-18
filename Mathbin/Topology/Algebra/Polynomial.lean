@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module topology.algebra.polynomial
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,7 +52,7 @@ variable {R S : Type _} [Semiring R] [TopologicalSpace R] [TopologicalSemiring R
 protected theorem continuous_eval₂ [Semiring S] (p : S[X]) (f : S →+* R) :
     Continuous fun x => p.eval₂ f x :=
   by
-  dsimp only [eval₂_eq_sum, Finsupp.sum]
+  simp only [eval₂_eq_sum, Finsupp.sum]
   exact continuous_finset_sum _ fun c hc => continuous_const.mul (continuous_pow _)
 #align polynomial.continuous_eval₂ Polynomial.continuous_eval₂
 
@@ -177,7 +177,7 @@ theorem coeff_le_of_roots_le {p : F[X]} {f : F →+* K} {B : ℝ} (i : ℕ) (h1 
     positivity
   rw [coeff_eq_esymm_roots_of_splits ((splits_id_iff_splits f).2 h2) hi, (h1.map _).leadingCoeff,
     one_mul, norm_mul, norm_pow, norm_neg, norm_one, one_pow, one_mul]
-  apply ((norm_multiset_sum_le _).trans <| (sum_le_card_nsmul _ _) fun r hr => _).trans
+  apply ((norm_multiset_sum_le _).trans <| sum_le_card_nsmul _ _ fun r hr => _).trans
   ·
     rw [Multiset.map_map, card_map, card_powerset_len, ← nat_degree_eq_card_roots' h2,
       Nat.choose_symm hi, mul_comm, nsmul_eq_mul]
@@ -187,7 +187,7 @@ theorem coeff_le_of_roots_le {p : F[X]} {f : F →+* K} {B : ℝ} (i : ℕ) (h1 
   lift B to ℝ≥0 using hB
   rw [← coe_nnnorm, ← Nnreal.coe_pow, Nnreal.coe_le_coe, ← nnnorm_hom_apply, ← MonoidHom.coe_coe,
     MonoidHom.map_multiset_prod]
-  refine' ((prod_le_pow_card _ B) fun x hx => _).trans_eq (by rw [card_map, hs.2])
+  refine' (prod_le_pow_card _ B fun x hx => _).trans_eq (by rw [card_map, hs.2])
   obtain ⟨z, hz, rfl⟩ := Multiset.mem_map.1 hx
   exact h3 z (mem_of_le hs.1 hz)
 #align polynomial.coeff_le_of_roots_le Polynomial.coeff_le_of_roots_le

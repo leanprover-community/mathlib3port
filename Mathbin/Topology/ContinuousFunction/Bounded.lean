@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Mario Carneiro, Yury Kudryashov, Heather Macbeth
 
 ! This file was ported from Lean 3 source module topology.continuous_function.bounded
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -177,7 +177,7 @@ theorem dist_set_exists : ∃ C, 0 ≤ C ∧ ∀ x : α, dist (f x) (g x) ≤ C 
 
 /-- The pointwise distance is controlled by the distance between functions, by definition. -/
 theorem dist_coe_le_dist (x : α) : dist (f x) (g x) ≤ dist f g :=
-  (le_cinfₛ dist_set_exists) fun b hb => hb.2 x
+  le_cinfₛ dist_set_exists fun b hb => hb.2 x
 #align bounded_continuous_function.dist_coe_le_dist BoundedContinuousFunction.dist_coe_le_dist
 
 /- This lemma will be needed in the proof of the metric space instance, but it will become
@@ -268,7 +268,7 @@ theorem dist_zero_of_empty [IsEmpty α] : dist f g = 0 := by
 
 theorem dist_eq_supr : dist f g = ⨆ x : α, dist (f x) (g x) :=
   by
-  cases isEmpty_or_nonempty α; · rw [supᵢ_of_empty', Real.Sup_empty, dist_zero_of_empty]
+  cases isEmpty_or_nonempty α; · rw [supᵢ_of_empty', Real.supₛ_empty, dist_zero_of_empty]
   refine' (dist_le_iff_of_nonempty.mpr <| le_csupᵢ _).antisymm (csupᵢ_le dist_coe_le_dist)
   exact dist_set_exists.imp fun C hC => forall_range_iff.2 hC.2
 #align bounded_continuous_function.dist_eq_supr BoundedContinuousFunction.dist_eq_supr
@@ -991,13 +991,13 @@ instance [Nonempty α] [One β] [NormOneClass β] : NormOneClass (α →ᵇ β)
 /-- The pointwise opposite of a bounded continuous function is again bounded continuous. -/
 instance : Neg (α →ᵇ β) :=
   ⟨fun f =>
-    (ofNormedAddCommGroup (-f) f.Continuous.neg ‖f‖) fun x =>
+    ofNormedAddCommGroup (-f) f.Continuous.neg ‖f‖ fun x =>
       trans_rel_right _ (norm_neg _) (f.norm_coe_le_norm x)⟩
 
 /-- The pointwise difference of two bounded continuous functions is again bounded continuous. -/
 instance : Sub (α →ᵇ β) :=
   ⟨fun f g =>
-    (ofNormedAddCommGroup (f - g) (f.Continuous.sub g.Continuous) (‖f‖ + ‖g‖)) fun x =>
+    ofNormedAddCommGroup (f - g) (f.Continuous.sub g.Continuous) (‖f‖ + ‖g‖) fun x =>
       by
       simp only [sub_eq_add_neg]
       exact
@@ -1316,7 +1316,7 @@ variable [NonUnitalSemiNormedRing R]
 
 instance : Mul (α →ᵇ R)
     where mul f g :=
-    (ofNormedAddCommGroup (f * g) (f.Continuous.mul g.Continuous) (‖f‖ * ‖g‖)) fun x =>
+    ofNormedAddCommGroup (f * g) (f.Continuous.mul g.Continuous) (‖f‖ * ‖g‖) fun x =>
       le_trans (norm_mul_le (f x) (g x)) <|
         mul_le_mul (f.norm_coe_le_norm x) (g.norm_coe_le_norm x) (norm_nonneg _) (norm_nonneg _)
 

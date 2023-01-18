@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Martin Dvorak, Kyle Miller, Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.cross_product
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -105,7 +105,7 @@ theorem dot_cross_self (v w : Fin 3 → R) : w ⬝ᵥ v ×₃ w = 0 := by
 theorem triple_product_permutation (u v w : Fin 3 → R) : u ⬝ᵥ v ×₃ w = v ⬝ᵥ w ×₃ u :=
   by
   simp only [cross_apply, vec3_dot_product, Matrix.head_cons, Matrix.cons_vec_bit0_eq_alt0,
-    Matrix.empty_append, Matrix.cons_val_one, Matrix.cons_vec_alt0, Matrix.cons_append,
+    Matrix.empty_vec_append, Matrix.cons_val_one, Matrix.cons_vec_alt0, Matrix.cons_vec_append,
     Matrix.cons_val_zero]
   ring
 #align triple_product_permutation triple_product_permutation
@@ -116,8 +116,8 @@ theorem triple_product_eq_det (u v w : Fin 3 → R) : u ⬝ᵥ v ×₃ w = Matri
   by
   simp only [vec3_dot_product, cross_apply, Matrix.det_fin_three, Matrix.head_cons,
     Matrix.cons_vec_bit0_eq_alt0, Matrix.empty_vec_alt0, Matrix.cons_vec_alt0,
-    Matrix.vec_head_vec_alt0, Fin.fin_append_apply_zero, Matrix.empty_append, Matrix.cons_append,
-    Matrix.cons_val', Matrix.cons_val_one, Matrix.cons_val_zero]
+    Matrix.vec_head_vec_alt0, Matrix.vec_append_apply_zero, Matrix.empty_vec_append,
+    Matrix.cons_vec_append, Matrix.cons_val', Matrix.cons_val_one, Matrix.cons_val_zero]
   ring
 #align triple_product_eq_det triple_product_eq_det
 
@@ -125,8 +125,8 @@ theorem triple_product_eq_det (u v w : Fin 3 → R) : u ⬝ᵥ v ×₃ w = Matri
 theorem cross_dot_cross (u v w x : Fin 3 → R) :
     u ×₃ v ⬝ᵥ w ×₃ x = u ⬝ᵥ w * v ⬝ᵥ x - u ⬝ᵥ x * v ⬝ᵥ w :=
   by
-  simp only [vec3_dot_product, cross_apply, cons_append, cons_vec_bit0_eq_alt0, cons_val_one,
-    cons_vec_alt0, LinearMap.mk₂_apply, cons_val_zero, head_cons, empty_append]
+  simp only [vec3_dot_product, cross_apply, cons_vec_append, cons_vec_bit0_eq_alt0, cons_val_one,
+    cons_vec_alt0, LinearMap.mk₂_apply, cons_val_zero, head_cons, empty_vec_append]
   ring_nf
 #align cross_dot_cross cross_dot_cross
 

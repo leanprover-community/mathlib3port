@@ -5,7 +5,7 @@ Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Sébasti
   Rémy Degenne, David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.special_functions.pow
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -298,8 +298,7 @@ theorem ContinuousOn.cpow (hf : ContinuousOn f s) (hg : ContinuousOn g s)
 #align continuous_on.cpow ContinuousOn.cpow
 
 theorem ContinuousOn.const_cpow {b : ℂ} (hf : ContinuousOn f s) (h : b ≠ 0 ∨ ∀ a ∈ s, f a ≠ 0) :
-    ContinuousOn (fun x => b ^ f x) s := fun a ha =>
-  (hf a ha).const_cpow ((h.imp id) fun h => h a ha)
+    ContinuousOn (fun x => b ^ f x) s := fun a ha => (hf a ha).const_cpow (h.imp id fun h => h a ha)
 #align continuous_on.const_cpow ContinuousOn.const_cpow
 
 theorem Continuous.cpow (hf : Continuous f) (hg : Continuous g)
@@ -309,7 +308,7 @@ theorem Continuous.cpow (hf : Continuous f) (hg : Continuous g)
 
 theorem Continuous.const_cpow {b : ℂ} (hf : Continuous f) (h : b ≠ 0 ∨ ∀ a, f a ≠ 0) :
     Continuous fun x => b ^ f x :=
-  continuous_iff_continuous_at.2 fun a => hf.ContinuousAt.const_cpow <| (h.imp id) fun h => h a
+  continuous_iff_continuous_at.2 fun a => hf.ContinuousAt.const_cpow <| h.imp id fun h => h a
 #align continuous.const_cpow Continuous.const_cpow
 
 theorem ContinuousOn.cpow_const {b : ℂ} (hf : ContinuousOn f s)
@@ -536,7 +535,7 @@ theorem is_O_cpow_rpow (hl : IsBoundedUnder (· ≤ ·) l fun x => |(g x).im|) :
     (fun x => f x ^ g x) =O[l] fun x => abs (f x) ^ (g x).re :=
   calc
     (fun x => f x ^ g x) =O[l] fun x => abs (f x) ^ (g x).re / Real.exp (arg (f x) * im (g x)) :=
-      (is_O_of_le _) fun x => (abs_cpow_le _ _).trans (le_abs_self _)
+      is_O_of_le _ fun x => (abs_cpow_le _ _).trans (le_abs_self _)
     _ =Θ[l] fun x => abs (f x) ^ (g x).re / (1 : ℝ) :=
       (is_Theta_refl _ _).div (is_Theta_exp_arg_mul_im hl)
     _ =ᶠ[l] fun x => abs (f x) ^ (g x).re := by simp only [of_real_one, div_one]
@@ -673,16 +672,16 @@ theorem rpow_add_int {x : ℝ} (hx : x ≠ 0) (y : ℝ) (n : ℤ) : x ^ (y + n) 
     Complex.of_real_mul_re, ← rpow_def, mul_comm]
 #align real.rpow_add_int Real.rpow_add_int
 
-theorem rpow_add_nat {x : ℝ} (hx : x ≠ 0) (y : ℝ) (n : ℕ) : x ^ (y + n) = x ^ y * x ^ n :=
-  rpow_add_int hx y n
+theorem rpow_add_nat {x : ℝ} (hx : x ≠ 0) (y : ℝ) (n : ℕ) : x ^ (y + n) = x ^ y * x ^ n := by
+  simpa using rpow_add_int hx y n
 #align real.rpow_add_nat Real.rpow_add_nat
 
 theorem rpow_sub_int {x : ℝ} (hx : x ≠ 0) (y : ℝ) (n : ℤ) : x ^ (y - n) = x ^ y / x ^ n := by
   simpa using rpow_add_int hx y (-n)
 #align real.rpow_sub_int Real.rpow_sub_int
 
-theorem rpow_sub_nat {x : ℝ} (hx : x ≠ 0) (y : ℝ) (n : ℕ) : x ^ (y - n) = x ^ y / x ^ n :=
-  rpow_sub_int hx y n
+theorem rpow_sub_nat {x : ℝ} (hx : x ≠ 0) (y : ℝ) (n : ℕ) : x ^ (y - n) = x ^ y / x ^ n := by
+  simpa using rpow_sub_int hx y n
 #align real.rpow_sub_nat Real.rpow_sub_nat
 
 theorem rpow_add_one {x : ℝ} (hx : x ≠ 0) (y : ℝ) : x ^ (y + 1) = x ^ y * x := by
@@ -700,8 +699,7 @@ theorem rpow_int_cast (x : ℝ) (n : ℤ) : x ^ (n : ℝ) = x ^ n := by
 #align real.rpow_int_cast Real.rpow_int_cast
 
 @[simp, norm_cast]
-theorem rpow_nat_cast (x : ℝ) (n : ℕ) : x ^ (n : ℝ) = x ^ n :=
-  rpow_int_cast x n
+theorem rpow_nat_cast (x : ℝ) (n : ℕ) : x ^ (n : ℝ) = x ^ n := by simpa using rpow_int_cast x n
 #align real.rpow_nat_cast Real.rpow_nat_cast
 
 @[simp]
@@ -1102,7 +1100,7 @@ theorem Filter.Tendsto.rpow {l : Filter α} {f g : α → ℝ} {x y : ℝ} (hf :
 theorem Filter.Tendsto.rpow_const {l : Filter α} {f : α → ℝ} {x p : ℝ} (hf : Tendsto f l (𝓝 x))
     (h : x ≠ 0 ∨ 0 ≤ p) : Tendsto (fun a => f a ^ p) l (𝓝 (x ^ p)) :=
   if h0 : 0 = p then h0 ▸ by simp [tendsto_const_nhds]
-  else hf.rpow tendsto_const_nhds ((h.imp id) fun h' => h'.lt_of_ne h0)
+  else hf.rpow tendsto_const_nhds (h.imp id fun h' => h'.lt_of_ne h0)
 #align filter.tendsto.rpow_const Filter.Tendsto.rpow_const
 
 variable [TopologicalSpace α] {f g : α → ℝ} {s : Set α} {x : α} {p : ℝ}
@@ -1329,8 +1327,8 @@ theorem is_o_zpow_exp_pos_mul_at_top (k : ℤ) {b : ℝ} (hb : 0 < b) :
 
 /-- `x ^ k = o(exp(b * x))` as `x → ∞` for any natural `k` and positive `b`. -/
 theorem is_o_pow_exp_pos_mul_at_top (k : ℕ) {b : ℝ} (hb : 0 < b) :
-    (fun x : ℝ => x ^ k) =o[at_top] fun x => exp (b * x) :=
-  is_o_zpow_exp_pos_mul_at_top k hb
+    (fun x : ℝ => x ^ k) =o[at_top] fun x => exp (b * x) := by
+  simpa using is_o_zpow_exp_pos_mul_at_top k hb
 #align is_o_pow_exp_pos_mul_at_top is_o_pow_exp_pos_mul_at_top
 
 /-- `x ^ s = o(exp x)` as `x → ∞` for any real `s`. -/
@@ -1372,7 +1370,7 @@ theorem is_o_log_rpow_rpow_at_top {s : ℝ} (r : ℝ) (hs : 0 < s) :
 theorem is_o_abs_log_rpow_rpow_nhds_zero {s : ℝ} (r : ℝ) (hs : s < 0) :
     (fun x => |log x| ^ r) =o[𝓝[>] 0] fun x => x ^ s :=
   ((is_o_log_rpow_rpow_at_top r (neg_pos.2 hs)).comp_tendsto tendsto_inv_zero_at_top).congr'
-    ((mem_of_superset (Icc_mem_nhds_within_Ioi <| Set.left_mem_Ico.2 one_pos)) fun x hx => by
+    (mem_of_superset (Icc_mem_nhds_within_Ioi <| Set.left_mem_Ico.2 one_pos) fun x hx => by
       simp [abs_of_nonpos, log_nonpos hx.1 hx.2])
     (eventually_mem_nhds_within.mono fun x hx => by
       rw [Function.comp_apply, inv_rpow hx.out.le, rpow_neg hx.out.le, inv_inv])
@@ -1380,7 +1378,7 @@ theorem is_o_abs_log_rpow_rpow_nhds_zero {s : ℝ} (r : ℝ) (hs : s < 0) :
 
 theorem is_o_log_rpow_nhds_zero {r : ℝ} (hr : r < 0) : log =o[𝓝[>] 0] fun x => x ^ r :=
   (is_o_abs_log_rpow_rpow_nhds_zero 1 hr).neg_left.congr'
-    ((mem_of_superset (Icc_mem_nhds_within_Ioi <| Set.left_mem_Ico.2 one_pos)) fun x hx => by
+    (mem_of_superset (Icc_mem_nhds_within_Ioi <| Set.left_mem_Ico.2 one_pos) fun x hx => by
       simp [abs_of_nonpos (log_nonpos hx.1 hx.2)])
     EventuallyEq.rfl
 #align is_o_log_rpow_nhds_zero is_o_log_rpow_nhds_zero
@@ -1804,7 +1802,7 @@ namespace Nnreal
 
 theorem continuous_at_rpow_const {x : ℝ≥0} {y : ℝ} (h : x ≠ 0 ∨ 0 ≤ y) :
     ContinuousAt (fun z => z ^ y) x :=
-  (h.elim fun h => tendsto_id.nnrpow tendsto_const_nhds (Or.inl h)) fun h =>
+  h.elim (fun h => tendsto_id.nnrpow tendsto_const_nhds (Or.inl h)) fun h =>
     h.eq_or_lt.elim (fun h => h ▸ by simp only [rpow_zero, continuous_at_const]) fun h =>
       tendsto_id.nnrpow tendsto_const_nhds (Or.inr h)
 #align nnreal.continuous_at_rpow_const Nnreal.continuous_at_rpow_const

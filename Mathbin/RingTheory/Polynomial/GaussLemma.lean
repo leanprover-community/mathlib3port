@@ -4,12 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.gauss_lemma
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.RingTheory.Int.Basic
+import Mathbin.FieldTheory.SplittingField
 import Mathbin.RingTheory.Localization.Integral
+import Mathbin.RingTheory.IntegrallyClosed
 
 /-!
 # Gauss's Lemma
@@ -17,12 +19,18 @@ import Mathbin.RingTheory.Localization.Integral
 Gauss's Lemma is one of a few results pertaining to irreducibility of primitive polynomials.
 
 ## Main Results
+ - `polynomial.monic.irreducible_iff_irreducible_map_fraction_map`:
+  A monic polynomial over an integrally closed domain is irreducible iff it is irreducible in a
+    fraction field
+ - `is_integrally_closed_iff'`:
+   Integrally closed domains are precisely the domains for in which Gauss's lemma holds
+    for monic polynomials
  - `polynomial.is_primitive.irreducible_iff_irreducible_map_fraction_map`:
-  A primitive polynomial is irreducible iff it is irreducible in a fraction field.
+  A primitive polynomial over a GCD domain is irreducible iff it is irreducible in a fraction field
  - `polynomial.is_primitive.int.irreducible_iff_irreducible_map_cast`:
   A primitive polynomial over `ℤ` is irreducible iff it is irreducible over `ℚ`.
  - `polynomial.is_primitive.dvd_iff_fraction_map_dvd_fraction_map`:
-  Two primitive polynomials divide each other iff they do in a fraction field.
+  Two primitive polynomials over a GCD domain divide each other iff they do in a fraction field.
  - `polynomial.is_primitive.int.dvd_iff_map_cast_dvd_map_cast`:
   Two primitive polynomials over `ℤ` divide each other if they do in `ℚ`.
 
@@ -31,19 +39,15 @@ Gauss's Lemma is one of a few results pertaining to irreducibility of primitive 
 
 open nonZeroDivisors Polynomial
 
-variable {R : Type _} [CommRing R] [IsDomain R]
+variable {R : Type _} [CommRing R]
 
 namespace Polynomial
 
-section NormalizedGCDMonoid
-
-variable [NormalizedGCDMonoid R]
-
 section
 
-variable {S : Type _} [CommRing S] [IsDomain S] {φ : R →+* S} (hinj : Function.Injective φ)
+variable {S : Type _} [CommRing S] [IsDomain S]
 
-variable {f : R[X]} (hf : f.IsPrimitive)
+variable {φ : R →+* S} (hinj : Function.Injective φ) {f : R[X]} (hf : f.IsPrimitive)
 
 include hinj hf
 
@@ -53,22 +57,19 @@ theorem IsPrimitive.is_unit_iff_is_unit_map_of_injective : IsUnit f ↔ IsUnit (
   rcases is_unit_iff.1 h with ⟨_, ⟨u, rfl⟩, hu⟩
   have hdeg := degree_C u.ne_zero
   rw [hu, degree_map_eq_of_injective hinj] at hdeg
-  rw [eq_C_of_degree_eq_zero hdeg, is_primitive_iff_content_eq_one, content_C, normalize_eq_one] at
-    hf
-  rwa [eq_C_of_degree_eq_zero hdeg, is_unit_C]
+  rw [eq_C_of_degree_eq_zero hdeg] at hf⊢
+  exact is_unit_C.mpr (is_primitive_iff_is_unit_of_C_dvd.mp hf (f.coeff 0) dvd_rfl)
 #align
   polynomial.is_primitive.is_unit_iff_is_unit_map_of_injective Polynomial.IsPrimitive.is_unit_iff_is_unit_map_of_injective
 
 theorem IsPrimitive.irreducible_of_irreducible_map_of_injective (h_irr : Irreducible (map φ f)) :
     Irreducible f :=
   by
-  refine' ⟨fun h => h_irr.not_unit (IsUnit.map (map_ring_hom φ) h), _⟩
-  intro a b h
-  rcases h_irr.is_unit_or_is_unit (by rw [h, Polynomial.map_mul]) with (hu | hu)
-  · left
-    rwa [(hf.is_primitive_of_dvd (Dvd.intro _ h.symm)).is_unit_iff_is_unit_map_of_injective hinj]
-  right
-  rwa [(hf.is_primitive_of_dvd (Dvd.intro_left _ h.symm)).is_unit_iff_is_unit_map_of_injective hinj]
+  refine'
+    ⟨fun h => h_irr.not_unit (IsUnit.map (map_ring_hom φ) h), fun a b h =>
+      (h_irr.is_unit_or_is_unit <| by rw [h, Polynomial.map_mul]).imp _ _⟩
+  all_goals apply ((is_primitive_of_dvd hf _).is_unit_iff_is_unit_map_of_injective hinj).mpr
+  exacts[Dvd.intro _ h.symm, Dvd.intro_left _ h.symm]
 #align
   polynomial.is_primitive.irreducible_of_irreducible_map_of_injective Polynomial.IsPrimitive.irreducible_of_irreducible_map_of_injective
 
@@ -84,7 +85,76 @@ theorem IsPrimitive.is_unit_iff_is_unit_map {p : R[X]} (hp : p.IsPrimitive) :
 #align
   polynomial.is_primitive.is_unit_iff_is_unit_map Polynomial.IsPrimitive.is_unit_iff_is_unit_map
 
+variable [IsDomain R]
+
+section IsIntegrallyClosed
+
+open IsIntegrallyClosed
+
+/-- **Gauss's Lemma** for integrally closed domains states that a monic polynomial is irreducible
+  iff it is irreducible in the fraction field. -/
+theorem Monic.irreducible_iff_irreducible_map_fraction_map [IsIntegrallyClosed R] {p : R[X]}
+    (h : p.Monic) : Irreducible p ↔ Irreducible (p.map <| algebraMap R K) :=
+  by
+  /- The ← direction follows from `is_primitive.irreducible_of_irreducible_map_of_injective`.
+       For the → direction, it is enought to show that if `(p.map $ algebra_map R K) = a * b` and
+       `a` is not a unit then `b` is a unit -/
+  refine'
+    ⟨fun hp =>
+      irreducible_iff.mpr
+        ⟨hp.not_unit.imp h.is_primitive.is_unit_iff_is_unit_map.mpr, fun a b H =>
+          or_iff_not_imp_left.mpr fun hₐ => _⟩,
+      fun hp =>
+      h.is_primitive.irreducible_of_irreducible_map_of_injective (IsFractionRing.injective R K) hp⟩
+  obtain ⟨a', ha⟩ := eq_map_mul_C_of_dvd K h (dvd_of_mul_right_eq b H.symm)
+  obtain ⟨b', hb⟩ := eq_map_mul_C_of_dvd K h (dvd_of_mul_left_eq a H.symm)
+  have : a.leading_coeff * b.leading_coeff = 1 := by
+    rw [← leading_coeff_mul, ← H, monic.leading_coeff (h.map <| algebraMap R K)]
+  rw [← ha, ← hb, mul_comm _ (C b.leading_coeff), mul_assoc, ← mul_assoc (C a.leading_coeff), ←
+    C_mul, this, C_1, one_mul, ← Polynomial.map_mul] at H
+  rw [← hb, ← Polynomial.coe_map_ring_hom]
+  refine'
+    IsUnit.mul (IsUnit.map _ (Or.resolve_left (hp.is_unit_or_is_unit _) (show ¬IsUnit a' from _)))
+      (is_unit_iff_exists_inv'.mpr
+        (Exists.intro (C a.leading_coeff) <| by rwa [← C_mul, this, C_1]))
+  · exact Polynomial.map_injective _ (IsFractionRing.injective R K) H
+  · by_contra h_contra
+    refine' hₐ _
+    rw [← ha, ← Polynomial.coe_map_ring_hom]
+    exact
+      IsUnit.mul (IsUnit.map _ h_contra)
+        (is_unit_iff_exists_inv.mpr
+          (Exists.intro (C b.leading_coeff) <| by rwa [← C_mul, this, C_1]))
+#align
+  polynomial.monic.irreducible_iff_irreducible_map_fraction_map Polynomial.Monic.irreducible_iff_irreducible_map_fraction_map
+
+/-- Integrally closed domains are precisely the domains for in which Gauss's lemma holds
+    for monic polynomials -/
+theorem is_integrally_closed_iff' :
+    IsIntegrallyClosed R ↔
+      ∀ p : R[X], p.Monic → (Irreducible p ↔ Irreducible (p.map <| algebraMap R K)) :=
+  by
+  constructor
+  · intro hR p hp
+    letI := hR
+    exact monic.irreducible_iff_irreducible_map_fraction_map hp
+  · intro H
+    refine'
+      (is_integrally_closed_iff K).mpr fun x hx =>
+        ring_hom.mem_range.mp <| minpoly.mem_range_of_degree_eq_one R x _
+    rw [← monic.degree_map (minpoly.monic hx) (algebraMap R K)]
+    apply
+      degree_eq_one_of_irreducible_of_root ((H _ <| minpoly.monic hx).mp (minpoly.irreducible hx))
+    rw [is_root, eval_map, ← aeval_def, minpoly.aeval R x]
+#align polynomial.is_integrally_closed_iff' Polynomial.is_integrally_closed_iff'
+
+end IsIntegrallyClosed
+
 open IsLocalization
+
+section NormalizedGCDMonoid
+
+variable [NormalizedGCDMonoid R]
 
 theorem is_unit_or_eq_zero_of_is_unit_integer_normalization_prim_part {p : K[X]} (h0 : p ≠ 0)
     (h : IsUnit (integerNormalization R⁰ p).primPart) : IsUnit p :=
@@ -106,8 +176,8 @@ theorem is_unit_or_eq_zero_of_is_unit_integer_normalization_prim_part {p : K[X]}
 #align
   polynomial.is_unit_or_eq_zero_of_is_unit_integer_normalization_prim_part Polynomial.is_unit_or_eq_zero_of_is_unit_integer_normalization_prim_part
 
-/-- **Gauss's Lemma** states that a primitive polynomial is irreducible iff it is irreducible in the
-  fraction field. -/
+/-- **Gauss's Lemma** for GCD domains states that a primitive polynomial is irreducible iff it is
+  irreducible in the fraction field. -/
 theorem IsPrimitive.irreducible_iff_irreducible_map_fraction_map {p : R[X]} (hp : p.IsPrimitive) :
     Irreducible p ↔ Irreducible (p.map (algebraMap R K)) :=
   by
@@ -187,6 +257,8 @@ theorem IsPrimitive.dvd_iff_fraction_map_dvd_fraction_map {p q : R[X]} (hp : p.I
 #align
   polynomial.is_primitive.dvd_iff_fraction_map_dvd_fraction_map Polynomial.IsPrimitive.dvd_iff_fraction_map_dvd_fraction_map
 
+end NormalizedGCDMonoid
+
 end FractionMap
 
 /-- **Gauss's Lemma** for `ℤ` states that a primitive integer polynomial is irreducible iff it is
@@ -202,8 +274,6 @@ theorem IsPrimitive.Int.dvd_iff_map_cast_dvd_map_cast (p q : ℤ[X]) (hp : p.IsP
   hp.dvd_iff_fraction_map_dvd_fraction_map ℚ hq
 #align
   polynomial.is_primitive.int.dvd_iff_map_cast_dvd_map_cast Polynomial.IsPrimitive.Int.dvd_iff_map_cast_dvd_map_cast
-
-end NormalizedGCDMonoid
 
 end Polynomial
 

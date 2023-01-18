@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.factors
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -181,21 +181,21 @@ theorem factors_unique {n : ℕ} {l : List ℕ} (h₁ : Prod l = n) (h₂ : ∀ 
     exact fun p => prime_of_mem_factors
 #align nat.factors_unique Nat.factors_unique
 
-theorem Prime.factors_pow {p : ℕ} (hp : p.Prime) (n : ℕ) : (p ^ n).factors = List.repeat p n :=
+theorem Prime.factors_pow {p : ℕ} (hp : p.Prime) (n : ℕ) : (p ^ n).factors = List.replicate n p :=
   by
   symm
-  rw [← List.repeat_perm]
-  apply Nat.factors_unique (List.prod_repeat p n)
+  rw [← List.replicate_perm]
+  apply Nat.factors_unique (List.prod_replicate n p)
   intro q hq
-  rwa [eq_of_mem_repeat hq]
+  rwa [eq_of_mem_replicate hq]
 #align nat.prime.factors_pow Nat.Prime.factors_pow
 
 theorem eq_prime_pow_of_unique_prime_dvd {n p : ℕ} (hpos : n ≠ 0)
     (h : ∀ {d}, Nat.Prime d → d ∣ n → d = p) : n = p ^ n.factors.length :=
   by
   set k := n.factors.length
-  rw [← prod_factors hpos, ← prod_repeat p k,
-    eq_repeat_of_mem fun d hd => h (prime_of_mem_factors hd) (dvd_of_mem_factors hd)]
+  rw [← prod_factors hpos, ← prod_replicate k p,
+    eq_replicate_of_mem fun d hd => h (prime_of_mem_factors hd) (dvd_of_mem_factors hd)]
 #align nat.eq_prime_pow_of_unique_prime_dvd Nat.eq_prime_pow_of_unique_prime_dvd
 
 /-- For positive `a` and `b`, the prime factors of `a * b` are the union of those of `a` and `b` -/
@@ -313,5 +313,5 @@ theorem eq_two_pow_or_exists_odd_prime_and_dvd (n : ℕ) :
 
 end Nat
 
-assert_not_exists multiset
+assert_not_exists Multiset
 

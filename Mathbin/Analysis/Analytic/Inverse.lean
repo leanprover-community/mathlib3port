@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.analytic.inverse
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -253,7 +253,7 @@ theorem comp_right_inv_aux2 (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[�
   refine' sum_congr rfl fun c hc => p.congr rfl fun j hj1 hj2 => _
   have : ∀ k, c.blocks_fun k < n + 2 :=
     by
-    simp only [Set.mem_to_finset, Set.mem_setOf_eq] at hc
+    simp only [Set.mem_toFinset, Set.mem_setOf_eq] at hc
     simp [← Composition.ne_single_iff N, Composition.eq_single_iff_length, ne_of_gt hc]
   simp [apply_composition, this]
 #align formal_multilinear_series.comp_right_inv_aux2 FormalMultilinearSeries.comp_right_inv_aux2
@@ -427,7 +427,7 @@ theorem radius_right_inv_pos_of_radius_pos_aux1 (n : ℕ) (p : ℕ → ℝ) (hp 
         sum_le_sum_of_subset_of_nonneg _ fun x hx1 hx2 =>
           prod_nonneg fun j hj => mul_nonneg hr (mul_nonneg (pow_nonneg ha _) (hp _))
       rintro ⟨k, c⟩ hd
-      simp only [Set.mem_to_finset, mem_Ico, mem_sigma, Set.mem_setOf_eq] at hd
+      simp only [Set.mem_toFinset, mem_Ico, mem_sigma, Set.mem_setOf_eq] at hd
       simp only [mem_comp_partial_sum_target_iff]
       refine' ⟨hd.2, c.length_le.trans_lt hd.1.2, fun j => _⟩
       have : c ≠ Composition.single k (zero_lt_two.trans_le hd.1.1) := by

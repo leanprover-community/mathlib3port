@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module linear_algebra.tensor_algebra.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -79,19 +79,20 @@ variable {M}
 
 /-- The canonical linear map `M →ₗ[R] tensor_algebra R M`.
 -/
-def ι : M →ₗ[R] TensorAlgebra R M
-    where
-  toFun m := RingQuot.mkAlgHom R _ (FreeAlgebra.ι R m)
-  map_add' x y := by
-    rw [← AlgHom.map_add]
-    exact RingQuot.mk_alg_hom_rel R rel.add
-  map_smul' r x := by
-    rw [← AlgHom.map_smul]
-    exact RingQuot.mk_alg_hom_rel R rel.smul
+irreducible_def ι : M →ₗ[R] TensorAlgebra R M :=
+  { toFun := fun m => RingQuot.mkAlgHom R _ (FreeAlgebra.ι R m)
+    map_add' := fun x y => by
+      rw [← AlgHom.map_add]
+      exact RingQuot.mk_alg_hom_rel R rel.add
+    map_smul' := fun r x => by
+      rw [← AlgHom.map_smul]
+      exact RingQuot.mk_alg_hom_rel R rel.smul }
 #align tensor_algebra.ι TensorAlgebra.ι
 
 theorem ring_quot_mk_alg_hom_free_algebra_ι_eq_ι (m : M) :
     RingQuot.mkAlgHom R (Rel R M) (FreeAlgebra.ι R m) = ι R m :=
+  by
+  rw [ι]
   rfl
 #align
   tensor_algebra.ring_quot_mk_alg_hom_free_algebra_ι_eq_ι TensorAlgebra.ring_quot_mk_alg_hom_free_algebra_ι_eq_ι
@@ -100,21 +101,27 @@ theorem ring_quot_mk_alg_hom_free_algebra_ι_eq_ι (m : M) :
 of `f` to a morphism of `R`-algebras `tensor_algebra R M → A`.
 -/
 @[simps symmApply]
-def lift {A : Type _} [Semiring A] [Algebra R A] : (M →ₗ[R] A) ≃ (TensorAlgebra R M →ₐ[R] A)
-    where
-  toFun :=
-    RingQuot.liftAlgHom R ∘ fun f =>
-      ⟨FreeAlgebra.lift R ⇑f, fun x y (h : Rel R M x y) => by
-        induction h <;> simp [Algebra.smul_def]⟩
-  invFun F := F.toLinearMap.comp (ι R)
-  left_inv f :=
-    LinearMap.ext fun x =>
-      (RingQuot.lift_alg_hom_mk_alg_hom_apply _ _ _ _).trans (FreeAlgebra.lift_ι_apply f x)
-  right_inv F :=
-    RingQuot.ring_quot_ext' _ _ _ <|
-      FreeAlgebra.hom_ext <|
-        funext fun x =>
-          (RingQuot.lift_alg_hom_mk_alg_hom_apply _ _ _ _).trans (FreeAlgebra.lift_ι_apply _ _)
+irreducible_def lift {A : Type _} [Semiring A] [Algebra R A] :
+  (M →ₗ[R] A) ≃ (TensorAlgebra R M →ₐ[R] A) :=
+  { toFun :=
+      RingQuot.liftAlgHom R ∘ fun f =>
+        ⟨FreeAlgebra.lift R ⇑f, fun x y (h : Rel R M x y) => by
+          induction h <;>
+            simp only [Algebra.smul_def, FreeAlgebra.lift_ι_apply, LinearMap.map_smulₛₗ,
+              RingHom.id_apply, map_mul, AlgHom.commutes, map_add]⟩
+    invFun := fun F => F.toLinearMap.comp (ι R)
+    left_inv := fun f => by
+      rw [ι]
+      ext1 x
+      exact (RingQuot.lift_alg_hom_mk_alg_hom_apply _ _ _ _).trans (FreeAlgebra.lift_ι_apply f x)
+    right_inv := fun F =>
+      RingQuot.ring_quot_ext' _ _ _ <|
+        FreeAlgebra.hom_ext <|
+          funext fun x => by
+            rw [ι]
+            exact
+              (RingQuot.lift_alg_hom_mk_alg_hom_apply _ _ _ _).trans
+                (FreeAlgebra.lift_ι_apply _ _) }
 #align tensor_algebra.lift TensorAlgebra.lift
 
 variable {R}
@@ -122,20 +129,24 @@ variable {R}
 @[simp]
 theorem ι_comp_lift {A : Type _} [Semiring A] [Algebra R A] (f : M →ₗ[R] A) :
     (lift R f).toLinearMap.comp (ι R) = f :=
-  (lift R).symm_apply_apply f
+  by
+  convert (lift R).symm_apply_apply f
+  simp only [lift, Equiv.coe_fn_symm_mk]
 #align tensor_algebra.ι_comp_lift TensorAlgebra.ι_comp_lift
 
 @[simp]
 theorem lift_ι_apply {A : Type _} [Semiring A] [Algebra R A] (f : M →ₗ[R] A) (x) :
     lift R f (ι R x) = f x := by
-  dsimp [lift, ι]
+  conv_rhs => rw [← ι_comp_lift f]
   rfl
 #align tensor_algebra.lift_ι_apply TensorAlgebra.lift_ι_apply
 
 @[simp]
 theorem lift_unique {A : Type _} [Semiring A] [Algebra R A] (f : M →ₗ[R] A)
     (g : TensorAlgebra R M →ₐ[R] A) : g.toLinearMap.comp (ι R) = f ↔ g = lift R f :=
-  (lift R).symm_apply_eq
+  by
+  rw [← (lift R).symm_apply_eq]
+  simp only [lift, Equiv.coe_fn_symm_mk]
 #align tensor_algebra.lift_unique TensorAlgebra.lift_unique
 
 -- Marking `tensor_algebra` irreducible makes `ring` instances inaccessible on quotients.

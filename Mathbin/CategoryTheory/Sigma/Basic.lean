@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.sigma.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -261,7 +261,7 @@ variable {I} {K : Type w₃}
 /-- The functor `sigma.map` applied to a composition is a composition of functors. -/
 @[simps]
 def mapComp (f : K → J) (g : J → I) : map (C ∘ g) f ⋙ (map C g : _) ≅ map C (g ∘ f) :=
-  (descUniq _ _) fun k =>
+  descUniq _ _ fun k =>
     (isoWhiskerRight (inclCompMap (C ∘ g) f k) (map C g : _) : _) ≪≫ inclCompMap _ _ _
 #align category_theory.sigma.map_comp CategoryTheory.Sigma.mapComp
 

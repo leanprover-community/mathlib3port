@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.finrank
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -315,7 +315,7 @@ theorem finrank_span_finset_le_card (s : Finset V) : (s : Set V).finrank K ≤ s
 theorem finrank_range_le_card {ι : Type _} [Fintype ι] {b : ι → V} :
     (Set.range b).finrank K ≤ Fintype.card ι :=
   (finrank_span_le_card _).trans <| by
-    rw [Set.to_finset_range]
+    rw [Set.toFinset_range]
     exact Finset.card_image_le
 #align finrank_range_le_card finrank_range_le_card
 

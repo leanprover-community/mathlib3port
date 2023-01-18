@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Sébastien Gouëzel, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.uniform_space.uniform_embedding
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -182,7 +182,7 @@ hence it is a `uniform_embedding`. -/
 protected theorem UniformInducing.uniform_embedding [SeparatedSpace α] {f : α → β}
     (hf : UniformInducing f) : UniformEmbedding f :=
   ⟨hf, fun x y h =>
-    (eq_of_uniformity_basis (hf.basis_uniformity (𝓤 β).basis_sets)) fun s hs =>
+    eq_of_uniformity_basis (hf.basis_uniformity (𝓤 β).basis_sets) fun s hs =>
       mem_preimage.2 <| mem_uniformity_of_eq hs h⟩
 #align uniform_inducing.uniform_embedding UniformInducing.uniform_embedding
 
@@ -396,8 +396,7 @@ theorem complete_space_extension {m : β → α} (hm : UniformInducing m) (dense
         le_infᵢ fun hs =>
           le_infᵢ fun t =>
             le_infᵢ fun ht =>
-              le_principal_iff.mpr <|
-                (mem_of_superset ht) fun x hx => ⟨x, hx, refl_mem_uniformity hs⟩
+              le_principal_iff.mpr <| mem_of_superset ht fun x hx => ⟨x, hx, refl_mem_uniformity hs⟩
     have : NeBot g := hf.left.mono this
     have : NeBot (comap m g) :=
       comap_ne_bot fun t ht =>
@@ -560,7 +559,7 @@ theorem uniform_continuous_uniformly_extend [cγ : CompleteSpace γ] : UniformCo
     by rwa [h_e.comap_uniformity.symm] at this
   let ⟨t, ht, ts⟩ := this
   show preimage (fun p : α × α => (ψ p.1, ψ p.2)) d ∈ 𝓤 α from
-    ((𝓤 α).sets_of_superset (interior_mem_uniformity ht)) fun ⟨x₁, x₂⟩ hx_t =>
+    (𝓤 α).sets_of_superset (interior_mem_uniformity ht) fun ⟨x₁, x₂⟩ hx_t =>
       have : 𝓝 (x₁, x₂) ≤ 𝓟 (interior t) := is_open_iff_nhds.mp is_open_interior (x₁, x₂) hx_t
       have : interior t ∈ 𝓝 x₁ ×ᶠ 𝓝 x₂ := by rwa [nhds_prod_eq, le_principal_iff] at this
       let ⟨m₁, hm₁, m₂, hm₂, (hm : m₁ ×ˢ m₂ ⊆ interior t)⟩ := mem_prod_iff.mp this

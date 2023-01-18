@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module data.quot
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -53,15 +53,15 @@ instance (r : α → α → Prop) [Inhabited α] : Inhabited (Quot r) :=
   ⟨⟦default⟧⟩
 
 instance [Subsingleton α] : Subsingleton (Quot ra) :=
-  ⟨fun x => Quot.induction_on x fun y => Quot.ind fun b => congr_arg _ (Subsingleton.elim _ _)⟩
+  ⟨fun x => Quot.inductionOn x fun y => Quot.ind fun b => congr_arg _ (Subsingleton.elim _ _)⟩
 
 #print Quot.hrecOn₂ /-
 /-- Recursion on two `quotient` arguments `a` and `b`, result type depends on `⟦a⟧` and `⟦b⟧`. -/
 protected def hrecOn₂ (qa : Quot ra) (qb : Quot rb) (f : ∀ a b, φ ⟦a⟧ ⟦b⟧)
     (ca : ∀ {b a₁ a₂}, ra a₁ a₂ → HEq (f a₁ b) (f a₂ b))
     (cb : ∀ {a b₁ b₂}, rb b₁ b₂ → HEq (f a b₁) (f a b₂)) : φ qa qb :=
-  (Quot.hrecOn qa fun a => Quot.hrecOn qb (f a) fun b₁ b₂ pb => cb pb) fun a₁ a₂ pa =>
-    (Quot.induction_on qb) fun b =>
+  Quot.hrecOn qa (fun a => Quot.hrecOn qb (f a) fun b₁ b₂ pb => cb pb) fun a₁ a₂ pa =>
+    Quot.inductionOn qb fun b =>
       calc
         HEq (@Quot.hrecOn _ _ (φ _) ⟦b⟧ (f a₁) (@cb _)) (f a₁ b) := by simp [heq_self_iff_true]
         HEq _ (f a₂ b) := ca pa
@@ -74,7 +74,7 @@ protected def hrecOn₂ (qa : Quot ra) (qb : Quot rb) (f : ∀ a b, φ ⟦a⟧ �
 /-- Map a function `f : α → β` such that `ra x y` implies `rb (f x) (f y)`
 to a map `quot ra → quot rb`. -/
 protected def map (f : α → β) (h : (ra ⇒ rb) f f) : Quot ra → Quot rb :=
-  (Quot.lift fun x => ⟦f x⟧) fun x y (h₁ : ra x y) => Quot.sound <| h h₁
+  Quot.lift (fun x => ⟦f x⟧) fun x y (h₁ : ra x y) => Quot.sound <| h h₁
 #align quot.map Quot.map
 -/
 
@@ -136,7 +136,7 @@ theorem surjective_lift {f : α → γ} (h : ∀ a₁ a₂, r a₁ a₂ → f a�
 protected def lift₂ (f : α → β → γ) (hr : ∀ a b₁ b₂, s b₁ b₂ → f a b₁ = f a b₂)
     (hs : ∀ a₁ a₂ b, r a₁ a₂ → f a₁ b = f a₂ b) (q₁ : Quot r) (q₂ : Quot s) : γ :=
   Quot.lift (fun a => Quot.lift (f a) (hr a))
-    (fun a₁ a₂ ha => funext fun q => Quot.induction_on q fun b => hs a₁ a₂ b ha) q₁ q₂
+    (fun a₁ a₂ ha => funext fun q => Quot.inductionOn q fun b => hs a₁ a₂ b ha) q₁ q₂
 #align quot.lift₂ Quot.lift₂
 -/
 
@@ -206,8 +206,8 @@ theorem map₂_mk (f : α → β → γ) (hr : ∀ a b₁ b₂, s b₁ b₂ → 
 protected def recOnSubsingleton₂ {φ : Quot r → Quot s → Sort _}
     [h : ∀ a b, Subsingleton (φ ⟦a⟧ ⟦b⟧)] (q₁ : Quot r) (q₂ : Quot s) (f : ∀ a b, φ ⟦a⟧ ⟦b⟧) :
     φ q₁ q₂ :=
-  (@Quot.recOnSubsingleton _ r (fun q => φ q q₂) (fun a => Quot.ind (h a) q₂) q₁) fun a =>
-    (Quot.recOnSubsingleton q₂) fun b => f a b
+  @Quot.recOnSubsingleton' _ r (fun q => φ q q₂) (fun a => Quot.ind (h a) q₂) q₁ fun a =>
+    Quot.recOnSubsingleton' q₂ fun b => f a b
 #align quot.rec_on_subsingleton₂ Quot.recOnSubsingleton₂
 -/
 
@@ -236,7 +236,7 @@ protected theorem induction_on₃ {δ : Quot r → Quot s → Quot t → Prop} (
 #align quot.induction_on₃ Quot.induction_on₃
 
 instance (r : α → α → Prop) (f : α → Prop) (h : ∀ a b, r a b → f a = f b) [hf : DecidablePred f] :
-    DecidablePred (Quot.lift f h) := fun q => Quot.recOnSubsingleton q hf
+    DecidablePred (Quot.lift f h) := fun q => Quot.recOnSubsingleton' q hf
 
 /-- Note that this provides `decidable_rel (quot.lift₂ f ha hb)` when `α = β`. -/
 instance (r : α → α → Prop) (s : β → β → Prop) (f : α → β → Prop)
@@ -369,7 +369,7 @@ theorem Quotient.eq [r : Setoid α] {x y : α} : ⟦x⟧ = ⟦y⟧ ↔ x ≈ y :
 #print forall_quotient_iff /-
 theorem forall_quotient_iff {α : Type _} [r : Setoid α] {p : Quotient r → Prop} :
     (∀ a : Quotient r, p a) ↔ ∀ a : α, p ⟦a⟧ :=
-  ⟨fun h x => h _, fun h a => a.induction_on h⟩
+  ⟨fun h x => h _, fun h a => a.inductionOn h⟩
 #align forall_quotient_iff forall_quotient_iff
 -/
 
@@ -571,7 +571,7 @@ end Pi
 
 #print nonempty_quotient_iff /-
 theorem nonempty_quotient_iff (s : Setoid α) : Nonempty (Quotient s) ↔ Nonempty α :=
-  ⟨fun ⟨a⟩ => Quotient.induction_on a Nonempty.intro, fun ⟨a⟩ => ⟨⟦a⟧⟩⟩
+  ⟨fun ⟨a⟩ => Quotient.inductionOn a Nonempty.intro, fun ⟨a⟩ => ⟨⟦a⟧⟩⟩
 #align nonempty_quotient_iff nonempty_quotient_iff
 -/
 
@@ -656,7 +656,7 @@ Case conversion may be inaccurate. Consider using '#align trunc.induction_on₂ 
 @[elab_as_elim]
 protected theorem induction_on₂ {C : Trunc α → Trunc β → Prop} (q₁ : Trunc α) (q₂ : Trunc β)
     (h : ∀ a b, C (mk a) (mk b)) : C q₁ q₂ :=
-  (Trunc.induction_on q₁) fun a₁ => Trunc.induction_on q₂ (h a₁)
+  Trunc.induction_on q₁ fun a₁ => Trunc.induction_on q₂ (h a₁)
 #align trunc.induction_on₂ Trunc.induction_on₂
 
 #print Trunc.eq /-
@@ -845,7 +845,7 @@ of an instance argument. -/
 @[elab_as_elim]
 protected theorem inductionOn' {p : Quotient s₁ → Prop} (q : Quotient s₁)
     (h : ∀ a, p (Quotient.mk' a)) : p q :=
-  Quotient.induction_on q h
+  Quotient.inductionOn q h
 #align quotient.induction_on' Quotient.inductionOn'
 -/
 

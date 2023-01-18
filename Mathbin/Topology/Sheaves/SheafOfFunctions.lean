@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Scott Morrison
 
 ! This file was ported from Lean 3 source module topology.sheaves.sheaf_of_functions
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,7 +57,7 @@ In fact, the proof is identical when we do this for dependent functions to a typ
 so we do the more general case.
 -/
 theorem to_Types_is_sheaf (T : X → Type u) : (presheafToTypes X T).IsSheaf :=
-  (is_sheaf_of_is_sheaf_unique_gluing_types _) fun ι U sf hsf =>
+  is_sheaf_of_is_sheaf_unique_gluing_types _ fun ι U sf hsf =>
     -- We use the sheaf condition in terms of unique gluing
   -- U is a family of open sets, indexed by `ι` and `sf` is a compatible family of sections.
   -- In the informal comments below, I'll just write `U` to represent the union.

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module tactic.itauto
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -378,7 +378,7 @@ unsafe def context :=
 
 /-- Debug printer for the context. -/
 unsafe def context.to_format (Γ : context) : format :=
-  (Γ.fold "") fun P p f =>
+  Γ.fold "" fun P p f =>
     -- ++ " := " ++ p.to_format
           P.to_format ++
         ",\n" ++
@@ -458,7 +458,7 @@ unsafe def search (prove : context → Prop → ℕ → Bool × proof × ℕ) :
     | some p => (true, p, n)
     | none =>
       let search₁ :=
-        (Γ.fold none) fun A p r =>
+        Γ.fold none fun A p r =>
           match r with
           | some r => some r
           | none =>
@@ -735,8 +735,8 @@ open Itauto
   propositions `a`.
 -/
 unsafe def itauto (use_dec use_classical : Bool) (extra_dec : List expr) : tactic Unit :=
-  (using_new_ref mkBuffer) fun atoms =>
-    (using_new_ref mk_name_map) fun hs => do
+  using_new_ref mkBuffer fun atoms =>
+    using_new_ref mk_name_map fun hs => do
       let t ← target
       let t ← condM (is_prop t) (reify atoms t) (tactic.exfalso $> prop.false)
       let hyps ← local_context
@@ -775,14 +775,14 @@ unsafe def itauto (use_dec use_classical : Bool) (extra_dec : List expr) : tacti
             let decided :=
               match Γ with
               | Except.ok Γ =>
-                (Γ.fold native.mk_rb_set) fun p _ m =>
+                Γ.fold native.mk_rb_set fun p _ m =>
                   match p with
                   | prop.var i => m.insert i
                   | prop.not (prop.var i) => m.insert i
                   | _ => m
               | Except.error _ => native.mk_rb_set
             read_ref atoms >>= fun ats =>
-                (ats.2.iterate (pure decs)) fun i e r =>
+                ats.2.iterate (pure decs) fun i e r =>
                   if decided i.1 then r else r >>= fun decs => add_dec ff decs e
           else pure decs
       let Γ ←

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module probability.martingale.borel_cantelli
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -324,7 +324,7 @@ theorem process_zero : process s 0 = 0 := by rw [process, Finset.range_zero, Fin
 #align measure_theory.borel_cantelli.process_zero MeasureTheory.BorelCantelli.process_zero
 
 theorem adapted_process (hs : ∀ n, measurable_set[ℱ n] (s n)) : Adapted ℱ (process s) := fun n =>
-  (Finset.strongly_measurable_sum' _) fun k hk =>
+  Finset.strongly_measurable_sum' _ fun k hk =>
     strongly_measurable_one.indicator <| ℱ.mono (Finset.mem_range.1 hk) _ <| hs _
 #align measure_theory.borel_cantelli.adapted_process MeasureTheory.BorelCantelli.adapted_process
 
@@ -362,7 +362,7 @@ theorem process_difference_le (s : ℕ → Set Ω) (ω : Ω) (n : ℕ) :
 
 theorem integrableProcess (μ : Measure Ω) [IsFiniteMeasure μ] (hs : ∀ n, measurable_set[ℱ n] (s n))
     (n : ℕ) : Integrable (process s n) μ :=
-  (integrableFinsetSum' _) fun k hk =>
+  integrableFinsetSum' _ fun k hk =>
     IntegrableOn.integrableIndicator (integrableConst 1) <| ℱ.le _ _ <| hs _
 #align
   measure_theory.borel_cantelli.integrable_process MeasureTheory.BorelCantelli.integrableProcess
@@ -401,7 +401,7 @@ theorem tendsto_sum_indicator_at_top_iff [IsFiniteMeasure μ]
     simp only [martingale_part, sub_eq_add_neg] at hω₁
     exact
       hω₁
-        ((tendsto_at_top_add_right_of_le _ (-b) (tendsto_neg_at_bot_iff.1 ht)) fun n =>
+        (tendsto_at_top_add_right_of_le _ (-b) (tendsto_neg_at_bot_iff.1 ht) fun n =>
           neg_le_neg (hbdd ⟨n, rfl⟩))
   · refine' tendsto_at_top_at_top_of_monotone' (monotone_nat_of_le_succ hω₄) _
     rintro ⟨b, hbdd⟩

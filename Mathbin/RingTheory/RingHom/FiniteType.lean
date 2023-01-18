@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.ring_hom.finite_type
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -89,7 +89,7 @@ theorem finite_type_of_localization_span_target : OfLocalizationSpanTarget @Fini
       rw [Finset.coe_union, Finset.coe_image]
       exact Or.inr (Set.mem_image_of_mem _ (finsupp.mem_support_iff.mpr h))
     · intro r
-      rw [Finset.coe_union, Finset.coe_union, Finset.coe_bUnion]
+      rw [Finset.coe_union, Finset.coe_union, Finset.coe_bunionᵢ]
       -- Since all `sᵢ` and numerators of `t r` are in the algebra, it suffices to show that the
       -- image of `x` in `Sᵣ` falls in the `R`-adjoin of `t r`, which is of course true.
       obtain ⟨⟨_, n₂, rfl⟩, hn₂⟩ :=

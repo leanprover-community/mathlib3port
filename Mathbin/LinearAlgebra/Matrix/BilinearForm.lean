@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Kexing Ying
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.bilinear_form
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -571,8 +571,7 @@ theorem Matrix.Nondegenerate.toBilin' {M : Matrix ι ι R₃} (h : M.Nondegenera
 @[simp]
 theorem Matrix.nondegenerate_to_bilin'_iff {M : Matrix ι ι R₃} :
     M.toBilin'.Nondegenerate ↔ M.Nondegenerate :=
-  ⟨fun h v hv => (h v) fun w => (M.to_bilin'_apply' _ _).trans <| hv w,
-    Matrix.Nondegenerate.toBilin'⟩
+  ⟨fun h v hv => h v fun w => (M.to_bilin'_apply' _ _).trans <| hv w, Matrix.Nondegenerate.toBilin'⟩
 #align matrix.nondegenerate_to_bilin'_iff Matrix.nondegenerate_to_bilin'_iff
 
 theorem Matrix.Nondegenerate.toBilin {M : Matrix ι ι R₃} (h : M.Nondegenerate) (b : Basis ι R₃ M₃) :

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.block
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -169,8 +169,8 @@ theorem det_to_square_block_id (M : Matrix m m R) (i : m) : (M.toSquareBlock id 
 
 theorem det_to_block (M : Matrix m m R) (p : m → Prop) [DecidablePred p] :
     M.det =
-      (fromBlocks (toBlock M p p) ((toBlock M p) fun j => ¬p j) (toBlock M (fun j => ¬p j) p) <|
-          (toBlock M fun j => ¬p j) fun j => ¬p j).det :=
+      (fromBlocks (toBlock M p p) (toBlock M p fun j => ¬p j) (toBlock M (fun j => ¬p j) p) <|
+          toBlock M (fun j => ¬p j) fun j => ¬p j).det :=
   by
   rw [← Matrix.det_reindex_self (Equiv.sumCompl p).symm M]
   rw [det_apply', det_apply']
@@ -242,7 +242,7 @@ protected theorem BlockTriangular.det [DecidableEq α] [LinearOrder α] (hM : Bl
 theorem BlockTriangular.det_fintype [DecidableEq α] [Fintype α] [LinearOrder α]
     (h : BlockTriangular M b) : M.det = ∏ k : α, (M.toSquareBlock b k).det :=
   by
-  refine' h.det.trans ((prod_subset (subset_univ _)) fun a _ ha => _)
+  refine' h.det.trans (prod_subset (subset_univ _) fun a _ ha => _)
   have : IsEmpty { i // b i = a } := ⟨fun i => ha <| mem_image.2 ⟨i, mem_univ _, i.2⟩⟩
   exact det_is_empty
 #align matrix.block_triangular.det_fintype Matrix.BlockTriangular.det_fintype

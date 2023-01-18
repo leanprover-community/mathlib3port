@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module order.filter.archimedean
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,7 +44,7 @@ theorem tendsto_coe_nat_at_top_at_top [StrictOrderedSemiring R] [Archimedean R] 
 @[simp]
 theorem Int.comap_coe_at_top [StrictOrderedRing R] [Archimedean R] :
     comap (coe : ℤ → R) atTop = at_top :=
-  (comap_embedding_at_top fun _ _ => Int.cast_le) fun r =>
+  comap_embedding_at_top (fun _ _ => Int.cast_le) fun r =>
     let ⟨n, hn⟩ := exists_nat_ge r
     ⟨n, by exact_mod_cast hn⟩
 #align int.comap_coe_at_top Int.comap_coe_at_top
@@ -52,7 +52,7 @@ theorem Int.comap_coe_at_top [StrictOrderedRing R] [Archimedean R] :
 @[simp]
 theorem Int.comap_coe_at_bot [StrictOrderedRing R] [Archimedean R] :
     comap (coe : ℤ → R) atBot = at_bot :=
-  (comap_embedding_at_bot fun _ _ => Int.cast_le) fun r =>
+  comap_embedding_at_bot (fun _ _ => Int.cast_le) fun r =>
     let ⟨n, hn⟩ := exists_nat_ge (-r)
     ⟨-n, by simpa [neg_le] using hn⟩
 #align int.comap_coe_at_bot Int.comap_coe_at_bot
@@ -77,7 +77,7 @@ theorem tendsto_coe_int_at_top_at_top [StrictOrderedRing R] [Archimedean R] :
 @[simp]
 theorem Rat.comap_coe_at_top [LinearOrderedField R] [Archimedean R] :
     comap (coe : ℚ → R) atTop = at_top :=
-  (comap_embedding_at_top fun _ _ => Rat.cast_le) fun r =>
+  comap_embedding_at_top (fun _ _ => Rat.cast_le) fun r =>
     let ⟨n, hn⟩ := exists_nat_ge r
     ⟨n, by simpa⟩
 #align rat.comap_coe_at_top Rat.comap_coe_at_top
@@ -85,7 +85,7 @@ theorem Rat.comap_coe_at_top [LinearOrderedField R] [Archimedean R] :
 @[simp]
 theorem Rat.comap_coe_at_bot [LinearOrderedField R] [Archimedean R] :
     comap (coe : ℚ → R) atBot = at_bot :=
-  (comap_embedding_at_bot fun _ _ => Rat.cast_le) fun r =>
+  comap_embedding_at_bot (fun _ _ => Rat.cast_le) fun r =>
     let ⟨n, hn⟩ := exists_nat_ge (-r)
     ⟨-n, by simpa [neg_le] ⟩
 #align rat.comap_coe_at_bot Rat.comap_coe_at_bot

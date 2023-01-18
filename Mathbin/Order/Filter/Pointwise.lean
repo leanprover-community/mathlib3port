@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.filter.pointwise
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -531,8 +531,8 @@ protected def mulOneClass : MulOneClass (Filter α)
     where
   one := 1
   mul := (· * ·)
-  one_mul f := by simp only [← pure_one, ← map₂_mul, map₂_pure_left, one_mul, map_id']
-  mul_one f := by simp only [← pure_one, ← map₂_mul, map₂_pure_right, mul_one, map_id']
+  one_mul := map₂_left_identity one_mul
+  mul_one := map₂_right_identity mul_one
 #align filter.mul_one_class Filter.mulOneClass
 
 scoped[Pointwise]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 
 ! This file was ported from Lean 3 source module data.fintype.list
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,30 +36,37 @@ open List
 
 namespace Multiset
 
+#print Multiset.lists /-
 /-- The `finset` of `l : list α` that, given `m : multiset α`, have the property `⟦l⟧ = m`.
 -/
 def lists : Multiset α → Finset (List α) := fun s =>
   Quotient.liftOn s (fun l => l.permutations.toFinset) fun l l' (h : l ~ l') =>
     by
     ext sl
-    simp only [mem_permutations, List.mem_to_finset]
+    simp only [mem_permutations, List.mem_toFinset]
     exact ⟨fun hs => hs.trans h, fun hs => hs.trans h.symm⟩
 #align multiset.lists Multiset.lists
+-/
 
+#print Multiset.lists_coe /-
 @[simp]
 theorem lists_coe (l : List α) : lists (l : Multiset α) = l.permutations.toFinset :=
   rfl
 #align multiset.lists_coe Multiset.lists_coe
+-/
 
+#print Multiset.mem_lists_iff /-
 @[simp]
 theorem mem_lists_iff (s : Multiset α) (l : List α) : l ∈ lists s ↔ s = ⟦l⟧ :=
   by
-  induction s using Quotient.induction_on
+  induction s using Quotient.inductionOn
   simpa using perm_comm
 #align multiset.mem_lists_iff Multiset.mem_lists_iff
+-/
 
 end Multiset
 
+#print fintypeNodupList /-
 instance fintypeNodupList [Fintype α] : Fintype { l : List α // l.Nodup } :=
   Fintype.subtype ((Finset.univ : Finset α).powerset.bUnion fun s => s.val.lists) fun l =>
     by
@@ -71,4 +78,5 @@ instance fintypeNodupList [Fintype α] : Fintype { l : List α // l.Nodup } :=
       refine' ⟨⟨↑l, hl⟩, _⟩
       simp
 #align fintype_nodup_list fintypeNodupList
+-/
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.list.infix
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1015,7 +1015,7 @@ theorem mem_inits : ∀ s t : List α, s ∈ inits t ↔ s <+: t
       match s, mi with
       | [], ⟨_, rfl⟩ => Or.inl rfl
       | b :: s, ⟨r, hr⟩ =>
-        (List.noConfusion hr) fun ba (st : s ++ r = t) =>
+        List.noConfusion hr fun ba (st : s ++ r = t) =>
           Or.inr <| by rw [ba] <;> exact ⟨_, (mem_inits _ _).2 ⟨_, st⟩, rfl⟩⟩
 #align list.mem_inits List.mem_inits
 -/

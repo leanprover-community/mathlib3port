@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module group_theory.free_group
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -470,7 +470,7 @@ theorem eqv_gen_step_iff_join_red : EqvGen Red.Step L₁ L₂ ↔ Join Red L₁ 
     (fun h =>
       have : EqvGen (Join Red) L₁ L₂ := h.mono fun a b => join_red_of_step
       equivalence_join_red.eqv_gen_iff.1 this)
-    ((join_of_equivalence (EqvGen.is_equivalence _)) fun a b =>
+    (join_of_equivalence (EqvGen.is_equivalence _) fun a b =>
       reflTransGen_of_equivalence (EqvGen.is_equivalence _) EqvGen.rel)
 #align free_group.eqv_gen_step_iff_join_red FreeGroup.eqv_gen_step_iff_join_red
 
@@ -537,7 +537,7 @@ instance : Mul (FreeGroup α) :=
       (fun L₁ =>
         Quot.liftOn y (fun L₂ => mk <| L₁ ++ L₂) fun L₂ L₃ H =>
           Quot.sound <| Red.Step.append_left H)
-      fun L₁ L₂ H => (Quot.induction_on y) fun L₃ => Quot.sound <| Red.Step.append_right H⟩
+      fun L₁ L₂ H => Quot.inductionOn y fun L₃ => Quot.sound <| Red.Step.append_right H⟩
 
 @[simp, to_additive]
 theorem mul_mk : mk L₁ * mk L₂ = mk (L₁ ++ L₂) :=
@@ -630,7 +630,7 @@ instance : Group (FreeGroup α) where
   mul_left_inv := by
     rintro ⟨L⟩ <;>
       exact
-        (List.recOn L rfl) fun ⟨x, b⟩ tl ih =>
+        List.recOn L rfl fun ⟨x, b⟩ tl ih =>
           Eq.trans (Quot.sound <| by simp [inv_rev, one_eq_mk]) ih
 
 /-- `of` is the canonical injection from the type to the free group over that type by sending each
@@ -682,7 +682,7 @@ the free group over `α` to `β` -/
 def lift : (α → β) ≃ (FreeGroup α →* β)
     where
   toFun f :=
-    MonoidHom.mk' ((Quot.lift (Lift.aux f)) fun L₁ L₂ => Red.Step.lift) <| by rintro ⟨L₁⟩ ⟨L₂⟩;
+    MonoidHom.mk' (Quot.lift (Lift.aux f) fun L₁ L₂ => Red.Step.lift) <| by rintro ⟨L₁⟩ ⟨L₂⟩;
       simp [lift.aux]
   invFun g := g ∘ of
   left_inv f := one_mul _
@@ -761,7 +761,7 @@ over `α` to the free group over `β`. -/
 @[to_additive
       "Any function from `α` to `β` extends uniquely to an additive group homomorphism\nfrom the additive free group over `α` to the additive free group over `β`."]
 def map : FreeGroup α →* FreeGroup β :=
-  MonoidHom.mk' ((Quot.map (List.map fun x => (f x.1, x.2))) fun L₁ L₂ H => by cases H <;> simp)
+  MonoidHom.mk' (Quot.map (List.map fun x => (f x.1, x.2)) fun L₁ L₂ H => by cases H <;> simp)
     (by
       rintro ⟨L₁⟩ ⟨L₂⟩
       simp)
@@ -807,7 +807,7 @@ theorem map.unique (g : FreeGroup α →* FreeGroup β) (hg : ∀ x, g (of x) = 
 
 @[to_additive]
 theorem map_eq_lift : map f x = lift (of ∘ f) x :=
-  Eq.symm <| (map.unique _) fun x => by simp
+  Eq.symm <| map.unique _ fun x => by simp
 #align free_group.map_eq_lift FreeGroup.map_eq_lift
 
 /-- Equivalent types give rise to multiplicatively equivalent free groups.
@@ -971,8 +971,8 @@ instance : Monad FreeGroup.{u} where
 protected theorem induction_on {C : FreeGroup α → Prop} (z : FreeGroup α) (C1 : C 1)
     (Cp : ∀ x, C <| pure x) (Ci : ∀ x, C (pure x) → C (pure x)⁻¹)
     (Cm : ∀ x y, C x → C y → C (x * y)) : C z :=
-  (Quot.induction_on z) fun L =>
-    (List.recOn L C1) fun ⟨x, b⟩ tl ih => Bool.recOn b (Cm _ _ (Ci _ <| Cp x) ih) (Cm _ _ (Cp x) ih)
+  Quot.inductionOn z fun L =>
+    List.recOn L C1 fun ⟨x, b⟩ tl ih => Bool.recOn b (Cm _ _ (Ci _ <| Cp x) ih) (Cm _ _ (Cp x) ih)
 #align free_group.induction_on FreeGroup.induction_on
 
 @[simp, to_additive]
@@ -1043,8 +1043,8 @@ variable [DecidableEq α]
 iff `α` has decidable equality. -/
 @[to_additive "The maximal reduction of a word. It is computable\niff `α` has decidable equality."]
 def reduce (L : List (α × Bool)) : List (α × Bool) :=
-  (List.recOn L []) fun hd1 tl1 ih =>
-    (List.casesOn ih [hd1]) fun hd2 tl2 =>
+  List.recOn L [] fun hd1 tl1 ih =>
+    List.casesOn ih [hd1] fun hd2 tl2 =>
       if hd1.1 = hd2.1 ∧ hd1.2 = not hd2.2 then tl2 else hd1::hd2::tl2
 #align free_group.reduce FreeGroup.reduce
 
@@ -1100,7 +1100,7 @@ theorem reduce.red : Red L (reduce L) :=
         "@["
         [(Term.attrInstance
           (Term.attrKind [])
-          (to_additive "to_additive" [] [] (to_additiveRest [] [] [] [])))]
+          (to_additive "to_additive" [] (to_additiveRest [] [] [] [])))]
         "]")]
       []
       []
@@ -1594,7 +1594,7 @@ group to its maximal reduction. -/
 @[to_additive
       "The function that sends an element of the additive free\ngroup to its maximal reduction."]
 def toWord : FreeGroup α → List (α × Bool) :=
-  (Quot.lift reduce) fun L₁ L₂ H => reduce.Step.eq H
+  Quot.lift reduce fun L₁ L₂ H => reduce.Step.eq H
 #align free_group.to_word FreeGroup.toWord
 
 @[to_additive]
@@ -1699,9 +1699,9 @@ theorem Red.enum.complete (H : Red L₁ L₂) : L₂ ∈ Red.enum L₁ :=
 #align free_group.red.enum.complete FreeGroup.Red.enum.complete
 
 instance : Fintype { L₂ // Red L₁ L₂ } :=
-  (Fintype.subtype (List.toFinset <| Red.enum L₁)) fun L₂ =>
-    ⟨fun H => red.enum.sound <| List.mem_to_finset.1 H, fun H =>
-      List.mem_to_finset.2 <| Red.enum.complete H⟩
+  Fintype.subtype (List.toFinset <| Red.enum L₁) fun L₂ =>
+    ⟨fun H => red.enum.sound <| List.mem_toFinset.1 H, fun H =>
+      List.mem_toFinset.2 <| Red.enum.complete H⟩
 
 end Reduce
 

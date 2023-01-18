@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module dynamics.periodic_pts
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -412,7 +412,7 @@ theorem not_is_periodic_pt_of_pos_of_lt_minimal_period :
   function.not_is_periodic_pt_of_pos_of_lt_minimal_period Function.not_is_periodic_pt_of_pos_of_lt_minimal_period
 
 theorem IsPeriodicPt.minimal_period_dvd (hx : IsPeriodicPt f n x) : minimalPeriod f x ∣ n :=
-  ((eq_or_lt_of_le <| n.zero_le).elim fun hn0 => hn0 ▸ dvd_zero _) fun hn0 =>
+  (eq_or_lt_of_le <| n.zero_le).elim (fun hn0 => hn0 ▸ dvd_zero _) fun hn0 =>
     Nat.dvd_iff_mod_eq_zero.2 <|
       (hx.mod <| is_periodic_pt_minimal_period f x).eq_zero_of_lt_minimal_period <|
         Nat.mod_lt _ <| hx.minimal_period_pos hn0
@@ -579,7 +579,7 @@ theorem periodic_orbit_apply_iterate_eq (hx : x ∈ periodicPts f) (n : ℕ) :
       ⟨n, by
         apply List.ext_nthLe _ fun m _ _ => _
         · simp [minimal_period_apply_iterate hx]
-        · rw [List.nth_le_rotate _ n m]
+        · rw [List.nthLe_rotate _ n m]
           simp [iterate_add_apply]⟩
 #align function.periodic_orbit_apply_iterate_eq Function.periodic_orbit_apply_iterate_eq
 

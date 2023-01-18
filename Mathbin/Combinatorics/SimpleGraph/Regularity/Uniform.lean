@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.regularity.uniform
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -233,7 +233,7 @@ theorem mk_mem_non_uniforms_iff (u v : Finset α) (ε : 𝕜) :
 #align finpartition.mk_mem_non_uniforms_iff Finpartition.mk_mem_non_uniforms_iff
 
 theorem non_uniforms_mono {ε ε' : 𝕜} (h : ε ≤ ε') : P.nonUniforms G ε' ⊆ P.nonUniforms G ε :=
-  (monotone_filter_right _) fun uv => mt <| SimpleGraph.IsUniform.mono h
+  monotone_filter_right _ fun uv => mt <| SimpleGraph.IsUniform.mono h
 #align finpartition.non_uniforms_mono Finpartition.non_uniforms_mono
 
 theorem non_uniforms_bot (hε : 0 < ε) : (⊥ : Finpartition A).nonUniforms G ε = ∅ :=

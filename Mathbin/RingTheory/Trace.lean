@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.trace
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -360,7 +360,7 @@ theorem trace_eq_sum_embeddings_gen (pb : PowerBasis K L)
   by
   letI := Classical.decEq E
   rw [pb.trace_gen_eq_sum_roots hE, Fintype.sum_equiv pb.lift_equiv', Finset.sum_mem_multiset,
-    Finset.sum_eq_multiset_sum, Multiset.to_finset_val, multiset.dedup_eq_self.mpr _,
+    Finset.sum_eq_multiset_sum, Multiset.toFinset_val, multiset.dedup_eq_self.mpr _,
     Multiset.map_id]
   · exact nodup_roots ((separable_map _).mpr hfx)
   · intro x

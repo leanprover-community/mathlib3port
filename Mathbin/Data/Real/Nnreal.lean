@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module data.real.nnreal
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -457,13 +457,13 @@ theorem bdd_below_coe (s : Set ℝ≥0) : BddBelow ((coe : ℝ≥0 → ℝ) '' s
 #align nnreal.bdd_below_coe Nnreal.bdd_below_coe
 
 noncomputable instance : ConditionallyCompleteLinearOrderBot ℝ≥0 :=
-  Nonneg.conditionallyCompleteLinearOrderBot Real.Sup_empty.le
+  Nonneg.conditionallyCompleteLinearOrderBot Real.supₛ_empty.le
 
 @[norm_cast]
 theorem coe_Sup (s : Set ℝ≥0) : (↑(supₛ s) : ℝ) = supₛ ((coe : ℝ≥0 → ℝ) '' s) :=
   Eq.symm <|
     @subset_supₛ_of_within ℝ (Set.Ici 0) _ ⟨(0 : ℝ≥0)⟩ s <|
-      (Real.Sup_nonneg _) fun y ⟨x, _, hy⟩ => hy ▸ x.2
+      Real.supₛ_nonneg _ fun y ⟨x, _, hy⟩ => hy ▸ x.2
 #align nnreal.coe_Sup Nnreal.coe_Sup
 
 @[norm_cast]
@@ -475,12 +475,12 @@ theorem coe_supr {ι : Sort _} (s : ι → ℝ≥0) : (↑(⨆ i, s i) : ℝ) = 
 theorem coe_Inf (s : Set ℝ≥0) : (↑(infₛ s) : ℝ) = infₛ ((coe : ℝ≥0 → ℝ) '' s) :=
   Eq.symm <|
     @subset_infₛ_of_within ℝ (Set.Ici 0) _ ⟨(0 : ℝ≥0)⟩ s <|
-      (Real.Inf_nonneg _) fun y ⟨x, _, hy⟩ => hy ▸ x.2
+      Real.infₛ_nonneg _ fun y ⟨x, _, hy⟩ => hy ▸ x.2
 #align nnreal.coe_Inf Nnreal.coe_Inf
 
 @[simp]
 theorem Inf_empty : infₛ (∅ : Set ℝ≥0) = 0 := by
-  rw [← Nnreal.coe_eq_zero, coe_Inf, Set.image_empty, Real.Inf_empty]
+  rw [← Nnreal.coe_eq_zero, coe_Inf, Set.image_empty, Real.infₛ_empty]
 #align nnreal.Inf_empty Nnreal.Inf_empty
 
 @[norm_cast]
@@ -654,7 +654,7 @@ theorem le_to_nnreal_iff_coe_le {r : ℝ≥0} {p : ℝ} (hp : 0 ≤ p) : r ≤ R
 #align real.le_to_nnreal_iff_coe_le Real.le_to_nnreal_iff_coe_le
 
 theorem le_to_nnreal_iff_coe_le' {r : ℝ≥0} {p : ℝ} (hr : 0 < r) : r ≤ Real.toNnreal p ↔ ↑r ≤ p :=
-  ((le_or_lt 0 p).elim le_to_nnreal_iff_coe_le) fun hp => by
+  (le_or_lt 0 p).elim le_to_nnreal_iff_coe_le fun hp => by
     simp only [(hp.trans_le r.coe_nonneg).not_le, to_nnreal_eq_zero.2 hp.le, hr.not_le]
 #align real.le_to_nnreal_iff_coe_le' Real.le_to_nnreal_iff_coe_le'
 
@@ -1017,14 +1017,14 @@ theorem supr_of_not_bdd_above (hf : ¬BddAbove (range f)) : (⨆ i, f i) = 0 :=
 theorem infi_empty [IsEmpty ι] (f : ι → ℝ≥0) : (⨅ i, f i) = 0 :=
   by
   rw [← Nnreal.coe_eq, coe_infi]
-  exact Real.cinfi_empty _
+  exact Real.cinfᵢ_empty _
 #align nnreal.infi_empty Nnreal.infi_empty
 
 @[simp]
 theorem infi_const_zero {α : Sort _} : (⨅ i : α, (0 : ℝ≥0)) = 0 :=
   by
   rw [← Nnreal.coe_eq, coe_infi]
-  exact Real.cinfi_const_zero
+  exact Real.cinfᵢ_const_zero
 #align nnreal.infi_const_zero Nnreal.infi_const_zero
 
 theorem infi_mul (f : ι → ℝ≥0) (a : ℝ≥0) : infᵢ f * a = ⨅ i, f i * a :=

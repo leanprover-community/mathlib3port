@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shing Tak Lam
 
 ! This file was ported from Lean 3 source module algebraic_topology.fundamental_groupoid.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -288,10 +288,10 @@ instance : CategoryTheory.Groupoid (FundamentalGroupoid X)
   id x := ⟦Path.refl x⟧
   comp x y z := Path.Homotopic.Quotient.comp
   id_comp' x y f :=
-    Quotient.induction_on f fun a =>
+    Quotient.inductionOn f fun a =>
       show ⟦(Path.refl x).trans a⟧ = ⟦a⟧ from Quotient.sound ⟨Path.Homotopy.reflTrans a⟩
   comp_id' x y f :=
-    Quotient.induction_on f fun a =>
+    Quotient.inductionOn f fun a =>
       show ⟦a.trans (Path.refl y)⟧ = ⟦a⟧ from Quotient.sound ⟨Path.Homotopy.transRefl a⟩
   assoc' w x y z f g h :=
     Quotient.induction_on₃ f g h fun p q r =>
@@ -305,11 +305,11 @@ instance : CategoryTheory.Groupoid (FundamentalGroupoid X)
         exact ⟨h.symm₂⟩)
       p
   inv_comp' x y f :=
-    Quotient.induction_on f fun a =>
+    Quotient.inductionOn f fun a =>
       show ⟦a.symm.trans a⟧ = ⟦Path.refl y⟧ from
         Quotient.sound ⟨(Path.Homotopy.reflSymmTrans a).symm⟩
   comp_inv' x y f :=
-    Quotient.induction_on f fun a =>
+    Quotient.inductionOn f fun a =>
       show ⟦a.trans a.symm⟧ = ⟦Path.refl x⟧ from
         Quotient.sound ⟨(Path.Homotopy.reflTransSymm a).symm⟩
 
@@ -331,14 +331,14 @@ def fundamentalGroupoidFunctor : TopCat ⥤ CategoryTheory.GroupoidCat
       map := fun x y p => p.mapFn f
       map_id' := fun X => rfl
       map_comp' := fun x y z p q =>
-        (Quotient.induction_on₂ p q) fun a b => by
+        Quotient.induction_on₂ p q fun a b => by
           simp [comp_eq, ← Path.Homotopic.map_lift, ← Path.Homotopic.comp_lift] }
   map_id' := by
     intro X
     change _ = (⟨_, _, _, _⟩ : FundamentalGroupoid X ⥤ FundamentalGroupoid X)
     congr
     ext (x y p)
-    refine' Quotient.induction_on p fun q => _
+    refine' Quotient.inductionOn p fun q => _
     rw [← Path.Homotopic.map_lift]
     conv_rhs => rw [← q.map_id]
     rfl
@@ -346,7 +346,7 @@ def fundamentalGroupoidFunctor : TopCat ⥤ CategoryTheory.GroupoidCat
     intro X Y Z f g
     congr
     ext (x y p)
-    refine' Quotient.induction_on p fun q => _
+    refine' Quotient.inductionOn p fun q => _
     simp only [Quotient.map_mk, Path.map_map, Quotient.eq]
     rfl
 #align

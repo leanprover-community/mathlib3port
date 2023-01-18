@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Pierre-Alexandre Bazin
 
 ! This file was ported from Lean 3 source module algebra.module.pid
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -208,7 +208,7 @@ theorem torsion_by_prime_power_decomposition (hN : Module.IsTorsion' N (Submonoi
           ⟨_,
             ⟨(((@lequivProdOfRightSplitExact _ _ _ _ _ _ _ _ _ _ _ _
                               ((f.trans ULift.moduleEquiv.{u, u, v}.symm).toLinearMap.comp <| mkq _)
-                              (((DirectSum.toModule _ _ _) fun i =>
+                              ((DirectSum.toModule _ _ _ fun i =>
                                     (liftqSpanSingleton.{u, u} (p ^ k i)
                                         (LinearMap.toSpanSingleton _ _ _) (this i).some_spec.left :
                                       R ⧸ _ →ₗ[R] _)).comp

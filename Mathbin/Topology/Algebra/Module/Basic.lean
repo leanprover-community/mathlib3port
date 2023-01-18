@@ -5,7 +5,7 @@ Authors: Jan-David Salchow, Sébastien Gouëzel, Jean Lo, Yury Kudryashov, Fréd
   Heather Macbeth
 
 ! This file was ported from Lean 3 source module topology.algebra.module.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1530,7 +1530,7 @@ variable {σ₂₁ : R₂ →+* R} [RingHomInvPair σ₁₂ σ₂₁]
 `proj_ker_of_right_inverse f₁ f₂ h` is the projection `M →L[R] f₁.ker` along `f₂.range`. -/
 def projKerOfRightInverse [TopologicalAddGroup M] (f₁ : M →SL[σ₁₂] M₂) (f₂ : M₂ →SL[σ₂₁] M)
     (h : Function.RightInverse f₂ f₁) : M →L[R] LinearMap.ker f₁ :=
-  ((id R M - f₂.comp f₁).codRestrict (LinearMap.ker f₁)) fun x => by simp [h (f₁ x)]
+  (id R M - f₂.comp f₁).codRestrict (LinearMap.ker f₁) fun x => by simp [h (f₁ x)]
 #align continuous_linear_map.proj_ker_of_right_inverse ContinuousLinearMap.projKerOfRightInverse
 
 @[simp]
@@ -2723,7 +2723,7 @@ def ClosedComplemented (p : Submodule R M) : Prop :=
 
 theorem ClosedComplemented.has_closed_complement {p : Submodule R M} [T1Space p]
     (h : ClosedComplemented p) : ∃ (q : Submodule R M)(hq : IsClosed (q : Set M)), IsCompl p q :=
-  (Exists.elim h) fun f hf => ⟨ker f, f.is_closed_ker, LinearMap.is_compl_of_proj hf⟩
+  Exists.elim h fun f hf => ⟨ker f, f.is_closed_ker, LinearMap.is_compl_of_proj hf⟩
 #align
   submodule.closed_complemented.has_closed_complement Submodule.ClosedComplemented.has_closed_complement
 

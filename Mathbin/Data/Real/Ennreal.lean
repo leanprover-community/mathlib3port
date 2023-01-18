@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.real.ennreal
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -494,7 +494,7 @@ def neTopEquivNnreal : { a | a ≠ ∞ } ≃ ℝ≥0
 #align ennreal.ne_top_equiv_nnreal Ennreal.neTopEquivNnreal
 
 theorem cinfi_ne_top [InfSet α] (f : ℝ≥0∞ → α) : (⨅ x : { x // x ≠ ∞ }, f x) = ⨅ x : ℝ≥0, f x :=
-  Eq.symm <| (neTopEquivNnreal.symm.Surjective.infi_congr _) fun x => rfl
+  Eq.symm <| neTopEquivNnreal.symm.Surjective.infi_congr _ fun x => rfl
 #align ennreal.cinfi_ne_top Ennreal.cinfi_ne_top
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ≠ » ennreal.top()) -/

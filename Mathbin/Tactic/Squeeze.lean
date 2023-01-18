@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module tactic.squeeze
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,7 +50,7 @@ open List
 
 /-- parse structure instance of the shape `{ field1 := value1, .. , field2 := value2 }` -/
 unsafe def struct_inst : lean.parser pexpr :=
-  (with_desc "cfg") do
+  with_desc "cfg" do
     tk "{"
     let ls ←
       sep_by (skip_info (tk ","))
@@ -119,8 +119,7 @@ unsafe def mk_suggestion (p : Pos) (pre post : String) (args : List simp_arg_typ
     | none => do
       let args := render_simp_arg_list args
       if at_pos then
-          (@scopeTrace _ p p) fun _ =>
-            _root_.trace (s! "{pre }{args }{post}") (pure () : tactic Unit)
+          @scopeTrace _ p p fun _ => _root_.trace (s! "{pre }{args }{post}") (pure () : tactic Unit)
         else trace s! "{pre }{args }{post}"
     | some xs => do
       squeeze_loc_attr `` squeeze_loc_attr_carrier ((p, pre, args, post) :: xs) ff
@@ -262,7 +261,7 @@ unsafe def squeeze_scope (tac : itactic) : tactic Unit := do
   let none ← squeeze_loc_attr.get_param `` squeeze_loc_attr_carrier |
     pure ()
   squeeze_loc_attr `` squeeze_loc_attr_carrier (some []) ff
-  (finally tac) do
+  finally tac do
       let some xs ← squeeze_loc_attr `` squeeze_loc_attr_carrier |
         fail "invalid state"
       let m := native.rb_lmap.of_list xs

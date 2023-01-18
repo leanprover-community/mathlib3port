@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris Van Doorn, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.measure.regular
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -461,7 +461,7 @@ theorem weaklyRegularOfFinite [BorelSpace α] (μ : Measure α) [IsFiniteMeasure
     -- `U n` with measure at most `μ (s n) + δ n` for a summable `δ`, and taking the union of these.
     refine'
       ⟨⋃ k ∈ t, F k, Union_mono fun k => Union_subset fun _ => hFs _, ⋃ n, U n, Union_mono hsU,
-        (is_closed_bUnion t.finite_to_set) fun k _ => hFc k, is_open_Union hUo, ht.le.trans _, _⟩
+        is_closed_bUnion t.finite_to_set fun k _ => hFc k, is_open_Union hUo, ht.le.trans _, _⟩
     · calc
         (∑ k in t, μ (s k)) + ε / 2 ≤ ((∑ k in t, μ (F k)) + ∑ k in t, δ k) + ε / 2 :=
           by

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Mario Carneiro
 
 ! This file was ported from Lean 3 source module order.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -364,13 +364,13 @@ end PartialOrder
 
 #print LE.le.lt_or_le /-
 theorem lt_or_le [LinearOrder α] {a b : α} (h : a ≤ b) (c : α) : a < c ∨ c ≤ b :=
-  ((lt_or_ge a c).imp id) fun hc => le_trans hc h
+  (lt_or_ge a c).imp id fun hc => le_trans hc h
 #align has_le.le.lt_or_le LE.le.lt_or_le
 -/
 
 #print LE.le.le_or_lt /-
 theorem le_or_lt [LinearOrder α] {a b : α} (h : a ≤ b) (c : α) : a ≤ c ∨ c < b :=
-  ((le_or_gt a c).imp id) fun hc => lt_of_lt_of_le hc h
+  (le_or_gt a c).imp id fun hc => lt_of_lt_of_le hc h
 #align has_le.le.le_or_lt LE.le.le_or_lt
 -/
 

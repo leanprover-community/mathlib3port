@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.analysis.topology
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -185,7 +185,7 @@ protected def id : Realizer α :=
       inter := fun ⟨x, h₁⟩ ⟨y, h₂⟩ a h₃ => ⟨_, h₁.inter h₂⟩
       inter_mem := fun ⟨x, h₁⟩ ⟨y, h₂⟩ a => id
       inter_sub := fun ⟨x, h₁⟩ ⟨y, h₂⟩ a h₃ => Subset.refl _ },
-    (ext Subtype.property) fun x s h =>
+    ext Subtype.property fun x s h =>
       let ⟨t, h, o, m⟩ := mem_nhds_iff.1 h
       ⟨⟨t, o⟩, m, h⟩⟩
 #align ctop.realizer.id Ctop.Realizer.id

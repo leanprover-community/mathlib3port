@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.calculus
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -384,7 +384,7 @@ open Metric hiding mem_nhds_iff
 
 variable {n : ℕ∞} {E : Type _} [InnerProductSpace ℝ E]
 
-theorem cont_diff_homeomorph_unit_ball : (ContDiff ℝ n) fun x : E => (homeomorphUnitBall x : E) :=
+theorem cont_diff_homeomorph_unit_ball : ContDiff ℝ n fun x : E => (homeomorphUnitBall x : E) :=
   by
   suffices ContDiff ℝ n fun x => (1 + ‖x‖ ^ 2).sqrt⁻¹ by exact this.smul cont_diff_id
   have h : ∀ x : E, 0 < 1 + ‖x‖ ^ 2 := fun x => by positivity

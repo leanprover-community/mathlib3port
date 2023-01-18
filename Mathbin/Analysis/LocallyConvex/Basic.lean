@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jean Lo, Bhavik Mehta, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.locally_convex.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -104,7 +104,7 @@ theorem absorbs_Union_finset {ι : Type _} {t : Finset ι} {f : ι → Set E} :
     ·
       simp only [Finset.not_mem_empty, Set.unionᵢ_false, Set.unionᵢ_empty, absorbs_empty,
         IsEmpty.forall_iff, imp_true_iff]
-    rw [Finset.set_bUnion_insert, absorbs_union, hi]
+    rw [Finset.set_bunionᵢ_insert, absorbs_union, hi]
     constructor <;> intro h
     · refine' fun _ hi' => (finset.mem_insert.mp hi').elim _ (h.2 _)
       exact fun hi'' => by

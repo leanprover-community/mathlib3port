@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module data.json
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -304,7 +304,7 @@ do
 -/
 @[derive_handler]
 unsafe def non_null_json_serializable_handler : derive_handler :=
-  (instance_derive_handler `` non_null_json_serializable) do
+  instance_derive_handler `` non_null_json_serializable do
     intros
     let q(non_null_json_serializable $(e)) ← target >>= whnf
     let (struct_name, (ctor_name, ctor), fields) ← get_constructor_and_projections e

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module meta.rb_map
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -73,7 +73,7 @@ It does so by folding over `s2`. If `s1` is significantly smaller than `s2`,
 it may be worth it to reverse the fold.
 -/
 unsafe def sdiff {α} (s1 s2 : rb_set α) : rb_set α :=
-  (s2.fold s1) fun v s => s.erase v
+  s2.fold s1 fun v s => s.erase v
 #align native.rb_set.sdiff native.rb_set.sdiff
 
 /-- `insert_list s l` inserts each element of `l` into `s`.
@@ -256,7 +256,7 @@ namespace ExprSet
 contain bogus names.
 -/
 unsafe def local_set_to_name_set (lcs : expr_set) : name_set :=
-  (lcs.fold mk_name_set) fun h ns => ns.insert h.local_uniq_name
+  lcs.fold mk_name_set fun h ns => ns.insert h.local_uniq_name
 #align expr_set.local_set_to_name_set expr_set.local_set_to_name_set
 
 end ExprSet

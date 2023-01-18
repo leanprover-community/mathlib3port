@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser, Zhangir Azerbayev
 
 ! This file was ported from Lean 3 source module linear_algebra.alternating
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1130,7 +1130,7 @@ are distinct basis vectors. -/
 theorem Basis.ext_alternating {f g : AlternatingMap R' N₁ N₂ ι} (e : Basis ι₁ R' N₁)
     (h : ∀ v : ι → ι₁, Function.Injective v → (f fun i => e (v i)) = g fun i => e (v i)) : f = g :=
   by
-  refine' AlternatingMap.coe_multilinear_map_injective ((Basis.ext_multilinear e) fun v => _)
+  refine' AlternatingMap.coe_multilinear_map_injective (Basis.ext_multilinear e fun v => _)
   by_cases hi : Function.Injective v
   · exact h v hi
   · have : ¬Function.Injective fun i => e (v i) := hi.imp Function.Injective.of_comp

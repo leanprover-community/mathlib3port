@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cuma Kökmen, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.integral.torus_integral
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -228,7 +228,7 @@ theorem norm_torus_integral_le_of_norm_le_const {C : ℝ} (hf : ∀ θ, ‖f (to
     ‖∯ x in T(c, R), f x‖ ≤ ((2 * π) ^ (n : ℕ) * ∏ i, |R i|) * C :=
   calc
     ‖∯ x in T(c, R), f x‖ ≤ (∏ i, |R i|) * C * (volume (Icc (0 : ℝⁿ) fun _ => 2 * π)).toReal :=
-      (norm_set_integral_le_of_norm_le_const' measure_Icc_lt_top measurable_set_Icc) fun θ hθ =>
+      norm_set_integral_le_of_norm_le_const' measure_Icc_lt_top measurable_set_Icc fun θ hθ =>
         calc
           ‖(∏ i : Fin n, R i * exp (θ i * I) * I : ℂ) • f (torusMap c R θ)‖ =
               (∏ i : Fin n, |R i|) * ‖f (torusMap c R θ)‖ :=
@@ -287,8 +287,8 @@ theorem torus_integral_succ_above {f : ℂⁿ⁺¹ → E} {c : ℂⁿ⁺¹} {R :
     simp only [MeasurableEquiv.pi_fin_succ_above_equiv_symm_apply, i.insert_nth_apply_same,
       i.insert_nth_apply_succ_above, (· ∘ ·)]
     congr 2
-    simp only [funext_iff, i.forall_iff_succ_above, circleMap, Fin.insert_nth_apply_same,
-      eq_self_iff_true, Fin.insert_nth_apply_succ_above, imp_true_iff, and_self_iff]
+    simp only [funext_iff, i.forall_iff_succ_above, circleMap, Fin.insertNth_apply_same,
+      eq_self_iff_true, Fin.insertNth_apply_succAbove, imp_true_iff, and_self_iff]
   · have := hf.function_integrable
     rwa [← hem.integrable_on_comp_preimage e.measurable_embedding, heπ] at this
 #align torus_integral_succ_above torus_integral_succ_above

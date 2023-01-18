@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Neil Strickland
 
 ! This file was ported from Lean 3 source module data.pnat.factors
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -30,11 +30,14 @@ the multiplicity of `p` in this factors multiset being the p-adic valuation of `
  gives an equivalence between this set and ℕ+, as we will formalize
  below. -/
 def PrimeMultiset :=
-  Multiset Nat.Primes deriving Inhabited, Repr, CanonicallyOrderedAddMonoid, DistribLattice,
+  Multiset Nat.Primes deriving Inhabited, CanonicallyOrderedAddMonoid, DistribLattice,
   SemilatticeSup, OrderBot, Sub, OrderedSub
 #align prime_multiset PrimeMultiset
 
 namespace PrimeMultiset
+
+-- `@[derive]` doesn't work for `meta` instances
+unsafe instance : Repr PrimeMultiset := by delta PrimeMultiset <;> infer_instance
 
 /-- The multiset consisting of a single prime -/
 def ofPrime (p : Nat.Primes) : PrimeMultiset :=
@@ -407,15 +410,15 @@ theorem count_factor_multiset (m : ℕ+) (p : Nat.Primes) (k : ℕ) :
     (p : ℕ+) ^ k ∣ m ↔ k ≤ m.factorMultiset.count p :=
   by
   intros
-  rw [Multiset.le_count_iff_repeat_le]
+  rw [Multiset.le_count_iff_replicate_le]
   rw [← factor_multiset_le_iff, factor_multiset_pow, factor_multiset_of_prime]
   congr 2
-  apply multiset.eq_repeat.mpr
+  apply multiset.eq_replicate.mpr
   constructor
   · rw [Multiset.card_nsmul, PrimeMultiset.card_of_prime, mul_one]
   · intro q h
     rw [PrimeMultiset.ofPrime, Multiset.nsmul_singleton _ k] at h
-    exact Multiset.eq_of_mem_repeat h
+    exact Multiset.eq_of_mem_replicate h
 #align pnat.count_factor_multiset PNat.count_factor_multiset
 
 end PNat

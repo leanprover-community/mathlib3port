@@ -6,7 +6,7 @@ Authors: Johannes Hölzl
 Extends the theory on functors, applicatives and monads.
 
 ! This file was ported from Lean 3 source module control.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -319,7 +319,7 @@ open Functor
 lean 3 declaration is
   forall {m : Type.{u1} -> Type.{u2}} [_inst_1 : Applicative.{u1, u2} m] [_inst_2 : CommApplicative.{u1, u2} m _inst_1] {α : Type.{u1}} {β : Type.{u1}} {γ : Type.{u1}} (a : m α) (b : m β) {f : α -> β -> γ}, Eq.{succ u2} (m γ) (Seq.seq.{u1, u2} (fun {α : Type.{u1}} => m α) (Applicative.toHasSeq.{u1, u2} (fun {α : Type.{u1}} => m α) _inst_1) β γ (Functor.map.{u1, u2} (fun {α : Type.{u1}} => m α) (Applicative.toFunctor.{u1, u2} (fun {α : Type.{u1}} => m α) _inst_1) α (β -> γ) f a) b) (Seq.seq.{u1, u2} m (Applicative.toHasSeq.{u1, u2} m _inst_1) α γ (Functor.map.{u1, u2} m (Applicative.toFunctor.{u1, u2} m _inst_1) β (α -> γ) (flip.{succ u1, succ u1, succ u1} α β γ f) b) a)
 but is expected to have type
-  forall {m : Type.{u1} -> Type.{u2}} [_inst_1 : Applicative.{u1, u2} m] [_inst_2 : CommApplicative.{u1, u2} m _inst_1] {α : Type.{u1}} {β : Type.{u1}} {γ : Type.{u1}} (a : m α) (b : m β) {f : α -> β -> γ}, Eq.{succ u2} (m γ) (Seq.seq.{u1, u2} m (Applicative.toSeq.{u1, u2} m _inst_1) β γ (Functor.map.{u1, u2} m (Applicative.toFunctor.{u1, u2} m _inst_1) α (β -> γ) f a) (fun (x._@.Mathlib.Control.Basic._hyg.2535 : Unit) => b)) (Seq.seq.{u1, u2} m (Applicative.toSeq.{u1, u2} m _inst_1) α γ (Functor.map.{u1, u2} m (Applicative.toFunctor.{u1, u2} m _inst_1) β (α -> γ) (flip.{succ u1, succ u1, succ u1} α β γ f) b) (fun (x._@.Mathlib.Control.Basic._hyg.2552 : Unit) => a))
+  forall {m : Type.{u1} -> Type.{u2}} [_inst_1 : Applicative.{u1, u2} m] [_inst_2 : CommApplicative.{u1, u2} m _inst_1] {α : Type.{u1}} {β : Type.{u1}} {γ : Type.{u1}} (a : m α) (b : m β) {f : α -> β -> γ}, Eq.{succ u2} (m γ) (Seq.seq.{u1, u2} m (Applicative.toSeq.{u1, u2} m _inst_1) β γ (Functor.map.{u1, u2} m (Applicative.toFunctor.{u1, u2} m _inst_1) α (β -> γ) f a) (fun (x._@.Mathlib.Control.Basic._hyg.2589 : Unit) => b)) (Seq.seq.{u1, u2} m (Applicative.toSeq.{u1, u2} m _inst_1) α γ (Functor.map.{u1, u2} m (Applicative.toFunctor.{u1, u2} m _inst_1) β (α -> γ) (flip.{succ u1, succ u1, succ u1} α β γ f) b) (fun (x._@.Mathlib.Control.Basic._hyg.2606 : Unit) => a))
 Case conversion may be inaccurate. Consider using '#align is_comm_applicative.commutative_map CommApplicative.commutative_mapₓ'. -/
 theorem CommApplicative.commutative_map {m : Type _ → Type _} [Applicative m] [CommApplicative m]
     {α β γ} (a : m α) (b : m β) {f : α → β → γ} : f <$> a <*> b = flip f <$> b <*> a :=

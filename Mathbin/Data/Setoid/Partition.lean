@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Amelia Livingston, Bryan Gin-ge Chen, Patrick Massot
 
 ! This file was ported from Lean 3 source module data.setoid.partition
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -139,7 +139,7 @@ theorem eq_of_mem_classes {r : Setoid α} {x b} (hc : b ∈ r.classes) (hb : x �
 theorem eq_eqv_class_of_mem {c : Set (Set α)} (H : ∀ a, ∃! (b : _)(_ : b ∈ c), a ∈ b) {s y}
     (hs : s ∈ c) (hy : y ∈ s) : s = { x | (mkClasses c H).Rel x y } :=
   Set.ext fun x =>
-    ⟨fun hs' => (symm' (mkClasses c H)) fun b' hb' h' => eq_of_mem_eqv_class H hs hy hb' h' ▸ hs',
+    ⟨fun hs' => symm' (mkClasses c H) fun b' hb' h' => eq_of_mem_eqv_class H hs hy hb' h' ▸ hs',
       fun hx =>
       (H x).elim2 fun b' hc' hb' h' =>
         (eq_of_mem_eqv_class H hs hy hc' <| hx b' hc' hb').symm ▸ hb'⟩
@@ -175,7 +175,7 @@ theorem eqv_classes_disjoint {c : Set (Set α)} (H : ∀ a, ∃! (b : _)(_ : b �
 theorem eqv_classes_of_disjoint_union {c : Set (Set α)} (hu : Set.unionₛ c = @Set.univ α)
     (H : c.PairwiseDisjoint id) (a) : ∃! (b : _)(_ : b ∈ c), a ∈ b :=
   let ⟨b, hc, ha⟩ := Set.mem_unionₛ.1 <| show a ∈ _ by rw [hu] <;> exact Set.mem_univ a
-  (ExistsUnique.intro₂ b hc ha) fun b' hc' ha' => H.elim_set hc' hc a ha' ha
+  ExistsUnique.intro₂ b hc ha fun b' hc' ha' => H.elim_set hc' hc a ha' ha
 #align setoid.eqv_classes_of_disjoint_union Setoid.eqv_classes_of_disjoint_union
 
 /-- Makes an equivalence relation from a set of disjoints sets covering α. -/
@@ -304,7 +304,7 @@ end Partition
 def IsPartition.finpartition {c : Finset (Set α)} (hc : Setoid.IsPartition (c : Set (Set α))) :
     Finpartition (Set.univ : Set α) where
   parts := c
-  SupIndep := Finset.sup_indep_iff_pairwise_disjoint.mpr <| eqv_classes_disjoint hc.2
+  SupIndep := Finset.supIndep_iff_pairwiseDisjoint.mpr <| eqv_classes_disjoint hc.2
   sup_parts := c.sup_id_set_eq_sUnion.trans hc.sUnion_eq_univ
   not_bot_mem := hc.left
 #align setoid.is_partition.finpartition Setoid.IsPartition.finpartition
@@ -458,13 +458,13 @@ theorem out_proj (x : α) : hs.out (hs.proj x) = hs.some (hs.index x) :=
 
 /-- The indices of `quotient.out'` and `indexed_partition.out` are equal. -/
 theorem index_out' (x : hs.Quotient) : hs.index x.out' = hs.index (hs.out x) :=
-  (Quotient.inductionOn' x) fun x => (Setoid.ker_apply_mk_out' x).trans (hs.index_some _).symm
+  Quotient.inductionOn' x fun x => (Setoid.ker_apply_mk_out' x).trans (hs.index_some _).symm
 #align indexed_partition.index_out' IndexedPartition.index_out'
 
 /-- This lemma is analogous to `quotient.out_eq'`. -/
 @[simp]
 theorem proj_out (x : hs.Quotient) : hs.proj (hs.out x) = x :=
-  (Quotient.inductionOn' x) fun x => Quotient.sound' <| hs.some_index x
+  Quotient.inductionOn' x fun x => Quotient.sound' <| hs.some_index x
 #align indexed_partition.proj_out IndexedPartition.proj_out
 
 theorem class_of {x : α} : setOf (hs.Setoid.Rel x) = s (hs.index x) :=
@@ -472,7 +472,7 @@ theorem class_of {x : α} : setOf (hs.Setoid.Rel x) = s (hs.index x) :=
 #align indexed_partition.class_of IndexedPartition.class_of
 
 theorem proj_fiber (x : hs.Quotient) : hs.proj ⁻¹' {x} = s (hs.equivQuotient.symm x) :=
-  (Quotient.inductionOn' x) fun x => by
+  Quotient.inductionOn' x fun x => by
     ext y
     simp only [Set.mem_preimage, Set.mem_singleton_iff, hs.mem_iff_index_eq]
     exact Quotient.eq'

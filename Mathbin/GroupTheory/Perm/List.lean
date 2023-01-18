@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 
 ! This file was ported from Lean 3 source module group_theory.perm.list
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -188,7 +188,7 @@ theorem zip_with_swap_prod_support' (l l' : List α) :
 #align list.zip_with_swap_prod_support' List.zip_with_swap_prod_support'
 
 theorem zip_with_swap_prod_support [Fintype α] (l l' : List α) :
-    (zipWith swap l l').Prod.support ≤ l.toFinset ⊔ l'.toFinset :=
+    (zipWith swap l l').Prod.Support ≤ l.toFinset ⊔ l'.toFinset :=
   by
   intro x hx
   have hx' : x ∈ { x | (zip_with swap l l').Prod x ≠ x } := by simpa using hx
@@ -201,7 +201,7 @@ theorem support_form_perm_le' : { x | formPerm l x ≠ x } ≤ l.toFinset :=
   simpa [Finset.subset_iff] using tail_subset l
 #align list.support_form_perm_le' List.support_form_perm_le'
 
-theorem support_form_perm_le [Fintype α] : support (formPerm l) ≤ l.toFinset :=
+theorem support_form_perm_le [Fintype α] : Support (formPerm l) ≤ l.toFinset :=
   by
   intro x hx
   have hx' : x ∈ { x | form_perm l x ≠ x } := by simpa using hx
@@ -259,7 +259,7 @@ theorem support_form_perm_of_nodup' (l : List α) (h : Nodup l) (h' : ∀ x : α
 #align list.support_form_perm_of_nodup' List.support_form_perm_of_nodup'
 
 theorem support_form_perm_of_nodup [Fintype α] (l : List α) (h : Nodup l) (h' : ∀ x : α, l ≠ [x]) :
-    support (formPerm l) = l.toFinset :=
+    Support (formPerm l) = l.toFinset :=
   by
   rw [← Finset.coe_inj]
   convert support_form_perm_of_nodup' _ h h'

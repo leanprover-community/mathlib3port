@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Alena Gusakov, Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.finset.slice
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,7 +55,7 @@ theorem Sized.mono (h : A ⊆ B) (hB : B.Sized r) : A.Sized r := fun x hx => hB 
 
 theorem sized_union : (A ∪ B).Sized r ↔ A.Sized r ∧ B.Sized r :=
   ⟨fun hA => ⟨hA.mono <| subset_union_left _ _, hA.mono <| subset_union_right _ _⟩, fun hA x hx =>
-    (hx.elim fun h => hA.1 h) fun h => hA.2 h⟩
+    hx.elim (fun h => hA.1 h) fun h => hA.2 h⟩
 #align set.sized_union Set.sized_union
 
 alias sized_union ↔ _ sized.union
@@ -80,11 +80,11 @@ protected theorem Sized.is_antichain (hA : A.Sized r) : IsAntichain (· ⊆ ·) 
 #align set.sized.is_antichain Set.Sized.is_antichain
 
 protected theorem Sized.subsingleton (hA : A.Sized 0) : A.Subsingleton :=
-  (subsingleton_of_forall_eq ∅) fun s hs => card_eq_zero.1 <| hA hs
+  subsingleton_of_forall_eq ∅ fun s hs => card_eq_zero.1 <| hA hs
 #align set.sized.subsingleton Set.Sized.subsingleton
 
 theorem Sized.subsingleton' [Fintype α] (hA : A.Sized (Fintype.card α)) : A.Subsingleton :=
-  (subsingleton_of_forall_eq Finset.univ) fun s hs => s.card_eq_iff_eq_univ.1 <| hA hs
+  subsingleton_of_forall_eq Finset.univ fun s hs => s.card_eq_iff_eq_univ.1 <| hA hs
 #align set.sized.subsingleton' Set.Sized.subsingleton'
 
 theorem Sized.empty_mem_iff (hA : A.Sized r) : ∅ ∈ A ↔ A = {∅} :=
@@ -96,7 +96,7 @@ theorem Sized.univ_mem_iff [Fintype α] (hA : A.Sized r) : Finset.univ ∈ A ↔
 #align set.sized.univ_mem_iff Set.Sized.univ_mem_iff
 
 theorem sized_powerset_len (s : Finset α) (r : ℕ) : (powersetLen r s : Set (Finset α)).Sized r :=
-  fun t ht => (mem_powerset_len.1 ht).2
+  fun t ht => (mem_powersetLen.1 ht).2
 #align set.sized_powerset_len Set.sized_powerset_len
 
 end Set
@@ -169,8 +169,8 @@ variable [Fintype α] (𝒜)
 
 @[simp]
 theorem bUnion_slice [DecidableEq α] : (Iic <| Fintype.card α).bUnion 𝒜.slice = 𝒜 :=
-  (Subset.antisymm (bUnion_subset.2 fun r _ => slice_subset)) fun s hs =>
-    mem_bUnion.2 ⟨s.card, mem_Iic.2 <| s.card_le_univ, mem_slice.2 <| ⟨hs, rfl⟩⟩
+  Subset.antisymm (bunionᵢ_subset.2 fun r _ => slice_subset) fun s hs =>
+    mem_bunionᵢ.2 ⟨s.card, mem_Iic.2 <| s.card_le_univ, mem_slice.2 <| ⟨hs, rfl⟩⟩
 #align finset.bUnion_slice Finset.bUnion_slice
 
 @[simp]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.vector.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,6 +48,13 @@ theorem ext : ∀ {v w : Vector α n} (h : ∀ m : Fin n, Vector.nth v m = Vecto
     Subtype.eq (List.ext_nthLe (by rw [hv, hw]) fun m hm hn => h ⟨m, hv ▸ hm⟩)
 #align vector.ext Vector.ext
 
+#print Vector.replicate /-
+/-- A vector with `n` elements `a`. -/
+def replicate (n : ℕ) (a : α) : Vector α n :=
+  ⟨List.replicate n a, List.length_replicate n a⟩
+#align vector.replicate Vector.replicate
+-/
+
 /-- The empty `vector` is a `subsingleton`. -/
 instance zero_subsingleton : Subsingleton (Vector α 0) :=
   ⟨fun _ _ => Vector.ext fun m => Fin.elim0 m⟩
@@ -85,7 +92,7 @@ theorem exists_eq_cons (v : Vector α n.succ) : ∃ (a : α)(as : Vector α n), 
 @[simp]
 theorem to_list_of_fn : ∀ {n} (f : Fin n → α), toList (ofFn f) = List.ofFn f
   | 0, f => rfl
-  | n + 1, f => by rw [of_fn, List.of_fn_succ, to_list_cons, to_list_of_fn]
+  | n + 1, f => by rw [of_fn, List.ofFn_succ, to_list_cons, to_list_of_fn]
 #align vector.to_list_of_fn Vector.to_list_of_fn
 
 @[simp]
@@ -124,8 +131,9 @@ theorem nth_eq_nth_le :
 #align vector.nth_eq_nth_le Vector.nth_eq_nth_le
 
 @[simp]
-theorem nth_repeat (a : α) (i : Fin n) : (Vector.repeat a n).nth i = a := by apply List.nthLe_repeat
-#align vector.nth_repeat Vector.nth_repeat
+theorem nth_replicate (a : α) (i : Fin n) : (Vector.replicate n a).nth i = a :=
+  List.nthLe_replicate _ _
+#align vector.nth_replicate Vector.nth_replicate
 
 @[simp]
 theorem nth_map {β : Type _} (v : Vector α n) (f : α → β) (i : Fin n) :
@@ -134,7 +142,7 @@ theorem nth_map {β : Type _} (v : Vector α n) (f : α → β) (i : Fin n) :
 
 @[simp]
 theorem nth_of_fn {n} (f : Fin n → α) (i) : nth (ofFn f) i = f i := by
-  rw [nth_eq_nth_le, ← List.nth_le_of_fn f] <;> congr <;> apply to_list_of_fn
+  rw [nth_eq_nth_le, ← List.nthLe_ofFn f] <;> congr <;> apply to_list_of_fn
 #align vector.nth_of_fn Vector.nth_of_fn
 
 @[simp]
@@ -143,7 +151,7 @@ theorem of_fn_nth (v : Vector α n) : ofFn (nth v) = v :=
   rcases v with ⟨l, rfl⟩
   apply to_list_injective
   change nth ⟨l, Eq.refl _⟩ with fun i => nth ⟨l, rfl⟩ i
-  simpa only [to_list_of_fn] using List.of_fn_nth_le _
+  simpa only [to_list_of_fn] using List.ofFn_nthLe _
 #align vector.of_fn_nth Vector.of_fn_nth
 
 /-- The natural equivalence between length-`n` vectors and functions from `fin n`. -/

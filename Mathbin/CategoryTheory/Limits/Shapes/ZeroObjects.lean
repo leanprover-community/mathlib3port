@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Johan Commelin
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.zero_objects
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -97,12 +97,12 @@ def iso (hX : IsZero X) (hY : IsZero Y) : X ≅ Y
 
 /-- A zero object is in particular initial. -/
 protected def isInitial (hX : IsZero X) : IsInitial X :=
-  (@IsInitial.ofUnique _ _ X) fun Y => (hX.unique_to Y).some
+  @IsInitial.ofUnique _ _ X fun Y => (hX.unique_to Y).some
 #align category_theory.limits.is_zero.is_initial CategoryTheory.Limits.IsZero.isInitial
 
 /-- A zero object is in particular terminal. -/
 protected def isTerminal (hX : IsZero X) : IsTerminal X :=
-  (@IsTerminal.ofUnique _ _ X) fun Y => (hX.unique_from Y).some
+  @IsTerminal.ofUnique _ _ X fun Y => (hX.unique_from Y).some
 #align category_theory.limits.is_zero.is_terminal CategoryTheory.Limits.IsZero.isTerminal
 
 /-- The (unique) isomorphism between any initial object and the zero object. -/

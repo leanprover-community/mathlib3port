@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.normed.group.add_torsor
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -104,11 +104,11 @@ theorem dist_vadd_right (v : V) (x : P) : dist x (v +ᵥ x) = ‖v‖ := by rw [
 /-- Isometry between the tangent space `V` of a (semi)normed add torsor `P` and `P` given by
 addition/subtraction of `x : P`. -/
 @[simps]
-def Isometric.vaddConst (x : P) : V ≃ᵢ P
+def IsometryEquiv.vaddConst (x : P) : V ≃ᵢ P
     where
   toEquiv := Equiv.vaddConst x
   isometry_to_fun := Isometry.of_dist_eq fun _ _ => dist_vadd_cancel_right _ _ _
-#align isometric.vadd_const Isometric.vaddConst
+#align isometry_equiv.vadd_const IsometryEquiv.vaddConst
 
 section
 
@@ -116,11 +116,11 @@ variable (P)
 
 /-- Self-isometry of a (semi)normed add torsor given by addition of a constant vector `x`. -/
 @[simps]
-def Isometric.constVadd (x : V) : P ≃ᵢ P
+def IsometryEquiv.constVadd (x : V) : P ≃ᵢ P
     where
   toEquiv := Equiv.constVadd P x
   isometry_to_fun := Isometry.of_dist_eq fun _ _ => dist_vadd_cancel_left _ _ _
-#align isometric.const_vadd Isometric.constVadd
+#align isometry_equiv.const_vadd IsometryEquiv.constVadd
 
 end
 
@@ -132,15 +132,15 @@ theorem dist_vsub_cancel_left (x y z : P) : dist (x -ᵥ y) (x -ᵥ z) = dist y 
 /-- Isometry between the tangent space `V` of a (semi)normed add torsor `P` and `P` given by
 subtraction from `x : P`. -/
 @[simps]
-def Isometric.constVsub (x : P) : P ≃ᵢ V
+def IsometryEquiv.constVsub (x : P) : P ≃ᵢ V
     where
   toEquiv := Equiv.constVsub x
   isometry_to_fun := Isometry.of_dist_eq fun y z => dist_vsub_cancel_left _ _ _
-#align isometric.const_vsub Isometric.constVsub
+#align isometry_equiv.const_vsub IsometryEquiv.constVsub
 
 @[simp]
 theorem dist_vsub_cancel_right (x y z : P) : dist (x -ᵥ z) (y -ᵥ z) = dist x y :=
-  (Isometric.vaddConst z).symm.dist_eq x y
+  (IsometryEquiv.vaddConst z).symm.dist_eq x y
 #align dist_vsub_cancel_right dist_vsub_cancel_right
 
 section Pointwise
@@ -149,18 +149,18 @@ open Pointwise
 
 @[simp]
 theorem vadd_ball (x : V) (y : P) (r : ℝ) : x +ᵥ Metric.ball y r = Metric.ball (x +ᵥ y) r :=
-  (Isometric.constVadd P x).image_ball y r
+  (IsometryEquiv.constVadd P x).image_ball y r
 #align vadd_ball vadd_ball
 
 @[simp]
 theorem vadd_closed_ball (x : V) (y : P) (r : ℝ) :
     x +ᵥ Metric.closedBall y r = Metric.closedBall (x +ᵥ y) r :=
-  (Isometric.constVadd P x).image_closed_ball y r
+  (IsometryEquiv.constVadd P x).image_closed_ball y r
 #align vadd_closed_ball vadd_closed_ball
 
 @[simp]
 theorem vadd_sphere (x : V) (y : P) (r : ℝ) : x +ᵥ Metric.sphere y r = Metric.sphere (x +ᵥ y) r :=
-  (Isometric.constVadd P x).image_sphere y r
+  (IsometryEquiv.constVadd P x).image_sphere y r
 #align vadd_sphere vadd_sphere
 
 end Pointwise

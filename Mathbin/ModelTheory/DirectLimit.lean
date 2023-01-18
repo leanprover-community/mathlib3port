@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module model_theory.direct_limit
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -380,7 +380,7 @@ theorem lift_unique (F : DirectLimit G f ↪[L] P) (x) :
     F x =
       lift L ι G f (fun i => F.comp <| of L ι G f i)
         (fun i j hij x => by rw [F.comp_apply, F.comp_apply, of_f]) x :=
-  (DirectLimit.induction_on x) fun i x => by rw [lift_of] <;> rfl
+  DirectLimit.induction_on x fun i x => by rw [lift_of] <;> rfl
 #align first_order.language.direct_limit.lift_unique FirstOrder.Language.DirectLimit.lift_unique
 
 /-- The direct limit of countably many countably generated structures is countably generated. -/

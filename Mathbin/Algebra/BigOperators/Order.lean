@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.big_operators.order
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -149,7 +149,7 @@ theorem prod_le_prod_of_subset_of_one_le' (h : s ⊆ t) (hf : ∀ i ∈ t, i ∉
 
 @[to_additive sum_mono_set_of_nonneg]
 theorem prod_mono_set_of_one_le' (hf : ∀ x, 1 ≤ f x) : Monotone fun s => ∏ x in s, f x :=
-  fun s t hst => (prod_le_prod_of_subset_of_one_le' hst) fun x _ _ => hf x
+  fun s t hst => prod_le_prod_of_subset_of_one_le' hst fun x _ _ => hf x
 #align finset.prod_mono_set_of_one_le' Finset.prod_mono_set_of_one_le'
 
 @[to_additive sum_le_univ_sum_of_nonneg]
@@ -181,7 +181,7 @@ theorem single_le_prod' (hf : ∀ i ∈ s, 1 ≤ f i) {a} (h : a ∈ s) : f a �
   calc
     f a = ∏ i in {a}, f i := prod_singleton.symm
     _ ≤ ∏ i in s, f i :=
-      (prod_le_prod_of_subset_of_one_le' (singleton_subset_iff.2 h)) fun i hi _ => hf i hi
+      prod_le_prod_of_subset_of_one_le' (singleton_subset_iff.2 h) fun i hi _ => hf i hi
     
 #align finset.single_le_prod' Finset.single_le_prod'
 
@@ -215,7 +215,7 @@ theorem prod_fiberwise_le_prod_of_one_le_prod_fiber' {t : Finset ι'} {g : ι �
   calc
     (∏ y in t, ∏ x in s.filter fun x => g x = y, f x) ≤
         ∏ y in t ∪ s.image g, ∏ x in s.filter fun x => g x = y, f x :=
-      (prod_le_prod_of_subset_of_one_le' (subset_union_left _ _)) fun y hyts => h y
+      prod_le_prod_of_subset_of_one_le' (subset_union_left _ _) fun y hyts => h y
     _ = ∏ x in s, f x :=
       prod_fiberwise_of_maps_to (fun x hx => mem_union.2 <| Or.inr <| mem_image_of_mem _ hx) _
     
@@ -361,7 +361,7 @@ theorem card_le_card_bUnion_add_card_fiber {s : Finset ι} {f : ι → Finset α
   rw [← Finset.filter_card_add_filter_neg_card_eq_card fun i => f i = ∅, add_comm]
   exact
     add_le_add_right
-      (((card_le_card_bUnion (hs.subset <| filter_subset _ _)) fun i hi =>
+      ((card_le_card_bUnion (hs.subset <| filter_subset _ _) fun i hi =>
             nonempty_of_ne_empty <| (mem_filter.1 hi).2).trans <|
         card_le_of_subset <| bUnion_subset_bUnion_of_subset_left _ <| filter_subset _ _)
       _
@@ -387,7 +387,7 @@ theorem prod_eq_one_iff' : (∏ x in s, f x) = 1 ↔ ∀ x ∈ s, f x = 1 :=
 
 @[to_additive sum_le_sum_of_subset]
 theorem prod_le_prod_of_subset' (h : s ⊆ t) : (∏ x in s, f x) ≤ ∏ x in t, f x :=
-  (prod_le_prod_of_subset_of_one_le' h) fun x h₁ h₂ => one_le _
+  prod_le_prod_of_subset_of_one_le' h fun x h₁ h₂ => one_le _
 #align finset.prod_le_prod_of_subset' Finset.prod_le_prod_of_subset'
 
 @[to_additive sum_mono_set]
@@ -459,7 +459,7 @@ theorem single_lt_prod' {i j : ι} (hij : j ≠ i) (hi : i ∈ s) (hj : j ∈ s)
   calc
     f i = ∏ k in {i}, f k := prod_singleton.symm
     _ < ∏ k in s, f k :=
-      (prod_lt_prod_of_subset' (singleton_subset_iff.2 hi) hj (mt mem_singleton.1 hij) hlt)
+      prod_lt_prod_of_subset' (singleton_subset_iff.2 hi) hj (mt mem_singleton.1 hij) hlt
         fun k hks hki => hle k hks (mt mem_singleton.2 hki)
     
 #align finset.single_lt_prod' Finset.single_lt_prod'
@@ -661,15 +661,15 @@ open Finset
 /-- A product of finite numbers is still finite -/
 theorem prod_lt_top [CanonicallyOrderedCommSemiring R] [Nontrivial R] [DecidableEq R] {s : Finset ι}
     {f : ι → WithTop R} (h : ∀ i ∈ s, f i ≠ ⊤) : (∏ i in s, f i) < ⊤ :=
-  (prod_induction f (fun a => a < ⊤) (fun a b h₁ h₂ => mul_lt_top h₁.Ne h₂.Ne) (coe_lt_top 1))
+  prod_induction f (fun a => a < ⊤) (fun a b h₁ h₂ => mul_lt_top h₁.Ne h₂.Ne) (coe_lt_top 1)
     fun a ha => lt_top_iff_ne_top.2 (h a ha)
 #align with_top.prod_lt_top WithTop.prod_lt_top
 
 /-- A sum of finite numbers is still finite -/
 theorem sum_lt_top [OrderedAddCommMonoid M] {s : Finset ι} {f : ι → WithTop M}
     (h : ∀ i ∈ s, f i ≠ ⊤) : (∑ i in s, f i) < ⊤ :=
-  (sum_induction f (fun a => a < ⊤) (fun a b h₁ h₂ => add_lt_top.2 ⟨h₁, h₂⟩) zero_lt_top)
-    fun i hi => lt_top_iff_ne_top.2 (h i hi)
+  sum_induction f (fun a => a < ⊤) (fun a b h₁ h₂ => add_lt_top.2 ⟨h₁, h₂⟩) zero_lt_top fun i hi =>
+    lt_top_iff_ne_top.2 (h i hi)
 #align with_top.sum_lt_top WithTop.sum_lt_top
 
 /-- A sum of numbers is infinite iff one of them is infinite -/

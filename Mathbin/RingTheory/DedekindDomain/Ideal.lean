@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenji Nakagawa, Anne Baanen, Filippo A. E. Nuccio
 
 ! This file was ported from Lean 3 source module ring_theory.dedekind_domain.ideal
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -816,7 +816,7 @@ theorem Ideal.eq_prime_pow_of_succ_lt_of_le {P I : Ideal A} [P_prime : P.IsPrime
   have := pow_ne_zero (i + 1) hP
   rw [← Ideal.dvd_not_unit_iff_lt, dvd_not_unit_iff_normalized_factors_lt_normalized_factors,
     normalized_factors_pow, normalized_factors_irreducible P_prime'.irreducible,
-    Multiset.nsmul_singleton, Multiset.lt_repeat_succ] at hlt
+    Multiset.nsmul_singleton, Multiset.lt_replicate_succ] at hlt
   rw [← Ideal.dvd_iff_le, dvd_iff_normalized_factors_le_normalized_factors, normalized_factors_pow,
     normalized_factors_irreducible P_prime'.irreducible, Multiset.nsmul_singleton]
   all_goals assumption
@@ -1012,8 +1012,8 @@ theorem sup_eq_prod_inf_factors (hI : I ≠ ⊥) (hJ : J ≠ ⊥) :
 
 theorem irreducible_pow_sup (hI : I ≠ ⊥) (hJ : Irreducible J) (n : ℕ) :
     J ^ n ⊔ I = J ^ min ((normalizedFactors I).count J) n := by
-  rw [sup_eq_prod_inf_factors (pow_ne_zero n hJ.ne_zero) hI, ← inf_eq_inter,
-    normalized_factors_of_irreducible_pow hJ, normalize_eq J, repeat_inf, prod_repeat]
+  rw [sup_eq_prod_inf_factors (pow_ne_zero n hJ.ne_zero) hI, min_comm,
+    normalized_factors_of_irreducible_pow hJ, normalize_eq J, replicate_inter, prod_replicate]
 #align irreducible_pow_sup irreducible_pow_sup
 
 theorem irreducible_pow_sup_of_le (hJ : Irreducible J) (n : ℕ) (hn : ↑n ≤ multiplicity J I) :
@@ -1412,7 +1412,7 @@ noncomputable def IsDedekindDomain.quotientEquivPiOfProdEq {ι : Type _} [Fintyp
     (prod_eq : (∏ i, P i ^ e i) = I) : R ⧸ I ≃+* ∀ i, R ⧸ P i ^ e i :=
   (Ideal.quotEquivOfEq
         (by
-          simp only [← prod_eq, Finset.inf_eq_infi, Finset.mem_univ, cinfᵢ_pos, ←
+          simp only [← prod_eq, Finset.inf_eq_infᵢ, Finset.mem_univ, cinfᵢ_pos, ←
             IsDedekindDomain.inf_prime_pow_eq_prod _ _ _ (fun i _ => Prime i) fun i _ j _ =>
               coprime i j])).trans <|
     Ideal.quotientInfRingEquivPiQuotient _ fun i j hij =>
@@ -1436,7 +1436,7 @@ where `P i` ranges over the prime factors of `I` and `e i` over the multipliciti
 noncomputable def IsDedekindDomain.quotientEquivPiFactors {I : Ideal R} (hI : I ≠ ⊥) :
     R ⧸ I ≃+* ∀ P : (factors I).toFinset, R ⧸ (P : Ideal R) ^ (factors I).count P :=
   IsDedekindDomain.quotientEquivPiOfProdEq _ _ _
-    (fun P : (factors I).toFinset => prime_of_factor _ (Multiset.mem_to_finset.mp P.Prop))
+    (fun P : (factors I).toFinset => prime_of_factor _ (Multiset.mem_toFinset.mp P.Prop))
     (fun i j hij => Subtype.coe_injective.Ne hij)
     (calc
       (∏ P : (factors I).toFinset, (P : Ideal R) ^ (factors I).count (P : Ideal R)) =

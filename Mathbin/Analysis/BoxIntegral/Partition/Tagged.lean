@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.box_integral.partition.tagged
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -473,14 +473,14 @@ theorem distortion_le_iff {c : ℝ≥0} : π.distortion ≤ c ↔ ∀ J ∈ π, 
 theorem BoxIntegral.Prepartition.distortion_bUnion_tagged (π : Prepartition I)
     (πi : ∀ J, TaggedPrepartition J) :
     (π.bUnionTagged πi).distortion = π.boxes.sup fun J => (πi J).distortion :=
-  sup_bUnion _ _
+  sup_bunionᵢ _ _
 #align
   box_integral.prepartition.distortion_bUnion_tagged BoxIntegral.Prepartition.distortion_bUnion_tagged
 
 @[simp]
 theorem distortion_bUnion_prepartition (π : TaggedPrepartition I) (πi : ∀ J, Prepartition J) :
     (π.bUnionPrepartition πi).distortion = π.boxes.sup fun J => (πi J).distortion :=
-  sup_bUnion _ _
+  sup_bunionᵢ _ _
 #align
   box_integral.tagged_prepartition.distortion_bUnion_prepartition BoxIntegral.TaggedPrepartition.distortion_bUnion_prepartition
 

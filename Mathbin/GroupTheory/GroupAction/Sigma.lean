@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module group_theory.group_action.sigma
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,7 +36,7 @@ variable [∀ i, SMul M (α i)] [∀ i, SMul N (α i)] (a : M) (i : ι) (b : α 
 
 @[to_additive Sigma.hasVadd]
 instance : SMul M (Σi, α i) :=
-  ⟨fun a => (Sigma.map id) fun i => (· • ·) a⟩
+  ⟨fun a => Sigma.map id fun i => (· • ·) a⟩
 
 /- warning: sigma.smul_def -> Sigma.smul_def is a dubious translation:
 lean 3 declaration is
@@ -92,7 +92,7 @@ protected theorem FaithfulSMul' [FaithfulSMul M (α i)] : FaithfulSMul M (Σi, �
 
 @[to_additive]
 instance [Nonempty ι] [∀ i, FaithfulSMul M (α i)] : FaithfulSMul M (Σi, α i) :=
-  (Nonempty.elim ‹_›) fun i => Sigma.FaithfulSMul' i
+  Nonempty.elim ‹_› fun i => Sigma.FaithfulSMul' i
 
 end SMul
 

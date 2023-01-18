@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Chris Hughes
 
 ! This file was ported from Lean 3 source module ring_theory.integral_domain
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,7 +60,7 @@ def Fintype.groupWithZeroOfCancel (M : Type _) [CancelMonoidWithZero M] [Decidab
     inv := fun a => if h : a = 0 then 0 else Fintype.bijInv (mul_right_bijective_of_finite₀ h) 1
     mul_inv_cancel := fun a ha => by
       simp [Inv.inv, dif_neg ha]
-      exact Fintype.right_inverse_bij_inv _ _
+      exact Fintype.rightInverse_bijInv _ _
     inv_zero := by simp [Inv.inv, dif_pos rfl] }
 #align fintype.group_with_zero_of_cancel Fintype.groupWithZeroOfCancel
 
@@ -134,7 +134,7 @@ theorem card_nth_roots_subgroup_units [Fintype G] (f : G →* R) (hf : Injective
   apply card_le_card_of_inj_on f
   · intro g hg
     rw [sep_def, mem_filter] at hg
-    rw [Multiset.mem_to_finset, mem_nth_roots hn, ← f.map_pow, hg.2]
+    rw [Multiset.mem_toFinset, mem_nth_roots hn, ← f.map_pow, hg.2]
   · intros
     apply hf
     assumption
@@ -172,6 +172,29 @@ instance subgroup_units_cyclic : IsCyclic S :=
 #align subgroup_units_cyclic subgroup_units_cyclic
 
 end
+
+section EuclideanDivision
+
+namespace Polynomial
+
+open Polynomial
+
+variable (K : Type) [Field K] [Algebra R[X] K] [IsFractionRing R[X] K]
+
+theorem div_eq_quo_add_rem_div (f : R[X]) {g : R[X]} (hg : g.Monic) :
+    ∃ q r : R[X], r.degree < g.degree ∧ (↑f : K) / ↑g = ↑q + ↑r / ↑g :=
+  by
+  refine' ⟨f /ₘ g, f %ₘ g, _, _⟩
+  · exact degree_mod_by_monic_lt _ hg
+  · have hg' : (↑g : K) ≠ 0 := by exact_mod_cast monic.ne_zero hg
+    field_simp [hg']
+    norm_cast
+    rw [add_comm, mul_comm, mod_by_monic_add_div f hg]
+#align polynomial.div_eq_quo_add_rem_div Polynomial.div_eq_quo_add_rem_div
+
+end Polynomial
+
+end EuclideanDivision
 
 variable [Fintype G]
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Jireh Loreaux
 
 ! This file was ported from Lean 3 source module algebra.star.subalgebra
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -397,7 +397,7 @@ def starClosure (S : Subalgebra R A) : StarSubalgebra R A :=
 theorem star_closure_le {S₁ : Subalgebra R A} {S₂ : StarSubalgebra R A} (h : S₁ ≤ S₂.toSubalgebra) :
     S₁.starClosure ≤ S₂ :=
   StarSubalgebra.to_subalgebra_le_iff.1 <|
-    (sup_le h) fun x hx =>
+    sup_le h fun x hx =>
       (star_star x ▸ star_mem (show star x ∈ S₂ from h <| (S₁.mem_star_iff _).1 hx) : x ∈ S₂)
 #align subalgebra.star_closure_le Subalgebra.star_closure_le
 
@@ -465,7 +465,7 @@ protected theorem gc : GaloisConnection (adjoin R : Set A → StarSubalgebra R A
   rw [← to_subalgebra_le_iff, adjoin_to_subalgebra, Algebra.adjoin_le_iff, coe_to_subalgebra]
   exact
     ⟨fun h => (Set.subset_union_left s _).trans h, fun h =>
-      (Set.union_subset h) fun x hx => star_star x ▸ star_mem (show star x ∈ S from h hx)⟩
+      Set.union_subset h fun x hx => star_star x ▸ star_mem (show star x ∈ S from h hx)⟩
 #align star_subalgebra.gc StarSubalgebra.gc
 
 /-- Galois insertion between `adjoin` and `coe`. -/
@@ -532,17 +532,15 @@ theorem adjoin_induction' {s : Set A} {p : adjoin R s → Prop} (a : adjoin R s)
     (Hs : ∀ (x) (h : x ∈ s), p ⟨x, subset_adjoin R s h⟩) (Halg : ∀ r, p (algebraMap R _ r))
     (Hadd : ∀ x y, p x → p y → p (x + y)) (Hmul : ∀ x y, p x → p y → p (x * y))
     (Hstar : ∀ x, p x → p (star x)) : p a :=
-  (Subtype.recOn a) fun b hb =>
+  Subtype.recOn a fun b hb =>
     by
     refine' Exists.elim _ fun (hb : b ∈ adjoin R s) (hc : p ⟨b, hb⟩) => hc
     apply adjoin_induction hb
     exacts[fun x hx => ⟨subset_adjoin R s hx, Hs x hx⟩, fun r =>
       ⟨StarSubalgebra.algebra_map_mem _ r, Halg r⟩, fun x y hx hy =>
-      (Exists.elim hx) fun hx' hx =>
-        (Exists.elim hy) fun hy' hy => ⟨add_mem hx' hy', Hadd _ _ hx hy⟩,
+      Exists.elim hx fun hx' hx => Exists.elim hy fun hy' hy => ⟨add_mem hx' hy', Hadd _ _ hx hy⟩,
       fun x y hx hy =>
-      (Exists.elim hx) fun hx' hx =>
-        (Exists.elim hy) fun hy' hy => ⟨mul_mem hx' hy', Hmul _ _ hx hy⟩,
+      Exists.elim hx fun hx' hx => Exists.elim hy fun hy' hy => ⟨mul_mem hx' hy', Hmul _ _ hx hy⟩,
       fun x hx => Exists.elim hx fun hx' hx => ⟨star_mem hx', Hstar _ hx⟩]
 #align star_subalgebra.adjoin_induction' StarSubalgebra.adjoin_induction'
 
@@ -758,7 +756,7 @@ theorem adjoin_le_equalizer {s : Set A} (h : s.EqOn f g) : adjoin R s ≤ StarAl
 #align star_alg_hom.adjoin_le_equalizer StarAlgHom.adjoin_le_equalizer
 
 theorem ext_of_adjoin_eq_top {s : Set A} (h : adjoin R s = ⊤) ⦃f g : F⦄ (hs : s.EqOn f g) : f = g :=
-  (FunLike.ext f g) fun x => StarAlgHom.adjoin_le_equalizer f g hs <| h.symm ▸ trivial
+  FunLike.ext f g fun x => StarAlgHom.adjoin_le_equalizer f g hs <| h.symm ▸ trivial
 #align star_alg_hom.ext_of_adjoin_eq_top StarAlgHom.ext_of_adjoin_eq_top
 
 omit hF

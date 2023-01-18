@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module data.set_like.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -246,7 +246,7 @@ theorem le_def {S T : A} : S ≤ T ↔ ∀ ⦃x : B⦄, x ∈ S → x ∈ T :=
 lean 3 declaration is
   forall {A : Type.{u1}} {B : Type.{u2}} [i : SetLike.{u1, u2} A B] {S : A} {T : A}, Iff (HasSubset.Subset.{u2} (Set.{u2} B) (Set.hasSubset.{u2} B) ((fun (a : Type.{u1}) (b : Type.{u2}) [self : HasLiftT.{succ u1, succ u2} a b] => self.0) A (Set.{u2} B) (HasLiftT.mk.{succ u1, succ u2} A (Set.{u2} B) (CoeTCₓ.coe.{succ u1, succ u2} A (Set.{u2} B) (SetLike.Set.hasCoeT.{u1, u2} A B i))) S) ((fun (a : Type.{u1}) (b : Type.{u2}) [self : HasLiftT.{succ u1, succ u2} a b] => self.0) A (Set.{u2} B) (HasLiftT.mk.{succ u1, succ u2} A (Set.{u2} B) (CoeTCₓ.coe.{succ u1, succ u2} A (Set.{u2} B) (SetLike.Set.hasCoeT.{u1, u2} A B i))) T)) (LE.le.{u1} A (Preorder.toLE.{u1} A (PartialOrder.toPreorder.{u1} A (SetLike.partialOrder.{u1, u2} A B i))) S T)
 but is expected to have type
-  forall {A : Type.{u1}} {B : Type.{u2}} [i : SetLike.{u1, u2} A B] {S : A} {T : A}, Iff (HasSubset.Subset.{u2} (Set.{u2} B) (Set.instHasSubsetSet_1.{u2} B) (SetLike.coe.{u1, u2} A B i S) (SetLike.coe.{u1, u2} A B i T)) (LE.le.{u1} A (Preorder.toLE.{u1} A (PartialOrder.toPreorder.{u1} A (SetLike.instPartialOrder.{u1, u2} A B i))) S T)
+  forall {A : Type.{u1}} {B : Type.{u2}} [i : SetLike.{u1, u2} A B] {S : A} {T : A}, Iff (HasSubset.Subset.{u2} (Set.{u2} B) (Set.instHasSubsetSet.{u2} B) (SetLike.coe.{u1, u2} A B i S) (SetLike.coe.{u1, u2} A B i T)) (LE.le.{u1} A (Preorder.toLE.{u1} A (PartialOrder.toPreorder.{u1} A (SetLike.instPartialOrder.{u1, u2} A B i))) S T)
 Case conversion may be inaccurate. Consider using '#align set_like.coe_subset_coe SetLike.coe_subset_coeₓ'. -/
 @[simp, norm_cast]
 theorem coe_subset_coe {S T : A} : (S : Set B) ⊆ T ↔ S ≤ T :=

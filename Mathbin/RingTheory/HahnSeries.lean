@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module ring_theory.hahn_series
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1160,8 +1160,7 @@ def toPowerSeries : HahnSeries ℕ R ≃+* PowerSeries R
     ext n
     simp only [PowerSeries.coeff_mul, PowerSeries.coeff_mk, mul_coeff, is_pwo_support]
     classical
-      refine'
-        sum_filter_ne_zero.symm.trans (((sum_congr _) fun _ _ => rfl).trans sum_filter_ne_zero)
+      refine' sum_filter_ne_zero.symm.trans ((sum_congr _ fun _ _ => rfl).trans sum_filter_ne_zero)
       ext m
       simp only [nat.mem_antidiagonal, mem_add_antidiagonal, and_congr_left_iff, mem_filter,
         mem_support]

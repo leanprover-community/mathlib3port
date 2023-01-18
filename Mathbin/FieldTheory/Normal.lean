@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Thomas Browning, Patrick Lutz
 
 ! This file was ported from Lean 3 source module field_theory.normal
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -82,7 +82,7 @@ theorem Normal.exists_is_splitting_field [h : Normal F K] [FiniteDimensional F K
   by
   let s := Basis.ofVectorSpace F K
   refine'
-    ⟨∏ x, minpoly F (s x), (splits_prod _) fun x hx => h.splits (s x),
+    ⟨∏ x, minpoly F (s x), splits_prod _ fun x hx => h.splits (s x),
       subalgebra.to_submodule.injective _⟩
   rw [Algebra.top_to_submodule, eq_top_iff, ← s.span_eq, Submodule.span_le, Set.range_subset_iff]
   refine' fun x =>
@@ -229,7 +229,7 @@ theorem Normal.of_is_splitting_field (p : F[X]) [hFEp : IsSplittingField F E p] 
       @Subalgebra.restrict_scalars_top F C] at this
     exact top_le_iff.mpr (Subalgebra.restrict_scalars_injective F this)
   dsimp only [S]
-  rw [← Finset.image_to_finset, Finset.coe_image]
+  rw [← Finset.image_toFinset, Finset.coe_image]
   apply
     Eq.trans
       (Algebra.adjoin_res_eq_adjoin_res F E C D hFEp.adjoin_roots AdjoinRoot.adjoin_root_eq_top)
@@ -487,7 +487,7 @@ theorem restrict_scalars_eq_supr_adjoin [h : Normal F L] :
       minpoly.ne_zero
         ((is_integral_algebra_map_iff (algebraMap K L).Injective).mp
           (h.is_integral (algebraMap K L x)))
-  · rw [Polynomial.rootSet, Finset.mem_coe, Multiset.mem_to_finset] at hy
+  · rw [Polynomial.rootSet, Finset.mem_coe, Multiset.mem_toFinset] at hy
     let g :=
       (alg_hom_adjoin_integral_equiv F
             ((is_integral_algebra_map_iff (algebraMap K L).Injective).mp

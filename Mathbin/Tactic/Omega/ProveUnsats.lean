@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seul Baek
 
 ! This file was ported from Lean 3 source module tactic.omega.prove_unsats
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -26,13 +26,13 @@ unsafe def prove_neg : Int → tactic expr
   | -[m+1] => return q(Int.negSucc_lt_zero $(q(m)))
 #align omega.prove_neg omega.prove_neg
 
-theorem forall_mem_repeat_zero_eq_zero (m : Nat) : ∀ x ∈ List.repeat (0 : Int) m, x = (0 : Int) :=
-  fun x => List.eq_of_mem_repeat
-#align omega.forall_mem_repeat_zero_eq_zero Omega.forall_mem_repeat_zero_eq_zero
+theorem forall_mem_replicate_zero_eq_zero (m : Nat) :
+    ∀ x ∈ List.replicate m (0 : Int), x = (0 : Int) := fun x => List.eq_of_mem_replicate
+#align omega.forall_mem_replicate_zero_eq_zero Omega.forall_mem_replicate_zero_eq_zero
 
-/-- Return expr of proof that elements of (repeat 0 is.length) are all 0 -/
+/-- Return expr of proof that elements of (replicate is.length 0) are all 0 -/
 unsafe def prove_forall_mem_eq_zero (is : List Int) : tactic expr :=
-  return q(forall_mem_repeat_zero_eq_zero is.length)
+  return q(forall_mem_replicate_zero_eq_zero is.length)
 #align omega.prove_forall_mem_eq_zero omega.prove_forall_mem_eq_zero
 
 /-- Return expr of proof that the combination of linear constraints

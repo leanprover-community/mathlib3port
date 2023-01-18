@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rohan Mitta, Kevin Buzzard, Alistair Tucker, Johannes Hölzl, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.lipschitz
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -284,7 +284,7 @@ protected theorem uncurry {f : α → β → γ} {Kα Kβ : ℝ≥0} (hα : ∀ 
 #align lipschitz_with.uncurry LipschitzWith.uncurry
 
 protected theorem iterate {f : α → α} (hf : LipschitzWith K f) : ∀ n, LipschitzWith (K ^ n) (f^[n])
-  | 0 => LipschitzWith.id
+  | 0 => by simpa only [pow_zero] using LipschitzWith.id
   | n + 1 => by rw [pow_succ'] <;> exact (iterate n).comp hf
 #align lipschitz_with.iterate LipschitzWith.iterate
 
@@ -313,7 +313,7 @@ protected theorem list_prod (f : ι → Function.End α) (K : ι → ℝ≥0)
 
 protected theorem pow {f : Function.End α} {K} (h : LipschitzWith K f) :
     ∀ n : ℕ, LipschitzWith (K ^ n) (f ^ n : Function.End α)
-  | 0 => LipschitzWith.id
+  | 0 => by simpa only [pow_zero] using LipschitzWith.id
   | n + 1 => by
     rw [pow_succ, pow_succ]
     exact h.mul (pow n)
@@ -388,7 +388,7 @@ theorem maps_to_ball (hf : LipschitzWith K f) (hK : K ≠ 0) (x : α) (r : ℝ) 
 
 /-- A Lipschitz continuous map is a locally bounded map. -/
 def toLocallyBoundedMap (f : α → β) (hf : LipschitzWith K f) : LocallyBoundedMap α β :=
-  (LocallyBoundedMap.ofMapBounded f) fun s hs =>
+  LocallyBoundedMap.ofMapBounded f fun s hs =>
     let ⟨C, hC⟩ := Metric.is_bounded_iff.1 hs
     Metric.is_bounded_iff.2
       ⟨K * C,

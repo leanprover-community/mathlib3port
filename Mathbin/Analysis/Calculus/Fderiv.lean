@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Sébastien Gouëzel, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.calculus.fderiv
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -841,7 +841,7 @@ theorem Filter.EventuallyEq.has_fderiv_at_filter_iff (h₀ : f₀ =ᶠ[L] f₁) 
 
 theorem HasFderivAtFilter.congrOfEventuallyEq (h : HasFderivAtFilter f f' x L) (hL : f₁ =ᶠ[L] f)
     (hx : f₁ x = f x) : HasFderivAtFilter f₁ f' x L :=
-  ((hL.has_fderiv_at_filter_iff hx) fun _ => rfl).2 h
+  (hL.has_fderiv_at_filter_iff hx fun _ => rfl).2 h
 #align has_fderiv_at_filter.congr_of_eventually_eq HasFderivAtFilter.congrOfEventuallyEq
 
 theorem Filter.EventuallyEq.has_fderiv_at_iff (h : f₀ =ᶠ[𝓝 x] f₁) :
@@ -1132,7 +1132,7 @@ theorem differentiable_on_singleton : DifferentiableOn 𝕜 f {x} :=
 #align differentiable_on_singleton differentiable_on_singleton
 
 theorem Set.Subsingleton.differentiable_on (hs : s.Subsingleton) : DifferentiableOn 𝕜 f s :=
-  hs.induction_on differentiable_on_empty fun x => differentiable_on_singleton
+  hs.inductionOn differentiable_on_empty fun x => differentiable_on_singleton
 #align set.subsingleton.differentiable_on Set.Subsingleton.differentiable_on
 
 theorem hasFderivAtZeroOfEventuallyConst (c : F) (hf : f =ᶠ[𝓝 x] fun y => c) :

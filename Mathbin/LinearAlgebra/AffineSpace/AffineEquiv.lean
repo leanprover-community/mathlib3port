@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module linear_algebra.affine_space.affine_equiv
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -265,6 +265,16 @@ theorem apply_eq_iff_eq_symm_apply (e : P₁ ≃ᵃ[k] P₂) {p₁ p₂} : e p�
 theorem apply_eq_iff_eq (e : P₁ ≃ᵃ[k] P₂) {p₁ p₂ : P₁} : e p₁ = e p₂ ↔ p₁ = p₂ :=
   e.toEquiv.apply_eq_iff_eq
 #align affine_equiv.apply_eq_iff_eq AffineEquiv.apply_eq_iff_eq
+
+@[simp]
+theorem image_symm (f : P₁ ≃ᵃ[k] P₂) (s : Set P₂) : f.symm '' s = f ⁻¹' s :=
+  f.symm.toEquiv.image_eq_preimage _
+#align affine_equiv.image_symm AffineEquiv.image_symm
+
+@[simp]
+theorem preimage_symm (f : P₁ ≃ᵃ[k] P₂) (s : Set P₁) : f.symm ⁻¹' s = f '' s :=
+  (f.symm.image_symm _).symm
+#align affine_equiv.preimage_symm AffineEquiv.preimage_symm
 
 variable (k P₁)
 
@@ -598,7 +608,7 @@ theorem injective_point_reflection_left_of_injective_bit0 (h : Injective (bit0 :
 
 theorem injective_point_reflection_left_of_module [Invertible (2 : k)] :
     ∀ y, Injective fun x : P₁ => pointReflection k x y :=
-  (injective_point_reflection_left_of_injective_bit0 k) fun x y h => by
+  injective_point_reflection_left_of_injective_bit0 k fun x y h => by
     rwa [bit0, bit0, ← two_smul k x, ← two_smul k y,
       (isUnit_of_invertible (2 : k)).smul_left_cancel] at h
 #align

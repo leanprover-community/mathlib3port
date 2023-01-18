@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.rel
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -90,7 +90,7 @@ def dom :=
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {r : Rel.{u1, u2} α β} {s : Rel.{u1, u2} α β}, (LE.le.{max u1 u2} (Rel.{u1, u2} α β) (Preorder.toLE.{max u1 u2} (Rel.{u1, u2} α β) (PartialOrder.toPreorder.{max u1 u2} (Rel.{u1, u2} α β) (CompleteSemilatticeInf.toPartialOrder.{max u1 u2} (Rel.{u1, u2} α β) (CompleteLattice.toCompleteSemilatticeInf.{max u1 u2} (Rel.{u1, u2} α β) (Rel.completeLattice.{u1, u2} α β))))) r s) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Rel.dom.{u1, u2} α β r) (Rel.dom.{u1, u2} α β s))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : Rel.{u2, u1} α β} {s : Rel.{u2, u1} α β}, (LE.le.{max u2 u1} (Rel.{u2, u1} α β) (Preorder.toLE.{max u2 u1} (Rel.{u2, u1} α β) (PartialOrder.toPreorder.{max u2 u1} (Rel.{u2, u1} α β) (CompleteSemilatticeInf.toPartialOrder.{max u2 u1} (Rel.{u2, u1} α β) (CompleteLattice.toCompleteSemilatticeInf.{max u2 u1} (Rel.{u2, u1} α β) (instCompleteLatticeRel.{u2, u1} α β))))) r s) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet_1.{u2} α) (Rel.dom.{u2, u1} α β r) (Rel.dom.{u2, u1} α β s))
+  forall {α : Type.{u2}} {β : Type.{u1}} {r : Rel.{u2, u1} α β} {s : Rel.{u2, u1} α β}, (LE.le.{max u2 u1} (Rel.{u2, u1} α β) (Preorder.toLE.{max u2 u1} (Rel.{u2, u1} α β) (PartialOrder.toPreorder.{max u2 u1} (Rel.{u2, u1} α β) (CompleteSemilatticeInf.toPartialOrder.{max u2 u1} (Rel.{u2, u1} α β) (CompleteLattice.toCompleteSemilatticeInf.{max u2 u1} (Rel.{u2, u1} α β) (instCompleteLatticeRel.{u2, u1} α β))))) r s) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) (Rel.dom.{u2, u1} α β r) (Rel.dom.{u2, u1} α β s))
 Case conversion may be inaccurate. Consider using '#align rel.dom_mono Rel.dom_monoₓ'. -/
 theorem dom_mono {r s : Rel α β} (h : r ≤ s) : dom r ⊆ dom s := fun a ⟨b, hx⟩ => ⟨b, h a b hx⟩
 #align rel.dom_mono Rel.dom_mono
@@ -211,7 +211,7 @@ theorem mem_image (y : β) (s : Set α) : y ∈ image r s ↔ ∃ x ∈ s, r x y
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} (r : Rel.{u1, u2} α β), Relator.LiftFun.{succ u1, succ u1, succ u2, succ u2} (Set.{u1} α) (Set.{u1} α) (Set.{u2} β) (Set.{u2} β) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α)) (HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β)) (Rel.image.{u1, u2} α β r) (Rel.image.{u1, u2} α β r)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (r : Rel.{u2, u1} α β), Relator.LiftFun.{succ u2, succ u2, succ u1, succ u1} (Set.{u2} α) (Set.{u2} α) (Set.{u1} β) (Set.{u1} β) (fun (x._@.Mathlib.Data.Rel._hyg.1505 : Set.{u2} α) (x._@.Mathlib.Data.Rel._hyg.1507 : Set.{u2} α) => HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet_1.{u2} α) x._@.Mathlib.Data.Rel._hyg.1505 x._@.Mathlib.Data.Rel._hyg.1507) (fun (x._@.Mathlib.Data.Rel._hyg.1520 : Set.{u1} β) (x._@.Mathlib.Data.Rel._hyg.1522 : Set.{u1} β) => HasSubset.Subset.{u1} (Set.{u1} β) (Set.instHasSubsetSet_1.{u1} β) x._@.Mathlib.Data.Rel._hyg.1520 x._@.Mathlib.Data.Rel._hyg.1522) (Rel.image.{u2, u1} α β r) (Rel.image.{u2, u1} α β r)
+  forall {α : Type.{u2}} {β : Type.{u1}} (r : Rel.{u2, u1} α β), Relator.LiftFun.{succ u2, succ u2, succ u1, succ u1} (Set.{u2} α) (Set.{u2} α) (Set.{u1} β) (Set.{u1} β) (fun (x._@.Mathlib.Data.Rel._hyg.1505 : Set.{u2} α) (x._@.Mathlib.Data.Rel._hyg.1507 : Set.{u2} α) => HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) x._@.Mathlib.Data.Rel._hyg.1505 x._@.Mathlib.Data.Rel._hyg.1507) (fun (x._@.Mathlib.Data.Rel._hyg.1520 : Set.{u1} β) (x._@.Mathlib.Data.Rel._hyg.1522 : Set.{u1} β) => HasSubset.Subset.{u1} (Set.{u1} β) (Set.instHasSubsetSet.{u1} β) x._@.Mathlib.Data.Rel._hyg.1520 x._@.Mathlib.Data.Rel._hyg.1522) (Rel.image.{u2, u1} α β r) (Rel.image.{u2, u1} α β r)
 Case conversion may be inaccurate. Consider using '#align rel.image_subset Rel.image_subsetₓ'. -/
 theorem image_subset : ((· ⊆ ·) ⇒ (· ⊆ ·)) r.image r.image := fun s t h y ⟨x, xs, rxy⟩ =>
   ⟨x, h xs, rxy⟩
@@ -231,7 +231,7 @@ theorem image_mono : Monotone r.image :=
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} (r : Rel.{u1, u2} α β) (s : Set.{u1} α) (t : Set.{u1} α), HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) (Rel.image.{u1, u2} α β r (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t)) (Inter.inter.{u2} (Set.{u2} β) (Set.hasInter.{u2} β) (Rel.image.{u1, u2} α β r s) (Rel.image.{u1, u2} α β r t))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (r : Rel.{u2, u1} α β) (s : Set.{u2} α) (t : Set.{u2} α), HasSubset.Subset.{u1} (Set.{u1} β) (Set.instHasSubsetSet_1.{u1} β) (Rel.image.{u2, u1} α β r (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet_1.{u2} α) s t)) (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet_1.{u1} β) (Rel.image.{u2, u1} α β r s) (Rel.image.{u2, u1} α β r t))
+  forall {α : Type.{u2}} {β : Type.{u1}} (r : Rel.{u2, u1} α β) (s : Set.{u2} α) (t : Set.{u2} α), HasSubset.Subset.{u1} (Set.{u1} β) (Set.instHasSubsetSet.{u1} β) (Rel.image.{u2, u1} α β r (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) s t)) (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet.{u1} β) (Rel.image.{u2, u1} α β r s) (Rel.image.{u2, u1} α β r t))
 Case conversion may be inaccurate. Consider using '#align rel.image_inter Rel.image_interₓ'. -/
 theorem image_inter (s t : Set α) : r.image (s ∩ t) ⊆ r.image s ∩ r.image t :=
   r.image_mono.map_inf_le s t
@@ -241,7 +241,7 @@ theorem image_inter (s t : Set α) : r.image (s ∩ t) ⊆ r.image s ∩ r.image
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} (r : Rel.{u1, u2} α β) (s : Set.{u1} α) (t : Set.{u1} α), Eq.{succ u2} (Set.{u2} β) (Rel.image.{u1, u2} α β r (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s t)) (Union.union.{u2} (Set.{u2} β) (Set.hasUnion.{u2} β) (Rel.image.{u1, u2} α β r s) (Rel.image.{u1, u2} α β r t))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (r : Rel.{u2, u1} α β) (s : Set.{u2} α) (t : Set.{u2} α), Eq.{succ u1} (Set.{u1} β) (Rel.image.{u2, u1} α β r (Union.union.{u2} (Set.{u2} α) (Set.instUnionSet_1.{u2} α) s t)) (Union.union.{u1} (Set.{u1} β) (Set.instUnionSet_1.{u1} β) (Rel.image.{u2, u1} α β r s) (Rel.image.{u2, u1} α β r t))
+  forall {α : Type.{u2}} {β : Type.{u1}} (r : Rel.{u2, u1} α β) (s : Set.{u2} α) (t : Set.{u2} α), Eq.{succ u1} (Set.{u1} β) (Rel.image.{u2, u1} α β r (Union.union.{u2} (Set.{u2} α) (Set.instUnionSet.{u2} α) s t)) (Union.union.{u1} (Set.{u1} β) (Set.instUnionSet.{u1} β) (Rel.image.{u2, u1} α β r s) (Rel.image.{u2, u1} α β r t))
 Case conversion may be inaccurate. Consider using '#align rel.image_union Rel.image_unionₓ'. -/
 theorem image_union (s t : Set α) : r.image (s ∪ t) = r.image s ∪ r.image t :=
   le_antisymm
@@ -318,7 +318,7 @@ theorem preimage_mono {s t : Set β} (h : s ⊆ t) : r.Preimage s ⊆ r.Preimage
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} (r : Rel.{u1, u2} α β) (s : Set.{u2} β) (t : Set.{u2} β), HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Rel.preimage.{u1, u2} α β r (Inter.inter.{u2} (Set.{u2} β) (Set.hasInter.{u2} β) s t)) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (Rel.preimage.{u1, u2} α β r s) (Rel.preimage.{u1, u2} α β r t))
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} (r : Rel.{u1, u2} α β) (s : Set.{u2} β) (t : Set.{u2} β), HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) (Rel.preimage.{u1, u2} α β r (Inter.inter.{u2} (Set.{u2} β) (Set.instInterSet_1.{u2} β) s t)) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet_1.{u1} α) (Rel.preimage.{u1, u2} α β r s) (Rel.preimage.{u1, u2} α β r t))
+  forall {α : Type.{u1}} {β : Type.{u2}} (r : Rel.{u1, u2} α β) (s : Set.{u2} β) (t : Set.{u2} β), HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Rel.preimage.{u1, u2} α β r (Inter.inter.{u2} (Set.{u2} β) (Set.instInterSet.{u2} β) s t)) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (Rel.preimage.{u1, u2} α β r s) (Rel.preimage.{u1, u2} α β r t))
 Case conversion may be inaccurate. Consider using '#align rel.preimage_inter Rel.preimage_interₓ'. -/
 theorem preimage_inter (s t : Set β) : r.Preimage (s ∩ t) ⊆ r.Preimage s ∩ r.Preimage t :=
   image_inter _ s t
@@ -328,7 +328,7 @@ theorem preimage_inter (s t : Set β) : r.Preimage (s ∩ t) ⊆ r.Preimage s �
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} (r : Rel.{u1, u2} α β) (s : Set.{u2} β) (t : Set.{u2} β), Eq.{succ u1} (Set.{u1} α) (Rel.preimage.{u1, u2} α β r (Union.union.{u2} (Set.{u2} β) (Set.hasUnion.{u2} β) s t)) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) (Rel.preimage.{u1, u2} α β r s) (Rel.preimage.{u1, u2} α β r t))
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} (r : Rel.{u1, u2} α β) (s : Set.{u2} β) (t : Set.{u2} β), Eq.{succ u1} (Set.{u1} α) (Rel.preimage.{u1, u2} α β r (Union.union.{u2} (Set.{u2} β) (Set.instUnionSet_1.{u2} β) s t)) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet_1.{u1} α) (Rel.preimage.{u1, u2} α β r s) (Rel.preimage.{u1, u2} α β r t))
+  forall {α : Type.{u1}} {β : Type.{u2}} (r : Rel.{u1, u2} α β) (s : Set.{u2} β) (t : Set.{u2} β), Eq.{succ u1} (Set.{u1} α) (Rel.preimage.{u1, u2} α β r (Union.union.{u2} (Set.{u2} β) (Set.instUnionSet.{u2} β) s t)) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) (Rel.preimage.{u1, u2} α β r s) (Rel.preimage.{u1, u2} α β r t))
 Case conversion may be inaccurate. Consider using '#align rel.preimage_union Rel.preimage_unionₓ'. -/
 theorem preimage_union (s t : Set β) : r.Preimage (s ∪ t) = r.Preimage s ∪ r.Preimage t :=
   image_union _ s t
@@ -392,7 +392,7 @@ theorem core_mono : Monotone r.core :=
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} (r : Rel.{u1, u2} α β) (s : Set.{u2} β) (t : Set.{u2} β), Eq.{succ u1} (Set.{u1} α) (Rel.core.{u1, u2} α β r (Inter.inter.{u2} (Set.{u2} β) (Set.hasInter.{u2} β) s t)) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (Rel.core.{u1, u2} α β r s) (Rel.core.{u1, u2} α β r t))
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} (r : Rel.{u1, u2} α β) (s : Set.{u2} β) (t : Set.{u2} β), Eq.{succ u1} (Set.{u1} α) (Rel.core.{u1, u2} α β r (Inter.inter.{u2} (Set.{u2} β) (Set.instInterSet_1.{u2} β) s t)) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet_1.{u1} α) (Rel.core.{u1, u2} α β r s) (Rel.core.{u1, u2} α β r t))
+  forall {α : Type.{u1}} {β : Type.{u2}} (r : Rel.{u1, u2} α β) (s : Set.{u2} β) (t : Set.{u2} β), Eq.{succ u1} (Set.{u1} α) (Rel.core.{u1, u2} α β r (Inter.inter.{u2} (Set.{u2} β) (Set.instInterSet.{u2} β) s t)) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (Rel.core.{u1, u2} α β r s) (Rel.core.{u1, u2} α β r t))
 Case conversion may be inaccurate. Consider using '#align rel.core_inter Rel.core_interₓ'. -/
 theorem core_inter (s t : Set β) : r.core (s ∩ t) = r.core s ∩ r.core t :=
   Set.ext (by simp [mem_core, imp_and, forall_and])
@@ -402,7 +402,7 @@ theorem core_inter (s t : Set β) : r.core (s ∩ t) = r.core s ∩ r.core t :=
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} (r : Rel.{u1, u2} α β) (s : Set.{u2} β) (t : Set.{u2} β), HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) (Rel.core.{u1, u2} α β r s) (Rel.core.{u1, u2} α β r t)) (Rel.core.{u1, u2} α β r (Union.union.{u2} (Set.{u2} β) (Set.hasUnion.{u2} β) s t))
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} (r : Rel.{u1, u2} α β) (s : Set.{u2} β) (t : Set.{u2} β), HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet_1.{u1} α) (Rel.core.{u1, u2} α β r s) (Rel.core.{u1, u2} α β r t)) (Rel.core.{u1, u2} α β r (Union.union.{u2} (Set.{u2} β) (Set.instUnionSet_1.{u2} β) s t))
+  forall {α : Type.{u1}} {β : Type.{u2}} (r : Rel.{u1, u2} α β) (s : Set.{u2} β) (t : Set.{u2} β), HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) (Rel.core.{u1, u2} α β r s) (Rel.core.{u1, u2} α β r t)) (Rel.core.{u1, u2} α β r (Union.union.{u2} (Set.{u2} β) (Set.instUnionSet.{u2} β) s t))
 Case conversion may be inaccurate. Consider using '#align rel.core_union Rel.core_unionₓ'. -/
 theorem core_union (s t : Set β) : r.core s ∪ r.core t ⊆ r.core (s ∪ t) :=
   r.core_mono.le_map_sup s t
@@ -447,7 +447,7 @@ def restrictDomain (s : Set α) : Rel { x // x ∈ s } β := fun x y => r x.val 
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} (r : Rel.{u1, u2} α β) (s : Set.{u1} α) (t : Set.{u2} β), Iff (HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) (Rel.image.{u1, u2} α β r s) t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s (Rel.core.{u1, u2} α β r t))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (r : Rel.{u2, u1} α β) (s : Set.{u2} α) (t : Set.{u1} β), Iff (HasSubset.Subset.{u1} (Set.{u1} β) (Set.instHasSubsetSet_1.{u1} β) (Rel.image.{u2, u1} α β r s) t) (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet_1.{u2} α) s (Rel.core.{u2, u1} α β r t))
+  forall {α : Type.{u2}} {β : Type.{u1}} (r : Rel.{u2, u1} α β) (s : Set.{u2} α) (t : Set.{u1} β), Iff (HasSubset.Subset.{u1} (Set.{u1} β) (Set.instHasSubsetSet.{u1} β) (Rel.image.{u2, u1} α β r s) t) (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) s (Rel.core.{u2, u1} α β r t))
 Case conversion may be inaccurate. Consider using '#align rel.image_subset_iff Rel.image_subset_iffₓ'. -/
 theorem image_subset_iff (s : Set α) (t : Set β) : image r s ⊆ t ↔ s ⊆ core r t :=
   Iff.intro (fun h x xs y rxy => h ⟨x, xs, rxy⟩) fun h y ⟨x, xs, rxy⟩ => h xs y rxy

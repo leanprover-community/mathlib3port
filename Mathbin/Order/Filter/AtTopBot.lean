@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jeremy Avigad, Yury Kudryashov, Patrick Massot
 
 ! This file was ported from Lean 3 source module order.filter.at_top_bot
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -61,7 +61,7 @@ theorem Ici_mem_at_top [Preorder α] (a : α) : Ici a ∈ (atTop : Filter α) :=
 
 theorem Ioi_mem_at_top [Preorder α] [NoMaxOrder α] (x : α) : Ioi x ∈ (atTop : Filter α) :=
   let ⟨z, hz⟩ := exists_gt x
-  (mem_of_superset (mem_at_top z)) fun y h => lt_of_lt_of_le hz h
+  mem_of_superset (mem_at_top z) fun y h => lt_of_lt_of_le hz h
 #align filter.Ioi_mem_at_top Filter.Ioi_mem_at_top
 
 theorem mem_at_bot [Preorder α] (a : α) : { b : α | b ≤ a } ∈ @atBot α _ :=
@@ -74,7 +74,7 @@ theorem Iic_mem_at_bot [Preorder α] (a : α) : Iic a ∈ (atBot : Filter α) :=
 
 theorem Iio_mem_at_bot [Preorder α] [NoMinOrder α] (x : α) : Iio x ∈ (atBot : Filter α) :=
   let ⟨z, hz⟩ := exists_lt x
-  (mem_of_superset (mem_at_bot z)) fun y h => lt_of_le_of_lt h hz
+  mem_of_superset (mem_at_bot z) fun y h => lt_of_le_of_lt h hz
 #align filter.Iio_mem_at_bot Filter.Iio_mem_at_bot
 
 theorem disjoint_at_bot_principal_Ioi [Preorder α] (x : α) : Disjoint atBot (𝓟 (Ioi x)) :=
@@ -244,7 +244,7 @@ theorem Tendsto.eventually_ne_at_bot [Preorder β] [NoMinOrder β] {f : α → �
 
 theorem at_top_basis_Ioi [Nonempty α] [SemilatticeSup α] [NoMaxOrder α] :
     (@atTop α _).HasBasis (fun _ => True) Ioi :=
-  (at_top_basis.to_has_basis fun a ha => ⟨a, ha, Ioi_subset_Ici_self⟩) fun a ha =>
+  at_top_basis.to_has_basis (fun a ha => ⟨a, ha, Ioi_subset_Ici_self⟩) fun a ha =>
     (exists_gt a).imp fun b hb => ⟨ha, Ici_subset_Ioi.2 hb⟩
 #align filter.at_top_basis_Ioi Filter.at_top_basis_Ioi
 
@@ -1281,7 +1281,7 @@ theorem tendsto_at_top_at_top_of_monotone [Preorder α] [Preorder β] {f : α �
   tendsto_infi.2 fun b =>
     tendsto_principal.2 <|
       let ⟨a, ha⟩ := h b
-      (mem_of_superset (mem_at_top a)) fun a' ha' => le_trans ha (hf ha')
+      mem_of_superset (mem_at_top a) fun a' ha' => le_trans ha (hf ha')
 #align filter.tendsto_at_top_at_top_of_monotone Filter.tendsto_at_top_at_top_of_monotone
 
 theorem tendsto_at_bot_at_bot_of_monotone [Preorder α] [Preorder β] {f : α → β} (hf : Monotone f)
@@ -1289,7 +1289,7 @@ theorem tendsto_at_bot_at_bot_of_monotone [Preorder α] [Preorder β] {f : α �
   tendsto_infi.2 fun b =>
     tendsto_principal.2 <|
       let ⟨a, ha⟩ := h b
-      (mem_of_superset (mem_at_bot a)) fun a' ha' => le_trans (hf ha') ha
+      mem_of_superset (mem_at_bot a) fun a' ha' => le_trans (hf ha') ha
 #align filter.tendsto_at_bot_at_bot_of_monotone Filter.tendsto_at_bot_at_bot_of_monotone
 
 theorem tendsto_at_top_at_top_iff_of_monotone [Nonempty α] [SemilatticeSup α] [Preorder β]

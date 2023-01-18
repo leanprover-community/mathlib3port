@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.filter.lift
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -299,7 +299,7 @@ theorem lift'_le {f : Filter α} {g : Set α → Set β} {h : Filter β} {s : Se
 #align filter.lift'_le Filter.lift'_le
 
 theorem lift'_mono (hf : f₁ ≤ f₂) (hh : h₁ ≤ h₂) : f₁.lift' h₁ ≤ f₂.lift' h₂ :=
-  (lift_mono hf) fun s => principal_mono.mpr <| hh s
+  lift_mono hf fun s => principal_mono.mpr <| hh s
 #align filter.lift'_mono Filter.lift'_mono
 
 theorem lift'_mono' (hh : ∀ s ∈ f, h₁ s ⊆ h₂ s) : f.lift' h₁ ≤ f.lift' h₂ :=

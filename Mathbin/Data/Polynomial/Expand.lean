@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module data.polynomial.expand
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -90,7 +90,7 @@ theorem expand_one (f : R[X]) : expand R 1 f = f :=
 #align polynomial.expand_one Polynomial.expand_one
 
 theorem expand_pow (f : R[X]) : expand R (p ^ q) f = (expand R p^[q]) f :=
-  (Nat.recOn q (by rw [pow_zero, expand_one, Function.iterate_zero, id])) fun n ih => by
+  Nat.recOn q (by rw [pow_zero, expand_one, Function.iterate_zero, id]) fun n ih => by
     rw [Function.iterate_succ_apply', pow_succ, expand_mul, ih]
 #align polynomial.expand_pow Polynomial.expand_pow
 
@@ -298,7 +298,7 @@ theorem of_irreducible_expand {p : ℕ} (hp : p ≠ 0) {f : R[X]} (hf : Irreduci
 
 theorem of_irreducible_expand_pow {p : ℕ} (hp : p ≠ 0) {f : R[X]} {n : ℕ} :
     Irreducible (expand R (p ^ n) f) → Irreducible f :=
-  (Nat.recOn n fun hf => by rwa [pow_zero, expand_one] at hf) fun n ih hf =>
+  Nat.recOn n (fun hf => by rwa [pow_zero, expand_one] at hf) fun n ih hf =>
     ih <|
       of_irreducible_expand hp <| by
         rw [pow_succ] at hf

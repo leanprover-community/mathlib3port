@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Kexing Ying, Moritz Doll
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.sesquilinear_form
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -729,7 +729,7 @@ theorem Matrix.Nondegenerate.toLinearMap₂' {M : Matrix ι ι R₁} (h : M.Nond
 @[simp]
 theorem Matrix.separating_left_to_linear_map₂'_iff {M : Matrix ι ι R₁} :
     M.toLinearMap₂'.SeparatingLeft ↔ M.Nondegenerate :=
-  ⟨fun h v hv => (h v) fun w => (M.to_linear_map₂'_apply' _ _).trans <| hv w,
+  ⟨fun h v hv => h v fun w => (M.to_linear_map₂'_apply' _ _).trans <| hv w,
     Matrix.Nondegenerate.toLinearMap₂'⟩
 #align matrix.separating_left_to_linear_map₂'_iff Matrix.separating_left_to_linear_map₂'_iff
 

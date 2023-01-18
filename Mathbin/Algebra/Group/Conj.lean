@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Chris Hughes, Michael Howes
 
 ! This file was ported from Lean 3 source module algebra.group.conj
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -279,7 +279,7 @@ theorem quot_mk_eq_mk (a : α) : Quot.mk Setoid.r a = ConjClasses.mk a :=
 
 #print ConjClasses.forall_isConj /-
 theorem forall_isConj {p : ConjClasses α → Prop} : (∀ a, p a) ↔ ∀ a, p (ConjClasses.mk a) :=
-  Iff.intro (fun h a => h _) fun h a => Quotient.induction_on a h
+  Iff.intro (fun h a => h _) fun h a => Quotient.inductionOn a h
 #align conj_classes.forall_is_conj ConjClasses.forall_isConj
 -/
 
@@ -469,5 +469,5 @@ theorem carrier_eq_preimage_mk {a : ConjClasses α} : a.carrier = ConjClasses.mk
 
 end ConjClasses
 
-assert_not_exists multiset
+assert_not_exists Multiset
 

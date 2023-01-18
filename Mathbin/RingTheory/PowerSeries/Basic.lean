@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Kenny Lau
 
 ! This file was ported from Lean 3 source module ring_theory.power_series.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -671,7 +671,7 @@ theorem coeff_trunc (m : σ →₀ ℕ) (φ : MvPowerSeries σ R) :
 
 @[simp]
 theorem trunc_one (hnn : n ≠ 0) : trunc R n 1 = 1 :=
-  (MvPolynomial.ext _ _) fun m => by
+  MvPolynomial.ext _ _ fun m => by
     rw [coeff_trunc, coeff_one]
     split_ifs with H H' H'
     · subst m
@@ -689,7 +689,7 @@ theorem trunc_one (hnn : n ≠ 0) : trunc R n 1 = 1 :=
 
 @[simp]
 theorem trunc_C (hnn : n ≠ 0) (a : R) : trunc R n (c σ R a) = MvPolynomial.c a :=
-  (MvPolynomial.ext _ _) fun m =>
+  MvPolynomial.ext _ _ fun m =>
     by
     rw [coeff_trunc, coeff_C, MvPolynomial.coeff_C]
     split_ifs with H <;> first |rfl|try simp_all

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module testing.slim_check.functions
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -128,9 +128,9 @@ variable [DecidableEq α]
 protected def shrink : ShrinkFn (TotalFunction α β)
   | ⟨m, x⟩ =>
     (Sampleable.shrink (m, x)).map fun ⟨⟨m', x'⟩, h⟩ =>
-      ⟨⟨List.dedupkeys m', x'⟩,
+      ⟨⟨List.dedupKeys m', x'⟩,
         lt_of_le_of_lt
-          (by unfold_wf <;> refine' @List.sizeOf_dedupkeys _ _ _ (@sampleable.wf _ _) _) h⟩
+          (by unfold_wf <;> refine' @List.sizeOf_dedupKeys _ _ _ (@sampleable.wf _ _) _) h⟩
 #align slim_check.total_function.shrink SlimCheck.TotalFunction.shrink
 
 variable [Repr α] [Repr β]
@@ -177,16 +177,16 @@ def applyFinsupp (tf : TotalFunction α β) : α →₀ β
     intro a
     rcases tf with ⟨A, y⟩
     simp only [apply, zero_default_supp, List.mem_map', List.mem_filter, exists_and_right,
-      List.mem_to_finset, exists_eq_right, Sigma.exists, Ne.def, zero_default]
+      List.mem_toFinset, exists_eq_right, Sigma.exists, Ne.def, zero_default]
     constructor
     · rintro ⟨od, hval, hod⟩
-      have := List.mem_dlookup (List.nodupkeys_dedupkeys A) hval
+      have := List.mem_dlookup (List.nodupKeys_dedupKeys A) hval
       rw [(_ : List.dlookup a A = od)]
       · simpa
-      · simpa [List.dlookup_dedupkeys, WithTop.some_eq_coe]
+      · simpa [List.dlookup_dedupKeys, WithTop.some_eq_coe]
     · intro h
       use (A.lookup a).getOrElse (0 : β)
-      rw [← List.dlookup_dedupkeys] at h⊢
+      rw [← List.dlookup_dedupKeys] at h⊢
       simp only [h, ← List.mem_dlookup_iff A.nodupkeys_dedupkeys, and_true_iff, not_false_iff,
         Option.mem_def]
       cases List.dlookup a A.dedupkeys

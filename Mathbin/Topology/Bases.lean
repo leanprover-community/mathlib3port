@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.bases
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -544,7 +544,7 @@ theorem is_topological_basis_infi {β : Type _} {ι : Type _} {X : ι → Type _
 
 theorem is_topological_basis_singletons (α : Type _) [TopologicalSpace α] [DiscreteTopology α] :
     IsTopologicalBasis { s | ∃ x : α, (s : Set α) = {x} } :=
-  (is_topological_basis_of_open_of_nhds fun u hu => is_open_discrete _) fun x u hx u_open =>
+  is_topological_basis_of_open_of_nhds (fun u hu => is_open_discrete _) fun x u hx u_open =>
     ⟨{x}, ⟨x, rfl⟩, mem_singleton x, singleton_subset_iff.2 hx⟩
 #align is_topological_basis_singletons is_topological_basis_singletons
 

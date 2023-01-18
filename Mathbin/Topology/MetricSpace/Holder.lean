@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.holder
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -75,7 +75,7 @@ theorem holder_on_with_singleton (C r : ℝ≥0) (f : X → Y) (x : X) : HolderO
 
 theorem Set.Subsingleton.holder_on_with {s : Set X} (hs : s.Subsingleton) (C r : ℝ≥0) (f : X → Y) :
     HolderOnWith C r f s :=
-  hs.induction_on (holder_on_with_empty C r f) (holder_on_with_singleton C r f)
+  hs.inductionOn (holder_on_with_empty C r f) (holder_on_with_singleton C r f)
 #align set.subsingleton.holder_on_with Set.Subsingleton.holder_on_with
 
 theorem holder_on_with_univ {C r : ℝ≥0} {f : X → Y} : HolderOnWith C r f univ ↔ HolderWith C r f :=

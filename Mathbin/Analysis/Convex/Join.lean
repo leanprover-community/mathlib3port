@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.convex.join
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,7 +47,7 @@ theorem convex_join_comm (s t : Set E) : convexJoin 𝕜 s t = convexJoin 𝕜 t
 #align convex_join_comm convex_join_comm
 
 theorem convex_join_mono (hs : s₁ ⊆ s₂) (ht : t₁ ⊆ t₂) : convexJoin 𝕜 s₁ t₁ ⊆ convexJoin 𝕜 s₂ t₂ :=
-  (bunionᵢ_mono hs) fun x hx => (bunionᵢ_mono ht) fun y hy => Subset.rfl
+  bunionᵢ_mono hs fun x hx => bunionᵢ_mono ht fun y hy => Subset.rfl
 #align convex_join_mono convex_join_mono
 
 theorem convex_join_mono_left (hs : s₁ ⊆ s₂) : convexJoin 𝕜 s₁ t ⊆ convexJoin 𝕜 s₂ t :=

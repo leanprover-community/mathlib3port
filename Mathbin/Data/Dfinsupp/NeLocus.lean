@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa, Junyan Xu
 
 ! This file was ported from Lean 3 source module data.dfinsupp.ne_locus
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -128,13 +128,13 @@ variable [∀ a, DecidableEq (N a)]
 @[simp]
 theorem ne_locus_add_left [∀ a, AddLeftCancelMonoid (N a)] (f g h : Π₀ a, N a) :
     (f + g).neLocus (f + h) = g.neLocus h :=
-  (zip_with_ne_locus_eq_left _ _ _ _) fun a => add_right_injective
+  zip_with_ne_locus_eq_left _ _ _ _ fun a => add_right_injective
 #align dfinsupp.ne_locus_add_left Dfinsupp.ne_locus_add_left
 
 @[simp]
 theorem ne_locus_add_right [∀ a, AddRightCancelMonoid (N a)] (f g h : Π₀ a, N a) :
     (f + h).neLocus (g + h) = f.neLocus g :=
-  (zip_with_ne_locus_eq_right _ _ _ _) fun a => add_left_injective
+  zip_with_ne_locus_eq_right _ _ _ _ fun a => add_left_injective
 #align dfinsupp.ne_locus_add_right Dfinsupp.ne_locus_add_right
 
 section AddGroup

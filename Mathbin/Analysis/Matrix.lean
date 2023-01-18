@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth, Eric Wieser
 
 ! This file was ported from Lean 3 source module analysis.matrix
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -104,7 +104,7 @@ theorem nnnorm_map_eq (A : Matrix m n α) (f : α → β) (hf : ∀ a, ‖f a‖
 
 @[simp]
 theorem norm_map_eq (A : Matrix m n α) (f : α → β) (hf : ∀ a, ‖f a‖ = ‖a‖) : ‖A.map f‖ = ‖A‖ :=
-  (congr_arg (coe : ℝ≥0 → ℝ) <| (nnnorm_map_eq A f) fun a => Subtype.ext <| hf a : _)
+  (congr_arg (coe : ℝ≥0 → ℝ) <| nnnorm_map_eq A f fun a => Subtype.ext <| hf a : _)
 #align matrix.norm_map_eq Matrix.norm_map_eq
 
 @[simp]
@@ -279,7 +279,7 @@ theorem linfty_op_nnnorm_diagonal [DecidableEq m] (v : m → α) : ‖diagonal v
   by
   rw [linfty_op_nnnorm_def, Pi.nnnorm_def]
   congr 1 with i : 1
-  refine' ((Finset.sum_eq_single_of_mem _ (Finset.mem_univ i)) fun j hj hij => _).trans _
+  refine' (Finset.sum_eq_single_of_mem _ (Finset.mem_univ i) fun j hj hij => _).trans _
   · rw [diagonal_apply_ne' _ hij, nnnorm_zero]
   · rw [diagonal_apply_eq]
 #align matrix.linfty_op_nnnorm_diagonal Matrix.linfty_op_nnnorm_diagonal
@@ -303,7 +303,7 @@ theorem linfty_op_nnnorm_mul (A : Matrix l m α) (B : Matrix m n α) : ‖A ⬝ 
     (finset.univ.sup fun i => ∑ k, ‖∑ j, A i j * B j k‖₊) ≤
         finset.univ.sup fun i => ∑ (k) (j), ‖A i j‖₊ * ‖B j k‖₊ :=
       Finset.sup_mono_fun fun i hi =>
-        Finset.sum_le_sum fun k hk => (nnnorm_sum_le_of_le _) fun j hj => nnnorm_mul_le _ _
+        Finset.sum_le_sum fun k hk => nnnorm_sum_le_of_le _ fun j hj => nnnorm_mul_le _ _
     _ = finset.univ.sup fun i => ∑ j, ‖A i j‖₊ * ∑ k, ‖B j k‖₊ := by
       simp_rw [@Finset.sum_comm _ m n, Finset.mul_sum]
     _ ≤ finset.univ.sup fun i => ∑ j, ‖A i j‖₊ * finset.univ.sup fun i => ∑ j, ‖B i j‖₊ :=
@@ -444,7 +444,7 @@ theorem frobenius_nnnorm_map_eq (A : Matrix m n α) (f : α → β) (hf : ∀ a,
 @[simp]
 theorem frobenius_norm_map_eq (A : Matrix m n α) (f : α → β) (hf : ∀ a, ‖f a‖ = ‖a‖) :
     ‖A.map f‖ = ‖A‖ :=
-  (congr_arg (coe : ℝ≥0 → ℝ) <| (frobenius_nnnorm_map_eq A f) fun a => Subtype.ext <| hf a : _)
+  (congr_arg (coe : ℝ≥0 → ℝ) <| frobenius_nnnorm_map_eq A f fun a => Subtype.ext <| hf a : _)
 #align matrix.frobenius_norm_map_eq Matrix.frobenius_norm_map_eq
 
 @[simp]

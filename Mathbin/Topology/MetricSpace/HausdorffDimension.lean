@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.hausdorff_dimension
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -440,23 +440,23 @@ theorem Isometry.dimH_image (hf : Isometry f) (s : Set X) : dimH (f '' s) = dimH
   le_antisymm (hf.lipschitz.dimH_image_le _) (hf.antilipschitz.le_dimH_image _)
 #align isometry.dimH_image Isometry.dimH_image
 
-namespace Isometric
+namespace IsometryEquiv
 
 @[simp]
 theorem dimH_image (e : X ≃ᵢ Y) (s : Set X) : dimH (e '' s) = dimH s :=
   e.Isometry.dimH_image s
-#align isometric.dimH_image Isometric.dimH_image
+#align isometry_equiv.dimH_image IsometryEquiv.dimH_image
 
 @[simp]
 theorem dimH_preimage (e : X ≃ᵢ Y) (s : Set Y) : dimH (e ⁻¹' s) = dimH s := by
   rw [← e.image_symm, e.symm.dimH_image]
-#align isometric.dimH_preimage Isometric.dimH_preimage
+#align isometry_equiv.dimH_preimage IsometryEquiv.dimH_preimage
 
 theorem dimH_univ (e : X ≃ᵢ Y) : dimH (univ : Set X) = dimH (univ : Set Y) := by
   rw [← e.dimH_preimage univ, preimage_univ]
-#align isometric.dimH_univ Isometric.dimH_univ
+#align isometry_equiv.dimH_univ IsometryEquiv.dimH_univ
 
-end Isometric
+end IsometryEquiv
 
 namespace ContinuousLinearEquiv
 

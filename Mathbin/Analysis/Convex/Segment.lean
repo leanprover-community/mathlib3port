@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Yury Kudriashov, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.convex.segment
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -139,7 +139,7 @@ theorem insert_endpoints_open_segment (x y : E) :
   simp only [subset_antisymm_iff, insert_subset, left_mem_segment, right_mem_segment,
     open_segment_subset_segment, true_and_iff]
   rintro z ⟨a, b, ha, hb, hab, rfl⟩
-  refine' hb.eq_or_gt.imp _ fun hb' => (ha.eq_or_gt.imp _) fun ha' => _
+  refine' hb.eq_or_gt.imp _ fun hb' => ha.eq_or_gt.imp _ fun ha' => _
   · rintro rfl
     rw [← add_zero a, hab, one_smul, zero_smul, add_zero]
   · rintro rfl
@@ -427,7 +427,7 @@ variable [OrderedSemiring 𝕜]
 
 section OrderedAddCommMonoid
 
-variable [OrderedAddCommMonoid E] [Module 𝕜 E] [OrderedSmul 𝕜 E] {x y : E}
+variable [OrderedAddCommMonoid E] [Module 𝕜 E] [OrderedSMul 𝕜 E] {x y : E}
 
 theorem segment_subset_Icc (h : x ≤ y) : [x -[𝕜] y] ⊆ Icc x y :=
   by
@@ -447,7 +447,7 @@ end OrderedAddCommMonoid
 
 section OrderedCancelAddCommMonoid
 
-variable [OrderedCancelAddCommMonoid E] [Module 𝕜 E] [OrderedSmul 𝕜 E] {x y : E}
+variable [OrderedCancelAddCommMonoid E] [Module 𝕜 E] [OrderedSMul 𝕜 E] {x y : E}
 
 theorem open_segment_subset_Ioo (h : x < y) : openSegment 𝕜 x y ⊆ Ioo x y :=
   by
@@ -467,7 +467,7 @@ end OrderedCancelAddCommMonoid
 
 section LinearOrderedAddCommMonoid
 
-variable [LinearOrderedAddCommMonoid E] [Module 𝕜 E] [OrderedSmul 𝕜 E] {𝕜} {a b : 𝕜}
+variable [LinearOrderedAddCommMonoid E] [Module 𝕜 E] [OrderedSMul 𝕜 E] {𝕜} {a b : 𝕜}
 
 theorem segment_subset_uIcc (x y : E) : [x -[𝕜] y] ⊆ uIcc x y :=
   by

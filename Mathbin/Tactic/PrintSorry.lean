@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module tactic.print_sorry
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,7 +56,7 @@ unsafe def find_all_exprs_aux (env : environment) (f : expr → Bool) (g : Name 
       else do
         let d ← env.get n
         let process (v : expr) : tactic find_all_expr_data :=
-          (v.mfold ⟨false, false, l, ns, mk_name_set⟩) fun e _ p =>
+          v.mfold ⟨false, false, l, ns, mk_name_set⟩ fun e _ p =>
             if f e then pure ⟨true, true, p.descendants, p.name_map, p.direct_descendants⟩
             else if e.is_constant then find_all_exprs_aux e.const_name p else pure p
         let ⟨b', b, l, ns, desc'⟩ ← process d.value

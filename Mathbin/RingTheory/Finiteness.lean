@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.finiteness
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -182,7 +182,7 @@ theorem fgFinsetSup {ι : Type _} (s : Finset ι) (N : ι → Submodule R M) (h 
 #align submodule.fg_finset_sup Submodule.fgFinsetSup
 
 theorem fgBsupr {ι : Type _} (s : Finset ι) (N : ι → Submodule R M) (h : ∀ i ∈ s, (N i).Fg) :
-    (⨆ i ∈ s, N i).Fg := by simpa only [Finset.sup_eq_supr] using fg_finset_sup s N h
+    (⨆ i ∈ s, N i).Fg := by simpa only [Finset.sup_eq_supᵢ] using fg_finset_sup s N h
 #align submodule.fg_bsupr Submodule.fgBsupr
 
 theorem fgSupr {ι : Type _} [Finite ι] (N : ι → Submodule R M) (h : ∀ i, (N i).Fg) : (supᵢ N).Fg :=
@@ -205,7 +205,7 @@ variable {f}
 theorem fgOfFgMapInjective (f : M →ₗ[R] P) (hf : Function.Injective f) {N : Submodule R M}
     (hfn : (N.map f).Fg) : N.Fg :=
   let ⟨t, ht⟩ := hfn
-  ⟨(t.Preimage f) fun x _ y _ h => hf h,
+  ⟨t.Preimage f fun x _ y _ h => hf h,
     Submodule.map_injective_of_injective hf <|
       by
       rw [f.map_span, Finset.coe_preimage, Set.image_preimage_eq_inter_range,
@@ -386,7 +386,7 @@ theorem fg_iff_compact (s : Submodule R M) : s.Fg ↔ CompleteLattice.IsCompactE
     have supr_rw : ∀ t : Finset M, (⨆ x ∈ t, sp x) = ⨆ x ∈ (↑t : Set M), sp x := fun t => by rfl
     constructor
     · rintro ⟨t, rfl⟩
-      rw [span_eq_supr_of_singleton_spans, ← supr_rw, ← Finset.sup_eq_supr t sp]
+      rw [span_eq_supr_of_singleton_spans, ← supr_rw, ← Finset.sup_eq_supᵢ t sp]
       apply CompleteLattice.finset_sup_compact_of_compact
       exact fun n _ => singleton_span_is_compact_element n
     · intro h
@@ -398,10 +398,10 @@ theorem fg_iff_compact (s : Submodule R M) : s.Fg ↔ CompleteLattice.IsCompactE
       have ssup : s = u.sup id := by
         suffices : u.sup id ≤ s
         exact le_antisymm husup this
-        rw [sSup, Finset.sup_id_eq_Sup]
+        rw [sSup, Finset.sup_id_eq_supₛ]
         exact supₛ_le_supₛ huspan
       obtain ⟨t, ⟨hts, rfl⟩⟩ := finset.subset_image_iff.mp huspan
-      rw [Finset.sup_finset_image, Function.comp.left_id, Finset.sup_eq_supr, supr_rw, ←
+      rw [Finset.sup_finset_image, Function.comp.left_id, Finset.sup_eq_supᵢ, supr_rw, ←
         span_eq_supr_of_singleton_spans, eq_comm] at ssup
       exact ⟨t, ssup⟩
 #align submodule.fg_iff_compact Submodule.fg_iff_compact

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.localization.fraction_ring
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -128,20 +128,17 @@ protected noncomputable irreducible_def inv (z : K) : K :=
           h <| eq_zero_of_fst_eq_zero (sec_spec (nonZeroDivisors A) z) h0⟩
 #align is_fraction_ring.inv IsFractionRing.inv
 
-attribute [local semireducible] IsFractionRing.inv
-
 protected theorem mul_inv_cancel (x : K) (hx : x ≠ 0) : x * IsFractionRing.inv A x = 1 :=
-  show x * dite _ _ _ = 1
-    by
-    rw [dif_neg hx, ←
-      IsUnit.mul_left_inj
-        (map_units K
-          ⟨(sec _ x).1,
-            mem_non_zero_divisors_iff_ne_zero.2 fun h0 =>
-              hx <| eq_zero_of_fst_eq_zero (sec_spec (nonZeroDivisors A) x) h0⟩),
-      one_mul, mul_assoc]
-    rw [mk'_spec, ← eq_mk'_iff_mul_eq]
-    exact (mk'_sec _ x).symm
+  by
+  rw [IsFractionRing.inv, dif_neg hx, ←
+    IsUnit.mul_left_inj
+      (map_units K
+        ⟨(sec _ x).1,
+          mem_non_zero_divisors_iff_ne_zero.2 fun h0 =>
+            hx <| eq_zero_of_fst_eq_zero (sec_spec (nonZeroDivisors A) x) h0⟩),
+    one_mul, mul_assoc]
+  rw [mk'_spec, ← eq_mk'_iff_mul_eq]
+  exact (mk'_sec _ x).symm
 #align is_fraction_ring.mul_inv_cancel IsFractionRing.mul_inv_cancel
 
 /-- A `comm_ring` `K` which is the localization of an integral domain `R` at `R - {0}` is a field.
@@ -152,7 +149,10 @@ noncomputable def toField : Field K :=
     show CommRing K by infer_instance with
     inv := IsFractionRing.inv A
     mul_inv_cancel := IsFractionRing.mul_inv_cancel A
-    inv_zero := dif_pos rfl }
+    inv_zero := by
+      change IsFractionRing.inv A (0 : K) = 0
+      rw [IsFractionRing.inv]
+      exact dif_pos rfl }
 #align is_fraction_ring.to_field IsFractionRing.toField
 
 end CommRing

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.semiquot
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -134,7 +134,7 @@ theorem mem_pure' {a b : α} : a ∈ Semiquot.pure b ↔ a = b :=
 lean 3 declaration is
   forall {α : Type.{u_1}} (q : Semiquotₓ.{u_2, u_1} α) {s : Set.{u_1} α}, (HasSubset.Subset.{u_1} (Set.{u_1} α) (Set.hasSubset.{u_1} α) (Semiquotₓ.s.{u_2, u_1} α q) s) -> (Semiquotₓ.{u_3, u_1} α)
 but is expected to have type
-  forall {α : Type.{u_1}} (q : Semiquot.{u_1} α) {s : Set.{u_1} α}, (HasSubset.Subset.{u_1} (Set.{u_1} α) (Set.instHasSubsetSet_1.{u_1} α) (Semiquot.s.{u_1} α q) s) -> (Semiquot.{u_1} α)
+  forall {α : Type.{u_1}} (q : Semiquot.{u_1} α) {s : Set.{u_1} α}, (HasSubset.Subset.{u_1} (Set.{u_1} α) (Set.instHasSubsetSet.{u_1} α) (Semiquot.s.{u_1} α q) s) -> (Semiquot.{u_1} α)
 Case conversion may be inaccurate. Consider using '#align semiquot.blur' Semiquot.blur'ₓ'. -/
 /-- Replace `s` in a `semiquot` with a superset. -/
 def blur' (q : Semiquot α) {s : Set α} (h : q.s ⊆ s) : Semiquot α :=
@@ -156,7 +156,7 @@ def blur (s : Set α) (q : Semiquot α) : Semiquot α :=
 lean 3 declaration is
   forall {α : Type.{u_1}} (q : Semiquotₓ.{u_2, u_1} α) (s : Set.{u_1} α) (h : HasSubset.Subset.{u_1} (Set.{u_1} α) (Set.hasSubset.{u_1} α) (Semiquotₓ.s.{u_2, u_1} α q) s), Eq.{succ u_1} (Semiquotₓ.{u_3, u_1} α) (Semiquot.blur.{u_1, u_2, u_3} α s q) (Semiquot.blur'.{u_1, u_2, u_3} α q s h)
 but is expected to have type
-  forall {α : Type.{u_1}} (q : Semiquot.{u_1} α) (s : Set.{u_1} α) (h : HasSubset.Subset.{u_1} (Set.{u_1} α) (Set.instHasSubsetSet_1.{u_1} α) (Semiquot.s.{u_1} α q) s), Eq.{succ u_1} (Semiquot.{u_1} α) (Semiquot.blur.{u_1} α s q) (Semiquot.blur'.{u_1} α q s h)
+  forall {α : Type.{u_1}} (q : Semiquot.{u_1} α) (s : Set.{u_1} α) (h : HasSubset.Subset.{u_1} (Set.{u_1} α) (Set.instHasSubsetSet.{u_1} α) (Semiquot.s.{u_1} α q) s), Eq.{succ u_1} (Semiquot.{u_1} α) (Semiquot.blur.{u_1} α s q) (Semiquot.blur'.{u_1} α q s h)
 Case conversion may be inaccurate. Consider using '#align semiquot.blur_eq_blur' Semiquot.blur_eq_blur'ₓ'. -/
 theorem blur_eq_blur' (q : Semiquot α) (s : Set α) (h : q.s ⊆ s) : blur s q = blur' q h := by
   unfold blur <;> congr <;> exact Set.union_eq_self_of_subset_right h
@@ -166,7 +166,7 @@ theorem blur_eq_blur' (q : Semiquot α) (s : Set α) (h : q.s ⊆ s) : blur s q 
 lean 3 declaration is
   forall {α : Type.{u_1}} (q : Semiquotₓ.{u_2, u_1} α) {s : Set.{u_1} α} (h : HasSubset.Subset.{u_1} (Set.{u_1} α) (Set.hasSubset.{u_1} α) (Semiquotₓ.s.{u_2, u_1} α q) s) {a : α}, Iff (Membership.Mem.{u_1, u_1} α (Semiquotₓ.{u_3, u_1} α) (Semiquotₓ.hasMem.{u_1, u_3} α) a (Semiquot.blur'.{u_1, u_2, u_3} α q s h)) (Membership.Mem.{u_1, u_1} α (Set.{u_1} α) (Set.hasMem.{u_1} α) a s)
 but is expected to have type
-  forall {α : Type.{u_1}} (q : Semiquot.{u_1} α) {s : Set.{u_1} α} (h : HasSubset.Subset.{u_1} (Set.{u_1} α) (Set.instHasSubsetSet_1.{u_1} α) (Semiquot.s.{u_1} α q) s) {a : α}, Iff (Membership.mem.{u_1, u_1} α (Semiquot.{u_1} α) (Semiquot.instMembershipSemiquot.{u_1} α) a (Semiquot.blur'.{u_1} α q s h)) (Membership.mem.{u_1, u_1} α (Set.{u_1} α) (Set.instMembershipSet.{u_1} α) a s)
+  forall {α : Type.{u_1}} (q : Semiquot.{u_1} α) {s : Set.{u_1} α} (h : HasSubset.Subset.{u_1} (Set.{u_1} α) (Set.instHasSubsetSet.{u_1} α) (Semiquot.s.{u_1} α q) s) {a : α}, Iff (Membership.mem.{u_1, u_1} α (Semiquot.{u_1} α) (Semiquot.instMembershipSemiquot.{u_1} α) a (Semiquot.blur'.{u_1} α q s h)) (Membership.mem.{u_1, u_1} α (Set.{u_1} α) (Set.instMembershipSet.{u_1} α) a s)
 Case conversion may be inaccurate. Consider using '#align semiquot.mem_blur' Semiquot.mem_blur'ₓ'. -/
 @[simp]
 theorem mem_blur' (q : Semiquot α) {s : Set α} (h : q.s ⊆ s) {a : α} : a ∈ blur' q h ↔ a ∈ s :=

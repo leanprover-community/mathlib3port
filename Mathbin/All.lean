@@ -574,6 +574,7 @@ import Mathbin.Analysis.Convex.Gauge
 import Mathbin.Analysis.Convex.Hull
 import Mathbin.Analysis.Convex.Independent
 import Mathbin.Analysis.Convex.Integral
+import Mathbin.Analysis.Convex.Intrinsic
 import Mathbin.Analysis.Convex.Jensen
 import Mathbin.Analysis.Convex.Join
 import Mathbin.Analysis.Convex.KreinMilman
@@ -624,6 +625,7 @@ import Mathbin.Analysis.Matrix
 import Mathbin.Analysis.MeanInequalities
 import Mathbin.Analysis.MeanInequalitiesPow
 import Mathbin.Analysis.Normed.Field.Basic
+import Mathbin.Analysis.Normed.Field.InfiniteSum
 import Mathbin.Analysis.Normed.Field.UnitBall
 import Mathbin.Analysis.Normed.Group.SemiNormedGroupCat
 import Mathbin.Analysis.Normed.Group.SemiNormedGroupCat.Completion
@@ -1277,6 +1279,7 @@ import Mathbin.Data.Finset.Sigma
 import Mathbin.Data.Finset.Slice
 import Mathbin.Data.Finset.Sort
 import Mathbin.Data.Finset.Sum
+import Mathbin.Data.Finset.Sups
 import Mathbin.Data.Finset.Sym
 import Mathbin.Data.Finsupp.Antidiagonal
 import Mathbin.Data.Finsupp.Basic
@@ -1377,7 +1380,6 @@ import Mathbin.Data.List.Lattice
 import Mathbin.Data.List.Lemmas
 import Mathbin.Data.List.Lex
 import Mathbin.Data.List.MinMax
-import Mathbin.Data.List.Modeq
 import Mathbin.Data.List.NatAntidiagonal
 import Mathbin.Data.List.Nodup
 import Mathbin.Data.List.NodupEquivFin
@@ -1560,6 +1562,7 @@ import Mathbin.Data.Polynomial.Mirror
 import Mathbin.Data.Polynomial.Module
 import Mathbin.Data.Polynomial.Monic
 import Mathbin.Data.Polynomial.Monomial
+import Mathbin.Data.Polynomial.PartialFractions
 import Mathbin.Data.Polynomial.Reverse
 import Mathbin.Data.Polynomial.RingDivision
 import Mathbin.Data.Polynomial.Splits
@@ -2201,8 +2204,10 @@ import Mathbin.NumberTheory.Cyclotomic.Gal
 import Mathbin.NumberTheory.Cyclotomic.PrimitiveRoots
 import Mathbin.NumberTheory.Cyclotomic.Rat
 import Mathbin.NumberTheory.Dioph
+import Mathbin.NumberTheory.DiophantineApproximation
 import Mathbin.NumberTheory.Divisors
 import Mathbin.NumberTheory.Fermat4
+import Mathbin.NumberTheory.FermatPsp
 import Mathbin.NumberTheory.FrobeniusNumber
 import Mathbin.NumberTheory.FunctionField
 import Mathbin.NumberTheory.KummerDedekind
@@ -2563,6 +2568,7 @@ import Mathbin.RingTheory.Valuation.Basic
 import Mathbin.RingTheory.Valuation.ExtendToLocalization
 import Mathbin.RingTheory.Valuation.Integers
 import Mathbin.RingTheory.Valuation.Integral
+import Mathbin.RingTheory.Valuation.RamificationGroup
 import Mathbin.RingTheory.Valuation.Tfae
 import Mathbin.RingTheory.Valuation.ValuationRing
 import Mathbin.RingTheory.Valuation.ValuationSubring
@@ -2790,6 +2796,7 @@ import Mathbin.Topology.Algebra.ConstMulAction
 import Mathbin.Topology.Algebra.Constructions
 import Mathbin.Topology.Algebra.ContinuousAffineMap
 import Mathbin.Topology.Algebra.ContinuousMonoidHom
+import Mathbin.Topology.Algebra.Equicontinuity
 import Mathbin.Topology.Algebra.Field
 import Mathbin.Topology.Algebra.FilterBasis
 import Mathbin.Topology.Algebra.Group.Basic

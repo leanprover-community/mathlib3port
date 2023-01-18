@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.normed_space.lp_space
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -447,7 +447,7 @@ theorem norm_nonneg' (f : lp E p) : 0 ≤ ‖f‖ :=
   · simp [lp.norm_eq_card_dsupport f]
   · cases' isEmpty_or_nonempty α with _i _i <;> skip
     · rw [lp.norm_eq_csupr]
-      simp [Real.csupr_empty]
+      simp [Real.csupᵢ_empty]
     inhabit α
     exact (norm_nonneg (f default)).trans ((lp.is_lub_norm f).1 ⟨default, rfl⟩)
   · rw [lp.norm_eq_tsum_rpow hp f]
@@ -526,7 +526,7 @@ instance [hp : Fact (1 ≤ p)] : NormedAddCommGroup (lp E p) :=
           rintro x ⟨i, rfl⟩
           refine'
             le_trans _
-              (add_mem_upper_bounds_add (lp.is_lub_norm f).1 (lp.is_lub_norm g).1
+              (add_mem_upperBounds_add (lp.is_lub_norm f).1 (lp.is_lub_norm g).1
                 ⟨_, _, ⟨i, rfl⟩, ⟨i, rfl⟩, rfl⟩)
           exact norm_add_le (f i) (g i)
         · have hp'' : 0 < p.to_real := zero_lt_one.trans_le hp'
@@ -930,7 +930,7 @@ variable [NormedField 𝕜] [∀ i, NormedRing (B i)] [∀ i, NormedAlgebra 𝕜
 
 /-- A variant of `pi.algebra` that lean can't find otherwise. -/
 instance Pi.algebraOfNormedAlgebra : Algebra 𝕜 (∀ i, B i) :=
-  (@Pi.algebra I 𝕜 B _ _) fun i => NormedAlgebra.toAlgebra
+  @Pi.algebra I 𝕜 B _ _ fun i => NormedAlgebra.toAlgebra
 #align pi.algebra_of_normed_algebra Pi.algebraOfNormedAlgebra
 
 instance PreLp.algebra : Algebra 𝕜 (PreLp B) :=

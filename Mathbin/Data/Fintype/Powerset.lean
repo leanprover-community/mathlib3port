@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.fintype.powerset
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,7 +41,7 @@ theorem Finset.powerset_eq_univ [Fintype α] {s : Finset α} : s.powerset = univ
 
 theorem Finset.mem_powerset_len_univ_iff [Fintype α] {s : Finset α} {k : ℕ} :
     s ∈ powersetLen k (univ : Finset α) ↔ card s = k :=
-  mem_powerset_len.trans <| and_iff_right <| subset_univ _
+  mem_powersetLen.trans <| and_iff_right <| subset_univ _
 #align finset.mem_powerset_len_univ_iff Finset.mem_powerset_len_univ_iff
 
 @[simp]
@@ -49,7 +49,7 @@ theorem Finset.univ_filter_card_eq (α : Type _) [Fintype α] (k : ℕ) :
     ((Finset.univ : Finset (Finset α)).filter fun s => s.card = k) = Finset.univ.powersetLen k :=
   by
   ext
-  simp [Finset.mem_powerset_len]
+  simp [Finset.mem_powersetLen]
 #align finset.univ_filter_card_eq Finset.univ_filter_card_eq
 
 @[simp]

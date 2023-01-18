@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash, Eric Wieser
 
 ! This file was ported from Lean 3 source module topology.instances.matrix
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -124,7 +124,7 @@ theorem Continuous.matrix_diagonal [Zero R] [DecidableEq n] {A : X → n → R} 
 theorem Continuous.matrix_dot_product [Fintype n] [Mul R] [AddCommMonoid R] [HasContinuousAdd R]
     [HasContinuousMul R] {A : X → n → R} {B : X → n → R} (hA : Continuous A) (hB : Continuous B) :
     Continuous fun x => dotProduct (A x) (B x) :=
-  (continuous_finset_sum _) fun i _ =>
+  continuous_finset_sum _ fun i _ =>
     ((continuous_apply i).comp hA).mul ((continuous_apply i).comp hB)
 #align continuous.matrix_dot_product Continuous.matrix_dot_product
 
@@ -134,7 +134,7 @@ theorem Continuous.matrix_mul [Fintype n] [Mul R] [AddCommMonoid R] [HasContinuo
     [HasContinuousMul R] {A : X → Matrix m n R} {B : X → Matrix n p R} (hA : Continuous A)
     (hB : Continuous B) : Continuous fun x => (A x).mul (B x) :=
   continuous_matrix fun i j =>
-    (continuous_finset_sum _) fun k _ => (hA.matrix_elem _ _).mul (hB.matrix_elem _ _)
+    continuous_finset_sum _ fun k _ => (hA.matrix_elem _ _).mul (hB.matrix_elem _ _)
 #align continuous.matrix_mul Continuous.matrix_mul
 
 instance [Fintype n] [Mul R] [AddCommMonoid R] [HasContinuousAdd R] [HasContinuousMul R] :
@@ -193,7 +193,7 @@ theorem continuous_matrix_diag : Continuous (Matrix.diag : Matrix n n R → n �
 @[continuity]
 theorem Continuous.matrix_trace [Fintype n] [AddCommMonoid R] [HasContinuousAdd R]
     {A : X → Matrix n n R} (hA : Continuous A) : Continuous fun x => trace (A x) :=
-  (continuous_finset_sum _) fun i hi => hA.matrix_elem _ _
+  continuous_finset_sum _ fun i hi => hA.matrix_elem _ _
 #align continuous.matrix_trace Continuous.matrix_trace
 
 @[continuity]

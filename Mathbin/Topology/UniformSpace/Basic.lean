@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.uniform_space.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -704,7 +704,7 @@ theorem nhds_eq_comap_uniformity_aux {α : Type u} {x : α} {s : Set α} {F : Fi
   rw [mem_comap] <;>
     exact
       Iff.intro (fun hs => ⟨_, hs, fun x hx => hx rfl⟩) fun ⟨t, h, ht⟩ =>
-        (F.sets_of_superset h) fun ⟨p₁, p₂⟩ hp (h : p₁ = x) => ht <| by simp [h.symm, hp]
+        F.sets_of_superset h fun ⟨p₁, p₂⟩ hp (h : p₁ = x) => ht <| by simp [h.symm, hp]
 #align nhds_eq_comap_uniformity_aux nhds_eq_comap_uniformity_aux
 
 theorem nhds_eq_comap_uniformity {x : α} : 𝓝 x = (𝓤 α).comap (Prod.mk x) :=
@@ -779,7 +779,7 @@ theorem UniformSpace.mem_closure_iff_ball {s : Set α} {x} :
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem UniformSpace.has_basis_nhds_prod (x y : α) :
-    (HasBasis (𝓝 (x, y)) fun s => s ∈ 𝓤 α ∧ SymmetricRel s) fun s => ball x s ×ˢ ball y s :=
+    HasBasis (𝓝 (x, y)) (fun s => s ∈ 𝓤 α ∧ SymmetricRel s) fun s => ball x s ×ˢ ball y s :=
   by
   rw [nhds_prod_eq]
   apply (has_basis_nhds x).prod_same_index (has_basis_nhds y)

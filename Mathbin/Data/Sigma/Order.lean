@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.sigma.order
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -189,7 +189,7 @@ theorem lt_def [LT ι] [∀ i, LT (α i)] {a b : Σₗ i, α i} :
 instance preorder [Preorder ι] [∀ i, Preorder (α i)] : Preorder (Σₗ i, α i) :=
   { Lex.LE, Lex.LT with
     le_refl := fun ⟨i, a⟩ => Lex.right a a le_rfl
-    le_trans := fun _ _ _ => trans_of ((Lex (· < ·)) fun _ => (· ≤ ·))
+    le_trans := fun _ _ _ => trans_of (Lex (· < ·) fun _ => (· ≤ ·))
     lt_iff_le_not_le :=
       by
       refine' fun a b => ⟨fun hab => ⟨hab.mono_right fun i a b => le_of_lt, _⟩, _⟩
@@ -207,7 +207,7 @@ instance preorder [Preorder ι] [∀ i, Preorder (α i)] : Preorder (Σₗ i, α
 #print Sigma.Lex.partialOrder /-
 /-- The lexicographical partial order on a sigma type. -/
 instance partialOrder [Preorder ι] [∀ i, PartialOrder (α i)] : PartialOrder (Σₗ i, α i) :=
-  { Lex.preorder with le_antisymm := fun _ _ => antisymm_of ((Lex (· < ·)) fun _ => (· ≤ ·)) }
+  { Lex.preorder with le_antisymm := fun _ _ => antisymm_of (Lex (· < ·) fun _ => (· ≤ ·)) }
 #align sigma.lex.partial_order Sigma.Lex.partialOrder
 -/
 
@@ -215,7 +215,7 @@ instance partialOrder [Preorder ι] [∀ i, PartialOrder (α i)] : PartialOrder 
 /-- The lexicographical linear order on a sigma type. -/
 instance linearOrder [LinearOrder ι] [∀ i, LinearOrder (α i)] : LinearOrder (Σₗ i, α i) :=
   { Lex.partialOrder with
-    le_total := total_of ((Lex (· < ·)) fun _ => (· ≤ ·))
+    le_total := total_of (Lex (· < ·) fun _ => (· ≤ ·))
     DecidableEq := Sigma.decidableEq
     decidableLe := Lex.decidable _ _ }
 #align sigma.lex.linear_order Sigma.Lex.linearOrder

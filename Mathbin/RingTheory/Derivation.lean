@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri, Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.derivation
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -455,7 +455,7 @@ theorem leibniz_inv {K : Type _} [Field K] [Module K M] [Algebra R K] (D : Deriv
 
 instance : Neg (Derivation R A M) :=
   ⟨fun D =>
-    (mk' (-D)) fun a b => by
+    mk' (-D) fun a b => by
       simp only [LinearMap.neg_apply, smul_neg, neg_add_rev, leibniz, coe_fn_coe, add_comm]⟩
 
 @[simp]
@@ -474,7 +474,7 @@ theorem neg_apply : (-D) a = -D a :=
 
 instance : Sub (Derivation R A M) :=
   ⟨fun D1 D2 =>
-    (mk' (D1 - D2 : A →ₗ[R] M)) fun a b => by
+    mk' (D1 - D2 : A →ₗ[R] M) fun a b => by
       simp only [LinearMap.sub_apply, leibniz, coe_fn_coe, smul_sub, add_sub_add_comm]⟩
 
 @[simp]
@@ -506,7 +506,7 @@ variable (D : Derivation R A A) {D1 D2 : Derivation R A A} (r : R) (a b : A)
 /-- The commutator of derivations is again a derivation. -/
 instance : Bracket (Derivation R A A) (Derivation R A A) :=
   ⟨fun D1 D2 =>
-    (mk' ⁅(D1 : Module.EndCat R A), (D2 : Module.EndCat R A)⁆) fun a b =>
+    mk' ⁅(D1 : Module.EndCat R A), (D2 : Module.EndCat R A)⁆ fun a b =>
       by
       simp only [Ring.lie_def, map_add, id.smul_eq_mul, LinearMap.mul_apply, leibniz, coe_fn_coe,
         LinearMap.sub_apply]

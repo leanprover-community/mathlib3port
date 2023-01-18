@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.num.lemmas
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -244,7 +244,7 @@ theorem bit1_succ : ∀ n : Num, n.bit1.succ = n.succ.bit0
 #align num.bit1_succ Num.bit1_succ
 
 theorem of_nat'_succ : ∀ {n}, ofNat' (n + 1) = ofNat' n + 1 :=
-  (Nat.binaryRec (by simp <;> rfl)) fun b n ih =>
+  Nat.binaryRec (by simp <;> rfl) fun b n ih =>
     by
     cases b
     · erw [of_nat'_bit tt n, of_nat'_bit]
@@ -794,8 +794,7 @@ theorem nat_size_to_nat (n) : natSize n = Nat.size n := by rw [← size_eq_nat_s
 
 @[simp]
 theorem of_nat'_eq : ∀ n, Num.ofNat' n = n :=
-  (Nat.binaryRec (by simp)) fun b n IH =>
-    by
+  Nat.binaryRec (by simp) fun b n IH => by
     rw [of_nat'] at IH⊢
     rw [Nat.binaryRec_eq, IH]
     · cases b <;> simp [Nat.bit, bit0_of_bit0, bit1_of_bit1]

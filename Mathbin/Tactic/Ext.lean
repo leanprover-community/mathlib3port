@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Jesse Michael Han
 
 ! This file was ported from Lean 3 source module tactic.ext
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -100,7 +100,7 @@ unsafe def derive_struct_ext_lemma (n : Name) : tactic Name := do
   let pr ←
     run_async do
         let (_, pr) ←
-          (solve_aux t) do
+          solve_aux t do
               let args ← intron args.length
               let x ← intro1
               let y ← intro1
@@ -427,13 +427,13 @@ private unsafe def try_intros_core : StateT ext_state tactic Unit := do
     | [] =>
       (do
           let es ← StateT.lift intros
-          (when (es > 0)) do
+          when (es > 0) do
               let msg := "intros " ++ " ".intercalate (es fun e => e)
               modify fun ⟨patts, trace_msg, fuel⟩ => ⟨patts, trace_msg ++ [msg], fuel⟩) <|>
         pure ()
     | x :: xs => do
       let tgt ← StateT.lift (target >>= whnf)
-      (when tgt) do
+      when tgt do
           StateT.lift (rintro [x])
           let msg ← StateT.lift ((· ++ ·) "rintro " <$> format.to_string <$> x ff)
           modify fun ⟨_, trace_msg, fuel⟩ => ⟨xs, trace_msg ++ [msg], fuel⟩

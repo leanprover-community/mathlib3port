@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.p_series
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -229,6 +229,18 @@ if and only if `1 < p`. -/
 theorem Real.summable_one_div_nat_pow {p : ℕ} : Summable (fun n => 1 / n ^ p : ℕ → ℝ) ↔ 1 < p := by
   simp
 #align real.summable_one_div_nat_pow Real.summable_one_div_nat_pow
+
+/-- Summability of the `p`-series over `ℤ`. -/
+theorem Real.summable_one_div_int_pow {p : ℕ} : (Summable fun n : ℤ => 1 / (n : ℝ) ^ p) ↔ 1 < p :=
+  by
+  refine'
+    ⟨fun h => real.summable_one_div_nat_pow.mp (h.comp_injective Nat.cast_injective), fun h =>
+      summable_int_of_summable_nat (real.summable_one_div_nat_pow.mpr h)
+        (((real.summable_one_div_nat_pow.mpr h).mul_left <| 1 / (-1) ^ p).congr fun n => _)⟩
+  conv_rhs => rw [Int.cast_neg, neg_eq_neg_one_mul, mul_pow, ← div_div]
+  conv_lhs => rw [mul_div, mul_one]
+  rfl
+#align real.summable_one_div_int_pow Real.summable_one_div_int_pow
 
 /-- Harmonic series is not unconditionally summable. -/
 theorem Real.not_summable_nat_cast_inv : ¬Summable (fun n => n⁻¹ : ℕ → ℝ) :=

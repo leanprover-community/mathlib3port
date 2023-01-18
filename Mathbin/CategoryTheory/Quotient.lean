@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
 
 ! This file was ported from Lean 3 source module category_theory.quotient
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -90,7 +90,7 @@ def comp ⦃a b c : Quotient r⦄ : Hom r a b → Hom r b c → Hom r a c := fun
     (fun f =>
       Quot.liftOn hg (fun g => Quot.mk _ (f ≫ g)) fun g₁ g₂ h =>
         Quot.sound <| comp_left r f g₁ g₂ h)
-    fun f₁ f₂ h => (Quot.induction_on hg) fun g => Quot.sound <| comp_right r g f₁ f₂ h
+    fun f₁ f₂ h => Quot.inductionOn hg fun g => Quot.sound <| comp_right r g f₁ f₂ h
 #align category_theory.quotient.comp CategoryTheory.Quotient.comp
 
 @[simp]
@@ -193,7 +193,7 @@ theorem lift_unique (Φ : Quotient r ⥤ D) (hΦ : functor r ⋙ Φ = F) : Φ = 
     rfl
   · rintro X Y f
     dsimp [lift, Functor]
-    apply Quot.induction_on f
+    apply Quot.inductionOn f
     rintro ff
     simp only [Quot.liftOn_mk, functor.comp_map]
     congr <;> ext <;> rfl

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module tactic.simps
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -791,10 +791,9 @@ unsafe def simps_add_projections :
                   (todo_now ∨ todo = [] ∧ eta ∧ to_apply = []) <|
                 if cfg then simps_add_projection nm tgt lhs_ap rhs_ap new_args univs cfg
                 else simps_add_projection nm type lhs rhs args univs cfg
-            (-- If we are in the middle of a composite projection.
-                  when
-                  (to_apply ≠ []))
-                do
+            -- If we are in the middle of a composite projection.
+                when
+                (to_apply ≠ []) do
                 let ⟨new_rhs, proj, proj_expr, proj_nrs, is_default, is_prefix⟩ ←
                   return <| proj_info to_apply
                 let new_type ← infer_type new_rhs
@@ -804,11 +803,10 @@ unsafe def simps_add_projections :
                                 >  {← lhs_ap}")
                 simps_add_projections e nm new_type lhs_ap new_rhs new_args univs ff cfg todo
                     to_apply
-            (/- We stop if no further projection is specified or if we just reduced an eta-expansion and we
-                        automatically choose projections -/
-                  when
-                  ¬(to_apply ≠ [] ∨ todo = [""] ∨ eta ∧ todo = []))
-                do
+            /- We stop if no further projection is specified or if we just reduced an eta-expansion and we
+                      automatically choose projections -/
+                when
+                (¬(to_apply ≠ [] ∨ todo = [""] ∨ eta ∧ todo = [])) do
                 let projs : List Name := proj_info fun x => x
                 let todo := if to_apply = [] then todo_next else todo
                 -- check whether all elements in `todo` have a projection as prefix
@@ -830,10 +828,9 @@ unsafe def simps_add_projections :
                     do
                     let new_type ← infer_type new_rhs
                     let new_todo := todo fun x => x ("_" ++ proj)
-                    (-- we only continue with this field if it is non-propositional or mentioned in todo
-                          when
-                          (is_default ∧ todo = [] ∨ new_todo ≠ []))
-                        do
+                    -- we only continue with this field if it is non-propositional or mentioned in todo
+                        when
+                        (is_default ∧ todo = [] ∨ new_todo ≠ []) do
                         let new_lhs := proj_expr [lhs_ap]
                         let new_nm := nm proj is_prefix
                         let new_cfg :=

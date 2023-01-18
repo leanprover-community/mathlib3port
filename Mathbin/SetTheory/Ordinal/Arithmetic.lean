@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Floris van Doorn, Violeta Hernández Palacios
 
 ! This file was ported from Lean 3 source module set_theory.ordinal.arithmetic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -72,7 +72,7 @@ namespace Ordinal
 
 @[simp]
 theorem lift_add (a b) : lift (a + b) = lift a + lift b :=
-  (Quotient.induction_on₂ a b) fun ⟨α, r, _⟩ ⟨β, s, _⟩ =>
+  Quotient.induction_on₂ a b fun ⟨α, r, _⟩ ⟨β, s, _⟩ =>
     Quotient.sound
       ⟨(RelIso.preimage Equiv.ulift _).trans
           (RelIso.sumLexCongr (RelIso.preimage Equiv.ulift _) (RelIso.preimage Equiv.ulift _)).symm⟩
@@ -87,9 +87,9 @@ theorem lift_succ (a) : lift (succ a) = succ (lift a) :=
 
 instance add_contravariant_class_le : ContravariantClass Ordinal.{u} Ordinal.{u} (· + ·) (· ≤ ·) :=
   ⟨fun a b c =>
-    (induction_on a) fun α r hr =>
-      (induction_on b) fun β₁ s₁ hs₁ =>
-        (induction_on c) fun β₂ s₂ hs₂ ⟨f⟩ =>
+    induction_on a fun α r hr =>
+      induction_on b fun β₁ s₁ hs₁ =>
+        induction_on c fun β₂ s₂ hs₂ ⟨f⟩ =>
           ⟨have fl : ∀ a, f (Sum.inl a) = Sum.inl a := fun a => by
               simpa only [InitialSeg.trans_apply, InitialSeg.leAdd_apply] using
                 @InitialSeg.eq _ _ _ _ (@Sum.Lex.is_well_order _ _ _ _ hr hs₂)
@@ -149,8 +149,8 @@ theorem add_right_cancel {a b : Ordinal} (n : ℕ) : a + n = b + n ↔ a = b := 
 #align ordinal.add_right_cancel Ordinal.add_right_cancel
 
 theorem add_eq_zero_iff {a b : Ordinal} : a + b = 0 ↔ a = 0 ∧ b = 0 :=
-  (induction_on a) fun α r _ =>
-    (induction_on b) fun β s _ =>
+  induction_on a fun α r _ =>
+    induction_on b fun β s _ =>
       by
       simp_rw [← type_sum_lex, type_eq_zero_iff_is_empty]
       exact isEmpty_sum
@@ -384,7 +384,7 @@ theorem bounded_singleton {r : α → α → Prop} [IsWellOrder α r] (hr : (typ
 theorem type_subrel_lt (o : Ordinal.{u}) :
     type (Subrel (· < ·) { o' : Ordinal | o' < o }) = Ordinal.lift.{u + 1} o :=
   by
-  refine' Quotient.induction_on o _
+  refine' Quotient.inductionOn o _
   rintro ⟨α, r, wo⟩; skip; apply Quotient.sound
   constructor; symm; refine' (RelIso.preimage Equiv.ulift r).trans (enum_iso r).symm
 #align ordinal.type_subrel_lt Ordinal.type_subrel_lt
@@ -494,7 +494,7 @@ theorem add_le_of_limit {a b c : Ordinal} (h : IsLimit b) : a + b ≤ c ↔ ∀ 
     le_of_not_lt <|
       induction_on a
         (fun α r _ =>
-          (induction_on b) fun β s _ h H l => by
+          induction_on b fun β s _ h H l => by
             skip
             suffices ∀ x : β, Sum.Lex r s (Sum.inr x) (enum _ _ l)
               by
@@ -643,14 +643,14 @@ theorem one_add_of_omega_le {o} (h : ω ≤ o) : 1 + o = o := by
 instance : Monoid Ordinal.{u}
     where
   mul a b :=
-    (Quotient.liftOn₂ a b
-        (fun ⟨α, r, wo⟩ ⟨β, s, wo'⟩ => ⟦⟨β × α, Prod.Lex s r, Prod.Lex.is_well_order⟩⟧ :
-          WellOrder → WellOrder → Ordinal))
+    Quotient.liftOn₂ a b
+      (fun ⟨α, r, wo⟩ ⟨β, s, wo'⟩ => ⟦⟨β × α, Prod.Lex s r, Prod.Lex.is_well_order⟩⟧ :
+        WellOrder → WellOrder → Ordinal)
       fun ⟨α₁, r₁, o₁⟩ ⟨α₂, r₂, o₂⟩ ⟨β₁, s₁, p₁⟩ ⟨β₂, s₂, p₂⟩ ⟨f⟩ ⟨g⟩ =>
       Quot.sound ⟨RelIso.prodLexCongr g f⟩
   one := 1
   mul_assoc a b c :=
-    (Quotient.induction_on₃ a b c) fun ⟨α, r, _⟩ ⟨β, s, _⟩ ⟨γ, t, _⟩ =>
+    Quotient.induction_on₃ a b c fun ⟨α, r, _⟩ ⟨β, s, _⟩ ⟨γ, t, _⟩ =>
       Eq.symm <|
         Quotient.sound
           ⟨⟨prodAssoc _ _ _, fun a b => by
@@ -658,7 +658,7 @@ instance : Monoid Ordinal.{u}
               rcases b with ⟨⟨b₁, b₂⟩, b₃⟩
               simp [Prod.lex_def, and_or_left, or_assoc', and_assoc']⟩⟩
   mul_one a :=
-    (induction_on a) fun α r _ =>
+    induction_on a fun α r _ =>
       Quotient.sound
         ⟨⟨punitProd _, fun a b => by
             rcases a with ⟨⟨⟨⟩⟩, a⟩ <;> rcases b with ⟨⟨⟨⟩⟩, b⟩ <;>
@@ -666,7 +666,7 @@ instance : Monoid Ordinal.{u}
                 simp only [eq_self_iff_true, true_and_iff] <;>
               rfl⟩⟩
   one_mul a :=
-    (induction_on a) fun α r _ =>
+    induction_on a fun α r _ =>
       Quotient.sound
         ⟨⟨prodPUnit _, fun a b => by
             rcases a with ⟨a, ⟨⟨⟩⟩⟩ <;> rcases b with ⟨b, ⟨⟨⟩⟩⟩ <;>
@@ -680,8 +680,8 @@ theorem type_prod_lex {α β : Type u} (r : α → α → Prop) (s : β → β �
 #align ordinal.type_prod_lex Ordinal.type_prod_lex
 
 private theorem mul_eq_zero' {a b : Ordinal} : a * b = 0 ↔ a = 0 ∨ b = 0 :=
-  (induction_on a) fun α _ _ =>
-    (induction_on b) fun β _ _ =>
+  induction_on a fun α _ _ =>
+    induction_on b fun β _ _ =>
       by
       simp_rw [← type_prod_lex, type_eq_zero_iff_is_empty]
       rw [or_comm']
@@ -699,7 +699,7 @@ instance : NoZeroDivisors Ordinal :=
 
 @[simp]
 theorem lift_mul (a b) : lift (a * b) = lift a * lift b :=
-  (Quotient.induction_on₂ a b) fun ⟨α, r, _⟩ ⟨β, s, _⟩ =>
+  Quotient.induction_on₂ a b fun ⟨α, r, _⟩ ⟨β, s, _⟩ =>
     Quotient.sound
       ⟨(RelIso.preimage Equiv.ulift _).trans
           (RelIso.prodLexCongr (RelIso.preimage Equiv.ulift _)
@@ -708,12 +708,12 @@ theorem lift_mul (a b) : lift (a * b) = lift a * lift b :=
 
 @[simp]
 theorem card_mul (a b) : card (a * b) = card a * card b :=
-  (Quotient.induction_on₂ a b) fun ⟨α, r, _⟩ ⟨β, s, _⟩ => mul_comm (mk β) (mk α)
+  Quotient.induction_on₂ a b fun ⟨α, r, _⟩ ⟨β, s, _⟩ => mul_comm (mk β) (mk α)
 #align ordinal.card_mul Ordinal.card_mul
 
 instance : LeftDistribClass Ordinal.{u} :=
   ⟨fun a b c =>
-    (Quotient.induction_on₃ a b c) fun ⟨α, r, _⟩ ⟨β, s, _⟩ ⟨γ, t, _⟩ =>
+    Quotient.induction_on₃ a b c fun ⟨α, r, _⟩ ⟨β, s, _⟩ ⟨γ, t, _⟩ =>
       Quotient.sound
         ⟨⟨sumProdDistrib _ _ _, by
             rintro ⟨a₁ | a₁, a₂⟩ ⟨b₁ | b₁, b₂⟩ <;>
@@ -727,7 +727,7 @@ theorem mul_succ (a b : Ordinal) : a * succ b = a * b + a :=
 
 instance mul_covariant_class_le : CovariantClass Ordinal.{u} Ordinal.{u} (· * ·) (· ≤ ·) :=
   ⟨fun c a b =>
-    (Quotient.induction_on₃ a b c) fun ⟨α, r, _⟩ ⟨β, s, _⟩ ⟨γ, t, _⟩ ⟨f⟩ =>
+    Quotient.induction_on₃ a b c fun ⟨α, r, _⟩ ⟨β, s, _⟩ ⟨γ, t, _⟩ ⟨f⟩ =>
       by
       skip
       refine'
@@ -741,7 +741,7 @@ instance mul_covariant_class_le : CovariantClass Ordinal.{u} Ordinal.{u} (· * �
 instance mul_swap_covariant_class_le :
     CovariantClass Ordinal.{u} Ordinal.{u} (swap (· * ·)) (· ≤ ·) :=
   ⟨fun c a b =>
-    (Quotient.induction_on₃ a b c) fun ⟨α, r, _⟩ ⟨β, s, _⟩ ⟨γ, t, _⟩ ⟨f⟩ =>
+    Quotient.induction_on₃ a b c fun ⟨α, r, _⟩ ⟨β, s, _⟩ ⟨γ, t, _⟩ ⟨f⟩ =>
       by
       skip
       refine'
@@ -807,7 +807,7 @@ private theorem mul_le_of_limit_aux {α β r s} [IsWellOrder α r] [IsWellOrder 
 theorem mul_le_of_limit {a b c : Ordinal} (h : IsLimit b) : a * b ≤ c ↔ ∀ b' < b, a * b' ≤ c :=
   ⟨fun h b' l => (mul_le_mul_left' l.le _).trans h, fun H =>
     le_of_not_lt <|
-      induction_on a (fun α r _ => (induction_on b) fun β s _ => mul_le_of_limit_aux) h H⟩
+      induction_on a (fun α r _ => induction_on b fun β s _ => mul_le_of_limit_aux) h H⟩
 #align ordinal.mul_le_of_limit Ordinal.mul_le_of_limit
 
 theorem mul_is_normal {a : Ordinal} (h : 0 < a) : IsNormal ((· * ·) a) :=
@@ -1483,7 +1483,7 @@ theorem lt_bsup {o} (f : ∀ a < o, Ordinal) {a} : a < bsup o f ↔ ∃ i hi, a 
 
 theorem IsNormal.bsup {f} (H : IsNormal f) {o} :
     ∀ (g : ∀ a < o, Ordinal) (h : o ≠ 0), f (bsup o g) = bsup o fun a h => f (g a h) :=
-  (induction_on o) fun α r _ g h => by
+  induction_on o fun α r _ g h => by
     skip
     haveI := type_ne_zero_iff_nonempty.1 h
     rw [← sup_eq_bsup' r, H.sup, ← sup_eq_bsup' r] <;> rfl
@@ -2974,13 +2974,13 @@ variable {a b : α}
 smallest ordinal greater than the ranks of all elements below it (i.e. elements `b` such that
 `r b a`). -/
 noncomputable def rank (h : Acc r a) : Ordinal :=
-  (Acc.recOn h) fun a h ih => Ordinal.sup fun b : { b // r b a } => Order.succ <| ih b b.2
+  Acc.recOn h fun a h ih => Ordinal.sup fun b : { b // r b a } => Order.succ <| ih b b.2
 #align acc.rank Acc.rank
 
 theorem rank_eq (h : Acc r a) :
     h.rank = Ordinal.sup fun b : { b // r b a } => Order.succ (h.inv b.2).rank :=
   by
-  change ((Acc.intro a) fun _ => h.inv).rank = _
+  change (Acc.intro a fun _ => h.inv).rank = _
   rfl
 #align acc.rank_eq Acc.rank_eq
 

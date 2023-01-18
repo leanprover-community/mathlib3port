@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.projective_spectrum.scheme
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -643,9 +643,8 @@ theorem carrier.asIdeal.ne_top : carrier.asIdeal f_deg hm q ≠ ⊤ := fun rid =
   algebraic_geometry.Proj_iso_Spec_Top_component.from_Spec.carrier.as_ideal.ne_top AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.carrier.asIdeal.ne_top
 
 theorem carrier.asIdeal.prime : (carrier.asIdeal f_deg hm q).IsPrime :=
-  ((carrier.asIdeal.homogeneous f_deg hm q).isPrimeOfHomogeneousMemOrMem
-      (carrier.asIdeal.ne_top f_deg hm q))
-    fun x y ⟨nx, hnx⟩ ⟨ny, hny⟩ hxy =>
+  (carrier.asIdeal.homogeneous f_deg hm q).isPrimeOfHomogeneousMemOrMem
+    (carrier.asIdeal.ne_top f_deg hm q) fun x y ⟨nx, hnx⟩ ⟨ny, hny⟩ hxy =>
     show (∀ i, _ ∈ _) ∨ ∀ i, _ ∈ _
       by
       rw [← and_forall_ne nx, and_iff_left, ← and_forall_ne ny, and_iff_left]

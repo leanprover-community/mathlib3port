@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.mv_polynomial.derivation
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,7 +37,7 @@ variable (R)
 /-- The derivation on `mv_polynomial σ R` that takes value `f i` on `X i`, as a linear map.
 Use `mv_polynomial.mk_derivation` instead. -/
 def mkDerivationₗ (f : σ → A) : MvPolynomial σ R →ₗ[R] A :=
-  (Finsupp.lsum R) fun xs : σ →₀ ℕ =>
+  Finsupp.lsum R fun xs : σ →₀ ℕ =>
     (LinearMap.ringLmapEquivSelf R R A).symm <|
       xs.Sum fun i k => monomial (xs - Finsupp.single i 1) (k : R) • f i
 #align mv_polynomial.mk_derivationₗ MvPolynomial.mkDerivationₗ

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module ring_theory.adjoin.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -120,18 +120,18 @@ theorem adjoin_induction₂ {p : A → A → Prop} {a b : A} (ha : a ∈ adjoin 
 theorem adjoin_induction' {p : adjoin R s → Prop} (Hs : ∀ (x) (h : x ∈ s), p ⟨x, subset_adjoin h⟩)
     (Halg : ∀ r, p (algebraMap R _ r)) (Hadd : ∀ x y, p x → p y → p (x + y))
     (Hmul : ∀ x y, p x → p y → p (x * y)) (x : adjoin R s) : p x :=
-  (Subtype.recOn x) fun x hx =>
+  Subtype.recOn x fun x hx =>
     by
     refine' Exists.elim _ fun (hx : x ∈ adjoin R s) (hc : p ⟨x, hx⟩) => hc
     exact
       adjoin_induction hx (fun x hx => ⟨subset_adjoin hx, Hs x hx⟩)
         (fun r => ⟨Subalgebra.algebra_map_mem _ r, Halg r⟩)
         (fun x y hx hy =>
-          (Exists.elim hx) fun hx' hx =>
-            (Exists.elim hy) fun hy' hy => ⟨Subalgebra.add_mem _ hx' hy', Hadd _ _ hx hy⟩)
+          Exists.elim hx fun hx' hx =>
+            Exists.elim hy fun hy' hy => ⟨Subalgebra.add_mem _ hx' hy', Hadd _ _ hx hy⟩)
         fun x y hx hy =>
-        (Exists.elim hx) fun hx' hx =>
-          (Exists.elim hy) fun hy' hy => ⟨Subalgebra.mul_mem _ hx' hy', Hmul _ _ hx hy⟩
+        Exists.elim hx fun hx' hx =>
+          Exists.elim hy fun hy' hy => ⟨Subalgebra.mul_mem _ hx' hy', Hmul _ _ hx hy⟩
 #align algebra.adjoin_induction' Algebra.adjoin_induction'
 
 @[simp]
@@ -319,7 +319,7 @@ theorem adjoin_union_eq_adjoin_adjoin :
   le_antisymm
     (closure_mono <|
       Set.union_subset (Set.range_subset_iff.2 fun r => Or.inl ⟨algebraMap R (adjoin R s) r, rfl⟩)
-        ((Set.union_subset_union_left _) fun x hxs => ⟨⟨_, subset_adjoin hxs⟩, rfl⟩))
+        (Set.union_subset_union_left _ fun x hxs => ⟨⟨_, subset_adjoin hxs⟩, rfl⟩))
     (closure_le.2 <|
       Set.union_subset (Set.range_subset_iff.2 fun x => adjoin_mono (Set.subset_union_left _ _) x.2)
         (Set.Subset.trans (Set.subset_union_right _ _) subset_adjoin))

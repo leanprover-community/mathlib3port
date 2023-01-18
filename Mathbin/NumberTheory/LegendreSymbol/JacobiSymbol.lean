@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 
 ! This file was ported from Lean 3 source module number_theory.legendre_symbol.jacobi_symbol
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -202,7 +202,7 @@ theorem eq_one_or_neg_one {a : ℤ} {b : ℕ} (h : a.gcd b = 1) : J(a | b) = 1 �
 
 /-- We have that `J(a^e | b) = J(a | b)^e`. -/
 theorem pow_left (a : ℤ) (e b : ℕ) : J(a ^ e | b) = J(a | b) ^ e :=
-  (Nat.recOn e (by rw [pow_zero, pow_zero, one_left])) fun _ ih => by
+  Nat.recOn e (by rw [pow_zero, pow_zero, one_left]) fun _ ih => by
     rw [pow_succ, pow_succ, mul_left, ih]
 #align jacobi_sym.pow_left jacobiSym.pow_left
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Jeremy Avigad, Simon Hudon
 
 ! This file was ported from Lean 3 source module data.pfun
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -252,10 +252,10 @@ case `f.fix a` returns `f a`), or it is undefined (in which case `f.fix a` is un
 it is in the `α` part of `β ⊕ α` (in which case we repeat the procedure, so `f.fix a` will return
 `f.fix (f a)`). -/
 def fix (f : α →. Sum β α) : α →. β := fun a =>
-  (Part.assert (Acc (fun x y => Sum.inr x ∈ f y) a)) fun h =>
+  Part.assert (Acc (fun x y => Sum.inr x ∈ f y) a) fun h =>
     @WellFounded.fixF _ (fun x y => Sum.inr x ∈ f y) _
       (fun a IH =>
-        (Part.assert (f a).Dom) fun hf => by
+        Part.assert (f a).Dom fun hf => by
           cases' e : (f a).get hf with b a' <;> [exact Part.some b, exact IH _ ⟨hf, e⟩])
       a h
 #align pfun.fix Pfun.fix

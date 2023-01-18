@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.monoid_algebra.grading
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -115,7 +115,7 @@ instance gradeBy.graded_monoid [AddMonoid M] [AddMonoid ι] [CommSemiring R] (f 
       rw [h, AddMonoidHom.map_zero]
   mul_mem i j a b ha hb c hc := by
     set h := support_mul a b hc
-    simp only [Finset.mem_bUnion] at h
+    simp only [Finset.mem_bunionᵢ] at h
     rcases h with ⟨ma, ⟨hma, ⟨mb, ⟨hmb, hmc⟩⟩⟩⟩
     rw [← ha ma hma, ← hb mb hmb, finset.mem_singleton.mp hmc]
     apply AddMonoidHom.map_add
@@ -198,7 +198,7 @@ instance gradeBy.gradedAlgebra : GradedAlgebra (gradeBy R f) :=
       ext : 2
       dsimp
       rw [decompose_aux_single, DirectSum.coe_alg_hom_of, Subtype.coe_mk])
-    fun i x => by convert (decompose_aux_coe f x : _)
+    fun i x => by rw [decompose_aux_coe f x]
 #align add_monoid_algebra.grade_by.graded_algebra AddMonoidAlgebra.gradeBy.gradedAlgebra
 
 -- Lean can't find this later without us repeating it

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.comma
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -224,7 +224,7 @@ noncomputable instance createsLimit [i : PreservesLimit (F ⋙ proj X G) G] :
   creates_limit_of_reflects_iso fun c t =>
     { liftedCone := @Comma.coneOfPreserves _ _ _ _ _ i punitCone t
       makesLimit := Comma.coneOfPreservesIsLimit _ punitConeIsLimit _
-      validLift := (Cones.ext (Iso.refl _)) fun j => (id_comp _).symm }
+      validLift := Cones.ext (Iso.refl _) fun j => (id_comp _).symm }
 #align category_theory.structured_arrow.creates_limit CategoryTheory.StructuredArrow.createsLimit
 
 noncomputable instance createsLimitsOfShape [PreservesLimitsOfShape J G] :
@@ -273,7 +273,7 @@ noncomputable instance createsColimit [i : PreservesColimit (F ⋙ proj G X) G] 
   creates_colimit_of_reflects_iso fun c t =>
     { liftedCocone := @Comma.coconeOfPreserves _ _ _ _ _ i t punitCocone
       makesColimit := Comma.coconeOfPreservesIsColimit _ _ punitCoconeIsColimit
-      validLift := (Cocones.ext (Iso.refl _)) fun j => comp_id _ }
+      validLift := Cocones.ext (Iso.refl _) fun j => comp_id _ }
 #align
   category_theory.costructured_arrow.creates_colimit CategoryTheory.CostructuredArrow.createsColimit
 

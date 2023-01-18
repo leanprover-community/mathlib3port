@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module measure_theory.function.uniform_integrable
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -964,7 +964,7 @@ theorem uniformIntegrableOf [IsFiniteMeasure μ] (hp : 1 ≤ p) (hp' : p ≠ ∞
   set g : ι → α → β := fun i => (hf i).some
   have hgmeas : ∀ i, strongly_measurable (g i) := fun i => (Exists.choose_spec <| hf i).1
   have hgeq : ∀ i, g i =ᵐ[μ] f i := fun i => (Exists.choose_spec <| hf i).2.symm
-  refine' ((uniform_integrable_of' hp hp' hgmeas) fun ε hε => _).ae_eq hgeq
+  refine' (uniform_integrable_of' hp hp' hgmeas fun ε hε => _).ae_eq hgeq
   obtain ⟨C, hC⟩ := h ε hε
   refine' ⟨C, fun i => le_trans (le_of_eq <| snorm_congr_ae _) (hC i)⟩
   filter_upwards [(Exists.choose_spec <| hf i).2] with x hx

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -606,13 +606,17 @@ theorem strongRecOn'_beta {P : ℕ → Sort _} {h} {n : ℕ} :
 #align nat.strong_rec_on_beta' Nat.strongRecOn'_beta
 -/
 
-#print Nat.le_induction /-
+/- warning: nat.le_induction -> Nat.le_induction is a dubious translation:
+lean 3 declaration is
+  forall {P : Nat -> Prop} {m : Nat}, (P m) -> (forall (n : Nat), (LE.le.{0} Nat Nat.hasLe m n) -> (P n) -> (P (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) -> (forall (n : Nat), (LE.le.{0} Nat Nat.hasLe m n) -> (P n))
+but is expected to have type
+  forall {P : Nat} {m : forall (n : Nat), (LE.le.{0} Nat instLENat P n) -> Prop}, (m P (le_rfl.{0} Nat (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) P)) -> (forall (n : Nat) (ᾰ : LE.le.{0} Nat instLENat P n), (m n ᾰ) -> (m (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (LE.le.trans.{0} Nat (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) P n (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) ᾰ (Nat.le_succ n)))) -> (forall (n : Nat) (ᾰ : LE.le.{0} Nat instLENat P n), m n ᾰ)
+Case conversion may be inaccurate. Consider using '#align nat.le_induction Nat.le_inductionₓ'. -/
 /-- Induction principle starting at a non-zero number. For maps to a `Sort*` see `le_rec_on`. -/
 @[elab_as_elim]
 theorem le_induction {P : Nat → Prop} {m} (h0 : P m) (h1 : ∀ n, m ≤ n → P n → P (n + 1)) :
     ∀ n, m ≤ n → P n := by apply Nat.le.ndrec h0 <;> exact h1
 #align nat.le_induction Nat.le_induction
--/
 
 #print Nat.decreasingInduction /-
 /-- Decreasing induction: if `P (k+1)` implies `P k`, then `P n` implies `P m` for all `m ≤ n`.
@@ -773,7 +777,7 @@ theorem div_lt_one_iff {a b : ℕ} (hb : 0 < b) : a / b < 1 ↔ a < b :=
 
 #print Nat.div_le_div_right /-
 protected theorem div_le_div_right {n m : ℕ} (h : n ≤ m) {k : ℕ} : n / k ≤ m / k :=
-  ((Nat.eq_zero_or_pos k).elim fun k0 => by simp [k0]) fun hk =>
+  (Nat.eq_zero_or_pos k).elim (fun k0 => by simp [k0]) fun hk =>
     (le_div_iff_mul_le' hk).2 <| le_trans (Nat.div_mul_le_self _ _) h
 #align nat.div_le_div_right Nat.div_le_div_right
 -/

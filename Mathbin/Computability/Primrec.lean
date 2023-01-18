@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module computability.primrec
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -267,7 +267,7 @@ theorem pred : Primrec Nat.pred :=
 #align primrec.pred Primrec.pred
 
 theorem encode_iff {f : α → σ} : (Primrec fun a => encode (f a)) ↔ Primrec f :=
-  ⟨fun h => (Nat.Primrec.of_eq h) fun n => by cases decode α n <;> rfl, Primrec.encode.comp⟩
+  ⟨fun h => Nat.Primrec.of_eq h fun n => by cases decode α n <;> rfl, Primrec.encode.comp⟩
 #align primrec.encode_iff Primrec.encode_iff
 
 theorem of_nat_iff {α β} [Denumerable α] [Primcodable β] {f : α → β} :
@@ -643,7 +643,7 @@ theorem option_is_some : Primrec (@Option.isSome α) :=
 #align primrec.option_is_some Primrec.option_is_some
 
 theorem option_get_or_else : Primrec₂ (@Option.getD α) :=
-  (Primrec.of_eq (option_cases Primrec₂.left Primrec₂.right Primrec₂.right)) fun ⟨o, a⟩ => by
+  Primrec.of_eq (option_cases Primrec₂.left Primrec₂.right Primrec₂.right) fun ⟨o, a⟩ => by
     cases o <;> rfl
 #align primrec.option_get_or_else Primrec.option_get_or_else
 
@@ -1103,14 +1103,10 @@ theorem list_nth : Primrec₂ (@List.get? α) :=
     · apply IH
 #align primrec.list_nth Primrec.list_nth
 
-theorem list_nthd (d : α) : Primrec₂ (List.getD d) :=
+theorem list_nthd (d : α) : Primrec₂ fun l n => List.getD l n d :=
   by
-  suffices List.getD d = fun l n => (List.get? l n).getOrElse d
-    by
-    rw [this]
-    exact option_get_or_else.comp₂ list_nth (const _)
-  funext
-  exact List.getD_eq_getD_get? _ _ _
+  simp only [List.getD_eq_getD_get?]
+  exact option_get_or_else.comp₂ list_nth (const _)
 #align primrec.list_nthd Primrec.list_nthd
 
 theorem list_inth [Inhabited α] : Primrec₂ (@List.getI α _) :=
@@ -1334,7 +1330,7 @@ theorem list_of_fn :
     ∀ {n} {f : Fin n → α → σ}, (∀ i, Primrec (f i)) → Primrec fun a => List.ofFn fun i => f i a
   | 0, f, hf => const []
   | n + 1, f, hf => by
-    simp [List.of_fn_succ] <;> exact list_cons.comp (hf 0) (list_of_fn fun i => hf i.succ)
+    simp [List.ofFn_succ] <;> exact list_cons.comp (hf 0) (list_of_fn fun i => hf i.succ)
 #align primrec.list_of_fn Primrec.list_of_fn
 
 theorem vector_of_fn {n} {f : Fin n → α → σ} (hf : ∀ i, Primrec (f i)) :

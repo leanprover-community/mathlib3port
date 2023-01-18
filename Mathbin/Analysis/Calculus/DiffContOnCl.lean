@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.calculus.diff_cont_on_cl
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -141,7 +141,7 @@ theorem smul_const {𝕜' : Type _} [NontriviallyNormedField 𝕜'] [NormedAlgeb
 
 theorem inv {f : E → 𝕜} (hf : DiffContOnCl 𝕜 f s) (h₀ : ∀ x ∈ closure s, f x ≠ 0) :
     DiffContOnCl 𝕜 f⁻¹ s :=
-  ⟨(differentiable_on_inv.comp hf.1) fun x hx => h₀ _ (subset_closure hx), hf.2.inv₀ h₀⟩
+  ⟨differentiable_on_inv.comp hf.1 fun x hx => h₀ _ (subset_closure hx), hf.2.inv₀ h₀⟩
 #align diff_cont_on_cl.inv DiffContOnCl.inv
 
 end DiffContOnCl

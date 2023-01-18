@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Paul-Nicolas Madelaine, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module tactic.norm_cast
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,7 +62,7 @@ initialize
 /-- Output a trace message if `trace.norm_cast` is enabled.
 -/
 unsafe def trace_norm_cast {α} [has_to_tactic_format α] (msg : String) (a : α) : tactic Unit :=
-  (when_tracing `norm_cast) do
+  when_tracing `norm_cast do
     let a ← pp a
     trace ("[norm_cast] " ++ msg ++ a : format)
 #align norm_cast.trace_norm_cast norm_cast.trace_norm_cast
@@ -633,14 +633,14 @@ unsafe def aux_mod_cast (e : expr) (include_goal : Bool := true) : tactic expr :
 /-- `exact_mod_cast e` runs `norm_cast` on the goal and `e`, and tries to use `e` to close the
 goal. -/
 unsafe def exact_mod_cast (e : expr) : tactic Unit :=
-  (decorate_error "exact_mod_cast failed:") do
+  decorate_error "exact_mod_cast failed:" do
     let new_e ← aux_mod_cast e
     exact new_e
 #align tactic.exact_mod_cast tactic.exact_mod_cast
 
 /-- `apply_mod_cast e` runs `norm_cast` on the goal and `e`, and tries to apply `e`. -/
 unsafe def apply_mod_cast (e : expr) : tactic (List (Name × expr)) :=
-  (decorate_error "apply_mod_cast failed:") do
+  decorate_error "apply_mod_cast failed:" do
     let new_e ← aux_mod_cast e
     apply new_e
 #align tactic.apply_mod_cast tactic.apply_mod_cast
@@ -648,7 +648,7 @@ unsafe def apply_mod_cast (e : expr) : tactic (List (Name × expr)) :=
 /-- `assumption_mod_cast` runs `norm_cast` on the goal. For each local hypothesis `h`, it also
 normalizes `h` and tries to use that to close the goal. -/
 unsafe def assumption_mod_cast : tactic Unit :=
-  (decorate_error "assumption_mod_cast failed:") do
+  decorate_error "assumption_mod_cast failed:" do
     let cfg : SimpConfig :=
       { failIfUnchanged := false
         canonizeInstances := false
@@ -680,7 +680,7 @@ unsafe def norm_cast (loc : parse location) : tactic Unit := do
 /-- Rewrite with the given rules and normalize casts between steps.
 -/
 unsafe def rw_mod_cast (rs : parse rw_rules) (loc : parse location) : tactic Unit :=
-  (decorate_error "rw_mod_cast failed:") do
+  decorate_error "rw_mod_cast failed:" do
     let cfg_norm : SimpConfig := { }
     let cfg_rw : RewriteCfg := { }
     let ns ← loc.get_locals

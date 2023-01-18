@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module group_theory.group_action.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -322,7 +322,7 @@ variable {α β}
 /-- The orbit corresponding to an element of the quotient by `mul_action.orbit_rel` -/
 @[to_additive "The orbit corresponding to an element of the quotient by `add_action.orbit_rel`"]
 def orbitRel.Quotient.orbit (x : orbitRel.Quotient α β) : Set β :=
-  (Quotient.liftOn' x (orbit α)) fun _ _ => MulAction.orbit_eq_iff.2
+  Quotient.liftOn' x (orbit α) fun _ _ => MulAction.orbit_eq_iff.2
 #align mul_action.orbit_rel.quotient.orbit MulAction.orbitRel.Quotient.orbit
 
 @[simp, to_additive]

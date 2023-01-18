@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kevin Kappelmann
 
 ! This file was ported from Lean 3 source module data.rat.floor
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,7 +60,7 @@ protected theorem le_floor {z : ℤ} : ∀ {r : ℚ}, z ≤ Rat.floor r ↔ (z :
 #align rat.le_floor Rat.le_floor
 
 instance : FloorRing ℚ :=
-  (FloorRing.ofFloor ℚ Rat.floor) fun a z => Rat.le_floor.symm
+  FloorRing.ofFloor ℚ Rat.floor fun a z => Rat.le_floor.symm
 
 /- warning: rat.floor_def -> Rat.floor_def is a dubious translation:
 lean 3 declaration is
@@ -228,7 +228,7 @@ theorem fract_inv_num_lt_num_of_pos {q : ℚ} (q_pos : 0 < q) : (fract q⁻¹).n
       suffices ((q.denom : ℤ) - q.num * ⌊q_inv⌋).natAbs.Coprime q.num.nat_abs by
         exact_mod_cast Rat.num_div_eq_of_coprime q_num_pos this
       have tmp := Nat.coprime_sub_mul_floor_rat_div_of_coprime q.cop.symm
-      simpa only [Nat.cast_nat_abs, abs_of_nonneg q_num_pos.le] using tmp
+      simpa only [Nat.cast_natAbs, abs_of_nonneg q_num_pos.le] using tmp
     rwa [this]
   -- to show the claim, start with the following inequality
   have q_inv_num_denom_ineq : q⁻¹.num - ⌊q⁻¹⌋ * q⁻¹.denom < q⁻¹.denom :=

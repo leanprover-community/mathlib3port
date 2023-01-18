@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yury Kudryashov, Sébastien Gouëzel, Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.integral.set_to_l1
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -182,7 +182,7 @@ theorem map_Union_fin_meas_set_eq_sum (T : Set α → β) (T_empty : T ∅ = 0)
     h_add (S a) (⋃ i ∈ s, S i) (hS_meas a) (measurable_set_bUnion _ fun i _ => hS_meas i)
       (hps a (Finset.mem_insert_self a s))]
   · congr
-    convert Finset.supr_insert a s S
+    convert Finset.supᵢ_insert a s S
   ·
     exact
       ((measure_bUnion_finset_le _ _).trans_lt <|
@@ -377,7 +377,7 @@ theorem map_set_to_simple_func (T : Set α → F →L[ℝ] F') (h_add : FinMeasA
       T (⋃ y ∈ Filter (fun b : G => g b = g (f a)) f.range, f ⁻¹' {y}) (g (f a)) :=
     by
     congr
-    rw [← Finset.set_bUnion_preimage_singleton]
+    rw [← Finset.set_bunionᵢ_preimage_singleton]
   rw [h_left_eq']
   rw [h_add.map_Union_fin_meas_set_eq_sum T T_empty]
   · simp only [filter_congr_decidable, sum_apply, ContinuousLinearMap.coe_sum']
@@ -519,7 +519,7 @@ theorem set_to_simple_func_add (T : Set α → E →L[ℝ] F) (h_add : FinMeasAd
       rw [add_eq_map₂, map_set_to_simple_func T h_add hp_pair]
       simp
     _ = ∑ x in (pair f g).range, T (pair f g ⁻¹' {x}) x.fst + T (pair f g ⁻¹' {x}) x.snd :=
-      (Finset.sum_congr rfl) fun a ha => ContinuousLinearMap.map_add _ _ _
+      Finset.sum_congr rfl fun a ha => ContinuousLinearMap.map_add _ _ _
     _ =
         (∑ x in (pair f g).range, T (pair f g ⁻¹' {x}) x.fst) +
           ∑ x in (pair f g).range, T (pair f g ⁻¹' {x}) x.snd :=
@@ -567,7 +567,7 @@ theorem set_to_simple_func_smul_real (T : Set α → E →L[ℝ] F) (h_add : Fin
       rw [smul_eq_map c f, map_set_to_simple_func T h_add hf]
       rw [smul_zero]
     _ = ∑ x in f.range, c • T (f ⁻¹' {x}) x :=
-      (Finset.sum_congr rfl) fun b hb => by rw [ContinuousLinearMap.map_smul (T (f ⁻¹' {b})) c b]
+      Finset.sum_congr rfl fun b hb => by rw [ContinuousLinearMap.map_smul (T (f ⁻¹' {b})) c b]
     _ = c • setToSimpleFunc T f := by simp only [set_to_simple_func, smul_sum, smul_smul, mul_comm]
     
 #align
@@ -582,7 +582,7 @@ theorem set_to_simple_func_smul {E} [NormedAddCommGroup E] [NormedField 𝕜] [N
       by
       rw [smul_eq_map c f, map_set_to_simple_func T h_add hf]
       rw [smul_zero]
-    _ = ∑ x in f.range, c • T (f ⁻¹' {x}) x := (Finset.sum_congr rfl) fun b hb => by rw [h_smul]
+    _ = ∑ x in f.range, c • T (f ⁻¹' {x}) x := Finset.sum_congr rfl fun b hb => by rw [h_smul]
     _ = c • setToSimpleFunc T f := by simp only [set_to_simple_func, smul_sum, smul_smul, mul_comm]
     
 #align

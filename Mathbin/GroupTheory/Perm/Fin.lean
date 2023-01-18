@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module group_theory.perm.fin
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -116,13 +116,13 @@ theorem sign_fin_rotate (n : ℕ) : Perm.sign (finRotate (n + 1)) = (-1) ^ n :=
 #align sign_fin_rotate sign_fin_rotate
 
 @[simp]
-theorem support_fin_rotate {n : ℕ} : support (finRotate (n + 2)) = Finset.univ :=
+theorem support_fin_rotate {n : ℕ} : Support (finRotate (n + 2)) = Finset.univ :=
   by
   ext
   simp
 #align support_fin_rotate support_fin_rotate
 
-theorem support_fin_rotate_of_le {n : ℕ} (h : 2 ≤ n) : support (finRotate n) = Finset.univ :=
+theorem support_fin_rotate_of_le {n : ℕ} (h : 2 ≤ n) : Support (finRotate n) = Finset.univ :=
   by
   obtain ⟨m, rfl⟩ := exists_add_of_le h
   rw [add_comm, support_fin_rotate]

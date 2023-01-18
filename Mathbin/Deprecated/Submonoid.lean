@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Kenny Lau, Johan Commelin, Mario Carneiro, Kevin Buzzard
 
 ! This file was ported from Lean 3 source module deprecated.submonoid
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -224,7 +224,7 @@ the submonoid. -/
 theorem multiset_prod_mem {M} [CommMonoid M] {s : Set M} (hs : IsSubmonoid s) (m : Multiset M) :
     (∀ a ∈ m, a ∈ s) → m.Prod ∈ s :=
   by
-  refine' Quotient.induction_on m fun l hl => _
+  refine' Quotient.inductionOn m fun l hl => _
   rw [Multiset.quot_mk_to_coe, Multiset.coe_prod]
   exact list_prod_mem hs hl
 #align is_submonoid.multiset_prod_mem IsSubmonoid.multiset_prod_mem

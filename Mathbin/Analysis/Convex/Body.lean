@@ -4,22 +4,21 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Paul A. Reichert
 
 ! This file was ported from Lean 3 source module analysis.convex.body
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Convex.Basic
-import Mathbin.Analysis.NormedSpace.Basic
 import Mathbin.Data.Real.Nnreal
-import Mathbin.Data.Set.Pointwise.Basic
-import Mathbin.Topology.SubsetProperties
+import Mathbin.Topology.Algebra.Module.Basic
+import Mathbin.Topology.Instances.Real
 
 /-!
 # convex bodies
 
 This file contains the definition of the type `convex_body V`
 consisting of
-convex, compact, nonempty subsets of a real normed space `V`.
+convex, compact, nonempty subsets of a real topological vector space `V`.
 
 `convex_body V` is a module over the nonnegative reals (`nnreal`).
 
@@ -38,9 +37,10 @@ open Pointwise
 
 open Nnreal
 
-variable (V : Type _) [SeminormedAddCommGroup V] [NormedSpace ℝ V]
+variable (V : Type _) [TopologicalSpace V] [AddCommGroup V] [HasContinuousAdd V] [Module ℝ V]
+  [HasContinuousSmul ℝ V]
 
-/-- Let `V` be a normed space. A subset of `V` is a convex body if and only if
+/-- Let `V` be a real topological vector space. A subset of `V` is a convex body if and only if
 it is convex, compact, and nonempty.
 -/
 structure ConvexBody where

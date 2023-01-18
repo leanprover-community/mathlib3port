@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.integral.divergence_theorem
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -126,7 +126,7 @@ theorem integral_divergence_of_has_fderiv_within_at_off_countable_aux₁ (I : Bo
       (hs.mono (inter_subset_left _ _)) (fun x hx => Hc _ hx.2) fun x hx =>
       Hd _ ⟨hx.1, fun h => hx.2 ⟨h, hx.1⟩⟩
   rw [continuous_on_pi] at Hc
-  refine' (A.unique B).trans ((sum_congr rfl) fun i hi => _)
+  refine' (A.unique B).trans (sum_congr rfl fun i hi => _)
   refine' congr_arg₂ Sub.sub _ _
   · have := box.continuous_on_face_Icc (Hc i) (Set.right_mem_Icc.2 (I.lower_le_upper i))
     have := (this.integrable_on_compact (box.is_compact_Icc _)).monoSet box.coe_subset_Icc

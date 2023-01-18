@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module category_theory.subobject.comma
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,7 +69,7 @@ theorem project_subobject_mk [HasLimits C] [PreservesLimits T] {A P : Structured
 
 theorem project_subobject_factors [HasLimits C] [PreservesLimits T] {A : StructuredArrow S T} :
     ∀ P : Subobject A, ∃ q, q ≫ T.map (projectSubobject P).arrow = A.Hom :=
-  (Subobject.ind _) fun P f hf =>
+  Subobject.ind _ fun P f hf =>
     ⟨P.Hom ≫ T.map (Subobject.underlyingIso _).inv,
       by
       dsimp
@@ -175,7 +175,7 @@ theorem project_quotient_mk [HasColimits C] [PreservesColimits S] {A : Costructu
 
 theorem project_quotient_factors [HasColimits C] [PreservesColimits S] {A : CostructuredArrow S T} :
     ∀ P : Subobject (op A), ∃ q, S.map (projectQuotient P).arrow.unop ≫ q = A.Hom :=
-  (Subobject.ind _) fun P f hf =>
+  Subobject.ind _ fun P f hf =>
     ⟨S.map (Subobject.underlyingIso _).unop.inv ≫ P.unop.Hom,
       by
       dsimp

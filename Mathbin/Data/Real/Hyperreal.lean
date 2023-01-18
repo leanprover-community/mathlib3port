@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Abhimanyu Pallavi Sudhir
 
 ! This file was ported from Lean 3 source module data.real.hyperreal
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -285,7 +285,7 @@ theorem is_st_unique {x : ℝ*} {r s : ℝ} (hr : IsSt x r) (hs : IsSt x s) : r 
 #align hyperreal.is_st_unique Hyperreal.is_st_unique
 
 theorem not_infinite_of_exists_st {x : ℝ*} : (∃ r : ℝ, IsSt x r) → ¬Infinite x := fun he hi =>
-  (Exists.dcases_on he) fun r hr =>
+  Exists.dcases_on he fun r hr =>
     hi.elim (fun hip => not_lt_of_lt (hr 2 zero_lt_two).2 (hip <| r + 2)) fun hin =>
       not_lt_of_lt (hr 2 zero_lt_two).1 (hin <| r - 2)
 #align hyperreal.not_infinite_of_exists_st Hyperreal.not_infinite_of_exists_st
@@ -296,7 +296,7 @@ theorem is_st_Sup {x : ℝ*} (hni : ¬Infinite x) : IsSt x (supₛ { y : ℝ | (
   have hnile := not_forall.mp (not_or.mp hni).1
   have hnige := not_forall.mp (not_or.mp hni).2
   Exists.dcases_on hnile <|
-    (Exists.dcases_on hnige) fun r₁ hr₁ r₂ hr₂ =>
+    Exists.dcases_on hnige fun r₁ hr₁ r₂ hr₂ =>
       have HR₁ : S.Nonempty :=
         ⟨r₁ - 1, lt_of_lt_of_le (coe_lt_coe.2 <| sub_one_lt _) (not_lt.mp hr₁)⟩
       have HR₂ : BddAbove S :=
@@ -632,7 +632,7 @@ theorem infinite_neg_add_not_infinite {x y : ℝ*} :
 theorem infinite_pos_of_tendsto_top {f : ℕ → ℝ} (hf : Tendsto f atTop atTop) :
     InfinitePos (ofSeq f) := fun r =>
   have hf' := tendsto_at_top_at_top.mp hf
-  (Exists.cases_on (hf' (r + 1))) fun i hi =>
+  Exists.cases_on (hf' (r + 1)) fun i hi =>
     have hi' : ∀ a : ℕ, f a < r + 1 → a < i := fun a => by
       rw [← not_le, ← not_le] <;> exact not_imp_not.mpr (hi a)
     have hS : { a : ℕ | r < f a }ᶜ ⊆ { a : ℕ | a ≤ i } := by
@@ -644,7 +644,7 @@ theorem infinite_pos_of_tendsto_top {f : ℕ → ℝ} (hf : Tendsto f atTop atTo
 theorem infinite_neg_of_tendsto_bot {f : ℕ → ℝ} (hf : Tendsto f atTop atBot) :
     InfiniteNeg (ofSeq f) := fun r =>
   have hf' := tendsto_at_top_at_bot.mp hf
-  (Exists.cases_on (hf' (r - 1))) fun i hi =>
+  Exists.cases_on (hf' (r - 1)) fun i hi =>
     have hi' : ∀ a : ℕ, r - 1 < f a → a < i := fun a => by
       rw [← not_le, ← not_le] <;> exact not_imp_not.mpr (hi a)
     have hS : { a : ℕ | f a < r }ᶜ ⊆ { a : ℕ | a ≤ i } := by
@@ -661,21 +661,21 @@ theorem not_infinite_add {x y : ℝ*} (hx : ¬Infinite x) (hy : ¬Infinite y) : 
   have hx' := exists_st_of_not_infinite hx
   have hy' := exists_st_of_not_infinite hy
   Exists.cases_on hx' <|
-    (Exists.cases_on hy') fun r hr s hs => not_infinite_of_exists_st <| ⟨s + r, is_st_add hs hr⟩
+    Exists.cases_on hy' fun r hr s hs => not_infinite_of_exists_st <| ⟨s + r, is_st_add hs hr⟩
 #align hyperreal.not_infinite_add Hyperreal.not_infinite_add
 
 theorem not_infinite_iff_exist_lt_gt {x : ℝ*} : ¬Infinite x ↔ ∃ r s : ℝ, (r : ℝ*) < x ∧ x < s :=
   ⟨fun hni =>
     Exists.dcases_on (not_forall.mp (not_or.mp hni).1) <|
-      (Exists.dcases_on (not_forall.mp (not_or.mp hni).2)) fun r hr s hs => by
+      Exists.dcases_on (not_forall.mp (not_or.mp hni).2) fun r hr s hs => by
         rw [not_lt] at hr hs <;>
           exact
             ⟨r - 1, s + 1,
               ⟨lt_of_lt_of_le (by rw [sub_eq_add_neg] <;> norm_num) hr,
                 lt_of_le_of_lt hs (by norm_num)⟩⟩,
     fun hrs =>
-    (Exists.dcases_on hrs) fun r hr =>
-      (Exists.dcases_on hr) fun s hs =>
+    Exists.dcases_on hrs fun r hr =>
+      Exists.dcases_on hr fun s hs =>
         not_or.mpr ⟨not_forall.mpr ⟨s, lt_asymm hs.2⟩, not_forall.mpr ⟨r, lt_asymm hs.1⟩⟩⟩
 #align hyperreal.not_infinite_iff_exist_lt_gt Hyperreal.not_infinite_iff_exist_lt_gt
 
@@ -700,8 +700,8 @@ private theorem is_st_mul' {x y : ℝ*} {r s : ℝ} (hxr : IsSt x r) (hys : IsSt
   have h :=
     not_infinite_iff_exist_lt_gt.mp <|
       not_imp_not.mpr infinite_iff_infinite_abs.mpr <| not_infinite_of_exists_st ⟨r, hxr⟩
-  (Exists.cases_on h) fun u h' =>
-    (Exists.cases_on h') fun t ⟨hu, ht⟩ =>
+  Exists.cases_on h fun u h' =>
+    Exists.cases_on h' fun t ⟨hu, ht⟩ =>
       is_st_iff_abs_sub_lt_delta.mpr fun d hd =>
         calc
           |x * y - r * s| = |x * (y - s) + (x - r) * s| := by
@@ -738,9 +738,8 @@ theorem is_st_mul {x y : ℝ*} {r s : ℝ} (hxr : IsSt x r) (hys : IsSt y s) : I
   have h :=
     not_infinite_iff_exist_lt_gt.mp <|
       not_imp_not.mpr infinite_iff_infinite_abs.mpr <| not_infinite_of_exists_st ⟨r, hxr⟩
-  (Exists.cases_on h) fun u h' =>
-    (Exists.cases_on h') fun t ⟨hu, ht⟩ =>
-      by
+  Exists.cases_on h fun u h' =>
+    Exists.cases_on h' fun t ⟨hu, ht⟩ => by
       by_cases hs : s = 0
       · apply is_st_iff_abs_sub_lt_delta.mpr
         intro d hd
@@ -759,7 +758,7 @@ theorem not_infinite_mul {x y : ℝ*} (hx : ¬Infinite x) (hy : ¬Infinite y) : 
   have hx' := exists_st_of_not_infinite hx
   have hy' := exists_st_of_not_infinite hy
   Exists.cases_on hx' <|
-    (Exists.cases_on hy') fun r hr s hs => not_infinite_of_exists_st <| ⟨s * r, is_st_mul hs hr⟩
+    Exists.cases_on hy' fun r hr s hs => not_infinite_of_exists_st <| ⟨s * r, is_st_mul hs hr⟩
 #align hyperreal.not_infinite_mul Hyperreal.not_infinite_mul
 
 ---
@@ -875,7 +874,7 @@ theorem infinite_pos_iff_infinitesimal_inv_pos {x : ℝ*} :
           (inv_lt (coe_lt_coe.2 hr) (hip 0)).mp (by convert hip r⁻¹)⟩,
       inv_pos.2 <| hip 0⟩,
     fun ⟨hi, hp⟩ r =>
-    (@by_cases (r = 0) (↑r < x) fun h => Eq.substr h (inv_pos.mp hp)) fun h =>
+    @by_cases (r = 0) (↑r < x) (fun h => Eq.substr h (inv_pos.mp hp)) fun h =>
       lt_of_le_of_lt (coe_le_coe.2 (le_abs_self r))
         ((inv_lt_inv (inv_pos.mp hp) (coe_lt_coe.2 (abs_pos.2 h))).mp
           ((infinitesimal_def.mp hi) (|r|)⁻¹ (inv_pos.2 (abs_pos.2 h))).2)⟩
@@ -940,7 +939,7 @@ theorem is_st_of_tendsto {f : ℕ → ℝ} {r : ℝ} (hf : Tendsto f atTop (𝓝
 theorem is_st_inv {x : ℝ*} {r : ℝ} (hi : ¬Infinitesimal x) : IsSt x r → IsSt x⁻¹ r⁻¹ := fun hxr =>
   have h : x ≠ 0 := fun h => hi (h.symm ▸ infinitesimal_zero)
   have H := exists_st_of_not_infinite <| not_imp_not.mpr (infinitesimal_iff_infinite_inv h).mpr hi
-  (Exists.cases_on H) fun s hs =>
+  Exists.cases_on H fun s hs =>
     have H' : IsSt 1 (r * s) := mul_inv_cancel h ▸ is_st_mul hxr hs
     have H'' : s = r⁻¹ := one_div r ▸ eq_one_div_of_mul_eq_one_right (eq_of_is_st_real H').symm
     H'' ▸ hs
@@ -973,7 +972,7 @@ theorem infinite_omega : Infinite ω :=
 theorem infinite_pos_mul_of_infinite_pos_not_infinitesimal_pos {x y : ℝ*} :
     InfinitePos x → ¬Infinitesimal y → 0 < y → InfinitePos (x * y) := fun hx hy₁ hy₂ r =>
   have hy₁' := not_forall.mp (by rw [infinitesimal_def] at hy₁ <;> exact hy₁)
-  (Exists.dcases_on hy₁') fun r₁ hy₁'' =>
+  Exists.dcases_on hy₁' fun r₁ hy₁'' =>
     by
     have hyr := by rw [not_imp, ← abs_lt, not_lt, abs_of_pos hy₂] at hy₁'' <;> exact hy₁''
     rw [← div_mul_cancel r (ne_of_gt hyr.1), coe_mul] <;>

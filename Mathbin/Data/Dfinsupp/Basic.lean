@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Kenny Lau
 
 ! This file was ported from Lean 3 source module data.dfinsupp.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -564,7 +564,7 @@ theorem finite_support (f : Π₀ i, β i) : Set.Finite { i | f i ≠ 0 } := by
   classical exact
       Trunc.induction_on f.support' fun xs =>
         (Multiset.toFinset ↑xs).finite_to_set.Subset fun i H =>
-          Multiset.mem_to_finset.2 ((xs.Prop i).resolve_right H)
+          Multiset.mem_toFinset.2 ((xs.Prop i).resolve_right H)
 #align dfinsupp.finite_support Dfinsupp.finite_support
 
 include dec
@@ -1009,7 +1009,7 @@ protected theorem induction {p : (Π₀ i, β i) → Prop} (f : Π₀ i, β i) (
 
 theorem induction₂ {p : (Π₀ i, β i) → Prop} (f : Π₀ i, β i) (h0 : p 0)
     (ha : ∀ (i b) (f : Π₀ i, β i), f i = 0 → b ≠ 0 → p f → p (f + single i b)) : p f :=
-  (Dfinsupp.induction f h0) fun i b f h1 h2 h3 =>
+  Dfinsupp.induction f h0 fun i b f h1 h2 h3 =>
     have h4 : f + single i b = single i b + f :=
       by
       ext j; by_cases H : i = j
@@ -1116,21 +1116,21 @@ def support (f : Π₀ i, β i) : Finset ι :=
     ext i; constructor
     · intro H
       rcases Finset.mem_filter.1 H with ⟨h1, h2⟩
-      exact Finset.mem_filter.2 ⟨Multiset.mem_to_finset.2 <| (hy i).resolve_right h2, h2⟩
+      exact Finset.mem_filter.2 ⟨Multiset.mem_toFinset.2 <| (hy i).resolve_right h2, h2⟩
     · intro H
       rcases Finset.mem_filter.1 H with ⟨h1, h2⟩
-      exact Finset.mem_filter.2 ⟨Multiset.mem_to_finset.2 <| (hx i).resolve_right h2, h2⟩
+      exact Finset.mem_filter.2 ⟨Multiset.mem_toFinset.2 <| (hx i).resolve_right h2, h2⟩
 #align dfinsupp.support Dfinsupp.support
 
 @[simp]
 theorem support_mk_subset {s : Finset ι} {x : ∀ i : (↑s : Set ι), β i.1} : (mk s x).support ⊆ s :=
-  fun i H => Multiset.mem_to_finset.1 (Finset.mem_filter.1 H).1
+  fun i H => Multiset.mem_toFinset.1 (Finset.mem_filter.1 H).1
 #align dfinsupp.support_mk_subset Dfinsupp.support_mk_subset
 
 @[simp]
 theorem support_mk'_subset {f : ∀ i, β i} {s : Multiset ι} {h} :
     (mk' f <| Trunc.mk ⟨s, h⟩).support ⊆ s.toFinset := fun i H =>
-  Multiset.mem_to_finset.1 <| by simpa using (Finset.mem_filter.1 H).1
+  Multiset.mem_toFinset.1 <| by simpa using (Finset.mem_filter.1 H).1
 #align dfinsupp.support_mk'_subset Dfinsupp.support_mk'_subset
 
 @[simp]
@@ -1139,7 +1139,7 @@ theorem mem_support_to_fun (f : Π₀ i, β i) (i) : i ∈ f.support ↔ f i ≠
   cases' f with f s
   induction s using Trunc.induction_on
   dsimp only [support, Trunc.lift_mk]
-  rw [Finset.mem_filter, Multiset.mem_to_finset, coe_mk']
+  rw [Finset.mem_filter, Multiset.mem_toFinset, coe_mk']
   exact and_iff_right_of_imp (s.prop i).resolve_right
 #align dfinsupp.mem_support_to_fun Dfinsupp.mem_support_to_fun
 
@@ -1342,7 +1342,7 @@ noncomputable def comapDomain [∀ i, Zero (β i)] (h : κ → ι) (hh : Functio
   support' :=
     f.support'.map fun s =>
       ⟨((Multiset.toFinset ↑s).Preimage h (hh.InjOn _)).val, fun x =>
-        (s.Prop (h x)).imp_left fun hx => mem_preimage.mpr <| Multiset.mem_to_finset.mpr hx⟩
+        (s.Prop (h x)).imp_left fun hx => mem_preimage.mpr <| Multiset.mem_toFinset.mpr hx⟩
 #align dfinsupp.comap_domain Dfinsupp.comapDomain
 
 @[simp]
@@ -1495,7 +1495,7 @@ noncomputable def sigmaCurry [∀ i j, Zero (δ i j)] (f : Π₀ i : Σi, _, δ 
     Π₀ (i) (j), δ i j := by
   classical exact
       mk (f.support.image fun i => i.1) fun i =>
-        (mk (f.support.preimage (Sigma.mk i) <| sigma_mk_injective.inj_on _)) fun j => f ⟨i, j⟩
+        mk (f.support.preimage (Sigma.mk i) <| sigma_mk_injective.inj_on _) fun j => f ⟨i, j⟩
 #align dfinsupp.sigma_curry Dfinsupp.sigmaCurry
 
 @[simp]
@@ -1572,8 +1572,7 @@ noncomputable def sigmaUncurry [∀ i j, Zero (δ i j)] (f : Π₀ (i) (j), δ i
   toFun i := f i.1 i.2
   support' :=
     f.support'.map fun s =>
-      ⟨(Multiset.bind ↑s) fun i => ((f i).support.map ⟨Sigma.mk i, sigma_mk_injective⟩).val,
-        fun i =>
+      ⟨Multiset.bind ↑s fun i => ((f i).support.map ⟨Sigma.mk i, sigma_mk_injective⟩).val, fun i =>
         by
         simp_rw [Multiset.mem_bind, map_val, Multiset.mem_map, Function.Embedding.coeFn_mk, ←
           Finset.mem_def, mem_support_to_fun]
@@ -1814,7 +1813,7 @@ theorem support_sum {ι₁ : Type u₁} [DecidableEq ι₁] {β₁ : ι₁ → T
     fun i₁ h =>
     let ⟨i, hi, Ne⟩ := Finset.exists_ne_zero_of_sum_ne_zero h
     ⟨i, mem_support_iff.1 hi, Ne⟩
-  simpa [Finset.subset_iff, mem_support_iff, Finset.mem_bUnion, sum_apply] using this
+  simpa [Finset.subset_iff, mem_support_iff, Finset.mem_bunionᵢ, sum_apply] using this
 #align dfinsupp.support_sum Dfinsupp.support_sum
 
 @[simp, to_additive]
@@ -1905,13 +1904,13 @@ def sumAddHom [∀ i, AddZeroClass (β i)] [AddCommMonoid γ] (φ : ∀ i, β i 
           ((Finset.sum_congr rfl _).trans (Finset.sum_subset H2 _))
       · intro i H1 H2
         rw [Finset.mem_inter] at H2
-        simp only [Multiset.mem_to_finset] at H1 H2
+        simp only [Multiset.mem_toFinset] at H1 H2
         rw [(hy i).resolve_left (mt (And.intro H1) H2), AddMonoidHom.map_zero]
       · intro i H1
         rfl
       · intro i H1 H2
         rw [Finset.mem_inter] at H2
-        simp only [Multiset.mem_to_finset] at H1 H2
+        simp only [Multiset.mem_toFinset] at H1 H2
         rw [(hx i).resolve_left (mt (fun H3 => And.intro H3 H1) H2), AddMonoidHom.map_zero]
   map_add' := by
     rintro ⟨f, sf, hf⟩ ⟨g, sg, hg⟩
@@ -1920,17 +1919,17 @@ def sumAddHom [∀ i, AddZeroClass (β i)] [AddCommMonoid γ] (φ : ∀ i, β i 
     congr 1
     · refine' (Finset.sum_subset _ _).symm
       · intro i
-        simp only [Multiset.mem_to_finset, Multiset.mem_add]
+        simp only [Multiset.mem_toFinset, Multiset.mem_add]
         exact Or.inl
       · intro i H1 H2
-        simp only [Multiset.mem_to_finset, Multiset.mem_add] at H2
+        simp only [Multiset.mem_toFinset, Multiset.mem_add] at H2
         rw [(hf i).resolve_left H2, AddMonoidHom.map_zero]
     · refine' (Finset.sum_subset _ _).symm
       · intro i
-        simp only [Multiset.mem_to_finset, Multiset.mem_add]
+        simp only [Multiset.mem_toFinset, Multiset.mem_add]
         exact Or.inr
       · intro i H1 H2
-        simp only [Multiset.mem_to_finset, Multiset.mem_add] at H2
+        simp only [Multiset.mem_toFinset, Multiset.mem_add] at H2
         rw [(hg i).resolve_left H2, AddMonoidHom.map_zero]
   map_zero' := rfl
 #align dfinsupp.sum_add_hom Dfinsupp.sumAddHom
@@ -1940,7 +1939,7 @@ theorem sum_add_hom_single [∀ i, AddZeroClass (β i)] [AddCommMonoid γ] (φ :
     (x : β i) : sumAddHom φ (single i x) = φ i x :=
   by
   dsimp [sum_add_hom, single, Trunc.lift_mk]
-  rw [Multiset.to_finset_singleton, Finset.sum_singleton, Pi.single_eq_same]
+  rw [Multiset.toFinset_singleton, Finset.sum_singleton, Pi.single_eq_same]
 #align dfinsupp.sum_add_hom_single Dfinsupp.sum_add_hom_single
 
 @[simp]

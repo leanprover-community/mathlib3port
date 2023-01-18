@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Amelia Livingston
 
 ! This file was ported from Lean 3 source module group_theory.monoid_localization
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -358,13 +358,13 @@ theorem lift_on₂_mk {p : Sort _} (f : M → S → M → S → p) (H) (a c : M)
 @[elab_as_elim, to_additive]
 theorem induction_on₂ {p : Localization S → Localization S → Prop} (x y)
     (H : ∀ x y : M × S, p (mk x.1 x.2) (mk y.1 y.2)) : p x y :=
-  (induction_on x) fun x => induction_on y <| H x
+  induction_on x fun x => induction_on y <| H x
 #align localization.induction_on₂ Localization.induction_on₂
 
 @[elab_as_elim, to_additive]
 theorem induction_on₃ {p : Localization S → Localization S → Localization S → Prop} (x y z)
     (H : ∀ x y z : M × S, p (mk x.1 x.2) (mk y.1 y.2) (mk z.1 z.2)) : p x y z :=
-  (induction_on₂ x y) fun x y => induction_on z <| H x y
+  induction_on₂ x y fun x y => induction_on z <| H x y
 #align localization.induction_on₃ Localization.induction_on₃
 
 @[to_additive]
@@ -390,7 +390,7 @@ variable {R R₁ R₂ : Type _}
 /-- Scalar multiplication in a monoid localization is defined as `c • ⟨a, b⟩ = ⟨c • a, b⟩`. -/
 protected irreducible_def smul [SMul R M] [IsScalarTower R M M] (c : R) (z : Localization S) :
   Localization S :=
-  (Localization.liftOn z fun a b => mk (c • a) b) fun a a' b b' h =>
+  Localization.liftOn z (fun a b => mk (c • a) b) fun a a' b b' h =>
     mk_eq_mk_iff.2
       (by
         cases' b with b hb
@@ -990,7 +990,7 @@ that `z = f x * (f y)⁻¹`. -/
 @[to_additive
       "Given a `add_comm_monoid` homomorphism `g : M →+ P` where for submonoids\n`S ⊆ M, T ⊆ P` we have `g(S) ⊆ T`, the induced add_monoid homomorphism from the localization of `M`\nat `S` to the localization of `P` at `T`: if `f : M →+ N` and `k : P →+ Q` are localization maps\nfor `S` and `T` respectively, we send `z : N` to `k (g x) - k (g y)`, where `(x, y) : M × S` are\nsuch that `z = f x - f y`."]
 noncomputable def map : N →* Q :=
-  (@lift _ _ _ _ _ _ _ f (k.toMap.comp g)) fun y => k.map_units ⟨g y, hy y⟩
+  @lift _ _ _ _ _ _ _ f (k.toMap.comp g) fun y => k.map_units ⟨g y, hy y⟩
 #align submonoid.localization_map.map Submonoid.LocalizationMap.map
 
 variable {k}
@@ -1468,7 +1468,7 @@ def monoidOf : Submonoid.LocalizationMap S (Localization S) :=
     map_units' := fun y =>
       isUnit_iff_exists_inv.2 ⟨mk 1 y, by rw [mk_mul, mul_one, one_mul, mk_self]⟩
     surj' := fun z =>
-      (induction_on z) fun x => ⟨x, by rw [mk_mul, mul_comm x.fst, ← mk_mul, mk_self, one_mul]⟩
+      induction_on z fun x => ⟨x, by rw [mk_mul, mul_comm x.fst, ← mk_mul, mk_self, one_mul]⟩
     eq_iff_exists' := fun x y =>
       mk_eq_mk_iff.trans <|
         r_iff_exists.trans <| show (∃ c : S, x * 1 * c = y * 1 * c) ↔ _ by rw [mul_one, mul_one] }

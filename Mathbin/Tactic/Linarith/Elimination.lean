@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module tactic.linarith.elimination
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -242,7 +242,7 @@ unsafe def pcomp.is_contr (p : pcomp) : Bool :=
 for every `p' ∈ comps`.
 -/
 unsafe def elim_with_set (a : ℕ) (p : pcomp) (comps : rb_set pcomp) : rb_set pcomp :=
-  (comps.fold mk_pcomp_set) fun pc s =>
+  comps.fold mk_pcomp_set fun pc s =>
     match pelim_var p pc a with
     | some pc => if pc.maybe_minimal a then s.insert pc else s
     | none => s
@@ -304,7 +304,7 @@ Returns `(pos, neg, not_present)`.
 -/
 unsafe def split_set_by_var_sign (a : ℕ) (comps : rb_set pcomp) :
     rb_set pcomp × rb_set pcomp × rb_set pcomp :=
-  (comps.fold ⟨mk_pcomp_set, mk_pcomp_set, mk_pcomp_set⟩) fun pc ⟨Pos, neg, not_present⟩ =>
+  comps.fold ⟨mk_pcomp_set, mk_pcomp_set, mk_pcomp_set⟩ fun pc ⟨Pos, neg, not_present⟩ =>
     let n := pc.c.coeffOf a
     if n > 0 then ⟨Pos.insert pc, neg, not_present⟩
     else if n < 0 then ⟨Pos, neg.insert pc, not_present⟩ else ⟨Pos, neg, not_present.insert pc⟩
@@ -316,7 +316,7 @@ from the `linarith` state.
 -/
 unsafe def monad.elim_var (a : ℕ) : linarith_monad Unit := do
   let vs ← get_max_var
-  (when (a ≤ vs)) do
+  when (a ≤ vs) do
       let ⟨Pos, neg, not_present⟩ ← split_set_by_var_sign a <$> get_comps
       let cs' := Pos not_present fun p s => s (elim_with_set a p neg)
       update (vs - 1) cs'

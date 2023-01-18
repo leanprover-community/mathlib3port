@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Martin Zinkevich, Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.pi_system
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -336,7 +336,7 @@ theorem mem_generate_pi_system_Union_elim' {α β} {g : β → Set (Set α)} {s 
     ⟨T.image Subtype.val, Function.extend Subtype.val f fun b : β => (∅ : Set α), by simp, _, _⟩
   · ext a
     constructor <;>
-      · simp only [Set.mem_interᵢ, Subtype.forall, Finset.set_bInter_finset_image]
+      · simp only [Set.mem_interᵢ, Subtype.forall, Finset.set_binterᵢ_finset_image]
         intro h1 b h_b h_b_in_T
         have h2 := h1 b h_b h_b_in_T
         revert h2
@@ -586,10 +586,10 @@ theorem hasUnion {β} [Countable β] {f : β → Set α} (hd : Pairwise (Disjoin
     (h : ∀ i, d.Has (f i)) : d.Has (⋃ i, f i) :=
   by
   cases nonempty_encodable β
-  rw [← Encodable.Union_decode₂]
+  rw [← Encodable.unionᵢ_decode₂]
   exact
-    d.has_Union_nat (Encodable.Union_decode₂_disjoint_on hd) fun n =>
-      Encodable.Union_decode₂_cases d.has_empty h
+    d.has_Union_nat (Encodable.unionᵢ_decode₂_disjoint_on hd) fun n =>
+      Encodable.unionᵢ_decode₂_cases d.has_empty h
 #align measurable_space.dynkin_system.has_Union MeasurableSpace.DynkinSystem.hasUnion
 
 /- warning: measurable_space.dynkin_system.has_union clashes with measurable_space.dynkin_system.has_Union -> MeasurableSpace.DynkinSystem.hasUnion
@@ -729,10 +729,10 @@ theorem generate_has_subset_generate_measurable {C : Set (Set α)} {s : Set α}
 theorem generateInter {s : Set (Set α)} (hs : IsPiSystem s) {t₁ t₂ : Set α}
     (ht₁ : (generate s).Has t₁) (ht₂ : (generate s).Has t₂) : (generate s).Has (t₁ ∩ t₂) :=
   have : generate s ≤ (generate s).restrictOn ht₂ :=
-    (generate_le _) fun s₁ hs₁ =>
+    generate_le _ fun s₁ hs₁ =>
       have : (generate s).Has s₁ := GenerateHas.basic s₁ hs₁
       have : generate s ≤ (generate s).restrictOn this :=
-        (generate_le _) fun s₂ hs₂ =>
+        generate_le _ fun s₂ hs₂ =>
           show (generate s).Has (s₂ ∩ s₁) from
             (s₂ ∩ s₁).eq_empty_or_nonempty.elim (fun h => h.symm ▸ generate_has.empty) fun h =>
               GenerateHas.basic _ <| hs _ hs₂ _ hs₁ h
@@ -754,7 +754,7 @@ theorem generate_from_eq {s : Set (Set α)} (hs : IsPiSystem s) :
     (of_measurable_space_le_of_measurable_space_iff.mp <|
       by
       rw [of_measurable_space_to_measurable_space]
-      exact (generate_le _) fun t ht => measurable_set_generate_from ht)
+      exact generate_le _ fun t ht => measurable_set_generate_from ht)
 #align measurable_space.dynkin_system.generate_from_eq MeasurableSpace.DynkinSystem.generate_from_eq
 
 end DynkinSystem
@@ -778,7 +778,7 @@ theorem induction_on_inter {C : Set α → Prop} {s : Set (Set α)} [m : Measura
         rw [Eq]
         exact ht)
     fun f hf ht =>
-    (h_union f hf) fun i => by
+    h_union f hf fun i => by
       rw [Eq]
       exact ht _
 #align measurable_space.induction_on_inter MeasurableSpace.induction_on_inter

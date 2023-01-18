@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.sigma.interval
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,19 +66,19 @@ section
 variable (a b : Σi, α i)
 
 theorem card_Icc : (icc a b).card = if h : a.1 = b.1 then (icc (h.rec a.2) b.2).card else 0 :=
-  card_sigma_lift _ _ _
+  card_sigmaLift _ _ _
 #align sigma.card_Icc Sigma.card_Icc
 
 theorem card_Ico : (ico a b).card = if h : a.1 = b.1 then (ico (h.rec a.2) b.2).card else 0 :=
-  card_sigma_lift _ _ _
+  card_sigmaLift _ _ _
 #align sigma.card_Ico Sigma.card_Ico
 
 theorem card_Ioc : (ioc a b).card = if h : a.1 = b.1 then (ioc (h.rec a.2) b.2).card else 0 :=
-  card_sigma_lift _ _ _
+  card_sigmaLift _ _ _
 #align sigma.card_Ioc Sigma.card_Ioc
 
 theorem card_Ioo : (ioo a b).card = if h : a.1 = b.1 then (ioo (h.rec a.2) b.2).card else 0 :=
-  card_sigma_lift _ _ _
+  card_sigmaLift _ _ _
 #align sigma.card_Ioo Sigma.card_Ioo
 
 end

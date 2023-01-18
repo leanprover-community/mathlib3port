@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.num.bitwise
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -429,8 +429,8 @@ def bits : Snum → ∀ n, Vector Bool n
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 def cadd : Snum → Snum → Bool → Snum :=
-  (rec' fun a p c => czadd c a p) fun a p IH =>
-    (rec' fun b c => czadd c b (a::p)) fun b q _ c => Bitvec.xor3 a b c::IH q (Bitvec.carry a b c)
+  rec' (fun a p c => czadd c a p) fun a p IH =>
+    rec' (fun b c => czadd c b (a::p)) fun b q _ c => Bitvec.xor3 a b c::IH q (Bitvec.carry a b c)
 #align snum.cadd Snum.cadd
 
 /-- Add two `snum`s. -/
@@ -441,7 +441,7 @@ protected def add (a b : Snum) : Snum :=
 instance : Add Snum :=
   ⟨Snum.add⟩
 
-/-- Substract two `snum`s. -/
+/-- subtract two `snum`s. -/
 protected def sub (a b : Snum) : Snum :=
   a + -b
 #align snum.sub Snum.sub
@@ -451,7 +451,7 @@ instance : Sub Snum :=
 
 /-- Multiply two `snum`s. -/
 protected def mul (a : Snum) : Snum → Snum :=
-  (rec' fun b => cond b (-a) 0) fun b q IH => cond b (bit0 IH + a) (bit0 IH)
+  rec' (fun b => cond b (-a) 0) fun b q IH => cond b (bit0 IH + a) (bit0 IH)
 #align snum.mul Snum.mul
 
 instance : Mul Snum :=

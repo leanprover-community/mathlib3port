@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module tactic.linarith.preprocessing
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -301,7 +301,7 @@ unsafe def nlinarith_extras : global_preprocessor
   transform ls := do
     let s ← ls.mfoldr (fun h s' => infer_type h >>= find_squares s') mk_rb_set
     let new_es ←
-      (s.mfold ([] : List expr)) fun ⟨e, is_sq⟩ new_es =>
+      s.mfold ([] : List expr) fun ⟨e, is_sq⟩ new_es =>
           (do
               let p ← mk_app (if is_sq then `` sq_nonneg else `` mul_self_nonneg) [e]
               return <| p :: new_es) <|>

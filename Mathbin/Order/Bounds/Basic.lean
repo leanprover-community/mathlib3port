@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module order.bounds.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -518,7 +518,7 @@ theorem IsGreatest.nonempty (h : IsGreatest s a) : s.Nonempty :=
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, Eq.{succ u1} (Set.{u1} α) (upperBounds.{u1} α _inst_1 (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s t)) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (upperBounds.{u1} α _inst_1 s) (upperBounds.{u1} α _inst_1 t))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, Eq.{succ u1} (Set.{u1} α) (upperBounds.{u1} α _inst_1 (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet_1.{u1} α) s t)) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet_1.{u1} α) (upperBounds.{u1} α _inst_1 s) (upperBounds.{u1} α _inst_1 t))
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, Eq.{succ u1} (Set.{u1} α) (upperBounds.{u1} α _inst_1 (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t)) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (upperBounds.{u1} α _inst_1 s) (upperBounds.{u1} α _inst_1 t))
 Case conversion may be inaccurate. Consider using '#align upper_bounds_union upperBounds_unionₓ'. -/
 @[simp]
 theorem upperBounds_union : upperBounds (s ∪ t) = upperBounds s ∩ upperBounds t :=
@@ -530,7 +530,7 @@ theorem upperBounds_union : upperBounds (s ∪ t) = upperBounds s ∩ upperBound
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, Eq.{succ u1} (Set.{u1} α) (lowerBounds.{u1} α _inst_1 (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s t)) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (lowerBounds.{u1} α _inst_1 s) (lowerBounds.{u1} α _inst_1 t))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, Eq.{succ u1} (Set.{u1} α) (lowerBounds.{u1} α _inst_1 (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet_1.{u1} α) s t)) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet_1.{u1} α) (lowerBounds.{u1} α _inst_1 s) (lowerBounds.{u1} α _inst_1 t))
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, Eq.{succ u1} (Set.{u1} α) (lowerBounds.{u1} α _inst_1 (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t)) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (lowerBounds.{u1} α _inst_1 s) (lowerBounds.{u1} α _inst_1 t))
 Case conversion may be inaccurate. Consider using '#align lower_bounds_union lowerBounds_unionₓ'. -/
 @[simp]
 theorem lowerBounds_union : lowerBounds (s ∪ t) = lowerBounds s ∩ lowerBounds t :=
@@ -541,7 +541,7 @@ theorem lowerBounds_union : lowerBounds (s ∪ t) = lowerBounds s ∩ lowerBound
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) (upperBounds.{u1} α _inst_1 s) (upperBounds.{u1} α _inst_1 t)) (upperBounds.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet_1.{u1} α) (upperBounds.{u1} α _inst_1 s) (upperBounds.{u1} α _inst_1 t)) (upperBounds.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet_1.{u1} α) s t))
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) (upperBounds.{u1} α _inst_1 s) (upperBounds.{u1} α _inst_1 t)) (upperBounds.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t))
 Case conversion may be inaccurate. Consider using '#align union_upper_bounds_subset_upper_bounds_inter union_upperBounds_subset_upperBounds_interₓ'. -/
 theorem union_upperBounds_subset_upperBounds_inter :
     upperBounds s ∪ upperBounds t ⊆ upperBounds (s ∩ t) :=
@@ -553,7 +553,7 @@ theorem union_upperBounds_subset_upperBounds_inter :
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) (lowerBounds.{u1} α _inst_1 s) (lowerBounds.{u1} α _inst_1 t)) (lowerBounds.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet_1.{u1} α) (lowerBounds.{u1} α _inst_1 s) (lowerBounds.{u1} α _inst_1 t)) (lowerBounds.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet_1.{u1} α) s t))
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) (lowerBounds.{u1} α _inst_1 s) (lowerBounds.{u1} α _inst_1 t)) (lowerBounds.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t))
 Case conversion may be inaccurate. Consider using '#align union_lower_bounds_subset_lower_bounds_inter union_lowerBounds_subset_lowerBounds_interₓ'. -/
 theorem union_lowerBounds_subset_lowerBounds_inter :
     lowerBounds s ∪ lowerBounds t ⊆ lowerBounds (s ∩ t) :=
@@ -564,7 +564,7 @@ theorem union_lowerBounds_subset_lowerBounds_inter :
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {s : Set.{u1} α} {t : Set.{u1} α}, Iff (IsLeast.{u1} α _inst_1 (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s t) a) (Or (And (IsLeast.{u1} α _inst_1 s a) (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a (lowerBounds.{u1} α _inst_1 t))) (And (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a (lowerBounds.{u1} α _inst_1 s)) (IsLeast.{u1} α _inst_1 t a)))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {s : Set.{u1} α} {t : Set.{u1} α}, Iff (IsLeast.{u1} α _inst_1 (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet_1.{u1} α) s t) a) (Or (And (IsLeast.{u1} α _inst_1 s a) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a (lowerBounds.{u1} α _inst_1 t))) (And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a (lowerBounds.{u1} α _inst_1 s)) (IsLeast.{u1} α _inst_1 t a)))
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {s : Set.{u1} α} {t : Set.{u1} α}, Iff (IsLeast.{u1} α _inst_1 (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t) a) (Or (And (IsLeast.{u1} α _inst_1 s a) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a (lowerBounds.{u1} α _inst_1 t))) (And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a (lowerBounds.{u1} α _inst_1 s)) (IsLeast.{u1} α _inst_1 t a)))
 Case conversion may be inaccurate. Consider using '#align is_least_union_iff isLeast_union_iffₓ'. -/
 theorem isLeast_union_iff {a : α} {s t : Set α} :
     IsLeast (s ∪ t) a ↔ IsLeast s a ∧ a ∈ lowerBounds t ∨ a ∈ lowerBounds s ∧ IsLeast t a := by
@@ -575,7 +575,7 @@ theorem isLeast_union_iff {a : α} {s t : Set α} :
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α} {a : α}, Iff (IsGreatest.{u1} α _inst_1 (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s t) a) (Or (And (IsGreatest.{u1} α _inst_1 s a) (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a (upperBounds.{u1} α _inst_1 t))) (And (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a (upperBounds.{u1} α _inst_1 s)) (IsGreatest.{u1} α _inst_1 t a)))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α} {a : α}, Iff (IsGreatest.{u1} α _inst_1 (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet_1.{u1} α) s t) a) (Or (And (IsGreatest.{u1} α _inst_1 s a) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a (upperBounds.{u1} α _inst_1 t))) (And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a (upperBounds.{u1} α _inst_1 s)) (IsGreatest.{u1} α _inst_1 t a)))
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α} {a : α}, Iff (IsGreatest.{u1} α _inst_1 (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t) a) (Or (And (IsGreatest.{u1} α _inst_1 s a) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a (upperBounds.{u1} α _inst_1 t))) (And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a (upperBounds.{u1} α _inst_1 s)) (IsGreatest.{u1} α _inst_1 t a)))
 Case conversion may be inaccurate. Consider using '#align is_greatest_union_iff isGreatest_union_iffₓ'. -/
 theorem isGreatest_union_iff :
     IsGreatest (s ∪ t) a ↔
@@ -587,7 +587,7 @@ theorem isGreatest_union_iff :
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (BddAbove.{u1} α _inst_1 s) -> (BddAbove.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (BddAbove.{u1} α _inst_1 s) -> (BddAbove.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet_1.{u1} α) s t))
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (BddAbove.{u1} α _inst_1 s) -> (BddAbove.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t))
 Case conversion may be inaccurate. Consider using '#align bdd_above.inter_of_left BddAbove.inter_of_leftₓ'. -/
 /-- If `s` is bounded, then so is `s ∩ t` -/
 theorem BddAbove.inter_of_left (h : BddAbove s) : BddAbove (s ∩ t) :=
@@ -598,7 +598,7 @@ theorem BddAbove.inter_of_left (h : BddAbove s) : BddAbove (s ∩ t) :=
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (BddAbove.{u1} α _inst_1 t) -> (BddAbove.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (BddAbove.{u1} α _inst_1 t) -> (BddAbove.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet_1.{u1} α) s t))
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (BddAbove.{u1} α _inst_1 t) -> (BddAbove.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t))
 Case conversion may be inaccurate. Consider using '#align bdd_above.inter_of_right BddAbove.inter_of_rightₓ'. -/
 /-- If `t` is bounded, then so is `s ∩ t` -/
 theorem BddAbove.inter_of_right (h : BddAbove t) : BddAbove (s ∩ t) :=
@@ -609,7 +609,7 @@ theorem BddAbove.inter_of_right (h : BddAbove t) : BddAbove (s ∩ t) :=
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (BddBelow.{u1} α _inst_1 s) -> (BddBelow.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (BddBelow.{u1} α _inst_1 s) -> (BddBelow.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet_1.{u1} α) s t))
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (BddBelow.{u1} α _inst_1 s) -> (BddBelow.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t))
 Case conversion may be inaccurate. Consider using '#align bdd_below.inter_of_left BddBelow.inter_of_leftₓ'. -/
 /-- If `s` is bounded, then so is `s ∩ t` -/
 theorem BddBelow.inter_of_left (h : BddBelow s) : BddBelow (s ∩ t) :=
@@ -620,7 +620,7 @@ theorem BddBelow.inter_of_left (h : BddBelow s) : BddBelow (s ∩ t) :=
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (BddBelow.{u1} α _inst_1 t) -> (BddBelow.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (BddBelow.{u1} α _inst_1 t) -> (BddBelow.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet_1.{u1} α) s t))
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (BddBelow.{u1} α _inst_1 t) -> (BddBelow.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t))
 Case conversion may be inaccurate. Consider using '#align bdd_below.inter_of_right BddBelow.inter_of_rightₓ'. -/
 /-- If `t` is bounded, then so is `s ∩ t` -/
 theorem BddBelow.inter_of_right (h : BddBelow t) : BddBelow (s ∩ t) :=
@@ -631,7 +631,7 @@ theorem BddBelow.inter_of_right (h : BddBelow t) : BddBelow (s ∩ t) :=
 lean 3 declaration is
   forall {γ : Type.{u1}} [_inst_3 : SemilatticeSup.{u1} γ] {s : Set.{u1} γ} {t : Set.{u1} γ}, (BddAbove.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeSup.toPartialOrder.{u1} γ _inst_3)) s) -> (BddAbove.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeSup.toPartialOrder.{u1} γ _inst_3)) t) -> (BddAbove.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeSup.toPartialOrder.{u1} γ _inst_3)) (Union.union.{u1} (Set.{u1} γ) (Set.hasUnion.{u1} γ) s t))
 but is expected to have type
-  forall {γ : Type.{u1}} [_inst_3 : SemilatticeSup.{u1} γ] {s : Set.{u1} γ} {t : Set.{u1} γ}, (BddAbove.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeSup.toPartialOrder.{u1} γ _inst_3)) s) -> (BddAbove.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeSup.toPartialOrder.{u1} γ _inst_3)) t) -> (BddAbove.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeSup.toPartialOrder.{u1} γ _inst_3)) (Union.union.{u1} (Set.{u1} γ) (Set.instUnionSet_1.{u1} γ) s t))
+  forall {γ : Type.{u1}} [_inst_3 : SemilatticeSup.{u1} γ] {s : Set.{u1} γ} {t : Set.{u1} γ}, (BddAbove.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeSup.toPartialOrder.{u1} γ _inst_3)) s) -> (BddAbove.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeSup.toPartialOrder.{u1} γ _inst_3)) t) -> (BddAbove.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeSup.toPartialOrder.{u1} γ _inst_3)) (Union.union.{u1} (Set.{u1} γ) (Set.instUnionSet.{u1} γ) s t))
 Case conversion may be inaccurate. Consider using '#align bdd_above.union BddAbove.unionₓ'. -/
 /-- If `s` and `t` are bounded above sets in a `semilattice_sup`, then so is `s ∪ t`. -/
 theorem BddAbove.union [SemilatticeSup γ] {s t : Set γ} :
@@ -647,7 +647,7 @@ theorem BddAbove.union [SemilatticeSup γ] {s t : Set γ} :
 lean 3 declaration is
   forall {γ : Type.{u1}} [_inst_3 : SemilatticeSup.{u1} γ] {s : Set.{u1} γ} {t : Set.{u1} γ}, Iff (BddAbove.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeSup.toPartialOrder.{u1} γ _inst_3)) (Union.union.{u1} (Set.{u1} γ) (Set.hasUnion.{u1} γ) s t)) (And (BddAbove.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeSup.toPartialOrder.{u1} γ _inst_3)) s) (BddAbove.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeSup.toPartialOrder.{u1} γ _inst_3)) t))
 but is expected to have type
-  forall {γ : Type.{u1}} [_inst_3 : SemilatticeSup.{u1} γ] {s : Set.{u1} γ} {t : Set.{u1} γ}, Iff (BddAbove.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeSup.toPartialOrder.{u1} γ _inst_3)) (Union.union.{u1} (Set.{u1} γ) (Set.instUnionSet_1.{u1} γ) s t)) (And (BddAbove.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeSup.toPartialOrder.{u1} γ _inst_3)) s) (BddAbove.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeSup.toPartialOrder.{u1} γ _inst_3)) t))
+  forall {γ : Type.{u1}} [_inst_3 : SemilatticeSup.{u1} γ] {s : Set.{u1} γ} {t : Set.{u1} γ}, Iff (BddAbove.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeSup.toPartialOrder.{u1} γ _inst_3)) (Union.union.{u1} (Set.{u1} γ) (Set.instUnionSet.{u1} γ) s t)) (And (BddAbove.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeSup.toPartialOrder.{u1} γ _inst_3)) s) (BddAbove.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeSup.toPartialOrder.{u1} γ _inst_3)) t))
 Case conversion may be inaccurate. Consider using '#align bdd_above_union bddAbove_unionₓ'. -/
 /-- The union of two sets is bounded above if and only if each of the sets is. -/
 theorem bddAbove_union [SemilatticeSup γ] {s t : Set γ} :
@@ -660,7 +660,7 @@ theorem bddAbove_union [SemilatticeSup γ] {s t : Set γ} :
 lean 3 declaration is
   forall {γ : Type.{u1}} [_inst_3 : SemilatticeInf.{u1} γ] {s : Set.{u1} γ} {t : Set.{u1} γ}, (BddBelow.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ _inst_3)) s) -> (BddBelow.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ _inst_3)) t) -> (BddBelow.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ _inst_3)) (Union.union.{u1} (Set.{u1} γ) (Set.hasUnion.{u1} γ) s t))
 but is expected to have type
-  forall {γ : Type.{u1}} [_inst_3 : SemilatticeInf.{u1} γ] {s : Set.{u1} γ} {t : Set.{u1} γ}, (BddBelow.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ _inst_3)) s) -> (BddBelow.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ _inst_3)) t) -> (BddBelow.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ _inst_3)) (Union.union.{u1} (Set.{u1} γ) (Set.instUnionSet_1.{u1} γ) s t))
+  forall {γ : Type.{u1}} [_inst_3 : SemilatticeInf.{u1} γ] {s : Set.{u1} γ} {t : Set.{u1} γ}, (BddBelow.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ _inst_3)) s) -> (BddBelow.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ _inst_3)) t) -> (BddBelow.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ _inst_3)) (Union.union.{u1} (Set.{u1} γ) (Set.instUnionSet.{u1} γ) s t))
 Case conversion may be inaccurate. Consider using '#align bdd_below.union BddBelow.unionₓ'. -/
 theorem BddBelow.union [SemilatticeInf γ] {s t : Set γ} :
     BddBelow s → BddBelow t → BddBelow (s ∪ t) :=
@@ -671,7 +671,7 @@ theorem BddBelow.union [SemilatticeInf γ] {s t : Set γ} :
 lean 3 declaration is
   forall {γ : Type.{u1}} [_inst_3 : SemilatticeInf.{u1} γ] {s : Set.{u1} γ} {t : Set.{u1} γ}, Iff (BddBelow.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ _inst_3)) (Union.union.{u1} (Set.{u1} γ) (Set.hasUnion.{u1} γ) s t)) (And (BddBelow.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ _inst_3)) s) (BddBelow.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ _inst_3)) t))
 but is expected to have type
-  forall {γ : Type.{u1}} [_inst_3 : SemilatticeInf.{u1} γ] {s : Set.{u1} γ} {t : Set.{u1} γ}, Iff (BddBelow.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ _inst_3)) (Union.union.{u1} (Set.{u1} γ) (Set.instUnionSet_1.{u1} γ) s t)) (And (BddBelow.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ _inst_3)) s) (BddBelow.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ _inst_3)) t))
+  forall {γ : Type.{u1}} [_inst_3 : SemilatticeInf.{u1} γ] {s : Set.{u1} γ} {t : Set.{u1} γ}, Iff (BddBelow.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ _inst_3)) (Union.union.{u1} (Set.{u1} γ) (Set.instUnionSet.{u1} γ) s t)) (And (BddBelow.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ _inst_3)) s) (BddBelow.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ _inst_3)) t))
 Case conversion may be inaccurate. Consider using '#align bdd_below_union bddBelow_unionₓ'. -/
 /-- The union of two sets is bounded above if and only if each of the sets is.-/
 theorem bddBelow_union [SemilatticeInf γ] {s t : Set γ} :
@@ -683,7 +683,7 @@ theorem bddBelow_union [SemilatticeInf γ] {s t : Set γ} :
 lean 3 declaration is
   forall {γ : Type.{u1}} [_inst_3 : SemilatticeSup.{u1} γ] {a : γ} {b : γ} {s : Set.{u1} γ} {t : Set.{u1} γ}, (IsLUB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeSup.toPartialOrder.{u1} γ _inst_3)) s a) -> (IsLUB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeSup.toPartialOrder.{u1} γ _inst_3)) t b) -> (IsLUB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeSup.toPartialOrder.{u1} γ _inst_3)) (Union.union.{u1} (Set.{u1} γ) (Set.hasUnion.{u1} γ) s t) (HasSup.sup.{u1} γ (SemilatticeSup.toHasSup.{u1} γ _inst_3) a b))
 but is expected to have type
-  forall {γ : Type.{u1}} [_inst_3 : SemilatticeSup.{u1} γ] {a : γ} {b : γ} {s : Set.{u1} γ} {t : Set.{u1} γ}, (IsLUB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeSup.toPartialOrder.{u1} γ _inst_3)) s a) -> (IsLUB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeSup.toPartialOrder.{u1} γ _inst_3)) t b) -> (IsLUB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeSup.toPartialOrder.{u1} γ _inst_3)) (Union.union.{u1} (Set.{u1} γ) (Set.instUnionSet_1.{u1} γ) s t) (HasSup.sup.{u1} γ (SemilatticeSup.toHasSup.{u1} γ _inst_3) a b))
+  forall {γ : Type.{u1}} [_inst_3 : SemilatticeSup.{u1} γ] {a : γ} {b : γ} {s : Set.{u1} γ} {t : Set.{u1} γ}, (IsLUB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeSup.toPartialOrder.{u1} γ _inst_3)) s a) -> (IsLUB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeSup.toPartialOrder.{u1} γ _inst_3)) t b) -> (IsLUB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeSup.toPartialOrder.{u1} γ _inst_3)) (Union.union.{u1} (Set.{u1} γ) (Set.instUnionSet.{u1} γ) s t) (HasSup.sup.{u1} γ (SemilatticeSup.toHasSup.{u1} γ _inst_3) a b))
 Case conversion may be inaccurate. Consider using '#align is_lub.union IsLUB.unionₓ'. -/
 /-- If `a` is the least upper bound of `s` and `b` is the least upper bound of `t`,
 then `a ⊔ b` is the least upper bound of `s ∪ t`. -/
@@ -699,7 +699,7 @@ theorem IsLUB.union [SemilatticeSup γ] {a b : γ} {s t : Set γ} (hs : IsLUB s 
 lean 3 declaration is
   forall {γ : Type.{u1}} [_inst_3 : SemilatticeInf.{u1} γ] {a₁ : γ} {a₂ : γ} {s : Set.{u1} γ} {t : Set.{u1} γ}, (IsGLB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ _inst_3)) s a₁) -> (IsGLB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ _inst_3)) t a₂) -> (IsGLB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ _inst_3)) (Union.union.{u1} (Set.{u1} γ) (Set.hasUnion.{u1} γ) s t) (HasInf.inf.{u1} γ (SemilatticeInf.toHasInf.{u1} γ _inst_3) a₁ a₂))
 but is expected to have type
-  forall {γ : Type.{u1}} [_inst_3 : SemilatticeInf.{u1} γ] {a₁ : γ} {a₂ : γ} {s : Set.{u1} γ} {t : Set.{u1} γ}, (IsGLB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ _inst_3)) s a₁) -> (IsGLB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ _inst_3)) t a₂) -> (IsGLB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ _inst_3)) (Union.union.{u1} (Set.{u1} γ) (Set.instUnionSet_1.{u1} γ) s t) (HasInf.inf.{u1} γ (SemilatticeInf.toHasInf.{u1} γ _inst_3) a₁ a₂))
+  forall {γ : Type.{u1}} [_inst_3 : SemilatticeInf.{u1} γ] {a₁ : γ} {a₂ : γ} {s : Set.{u1} γ} {t : Set.{u1} γ}, (IsGLB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ _inst_3)) s a₁) -> (IsGLB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ _inst_3)) t a₂) -> (IsGLB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ _inst_3)) (Union.union.{u1} (Set.{u1} γ) (Set.instUnionSet.{u1} γ) s t) (HasInf.inf.{u1} γ (SemilatticeInf.toHasInf.{u1} γ _inst_3) a₁ a₂))
 Case conversion may be inaccurate. Consider using '#align is_glb.union IsGLB.unionₓ'. -/
 /-- If `a` is the greatest lower bound of `s` and `b` is the greatest lower bound of `t`,
 then `a ⊓ b` is the greatest lower bound of `s ∪ t`. -/
@@ -712,7 +712,7 @@ theorem IsGLB.union [SemilatticeInf γ] {a₁ a₂ : γ} {s t : Set γ} (hs : Is
 lean 3 declaration is
   forall {γ : Type.{u1}} [_inst_3 : LinearOrder.{u1} γ] {a : γ} {b : γ} {s : Set.{u1} γ} {t : Set.{u1} γ}, (IsLeast.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ (Lattice.toSemilatticeInf.{u1} γ (LinearOrder.toLattice.{u1} γ _inst_3)))) s a) -> (IsLeast.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ (Lattice.toSemilatticeInf.{u1} γ (LinearOrder.toLattice.{u1} γ _inst_3)))) t b) -> (IsLeast.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ (Lattice.toSemilatticeInf.{u1} γ (LinearOrder.toLattice.{u1} γ _inst_3)))) (Union.union.{u1} (Set.{u1} γ) (Set.hasUnion.{u1} γ) s t) (LinearOrder.min.{u1} γ _inst_3 a b))
 but is expected to have type
-  forall {γ : Type.{u1}} [_inst_3 : LinearOrder.{u1} γ] {a : γ} {b : γ} {s : Set.{u1} γ} {t : Set.{u1} γ}, (IsLeast.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ (Lattice.toSemilatticeInf.{u1} γ (DistribLattice.toLattice.{u1} γ (instDistribLattice.{u1} γ _inst_3))))) s a) -> (IsLeast.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ (Lattice.toSemilatticeInf.{u1} γ (DistribLattice.toLattice.{u1} γ (instDistribLattice.{u1} γ _inst_3))))) t b) -> (IsLeast.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ (Lattice.toSemilatticeInf.{u1} γ (DistribLattice.toLattice.{u1} γ (instDistribLattice.{u1} γ _inst_3))))) (Union.union.{u1} (Set.{u1} γ) (Set.instUnionSet_1.{u1} γ) s t) (Min.min.{u1} γ (LinearOrder.toMin.{u1} γ _inst_3) a b))
+  forall {γ : Type.{u1}} [_inst_3 : LinearOrder.{u1} γ] {a : γ} {b : γ} {s : Set.{u1} γ} {t : Set.{u1} γ}, (IsLeast.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ (Lattice.toSemilatticeInf.{u1} γ (DistribLattice.toLattice.{u1} γ (instDistribLattice.{u1} γ _inst_3))))) s a) -> (IsLeast.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ (Lattice.toSemilatticeInf.{u1} γ (DistribLattice.toLattice.{u1} γ (instDistribLattice.{u1} γ _inst_3))))) t b) -> (IsLeast.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ (Lattice.toSemilatticeInf.{u1} γ (DistribLattice.toLattice.{u1} γ (instDistribLattice.{u1} γ _inst_3))))) (Union.union.{u1} (Set.{u1} γ) (Set.instUnionSet.{u1} γ) s t) (Min.min.{u1} γ (LinearOrder.toMin.{u1} γ _inst_3) a b))
 Case conversion may be inaccurate. Consider using '#align is_least.union IsLeast.unionₓ'. -/
 /-- If `a` is the least element of `s` and `b` is the least element of `t`,
 then `min a b` is the least element of `s ∪ t`. -/
@@ -725,7 +725,7 @@ theorem IsLeast.union [LinearOrder γ] {a b : γ} {s t : Set γ} (ha : IsLeast s
 lean 3 declaration is
   forall {γ : Type.{u1}} [_inst_3 : LinearOrder.{u1} γ] {a : γ} {b : γ} {s : Set.{u1} γ} {t : Set.{u1} γ}, (IsGreatest.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ (Lattice.toSemilatticeInf.{u1} γ (LinearOrder.toLattice.{u1} γ _inst_3)))) s a) -> (IsGreatest.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ (Lattice.toSemilatticeInf.{u1} γ (LinearOrder.toLattice.{u1} γ _inst_3)))) t b) -> (IsGreatest.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ (Lattice.toSemilatticeInf.{u1} γ (LinearOrder.toLattice.{u1} γ _inst_3)))) (Union.union.{u1} (Set.{u1} γ) (Set.hasUnion.{u1} γ) s t) (LinearOrder.max.{u1} γ _inst_3 a b))
 but is expected to have type
-  forall {γ : Type.{u1}} [_inst_3 : LinearOrder.{u1} γ] {a : γ} {b : γ} {s : Set.{u1} γ} {t : Set.{u1} γ}, (IsGreatest.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ (Lattice.toSemilatticeInf.{u1} γ (DistribLattice.toLattice.{u1} γ (instDistribLattice.{u1} γ _inst_3))))) s a) -> (IsGreatest.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ (Lattice.toSemilatticeInf.{u1} γ (DistribLattice.toLattice.{u1} γ (instDistribLattice.{u1} γ _inst_3))))) t b) -> (IsGreatest.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ (Lattice.toSemilatticeInf.{u1} γ (DistribLattice.toLattice.{u1} γ (instDistribLattice.{u1} γ _inst_3))))) (Union.union.{u1} (Set.{u1} γ) (Set.instUnionSet_1.{u1} γ) s t) (Max.max.{u1} γ (LinearOrder.toMax.{u1} γ _inst_3) a b))
+  forall {γ : Type.{u1}} [_inst_3 : LinearOrder.{u1} γ] {a : γ} {b : γ} {s : Set.{u1} γ} {t : Set.{u1} γ}, (IsGreatest.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ (Lattice.toSemilatticeInf.{u1} γ (DistribLattice.toLattice.{u1} γ (instDistribLattice.{u1} γ _inst_3))))) s a) -> (IsGreatest.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ (Lattice.toSemilatticeInf.{u1} γ (DistribLattice.toLattice.{u1} γ (instDistribLattice.{u1} γ _inst_3))))) t b) -> (IsGreatest.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ (Lattice.toSemilatticeInf.{u1} γ (DistribLattice.toLattice.{u1} γ (instDistribLattice.{u1} γ _inst_3))))) (Union.union.{u1} (Set.{u1} γ) (Set.instUnionSet.{u1} γ) s t) (Max.max.{u1} γ (LinearOrder.toMax.{u1} γ _inst_3) a b))
 Case conversion may be inaccurate. Consider using '#align is_greatest.union IsGreatest.unionₓ'. -/
 /-- If `a` is the greatest element of `s` and `b` is the greatest element of `t`,
 then `max a b` is the greatest element of `s ∪ t`. -/
@@ -738,20 +738,20 @@ theorem IsGreatest.union [LinearOrder γ] {a b : γ} {s t : Set γ} (ha : IsGrea
 lean 3 declaration is
   forall {γ : Type.{u1}} [_inst_3 : LinearOrder.{u1} γ] {s : Set.{u1} γ} {a : γ} {b : γ}, (IsLUB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ (Lattice.toSemilatticeInf.{u1} γ (LinearOrder.toLattice.{u1} γ _inst_3)))) s a) -> (Membership.Mem.{u1, u1} γ (Set.{u1} γ) (Set.hasMem.{u1} γ) b s) -> (IsLUB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ (Lattice.toSemilatticeInf.{u1} γ (LinearOrder.toLattice.{u1} γ _inst_3)))) (Inter.inter.{u1} (Set.{u1} γ) (Set.hasInter.{u1} γ) s (Set.Ici.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ (Lattice.toSemilatticeInf.{u1} γ (LinearOrder.toLattice.{u1} γ _inst_3)))) b)) a)
 but is expected to have type
-  forall {γ : Type.{u1}} [_inst_3 : LinearOrder.{u1} γ] {s : Set.{u1} γ} {a : γ} {b : γ}, (IsLUB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ (Lattice.toSemilatticeInf.{u1} γ (DistribLattice.toLattice.{u1} γ (instDistribLattice.{u1} γ _inst_3))))) s a) -> (Membership.mem.{u1, u1} γ (Set.{u1} γ) (Set.instMembershipSet.{u1} γ) b s) -> (IsLUB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ (Lattice.toSemilatticeInf.{u1} γ (DistribLattice.toLattice.{u1} γ (instDistribLattice.{u1} γ _inst_3))))) (Inter.inter.{u1} (Set.{u1} γ) (Set.instInterSet_1.{u1} γ) s (Set.Ici.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ (Lattice.toSemilatticeInf.{u1} γ (DistribLattice.toLattice.{u1} γ (instDistribLattice.{u1} γ _inst_3))))) b)) a)
+  forall {γ : Type.{u1}} [_inst_3 : LinearOrder.{u1} γ] {s : Set.{u1} γ} {a : γ} {b : γ}, (IsLUB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ (Lattice.toSemilatticeInf.{u1} γ (DistribLattice.toLattice.{u1} γ (instDistribLattice.{u1} γ _inst_3))))) s a) -> (Membership.mem.{u1, u1} γ (Set.{u1} γ) (Set.instMembershipSet.{u1} γ) b s) -> (IsLUB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ (Lattice.toSemilatticeInf.{u1} γ (DistribLattice.toLattice.{u1} γ (instDistribLattice.{u1} γ _inst_3))))) (Inter.inter.{u1} (Set.{u1} γ) (Set.instInterSet.{u1} γ) s (Set.Ici.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ (Lattice.toSemilatticeInf.{u1} γ (DistribLattice.toLattice.{u1} γ (instDistribLattice.{u1} γ _inst_3))))) b)) a)
 Case conversion may be inaccurate. Consider using '#align is_lub.inter_Ici_of_mem IsLUB.inter_Ici_of_memₓ'. -/
 theorem IsLUB.inter_Ici_of_mem [LinearOrder γ] {s : Set γ} {a b : γ} (ha : IsLUB s a) (hb : b ∈ s) :
     IsLUB (s ∩ Ici b) a :=
   ⟨fun x hx => ha.1 hx.1, fun c hc =>
     have hbc : b ≤ c := hc ⟨hb, le_rfl⟩
-    ha.2 fun x hx => ((le_total x b).elim fun hxb => hxb.trans hbc) fun hbx => hc ⟨hx, hbx⟩⟩
+    ha.2 fun x hx => (le_total x b).elim (fun hxb => hxb.trans hbc) fun hbx => hc ⟨hx, hbx⟩⟩
 #align is_lub.inter_Ici_of_mem IsLUB.inter_Ici_of_mem
 
 /- warning: is_glb.inter_Iic_of_mem -> IsGLB.inter_Iic_of_mem is a dubious translation:
 lean 3 declaration is
   forall {γ : Type.{u1}} [_inst_3 : LinearOrder.{u1} γ] {s : Set.{u1} γ} {a : γ} {b : γ}, (IsGLB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ (Lattice.toSemilatticeInf.{u1} γ (LinearOrder.toLattice.{u1} γ _inst_3)))) s a) -> (Membership.Mem.{u1, u1} γ (Set.{u1} γ) (Set.hasMem.{u1} γ) b s) -> (IsGLB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ (Lattice.toSemilatticeInf.{u1} γ (LinearOrder.toLattice.{u1} γ _inst_3)))) (Inter.inter.{u1} (Set.{u1} γ) (Set.hasInter.{u1} γ) s (Set.Iic.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ (Lattice.toSemilatticeInf.{u1} γ (LinearOrder.toLattice.{u1} γ _inst_3)))) b)) a)
 but is expected to have type
-  forall {γ : Type.{u1}} [_inst_3 : LinearOrder.{u1} γ] {s : Set.{u1} γ} {a : γ} {b : γ}, (IsGLB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ (Lattice.toSemilatticeInf.{u1} γ (DistribLattice.toLattice.{u1} γ (instDistribLattice.{u1} γ _inst_3))))) s a) -> (Membership.mem.{u1, u1} γ (Set.{u1} γ) (Set.instMembershipSet.{u1} γ) b s) -> (IsGLB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ (Lattice.toSemilatticeInf.{u1} γ (DistribLattice.toLattice.{u1} γ (instDistribLattice.{u1} γ _inst_3))))) (Inter.inter.{u1} (Set.{u1} γ) (Set.instInterSet_1.{u1} γ) s (Set.Iic.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ (Lattice.toSemilatticeInf.{u1} γ (DistribLattice.toLattice.{u1} γ (instDistribLattice.{u1} γ _inst_3))))) b)) a)
+  forall {γ : Type.{u1}} [_inst_3 : LinearOrder.{u1} γ] {s : Set.{u1} γ} {a : γ} {b : γ}, (IsGLB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ (Lattice.toSemilatticeInf.{u1} γ (DistribLattice.toLattice.{u1} γ (instDistribLattice.{u1} γ _inst_3))))) s a) -> (Membership.mem.{u1, u1} γ (Set.{u1} γ) (Set.instMembershipSet.{u1} γ) b s) -> (IsGLB.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ (Lattice.toSemilatticeInf.{u1} γ (DistribLattice.toLattice.{u1} γ (instDistribLattice.{u1} γ _inst_3))))) (Inter.inter.{u1} (Set.{u1} γ) (Set.instInterSet.{u1} γ) s (Set.Iic.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ (Lattice.toSemilatticeInf.{u1} γ (DistribLattice.toLattice.{u1} γ (instDistribLattice.{u1} γ _inst_3))))) b)) a)
 Case conversion may be inaccurate. Consider using '#align is_glb.inter_Iic_of_mem IsGLB.inter_Iic_of_memₓ'. -/
 theorem IsGLB.inter_Iic_of_mem [LinearOrder γ] {s : Set γ} {a b : γ} (ha : IsGLB s a) (hb : b ∈ s) :
     IsGLB (s ∩ Iic b) a :=
@@ -1209,14 +1209,19 @@ theorem bddBelow_bddAbove_iff_subset_Icc : BddBelow s ∧ BddAbove s ↔ ∃ a b
 -/
 
 
+@[simp]
+theorem is_greatest_univ_iff : IsGreatest univ a ↔ IsTop a := by
+  simp [IsGreatest, mem_upperBounds, IsTop]
+#align is_greatest_univ_iff is_greatest_univ_iff
+
 /- warning: is_greatest_univ -> isGreatest_univ is a dubious translation:
 lean 3 declaration is
-  forall {γ : Type.{u1}} [_inst_3 : Preorder.{u1} γ] [_inst_4 : OrderTop.{u1} γ (Preorder.toLE.{u1} γ _inst_3)], IsGreatest.{u1} γ _inst_3 (Set.univ.{u1} γ) (Top.top.{u1} γ (OrderTop.toHasTop.{u1} γ (Preorder.toLE.{u1} γ _inst_3) _inst_4))
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_3 : OrderTop.{u1} α (Preorder.toLE.{u1} α _inst_1)], IsGreatest.{u1} α _inst_1 (Set.univ.{u1} α) (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_3))
 but is expected to have type
-  forall {γ : Type.{u1}} [_inst_3 : Preorder.{u1} γ] [_inst_4 : OrderTop.{u1} γ (Preorder.toLE.{u1} γ _inst_3)], IsGreatest.{u1} γ _inst_3 (Set.univ.{u1} γ) (Top.top.{u1} γ (OrderTop.toTop.{u1} γ (Preorder.toLE.{u1} γ _inst_3) _inst_4))
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_3 : OrderTop.{u1} α (Preorder.toLE.{u1} α _inst_1)], IsGreatest.{u1} α _inst_1 (Set.univ.{u1} α) (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_3))
 Case conversion may be inaccurate. Consider using '#align is_greatest_univ isGreatest_univₓ'. -/
-theorem isGreatest_univ [Preorder γ] [OrderTop γ] : IsGreatest (univ : Set γ) ⊤ :=
-  ⟨mem_univ _, fun x hx => le_top⟩
+theorem isGreatest_univ [OrderTop α] : IsGreatest (univ : Set α) ⊤ :=
+  is_greatest_univ_iff.2 isTop_top
 #align is_greatest_univ isGreatest_univ
 
 /- warning: order_top.upper_bounds_univ -> OrderTop.upperBounds_univ is a dubious translation:
@@ -1232,11 +1237,11 @@ theorem OrderTop.upperBounds_univ [PartialOrder γ] [OrderTop γ] :
 
 /- warning: is_lub_univ -> isLUB_univ is a dubious translation:
 lean 3 declaration is
-  forall {γ : Type.{u1}} [_inst_3 : Preorder.{u1} γ] [_inst_4 : OrderTop.{u1} γ (Preorder.toLE.{u1} γ _inst_3)], IsLUB.{u1} γ _inst_3 (Set.univ.{u1} γ) (Top.top.{u1} γ (OrderTop.toHasTop.{u1} γ (Preorder.toLE.{u1} γ _inst_3) _inst_4))
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_3 : OrderTop.{u1} α (Preorder.toLE.{u1} α _inst_1)], IsLUB.{u1} α _inst_1 (Set.univ.{u1} α) (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_3))
 but is expected to have type
-  forall {γ : Type.{u1}} [_inst_3 : Preorder.{u1} γ] [_inst_4 : OrderTop.{u1} γ (Preorder.toLE.{u1} γ _inst_3)], IsLUB.{u1} γ _inst_3 (Set.univ.{u1} γ) (Top.top.{u1} γ (OrderTop.toTop.{u1} γ (Preorder.toLE.{u1} γ _inst_3) _inst_4))
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_3 : OrderTop.{u1} α (Preorder.toLE.{u1} α _inst_1)], IsLUB.{u1} α _inst_1 (Set.univ.{u1} α) (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_3))
 Case conversion may be inaccurate. Consider using '#align is_lub_univ isLUB_univₓ'. -/
-theorem isLUB_univ [Preorder γ] [OrderTop γ] : IsLUB (univ : Set γ) ⊤ :=
+theorem isLUB_univ [OrderTop α] : IsLUB (univ : Set α) ⊤ :=
   isGreatest_univ.IsLub
 #align is_lub_univ isLUB_univ
 
@@ -1252,23 +1257,28 @@ theorem OrderBot.lowerBounds_univ [PartialOrder γ] [OrderBot γ] :
   @OrderTop.upperBounds_univ γᵒᵈ _ _
 #align order_bot.lower_bounds_univ OrderBot.lowerBounds_univ
 
+@[simp]
+theorem is_least_univ_iff : IsLeast univ a ↔ IsBot a :=
+  @is_greatest_univ_iff αᵒᵈ _ _
+#align is_least_univ_iff is_least_univ_iff
+
 /- warning: is_least_univ -> isLeast_univ is a dubious translation:
 lean 3 declaration is
-  forall {γ : Type.{u1}} [_inst_3 : Preorder.{u1} γ] [_inst_4 : OrderBot.{u1} γ (Preorder.toLE.{u1} γ _inst_3)], IsLeast.{u1} γ _inst_3 (Set.univ.{u1} γ) (Bot.bot.{u1} γ (OrderBot.toHasBot.{u1} γ (Preorder.toLE.{u1} γ _inst_3) _inst_4))
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α _inst_1)], IsLeast.{u1} α _inst_1 (Set.univ.{u1} α) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_3))
 but is expected to have type
-  forall {γ : Type.{u1}} [_inst_3 : Preorder.{u1} γ] [_inst_4 : OrderBot.{u1} γ (Preorder.toLE.{u1} γ _inst_3)], IsLeast.{u1} γ _inst_3 (Set.univ.{u1} γ) (Bot.bot.{u1} γ (OrderBot.toBot.{u1} γ (Preorder.toLE.{u1} γ _inst_3) _inst_4))
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α _inst_1)], IsLeast.{u1} α _inst_1 (Set.univ.{u1} α) (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_3))
 Case conversion may be inaccurate. Consider using '#align is_least_univ isLeast_univₓ'. -/
-theorem isLeast_univ [Preorder γ] [OrderBot γ] : IsLeast (univ : Set γ) ⊥ :=
-  @isGreatest_univ γᵒᵈ _ _
+theorem isLeast_univ [OrderBot α] : IsLeast (univ : Set α) ⊥ :=
+  @isGreatest_univ αᵒᵈ _ _
 #align is_least_univ isLeast_univ
 
 /- warning: is_glb_univ -> isGLB_univ is a dubious translation:
 lean 3 declaration is
-  forall {γ : Type.{u1}} [_inst_3 : Preorder.{u1} γ] [_inst_4 : OrderBot.{u1} γ (Preorder.toLE.{u1} γ _inst_3)], IsGLB.{u1} γ _inst_3 (Set.univ.{u1} γ) (Bot.bot.{u1} γ (OrderBot.toHasBot.{u1} γ (Preorder.toLE.{u1} γ _inst_3) _inst_4))
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α _inst_1)], IsGLB.{u1} α _inst_1 (Set.univ.{u1} α) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_3))
 but is expected to have type
-  forall {γ : Type.{u1}} [_inst_3 : Preorder.{u1} γ] [_inst_4 : OrderBot.{u1} γ (Preorder.toLE.{u1} γ _inst_3)], IsGLB.{u1} γ _inst_3 (Set.univ.{u1} γ) (Bot.bot.{u1} γ (OrderBot.toBot.{u1} γ (Preorder.toLE.{u1} γ _inst_3) _inst_4))
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α _inst_1)], IsGLB.{u1} α _inst_1 (Set.univ.{u1} α) (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_3))
 Case conversion may be inaccurate. Consider using '#align is_glb_univ isGLB_univₓ'. -/
-theorem isGLB_univ [Preorder γ] [OrderBot γ] : IsGLB (univ : Set γ) ⊥ :=
+theorem isGLB_univ [OrderBot α] : IsGLB (univ : Set α) ⊥ :=
   isLeast_univ.IsGlb
 #align is_glb_univ isGLB_univ
 
@@ -1334,24 +1344,33 @@ theorem bddBelow_empty [Nonempty α] : BddBelow (∅ : Set α) := by
 #align bdd_below_empty bddBelow_empty
 -/
 
+@[simp]
+theorem is_glb_empty_iff : IsGLB ∅ a ↔ IsTop a := by simp [IsGLB]
+#align is_glb_empty_iff is_glb_empty_iff
+
+@[simp]
+theorem is_lub_empty_iff : IsLUB ∅ a ↔ IsBot a :=
+  @is_glb_empty_iff αᵒᵈ _ _
+#align is_lub_empty_iff is_lub_empty_iff
+
 /- warning: is_glb_empty -> isGLB_empty is a dubious translation:
 lean 3 declaration is
-  forall {γ : Type.{u1}} [_inst_3 : Preorder.{u1} γ] [_inst_4 : OrderTop.{u1} γ (Preorder.toLE.{u1} γ _inst_3)], IsGLB.{u1} γ _inst_3 (EmptyCollection.emptyCollection.{u1} (Set.{u1} γ) (Set.hasEmptyc.{u1} γ)) (Top.top.{u1} γ (OrderTop.toHasTop.{u1} γ (Preorder.toLE.{u1} γ _inst_3) _inst_4))
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_3 : OrderTop.{u1} α (Preorder.toLE.{u1} α _inst_1)], IsGLB.{u1} α _inst_1 (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.hasEmptyc.{u1} α)) (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_3))
 but is expected to have type
-  forall {γ : Type.{u1}} [_inst_3 : Preorder.{u1} γ] [_inst_4 : OrderTop.{u1} γ (Preorder.toLE.{u1} γ _inst_3)], IsGLB.{u1} γ _inst_3 (EmptyCollection.emptyCollection.{u1} (Set.{u1} γ) (Set.instEmptyCollectionSet.{u1} γ)) (Top.top.{u1} γ (OrderTop.toTop.{u1} γ (Preorder.toLE.{u1} γ _inst_3) _inst_4))
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_3 : OrderTop.{u1} α (Preorder.toLE.{u1} α _inst_1)], IsGLB.{u1} α _inst_1 (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α)) (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_3))
 Case conversion may be inaccurate. Consider using '#align is_glb_empty isGLB_emptyₓ'. -/
-theorem isGLB_empty [Preorder γ] [OrderTop γ] : IsGLB ∅ (⊤ : γ) := by
-  simp only [IsGLB, lowerBounds_empty, isGreatest_univ]
+theorem isGLB_empty [OrderTop α] : IsGLB ∅ (⊤ : α) :=
+  is_glb_empty_iff.2 isTop_top
 #align is_glb_empty isGLB_empty
 
 /- warning: is_lub_empty -> isLUB_empty is a dubious translation:
 lean 3 declaration is
-  forall {γ : Type.{u1}} [_inst_3 : Preorder.{u1} γ] [_inst_4 : OrderBot.{u1} γ (Preorder.toLE.{u1} γ _inst_3)], IsLUB.{u1} γ _inst_3 (EmptyCollection.emptyCollection.{u1} (Set.{u1} γ) (Set.hasEmptyc.{u1} γ)) (Bot.bot.{u1} γ (OrderBot.toHasBot.{u1} γ (Preorder.toLE.{u1} γ _inst_3) _inst_4))
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α _inst_1)], IsLUB.{u1} α _inst_1 (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.hasEmptyc.{u1} α)) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_3))
 but is expected to have type
-  forall {γ : Type.{u1}} [_inst_3 : Preorder.{u1} γ] [_inst_4 : OrderBot.{u1} γ (Preorder.toLE.{u1} γ _inst_3)], IsLUB.{u1} γ _inst_3 (EmptyCollection.emptyCollection.{u1} (Set.{u1} γ) (Set.instEmptyCollectionSet.{u1} γ)) (Bot.bot.{u1} γ (OrderBot.toBot.{u1} γ (Preorder.toLE.{u1} γ _inst_3) _inst_4))
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α _inst_1)], IsLUB.{u1} α _inst_1 (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α)) (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_3))
 Case conversion may be inaccurate. Consider using '#align is_lub_empty isLUB_emptyₓ'. -/
-theorem isLUB_empty [Preorder γ] [OrderBot γ] : IsLUB ∅ (⊥ : γ) :=
-  @isGLB_empty γᵒᵈ _ _
+theorem isLUB_empty [OrderBot α] : IsLUB ∅ (⊥ : α) :=
+  @isGLB_empty αᵒᵈ _ _
 #align is_lub_empty isLUB_empty
 
 #print IsLUB.nonempty /-
@@ -1370,7 +1389,7 @@ theorem IsGLB.nonempty [NoMaxOrder α] (hs : IsGLB s a) : s.Nonempty :=
 
 #print nonempty_of_not_bddAbove /-
 theorem nonempty_of_not_bddAbove [ha : Nonempty α] (h : ¬BddAbove s) : s.Nonempty :=
-  (Nonempty.elim ha) fun x => (not_bddAbove_iff'.1 h x).imp fun a ha => ha.fst
+  Nonempty.elim ha fun x => (not_bddAbove_iff'.1 h x).imp fun a ha => ha.fst
 #align nonempty_of_not_bdd_above nonempty_of_not_bddAbove
 -/
 
@@ -1461,7 +1480,7 @@ theorem IsLeast.insert [LinearOrder γ] (a) {b} {s : Set γ} (hs : IsLeast s b) 
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α) (s : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (upperBounds.{u1} α _inst_1 (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.hasInsert.{u1} α) a s)) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (Set.Ici.{u1} α _inst_1 a) (upperBounds.{u1} α _inst_1 s))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α) (s : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (upperBounds.{u1} α _inst_1 (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.instInsertSet.{u1} α) a s)) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet_1.{u1} α) (Set.Ici.{u1} α _inst_1 a) (upperBounds.{u1} α _inst_1 s))
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α) (s : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (upperBounds.{u1} α _inst_1 (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.instInsertSet.{u1} α) a s)) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (Set.Ici.{u1} α _inst_1 a) (upperBounds.{u1} α _inst_1 s))
 Case conversion may be inaccurate. Consider using '#align upper_bounds_insert upperBounds_insertₓ'. -/
 @[simp]
 theorem upperBounds_insert (a : α) (s : Set α) : upperBounds (insert a s) = Ici a ∩ upperBounds s :=
@@ -1472,7 +1491,7 @@ theorem upperBounds_insert (a : α) (s : Set α) : upperBounds (insert a s) = Ic
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α) (s : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (lowerBounds.{u1} α _inst_1 (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.hasInsert.{u1} α) a s)) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (Set.Iic.{u1} α _inst_1 a) (lowerBounds.{u1} α _inst_1 s))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α) (s : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (lowerBounds.{u1} α _inst_1 (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.instInsertSet.{u1} α) a s)) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet_1.{u1} α) (Set.Iic.{u1} α _inst_1 a) (lowerBounds.{u1} α _inst_1 s))
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α) (s : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (lowerBounds.{u1} α _inst_1 (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.instInsertSet.{u1} α) a s)) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (Set.Iic.{u1} α _inst_1 a) (lowerBounds.{u1} α _inst_1 s))
 Case conversion may be inaccurate. Consider using '#align lower_bounds_insert lowerBounds_insertₓ'. -/
 @[simp]
 theorem lowerBounds_insert (a : α) (s : Set α) : lowerBounds (insert a s) = Iic a ∩ lowerBounds s :=
@@ -1482,7 +1501,7 @@ theorem lowerBounds_insert (a : α) (s : Set α) : lowerBounds (insert a s) = Ii
 #print OrderTop.bddAbove /-
 /-- When there is a global maximum, every set is bounded above. -/
 @[simp]
-protected theorem OrderTop.bddAbove [Preorder γ] [OrderTop γ] (s : Set γ) : BddAbove s :=
+protected theorem OrderTop.bddAbove [OrderTop α] (s : Set α) : BddAbove s :=
   ⟨⊤, fun a ha => OrderTop.le_top a⟩
 #align order_top.bdd_above OrderTop.bddAbove
 -/
@@ -1490,7 +1509,7 @@ protected theorem OrderTop.bddAbove [Preorder γ] [OrderTop γ] (s : Set γ) : B
 #print OrderBot.bddBelow /-
 /-- When there is a global minimum, every set is bounded below. -/
 @[simp]
-protected theorem OrderBot.bddBelow [Preorder γ] [OrderBot γ] (s : Set γ) : BddBelow s :=
+protected theorem OrderBot.bddBelow [OrderBot α] (s : Set α) : BddBelow s :=
   ⟨⊥, fun a ha => OrderBot.bot_le a⟩
 #align order_bot.bdd_below OrderBot.bddBelow
 -/
@@ -1792,7 +1811,7 @@ theorem image_lower_bounds_subset_lower_bounds_image :
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {t : Set.{u1} α}, (MonotoneOn.{u1, u2} α β _inst_1 _inst_2 f t) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s t) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (upperBounds.{u1} α _inst_1 s) t)) -> (BddAbove.{u2} β _inst_2 (Set.image.{u1, u2} α β f s))
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {t : Set.{u1} α}, (MonotoneOn.{u1, u2} α β _inst_1 _inst_2 f t) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) s t) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet_1.{u1} α) (upperBounds.{u1} α _inst_1 s) t)) -> (BddAbove.{u2} β _inst_2 (Set.image.{u1, u2} α β f s))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {t : Set.{u1} α}, (MonotoneOn.{u1, u2} α β _inst_1 _inst_2 f t) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s t) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (upperBounds.{u1} α _inst_1 s) t)) -> (BddAbove.{u2} β _inst_2 (Set.image.{u1, u2} α β f s))
 Case conversion may be inaccurate. Consider using '#align monotone_on.map_bdd_above MonotoneOn.map_bddAboveₓ'. -/
 /-- The image under a monotone function on a set `t` of a subset which has an upper bound in `t`
   is bounded above. -/
@@ -1804,7 +1823,7 @@ theorem map_bddAbove : (upperBounds s ∩ t).Nonempty → BddAbove (f '' s) := f
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {t : Set.{u1} α}, (MonotoneOn.{u1, u2} α β _inst_1 _inst_2 f t) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s t) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (lowerBounds.{u1} α _inst_1 s) t)) -> (BddBelow.{u2} β _inst_2 (Set.image.{u1, u2} α β f s))
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {t : Set.{u1} α}, (MonotoneOn.{u1, u2} α β _inst_1 _inst_2 f t) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) s t) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet_1.{u1} α) (lowerBounds.{u1} α _inst_1 s) t)) -> (BddBelow.{u2} β _inst_2 (Set.image.{u1, u2} α β f s))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {t : Set.{u1} α}, (MonotoneOn.{u1, u2} α β _inst_1 _inst_2 f t) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s t) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (lowerBounds.{u1} α _inst_1 s) t)) -> (BddBelow.{u2} β _inst_2 (Set.image.{u1, u2} α β f s))
 Case conversion may be inaccurate. Consider using '#align monotone_on.map_bdd_below MonotoneOn.map_bddBelowₓ'. -/
 /-- The image under a monotone function on a set `t` of a subset which has a lower bound in `t`
   is bounded below. -/
@@ -1863,7 +1882,7 @@ theorem mem_lowerBounds_image_self : a ∈ upperBounds t → a ∈ t → f a ∈
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {t : Set.{u1} α}, (AntitoneOn.{u1, u2} α β _inst_1 _inst_2 f t) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s t) -> (HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) (Set.image.{u1, u2} α β f (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (lowerBounds.{u1} α _inst_1 s) t)) (upperBounds.{u2} β _inst_2 (Set.image.{u1, u2} α β f s)))
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {t : Set.{u1} α}, (AntitoneOn.{u1, u2} α β _inst_1 _inst_2 f t) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) s t) -> (HasSubset.Subset.{u2} (Set.{u2} β) (Set.instHasSubsetSet_1.{u2} β) (Set.image.{u1, u2} α β f (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet_1.{u1} α) (lowerBounds.{u1} α _inst_1 s) t)) (upperBounds.{u2} β _inst_2 (Set.image.{u1, u2} α β f s)))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {t : Set.{u1} α}, (AntitoneOn.{u1, u2} α β _inst_1 _inst_2 f t) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s t) -> (HasSubset.Subset.{u2} (Set.{u2} β) (Set.instHasSubsetSet.{u2} β) (Set.image.{u1, u2} α β f (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (lowerBounds.{u1} α _inst_1 s) t)) (upperBounds.{u2} β _inst_2 (Set.image.{u1, u2} α β f s)))
 Case conversion may be inaccurate. Consider using '#align antitone_on.image_lower_bounds_subset_upper_bounds_image AntitoneOn.image_lowerBounds_subset_upperBounds_imageₓ'. -/
 theorem image_lowerBounds_subset_upperBounds_image :
     f '' (lowerBounds s ∩ t) ⊆ upperBounds (f '' s) :=
@@ -1875,7 +1894,7 @@ theorem image_lowerBounds_subset_upperBounds_image :
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {t : Set.{u1} α}, (AntitoneOn.{u1, u2} α β _inst_1 _inst_2 f t) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s t) -> (HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) (Set.image.{u1, u2} α β f (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (upperBounds.{u1} α _inst_1 s) t)) (lowerBounds.{u2} β _inst_2 (Set.image.{u1, u2} α β f s)))
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {t : Set.{u1} α}, (AntitoneOn.{u1, u2} α β _inst_1 _inst_2 f t) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) s t) -> (HasSubset.Subset.{u2} (Set.{u2} β) (Set.instHasSubsetSet_1.{u2} β) (Set.image.{u1, u2} α β f (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet_1.{u1} α) (upperBounds.{u1} α _inst_1 s) t)) (lowerBounds.{u2} β _inst_2 (Set.image.{u1, u2} α β f s)))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {t : Set.{u1} α}, (AntitoneOn.{u1, u2} α β _inst_1 _inst_2 f t) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s t) -> (HasSubset.Subset.{u2} (Set.{u2} β) (Set.instHasSubsetSet.{u2} β) (Set.image.{u1, u2} α β f (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (upperBounds.{u1} α _inst_1 s) t)) (lowerBounds.{u2} β _inst_2 (Set.image.{u1, u2} α β f s)))
 Case conversion may be inaccurate. Consider using '#align antitone_on.image_upper_bounds_subset_lower_bounds_image AntitoneOn.image_upperBounds_subset_lowerBounds_imageₓ'. -/
 theorem image_upperBounds_subset_lowerBounds_image :
     f '' (upperBounds s ∩ t) ⊆ lowerBounds (f '' s) :=
@@ -1887,7 +1906,7 @@ theorem image_upperBounds_subset_lowerBounds_image :
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {t : Set.{u1} α}, (AntitoneOn.{u1, u2} α β _inst_1 _inst_2 f t) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s t) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (upperBounds.{u1} α _inst_1 s) t)) -> (BddBelow.{u2} β _inst_2 (Set.image.{u1, u2} α β f s))
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {t : Set.{u1} α}, (AntitoneOn.{u1, u2} α β _inst_1 _inst_2 f t) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) s t) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet_1.{u1} α) (upperBounds.{u1} α _inst_1 s) t)) -> (BddBelow.{u2} β _inst_2 (Set.image.{u1, u2} α β f s))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {t : Set.{u1} α}, (AntitoneOn.{u1, u2} α β _inst_1 _inst_2 f t) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s t) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (upperBounds.{u1} α _inst_1 s) t)) -> (BddBelow.{u2} β _inst_2 (Set.image.{u1, u2} α β f s))
 Case conversion may be inaccurate. Consider using '#align antitone_on.map_bdd_above AntitoneOn.map_bddAboveₓ'. -/
 /-- The image under an antitone function of a set which is bounded above is bounded below. -/
 theorem map_bddAbove : (upperBounds s ∩ t).Nonempty → BddBelow (f '' s) :=
@@ -1898,7 +1917,7 @@ theorem map_bddAbove : (upperBounds s ∩ t).Nonempty → BddBelow (f '' s) :=
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {t : Set.{u1} α}, (AntitoneOn.{u1, u2} α β _inst_1 _inst_2 f t) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s t) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (lowerBounds.{u1} α _inst_1 s) t)) -> (BddAbove.{u2} β _inst_2 (Set.image.{u1, u2} α β f s))
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {t : Set.{u1} α}, (AntitoneOn.{u1, u2} α β _inst_1 _inst_2 f t) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) s t) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet_1.{u1} α) (lowerBounds.{u1} α _inst_1 s) t)) -> (BddAbove.{u2} β _inst_2 (Set.image.{u1, u2} α β f s))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {t : Set.{u1} α}, (AntitoneOn.{u1, u2} α β _inst_1 _inst_2 f t) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s t) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (lowerBounds.{u1} α _inst_1 s) t)) -> (BddAbove.{u2} β _inst_2 (Set.image.{u1, u2} α β f s))
 Case conversion may be inaccurate. Consider using '#align antitone_on.map_bdd_below AntitoneOn.map_bddBelowₓ'. -/
 /-- The image under an antitone function of a set which is bounded below is bounded above. -/
 theorem map_bddBelow : (lowerBounds s ∩ t).Nonempty → BddAbove (f '' s) :=

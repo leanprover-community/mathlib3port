@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module topology.algebra.group_with_zero
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -188,7 +188,7 @@ theorem Continuous.div (hf : Continuous f) (hg : Continuous g) (h₀ : ∀ x, g 
 #align continuous.div Continuous.div
 
 theorem continuous_on_div : ContinuousOn (fun p : G₀ × G₀ => p.1 / p.2) { p | p.2 ≠ 0 } :=
-  (continuous_on_fst.div continuous_on_snd) fun _ => id
+  continuous_on_fst.div continuous_on_snd fun _ => id
 #align continuous_on_div continuous_on_div
 
 /-- The function `f x / g x` is discontinuous when `g x = 0`.

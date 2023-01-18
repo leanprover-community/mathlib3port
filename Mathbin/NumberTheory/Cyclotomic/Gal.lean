@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 
 ! This file was ported from Lean 3 source module number_theory.cyclotomic.gal
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -126,7 +126,7 @@ noncomputable def autEquivPow : (L ≃ₐ[K] L) ≃* (Zmod n)ˣ :=
       simp only [IsPrimitiveRoot.power_basis_gen, IsPrimitiveRoot.aut_to_pow_spec]
     right_inv := fun x => by
       simp only [MonoidHom.to_fun_eq_coe]
-      generalize_proofs _ _ h
+      generalize_proofs _ h
       have key := hζ.aut_to_pow_spec K ((hζ.power_basis K).equivOfMinpoly ((hμ x).PowerBasis K) h)
       have := (hζ.power_basis K).equiv_of_minpoly_gen ((hμ x).PowerBasis K) h
       rw [hζ.power_basis_gen K] at this
@@ -156,7 +156,7 @@ noncomputable def fromZetaAut : L ≃ₐ[K] L :=
 theorem from_zeta_aut_spec : fromZetaAut hμ h (zeta n K L) = μ :=
   by
   simp_rw [from_zeta_aut, aut_equiv_pow_symm_apply]
-  generalize_proofs _ hζ h _ hμ _
+  generalize_proofs hζ h _ hμ _
   rw [← hζ.power_basis_gen K]
   rw [PowerBasis.equiv_of_minpoly_gen, hμ.power_basis_gen K]
   convert h.some_spec.some_spec

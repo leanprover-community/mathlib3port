@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 
 ! This file was ported from Lean 3 source module analysis.schwartz_space
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -317,9 +317,8 @@ theorem add_apply {f g : 𝓢(E, F)} {x : E} : (f + g) x = f x + g x :=
 
 theorem seminorm_aux_add_le (k n : ℕ) (f g : 𝓢(E, F)) :
     (f + g).seminormAux k n ≤ f.seminormAux k n + g.seminormAux k n :=
-  ((f + g).seminorm_aux_le_bound k n
-      (add_nonneg (seminorm_aux_nonneg _ _ _) (seminorm_aux_nonneg _ _ _)))
-    fun x =>
+  (f + g).seminorm_aux_le_bound k n
+    (add_nonneg (seminorm_aux_nonneg _ _ _) (seminorm_aux_nonneg _ _ _)) fun x =>
     (decay_add_le_aux k n f g x).trans <|
       add_le_add (f.le_seminorm_aux k n x) (g.le_seminorm_aux k n x)
 #align schwartz_map.seminorm_aux_add_le SchwartzMap.seminorm_aux_add_le

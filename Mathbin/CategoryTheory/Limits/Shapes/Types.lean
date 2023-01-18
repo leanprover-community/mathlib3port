@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.types
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -418,7 +418,7 @@ The converse of `unique_of_type_equalizer`.
 -/
 noncomputable def typeEqualizerOfUnique (t : ∀ y : Y, g y = h y → ∃! x : X, f x = y) :
     IsLimit (Fork.ofι _ w) :=
-  (Fork.IsLimit.mk' _) fun s => by
+  Fork.IsLimit.mk' _ fun s => by
     refine' ⟨fun i => _, _, _⟩
     · apply Classical.choose (t (s.ι i) _)
       apply congr_fun s.condition i
@@ -458,7 +458,7 @@ def equalizerLimit : Limits.LimitCone (parallelPair g h)
     where
   Cone := Fork.ofι (Subtype.val : { x : Y // g x = h x } → Y) (funext Subtype.prop)
   IsLimit :=
-    (Fork.IsLimit.mk' _) fun s =>
+    Fork.IsLimit.mk' _ fun s =>
       ⟨fun i => ⟨s.ι i, by apply congr_fun s.condition i⟩, rfl, fun m hm =>
         funext fun x => Subtype.ext (congr_fun hm x)⟩
 #align category_theory.limits.types.equalizer_limit CategoryTheory.Limits.Types.equalizerLimit
@@ -501,12 +501,12 @@ def coequalizerColimit : Limits.ColimitCocone (parallelPair f g)
   Cocone :=
     Cofork.ofπ (Quot.mk (CoequalizerRel f g)) (funext fun x => Quot.sound (CoequalizerRel.rel x))
   IsColimit :=
-    (Cofork.IsColimit.mk' _) fun s =>
+    Cofork.IsColimit.mk' _ fun s =>
       ⟨Quot.lift s.π fun a b (h : CoequalizerRel f g a b) =>
           by
           cases h
           exact congr_fun s.condition h_1,
-        rfl, fun m hm => funext fun x => Quot.induction_on x (congr_fun hm : _)⟩
+        rfl, fun m hm => funext fun x => Quot.inductionOn x (congr_fun hm : _)⟩
 #align
   category_theory.limits.types.coequalizer_colimit CategoryTheory.Limits.Types.coequalizerColimit
 

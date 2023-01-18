@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module field_theory.fixed
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -184,7 +184,7 @@ variable [Fintype G] (x : F)
 
 /-- `minpoly G F x` is the minimal polynomial of `(x : F)` over `fixed_points G F`. -/
 def minpoly : Polynomial (FixedPoints.subfield G F) :=
-  ((prodXSubSmul G F x).toSubring (FixedPoints.subfield G F).toSubring) fun c hc g =>
+  (prodXSubSmul G F x).toSubring (FixedPoints.subfield G F).toSubring fun c hc g =>
     let ⟨n, hc0, hn⟩ := Polynomial.mem_frange_iff.1 hc
     hn.symm ▸ prodXSubSmul.coeff G F x g n
 #align fixed_points.minpoly FixedPoints.minpoly
@@ -224,7 +224,7 @@ theorem of_eval₂ (f : Polynomial (FixedPoints.subfield G F))
   refine'
     Fintype.prod_dvd_of_coprime
       (Polynomial.pairwise_coprime_X_sub_C <| MulAction.injective_of_quotient_stabilizer G x)
-      fun y => (QuotientGroup.induction_on y) fun g => _
+      fun y => QuotientGroup.induction_on y fun g => _
   rw [Polynomial.dvd_iff_is_root, Polynomial.IsRoot.def, MulAction.of_quotient_stabilizer_mk,
     Polynomial.eval_smul', ← Subfield.toSubring.subtype_eq_subtype, ←
     IsInvariantSubring.coe_subtype_hom' G (FixedPoints.subfield G F).toSubring, ←

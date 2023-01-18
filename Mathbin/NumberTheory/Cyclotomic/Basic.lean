@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module number_theory.cyclotomic.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -396,7 +396,7 @@ theorem adjoin_roots_cyclotomic_eq_adjoin_nth_roots [DecidableEq B] [IsDomain B]
   by
   simp only [mem_singleton_iff, exists_eq_left, map_cyclotomic]
   refine' le_antisymm (adjoin_mono fun x hx => _) (adjoin_le fun x hx => _)
-  · simp only [Multiset.mem_to_finset, Finset.mem_coe, map_cyclotomic,
+  · simp only [Multiset.mem_toFinset, Finset.mem_coe, map_cyclotomic,
       mem_roots (cyclotomic_ne_zero n B)] at hx
     simp only [mem_singleton_iff, exists_eq_left, mem_set_of_eq]
     rw [is_root_of_unity_iff n.pos]
@@ -404,7 +404,7 @@ theorem adjoin_roots_cyclotomic_eq_adjoin_nth_roots [DecidableEq B] [IsDomain B]
   · simp only [mem_singleton_iff, exists_eq_left, mem_set_of_eq] at hx
     obtain ⟨i, hin, rfl⟩ := hζ.eq_pow_of_pow_eq_one hx n.pos
     refine' SetLike.mem_coe.2 (Subalgebra.pow_mem _ (subset_adjoin _) _)
-    rwa [Finset.mem_coe, Multiset.mem_to_finset, mem_roots <| cyclotomic_ne_zero n B]
+    rwa [Finset.mem_coe, Multiset.mem_toFinset, mem_roots <| cyclotomic_ne_zero n B]
     exact hζ.is_root_cyclotomic n.pos
 #align
   is_cyclotomic_extension.adjoin_roots_cyclotomic_eq_adjoin_nth_roots IsCyclotomicExtension.adjoin_roots_cyclotomic_eq_adjoin_nth_roots
@@ -419,10 +419,10 @@ theorem adjoin_roots_cyclotomic_eq_adjoin_root_cyclotomic {n : ℕ+} [DecidableE
     exact SetLike.mem_coe.2 (Subalgebra.pow_mem _ (subset_adjoin <| mem_singleton ζ) _)
     rw [is_root_of_unity_iff n.pos]
     refine' ⟨n, Nat.mem_divisors_self n n.ne_zero, _⟩
-    rwa [Finset.mem_coe, Multiset.mem_to_finset, map_cyclotomic,
+    rwa [Finset.mem_coe, Multiset.mem_toFinset, map_cyclotomic,
       mem_roots <| cyclotomic_ne_zero n B] at hx
   · simp only [mem_singleton_iff, exists_eq_left, mem_set_of_eq] at hx
-    simpa only [hx, Multiset.mem_to_finset, Finset.mem_coe, map_cyclotomic,
+    simpa only [hx, Multiset.mem_toFinset, Finset.mem_coe, map_cyclotomic,
       mem_roots (cyclotomic_ne_zero n B)] using hζ.is_root_cyclotomic n.pos
 #align
   is_cyclotomic_extension.adjoin_roots_cyclotomic_eq_adjoin_root_cyclotomic IsCyclotomicExtension.adjoin_roots_cyclotomic_eq_adjoin_root_cyclotomic
@@ -499,7 +499,7 @@ theorem splitting_field_X_pow_sub_one : IsSplittingField K L (X ^ (n : ℕ) - 1)
       rw [← ((iff_adjoin_eq_top {n} K L).1 inferInstance).2]
       congr
       refine' Set.ext fun x => _
-      simp only [Polynomial.map_pow, mem_singleton_iff, Multiset.mem_to_finset, exists_eq_left,
+      simp only [Polynomial.map_pow, mem_singleton_iff, Multiset.mem_toFinset, exists_eq_left,
         mem_set_of_eq, Polynomial.map_X, Polynomial.map_one, Finset.mem_coe, Polynomial.map_sub]
       rwa [← RingHom.map_one C, mem_roots (@X_pow_sub_C_ne_zero L _ _ _ n.pos _), is_root.def,
         eval_sub, eval_pow, eval_C, eval_X, sub_eq_zero] }

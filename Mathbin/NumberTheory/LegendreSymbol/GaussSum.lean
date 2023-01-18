@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 
 ! This file was ported from Lean 3 source module number_theory.legendre_symbol.gauss_sum
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -107,7 +107,7 @@ private theorem gauss_sum_mul_aux {χ : MulChar R R'} (hχ : IsNontrivial χ) (�
       map_zero_one, mul_one]
     exact hχ.sum_eq_zero.symm
   · -- case `b ≠ 0`
-    refine' ((Fintype.sum_bijective _ (mul_left_bijective₀ b hb) _ _) fun x => _).symm
+    refine' (Fintype.sum_bijective _ (mul_left_bijective₀ b hb) _ _ fun x => _).symm
     rw [mul_assoc, mul_comm x, ← mul_assoc, mul_inv_cancel hb, one_mul, mul_sub, mul_one]
 #align gauss_sum_mul_aux gauss_sum_mul_aux
 
@@ -307,7 +307,7 @@ theorem FiniteField.two_pow_card {F : Type _} [Fintype F] [Field F] (hF : ringCh
       apply pow_one
     convert_to (0 + 1 * τ ^ 1 + 0 + -1 * τ ^ 3 + 0 + -1 * τ ^ 5 + 0 + 1 * τ ^ 7) ^ 2 = _
     · simp only [χ₈_apply, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons,
-        Matrix.cons_vec_bit0_eq_alt0, Matrix.cons_vec_bit1_eq_alt1, Matrix.cons_append,
+        Matrix.cons_vec_bit0_eq_alt0, Matrix.cons_vec_bit1_eq_alt1, Matrix.cons_vec_append,
         Matrix.cons_vec_alt0, Matrix.cons_vec_alt1, Int.cast_zero, Int.cast_one, Int.cast_neg,
         zero_mul]
       rfl

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module set_theory.zfc.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -165,7 +165,7 @@ theorem Equiv.exists_right {x y : PSet} (h : Equiv x y) : ∀ j, ∃ i, Equiv (x
 
 @[refl]
 protected theorem Equiv.refl (x) : Equiv x x :=
-  (PSet.recOn x) fun α A IH => ⟨fun a => ⟨a, IH a⟩, fun a => ⟨a, IH a⟩⟩
+  PSet.recOn x fun α A IH => ⟨fun a => ⟨a, IH a⟩, fun a => ⟨a, IH a⟩⟩
 #align pSet.equiv.refl PSet.Equiv.refl
 
 protected theorem Equiv.rfl : ∀ {x}, Equiv x x :=
@@ -173,8 +173,8 @@ protected theorem Equiv.rfl : ∀ {x}, Equiv x x :=
 #align pSet.equiv.rfl PSet.Equiv.rfl
 
 protected theorem Equiv.euc {x} : ∀ {y z}, Equiv x y → Equiv z y → Equiv x z :=
-  (PSet.recOn x) fun α A IH y =>
-    (PSet.casesOn y) fun β B ⟨γ, Γ⟩ ⟨αβ, βα⟩ ⟨γβ, βγ⟩ =>
+  PSet.recOn x fun α A IH y =>
+    PSet.casesOn y fun β B ⟨γ, Γ⟩ ⟨αβ, βα⟩ ⟨γβ, βγ⟩ =>
       ⟨fun a =>
         let ⟨b, ab⟩ := αβ a
         let ⟨c, bc⟩ := βγ b
@@ -602,7 +602,7 @@ def evalAux :
         eval_aux.2 _ _ (a.2 _ _ h)
     ⟨F, fun b c h =>
       funext <|
-        (@Quotient.ind _ _ fun q => F b q = F c q) fun z =>
+        @Quotient.ind _ _ (fun q => F b q = F c q) fun z =>
           eval_aux.2 (Resp.f b z) (Resp.f c z) (h _ _ (PSet.Equiv.refl z))⟩
 #align pSet.resp.eval_aux PSet.Resp.evalAux
 
@@ -660,7 +660,7 @@ noncomputable def allDefinable : ∀ {n} (F : Arity SetCat.{u} n), Definable n F
       intro x y h
       rw [@Quotient.sound PSet _ _ _ h]
       exact (definable.resp (F ⟦y⟧)).2
-    refine' funext fun q => (Quotient.induction_on q) fun x => _
+    refine' funext fun q => Quotient.inductionOn q fun x => _
     simp_rw [resp.eval_val, resp.f, Subtype.val_eq_coe, Subtype.coe_eta]
     exact @definable.eq _ (F ⟦x⟧) (I ⟦x⟧)
 #align classical.all_definable Classical.allDefinable
@@ -729,12 +729,12 @@ theorem mem_to_set (a u : SetCat.{u}) : a ∈ u.toSet ↔ a ∈ u :=
 #align Set.mem_to_set SetCat.mem_to_set
 
 instance small_to_set (x : SetCat.{u}) : Small.{u} x.toSet :=
-  (Quotient.induction_on x) fun a =>
+  Quotient.inductionOn x fun a =>
     by
     let f : a.type → (mk a).toSet := fun i => ⟨mk <| a.func i, func_mem a i⟩
     suffices Function.Surjective f by exact small_of_surjective this
     rintro ⟨y, hb⟩
-    induction y using Quotient.induction_on
+    induction y using Quotient.inductionOn
     cases' hb with i h
     exact ⟨i, Subtype.coe_injective (Quotient.sound h.symm)⟩
 #align Set.small_to_set SetCat.small_to_set
@@ -780,7 +780,7 @@ instance : IsTrans SetCat (· ⊆ ·) :=
 theorem subset_iff : ∀ {x y : PSet}, mk x ⊆ mk y ↔ x ⊆ y
   | ⟨α, A⟩, ⟨β, B⟩ =>
     ⟨fun h a => @h ⟦A a⟧ (Mem.mk A a), fun h z =>
-      Quotient.induction_on z fun z ⟨a, za⟩ =>
+      Quotient.inductionOn z fun z ⟨a, za⟩ =>
         let ⟨b, ab⟩ := h a
         ⟨b, za.trans ab⟩⟩
 #align Set.subset_iff SetCat.subset_iff
@@ -823,7 +823,7 @@ instance : Inhabited SetCat :=
 
 @[simp]
 theorem mem_empty (x) : x ∉ (∅ : SetCat.{u}) :=
-  Quotient.induction_on x PSet.mem_empty
+  Quotient.inductionOn x PSet.mem_empty
 #align Set.mem_empty SetCat.mem_empty
 
 @[simp]
@@ -832,7 +832,7 @@ theorem to_set_empty : toSet ∅ = ∅ := by simp [to_set]
 
 @[simp]
 theorem empty_subset (x : SetCat.{u}) : (∅ : SetCat) ⊆ x :=
-  (Quotient.induction_on x) fun y => subset_iff.2 <| PSet.empty_subset y
+  Quotient.inductionOn x fun y => subset_iff.2 <| PSet.empty_subset y
 #align Set.empty_subset SetCat.empty_subset
 
 @[simp]
@@ -844,7 +844,7 @@ theorem nonempty_mk_iff {x : PSet} : (mk x).Nonempty ↔ x.Nonempty :=
   by
   refine' ⟨_, fun ⟨a, h⟩ => ⟨mk a, h⟩⟩
   rintro ⟨a, h⟩
-  induction a using Quotient.induction_on
+  induction a using Quotient.inductionOn
   exact ⟨a, h⟩
 #align Set.nonempty_mk_iff SetCat.nonempty_mk_iff
 
@@ -939,7 +939,7 @@ theorem omega_zero : ∅ ∈ omega :=
 
 @[simp]
 theorem omega_succ {n} : n ∈ omega.{u} → insert n n ∈ omega.{u} :=
-  Quotient.induction_on n fun x ⟨⟨n⟩, h⟩ =>
+  Quotient.inductionOn n fun x ⟨⟨n⟩, h⟩ =>
     ⟨⟨n + 1⟩,
       SetCat.exact <|
         show insert (mk x) (mk x) = insert (mk <| ofNat n) (mk <| ofNat n) by rw [SetCat.sound h];
@@ -1038,7 +1038,7 @@ prefix:110 "⋃₀ " => SetCat.sUnion
 theorem mem_sUnion {x y : SetCat.{u}} : y ∈ ⋃₀ x ↔ ∃ z ∈ x, y ∈ z :=
   Quotient.induction_on₂ x y fun x y =>
     Iff.trans mem_sUnion
-      ⟨fun ⟨z, h⟩ => ⟨⟦z⟧, h⟩, fun ⟨z, h⟩ => Quotient.induction_on z (fun z h => ⟨z, h⟩) h⟩
+      ⟨fun ⟨z, h⟩ => ⟨⟦z⟧, h⟩, fun ⟨z, h⟩ => Quotient.inductionOn z (fun z h => ⟨z, h⟩) h⟩
 #align Set.mem_sUnion SetCat.mem_sUnion
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -1142,11 +1142,11 @@ theorem mem_diff {x y z : SetCat.{u}} : z ∈ x \ y ↔ z ∈ x ∧ z ∉ y :=
 /-- Induction on the `∈` relation. -/
 @[elab_as_elim]
 theorem induction_on {p : SetCat → Prop} (x) (h : ∀ x, (∀ y ∈ x, p y) → p x) : p x :=
-  (Quotient.induction_on x) fun u =>
-    (PSet.recOn u) fun α A IH =>
-      (h _) fun y =>
+  Quotient.inductionOn x fun u =>
+    PSet.recOn u fun α A IH =>
+      h _ fun y =>
         show @Membership.Mem _ _ SetCat.hasMem y ⟦⟨α, A⟩⟧ → p y from
-          Quotient.induction_on y fun v ⟨a, ha⟩ =>
+          Quotient.inductionOn y fun v ⟨a, ha⟩ =>
             by
             rw [@Quotient.sound PSet _ _ _ ha]
             exact IH a
@@ -1174,7 +1174,7 @@ theorem regularity (x : SetCat.{u}) (h : x ≠ ∅) : ∃ y ∈ x, x ∩ y = ∅
   by_contradiction fun ne =>
     h <|
       (eq_empty x).2 fun y =>
-        (induction_on y) fun z (IH : ∀ w : SetCat.{u}, w ∈ z → w ∉ x) =>
+        induction_on y fun z (IH : ∀ w : SetCat.{u}, w ∈ z → w ∉ x) =>
           show z ∉ x from fun zx =>
             Ne
               ⟨z, zx,
@@ -1198,7 +1198,7 @@ def image (f : SetCat → SetCat) [H : Definable 1 f] : SetCat → SetCat :=
 
 theorem image.mk :
     ∀ (f : SetCat.{u} → SetCat.{u}) [H : Definable 1 f] (x) {y} (h : y ∈ x), f y ∈ @image f H x
-  | _, ⟨F⟩, x, y => (Quotient.induction_on₂ x y) fun ⟨α, A⟩ y ⟨a, ya⟩ => ⟨a, F.2 _ _ ya⟩
+  | _, ⟨F⟩, x, y => Quotient.induction_on₂ x y fun ⟨α, A⟩ y ⟨a, ya⟩ => ⟨a, F.2 _ _ ya⟩
 #align Set.image.mk SetCat.image.mk
 
 @[simp]
@@ -1206,7 +1206,7 @@ theorem mem_image :
     ∀ {f : SetCat.{u} → SetCat.{u}} [H : Definable 1 f] {x y : SetCat.{u}},
       y ∈ @image f H x ↔ ∃ z ∈ x, f z = y
   | _, ⟨F⟩, x, y =>
-    (Quotient.induction_on₂ x y) fun ⟨α, A⟩ y =>
+    Quotient.induction_on₂ x y fun ⟨α, A⟩ y =>
       ⟨fun ⟨a, ya⟩ => ⟨⟦A a⟧, Mem.mk A a, Eq.symm <| Quotient.sound ya⟩, fun ⟨z, hz, e⟩ =>
         e ▸ image.mk _ _ hz⟩
 #align Set.mem_image SetCat.mem_image

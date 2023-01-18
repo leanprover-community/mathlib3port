@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module computability.partrec_code
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -335,9 +335,9 @@ theorem rec_prim' {α σ} [Primcodable α] [Primcodable σ] {c : α → Code} (h
             (((Primrec.of_nat code).comp m₁).pair <|
               ((Primrec.of_nat code).comp m₂).pair <| s₁.pair s₂)))
   let G : α → List σ → Option σ := fun a IH =>
-    (IH.length.cases (some (z a))) fun n =>
-      (n.cases (some (s a))) fun n =>
-        (n.cases (some (l a))) fun n => (n.cases (some (r a))) fun n => G₁ ((a, IH), n, n.div2.div2)
+    IH.length.cases (some (z a)) fun n =>
+      n.cases (some (s a)) fun n =>
+        n.cases (some (l a)) fun n => n.cases (some (r a)) fun n => G₁ ((a, IH), n, n.div2.div2)
   have : Primrec₂ G :=
     nat_cases (list_length.comp snd) (option_some_iff.2 (hz.comp fst)) <|
       nat_cases snd (option_some_iff.2 (hs.comp (fst.comp fst))) <|
@@ -347,7 +347,7 @@ theorem rec_prim' {α σ} [Primcodable α] [Primcodable σ] {c : α → Code} (h
               ((fst.pair snd).comp <| fst.comp <| fst.comp <| fst.comp <| fst).pair <|
                 snd.pair <| nat_div2.comp <| nat_div2.comp snd)
   refine'
-    (((nat_strong_rec (fun a n => F a (of_nat code n)) this.to₂) fun a n => _).comp Primrec.id <|
+    ((nat_strong_rec (fun a n => F a (of_nat code n)) this.to₂ fun a n => _).comp Primrec.id <|
           encode_iff.2 hc).of_eq
       fun a => by simp
   simp
@@ -437,9 +437,9 @@ theorem rec_prim {α σ} [Primcodable α] [Primcodable σ] {c : α → Code} (hc
               (((Primrec.of_nat code).comp m₁).pair <|
                 ((Primrec.of_nat code).comp m₂).pair <| s₁.pair s₂)))
   let G : α → List σ → Option σ := fun a IH =>
-    (IH.length.cases (some (z a))) fun n =>
-      (n.cases (some (s a))) fun n =>
-        (n.cases (some (l a))) fun n => (n.cases (some (r a))) fun n => G₁ ((a, IH), n, n.div2.div2)
+    IH.length.cases (some (z a)) fun n =>
+      n.cases (some (s a)) fun n =>
+        n.cases (some (l a)) fun n => n.cases (some (r a)) fun n => G₁ ((a, IH), n, n.div2.div2)
   have : Primrec₂ G :=
     nat_cases (list_length.comp snd) (option_some_iff.2 (hz.comp fst)) <|
       nat_cases snd (option_some_iff.2 (hs.comp (fst.comp fst))) <|
@@ -449,7 +449,7 @@ theorem rec_prim {α σ} [Primcodable α] [Primcodable σ] {c : α → Code} (hc
               ((fst.pair snd).comp <| fst.comp <| fst.comp <| fst.comp <| fst).pair <|
                 snd.pair <| nat_div2.comp <| nat_div2.comp snd)
   refine'
-    (((nat_strong_rec (fun a n => F a (of_nat code n)) this.to₂) fun a n => _).comp Primrec.id <|
+    ((nat_strong_rec (fun a n => F a (of_nat code n)) this.to₂ fun a n => _).comp Primrec.id <|
           encode_iff.2 hc).of_eq
       fun a => by simp
   simp
@@ -545,9 +545,9 @@ theorem rec_computable {α σ} [Primcodable α] [Primcodable σ] {c : α → Cod
             (((Computable.of_nat code).comp m₁).pair <|
               ((Computable.of_nat code).comp m₂).pair <| s₁.pair s₂)))
   let G : α → List σ → Option σ := fun a IH =>
-    (IH.length.cases (some (z a))) fun n =>
-      (n.cases (some (s a))) fun n =>
-        (n.cases (some (l a))) fun n => (n.cases (some (r a))) fun n => G₁ ((a, IH), n, n.div2.div2)
+    IH.length.cases (some (z a)) fun n =>
+      n.cases (some (s a)) fun n =>
+        n.cases (some (l a)) fun n => n.cases (some (r a)) fun n => G₁ ((a, IH), n, n.div2.div2)
   have : Computable₂ G :=
     nat_cases (list_length.comp snd) (option_some_iff.2 (hz.comp fst)) <|
       nat_cases snd (option_some_iff.2 (hs.comp (fst.comp fst))) <|
@@ -557,7 +557,7 @@ theorem rec_computable {α σ} [Primcodable α] [Primcodable σ] {c : α → Cod
               ((fst.pair snd).comp <| fst.comp <| fst.comp <| fst.comp <| fst).pair <|
                 snd.pair <| nat_div2.comp <| nat_div2.comp snd)
   refine'
-    (((nat_strong_rec (fun a n => F a (of_nat code n)) this.to₂) fun a n => _).comp Computable.id <|
+    ((nat_strong_rec (fun a n => F a (of_nat code n)) this.to₂ fun a n => _).comp Computable.id <|
           encode_iff.2 hc).of_eq
       fun a => by simp
   simp
@@ -727,7 +727,7 @@ def evaln : ∀ k : ℕ, Code → ℕ → Option ℕ
   | k + 1, prec cf cg => fun n =>
     guard (n ≤ k) >>
       n.unpaired fun a n =>
-        (n.cases (evaln (k + 1) cf a)) fun y => do
+        n.cases (evaln (k + 1) cf a) fun y => do
           let i ← evaln k (prec cf cg) (mkpair a y)
           evaln (k + 1) cg (mkpair a (mkpair y i))
   | k + 1, rfind' cf => fun n =>
@@ -912,7 +912,7 @@ private def G (L : List (List (Option ℕ))) : Option (List (Option ℕ)) :=
     let k := a.1
     let c := a.2
     (List.range k).map fun n =>
-      (k.cases none) fun k' =>
+      k.cases none fun k' =>
         Nat.Partrec.Code.recOn c (some 0)
           (-- zero
             some
@@ -1029,7 +1029,7 @@ theorem evaln_prim : Primrec fun a : (ℕ × code) × ℕ => evaln a.1.1 a.1.2 a
     Primrec₂ fun (_ : Unit) (n : ℕ) =>
       let a := ofNat (ℕ × code) n
       (List.range a.1).map (evaln a.1 a.2) :=
-    (Primrec.nat_strong_rec _ (hG.comp snd).to₂) fun _ p =>
+    Primrec.nat_strong_rec _ (hG.comp snd).to₂ fun _ p =>
       by
       simp [G]
       rw [(_ : (of_nat (ℕ × code) _).snd = of_nat code p.unpair.2)]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stuart Presnell
 
 ! This file was ported from Lean 3 source module data.nat.factorization.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -131,7 +131,7 @@ theorem support_factorization {n : ℕ} : n.factorization.support = n.factors.to
 #align nat.support_factorization Nat.support_factorization
 
 theorem factor_iff_mem_factorization {n p : ℕ} : p ∈ n.factorization.support ↔ p ∈ n.factors := by
-  simp only [support_factorization, List.mem_to_finset]
+  simp only [support_factorization, List.mem_toFinset]
 #align nat.factor_iff_mem_factorization Nat.factor_iff_mem_factorization
 
 theorem prime_of_mem_factorization {n p : ℕ} (hp : p ∈ n.factorization.support) : p.Prime :=
@@ -376,7 +376,7 @@ theorem ord_proj_dvd (n p : ℕ) : ord_proj[p] n ∣ n :=
   apply dvd_of_factors_subperm (pow_ne_zero _ hp.ne_zero)
   rw [hp.factors_pow, List.subperm_ext_iff]
   intro q hq
-  simp [List.eq_of_mem_repeat hq]
+  simp [List.eq_of_mem_replicate hq]
 #align nat.ord_proj_dvd Nat.ord_proj_dvd
 
 theorem ord_compl_dvd (n p : ℕ) : ord_compl[p] n ∣ n :=
@@ -613,7 +613,7 @@ theorem ord_proj_dvd_ord_proj_iff_dvd {a b : ℕ} (ha0 : a ≠ 0) (hb0 : b ≠ 0
   refine' ⟨fun h => _, fun hab p => ord_proj_dvd_ord_proj_of_dvd hb0 hab p⟩
   rw [← factorization_le_iff_dvd ha0 hb0]
   intro q
-  rcases le_or_lt q 1 with (hq_le | hq1); · interval_cases q <;> simp
+  rcases le_or_lt q 1 with (hq_le | hq1); · interval_cases <;> simp
   exact (pow_dvd_pow_iff_le_right hq1).1 (h q)
 #align nat.ord_proj_dvd_ord_proj_iff_dvd Nat.ord_proj_dvd_ord_proj_iff_dvd
 
@@ -698,7 +698,7 @@ theorem factorization_lcm {a b : ℕ} (ha : a ≠ 0) (hb : b ≠ 0) :
     (a.lcm b).factorization = a.factorization ⊔ b.factorization :=
   by
   rw [← add_right_inj (a.gcd b).factorization, ←
-    factorization_mul ((mt gcd_eq_zero_iff.1) fun h => ha h.1) (lcm_ne_zero ha hb), gcd_mul_lcm,
+    factorization_mul (mt gcd_eq_zero_iff.1 fun h => ha h.1) (lcm_ne_zero ha hb), gcd_mul_lcm,
     factorization_gcd ha hb, factorization_mul ha hb]
   ext1; exact (min_add_max _ _).symm
 #align nat.factorization_lcm Nat.factorization_lcm
@@ -808,7 +808,7 @@ we can define `P` for all natural numbers. -/
 @[elab_as_elim]
 def recOnPrimePow {P : ℕ → Sort _} (h0 : P 0) (h1 : P 1)
     (h : ∀ a p n : ℕ, p.Prime → ¬p ∣ a → 0 < n → P a → P (p ^ n * a)) : ∀ a : ℕ, P a := fun a =>
-  (Nat.strongRecOn a) fun n =>
+  Nat.strongRecOn a fun n =>
     match n with
     | 0 => fun _ => h0
     | 1 => fun _ => h1
@@ -869,7 +869,7 @@ def recOnMul {P : ℕ → Sort _} (h0 : P 0) (h1 : P 1) (hp : ∀ p, Prime p →
     match n with
     | 0 => h1
     | n + 1 => h _ _ (hp p hp') (_match _)
-  (recOnPrimeCoprime h0 hp) fun a b _ _ _ => h a b
+  recOnPrimeCoprime h0 hp fun a b _ _ _ => h a b
 #align nat.rec_on_mul Nat.recOnMul
 
 /-- For any multiplicative function `f` with `f 1 = 1` and any `n ≠ 0`,

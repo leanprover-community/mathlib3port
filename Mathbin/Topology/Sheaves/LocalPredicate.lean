@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Scott Morrison, Adam Topaz
 
 ! This file was ported from Lean 3 source module topology.sheaves.local_predicate
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -182,7 +182,7 @@ open TopCat.Presheaf
 /-- The functions satisfying a local predicate satisfy the sheaf condition.
 -/
 theorem is_sheaf (P : LocalPredicate T) : (subpresheafToTypes P.toPrelocalPredicate).IsSheaf :=
-  (Presheaf.is_sheaf_of_is_sheaf_unique_gluing_types _) fun ι U sf sf_comp =>
+  Presheaf.is_sheaf_of_is_sheaf_unique_gluing_types _ fun ι U sf sf_comp =>
     by
     -- We show the sheaf condition in terms of unique gluing.
     -- First we obtain a family of sections for the underlying sheaf of functions,

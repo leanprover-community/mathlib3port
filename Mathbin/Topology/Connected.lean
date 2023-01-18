@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.connected
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -96,7 +96,7 @@ theorem is_preconnected_singleton {x} : IsPreconnected ({x} : Set α) :=
 #align is_preconnected_singleton is_preconnected_singleton
 
 theorem Set.Subsingleton.is_preconnected {s : Set α} (hs : s.Subsingleton) : IsPreconnected s :=
-  hs.induction_on is_preconnected_empty fun x => is_preconnected_singleton
+  hs.inductionOn is_preconnected_empty fun x => is_preconnected_singleton
 #align set.subsingleton.is_preconnected Set.Subsingleton.is_preconnected
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » s) -/
@@ -124,7 +124,7 @@ theorem is_preconnected_of_forall_pair {s : Set α}
       ∀ (x) (_ : x ∈ s) (y) (_ : y ∈ s), ∃ (t : _)(_ : t ⊆ s), x ∈ t ∧ y ∈ t ∧ IsPreconnected t) :
     IsPreconnected s := by
   rcases eq_empty_or_nonempty s with (rfl | ⟨x, hx⟩)
-  exacts[is_preconnected_empty, (is_preconnected_of_forall x) fun y => H x hx y]
+  exacts[is_preconnected_empty, is_preconnected_of_forall x fun y => H x hx y]
 #align is_preconnected_of_forall_pair is_preconnected_of_forall_pair
 
 /-- A union of a family of preconnected sets with a common point is preconnected as well. -/
@@ -138,7 +138,7 @@ theorem is_preconnected_sUnion (x : α) (c : Set (Set α)) (H1 : ∀ s ∈ c, x 
 
 theorem is_preconnected_Union {ι : Sort _} {s : ι → Set α} (h₁ : (⋂ i, s i).Nonempty)
     (h₂ : ∀ i, IsPreconnected (s i)) : IsPreconnected (⋃ i, s i) :=
-  (Exists.elim h₁) fun f hf => is_preconnected_sUnion f _ hf (forall_range_iff.2 h₂)
+  Exists.elim h₁ fun f hf => is_preconnected_sUnion f _ hf (forall_range_iff.2 h₂)
 #align is_preconnected_Union is_preconnected_Union
 
 theorem IsPreconnected.union (x : α) {s t : Set α} (H1 : x ∈ s) (H2 : x ∈ t) (H3 : IsPreconnected s)
@@ -246,7 +246,7 @@ theorem IsPreconnected.Union_of_refl_trans_gen {ι : Type _} {s : ι → Set α}
 theorem IsConnected.Union_of_refl_trans_gen {ι : Type _} [Nonempty ι] {s : ι → Set α}
     (H : ∀ i, IsConnected (s i))
     (K : ∀ i j, ReflTransGen (fun i j : ι => (s i ∩ s j).Nonempty) i j) : IsConnected (⋃ n, s n) :=
-  ⟨nonempty_unionᵢ.2 <| (Nonempty.elim ‹_›) fun i : ι => ⟨i, (H _).Nonempty⟩,
+  ⟨nonempty_unionᵢ.2 <| Nonempty.elim ‹_› fun i : ι => ⟨i, (H _).Nonempty⟩,
     IsPreconnected.Union_of_refl_trans_gen (fun i => (H i).IsPreconnected) K⟩
 #align is_connected.Union_of_refl_trans_gen IsConnected.Union_of_refl_trans_gen
 
@@ -260,8 +260,8 @@ variable [LinearOrder β] [SuccOrder β] [IsSuccArchimedean β]
   such that any two neighboring sets meet is preconnected. -/
 theorem IsPreconnected.Union_of_chain {s : β → Set α} (H : ∀ n, IsPreconnected (s n))
     (K : ∀ n, (s n ∩ s (succ n)).Nonempty) : IsPreconnected (⋃ n, s n) :=
-  (IsPreconnected.Union_of_refl_trans_gen H) fun i j =>
-    (reflTransGen_of_succ _ fun i _ => K i) fun i _ =>
+  IsPreconnected.Union_of_refl_trans_gen H fun i j =>
+    reflTransGen_of_succ _ (fun i _ => K i) fun i _ =>
       by
       rw [inter_comm]
       exact K i
@@ -271,8 +271,8 @@ theorem IsPreconnected.Union_of_chain {s : β → Set α} (H : ∀ n, IsPreconne
   such that any two neighboring sets meet is connected. -/
 theorem IsConnected.Union_of_chain [Nonempty β] {s : β → Set α} (H : ∀ n, IsConnected (s n))
     (K : ∀ n, (s n ∩ s (succ n)).Nonempty) : IsConnected (⋃ n, s n) :=
-  (IsConnected.Union_of_refl_trans_gen H) fun i j =>
-    (reflTransGen_of_succ _ fun i _ => K i) fun i _ =>
+  IsConnected.Union_of_refl_trans_gen H fun i j =>
+    reflTransGen_of_succ _ (fun i _ => K i) fun i _ =>
       by
       rw [inter_comm]
       exact K i
@@ -1145,7 +1145,7 @@ theorem connected_component_subset_Inter_clopen {x : α} :
 /-- A clopen set is the union of its connected components. -/
 theorem IsClopen.bUnion_connected_component_eq {Z : Set α} (h : IsClopen Z) :
     (⋃ x ∈ Z, connectedComponent x) = Z :=
-  (Subset.antisymm (Union₂_subset fun x => h.connected_component_subset)) fun x hx =>
+  Subset.antisymm (Union₂_subset fun x => h.connected_component_subset) fun x hx =>
     mem_unionᵢ₂_of_mem hx mem_connected_component
 #align is_clopen.bUnion_connected_component_eq IsClopen.bUnion_connected_component_eq
 

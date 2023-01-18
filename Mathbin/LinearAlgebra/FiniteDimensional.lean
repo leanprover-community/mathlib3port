@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module linear_algebra.finite_dimensional
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -253,7 +253,7 @@ noncomputable def Basis.unique {ι : Type _} (b : Basis ι K K) : Unique ι :=
     (FiniteDimensional.finrank_eq_card_basis' b).symm
   simp only [Cardinal.eq_one_iff_unique, FiniteDimensional.finrank_self, algebraMap.coe_one] at A
   exact Nonempty.some ((unique_iff_subsingleton_and_nonempty _).2 A)
-#align finite_dimensional.basis.unique FiniteDimensional.Basis.unique
+#align basis.unique Basis.unique
 
 variable (K V)
 
@@ -1597,7 +1597,7 @@ theorem Subalgebra.is_simple_order_of_finrank (hr : finrank F E = 2) :
       haveI : FiniteDimensional F S := FiniteDimensional.finite_dimensional_submodule S.to_submodule
       have : finrank F S ≤ 2 := hr ▸ S.to_submodule.finrank_le
       have : 0 < finrank F S := finrank_pos_iff.mpr inferInstance
-      interval_cases finrank F S
+      interval_cases
       · left
         exact Subalgebra.eq_bot_of_finrank_one h
       · right

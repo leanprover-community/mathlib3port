@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kevin Buzzard, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module linear_algebra.quotient
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -123,7 +123,7 @@ variable {S : Type _} [SMul S R] [SMul S M] [IsScalarTower S R M] (P : Submodule
 
 instance hasSmul' : SMul S (M ⧸ P) :=
   ⟨fun a =>
-    (Quotient.map' ((· • ·) a)) fun x y h =>
+    Quotient.map' ((· • ·) a) fun x y h =>
       left_rel_apply.mpr <| by simpa [smul_sub] using P.smul_mem (a • 1 : R) (left_rel_apply.mp h)⟩
 #align submodule.quotient.has_smul' Submodule.Quotient.hasSmul'
 
@@ -248,14 +248,14 @@ theorem nontrivial_of_lt_top (h : p < ⊤) : Nontrivial (M ⧸ p) :=
 end Quotient
 
 instance QuotientBot.infinite [Infinite M] : Infinite (M ⧸ (⊥ : Submodule R M)) :=
-  (Infinite.of_injective Submodule.Quotient.mk) fun x y h =>
+  Infinite.of_injective Submodule.Quotient.mk fun x y h =>
     sub_eq_zero.mp <| (Submodule.Quotient.eq ⊥).mp h
 #align submodule.quotient_bot.infinite Submodule.QuotientBot.infinite
 
 instance QuotientTop.unique : Unique (M ⧸ (⊤ : Submodule R M))
     where
   default := 0
-  uniq x := (Quotient.inductionOn' x) fun x => (Submodule.Quotient.eq ⊤).mpr Submodule.mem_top
+  uniq x := Quotient.inductionOn' x fun x => (Submodule.Quotient.eq ⊤).mpr Submodule.mem_top
 #align submodule.quotient_top.unique Submodule.QuotientTop.unique
 
 instance QuotientTop.fintype : Fintype (M ⧸ (⊤ : Submodule R M)) :=
@@ -632,7 +632,7 @@ theorem coe_quot_equiv_of_eq_bot_symm (hp : p = ⊥) :
 /-- Quotienting by equal submodules gives linearly equivalent quotients. -/
 def quotEquivOfEq (h : p = p') : (M ⧸ p) ≃ₗ[R] M ⧸ p' :=
   {
-    (@Quotient.congr _ _ (quotientRel p) (quotientRel p') (Equiv.refl _)) fun a b =>
+    @Quotient.congr _ _ (quotientRel p) (quotientRel p') (Equiv.refl _) fun a b =>
       by
       subst h
       rfl with

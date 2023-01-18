@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.tangent_cone
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -404,7 +404,7 @@ differentiability. -/
 theorem UniqueDiffOn.pi (ι : Type _) [Finite ι] (E : ι → Type _) [∀ i, NormedAddCommGroup (E i)]
     [∀ i, NormedSpace 𝕜 (E i)] (s : ∀ i, Set (E i)) (I : Set ι)
     (h : ∀ i ∈ I, UniqueDiffOn 𝕜 (s i)) : UniqueDiffOn 𝕜 (Set.pi I s) := fun x hx =>
-  (UniqueDiffWithinAt.pi _ _ _ _ _) fun i hi => h i hi (x i) (hx i hi)
+  UniqueDiffWithinAt.pi _ _ _ _ _ fun i hi => h i hi (x i) (hx i hi)
 #align unique_diff_on.pi UniqueDiffOn.pi
 
 /-- The finite product of a family of sets of unique differentiability is a set of unique
@@ -412,7 +412,7 @@ differentiability. -/
 theorem UniqueDiffOn.univ_pi (ι : Type _) [Finite ι] (E : ι → Type _)
     [∀ i, NormedAddCommGroup (E i)] [∀ i, NormedSpace 𝕜 (E i)] (s : ∀ i, Set (E i))
     (h : ∀ i, UniqueDiffOn 𝕜 (s i)) : UniqueDiffOn 𝕜 (Set.pi univ s) :=
-  (UniqueDiffOn.pi _ _ _ _) fun i _ => h i
+  UniqueDiffOn.pi _ _ _ _ fun i _ => h i
 #align unique_diff_on.univ_pi UniqueDiffOn.univ_pi
 
 /-- In a real vector space, a convex set with nonempty interior is a set of unique

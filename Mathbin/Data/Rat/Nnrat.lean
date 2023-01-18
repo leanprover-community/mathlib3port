@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module data.rat.nnrat
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -385,7 +385,7 @@ theorem le_to_nnrat_iff_coe_le {q : ℚ≥0} (hp : 0 ≤ p) : q ≤ toNnrat p �
 #align rat.le_to_nnrat_iff_coe_le Rat.le_to_nnrat_iff_coe_le
 
 theorem le_to_nnrat_iff_coe_le' {q : ℚ≥0} (hq : 0 < q) : q ≤ toNnrat p ↔ ↑q ≤ p :=
-  ((le_or_lt 0 p).elim le_to_nnrat_iff_coe_le) fun hp => by
+  (le_or_lt 0 p).elim le_to_nnrat_iff_coe_le fun hp => by
     simp only [(hp.trans_le q.coe_nonneg).not_le, to_nnrat_eq_zero.2 hp.le, hq.not_le]
 #align rat.le_to_nnrat_iff_coe_le' Rat.le_to_nnrat_iff_coe_le'
 

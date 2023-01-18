@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mantas Bakšys
 
 ! This file was ported from Lean 3 source module algebra.order.rearrangement
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,7 +57,7 @@ variable {ι α β : Type _}
 
 section Smul
 
-variable [LinearOrderedRing α] [LinearOrderedAddCommGroup β] [Module α β] [OrderedSmul α β]
+variable [LinearOrderedRing α] [LinearOrderedAddCommGroup β] [Module α β] [OrderedSMul α β]
   {s : Finset ι} {σ : Perm ι} {f : ι → α} {g : ι → β}
 
 /-- **Rearrangement Inequality**: Pointwise scalar multiplication of `f` and `g` is maximized when
@@ -91,7 +91,7 @@ theorem MonovaryOn.sum_smul_comp_perm_le_sum_smul (hfg : MonovaryOn f g s)
     simp only [← s.sum_erase_add _ h1s, add_comm]
     rw [← add_assoc, ← add_assoc]
     simp only [hτ, swap_apply_left, Function.comp_apply, Equiv.coe_trans, apply_inv_self]
-    refine' add_le_add (smul_add_smul_le_smul_add_smul' _ _) ((sum_congr rfl) fun x hx => _).le
+    refine' add_le_add (smul_add_smul_le_smul_add_smul' _ _) (sum_congr rfl fun x hx => _).le
     · specialize hamax (σ⁻¹ a) h1s
       rw [Prod.Lex.le_iff] at hamax
       cases hamax
@@ -122,7 +122,7 @@ theorem MonovaryOn.sum_smul_comp_perm_eq_sum_smul_iff (hfg : MonovaryOn f g s)
       set τ : perm ι := (swap x y).trans σ
       have hτs : { x | τ x ≠ x } ⊆ s :=
         by
-        refine' (set_support_mul_subset σ <| swap x y).trans ((Set.union_subset hσ) fun z hz => _)
+        refine' (set_support_mul_subset σ <| swap x y).trans (Set.union_subset hσ fun z hz => _)
         obtain ⟨_, rfl | rfl⟩ := swap_apply_ne_self_iff.1 hz <;> assumption
       refine' ((hfg.sum_smul_comp_perm_le_sum_smul hτs).trans_lt' _).Ne
       obtain rfl | hxy := eq_or_ne x y
@@ -130,7 +130,7 @@ theorem MonovaryOn.sum_smul_comp_perm_eq_sum_smul_iff (hfg : MonovaryOn f g s)
       simp only [← s.sum_erase_add _ hx, ← (s.erase x).sum_erase_add _ (mem_erase.2 ⟨hxy.symm, hy⟩),
         add_assoc, Equiv.coe_trans, Function.comp_apply, swap_apply_right, swap_apply_left]
       refine'
-        add_lt_add_of_le_of_lt ((Finset.sum_congr rfl) fun z hz => _).le
+        add_lt_add_of_le_of_lt (Finset.sum_congr rfl fun z hz => _).le
           (smul_add_smul_lt_smul_add_smul hfxy hgxy)
       simp_rw [mem_erase] at hz
       rw [swap_apply_of_ne_of_ne hz.2.1 hz.1]

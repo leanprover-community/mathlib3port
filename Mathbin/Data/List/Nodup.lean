@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Kenny Lau
 
 ! This file was ported from Lean 3 source module data.list.nodup
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -199,20 +199,20 @@ theorem nthLe_index_of [DecidableEq α] {l : List α} (H : Nodup l) (n h) :
 theorem nodup_iff_count_le_one [DecidableEq α] {l : List α} : Nodup l ↔ ∀ a, count a l ≤ 1 :=
   nodup_iff_sublist.trans <|
     forall_congr' fun a =>
-      have : [a, a] <+ l ↔ 1 < count a l := (@le_count_iff_repeat_sublist _ _ a l 2).symm
+      have : [a, a] <+ l ↔ 1 < count a l := (@le_count_iff_replicate_sublist _ _ a l 2).symm
       (not_congr this).trans not_lt
 #align list.nodup_iff_count_le_one List.nodup_iff_count_le_one
 -/
 
-#print List.nodup_repeat /-
-theorem nodup_repeat (a : α) : ∀ {n : ℕ}, Nodup (repeat a n) ↔ n ≤ 1
+#print List.nodup_replicate /-
+theorem nodup_replicate (a : α) : ∀ {n : ℕ}, Nodup (replicate n a) ↔ n ≤ 1
   | 0 => by simp [Nat.zero_le]
   | 1 => by simp
   | n + 2 =>
     iff_of_false
-      (fun H => nodup_iff_sublist.1 H a ((repeat_sublist_repeat _).2 (Nat.le_add_left 2 n)))
+      (fun H => nodup_iff_sublist.1 H a ((replicate_sublist_replicate _).2 (Nat.le_add_left 2 n)))
       (not_le_of_lt <| Nat.le_add_left 2 n)
-#align list.nodup_repeat List.nodup_repeat
+#align list.nodup_replicate List.nodup_replicate
 -/
 
 #print List.count_eq_one_of_mem /-
@@ -278,7 +278,7 @@ theorem nodup_middle {a : α} {l₁ l₂ : List α} : Nodup (l₁ ++ a :: l₂) 
 -/
 
 theorem Nodup.of_map (f : α → β) {l : List α} : Nodup (map f l) → Nodup l :=
-  (Pairwise.of_map f) fun a b => mt <| congr_arg f
+  Pairwise.of_map f fun a b => mt <| congr_arg f
 #align list.nodup.of_map List.Nodup.of_mapₓ
 
 theorem Nodup.map_on {f : α → β} (H : ∀ x ∈ l, ∀ y ∈ l, f x = f y → x = y) (d : Nodup l) :
@@ -1199,7 +1199,7 @@ theorem
 #print List.Nodup.filterMap /-
 protected theorem Nodup.filterMap {f : α → Option β} (h : ∀ a a' b, b ∈ f a → b ∈ f a' → a = a') :
     Nodup l → Nodup (filterMap f l) :=
-  (Pairwise.filter_map f) fun a a' n b bm b' bm' e => n <| h a a' b' (e ▸ bm) bm'
+  Pairwise.filter_map f fun a a' n b bm b' bm' e => n <| h a a' b' (e ▸ bm) bm'
 #align list.nodup.filter_map List.Nodup.filterMap
 -/
 

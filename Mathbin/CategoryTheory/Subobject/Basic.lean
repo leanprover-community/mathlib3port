@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.subobject.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -139,7 +139,7 @@ protected def lift {α : Sort _} {X : C} (F : ∀ ⦃A : C⦄ (f : A ⟶ X) [Mon
       ∀ ⦃A B : C⦄ (f : A ⟶ X) (g : B ⟶ X) [Mono f] [Mono g] (i : A ≅ B),
         i.Hom ≫ g = f → F f = F g) :
     Subobject X → α := fun P =>
-  (Quotient.liftOn' P fun m => F m.arrow) fun m n ⟨i⟩ =>
+  Quotient.liftOn' P (fun m => F m.arrow) fun m n ⟨i⟩ =>
     h m.arrow n.arrow ((MonoOver.forget X ⋙ Over.forget X).mapIso i) (Over.w i.Hom)
 #align category_theory.subobject.lift CategoryTheory.Subobject.lift
 
@@ -256,7 +256,7 @@ theorem mk_le_mk_of_comm {B A₁ A₂ : C} {f₁ : A₁ ⟶ B} {f₂ : A₂ ⟶ 
 
 @[simp]
 theorem mk_arrow (P : Subobject X) : mk P.arrow = P :=
-  (Quotient.inductionOn' P) fun Q =>
+  Quotient.inductionOn' P fun Q =>
     by
     obtain ⟨e⟩ := @Quotient.mk_out' _ (is_isomorphic_setoid _) Q
     refine' Quotient.sound' ⟨mono_over.iso_mk _ _ ≪≫ e⟩ <;> tidy

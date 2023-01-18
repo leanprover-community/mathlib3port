@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca, Johan Commelin
 
 ! This file was ported from Lean 3 source module analysis.normed.group.SemiNormedGroup.completion
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -84,7 +84,7 @@ The difference from the definition obtained from the functoriality of completion
 map sending a morphism `f` to the associated morphism of completions is itself additive. -/
 def completion.mapHom (V W : SemiNormedGroupCat.{u}) :
     (V ⟶ W) →+ (completion.obj V ⟶ completion.obj W) :=
-  (AddMonoidHom.mk' (CategoryTheory.Functor.map completion)) fun f g => f.completion_add g
+  AddMonoidHom.mk' (CategoryTheory.Functor.map completion) fun f g => f.completion_add g
 #align SemiNormedGroup.Completion.map_hom SemiNormedGroupCat.completion.mapHom
 
 @[simp]

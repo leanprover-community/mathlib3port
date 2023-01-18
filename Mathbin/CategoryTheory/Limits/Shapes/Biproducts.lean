@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Jakob von Raumer
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.biproducts
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -492,7 +492,7 @@ theorem biproduct.iso_product_hom {f : J → C} [HasBiproduct f] :
 @[simp]
 theorem biproduct.iso_product_inv {f : J → C} [HasBiproduct f] :
     (biproduct.isoProduct f).inv = biproduct.lift (Pi.π f) :=
-  (biproduct.hom_ext _ _) fun j => by simp [iso.inv_comp_eq]
+  biproduct.hom_ext _ _ fun j => by simp [iso.inv_comp_eq]
 #align
   category_theory.limits.biproduct.iso_product_inv CategoryTheory.Limits.biproduct.iso_product_inv
 
@@ -511,7 +511,7 @@ theorem biproduct.iso_coproduct_inv {f : J → C} [HasBiproduct f] :
 @[simp]
 theorem biproduct.iso_coproduct_hom {f : J → C} [HasBiproduct f] :
     (biproduct.isoCoproduct f).hom = biproduct.desc (Sigma.ι f) :=
-  (biproduct.hom_ext' _ _) fun j => by simp [← iso.eq_comp_inv]
+  biproduct.hom_ext' _ _ fun j => by simp [← iso.eq_comp_inv]
 #align
   category_theory.limits.biproduct.iso_coproduct_hom CategoryTheory.Limits.biproduct.iso_coproduct_hom
 
@@ -704,7 +704,7 @@ def biproduct.isLimitFromSubtype :
     IsLimit
       (KernelFork.ofι (biproduct.fromSubtype f fun j => j ≠ i) (by simp) :
         KernelFork (biproduct.π f i)) :=
-  (Fork.IsLimit.mk' _) fun s =>
+  Fork.IsLimit.mk' _ fun s =>
     ⟨s.ι ≫ biproduct.toSubtype _ _, by
       ext j
       rw [kernel_fork.ι_of_ι, category.assoc, category.assoc,
@@ -734,7 +734,7 @@ def biproduct.isColimitToSubtype :
     IsColimit
       (CokernelCofork.ofπ (biproduct.toSubtype f fun j => j ≠ i) (by simp) :
         CokernelCofork (biproduct.ι f i)) :=
-  (Cofork.IsColimit.mk' _) fun s =>
+  Cofork.IsColimit.mk' _ fun s =>
     ⟨biproduct.fromSubtype _ _ ≫ s.π, by
       ext j
       rw [cokernel_cofork.π_of_π, biproduct.to_subtype_from_subtype_assoc, biproduct.ι_map_assoc]
@@ -1754,14 +1754,14 @@ variable {c}
 
 /-- The fork defined in `binary_bicone.fst_kernel_fork` is indeed a kernel. -/
 def BinaryBicone.isLimitFstKernelFork (i : IsLimit c.toCone) : IsLimit c.fstKernelFork :=
-  (Fork.IsLimit.mk' _) fun s =>
+  Fork.IsLimit.mk' _ fun s =>
     ⟨s.ι ≫ c.snd, by apply binary_fan.is_limit.hom_ext i <;> simp, fun m hm => by simp [← hm]⟩
 #align
   category_theory.limits.binary_bicone.is_limit_fst_kernel_fork CategoryTheory.Limits.BinaryBicone.isLimitFstKernelFork
 
 /-- The fork defined in `binary_bicone.snd_kernel_fork` is indeed a kernel. -/
 def BinaryBicone.isLimitSndKernelFork (i : IsLimit c.toCone) : IsLimit c.sndKernelFork :=
-  (Fork.IsLimit.mk' _) fun s =>
+  Fork.IsLimit.mk' _ fun s =>
     ⟨s.ι ≫ c.fst, by apply binary_fan.is_limit.hom_ext i <;> simp, fun m hm => by simp [← hm]⟩
 #align
   category_theory.limits.binary_bicone.is_limit_snd_kernel_fork CategoryTheory.Limits.BinaryBicone.isLimitSndKernelFork
@@ -1769,7 +1769,7 @@ def BinaryBicone.isLimitSndKernelFork (i : IsLimit c.toCone) : IsLimit c.sndKern
 /-- The cofork defined in `binary_bicone.inl_cokernel_cofork` is indeed a cokernel. -/
 def BinaryBicone.isColimitInlCokernelCofork (i : IsColimit c.toCocone) :
     IsColimit c.inlCokernelCofork :=
-  (Cofork.IsColimit.mk' _) fun s =>
+  Cofork.IsColimit.mk' _ fun s =>
     ⟨c.inr ≫ s.π, by apply binary_cofan.is_colimit.hom_ext i <;> simp, fun m hm => by simp [← hm]⟩
 #align
   category_theory.limits.binary_bicone.is_colimit_inl_cokernel_cofork CategoryTheory.Limits.BinaryBicone.isColimitInlCokernelCofork
@@ -1777,7 +1777,7 @@ def BinaryBicone.isColimitInlCokernelCofork (i : IsColimit c.toCocone) :
 /-- The cofork defined in `binary_bicone.inr_cokernel_cofork` is indeed a cokernel. -/
 def BinaryBicone.isColimitInrCokernelCofork (i : IsColimit c.toCocone) :
     IsColimit c.inrCokernelCofork :=
-  (Cofork.IsColimit.mk' _) fun s =>
+  Cofork.IsColimit.mk' _ fun s =>
     ⟨c.inl ≫ s.π, by apply binary_cofan.is_colimit.hom_ext i <;> simp, fun m hm => by simp [← hm]⟩
 #align
   category_theory.limits.binary_bicone.is_colimit_inr_cokernel_cofork CategoryTheory.Limits.BinaryBicone.isColimitInrCokernelCofork

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton, Mario Carneiro, Isabel Longbottom, Scott Morrison
 
 ! This file was ported from Lean 3 source module set_theory.game.pgame
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -236,8 +236,8 @@ theorem IsOption.mk_right {xl xr : Type u} (xL : xl → Pgame) (xR : xr → Pgam
 
 theorem wf_is_option : WellFounded IsOption :=
   ⟨fun x =>
-    (moveRecOn x) fun x IHl IHr =>
-      (Acc.intro x) fun y h => by
+    moveRecOn x fun x IHl IHr =>
+      Acc.intro x fun y h => by
         induction' h with _ i _ j
         · exact IHl i
         · exact IHr j⟩

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module algebra.group_power.lemmas
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1122,7 +1122,7 @@ alias le_self_sq ← le_self_pow_two
 lean 3 declaration is
   forall {x : Int}, (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) (Int.natAbs x)) -> (Function.Injective.{1, 1} Nat Int (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.monoid)) x))
 but is expected to have type
-  forall {x : Int}, (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) (Int.natAbs x)) -> (Function.Injective.{1, 1} Nat Int ((fun (x._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.7795 : Int) (x._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.7797 : Nat) => HPow.hPow.{0, 0, 0} Int Nat Int Int.instHPowIntNat x._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.7795 x._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.7797) x))
+  forall {x : Int}, (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) (Int.natAbs x)) -> (Function.Injective.{1, 1} Nat Int ((fun (x._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.7693 : Int) (x._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.7695 : Nat) => HPow.hPow.{0, 0, 0} Int Nat Int Int.instHPowIntNat x._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.7693 x._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.7695) x))
 Case conversion may be inaccurate. Consider using '#align int.pow_right_injective Int.pow_right_injectiveₓ'. -/
 theorem pow_right_injective {x : ℤ} (h : 1 < x.natAbs) : Function.Injective ((· ^ ·) x : ℕ → ℤ) :=
   by

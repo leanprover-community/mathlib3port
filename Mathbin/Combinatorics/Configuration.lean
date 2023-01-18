@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 
 ! This file was ported from Lean 3 source module combinatorics.configuration
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -135,7 +135,7 @@ theorem Nondegenerate.exists_injective_of_card_le [Nondegenerate P L] [Fintype P
     -- If `s = {l}`, then pick a point `p ∉ l`
     · obtain ⟨l, rfl⟩ := finset.card_eq_one.mp hs₁
       obtain ⟨p, hl⟩ := exists_point l
-      rw [Finset.card_singleton, Finset.singleton_bUnion, Nat.one_le_iff_ne_zero]
+      rw [Finset.card_singleton, Finset.singleton_bunionᵢ, Nat.one_le_iff_ne_zero]
       exact Finset.card_ne_zero_of_mem (set.mem_to_finset.mpr hl)
     suffices s.bUnion tᶜ.card ≤ sᶜ.card
       by
@@ -148,8 +148,8 @@ theorem Nondegenerate.exists_injective_of_card_le [Nondegenerate P L] [Fintype P
       by
       -- At most one line through two points of `s`
       refine' finset.card_le_one_iff.mpr fun p₁ p₂ hp₁ hp₂ => _
-      simp_rw [Finset.mem_compl, Finset.mem_bUnion, exists_prop, not_exists, not_and,
-        Set.mem_to_finset, Set.mem_setOf_eq, not_not] at hp₁ hp₂
+      simp_rw [Finset.mem_compl, Finset.mem_bunionᵢ, exists_prop, not_exists, not_and,
+        Set.mem_toFinset, Set.mem_setOf_eq, not_not] at hp₁ hp₂
       obtain ⟨l₁, l₂, hl₁, hl₂, hl₃⟩ :=
         finset.one_lt_card_iff.mp (nat.one_lt_iff_ne_zero_and_ne_one.mpr ⟨hs₀, hs₁⟩)
       exact (eq_or_eq (hp₁ l₁ hl₁) (hp₂ l₁ hl₁) (hp₁ l₂ hl₂) (hp₂ l₂ hl₂)).resolve_right hl₃
@@ -305,10 +305,10 @@ theorem HasLines.line_count_eq_point_count [HasLines P L] [Fintype P] [Fintype L
         rw [hf2]
       · obtain ⟨l, hl⟩ := hf1.2 p
         exact ⟨l, Finset.mem_univ l, hl.symm⟩
-      all_goals simp_rw [Finset.mem_univ, true_and_iff, Set.mem_to_finset]; exact fun p => Iff.rfl
+      all_goals simp_rw [Finset.mem_univ, true_and_iff, Set.mem_toFinset]; exact fun p => Iff.rfl
     have step3 : (∑ i in sᶜ, line_count L i.1) = ∑ i in sᶜ, point_count P i.2 := by
       rwa [← s.sum_add_sum_compl, ← s.sum_add_sum_compl, step2, add_left_cancel_iff] at step1
-    rw [← Set.to_finset_compl] at step3
+    rw [← Set.toFinset_compl] at step3
     exact
       ((Finset.sum_eq_sum_iff_of_le fun i hi =>
               has_lines.point_count_le_line_count (set.mem_to_finset.mp hi)).mp
@@ -455,7 +455,7 @@ variable {P L}
 
 theorem line_count_eq_point_count [Finite P] [Finite L] (p : P) (l : L) :
     lineCount L p = pointCount P l :=
-  (Exists.elim (exists_point l)) fun q hq =>
+  Exists.elim (exists_point l) fun q hq =>
     (line_count_eq_line_count L p q).trans <|
       by
       cases nonempty_fintype P

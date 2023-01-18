@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.sigma.lex
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -100,7 +100,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align sigma.lex.mono_left Sigma.Lex.mono_leftₓ'. -/
 theorem Lex.mono_left (hr : ∀ a b, r₁ a b → r₂ a b) {a b : Σi, α i} (h : Lex r₁ s a b) :
     Lex r₂ s a b :=
-  (h.mono hr) fun _ _ _ => id
+  h.mono hr fun _ _ _ => id
 #align sigma.lex.mono_left Sigma.Lex.mono_left
 
 /- warning: sigma.lex.mono_right -> Sigma.Lex.mono_right is a dubious translation:
@@ -239,7 +239,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align psigma.lex.mono_left PSigma.Lex.mono_leftₓ'. -/
 theorem Lex.mono_left {r₁ r₂ : ι → ι → Prop} {s : ∀ i, α i → α i → Prop}
     (hr : ∀ a b, r₁ a b → r₂ a b) {a b : Σ'i, α i} (h : Lex r₁ s a b) : Lex r₂ s a b :=
-  (h.mono hr) fun _ _ _ => id
+  h.mono hr fun _ _ _ => id
 #align psigma.lex.mono_left PSigma.Lex.mono_left
 
 /- warning: psigma.lex.mono_right -> PSigma.Lex.mono_right is a dubious translation:

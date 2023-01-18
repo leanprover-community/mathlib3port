@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module order.category.omega_complete_partial_order
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -105,7 +105,7 @@ end HasProducts
 instance omegaCompletePartialOrderEqualizer {α β : Type _} [OmegaCompletePartialOrder α]
     [OmegaCompletePartialOrder β] (f g : α →𝒄 β) :
     OmegaCompletePartialOrder { a : α // f a = g a } :=
-  (OmegaCompletePartialOrder.subtype _) fun c hc =>
+  OmegaCompletePartialOrder.subtype _ fun c hc =>
     by
     rw [f.continuous, g.continuous]
     congr 1
@@ -129,7 +129,7 @@ def equalizer {X Y : ωCPO.{v}} (f g : X ⟶ Y) : Fork f g :=
 
 /-- The equalizer fork is a limit. -/
 def isEqualizer {X Y : ωCPO.{v}} (f g : X ⟶ Y) : IsLimit (equalizer f g) :=
-  (Fork.IsLimit.mk' _) fun s =>
+  Fork.IsLimit.mk' _ fun s =>
     ⟨{  toFun := fun x => ⟨s.ι x, by apply continuous_hom.congr_fun s.condition⟩
         monotone' := fun x y h => s.ι.Monotone h
         cont := fun x => Subtype.ext (s.ι.Continuous x) },

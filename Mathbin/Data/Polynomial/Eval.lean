@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module data.polynomial.eval
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,12 +43,12 @@ variable (f : R →+* S) (x : S)
 
 /-- Evaluate a polynomial `p` given a ring hom `f` from the scalar ring
   to the target and a value `x` for the variable in the target -/
-def eval₂ (p : R[X]) : S :=
+irreducible_def eval₂ (p : R[X]) : S :=
   p.Sum fun e a => f a * x ^ e
 #align polynomial.eval₂ Polynomial.eval₂
 
-theorem eval₂_eq_sum {f : R →+* S} {x : S} : p.eval₂ f x = p.Sum fun e a => f a * x ^ e :=
-  rfl
+theorem eval₂_eq_sum {f : R →+* S} {x : S} : p.eval₂ f x = p.Sum fun e a => f a * x ^ e := by
+  rw [eval₂]
 #align polynomial.eval₂_eq_sum Polynomial.eval₂_eq_sum
 
 theorem eval₂_congr {R S : Type _} [Semiring R] [Semiring S] {f g : R →+* S} {s t : S}
@@ -89,7 +89,9 @@ theorem eval₂_X_pow {n : ℕ} : (X ^ n).eval₂ f x = x ^ n :=
 #align polynomial.eval₂_X_pow Polynomial.eval₂_X_pow
 
 @[simp]
-theorem eval₂_add : (p + q).eval₂ f x = p.eval₂ f x + q.eval₂ f x := by
+theorem eval₂_add : (p + q).eval₂ f x = p.eval₂ f x + q.eval₂ f x :=
+  by
+  simp only [eval₂_eq_sum]
   apply sum_add_index <;> simp [add_mul]
 #align polynomial.eval₂_add Polynomial.eval₂_add
 
@@ -186,7 +188,7 @@ theorem eval₂_mul_noncomm (hf : ∀ k, Commute (f <| q.coeff k) x) :
 @[simp]
 theorem eval₂_mul_X : eval₂ f x (p * X) = eval₂ f x p * x :=
   by
-  refine' trans ((eval₂_mul_noncomm _ _) fun k => _) (by rw [eval₂_X])
+  refine' trans (eval₂_mul_noncomm _ _ fun k => _) (by rw [eval₂_X])
   rcases em (k = 1) with (rfl | hk)
   · simp
   · simp [coeff_X_of_ne_one hk]
@@ -261,7 +263,7 @@ variable [CommSemiring S] (f : R →+* S) (x : S)
 
 @[simp]
 theorem eval₂_mul : (p * q).eval₂ f x = p.eval₂ f x * q.eval₂ f x :=
-  (eval₂_mul_noncomm _ _) fun k => Commute.all _ _
+  eval₂_mul_noncomm _ _ fun k => Commute.all _ _
 #align polynomial.eval₂_mul Polynomial.eval₂_mul
 
 theorem eval₂_mul_eq_zero_of_left (q : R[X]) (hp : p.eval₂ f x = 0) : (p * q).eval₂ f x = 0 :=
@@ -320,6 +322,8 @@ def eval : R → R[X] → R :=
 #align polynomial.eval Polynomial.eval
 
 theorem eval_eq_sum : p.eval x = p.Sum fun e a => a * x ^ e :=
+  by
+  rw [eval, eval₂_eq_sum]
   rfl
 #align polynomial.eval_eq_sum Polynomial.eval_eq_sum
 
@@ -500,8 +504,10 @@ theorem IsRoot.eq_zero (h : IsRoot p x) : eval x p = 0 :=
 theorem coeff_zero_eq_eval_zero (p : R[X]) : coeff p 0 = p.eval 0 :=
   calc
     coeff p 0 = coeff p 0 * 0 ^ 0 := by simp
-    _ = p.eval 0 :=
-      Eq.symm <|
+    _ = p.eval 0 := by
+      symm
+      rw [eval_eq_sum]
+      exact
         Finset.sum_eq_single _ (fun b _ hb => by simp [zero_pow (Nat.pos_of_ne_zero hb)]) (by simp)
     
 #align polynomial.coeff_zero_eq_eval_zero Polynomial.coeff_zero_eq_eval_zero
@@ -527,8 +533,7 @@ def comp (p q : R[X]) : R[X] :=
   p.eval₂ c q
 #align polynomial.comp Polynomial.comp
 
-theorem comp_eq_sum_left : p.comp q = p.Sum fun e a => c a * q ^ e :=
-  rfl
+theorem comp_eq_sum_left : p.comp q = p.Sum fun e a => c a * q ^ e := by rw [comp, eval₂_eq_sum]
 #align polynomial.comp_eq_sum_left Polynomial.comp_eq_sum_left
 
 @[simp]
@@ -984,10 +989,9 @@ theorem eval_int_cast_map {R S : Type _} [Ring R] [Ring S] (f : R →+* S) (p : 
 end Map
 
 /-!
-After having set up the basic theory of `eval₂`, `eval`, `comp`, and `map`,
-we make `eval₂` irreducible.
+we have made `eval₂` irreducible from the start.
 
-Perhaps we can make the others irreducible too?
+Perhaps we can make also `eval`, `comp`, and `map` irreducible too?
 -/
 
 
@@ -1047,7 +1051,7 @@ theorem coe_eval_ring_hom (r : R) : (evalRingHom r : R[X] → R) = eval r :=
 #align polynomial.coe_eval_ring_hom Polynomial.coe_eval_ring_hom
 
 theorem eval_ring_hom_zero : evalRingHom 0 = constant_coeff :=
-  (FunLike.ext _ _) fun p => p.coeff_zero_eq_eval_zero.symm
+  FunLike.ext _ _ fun p => p.coeff_zero_eq_eval_zero.symm
 #align polynomial.eval_ring_hom_zero Polynomial.eval_ring_hom_zero
 
 @[simp]

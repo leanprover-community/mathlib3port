@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.nat.part_enat
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -348,7 +348,7 @@ theorem ne_zero_iff {x : PartEnat} : x ≠ 0 ↔ ⊥ < x :=
 #align part_enat.ne_zero_iff PartEnat.ne_zero_iff
 
 theorem dom_of_lt {x y : PartEnat} : x < y → x.Dom :=
-  (PartEnat.cases_on x not_top_lt) fun _ _ => dom_coe _
+  PartEnat.cases_on x not_top_lt fun _ _ => dom_coe _
 #align part_enat.dom_of_lt PartEnat.dom_of_lt
 
 theorem top_eq_none : (⊤ : PartEnat) = none :=
@@ -402,7 +402,7 @@ theorem eq_top_iff_forall_le (x : PartEnat) : x = ⊤ ↔ ∀ n : ℕ, (n : Part
 #align part_enat.eq_top_iff_forall_le PartEnat.eq_top_iff_forall_le
 
 theorem pos_iff_one_le {x : PartEnat} : 0 < x ↔ 1 ≤ x :=
-  (PartEnat.cases_on x (by simp only [iff_true_iff, le_top, coe_lt_top, ← @Nat.cast_zero PartEnat]))
+  PartEnat.cases_on x (by simp only [iff_true_iff, le_top, coe_lt_top, ← @Nat.cast_zero PartEnat])
     fun n =>
     by
     rw [← Nat.cast_zero, ← Nat.cast_one, PartEnat.coe_lt_coe, PartEnat.coe_le_coe]
@@ -443,12 +443,12 @@ instance : CanonicallyOrderedAddMonoid PartEnat :=
   { PartEnat.semilatticeSup, PartEnat.orderBot,
     PartEnat.orderedAddCommMonoid with
     le_self_add := fun a b =>
-      (PartEnat.cases_on b (le_top.trans_eq (add_top _).symm)) fun b =>
-        (PartEnat.cases_on a (top_add _).ge) fun a =>
+      PartEnat.cases_on b (le_top.trans_eq (add_top _).symm) fun b =>
+        PartEnat.cases_on a (top_add _).ge fun a =>
           (coe_le_coe.2 le_self_add).trans_eq (Nat.cast_add _ _)
     exists_add_of_le := fun a b =>
-      (PartEnat.cases_on b fun _ => ⟨⊤, (add_top _).symm⟩) fun b =>
-        (PartEnat.cases_on a fun h => ((coe_lt_top _).not_le h).elim) fun a h =>
+      PartEnat.cases_on b (fun _ => ⟨⊤, (add_top _).symm⟩) fun b =>
+        PartEnat.cases_on a (fun h => ((coe_lt_top _).not_le h).elim) fun a h =>
           ⟨(b - a : ℕ), by
             rw [← Nat.cast_add, coe_inj, add_comm, tsub_add_cancel_of_le (coe_le_coe.1 h)]⟩ }
 
@@ -732,7 +732,7 @@ theorem find_le (n : ℕ) (h : P n) : find P ≤ n :=
 
 theorem find_eq_top_iff : find P = ⊤ ↔ ∀ n, ¬P n :=
   (eq_top_iff_forall_lt _).trans
-    ⟨fun h n => (lt_find_iff P n).mp (h n) _ le_rfl, fun h n => (lt_find P n) fun _ _ => h _⟩
+    ⟨fun h n => (lt_find_iff P n).mp (h n) _ le_rfl, fun h n => lt_find P n fun _ _ => h _⟩
 #align part_enat.find_eq_top_iff PartEnat.find_eq_top_iff
 
 end Find

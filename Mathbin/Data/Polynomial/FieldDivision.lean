@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module data.polynomial.field_division
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -329,7 +329,7 @@ section
 open EuclideanDomain
 
 theorem gcd_map [Field k] (f : R →+* k) : gcd (p.map f) (q.map f) = (gcd p q).map f :=
-  (GCD.induction p q fun x => by simp_rw [Polynomial.map_zero, EuclideanDomain.gcd_zero_left])
+  GCD.induction p q (fun x => by simp_rw [Polynomial.map_zero, EuclideanDomain.gcd_zero_left])
     fun x y hx ih => by rw [gcd_val, ← map_mod, ih, ← gcd_val]
 #align polynomial.gcd_map Polynomial.gcd_map
 
@@ -382,7 +382,7 @@ theorem mem_roots_map [CommRing k] [IsDomain k] {f : R →+* k} {x : k} (hp : p 
 theorem root_set_monomial [CommRing S] [IsDomain S] [Algebra R S] {n : ℕ} (hn : n ≠ 0) {a : R}
     (ha : a ≠ 0) : (monomial n a).rootSet S = {0} := by
   rw [root_set, map_monomial, roots_monomial ((_root_.map_ne_zero (algebraMap R S)).2 ha),
-    Multiset.to_finset_nsmul _ _ hn, Multiset.to_finset_singleton, Finset.coe_singleton]
+    Multiset.toFinset_nsmul _ _ hn, Multiset.toFinset_singleton, Finset.coe_singleton]
 #align polynomial.root_set_monomial Polynomial.root_set_monomial
 
 theorem root_set_C_mul_X_pow [CommRing S] [IsDomain S] [Algebra R S] {n : ℕ} (hn : n ≠ 0) {a : R}
@@ -401,7 +401,7 @@ theorem root_set_prod [CommRing S] [IsDomain S] [Algebra R S] {ι : Type _} (f :
     (s : Finset ι) (h : s.Prod f ≠ 0) : (s.Prod f).rootSet S = ⋃ i ∈ s, (f i).rootSet S :=
   by
   simp only [root_set, ← Finset.mem_coe]
-  rw [Polynomial.map_prod, roots_prod, Finset.bind_to_finset, s.val_to_finset, Finset.coe_bUnion]
+  rw [Polynomial.map_prod, roots_prod, Finset.bind_toFinset, s.val_to_finset, Finset.coe_bunionᵢ]
   rwa [← Polynomial.map_prod, Ne, map_eq_zero]
 #align polynomial.root_set_prod Polynomial.root_set_prod
 

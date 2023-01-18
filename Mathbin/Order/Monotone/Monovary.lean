@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.monotone.monovary
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -135,7 +135,7 @@ theorem antivaryOn_univ : AntivaryOn f g univ ↔ Antivary f g :=
 lean 3 declaration is
   forall {ι : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u3} β] {f : ι -> α} {g : ι -> β} {s : Set.{u1} ι} {t : Set.{u1} ι}, (HasSubset.Subset.{u1} (Set.{u1} ι) (Set.hasSubset.{u1} ι) s t) -> (MonovaryOn.{u1, u2, u3} ι α β _inst_1 _inst_2 f g t) -> (MonovaryOn.{u1, u2, u3} ι α β _inst_1 _inst_2 f g s)
 but is expected to have type
-  forall {ι : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : ι -> α} {g : ι -> β} {s : Set.{u3} ι} {t : Set.{u3} ι}, (HasSubset.Subset.{u3} (Set.{u3} ι) (Set.instHasSubsetSet_1.{u3} ι) s t) -> (MonovaryOn.{u3, u2, u1} ι α β _inst_1 _inst_2 f g t) -> (MonovaryOn.{u3, u2, u1} ι α β _inst_1 _inst_2 f g s)
+  forall {ι : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : ι -> α} {g : ι -> β} {s : Set.{u3} ι} {t : Set.{u3} ι}, (HasSubset.Subset.{u3} (Set.{u3} ι) (Set.instHasSubsetSet.{u3} ι) s t) -> (MonovaryOn.{u3, u2, u1} ι α β _inst_1 _inst_2 f g t) -> (MonovaryOn.{u3, u2, u1} ι α β _inst_1 _inst_2 f g s)
 Case conversion may be inaccurate. Consider using '#align monovary_on.subset MonovaryOn.subsetₓ'. -/
 protected theorem MonovaryOn.subset (hst : s ⊆ t) (h : MonovaryOn f g t) : MonovaryOn f g s :=
   fun i hi j hj => h (hst hi) (hst hj)
@@ -145,7 +145,7 @@ protected theorem MonovaryOn.subset (hst : s ⊆ t) (h : MonovaryOn f g t) : Mon
 lean 3 declaration is
   forall {ι : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u3} β] {f : ι -> α} {g : ι -> β} {s : Set.{u1} ι} {t : Set.{u1} ι}, (HasSubset.Subset.{u1} (Set.{u1} ι) (Set.hasSubset.{u1} ι) s t) -> (AntivaryOn.{u1, u2, u3} ι α β _inst_1 _inst_2 f g t) -> (AntivaryOn.{u1, u2, u3} ι α β _inst_1 _inst_2 f g s)
 but is expected to have type
-  forall {ι : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : ι -> α} {g : ι -> β} {s : Set.{u3} ι} {t : Set.{u3} ι}, (HasSubset.Subset.{u3} (Set.{u3} ι) (Set.instHasSubsetSet_1.{u3} ι) s t) -> (AntivaryOn.{u3, u2, u1} ι α β _inst_1 _inst_2 f g t) -> (AntivaryOn.{u3, u2, u1} ι α β _inst_1 _inst_2 f g s)
+  forall {ι : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : ι -> α} {g : ι -> β} {s : Set.{u3} ι} {t : Set.{u3} ι}, (HasSubset.Subset.{u3} (Set.{u3} ι) (Set.instHasSubsetSet.{u3} ι) s t) -> (AntivaryOn.{u3, u2, u1} ι α β _inst_1 _inst_2 f g t) -> (AntivaryOn.{u3, u2, u1} ι α β _inst_1 _inst_2 f g s)
 Case conversion may be inaccurate. Consider using '#align antivary_on.subset AntivaryOn.subsetₓ'. -/
 protected theorem AntivaryOn.subset (hst : s ⊆ t) (h : AntivaryOn f g t) : AntivaryOn f g s :=
   fun i hi j hj => h (hst hi) (hst hj)

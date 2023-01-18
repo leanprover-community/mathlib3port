@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module model_theory.satisfiability
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -217,8 +217,8 @@ theorem is_satisfiable_Union_iff_is_satisfiable_Union_finset {ι : Type _} (T : 
         fun h => _⟩
     rw [is_satisfiable_iff_is_finitely_satisfiable]
     intro s hs
-    rw [Set.Union_eq_Union_finset] at hs
-    obtain ⟨t, ht⟩ := Directed.exists_mem_subset_of_finset_subset_bUnion _ hs
+    rw [Set.unionᵢ_eq_unionᵢ_finset] at hs
+    obtain ⟨t, ht⟩ := Directed.exists_mem_subset_of_finset_subset_bunionᵢ _ hs
     · exact (h t).mono ht
     ·
       exact
@@ -462,7 +462,7 @@ theorem IsMaximal.mem_or_not_mem (h : T.IsMaximal) (φ : L.Sentence) : φ ∈ T 
 theorem IsMaximal.mem_of_models (h : T.IsMaximal) {φ : L.Sentence} (hφ : T ⊨ φ) : φ ∈ T :=
   by
   refine' (h.mem_or_not_mem φ).resolve_right fun con => _
-  rw [models_iff_not_satisfiable, Set.union_singleton, Set.insert_eq_of_mem con] at hφ
+  rw [models_iff_not_satisfiable, Set.union_singleton, Set.insert_eq_of_mem Con] at hφ
   exact hφ h.1
 #align
   first_order.language.Theory.is_maximal.mem_of_models FirstOrder.Language.TheoryCat.IsMaximal.mem_of_models
@@ -765,7 +765,7 @@ theorem Categorical.is_complete (h : κ.Categorical T) (h1 : ℵ₀ ≤ κ)
     rw [Theory.models_sentence_iff, Theory.models_sentence_iff]
     by_contra con
     push_neg  at con
-    obtain ⟨⟨MF, hMF⟩, MT, hMT⟩ := con
+    obtain ⟨⟨MF, hMF⟩, MT, hMT⟩ := Con
     rw [sentence.realize_not, not_not] at hMT
     refine' hMF _
     haveI := hT MT

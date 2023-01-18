@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 
 ! This file was ported from Lean 3 source module algebra.monoid_algebra.degree
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,7 +70,7 @@ theorem sup_support_mul_le {degb : A → B} (degbm : ∀ {a b}, degb (a + b) ≤
     (f * g).support.sup degb ≤ f.support.sup degb + g.support.sup degb :=
   by
   refine' (Finset.sup_mono <| support_mul _ _).trans _
-  simp_rw [Finset.sup_bUnion, Finset.sup_singleton]
+  simp_rw [Finset.sup_bunionᵢ, Finset.sup_singleton]
   refine' Finset.sup_le fun fd fds => Finset.sup_le fun gd gds => degbm.trans <| add_le_add _ _ <;>
     exact Finset.le_sup ‹_›
 #align add_monoid_algebra.sup_support_mul_le AddMonoidAlgebra.sup_support_mul_le
@@ -115,9 +115,9 @@ theorem le_inf_support_list_prod (degt0 : 0 ≤ degt 0)
 theorem sup_support_pow_le (degb0 : degb 0 ≤ 0) (degbm : ∀ a b, degb (a + b) ≤ degb a + degb b)
     (n : ℕ) (f : AddMonoidAlgebra R A) : (f ^ n).support.sup degb ≤ n • f.support.sup degb :=
   by
-  rw [← List.prod_repeat, ← List.sum_repeat]
+  rw [← List.prod_replicate, ← List.sum_replicate]
   refine' (sup_support_list_prod_le degb0 degbm _).trans_eq _
-  rw [List.map_repeat]
+  rw [List.map_replicate]
 #align add_monoid_algebra.sup_support_pow_le AddMonoidAlgebra.sup_support_pow_le
 
 theorem le_inf_support_pow (degt0 : 0 ≤ degt 0) (degtm : ∀ a b, degt a + degt b ≤ degt (a + b))
@@ -142,7 +142,7 @@ theorem sup_support_multiset_prod_le (degb0 : degb 0 ≤ 0)
     (degbm : ∀ a b, degb (a + b) ≤ degb a + degb b) (m : Multiset (AddMonoidAlgebra R A)) :
     m.Prod.support.sup degb ≤ (m.map fun f : AddMonoidAlgebra R A => f.support.sup degb).Sum :=
   by
-  induction m using Quot.induction_on
+  induction m using Quot.inductionOn
   rw [Multiset.quot_mk_to_coe'', Multiset.coe_map, Multiset.coe_sum, Multiset.coe_prod]
   exact sup_support_list_prod_le degb0 degbm m
 #align add_monoid_algebra.sup_support_multiset_prod_le AddMonoidAlgebra.sup_support_multiset_prod_le

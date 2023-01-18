@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module category_theory.sites.compatible_plus
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -177,7 +177,7 @@ def plusFunctorWhiskerLeftIso (P : Cᵒᵖ ⥤ D)
     [∀ (F : D ⥤ E) (X : C) (W : J.cover X) (P : Cᵒᵖ ⥤ D),
         PreservesLimit (W.index P).multicospan F] :
     (whiskeringLeft _ _ E).obj (J.plusObj P) ≅ (whiskeringLeft _ _ _).obj P ⋙ J.plusFunctor E :=
-  (NatIso.ofComponents fun X => plusCompIso _ _ _) fun F G η => plus_comp_iso_whisker_left _ _ _
+  NatIso.ofComponents (fun X => plusCompIso _ _ _) fun F G η => plus_comp_iso_whisker_left _ _ _
 #align
   category_theory.grothendieck_topology.plus_functor_whisker_left_iso CategoryTheory.GrothendieckTopology.plusFunctorWhiskerLeftIso
 
@@ -212,7 +212,7 @@ theorem plus_comp_iso_whisker_right {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) :
 def plusFunctorWhiskerRightIso :
     J.plusFunctor D ⋙ (whiskeringRight _ _ _).obj F ≅
       (whiskeringRight _ _ _).obj F ⋙ J.plusFunctor E :=
-  (NatIso.ofComponents fun P => J.plusCompIso _ _) fun P Q η => plus_comp_iso_whisker_right _ _ _
+  NatIso.ofComponents (fun P => J.plusCompIso _ _) fun P Q η => plus_comp_iso_whisker_right _ _ _
 #align
   category_theory.grothendieck_topology.plus_functor_whisker_right_iso CategoryTheory.GrothendieckTopology.plusFunctorWhiskerRightIso
 

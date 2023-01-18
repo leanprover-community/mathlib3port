@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.local_homeomorph
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1184,8 +1184,8 @@ variable {ι : Type _} [Fintype ι] {Xi Yi : ι → Type _} [∀ i, TopologicalS
 def pi : LocalHomeomorph (∀ i, Xi i) (∀ i, Yi i)
     where
   toLocalEquiv := LocalEquiv.pi fun i => (ei i).toLocalEquiv
-  open_source := (is_open_set_pi finite_univ) fun i hi => (ei i).open_source
-  open_target := (is_open_set_pi finite_univ) fun i hi => (ei i).open_target
+  open_source := is_open_set_pi finite_univ fun i hi => (ei i).open_source
+  open_target := is_open_set_pi finite_univ fun i hi => (ei i).open_target
   continuous_to_fun :=
     continuous_on_pi.2 fun i =>
       (ei i).ContinuousOn.comp (continuous_apply _).ContinuousOn fun f hf => hf i trivial

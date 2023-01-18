@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module algebraic_geometry.prime_spectrum.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -991,7 +991,7 @@ theorem le_iff_specializes (x y : PrimeSpectrum R) : x ≤ y ↔ x ⤳ y :=
 /-- `nhds` as an order embedding. -/
 @[simps (config := { fullyApplied := true })]
 def nhdsOrderEmbedding : PrimeSpectrum R ↪o Filter (PrimeSpectrum R) :=
-  (OrderEmbedding.ofMapLeIff nhds) fun a b => (le_iff_specializes a b).symm
+  OrderEmbedding.ofMapLeIff nhds fun a b => (le_iff_specializes a b).symm
 #align prime_spectrum.nhds_order_embedding PrimeSpectrum.nhdsOrderEmbedding
 
 instance : T0Space (PrimeSpectrum R) :=

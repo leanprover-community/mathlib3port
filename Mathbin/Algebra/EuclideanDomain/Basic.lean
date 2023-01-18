@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Louis Carlin, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.euclidean_domain.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -340,10 +340,10 @@ private def P (a b : R) : R × R × R → Prop
 #print EuclideanDomain.xgcdAux_P /-
 theorem xgcdAux_P (a b : R) {r r' : R} :
     ∀ {s t s' t'}, P a b (r, s, t) → P a b (r', s', t') → P a b (xgcdAux r s t r' s' t') :=
-  (GCD.induction r r'
-      (by
-        intros
-        simpa only [xgcd_zero_left] ))
+  GCD.induction r r'
+    (by
+      intros
+      simpa only [xgcd_zero_left] )
     fun x y h IH s t s' t' p p' => by
     rw [xgcd_aux_rec h]; refine' IH _ p; unfold P at p p'⊢
     rw [mul_sub, mul_sub, add_sub, sub_add_eq_add_sub, ← p', sub_sub, mul_comm _ s, ← mul_assoc,

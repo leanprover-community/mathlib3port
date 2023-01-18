@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Benjamin Davidson
 
 ! This file was ported from Lean 3 source module analysis.special_functions.trigonometric.inverse_deriv
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -144,7 +144,7 @@ theorem cont_diff_at_arcsin_iff {x : ℝ} {n : ℕ∞} :
     or_iff_not_imp_left.2 fun hn =>
       differentiable_at_arcsin.1 <| h.DifferentiableAt <| Enat.one_le_iff_ne_zero.2 hn,
     fun h =>
-    (h.elim fun hn => hn.symm ▸ (cont_diff_zero.2 continuous_arcsin).ContDiffAt) fun hx =>
+    h.elim (fun hn => hn.symm ▸ (cont_diff_zero.2 continuous_arcsin).ContDiffAt) fun hx =>
       cont_diff_at_arcsin hx.1 hx.2⟩
 #align real.cont_diff_at_arcsin_iff Real.cont_diff_at_arcsin_iff
 

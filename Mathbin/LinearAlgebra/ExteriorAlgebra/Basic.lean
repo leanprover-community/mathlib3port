@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhangir Azerbayev, Adam Topaz, Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.exterior_algebra.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -259,7 +259,7 @@ theorem ι_mul_prod_list {n : ℕ} (f : Fin n → M) (i : Fin n) :
   by
   induction' n with n hn
   · exact i.elim0
-  · rw [List.of_fn_succ, List.prod_cons, ← mul_assoc]
+  · rw [List.ofFn_succ, List.prod_cons, ← mul_assoc]
     by_cases h : i = 0
     · rw [h, ι_sq_zero, zero_mul]
     · replace hn := congr_arg ((· * ·) <| ι R <| f 0) (hn (fun i => f <| Fin.succ i) (i.pred h))
@@ -287,7 +287,7 @@ def ιMulti (n : ℕ) : AlternatingMap R M (ExteriorAlgebra R M) (Fin n) :=
       clear hxy
       induction' n with n hn generalizing x y
       · exact x.elim0
-      · rw [List.of_fn_succ, List.prod_cons]
+      · rw [List.ofFn_succ, List.prod_cons]
         by_cases hx : x = 0
         · rw [hx] at hfxy h
           rw [hfxy, ← Fin.succ_pred y (ne_of_lt h).symm]
@@ -316,7 +316,7 @@ theorem ι_multi_zero_apply (v : Fin 0 → M) : ιMulti R 0 v = 1 :=
 @[simp]
 theorem ι_multi_succ_apply {n : ℕ} (v : Fin n.succ → M) :
     ιMulti R _ v = ι R (v 0) * ιMulti R _ (Matrix.vecTail v) :=
-  (congr_arg List.prod (List.of_fn_succ _)).trans List.prod_cons
+  (congr_arg List.prod (List.ofFn_succ _)).trans List.prod_cons
 #align exterior_algebra.ι_multi_succ_apply ExteriorAlgebra.ι_multi_succ_apply
 
 theorem ι_multi_succ_curry_left {n : ℕ} (m : M) :

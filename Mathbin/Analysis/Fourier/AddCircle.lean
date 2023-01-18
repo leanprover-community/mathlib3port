@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth, David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.fourier.add_circle
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -411,6 +411,30 @@ theorem fourierCoeffOn.const_mul {a b : ℝ} (f : ℝ → ℂ) (c : ℂ) (n : �
     fourierCoeffOn hab (fun x => c * f x) n = c * fourierCoeffOn hab f n :=
   fourierCoeffOn.const_smul _ _ _ _
 #align fourier_coeff_on.const_mul fourierCoeffOn.const_mul
+
+include hT
+
+theorem fourier_coeff_lift_Ioc_eq {a : ℝ} (f : ℝ → ℂ) (n : ℤ) :
+    fourierCoeff (AddCircle.liftIoc T a f) n = fourierCoeffOn (lt_add_of_pos_right a hT.out) f n :=
+  by
+  rw [fourier_coeff_on_eq_integral, fourier_coeff_eq_interval_integral, add_sub_cancel' a T]
+  congr 1
+  refine' intervalIntegral.integral_congr_ae (ae_of_all _ fun x hx => _)
+  rw [lift_Ioc_coe_apply]
+  rwa [uIoc_of_le (lt_add_of_pos_right a hT.out).le] at hx
+#align fourier_coeff_lift_Ioc_eq fourier_coeff_lift_Ioc_eq
+
+theorem fourier_coeff_lift_Ico_eq {a : ℝ} (f : ℝ → ℂ) (n : ℤ) :
+    fourierCoeff (AddCircle.liftIco T a f) n = fourierCoeffOn (lt_add_of_pos_right a hT.out) f n :=
+  by
+  rw [fourier_coeff_on_eq_integral, fourier_coeff_eq_interval_integral _ _ a, add_sub_cancel' a T]
+  congr 1
+  simp_rw [intervalIntegral.integral_of_le (lt_add_of_pos_right a hT.out).le,
+    integral_Ioc_eq_integral_Ioo]
+  refine' set_integral_congr measurable_set_Ioo fun x hx => _
+  dsimp only
+  rw [lift_Ico_coe_apply (Ioo_subset_Ico_self hx)]
+#align fourier_coeff_lift_Ico_eq fourier_coeff_lift_Ico_eq
 
 end fourierCoeff
 

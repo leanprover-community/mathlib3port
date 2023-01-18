@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module logic.is_empty
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -307,6 +307,6 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align function.extend_of_empty Function.extend_of_isEmptyₓ'. -/
 theorem Function.extend_of_isEmpty [IsEmpty α] (f : α → β) (g : α → γ) (h : β → γ) :
     Function.extend f g h = h :=
-  funext fun x => (Function.extend_apply' _ _ _) fun ⟨a, h⟩ => isEmptyElim a
+  funext fun x => Function.extend_apply' _ _ _ fun ⟨a, h⟩ => isEmptyElim a
 #align function.extend_of_empty Function.extend_of_isEmpty
 

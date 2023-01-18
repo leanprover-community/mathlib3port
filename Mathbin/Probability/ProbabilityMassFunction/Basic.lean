@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Devon Tuma
 
 ! This file was ported from Lean 3 source module probability.probability_mass_function.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -116,7 +116,7 @@ theorem apply_eq_one_iff (p : Pmf α) (a : α) : p a = 1 ↔ p.support = {a} :=
     _ = (∑' b, ite (b = a) (p b) 0) + ∑' b, ite (b = a) 0 (p b) :=
       by
       congr
-      exact symm ((tsum_eq_single a) fun b hb => if_neg hb)
+      exact symm (tsum_eq_single a fun b hb => if_neg hb)
     _ = ∑' b, ite (b = a) (p b) 0 + ite (b = a) 0 (p b) := ennreal.tsum_add.symm
     _ = ∑' b, p b := tsum_congr fun b => by split_ifs <;> simp only [zero_add, add_zero, le_rfl]
     
@@ -164,7 +164,7 @@ theorem to_outer_measure_apply_finset (s : Finset α) : p.toOuterMeasure s = ∑
 
 theorem to_outer_measure_apply_singleton (a : α) : p.toOuterMeasure {a} = p a :=
   by
-  refine' (p.to_outer_measure_apply {a}).trans (((tsum_eq_single a) fun b hb => _).trans _)
+  refine' (p.to_outer_measure_apply {a}).trans ((tsum_eq_single a fun b hb => _).trans _)
   · exact ite_eq_right_iff.2 fun hb' => False.elim <| hb hb'
   · exact ite_eq_left_iff.2 fun ha' => False.elim <| ha' rfl
 #align pmf.to_outer_measure_apply_singleton Pmf.to_outer_measure_apply_singleton

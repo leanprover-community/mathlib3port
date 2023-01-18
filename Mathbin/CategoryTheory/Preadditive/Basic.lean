@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel, Jakob von Raumer
 
 ! This file was ported from Lean 3 source module category_theory.preadditive.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -133,19 +133,19 @@ instance (X : C) : Ring (EndCat X) :=
 
 /-- Composition by a fixed left argument as a group homomorphism -/
 def leftComp {P Q : C} (R : C) (f : P ⟶ Q) : (Q ⟶ R) →+ (P ⟶ R) :=
-  (mk' fun g => f ≫ g) fun g g' => by simp
+  mk' (fun g => f ≫ g) fun g g' => by simp
 #align category_theory.preadditive.left_comp CategoryTheory.Preadditive.leftComp
 
 /-- Composition by a fixed right argument as a group homomorphism -/
 def rightComp (P : C) {Q R : C} (g : Q ⟶ R) : (P ⟶ Q) →+ (P ⟶ R) :=
-  (mk' fun f => f ≫ g) fun f f' => by simp
+  mk' (fun f => f ≫ g) fun f f' => by simp
 #align category_theory.preadditive.right_comp CategoryTheory.Preadditive.rightComp
 
 variable {P Q R : C} (f f' : P ⟶ Q) (g g' : Q ⟶ R)
 
 /-- Composition as a bilinear group homomorphism -/
 def compHom : (P ⟶ Q) →+ (Q ⟶ R) →+ (P ⟶ R) :=
-  (AddMonoidHom.mk' fun f => leftComp _ f) fun f₁ f₂ =>
+  AddMonoidHom.mk' (fun f => leftComp _ f) fun f₁ f₂ =>
     AddMonoidHom.ext fun g => (rightComp _ g).map_add f₁ f₂
 #align category_theory.preadditive.comp_hom CategoryTheory.Preadditive.compHom
 
@@ -336,7 +336,7 @@ theorem kernel_fork_of_fork_of_ι {P : C} (ι : P ⟶ X) (w : ι ≫ f = ι ≫ 
 /-- A kernel of `f - g` is an equalizer of `f` and `g`. -/
 def isLimitForkOfKernelFork {c : KernelFork (f - g)} (i : IsLimit c) :
     IsLimit (forkOfKernelFork c) :=
-  (Fork.IsLimit.mk' _) fun s =>
+  Fork.IsLimit.mk' _ fun s =>
     ⟨i.lift (kernelForkOfFork s), i.fac _ _, fun m h => by apply fork.is_limit.hom_ext i <;> tidy⟩
 #align
   category_theory.preadditive.is_limit_fork_of_kernel_fork CategoryTheory.Preadditive.isLimitForkOfKernelFork
@@ -350,7 +350,7 @@ theorem is_limit_fork_of_kernel_fork_lift {c : KernelFork (f - g)} (i : IsLimit 
 
 /-- An equalizer of `f` and `g` is a kernel of `f - g`. -/
 def isLimitKernelForkOfFork {c : Fork f g} (i : IsLimit c) : IsLimit (kernelForkOfFork c) :=
-  (Fork.IsLimit.mk' _) fun s =>
+  Fork.IsLimit.mk' _ fun s =>
     ⟨i.lift (forkOfKernelFork s), i.fac _ _, fun m h => by apply fork.is_limit.hom_ext i <;> tidy⟩
 #align
   category_theory.preadditive.is_limit_kernel_fork_of_fork CategoryTheory.Preadditive.isLimitKernelForkOfFork
@@ -411,7 +411,7 @@ theorem cokernel_cofork_of_cofork_of_π {P : C} (π : Y ⟶ P) (w : f ≫ π = g
 /-- A cokernel of `f - g` is a coequalizer of `f` and `g`. -/
 def isColimitCoforkOfCokernelCofork {c : CokernelCofork (f - g)} (i : IsColimit c) :
     IsColimit (coforkOfCokernelCofork c) :=
-  (Cofork.IsColimit.mk' _) fun s =>
+  Cofork.IsColimit.mk' _ fun s =>
     ⟨i.desc (cokernelCoforkOfCofork s), i.fac _ _, fun m h => by
       apply cofork.is_colimit.hom_ext i <;> tidy⟩
 #align
@@ -428,7 +428,7 @@ theorem is_colimit_cofork_of_cokernel_cofork_desc {c : CokernelCofork (f - g)} (
 /-- A coequalizer of `f` and `g` is a cokernel of `f - g`. -/
 def isColimitCokernelCoforkOfCofork {c : Cofork f g} (i : IsColimit c) :
     IsColimit (cokernelCoforkOfCofork c) :=
-  (Cofork.IsColimit.mk' _) fun s =>
+  Cofork.IsColimit.mk' _ fun s =>
     ⟨i.desc (coforkOfCokernelCofork s), i.fac _ _, fun m h => by
       apply cofork.is_colimit.hom_ext i <;> tidy⟩
 #align

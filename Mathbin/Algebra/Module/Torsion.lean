@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Pierre-Alexandre Bazin
 
 ! This file was ported from Lean 3 source module algebra.module.torsion
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -442,7 +442,7 @@ theorem supr_torsion_by_ideal_eq_torsion_by_infi :
 theorem sup_indep_torsion_by_ideal : S.SupIndep fun i => torsionBySet R M <| p i :=
   fun T hT i hi hiT =>
   by
-  rw [disjoint_iff, Finset.sup_eq_supr,
+  rw [disjoint_iff, Finset.sup_eq_supᵢ,
     supr_torsion_by_ideal_eq_torsion_by_infi fun i hi j hj ij => hp (hT hi) (hT hj) ij]
   have :=
     @GaloisConnection.u_inf _ _ (OrderDual.toDual _) (OrderDual.toDual _) _ _ _ _ (torsion_gc R M)
@@ -461,7 +461,7 @@ theorem supr_torsion_by_eq_torsion_by_prod :
     (⨆ i ∈ S, torsionBy R M <| q i) = torsionBy R M (∏ i in S, q i) :=
   by
   rw [← torsion_by_span_singleton_eq, Ideal.submodule_span_eq, ←
-    Ideal.finset_inf_span_singleton _ _ hq, Finset.inf_eq_infi, ←
+    Ideal.finset_inf_span_singleton _ _ hq, Finset.inf_eq_infᵢ, ←
     supr_torsion_by_ideal_eq_torsion_by_infi]
   · congr
     ext : 1
@@ -502,8 +502,8 @@ theorem torsion_by_set_is_internal {p : ι → Ideal R}
     (hM : Module.IsTorsionBySet R M (⨅ i ∈ S, p i : Ideal R)) :
     DirectSum.IsInternal fun i : S => torsionBySet R M <| p i :=
   DirectSum.is_internal_submodule_of_independent_of_supr_eq_top
-    (CompleteLattice.independent_iff_sup_indep.mpr <| sup_indep_torsion_by_ideal hp)
-    (((supᵢ_subtype'' ↑S) fun i => torsionBySet R M <| p i).trans <|
+    (CompleteLattice.independent_iff_supIndep.mpr <| sup_indep_torsion_by_ideal hp)
+    ((supᵢ_subtype'' ↑S fun i => torsionBySet R M <| p i).trans <|
       (supr_torsion_by_ideal_eq_torsion_by_infi hp).trans <|
         (Module.is_torsion_by_set_iff_torsion_by_set_eq_top _).mp hM)
 #align submodule.torsion_by_set_is_internal Submodule.torsion_by_set_is_internal
@@ -515,7 +515,7 @@ theorem torsion_by_is_internal {q : ι → R} (hq : (S : Set ι).Pairwise <| (Is
     DirectSum.IsInternal fun i : S => torsionBy R M <| q i :=
   by
   rw [← Module.is_torsion_by_span_singleton_iff, Ideal.submodule_span_eq, ←
-    Ideal.finset_inf_span_singleton _ _ hq, Finset.inf_eq_infi] at hM
+    Ideal.finset_inf_span_singleton _ _ hq, Finset.inf_eq_infᵢ] at hM
   convert
     torsion_by_set_is_internal
       (fun i hi j hj ij => (Ideal.sup_eq_top_iff_is_coprime (q i) _).mpr <| hq hi hj ij) hM
@@ -533,7 +533,7 @@ include hM
 /-- can't be an instance because hM can't be inferred -/
 def IsTorsionBySet.hasSmul : SMul (R ⧸ I) M
     where smul b x :=
-    (Quotient.liftOn' b (· • x)) fun b₁ b₂ h =>
+    Quotient.liftOn' b (· • x) fun b₁ b₂ h =>
       by
       show b₁ • x = b₂ • x
       have : (-b₁ + b₂) • x = 0 := @hM x ⟨_, quotient_add_group.left_rel_apply.mp h⟩
@@ -556,7 +556,7 @@ def IsTorsionBySet.module : Module (R ⧸ I) M :=
 
 instance IsTorsionBySet.is_scalar_tower {S : Type _} [SMul S R] [SMul S M] [IsScalarTower S R M]
     [IsScalarTower S R R] : @IsScalarTower S (R ⧸ I) M _ (IsTorsionBySet.module hM).toHasSmul _
-    where smul_assoc b d x := (Quotient.inductionOn' d) fun c => (smul_assoc b c x : _)
+    where smul_assoc b d x := Quotient.inductionOn' d fun c => (smul_assoc b c x : _)
 #align module.is_torsion_by_set.is_scalar_tower Module.IsTorsionBySet.is_scalar_tower
 
 omit hM
@@ -564,7 +564,7 @@ omit hM
 instance : Module (R ⧸ I) (M ⧸ I • (⊤ : Submodule R M)) :=
   IsTorsionBySet.module fun x r =>
     by
-    induction x using Quotient.induction_on
+    induction x using Quotient.inductionOn
     refine' (Submodule.Quotient.mk_eq_zero _).mpr (Submodule.smul_mem_smul r.prop _)
     trivial
 
@@ -748,7 +748,7 @@ variable [CommRing R] [AddCommGroup M] [Module R M]
 @[simp]
 theorem torsion_eq_bot : torsion R (M ⧸ torsion R M) = ⊥ :=
   eq_bot_iff.mpr fun z =>
-    (Quotient.inductionOn' z) fun x ⟨a, hax⟩ =>
+    Quotient.inductionOn' z fun x ⟨a, hax⟩ =>
       by
       rw [Quotient.mk'_eq_mk, ← quotient.mk_smul, quotient.mk_eq_zero] at hax
       rw [mem_bot, Quotient.mk'_eq_mk, quotient.mk_eq_zero]

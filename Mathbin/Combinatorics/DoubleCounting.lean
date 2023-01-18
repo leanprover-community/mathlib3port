@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module combinatorics.double_counting
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -118,8 +118,8 @@ theorem card_mul_le_card_mul' [∀ a b, Decidable (r a b)]
 theorem card_mul_eq_card_mul [∀ a b, Decidable (r a b)]
     (hm : ∀ a ∈ s, (t.bipartiteAbove r a).card = m)
     (hn : ∀ b ∈ t, (s.bipartiteBelow r b).card = n) : s.card * m = t.card * n :=
-  ((card_mul_le_card_mul _ fun a ha => (hm a ha).ge) fun b hb => (hn b hb).le).antisymm <|
-    (card_mul_le_card_mul' _ fun a ha => (hn a ha).ge) fun b hb => (hm b hb).le
+  (card_mul_le_card_mul _ (fun a ha => (hm a ha).ge) fun b hb => (hn b hb).le).antisymm <|
+    card_mul_le_card_mul' _ (fun a ha => (hn a ha).ge) fun b hb => (hm b hb).le
 #align finset.card_mul_eq_card_mul Finset.card_mul_eq_card_mul
 
 theorem card_le_card_of_forall_subsingleton (hs : ∀ a ∈ s, ∃ b, b ∈ t ∧ r a b)
@@ -154,14 +154,12 @@ variable [Fintype α] [Fintype β] {r : α → β → Prop}
 
 theorem card_le_card_of_left_total_unique (h₁ : LeftTotal r) (h₂ : LeftUnique r) :
     Fintype.card α ≤ Fintype.card β :=
-  (card_le_card_of_forall_subsingleton r (by simpa using h₁)) fun b _ a₁ ha₁ a₂ ha₂ =>
-    h₂ ha₁.2 ha₂.2
+  card_le_card_of_forall_subsingleton r (by simpa using h₁) fun b _ a₁ ha₁ a₂ ha₂ => h₂ ha₁.2 ha₂.2
 #align fintype.card_le_card_of_left_total_unique Fintype.card_le_card_of_left_total_unique
 
 theorem card_le_card_of_right_total_unique (h₁ : RightTotal r) (h₂ : RightUnique r) :
     Fintype.card β ≤ Fintype.card α :=
-  (card_le_card_of_forall_subsingleton' r (by simpa using h₁)) fun b _ a₁ ha₁ a₂ ha₂ =>
-    h₂ ha₁.2 ha₂.2
+  card_le_card_of_forall_subsingleton' r (by simpa using h₁) fun b _ a₁ ha₁ a₂ ha₂ => h₂ ha₁.2 ha₂.2
 #align fintype.card_le_card_of_right_total_unique Fintype.card_le_card_of_right_total_unique
 
 end Fintype

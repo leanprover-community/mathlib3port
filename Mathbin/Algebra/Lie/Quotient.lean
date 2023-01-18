@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.quotient
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -89,7 +89,7 @@ theorem is_quotient_mk (m : M) : Quotient.mk' m = (mk m : M ⧸ N) :=
 /-- Given a Lie module `M` over a Lie algebra `L`, together with a Lie submodule `N ⊆ M`, there
 is a natural linear map from `L` to the endomorphisms of `M` leaving `N` invariant. -/
 def lieSubmoduleInvariant : L →ₗ[R] Submodule.compatibleMaps N.toSubmodule N.toSubmodule :=
-  (LinearMap.codRestrict _ (LieModule.toEndomorphism R L M)) fun _ _ => N.lie_mem
+  LinearMap.codRestrict _ (LieModule.toEndomorphism R L M) fun _ _ => N.lie_mem
 #align lie_submodule.quotient.lie_submodule_invariant LieSubmodule.Quotient.lieSubmoduleInvariant
 
 variable (N)

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.presheafed_space.gluing
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -505,7 +505,7 @@ Vᵢⱼ ⟶ Uᵢ
  Uⱼ ⟶ X
 -/
 def vPullbackConeIsLimit (i j : D.J) : IsLimit (𝖣.vPullbackCone i j) :=
-  (PullbackCone.isLimitAux' _) fun s => by
+  PullbackCone.isLimitAux' _ fun s => by
     refine' ⟨_, _, _, _⟩
     · refine' PresheafedSpace.is_open_immersion.lift (D.f i j) s.fst _
       erw [← D.to_Top_glue_data.preimage_range j i]

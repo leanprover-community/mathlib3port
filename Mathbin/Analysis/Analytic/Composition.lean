@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Johan Commelin
 
 ! This file was ported from Lean 3 source module analysis.analytic.composition
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -620,7 +620,7 @@ def compPartialSumSource (m M N : ℕ) : Finset (Σn, Fin n → ℕ) :=
 theorem mem_comp_partial_sum_source_iff (m M N : ℕ) (i : Σn, Fin n → ℕ) :
     i ∈ compPartialSumSource m M N ↔ (m ≤ i.1 ∧ i.1 < M) ∧ ∀ a : Fin i.1, 1 ≤ i.2 a ∧ i.2 a < N :=
   by
-  simp only [comp_partial_sum_source, Finset.mem_Ico, Fintype.mem_pi_finset, Finset.mem_sigma,
+  simp only [comp_partial_sum_source, Finset.mem_Ico, Fintype.mem_piFinset, Finset.mem_sigma,
     iff_self_iff]
 #align
   formal_multilinear_series.mem_comp_partial_sum_source_iff FormalMultilinearSeries.mem_comp_partial_sum_source_iff
@@ -1205,7 +1205,7 @@ def sigmaEquivSigmaPi (n : ℕ) :
         blocks_sum := by simp [sum_of_fn, Composition.blocks_sum, Composition.sum_blocks_fun] },
       { blocks := ofFn fun j => (i.2 j).length
         blocks_pos :=
-          forall_mem_of_fn_iff.2 fun j =>
+          forall_mem_ofFn_iff.2 fun j =>
             Composition.length_pos_of_pos _ (Composition.blocks_pos' _ _ _)
         blocks_sum := by
           dsimp only [Composition.length]

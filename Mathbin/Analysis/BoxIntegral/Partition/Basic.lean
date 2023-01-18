@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.box_integral.partition.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -259,7 +259,7 @@ theorem Union_bot : (⊥ : Prepartition I).union = ∅ :=
 #align box_integral.prepartition.Union_bot BoxIntegral.Prepartition.Union_bot
 
 theorem subset_Union (h : J ∈ π) : ↑J ⊆ π.union :=
-  subset_bUnion_of_mem h
+  subset_bunionᵢ_of_mem h
 #align box_integral.prepartition.subset_Union BoxIntegral.Prepartition.subset_Union
 
 theorem Union_subset : π.union ⊆ I :=
@@ -314,13 +314,14 @@ function. -/
 def bUnion (πi : ∀ J : Box ι, Prepartition J) : Prepartition I
     where
   boxes := π.boxes.bUnion fun J => (πi J).boxes
-  le_of_mem' J hJ := by
-    simp only [Finset.mem_bUnion, exists_prop, mem_boxes] at hJ
+  le_of_mem' J hJ :=
+    by
+    simp only [Finset.mem_bunionᵢ, exists_prop, mem_boxes] at hJ
     rcases hJ with ⟨J', hJ', hJ⟩
     exact ((πi J').le_of_mem hJ).trans (π.le_of_mem hJ')
   PairwiseDisjoint :=
     by
-    simp only [Set.Pairwise, Finset.mem_coe, Finset.mem_bUnion]
+    simp only [Set.Pairwise, Finset.mem_coe, Finset.mem_bunionᵢ]
     rintro J₁' ⟨J₁, hJ₁, hJ₁'⟩ J₂' ⟨J₂, hJ₂, hJ₂'⟩ Hne
     rw [Function.onFun, Set.disjoint_left]
     rintro x hx₁ hx₂; apply Hne
@@ -357,7 +358,7 @@ theorem bUnion_congr (h : π₁ = π₂) (hi : ∀ J ∈ π₁, πi₁ J = πi�
 
 theorem bUnion_congr_of_le (h : π₁ = π₂) (hi : ∀ J ≤ I, πi₁ J = πi₂ J) :
     π₁.bUnion πi₁ = π₂.bUnion πi₂ :=
-  (bUnion_congr h) fun J hJ => hi J (π₁.le_of_mem hJ)
+  bUnion_congr h fun J hJ => hi J (π₁.le_of_mem hJ)
 #align box_integral.prepartition.bUnion_congr_of_le BoxIntegral.Prepartition.bUnion_congr_of_le
 
 @[simp]
@@ -488,7 +489,7 @@ theorem of_with_bot_mono {boxes₁ : Finset (WithBot (Box ι))}
     (H : ∀ J ∈ boxes₁, J ≠ ⊥ → ∃ J' ∈ boxes₂, J ≤ J') :
     ofWithBot boxes₁ le_of_mem₁ pairwise_disjoint₁ ≤
       ofWithBot boxes₂ le_of_mem₂ pairwise_disjoint₂ :=
-  (le_of_with_bot _) fun J hJ => H J (mem_of_with_bot.1 hJ) WithBot.coe_ne_bot
+  le_of_with_bot _ fun J hJ => H J (mem_of_with_bot.1 hJ) WithBot.coe_ne_bot
 #align box_integral.prepartition.of_with_bot_mono BoxIntegral.Prepartition.of_with_bot_mono
 
 theorem sum_of_with_bot {M : Type _} [AddCommMonoid M] (boxes : Finset (WithBot (Box ι)))
@@ -542,9 +543,9 @@ theorem restrict_boxes_of_le (π : Prepartition I) (h : I ≤ J) : (π.restrict 
   by
   simp only [restrict, of_with_bot, erase_none_eq_bUnion]
   refine' finset.image_bUnion.trans _
-  refine' (Finset.bUnion_congr rfl _).trans Finset.bUnion_singleton_eq_self
+  refine' (Finset.bunionᵢ_congr rfl _).trans Finset.bunionᵢ_singleton_eq_self
   intro J' hJ'
-  rw [inf_of_le_right, ← WithBot.some_eq_coe, Option.to_finset_some]
+  rw [inf_of_le_right, ← WithBot.some_eq_coe, Option.toFinset_some]
   exact WithBot.coe_le_coe.2 ((π.le_of_mem hJ').trans h)
 #align box_integral.prepartition.restrict_boxes_of_le BoxIntegral.Prepartition.restrict_boxes_of_le
 
@@ -720,7 +721,7 @@ theorem distortion_le_iff {c : ℝ≥0} : π.distortion ≤ c ↔ ∀ J ∈ π, 
 
 theorem distortion_bUnion (π : Prepartition I) (πi : ∀ J, Prepartition J) :
     (π.bUnion πi).distortion = π.boxes.sup fun J => (πi J).distortion :=
-  sup_bUnion _ _
+  sup_bunionᵢ _ _
 #align box_integral.prepartition.distortion_bUnion BoxIntegral.Prepartition.distortion_bUnion
 
 @[simp]
@@ -824,8 +825,8 @@ end IsPartition
 
 theorem Union_bUnion_partition (h : ∀ J ∈ π, (πi J).IsPartition) : (π.bUnion πi).union = π.union :=
   (Union_bUnion _ _).trans <|
-    (unionᵢ_congr_of_surjective id surjective_id) fun J =>
-      (unionᵢ_congr_of_surjective id surjective_id) fun hJ => (h J hJ).Union_eq
+    unionᵢ_congr_of_surjective id surjective_id fun J =>
+      unionᵢ_congr_of_surjective id surjective_id fun hJ => (h J hJ).Union_eq
 #align
   box_integral.prepartition.Union_bUnion_partition BoxIntegral.Prepartition.Union_bUnion_partition
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
 
 ! This file was ported from Lean 3 source module order.countable_dense_linear_order
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -129,7 +129,7 @@ theorem exists_across [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonem
 
 /-- A partial isomorphism between `α` and `β` is also a partial isomorphism between `β` and `α`. -/
 protected def comm : PartialIso α β → PartialIso β α :=
-  (Subtype.map (Finset.image (Equiv.prodComm _ _))) fun f hf p hp q hq =>
+  Subtype.map (Finset.image (Equiv.prodComm _ _)) fun f hf p hp q hq =>
     Eq.symm <|
       hf ((Equiv.prodComm α β).symm p)
         (by
@@ -232,7 +232,7 @@ theorem iso_of_countable_dense [Encodable α] [DenselyOrdered α] [NoMinOrder α
   let our_ideal : Ideal (PartialIso α β) := idealOfCofinals default to_cofinal
   let F a := funOfIdeal a our_ideal (cofinal_meets_ideal_of_cofinals _ to_cofinal (Sum.inl a))
   let G b := invOfIdeal b our_ideal (cofinal_meets_ideal_of_cofinals _ to_cofinal (Sum.inr b))
-  ⟨(OrderIso.ofCmpEqCmp (fun a => (F a).val) fun b => (G b).val) fun a b =>
+  ⟨OrderIso.ofCmpEqCmp (fun a => (F a).val) (fun b => (G b).val) fun a b =>
       by
       rcases(F a).Prop with ⟨f, hf, ha⟩
       rcases(G b).Prop with ⟨g, hg, hb⟩

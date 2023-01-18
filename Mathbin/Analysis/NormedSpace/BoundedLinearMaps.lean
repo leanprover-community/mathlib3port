@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module analysis.normed_space.bounded_linear_maps
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -130,7 +130,7 @@ variable {f g : E → F}
 
 theorem smul (c : 𝕜) (hf : IsBoundedLinearMap 𝕜 f) : IsBoundedLinearMap 𝕜 (c • f) :=
   let ⟨hlf, M, hMp, hM⟩ := hf
-  ((c • hlf.mk' f).isLinear.withBound (‖c‖ * M)) fun x =>
+  (c • hlf.mk' f).isLinear.withBound (‖c‖ * M) fun x =>
     calc
       ‖c • f x‖ = ‖c‖ * ‖f x‖ := norm_smul c (f x)
       _ ≤ ‖c‖ * (M * ‖x‖) := mul_le_mul_of_nonneg_left (hM _) (norm_nonneg _)
@@ -140,7 +140,7 @@ theorem smul (c : 𝕜) (hf : IsBoundedLinearMap 𝕜 f) : IsBoundedLinearMap �
 
 theorem neg (hf : IsBoundedLinearMap 𝕜 f) : IsBoundedLinearMap 𝕜 fun e => -f e :=
   by
-  rw [show (fun e => -f e) = fun e => (-1 : 𝕜) • f e by funext ; simp]
+  rw [show (fun e => -f e) = fun e => (-1 : 𝕜) • f e by funext; simp]
   exact smul (-1) hf
 #align is_bounded_linear_map.neg IsBoundedLinearMap.neg
 
@@ -148,7 +148,7 @@ theorem add (hf : IsBoundedLinearMap 𝕜 f) (hg : IsBoundedLinearMap 𝕜 g) :
     IsBoundedLinearMap 𝕜 fun e => f e + g e :=
   let ⟨hlf, Mf, hMfp, hMf⟩ := hf
   let ⟨hlg, Mg, hMgp, hMg⟩ := hg
-  ((hlf.mk' _ + hlg.mk' _).isLinear.withBound (Mf + Mg)) fun x =>
+  (hlf.mk' _ + hlg.mk' _).isLinear.withBound (Mf + Mg) fun x =>
     calc
       ‖f x + g x‖ ≤ Mf * ‖x‖ + Mg * ‖x‖ := norm_add_le_of_le (hMf x) (hMg x)
       _ ≤ (Mf + Mg) * ‖x‖ := by rw [add_mul]

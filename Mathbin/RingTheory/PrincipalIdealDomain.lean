@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Morenikeji Neri
 
 ! This file was ported from Lean 3 source module ring_theory.principal_ideal_domain
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -441,7 +441,7 @@ theorem is_coprime_of_irreducible_dvd {x y : R} (nonzero : ¬(x = 0 ∧ y = 0))
 
 theorem is_coprime_of_prime_dvd {x y : R} (nonzero : ¬(x = 0 ∧ y = 0))
     (H : ∀ z : R, Prime z → z ∣ x → ¬z ∣ y) : IsCoprime x y :=
-  (is_coprime_of_irreducible_dvd nonzero) fun z zi => H z <| GCDMonoid.prime_of_irreducible zi
+  is_coprime_of_irreducible_dvd nonzero fun z zi => H z <| GCDMonoid.prime_of_irreducible zi
 #align is_coprime_of_prime_dvd is_coprime_of_prime_dvd
 
 theorem Irreducible.coprime_iff_not_dvd {p n : R} (pp : Irreducible p) : IsCoprime p n ↔ ¬p ∣ n :=

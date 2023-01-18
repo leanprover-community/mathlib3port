@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang
 
 ! This file was ported from Lean 3 source module algebra.module.injective
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -148,14 +148,15 @@ instance : HasInf (ExtensionOf i f)
       is_extension := fun m => X1.is_extension _ }
 
 instance : SemilatticeInf (ExtensionOf i f) :=
-  (Function.Injective.semilatticeInf ExtensionOf.toLinearPmap fun X Y h =>
-      (ExtensionOf.ext (by rw [h])) fun x y h' =>
+  Function.Injective.semilatticeInf ExtensionOf.toLinearPmap
+    (fun X Y h =>
+      ExtensionOf.ext (by rw [h]) fun x y h' =>
         by
         induction h
         congr
         exact_mod_cast h')
     fun X Y =>
-    (LinearPmap.ext rfl) fun x y h => by
+    LinearPmap.ext rfl fun x y h => by
       congr
       exact_mod_cast h
 

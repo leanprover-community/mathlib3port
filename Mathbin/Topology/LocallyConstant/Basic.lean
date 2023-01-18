@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module topology.locally_constant.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -777,7 +777,7 @@ theorem of_constant (f : X → Y) (h : ∀ x y, f x = f y) : IsLocallyConstant f
 #align is_locally_constant.of_constant IsLocallyConstant.of_constant
 
 theorem const (y : Y) : IsLocallyConstant (Function.const X y) :=
-  (of_constant _) fun _ _ => rfl
+  of_constant _ fun _ _ => rfl
 #align is_locally_constant.const IsLocallyConstant.const
 
 theorem comp {f : X → Y} (hf : IsLocallyConstant f) (g : Y → Z) : IsLocallyConstant (g ∘ f) :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.normed_space.affine_isometry
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -473,29 +473,29 @@ protected theorem isometry : Isometry e :=
   e.toAffineIsometry.Isometry
 #align affine_isometry_equiv.isometry AffineIsometryEquiv.isometry
 
-/-- Reinterpret a `affine_isometry_equiv` as an `isometric`. -/
-def toIsometric : P ≃ᵢ P₂ :=
+/-- Reinterpret a `affine_isometry_equiv` as an `isometry_equiv`. -/
+def toIsometryEquiv : P ≃ᵢ P₂ :=
   ⟨e.toAffineEquiv.toEquiv, e.Isometry⟩
-#align affine_isometry_equiv.to_isometric AffineIsometryEquiv.toIsometric
+#align affine_isometry_equiv.to_isometry_equiv AffineIsometryEquiv.toIsometryEquiv
 
 @[simp]
-theorem coe_to_isometric : ⇑e.toIsometric = e :=
+theorem coe_to_isometry_equiv : ⇑e.toIsometryEquiv = e :=
   rfl
-#align affine_isometry_equiv.coe_to_isometric AffineIsometryEquiv.coe_to_isometric
+#align affine_isometry_equiv.coe_to_isometry_equiv AffineIsometryEquiv.coe_to_isometry_equiv
 
 include V V₂
 
 theorem range_eq_univ (e : P ≃ᵃⁱ[𝕜] P₂) : Set.range e = Set.univ :=
   by
-  rw [← coe_to_isometric]
-  exact Isometric.range_eq_univ _
+  rw [← coe_to_isometry_equiv]
+  exact IsometryEquiv.range_eq_univ _
 #align affine_isometry_equiv.range_eq_univ AffineIsometryEquiv.range_eq_univ
 
 omit V V₂
 
 /-- Reinterpret a `affine_isometry_equiv` as an `homeomorph`. -/
 def toHomeomorph : P ≃ₜ P₂ :=
-  e.toIsometric.toHomeomorph
+  e.toIsometryEquiv.toHomeomorph
 #align affine_isometry_equiv.to_homeomorph AffineIsometryEquiv.toHomeomorph
 
 @[simp]
@@ -544,9 +544,9 @@ theorem to_affine_equiv_refl : (refl 𝕜 P).toAffineEquiv = AffineEquiv.refl �
 #align affine_isometry_equiv.to_affine_equiv_refl AffineIsometryEquiv.to_affine_equiv_refl
 
 @[simp]
-theorem to_isometric_refl : (refl 𝕜 P).toIsometric = Isometric.refl P :=
+theorem to_isometry_equiv_refl : (refl 𝕜 P).toIsometryEquiv = IsometryEquiv.refl P :=
   rfl
-#align affine_isometry_equiv.to_isometric_refl AffineIsometryEquiv.to_isometric_refl
+#align affine_isometry_equiv.to_isometry_equiv_refl AffineIsometryEquiv.to_isometry_equiv_refl
 
 @[simp]
 theorem to_homeomorph_refl : (refl 𝕜 P).toHomeomorph = Homeomorph.refl P :=
@@ -581,9 +581,9 @@ theorem to_affine_equiv_symm : e.toAffineEquiv.symm = e.symm.toAffineEquiv :=
 #align affine_isometry_equiv.to_affine_equiv_symm AffineIsometryEquiv.to_affine_equiv_symm
 
 @[simp]
-theorem to_isometric_symm : e.toIsometric.symm = e.symm.toIsometric :=
+theorem to_isometry_equiv_symm : e.toIsometryEquiv.symm = e.symm.toIsometryEquiv :=
   rfl
-#align affine_isometry_equiv.to_isometric_symm AffineIsometryEquiv.to_isometric_symm
+#align affine_isometry_equiv.to_isometry_equiv_symm AffineIsometryEquiv.to_isometry_equiv_symm
 
 @[simp]
 theorem to_homeomorph_symm : e.toHomeomorph.symm = e.symm.toHomeomorph :=

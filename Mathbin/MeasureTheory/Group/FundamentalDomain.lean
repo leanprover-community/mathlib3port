@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.group.fundamental_domain
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -210,9 +210,9 @@ theorem restrict_restrict (h : IsFundamentalDomain G s μ) (g : G) (t : Set α) 
 
 @[to_additive]
 theorem smul (h : IsFundamentalDomain G s μ) (g : G) : IsFundamentalDomain G (g • s) μ :=
-  (h.imageOfEquiv (MulAction.toPerm g) (measurePreservingSmul _ _).QuasiMeasurePreserving
-      ⟨fun g' => g⁻¹ * g' * g, fun g' => g * g' * g⁻¹, fun g' => by simp [mul_assoc], fun g' => by
-        simp [mul_assoc]⟩)
+  h.imageOfEquiv (MulAction.toPerm g) (measurePreservingSmul _ _).QuasiMeasurePreserving
+    ⟨fun g' => g⁻¹ * g' * g, fun g' => g * g' * g⁻¹, fun g' => by simp [mul_assoc], fun g' => by
+      simp [mul_assoc]⟩
     fun g' x => by simp [smul_smul, mul_assoc]
 #align measure_theory.is_fundamental_domain.smul MeasureTheory.IsFundamentalDomain.smul
 
@@ -449,7 +449,7 @@ theorem measure_le_of_pairwise_disjoint (hs : IsFundamentalDomain G s μ)
   calc
     μ t = ∑' g : G, μ (g • t ∩ s) := hs.measure_eq_tsum t
     _ = μ (⋃ g : G, g • t ∩ s) :=
-      Eq.symm <| (measure_Union₀ hd) fun g => (ht.smul _).inter hs.NullMeasurableSet
+      Eq.symm <| measure_Union₀ hd fun g => (ht.smul _).inter hs.NullMeasurableSet
     _ ≤ μ s := measure_mono (Union_subset fun g => inter_subset_right _ _)
     
 #align

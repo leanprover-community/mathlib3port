@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module control.fix
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,7 +64,7 @@ def Fix.approx : Stream' <| ∀ a, Part <| β a
 /-- loop body for finding the fixed point of `f` -/
 def fixAux {p : ℕ → Prop} (i : Nat.Upto p) (g : ∀ j : Nat.Upto p, i < j → ∀ a, Part <| β a) :
     ∀ a, Part <| β a :=
-  f fun x : α => (assert ¬p i.val) fun h : ¬p i.val => g (i.succ h) (Nat.lt_succ_self _) x
+  f fun x : α => assert (¬p i.val) fun h : ¬p i.val => g (i.succ h) (Nat.lt_succ_self _) x
 #align part.fix_aux Part.fixAux
 -/
 
@@ -78,7 +78,7 @@ it satisfies the equations:
   2. `∀ X, f X ≤ X → fix f ≤ X`   (least fixed point)
 -/
 protected def fix (x : α) : Part <| β x :=
-  (Part.assert (∃ i, (Fix.approx f i x).Dom)) fun h =>
+  Part.assert (∃ i, (Fix.approx f i x).Dom) fun h =>
     WellFounded.fix.{1} (Nat.Upto.wf h) (fixAux f) Nat.Upto.zero x
 #align part.fix Part.fix
 -/

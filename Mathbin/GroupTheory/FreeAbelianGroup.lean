@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module group_theory.free_abelian_group
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -159,10 +159,9 @@ attribute [local instance] QuotientGroup.leftRel
 protected theorem induction_on {C : FreeAbelianGroup α → Prop} (z : FreeAbelianGroup α) (C0 : C 0)
     (C1 : ∀ x, C <| of x) (Cn : ∀ x, C (of x) → C (-of x)) (Cp : ∀ x y, C x → C y → C (x + y)) :
     C z :=
-  (Quotient.inductionOn' z) fun x =>
-    (Quot.induction_on x) fun L =>
-      (List.recOn L C0) fun ⟨x, b⟩ tl ih =>
-        Bool.recOn b (Cp _ _ (Cn _ (C1 x)) ih) (Cp _ _ (C1 x) ih)
+  Quotient.inductionOn' z fun x =>
+    Quot.inductionOn x fun L =>
+      List.recOn L C0 fun ⟨x, b⟩ tl ih => Bool.recOn b (Cp _ _ (Cn _ (C1 x)) ih) (Cp _ _ (C1 x) ih)
 #align free_abelian_group.induction_on FreeAbelianGroup.induction_on
 
 theorem lift.add' {α β} [AddCommGroup β] (a : FreeAbelianGroup α) (f g : α → β) :
@@ -377,7 +376,7 @@ theorem lift_comp {α} {β} {γ} [AddCommGroup γ] (f : α → β) (g : β → �
 
 theorem map_id : map id = AddMonoidHom.id (FreeAbelianGroup α) :=
   Eq.symm <|
-    (lift.ext _ _) fun x => (lift.unique of (AddMonoidHom.id _)) fun y => AddMonoidHom.id_apply _ _
+    lift.ext _ _ fun x => lift.unique of (AddMonoidHom.id _) fun y => AddMonoidHom.id_apply _ _
 #align free_abelian_group.map_id FreeAbelianGroup.map_id
 
 theorem map_id_apply (x : FreeAbelianGroup α) : map id x = x :=
@@ -387,7 +386,7 @@ theorem map_id_apply (x : FreeAbelianGroup α) : map id x = x :=
 #align free_abelian_group.map_id_apply FreeAbelianGroup.map_id_apply
 
 theorem map_comp {f : α → β} {g : β → γ} : map (g ∘ f) = (map g).comp (map f) :=
-  Eq.symm <| (lift.ext _ _) fun x => Eq.symm <| lift_comp _ _ _
+  Eq.symm <| lift.ext _ _ fun x => Eq.symm <| lift_comp _ _ _
 #align free_abelian_group.map_comp FreeAbelianGroup.map_comp
 
 theorem map_comp_apply {f : α → β} {g : β → γ} (x : FreeAbelianGroup α) :

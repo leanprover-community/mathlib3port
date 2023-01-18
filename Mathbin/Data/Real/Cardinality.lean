@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module data.real.cardinality
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -83,6 +83,10 @@ theorem cantor_function_aux_eq (h : f n = g n) :
     cantorFunctionAux c f n = cantorFunctionAux c g n := by simp [cantor_function_aux, h]
 #align cardinal.cantor_function_aux_eq Cardinal.cantor_function_aux_eq
 
+theorem cantor_function_aux_zero (f : ℕ → Bool) : cantorFunctionAux c f 0 = cond (f 0) 1 0 := by
+  cases h : f 0 <;> simp [h]
+#align cardinal.cantor_function_aux_zero Cardinal.cantor_function_aux_zero
+
 theorem cantor_function_aux_succ (f : ℕ → Bool) :
     (fun n => cantorFunctionAux c f (n + 1)) = fun n =>
       c * cantorFunctionAux c (fun n => f (n + 1)) n :=
@@ -156,12 +160,12 @@ theorem increasing_cantor_function (h1 : 0 < c) (h2 : c < 1 / 2) {n : ℕ} {f g 
     · rw [cantor_function_succ _ (le_of_lt h1) h3, div_eq_mul_inv, ←
         tsum_geometric_of_lt_1 (le_of_lt h1) h3]
       apply zero_add
-    · convert tsum_eq_single 0 _
-      · infer_instance
+    · refine' (tsum_eq_single 0 _).trans _
       · intro n hn
         cases n
         contradiction
         rfl
+      · exact cantor_function_aux_zero _
   rw [cantor_function_succ f (le_of_lt h1) h3, cantor_function_succ g (le_of_lt h1) h3]
   rw [hn 0 <| zero_lt_succ n]
   apply add_lt_add_left

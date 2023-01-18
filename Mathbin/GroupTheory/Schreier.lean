@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 
 ! This file was ported from Lean 3 source module group_theory.schreier
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -118,8 +118,8 @@ theorem exists_finset_card_le_mul [FiniteIndex H] {S : Finset G} (hS : closure (
   obtain ⟨R₀, hR : R₀ ∈ right_transversals (H : Set G), hR1⟩ := exists_right_transversal (1 : G)
   haveI : Fintype R₀ := Fintype.ofEquiv _ (mem_right_transversals.to_equiv hR)
   let R : Finset G := Set.toFinset R₀
-  replace hR : (R : Set G) ∈ right_transversals (H : Set G) := by rwa [Set.coe_to_finset]
-  replace hR1 : (1 : G) ∈ R := by rwa [Set.mem_to_finset]
+  replace hR : (R : Set G) ∈ right_transversals (H : Set G) := by rwa [Set.coe_toFinset]
+  replace hR1 : (1 : G) ∈ R := by rwa [Set.mem_toFinset]
   refine' ⟨_, _, closure_mul_image_eq_top' hR hR1 hS⟩
   calc
     _ ≤ (R * S).card := Finset.card_image_le

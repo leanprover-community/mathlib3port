@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module model_theory.definability
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -132,14 +132,14 @@ theorem definable_finset_sup {ι : Type _} {f : ∀ i : ι, Set (α → M)} (hf 
 theorem definable_finset_bInter {ι : Type _} {f : ∀ i : ι, Set (α → M)}
     (hf : ∀ i, A.Definable L (f i)) (s : Finset ι) : A.Definable L (⋂ i ∈ s, f i) :=
   by
-  rw [← Finset.inf_set_eq_bInter]
+  rw [← Finset.inf_set_eq_interᵢ]
   exact definable_finset_inf hf s
 #align set.definable_finset_bInter Set.definable_finset_bInter
 
 theorem definable_finset_bUnion {ι : Type _} {f : ∀ i : ι, Set (α → M)}
     (hf : ∀ i, A.Definable L (f i)) (s : Finset ι) : A.Definable L (⋃ i ∈ s, f i) :=
   by
-  rw [← Finset.sup_set_eq_bUnion]
+  rw [← Finset.sup_set_eq_bunionᵢ]
   exact definable_finset_sup hf s
 #align set.definable_finset_bUnion Set.definable_finset_bUnion
 

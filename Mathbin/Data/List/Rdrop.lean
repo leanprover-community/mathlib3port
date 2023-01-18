@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 
 ! This file was ported from Lean 3 source module data.list.rdrop
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -277,15 +277,15 @@ theorem dropWhile_idempotent : dropWhile p (dropWhile p l) = dropWhile p l :=
   dropWhile_eq_self_iff.mpr (dropWhile_nthLe_zero_not _ _)
 #align list.drop_while_idempotent List.dropWhile_idempotent
 
-/- warning: list.rdrop_while_idempotent -> List.rdrop_while_idempotent is a dubious translation:
+/- warning: list.rdrop_while_idempotent -> List.rdropWhile_idempotent is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p] (l : List.{u1} α), Eq.{succ u1} (List.{u1} α) (List.rdropWhile.{u1} α p (fun (a : α) => _inst_1 a) (List.rdropWhile.{u1} α p (fun (a : α) => _inst_1 a) l)) (List.rdropWhile.{u1} α p (fun (a : α) => _inst_1 a) l)
 but is expected to have type
   forall {α : Type.{u1}} (p : α -> Bool) (_inst_1 : List.{u1} α), Eq.{succ u1} (List.{u1} α) (List.rdropWhile.{u1} α p (List.rdropWhile.{u1} α p _inst_1)) (List.rdropWhile.{u1} α p _inst_1)
-Case conversion may be inaccurate. Consider using '#align list.rdrop_while_idempotent List.rdrop_while_idempotentₓ'. -/
-theorem rdrop_while_idempotent : rdropWhile p (rdropWhile p l) = rdropWhile p l :=
+Case conversion may be inaccurate. Consider using '#align list.rdrop_while_idempotent List.rdropWhile_idempotentₓ'. -/
+theorem rdropWhile_idempotent : rdropWhile p (rdropWhile p l) = rdropWhile p l :=
   rdropWhile_eq_self_iff.mpr (rdropWhile_last_not _ _)
-#align list.rdrop_while_idempotent List.rdrop_while_idempotent
+#align list.rdrop_while_idempotent List.rdropWhile_idempotent
 
 /- warning: list.rtake_while -> List.rtakeWhile is a dubious translation:
 lean 3 declaration is

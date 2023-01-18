@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jannis Limperg
 
 ! This file was ported from Lean 3 source module tactic.dependencies
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -249,7 +249,7 @@ unsafe def hyp_depends_on_local_name_set' : expr_set → expr → name_set → t
   let ff ← pure has_dep |
     pure (true, cache)
   let (has_dep, cache) ←
-    (direct_deps.mfold (false, cache)) fun d ⟨b, cache⟩ =>
+    direct_deps.mfold (false, cache) fun d ⟨b, cache⟩ =>
         if b then pure (true, cache) else hyp_depends_on_local_name_set' cache d ns
   if has_dep then pure (tt, cache) else pure (ff, cache h)
 #align tactic.hyp_depends_on_local_name_set' tactic.hyp_depends_on_local_name_set'
@@ -412,7 +412,7 @@ unsafe def dependency_set_of_hyp' :
     | none => do
       let direct_deps ← direct_dependency_set_of_hyp h
       let (deps, cache) ←
-        (direct_deps (direct_deps, cache)) fun h' ⟨deps, cache⟩ => do
+        direct_deps (direct_deps, cache) fun h' ⟨deps, cache⟩ => do
             let (deps', cache) ← dependency_set_of_hyp' cache h'
             pure (deps deps', cache)
       pure (deps, cache h deps)

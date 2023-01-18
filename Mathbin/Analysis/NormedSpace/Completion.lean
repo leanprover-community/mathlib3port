@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.normed_space.completion
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,8 +43,8 @@ instance : NormedSpace 𝕜 (Completion E) :=
   { Completion.module with
     smul := (· • ·)
     norm_smul_le := fun c x =>
-      (induction_on x
-          (is_closed_le (continuous_const_smul _).norm (continuous_const.mul continuous_norm)))
+      induction_on x
+        (is_closed_le (continuous_const_smul _).norm (continuous_const.mul continuous_norm))
         fun y => by simp only [← coe_smul, norm_coe, norm_smul] }
 
 variable {𝕜 E}

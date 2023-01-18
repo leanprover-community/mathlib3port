@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.box_integral.box.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -738,13 +738,13 @@ theorem monotone_face {n} (i : Fin (n + 1)) : Monotone fun I => face I i := fun 
 
 theorem maps_to_insert_nth_face_Icc {n} (I : Box (Fin (n + 1))) {i : Fin (n + 1)} {x : ℝ}
     (hx : x ∈ Icc (I.lower i) (I.upper i)) : MapsTo (i.insertNth x) (I.face i).IccCat I.IccCat :=
-  fun y hy => Fin.insert_nth_mem_Icc.2 ⟨hx, hy⟩
+  fun y hy => Fin.insertNth_mem_Icc.2 ⟨hx, hy⟩
 #align box_integral.box.maps_to_insert_nth_face_Icc BoxIntegral.Box.maps_to_insert_nth_face_Icc
 
 theorem maps_to_insert_nth_face {n} (I : Box (Fin (n + 1))) {i : Fin (n + 1)} {x : ℝ}
     (hx : x ∈ Ioc (I.lower i) (I.upper i)) : MapsTo (i.insertNth x) (I.face i) I := fun y hy => by
-  simpa only [mem_coe, mem_def, i.forall_iff_succ_above, hx, Fin.insert_nth_apply_same,
-    Fin.insert_nth_apply_succ_above, true_and_iff]
+  simpa only [mem_coe, mem_def, i.forall_iff_succ_above, hx, Fin.insertNth_apply_same,
+    Fin.insertNth_apply_succAbove, true_and_iff]
 #align box_integral.box.maps_to_insert_nth_face BoxIntegral.Box.maps_to_insert_nth_face
 
 theorem continuous_on_face_Icc {X} [TopologicalSpace X] {n} {f : (Fin (n + 1) → ℝ) → X}
@@ -853,7 +853,7 @@ theorem diam_Icc_le_of_distortion_le (I : Box ι) (i : ι) {c : ℝ≥0} (h : I.
     diam I.IccCat ≤ c * (I.upper i - I.lower i) :=
   have : (0 : ℝ) ≤ c * (I.upper i - I.lower i) :=
     mul_nonneg c.coe_nonneg (sub_nonneg.2 <| I.lower_le_upper _)
-  (diam_le_of_forall_dist_le this) fun x hx y hy =>
+  diam_le_of_forall_dist_le this fun x hx y hy =>
     calc
       dist x y ≤ dist I.lower I.upper := Real.dist_le_of_mem_pi_Icc hx hy
       _ ≤ I.distortion * (I.upper i - I.lower i) := I.dist_le_distortion_mul i

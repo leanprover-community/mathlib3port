@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module model_theory.encoding
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -106,7 +106,7 @@ theorem list_decode_encode_list (l : List (L.term α)) :
         by
         induction' fin_range n with i l' l'ih
         · rfl
-        · rw [cons_bind, append_assoc, ih, map_cons, l'ih, cons_append]
+        · rw [cons_bind, List.append_assoc, ih, map_cons, l'ih, cons_append]
       have h' :
         ∀ i,
           (list_decode (((fin_range n).bind fun i : Fin n => (ts i).listEncode) ++ l)).nth ↑i =
@@ -367,7 +367,7 @@ theorem list_decode_encode_list (l : List (Σn, L.BoundedFormula α n)) :
         rw [List.drop_append_eq_append_drop, length_map, length_fin_range, Nat.sub_self, drop,
           drop_eq_nil_of_le, nil_append]
         rw [length_map, length_fin_range]
-    · rw [list_encode, append_assoc, cons_append, list_decode]
+    · rw [list_encode, List.append_assoc, cons_append, list_decode]
       simp only [Subtype.val_eq_coe] at *
       rw [(ih1 _).1, (ih1 _).2, (ih2 _).1, (ih2 _).2, sigma_imp, dif_pos rfl]
       exact ⟨rfl, rfl⟩

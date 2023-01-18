@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module linear_algebra.ray
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -120,7 +120,7 @@ theorem trans (hxy : SameRay R x y) (hyz : SameRay R y z) (hy : y = 0 → x = 0 
 /-- A vector is in the same ray as a nonnegative multiple of itself. -/
 theorem same_ray_nonneg_smul_right (v : M) {r : R} (h : 0 ≤ r) : SameRay R v (r • v) :=
   Or.inr <|
-    (h.eq_or_lt.imp fun h => h ▸ zero_smul R v) fun h =>
+    h.eq_or_lt.imp (fun h => h ▸ zero_smul R v) fun h =>
       ⟨r, 1, h, by
         nontriviality R
         exact zero_lt_one, (one_smul _ _).symm⟩
@@ -133,7 +133,7 @@ theorem same_ray_pos_smul_right (v : M) {r : R} (h : 0 < r) : SameRay R v (r •
 
 /-- A vector is in the same ray as a nonnegative multiple of one it is in the same ray as. -/
 theorem nonneg_smul_right {r : R} (h : SameRay R x y) (hr : 0 ≤ r) : SameRay R x (r • y) :=
-  (h.trans (same_ray_nonneg_smul_right y hr)) fun hy => Or.inr <| by rw [hy, smul_zero]
+  h.trans (same_ray_nonneg_smul_right y hr) fun hy => Or.inr <| by rw [hy, smul_zero]
 #align same_ray.nonneg_smul_right SameRay.nonneg_smul_right
 
 /-- A vector is in the same ray as a positive multiple of one it is in the same ray as. -/
@@ -164,7 +164,7 @@ theorem pos_smul_left {r : R} (h : SameRay R x y) (hr : 0 < r) : SameRay R (r �
 /-- If two vectors are on the same ray then they remain so after applying a linear map. -/
 theorem map (f : M →ₗ[R] N) (h : SameRay R x y) : SameRay R (f x) (f y) :=
   (h.imp fun hx => by rw [hx, map_zero]) <|
-    (Or.imp fun hy => by rw [hy, map_zero]) fun ⟨r₁, r₂, hr₁, hr₂, h⟩ =>
+    Or.imp (fun hy => by rw [hy, map_zero]) fun ⟨r₁, r₂, hr₁, hr₂, h⟩ =>
       ⟨r₁, r₂, hr₁, hr₂, by rw [← f.map_smul, ← f.map_smul, h]⟩
 #align same_ray.map SameRay.map
 
@@ -236,7 +236,7 @@ instance : Setoid (RayVector R M)
   R x y := SameRay R (x : M) y
   iseqv :=
     ⟨fun x => SameRay.refl _, fun x y h => h.symm, fun x y z hxy hyz =>
-      (hxy.trans hyz) fun hy => (y.2 hy).elim⟩
+      hxy.trans hyz fun hy => (y.2 hy).elim⟩
 
 /-- A ray (equivalence class of nonzero vectors with common positive multiples) in a module. -/
 @[nolint has_nonempty_instance]
@@ -285,12 +285,12 @@ theorem ray_pos_smul {v : M} (h : v ≠ 0) {r : R} (hr : 0 < r) (hrv : r • v �
 
 /-- An equivalence between modules implies an equivalence between ray vectors. -/
 def RayVector.mapLinearEquiv (e : M ≃ₗ[R] N) : RayVector R M ≃ RayVector R N :=
-  (Equiv.subtypeEquiv e.toEquiv) fun _ => e.map_ne_zero_iff.symm
+  Equiv.subtypeEquiv e.toEquiv fun _ => e.map_ne_zero_iff.symm
 #align ray_vector.map_linear_equiv RayVector.mapLinearEquiv
 
 /-- An equivalence between modules implies an equivalence between rays. -/
 def Module.Ray.map (e : M ≃ₗ[R] N) : Module.Ray R M ≃ Module.Ray R N :=
-  (Quotient.congr (RayVector.mapLinearEquiv e)) fun ⟨a, ha⟩ ⟨b, hb⟩ => (same_ray_map_iff _).symm
+  Quotient.congr (RayVector.mapLinearEquiv e) fun ⟨a, ha⟩ ⟨b, hb⟩ => (same_ray_map_iff _).symm
 #align module.ray.map Module.Ray.map
 
 @[simp]
@@ -301,7 +301,7 @@ theorem Module.Ray.map_apply (e : M ≃ₗ[R] N) (v : M) (hv : v ≠ 0) :
 
 @[simp]
 theorem Module.Ray.map_refl : (Module.Ray.map <| LinearEquiv.refl R M) = Equiv.refl _ :=
-  Equiv.ext <| (Module.Ray.ind R) fun _ _ => rfl
+  Equiv.ext <| Module.Ray.ind R fun _ _ => rfl
 #align module.ray.map_refl Module.Ray.map_refl
 
 @[simp]
@@ -317,7 +317,7 @@ variable {G : Type _} [Group G] [DistribMulAction G M]
 when `G = Rˣ` -/
 instance {R : Type _} : MulAction G (RayVector R M)
     where
-  smul r := (Subtype.map ((· • ·) r)) fun a => (smul_ne_zero_iff_ne _).2
+  smul r := Subtype.map ((· • ·) r) fun a => (smul_ne_zero_iff_ne _).2
   mul_smul a b m := Subtype.ext <| mul_smul a b _
   one_smul m := Subtype.ext <| one_smul _ _
 

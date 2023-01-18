@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module tactic.scc
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -130,7 +130,7 @@ unsafe def root (cl : closure) : expr → tactic (ℕ × expr × expr)
       | some (Sum.inr (e₀, p₀)) => do
         let (n, e₁, p₁) ← root e₀
         let p ← mk_app `` Iff.trans [p₀, p₁]
-        (modify_ref cl) fun m => m e (Sum.inr (e₁, p))
+        modify_ref cl fun m => m e (Sum.inr (e₁, p))
         pure (n, e₁, p)
 #align tactic.closure.root tactic.closure.root
 
@@ -139,7 +139,7 @@ unsafe def merge_intl (cl : closure) (p e₀ p₀ e₁ p₁ : expr) : tactic Uni
   let p₂ ← mk_app `` Iff.symm [p₀]
   let p ← mk_app `` Iff.trans [p₂, p]
   let p ← mk_app `` Iff.trans [p, p₁]
-  (modify_ref cl) fun m => m e₀ <| Sum.inr (e₁, p)
+  modify_ref cl fun m => m e₀ <| Sum.inr (e₁, p)
 #align tactic.closure.merge_intl tactic.closure.merge_intl
 
 -- failed to format: unknown constant 'term.pseudo.antiquot'
@@ -175,7 +175,7 @@ unsafe def merge_intl (cl : closure) (p e₀ p₀ e₁ p₁ : expr) : tactic Uni
 
 /-- Sequentially assign numbers to the nodes of the graph as they are being visited. -/
 unsafe def assign_preorder (cl : closure) (e : expr) : tactic Unit :=
-  (modify_ref cl) fun m => m.insert e (Sum.inl m.size)
+  modify_ref cl fun m => m.insert e (Sum.inl m.size)
 #align tactic.closure.assign_preorder tactic.closure.assign_preorder
 
 /-- `prove_eqv cl e₀ e₁` constructs a proof of equivalence of `e₀` and `e₁` if
@@ -241,7 +241,7 @@ namespace ImplGraph
                     let m ← read_ref g
                     let xs := ( m v₀ ) . getOrElse [ ]
                     let xs' := ( m v₁ ) . getOrElse [ ]
-                    ( modify_ref g ) fun m => ( m v₀ ( ( v₁ , p ) :: xs ) ) . insert v₁ xs'
+                    modify_ref g fun m => ( m v₀ ( ( v₁ , p ) :: xs ) ) . insert v₁ xs'
               |
                 q( $ ( v₀ ) ↔ $ ( v₁ ) )
                 =>
@@ -319,10 +319,10 @@ unsafe def dfs_at : List (expr × expr) → expr → tactic Unit
       | some ff => collapse vs v
       | none => do
         cl v
-        (modify_ref visit) fun m => m v ff
+        modify_ref visit fun m => m v ff
         let ns ← g v
         ns fun ⟨w, e⟩ => dfs_at ((v, e) :: vs) w
-        (modify_ref visit) fun m => m v tt
+        modify_ref visit fun m => m v tt
         pure ()
 #align tactic.impl_graph.dfs_at tactic.impl_graph.dfs_at
 
@@ -331,7 +331,7 @@ end Scc
 /-- Use the local assumptions to create a set of equivalence classes. -/
 unsafe def mk_scc (cl : closure) : tactic (expr_map (List (expr × expr))) :=
   with_impl_graph fun g =>
-    (using_new_ref (expr_map.mk Bool)) fun visit => do
+    using_new_ref (expr_map.mk Bool) fun visit => do
       let ls ← local_context
       ls fun l => try (g l)
       let m ← read_ref g

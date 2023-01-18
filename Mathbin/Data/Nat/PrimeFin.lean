@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.prime_fin
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -29,7 +29,7 @@ theorem infinite_set_of_prime : { p | Prime p }.Infinite :=
 theorem factors_mul_to_finset {a b : ℕ} (ha : a ≠ 0) (hb : b ≠ 0) :
     (a * b).factors.toFinset = a.factors.toFinset ∪ b.factors.toFinset :=
   (List.toFinset.ext fun x => (mem_factors_mul ha hb).trans List.mem_union.symm).trans <|
-    List.to_finset_union _ _
+    List.toFinset_union _ _
 #align nat.factors_mul_to_finset Nat.factors_mul_to_finset
 
 theorem pow_succ_factors_to_finset (n k : ℕ) :
@@ -57,7 +57,7 @@ theorem prime_pow_prime_divisor {p k : ℕ} (hk : k ≠ 0) (hp : Prime p) :
 
 theorem factors_mul_to_finset_of_coprime {a b : ℕ} (hab : Coprime a b) :
     (a * b).factors.toFinset = a.factors.toFinset ∪ b.factors.toFinset :=
-  (List.toFinset.ext <| mem_factors_mul_of_coprime hab).trans <| List.to_finset_union _ _
+  (List.toFinset.ext <| mem_factors_mul_of_coprime hab).trans <| List.toFinset_union _ _
 #align nat.factors_mul_to_finset_of_coprime Nat.factors_mul_to_finset_of_coprime
 
 end Nat

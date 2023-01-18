@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module analysis.convex.simplicial_complex.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -113,7 +113,7 @@ theorem disjoint_or_exists_inter_eq_convex_hull (hs : s ∈ K.faces) (ht : t ∈
     by_contra' h
     refine'
       h.2 (s ∩ t)
-        ((K.down_closed hs (inter_subset_left _ _)) fun hst =>
+        (K.down_closed hs (inter_subset_left _ _) fun hst =>
           h.1 <| disjoint_iff_inf_le.mpr <| (K.inter_subset_convex_hull hs ht).trans _)
         _
     · rw [← coe_inter, hst, coe_empty, convex_hull_empty]
@@ -250,7 +250,7 @@ instance : HasInf (SimplicialComplex 𝕜 E) :=
 
 instance : SemilatticeInf (SimplicialComplex 𝕜 E) :=
   {
-    (PartialOrder.lift faces) fun x y =>
+    PartialOrder.lift faces fun x y =>
       ext _ _ with
     inf := (· ⊓ ·)
     inf_le_left := fun K L s hs => hs.1

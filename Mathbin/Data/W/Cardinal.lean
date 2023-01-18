@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.W.cardinal
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -58,11 +58,11 @@ theorem cardinal_mk_le_of_le {κ : Cardinal.{u}} (hκ : (Sum fun a : α => κ ^ 
 /-- If, for any `a : α`, `β a` is finite, then the cardinality of `W_type β`
   is at most the maximum of the cardinality of `α` and `ℵ₀`  -/
 theorem cardinal_mk_le_max_aleph_0_of_finite [∀ a, Finite (β a)] : (#WType β) ≤ max (#α) ℵ₀ :=
-  ((isEmpty_or_nonempty α).elim
-      (by
-        intro h
-        rw [Cardinal.mk_eq_zero (WType β)]
-        exact zero_le _))
+  (isEmpty_or_nonempty α).elim
+    (by
+      intro h
+      rw [Cardinal.mk_eq_zero (WType β)]
+      exact zero_le _)
     fun hn =>
     let m := max (#α) ℵ₀
     cardinal_mk_le_of_le <|

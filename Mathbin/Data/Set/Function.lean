@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Andrew Zipperer, Haitao Zhang, Minchao Wu, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.set.function
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -116,7 +116,7 @@ theorem range_restrict (f : α → β) (s : Set α) : Set.range (s.restrict f) =
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β) (s : Set.{u1} α) (t : Set.{u1} α), Eq.{succ u2} (Set.{u2} β) (Set.image.{u1, u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) β (Set.restrict.{u1, u2} α (fun (ᾰ : α) => β) s f) (Set.preimage.{u1, u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s)))))) t)) (Set.image.{u1, u2} α β f (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) t s))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β) (s : Set.{u2} α) (t : Set.{u2} α), Eq.{succ u1} (Set.{u1} β) (Set.image.{u2, u1} (Set.Elem.{u2} α s) β (Set.restrict.{u2, u1} α (fun (ᾰ : α) => β) s f) (Set.preimage.{u2, u2} (Set.Elem.{u2} α s) α (Subtype.val.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s)) t)) (Set.image.{u2, u1} α β f (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet_1.{u2} α) t s))
+  forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β) (s : Set.{u2} α) (t : Set.{u2} α), Eq.{succ u1} (Set.{u1} β) (Set.image.{u2, u1} (Set.Elem.{u2} α s) β (Set.restrict.{u2, u1} α (fun (ᾰ : α) => β) s f) (Set.preimage.{u2, u2} (Set.Elem.{u2} α s) α (Subtype.val.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s)) t)) (Set.image.{u2, u1} α β f (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) t s))
 Case conversion may be inaccurate. Consider using '#align set.image_restrict Set.image_restrictₓ'. -/
 theorem image_restrict (f : α → β) (s t : Set α) : s.restrict f '' (coe ⁻¹' t) = f '' (t ∩ s) := by
   rw [restrict, image_comp, image_preimage_eq_inter_range, Subtype.range_coe]
@@ -223,7 +223,7 @@ theorem restrict_extend_compl_range (f : α → β) (g : α → γ) (g' : β →
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} (f : α -> β) (g : α -> γ) (g' : β -> γ), HasSubset.Subset.{u3} (Set.{u3} γ) (Set.hasSubset.{u3} γ) (Set.range.{u3, succ u2} γ β (Function.extend.{succ u1, succ u2, succ u3} α β γ f g g')) (Union.union.{u3} (Set.{u3} γ) (Set.hasUnion.{u3} γ) (Set.range.{u3, succ u1} γ α g) (Set.image.{u2, u3} β γ g' (HasCompl.compl.{u2} (Set.{u2} β) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} β) (Set.booleanAlgebra.{u2} β)) (Set.range.{u2, succ u1} β α f))))
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} (f : α -> β) (g : α -> γ) (g' : β -> γ), HasSubset.Subset.{u3} (Set.{u3} γ) (Set.instHasSubsetSet_1.{u3} γ) (Set.range.{u3, succ u2} γ β (Function.extend.{succ u1, succ u2, succ u3} α β γ f g g')) (Union.union.{u3} (Set.{u3} γ) (Set.instUnionSet_1.{u3} γ) (Set.range.{u3, succ u1} γ α g) (Set.image.{u2, u3} β γ g' (HasCompl.compl.{u2} (Set.{u2} β) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} β) (Set.instBooleanAlgebraSet.{u2} β)) (Set.range.{u2, succ u1} β α f))))
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} (f : α -> β) (g : α -> γ) (g' : β -> γ), HasSubset.Subset.{u3} (Set.{u3} γ) (Set.instHasSubsetSet.{u3} γ) (Set.range.{u3, succ u2} γ β (Function.extend.{succ u1, succ u2, succ u3} α β γ f g g')) (Union.union.{u3} (Set.{u3} γ) (Set.instUnionSet.{u3} γ) (Set.range.{u3, succ u1} γ α g) (Set.image.{u2, u3} β γ g' (HasCompl.compl.{u2} (Set.{u2} β) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} β) (Set.instBooleanAlgebraSet.{u2} β)) (Set.range.{u2, succ u1} β α f))))
 Case conversion may be inaccurate. Consider using '#align set.range_extend_subset Set.range_extend_subsetₓ'. -/
 theorem range_extend_subset (f : α → β) (g : α → γ) (g' : β → γ) :
     range (extend f g g') ⊆ range g ∪ g' '' range fᶜ := by
@@ -238,7 +238,7 @@ theorem range_extend_subset (f : α → β) (g : α → γ) (g' : β → γ) :
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {f : α -> β}, (Function.Injective.{succ u1, succ u2} α β f) -> (forall (g : α -> γ) (g' : β -> γ), Eq.{succ u3} (Set.{u3} γ) (Set.range.{u3, succ u2} γ β (Function.extend.{succ u1, succ u2, succ u3} α β γ f g g')) (Union.union.{u3} (Set.{u3} γ) (Set.hasUnion.{u3} γ) (Set.range.{u3, succ u1} γ α g) (Set.image.{u2, u3} β γ g' (HasCompl.compl.{u2} (Set.{u2} β) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} β) (Set.booleanAlgebra.{u2} β)) (Set.range.{u2, succ u1} β α f)))))
 but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} {f : α -> β}, (Function.Injective.{succ u3, succ u2} α β f) -> (forall (g : α -> γ) (g' : β -> γ), Eq.{succ u1} (Set.{u1} γ) (Set.range.{u1, succ u2} γ β (Function.extend.{succ u3, succ u2, succ u1} α β γ f g g')) (Union.union.{u1} (Set.{u1} γ) (Set.instUnionSet_1.{u1} γ) (Set.range.{u1, succ u3} γ α g) (Set.image.{u2, u1} β γ g' (HasCompl.compl.{u2} (Set.{u2} β) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} β) (Set.instBooleanAlgebraSet.{u2} β)) (Set.range.{u2, succ u3} β α f)))))
+  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} {f : α -> β}, (Function.Injective.{succ u3, succ u2} α β f) -> (forall (g : α -> γ) (g' : β -> γ), Eq.{succ u1} (Set.{u1} γ) (Set.range.{u1, succ u2} γ β (Function.extend.{succ u3, succ u2, succ u1} α β γ f g g')) (Union.union.{u1} (Set.{u1} γ) (Set.instUnionSet.{u1} γ) (Set.range.{u1, succ u3} γ α g) (Set.image.{u2, u1} β γ g' (HasCompl.compl.{u2} (Set.{u2} β) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} β) (Set.instBooleanAlgebraSet.{u2} β)) (Set.range.{u2, succ u3} β α f)))))
 Case conversion may be inaccurate. Consider using '#align set.range_extend Set.range_extendₓ'. -/
 theorem range_extend {f : α → β} (hf : Injective f) (g : α → γ) (g' : β → γ) :
     range (extend f g g') = range g ∪ g' '' range fᶜ :=
@@ -392,7 +392,7 @@ theorem EqOn.image_eq (heq : EqOn f₁ f₂ s) : f₁ '' s = f₂ '' s :=
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {f₁ : α -> β} {f₂ : α -> β}, (Set.EqOn.{u1, u2} α β f₁ f₂ s) -> (forall (t : Set.{u2} β), Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (Set.preimage.{u1, u2} α β f₁ t)) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (Set.preimage.{u1, u2} α β f₂ t)))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {f₁ : α -> β} {f₂ : α -> β}, (Set.EqOn.{u2, u1} α β f₁ f₂ s) -> (forall (t : Set.{u1} β), Eq.{succ u2} (Set.{u2} α) (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet_1.{u2} α) s (Set.preimage.{u2, u1} α β f₁ t)) (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet_1.{u2} α) s (Set.preimage.{u2, u1} α β f₂ t)))
+  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {f₁ : α -> β} {f₂ : α -> β}, (Set.EqOn.{u2, u1} α β f₁ f₂ s) -> (forall (t : Set.{u1} β), Eq.{succ u2} (Set.{u2} α) (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) s (Set.preimage.{u2, u1} α β f₁ t)) (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) s (Set.preimage.{u2, u1} α β f₂ t)))
 Case conversion may be inaccurate. Consider using '#align set.eq_on.inter_preimage_eq Set.EqOn.inter_preimage_eqₓ'. -/
 theorem EqOn.inter_preimage_eq (heq : EqOn f₁ f₂ s) (t : Set β) : s ∩ f₁ ⁻¹' t = s ∩ f₂ ⁻¹' t :=
   ext fun x => and_congr_right_iff.2 fun hx => by rw [mem_preimage, mem_preimage, HEq hx]
@@ -402,7 +402,7 @@ theorem EqOn.inter_preimage_eq (heq : EqOn f₁ f₂ s) (t : Set β) : s ∩ f�
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s₁ : Set.{u1} α} {s₂ : Set.{u1} α} {f₁ : α -> β} {f₂ : α -> β}, (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s₁ s₂) -> (Set.EqOn.{u1, u2} α β f₁ f₂ s₂) -> (Set.EqOn.{u1, u2} α β f₁ f₂ s₁)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s₁ : Set.{u2} α} {s₂ : Set.{u2} α} {f₁ : α -> β} {f₂ : α -> β}, (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet_1.{u2} α) s₁ s₂) -> (Set.EqOn.{u2, u1} α β f₁ f₂ s₂) -> (Set.EqOn.{u2, u1} α β f₁ f₂ s₁)
+  forall {α : Type.{u2}} {β : Type.{u1}} {s₁ : Set.{u2} α} {s₂ : Set.{u2} α} {f₁ : α -> β} {f₂ : α -> β}, (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) s₁ s₂) -> (Set.EqOn.{u2, u1} α β f₁ f₂ s₂) -> (Set.EqOn.{u2, u1} α β f₁ f₂ s₁)
 Case conversion may be inaccurate. Consider using '#align set.eq_on.mono Set.EqOn.monoₓ'. -/
 theorem EqOn.mono (hs : s₁ ⊆ s₂) (hf : EqOn f₁ f₂ s₂) : EqOn f₁ f₂ s₁ := fun x hx => hf (hs hx)
 #align set.eq_on.mono Set.EqOn.mono
@@ -411,7 +411,7 @@ theorem EqOn.mono (hs : s₁ ⊆ s₂) (hf : EqOn f₁ f₂ s₂) : EqOn f₁ f�
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s₁ : Set.{u1} α} {s₂ : Set.{u1} α} {f₁ : α -> β} {f₂ : α -> β}, Iff (Set.EqOn.{u1, u2} α β f₁ f₂ (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s₁ s₂)) (And (Set.EqOn.{u1, u2} α β f₁ f₂ s₁) (Set.EqOn.{u1, u2} α β f₁ f₂ s₂))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s₁ : Set.{u2} α} {s₂ : Set.{u2} α} {f₁ : α -> β} {f₂ : α -> β}, Iff (Set.EqOn.{u2, u1} α β f₁ f₂ (Union.union.{u2} (Set.{u2} α) (Set.instUnionSet_1.{u2} α) s₁ s₂)) (And (Set.EqOn.{u2, u1} α β f₁ f₂ s₁) (Set.EqOn.{u2, u1} α β f₁ f₂ s₂))
+  forall {α : Type.{u2}} {β : Type.{u1}} {s₁ : Set.{u2} α} {s₂ : Set.{u2} α} {f₁ : α -> β} {f₂ : α -> β}, Iff (Set.EqOn.{u2, u1} α β f₁ f₂ (Union.union.{u2} (Set.{u2} α) (Set.instUnionSet.{u2} α) s₁ s₂)) (And (Set.EqOn.{u2, u1} α β f₁ f₂ s₁) (Set.EqOn.{u2, u1} α β f₁ f₂ s₂))
 Case conversion may be inaccurate. Consider using '#align set.eq_on_union Set.eqOn_unionₓ'. -/
 @[simp]
 theorem eqOn_union : EqOn f₁ f₂ (s₁ ∪ s₂) ↔ EqOn f₁ f₂ s₁ ∧ EqOn f₁ f₂ s₂ :=
@@ -422,7 +422,7 @@ theorem eqOn_union : EqOn f₁ f₂ (s₁ ∪ s₂) ↔ EqOn f₁ f₂ s₁ ∧ 
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s₁ : Set.{u1} α} {s₂ : Set.{u1} α} {f₁ : α -> β} {f₂ : α -> β}, (Set.EqOn.{u1, u2} α β f₁ f₂ s₁) -> (Set.EqOn.{u1, u2} α β f₁ f₂ s₂) -> (Set.EqOn.{u1, u2} α β f₁ f₂ (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s₁ s₂))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s₁ : Set.{u2} α} {s₂ : Set.{u2} α} {f₁ : α -> β} {f₂ : α -> β}, (Set.EqOn.{u2, u1} α β f₁ f₂ s₁) -> (Set.EqOn.{u2, u1} α β f₁ f₂ s₂) -> (Set.EqOn.{u2, u1} α β f₁ f₂ (Union.union.{u2} (Set.{u2} α) (Set.instUnionSet_1.{u2} α) s₁ s₂))
+  forall {α : Type.{u2}} {β : Type.{u1}} {s₁ : Set.{u2} α} {s₂ : Set.{u2} α} {f₁ : α -> β} {f₂ : α -> β}, (Set.EqOn.{u2, u1} α β f₁ f₂ s₁) -> (Set.EqOn.{u2, u1} α β f₁ f₂ s₂) -> (Set.EqOn.{u2, u1} α β f₁ f₂ (Union.union.{u2} (Set.{u2} α) (Set.instUnionSet.{u2} α) s₁ s₂))
 Case conversion may be inaccurate. Consider using '#align set.eq_on.union Set.EqOn.unionₓ'. -/
 theorem EqOn.union (h₁ : EqOn f₁ f₂ s₁) (h₂ : EqOn f₁ f₂ s₂) : EqOn f₁ f₂ (s₁ ∪ s₂) :=
   eqOn_union.2 ⟨h₁, h₂⟩
@@ -559,7 +559,7 @@ variable [Preorder α] [Preorder β]
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {s₂ : Set.{u1} α} {f : α -> β} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β], (MonotoneOn.{u1, u2} α β _inst_1 _inst_2 f s) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s₂ s) -> (MonotoneOn.{u1, u2} α β _inst_1 _inst_2 f s₂)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {s₂ : Set.{u2} α} {f : α -> β} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β], (MonotoneOn.{u2, u1} α β _inst_1 _inst_2 f s) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet_1.{u2} α) s₂ s) -> (MonotoneOn.{u2, u1} α β _inst_1 _inst_2 f s₂)
+  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {s₂ : Set.{u2} α} {f : α -> β} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β], (MonotoneOn.{u2, u1} α β _inst_1 _inst_2 f s) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) s₂ s) -> (MonotoneOn.{u2, u1} α β _inst_1 _inst_2 f s₂)
 Case conversion may be inaccurate. Consider using '#align monotone_on.mono MonotoneOn.monoₓ'. -/
 theorem MonotoneOn.mono (h : MonotoneOn f s) (h' : s₂ ⊆ s) : MonotoneOn f s₂ := fun x hx y hy =>
   h (h' hx) (h' hy)
@@ -569,7 +569,7 @@ theorem MonotoneOn.mono (h : MonotoneOn f s) (h' : s₂ ⊆ s) : MonotoneOn f s�
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {s₂ : Set.{u1} α} {f : α -> β} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β], (AntitoneOn.{u1, u2} α β _inst_1 _inst_2 f s) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s₂ s) -> (AntitoneOn.{u1, u2} α β _inst_1 _inst_2 f s₂)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {s₂ : Set.{u2} α} {f : α -> β} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β], (AntitoneOn.{u2, u1} α β _inst_1 _inst_2 f s) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet_1.{u2} α) s₂ s) -> (AntitoneOn.{u2, u1} α β _inst_1 _inst_2 f s₂)
+  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {s₂ : Set.{u2} α} {f : α -> β} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β], (AntitoneOn.{u2, u1} α β _inst_1 _inst_2 f s) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) s₂ s) -> (AntitoneOn.{u2, u1} α β _inst_1 _inst_2 f s₂)
 Case conversion may be inaccurate. Consider using '#align antitone_on.mono AntitoneOn.monoₓ'. -/
 theorem AntitoneOn.mono (h : AntitoneOn f s) (h' : s₂ ⊆ s) : AntitoneOn f s₂ := fun x hx y hy =>
   h (h' hx) (h' hy)
@@ -579,7 +579,7 @@ theorem AntitoneOn.mono (h : AntitoneOn f s) (h' : s₂ ⊆ s) : AntitoneOn f s�
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {s₂ : Set.{u1} α} {f : α -> β} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β], (StrictMonoOn.{u1, u2} α β _inst_1 _inst_2 f s) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s₂ s) -> (StrictMonoOn.{u1, u2} α β _inst_1 _inst_2 f s₂)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {s₂ : Set.{u2} α} {f : α -> β} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β], (StrictMonoOn.{u2, u1} α β _inst_1 _inst_2 f s) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet_1.{u2} α) s₂ s) -> (StrictMonoOn.{u2, u1} α β _inst_1 _inst_2 f s₂)
+  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {s₂ : Set.{u2} α} {f : α -> β} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β], (StrictMonoOn.{u2, u1} α β _inst_1 _inst_2 f s) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) s₂ s) -> (StrictMonoOn.{u2, u1} α β _inst_1 _inst_2 f s₂)
 Case conversion may be inaccurate. Consider using '#align strict_mono_on.mono StrictMonoOn.monoₓ'. -/
 theorem StrictMonoOn.mono (h : StrictMonoOn f s) (h' : s₂ ⊆ s) : StrictMonoOn f s₂ :=
   fun x hx y hy => h (h' hx) (h' hy)
@@ -589,7 +589,7 @@ theorem StrictMonoOn.mono (h : StrictMonoOn f s) (h' : s₂ ⊆ s) : StrictMonoO
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {s₂ : Set.{u1} α} {f : α -> β} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β], (StrictAntiOn.{u1, u2} α β _inst_1 _inst_2 f s) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s₂ s) -> (StrictAntiOn.{u1, u2} α β _inst_1 _inst_2 f s₂)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {s₂ : Set.{u2} α} {f : α -> β} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β], (StrictAntiOn.{u2, u1} α β _inst_1 _inst_2 f s) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet_1.{u2} α) s₂ s) -> (StrictAntiOn.{u2, u1} α β _inst_1 _inst_2 f s₂)
+  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {s₂ : Set.{u2} α} {f : α -> β} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β], (StrictAntiOn.{u2, u1} α β _inst_1 _inst_2 f s) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) s₂ s) -> (StrictAntiOn.{u2, u1} α β _inst_1 _inst_2 f s₂)
 Case conversion may be inaccurate. Consider using '#align strict_anti_on.mono StrictAntiOn.monoₓ'. -/
 theorem StrictAntiOn.mono (h : StrictAntiOn f s) (h' : s₂ ⊆ s) : StrictAntiOn f s₂ :=
   fun x hx y hy => h (h' hx) (h' hy)
@@ -729,7 +729,7 @@ theorem mapsTo_iff_exists_map_subtype : MapsTo f s t ↔ ∃ g : s → t, ∀ x 
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {t : Set.{u2} β} {f : α -> β}, Iff (Set.MapsTo.{u1, u2} α β f s t) (HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) (Set.image.{u1, u2} α β f s) t)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t : Set.{u1} β} {f : α -> β}, Iff (Set.MapsTo.{u2, u1} α β f s t) (HasSubset.Subset.{u1} (Set.{u1} β) (Set.instHasSubsetSet_1.{u1} β) (Set.image.{u2, u1} α β f s) t)
+  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t : Set.{u1} β} {f : α -> β}, Iff (Set.MapsTo.{u2, u1} α β f s t) (HasSubset.Subset.{u1} (Set.{u1} β) (Set.instHasSubsetSet.{u1} β) (Set.image.{u2, u1} α β f s) t)
 Case conversion may be inaccurate. Consider using '#align set.maps_to' Set.mapsTo'ₓ'. -/
 theorem mapsTo' : MapsTo f s t ↔ f '' s ⊆ t :=
   image_subset_iff.symm
@@ -739,7 +739,7 @@ theorem mapsTo' : MapsTo f s t ↔ f '' s ⊆ t :=
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {s : Set.{u1} α} {t : Set.{u2} β}, (Set.MapsTo.{u1, u2} α β f s t) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s (Set.preimage.{u1, u2} α β f t))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {s : Set.{u2} α} {t : Set.{u1} β}, (Set.MapsTo.{u2, u1} α β f s t) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet_1.{u2} α) s (Set.preimage.{u2, u1} α β f t))
+  forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {s : Set.{u2} α} {t : Set.{u1} β}, (Set.MapsTo.{u2, u1} α β f s t) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) s (Set.preimage.{u2, u1} α β f t))
 Case conversion may be inaccurate. Consider using '#align set.maps_to.subset_preimage Set.MapsTo.subset_preimageₓ'. -/
 theorem MapsTo.subset_preimage {f : α → β} {s : Set α} {t : Set β} (hf : MapsTo f s t) :
     s ⊆ f ⁻¹' t :=
@@ -767,7 +767,7 @@ theorem mapsTo_singleton : MapsTo f {a} t ↔ f a ∈ t :=
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {t : Set.{u2} β} {f : α -> β}, (Set.MapsTo.{u1, u2} α β f s t) -> (HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) (Set.image.{u1, u2} α β f s) t)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t : Set.{u1} β} {f : α -> β}, (Set.MapsTo.{u2, u1} α β f s t) -> (HasSubset.Subset.{u1} (Set.{u1} β) (Set.instHasSubsetSet_1.{u1} β) (Set.image.{u2, u1} α β f s) t)
+  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t : Set.{u1} β} {f : α -> β}, (Set.MapsTo.{u2, u1} α β f s t) -> (HasSubset.Subset.{u1} (Set.{u1} β) (Set.instHasSubsetSet.{u1} β) (Set.image.{u2, u1} α β f s) t)
 Case conversion may be inaccurate. Consider using '#align set.maps_to.image_subset Set.MapsTo.image_subsetₓ'. -/
 theorem MapsTo.image_subset (h : MapsTo f s t) : f '' s ⊆ t :=
   mapsTo'.1 h
@@ -853,7 +853,7 @@ theorem mapsTo_of_subsingleton [Subsingleton α] (f : α → α) (s : Set α) : 
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s₁ : Set.{u1} α} {s₂ : Set.{u1} α} {t₁ : Set.{u2} β} {t₂ : Set.{u2} β} {f : α -> β}, (Set.MapsTo.{u1, u2} α β f s₁ t₁) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s₂ s₁) -> (HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) t₁ t₂) -> (Set.MapsTo.{u1, u2} α β f s₂ t₂)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s₁ : Set.{u2} α} {s₂ : Set.{u2} α} {t₁ : Set.{u1} β} {t₂ : Set.{u1} β} {f : α -> β}, (Set.MapsTo.{u2, u1} α β f s₁ t₁) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet_1.{u2} α) s₂ s₁) -> (HasSubset.Subset.{u1} (Set.{u1} β) (Set.instHasSubsetSet_1.{u1} β) t₁ t₂) -> (Set.MapsTo.{u2, u1} α β f s₂ t₂)
+  forall {α : Type.{u2}} {β : Type.{u1}} {s₁ : Set.{u2} α} {s₂ : Set.{u2} α} {t₁ : Set.{u1} β} {t₂ : Set.{u1} β} {f : α -> β}, (Set.MapsTo.{u2, u1} α β f s₁ t₁) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) s₂ s₁) -> (HasSubset.Subset.{u1} (Set.{u1} β) (Set.instHasSubsetSet.{u1} β) t₁ t₂) -> (Set.MapsTo.{u2, u1} α β f s₂ t₂)
 Case conversion may be inaccurate. Consider using '#align set.maps_to.mono Set.MapsTo.monoₓ'. -/
 theorem MapsTo.mono (hf : MapsTo f s₁ t₁) (hs : s₂ ⊆ s₁) (ht : t₁ ⊆ t₂) : MapsTo f s₂ t₂ :=
   fun x hx => ht (hf <| hs hx)
@@ -863,7 +863,7 @@ theorem MapsTo.mono (hf : MapsTo f s₁ t₁) (hs : s₂ ⊆ s₁) (ht : t₁ �
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s₁ : Set.{u1} α} {s₂ : Set.{u1} α} {t : Set.{u2} β} {f : α -> β}, (Set.MapsTo.{u1, u2} α β f s₁ t) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s₂ s₁) -> (Set.MapsTo.{u1, u2} α β f s₂ t)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s₁ : Set.{u2} α} {s₂ : Set.{u2} α} {t : Set.{u1} β} {f : α -> β}, (Set.MapsTo.{u2, u1} α β f s₁ t) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet_1.{u2} α) s₂ s₁) -> (Set.MapsTo.{u2, u1} α β f s₂ t)
+  forall {α : Type.{u2}} {β : Type.{u1}} {s₁ : Set.{u2} α} {s₂ : Set.{u2} α} {t : Set.{u1} β} {f : α -> β}, (Set.MapsTo.{u2, u1} α β f s₁ t) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) s₂ s₁) -> (Set.MapsTo.{u2, u1} α β f s₂ t)
 Case conversion may be inaccurate. Consider using '#align set.maps_to.mono_left Set.MapsTo.mono_leftₓ'. -/
 theorem MapsTo.mono_left (hf : MapsTo f s₁ t) (hs : s₂ ⊆ s₁) : MapsTo f s₂ t := fun x hx =>
   hf (hs hx)
@@ -873,7 +873,7 @@ theorem MapsTo.mono_left (hf : MapsTo f s₁ t) (hs : s₂ ⊆ s₁) : MapsTo f 
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {t₁ : Set.{u2} β} {t₂ : Set.{u2} β} {f : α -> β}, (Set.MapsTo.{u1, u2} α β f s t₁) -> (HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) t₁ t₂) -> (Set.MapsTo.{u1, u2} α β f s t₂)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t₁ : Set.{u1} β} {t₂ : Set.{u1} β} {f : α -> β}, (Set.MapsTo.{u2, u1} α β f s t₁) -> (HasSubset.Subset.{u1} (Set.{u1} β) (Set.instHasSubsetSet_1.{u1} β) t₁ t₂) -> (Set.MapsTo.{u2, u1} α β f s t₂)
+  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t₁ : Set.{u1} β} {t₂ : Set.{u1} β} {f : α -> β}, (Set.MapsTo.{u2, u1} α β f s t₁) -> (HasSubset.Subset.{u1} (Set.{u1} β) (Set.instHasSubsetSet.{u1} β) t₁ t₂) -> (Set.MapsTo.{u2, u1} α β f s t₂)
 Case conversion may be inaccurate. Consider using '#align set.maps_to.mono_right Set.MapsTo.mono_rightₓ'. -/
 theorem MapsTo.mono_right (hf : MapsTo f s t₁) (ht : t₁ ⊆ t₂) : MapsTo f s t₂ := fun x hx =>
   ht (hf hx)
@@ -883,7 +883,7 @@ theorem MapsTo.mono_right (hf : MapsTo f s t₁) (ht : t₁ ⊆ t₂) : MapsTo f
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s₁ : Set.{u1} α} {s₂ : Set.{u1} α} {t₁ : Set.{u2} β} {t₂ : Set.{u2} β} {f : α -> β}, (Set.MapsTo.{u1, u2} α β f s₁ t₁) -> (Set.MapsTo.{u1, u2} α β f s₂ t₂) -> (Set.MapsTo.{u1, u2} α β f (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s₁ s₂) (Union.union.{u2} (Set.{u2} β) (Set.hasUnion.{u2} β) t₁ t₂))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s₁ : Set.{u2} α} {s₂ : Set.{u2} α} {t₁ : Set.{u1} β} {t₂ : Set.{u1} β} {f : α -> β}, (Set.MapsTo.{u2, u1} α β f s₁ t₁) -> (Set.MapsTo.{u2, u1} α β f s₂ t₂) -> (Set.MapsTo.{u2, u1} α β f (Union.union.{u2} (Set.{u2} α) (Set.instUnionSet_1.{u2} α) s₁ s₂) (Union.union.{u1} (Set.{u1} β) (Set.instUnionSet_1.{u1} β) t₁ t₂))
+  forall {α : Type.{u2}} {β : Type.{u1}} {s₁ : Set.{u2} α} {s₂ : Set.{u2} α} {t₁ : Set.{u1} β} {t₂ : Set.{u1} β} {f : α -> β}, (Set.MapsTo.{u2, u1} α β f s₁ t₁) -> (Set.MapsTo.{u2, u1} α β f s₂ t₂) -> (Set.MapsTo.{u2, u1} α β f (Union.union.{u2} (Set.{u2} α) (Set.instUnionSet.{u2} α) s₁ s₂) (Union.union.{u1} (Set.{u1} β) (Set.instUnionSet.{u1} β) t₁ t₂))
 Case conversion may be inaccurate. Consider using '#align set.maps_to.union_union Set.MapsTo.union_unionₓ'. -/
 theorem MapsTo.union_union (h₁ : MapsTo f s₁ t₁) (h₂ : MapsTo f s₂ t₂) :
     MapsTo f (s₁ ∪ s₂) (t₁ ∪ t₂) := fun x hx =>
@@ -894,7 +894,7 @@ theorem MapsTo.union_union (h₁ : MapsTo f s₁ t₁) (h₂ : MapsTo f s₂ t�
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s₁ : Set.{u1} α} {s₂ : Set.{u1} α} {t : Set.{u2} β} {f : α -> β}, (Set.MapsTo.{u1, u2} α β f s₁ t) -> (Set.MapsTo.{u1, u2} α β f s₂ t) -> (Set.MapsTo.{u1, u2} α β f (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s₁ s₂) t)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s₁ : Set.{u2} α} {s₂ : Set.{u2} α} {t : Set.{u1} β} {f : α -> β}, (Set.MapsTo.{u2, u1} α β f s₁ t) -> (Set.MapsTo.{u2, u1} α β f s₂ t) -> (Set.MapsTo.{u2, u1} α β f (Union.union.{u2} (Set.{u2} α) (Set.instUnionSet_1.{u2} α) s₁ s₂) t)
+  forall {α : Type.{u2}} {β : Type.{u1}} {s₁ : Set.{u2} α} {s₂ : Set.{u2} α} {t : Set.{u1} β} {f : α -> β}, (Set.MapsTo.{u2, u1} α β f s₁ t) -> (Set.MapsTo.{u2, u1} α β f s₂ t) -> (Set.MapsTo.{u2, u1} α β f (Union.union.{u2} (Set.{u2} α) (Set.instUnionSet.{u2} α) s₁ s₂) t)
 Case conversion may be inaccurate. Consider using '#align set.maps_to.union Set.MapsTo.unionₓ'. -/
 theorem MapsTo.union (h₁ : MapsTo f s₁ t) (h₂ : MapsTo f s₂ t) : MapsTo f (s₁ ∪ s₂) t :=
   union_self t ▸ h₁.union_union h₂
@@ -904,7 +904,7 @@ theorem MapsTo.union (h₁ : MapsTo f s₁ t) (h₂ : MapsTo f s₂ t) : MapsTo 
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s₁ : Set.{u1} α} {s₂ : Set.{u1} α} {t : Set.{u2} β} {f : α -> β}, Iff (Set.MapsTo.{u1, u2} α β f (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s₁ s₂) t) (And (Set.MapsTo.{u1, u2} α β f s₁ t) (Set.MapsTo.{u1, u2} α β f s₂ t))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s₁ : Set.{u2} α} {s₂ : Set.{u2} α} {t : Set.{u1} β} {f : α -> β}, Iff (Set.MapsTo.{u2, u1} α β f (Union.union.{u2} (Set.{u2} α) (Set.instUnionSet_1.{u2} α) s₁ s₂) t) (And (Set.MapsTo.{u2, u1} α β f s₁ t) (Set.MapsTo.{u2, u1} α β f s₂ t))
+  forall {α : Type.{u2}} {β : Type.{u1}} {s₁ : Set.{u2} α} {s₂ : Set.{u2} α} {t : Set.{u1} β} {f : α -> β}, Iff (Set.MapsTo.{u2, u1} α β f (Union.union.{u2} (Set.{u2} α) (Set.instUnionSet.{u2} α) s₁ s₂) t) (And (Set.MapsTo.{u2, u1} α β f s₁ t) (Set.MapsTo.{u2, u1} α β f s₂ t))
 Case conversion may be inaccurate. Consider using '#align set.maps_to_union Set.mapsTo_unionₓ'. -/
 @[simp]
 theorem mapsTo_union : MapsTo f (s₁ ∪ s₂) t ↔ MapsTo f s₁ t ∧ MapsTo f s₂ t :=
@@ -918,7 +918,7 @@ theorem mapsTo_union : MapsTo f (s₁ ∪ s₂) t ↔ MapsTo f s₁ t ∧ MapsTo
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {t₁ : Set.{u2} β} {t₂ : Set.{u2} β} {f : α -> β}, (Set.MapsTo.{u1, u2} α β f s t₁) -> (Set.MapsTo.{u1, u2} α β f s t₂) -> (Set.MapsTo.{u1, u2} α β f s (Inter.inter.{u2} (Set.{u2} β) (Set.hasInter.{u2} β) t₁ t₂))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t₁ : Set.{u1} β} {t₂ : Set.{u1} β} {f : α -> β}, (Set.MapsTo.{u2, u1} α β f s t₁) -> (Set.MapsTo.{u2, u1} α β f s t₂) -> (Set.MapsTo.{u2, u1} α β f s (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet_1.{u1} β) t₁ t₂))
+  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t₁ : Set.{u1} β} {t₂ : Set.{u1} β} {f : α -> β}, (Set.MapsTo.{u2, u1} α β f s t₁) -> (Set.MapsTo.{u2, u1} α β f s t₂) -> (Set.MapsTo.{u2, u1} α β f s (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet.{u1} β) t₁ t₂))
 Case conversion may be inaccurate. Consider using '#align set.maps_to.inter Set.MapsTo.interₓ'. -/
 theorem MapsTo.inter (h₁ : MapsTo f s t₁) (h₂ : MapsTo f s t₂) : MapsTo f s (t₁ ∩ t₂) := fun x hx =>
   ⟨h₁ hx, h₂ hx⟩
@@ -928,7 +928,7 @@ theorem MapsTo.inter (h₁ : MapsTo f s t₁) (h₂ : MapsTo f s t₂) : MapsTo 
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s₁ : Set.{u1} α} {s₂ : Set.{u1} α} {t₁ : Set.{u2} β} {t₂ : Set.{u2} β} {f : α -> β}, (Set.MapsTo.{u1, u2} α β f s₁ t₁) -> (Set.MapsTo.{u1, u2} α β f s₂ t₂) -> (Set.MapsTo.{u1, u2} α β f (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s₁ s₂) (Inter.inter.{u2} (Set.{u2} β) (Set.hasInter.{u2} β) t₁ t₂))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s₁ : Set.{u2} α} {s₂ : Set.{u2} α} {t₁ : Set.{u1} β} {t₂ : Set.{u1} β} {f : α -> β}, (Set.MapsTo.{u2, u1} α β f s₁ t₁) -> (Set.MapsTo.{u2, u1} α β f s₂ t₂) -> (Set.MapsTo.{u2, u1} α β f (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet_1.{u2} α) s₁ s₂) (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet_1.{u1} β) t₁ t₂))
+  forall {α : Type.{u2}} {β : Type.{u1}} {s₁ : Set.{u2} α} {s₂ : Set.{u2} α} {t₁ : Set.{u1} β} {t₂ : Set.{u1} β} {f : α -> β}, (Set.MapsTo.{u2, u1} α β f s₁ t₁) -> (Set.MapsTo.{u2, u1} α β f s₂ t₂) -> (Set.MapsTo.{u2, u1} α β f (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) s₁ s₂) (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet.{u1} β) t₁ t₂))
 Case conversion may be inaccurate. Consider using '#align set.maps_to.inter_inter Set.MapsTo.inter_interₓ'. -/
 theorem MapsTo.inter_inter (h₁ : MapsTo f s₁ t₁) (h₂ : MapsTo f s₂ t₂) :
     MapsTo f (s₁ ∩ s₂) (t₁ ∩ t₂) := fun x hx => ⟨h₁ hx.1, h₂ hx.2⟩
@@ -938,7 +938,7 @@ theorem MapsTo.inter_inter (h₁ : MapsTo f s₁ t₁) (h₂ : MapsTo f s₂ t�
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {t₁ : Set.{u2} β} {t₂ : Set.{u2} β} {f : α -> β}, Iff (Set.MapsTo.{u1, u2} α β f s (Inter.inter.{u2} (Set.{u2} β) (Set.hasInter.{u2} β) t₁ t₂)) (And (Set.MapsTo.{u1, u2} α β f s t₁) (Set.MapsTo.{u1, u2} α β f s t₂))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t₁ : Set.{u1} β} {t₂ : Set.{u1} β} {f : α -> β}, Iff (Set.MapsTo.{u2, u1} α β f s (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet_1.{u1} β) t₁ t₂)) (And (Set.MapsTo.{u2, u1} α β f s t₁) (Set.MapsTo.{u2, u1} α β f s t₂))
+  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t₁ : Set.{u1} β} {t₂ : Set.{u1} β} {f : α -> β}, Iff (Set.MapsTo.{u2, u1} α β f s (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet.{u1} β) t₁ t₂)) (And (Set.MapsTo.{u2, u1} α β f s t₁) (Set.MapsTo.{u2, u1} α β f s t₂))
 Case conversion may be inaccurate. Consider using '#align set.maps_to_inter Set.mapsTo_interₓ'. -/
 @[simp]
 theorem mapsTo_inter : MapsTo f s (t₁ ∩ t₂) ↔ MapsTo f s t₁ ∧ MapsTo f s t₂ :=
@@ -1212,7 +1212,7 @@ theorem EqOn.injOn_iff (H : EqOn f₁ f₂ s) : InjOn f₁ s ↔ InjOn f₂ s :=
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s₁ : Set.{u1} α} {s₂ : Set.{u1} α} {f : α -> β}, (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s₁ s₂) -> (Set.InjOn.{u1, u2} α β f s₂) -> (Set.InjOn.{u1, u2} α β f s₁)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s₁ : Set.{u2} α} {s₂ : Set.{u2} α} {f : α -> β}, (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet_1.{u2} α) s₁ s₂) -> (Set.InjOn.{u2, u1} α β f s₂) -> (Set.InjOn.{u2, u1} α β f s₁)
+  forall {α : Type.{u2}} {β : Type.{u1}} {s₁ : Set.{u2} α} {s₂ : Set.{u2} α} {f : α -> β}, (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) s₁ s₂) -> (Set.InjOn.{u2, u1} α β f s₂) -> (Set.InjOn.{u2, u1} α β f s₁)
 Case conversion may be inaccurate. Consider using '#align set.inj_on.mono Set.InjOn.monoₓ'. -/
 theorem InjOn.mono (h : s₁ ⊆ s₂) (ht : InjOn f s₂) : InjOn f s₁ := fun x hx y hy H =>
   ht (h hx) (h hy) H
@@ -1222,7 +1222,7 @@ theorem InjOn.mono (h : s₁ ⊆ s₂) (ht : InjOn f s₂) : InjOn f s₁ := fun
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s₁ : Set.{u1} α} {s₂ : Set.{u1} α} {f : α -> β}, (Disjoint.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) s₁ s₂) -> (Iff (Set.InjOn.{u1, u2} α β f (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s₁ s₂)) (And (Set.InjOn.{u1, u2} α β f s₁) (And (Set.InjOn.{u1, u2} α β f s₂) (forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s₁) -> (forall (y : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y s₂) -> (Ne.{succ u2} β (f x) (f y)))))))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s₁ : Set.{u2} α} {s₂ : Set.{u2} α} {f : α -> β}, (Disjoint.{u2} (Set.{u2} α) (SemilatticeInf.toPartialOrder.{u2} (Set.{u2} α) (Lattice.toSemilatticeInf.{u2} (Set.{u2} α) (GeneralizedCoheytingAlgebra.toLattice.{u2} (Set.{u2} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} (Set.{u2} α) (BiheytingAlgebra.toCoheytingAlgebra.{u2} (Set.{u2} α) (BooleanAlgebra.toBiheytingAlgebra.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α))))))) (BoundedOrder.toOrderBot.{u2} (Set.{u2} α) (Preorder.toLE.{u2} (Set.{u2} α) (PartialOrder.toPreorder.{u2} (Set.{u2} α) (SemilatticeInf.toPartialOrder.{u2} (Set.{u2} α) (Lattice.toSemilatticeInf.{u2} (Set.{u2} α) (GeneralizedCoheytingAlgebra.toLattice.{u2} (Set.{u2} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} (Set.{u2} α) (BiheytingAlgebra.toCoheytingAlgebra.{u2} (Set.{u2} α) (BooleanAlgebra.toBiheytingAlgebra.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α))))))))) (BooleanAlgebra.toBoundedOrder.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α))) s₁ s₂) -> (Iff (Set.InjOn.{u2, u1} α β f (Union.union.{u2} (Set.{u2} α) (Set.instUnionSet_1.{u2} α) s₁ s₂)) (And (Set.InjOn.{u2, u1} α β f s₁) (And (Set.InjOn.{u2, u1} α β f s₂) (forall (x : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s₁) -> (forall (y : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) y s₂) -> (Ne.{succ u1} β (f x) (f y)))))))
+  forall {α : Type.{u2}} {β : Type.{u1}} {s₁ : Set.{u2} α} {s₂ : Set.{u2} α} {f : α -> β}, (Disjoint.{u2} (Set.{u2} α) (SemilatticeInf.toPartialOrder.{u2} (Set.{u2} α) (Lattice.toSemilatticeInf.{u2} (Set.{u2} α) (GeneralizedCoheytingAlgebra.toLattice.{u2} (Set.{u2} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} (Set.{u2} α) (BiheytingAlgebra.toCoheytingAlgebra.{u2} (Set.{u2} α) (BooleanAlgebra.toBiheytingAlgebra.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α))))))) (BoundedOrder.toOrderBot.{u2} (Set.{u2} α) (Preorder.toLE.{u2} (Set.{u2} α) (PartialOrder.toPreorder.{u2} (Set.{u2} α) (SemilatticeInf.toPartialOrder.{u2} (Set.{u2} α) (Lattice.toSemilatticeInf.{u2} (Set.{u2} α) (GeneralizedCoheytingAlgebra.toLattice.{u2} (Set.{u2} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} (Set.{u2} α) (BiheytingAlgebra.toCoheytingAlgebra.{u2} (Set.{u2} α) (BooleanAlgebra.toBiheytingAlgebra.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α))))))))) (BooleanAlgebra.toBoundedOrder.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α))) s₁ s₂) -> (Iff (Set.InjOn.{u2, u1} α β f (Union.union.{u2} (Set.{u2} α) (Set.instUnionSet.{u2} α) s₁ s₂)) (And (Set.InjOn.{u2, u1} α β f s₁) (And (Set.InjOn.{u2, u1} α β f s₂) (forall (x : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s₁) -> (forall (y : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) y s₂) -> (Ne.{succ u1} β (f x) (f y)))))))
 Case conversion may be inaccurate. Consider using '#align set.inj_on_union Set.injOn_unionₓ'. -/
 theorem injOn_union (h : Disjoint s₁ s₂) :
     InjOn f (s₁ ∪ s₂) ↔ InjOn f s₁ ∧ InjOn f s₂ ∧ ∀ x ∈ s₁, ∀ y ∈ s₂, f x ≠ f y :=
@@ -1369,7 +1369,7 @@ theorem injOn_preimage {B : Set (Set β)} (hB : B ⊆ 𝒫 range f) : InjOn (pre
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {s₁ : Set.{u1} α} {f : α -> β} {x : α}, (Set.InjOn.{u1, u2} α β f s) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s₁ s) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) (f x) (Set.image.{u1, u2} α β f s₁)) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s₁)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {s₁ : Set.{u2} α} {f : α -> β} {x : α}, (Set.InjOn.{u2, u1} α β f s) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet_1.{u2} α) s₁ s) -> (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) -> (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) (f x) (Set.image.{u2, u1} α β f s₁)) -> (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s₁)
+  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {s₁ : Set.{u2} α} {f : α -> β} {x : α}, (Set.InjOn.{u2, u1} α β f s) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) s₁ s) -> (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) -> (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) (f x) (Set.image.{u2, u1} α β f s₁)) -> (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s₁)
 Case conversion may be inaccurate. Consider using '#align set.inj_on.mem_of_mem_image Set.InjOn.mem_of_mem_imageₓ'. -/
 theorem InjOn.mem_of_mem_image {x} (hf : InjOn f s) (hs : s₁ ⊆ s) (h : x ∈ s) (h₁ : f x ∈ f '' s₁) :
     x ∈ s₁ :=
@@ -1381,7 +1381,7 @@ theorem InjOn.mem_of_mem_image {x} (hf : InjOn f s) (hs : s₁ ⊆ s) (h : x ∈
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {s₁ : Set.{u1} α} {f : α -> β} {x : α}, (Set.InjOn.{u1, u2} α β f s) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s₁ s) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (Iff (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) (f x) (Set.image.{u1, u2} α β f s₁)) (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s₁))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {s₁ : Set.{u2} α} {f : α -> β} {x : α}, (Set.InjOn.{u2, u1} α β f s) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet_1.{u2} α) s₁ s) -> (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) -> (Iff (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) (f x) (Set.image.{u2, u1} α β f s₁)) (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s₁))
+  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {s₁ : Set.{u2} α} {f : α -> β} {x : α}, (Set.InjOn.{u2, u1} α β f s) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) s₁ s) -> (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) -> (Iff (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) (f x) (Set.image.{u2, u1} α β f s₁)) (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s₁))
 Case conversion may be inaccurate. Consider using '#align set.inj_on.mem_image_iff Set.InjOn.mem_image_iffₓ'. -/
 theorem InjOn.mem_image_iff {x} (hf : InjOn f s) (hs : s₁ ⊆ s) (hx : x ∈ s) :
     f x ∈ f '' s₁ ↔ x ∈ s₁ :=
@@ -1392,7 +1392,7 @@ theorem InjOn.mem_image_iff {x} (hf : InjOn f s) (hs : s₁ ⊆ s) (hx : x ∈ s
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {s₁ : Set.{u1} α} {f : α -> β}, (Set.InjOn.{u1, u2} α β f s) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s₁ s) -> (Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (Set.preimage.{u1, u2} α β f (Set.image.{u1, u2} α β f s₁)) s) s₁)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {s₁ : Set.{u2} α} {f : α -> β}, (Set.InjOn.{u2, u1} α β f s) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet_1.{u2} α) s₁ s) -> (Eq.{succ u2} (Set.{u2} α) (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet_1.{u2} α) (Set.preimage.{u2, u1} α β f (Set.image.{u2, u1} α β f s₁)) s) s₁)
+  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {s₁ : Set.{u2} α} {f : α -> β}, (Set.InjOn.{u2, u1} α β f s) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) s₁ s) -> (Eq.{succ u2} (Set.{u2} α) (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) (Set.preimage.{u2, u1} α β f (Set.image.{u2, u1} α β f s₁)) s) s₁)
 Case conversion may be inaccurate. Consider using '#align set.inj_on.preimage_image_inter Set.InjOn.preimage_image_interₓ'. -/
 theorem InjOn.preimage_image_inter (hf : InjOn f s) (hs : s₁ ⊆ s) : f ⁻¹' (f '' s₁) ∩ s = s₁ :=
   ext fun x => ⟨fun ⟨h₁, h₂⟩ => hf.mem_of_mem_image hs h₂ h₁, fun h => ⟨mem_image_of_mem _ h, hs h⟩⟩
@@ -1423,7 +1423,7 @@ theorem InjOn.cancel_left (hg : t.InjOn g) (hf₁ : s.MapsTo f₁ t) (hf₂ : s.
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {s : Set.{u1} α} {t : Set.{u1} α} {u : Set.{u1} α}, (Set.InjOn.{u1, u2} α β f u) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s u) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) t u) -> (Eq.{succ u2} (Set.{u2} β) (Set.image.{u1, u2} α β f (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t)) (Inter.inter.{u2} (Set.{u2} β) (Set.hasInter.{u2} β) (Set.image.{u1, u2} α β f s) (Set.image.{u1, u2} α β f t)))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {s : Set.{u2} α} {t : Set.{u2} α} {u : Set.{u2} α}, (Set.InjOn.{u2, u1} α β f u) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet_1.{u2} α) s u) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet_1.{u2} α) t u) -> (Eq.{succ u1} (Set.{u1} β) (Set.image.{u2, u1} α β f (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet_1.{u2} α) s t)) (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet_1.{u1} β) (Set.image.{u2, u1} α β f s) (Set.image.{u2, u1} α β f t)))
+  forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {s : Set.{u2} α} {t : Set.{u2} α} {u : Set.{u2} α}, (Set.InjOn.{u2, u1} α β f u) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) s u) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) t u) -> (Eq.{succ u1} (Set.{u1} β) (Set.image.{u2, u1} α β f (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) s t)) (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet.{u1} β) (Set.image.{u2, u1} α β f s) (Set.image.{u2, u1} α β f t)))
 Case conversion may be inaccurate. Consider using '#align set.inj_on.image_inter Set.InjOn.image_interₓ'. -/
 theorem InjOn.image_inter {s t u : Set α} (hf : u.InjOn f) (hs : s ⊆ u) (ht : t ⊆ u) :
     f '' (s ∩ t) = f '' s ∩ f '' t :=
@@ -1441,7 +1441,7 @@ theorem InjOn.image_inter {s t u : Set α} (hf : u.InjOn f) (hs : s ⊆ u) (ht :
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {t : Set.{u1} α} {u : Set.{u1} α} {f : α -> β}, (Disjoint.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) s t) -> (Set.InjOn.{u1, u2} α β f u) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s u) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) t u) -> (Disjoint.{u2} (Set.{u2} β) (SemilatticeInf.toPartialOrder.{u2} (Set.{u2} β) (Lattice.toSemilatticeInf.{u2} (Set.{u2} β) (GeneralizedCoheytingAlgebra.toLattice.{u2} (Set.{u2} β) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u2} (Set.{u2} β) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u2} (Set.{u2} β) (Set.booleanAlgebra.{u2} β)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u2} (Set.{u2} β) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u2} (Set.{u2} β) (Set.booleanAlgebra.{u2} β))) (Set.image.{u1, u2} α β f s) (Set.image.{u1, u2} α β f t))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t : Set.{u2} α} {u : Set.{u2} α} {f : α -> β}, (Disjoint.{u2} (Set.{u2} α) (SemilatticeInf.toPartialOrder.{u2} (Set.{u2} α) (Lattice.toSemilatticeInf.{u2} (Set.{u2} α) (GeneralizedCoheytingAlgebra.toLattice.{u2} (Set.{u2} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} (Set.{u2} α) (BiheytingAlgebra.toCoheytingAlgebra.{u2} (Set.{u2} α) (BooleanAlgebra.toBiheytingAlgebra.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α))))))) (BoundedOrder.toOrderBot.{u2} (Set.{u2} α) (Preorder.toLE.{u2} (Set.{u2} α) (PartialOrder.toPreorder.{u2} (Set.{u2} α) (SemilatticeInf.toPartialOrder.{u2} (Set.{u2} α) (Lattice.toSemilatticeInf.{u2} (Set.{u2} α) (GeneralizedCoheytingAlgebra.toLattice.{u2} (Set.{u2} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} (Set.{u2} α) (BiheytingAlgebra.toCoheytingAlgebra.{u2} (Set.{u2} α) (BooleanAlgebra.toBiheytingAlgebra.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α))))))))) (BooleanAlgebra.toBoundedOrder.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α))) s t) -> (Set.InjOn.{u2, u1} α β f u) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet_1.{u2} α) s u) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet_1.{u2} α) t u) -> (Disjoint.{u1} (Set.{u1} β) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} β) (Lattice.toSemilatticeInf.{u1} (Set.{u1} β) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} β) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} β) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (Set.{u1} β) (BooleanAlgebra.toBiheytingAlgebra.{u1} (Set.{u1} β) (Set.instBooleanAlgebraSet.{u1} β))))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} β) (Preorder.toLE.{u1} (Set.{u1} β) (PartialOrder.toPreorder.{u1} (Set.{u1} β) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} β) (Lattice.toSemilatticeInf.{u1} (Set.{u1} β) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} β) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} β) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (Set.{u1} β) (BooleanAlgebra.toBiheytingAlgebra.{u1} (Set.{u1} β) (Set.instBooleanAlgebraSet.{u1} β))))))))) (BooleanAlgebra.toBoundedOrder.{u1} (Set.{u1} β) (Set.instBooleanAlgebraSet.{u1} β))) (Set.image.{u2, u1} α β f s) (Set.image.{u2, u1} α β f t))
+  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t : Set.{u2} α} {u : Set.{u2} α} {f : α -> β}, (Disjoint.{u2} (Set.{u2} α) (SemilatticeInf.toPartialOrder.{u2} (Set.{u2} α) (Lattice.toSemilatticeInf.{u2} (Set.{u2} α) (GeneralizedCoheytingAlgebra.toLattice.{u2} (Set.{u2} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} (Set.{u2} α) (BiheytingAlgebra.toCoheytingAlgebra.{u2} (Set.{u2} α) (BooleanAlgebra.toBiheytingAlgebra.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α))))))) (BoundedOrder.toOrderBot.{u2} (Set.{u2} α) (Preorder.toLE.{u2} (Set.{u2} α) (PartialOrder.toPreorder.{u2} (Set.{u2} α) (SemilatticeInf.toPartialOrder.{u2} (Set.{u2} α) (Lattice.toSemilatticeInf.{u2} (Set.{u2} α) (GeneralizedCoheytingAlgebra.toLattice.{u2} (Set.{u2} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} (Set.{u2} α) (BiheytingAlgebra.toCoheytingAlgebra.{u2} (Set.{u2} α) (BooleanAlgebra.toBiheytingAlgebra.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α))))))))) (BooleanAlgebra.toBoundedOrder.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α))) s t) -> (Set.InjOn.{u2, u1} α β f u) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) s u) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) t u) -> (Disjoint.{u1} (Set.{u1} β) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} β) (Lattice.toSemilatticeInf.{u1} (Set.{u1} β) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} β) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} β) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (Set.{u1} β) (BooleanAlgebra.toBiheytingAlgebra.{u1} (Set.{u1} β) (Set.instBooleanAlgebraSet.{u1} β))))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} β) (Preorder.toLE.{u1} (Set.{u1} β) (PartialOrder.toPreorder.{u1} (Set.{u1} β) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} β) (Lattice.toSemilatticeInf.{u1} (Set.{u1} β) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} β) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} β) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (Set.{u1} β) (BooleanAlgebra.toBiheytingAlgebra.{u1} (Set.{u1} β) (Set.instBooleanAlgebraSet.{u1} β))))))))) (BooleanAlgebra.toBoundedOrder.{u1} (Set.{u1} β) (Set.instBooleanAlgebraSet.{u1} β))) (Set.image.{u2, u1} α β f s) (Set.image.{u2, u1} α β f t))
 Case conversion may be inaccurate. Consider using '#align disjoint.image Disjoint.imageₓ'. -/
 theorem Disjoint.image {s t u : Set α} {f : α → β} (h : Disjoint s t) (hf : InjOn f u) (hs : s ⊆ u)
     (ht : t ⊆ u) : Disjoint (f '' s) (f '' t) :=
@@ -1464,7 +1464,7 @@ def SurjOn (f : α → β) (s : Set α) (t : Set β) : Prop :=
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {t : Set.{u2} β} {f : α -> β}, (Set.SurjOn.{u1, u2} α β f s t) -> (HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) t (Set.range.{u2, succ u1} β α f))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t : Set.{u1} β} {f : α -> β}, (Set.SurjOn.{u2, u1} α β f s t) -> (HasSubset.Subset.{u1} (Set.{u1} β) (Set.instHasSubsetSet_1.{u1} β) t (Set.range.{u1, succ u2} β α f))
+  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t : Set.{u1} β} {f : α -> β}, (Set.SurjOn.{u2, u1} α β f s t) -> (HasSubset.Subset.{u1} (Set.{u1} β) (Set.instHasSubsetSet.{u1} β) t (Set.range.{u1, succ u2} β α f))
 Case conversion may be inaccurate. Consider using '#align set.surj_on.subset_range Set.SurjOn.subset_rangeₓ'. -/
 theorem SurjOn.subset_range (h : SurjOn f s t) : t ⊆ range f :=
   Subset.trans h <| image_subset_range f s
@@ -1474,7 +1474,7 @@ theorem SurjOn.subset_range (h : SurjOn f s t) : t ⊆ range f :=
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {t : Set.{u2} β} {f : α -> β}, Iff (Set.SurjOn.{u1, u2} α β f s t) (Exists.{succ u2} (Set.{u2} β) (fun (t' : Set.{u2} β) => Exists.{max (succ u1) (succ u2)} ((coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) -> (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t')) (fun (g : (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) -> (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t')) => And (HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) t t') (And (Function.Surjective.{succ u1, succ u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t') g) (forall (x : coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s), Eq.{succ u2} β (f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s))))) x)) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t') β (HasLiftT.mk.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t') β (CoeTCₓ.coe.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t') β (coeBase.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t') β (coeSubtype.{succ u2} β (fun (x : β) => Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) x t'))))) (g x)))))))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t : Set.{u1} β} {f : α -> β}, Iff (Set.SurjOn.{u2, u1} α β f s t) (Exists.{succ u1} (Set.{u1} β) (fun (t' : Set.{u1} β) => Exists.{max (succ u2) (succ u1)} ((Set.Elem.{u2} α s) -> (Set.Elem.{u1} β t')) (fun (g : (Set.Elem.{u2} α s) -> (Set.Elem.{u1} β t')) => And (HasSubset.Subset.{u1} (Set.{u1} β) (Set.instHasSubsetSet_1.{u1} β) t t') (And (Function.Surjective.{succ u2, succ u1} (Set.Elem.{u2} α s) (Set.Elem.{u1} β t') g) (forall (x : Set.Elem.{u2} α s), Eq.{succ u1} β (f (Subtype.val.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) x)) (Subtype.val.{succ u1} β (fun (x : β) => Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) x t') (g x)))))))
+  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t : Set.{u1} β} {f : α -> β}, Iff (Set.SurjOn.{u2, u1} α β f s t) (Exists.{succ u1} (Set.{u1} β) (fun (t' : Set.{u1} β) => Exists.{max (succ u2) (succ u1)} ((Set.Elem.{u2} α s) -> (Set.Elem.{u1} β t')) (fun (g : (Set.Elem.{u2} α s) -> (Set.Elem.{u1} β t')) => And (HasSubset.Subset.{u1} (Set.{u1} β) (Set.instHasSubsetSet.{u1} β) t t') (And (Function.Surjective.{succ u2, succ u1} (Set.Elem.{u2} α s) (Set.Elem.{u1} β t') g) (forall (x : Set.Elem.{u2} α s), Eq.{succ u1} β (f (Subtype.val.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) x)) (Subtype.val.{succ u1} β (fun (x : β) => Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) x t') (g x)))))))
 Case conversion may be inaccurate. Consider using '#align set.surj_on_iff_exists_map_subtype Set.surjOn_iff_exists_map_subtypeₓ'. -/
 theorem surjOn_iff_exists_map_subtype :
     SurjOn f s t ↔ ∃ (t' : Set β)(g : s → t'), t ⊆ t' ∧ Surjective g ∧ ∀ x : s, f x = g x :=
@@ -1550,7 +1550,7 @@ theorem EqOn.surjOn_iff (h : EqOn f₁ f₂ s) : SurjOn f₁ s t ↔ SurjOn f₂
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s₁ : Set.{u1} α} {s₂ : Set.{u1} α} {t₁ : Set.{u2} β} {t₂ : Set.{u2} β} {f : α -> β}, (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s₁ s₂) -> (HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) t₁ t₂) -> (Set.SurjOn.{u1, u2} α β f s₁ t₂) -> (Set.SurjOn.{u1, u2} α β f s₂ t₁)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s₁ : Set.{u2} α} {s₂ : Set.{u2} α} {t₁ : Set.{u1} β} {t₂ : Set.{u1} β} {f : α -> β}, (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet_1.{u2} α) s₁ s₂) -> (HasSubset.Subset.{u1} (Set.{u1} β) (Set.instHasSubsetSet_1.{u1} β) t₁ t₂) -> (Set.SurjOn.{u2, u1} α β f s₁ t₂) -> (Set.SurjOn.{u2, u1} α β f s₂ t₁)
+  forall {α : Type.{u2}} {β : Type.{u1}} {s₁ : Set.{u2} α} {s₂ : Set.{u2} α} {t₁ : Set.{u1} β} {t₂ : Set.{u1} β} {f : α -> β}, (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) s₁ s₂) -> (HasSubset.Subset.{u1} (Set.{u1} β) (Set.instHasSubsetSet.{u1} β) t₁ t₂) -> (Set.SurjOn.{u2, u1} α β f s₁ t₂) -> (Set.SurjOn.{u2, u1} α β f s₂ t₁)
 Case conversion may be inaccurate. Consider using '#align set.surj_on.mono Set.SurjOn.monoₓ'. -/
 theorem SurjOn.mono (hs : s₁ ⊆ s₂) (ht : t₁ ⊆ t₂) (hf : SurjOn f s₁ t₂) : SurjOn f s₂ t₁ :=
   Subset.trans ht <| Subset.trans hf <| image_subset _ hs
@@ -1560,7 +1560,7 @@ theorem SurjOn.mono (hs : s₁ ⊆ s₂) (ht : t₁ ⊆ t₂) (hf : SurjOn f s�
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {t₁ : Set.{u2} β} {t₂ : Set.{u2} β} {f : α -> β}, (Set.SurjOn.{u1, u2} α β f s t₁) -> (Set.SurjOn.{u1, u2} α β f s t₂) -> (Set.SurjOn.{u1, u2} α β f s (Union.union.{u2} (Set.{u2} β) (Set.hasUnion.{u2} β) t₁ t₂))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t₁ : Set.{u1} β} {t₂ : Set.{u1} β} {f : α -> β}, (Set.SurjOn.{u2, u1} α β f s t₁) -> (Set.SurjOn.{u2, u1} α β f s t₂) -> (Set.SurjOn.{u2, u1} α β f s (Union.union.{u1} (Set.{u1} β) (Set.instUnionSet_1.{u1} β) t₁ t₂))
+  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t₁ : Set.{u1} β} {t₂ : Set.{u1} β} {f : α -> β}, (Set.SurjOn.{u2, u1} α β f s t₁) -> (Set.SurjOn.{u2, u1} α β f s t₂) -> (Set.SurjOn.{u2, u1} α β f s (Union.union.{u1} (Set.{u1} β) (Set.instUnionSet.{u1} β) t₁ t₂))
 Case conversion may be inaccurate. Consider using '#align set.surj_on.union Set.SurjOn.unionₓ'. -/
 theorem SurjOn.union (h₁ : SurjOn f s t₁) (h₂ : SurjOn f s t₂) : SurjOn f s (t₁ ∪ t₂) := fun x hx =>
   hx.elim (fun hx => h₁ hx) fun hx => h₂ hx
@@ -1570,7 +1570,7 @@ theorem SurjOn.union (h₁ : SurjOn f s t₁) (h₂ : SurjOn f s t₂) : SurjOn 
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s₁ : Set.{u1} α} {s₂ : Set.{u1} α} {t₁ : Set.{u2} β} {t₂ : Set.{u2} β} {f : α -> β}, (Set.SurjOn.{u1, u2} α β f s₁ t₁) -> (Set.SurjOn.{u1, u2} α β f s₂ t₂) -> (Set.SurjOn.{u1, u2} α β f (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s₁ s₂) (Union.union.{u2} (Set.{u2} β) (Set.hasUnion.{u2} β) t₁ t₂))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s₁ : Set.{u2} α} {s₂ : Set.{u2} α} {t₁ : Set.{u1} β} {t₂ : Set.{u1} β} {f : α -> β}, (Set.SurjOn.{u2, u1} α β f s₁ t₁) -> (Set.SurjOn.{u2, u1} α β f s₂ t₂) -> (Set.SurjOn.{u2, u1} α β f (Union.union.{u2} (Set.{u2} α) (Set.instUnionSet_1.{u2} α) s₁ s₂) (Union.union.{u1} (Set.{u1} β) (Set.instUnionSet_1.{u1} β) t₁ t₂))
+  forall {α : Type.{u2}} {β : Type.{u1}} {s₁ : Set.{u2} α} {s₂ : Set.{u2} α} {t₁ : Set.{u1} β} {t₂ : Set.{u1} β} {f : α -> β}, (Set.SurjOn.{u2, u1} α β f s₁ t₁) -> (Set.SurjOn.{u2, u1} α β f s₂ t₂) -> (Set.SurjOn.{u2, u1} α β f (Union.union.{u2} (Set.{u2} α) (Set.instUnionSet.{u2} α) s₁ s₂) (Union.union.{u1} (Set.{u1} β) (Set.instUnionSet.{u1} β) t₁ t₂))
 Case conversion may be inaccurate. Consider using '#align set.surj_on.union_union Set.SurjOn.union_unionₓ'. -/
 theorem SurjOn.union_union (h₁ : SurjOn f s₁ t₁) (h₂ : SurjOn f s₂ t₂) :
     SurjOn f (s₁ ∪ s₂) (t₁ ∪ t₂) :=
@@ -1582,7 +1582,7 @@ theorem SurjOn.union_union (h₁ : SurjOn f s₁ t₁) (h₂ : SurjOn f s₂ t�
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s₁ : Set.{u1} α} {s₂ : Set.{u1} α} {t₁ : Set.{u2} β} {t₂ : Set.{u2} β} {f : α -> β}, (Set.SurjOn.{u1, u2} α β f s₁ t₁) -> (Set.SurjOn.{u1, u2} α β f s₂ t₂) -> (Set.InjOn.{u1, u2} α β f (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s₁ s₂)) -> (Set.SurjOn.{u1, u2} α β f (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s₁ s₂) (Inter.inter.{u2} (Set.{u2} β) (Set.hasInter.{u2} β) t₁ t₂))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s₁ : Set.{u2} α} {s₂ : Set.{u2} α} {t₁ : Set.{u1} β} {t₂ : Set.{u1} β} {f : α -> β}, (Set.SurjOn.{u2, u1} α β f s₁ t₁) -> (Set.SurjOn.{u2, u1} α β f s₂ t₂) -> (Set.InjOn.{u2, u1} α β f (Union.union.{u2} (Set.{u2} α) (Set.instUnionSet_1.{u2} α) s₁ s₂)) -> (Set.SurjOn.{u2, u1} α β f (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet_1.{u2} α) s₁ s₂) (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet_1.{u1} β) t₁ t₂))
+  forall {α : Type.{u2}} {β : Type.{u1}} {s₁ : Set.{u2} α} {s₂ : Set.{u2} α} {t₁ : Set.{u1} β} {t₂ : Set.{u1} β} {f : α -> β}, (Set.SurjOn.{u2, u1} α β f s₁ t₁) -> (Set.SurjOn.{u2, u1} α β f s₂ t₂) -> (Set.InjOn.{u2, u1} α β f (Union.union.{u2} (Set.{u2} α) (Set.instUnionSet.{u2} α) s₁ s₂)) -> (Set.SurjOn.{u2, u1} α β f (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) s₁ s₂) (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet.{u1} β) t₁ t₂))
 Case conversion may be inaccurate. Consider using '#align set.surj_on.inter_inter Set.SurjOn.inter_interₓ'. -/
 theorem SurjOn.inter_inter (h₁ : SurjOn f s₁ t₁) (h₂ : SurjOn f s₂ t₂) (h : InjOn f (s₁ ∪ s₂)) :
     SurjOn f (s₁ ∩ s₂) (t₁ ∩ t₂) := by
@@ -1597,7 +1597,7 @@ theorem SurjOn.inter_inter (h₁ : SurjOn f s₁ t₁) (h₂ : SurjOn f s₂ t�
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s₁ : Set.{u1} α} {s₂ : Set.{u1} α} {t : Set.{u2} β} {f : α -> β}, (Set.SurjOn.{u1, u2} α β f s₁ t) -> (Set.SurjOn.{u1, u2} α β f s₂ t) -> (Set.InjOn.{u1, u2} α β f (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s₁ s₂)) -> (Set.SurjOn.{u1, u2} α β f (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s₁ s₂) t)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s₁ : Set.{u2} α} {s₂ : Set.{u2} α} {t : Set.{u1} β} {f : α -> β}, (Set.SurjOn.{u2, u1} α β f s₁ t) -> (Set.SurjOn.{u2, u1} α β f s₂ t) -> (Set.InjOn.{u2, u1} α β f (Union.union.{u2} (Set.{u2} α) (Set.instUnionSet_1.{u2} α) s₁ s₂)) -> (Set.SurjOn.{u2, u1} α β f (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet_1.{u2} α) s₁ s₂) t)
+  forall {α : Type.{u2}} {β : Type.{u1}} {s₁ : Set.{u2} α} {s₂ : Set.{u2} α} {t : Set.{u1} β} {f : α -> β}, (Set.SurjOn.{u2, u1} α β f s₁ t) -> (Set.SurjOn.{u2, u1} α β f s₂ t) -> (Set.InjOn.{u2, u1} α β f (Union.union.{u2} (Set.{u2} α) (Set.instUnionSet.{u2} α) s₁ s₂)) -> (Set.SurjOn.{u2, u1} α β f (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) s₁ s₂) t)
 Case conversion may be inaccurate. Consider using '#align set.surj_on.inter Set.SurjOn.interₓ'. -/
 theorem SurjOn.inter (h₁ : SurjOn f s₁ t) (h₂ : SurjOn f s₂ t) (h : InjOn f (s₁ ∪ s₂)) :
     SurjOn f (s₁ ∩ s₂) t :=
@@ -1723,7 +1723,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t : Set.{u1} β} {f : α -> β}, (Set.MapsTo.{u2, u1} α β f s t) -> (Function.Surjective.{succ u2, succ u1} α β f) -> (Set.SurjOn.{u2, u1} α β f (HasCompl.compl.{u2} (Set.{u2} α) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α)) s) (HasCompl.compl.{u1} (Set.{u1} β) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} β) (Set.instBooleanAlgebraSet.{u1} β)) t))
 Case conversion may be inaccurate. Consider using '#align set.maps_to.surj_on_compl Set.MapsTo.surjOn_complₓ'. -/
 theorem MapsTo.surjOn_compl (h : MapsTo f s t) (h' : Surjective f) : SurjOn f (sᶜ) (tᶜ) :=
-  h'.forall.2 fun x ht => (mem_image_of_mem _) fun hs => ht (h hs)
+  h'.forall.2 fun x ht => mem_image_of_mem _ fun hs => ht (h hs)
 #align set.maps_to.surj_on_compl Set.MapsTo.surjOn_compl
 
 /- warning: set.eq_on.cancel_right -> Set.EqOn.cancel_right is a dubious translation:
@@ -1835,7 +1835,7 @@ theorem bijOn_singleton : BijOn f {a} {b} ↔ f a = b := by simp [bij_on, eq_com
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s₁ : Set.{u1} α} {s₂ : Set.{u1} α} {t₁ : Set.{u2} β} {t₂ : Set.{u2} β} {f : α -> β}, (Set.BijOn.{u1, u2} α β f s₁ t₁) -> (Set.MapsTo.{u1, u2} α β f s₂ t₂) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s₁ (Set.preimage.{u1, u2} α β f t₂)) s₂) -> (Set.BijOn.{u1, u2} α β f (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s₁ s₂) (Inter.inter.{u2} (Set.{u2} β) (Set.hasInter.{u2} β) t₁ t₂))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s₁ : Set.{u2} α} {s₂ : Set.{u2} α} {t₁ : Set.{u1} β} {t₂ : Set.{u1} β} {f : α -> β}, (Set.BijOn.{u2, u1} α β f s₁ t₁) -> (Set.MapsTo.{u2, u1} α β f s₂ t₂) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet_1.{u2} α) (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet_1.{u2} α) s₁ (Set.preimage.{u2, u1} α β f t₂)) s₂) -> (Set.BijOn.{u2, u1} α β f (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet_1.{u2} α) s₁ s₂) (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet_1.{u1} β) t₁ t₂))
+  forall {α : Type.{u2}} {β : Type.{u1}} {s₁ : Set.{u2} α} {s₂ : Set.{u2} α} {t₁ : Set.{u1} β} {t₂ : Set.{u1} β} {f : α -> β}, (Set.BijOn.{u2, u1} α β f s₁ t₁) -> (Set.MapsTo.{u2, u1} α β f s₂ t₂) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) s₁ (Set.preimage.{u2, u1} α β f t₂)) s₂) -> (Set.BijOn.{u2, u1} α β f (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) s₁ s₂) (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet.{u1} β) t₁ t₂))
 Case conversion may be inaccurate. Consider using '#align set.bij_on.inter_maps_to Set.BijOn.inter_mapsToₓ'. -/
 theorem BijOn.inter_mapsTo (h₁ : BijOn f s₁ t₁) (h₂ : MapsTo f s₂ t₂) (h₃ : s₁ ∩ f ⁻¹' t₂ ⊆ s₂) :
     BijOn f (s₁ ∩ s₂) (t₁ ∩ t₂) :=
@@ -1848,7 +1848,7 @@ theorem BijOn.inter_mapsTo (h₁ : BijOn f s₁ t₁) (h₂ : MapsTo f s₂ t₂
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s₁ : Set.{u1} α} {s₂ : Set.{u1} α} {t₁ : Set.{u2} β} {t₂ : Set.{u2} β} {f : α -> β}, (Set.MapsTo.{u1, u2} α β f s₁ t₁) -> (Set.BijOn.{u1, u2} α β f s₂ t₂) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s₂ (Set.preimage.{u1, u2} α β f t₁)) s₁) -> (Set.BijOn.{u1, u2} α β f (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s₁ s₂) (Inter.inter.{u2} (Set.{u2} β) (Set.hasInter.{u2} β) t₁ t₂))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s₁ : Set.{u2} α} {s₂ : Set.{u2} α} {t₁ : Set.{u1} β} {t₂ : Set.{u1} β} {f : α -> β}, (Set.MapsTo.{u2, u1} α β f s₁ t₁) -> (Set.BijOn.{u2, u1} α β f s₂ t₂) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet_1.{u2} α) (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet_1.{u2} α) s₂ (Set.preimage.{u2, u1} α β f t₁)) s₁) -> (Set.BijOn.{u2, u1} α β f (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet_1.{u2} α) s₁ s₂) (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet_1.{u1} β) t₁ t₂))
+  forall {α : Type.{u2}} {β : Type.{u1}} {s₁ : Set.{u2} α} {s₂ : Set.{u2} α} {t₁ : Set.{u1} β} {t₂ : Set.{u1} β} {f : α -> β}, (Set.MapsTo.{u2, u1} α β f s₁ t₁) -> (Set.BijOn.{u2, u1} α β f s₂ t₂) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) s₂ (Set.preimage.{u2, u1} α β f t₁)) s₁) -> (Set.BijOn.{u2, u1} α β f (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) s₁ s₂) (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet.{u1} β) t₁ t₂))
 Case conversion may be inaccurate. Consider using '#align set.maps_to.inter_bij_on Set.MapsTo.inter_bijOnₓ'. -/
 theorem MapsTo.inter_bijOn (h₁ : MapsTo f s₁ t₁) (h₂ : BijOn f s₂ t₂) (h₃ : s₂ ∩ f ⁻¹' t₁ ⊆ s₁) :
     BijOn f (s₁ ∩ s₂) (t₁ ∩ t₂) :=
@@ -1859,7 +1859,7 @@ theorem MapsTo.inter_bijOn (h₁ : MapsTo f s₁ t₁) (h₂ : BijOn f s₂ t₂
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s₁ : Set.{u1} α} {s₂ : Set.{u1} α} {t₁ : Set.{u2} β} {t₂ : Set.{u2} β} {f : α -> β}, (Set.BijOn.{u1, u2} α β f s₁ t₁) -> (Set.BijOn.{u1, u2} α β f s₂ t₂) -> (Set.InjOn.{u1, u2} α β f (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s₁ s₂)) -> (Set.BijOn.{u1, u2} α β f (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s₁ s₂) (Inter.inter.{u2} (Set.{u2} β) (Set.hasInter.{u2} β) t₁ t₂))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s₁ : Set.{u2} α} {s₂ : Set.{u2} α} {t₁ : Set.{u1} β} {t₂ : Set.{u1} β} {f : α -> β}, (Set.BijOn.{u2, u1} α β f s₁ t₁) -> (Set.BijOn.{u2, u1} α β f s₂ t₂) -> (Set.InjOn.{u2, u1} α β f (Union.union.{u2} (Set.{u2} α) (Set.instUnionSet_1.{u2} α) s₁ s₂)) -> (Set.BijOn.{u2, u1} α β f (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet_1.{u2} α) s₁ s₂) (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet_1.{u1} β) t₁ t₂))
+  forall {α : Type.{u2}} {β : Type.{u1}} {s₁ : Set.{u2} α} {s₂ : Set.{u2} α} {t₁ : Set.{u1} β} {t₂ : Set.{u1} β} {f : α -> β}, (Set.BijOn.{u2, u1} α β f s₁ t₁) -> (Set.BijOn.{u2, u1} α β f s₂ t₂) -> (Set.InjOn.{u2, u1} α β f (Union.union.{u2} (Set.{u2} α) (Set.instUnionSet.{u2} α) s₁ s₂)) -> (Set.BijOn.{u2, u1} α β f (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) s₁ s₂) (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet.{u1} β) t₁ t₂))
 Case conversion may be inaccurate. Consider using '#align set.bij_on.inter Set.BijOn.interₓ'. -/
 theorem BijOn.inter (h₁ : BijOn f s₁ t₁) (h₂ : BijOn f s₂ t₂) (h : InjOn f (s₁ ∪ s₂)) :
     BijOn f (s₁ ∩ s₂) (t₁ ∩ t₂) :=
@@ -1871,7 +1871,7 @@ theorem BijOn.inter (h₁ : BijOn f s₁ t₁) (h₂ : BijOn f s₂ t₂) (h : I
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s₁ : Set.{u1} α} {s₂ : Set.{u1} α} {t₁ : Set.{u2} β} {t₂ : Set.{u2} β} {f : α -> β}, (Set.BijOn.{u1, u2} α β f s₁ t₁) -> (Set.BijOn.{u1, u2} α β f s₂ t₂) -> (Set.InjOn.{u1, u2} α β f (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s₁ s₂)) -> (Set.BijOn.{u1, u2} α β f (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s₁ s₂) (Union.union.{u2} (Set.{u2} β) (Set.hasUnion.{u2} β) t₁ t₂))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s₁ : Set.{u2} α} {s₂ : Set.{u2} α} {t₁ : Set.{u1} β} {t₂ : Set.{u1} β} {f : α -> β}, (Set.BijOn.{u2, u1} α β f s₁ t₁) -> (Set.BijOn.{u2, u1} α β f s₂ t₂) -> (Set.InjOn.{u2, u1} α β f (Union.union.{u2} (Set.{u2} α) (Set.instUnionSet_1.{u2} α) s₁ s₂)) -> (Set.BijOn.{u2, u1} α β f (Union.union.{u2} (Set.{u2} α) (Set.instUnionSet_1.{u2} α) s₁ s₂) (Union.union.{u1} (Set.{u1} β) (Set.instUnionSet_1.{u1} β) t₁ t₂))
+  forall {α : Type.{u2}} {β : Type.{u1}} {s₁ : Set.{u2} α} {s₂ : Set.{u2} α} {t₁ : Set.{u1} β} {t₂ : Set.{u1} β} {f : α -> β}, (Set.BijOn.{u2, u1} α β f s₁ t₁) -> (Set.BijOn.{u2, u1} α β f s₂ t₂) -> (Set.InjOn.{u2, u1} α β f (Union.union.{u2} (Set.{u2} α) (Set.instUnionSet.{u2} α) s₁ s₂)) -> (Set.BijOn.{u2, u1} α β f (Union.union.{u2} (Set.{u2} α) (Set.instUnionSet.{u2} α) s₁ s₂) (Union.union.{u1} (Set.{u1} β) (Set.instUnionSet.{u1} β) t₁ t₂))
 Case conversion may be inaccurate. Consider using '#align set.bij_on.union Set.BijOn.unionₓ'. -/
 theorem BijOn.union (h₁ : BijOn f s₁ t₁) (h₂ : BijOn f s₂ t₂) (h : InjOn f (s₁ ∪ s₂)) :
     BijOn f (s₁ ∪ s₂) (t₁ ∪ t₂) :=
@@ -1882,7 +1882,7 @@ theorem BijOn.union (h₁ : BijOn f s₁ t₁) (h₂ : BijOn f s₂ t₂) (h : I
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {t : Set.{u2} β} {f : α -> β}, (Set.BijOn.{u1, u2} α β f s t) -> (HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) t (Set.range.{u2, succ u1} β α f))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t : Set.{u1} β} {f : α -> β}, (Set.BijOn.{u2, u1} α β f s t) -> (HasSubset.Subset.{u1} (Set.{u1} β) (Set.instHasSubsetSet_1.{u1} β) t (Set.range.{u1, succ u2} β α f))
+  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t : Set.{u1} β} {f : α -> β}, (Set.BijOn.{u2, u1} α β f s t) -> (HasSubset.Subset.{u1} (Set.{u1} β) (Set.instHasSubsetSet.{u1} β) t (Set.range.{u1, succ u2} β α f))
 Case conversion may be inaccurate. Consider using '#align set.bij_on.subset_range Set.BijOn.subset_rangeₓ'. -/
 theorem BijOn.subset_range (h : BijOn f s t) : t ⊆ range f :=
   h.SurjOn.subset_range
@@ -1996,12 +1996,6 @@ theorem bijective_iff_bijOn_univ : Bijective f ↔ BijOn f univ univ :=
     ⟨Iff.mpr injective_iff_injOn_univ inj, Iff.mpr surjective_iff_surjOn_univ surj⟩
 #align set.bijective_iff_bij_on_univ Set.bijective_iff_bijOn_univ
 
-/- warning: function.bijective.bij_on_univ -> Function.Bijective.bij_on_univ is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β}, (Function.Bijective.{succ u1, succ u2} α β f) -> (Set.BijOn.{u1, u2} α β f (Set.univ.{u1} α) (Set.univ.{u2} β))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β}, (Function.Bijective.{succ u2, succ u1} α β f) -> (Set.BijOn.{u2, u1} α β f (Set.univ.{u2} α) (Set.univ.{u1} β))
-Case conversion may be inaccurate. Consider using '#align function.bijective.bij_on_univ Function.Bijective.bij_on_univₓ'. -/
 alias bijective_iff_bij_on_univ ↔ _root_.function.bijective.bij_on_univ _
 #align function.bijective.bij_on_univ Function.Bijective.bij_on_univ
 
@@ -2134,7 +2128,7 @@ theorem LeftInvOn.comp (hf' : LeftInvOn f' f s) (hg' : LeftInvOn g' g t) (hf : M
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {s₁ : Set.{u1} α} {f : α -> β} {f' : β -> α}, (Set.LeftInvOn.{u1, u2} α β f' f s) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s₁ s) -> (Set.LeftInvOn.{u1, u2} α β f' f s₁)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {s₁ : Set.{u2} α} {f : α -> β} {f' : β -> α}, (Set.LeftInvOn.{u2, u1} α β f' f s) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet_1.{u2} α) s₁ s) -> (Set.LeftInvOn.{u2, u1} α β f' f s₁)
+  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {s₁ : Set.{u2} α} {f : α -> β} {f' : β -> α}, (Set.LeftInvOn.{u2, u1} α β f' f s) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) s₁ s) -> (Set.LeftInvOn.{u2, u1} α β f' f s₁)
 Case conversion may be inaccurate. Consider using '#align set.left_inv_on.mono Set.LeftInvOn.monoₓ'. -/
 theorem LeftInvOn.mono (hf : LeftInvOn f' f s) (ht : s₁ ⊆ s) : LeftInvOn f' f s₁ := fun x hx =>
   hf (ht hx)
@@ -2144,7 +2138,7 @@ theorem LeftInvOn.mono (hf : LeftInvOn f' f s) (ht : s₁ ⊆ s) : LeftInvOn f' 
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {s₁ : Set.{u1} α} {f : α -> β} {f' : β -> α}, (Set.LeftInvOn.{u1, u2} α β f' f s) -> (Eq.{succ u2} (Set.{u2} β) (Set.image.{u1, u2} α β f (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s₁ s)) (Inter.inter.{u2} (Set.{u2} β) (Set.hasInter.{u2} β) (Set.preimage.{u2, u1} β α f' s₁) (Set.image.{u1, u2} α β f s)))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {s₁ : Set.{u2} α} {f : α -> β} {f' : β -> α}, (Set.LeftInvOn.{u2, u1} α β f' f s) -> (Eq.{succ u1} (Set.{u1} β) (Set.image.{u2, u1} α β f (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet_1.{u2} α) s₁ s)) (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet_1.{u1} β) (Set.preimage.{u1, u2} β α f' s₁) (Set.image.{u2, u1} α β f s)))
+  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {s₁ : Set.{u2} α} {f : α -> β} {f' : β -> α}, (Set.LeftInvOn.{u2, u1} α β f' f s) -> (Eq.{succ u1} (Set.{u1} β) (Set.image.{u2, u1} α β f (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) s₁ s)) (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet.{u1} β) (Set.preimage.{u1, u2} β α f' s₁) (Set.image.{u2, u1} α β f s)))
 Case conversion may be inaccurate. Consider using '#align set.left_inv_on.image_inter' Set.LeftInvOn.image_inter'ₓ'. -/
 theorem LeftInvOn.image_inter' (hf : LeftInvOn f' f s) : f '' (s₁ ∩ s) = f' ⁻¹' s₁ ∩ f '' s :=
   by
@@ -2159,7 +2153,7 @@ theorem LeftInvOn.image_inter' (hf : LeftInvOn f' f s) : f '' (s₁ ∩ s) = f' 
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {s₁ : Set.{u1} α} {f : α -> β} {f' : β -> α}, (Set.LeftInvOn.{u1, u2} α β f' f s) -> (Eq.{succ u2} (Set.{u2} β) (Set.image.{u1, u2} α β f (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s₁ s)) (Inter.inter.{u2} (Set.{u2} β) (Set.hasInter.{u2} β) (Set.preimage.{u2, u1} β α f' (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s₁ s)) (Set.image.{u1, u2} α β f s)))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {s₁ : Set.{u2} α} {f : α -> β} {f' : β -> α}, (Set.LeftInvOn.{u2, u1} α β f' f s) -> (Eq.{succ u1} (Set.{u1} β) (Set.image.{u2, u1} α β f (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet_1.{u2} α) s₁ s)) (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet_1.{u1} β) (Set.preimage.{u1, u2} β α f' (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet_1.{u2} α) s₁ s)) (Set.image.{u2, u1} α β f s)))
+  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {s₁ : Set.{u2} α} {f : α -> β} {f' : β -> α}, (Set.LeftInvOn.{u2, u1} α β f' f s) -> (Eq.{succ u1} (Set.{u1} β) (Set.image.{u2, u1} α β f (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) s₁ s)) (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet.{u1} β) (Set.preimage.{u1, u2} β α f' (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) s₁ s)) (Set.image.{u2, u1} α β f s)))
 Case conversion may be inaccurate. Consider using '#align set.left_inv_on.image_inter Set.LeftInvOn.image_interₓ'. -/
 theorem LeftInvOn.image_inter (hf : LeftInvOn f' f s) : f '' (s₁ ∩ s) = f' ⁻¹' (s₁ ∩ s) ∩ f '' s :=
   by
@@ -2182,7 +2176,7 @@ theorem LeftInvOn.image_image (hf : LeftInvOn f' f s) : f' '' (f '' s) = s := by
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {s₁ : Set.{u1} α} {f : α -> β} {f' : β -> α}, (Set.LeftInvOn.{u1, u2} α β f' f s) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s₁ s) -> (Eq.{succ u1} (Set.{u1} α) (Set.image.{u2, u1} β α f' (Set.image.{u1, u2} α β f s₁)) s₁)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {s₁ : Set.{u2} α} {f : α -> β} {f' : β -> α}, (Set.LeftInvOn.{u2, u1} α β f' f s) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet_1.{u2} α) s₁ s) -> (Eq.{succ u2} (Set.{u2} α) (Set.image.{u1, u2} β α f' (Set.image.{u2, u1} α β f s₁)) s₁)
+  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {s₁ : Set.{u2} α} {f : α -> β} {f' : β -> α}, (Set.LeftInvOn.{u2, u1} α β f' f s) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) s₁ s) -> (Eq.{succ u2} (Set.{u2} α) (Set.image.{u1, u2} β α f' (Set.image.{u2, u1} α β f s₁)) s₁)
 Case conversion may be inaccurate. Consider using '#align set.left_inv_on.image_image' Set.LeftInvOn.image_image'ₓ'. -/
 theorem LeftInvOn.image_image' (hf : LeftInvOn f' f s) (hs : s₁ ⊆ s) : f' '' (f '' s₁) = s₁ :=
   (hf.mono hs).image_image
@@ -2301,7 +2295,7 @@ theorem RightInvOn.comp (hf : RightInvOn f' f t) (hg : RightInvOn g' g p) (g'pt 
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {t : Set.{u2} β} {t₁ : Set.{u2} β} {f : α -> β} {f' : β -> α}, (Set.RightInvOn.{u1, u2} α β f' f t) -> (HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) t₁ t) -> (Set.RightInvOn.{u1, u2} α β f' f t₁)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {t : Set.{u1} β} {t₁ : Set.{u1} β} {f : α -> β} {f' : β -> α}, (Set.RightInvOn.{u2, u1} α β f' f t) -> (HasSubset.Subset.{u1} (Set.{u1} β) (Set.instHasSubsetSet_1.{u1} β) t₁ t) -> (Set.RightInvOn.{u2, u1} α β f' f t₁)
+  forall {α : Type.{u2}} {β : Type.{u1}} {t : Set.{u1} β} {t₁ : Set.{u1} β} {f : α -> β} {f' : β -> α}, (Set.RightInvOn.{u2, u1} α β f' f t) -> (HasSubset.Subset.{u1} (Set.{u1} β) (Set.instHasSubsetSet.{u1} β) t₁ t) -> (Set.RightInvOn.{u2, u1} α β f' f t₁)
 Case conversion may be inaccurate. Consider using '#align set.right_inv_on.mono Set.RightInvOn.monoₓ'. -/
 theorem RightInvOn.mono (hf : RightInvOn f' f t) (ht : t₁ ⊆ t) : RightInvOn f' f t₁ :=
   hf.mono ht
@@ -2392,7 +2386,7 @@ theorem InvOn.comp (hf : InvOn f' f s t) (hg : InvOn g' g t p) (fst : MapsTo f s
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {s₁ : Set.{u1} α} {t : Set.{u2} β} {t₁ : Set.{u2} β} {f : α -> β} {f' : β -> α}, (Set.InvOn.{u1, u2} α β f' f s t) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s₁ s) -> (HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) t₁ t) -> (Set.InvOn.{u1, u2} α β f' f s₁ t₁)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {s₁ : Set.{u2} α} {t : Set.{u1} β} {t₁ : Set.{u1} β} {f : α -> β} {f' : β -> α}, (Set.InvOn.{u2, u1} α β f' f s t) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet_1.{u2} α) s₁ s) -> (HasSubset.Subset.{u1} (Set.{u1} β) (Set.instHasSubsetSet_1.{u1} β) t₁ t) -> (Set.InvOn.{u2, u1} α β f' f s₁ t₁)
+  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {s₁ : Set.{u2} α} {t : Set.{u1} β} {t₁ : Set.{u1} β} {f : α -> β} {f' : β -> α}, (Set.InvOn.{u2, u1} α β f' f s t) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) s₁ s) -> (HasSubset.Subset.{u1} (Set.{u1} β) (Set.instHasSubsetSet.{u1} β) t₁ t) -> (Set.InvOn.{u2, u1} α β f' f s₁ t₁)
 Case conversion may be inaccurate. Consider using '#align set.inv_on.mono Set.InvOn.monoₓ'. -/
 theorem InvOn.mono (h : InvOn f' f s t) (hs : s₁ ⊆ s) (ht : t₁ ⊆ t) : InvOn f' f s₁ t₁ :=
   ⟨h.1.mono hs, h.2.mono ht⟩
@@ -2525,7 +2519,7 @@ theorem InjOn.leftInvOn_invFunOn [Nonempty α] (h : InjOn f s) : LeftInvOn (invF
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s₁ : Set.{u1} α} {s₂ : Set.{u1} α} {f : α -> β} [_inst_1 : Nonempty.{succ u1} α], (Set.InjOn.{u1, u2} α β f s₂) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s₁ s₂) -> (Eq.{succ u1} (Set.{u1} α) (Set.image.{u2, u1} β α (Function.invFunOn.{u1, u2} α β _inst_1 f s₂) (Set.image.{u1, u2} α β f s₁)) s₁)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s₁ : Set.{u2} α} {s₂ : Set.{u2} α} {f : α -> β} [_inst_1 : Nonempty.{succ u2} α], (Set.InjOn.{u2, u1} α β f s₂) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet_1.{u2} α) s₁ s₂) -> (Eq.{succ u2} (Set.{u2} α) (Set.image.{u1, u2} β α (Function.invFunOn.{u2, u1} α β _inst_1 f s₂) (Set.image.{u2, u1} α β f s₁)) s₁)
+  forall {α : Type.{u2}} {β : Type.{u1}} {s₁ : Set.{u2} α} {s₂ : Set.{u2} α} {f : α -> β} [_inst_1 : Nonempty.{succ u2} α], (Set.InjOn.{u2, u1} α β f s₂) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) s₁ s₂) -> (Eq.{succ u2} (Set.{u2} α) (Set.image.{u1, u2} β α (Function.invFunOn.{u2, u1} α β _inst_1 f s₂) (Set.image.{u2, u1} α β f s₁)) s₁)
 Case conversion may be inaccurate. Consider using '#align set.inj_on.inv_fun_on_image Set.InjOn.invFunOn_imageₓ'. -/
 theorem InjOn.invFunOn_image [Nonempty α] (h : InjOn f s₂) (ht : s₁ ⊆ s₂) :
     invFunOn f s₂ '' (f '' s₁) = s₁ :=
@@ -2593,7 +2587,7 @@ theorem SurjOn.bijOn_subset [Nonempty α] (h : SurjOn f s t) : BijOn f (invFunOn
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {t : Set.{u2} β} {f : α -> β}, Iff (Set.SurjOn.{u1, u2} α β f s t) (Exists.{succ u1} (Set.{u1} α) (fun (s' : Set.{u1} α) => Exists.{0} (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s' s) (fun (H : HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s' s) => Set.BijOn.{u1, u2} α β f s' t)))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t : Set.{u1} β} {f : α -> β}, Iff (Set.SurjOn.{u2, u1} α β f s t) (Exists.{succ u2} (Set.{u2} α) (fun (s' : Set.{u2} α) => Exists.{0} (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet_1.{u2} α) s' s) (fun (H : HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet_1.{u2} α) s' s) => Set.BijOn.{u2, u1} α β f s' t)))
+  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t : Set.{u1} β} {f : α -> β}, Iff (Set.SurjOn.{u2, u1} α β f s t) (Exists.{succ u2} (Set.{u2} α) (fun (s' : Set.{u2} α) => Exists.{0} (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) s' s) (fun (H : HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) s' s) => Set.BijOn.{u2, u1} α β f s' t)))
 Case conversion may be inaccurate. Consider using '#align set.surj_on_iff_exists_bij_on_subset Set.surjOn_iff_exists_bijOn_subsetₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (s' «expr ⊆ » s) -/
 theorem surjOn_iff_exists_bijOn_subset : SurjOn f s t ↔ ∃ (s' : _)(_ : s' ⊆ s), BijOn f s' t :=
@@ -2612,7 +2606,7 @@ theorem surjOn_iff_exists_bijOn_subset : SurjOn f s t ↔ ∃ (s' : _)(_ : s' �
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [n : Nonempty.{succ u1} α] {f : α -> β}, (Function.Injective.{succ u1, succ u2} α β f) -> (forall {s : Set.{u1} α}, (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) (Classical.choice.{succ u1} α n) s) -> (Eq.{succ u2} (Set.{u2} β) (Set.preimage.{u2, u1} β α (Function.invFun.{succ u1, succ u2} α β n f) s) (Union.union.{u2} (Set.{u2} β) (Set.hasUnion.{u2} β) (Set.image.{u1, u2} α β f s) (HasCompl.compl.{u2} (Set.{u2} β) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} β) (Set.booleanAlgebra.{u2} β)) (Set.range.{u2, succ u1} β α f)))))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [n : Nonempty.{succ u2} α] {f : α -> β}, (Function.Injective.{succ u2, succ u1} α β f) -> (forall {s : Set.{u2} α}, (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) (Classical.choice.{succ u2} α n) s) -> (Eq.{succ u1} (Set.{u1} β) (Set.preimage.{u1, u2} β α (Function.invFun.{succ u2, succ u1} α β n f) s) (Union.union.{u1} (Set.{u1} β) (Set.instUnionSet_1.{u1} β) (Set.image.{u2, u1} α β f s) (HasCompl.compl.{u1} (Set.{u1} β) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} β) (Set.instBooleanAlgebraSet.{u1} β)) (Set.range.{u1, succ u2} β α f)))))
+  forall {α : Type.{u2}} {β : Type.{u1}} [n : Nonempty.{succ u2} α] {f : α -> β}, (Function.Injective.{succ u2, succ u1} α β f) -> (forall {s : Set.{u2} α}, (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) (Classical.choice.{succ u2} α n) s) -> (Eq.{succ u1} (Set.{u1} β) (Set.preimage.{u1, u2} β α (Function.invFun.{succ u2, succ u1} α β n f) s) (Union.union.{u1} (Set.{u1} β) (Set.instUnionSet.{u1} β) (Set.image.{u2, u1} α β f s) (HasCompl.compl.{u1} (Set.{u1} β) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} β) (Set.instBooleanAlgebraSet.{u1} β)) (Set.range.{u1, succ u2} β α f)))))
 Case conversion may be inaccurate. Consider using '#align set.preimage_inv_fun_of_mem Set.preimage_invFun_of_memₓ'. -/
 theorem preimage_invFun_of_mem [n : Nonempty α] {f : α → β} (hf : Injective f) {s : Set α}
     (h : Classical.choice n ∈ s) : invFun f ⁻¹' s = f '' s ∪ range fᶜ :=
@@ -2876,7 +2870,7 @@ theorem piecewise_range_comp {ι : Sort _} (f : ι → α) [∀ j, Decidable (j 
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {s₁ : Set.{u1} α} {s₂ : Set.{u1} α} {t : Set.{u2} β} {t₁ : Set.{u2} β} {t₂ : Set.{u2} β} {f₁ : α -> β} {f₂ : α -> β} [_inst_2 : forall (i : α), Decidable (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) i s)], (Set.MapsTo.{u1, u2} α β f₁ (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s₁ s) (Inter.inter.{u2} (Set.{u2} β) (Set.hasInter.{u2} β) t₁ t)) -> (Set.MapsTo.{u1, u2} α β f₂ (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s₂ (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s)) (Inter.inter.{u2} (Set.{u2} β) (Set.hasInter.{u2} β) t₂ (HasCompl.compl.{u2} (Set.{u2} β) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} β) (Set.booleanAlgebra.{u2} β)) t))) -> (Set.MapsTo.{u1, u2} α β (Set.piecewise.{u1, succ u2} α (fun (ᾰ : α) => β) s f₁ f₂ (fun (j : α) => _inst_2 j)) (Set.ite.{u1} α s s₁ s₂) (Set.ite.{u2} β t t₁ t₂))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {s₁ : Set.{u2} α} {s₂ : Set.{u2} α} {t : Set.{u1} β} {t₁ : Set.{u1} β} {t₂ : Set.{u1} β} {f₁ : α -> β} {f₂ : α -> β} [_inst_2 : forall (i : α), Decidable (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) i s)], (Set.MapsTo.{u2, u1} α β f₁ (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet_1.{u2} α) s₁ s) (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet_1.{u1} β) t₁ t)) -> (Set.MapsTo.{u2, u1} α β f₂ (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet_1.{u2} α) s₂ (HasCompl.compl.{u2} (Set.{u2} α) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α)) s)) (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet_1.{u1} β) t₂ (HasCompl.compl.{u1} (Set.{u1} β) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} β) (Set.instBooleanAlgebraSet.{u1} β)) t))) -> (Set.MapsTo.{u2, u1} α β (Set.piecewise.{u2, succ u1} α (fun (ᾰ : α) => β) s f₁ f₂ (fun (j : α) => _inst_2 j)) (Set.ite.{u2} α s s₁ s₂) (Set.ite.{u1} β t t₁ t₂))
+  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {s₁ : Set.{u2} α} {s₂ : Set.{u2} α} {t : Set.{u1} β} {t₁ : Set.{u1} β} {t₂ : Set.{u1} β} {f₁ : α -> β} {f₂ : α -> β} [_inst_2 : forall (i : α), Decidable (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) i s)], (Set.MapsTo.{u2, u1} α β f₁ (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) s₁ s) (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet.{u1} β) t₁ t)) -> (Set.MapsTo.{u2, u1} α β f₂ (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) s₂ (HasCompl.compl.{u2} (Set.{u2} α) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α)) s)) (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet.{u1} β) t₂ (HasCompl.compl.{u1} (Set.{u1} β) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} β) (Set.instBooleanAlgebraSet.{u1} β)) t))) -> (Set.MapsTo.{u2, u1} α β (Set.piecewise.{u2, succ u1} α (fun (ᾰ : α) => β) s f₁ f₂ (fun (j : α) => _inst_2 j)) (Set.ite.{u2} α s s₁ s₂) (Set.ite.{u1} β t t₁ t₂))
 Case conversion may be inaccurate. Consider using '#align set.maps_to.piecewise_ite Set.MapsTo.piecewise_iteₓ'. -/
 theorem MapsTo.piecewise_ite {s s₁ s₂ : Set α} {t t₁ t₂ : Set β} {f₁ f₂ : α → β}
     [∀ i, Decidable (i ∈ s)] (h₁ : MapsTo f₁ (s₁ ∩ s) (t₁ ∩ t))
@@ -2891,7 +2885,7 @@ theorem MapsTo.piecewise_ite {s s₁ s₂ : Set α} {t t₁ t₂ : Set β} {f₁
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} (s : Set.{u1} α) [_inst_1 : forall (j : α), Decidable (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) j s)] {f : α -> β} {f' : α -> β} {g : α -> β} {t : Set.{u1} α}, Iff (Set.EqOn.{u1, u2} α β (Set.piecewise.{u1, succ u2} α (fun (ᾰ : α) => β) s f f' (fun (j : α) => _inst_1 j)) g t) (And (Set.EqOn.{u1, u2} α β f g (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) t s)) (Set.EqOn.{u1, u2} α β f' g (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) t (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s))))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (s : Set.{u2} α) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) j s)] {f : α -> β} {f' : α -> β} {g : α -> β} {t : Set.{u2} α}, Iff (Set.EqOn.{u2, u1} α β (Set.piecewise.{u2, succ u1} α (fun (ᾰ : α) => β) s f f' (fun (j : α) => _inst_1 j)) g t) (And (Set.EqOn.{u2, u1} α β f g (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet_1.{u2} α) t s)) (Set.EqOn.{u2, u1} α β f' g (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet_1.{u2} α) t (HasCompl.compl.{u2} (Set.{u2} α) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α)) s))))
+  forall {α : Type.{u2}} {β : Type.{u1}} (s : Set.{u2} α) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) j s)] {f : α -> β} {f' : α -> β} {g : α -> β} {t : Set.{u2} α}, Iff (Set.EqOn.{u2, u1} α β (Set.piecewise.{u2, succ u1} α (fun (ᾰ : α) => β) s f f' (fun (j : α) => _inst_1 j)) g t) (And (Set.EqOn.{u2, u1} α β f g (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) t s)) (Set.EqOn.{u2, u1} α β f' g (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) t (HasCompl.compl.{u2} (Set.{u2} α) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α)) s))))
 Case conversion may be inaccurate. Consider using '#align set.eq_on_piecewise Set.eqOn_piecewiseₓ'. -/
 theorem eqOn_piecewise {f f' g : α → β} {t} :
     EqOn (s.piecewise f f') g t ↔ EqOn f g (t ∩ s) ∧ EqOn f' g (t ∩ sᶜ) :=
@@ -2904,7 +2898,7 @@ theorem eqOn_piecewise {f f' g : α → β} {t} :
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} (s : Set.{u1} α) [_inst_1 : forall (j : α), Decidable (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) j s)] {f : α -> β} {f' : α -> β} {g : α -> β} {t : Set.{u1} α} {t' : Set.{u1} α}, (Set.EqOn.{u1, u2} α β f g (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) t s)) -> (Set.EqOn.{u1, u2} α β f' g (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) t' (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s))) -> (Set.EqOn.{u1, u2} α β (Set.piecewise.{u1, succ u2} α (fun (ᾰ : α) => β) s f f' (fun (j : α) => _inst_1 j)) g (Set.ite.{u1} α s t t'))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (s : Set.{u2} α) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) j s)] {f : α -> β} {f' : α -> β} {g : α -> β} {t : Set.{u2} α} {t' : Set.{u2} α}, (Set.EqOn.{u2, u1} α β f g (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet_1.{u2} α) t s)) -> (Set.EqOn.{u2, u1} α β f' g (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet_1.{u2} α) t' (HasCompl.compl.{u2} (Set.{u2} α) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α)) s))) -> (Set.EqOn.{u2, u1} α β (Set.piecewise.{u2, succ u1} α (fun (ᾰ : α) => β) s f f' (fun (j : α) => _inst_1 j)) g (Set.ite.{u2} α s t t'))
+  forall {α : Type.{u2}} {β : Type.{u1}} (s : Set.{u2} α) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) j s)] {f : α -> β} {f' : α -> β} {g : α -> β} {t : Set.{u2} α} {t' : Set.{u2} α}, (Set.EqOn.{u2, u1} α β f g (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) t s)) -> (Set.EqOn.{u2, u1} α β f' g (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) t' (HasCompl.compl.{u2} (Set.{u2} α) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α)) s))) -> (Set.EqOn.{u2, u1} α β (Set.piecewise.{u2, succ u1} α (fun (ᾰ : α) => β) s f f' (fun (j : α) => _inst_1 j)) g (Set.ite.{u2} α s t t'))
 Case conversion may be inaccurate. Consider using '#align set.eq_on.piecewise_ite' Set.EqOn.piecewise_ite'ₓ'. -/
 theorem EqOn.piecewise_ite' {f f' g : α → β} {t t'} (h : EqOn f g (t ∩ s))
     (h' : EqOn f' g (t' ∩ sᶜ)) : EqOn (s.piecewise f f') g (s.ite t t') := by
@@ -2992,7 +2986,7 @@ theorem piecewise_same : s.piecewise f f = f :=
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} (s : Set.{u1} α) [_inst_1 : forall (j : α), Decidable (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) j s)] (f : α -> β) (g : α -> β), Eq.{succ u2} (Set.{u2} β) (Set.range.{u2, succ u1} β α (Set.piecewise.{u1, succ u2} α (fun (ᾰ : α) => β) s f g (fun (j : α) => _inst_1 j))) (Union.union.{u2} (Set.{u2} β) (Set.hasUnion.{u2} β) (Set.image.{u1, u2} α β f s) (Set.image.{u1, u2} α β g (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s)))
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} (s : Set.{u1} α) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) j s)] (f : α -> β) (g : α -> β), Eq.{succ u2} (Set.{u2} β) (Set.range.{u2, succ u1} β α (Set.piecewise.{u1, succ u2} α (fun (ᾰ : α) => β) s f g (fun (j : α) => _inst_1 j))) (Union.union.{u2} (Set.{u2} β) (Set.instUnionSet_1.{u2} β) (Set.image.{u1, u2} α β f s) (Set.image.{u1, u2} α β g (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s)))
+  forall {α : Type.{u1}} {β : Type.{u2}} (s : Set.{u1} α) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) j s)] (f : α -> β) (g : α -> β), Eq.{succ u2} (Set.{u2} β) (Set.range.{u2, succ u1} β α (Set.piecewise.{u1, succ u2} α (fun (ᾰ : α) => β) s f g (fun (j : α) => _inst_1 j))) (Union.union.{u2} (Set.{u2} β) (Set.instUnionSet.{u2} β) (Set.image.{u1, u2} α β f s) (Set.image.{u1, u2} α β g (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s)))
 Case conversion may be inaccurate. Consider using '#align set.range_piecewise Set.range_piecewiseₓ'. -/
 theorem range_piecewise (f g : α → β) : range (s.piecewise f g) = f '' s ∪ g '' sᶜ :=
   by
@@ -3032,7 +3026,7 @@ theorem piecewise_mem_pi {δ : α → Type _} {t : Set α} {t' : ∀ i, Set (δ 
 lean 3 declaration is
   forall {ι : Type.{u1}} {α : ι -> Type.{u2}} (s : Set.{u1} ι) (s' : Set.{u1} ι) (t : forall (i : ι), Set.{u2} (α i)) (t' : forall (i : ι), Set.{u2} (α i)) [_inst_2 : forall (x : ι), Decidable (Membership.Mem.{u1, u1} ι (Set.{u1} ι) (Set.hasMem.{u1} ι) x s')], Eq.{succ (max u1 u2)} (Set.{max u1 u2} (forall (i : ι), α i)) (Set.pi.{u1, u2} ι (fun (i : ι) => α i) s (Set.piecewise.{u1, succ u2} ι (fun (i : ι) => Set.{u2} (α i)) s' t t' (fun (j : ι) => _inst_2 j))) (Inter.inter.{max u1 u2} (Set.{max u1 u2} (forall (i : ι), α i)) (Set.hasInter.{max u1 u2} (forall (i : ι), α i)) (Set.pi.{u1, u2} ι (fun (i : ι) => α i) (Inter.inter.{u1} (Set.{u1} ι) (Set.hasInter.{u1} ι) s s') t) (Set.pi.{u1, u2} ι (fun (i : ι) => α i) (SDiff.sdiff.{u1} (Set.{u1} ι) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} ι) (Set.booleanAlgebra.{u1} ι)) s s') t'))
 but is expected to have type
-  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} (s : Set.{u2} ι) (s' : Set.{u2} ι) (t : forall (i : ι), Set.{u1} (α i)) (t' : forall (i : ι), Set.{u1} (α i)) [_inst_2 : forall (x : ι), Decidable (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) x s')], Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (forall (i : ι), α i)) (Set.pi.{u2, u1} ι (fun (i : ι) => α i) s (Set.piecewise.{u2, succ u1} ι (fun (i : ι) => Set.{u1} (α i)) s' t t' (fun (j : ι) => _inst_2 j))) (Inter.inter.{max u1 u2} (Set.{max u2 u1} (forall (i : ι), α i)) (Set.instInterSet_1.{max u2 u1} (forall (i : ι), α i)) (Set.pi.{u2, u1} ι (fun (i : ι) => α i) (Inter.inter.{u2} (Set.{u2} ι) (Set.instInterSet_1.{u2} ι) s s') t) (Set.pi.{u2, u1} ι (fun (i : ι) => α i) (SDiff.sdiff.{u2} (Set.{u2} ι) (Set.instSDiffSet.{u2} ι) s s') t'))
+  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} (s : Set.{u2} ι) (s' : Set.{u2} ι) (t : forall (i : ι), Set.{u1} (α i)) (t' : forall (i : ι), Set.{u1} (α i)) [_inst_2 : forall (x : ι), Decidable (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) x s')], Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (forall (i : ι), α i)) (Set.pi.{u2, u1} ι (fun (i : ι) => α i) s (Set.piecewise.{u2, succ u1} ι (fun (i : ι) => Set.{u1} (α i)) s' t t' (fun (j : ι) => _inst_2 j))) (Inter.inter.{max u1 u2} (Set.{max u2 u1} (forall (i : ι), α i)) (Set.instInterSet.{max u2 u1} (forall (i : ι), α i)) (Set.pi.{u2, u1} ι (fun (i : ι) => α i) (Inter.inter.{u2} (Set.{u2} ι) (Set.instInterSet.{u2} ι) s s') t) (Set.pi.{u2, u1} ι (fun (i : ι) => α i) (SDiff.sdiff.{u2} (Set.{u2} ι) (Set.instSDiffSet.{u2} ι) s s') t'))
 Case conversion may be inaccurate. Consider using '#align set.pi_piecewise Set.pi_piecewiseₓ'. -/
 @[simp]
 theorem pi_piecewise {ι : Type _} {α : ι → Type _} (s s' : Set ι) (t t' : ∀ i, Set (α i))
@@ -3335,7 +3329,7 @@ Case conversion may be inaccurate. Consider using '#align function.update_comp_e
 theorem update_comp_eq_of_not_mem_range' {α β : Sort _} {γ : β → Sort _} [DecidableEq β]
     (g : ∀ b, γ b) {f : α → β} {i : β} (a : γ i) (h : i ∉ Set.range f) :
     (fun j => (Function.update g i a) (f j)) = fun j => g (f j) :=
-  (update_comp_eq_of_forall_ne' _ _) fun x hx => h ⟨x, hx⟩
+  update_comp_eq_of_forall_ne' _ _ fun x hx => h ⟨x, hx⟩
 #align function.update_comp_eq_of_not_mem_range' Function.update_comp_eq_of_not_mem_range'
 
 /- warning: function.update_comp_eq_of_not_mem_range -> Function.update_comp_eq_of_not_mem_range is a dubious translation:
@@ -3490,7 +3484,7 @@ theorem bijOn' (h₁ : MapsTo e s t) (h₂ : MapsTo e.symm t s) : BijOn e s t :=
 
 #print Equiv.bijOn /-
 protected theorem bijOn (h : ∀ a, e a ∈ t ↔ a ∈ s) : BijOn e s t :=
-  (e.bijOn' fun a => (h _).2) fun b hb => (h _).1 <| by rwa [apply_symm_apply]
+  e.bijOn' (fun a => (h _).2) fun b hb => (h _).1 <| by rwa [apply_symm_apply]
 #align equiv.bij_on Equiv.bijOn
 -/
 

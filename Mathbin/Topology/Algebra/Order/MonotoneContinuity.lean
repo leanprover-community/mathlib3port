@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Heather Macbeth
 
 ! This file was ported from Lean 3 source module topology.algebra.order.monotone_continuity
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -137,7 +137,7 @@ neighborhood under `f` includes `Ioi (f a)`, then `f` is continuous at `a` from 
 theorem StrictMonoOn.continuous_at_right_of_surj_on {f : α → β} {s : Set α} {a : α}
     (h_mono : StrictMonoOn f s) (hs : s ∈ 𝓝[≥] a) (hfs : SurjOn f s (Ioi (f a))) :
     ContinuousWithinAt f (Ici a) a :=
-  (h_mono.continuous_at_right_of_exists_between hs) fun b hb =>
+  h_mono.continuous_at_right_of_exists_between hs fun b hb =>
     let ⟨c, hcs, hcb⟩ := hfs hb
     ⟨c, hcs, hcb.symm ▸ hb, hcb.le⟩
 #align strict_mono_on.continuous_at_right_of_surj_on StrictMonoOn.continuous_at_right_of_surj_on
@@ -152,7 +152,7 @@ function `f : ℝ → ℝ` given by `f x = if x < 0 then x else x + 1` would be 
 theorem StrictMonoOn.continuous_at_left_of_exists_between {f : α → β} {s : Set α} {a : α}
     (h_mono : StrictMonoOn f s) (hs : s ∈ 𝓝[≤] a) (hfs : ∀ b < f a, ∃ c ∈ s, f c ∈ Ico b (f a)) :
     ContinuousWithinAt f (Iic a) a :=
-  (h_mono.dual.continuous_at_right_of_exists_between hs) fun b hb =>
+  h_mono.dual.continuous_at_right_of_exists_between hs fun b hb =>
     let ⟨c, hcs, hcb, hca⟩ := hfs b hb
     ⟨c, hcs, hca, hcb⟩
 #align
@@ -167,7 +167,7 @@ because otherwise the function `floor : ℝ → ℤ` would be a counter-example 
 theorem continuous_at_left_of_monotone_on_of_exists_between {f : α → β} {s : Set α} {a : α}
     (hf : MonotoneOn f s) (hs : s ∈ 𝓝[≤] a) (hfs : ∀ b < f a, ∃ c ∈ s, f c ∈ Ioo b (f a)) :
     ContinuousWithinAt f (Iic a) a :=
-  (@continuous_at_right_of_monotone_on_of_exists_between αᵒᵈ βᵒᵈ _ _ _ _ _ _ f s a hf.dual hs)
+  @continuous_at_right_of_monotone_on_of_exists_between αᵒᵈ βᵒᵈ _ _ _ _ _ _ f s a hf.dual hs
     fun b hb =>
     let ⟨c, hcs, hcb, hca⟩ := hfs b hb
     ⟨c, hcs, hca, hcb⟩

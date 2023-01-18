@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Junyan Xu
 
 ! This file was ported from Lean 3 source module data.dfinsupp.well_founded
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -114,7 +114,7 @@ variable (hbot : ∀ ⦃i a⦄, ¬s i a 0)
 include hbot
 
 theorem Lex.acc_zero : Acc (Dfinsupp.Lex r s) 0 :=
-  (Acc.intro 0) fun x ⟨_, _, h⟩ => (hbot h).elim
+  Acc.intro 0 fun x ⟨_, _, h⟩ => (hbot h).elim
 #align dfinsupp.lex.acc_zero Dfinsupp.Lex.acc_zero
 
 theorem Lex.acc_of_single [DecidableEq ι] [∀ (i) (x : α i), Decidable (x ≠ 0)] (x : Π₀ i, α i) :
@@ -160,7 +160,7 @@ theorem Lex.acc_single [DecidableEq ι] {i : ι} (hi : Acc (rᶜ ⊓ (· ≠ ·)
 
 theorem Lex.acc [DecidableEq ι] [∀ (i) (x : α i), Decidable (x ≠ 0)] (x : Π₀ i, α i)
     (h : ∀ i ∈ x.support, Acc (rᶜ ⊓ (· ≠ ·)) i) : Acc (Dfinsupp.Lex r s) x :=
-  (Lex.acc_of_single hbot x) fun i hi => Lex.acc_single hbot hs (h i hi) _
+  Lex.acc_of_single hbot x fun i hi => Lex.acc_single hbot hs (h i hi) _
 #align dfinsupp.lex.acc Dfinsupp.Lex.acc
 
 theorem Lex.well_founded (hr : WellFounded <| rᶜ ⊓ (· ≠ ·)) : WellFounded (Dfinsupp.Lex r s) :=
@@ -219,7 +219,7 @@ theorem Dfinsupp.Lex.well_founded_of_finite [IsStrictTotalOrder ι r] [Finite ι
 
 instance Dfinsupp.Lex.well_founded_lt_of_finite [LinearOrder ι] [Finite ι] [∀ i, Zero (α i)]
     [∀ i, LT (α i)] [hwf : ∀ i, WellFoundedLt (α i)] : WellFoundedLt (Lex (Π₀ i, α i)) :=
-  ⟨(Dfinsupp.Lex.well_founded_of_finite (· < ·)) fun i => (hwf i).1⟩
+  ⟨Dfinsupp.Lex.well_founded_of_finite (· < ·) fun i => (hwf i).1⟩
 #align dfinsupp.lex.well_founded_lt_of_finite Dfinsupp.Lex.well_founded_lt_of_finite
 
 protected theorem Dfinsupp.well_founded_lt [∀ i, Zero (α i)] [∀ i, Preorder (α i)]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Kurniadi Angdinata
 
 ! This file was ported from Lean 3 source module ring_theory.dedekind_domain.S_integer
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -119,7 +119,7 @@ def unitEquivUnitsInteger : S.Unit K ≃* (S.integer K)ˣ
     ⟨⟨x, fun v hv => (x.property v hv).le⟩, ⟨↑x⁻¹, fun v hv => (x⁻¹.property v hv).le⟩,
       Subtype.ext x.val.val_inv, Subtype.ext x.val.inv_val⟩
   invFun x :=
-    ⟨(Units.mk0 x) fun hx => x.NeZero ((Subring.coe_eq_zero_iff _).mp hx), fun v hv =>
+    ⟨Units.mk0 x fun hx => x.NeZero ((Subring.coe_eq_zero_iff _).mp hx), fun v hv =>
       eq_one_of_one_le_mul_left (x.val.property v hv) (x.inv.property v hv) <|
         Eq.ge <| by
           rw [← map_mul]

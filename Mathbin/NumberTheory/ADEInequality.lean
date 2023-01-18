@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module number_theory.ADE_inequality
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -218,13 +218,13 @@ theorem admissible_of_one_lt_sum_inv_aux' {p q r : ℕ+} (hpq : p ≤ q) (hqr : 
     (H : 1 < sumInv {p, q, r}) : Admissible {p, q, r} :=
   by
   have hp3 : p < 3 := lt_three hpq hqr H
-  interval_cases p
+  interval_cases
   · exact admissible_A' q r
   have hq4 : q < 4 := lt_four hqr H
-  interval_cases q
+  interval_cases
   · exact admissible_D' r
   have hr6 : r < 6 := lt_six H
-  interval_cases r
+  interval_cases
   · exact admissible_E6
   · exact admissible_E7
   · exact admissible_E8

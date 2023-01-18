@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.complex.cauchy_integral
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -295,7 +295,7 @@ theorem integral_boundary_rect_eq_zero_of_continuous_on_of_differentiable_on (f 
           I • ∫ y : ℝ in z.im..w.im, f (re w + y * I)) -
         I • ∫ y : ℝ in z.im..w.im, f (re z + y * I)) =
       0 :=
-  (integral_boundary_rect_eq_zero_of_differentiable_on_off_countable f z w ∅ countable_empty Hc)
+  integral_boundary_rect_eq_zero_of_differentiable_on_off_countable f z w ∅ countable_empty Hc
     fun x hx => Hd.DifferentiableAt <| (is_open_Ioo.reProdIm is_open_Ioo).mem_nhds hx.1
 #align
   complex.integral_boundary_rect_eq_zero_of_continuous_on_of_differentiable_on Complex.integral_boundary_rect_eq_zero_of_continuous_on_of_differentiable_on
@@ -577,9 +577,8 @@ $\oint_{|z-c|=R}(z-w)^{-1}f(z)\,dz=2πif(w)$. -/
 theorem DiffContOnCl.circle_integral_sub_inv_smul {R : ℝ} {c w : ℂ} {f : ℂ → E}
     (h : DiffContOnCl ℂ f (ball c R)) (hw : w ∈ ball c R) :
     (∮ z in C(c, R), (z - w)⁻¹ • f z) = (2 * π * I : ℂ) • f w :=
-  (circle_integral_sub_inv_smul_of_differentiable_on_off_countable countable_empty hw
-      h.continuous_on_ball)
-    fun x hx => h.DifferentiableAt is_open_ball hx.1
+  circle_integral_sub_inv_smul_of_differentiable_on_off_countable countable_empty hw
+    h.continuous_on_ball fun x hx => h.DifferentiableAt is_open_ball hx.1
 #align diff_cont_on_cl.circle_integral_sub_inv_smul DiffContOnCl.circle_integral_sub_inv_smul
 
 /-- **Cauchy integral formula**: if `f : ℂ → E` is complex differentiable on an open disc and is

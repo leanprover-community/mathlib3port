@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module algebra.big_operators.norm_num
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -462,37 +462,37 @@ theorem Finset.eval_prod_of_list {β α : Type _} [CommMonoid β] (s : Finset α
 @[norm_num]
 unsafe def eval_big_operators : expr → tactic (expr × expr)
   | q(@List.prod $(α) $(inst1) $(inst2) $(exs)) =>
-    (tactic.trace_error "Internal error in `tactic.norm_num.eval_big_operators`:") do
+    tactic.trace_error "Internal error in `tactic.norm_num.eval_big_operators`:" do
       let (xs, list_eq) ← eval_list exs
       let (result, sum_eq) ← list.prove_prod α xs
       let pf ← i_to_expr ``(List.prod_congr $(list_eq) $(sum_eq))
       pure (result, pf)
   | q(@List.sum $(α) $(inst1) $(inst2) $(exs)) =>
-    (tactic.trace_error "Internal error in `tactic.norm_num.eval_big_operators`:") do
+    tactic.trace_error "Internal error in `tactic.norm_num.eval_big_operators`:" do
       let (xs, list_eq) ← eval_list exs
       let (result, sum_eq) ← list.prove_sum α xs
       let pf ← i_to_expr ``(List.sum_congr $(list_eq) $(sum_eq))
       pure (result, pf)
   | q(@Multiset.prod $(α) $(inst) $(exs)) =>
-    (tactic.trace_error "Internal error in `tactic.norm_num.eval_big_operators`:") do
+    tactic.trace_error "Internal error in `tactic.norm_num.eval_big_operators`:" do
       let (xs, list_eq) ← eval_multiset exs
       let (result, sum_eq) ← list.prove_prod α xs
       let pf ← i_to_expr ``(Multiset.prod_congr $(list_eq) $(sum_eq))
       pure (result, pf)
   | q(@Multiset.sum $(α) $(inst) $(exs)) =>
-    (tactic.trace_error "Internal error in `tactic.norm_num.eval_big_operators`:") do
+    tactic.trace_error "Internal error in `tactic.norm_num.eval_big_operators`:" do
       let (xs, list_eq) ← eval_multiset exs
       let (result, sum_eq) ← list.prove_sum α xs
       let pf ← i_to_expr ``(Multiset.sum_congr $(list_eq) $(sum_eq))
       pure (result, pf)
   | q(@Finset.prod $(β) $(α) $(inst) $(es) $(ef)) =>
-    (tactic.trace_error "Internal error in `tactic.norm_num.eval_big_operators`:") do
+    tactic.trace_error "Internal error in `tactic.norm_num.eval_big_operators`:" do
       let (xs, list_eq, nodup) ← eval_finset decide_eq es
       let (result, sum_eq) ← list.prove_prod_map β ef xs
       let pf ← i_to_expr ``(Finset.eval_prod_of_list $(es) $(ef) $(nodup) $(list_eq) $(sum_eq))
       pure (result, pf)
   | q(@Finset.sum $(β) $(α) $(inst) $(es) $(ef)) =>
-    (tactic.trace_error "Internal error in `tactic.norm_num.eval_big_operators`:") do
+    tactic.trace_error "Internal error in `tactic.norm_num.eval_big_operators`:" do
       let (xs, list_eq, nodup) ← eval_finset decide_eq es
       let (result, sum_eq) ← list.prove_sum_map β ef xs
       let pf ← i_to_expr ``(Finset.eval_sum_of_list $(es) $(ef) $(nodup) $(list_eq) $(sum_eq))

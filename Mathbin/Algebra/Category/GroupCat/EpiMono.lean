@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang
 
 ! This file was ported from Lean 3 source module algebra.category.Group.epi_mono
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -322,7 +322,7 @@ theorem agree : f.range.carrier = { x | h x = g x } :=
 #align Group.surjective_of_epi_auxs.agree GroupCat.SurjectiveOfEpiAuxs.agree
 
 theorem comp_eq : (f ≫ show B ⟶ GroupCat.of SX' from g) = f ≫ h :=
-  (FunLike.ext _ _) fun a => by
+  FunLike.ext _ _ fun a => by
     simp only [comp_apply, show h (f a) = _ from (by simp [← agree] : f a ∈ { b | h b = g b })]
 #align Group.surjective_of_epi_auxs.comp_eq GroupCat.SurjectiveOfEpiAuxs.comp_eq
 

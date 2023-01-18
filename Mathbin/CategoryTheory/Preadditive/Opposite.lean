@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Adam Topaz, Johan Commelin, Joël Riou
 
 ! This file was ported from Lean 3 source module category_theory.preadditive.opposite
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -85,7 +85,7 @@ variable {C}
 /-- `unop` induces morphisms of monoids on hom groups of a preadditive category -/
 @[simps]
 def unopHom (X Y : Cᵒᵖ) : (X ⟶ Y) →+ (Opposite.unop Y ⟶ Opposite.unop X) :=
-  (AddMonoidHom.mk' fun f => f.unop) fun f g => unop_add _ f g
+  AddMonoidHom.mk' (fun f => f.unop) fun f g => unop_add _ f g
 #align category_theory.unop_hom CategoryTheory.unopHom
 
 @[simp]
@@ -97,7 +97,7 @@ theorem unop_sum (X Y : Cᵒᵖ) {ι : Type _} (s : Finset ι) (f : ι → (X �
 /-- `op` induces morphisms of monoids on hom groups of a preadditive category -/
 @[simps]
 def opHom (X Y : C) : (X ⟶ Y) →+ (Opposite.op Y ⟶ Opposite.op X) :=
-  (AddMonoidHom.mk' fun f => f.op) fun f g => op_add _ f g
+  AddMonoidHom.mk' (fun f => f.op) fun f g => op_add _ f g
 #align category_theory.op_hom CategoryTheory.opHom
 
 @[simp]

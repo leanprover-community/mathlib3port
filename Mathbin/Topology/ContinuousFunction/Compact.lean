@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module topology.continuous_function.compact
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -94,11 +94,11 @@ instance : MetricSpace C(α, β) :=
 isometric to `C(α, β)`.
 -/
 @[simps (config := { fullyApplied := false }) toEquiv apply symmApply]
-def isometricBoundedOfCompact : C(α, β) ≃ᵢ (α →ᵇ β)
+def isometryEquivBoundedOfCompact : C(α, β) ≃ᵢ (α →ᵇ β)
     where
   isometry_to_fun x y := rfl
   toEquiv := equivBoundedOfCompact α β
-#align continuous_map.isometric_bounded_of_compact ContinuousMap.isometricBoundedOfCompact
+#align continuous_map.isometry_equiv_bounded_of_compact ContinuousMap.isometryEquivBoundedOfCompact
 
 end
 
@@ -150,12 +150,12 @@ theorem dist_lt_iff (C0 : (0 : ℝ) < C) : dist f g < C ↔ ∀ x : α, dist (f 
 end
 
 instance [CompleteSpace β] : CompleteSpace C(α, β) :=
-  (isometricBoundedOfCompact α β).CompleteSpace
+  (isometryEquivBoundedOfCompact α β).CompleteSpace
 
 /-- See also `continuous_map.continuous_eval'` -/
 @[continuity]
 theorem continuous_eval : Continuous fun p : C(α, β) × α => p.1 p.2 :=
-  continuous_eval.comp ((isometricBoundedOfCompact α β).Continuous.prod_map continuous_id)
+  continuous_eval.comp ((isometryEquivBoundedOfCompact α β).Continuous.prod_map continuous_id)
 #align continuous_map.continuous_eval ContinuousMap.continuous_eval
 
 /-- See also `continuous_map.continuous_eval_const` -/
@@ -314,11 +314,11 @@ theorem linear_isometry_bounded_of_compact_apply_apply (f : C(α, E)) (a : α) :
   continuous_map.linear_isometry_bounded_of_compact_apply_apply ContinuousMap.linear_isometry_bounded_of_compact_apply_apply
 
 @[simp]
-theorem linear_isometry_bounded_of_compact_to_isometric :
-    (linearIsometryBoundedOfCompact α E 𝕜).toIsometric = isometricBoundedOfCompact α E :=
+theorem linear_isometry_bounded_of_compact_to_isometry_equiv :
+    (linearIsometryBoundedOfCompact α E 𝕜).toIsometryEquiv = isometryEquivBoundedOfCompact α E :=
   rfl
 #align
-  continuous_map.linear_isometry_bounded_of_compact_to_isometric ContinuousMap.linear_isometry_bounded_of_compact_to_isometric
+  continuous_map.linear_isometry_bounded_of_compact_to_isometry_equiv ContinuousMap.linear_isometry_bounded_of_compact_to_isometry_equiv
 
 @[simp]
 theorem linear_isometry_bounded_of_compact_to_add_equiv :

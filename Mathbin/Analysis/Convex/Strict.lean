@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.convex.strict
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -73,7 +73,7 @@ theorem strict_convex_univ : StrictConvex 𝕜 (univ : Set E) :=
 
 protected theorem StrictConvex.eq (hs : StrictConvex 𝕜 s) (hx : x ∈ s) (hy : y ∈ s) (ha : 0 < a)
     (hb : 0 < b) (hab : a + b = 1) (h : a • x + b • y ∉ interior s) : x = y :=
-  (hs.Eq hx hy) fun H => h <| H ha hb hab
+  hs.Eq hx hy fun H => h <| H ha hb hab
 #align strict_convex.eq StrictConvex.eq
 
 protected theorem StrictConvex.inter {t : Set E} (hs : StrictConvex 𝕜 s) (ht : StrictConvex 𝕜 t) :
@@ -162,7 +162,7 @@ theorem StrictConvex.is_linear_preimage {s : Set F} (hs : StrictConvex 𝕜 s) {
 section LinearOrderedCancelAddCommMonoid
 
 variable [TopologicalSpace β] [LinearOrderedCancelAddCommMonoid β] [OrderTopology β] [Module 𝕜 β]
-  [OrderedSmul 𝕜 β]
+  [OrderedSMul 𝕜 β]
 
 protected theorem Set.OrdConnected.strict_convex {s : Set β} (hs : OrdConnected s) :
     StrictConvex 𝕜 s :=

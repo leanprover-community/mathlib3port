@@ -5,7 +5,7 @@ Authors: Patrick Massot, Kevin Buzzard, Scott Morrison, Johan Commelin, Chris Hu
   Johannes Hölzl, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.hom.group
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2390,7 +2390,7 @@ See also `monoid_hom.of_map_div` for a version using `λ x y, x / y`.
       "Makes an additive group homomorphism from a proof that the map preserves\nthe operation `λ a b, a + -b`. See also `add_monoid_hom.of_map_sub` for a version using\n`λ a b, a - b`."]
 def ofMapMulInv {H : Type _} [Group H] (f : G → H)
     (map_div : ∀ a b : G, f (a * b⁻¹) = f a * (f b)⁻¹) : G →* H :=
-  (mk' f) fun x y =>
+  mk' f fun x y =>
     calc
       f (x * y) = f x * (f <| 1 * 1⁻¹ * y⁻¹)⁻¹ := by
         simp only [one_mul, inv_one, ← map_div, inv_inv]
@@ -2440,7 +2440,7 @@ theorem coe_of_map_div {H : Type _} [Group H] (f : G → H) (hf : ∀ x y, f (x 
 `x` to `(f x)⁻¹`. -/
 @[to_additive]
 instance {M G} [MulOneClass M] [CommGroup G] : Inv (M →* G) :=
-  ⟨fun f => (mk' fun g => (f g)⁻¹) fun a b => by rw [← mul_inv, f.map_mul]⟩
+  ⟨fun f => mk' (fun g => (f g)⁻¹) fun a b => by rw [← mul_inv, f.map_mul]⟩
 
 /-- If `f` is an additive monoid homomorphism to an additive commutative group, then `-f` is the
 homomorphism sending `x` to `-(f x)`. -/
@@ -2489,7 +2489,7 @@ sending `x` to `(f x) / (g x)`. -/
 @[to_additive]
 instance {M G} [MulOneClass M] [CommGroup G] : Div (M →* G) :=
   ⟨fun f g =>
-    (mk' fun x => f x / g x) fun a b => by
+    mk' (fun x => f x / g x) fun a b => by
       simp [div_eq_mul_inv, mul_assoc, mul_left_comm, mul_comm]⟩
 
 /-- If `f` and `g` are monoid homomorphisms to an additive commutative group, then `f - g`

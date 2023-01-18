@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module data.set.intervals.ord_connected
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -113,7 +113,7 @@ protected theorem Icc_subset (s : Set α) [hs : OrdConnected s] {x y} (hx : x �
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (Set.OrdConnected.{u1} α _inst_1 s) -> (Set.OrdConnected.{u1} α _inst_1 t) -> (Set.OrdConnected.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (Set.OrdConnected.{u1} α _inst_1 s) -> (Set.OrdConnected.{u1} α _inst_1 t) -> (Set.OrdConnected.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet_1.{u1} α) s t))
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (Set.OrdConnected.{u1} α _inst_1 s) -> (Set.OrdConnected.{u1} α _inst_1 t) -> (Set.OrdConnected.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t))
 Case conversion may be inaccurate. Consider using '#align set.ord_connected.inter Set.OrdConnected.interₓ'. -/
 theorem OrdConnected.inter {s t : Set α} (hs : OrdConnected s) (ht : OrdConnected t) :
     OrdConnected (s ∩ t) :=
@@ -124,7 +124,7 @@ theorem OrdConnected.inter {s t : Set α} (hs : OrdConnected s) (ht : OrdConnect
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α} [_inst_3 : Set.OrdConnected.{u1} α _inst_1 s] [_inst_4 : Set.OrdConnected.{u1} α _inst_1 t], Set.OrdConnected.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α} [_inst_3 : Set.OrdConnected.{u1} α _inst_1 s] [_inst_4 : Set.OrdConnected.{u1} α _inst_1 t], Set.OrdConnected.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet_1.{u1} α) s t)
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α} [_inst_3 : Set.OrdConnected.{u1} α _inst_1 s] [_inst_4 : Set.OrdConnected.{u1} α _inst_1 t], Set.OrdConnected.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t)
 Case conversion may be inaccurate. Consider using '#align set.ord_connected.inter' Set.OrdConnected.inter'ₓ'. -/
 instance OrdConnected.inter' {s t : Set α} [OrdConnected s] [OrdConnected t] :
     OrdConnected (s ∩ t) :=

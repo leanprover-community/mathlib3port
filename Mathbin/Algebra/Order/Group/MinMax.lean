@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.order.group.min_max
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,7 +57,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align min_inv_inv' min_inv_inv'ₓ'. -/
 @[to_additive min_neg_neg]
 theorem min_inv_inv' (a b : α) : min a⁻¹ b⁻¹ = (max a b)⁻¹ :=
-  Eq.symm <| (@Monotone.map_max α αᵒᵈ _ _ Inv.inv a b) fun a b => inv_le_inv_iff.mpr
+  Eq.symm <| @Monotone.map_max α αᵒᵈ _ _ Inv.inv a b fun a b => inv_le_inv_iff.mpr
 #align min_inv_inv' min_inv_inv'
 
 /- warning: max_inv_inv' -> max_inv_inv' is a dubious translation:
@@ -68,7 +68,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align max_inv_inv' max_inv_inv'ₓ'. -/
 @[to_additive max_neg_neg]
 theorem max_inv_inv' (a b : α) : max a⁻¹ b⁻¹ = (min a b)⁻¹ :=
-  Eq.symm <| (@Monotone.map_min α αᵒᵈ _ _ Inv.inv a b) fun a b => inv_le_inv_iff.mpr
+  Eq.symm <| @Monotone.map_min α αᵒᵈ _ _ Inv.inv a b fun a b => inv_le_inv_iff.mpr
 #align max_inv_inv' max_inv_inv'
 
 /- warning: min_div_div_right' -> min_div_div_right' is a dubious translation:

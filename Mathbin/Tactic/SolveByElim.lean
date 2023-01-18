@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Scott Morrison
 
 ! This file was ported from Lean 3 source module tactic.solve_by_elim
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -151,7 +151,7 @@ initialize
 -/
 unsafe def solve_by_elim_trace (n : ℕ) (f : format) : tactic Unit :=
   trace_if_enabled `solve_by_elim
-    ((f!"[solve_by_elim {(List.repeat '.' (n + 1)).asString} ") ++ f ++ "]")
+    ((f!"[solve_by_elim {(List.replicate (n + 1) '.').asString} ") ++ f ++ "]")
 #align tactic.solve_by_elim.solve_by_elim_trace tactic.solve_by_elim.solve_by_elim_trace
 
 /-- A helper function to generate trace messages on successful applications. -/

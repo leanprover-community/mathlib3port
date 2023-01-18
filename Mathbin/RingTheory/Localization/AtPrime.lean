@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.localization.at_prime
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -77,7 +77,7 @@ protected abbrev Localization.AtPrime :=
 namespace IsLocalization
 
 theorem AtPrime.nontrivial [IsLocalization.AtPrime S I] : Nontrivial S :=
-  (nontrivial_of_ne (0 : S) 1) fun hze =>
+  nontrivial_of_ne (0 : S) 1 fun hze =>
     by
     rw [← (algebraMap R S).map_one, ← (algebraMap R S).map_zero] at hze
     obtain ⟨t, ht⟩ := (eq_iff_exists I.prime_compl S).1 hze

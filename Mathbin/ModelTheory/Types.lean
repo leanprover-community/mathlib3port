@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module model_theory.types
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -86,7 +86,7 @@ theorem mem_of_models (p : T.CompleteType α) {φ : L[[α]].Sentence}
     (h : (L.lhomWithConstants α).onTheory T ⊨ φ) : φ ∈ p :=
   (p.mem_or_not_mem φ).resolve_right fun con =>
     ((models_iff_not_satisfiable _).1 h)
-      (p.IsMaximal.1.mono (union_subset p.Subset (singleton_subset_iff.2 con)))
+      (p.IsMaximal.1.mono (union_subset p.Subset (singleton_subset_iff.2 Con)))
 #align
   first_order.language.Theory.complete_type.mem_of_models FirstOrder.Language.TheoryCat.CompleteType.mem_of_models
 
@@ -176,7 +176,7 @@ theorem to_list_foldr_inf_mem {p : T.CompleteType α} {t : Finset L[[α]].Senten
     t.toList.foldr (· ⊓ ·) ⊤ ∈ p ↔ (t : L[[α]].TheoryCat) ⊆ ↑p :=
   by
   simp_rw [subset_def, ← SetLike.mem_coe, p.is_maximal.mem_iff_models, models_sentence_iff,
-    sentence.realize, formula.realize, bounded_formula.realize_foldr_inf, Finset.mem_to_list]
+    sentence.realize, formula.realize, bounded_formula.realize_foldr_inf, Finset.mem_toList]
   exact ⟨fun h φ hφ M => h _ _ hφ, fun h M φ hφ => h _ hφ _⟩
 #align
   first_order.language.Theory.complete_type.to_list_foldr_inf_mem FirstOrder.Language.TheoryCat.CompleteType.to_list_foldr_inf_mem

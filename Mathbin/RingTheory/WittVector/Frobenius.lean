@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.frobenius
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -261,7 +261,7 @@ variable {p}
 /-- `frobenius_fun` is the function underlying the ring endomorphism
 `frobenius : 𝕎 R →+* frobenius 𝕎 R`. -/
 def frobeniusFun (x : 𝕎 R) : 𝕎 R :=
-  (mk p) fun n => MvPolynomial.aeval x.coeff (frobeniusPoly p n)
+  mk p fun n => MvPolynomial.aeval x.coeff (frobeniusPoly p n)
 #align witt_vector.frobenius_fun WittVector.frobeniusFun
 
 theorem coeff_frobenius_fun (x : 𝕎 R) (n : ℕ) :

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jan-David Salchow, Sébastien Gouëzel, Jean Lo
 
 ! This file was ported from Lean 3 source module analysis.normed_space.operator_norm
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,7 +66,7 @@ def LinearMap.mkContinuous (C : ℝ) (h : ∀ x, ‖f x‖ ≤ C * ‖x‖) : E 
 is generalized to the case of any finite dimensional domain
 in `linear_map.to_continuous_linear_map`. -/
 def LinearMap.toContinuousLinearMap₁ (f : 𝕜 →ₗ[𝕜] E) : 𝕜 →L[𝕜] E :=
-  (f.mkContinuous ‖f 1‖) fun x =>
+  f.mkContinuous ‖f 1‖ fun x =>
     le_of_eq <| by
       conv_lhs => rw [← mul_one x]
       rw [← smul_eq_mul, f.map_smul, norm_smul, mul_comm]
@@ -314,13 +314,13 @@ theorem op_norm_le_bound (f : E →SL[σ₁₂] F) {M : ℝ} (hMp : 0 ≤ M) (hM
 /-- If one controls the norm of every `A x`, `‖x‖ ≠ 0`, then one controls the norm of `A`. -/
 theorem op_norm_le_bound' (f : E →SL[σ₁₂] F) {M : ℝ} (hMp : 0 ≤ M)
     (hM : ∀ x, ‖x‖ ≠ 0 → ‖f x‖ ≤ M * ‖x‖) : ‖f‖ ≤ M :=
-  (op_norm_le_bound f hMp) fun x =>
-    ((ne_or_eq ‖x‖ 0).elim (hM x)) fun h => by
+  op_norm_le_bound f hMp fun x =>
+    (ne_or_eq ‖x‖ 0).elim (hM x) fun h => by
       simp only [h, mul_zero, norm_image_of_norm_zero f f.2 h]
 #align continuous_linear_map.op_norm_le_bound' ContinuousLinearMap.op_norm_le_bound'
 
 theorem op_norm_le_of_lipschitz {f : E →SL[σ₁₂] F} {K : ℝ≥0} (hf : LipschitzWith K f) : ‖f‖ ≤ K :=
-  (f.op_norm_le_bound K.2) fun x => by
+  f.op_norm_le_bound K.2 fun x => by
     simpa only [dist_zero_right, f.map_zero] using hf.dist_le_mul x 0
 #align continuous_linear_map.op_norm_le_of_lipschitz ContinuousLinearMap.op_norm_le_of_lipschitz
 
@@ -390,8 +390,7 @@ theorem unit_le_op_norm : ‖x‖ ≤ 1 → ‖f x‖ ≤ ‖f‖ :=
 
 theorem op_norm_le_of_shell {f : E →SL[σ₁₂] F} {ε C : ℝ} (ε_pos : 0 < ε) (hC : 0 ≤ C) {c : 𝕜}
     (hc : 1 < ‖c‖) (hf : ∀ x, ε / ‖c‖ ≤ ‖x‖ → ‖x‖ < ε → ‖f x‖ ≤ C * ‖x‖) : ‖f‖ ≤ C :=
-  (f.op_norm_le_bound' hC) fun x hx =>
-    SemilinearMapClass.bound_of_shell_semi_normed f ε_pos hc hf hx
+  f.op_norm_le_bound' hC fun x hx => SemilinearMapClass.bound_of_shell_semi_normed f ε_pos hc hf hx
 #align continuous_linear_map.op_norm_le_of_shell ContinuousLinearMap.op_norm_le_of_shell
 
 theorem op_norm_le_of_ball {f : E →SL[σ₁₂] F} {ε : ℝ} {C : ℝ} (ε_pos : 0 < ε) (hC : 0 ≤ C)
@@ -434,7 +433,7 @@ theorem op_norm_le_of_unit_norm [NormedSpace ℝ E] [NormedSpace ℝ F] {f : E �
 
 /-- The operator norm satisfies the triangle inequality. -/
 theorem op_norm_add_le : ‖f + g‖ ≤ ‖f‖ + ‖g‖ :=
-  ((f + g).op_norm_le_bound (add_nonneg f.op_norm_nonneg g.op_norm_nonneg)) fun x =>
+  (f + g).op_norm_le_bound (add_nonneg f.op_norm_nonneg g.op_norm_nonneg) fun x =>
     (norm_add_le_of_le (f.le_op_norm x) (g.le_op_norm x)).trans_eq (add_mul _ _ _).symm
 #align continuous_linear_map.op_norm_add_le ContinuousLinearMap.op_norm_add_le
 
@@ -601,14 +600,14 @@ theorem op_nnnorm_le_bound (f : E →SL[σ₁₂] F) (M : ℝ≥0) (hM : ∀ x, 
 /-- If one controls the norm of every `A x`, `‖x‖₊ ≠ 0`, then one controls the norm of `A`. -/
 theorem op_nnnorm_le_bound' (f : E →SL[σ₁₂] F) (M : ℝ≥0) (hM : ∀ x, ‖x‖₊ ≠ 0 → ‖f x‖₊ ≤ M * ‖x‖₊) :
     ‖f‖₊ ≤ M :=
-  (op_norm_le_bound' f (zero_le M)) fun x hx => hM x <| by rwa [← Nnreal.coe_ne_zero]
+  op_norm_le_bound' f (zero_le M) fun x hx => hM x <| by rwa [← Nnreal.coe_ne_zero]
 #align continuous_linear_map.op_nnnorm_le_bound' ContinuousLinearMap.op_nnnorm_le_bound'
 
 /-- For a continuous real linear map `f`, if one controls the norm of every `f x`, `‖x‖₊ = 1`, then
 one controls the norm of `f`. -/
 theorem op_nnnorm_le_of_unit_nnnorm [NormedSpace ℝ E] [NormedSpace ℝ F] {f : E →L[ℝ] F} {C : ℝ≥0}
     (hf : ∀ x, ‖x‖₊ = 1 → ‖f x‖₊ ≤ C) : ‖f‖₊ ≤ C :=
-  (op_norm_le_of_unit_norm C.coe_nonneg) fun x hx => hf x <| by rwa [← Nnreal.coe_eq_one]
+  op_norm_le_of_unit_norm C.coe_nonneg fun x hx => hf x <| by rwa [← Nnreal.coe_eq_one]
 #align
   continuous_linear_map.op_nnnorm_le_of_unit_nnnorm ContinuousLinearMap.op_nnnorm_le_of_unit_nnnorm
 
@@ -793,7 +792,7 @@ variable [RingHomIsometric σ₂₃]
 
 theorem op_norm_le_bound₂ (f : E →SL[σ₁₃] F →SL[σ₂₃] G) {C : ℝ} (h0 : 0 ≤ C)
     (hC : ∀ x y, ‖f x y‖ ≤ C * ‖x‖ * ‖y‖) : ‖f‖ ≤ C :=
-  (f.op_norm_le_bound h0) fun x => (f x).op_norm_le_bound (mul_nonneg h0 (norm_nonneg _)) <| hC x
+  f.op_norm_le_bound h0 fun x => (f x).op_norm_le_bound (mul_nonneg h0 (norm_nonneg _)) <| hC x
 #align continuous_linear_map.op_norm_le_bound₂ ContinuousLinearMap.op_norm_le_bound₂
 
 theorem le_op_norm₂ [RingHomIsometric σ₁₃] (f : E →SL[σ₁₃] F →SL[σ₂₃] G) (x : E) (y : F) :
@@ -806,13 +805,13 @@ end
 @[simp]
 theorem op_norm_prod (f : E →L[𝕜] Fₗ) (g : E →L[𝕜] Gₗ) : ‖f.Prod g‖ = ‖(f, g)‖ :=
   le_antisymm
-      ((op_norm_le_bound _ (norm_nonneg _)) fun x => by
+      (op_norm_le_bound _ (norm_nonneg _) fun x => by
         simpa only [prod_apply, Prod.norm_def, max_mul_of_nonneg, norm_nonneg] using
           max_le_max (le_op_norm f x) (le_op_norm g x)) <|
     max_le
-      ((op_norm_le_bound _ (norm_nonneg _)) fun x =>
+      (op_norm_le_bound _ (norm_nonneg _) fun x =>
         (le_max_left _ _).trans ((f.Prod g).le_op_norm x))
-      ((op_norm_le_bound _ (norm_nonneg _)) fun x =>
+      (op_norm_le_bound _ (norm_nonneg _) fun x =>
         (le_max_right _ _).trans ((f.Prod g).le_op_norm x))
 #align continuous_linear_map.op_norm_prod ContinuousLinearMap.op_norm_prod
 
@@ -882,7 +881,7 @@ end ContinuousLinearMap
 namespace LinearIsometry
 
 theorem norm_to_continuous_linear_map_le (f : E →ₛₗᵢ[σ₁₂] F) : ‖f.toContinuousLinearMap‖ ≤ 1 :=
-  (f.toContinuousLinearMap.op_norm_le_bound zero_le_one) fun x => by simp
+  f.toContinuousLinearMap.op_norm_le_bound zero_le_one fun x => by simp
 #align
   linear_isometry.norm_to_continuous_linear_map_le LinearIsometry.norm_to_continuous_linear_map_le
 
@@ -901,7 +900,7 @@ theorem mk_continuous_norm_le (f : E →ₛₗ[σ₁₂] F) {C : ℝ} (hC : 0 �
 then its norm is bounded by the bound or zero if bound is negative. -/
 theorem mk_continuous_norm_le' (f : E →ₛₗ[σ₁₂] F) {C : ℝ} (h : ∀ x, ‖f x‖ ≤ C * ‖x‖) :
     ‖f.mkContinuous C h‖ ≤ max C 0 :=
-  (ContinuousLinearMap.op_norm_le_bound _ (le_max_right _ _)) fun x =>
+  ContinuousLinearMap.op_norm_le_bound _ (le_max_right _ _) fun x =>
     (h x).trans <| mul_le_mul_of_nonneg_right (le_max_left _ _) (norm_nonneg x)
 #align linear_map.mk_continuous_norm_le' LinearMap.mk_continuous_norm_le'
 
@@ -912,18 +911,17 @@ map and a bound on the norm of the image. The linear map can be constructed usin
 `linear_map.mk₂`. -/
 def mkContinuous₂ (f : E →ₛₗ[σ₁₃] F →ₛₗ[σ₂₃] G) (C : ℝ) (hC : ∀ x y, ‖f x y‖ ≤ C * ‖x‖ * ‖y‖) :
     E →SL[σ₁₃] F →SL[σ₂₃] G :=
-  (LinearMap.mkContinuous
-      { toFun := fun x => (f x).mkContinuous (C * ‖x‖) (hC x)
-        map_add' := fun x y => by
-          ext z
-          rw [ContinuousLinearMap.add_apply, mk_continuous_apply, mk_continuous_apply,
-            mk_continuous_apply, map_add, add_apply]
-        map_smul' := fun c x => by
-          ext z
-          rw [ContinuousLinearMap.smul_apply, mk_continuous_apply, mk_continuous_apply, map_smulₛₗ,
-            smul_apply] }
-      (max C 0))
-    fun x =>
+  LinearMap.mkContinuous
+    { toFun := fun x => (f x).mkContinuous (C * ‖x‖) (hC x)
+      map_add' := fun x y => by
+        ext z
+        rw [ContinuousLinearMap.add_apply, mk_continuous_apply, mk_continuous_apply,
+          mk_continuous_apply, map_add, add_apply]
+      map_smul' := fun c x => by
+        ext z
+        rw [ContinuousLinearMap.smul_apply, mk_continuous_apply, mk_continuous_apply, map_smulₛₗ,
+          smul_apply] }
+    (max C 0) fun x =>
     (mk_continuous_norm_le' _ _).trans_eq <| by rw [max_mul_of_nonneg _ _ (norm_nonneg x), zero_mul]
 #align linear_map.mk_continuous₂ LinearMap.mkContinuous₂
 
@@ -961,7 +959,7 @@ def flip (f : E →SL[σ₁₃] F →SL[σ₂₃] G) : F →SL[σ₂₃] E →SL
 #align continuous_linear_map.flip ContinuousLinearMap.flip
 
 private theorem le_norm_flip (f : E →SL[σ₁₃] F →SL[σ₂₃] G) : ‖f‖ ≤ ‖flip f‖ :=
-  (f.op_norm_le_bound₂ (norm_nonneg _)) fun x y =>
+  f.op_norm_le_bound₂ (norm_nonneg _) fun x y =>
     by
     rw [mul_right_comm]
     exact (flip f).le_op_norm₂ y x
@@ -1088,14 +1086,13 @@ variable (σ₁₂ σ₂₃ E F G)
 
 /-- Composition of continuous semilinear maps as a continuous semibilinear map. -/
 def compSL : (F →SL[σ₂₃] G) →L[𝕜₃] (E →SL[σ₁₂] F) →SL[σ₂₃] E →SL[σ₁₃] G :=
-  (LinearMap.mkContinuous₂
-      (LinearMap.mk₂'ₛₗ (RingHom.id 𝕜₃) σ₂₃ comp add_comp smul_comp comp_add fun c f g =>
-        by
-        ext
-        simp only [ContinuousLinearMap.map_smulₛₗ, coe_smul', coe_comp', Function.comp_apply,
-          Pi.smul_apply])
-      1)
-    fun f g => by simpa only [one_mul] using op_norm_comp_le f g
+  LinearMap.mkContinuous₂
+    (LinearMap.mk₂'ₛₗ (RingHom.id 𝕜₃) σ₂₃ comp add_comp smul_comp comp_add fun c f g =>
+      by
+      ext
+      simp only [ContinuousLinearMap.map_smulₛₗ, coe_smul', coe_comp', Function.comp_apply,
+        Pi.smul_apply])
+    1 fun f g => by simpa only [one_mul] using op_norm_comp_le f g
 #align continuous_linear_map.compSL ContinuousLinearMap.compSL
 
 variable {𝕜 σ₁₂ σ₂₃ E F G}
@@ -1233,7 +1230,7 @@ variable (𝕜) (𝕜' : Type _) [NonUnitalSemiNormedRing 𝕜'] [NormedSpace �
 
 /-- Multiplication in a non-unital normed algebra as a continuous bilinear map. -/
 def mul : 𝕜' →L[𝕜] 𝕜' →L[𝕜] 𝕜' :=
-  ((LinearMap.mul 𝕜 𝕜').mkContinuous₂ 1) fun x y => by simpa using norm_mul_le x y
+  (LinearMap.mul 𝕜 𝕜').mkContinuous₂ 1 fun x y => by simpa using norm_mul_le x y
 #align continuous_linear_map.mul ContinuousLinearMap.mul
 
 @[simp]
@@ -1316,7 +1313,7 @@ variable (𝕜) (𝕜' : Type _) [NormedField 𝕜'] [NormedAlgebra 𝕜 𝕜'] 
 
 /-- Scalar multiplication as a continuous bilinear map. -/
 def lsmul : 𝕜' →L[𝕜] E →L[𝕜] E :=
-  (((Algebra.lsmul 𝕜 E).toLinearMap : 𝕜' →ₗ[𝕜] E →ₗ[𝕜] E).mkContinuous₂ 1) fun c x => by
+  ((Algebra.lsmul 𝕜 E).toLinearMap : 𝕜' →ₗ[𝕜] E →ₗ[𝕜] E).mkContinuous₂ 1 fun c x => by
     simpa only [one_mul] using (norm_smul c x).le
 #align continuous_linear_map.lsmul ContinuousLinearMap.lsmul
 
@@ -1339,7 +1336,7 @@ theorem norm_to_span_singleton (x : E) : ‖toSpanSingleton 𝕜 x‖ = ‖x‖ 
 variable {𝕜}
 
 theorem op_norm_lsmul_apply_le (x : 𝕜') : ‖(lsmul 𝕜 𝕜' x : E →L[𝕜] E)‖ ≤ ‖x‖ :=
-  (ContinuousLinearMap.op_norm_le_bound _ (norm_nonneg x)) fun y => (norm_smul x y).le
+  ContinuousLinearMap.op_norm_le_bound _ (norm_nonneg x) fun y => (norm_smul x y).le
 #align continuous_linear_map.op_norm_lsmul_apply_le ContinuousLinearMap.op_norm_lsmul_apply_le
 
 /-- The norm of `lsmul` is at most 1 in any semi-normed group. -/
@@ -1362,8 +1359,8 @@ variable [NormedSpace 𝕜' Fₗ] [IsScalarTower 𝕜' 𝕜 Fₗ]
 
 @[simp]
 theorem norm_restrict_scalars (f : E →L[𝕜] Fₗ) : ‖f.restrictScalars 𝕜'‖ = ‖f‖ :=
-  le_antisymm ((op_norm_le_bound _ (norm_nonneg _)) fun x => f.le_op_norm x)
-    ((op_norm_le_bound _ (norm_nonneg _)) fun x => f.le_op_norm x)
+  le_antisymm (op_norm_le_bound _ (norm_nonneg _) fun x => f.le_op_norm x)
+    (op_norm_le_bound _ (norm_nonneg _) fun x => f.le_op_norm x)
 #align continuous_linear_map.norm_restrict_scalars ContinuousLinearMap.norm_restrict_scalars
 
 variable (𝕜 E Fₗ 𝕜') (𝕜'' : Type _) [Ring 𝕜''] [Module 𝕜'' Fₗ] [HasContinuousConstSmul 𝕜'' Fₗ]
@@ -1757,7 +1754,7 @@ theorem antilipschitz_of_uniform_embedding (f : E →L[𝕜] Fₗ) (hf : Uniform
       exact hx.trans_lt (half_lt_self εpos)
     simpa using this
   rcases NormedField.exists_one_lt_norm 𝕜 with ⟨c, hc⟩
-  refine' ⟨⟨δ⁻¹, _⟩ * ‖c‖₊, (AddMonoidHomClass.antilipschitz_of_bound f) fun x => _⟩
+  refine' ⟨⟨δ⁻¹, _⟩ * ‖c‖₊, AddMonoidHomClass.antilipschitz_of_bound f fun x => _⟩
   exact inv_nonneg.2 (le_of_lt δ_pos)
   by_cases hx : f x = 0
   · have : f x = f 0 := by simp [hx]
@@ -1918,7 +1915,7 @@ theorem is_weak_closed_closed_ball (f₀ : E' →SL[σ₁₂] F) (r : ℝ) ⦃f 
     f ∈ closedBall f₀ r :=
   by
   have hr : 0 ≤ r := nonempty_closed_ball.1 (nonempty_image_iff.1 (closure_nonempty_iff.1 ⟨_, hf⟩))
-  refine' mem_closed_ball_iff_norm.2 ((op_norm_le_bound _ hr) fun x => _)
+  refine' mem_closed_ball_iff_norm.2 (op_norm_le_bound _ hr fun x => _)
   have : IsClosed { g : E' → F | ‖g x - f₀ x‖ ≤ r * ‖x‖ } :=
     is_closed_Iic.preimage ((@continuous_apply E' (fun _ => F) _ x).sub continuous_const).norm
   refine' this.closure_subset_iff.2 (image_subset_iff.2 fun g hg => _) hf
@@ -2152,17 +2149,16 @@ variable (𝕜 E Fₗ)
 /-- `continuous_linear_map.smul_right` as a continuous trilinear map:
 `smul_rightL (c : E →L[𝕜] 𝕜) (f : F) (x : E) = c x • f`. -/
 def smulRightL : (E →L[𝕜] 𝕜) →L[𝕜] Fₗ →L[𝕜] E →L[𝕜] Fₗ :=
-  (LinearMap.mkContinuous₂
-      { toFun := smulRightₗ
-        map_add' := fun c₁ c₂ => by
-          ext x
-          simp only [add_smul, coe_smul_rightₗ, add_apply, smul_right_apply, LinearMap.add_apply]
-        map_smul' := fun m c => by
-          ext x
-          simp only [smul_smul, coe_smul_rightₗ, Algebra.id.smul_eq_mul, coe_smul',
-            smul_right_apply, LinearMap.smul_apply, RingHom.id_apply, Pi.smul_apply] }
-      1)
-    fun c x => by simp only [coe_smul_rightₗ, one_mul, norm_smul_right_apply, LinearMap.coe_mk]
+  LinearMap.mkContinuous₂
+    { toFun := smulRightₗ
+      map_add' := fun c₁ c₂ => by
+        ext x
+        simp only [add_smul, coe_smul_rightₗ, add_apply, smul_right_apply, LinearMap.add_apply]
+      map_smul' := fun m c => by
+        ext x
+        simp only [smul_smul, coe_smul_rightₗ, Algebra.id.smul_eq_mul, coe_smul', smul_right_apply,
+          LinearMap.smul_apply, RingHom.id_apply, Pi.smul_apply] }
+    1 fun c x => by simp only [coe_smul_rightₗ, one_mul, norm_smul_right_apply, LinearMap.coe_mk]
 #align continuous_linear_map.smul_rightL ContinuousLinearMap.smulRightL
 
 variable {𝕜 E Fₗ}

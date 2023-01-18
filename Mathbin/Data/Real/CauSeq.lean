@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.real.cau_seq
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -557,7 +557,7 @@ section SMul
 variable [SMul G β] [IsScalarTower G β β]
 
 instance : SMul G (CauSeq β abv) :=
-  ⟨fun a f => (ofEq (const (a • 1) * f) (a • f)) fun i => smul_one_mul _ _⟩
+  ⟨fun a f => ofEq (const (a • 1) * f) (a • f) fun i => smul_one_mul _ _⟩
 
 /- warning: cau_seq.coe_smul -> CauSeq.coe_smul is a dubious translation:
 lean 3 declaration is
@@ -751,7 +751,7 @@ Case conversion may be inaccurate. Consider using '#align cau_seq.const_lim_zero
 theorem const_limZero {x : β} : LimZero (const x) ↔ x = 0 :=
   ⟨fun H =>
     (abv_eq_zero abv).1 <|
-      (eq_of_le_of_forall_le_of_dense (abv_nonneg abv _)) fun ε ε0 =>
+      eq_of_le_of_forall_le_of_dense (abv_nonneg abv _) fun ε ε0 =>
         let ⟨i, hi⟩ := H _ ε0
         le_of_lt <| hi _ le_rfl,
     fun e => e.symm ▸ zero_lim_zero⟩
@@ -979,7 +979,7 @@ theorem one_not_equiv_zero : ¬const abv 1 ≈ const abv 0 := fun h =>
   have : ∀ ε > 0, ∃ i, ∀ k, i ≤ k → abv (1 - 0) < ε := h
   have h1 : abv 1 ≤ 0 :=
     le_of_not_gt fun h2 : 0 < abv 1 =>
-      (Exists.elim (this _ h2)) fun i hi => lt_irrefl (abv 1) <| by simpa using hi _ le_rfl
+      Exists.elim (this _ h2) fun i hi => lt_irrefl (abv 1) <| by simpa using hi _ le_rfl
   have h2 : 0 ≤ abv 1 := IsAbsoluteValue.abv_nonneg _ _
   have : abv 1 = 0 := le_antisymm h1 h2
   have : (1 : β) = 0 := (IsAbsoluteValue.abv_eq_zero abv).1 this

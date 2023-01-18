@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module data.nat.squarefree
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -292,11 +292,11 @@ theorem divisors_filter_squarefree {n : ℕ} (h0 : n ≠ 0) :
       rcases an with ⟨b, rfl⟩
       rw [mul_ne_zero_iff] at h0
       rw [UniqueFactorizationMonoid.squarefree_iff_nodup_normalized_factors h0.1] at hsq
-      rw [Multiset.to_finset_subset, Multiset.to_finset_val, hsq.dedup, ← associated_iff_eq,
+      rw [Multiset.toFinset_subset, Multiset.toFinset_val, hsq.dedup, ← associated_iff_eq,
         normalized_factors_mul h0.1 h0.2]
       exact ⟨Multiset.subset_of_le (Multiset.le_add_right _ _), normalized_factors_prod h0.1⟩
     · rintro ⟨s, hs, rfl⟩
-      rw [Finset.mem_powerset, ← Finset.val_le_iff, Multiset.to_finset_val] at hs
+      rw [Finset.mem_powerset, ← Finset.val_le_iff, Multiset.toFinset_val] at hs
       have hs0 : s.val.prod ≠ 0 :=
         by
         rw [Ne.def, Multiset.prod_eq_zero_iff]
@@ -322,11 +322,11 @@ theorem divisors_filter_squarefree {n : ℕ} (h0 : n ≠ 0) :
     apply UniqueFactorizationMonoid.factors_unique _ _ (associated_iff_eq.2 h)
     · intro z hz
       apply irreducible_of_normalized_factor z
-      rw [← Multiset.mem_to_finset]
+      rw [← Multiset.mem_toFinset]
       apply hx hz
     · intro z hz
       apply irreducible_of_normalized_factor z
-      rw [← Multiset.mem_to_finset]
+      rw [← Multiset.mem_toFinset]
       apply hy hz
 #align nat.divisors_filter_squarefree Nat.divisors_filter_squarefree
 

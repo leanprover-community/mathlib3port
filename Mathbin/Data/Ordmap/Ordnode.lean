@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.ordmap.ordnode
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -489,8 +489,8 @@ def glue : Ordnode α → Ordnode α → Ordnode α
      merge {1, 2} {3, 4} = {1, 2, 3, 4}
      merge {3, 4} {1, 2} = precondition violation -/
 def merge (l : Ordnode α) : Ordnode α → Ordnode α :=
-  (Ordnode.recOn l fun r => r) fun ls ll lx lr IHll IHlr r =>
-    (Ordnode.recOn r (node ls ll lx lr)) fun rs rl rx rr IHrl IHrr =>
+  Ordnode.recOn l (fun r => r) fun ls ll lx lr IHll IHlr r =>
+    Ordnode.recOn r (node ls ll lx lr) fun rs rl rx rr IHrl IHrr =>
       if delta * ls < rs then balanceL IHrl rx rr
       else
         if delta * rs < ls then balanceR ll lx (IHlr <| node rs rl rx rr)
@@ -523,8 +523,8 @@ assumption on the relative sizes.
     link {1, 2} 4 {5, 6} = {1, 2, 4, 5, 6}
     link {1, 3} 2 {5} = precondition violation -/
 def link (l : Ordnode α) (x : α) : Ordnode α → Ordnode α :=
-  (Ordnode.recOn l (insertMin x)) fun ls ll lx lr IHll IHlr r =>
-    (Ordnode.recOn r (insertMax l x)) fun rs rl rx rr IHrl IHrr =>
+  Ordnode.recOn l (insertMin x) fun ls ll lx lr IHll IHlr r =>
+    Ordnode.recOn r (insertMax l x) fun rs rl rx rr IHrl IHrr =>
       if delta * ls < rs then balanceL IHrl rx rr
       else if delta * rs < ls then balanceR ll lx (IHlr r) else node' l x r
 #align ordnode.link Ordnode.link

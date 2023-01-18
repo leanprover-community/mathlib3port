@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.measure.hausdorff
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -155,7 +155,7 @@ theorem finset_Union_of_pairwise_separated (hm : IsMetric μ) {I : Finset ι} {s
     induction' I using Finset.induction_on with i I hiI ihI hI
     · simp
     simp only [Finset.mem_insert] at hI
-    rw [Finset.set_bUnion_insert, hm, ihI, Finset.sum_insert hiI]
+    rw [Finset.set_bunionᵢ_insert, hm, ihI, Finset.sum_insert hiI]
     exacts[fun i hi j hj hij => hI i (Or.inr hi) j (Or.inr hj) hij,
       IsMetricSeparated.finset_Union_right fun j hj =>
         hI i (Or.inl rfl) j (Or.inr hj) (ne_of_mem_of_not_mem hj hiI).symm]
@@ -401,7 +401,7 @@ theorem isometry_comap_mk_metric (m : ℝ≥0∞ → ℝ≥0∞) {f : X → Y} (
     (H : Monotone m ∨ Surjective f) : comap f (mkMetric m) = mkMetric m :=
   by
   simp only [mk_metric, mk_metric', mk_metric'.pre, induced_outer_measure, comap_supr]
-  refine' surjective_id.supr_congr id fun ε => (surjective_id.supr_congr id) fun hε => _
+  refine' surjective_id.supr_congr id fun ε => surjective_id.supr_congr id fun hε => _
   rw [comap_bounded_by _ (H.imp (fun h_mono => _) id)]
   · congr with s : 1
     apply extend_congr
@@ -422,16 +422,17 @@ theorem isometry_map_mk_metric (m : ℝ≥0∞ → ℝ≥0∞) {f : X → Y} (hf
 #align
   measure_theory.outer_measure.isometry_map_mk_metric MeasureTheory.OuterMeasure.isometry_map_mk_metric
 
-theorem isometric_comap_mk_metric (m : ℝ≥0∞ → ℝ≥0∞) (f : X ≃ᵢ Y) :
+theorem isometry_equiv_comap_mk_metric (m : ℝ≥0∞ → ℝ≥0∞) (f : X ≃ᵢ Y) :
     comap f (mkMetric m) = mkMetric m :=
   isometry_comap_mk_metric _ f.Isometry (Or.inr f.Surjective)
 #align
-  measure_theory.outer_measure.isometric_comap_mk_metric MeasureTheory.OuterMeasure.isometric_comap_mk_metric
+  measure_theory.outer_measure.isometry_equiv_comap_mk_metric MeasureTheory.OuterMeasure.isometry_equiv_comap_mk_metric
 
-theorem isometric_map_mk_metric (m : ℝ≥0∞ → ℝ≥0∞) (f : X ≃ᵢ Y) : map f (mkMetric m) = mkMetric m :=
-  by rw [← isometric_comap_mk_metric _ f, map_comap_of_surjective f.surjective]
+theorem isometry_equiv_map_mk_metric (m : ℝ≥0∞ → ℝ≥0∞) (f : X ≃ᵢ Y) :
+    map f (mkMetric m) = mkMetric m := by
+  rw [← isometry_equiv_comap_mk_metric _ f, map_comap_of_surjective f.surjective]
 #align
-  measure_theory.outer_measure.isometric_map_mk_metric MeasureTheory.OuterMeasure.isometric_map_mk_metric
+  measure_theory.outer_measure.isometry_equiv_map_mk_metric MeasureTheory.OuterMeasure.isometry_equiv_map_mk_metric
 
 theorem trim_mk_metric [MeasurableSpace X] [BorelSpace X] (m : ℝ≥0∞ → ℝ≥0∞) :
     (mkMetric m : OuterMeasure X).trim = mkMetric m :=
@@ -533,8 +534,8 @@ theorem mk_metric_apply (m : ℝ≥0∞ → ℝ≥0∞) (s : Set X) :
       extend]
     refine'
       surjective_id.supr_congr (fun r => r) fun r =>
-        (supᵢ_congr_Prop Iff.rfl) fun hr =>
-          (surjective_id.infi_congr _) fun t => (infᵢ_congr_Prop Iff.rfl) fun ht => _
+        supᵢ_congr_Prop Iff.rfl fun hr =>
+          surjective_id.infi_congr _ fun t => infᵢ_congr_Prop Iff.rfl fun ht => _
     dsimp
     by_cases htr : ∀ n, diam (t n) ≤ r
     · rw [infᵢ_eq_if, if_pos htr]
@@ -1051,17 +1052,17 @@ theorem map_hausdorff_measure (hf : Isometry f) (hd : 0 ≤ d ∨ Surjective f) 
 
 end Isometry
 
-namespace Isometric
+namespace IsometryEquiv
 
 @[simp]
 theorem hausdorff_measure_image (e : X ≃ᵢ Y) (d : ℝ) (s : Set X) : μH[d] (e '' s) = μH[d] s :=
   e.Isometry.hausdorff_measure_image (Or.inr e.Surjective) s
-#align isometric.hausdorff_measure_image Isometric.hausdorff_measure_image
+#align isometry_equiv.hausdorff_measure_image IsometryEquiv.hausdorff_measure_image
 
 @[simp]
 theorem hausdorff_measure_preimage (e : X ≃ᵢ Y) (d : ℝ) (s : Set Y) : μH[d] (e ⁻¹' s) = μH[d] s :=
   by rw [← e.image_symm, e.symm.hausdorff_measure_image]
-#align isometric.hausdorff_measure_preimage Isometric.hausdorff_measure_preimage
+#align isometry_equiv.hausdorff_measure_preimage IsometryEquiv.hausdorff_measure_preimage
 
-end Isometric
+end IsometryEquiv
 

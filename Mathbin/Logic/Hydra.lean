@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Junyan Xu
 
 ! This file was ported from Lean 3 source module logic.hydra
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -133,7 +133,7 @@ theorem acc_of_singleton [IsIrrefl α r] {s : Multiset α} :
     (∀ a ∈ s, Acc (CutExpand r) {a}) → Acc (CutExpand r) s :=
   by
   refine' Multiset.induction _ _ s
-  · exact fun _ => (Acc.intro 0) fun s h => (not_cut_expand_zero s h).elim
+  · exact fun _ => Acc.intro 0 fun s h => (not_cut_expand_zero s h).elim
   · intro a s ih hacc
     rw [← s.singleton_add a]
     exact

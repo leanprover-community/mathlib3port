@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Mario Carneiro, Kevin Buzzard, Yury Kudryashov, Fréd�
   Heather Macbeth
 
 ! This file was ported from Lean 3 source module linear_algebra.span
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -167,15 +167,15 @@ theorem span_induction' {p : ∀ x, x ∈ span R s → Prop} (Hs : ∀ (x) (h : 
   refine'
     span_induction hx (fun m hm => ⟨subset_span hm, Hs m hm⟩) ⟨zero_mem _, H0⟩
       (fun x y hx hy =>
-        (Exists.elim hx) fun hx' hx =>
-          (Exists.elim hy) fun hy' hy => ⟨add_mem hx' hy', H1 _ _ _ _ hx hy⟩)
-      fun r x hx => (Exists.elim hx) fun hx' hx => ⟨smul_mem _ _ hx', H2 r _ _ hx⟩
+        Exists.elim hx fun hx' hx =>
+          Exists.elim hy fun hy' hy => ⟨add_mem hx' hy', H1 _ _ _ _ hx hy⟩)
+      fun r x hx => Exists.elim hx fun hx' hx => ⟨smul_mem _ _ hx', H2 r _ _ hx⟩
 #align submodule.span_induction' Submodule.span_induction'
 
 @[simp]
 theorem span_span_coe_preimage : span R ((coe : span R s → M) ⁻¹' s) = ⊤ :=
   eq_top_iff.2 fun x =>
-    (Subtype.recOn x) fun x hx _ =>
+    Subtype.recOn x fun x hx _ =>
       by
       refine' span_induction' (fun x hx => _) _ (fun x y _ _ => _) (fun r x _ => _) hx
       · exact subset_span hx
@@ -201,7 +201,7 @@ theorem span_nat_eq (s : AddSubmonoid M) : (span ℕ (s : Set M)).toAddSubmonoid
 theorem span_int_eq_add_subgroup_closure {M : Type _} [AddCommGroup M] (s : Set M) :
     (span ℤ s).toAddSubgroup = AddSubgroup.closure s :=
   Eq.symm <|
-    (AddSubgroup.closure_eq_of_le _ subset_span) fun x hx =>
+    AddSubgroup.closure_eq_of_le _ subset_span fun x hx =>
       span_induction hx (fun x hx => AddSubgroup.subset_closure hx) (AddSubgroup.zero_mem _)
         (fun _ _ => AddSubgroup.add_mem _) fun _ _ _ => AddSubgroup.zsmul_mem _ ‹_› _
 #align submodule.span_int_eq_add_subgroup_closure Submodule.span_int_eq_add_subgroup_closure
@@ -691,7 +691,7 @@ theorem finset_span_is_compact_element (S : Finset M) :
   by
   rw [span_eq_supr_of_singleton_spans]
   simp only [Finset.mem_coe]
-  rw [← Finset.sup_eq_supr]
+  rw [← Finset.sup_eq_supᵢ]
   exact
     CompleteLattice.finset_sup_compact_of_compact S fun x _ => singleton_span_is_compact_element x
 #align submodule.finset_span_is_compact_element Submodule.finset_span_is_compact_element

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.convex.quasiconvex
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -178,9 +178,9 @@ theorem QuasiconcaveOn.convex_gt (hf : QuasiconcaveOn 𝕜 s f) (r : β) :
 
 end SMul
 
-section OrderedSmul
+section OrderedSMul
 
-variable [SMul 𝕜 E] [Module 𝕜 β] [OrderedSmul 𝕜 β] {s : Set E} {f : E → β}
+variable [SMul 𝕜 E] [Module 𝕜 β] [OrderedSMul 𝕜 β] {s : Set E} {f : E → β}
 
 theorem ConvexOn.quasiconvex_on (hf : ConvexOn 𝕜 s f) : QuasiconvexOn 𝕜 s f :=
   hf.convex_le
@@ -190,7 +190,7 @@ theorem ConcaveOn.quasiconcave_on (hf : ConcaveOn 𝕜 s f) : QuasiconcaveOn �
   hf.convex_ge
 #align concave_on.quasiconcave_on ConcaveOn.quasiconcave_on
 
-end OrderedSmul
+end OrderedSMul
 
 end LinearOrderedAddCommMonoid
 
@@ -198,7 +198,7 @@ end AddCommMonoid
 
 section LinearOrderedAddCommMonoid
 
-variable [LinearOrderedAddCommMonoid E] [OrderedAddCommMonoid β] [Module 𝕜 E] [OrderedSmul 𝕜 E]
+variable [LinearOrderedAddCommMonoid E] [OrderedAddCommMonoid β] [Module 𝕜 E] [OrderedSMul 𝕜 E]
   {s : Set E} {f : E → β}
 
 theorem MonotoneOn.quasiconvex_on (hf : MonotoneOn f s) (hs : Convex 𝕜 s) : QuasiconvexOn 𝕜 s f :=

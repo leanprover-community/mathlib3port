@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Jeremy Avigad, Simon Hudon
 
 ! This file was ported from Lean 3 source module data.part
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -83,6 +83,16 @@ def toOption (o : Part α) [Decidable o.Dom] : Option α :=
 #align part.to_option Part.toOption
 -/
 
+@[simp]
+theorem to_option_is_some (o : Part α) [Decidable o.Dom] : o.toOption.isSome ↔ o.Dom := by
+  by_cases o.dom <;> simp [h, Part.toOption]
+#align part.to_option_is_some Part.to_option_is_some
+
+@[simp]
+theorem to_option_is_none (o : Part α) [Decidable o.Dom] : o.toOption.isNone ↔ ¬o.Dom := by
+  by_cases o.dom <;> simp [h, Part.toOption]
+#align part.to_option_is_none Part.to_option_is_none
+
 #print Part.ext' /-
 /-- `part` extensionality -/
 theorem ext' : ∀ {o p : Part α} (H1 : o.Dom ↔ p.Dom) (H2 : ∀ h₁ h₂, o.get h₁ = p.get h₂), o = p
@@ -139,7 +149,7 @@ theorem mem_mk_iff {p : Prop} {o : p → α} {a : α} : a ∈ Part.mk p o ↔ �
 /-- `part` extensionality -/
 @[ext]
 theorem ext {o p : Part α} (H : ∀ a, a ∈ o ↔ a ∈ p) : o = p :=
-  (ext' ⟨fun h => ((H _).1 ⟨h, rfl⟩).fst, fun h => ((H _).2 ⟨h, rfl⟩).fst⟩) fun a b =>
+  ext' ⟨fun h => ((H _).1 ⟨h, rfl⟩).fst, fun h => ((H _).2 ⟨h, rfl⟩).fst⟩ fun a b =>
     ((H _).2 ⟨_, rfl⟩).snd
 #align part.ext Part.ext
 -/
@@ -453,7 +463,7 @@ theorem ofOption_dom {α} : ∀ o : Option α, (ofOption o).Dom ↔ o.isSome
 
 #print Part.ofOption_eq_get /-
 theorem ofOption_eq_get {α} (o : Option α) : ofOption o = ⟨_, @Option.get _ o⟩ :=
-  (Part.ext' (ofOption_dom o)) fun h₁ h₂ => by cases o <;> [cases h₁, rfl]
+  Part.ext' (ofOption_dom o) fun h₁ h₂ => by cases o <;> [cases h₁, rfl]
 #align part.of_option_eq_get Part.ofOption_eq_get
 -/
 

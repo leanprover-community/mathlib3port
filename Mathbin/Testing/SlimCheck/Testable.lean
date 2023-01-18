@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module testing.slim_check.testable
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -552,7 +552,7 @@ a proof that all the values it produces are smaller (according to `sizeof`)
 than `x`. -/
 def minimizeAux [SampleableExt α] [∀ x, Testable (β x)] (cfg : SlimCheckCfg) (var : String) :
     ProxyRepr α → ℕ → OptionT Gen (Σx, TestResult (β (interp α x))) :=
-  (WellFounded.fix WellFoundedRelation.wf) fun x f_rec n => do
+  WellFounded.fix WellFoundedRelation.wf fun x f_rec n => do
     if cfg then
         return <|
           trace
@@ -602,11 +602,11 @@ bound variable with it -/
 instance varTestable [SampleableExt α] [∀ x, Testable (β x)] :
     Testable (NamedBinder var <| ∀ x : α, β x) :=
   ⟨fun cfg min => do
-    (Uliftable.adaptDown (sampleable_ext.sample α)) fun x => do
+    Uliftable.adaptDown (sampleable_ext.sample α) fun x => do
         let r ← testable.run (β (sampleable_ext.interp α x)) cfg ff
-        (Uliftable.adaptDown
-              (if is_failure r ∧ min then minimize _ _ cfg var x r
-              else if cfg then (trace s! "  {var } := {repr x}") <| pure ⟨x, r⟩ else pure ⟨x, r⟩))
+        Uliftable.adaptDown
+            (if is_failure r ∧ min then minimize _ _ cfg var x r
+            else if cfg then (trace s! "  {var } := {repr x}") <| pure ⟨x, r⟩ else pure ⟨x, r⟩)
             fun ⟨x, r⟩ =>
             return <|
               trace_if_giveup cfg var x r

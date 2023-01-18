@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning, Patrick Lutz
 
 ! This file was ported from Lean 3 source module field_theory.galois
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -379,7 +379,7 @@ theorem is_separable_splitting_field [FiniteDimensional F E] [IsGalois F E] :
   rw [eq_top_iff, ← IntermediateField.top_to_subalgebra, ← h1]
   rw [IntermediateField.adjoin_simple_to_subalgebra_of_integral (integral F α)]
   apply Algebra.adjoin_mono
-  rw [Set.singleton_subset_iff, Finset.mem_coe, Multiset.mem_to_finset, Polynomial.mem_roots]
+  rw [Set.singleton_subset_iff, Finset.mem_coe, Multiset.mem_toFinset, Polynomial.mem_roots]
   · dsimp only [Polynomial.IsRoot]
     rw [Polynomial.eval_map, ← Polynomial.aeval_def]
     exact minpoly.aeval _ _

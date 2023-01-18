@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Markus Himmel
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.equalizers
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1247,7 +1247,7 @@ theorem cone_of_is_split_mono_ι : (coneOfIsSplitMono f).ι = f :=
 /-- A split mono `f` equalizes `(retraction f ≫ f)` and `(𝟙 Y)`.
 -/
 def isSplitMonoEqualizes {X Y : C} (f : X ⟶ Y) [IsSplitMono f] : IsLimit (coneOfIsSplitMono f) :=
-  (Fork.IsLimit.mk' _) fun s =>
+  Fork.IsLimit.mk' _ fun s =>
     ⟨s.ι ≫ retraction f, by
       dsimp
       rw [category.assoc, ← s.condition]
@@ -1270,7 +1270,7 @@ variable {C f g}
 /-- The fork obtained by postcomposing an equalizer fork with a monomorphism is an equalizer. -/
 def isEqualizerCompMono {c : Fork f g} (i : IsLimit c) {Z : C} (h : Y ⟶ Z) [hm : Mono h] :
     IsLimit (Fork.ofι c.ι (by simp [reassoc_of c.condition]) : Fork (f ≫ h) (g ≫ h)) :=
-  (Fork.IsLimit.mk' _) fun s =>
+  Fork.IsLimit.mk' _ fun s =>
     let s' : Fork f g := Fork.ofι s.ι (by apply hm.right_cancellation <;> simp [s.condition])
     let l := Fork.IsLimit.lift' i s'.ι s'.condition
     ⟨l.1, l.2, fun m hm => by
@@ -1328,7 +1328,7 @@ theorem cocone_of_is_split_epi_π : (coconeOfIsSplitEpi f).π = f :=
 /-- A split epi `f` coequalizes `(f ≫ section_ f)` and `(𝟙 X)`.
 -/
 def isSplitEpiCoequalizes {X Y : C} (f : X ⟶ Y) [IsSplitEpi f] : IsColimit (coconeOfIsSplitEpi f) :=
-  (Cofork.IsColimit.mk' _) fun s =>
+  Cofork.IsColimit.mk' _ fun s =>
     ⟨section_ f ≫ s.π, by
       dsimp
       rw [← category.assoc, ← s.condition, category.id_comp], fun m hm => by simp [← hm]⟩
@@ -1355,7 +1355,7 @@ variable {C f g}
 a coequalizer. -/
 def isCoequalizerEpiComp {c : Cofork f g} (i : IsColimit c) {W : C} (h : W ⟶ X) [hm : Epi h] :
     IsColimit (Cofork.ofπ c.π (by simp) : Cofork (h ≫ f) (h ≫ g)) :=
-  (Cofork.IsColimit.mk' _) fun s =>
+  Cofork.IsColimit.mk' _ fun s =>
     let s' : Cofork f g :=
       Cofork.ofπ s.π (by apply hm.left_cancellation <;> simp_rw [← category.assoc, s.condition])
     let l := Cofork.IsColimit.desc' i s'.π s'.condition

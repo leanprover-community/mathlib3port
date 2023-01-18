@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module measure_theory.constructions.prod
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -379,7 +379,7 @@ namespace Measure
 /-- The binary product of measures. They are defined for arbitrary measures, but we basically
   prove all properties under the assumption that at least one of them is σ-finite. -/
 protected irreducible_def prod (μ : Measure α) (ν : Measure β) : Measure (α × β) :=
-  (bind μ) fun x : α => map (Prod.mk x) ν
+  bind μ fun x : α => map (Prod.mk x) ν
 #align measure_theory.measure.prod MeasureTheory.Measure.prod
 
 instance prod.measureSpace {α β} [MeasureSpace α] [MeasureSpace β] : MeasureSpace (α × β)

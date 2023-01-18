@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.fintype.sum
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -39,7 +39,7 @@ theorem Finset.univ_disj_sum_univ {α β : Type _} [Fintype α] [Fintype β] :
 @[simp]
 theorem Fintype.card_sum [Fintype α] [Fintype β] :
     Fintype.card (Sum α β) = Fintype.card α + Fintype.card β :=
-  card_disj_sum _ _
+  card_disjSum _ _
 #align fintype.card_sum Fintype.card_sum
 
 /-- If the subtype of all-but-one elements is a `fintype` then the type itself is a `fintype`. -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Johannes Hölzl, Mario Carneiro, Patrick Massot
 
 ! This file was ported from Lean 3 source module order.filter.bases
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -352,7 +352,7 @@ theorem HasBasis.to_has_basis' (hl : l.HasBasis p s) (h : ∀ i, p i → ∃ i',
 
 theorem HasBasis.to_has_basis (hl : l.HasBasis p s) (h : ∀ i, p i → ∃ i', p' i' ∧ s' i' ⊆ s i)
     (h' : ∀ i', p' i' → ∃ i, p i ∧ s i ⊆ s' i') : l.HasBasis p' s' :=
-  (hl.to_has_basis' h) fun i' hi' =>
+  hl.to_has_basis' h fun i' hi' =>
     let ⟨i, hi, hss'⟩ := h' i' hi'
     hl.mem_iff.2 ⟨i, hi, hss'⟩
 #align filter.has_basis.to_has_basis Filter.HasBasis.to_has_basis
@@ -781,7 +781,7 @@ theorem has_basis_infi_principal_finite {ι : Type _} (s : ι → Set α) :
   by
   refine' ⟨fun U => (mem_infi_finite _).trans _⟩
   simp only [infi_principal_finset, mem_Union, mem_principal, exists_prop, exists_finite_iff_finset,
-    Finset.set_bInter_coe]
+    Finset.set_binterᵢ_coe]
 #align filter.has_basis_infi_principal_finite Filter.has_basis_infi_principal_finite
 
 theorem has_basis_binfi_principal {s : β → Set α} {S : Set β} (h : DirectedOn (s ⁻¹'o (· ≥ ·)) S)
@@ -940,7 +940,7 @@ theorem HasBasis.prod_same_index_mono {ι : Type _} [LinearOrder ι] {p : ι →
     {sb : ι → Set β} (hla : la.HasBasis p sa) (hlb : lb.HasBasis p sb)
     (hsa : MonotoneOn sa { i | p i }) (hsb : MonotoneOn sb { i | p i }) :
     (la ×ᶠ lb).HasBasis p fun i => sa i ×ˢ sb i :=
-  (hla.prod_same_index hlb) fun i j hi hj =>
+  hla.prod_same_index hlb fun i j hi hj =>
     have : p (min i j) := min_rec' _ hi hj
     ⟨min i j, this, hsa this hi <| min_le_left _ _, hsb this hj <| min_le_right _ _⟩
 #align filter.has_basis.prod_same_index_mono Filter.HasBasis.prod_same_index_mono
@@ -956,7 +956,7 @@ theorem HasBasis.prod_same_index_anti {ι : Type _} [LinearOrder ι] {p : ι →
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem HasBasis.prod_self (hl : la.HasBasis pa sa) :
     (la ×ᶠ la).HasBasis pa fun i => sa i ×ˢ sa i :=
-  (hl.prod_same_index hl) fun i j hi hj => by
+  hl.prod_same_index hl fun i j hi hj => by
     simpa only [exists_prop, subset_inter_iff] using
       hl.mem_iff.1 (inter_mem (hl.mem_of_mem hi) (hl.mem_of_mem hj))
 #align filter.has_basis.prod_self Filter.HasBasis.prod_self

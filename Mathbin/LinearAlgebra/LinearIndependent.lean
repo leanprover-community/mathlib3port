@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Alexander Bentkamp, Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.linear_independent
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -738,7 +738,7 @@ theorem linear_independent_Union_finite_subtype {ι : Type _} {f : ι → Set M}
   induction' t using Finset.induction_on with i s his ih
   · refine' (linear_independent_empty _ _).mono _
     simp
-  · rw [Finset.set_bUnion_insert]
+  · rw [Finset.set_bunionᵢ_insert]
     refine' (hl _).union ih _
     rw [span_Union₂]
     exact hd i s s.finite_to_set his
@@ -1051,7 +1051,7 @@ theorem linear_independent_monoid_hom (G : Type _) [Monoid G] (L : Type _) [Comm
     exact
       linear_independent_iff'.2-- To do this, we use `finset` induction,
       fun s =>
-        (Finset.induction_on s fun g hg i => False.elim) fun a s has ih g hg =>
+        Finset.induction_on s (fun g hg i => False.elim) fun a s has ih g hg =>
           -- Here
           -- * `a` is a new character we will insert into the `finset` of characters `s`,
           -- * `ih` is the fact that only the trivial linear combination of characters in `s` is zero
@@ -1090,8 +1090,8 @@ theorem linear_independent_monoid_hom (G : Type _) [Monoid G] (L : Type _) [Comm
                             ∑ i in insert a s, a x * (g i * i y) :=
                         congr
                           (congr_arg Sub.sub
-                            ((Finset.sum_congr rfl) fun i _ => by rw [i.map_mul, mul_assoc]))
-                          ((Finset.sum_congr rfl) fun _ _ => by rw [mul_assoc, mul_left_comm])
+                            (Finset.sum_congr rfl fun i _ => by rw [i.map_mul, mul_assoc]))
+                          (Finset.sum_congr rfl fun _ _ => by rw [mul_assoc, mul_left_comm])
                       _ =
                           (∑ i in insert a s, (g i • i : G → L)) (x * y) -
                             a x * (∑ i in insert a s, (g i • i : G → L)) y :=

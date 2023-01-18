@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module order.partial_sups
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -91,7 +91,7 @@ theorem bdd_above_range_partial_sups {f : ℕ → α} :
   · rintro h b ⟨i, rfl⟩
     exact (le_partial_sups _ _).trans (h (Set.mem_range_self i))
   · rintro h b ⟨i, rfl⟩
-    exact (partial_sups_le _ _ _) fun _ _ => h (Set.mem_range_self _)
+    exact partial_sups_le _ _ _ fun _ _ => h (Set.mem_range_self _)
 #align bdd_above_range_partial_sups bdd_above_range_partial_sups
 
 theorem Monotone.partial_sups_eq {f : ℕ → α} (hf : Monotone f) : (partialSups f : ℕ → α) = f :=

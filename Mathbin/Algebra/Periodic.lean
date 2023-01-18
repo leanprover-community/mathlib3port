@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Benjamin Davidson
 
 ! This file was ported from Lean 3 source module algebra.periodic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -86,7 +86,7 @@ theorem List.periodic_prod [Add α] [CommMonoid β] (l : List (α → β)) (hl :
 @[to_additive]
 theorem Multiset.periodic_prod [Add α] [CommMonoid β] (s : Multiset (α → β))
     (hs : ∀ f ∈ s, Periodic f c) : Periodic s.Prod c :=
-  (s.prod_to_list ▸ s.toList.periodic_prod) fun f hf => hs f <| Multiset.mem_to_list.mp hf
+  (s.prod_to_list ▸ s.toList.periodic_prod) fun f hf => hs f <| Multiset.mem_toList.mp hf
 #align multiset.periodic_prod Multiset.periodic_prod
 
 @[to_additive]
@@ -330,7 +330,7 @@ theorem Periodic.map_vadd_multiples [AddCommMonoid α] (hf : Periodic f c)
 
 /-- Lift a periodic function to a function from the quotient group. -/
 def Periodic.lift [AddGroup α] (h : Periodic f c) (x : α ⧸ AddSubgroup.zmultiples c) : β :=
-  (Quotient.liftOn' x f) fun a b h' =>
+  Quotient.liftOn' x f fun a b h' =>
     by
     rw [QuotientAddGroup.left_rel_apply] at h'
     obtain ⟨k, hk⟩ := h'

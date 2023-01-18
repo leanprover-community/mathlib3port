@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Markus Himmel, Bhavik Mehta, Andrew Yang
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.pullbacks
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -767,7 +767,7 @@ def IsLimit.mk {W : C} {fst : W ⟶ X} {snd : W ⟶ Y} (eq : fst ≫ f = snd ≫
 /-- The flip of a pullback square is a pullback square. -/
 def flipIsLimit {W : C} {h : W ⟶ X} {k : W ⟶ Y} {comm : h ≫ f = k ≫ g}
     (t : IsLimit (mk _ _ comm.symm)) : IsLimit (mk _ _ comm) :=
-  (isLimitAux' _) fun s =>
+  isLimitAux' _ fun s =>
     by
     refine'
       ⟨(is_limit.lift' t _ _ s.condition.symm).1, (is_limit.lift' t _ _ _).2.2,
@@ -811,7 +811,7 @@ def isLimitOfFactors (f : X ⟶ Z) (g : Y ⟶ Z) (h : W ⟶ Z) [Mono h] (x : X �
       (PullbackCone.mk _ _
         (show s.fst ≫ x = s.snd ≫ y from
           (cancel_mono h).1 <| by simp only [category.assoc, hxh, hyh, s.condition])) :=
-  (PullbackCone.isLimitAux' _) fun t =>
+  PullbackCone.isLimitAux' _ fun t =>
     ⟨hs.lift (PullbackCone.mk t.fst t.snd <| by rw [← hxh, ← hyh, reassoc_of t.condition]),
       ⟨hs.fac _ WalkingCospan.left, hs.fac _ WalkingCospan.right, fun r hr hr' =>
         by
@@ -1027,7 +1027,7 @@ def IsColimit.mk {W : C} {inl : Y ⟶ W} {inr : Z ⟶ W} (eq : f ≫ inl = g ≫
 /-- The flip of a pushout square is a pushout square. -/
 def flipIsColimit {W : C} {h : Y ⟶ W} {k : Z ⟶ W} {comm : f ≫ h = g ≫ k}
     (t : IsColimit (mk _ _ comm.symm)) : IsColimit (mk _ _ comm) :=
-  (isColimitAux' _) fun s =>
+  isColimitAux' _ fun s =>
     by
     refine'
       ⟨(is_colimit.desc' t _ _ s.condition.symm).1, (is_colimit.desc' t _ _ _).2.2,
@@ -1071,7 +1071,7 @@ def isColimitOfFactors (f : X ⟶ Y) (g : X ⟶ Z) (h : X ⟶ W) [Epi h] (x : W 
       (PushoutCocone.mk _ _
         (show x ≫ s.inl = y ≫ s.inr from
           (cancel_epi h).1 <| by rw [reassoc_of hhx, reassoc_of hhy, s.condition])) :=
-  (PushoutCocone.isColimitAux' _) fun t =>
+  PushoutCocone.isColimitAux' _ fun t =>
     ⟨hs.desc
         (PushoutCocone.mk t.inl t.inr <| by
           rw [← hhx, ← hhy, category.assoc, category.assoc, t.condition]),

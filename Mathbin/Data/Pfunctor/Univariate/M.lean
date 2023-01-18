@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module data.pfunctor.univariate.M
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,7 +42,7 @@ inductive CofixA : ℕ → Type u
 /-- default inhabitant of `cofix_a` -/
 protected def CofixA.default [Inhabited F.A] : ∀ n, CofixA F n
   | 0 => CofixA.continue
-  | succ n => (CofixA.intro default) fun _ => cofix_a.default n
+  | succ n => CofixA.intro default fun _ => cofix_a.default n
 #align pfunctor.approx.cofix_a.default Pfunctor.Approx.CofixA.default
 
 instance [Inhabited F.A] {n} : Inhabited (CofixA F n) :=
@@ -198,7 +198,7 @@ def M :=
 
 theorem M.default_consistent [Inhabited F.A] : ∀ n, Agree (default : CofixA F n) default
   | 0 => Agree.continue _ _
-  | succ n => (Agree.intro _ _) fun _ => M.default_consistent n
+  | succ n => Agree.intro _ _ fun _ => M.default_consistent n
 #align pfunctor.M.default_consistent Pfunctor.M.default_consistent
 
 instance M.inhabited [Inhabited F.A] : Inhabited (M F) :=

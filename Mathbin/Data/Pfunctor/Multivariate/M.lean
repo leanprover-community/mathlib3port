@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Mario Carneiro, Simon Hudon
 
 ! This file was ported from Lean 3 source module data.pfunctor.multivariate.M
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,7 +56,7 @@ open Mvfunctor
 
 namespace Mvpfunctor
 
-open Typevec
+open TypeVec
 
 variable {n : ℕ} (P : Mvpfunctor.{u} (n + 1))
 
@@ -88,14 +88,14 @@ def mp : Mvpfunctor n where
 #align mvpfunctor.Mp Mvpfunctor.mp
 
 /-- `n`-ary M-type for `P` -/
-def M (α : Typevec n) : Type _ :=
+def M (α : TypeVec n) : Type _ :=
   P.mp.Obj α
 #align mvpfunctor.M Mvpfunctor.M
 
 instance mvfunctorM : Mvfunctor P.M := by delta M <;> infer_instance
 #align mvpfunctor.mvfunctor_M Mvpfunctor.mvfunctorM
 
-instance inhabitedM {α : Typevec _} [I : Inhabited P.A] [∀ i : Fin2 n, Inhabited (α i)] :
+instance inhabitedM {α : TypeVec _} [I : Inhabited P.A] [∀ i : Fin2 n, Inhabited (α i)] :
     Inhabited (P.M α) :=
   @Obj.inhabited _ (mp P) _ (@Pfunctor.M.inhabited P.last I) _
 #align mvpfunctor.inhabited_M Mvpfunctor.inhabitedM
@@ -115,7 +115,7 @@ def castLastB {a a' : P.A} (h : a = a') : P.last.B a → P.last.B a' := fun b =>
 #align mvpfunctor.cast_lastB Mvpfunctor.castLastB
 
 /-- Using corecursion, construct the contents of an M-type -/
-def M.corecContents {α : Typevec.{u} n} {β : Type u} (g₀ : β → P.A)
+def M.corecContents {α : TypeVec.{u} n} {β : Type u} (g₀ : β → P.A)
     (g₁ : ∀ b : β, P.drop.B (g₀ b) ⟹ α) (g₂ : ∀ b : β, P.last.B (g₀ b) → β) :
     ∀ x b, x = M.corecShape P g₀ g₂ b → M.Path P x ⟹ α
   | _, b, h, _, M.path.root x a f h' i c =>
@@ -138,63 +138,63 @@ def M.corecContents {α : Typevec.{u} n} {β : Type u} (g₀ : β → P.A)
 #align mvpfunctor.M.corec_contents Mvpfunctor.M.corecContents
 
 /-- Corecursor for M-type of `P` -/
-def M.corec' {α : Typevec n} {β : Type u} (g₀ : β → P.A) (g₁ : ∀ b : β, P.drop.B (g₀ b) ⟹ α)
+def M.corec' {α : TypeVec n} {β : Type u} (g₀ : β → P.A) (g₁ : ∀ b : β, P.drop.B (g₀ b) ⟹ α)
     (g₂ : ∀ b : β, P.last.B (g₀ b) → β) : β → P.M α := fun b =>
   ⟨M.corecShape P g₀ g₂ b, M.corecContents P g₀ g₁ g₂ _ _ rfl⟩
 #align mvpfunctor.M.corec' Mvpfunctor.M.corec'
 
 /-- Corecursor for M-type of `P` -/
-def M.corec {α : Typevec n} {β : Type u} (g : β → P.Obj (α.append1 β)) : β → P.M α :=
+def M.corec {α : TypeVec n} {β : Type u} (g : β → P.Obj (α.append1 β)) : β → P.M α :=
   M.corec' P (fun b => (g b).fst) (fun b => dropFun (g b).snd) fun b => lastFun (g b).snd
 #align mvpfunctor.M.corec Mvpfunctor.M.corec
 
 /-- Implementation of destructor for M-type of `P` -/
-def M.pathDestLeft {α : Typevec n} {x : P.last.M} {a : P.A} {f : P.last.B a → P.last.M}
+def M.pathDestLeft {α : TypeVec n} {x : P.last.M} {a : P.A} {f : P.last.B a → P.last.M}
     (h : Pfunctor.M.dest x = ⟨a, f⟩) (f' : M.Path P x ⟹ α) : P.drop.B a ⟹ α := fun i c =>
   f' i (M.Path.root x a f h i c)
 #align mvpfunctor.M.path_dest_left Mvpfunctor.M.pathDestLeft
 
 /-- Implementation of destructor for M-type of `P` -/
-def M.pathDestRight {α : Typevec n} {x : P.last.M} {a : P.A} {f : P.last.B a → P.last.M}
+def M.pathDestRight {α : TypeVec n} {x : P.last.M} {a : P.A} {f : P.last.B a → P.last.M}
     (h : Pfunctor.M.dest x = ⟨a, f⟩) (f' : M.Path P x ⟹ α) : ∀ j : P.last.B a, M.Path P (f j) ⟹ α :=
   fun j i c => f' i (M.Path.child x a f h j i c)
 #align mvpfunctor.M.path_dest_right Mvpfunctor.M.pathDestRight
 
 /-- Destructor for M-type of `P` -/
-def M.dest' {α : Typevec n} {x : P.last.M} {a : P.A} {f : P.last.B a → P.last.M}
+def M.dest' {α : TypeVec n} {x : P.last.M} {a : P.A} {f : P.last.B a → P.last.M}
     (h : Pfunctor.M.dest x = ⟨a, f⟩) (f' : M.Path P x ⟹ α) : P.Obj (α.append1 (P.M α)) :=
   ⟨a, splitFun (M.pathDestLeft P h f') fun x => ⟨f x, M.pathDestRight P h f' x⟩⟩
 #align mvpfunctor.M.dest' Mvpfunctor.M.dest'
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Destructor for M-types -/
-def M.dest {α : Typevec n} (x : P.M α) : P.Obj (α ::: P.M α) :=
+def M.dest {α : TypeVec n} (x : P.M α) : P.Obj (α ::: P.M α) :=
   M.dest' P (Sigma.eta <| Pfunctor.M.dest x.fst).symm x.snd
 #align mvpfunctor.M.dest Mvpfunctor.M.dest
 
 /-- Constructor for M-types -/
-def M.mk {α : Typevec n} : P.Obj (α.append1 (P.M α)) → P.M α :=
+def M.mk {α : TypeVec n} : P.Obj (α.append1 (P.M α)) → P.M α :=
   M.corec _ fun i => appendFun id (M.dest P) <$$> i
 #align mvpfunctor.M.mk Mvpfunctor.M.mk
 
-theorem M.dest'_eq_dest' {α : Typevec n} {x : P.last.M} {a₁ : P.A} {f₁ : P.last.B a₁ → P.last.M}
+theorem M.dest'_eq_dest' {α : TypeVec n} {x : P.last.M} {a₁ : P.A} {f₁ : P.last.B a₁ → P.last.M}
     (h₁ : Pfunctor.M.dest x = ⟨a₁, f₁⟩) {a₂ : P.A} {f₂ : P.last.B a₂ → P.last.M}
     (h₂ : Pfunctor.M.dest x = ⟨a₂, f₂⟩) (f' : M.Path P x ⟹ α) : M.dest' P h₁ f' = M.dest' P h₂ f' :=
   by cases h₁.symm.trans h₂ <;> rfl
 #align mvpfunctor.M.dest'_eq_dest' Mvpfunctor.M.dest'_eq_dest'
 
-theorem M.dest_eq_dest' {α : Typevec n} {x : P.last.M} {a : P.A} {f : P.last.B a → P.last.M}
+theorem M.dest_eq_dest' {α : TypeVec n} {x : P.last.M} {a : P.A} {f : P.last.B a → P.last.M}
     (h : Pfunctor.M.dest x = ⟨a, f⟩) (f' : M.Path P x ⟹ α) : M.dest P ⟨x, f'⟩ = M.dest' P h f' :=
   M.dest'_eq_dest' _ _ _ _
 #align mvpfunctor.M.dest_eq_dest' Mvpfunctor.M.dest_eq_dest'
 
-theorem M.dest_corec' {α : Typevec.{u} n} {β : Type u} (g₀ : β → P.A)
+theorem M.dest_corec' {α : TypeVec.{u} n} {β : Type u} (g₀ : β → P.A)
     (g₁ : ∀ b : β, P.drop.B (g₀ b) ⟹ α) (g₂ : ∀ b : β, P.last.B (g₀ b) → β) (x : β) :
     M.dest P (M.corec' P g₀ g₁ g₂ x) = ⟨g₀ x, splitFun (g₁ x) (M.corec' P g₀ g₁ g₂ ∘ g₂ x)⟩ :=
   rfl
 #align mvpfunctor.M.dest_corec' Mvpfunctor.M.dest_corec'
 
-theorem M.dest_corec {α : Typevec n} {β : Type u} (g : β → P.Obj (α.append1 β)) (x : β) :
+theorem M.dest_corec {α : TypeVec n} {β : Type u} (g : β → P.Obj (α.append1 β)) (x : β) :
     M.dest P (M.corec P g x) = appendFun id (M.corec P g) <$$> g x :=
   by
   trans; apply M.dest_corec'
@@ -206,7 +206,7 @@ theorem M.dest_corec {α : Typevec n} {β : Type u} (g : β → P.Obj (α.append
   rfl
 #align mvpfunctor.M.dest_corec Mvpfunctor.M.dest_corec
 
-theorem M.bisim_lemma {α : Typevec n} {a₁ : (mp P).A} {f₁ : (mp P).B a₁ ⟹ α} {a' : P.A}
+theorem M.bisim_lemma {α : TypeVec n} {a₁ : (mp P).A} {f₁ : (mp P).B a₁ ⟹ α} {a' : P.A}
     {f' : (P.B a').drop ⟹ α} {f₁' : (P.B a').last → M P α}
     (e₁ : M.dest P ⟨a₁, f₁⟩ = ⟨a', splitFun f' f₁'⟩) :
     ∃ (g₁' : _)(e₁' : Pfunctor.M.dest a₁ = ⟨a', g₁'⟩),
@@ -219,7 +219,7 @@ theorem M.bisim_lemma {α : Typevec n} {a₁ : (mp P).A} {f₁ : (mp P).B a₁ �
   cases e₁; exact ⟨_, e₁', split_fun_inj ef⟩
 #align mvpfunctor.M.bisim_lemma Mvpfunctor.M.bisim_lemma
 
-theorem M.bisim {α : Typevec n} (R : P.M α → P.M α → Prop)
+theorem M.bisim {α : TypeVec n} (R : P.M α → P.M α → Prop)
     (h :
       ∀ x y,
         R x y →
@@ -256,7 +256,7 @@ theorem M.bisim {α : Typevec n} (R : P.M α → P.M α → Prop)
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem M.bisim₀ {α : Typevec n} (R : P.M α → P.M α → Prop) (h₀ : Equivalence R)
+theorem M.bisim₀ {α : TypeVec n} (R : P.M α → P.M α → Prop) (h₀ : Equivalence R)
     (h : ∀ x y, R x y → (id ::: Quot.mk R) <$$> M.dest _ x = (id ::: Quot.mk R) <$$> M.dest _ y)
     (x y) (r : R x y) : x = y := by
   apply M.bisim P R _ _ _ r
@@ -289,7 +289,7 @@ theorem M.bisim₀ {α : Typevec n} (R : P.M α → P.M α → Prop) (h₀ : Equ
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem M.bisim' {α : Typevec n} (R : P.M α → P.M α → Prop)
+theorem M.bisim' {α : TypeVec n} (R : P.M α → P.M α → Prop)
     (h : ∀ x y, R x y → (id ::: Quot.mk R) <$$> M.dest _ x = (id ::: Quot.mk R) <$$> M.dest _ y)
     (x y) (r : R x y) : x = y := by
   have := M.bisim₀ P (EqvGen R) _ _
@@ -304,7 +304,7 @@ theorem M.bisim' {α : Typevec n} (R : P.M α → P.M α → Prop)
     all_goals cc
 #align mvpfunctor.M.bisim' Mvpfunctor.M.bisim'
 
-theorem M.dest_map {α β : Typevec n} (g : α ⟹ β) (x : P.M α) :
+theorem M.dest_map {α β : TypeVec n} (g : α ⟹ β) (x : P.M α) :
     M.dest P (g <$$> x) = (appendFun g fun x => g <$$> x) <$$> M.dest P x :=
   by
   cases' x with a f
@@ -317,7 +317,7 @@ theorem M.dest_map {α β : Typevec n} (g : α ⟹ β) (x : P.M α) :
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem M.map_dest {α β : Typevec n} (g : (α ::: P.M α) ⟹ (β ::: P.M β)) (x : P.M α)
+theorem M.map_dest {α β : TypeVec n} (g : (α ::: P.M α) ⟹ (β ::: P.M β)) (x : P.M α)
     (h : ∀ x : P.M α, lastFun g x = (dropFun g <$$> x : P.M β)) :
     g <$$> M.dest P x = M.dest P (dropFun g <$$> x) :=
   by

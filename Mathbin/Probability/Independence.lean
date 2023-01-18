@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module probability.independence
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -334,7 +334,7 @@ theorem IndepSets.indepSets {s : ι → Set (Set Ω)} [MeasurableSpace Ω] {μ :
     have h_inter :
       (⋂ (t : ι) (H : t ∈ ({i, j} : Finset ι)), ite (t = i) t₁ t₂) =
         ite (i = i) t₁ t₂ ∩ ite (j = i) t₁ t₂ :=
-      by simp only [Finset.set_bInter_singleton, Finset.set_bInter_insert]
+      by simp only [Finset.set_binterᵢ_singleton, Finset.set_binterᵢ_insert]
     have h_prod :
       (∏ t : ι in ({i, j} : Finset ι), μ (ite (t = i) t₁ t₂)) =
         μ (ite (i = i) t₁ t₂) * μ (ite (j = i) t₁ t₂) :=
@@ -377,7 +377,7 @@ section FromMeasurableSpacesToSetsOfSets
 theorem IndepCat.indepSets [MeasurableSpace Ω] {μ : Measure Ω} {m : ι → MeasurableSpace Ω}
     {s : ι → Set (Set Ω)} (hms : ∀ n, m n = generateFrom (s n)) (h_indep : IndepCat m μ) :
     IndepSets s μ := fun S f hfs =>
-  (h_indep S) fun x hxS =>
+  h_indep S fun x hxS =>
     ((hms x).symm ▸ measurable_set_generate_from (hfs x hxS) : measurable_set[m x] (f x))
 #align probability_theory.Indep.Indep_sets ProbabilityTheory.IndepCat.indepSets
 
@@ -621,7 +621,7 @@ theorem IndepSets.piUnionInterOfNotMem {π : ι → Set (Set Ω)} {a : ι} {S : 
     have h_μ_inter : μ (t1 ∩ t2) = ∏ n in insert a s, μ (f n) :=
       by
       have h_t1_inter_t2 : t1 ∩ t2 = ⋂ n ∈ insert a s, f n := by
-        rw [h_t1, h_t2, Finset.set_bInter_insert, Set.inter_comm]
+        rw [h_t1, h_t2, Finset.set_binterᵢ_insert, Set.inter_comm]
       rw [h_t1_inter_t2, ← hp_ind (insert a s) h_f_mem]
     have has : a ∉ s := fun has_mem => haS (hs_mem Membership)
     rw [h_μ_inter, Finset.prod_insert has, h_t2, mul_comm, h_μ_t1]
@@ -646,7 +646,7 @@ theorem IndepSets.indep [IsProbabilityMeasure μ] (m : ι → MeasurableSpace Ω
         eq_self_iff_true]
     intro a S ha_notin_S h_rec f hf_m
     have hf_m_S : ∀ x ∈ S, measurable_set[m x] (f x) := fun x hx => hf_m x (by simp [hx])
-    rw [Finset.set_bInter_insert, Finset.prod_insert ha_notin_S, ← h_rec hf_m_S]
+    rw [Finset.set_binterᵢ_insert, Finset.prod_insert ha_notin_S, ← h_rec hf_m_S]
     let p := piUnionInter π S
     set m_p := generate_from p with hS_eq_generate
     have h_indep : indep m_p (m a) μ :=

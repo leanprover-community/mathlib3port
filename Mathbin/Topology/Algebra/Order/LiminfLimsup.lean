@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.algebra.order.liminf_limsup
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -134,7 +134,7 @@ variable [ConditionallyCompleteLinearOrder α]
 theorem lt_mem_sets_of_Limsup_lt {f : Filter α} {b} (h : f.IsBounded (· ≤ ·)) (l : f.limsup < b) :
     ∀ᶠ a in f, a < b :=
   let ⟨c, (h : ∀ᶠ a in f, a ≤ c), hcb⟩ := exists_lt_of_cinfₛ_lt h l
-  (mem_of_superset h) fun a hac => lt_of_le_of_lt hac hcb
+  mem_of_superset h fun a hac => lt_of_le_of_lt hac hcb
 #align lt_mem_sets_of_Limsup_lt lt_mem_sets_of_Limsup_lt
 
 theorem gt_mem_sets_of_Liminf_gt :

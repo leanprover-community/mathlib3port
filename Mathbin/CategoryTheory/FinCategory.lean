@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.fin_category
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -105,10 +105,10 @@ noncomputable def objAsTypeToAsType : ObjAsType α ⥤ AsType α
 /-- The constructed category (`as_type α`) is equivalent to `obj_as_type α`. -/
 noncomputable def asTypeEquivObjAsType : AsType α ≌ ObjAsType α :=
   Equivalence.mk (asTypeToObjAsType α) (objAsTypeToAsType α)
-    ((NatIso.ofComponents Iso.refl) fun _ _ _ => by
+    (NatIso.ofComponents Iso.refl fun _ _ _ => by
       dsimp
       simp)
-    ((NatIso.ofComponents Iso.refl) fun _ _ _ => by
+    (NatIso.ofComponents Iso.refl fun _ _ _ => by
       dsimp
       simp)
 #align

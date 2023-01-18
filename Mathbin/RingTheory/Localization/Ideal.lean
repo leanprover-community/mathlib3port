@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.localization.ideal
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -73,7 +73,7 @@ theorem mem_map_algebra_map_iff {I : Ideal R} {z} :
 #align is_localization.mem_map_algebra_map_iff IsLocalization.mem_map_algebra_map_iff
 
 theorem map_comap (J : Ideal S) : Ideal.map (algebraMap R S) (Ideal.comap (algebraMap R S) J) = J :=
-  (le_antisymm (Ideal.map_le_iff_le_comap.2 le_rfl)) fun x hJ =>
+  le_antisymm (Ideal.map_le_iff_le_comap.2 le_rfl) fun x hJ =>
     by
     obtain ⟨r, s, hx⟩ := mk'_surjective M x
     rw [← hx] at hJ⊢

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module field_theory.is_alg_closed.algebraic_closure
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,7 +70,7 @@ def toSplittingField (s : Finset (MonicIrreducible k)) :
   MvPolynomial.aeval fun f =>
     if hf : f ∈ s then
       rootOfSplits _
-        (((splits_prod_iff _) fun (j : MonicIrreducible k) _ => j.2.2.NeZero).1
+        ((splits_prod_iff _ fun (j : MonicIrreducible k) _ => j.2.2.NeZero).1
           (SplittingField.splits _) f hf)
         (mt is_unit_iff_degree_eq_zero.2 f.2.2.not_unit)
     else 37
@@ -158,8 +158,7 @@ theorem AdjoinMonic.exists_root {f : k[X]} (hfm : f.Monic) (hfi : Irreducible f)
 
 /-- The `n`th step of constructing `algebraic_closure`, together with its `field` instance. -/
 def stepAux (n : ℕ) : Σα : Type u, Field α :=
-  (Nat.recOn n ⟨k, inferInstance⟩) fun n ih =>
-    ⟨@AdjoinMonic ih.1 ih.2, @AdjoinMonic.field ih.1 ih.2⟩
+  Nat.recOn n ⟨k, inferInstance⟩ fun n ih => ⟨@AdjoinMonic ih.1 ih.2, @AdjoinMonic.field ih.1 ih.2⟩
 #align algebraic_closure.step_aux AlgebraicClosure.stepAux
 
 /-- The `n`th step of constructing `algebraic_closure`. -/
@@ -228,7 +227,7 @@ instance Step.scalar_tower (n) : IsScalarTower k (Step k n) (Step k (n + 1)) :=
 #align algebraic_closure.step.scalar_tower AlgebraicClosure.Step.scalar_tower
 
 theorem Step.is_integral (n) : ∀ z : Step k n, IsIntegral k z :=
-  (Nat.recOn n fun z => is_integral_algebra_map) fun n ih z =>
+  Nat.recOn n (fun z => is_integral_algebra_map) fun n ih z =>
     is_integral_trans ih _ (AdjoinMonic.is_integral (Step k n) z : _)
 #align algebraic_closure.step.is_integral AlgebraicClosure.Step.is_integral
 
@@ -289,7 +288,7 @@ theorem exists_root {f : Polynomial (AlgebraicClosure k)} (hfm : f.Monic) (hfi :
 #align algebraic_closure.exists_root AlgebraicClosure.exists_root
 
 instance : IsAlgClosed (AlgebraicClosure k) :=
-  (IsAlgClosed.of_exists_root _) fun f => exists_root k
+  IsAlgClosed.of_exists_root _ fun f => exists_root k
 
 instance {R : Type _} [CommSemiring R] [alg : Algebra R k] : Algebra R (AlgebraicClosure k) :=
   ((ofStep k 0).comp (@algebraMap _ _ _ _ alg)).toAlgebra

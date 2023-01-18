@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module probability.martingale.centering
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -167,9 +167,9 @@ theorem martingale_part_add_ae_eq [SigmaFiniteFiltration μ ℱ] {f g : ℕ → 
     exact adapted_predictable_part.sub hg
   have hhmgle : martingale h ℱ μ :=
     hf.sub
-      ((martingale_martingale_part
-          (hf.adapted.add <| predictable.adapted hg <| hg0.symm ▸ strongly_measurable_zero))
-        fun n => (hf.integrable n).add <| hgint n)
+      (martingale_martingale_part
+        (hf.adapted.add <| predictable.adapted hg <| hg0.symm ▸ strongly_measurable_zero) fun n =>
+        (hf.integrable n).add <| hgint n)
   refine' (eventually_eq_iff_sub.2 _).symm
   filter_upwards [hhmgle.eq_zero_of_predictable hhpred n] with ω hω
   rw [hhdef, Pi.sub_apply] at hω

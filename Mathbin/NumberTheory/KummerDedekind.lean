@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Paul Lezeau
 
 ! This file was ported from Lean 3 source module number_theory.kummer_dedekind
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -350,7 +350,7 @@ theorem Ideal.irreducible_map_of_irreducible_minpoly (hI : IsMaximal I) (hI' : I
   use ⟨normalize (map I (minpoly R pb.gen)), mem_norm_factors⟩
   refine' ⟨_, rfl⟩
   apply Multiset.map_injective Subtype.coe_injective
-  rw [Multiset.attach_map_coe, Multiset.map_singleton, Subtype.coe_mk]
+  rw [Multiset.attach_map_val, Multiset.map_singleton, Subtype.coe_mk]
   exact normalized_factors_irreducible hf
 #align
   kummer_dedekind.ideal.irreducible_map_of_irreducible_minpoly KummerDedekind.Ideal.irreducible_map_of_irreducible_minpoly

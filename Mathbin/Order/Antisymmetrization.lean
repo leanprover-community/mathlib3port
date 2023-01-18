@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.antisymmetrization
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -177,15 +177,15 @@ theorem AntisymmRel.image {a b : α} (h : AntisymmRel (· ≤ ·) a b) {f : α �
 instance : PartialOrder (Antisymmetrization α (· ≤ ·))
     where
   le a b :=
-    (Quotient.liftOn₂' a b (· ≤ ·)) fun (a₁ a₂ b₁ b₂ : α) h₁ h₂ =>
+    Quotient.liftOn₂' a b (· ≤ ·) fun (a₁ a₂ b₁ b₂ : α) h₁ h₂ =>
       propext ⟨fun h => h₁.2.trans <| h.trans h₂.1, fun h => h₁.1.trans <| h.trans h₂.2⟩
   lt a b :=
-    (Quotient.liftOn₂' a b (· < ·)) fun (a₁ a₂ b₁ b₂ : α) h₁ h₂ =>
+    Quotient.liftOn₂' a b (· < ·) fun (a₁ a₂ b₁ b₂ : α) h₁ h₂ =>
       propext ⟨fun h => h₁.2.trans_lt <| h.trans_le h₂.1, fun h => h₁.1.trans_lt <| h.trans_le h₂.2⟩
   le_refl a := Quotient.inductionOn' a <| le_refl
-  le_trans a b c := (Quotient.inductionOn₃' a b c) fun a b c => le_trans
-  lt_iff_le_not_le a b := (Quotient.inductionOn₂' a b) fun a b => lt_iff_le_not_le
-  le_antisymm a b := (Quotient.inductionOn₂' a b) fun a b hab hba => Quotient.sound' ⟨hab, hba⟩
+  le_trans a b c := Quotient.inductionOn₃' a b c fun a b c => le_trans
+  lt_iff_le_not_le a b := Quotient.inductionOn₂' a b fun a b => lt_iff_le_not_le
+  le_antisymm a b := Quotient.inductionOn₂' a b fun a b hab hba => Quotient.sound' ⟨hab, hba⟩
 
 /- warning: antisymmetrization_fibration -> antisymmetrization_fibration is a dubious translation:
 lean 3 declaration is
@@ -391,11 +391,11 @@ Case conversion may be inaccurate. Consider using '#align order_iso.dual_antisym
 def OrderIso.dualAntisymmetrization :
     (Antisymmetrization α (· ≤ ·))ᵒᵈ ≃o Antisymmetrization αᵒᵈ (· ≤ ·)
     where
-  toFun := (Quotient.map' id) fun _ _ => And.symm
-  invFun := (Quotient.map' id) fun _ _ => And.symm
-  left_inv a := (Quotient.inductionOn' a) fun a => by simp_rw [Quotient.map'_mk', id]
-  right_inv a := (Quotient.inductionOn' a) fun a => by simp_rw [Quotient.map'_mk', id]
-  map_rel_iff' a b := (Quotient.inductionOn₂' a b) fun a b => Iff.rfl
+  toFun := Quotient.map' id fun _ _ => And.symm
+  invFun := Quotient.map' id fun _ _ => And.symm
+  left_inv a := Quotient.inductionOn' a fun a => by simp_rw [Quotient.map'_mk', id]
+  right_inv a := Quotient.inductionOn' a fun a => by simp_rw [Quotient.map'_mk', id]
+  map_rel_iff' a b := Quotient.inductionOn₂' a b fun a b => Iff.rfl
 #align order_iso.dual_antisymmetrization OrderIso.dualAntisymmetrization
 
 /- warning: order_iso.dual_antisymmetrization_apply -> OrderIso.dualAntisymmetrization_apply is a dubious translation:

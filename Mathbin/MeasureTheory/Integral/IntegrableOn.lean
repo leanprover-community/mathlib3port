@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.integral.integrable_on
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -368,7 +368,7 @@ theorem IntegrableAtFilter.inf_ae_iff {l : Filter α} :
   refine' ⟨t, ht, _⟩
   refine' hf.integrable.mono_measure fun v hv => _
   simp only [measure.restrict_apply hv]
-  refine' measure_mono_ae ((mem_of_superset hu) fun x hx => _)
+  refine' measure_mono_ae (mem_of_superset hu fun x hx => _)
   exact fun ⟨hv, ht⟩ => ⟨hv, ⟨ht, hx⟩⟩
 #align measure_theory.integrable_at_filter.inf_ae_iff MeasureTheory.IntegrableAtFilter.inf_ae_iff
 

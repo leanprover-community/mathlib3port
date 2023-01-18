@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module logic.unique
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -283,7 +283,7 @@ theorem eq_const_of_unique [Unique α] (f : α → β) : f = Function.const α (
 #print heq_const_of_unique /-
 theorem heq_const_of_unique [Unique α] {β : α → Sort v} (f : ∀ a, β a) :
     HEq f (Function.const α (f default)) :=
-  (Function.hfunext rfl) fun i _ _ => by rw [Subsingleton.elim i default]
+  Function.hfunext rfl fun i _ _ => by rw [Subsingleton.elim i default]
 #align heq_const_of_unique heq_const_of_unique
 -/
 

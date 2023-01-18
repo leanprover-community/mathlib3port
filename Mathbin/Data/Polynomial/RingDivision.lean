@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker, Johan Commelin
 
 ! This file was ported from Lean 3 source module data.polynomial.ring_division
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -527,7 +527,7 @@ theorem card_roots_sub_C {p : R[X]} {a : R} (hp0 : 0 < degree p) :
     ((p - c a).roots.card : WithBot ℕ) ≤ degree p :=
   calc
     ((p - c a).roots.card : WithBot ℕ) ≤ degree (p - c a) :=
-      card_roots <| (mt sub_eq_zero.1) fun h => not_le_of_gt hp0 <| h.symm ▸ degree_C_le
+      card_roots <| mt sub_eq_zero.1 fun h => not_le_of_gt hp0 <| h.symm ▸ degree_C_le
     _ = degree p := by rw [sub_eq_add_neg, ← C_neg] <;> exact degree_add_C hp0
     
 #align polynomial.card_roots_sub_C Polynomial.card_roots_sub_C
@@ -571,8 +571,7 @@ theorem card_le_degree_of_subset_roots {p : R[X]} {Z : Finset R} (h : Z.val ⊆ 
 #align polynomial.card_le_degree_of_subset_roots Polynomial.card_le_degree_of_subset_roots
 
 theorem finite_set_of_is_root {p : R[X]} (hp : p ≠ 0) : Set.Finite { x | IsRoot p x } := by
-  simpa only [← Finset.set_of_mem, mem_to_finset, mem_roots hp] using
-    p.roots.to_finset.finite_to_set
+  simpa only [← Finset.setOf_mem, mem_to_finset, mem_roots hp] using p.roots.to_finset.finite_to_set
 #align polynomial.finite_set_of_is_root Polynomial.finite_set_of_is_root
 
 theorem eq_zero_of_infinite_is_root (p : R[X]) (h : Set.Infinite { x | IsRoot p x }) : p = 0 :=
@@ -652,7 +651,7 @@ theorem roots_smul_nonzero (p : R[X]) (ha : a ≠ 0) : (a • p).roots = p.roots
 
 theorem roots_list_prod (L : List R[X]) :
     (0 : R[X]) ∉ L → L.Prod.roots = (L : Multiset R[X]).bind roots :=
-  (List.recOn L fun _ => roots_one) fun hd tl ih H =>
+  List.recOn L (fun _ => roots_one) fun hd tl ih H =>
     by
     rw [List.mem_cons, not_or] at H
     rw [List.prod_cons, roots_mul (mul_ne_zero (Ne.symm H.1) <| List.prod_ne_zero H.2), ←
@@ -716,14 +715,10 @@ theorem nat_degree_multiset_prod_X_sub_C_eq_card (s : Multiset R) :
     (s.map fun a => X - c a).Prod.natDegree = s.card :=
   by
   rw [nat_degree_multiset_prod_of_monic, Multiset.map_map]
-  · convert Multiset.sum_repeat 1 _
-    · convert Multiset.map_const _ 1
-      ext
-      apply nat_degree_X_sub_C
-    · simp
-  · intro f hf
-    obtain ⟨a, ha, rfl⟩ := Multiset.mem_map.1 hf
-    exact monic_X_sub_C a
+  ·
+    simp only [(· ∘ ·), nat_degree_X_sub_C, Multiset.map_const, Multiset.sum_replicate, smul_eq_mul,
+      mul_one]
+  · exact Multiset.forall_mem_map_iff.2 fun a _ => monic_X_sub_C a
 #align
   polynomial.nat_degree_multiset_prod_X_sub_C_eq_card Polynomial.nat_degree_multiset_prod_X_sub_C_eq_card
 
@@ -866,7 +861,7 @@ theorem root_set_def (p : T[X]) (S) [CommRing S] [IsDomain S] [Algebra T S] :
 
 @[simp]
 theorem root_set_C [CommRing S] [IsDomain S] [Algebra T S] (a : T) : (c a).rootSet S = ∅ := by
-  rw [root_set_def, map_C, roots_C, Multiset.to_finset_zero, Finset.coe_empty]
+  rw [root_set_def, map_C, roots_C, Multiset.toFinset_zero, Finset.coe_empty]
 #align polynomial.root_set_C Polynomial.root_set_C
 
 @[simp]
@@ -890,15 +885,15 @@ theorem bUnion_roots_finite {R S : Type _} [Semiring R] [CommRing S] [IsDomain S
     (d : ℕ) {U : Set R} (h : U.Finite) :
     (⋃ (f : R[X]) (hf : f.natDegree ≤ d ∧ ∀ i, f.coeff i ∈ U),
         ((f.map m).roots.toFinset : Set S)).Finite :=
-  (Set.Finite.bUnion
-      (by
-        -- We prove that the set of polynomials under consideration is finite because its
-        -- image by the injective map `π` is finite
-        let π : R[X] → Fin (d + 1) → R := fun f i => f.coeff i
-        refine' ((Set.Finite.pi fun e => h).Subset <| _).of_finite_image (_ : Set.InjOn π _)
-        · exact Set.image_subset_iff.2 fun f hf i _ => hf.2 i
-        · refine' fun x hx y hy hxy => (ext_iff_nat_degree_le hx.1 hy.1).2 fun i hi => _
-          exact id congr_fun hxy ⟨i, Nat.lt_succ_of_le hi⟩))
+  Set.Finite.bUnion
+    (by
+      -- We prove that the set of polynomials under consideration is finite because its
+      -- image by the injective map `π` is finite
+      let π : R[X] → Fin (d + 1) → R := fun f i => f.coeff i
+      refine' ((Set.Finite.pi fun e => h).Subset <| _).of_finite_image (_ : Set.InjOn π _)
+      · exact Set.image_subset_iff.2 fun f hf i _ => hf.2 i
+      · refine' fun x hx y hy hxy => (ext_iff_nat_degree_le hx.1 hy.1).2 fun i hi => _
+        exact id congr_fun hxy ⟨i, Nat.lt_succ_of_le hi⟩)
     fun i hi => Finset.finite_to_set _
 #align polynomial.bUnion_roots_finite Polynomial.bUnion_roots_finite
 
@@ -1065,8 +1060,8 @@ theorem Multiset.prod_X_sub_C_dvd_iff_le_roots {p : R[X]} (hp : p ≠ 0) (s : Mu
   ⟨fun h =>
     Multiset.le_iff_count.2 fun r =>
       by
-      rw [count_roots, le_root_multiplicity_iff hp, ← Multiset.prod_repeat, ←
-        Multiset.map_repeat fun a => X - C a, ← Multiset.filter_eq]
+      rw [count_roots, le_root_multiplicity_iff hp, ← Multiset.prod_replicate, ←
+        Multiset.map_replicate fun a => X - C a, ← Multiset.filter_eq]
       exact (Multiset.prod_dvd_prod_of_le <| Multiset.map_le_map <| s.filter_le _).trans h,
     fun h =>
     (Multiset.prod_dvd_prod_of_le <| Multiset.map_le_map h).trans p.prod_multiset_X_sub_C_dvd⟩
@@ -1138,7 +1133,8 @@ theorem eq_root_multiplicity_map {p : A[X]} {f : A →+* B} (hf : Function.Injec
 theorem count_map_roots [IsDomain A] {p : A[X]} {f : A →+* B} (hmap : map f p ≠ 0) (b : B) :
     (p.roots.map f).count b ≤ rootMultiplicity b (p.map f) :=
   by
-  rw [le_root_multiplicity_iff hmap, ← Multiset.prod_repeat, ← Multiset.map_repeat fun a => X - C a]
+  rw [le_root_multiplicity_iff hmap, ← Multiset.prod_replicate, ←
+    Multiset.map_replicate fun a => X - C a]
   rw [← Multiset.filter_eq]
   refine' (Multiset.prod_dvd_prod_of_le <| Multiset.map_le_map <| Multiset.filter_le _ _).trans _
   convert Polynomial.map_dvd _ p.prod_multiset_X_sub_C_dvd

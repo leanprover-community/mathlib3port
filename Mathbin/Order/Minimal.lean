@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.minimal
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -116,7 +116,7 @@ theorem maximals_eq_minimals [IsSymm α r] : maximals r s = minimals r s :=
 variable {r r₁ r₂ s t a}
 
 theorem Set.Subsingleton.maximals_eq (h : s.Subsingleton) : maximals r s = s :=
-  h.induction_on (minimals_empty _) (maximals_singleton _)
+  h.inductionOn (minimals_empty _) (maximals_singleton _)
 #align set.subsingleton.maximals_eq Set.Subsingleton.maximals_eq
 
 theorem Set.Subsingleton.minimals_eq (h : s.Subsingleton) : minimals r s = s :=
@@ -233,8 +233,8 @@ theorem IsGreatest.maximals_eq (h : IsGreatest s a) : maximals (· ≤ ·) s = {
 
 theorem IsAntichain.minimals_upper_closure (hs : IsAntichain (· ≤ ·) s) :
     minimals (· ≤ ·) (upperClosure s : Set α) = s :=
-  (hs.max_minimals fun a ⟨⟨b, hb, hba⟩, h⟩ => by
-      rwa [eq_of_mem_minimals ‹a ∈ _› (subset_upper_closure hb) hba])
+  hs.max_minimals
+    (fun a ⟨⟨b, hb, hba⟩, h⟩ => by rwa [eq_of_mem_minimals ‹a ∈ _› (subset_upper_closure hb) hba])
     fun a ha =>
     ⟨a, ⟨subset_upper_closure ha, fun b ⟨c, hc, hcb⟩ hba => by rwa [hs.eq' ha hc (hcb.trans hba)]⟩,
       le_rfl⟩

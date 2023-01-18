@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module category_theory.category.Bipointed
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -114,11 +114,13 @@ def swap : BipointedCat ⥤ BipointedCat
 @[simps]
 def swapEquiv : BipointedCat ≌ BipointedCat :=
   Equivalence.mk swap swap
-    ((NatIso.ofComponents fun X =>
+    (NatIso.ofComponents
+      (fun X =>
         { Hom := ⟨id, rfl, rfl⟩
           inv := ⟨id, rfl, rfl⟩ })
       fun X Y f => rfl)
-    ((NatIso.ofComponents fun X =>
+    (NatIso.ofComponents
+      (fun X =>
         { Hom := ⟨id, rfl, rfl⟩
           inv := ⟨id, rfl, rfl⟩ })
       fun X Y f => rfl)
@@ -210,7 +212,8 @@ theorem Pointed_to_Bipointed_snd_comp_swap :
 @[simps]
 def pointedToBipointedCompBipointedToPointedFst :
     pointedToBipointed ⋙ bipointedToPointedFst ≅ 𝟭 _ :=
-  (NatIso.ofComponents fun X =>
+  NatIso.ofComponents
+    (fun X =>
       { Hom := ⟨id, rfl⟩
         inv := ⟨id, rfl⟩ })
     fun X Y f => rfl
@@ -221,7 +224,8 @@ def pointedToBipointedCompBipointedToPointedFst :
 @[simps]
 def pointedToBipointedCompBipointedToPointedSnd :
     pointedToBipointed ⋙ bipointedToPointedSnd ≅ 𝟭 _ :=
-  (NatIso.ofComponents fun X =>
+  NatIso.ofComponents
+    (fun X =>
       { Hom := ⟨id, rfl⟩
         inv := ⟨id, rfl⟩ })
     fun X Y f => rfl

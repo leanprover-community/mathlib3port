@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jeremy Avigad, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module order.filter.ultrafilter
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -198,7 +198,7 @@ theorem eventually_imp : (∀ᶠ x in f, p x → q x) ↔ (∀ᶠ x in f, p x) �
 #align ultrafilter.eventually_imp Ultrafilter.eventually_imp
 
 theorem finite_sUnion_mem_iff {s : Set (Set α)} (hs : s.Finite) : ⋃₀ s ∈ f ↔ ∃ t ∈ s, t ∈ f :=
-  (Finite.induction_on hs (by simp)) fun a s ha hs his => by
+  Finite.induction_on hs (by simp) fun a s ha hs his => by
     simp [union_mem_iff, his, or_and_right, exists_or]
 #align ultrafilter.finite_sUnion_mem_iff Ultrafilter.finite_sUnion_mem_iff
 
@@ -209,7 +209,7 @@ theorem finite_bUnion_mem_iff {is : Set β} {s : β → Set α} (his : is.Finite
 
 /-- Pushforward for ultrafilters. -/
 def map (m : α → β) (f : Ultrafilter α) : Ultrafilter β :=
-  (ofComplNotMemIff (map m f)) fun s => @compl_not_mem_iff _ f (m ⁻¹' s)
+  ofComplNotMemIff (map m f) fun s => @compl_not_mem_iff _ f (m ⁻¹' s)
 #align ultrafilter.map Ultrafilter.map
 
 @[simp, norm_cast]
@@ -284,7 +284,7 @@ theorem comap_comap (f : Ultrafilter γ) {m : α → β} {n : β → γ} (inj₀
 
 /-- The principal ultrafilter associated to a point `x`. -/
 instance : Pure Ultrafilter :=
-  ⟨fun α a => (ofComplNotMemIff (pure a)) fun s => by simp⟩
+  ⟨fun α a => ofComplNotMemIff (pure a) fun s => by simp⟩
 
 @[simp]
 theorem mem_pure {a : α} {s : Set α} : s ∈ (pure a : Ultrafilter α) ↔ a ∈ s :=
@@ -340,7 +340,7 @@ theorem le_cofinite_or_eq_pure (f : Ultrafilter α) : (f : Filter α) ≤ cofini
 /-- Monadic bind for ultrafilters, coming from the one on filters
 defined in terms of map and join.-/
 def bind (f : Ultrafilter α) (m : α → Ultrafilter β) : Ultrafilter β :=
-  (ofComplNotMemIff (bind ↑f fun x => ↑(m x))) fun s => by
+  ofComplNotMemIff (bind ↑f fun x => ↑(m x)) fun s => by
     simp only [mem_bind', mem_coe, ← compl_mem_iff_not_mem, compl_set_of, compl_compl]
 #align ultrafilter.bind Ultrafilter.bind
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module number_theory.legendre_symbol.gauss_eisenstein_lemmas
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -143,8 +143,7 @@ private theorem gauss_lemma_aux₁ (p : ℕ) [Fact p.Prime] [Fact (p % 2 = 1)] {
     _ =
         ∏ x in ico 1 (p / 2).succ,
           (if (a * x : Zmod p).val ≤ p / 2 then 1 else -1) * (a * x : Zmod p).valMinAbs.natAbs :=
-      (prod_congr rfl) fun _ _ =>
-        by
+      prod_congr rfl fun _ _ => by
         simp only [nat_cast_nat_abs_val_min_abs]
         split_ifs <;> simp
     _ =
@@ -273,7 +272,7 @@ private theorem sum_Ico_eq_card_lt {p q : ℕ} :
     calc
       (∑ a in ico 1 (p / 2).succ, a * q / p) =
           ∑ a in ico 1 (p / 2).succ, ((ico 1 (q / 2).succ).filter fun x => x * p ≤ a * q).card :=
-        (Finset.sum_congr rfl) fun x hx =>
+        Finset.sum_congr rfl fun x hx =>
           div_eq_filter_card (Nat.pos_of_ne_zero hp0)
             (calc
               x * q / p ≤ p / 2 * q / p :=

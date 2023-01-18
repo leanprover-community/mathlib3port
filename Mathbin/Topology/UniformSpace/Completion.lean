@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.uniform_space.completion
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -224,7 +224,7 @@ set_option eqn_compiler.zeta true
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance : CompleteSpace (CauchyCat α) :=
-  (complete_space_extension uniform_inducing_pure_cauchy dense_range_pure_cauchy) fun f hf =>
+  complete_space_extension uniform_inducing_pure_cauchy dense_range_pure_cauchy fun f hf =>
     let f' : CauchyCat α := ⟨f, hf⟩
     have : map pure_cauchy f ≤ (𝓤 <| CauchyCat α).lift' (preimage (Prod.mk f')) :=
       le_lift'.2 fun s hs =>
@@ -319,7 +319,7 @@ attribute [local instance] UniformSpace.separationSetoid
 theorem separated_pure_cauchy_injective {α : Type _} [UniformSpace α] [s : SeparatedSpace α] :
     Function.Injective fun a : α => ⟦pureCauchy a⟧
   | a, b, h =>
-    (separated_def.1 s _ _) fun s hs =>
+    separated_def.1 s _ _ fun s hs =>
       let ⟨t, ht, hts⟩ := by
         rw [← (@uniform_embedding_pure_cauchy α _).comap_uniformity, Filter.mem_comap] at hs <;>
           exact hs
@@ -499,7 +499,7 @@ theorem induction_on₂ {p : Completion α → Completion β → Prop} (a : Comp
     (hp : IsClosed { x : Completion α × Completion β | p x.1 x.2 })
     (ih : ∀ (a : α) (b : β), p a b) : p a b :=
   have : ∀ x : Completion α × Completion β, p x.1 x.2 :=
-    (is_closed_property dense_range_coe₂ hp) fun ⟨a, b⟩ => ih a b
+    is_closed_property dense_range_coe₂ hp fun ⟨a, b⟩ => ih a b
   this (a, b)
 #align uniform_space.completion.induction_on₂ UniformSpace.Completion.induction_on₂
 
@@ -509,7 +509,7 @@ theorem induction_on₃ {p : Completion α → Completion β → Completion γ �
     (hp : IsClosed { x : Completion α × Completion β × Completion γ | p x.1 x.2.1 x.2.2 })
     (ih : ∀ (a : α) (b : β) (c : γ), p a b c) : p a b c :=
   have : ∀ x : Completion α × Completion β × Completion γ, p x.1 x.2.1 x.2.2 :=
-    (is_closed_property dense_range_coe₃ hp) fun ⟨a, b, c⟩ => ih a b c
+    is_closed_property dense_range_coe₃ hp fun ⟨a, b, c⟩ => ih a b c
   this (a, b, c)
 #align uniform_space.completion.induction_on₃ UniformSpace.Completion.induction_on₃
 

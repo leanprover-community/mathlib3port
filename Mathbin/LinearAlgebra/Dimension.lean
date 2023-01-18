@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Johannes Hölzl, Sander Dahmen, Scott Morrison
 
 ! This file was ported from Lean 3 source module linear_algebra.dimension
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -114,7 +114,7 @@ In particular this agrees with the usual notion of the dimension of a vector spa
 The definition is marked as protected to avoid conflicts with `_root_.rank`,
 the rank of a linear map.
 -/
-protected def Module.rank : Cardinal :=
+protected irreducible_def Module.rank : Cardinal :=
   ⨆ ι : { s : Set V // LinearIndependent K (coe : s → V) }, #ι.1
 #align module.rank Module.rank
 
@@ -150,6 +150,7 @@ theorem LinearMap.dim_le_of_injective (f : M →ₗ[R] M₁) (i : Injective f) :
 theorem dim_le {n : ℕ}
     (H : ∀ s : Finset M, (LinearIndependent R fun i : s => (i : M)) → s.card ≤ n) :
     Module.rank R M ≤ n := by
+  rw [Module.rank]
   apply csupᵢ_le'
   rintro ⟨s, li⟩
   exact linear_independent_bounded_of_finset_linear_independent_bounded H _ li
@@ -257,7 +258,7 @@ theorem cardinal_lift_le_dim_of_linear_independent.{m} {ι : Type w} {v : ι →
   by
   apply le_trans
   · exact cardinal.lift_mk_le.mpr ⟨(Equiv.ofInjective _ hv.injective).toEmbedding⟩
-  · simp only [Cardinal.lift_le]
+  · simp only [Cardinal.lift_le, Module.rank]
     apply le_trans
     swap
     exact le_csupᵢ (Cardinal.bdd_above_range.{v, v} _) ⟨range v, hv.coe_range⟩
@@ -285,6 +286,7 @@ variable (R M)
 theorem dim_punit : Module.rank R PUnit = 0 :=
   by
   apply le_bot_iff.mp
+  rw [Module.rank]
   apply csupᵢ_le'
   rintro ⟨s, li⟩
   apply le_bot_iff.mpr
@@ -786,6 +788,7 @@ theorem maximal_linear_independent_eq_infinite_basis {ι : Type _} (b : Basis ι
 theorem Basis.mk_eq_dim'' {ι : Type v} (v : Basis ι R M) : (#ι) = Module.rank R M :=
   by
   haveI := nontrivial_of_invariant_basis_number R
+  rw [Module.rank]
   apply le_antisymm
   · trans
     swap
@@ -801,8 +804,6 @@ theorem Basis.mk_eq_dim'' {ι : Type v} (v : Basis ι R M) : (#ι) = Module.rank
     apply linear_independent_le_basis v _ li
 #align basis.mk_eq_dim'' Basis.mk_eq_dim''
 
--- By this stage we want to have a complete API for `module.rank`,
--- so we set it `irreducible` here, to keep ourselves honest.
 theorem Basis.mk_range_eq_dim (v : Basis ι R M) : (#range v) = Module.rank R M :=
   v.reindexRange.mk_eq_dim''
 #align basis.mk_range_eq_dim Basis.mk_range_eq_dim

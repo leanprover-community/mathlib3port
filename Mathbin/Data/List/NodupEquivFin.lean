@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module data.list.nodup_equiv_fin
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -223,7 +223,7 @@ theorem duplicate_iff_exists_distinct_nth_le {l : List α} {x : α} :
         x = l.nthLe n hn ∧ x = l.nthLe m hm :=
   by
   classical
-    rw [duplicate_iff_two_le_count, le_count_iff_repeat_sublist,
+    rw [duplicate_iff_two_le_count, le_count_iff_replicate_sublist,
       sublist_iff_exists_fin_order_embedding_nth_le_eq]
     constructor
     · rintro ⟨f, hf⟩
@@ -236,8 +236,8 @@ theorem duplicate_iff_exists_distinct_nth_le {l : List α} {x : α} :
         · simp
         · simp [hnm]
         · simp
-        · simp only [Nat.lt_succ_iff, Nat.succ_le_succ_iff, repeat, length, nonpos_iff_eq_zero] at
-            hi hj
+        · simp only [Nat.lt_succ_iff, Nat.succ_le_succ_iff, replicate, length,
+            nonpos_iff_eq_zero] at hi hj
           simp [hi, hj]
       · rintro ⟨⟨_ | i⟩, hi⟩
         · simpa using h

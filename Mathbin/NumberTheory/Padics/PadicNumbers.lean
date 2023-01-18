@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module number_theory.padics.padic_numbers
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -597,9 +597,9 @@ def padicNormE {p : ℕ} [hp : Fact p.Prime] : AbsoluteValue ℚ_[p] ℚ
     where
   toFun := Quotient.lift PadicSeq.norm <| @PadicSeq.norm_equiv _ _
   map_mul' q r := Quotient.induction_on₂ q r <| PadicSeq.norm_mul
-  nonneg' q := Quotient.induction_on q <| PadicSeq.norm_nonneg
+  nonneg' q := Quotient.inductionOn q <| PadicSeq.norm_nonneg
   eq_zero' q :=
-    Quotient.induction_on q <| by
+    Quotient.inductionOn q <| by
       simpa only [Padic.zero_def, Quotient.eq] using PadicSeq.norm_zero_iff
   add_le' q r :=
     by
@@ -607,8 +607,8 @@ def padicNormE {p : ℕ} [hp : Fact p.Prime] : AbsoluteValue ℚ_[p] ℚ
       max ((Quotient.lift PadicSeq.norm <| @PadicSeq.norm_equiv _ _) q)
         ((Quotient.lift PadicSeq.norm <| @PadicSeq.norm_equiv _ _) r)
     exact Quotient.induction_on₂ q r <| PadicSeq.norm_nonarchimedean
-    refine' max_le_add_of_nonneg (Quotient.induction_on q <| PadicSeq.norm_nonneg) _
-    exact Quotient.induction_on r <| PadicSeq.norm_nonneg
+    refine' max_le_add_of_nonneg (Quotient.inductionOn q <| PadicSeq.norm_nonneg) _
+    exact Quotient.inductionOn r <| PadicSeq.norm_nonneg
 #align padic_norm_e padicNormE
 
 namespace padicNormE
@@ -650,7 +650,7 @@ theorem nonarchimedean' (q r : ℚ_[p]) : padicNormE (q + r) ≤ max (padicNormE
 equivalent theorems about `norm` (`‖ ‖`). -/
 theorem add_eq_max_of_ne' {q r : ℚ_[p]} :
     padicNormE q ≠ padicNormE r → padicNormE (q + r) = max (padicNormE q) (padicNormE r) :=
-  (Quotient.induction_on₂ q r) fun _ _ => PadicSeq.add_eq_max_of_ne
+  Quotient.induction_on₂ q r fun _ _ => PadicSeq.add_eq_max_of_ne
 #align padic_norm_e.add_eq_max_of_ne' padicNormE.add_eq_max_of_ne'
 
 @[simp]
@@ -659,7 +659,7 @@ theorem eq_padic_norm' (q : ℚ) : padicNormE (q : ℚ_[p]) = padicNorm p q :=
 #align padic_norm_e.eq_padic_norm' padicNormE.eq_padic_norm'
 
 protected theorem image' {q : ℚ_[p]} : q ≠ 0 → ∃ n : ℤ, padicNormE q = p ^ (-n) :=
-  (Quotient.induction_on q) fun f hf =>
+  Quotient.inductionOn q fun f hf =>
     have : ¬f ≈ 0 := (ne_zero_iff_nequiv_zero f).1 hf
     norm_values_discrete f this
 #align padic_norm_e.image' padicNormE.image'
@@ -678,7 +678,7 @@ variable {p : ℕ} [Fact p.Prime] (f : CauSeq _ (@padicNormE p _))
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (m n «expr ≥ » N) -/
 theorem rat_dense' (q : ℚ_[p]) {ε : ℚ} (hε : 0 < ε) : ∃ r : ℚ, padicNormE (q - r) < ε :=
-  (Quotient.induction_on q) fun q' =>
+  Quotient.inductionOn q fun q' =>
     have : ∃ N, ∀ (m) (_ : m ≥ N) (n) (_ : n ≥ N), padicNorm p (q' m - q' n) < ε := cauchy₂ _ hε
     let ⟨N, hN⟩ := this
     ⟨q' N, by
@@ -898,7 +898,7 @@ instance : NontriviallyNormedField ℚ_[p] :=
         exact_mod_cast hp.1.one_lt⟩ }
 
 protected theorem image {q : ℚ_[p]} : q ≠ 0 → ∃ n : ℤ, ‖q‖ = ↑((p : ℚ) ^ (-n)) :=
-  (Quotient.induction_on q) fun f hf =>
+  Quotient.inductionOn q fun f hf =>
     have : ¬f ≈ 0 := (PadicSeq.ne_zero_iff_nequiv_zero f).1 hf
     let ⟨n, hn⟩ := PadicSeq.norm_values_discrete f this
     ⟨n, congr_arg coe hn⟩

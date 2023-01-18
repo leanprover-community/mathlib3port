@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module field_theory.ratfunc
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -607,8 +607,8 @@ by mapping both the numerator and denominator and quotienting them. -/
 def map [MonoidHomClass F R[X] S[X]] (φ : F) (hφ : R[X]⁰ ≤ S[X]⁰.comap φ) : Ratfunc R →* Ratfunc S
     where
   toFun f :=
-    (Ratfunc.liftOn f fun n d =>
-        if h : φ d ∈ S[X]⁰ then of_fraction_ring (Localization.mk (φ n) ⟨φ d, h⟩) else 0)
+    Ratfunc.liftOn f
+      (fun n d => if h : φ d ∈ S[X]⁰ then of_fraction_ring (Localization.mk (φ n) ⟨φ d, h⟩) else 0)
       fun p q p' q' hq hq' h =>
       by
       rw [dif_pos, dif_pos, of_fraction_ring.inj_eq, Localization.mk_eq_mk_iff]
@@ -690,7 +690,7 @@ by mapping both the numerator and denominator and quotienting them. -/
 def liftMonoidWithZeroHom (φ : R[X] →*₀ G₀) (hφ : R[X]⁰ ≤ G₀⁰.comap φ) : Ratfunc R →*₀ G₀
     where
   toFun f :=
-    (Ratfunc.liftOn f fun p q => φ p / φ q) fun p q p' q' hq hq' h =>
+    Ratfunc.liftOn f (fun p q => φ p / φ q) fun p q p' q' hq hq' h =>
       by
       cases subsingleton_or_nontrivial R
       · rw [Subsingleton.elim p q, Subsingleton.elim p' q, Subsingleton.elim q' q]
@@ -1025,7 +1025,7 @@ theorem of_fraction_ring_mk' (x : K[X]) (y : K[X]⁰) :
 theorem of_fraction_ring_eq :
     (of_fraction_ring : FractionRing K[X] → Ratfunc K) = IsLocalization.algEquiv K[X]⁰ _ _ :=
   funext fun x =>
-    (Localization.induction_on x) fun x => by
+    Localization.induction_on x fun x => by
       simp only [IsLocalization.alg_equiv_apply, IsLocalization.ring_equiv_of_ring_equiv_apply,
         [anonymous], Localization.mk_eq_mk'_apply, IsLocalization.map_mk', of_fraction_ring_mk',
         RingEquiv.coe_toRingHom, RingEquiv.refl_apply, SetLike.eta]
@@ -1035,7 +1035,7 @@ theorem of_fraction_ring_eq :
 theorem to_fraction_ring_eq :
     (toFractionRing : Ratfunc K → FractionRing K[X]) = IsLocalization.algEquiv K[X]⁰ _ _ :=
   funext fun ⟨x⟩ =>
-    (Localization.induction_on x) fun x => by
+    Localization.induction_on x fun x => by
       simp only [Localization.mk_eq_mk'_apply, of_fraction_ring_mk', IsLocalization.alg_equiv_apply,
         [anonymous], IsLocalization.ring_equiv_of_ring_equiv_apply, IsLocalization.map_mk',
         RingEquiv.coe_toRingHom, RingEquiv.refl_apply, SetLike.eta]
@@ -1176,7 +1176,7 @@ theorem denom_div (p : K[X]) {q : K[X]} (hq : q ≠ 0) :
 #align ratfunc.denom_div Ratfunc.denom_div
 
 theorem monic_denom (x : Ratfunc K) : (denom x).Monic :=
-  x.induction_on fun p q hq => by
+  x.inductionOn fun p q hq => by
     rw [denom_div p hq, mul_comm]
     exact Polynomial.monic_mul_leading_coeff_inv (right_div_gcd_ne_zero hq)
 #align ratfunc.monic_denom Ratfunc.monic_denom
@@ -1214,7 +1214,7 @@ theorem denom_div_dvd (p q : K[X]) : denom (algebraMap _ _ p / algebraMap _ _ q)
 
 @[simp]
 theorem num_div_denom (x : Ratfunc K) : algebraMap _ _ (num x) / algebraMap _ _ (denom x) = x :=
-  x.induction_on fun p q hq =>
+  x.inductionOn fun p q hq =>
     by
     have q_div_ne_zero := right_div_gcd_ne_zero hq
     rw [num_div p q, denom_div p hq, RingHom.map_mul, RingHom.map_mul, mul_div_mul_left,

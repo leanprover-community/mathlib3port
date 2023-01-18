@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module category_theory.abelian.diagram_lemmas.four
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -98,7 +98,7 @@ A' --f'-> B' --g'-> C' --h'-> D'
 ```
 -/
 theorem mono_of_epi_of_mono_of_mono (hα : Epi α) (hβ : Mono β) (hδ : Mono δ) : Mono γ :=
-  (mono_of_zero_of_map_zero _) fun c hc =>
+  mono_of_zero_of_map_zero _ fun c hc =>
     have : h c = 0 :=
       suffices δ (h c) = 0 from zero_of_map_zero _ (pseudo_injective_of_mono _) _ this
       calc
@@ -106,15 +106,15 @@ theorem mono_of_epi_of_mono_of_mono (hα : Epi α) (hβ : Mono β) (hδ : Mono �
         _ = h' 0 := by rw [hc]
         _ = 0 := apply_zero _
         
-    (Exists.elim ((pseudo_exact_of_exact hgh).2 _ this)) fun b hb =>
+    Exists.elim ((pseudo_exact_of_exact hgh).2 _ this) fun b hb =>
       have : g' (β b) = 0 :=
         calc
           g' (β b) = γ (g b) := by rw [← comp_apply, comm₂, comp_apply]
           _ = γ c := by rw [hb]
           _ = 0 := hc
           
-      (Exists.elim ((pseudo_exact_of_exact hf'g').2 _ this)) fun a' ha' =>
-        (Exists.elim (pseudo_surjective_of_epi α a')) fun a ha =>
+      Exists.elim ((pseudo_exact_of_exact hf'g').2 _ this) fun a' ha' =>
+        Exists.elim (pseudo_surjective_of_epi α a') fun a ha =>
           have : f a = b :=
             suffices β (f a) = β b from pseudo_injective_of_mono _ this
             calc
@@ -149,7 +149,7 @@ A' --f'-> B' --g'-> C' --h'-> D'
 ```
 -/
 theorem epi_of_epi_of_epi_of_mono (hα : Epi α) (hγ : Epi γ) (hδ : Mono δ) : Epi β :=
-  (Preadditive.epi_of_cancel_zero _) fun R r hβr =>
+  Preadditive.epi_of_cancel_zero _ fun R r hβr =>
     have hf'r : f' ≫ r = 0 :=
       Limits.zero_of_epi_comp α <|
         calc

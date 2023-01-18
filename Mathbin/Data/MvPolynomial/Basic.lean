@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Johan Commelin, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.mv_polynomial.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -668,7 +668,7 @@ theorem coeff_C_mul (m) (a : R) (p : MvPolynomial σ R) : coeff m (c a * p) = a 
 
 theorem coeff_mul (p q : MvPolynomial σ R) (n : σ →₀ ℕ) :
     coeff n (p * q) = ∑ x in antidiagonal n, coeff x.1 p * coeff x.2 q :=
-  (AddMonoidAlgebra.mul_apply_antidiagonal p q _ _) fun p => mem_antidiagonal
+  AddMonoidAlgebra.mul_apply_antidiagonal p q _ _ fun p => mem_antidiagonal
 #align mv_polynomial.coeff_mul MvPolynomial.coeff_mul
 
 @[simp]
@@ -741,7 +741,7 @@ theorem coeff_mul_monomial' (m) (s : σ →₀ ℕ) (r : R) (p : MvPolynomial σ
     intro hm
     apply h
     have H := support_mul _ _ hm
-    simp only [Finset.mem_bUnion] at H
+    simp only [Finset.mem_bunionᵢ] at H
     rcases H with ⟨j, hj, i', hi', H⟩
     rw [support_monomial, if_neg hr, Finset.mem_singleton] at hi'
     subst i'

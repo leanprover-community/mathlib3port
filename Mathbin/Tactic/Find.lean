@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sebastian Ullrich
 
 ! This file was ported from Lean 3 source module tactic.find
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -97,7 +97,7 @@ The tactic `library_search` is an alternate way to find lemmas in the library.
 unsafe def find_cmd (_ : parse <| tk "#find") : lean.parser Unit := do
   let pat ← lean.parser.pexpr 0
   let env ← get_env
-  (env ()) fun d _ =>
+  env () fun d _ =>
       match d with
       | declaration.thm n _ ty _ => trace_match pat ty n
       | declaration.defn n _ ty _ _ _ => trace_match pat ty n

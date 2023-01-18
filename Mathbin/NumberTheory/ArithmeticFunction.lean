@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module number_theory.arithmetic_function
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -709,7 +709,7 @@ theorem eq_iff_eq_on_prime_powers [CommMonoidWithZero R] (f : ArithmeticFunction
   · rw [hn, arithmetic_function.map_zero, arithmetic_function.map_zero]
   rw [multiplicative_factorization f hf hn, multiplicative_factorization g hg hn]
   refine' Finset.prod_congr rfl _
-  simp only [support_factorization, List.mem_to_finset]
+  simp only [support_factorization, List.mem_toFinset]
   intro p hp
   exact h p _ (Nat.prime_of_mem_factors hp)
 #align
@@ -873,7 +873,7 @@ theorem card_factors_apply_prime {p : ℕ} (hp : p.Prime) : Ω p = 1 :=
 
 @[simp]
 theorem card_factors_apply_prime_pow {p k : ℕ} (hp : p.Prime) : Ω (p ^ k) = k := by
-  rw [card_factors_apply, hp.factors_pow, List.length_repeat]
+  rw [card_factors_apply, hp.factors_pow, List.length_replicate]
 #align
   nat.arithmetic_function.card_factors_apply_prime_pow Nat.ArithmeticFunction.card_factors_apply_prime_pow
 
@@ -914,7 +914,7 @@ theorem card_distinct_factors_eq_card_factors_iff_squarefree {n : ℕ} (h0 : n �
 @[simp]
 theorem card_distinct_factors_apply_prime_pow {p k : ℕ} (hp : p.Prime) (hk : k ≠ 0) :
     ω (p ^ k) = 1 := by
-  rw [card_distinct_factors_apply, hp.factors_pow, List.repeat_dedup hk, List.length_singleton]
+  rw [card_distinct_factors_apply, hp.factors_pow, List.replicate_dedup hk, List.length_singleton]
 #align
   nat.arithmetic_function.card_distinct_factors_apply_prime_pow Nat.ArithmeticFunction.card_distinct_factors_apply_prime_pow
 
@@ -1107,7 +1107,7 @@ theorem sum_eq_iff_sum_mul_moebius_eq [Ring R] {f g : ℕ → R} :
   by
   rw [sum_eq_iff_sum_smul_moebius_eq]
   apply forall_congr'
-  refine' fun a => imp_congr_right fun _ => ((sum_congr rfl) fun x hx => _).congr_left
+  refine' fun a => imp_congr_right fun _ => (sum_congr rfl fun x hx => _).congr_left
   rw [zsmul_eq_mul]
 #align
   nat.arithmetic_function.sum_eq_iff_sum_mul_moebius_eq Nat.ArithmeticFunction.sum_eq_iff_sum_mul_moebius_eq

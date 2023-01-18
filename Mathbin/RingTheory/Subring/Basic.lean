@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ashvni Narayanan
 
 ! This file was ported from Lean 3 source module ring_theory.subring.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1179,7 +1179,7 @@ open Subring
 
 This is the bundled version of `set.range_factorization`. -/
 def rangeRestrict (f : R →+* S) : R →+* f.range :=
-  (f.codRestrict f.range) fun x => ⟨x, rfl⟩
+  f.codRestrict f.range fun x => ⟨x, rfl⟩
 #align ring_hom.range_restrict RingHom.rangeRestrict
 
 @[simp]
@@ -1271,7 +1271,7 @@ theorem range_snd : (snd R S).srange = ⊤ :=
 
 @[simp]
 theorem prod_bot_sup_bot_prod (s : Subring R) (t : Subring S) : s.Prod ⊥ ⊔ prod ⊥ t = s.Prod t :=
-  (le_antisymm (sup_le (prod_mono_right s bot_le) (prod_mono_left t bot_le))) fun p hp =>
+  le_antisymm (sup_le (prod_mono_right s bot_le) (prod_mono_left t bot_le)) fun p hp =>
     Prod.fst_mul_snd p ▸
       mul_mem
         ((le_sup_left : s.Prod ⊥ ≤ s.Prod ⊥ ⊔ prod ⊥ t) ⟨hp.1, SetLike.mem_coe.2 <| one_mem ⊥⟩)

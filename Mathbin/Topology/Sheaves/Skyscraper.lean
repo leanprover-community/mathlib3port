@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang, Junyan Xu
 
 ! This file was ported from Lean 3 source module topology.sheaves.skyscraper
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -314,7 +314,8 @@ theorem to_skyscraper_from_stalk {𝓕 : Presheaf C X} {c : C} (f : 𝓕 ⟶ sky
     toSkyscraperPresheaf p₀ (fromStalk _ f) = f :=
   NatTrans.ext _ _ <|
     funext fun U =>
-      ((em (p₀ ∈ U.unop)).elim fun h => by
+      (em (p₀ ∈ U.unop)).elim
+        (fun h => by
           dsimp
           split_ifs
           erw [← category.assoc, colimit.ι_desc, category.assoc, eq_to_hom_trans, eq_to_hom_refl,

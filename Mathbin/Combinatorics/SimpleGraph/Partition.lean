@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Paulino, Kyle Miller
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.partition
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -110,7 +110,7 @@ theorem part_of_vertex_ne_of_adj {v w : V} (h : G.Adj v w) : P.partOfVertex v �
 /-- Create a coloring using the parts themselves as the colors.
 Each vertex is colored by the part it's contained in. -/
 def toColoring : G.Coloring P.parts :=
-  (Coloring.mk fun v => ⟨P.partOfVertex v, P.part_of_vertex_mem v⟩) fun _ _ hvw =>
+  Coloring.mk (fun v => ⟨P.partOfVertex v, P.part_of_vertex_mem v⟩) fun _ _ hvw =>
     by
     rw [Ne.def, Subtype.mk_eq_mk]
     exact P.part_of_vertex_ne_of_adj hvw
@@ -118,7 +118,7 @@ def toColoring : G.Coloring P.parts :=
 
 /-- Like `simple_graph.partition.to_coloring` but uses `set V` as the coloring type. -/
 def toColoring' : G.Coloring (Set V) :=
-  (Coloring.mk P.partOfVertex) fun _ _ hvw => P.part_of_vertex_ne_of_adj hvw
+  Coloring.mk P.partOfVertex fun _ _ hvw => P.part_of_vertex_ne_of_adj hvw
 #align simple_graph.partition.to_coloring' SimpleGraph.Partition.toColoring'
 
 theorem to_colorable [Fintype P.parts] : G.Colorable (Fintype.card P.parts) :=

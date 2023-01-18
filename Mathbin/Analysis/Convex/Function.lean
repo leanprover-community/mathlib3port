@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, François Dupuis
 
 ! This file was ported from Lean 3 source module analysis.convex.function
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -246,9 +246,9 @@ theorem concave_on_of_convex_hypograph (h : Convex 𝕜 { p : E × β | p.1 ∈ 
 
 end Module
 
-section OrderedSmul
+section OrderedSMul
 
-variable [SMul 𝕜 E] [Module 𝕜 β] [OrderedSmul 𝕜 β] {s : Set E} {f : E → β}
+variable [SMul 𝕜 E] [Module 𝕜 β] [OrderedSMul 𝕜 β] {s : Set E} {f : E → β}
 
 theorem ConvexOn.convex_le (hf : ConvexOn 𝕜 s f) (r : β) : Convex 𝕜 ({ x ∈ s | f x ≤ r }) :=
   fun x hx y hy a b ha hb hab =>
@@ -291,7 +291,7 @@ theorem concave_on_iff_convex_hypograph :
   @convex_on_iff_convex_epigraph 𝕜 E βᵒᵈ _ _ _ _ _ _ _ f
 #align concave_on_iff_convex_hypograph concave_on_iff_convex_hypograph
 
-end OrderedSmul
+end OrderedSMul
 
 section Module
 
@@ -410,9 +410,9 @@ theorem StrictConcaveOn.concave_on {s : Set E} {f : E → β} (hf : StrictConcav
   hf.dual.ConvexOn
 #align strict_concave_on.concave_on StrictConcaveOn.concave_on
 
-section OrderedSmul
+section OrderedSMul
 
-variable [OrderedSmul 𝕜 β] {s : Set E} {f : E → β}
+variable [OrderedSMul 𝕜 β] {s : Set E} {f : E → β}
 
 theorem StrictConvexOn.convex_lt (hf : StrictConvexOn 𝕜 s f) (r : β) :
     Convex 𝕜 ({ x ∈ s | f x < r }) :=
@@ -431,7 +431,7 @@ theorem StrictConcaveOn.convex_gt (hf : StrictConcaveOn 𝕜 s f) (r : β) :
   hf.dual.convex_lt r
 #align strict_concave_on.convex_gt StrictConcaveOn.convex_gt
 
-end OrderedSmul
+end OrderedSMul
 
 section LinearOrder
 
@@ -590,7 +590,7 @@ end DistribMulAction
 
 section Module
 
-variable [Module 𝕜 E] [Module 𝕜 β] [OrderedSmul 𝕜 β] {s : Set E} {f : E → β}
+variable [Module 𝕜 E] [Module 𝕜 β] [OrderedSMul 𝕜 β] {s : Set E} {f : E → β}
 
 theorem ConvexOn.convex_lt (hf : ConvexOn 𝕜 s f) (r : β) : Convex 𝕜 ({ x ∈ s | f x < r }) :=
   convex_iff_forall_pos.2 fun x hx y hy a b ha hb hab =>
@@ -645,7 +645,7 @@ end OrderedCancelAddCommMonoid
 
 section LinearOrderedAddCommMonoid
 
-variable [LinearOrderedAddCommMonoid β] [SMul 𝕜 E] [Module 𝕜 β] [OrderedSmul 𝕜 β] {s : Set E}
+variable [LinearOrderedAddCommMonoid β] [SMul 𝕜 E] [Module 𝕜 β] [OrderedSMul 𝕜 β] {s : Set E}
   {f g : E → β}
 
 /-- The pointwise maximum of convex functions is convex. -/
@@ -770,9 +770,9 @@ section LinearOrderedCancelAddCommMonoid
 
 variable [LinearOrderedCancelAddCommMonoid β]
 
-section OrderedSmul
+section OrderedSMul
 
-variable [SMul 𝕜 E] [Module 𝕜 β] [OrderedSmul 𝕜 β] {s : Set E} {f g : E → β}
+variable [SMul 𝕜 E] [Module 𝕜 β] [OrderedSMul 𝕜 β] {s : Set E} {f g : E → β}
 
 theorem ConvexOn.le_left_of_right_le' (hf : ConvexOn 𝕜 s f) {x y : E} (hx : x ∈ s) (hy : y ∈ s)
     {a b : 𝕜} (ha : 0 < a) (hb : 0 ≤ b) (hab : a + b = 1) (hfy : f y ≤ f (a • x + b • y)) :
@@ -830,11 +830,11 @@ theorem ConcaveOn.right_le_of_le_left (hf : ConcaveOn 𝕜 s f) {x y z : E} (hx 
   hf.dual.le_right_of_left_le hx hy hz hxz
 #align concave_on.right_le_of_le_left ConcaveOn.right_le_of_le_left
 
-end OrderedSmul
+end OrderedSMul
 
 section Module
 
-variable [Module 𝕜 E] [Module 𝕜 β] [OrderedSmul 𝕜 β] {s : Set E} {f g : E → β}
+variable [Module 𝕜 E] [Module 𝕜 β] [OrderedSMul 𝕜 β] {s : Set E} {f g : E → β}
 
 /- The following lemmas don't require `module 𝕜 E` if you add the hypothesis `x ≠ y`. At the time of
 the writing, we decided the resulting lemmas wouldn't be useful. Feel free to reintroduce them. -/
@@ -1055,7 +1055,7 @@ variable [OrderedAddCommMonoid β]
 
 section Module
 
-variable [SMul 𝕜 E] [Module 𝕜 β] [OrderedSmul 𝕜 β] {s : Set E} {f : E → β}
+variable [SMul 𝕜 E] [Module 𝕜 β] [OrderedSMul 𝕜 β] {s : Set E} {f : E → β}
 
 theorem ConvexOn.smul {c : 𝕜} (hc : 0 ≤ c) (hf : ConvexOn 𝕜 s f) : ConvexOn 𝕜 s fun x => c • f x :=
   ⟨hf.1, fun x hx y hy a b ha hb hab =>
@@ -1211,7 +1211,7 @@ end LinearOrderedField
 
 section
 
-variable [LinearOrderedField 𝕜] [LinearOrderedCancelAddCommMonoid β] [Module 𝕜 β] [OrderedSmul 𝕜 β]
+variable [LinearOrderedField 𝕜] [LinearOrderedCancelAddCommMonoid β] [Module 𝕜 β] [OrderedSMul 𝕜 β]
   {x y z : 𝕜} {s : Set 𝕜} {f : 𝕜 → β}
 
 theorem ConvexOn.le_right_of_left_le'' (hf : ConvexOn 𝕜 s f) (hx : x ∈ s) (hz : z ∈ s) (hxy : x < y)

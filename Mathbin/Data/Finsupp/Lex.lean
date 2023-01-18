@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 
 ! This file was ported from Lean 3 source module data.finsupp.lex
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,7 +47,7 @@ theorem lex_def {r : α → α → Prop} {s : N → N → Prop} {a b : α →₀
 #align finsupp.lex_def Finsupp.lex_def
 
 theorem lex_eq_inv_image_dfinsupp_lex (r : α → α → Prop) (s : N → N → Prop) :
-    Finsupp.Lex r s = InvImage ((Dfinsupp.Lex r) fun a => s) toDfinsupp :=
+    Finsupp.Lex r s = InvImage (Dfinsupp.Lex r fun a => s) toDfinsupp :=
   rfl
 #align finsupp.lex_eq_inv_image_dfinsupp_lex Finsupp.lex_eq_inv_image_dfinsupp_lex
 

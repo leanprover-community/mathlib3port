@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yury Kudryashov, Heather Macbeth
 
 ! This file was ported from Lean 3 source module measure_theory.function.simple_func_dense_lp
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1035,7 +1035,7 @@ theorem lp.induction [_i : Fact (1 ≤ p)] (hp_ne_top : p ≠ ∞) (P : lp E p �
               P (hf.toLp f) → P (hg.toLp g) → P (hf.toLp f + hg.toLp g))
     (h_closed : IsClosed { f : lp E p μ | P f }) : ∀ f : lp E p μ, P f :=
   by
-  refine' fun f => (Lp.simple_func.dense_range hp_ne_top).induction_on f h_closed _
+  refine' fun f => (Lp.simple_func.dense_range hp_ne_top).inductionOn f h_closed _
   refine' Lp.simple_func.induction (lt_of_lt_of_le Ennreal.zero_lt_one _i.elim).ne' hp_ne_top _ _
   · exact fun c s => h_ind c
   · exact fun f g hf hg => h_add hf hg
@@ -1083,7 +1083,7 @@ theorem Memℒp.induction [_i : Fact (1 ≤ p)] (hp_ne_top : p ≠ ∞) (P : (α
       h_ae (Lp.simple_func.to_simple_func_eq_to_fun f) (Lp.simple_func.mem_ℒp f)
         (this (Lp.simple_func.to_simple_func f) (Lp.simple_func.mem_ℒp f))
   have : ∀ f : Lp E p μ, P f := fun f =>
-    (Lp.simple_func.dense_range hp_ne_top).induction_on f h_closed this
+    (Lp.simple_func.dense_range hp_ne_top).inductionOn f h_closed this
   exact fun f hf => h_ae hf.coe_fn_to_Lp (Lp.mem_ℒp _) (this (hf.toLp f))
 #align measure_theory.mem_ℒp.induction MeasureTheory.Memℒp.induction
 

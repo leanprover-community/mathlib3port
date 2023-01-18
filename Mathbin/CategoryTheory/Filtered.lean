@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.filtered
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -282,7 +282,7 @@ theorem cocone_nonempty (F : J ⥤ C) : Nonempty (Cocone F) := by
     dsimp
     simp only [category.comp_id]
     apply w
-    simp only [Finset.mem_univ, Finset.mem_bUnion, exists_and_left, exists_prop_of_true,
+    simp only [Finset.mem_univ, Finset.mem_bunionᵢ, exists_and_left, exists_prop_of_true,
       Finset.mem_image]
     exact ⟨j, rfl, j', g, by simp⟩
 #align category_theory.is_filtered.cocone_nonempty CategoryTheory.IsFiltered.cocone_nonempty
@@ -687,7 +687,7 @@ theorem cone_nonempty (F : J ⥤ C) : Nonempty (Cone F) := by
     simp only [category.id_comp]
     symm
     apply w
-    simp only [Finset.mem_univ, Finset.mem_bUnion, exists_and_left, exists_prop_of_true,
+    simp only [Finset.mem_univ, Finset.mem_bunionᵢ, exists_and_left, exists_prop_of_true,
       Finset.mem_image]
     exact ⟨j, rfl, j', g, by simp⟩
 #align category_theory.is_cofiltered.cone_nonempty CategoryTheory.IsCofiltered.cone_nonempty

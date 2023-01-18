@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Adam Topaz
 
 ! This file was ported from Lean 3 source module algebra.free_algebra
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -231,12 +231,11 @@ variable {X}
 
 /-- The canonical function `X → free_algebra R X`.
 -/
-def ι : X → FreeAlgebra R X := fun m => Quot.mk _ m
+irreducible_def ι : X → FreeAlgebra R X := fun m => Quot.mk _ m
 #align free_algebra.ι FreeAlgebra.ι
 
 @[simp]
-theorem quot_mk_eq_ι (m : X) : Quot.mk (FreeAlgebra.Rel R X) m = ι R m :=
-  rfl
+theorem quot_mk_eq_ι (m : X) : Quot.mk (FreeAlgebra.Rel R X) m = ι R m := by rw [ι]
 #align free_algebra.quot_mk_eq_ι FreeAlgebra.quot_mk_eq_ι
 
 variable {A : Type _} [Semiring A] [Algebra R A]
@@ -245,7 +244,7 @@ variable {A : Type _} [Semiring A] [Algebra R A]
 private def lift_aux (f : X → A) : FreeAlgebra R X →ₐ[R] A
     where
   toFun a :=
-    (Quot.liftOn a (liftFun _ _ f)) fun a b h =>
+    Quot.liftOn a (liftFun _ _ f) fun a b h =>
       by
       induction h
       · exact (algebraMap R A).map_add h_r h_s
@@ -297,40 +296,45 @@ private def lift_aux (f : X → A) : FreeAlgebra R X →ₐ[R] A
 /-- Given a function `f : X → A` where `A` is an `R`-algebra, `lift R f` is the unique lift
 of `f` to a morphism of `R`-algebras `free_algebra R X → A`.
 -/
-def lift : (X → A) ≃ (FreeAlgebra R X →ₐ[R] A)
-    where
-  toFun := liftAux R
-  invFun F := F ∘ ι R
-  left_inv f := by
-    ext
-    rfl
-  right_inv F := by
-    ext x
-    rcases x with ⟨⟩
-    induction x
-    case of =>
-      change ((F : FreeAlgebra R X → A) ∘ ι R) _ = _
+irreducible_def lift : (X → A) ≃ (FreeAlgebra R X →ₐ[R] A) :=
+  { toFun := liftAux R
+    invFun := fun F => F ∘ ι R
+    left_inv := fun f => by
+      ext
+      rw [ι]
       rfl
-    case of_scalar =>
-      change algebraMap _ _ x = F (algebraMap _ _ x)
-      rw [AlgHom.commutes F x]
-    case
-      add a b ha hb =>
-      change lift_aux R (F ∘ ι R) (Quot.mk _ _ + Quot.mk _ _) = F (Quot.mk _ _ + Quot.mk _ _)
-      rw [AlgHom.map_add, AlgHom.map_add, ha, hb]
-    case
-      mul a b ha hb =>
-      change lift_aux R (F ∘ ι R) (Quot.mk _ _ * Quot.mk _ _) = F (Quot.mk _ _ * Quot.mk _ _)
-      rw [AlgHom.map_mul, AlgHom.map_mul, ha, hb]
+    right_inv := fun F => by
+      ext x
+      rcases x with ⟨⟩
+      induction x
+      case of =>
+        change ((F : FreeAlgebra R X → A) ∘ ι R) _ = _
+        rw [ι]
+        rfl
+      case of_scalar =>
+        change algebraMap _ _ x = F (algebraMap _ _ x)
+        rw [AlgHom.commutes F x]
+      case
+        add a b ha hb =>
+        change lift_aux R (F ∘ ι R) (Quot.mk _ _ + Quot.mk _ _) = F (Quot.mk _ _ + Quot.mk _ _)
+        rw [AlgHom.map_add, AlgHom.map_add, ha, hb]
+      case
+        mul a b ha hb =>
+        change lift_aux R (F ∘ ι R) (Quot.mk _ _ * Quot.mk _ _) = F (Quot.mk _ _ * Quot.mk _ _)
+        rw [AlgHom.map_mul, AlgHom.map_mul, ha, hb] }
 #align free_algebra.lift FreeAlgebra.lift
 
 @[simp]
 theorem lift_aux_eq (f : X → A) : liftAux R f = lift R f :=
+  by
+  rw [lift]
   rfl
 #align free_algebra.lift_aux_eq FreeAlgebra.lift_aux_eq
 
 @[simp]
 theorem lift_symm_apply (F : FreeAlgebra R X →ₐ[R] A) : (lift R).symm F = F ∘ ι R :=
+  by
+  rw [lift]
   rfl
 #align free_algebra.lift_symm_apply FreeAlgebra.lift_symm_apply
 
@@ -340,29 +344,29 @@ variable {R X}
 theorem ι_comp_lift (f : X → A) : (lift R f : FreeAlgebra R X → A) ∘ ι R = f :=
   by
   ext
+  rw [ι, lift]
   rfl
 #align free_algebra.ι_comp_lift FreeAlgebra.ι_comp_lift
 
 @[simp]
 theorem lift_ι_apply (f : X → A) (x) : lift R f (ι R x) = f x :=
+  by
+  rw [ι, lift]
   rfl
 #align free_algebra.lift_ι_apply FreeAlgebra.lift_ι_apply
 
 @[simp]
 theorem lift_unique (f : X → A) (g : FreeAlgebra R X →ₐ[R] A) :
     (g : FreeAlgebra R X → A) ∘ ι R = f ↔ g = lift R f :=
-  (lift R).symm_apply_eq
+  by
+  rw [← (lift R).symm_apply_eq, lift]
+  rfl
 #align free_algebra.lift_unique FreeAlgebra.lift_unique
 
 /-!
-At this stage we set the basic definitions as `@[irreducible]`, so from this point onwards one
+Since we have set the basic definitions as `@[irreducible]`, from this point onwards one
 should only use the universal properties of the free algebra, and consider the actual implementation
-as a quotient of an inductive type as completely hidden.
-
-Of course, one still has the option to locally make these definitions `semireducible` if so desired,
-and Lean is still willing in some circumstances to do unification based on the underlying
-definition.
--/
+as a quotient of an inductive type as completely hidden. -/
 
 
 -- Marking `free_algebra` irreducible makes `ring` instances inaccessible on quotients.

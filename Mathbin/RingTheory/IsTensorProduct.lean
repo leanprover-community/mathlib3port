@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.is_tensor_product
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -212,7 +212,7 @@ include h
 @[elab_as_elim]
 theorem IsBaseChange.inductionOn (x : N) (P : N → Prop) (h₁ : P 0) (h₂ : ∀ m : M, P (f m))
     (h₃ : ∀ (s : S) (n), P n → P (s • n)) (h₄ : ∀ n₁ n₂, P n₁ → P n₂ → P (n₁ + n₂)) : P x :=
-  h.induction_on x h₁ (fun s y => h₃ _ _ (h₂ _)) h₄
+  h.inductionOn x h₁ (fun s y => h₃ _ _ (h₂ _)) h₄
 #align is_base_change.induction_on IsBaseChange.inductionOn
 
 theorem IsBaseChange.alg_hom_ext (g₁ g₂ : N →ₗ[S] Q) (e : ∀ x, g₁ (f x) = g₂ (f x)) : g₁ = g₂ :=
@@ -278,63 +278,36 @@ theorem IsBaseChange.ofLiftUnique
         ∀ [Module R Q] [Module S Q],
           ∀ [IsScalarTower R S Q],
             ∀ g : M →ₗ[R] Q, ∃! g' : N →ₗ[S] Q, (g'.restrictScalars R).comp f = g) :
-    IsBaseChange S f := by
-  delta IsBaseChange IsTensorProduct
-  obtain ⟨g, hg, hg'⟩ :=
+    IsBaseChange S f :=
+  by
+  obtain ⟨g, hg, -⟩ :=
     h (ULift.{v₂} <| S ⊗[R] M)
       (ulift.module_equiv.symm.to_linear_map.comp <| TensorProduct.mk R S M 1)
   let f' : S ⊗[R] M →ₗ[R] N := _
   change Function.Bijective f'
   let f'' : S ⊗[R] M →ₗ[S] N :=
     by
-    refine' { f' with map_smul' := fun r x => _ }
-    apply TensorProduct.induction_on x
-    · simp only [map_zero, smul_zero, LinearMap.to_fun_eq_coe]
-    · intro x y
-      simp only [Algebra.of_id_apply, Algebra.id.smul_eq_mul, AlgHom.to_linear_map_apply,
-        LinearMap.mul_apply, TensorProduct.lift.tmul', LinearMap.smul_apply, RingHom.id_apply,
-        Module.algebra_map_End_apply, f', _root_.map_mul, TensorProduct.smul_tmul',
-        LinearMap.coe_restrict_scalars_eq_coe, LinearMap.flip_apply]
-    · intro x y hx hy
-      dsimp at hx hy⊢
-      simp only [hx, hy, smul_add, map_add]
-  change Function.Bijective f''
-  constructor
-  · apply Function.HasLeftInverse.injective
-    refine' ⟨ulift.module_equiv.to_linear_map.comp g, fun x => _⟩
-    apply TensorProduct.induction_on x
-    · simp only [map_zero]
-    · intro x y
-      have :=
-        (congr_arg (fun a => x • a) (LinearMap.congr_fun hg y)).trans
-          (ulift.module_equiv.symm.map_smul x _).symm
-      apply
-        (ULift.moduleEquiv : ULift.{v₂} (S ⊗ M) ≃ₗ[S] S ⊗ M).toEquiv.apply_eq_iff_eq_symm_apply.mpr
-      any_goals infer_instance
-      simpa only [Algebra.of_id_apply, smul_tmul', Algebra.id.smul_eq_mul, lift.tmul',
-        LinearMap.coe_restrict_scalars_eq_coe, LinearMap.flip_apply, AlgHom.to_linear_map_apply,
-        Module.algebra_map_End_apply, LinearMap.smul_apply, LinearMap.coe_mk, LinearMap.map_smulₛₗ,
-        mk_apply, mul_one] using this
-    · intro x y hx hy
-      simp only [map_add, hx, hy]
-  · apply Function.HasRightInverse.surjective
-    refine' ⟨ulift.module_equiv.to_linear_map.comp g, fun x => _⟩
-    obtain ⟨g', hg₁, hg₂⟩ := h (ULift.{max v₁ v₃} N) (ulift.module_equiv.symm.to_linear_map.comp f)
-    have : g' = ulift.module_equiv.symm.to_linear_map :=
-      by
-      refine' (hg₂ _ _).symm
-      rfl
-    subst this
-    apply (ULift.moduleEquiv : ULift.{max v₁ v₃} N ≃ₗ[S] N).symm.Injective
-    simp_rw [← LinearEquiv.coe_to_linear_map, ← LinearMap.comp_apply]
-    congr 1
-    apply hg₂
-    ext y
-    have := LinearMap.congr_fun hg y
-    dsimp [ULift.moduleEquiv] at this⊢
-    rw [this]
-    simp only [lift.tmul, LinearMap.coe_restrict_scalars_eq_coe, LinearMap.flip_apply,
-      AlgHom.to_linear_map_apply, _root_.map_one, LinearMap.one_apply]
+    refine'
+      { f' with
+        toFun := f'
+        map_smul' := fun s x =>
+          TensorProduct.induction_on x _ (fun s' y => smul_assoc s s' _) fun x y hx hy => _ }
+    · rw [map_zero, smul_zero, map_zero, smul_zero]
+    · rw [smul_add, map_add, map_add, smul_add, hx, hy]
+  simp_rw [FunLike.ext_iff, LinearMap.comp_apply, LinearMap.restrict_scalars_apply] at hg
+  let fe : S ⊗[R] M ≃ₗ[S] N :=
+    LinearEquiv.ofLinear f'' (ulift.module_equiv.to_linear_map.comp g) _ _
+  · exact fe.bijective
+  · rw [← LinearMap.cancel_left (ULift.moduleEquiv : ULift.{max v₁ v₃} N ≃ₗ[S] N).symm.Injective]
+    refine' (h (ULift.{max v₁ v₃} N) <| ulift.module_equiv.symm.to_linear_map.comp f).unique _ rfl
+    · infer_instance
+    ext x
+    simp only [LinearMap.comp_apply, LinearMap.restrict_scalars_apply, hg]
+    apply one_smul
+  · ext x
+    change (g <| (1 : S) • f x).down = _
+    rw [one_smul, hg]
+    rfl
 #align is_base_change.of_lift_unique IsBaseChange.ofLiftUnique
 
 variable {f}
@@ -548,7 +521,7 @@ theorem Algebra.IsPushout.alg_hom_ext [H : Algebra.IsPushout R S R' S'] {A : Typ
     (h₂ : f.comp (toAlgHom R S S') = g.comp (toAlgHom R S S')) : f = g :=
   by
   ext x
-  apply H.1.induction_on x
+  apply H.1.inductionOn x
   · simp only [map_zero]
   · exact AlgHom.congr_fun h₁
   · intro s s' e

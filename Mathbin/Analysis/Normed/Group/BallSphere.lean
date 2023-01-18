@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.normed.group.ball_sphere
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -26,7 +26,7 @@ variable {E : Type _} [SeminormedAddCommGroup E] {r : ℝ}
 antipodal map. -/
 instance : InvolutiveNeg (sphere (0 : E) r)
     where
-  neg := (Subtype.map Neg.neg) fun w => by simp
+  neg := Subtype.map Neg.neg fun w => by simp
   neg_neg x := Subtype.ext <| neg_neg x
 
 @[simp]
@@ -41,7 +41,7 @@ instance : HasContinuousNeg (sphere (0 : E) r) :=
 antipodal map. -/
 instance {r : ℝ} : InvolutiveNeg (ball (0 : E) r)
     where
-  neg := (Subtype.map Neg.neg) fun w => by simp
+  neg := Subtype.map Neg.neg fun w => by simp
   neg_neg x := Subtype.ext <| neg_neg x
 
 @[simp]
@@ -56,7 +56,7 @@ instance : HasContinuousNeg (ball (0 : E) r) :=
 antipodal map. -/
 instance {r : ℝ} : InvolutiveNeg (closedBall (0 : E) r)
     where
-  neg := (Subtype.map Neg.neg) fun w => by simp
+  neg := Subtype.map Neg.neg fun w => by simp
   neg_neg x := Subtype.ext <| neg_neg x
 
 @[simp]

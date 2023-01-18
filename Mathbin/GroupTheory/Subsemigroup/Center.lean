@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser, Jireh Loreaux
 
 ! This file was ported from Lean 3 source module group_theory.subsemigroup.center
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -126,7 +126,7 @@ theorem neg_mem_center [Ring M] {a : M} (ha : a ∈ Set.center M) : -a ∈ Set.c
 lean 3 declaration is
   forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M], HasSubset.Subset.{u1} (Set.{u1} (Units.{u1} M _inst_1)) (Set.hasSubset.{u1} (Units.{u1} M _inst_1)) (Set.preimage.{u1, u1} (Units.{u1} M _inst_1) M ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} M _inst_1) M (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} M _inst_1) M (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} M _inst_1) M (coeBase.{succ u1, succ u1} (Units.{u1} M _inst_1) M (Units.hasCoe.{u1} M _inst_1))))) (Set.center.{u1} M (MulOneClass.toHasMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)))) (Set.center.{u1} (Units.{u1} M _inst_1) (MulOneClass.toHasMul.{u1} (Units.{u1} M _inst_1) (Units.mulOneClass.{u1} M _inst_1)))
 but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M], HasSubset.Subset.{u1} (Set.{u1} (Units.{u1} M _inst_1)) (Set.instHasSubsetSet_1.{u1} (Units.{u1} M _inst_1)) (Set.preimage.{u1, u1} (Units.{u1} M _inst_1) M (Units.val.{u1} M _inst_1) (Set.center.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)))) (Set.center.{u1} (Units.{u1} M _inst_1) (MulOneClass.toMul.{u1} (Units.{u1} M _inst_1) (Units.instMulOneClassUnits.{u1} M _inst_1)))
+  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M], HasSubset.Subset.{u1} (Set.{u1} (Units.{u1} M _inst_1)) (Set.instHasSubsetSet.{u1} (Units.{u1} M _inst_1)) (Set.preimage.{u1, u1} (Units.{u1} M _inst_1) M (Units.val.{u1} M _inst_1) (Set.center.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)))) (Set.center.{u1} (Units.{u1} M _inst_1) (MulOneClass.toMul.{u1} (Units.{u1} M _inst_1) (Units.instMulOneClassUnits.{u1} M _inst_1)))
 Case conversion may be inaccurate. Consider using '#align set.subset_center_units Set.subset_center_unitsₓ'. -/
 @[to_additive subset_add_center_add_units]
 theorem subset_center_units [Monoid M] : (coe : Mˣ → M) ⁻¹' center M ⊆ Set.center Mˣ :=
@@ -137,7 +137,7 @@ theorem subset_center_units [Monoid M] : (coe : Mˣ → M) ⁻¹' center M ⊆ S
 lean 3 declaration is
   forall {M : Type.{u1}} [_inst_1 : GroupWithZero.{u1} M], HasSubset.Subset.{u1} (Set.{u1} (Units.{u1} M (MonoidWithZero.toMonoid.{u1} M (GroupWithZero.toMonoidWithZero.{u1} M _inst_1)))) (Set.hasSubset.{u1} (Units.{u1} M (MonoidWithZero.toMonoid.{u1} M (GroupWithZero.toMonoidWithZero.{u1} M _inst_1)))) (Set.center.{u1} (Units.{u1} M (MonoidWithZero.toMonoid.{u1} M (GroupWithZero.toMonoidWithZero.{u1} M _inst_1))) (MulOneClass.toHasMul.{u1} (Units.{u1} M (MonoidWithZero.toMonoid.{u1} M (GroupWithZero.toMonoidWithZero.{u1} M _inst_1))) (Units.mulOneClass.{u1} M (MonoidWithZero.toMonoid.{u1} M (GroupWithZero.toMonoidWithZero.{u1} M _inst_1))))) (Set.preimage.{u1, u1} (Units.{u1} M (MonoidWithZero.toMonoid.{u1} M (GroupWithZero.toMonoidWithZero.{u1} M _inst_1))) M ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} M (MonoidWithZero.toMonoid.{u1} M (GroupWithZero.toMonoidWithZero.{u1} M _inst_1))) M (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} M (MonoidWithZero.toMonoid.{u1} M (GroupWithZero.toMonoidWithZero.{u1} M _inst_1))) M (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} M (MonoidWithZero.toMonoid.{u1} M (GroupWithZero.toMonoidWithZero.{u1} M _inst_1))) M (coeBase.{succ u1, succ u1} (Units.{u1} M (MonoidWithZero.toMonoid.{u1} M (GroupWithZero.toMonoidWithZero.{u1} M _inst_1))) M (Units.hasCoe.{u1} M (MonoidWithZero.toMonoid.{u1} M (GroupWithZero.toMonoidWithZero.{u1} M _inst_1))))))) (Set.center.{u1} M (MulZeroClass.toHasMul.{u1} M (MulZeroOneClass.toMulZeroClass.{u1} M (MonoidWithZero.toMulZeroOneClass.{u1} M (GroupWithZero.toMonoidWithZero.{u1} M _inst_1))))))
 but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : GroupWithZero.{u1} M], HasSubset.Subset.{u1} (Set.{u1} (Units.{u1} M (MonoidWithZero.toMonoid.{u1} M (GroupWithZero.toMonoidWithZero.{u1} M _inst_1)))) (Set.instHasSubsetSet_1.{u1} (Units.{u1} M (MonoidWithZero.toMonoid.{u1} M (GroupWithZero.toMonoidWithZero.{u1} M _inst_1)))) (Set.center.{u1} (Units.{u1} M (MonoidWithZero.toMonoid.{u1} M (GroupWithZero.toMonoidWithZero.{u1} M _inst_1))) (MulOneClass.toMul.{u1} (Units.{u1} M (MonoidWithZero.toMonoid.{u1} M (GroupWithZero.toMonoidWithZero.{u1} M _inst_1))) (Units.instMulOneClassUnits.{u1} M (MonoidWithZero.toMonoid.{u1} M (GroupWithZero.toMonoidWithZero.{u1} M _inst_1))))) (Set.preimage.{u1, u1} (Units.{u1} M (MonoidWithZero.toMonoid.{u1} M (GroupWithZero.toMonoidWithZero.{u1} M _inst_1))) M (Units.val.{u1} M (MonoidWithZero.toMonoid.{u1} M (GroupWithZero.toMonoidWithZero.{u1} M _inst_1))) (Set.center.{u1} M (MulZeroClass.toMul.{u1} M (MulZeroOneClass.toMulZeroClass.{u1} M (MonoidWithZero.toMulZeroOneClass.{u1} M (GroupWithZero.toMonoidWithZero.{u1} M _inst_1))))))
+  forall {M : Type.{u1}} [_inst_1 : GroupWithZero.{u1} M], HasSubset.Subset.{u1} (Set.{u1} (Units.{u1} M (MonoidWithZero.toMonoid.{u1} M (GroupWithZero.toMonoidWithZero.{u1} M _inst_1)))) (Set.instHasSubsetSet.{u1} (Units.{u1} M (MonoidWithZero.toMonoid.{u1} M (GroupWithZero.toMonoidWithZero.{u1} M _inst_1)))) (Set.center.{u1} (Units.{u1} M (MonoidWithZero.toMonoid.{u1} M (GroupWithZero.toMonoidWithZero.{u1} M _inst_1))) (MulOneClass.toMul.{u1} (Units.{u1} M (MonoidWithZero.toMonoid.{u1} M (GroupWithZero.toMonoidWithZero.{u1} M _inst_1))) (Units.instMulOneClassUnits.{u1} M (MonoidWithZero.toMonoid.{u1} M (GroupWithZero.toMonoidWithZero.{u1} M _inst_1))))) (Set.preimage.{u1, u1} (Units.{u1} M (MonoidWithZero.toMonoid.{u1} M (GroupWithZero.toMonoidWithZero.{u1} M _inst_1))) M (Units.val.{u1} M (MonoidWithZero.toMonoid.{u1} M (GroupWithZero.toMonoidWithZero.{u1} M _inst_1))) (Set.center.{u1} M (MulZeroClass.toMul.{u1} M (MulZeroOneClass.toMulZeroClass.{u1} M (MonoidWithZero.toMulZeroOneClass.{u1} M (GroupWithZero.toMonoidWithZero.{u1} M _inst_1))))))
 Case conversion may be inaccurate. Consider using '#align set.center_units_subset Set.center_units_subsetₓ'. -/
 theorem center_units_subset [GroupWithZero M] : Set.center Mˣ ⊆ (coe : Mˣ → M) ⁻¹' center M :=
   fun a ha b => by
@@ -211,7 +211,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.center_eq_univ Set.center_eq_univₓ'. -/
 @[simp, to_additive add_center_eq_univ]
 theorem center_eq_univ [CommSemigroup M] : center M = Set.univ :=
-  (Subset.antisymm (subset_univ _)) fun x _ y => mul_comm y x
+  Subset.antisymm (subset_univ _) fun x _ y => mul_comm y x
 #align set.center_eq_univ Set.center_eq_univ
 
 end Set
@@ -299,5 +299,5 @@ end
 end Subsemigroup
 
 -- Guard against import creep
-assert_not_exists finset
+assert_not_exists Finset
 

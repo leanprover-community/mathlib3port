@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Minchao Wu, Chris Hughes, Mantas Bakšys
 
 ! This file was ported from Lean 3 source module data.list.min_max
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,14 +40,14 @@ variable (r : α → α → Prop) [DecidableRel r] {l : List α} {o : Option α}
 #print List.argAux /-
 /-- Auxiliary definition for `argmax` and `argmin`. -/
 def argAux (a : Option α) (b : α) : Option α :=
-  (Option.casesOn a (some b)) fun c => if r b c then some b else some c
+  Option.casesOn a (some b) fun c => if r b c then some b else some c
 #align list.arg_aux List.argAux
 -/
 
 #print List.foldl_argAux_eq_none /-
 @[simp]
 theorem foldl_argAux_eq_none : l.foldl (argAux r) o = none ↔ l = [] ∧ o = none :=
-  (List.reverseRecOn l (by simp)) fun tl hd => by
+  List.reverseRecOn l (by simp) fun tl hd => by
     simp [arg_aux] <;> cases foldl (arg_aux r) o tl <;> simp <;> try split_ifs <;> simp
 #align list.foldl_arg_aux_eq_none List.foldl_argAux_eq_none
 -/
@@ -174,7 +174,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u1} β] [_inst_2 : DecidableRel.{succ u1} β (fun (x._@.Mathlib.Data.List.MinMax._hyg.1123 : β) (x._@.Mathlib.Data.List.MinMax._hyg.1125 : β) => LT.lt.{u1} β (Preorder.toLT.{u1} β _inst_1) x._@.Mathlib.Data.List.MinMax._hyg.1123 x._@.Mathlib.Data.List.MinMax._hyg.1125)] {f : α -> β} {l : List.{u2} α} {a : α} {m : α}, (Membership.mem.{u2, u2} α (List.{u2} α) (List.instMembershipList.{u2} α) a l) -> (Membership.mem.{u2, u2} α (Option.{u2} α) (Option.instMembershipOption.{u2} α) m (List.argmax.{u2, u1} α β _inst_1 (fun (a : β) (b : β) => _inst_2 a b) f l)) -> (Not (LT.lt.{u1} β (Preorder.toLT.{u1} β _inst_1) (f m) (f a)))
 Case conversion may be inaccurate. Consider using '#align list.not_lt_of_mem_argmax List.not_lt_of_mem_argmaxₓ'. -/
 theorem not_lt_of_mem_argmax : a ∈ l → m ∈ argmax f l → ¬f m < f a :=
-  (not_of_mem_foldl_argAux _ fun _ => lt_irrefl _) fun _ _ _ => gt_trans
+  not_of_mem_foldl_argAux _ (fun _ => lt_irrefl _) fun _ _ _ => gt_trans
 #align list.not_lt_of_mem_argmax List.not_lt_of_mem_argmax
 
 /- warning: list.not_lt_of_mem_argmin -> List.not_lt_of_mem_argmin is a dubious translation:
@@ -184,7 +184,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u1} β] [_inst_2 : DecidableRel.{succ u1} β (fun (x._@.Mathlib.Data.List.MinMax._hyg.1211 : β) (x._@.Mathlib.Data.List.MinMax._hyg.1213 : β) => LT.lt.{u1} β (Preorder.toLT.{u1} β _inst_1) x._@.Mathlib.Data.List.MinMax._hyg.1211 x._@.Mathlib.Data.List.MinMax._hyg.1213)] {f : α -> β} {l : List.{u2} α} {a : α} {m : α}, (Membership.mem.{u2, u2} α (List.{u2} α) (List.instMembershipList.{u2} α) a l) -> (Membership.mem.{u2, u2} α (Option.{u2} α) (Option.instMembershipOption.{u2} α) m (List.argmin.{u2, u1} α β _inst_1 (fun (a : β) (b : β) => _inst_2 a b) f l)) -> (Not (LT.lt.{u1} β (Preorder.toLT.{u1} β _inst_1) (f a) (f m)))
 Case conversion may be inaccurate. Consider using '#align list.not_lt_of_mem_argmin List.not_lt_of_mem_argminₓ'. -/
 theorem not_lt_of_mem_argmin : a ∈ l → m ∈ argmin f l → ¬f a < f m :=
-  (not_of_mem_foldl_argAux _ fun _ => lt_irrefl _) fun _ _ _ => lt_trans
+  not_of_mem_foldl_argAux _ (fun _ => lt_irrefl _) fun _ _ _ => lt_trans
 #align list.not_lt_of_mem_argmin List.not_lt_of_mem_argmin
 
 /- warning: list.argmax_concat -> List.argmax_concat is a dubious translation:
@@ -288,7 +288,7 @@ Case conversion may be inaccurate. Consider using '#align list.argmax_cons List.
 theorem argmax_cons (f : α → β) (a : α) (l : List α) :
     argmax f (a :: l) =
       Option.casesOn (argmax f l) (some a) fun c => if f a < f c then some c else some a :=
-  (List.reverseRecOn l rfl) fun hd tl ih =>
+  List.reverseRecOn l rfl fun hd tl ih =>
     by
     rw [← cons_append, argmax_concat, ih, argmax_concat]
     cases' h : argmax f hd with m

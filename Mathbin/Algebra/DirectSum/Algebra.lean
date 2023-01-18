@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.direct_sum.algebra
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -129,7 +129,7 @@ theorem alg_hom_ext' ⦃f g : (⨁ i, A i) →ₐ[R] B⦄
 #align direct_sum.alg_hom_ext' DirectSum.alg_hom_ext'
 
 theorem alg_hom_ext ⦃f g : (⨁ i, A i) →ₐ[R] B⦄ (h : ∀ i x, f (of A i x) = g (of A i x)) : f = g :=
-  (alg_hom_ext' R A) fun i => LinearMap.ext <| h i
+  alg_hom_ext' R A fun i => LinearMap.ext <| h i
 #align direct_sum.alg_hom_ext DirectSum.alg_hom_ext
 
 end DirectSum

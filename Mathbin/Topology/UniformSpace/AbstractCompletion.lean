@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.uniform_space.abstract_completion
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -113,7 +113,7 @@ variable {β : Type _}
 
 protected theorem funext [TopologicalSpace β] [T2Space β] {f g : hatα → β} (hf : Continuous f)
     (hg : Continuous g) (h : ∀ a, f (ι a) = g (ι a)) : f = g :=
-  funext fun a => pkg.induction_on a (is_closed_eq hf hg) h
+  funext fun a => pkg.inductionOn a (is_closed_eq hf hg) h
 #align abstract_completion.funext AbstractCompletion.funext
 
 variable [UniformSpace β]
@@ -165,7 +165,7 @@ theorem extend_unique (hf : UniformContinuous f) {g : hatα → β} (hg : Unifor
 @[simp]
 theorem extend_comp_coe {f : hatα → β} (hf : UniformContinuous f) : pkg.extend (f ∘ ι) = f :=
   funext fun x =>
-    pkg.induction_on x (is_closed_eq pkg.continuous_extend hf.Continuous) fun y =>
+    pkg.inductionOn x (is_closed_eq pkg.continuous_extend hf.Continuous) fun y =>
       pkg.extend_coe (hf.comp <| pkg.uniform_continuous_coe) y
 #align abstract_completion.extend_comp_coe AbstractCompletion.extend_comp_coe
 
@@ -226,7 +226,7 @@ variable {γ : Type _} [UniformSpace γ]
 theorem extend_map [CompleteSpace γ] [SeparatedSpace γ] {f : β → γ} {g : α → β}
     (hf : UniformContinuous f) (hg : UniformContinuous g) :
     pkg'.extend f ∘ map g = pkg.extend (f ∘ g) :=
-  (pkg.funext (pkg'.continuous_extend.comp (pkg.continuous_map pkg' _)) pkg.continuous_extend)
+  pkg.funext (pkg'.continuous_extend.comp (pkg.continuous_map pkg' _)) pkg.continuous_extend
     fun a => by rw [pkg.extend_coe (hf.comp hg), comp_app, pkg.map_coe pkg' hg, pkg'.extend_coe hf]
 #align abstract_completion.extend_map AbstractCompletion.extend_map
 

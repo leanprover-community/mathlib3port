@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module order.atoms
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -74,13 +74,13 @@ def IsAtom (a : α) : Prop :=
 
 #print IsAtom.Iic /-
 theorem IsAtom.Iic (ha : IsAtom a) (hax : a ≤ x) : IsAtom (⟨a, hax⟩ : Set.Iic x) :=
-  ⟨fun con => ha.1 (Subtype.mk_eq_mk.1 con), fun ⟨b, hb⟩ hba => Subtype.mk_eq_mk.2 (ha.2 b hba)⟩
+  ⟨fun con => ha.1 (Subtype.mk_eq_mk.1 Con), fun ⟨b, hb⟩ hba => Subtype.mk_eq_mk.2 (ha.2 b hba)⟩
 #align is_atom.Iic IsAtom.Iic
 -/
 
 #print IsAtom.of_isAtom_coe_Iic /-
 theorem IsAtom.of_isAtom_coe_Iic {a : Set.Iic x} (ha : IsAtom a) : IsAtom (a : α) :=
-  ⟨fun con => ha.1 (Subtype.ext con), fun b hba =>
+  ⟨fun con => ha.1 (Subtype.ext Con), fun b hba =>
     Subtype.mk_eq_mk.1 (ha.2 ⟨b, hba.le.trans a.Prop⟩ hba)⟩
 #align is_atom.of_is_atom_coe_Iic IsAtom.of_isAtom_coe_Iic
 -/
@@ -846,7 +846,7 @@ protected noncomputable def completeLattice : CompleteLattice α :=
       rcases eq_bot_or_eq_top x with (rfl | rfl)
       · rw [if_neg]
         intro con
-        exact bot_ne_top (eq_top_iff.2 (h ⊤ con))
+        exact bot_ne_top (eq_top_iff.2 (h ⊤ Con))
       · exact le_top
     Inf_le := fun s x h => by
       rcases eq_bot_or_eq_top x with (rfl | rfl)
@@ -857,7 +857,7 @@ protected noncomputable def completeLattice : CompleteLattice α :=
       · exact bot_le
       · rw [if_neg]
         intro con
-        exact top_ne_bot (eq_bot_iff.2 (h ⊥ con)) }
+        exact top_ne_bot (eq_bot_iff.2 (h ⊥ Con)) }
 #align is_simple_order.complete_lattice IsSimpleOrder.completeLattice
 -/
 

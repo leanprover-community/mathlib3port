@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Simon Hudon, Scott Morrison, Keeley Hoek, Robert Y. Lewis, Floris van Doorn
 
 ! This file was ported from Lean 3 source module meta.expr
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -286,7 +286,7 @@ unsafe def fold_mvar {α} : level → (Name → α → α) → α → α
 For example if `l = max 1 (max (u+1) (max v w))` then `l.params = {u, v, w}`.
 -/
 protected unsafe def params (u : level) : name_set :=
-  (u.fold mk_name_set) fun v l =>
+  u.fold mk_name_set fun v l =>
     match v with
     | param nm => l.insert nm
     | _ => l
@@ -692,7 +692,7 @@ unsafe def list_meta_vars' (e : expr) : expr_set :=
 /-- Returns a list of all universe meta-variables in an expression (without duplicates). -/
 unsafe def list_univ_meta_vars (e : expr) : List Name :=
   native.rb_set.to_list <|
-    (e.fold native.mk_rb_set) fun e' i s =>
+    e.fold native.mk_rb_set fun e' i s =>
       match e' with
       | sort u => u.fold_mvar (flip native.rb_set.insert) s
       | const _ ls => ls.foldl (fun s' l => l.fold_mvar (flip native.rb_set.insert) s') s
@@ -711,7 +711,7 @@ unsafe def contains_expr_or_mvar (t : expr) (e : expr) : Bool :=
 
 /-- Returns a `name_set` of all constants in an expression starting with a certain prefix. -/
 unsafe def list_names_with_prefix (pre : Name) (e : expr) : name_set :=
-  (e.fold mk_name_set) fun e' _ l =>
+  e.fold mk_name_set fun e' _ l =>
     match e' with
     | expr.const n _ => if n.getPrefix = pre then l.insert n else l
     | _ => l
@@ -978,7 +978,7 @@ unsafe def replace_subexprs {elab : Bool} (e : expr elab) (mappings : List (expr
 unsafe def is_implicitly_included_variable (e : expr) (vs : List expr) : Bool :=
   if ¬e.local_pp_name.toString.startsWith "_" then e ∈ vs
   else
-    (e.local_type.fold true) fun se _ b =>
+    e.local_type.fold true fun se _ b =>
       if ¬b then false else if ¬se.is_local_constant then true else se ∈ vs
 #align expr.is_implicitly_included_variable expr.is_implicitly_included_variable
 
@@ -1126,7 +1126,7 @@ unsafe def is_ginductive' (e : environment) (nm : Name) : Bool :=
 
 /-- For all declarations `d` where `f d = some x` this adds `x` to the returned list.  -/
 unsafe def decl_filter_map {α : Type} (e : environment) (f : declaration → Option α) : List α :=
-  (e.fold []) fun d l =>
+  e.fold [] fun d l =>
     match f d with
     | some r => r :: l
     | none => l
@@ -1160,13 +1160,13 @@ unsafe def mfold {α : Type} {m : Type → Type} [Monad m] (e : environment) (x 
 
 /-- Filters all declarations in the environment. -/
 unsafe def filter (e : environment) (test : declaration → Bool) : List declaration :=
-  (e.fold []) fun d ds => if test d then d :: ds else ds
+  e.fold [] fun d ds => if test d then d :: ds else ds
 #align environment.filter environment.filter
 
 /-- Filters all declarations in the environment. -/
 unsafe def mfilter (e : environment) (test : declaration → tactic Bool) :
     tactic (List declaration) :=
-  (e.mfold []) fun d ds => do
+  e.mfold [] fun d ds => do
     let b ← test d
     return <| if b then d :: ds else ds
 #align environment.mfilter environment.mfilter

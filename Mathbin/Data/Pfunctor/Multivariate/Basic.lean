@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Simon Hudon
 
 ! This file was ported from Lean 3 source module data.pfunctor.multivariate.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -29,7 +29,7 @@ open Mvfunctor
 -/
 structure Mvpfunctor (n : ℕ) where
   A : Type u
-  B : A → Typevec.{u} n
+  B : A → TypeVec.{u} n
 #align mvpfunctor Mvpfunctor
 
 namespace Mvpfunctor
@@ -39,18 +39,18 @@ open Mvfunctor (Liftp Liftr)
 variable {n m : ℕ} (P : Mvpfunctor.{u} n)
 
 /-- Applying `P` to an object of `Type` -/
-def Obj (α : Typevec.{u} n) : Type u :=
+def Obj (α : TypeVec.{u} n) : Type u :=
   Σa : P.A, P.B a ⟹ α
 #align mvpfunctor.obj Mvpfunctor.Obj
 
 /-- Applying `P` to a morphism of `Type` -/
-def map {α β : Typevec n} (f : α ⟹ β) : P.Obj α → P.Obj β := fun ⟨a, g⟩ => ⟨a, Typevec.comp f g⟩
+def map {α β : TypeVec n} (f : α ⟹ β) : P.Obj α → P.Obj β := fun ⟨a, g⟩ => ⟨a, TypeVec.comp f g⟩
 #align mvpfunctor.map Mvpfunctor.map
 
 instance : Inhabited (Mvpfunctor n) :=
   ⟨⟨default, default⟩⟩
 
-instance Obj.inhabited {α : Typevec n} [Inhabited P.A] [∀ i, Inhabited (α i)] :
+instance Obj.inhabited {α : TypeVec n} [Inhabited P.A] [∀ i, Inhabited (α i)] :
     Inhabited (P.Obj α) :=
   ⟨⟨default, fun _ _ => default⟩⟩
 #align mvpfunctor.obj.inhabited Mvpfunctor.Obj.inhabited
@@ -58,16 +58,16 @@ instance Obj.inhabited {α : Typevec n} [Inhabited P.A] [∀ i, Inhabited (α i)
 instance : Mvfunctor P.Obj :=
   ⟨@Mvpfunctor.map n P⟩
 
-theorem map_eq {α β : Typevec n} (g : α ⟹ β) (a : P.A) (f : P.B a ⟹ α) :
+theorem map_eq {α β : TypeVec n} (g : α ⟹ β) (a : P.A) (f : P.B a ⟹ α) :
     @Mvfunctor.map _ P.Obj _ _ _ g ⟨a, f⟩ = ⟨a, g ⊚ f⟩ :=
   rfl
 #align mvpfunctor.map_eq Mvpfunctor.map_eq
 
-theorem id_map {α : Typevec n} : ∀ x : P.Obj α, Typevec.id <$$> x = x
+theorem id_map {α : TypeVec n} : ∀ x : P.Obj α, TypeVec.id <$$> x = x
   | ⟨a, g⟩ => rfl
 #align mvpfunctor.id_map Mvpfunctor.id_map
 
-theorem comp_map {α β γ : Typevec n} (f : α ⟹ β) (g : β ⟹ γ) :
+theorem comp_map {α β γ : TypeVec n} (f : α ⟹ β) (g : β ⟹ γ) :
     ∀ x : P.Obj α, (g ⊚ f) <$$> x = g <$$> f <$$> x
   | ⟨a, h⟩ => rfl
 #align mvpfunctor.comp_map Mvpfunctor.comp_map
@@ -84,7 +84,7 @@ def const (n : ℕ) (A : Type u) : Mvpfunctor n :=
 
 section Const
 
-variable (n) {A : Type u} {α β : Typevec.{u} n}
+variable (n) {A : Type u} {α β : TypeVec.{u} n}
 
 /-- Constructor for the constant functor -/
 def const.mk (x : A) {α} : (const n A).Obj α :=
@@ -126,7 +126,7 @@ def comp (P : Mvpfunctor.{u} n) (Q : Fin2 n → Mvpfunctor.{u} m) : Mvpfunctor m
   B a i := Σ(j : _)(b : P.2 a.1 j), (Q j).2 (a.snd j b) i
 #align mvpfunctor.comp Mvpfunctor.comp
 
-variable {P} {Q : Fin2 n → Mvpfunctor.{u} m} {α β : Typevec.{u} m}
+variable {P} {Q : Fin2 n → Mvpfunctor.{u} m} {α β : TypeVec.{u} m}
 
 /-- Constructor for functor composition -/
 def comp.mk (x : P.Obj fun i => (Q i).Obj α) : (comp P Q).Obj α :=
@@ -165,7 +165,7 @@ theorem comp.mk_get (x : (comp P Q).Obj α) : comp.mk (comp.get x) = x :=
 /-
 lifting predicates and relations
 -/
-theorem liftp_iff {α : Typevec n} (p : ∀ ⦃i⦄, α i → Prop) (x : P.Obj α) :
+theorem liftp_iff {α : TypeVec n} (p : ∀ ⦃i⦄, α i → Prop) (x : P.Obj α) :
     Liftp p x ↔ ∃ a f, x = ⟨a, f⟩ ∧ ∀ i j, p (f i j) :=
   by
   constructor
@@ -179,7 +179,7 @@ theorem liftp_iff {α : Typevec n} (p : ∀ ⦃i⦄, α i → Prop) (x : P.Obj �
   rw [xeq]; rfl
 #align mvpfunctor.liftp_iff Mvpfunctor.liftp_iff
 
-theorem liftp_iff' {α : Typevec n} (p : ∀ ⦃i⦄, α i → Prop) (a : P.A) (f : P.B a ⟹ α) :
+theorem liftp_iff' {α : TypeVec n} (p : ∀ ⦃i⦄, α i → Prop) (a : P.A) (f : P.B a ⟹ α) :
     @Liftp.{u} _ P.Obj _ α p ⟨a, f⟩ ↔ ∀ i x, p (f i x) :=
   by
   simp only [liftp_iff, Sigma.mk.inj_iff] <;> constructor <;> intro
@@ -189,7 +189,7 @@ theorem liftp_iff' {α : Typevec n} (p : ∀ ⦃i⦄, α i → Prop) (a : P.A) (
   repeat' first |constructor|assumption
 #align mvpfunctor.liftp_iff' Mvpfunctor.liftp_iff'
 
-theorem liftr_iff {α : Typevec n} (r : ∀ ⦃i⦄, α i → α i → Prop) (x y : P.Obj α) :
+theorem liftr_iff {α : TypeVec n} (r : ∀ ⦃i⦄, α i → α i → Prop) (x y : P.Obj α) :
     Liftr r x y ↔ ∃ a f₀ f₁, x = ⟨a, f₀⟩ ∧ y = ⟨a, f₁⟩ ∧ ∀ i j, r (f₀ i j) (f₁ i j) :=
   by
   constructor
@@ -214,7 +214,7 @@ theorem liftr_iff {α : Typevec n} (r : ∀ ⦃i⦄, α i → α i → Prop) (x 
 
 open Set Mvfunctor
 
-theorem supp_eq {α : Typevec n} (a : P.A) (f : P.B a ⟹ α) (i) :
+theorem supp_eq {α : TypeVec n} (a : P.A) (f : P.B a ⟹ α) (i) :
     @supp.{u} _ P.Obj _ α (⟨a, f⟩ : P.Obj α) i = f i '' univ :=
   by
   ext; simp only [supp, image_univ, mem_range, mem_set_of_eq]
@@ -236,7 +236,7 @@ Decomposing an n+1-ary pfunctor.
 -/
 namespace Mvpfunctor
 
-open Typevec
+open TypeVec
 
 variable {n : ℕ} (P : Mvpfunctor.{u} (n + 1))
 
@@ -257,7 +257,7 @@ def last : Pfunctor where
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- append arrows of a polynomial functor application -/
 @[reducible]
-def appendContents {α : Typevec n} {β : Type _} {a : P.A} (f' : P.drop.B a ⟹ α)
+def appendContents {α : TypeVec n} {β : Type _} {a : P.A} (f' : P.drop.B a ⟹ α)
     (f : P.last.B a → β) : P.B a ⟹ (α ::: β) :=
   splitFun f' f
 #align mvpfunctor.append_contents Mvpfunctor.appendContents

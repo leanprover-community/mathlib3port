@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Johannes Hölzl, Rémy Degenne
 
 ! This file was ported from Lean 3 source module order.liminf_limsup
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -510,8 +510,8 @@ theorem Liminf_le_Limsup {f : Filter α} [NeBot f]
       run_tac
         is_bounded_default) :
     liminf f ≤ limsup f :=
-  (Liminf_le_of_le h₂) fun a₀ ha₀ =>
-    (le_Limsup_of_le h₁) fun a₁ ha₁ =>
+  Liminf_le_of_le h₂ fun a₀ ha₀ =>
+    le_Limsup_of_le h₁ fun a₁ ha₁ =>
       show a₀ ≤ a₁ from
         let ⟨b, hb₀, hb₁⟩ := (ha₀.And ha₁).exists
         le_trans hb₀ hb₁
@@ -567,7 +567,7 @@ theorem limsup_le_limsup {α : Type _} [ConditionallyCompleteLattice β] {f : Fi
       run_tac
         is_bounded_default) :
     limsup u f ≤ limsup v f :=
-  (Limsup_le_Limsup hu hv) fun b => h.trans
+  Limsup_le_Limsup hu hv fun b => h.trans
 #align filter.limsup_le_limsup Filter.limsup_le_limsup
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/

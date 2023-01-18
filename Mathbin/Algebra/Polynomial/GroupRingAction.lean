@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module algebra.polynomial.group_ring_action
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -102,7 +102,7 @@ noncomputable def prodXSubSmul (x : R) : R[X] :=
 #align prod_X_sub_smul prodXSubSmul
 
 theorem prodXSubSmul.monic (x : R) : (prodXSubSmul G R x).Monic :=
-  (Polynomial.monic_prod_of_monic _ _) fun g _ => Polynomial.monic_X_sub_C _
+  Polynomial.monic_prod_of_monic _ _ fun g _ => Polynomial.monic_X_sub_C _
 #align prod_X_sub_smul.monic prodXSubSmul.monic
 
 theorem prodXSubSmul.eval (x : R) : (prodXSubSmul G R x).eval x = 0 :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.charpoly.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -61,14 +61,14 @@ theorem charmatrix_apply (M : Matrix n n R) (i j : n) :
 theorem charmatrix_apply_eq (M : Matrix n n R) (i : n) :
     charmatrix M i i = (x : R[X]) - c (M i i) := by
   simp only [charmatrix, sub_left_inj, Pi.sub_apply, scalar_apply_eq, RingHom.map_matrix_apply,
-    map_apply, Dmatrix.sub_apply]
+    map_apply, DMatrix.sub_apply]
 #align charmatrix_apply_eq charmatrix_apply_eq
 
 @[simp]
 theorem charmatrix_apply_ne (M : Matrix n n R) (i j : n) (h : i ≠ j) :
     charmatrix M i j = -c (M i j) := by
   simp only [charmatrix, Pi.sub_apply, scalar_apply_ne _ _ _ h, zero_sub, RingHom.map_matrix_apply,
-    map_apply, Dmatrix.sub_apply]
+    map_apply, DMatrix.sub_apply]
 #align charmatrix_apply_ne charmatrix_apply_ne
 
 theorem mat_poly_equiv_charmatrix (M : Matrix n n R) : matPolyEquiv (charmatrix M) = X - c M :=

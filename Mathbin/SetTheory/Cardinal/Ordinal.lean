@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module set_theory.cardinal.ordinal
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -514,8 +514,7 @@ theorem mul_eq_self {c : Cardinal} (h : ℵ₀ ≤ c) : c * c = c :=
   by
   refine' le_antisymm _ (by simpa only [mul_one] using mul_le_mul_left' (one_le_aleph_0.trans h) c)
   -- the only nontrivial part is `c * c ≤ c`. We prove it inductively.
-  refine'
-    Acc.recOn (cardinal.lt_wf.apply c) (fun c _ => (Quotient.induction_on c) fun α IH ol => _) h
+  refine' Acc.recOn (cardinal.lt_wf.apply c) (fun c _ => Quotient.inductionOn c fun α IH ol => _) h
   -- consider the minimal well-order `r` on `α` (a type with cardinality `c`).
   rcases ord_eq α with ⟨r, wo, e⟩
   skip
@@ -927,7 +926,7 @@ theorem add_one_le_add_one_iff_of_lt_aleph_0 {α β : Cardinal} : α + 1 ≤ β 
 theorem pow_le {κ μ : Cardinal.{u}} (H1 : ℵ₀ ≤ κ) (H2 : μ < ℵ₀) : κ ^ μ ≤ κ :=
   let ⟨n, H3⟩ := lt_aleph_0.1 H2
   H3.symm ▸
-    Quotient.induction_on κ
+    Quotient.inductionOn κ
       (fun α H1 =>
         Nat.recOn n
           (lt_of_lt_of_le
@@ -1024,7 +1023,7 @@ theorem mk_list_eq_mk (α : Type u) [Infinite α] : (#List α) = (#α) :=
     le_antisymm ⟨⟨fun x => [x], fun x y H => (List.cons.inj H).1⟩⟩ <|
       calc
         (#List α) = sum fun n : ℕ => (#α) ^ (n : Cardinal.{u}) := mk_list_eq_sum_pow α
-        _ ≤ sum fun n : ℕ => #α := (sum_le_sum _ _) fun n => pow_le H1 <| nat_lt_aleph_0 n
+        _ ≤ sum fun n : ℕ => #α := sum_le_sum _ _ fun n => pow_le H1 <| nat_lt_aleph_0 n
         _ = (#α) := by simp [H1]
         
 #align cardinal.mk_list_eq_mk Cardinal.mk_list_eq_mk
@@ -1055,7 +1054,7 @@ theorem mk_finset_of_infinite (α : Type u) [Infinite α] : (#Finset α) = (#α)
   Eq.symm <|
     le_antisymm (mk_le_of_injective fun x y => Finset.singleton_inj.1) <|
       calc
-        (#Finset α) ≤ (#List α) := mk_le_of_surjective List.to_finset_surjective
+        (#Finset α) ≤ (#List α) := mk_le_of_surjective List.toFinset_surjective
         _ = (#α) := mk_list_eq_mk α
         
 #align cardinal.mk_finset_of_infinite Cardinal.mk_finset_of_infinite

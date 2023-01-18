@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Mario Carneiro, Kevin Buzzard, Yury Kudryashov, Fréd�
   Heather Macbeth
 
 ! This file was ported from Lean 3 source module linear_algebra.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -674,7 +674,7 @@ variable {p p'}
 /-- If two submodules `p` and `p'` satisfy `p ⊆ p'`, then `of_le p p'` is the linear map version of
 this inclusion. -/
 def ofLe (h : p ≤ p') : p →ₗ[R] p' :=
-  (p.Subtype.codRestrict p') fun ⟨x, hx⟩ => h hx
+  p.Subtype.codRestrict p' fun ⟨x, hx⟩ => h hx
 #align submodule.of_le Submodule.ofLe
 
 @[simp]
@@ -1554,7 +1554,7 @@ theorem range_eq_bot {f : M →ₛₗ[τ₁₂] M₂} : range f = ⊥ ↔ f = 0 
 theorem range_le_ker_iff {f : M →ₛₗ[τ₁₂] M₂} {g : M₂ →ₛₗ[τ₂₃] M₃} :
     range f ≤ ker g ↔ (g.comp f : M →ₛₗ[τ₁₃] M₃) = 0 :=
   ⟨fun h => ker_eq_top.1 <| eq_top_iff'.2 fun x => h <| ⟨_, rfl⟩, fun h x hx =>
-    mem_ker.2 <| (Exists.elim hx) fun y hy => by rw [← hy, ← comp_apply, h, zero_apply]⟩
+    mem_ker.2 <| Exists.elim hx fun y hy => by rw [← hy, ← comp_apply, h, zero_apply]⟩
 #align linear_map.range_le_ker_iff LinearMap.range_le_ker_iff
 
 include sc
@@ -1940,19 +1940,21 @@ section AddCommMonoid
 
 section Subsingleton
 
-variable [Semiring R] [Semiring R₂] [Semiring R₃] [Semiring R₄]
+variable [Semiring R] [Semiring R₂]
 
-variable [AddCommMonoid M] [AddCommMonoid M₂] [AddCommMonoid M₃] [AddCommMonoid M₄]
+variable [AddCommMonoid M] [AddCommMonoid M₂]
 
 variable [Module R M] [Module R₂ M₂]
-
-variable [Subsingleton M] [Subsingleton M₂]
 
 variable {σ₁₂ : R →+* R₂} {σ₂₁ : R₂ →+* R}
 
 variable [RingHomInvPair σ₁₂ σ₂₁] [RingHomInvPair σ₂₁ σ₁₂]
 
 include σ₂₁
+
+section Module
+
+variable [Subsingleton M] [Subsingleton M₂]
 
 /-- Between two zero modules, the zero map is an equivalence. -/
 instance : Zero (M ≃ₛₗ[σ₁₂] M₂) :=
@@ -1989,6 +1991,15 @@ instance : Unique (M ≃ₛₗ[σ₁₂] M₂)
   default := 0
 
 omit σ₂₁
+
+end Module
+
+instance uniqueOfSubsingleton [Subsingleton R] [Subsingleton R₂] : Unique (M ≃ₛₗ[σ₁₂] M₂) :=
+  by
+  haveI := Module.subsingleton R M
+  haveI := Module.subsingleton R₂ M₂
+  infer_instance
+#align linear_equiv.unique_of_subsingleton LinearEquiv.uniqueOfSubsingleton
 
 end Subsingleton
 

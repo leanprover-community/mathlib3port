@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module group_theory.finiteness
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -424,7 +424,7 @@ theorem rank_closure_finset_le_card (s : Finset G) : Group.rank (closure (s : Se
       rw [Finset.coe_preimage]
       exact closure_preimage_eq_top s
     apply (Group.rank_le (closure (s : Set G)) ht).trans
-    rw [← Finset.card_image_of_inj_on, Finset.image_preimage]
+    rw [← Finset.card_image_of_injOn, Finset.image_preimage]
     · apply Finset.card_filter_le
     · apply subtype.coe_injective.inj_on
 #align subgroup.rank_closure_finset_le_card Subgroup.rank_closure_finset_le_card

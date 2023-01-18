@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andreas Swerdlow
 
 ! This file was ported from Lean 3 source module linear_algebra.sesquilinear_form
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -662,7 +662,7 @@ variable (M₁ M₂ I₁ I₂)
 /-- In a non-trivial module, zero is not non-degenerate. -/
 theorem not_separating_left_zero [Nontrivial M₁] : ¬(0 : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R).SeparatingLeft :=
   let ⟨m, hm⟩ := exists_ne (0 : M₁)
-  fun h => hm ((h m) fun n => rfl)
+  fun h => hm (h m fun n => rfl)
 #align linear_map.not_separating_left_zero LinearMap.not_separating_left_zero
 
 variable {M₁ M₂ I₁ I₂}
@@ -812,7 +812,7 @@ theorem IsOrtho.not_is_ortho_basis_self_of_separating_left [Nontrivial R] {B : M
     {v : Basis n R M} (h : B.IsOrtho v) (hB : B.SeparatingLeft) (i : n) : ¬B.IsOrtho (v i) (v i) :=
   by
   intro ho
-  refine' v.ne_zero i ((hB (v i)) fun m => _)
+  refine' v.ne_zero i (hB (v i) fun m => _)
   obtain ⟨vi, rfl⟩ := v.repr.symm.surjective m
   rw [Basis.repr_symm_apply, Finsupp.total_apply, Finsupp.sum, map_sum]
   apply Finset.sum_eq_zero

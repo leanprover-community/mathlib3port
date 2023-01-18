@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Julian Kuelshammer
 
 ! This file was ported from Lean 3 source module group_theory.order_of_element
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -633,7 +633,7 @@ variable [Monoid G]
 open BigOperators
 
 @[to_additive sum_card_add_order_of_eq_card_nsmul_eq_zero]
-theorem sum_card_order_of_eq_card_pow_eq_one [Fintype G] [DecidableEq G] (hn : 0 < n) :
+theorem sum_card_order_of_eq_card_pow_eq_one [Fintype G] [DecidableEq G] (hn : n ≠ 0) :
     (∑ m in (Finset.range n.succ).filter (· ∣ n),
         (Finset.univ.filter fun x : G => orderOf x = m).card) =
       (Finset.univ.filter fun x : G => x ^ n = 1).card :=
@@ -656,7 +656,7 @@ theorem sum_card_order_of_eq_card_pow_eq_one [Fintype G] [DecidableEq G] (hn : 0
               ⟨fun h => by
                 let ⟨m, hm⟩ := h.2
                 rw [hm, pow_mul, pow_order_of_eq_one, one_pow], fun h =>
-                ⟨order_of_le_of_pow_eq_one hn h, order_of_dvd_of_pow_eq_one h⟩⟩))
+                ⟨order_of_le_of_pow_eq_one hn.bot_lt h, order_of_dvd_of_pow_eq_one h⟩⟩))
     
 #align sum_card_order_of_eq_card_pow_eq_one sum_card_order_of_eq_card_pow_eq_one
 
@@ -956,7 +956,7 @@ theorem image_range_order_of [DecidableEq G] :
     Finset.image (fun i => x ^ i) (Finset.range (orderOf x)) = (zpowers x : Set G).toFinset :=
   by
   ext x
-  rw [Set.mem_to_finset, SetLike.mem_coe, mem_zpowers_iff_mem_range_order_of]
+  rw [Set.mem_toFinset, SetLike.mem_coe, mem_zpowers_iff_mem_range_order_of]
 #align image_range_order_of image_range_order_of
 
 /-- TODO: Generalise to `finite` + `cancel_monoid`. -/

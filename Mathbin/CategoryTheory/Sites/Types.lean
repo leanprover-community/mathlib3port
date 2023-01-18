@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module category_theory.sites.types
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -149,7 +149,7 @@ theorem eval_map (S : Type uᵒᵖ ⥤ Type u) (α β) (f : β ⟶ α) (s x) :
 @[simps]
 noncomputable def equivYoneda (S : Type uᵒᵖ ⥤ Type u) (hs : IsSheaf typesGrothendieckTopology S) :
     S ≅ yoneda.obj (S.obj (op PUnit)) :=
-  (NatIso.ofComponents fun α => Equiv.toIso <| evalEquiv S hs <| unop α) fun α β f =>
+  NatIso.ofComponents (fun α => Equiv.toIso <| evalEquiv S hs <| unop α) fun α β f =>
     funext fun s => funext fun x => eval_map S (unop α) (unop β) f.unop _ _
 #align category_theory.equiv_yoneda CategoryTheory.equivYoneda
 
@@ -214,9 +214,9 @@ theorem types_grothendieck_topology_eq_canonical :
                     (fun _ => ULift.up true : (yoneda.obj (ULift Bool)).obj (op PUnit)) = fun _ =>
                       ULift.up false :=
                     (hs PUnit fun _ => x).IsSeparatedFor.ext fun β f hf =>
-                      funext fun y => hsx.elim <| (S.2 hf) fun _ => y
+                      funext fun y => hsx.elim <| S.2 hf fun _ => y
                   Bool.noConfusion <| ULift.up.inj <| (congr_fun this PUnit.unit : _),
-                fun hs β f => (is_sheaf_yoneda' _) fun y => hs _⟩⟩
+                fun hs β f => is_sheaf_yoneda' _ fun y => hs _⟩⟩
 #align
   category_theory.types_grothendieck_topology_eq_canonical CategoryTheory.types_grothendieck_topology_eq_canonical
 

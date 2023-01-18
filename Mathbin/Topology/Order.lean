@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.order
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -440,8 +440,8 @@ def TopologicalSpace.induced {α : Type u} {β : Type v} (f : α → β) (t : To
     apply Exists.intro (⋃ (x : Set α) (h : x ∈ s), f x h)
     simp only [sUnion_eq_bUnion, preimage_Union, fun x h => (hf x h).right]; refine' ⟨_, rfl⟩
     exact
-      (@is_open_Union β _ t _) fun i =>
-        show IsOpen (⋃ h, f i h) from (@is_open_Union β _ t _) fun h => (hf i h).left
+      @is_open_Union β _ t _ fun i =>
+        show IsOpen (⋃ h, f i h) from @is_open_Union β _ t _ fun h => (hf i h).left
 #align topological_space.induced TopologicalSpace.induced
 
 theorem is_open_induced_iff [t : TopologicalSpace β] {s : Set α} {f : α → β} :
@@ -472,8 +472,8 @@ def TopologicalSpace.coinduced {α : Type u} {β : Type v} (f : α → β) (t : 
   is_open_sUnion s h := by
     rw [preimage_sUnion] <;>
       exact
-        (@is_open_Union _ _ t _) fun i =>
-          show IsOpen (⋃ H : i ∈ s, f ⁻¹' i) from (@is_open_Union _ _ t _) fun hi => h i hi
+        @is_open_Union _ _ t _ fun i =>
+          show IsOpen (⋃ H : i ∈ s, f ⁻¹' i) from @is_open_Union _ _ t _ fun hi => h i hi
 #align topological_space.coinduced TopologicalSpace.coinduced
 
 theorem is_open_coinduced {t : TopologicalSpace α} {s : Set β} {f : α → β} :

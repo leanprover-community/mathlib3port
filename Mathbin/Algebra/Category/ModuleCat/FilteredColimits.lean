@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Justus Springer
 
 ! This file was ported from Lean 3 source module algebra.category.Module.filtered_colimits
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -103,11 +103,11 @@ theorem colimit_smul_mk_eq (r : R) (x : Σj, F.obj j) : r • M.mk x = M.mk ⟨x
 instance colimitModule : Module R M
     where
   one_smul x := by
-    apply Quot.induction_on x; clear x; intro x; cases' x with j x
+    apply Quot.inductionOn x; clear x; intro x; cases' x with j x
     erw [colimit_smul_mk_eq F 1 ⟨j, x⟩, one_smul]
     rfl
   mul_smul r s x := by
-    apply Quot.induction_on x; clear x; intro x; cases' x with j x
+    apply Quot.inductionOn x; clear x; intro x; cases' x with j x
     erw [colimit_smul_mk_eq F (r * s) ⟨j, x⟩, colimit_smul_mk_eq F s ⟨j, x⟩,
       colimit_smul_mk_eq F r ⟨j, _⟩, mul_smul]
   smul_add r x y := by
@@ -122,11 +122,11 @@ instance colimitModule : Module R M
     erw [colimit_zero_eq _ (is_filtered.nonempty.some : J), colimit_smul_mk_eq, smul_zero]
     rfl
   zero_smul x := by
-    apply Quot.induction_on x; clear x; intro x; cases' x with j x
+    apply Quot.inductionOn x; clear x; intro x; cases' x with j x
     erw [colimit_smul_mk_eq, zero_smul, colimit_zero_eq _ j]
     rfl
   add_smul r s x := by
-    apply Quot.induction_on x; clear x; intro x; cases' x with j x
+    apply Quot.inductionOn x; clear x; intro x; cases' x with j x
     erw [colimit_smul_mk_eq, add_smul, colimit_smul_mk_eq, colimit_smul_mk_eq,
       colimit_add_mk_eq _ ⟨j, _⟩ ⟨j, _⟩ j (𝟙 j) (𝟙 j), CategoryTheory.Functor.map_id, id_apply,
       id_apply]
@@ -166,7 +166,7 @@ def colimitDesc (t : cocone F) : colimit ⟶ t.x :=
           (F ⋙ forget₂ (ModuleCat R) AddCommGroupCat.{max v u})).desc
       ((forget₂ (ModuleCat R) AddCommGroupCat.{max v u}).mapCocone t) with
     map_smul' := fun r x => by
-      apply Quot.induction_on x; clear x; intro x; cases' x with j x
+      apply Quot.inductionOn x; clear x; intro x; cases' x with j x
       erw [colimit_smul_mk_eq]
       exact LinearMap.map_smul (t.ι.app j) r x }
 #align Module.filtered_colimits.colimit_desc ModuleCat.FilteredColimits.colimitDesc

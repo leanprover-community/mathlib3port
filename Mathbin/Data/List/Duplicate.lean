@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky, Chris Hughes
 
 ! This file was ported from Lean 3 source module data.list.duplicate
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -193,7 +193,7 @@ theorem Duplicate.not_nodup (h : x ∈+ l) : ¬Nodup l := fun H =>
 
 #print List.duplicate_iff_two_le_count /-
 theorem duplicate_iff_two_le_count [DecidableEq α] : x ∈+ l ↔ 2 ≤ count x l := by
-  simp [duplicate_iff_sublist, le_count_iff_repeat_sublist]
+  simp [duplicate_iff_sublist, le_count_iff_replicate_sublist]
 #align list.duplicate_iff_two_le_count List.duplicate_iff_two_le_count
 -/
 

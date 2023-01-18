@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module data.polynomial.algebra_map
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -185,7 +185,7 @@ theorem adjoin_X : Algebra.adjoin R ({x} : Set R[X]) = ⊤ :=
 
 @[ext]
 theorem alg_hom_ext {f g : R[X] →ₐ[R] A} (h : f x = g x) : f = g :=
-  (AlgHom.ext_of_adjoin_eq_top adjoin_X) fun p hp => (Set.mem_singleton_iff.1 hp).symm ▸ h
+  AlgHom.ext_of_adjoin_eq_top adjoin_X fun p hp => (Set.mem_singleton_iff.1 hp).symm ▸ h
 #align polynomial.alg_hom_ext Polynomial.alg_hom_ext
 
 theorem aeval_def (p : R[X]) : aeval x p = eval₂ (algebraMap R A) x p :=
@@ -319,9 +319,9 @@ theorem Algebra.adjoin_singleton_eq_range_aeval (x : A) :
 
 variable {R}
 
-section CommSemiring
+section Semiring
 
-variable [CommSemiring S] {f : R →+* S}
+variable [Semiring S] {f : R →+* S}
 
 theorem aeval_eq_sum_range [Algebra R S] {p : R[X]} (x : S) :
     aeval x p = ∑ i in Finset.range (p.natDegree + 1), p.coeff i • x ^ i :=
@@ -351,9 +351,13 @@ theorem is_root_of_aeval_algebra_map_eq_zero [Algebra R S] {p : R[X]}
 #align
   polynomial.is_root_of_aeval_algebra_map_eq_zero Polynomial.is_root_of_aeval_algebra_map_eq_zero
 
+end Semiring
+
+section CommSemiring
+
 section AevalTower
 
-variable [Algebra S R] [Algebra S A'] [Algebra S B']
+variable [CommSemiring S] [Algebra S R] [Algebra S A'] [Algebra S B']
 
 /-- Version of `aeval` for defining algebra homs out of `R[X]` over a smaller base ring
   than `R`. -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Floris van Doorn
 
 ! This file was ported from Lean 3 source module data.set.pointwise.finite
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -132,7 +132,7 @@ theorem card_pow_eq_card_pow_card_univ [∀ k : ℕ, DecidablePred (· ∈ S ^ k
   convert
     card_pow_eq_card_pow_card_univ_aux mono (fun n => set_fintype_card_le_univ (S ^ n)) fun n h =>
       le_antisymm (mono (n + 1).le_succ) (key a⁻¹ _ _ _)
-  · simp only [Finset.filter_congr_decidable, Fintype.card_of_finset]
+  · simp only [[anonymous], Fintype.card_of_finset]
   replace h : {a} * S ^ n = S ^ (n + 1)
   · refine' Set.eq_of_subset_of_card_le _ (le_trans (ge_of_eq h) _)
     · exact mul_subset_mul (set.singleton_subset_iff.mpr ha) Set.Subset.rfl

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky, Mario Carneiro
 
 ! This file was ported from Lean 3 source module tactic.norm_fin
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -539,7 +539,7 @@ unsafe def eval_rel {α} (a b : expr) (f : expr → expr × expr → expr × exp
 `(n, ff, p)` where `p : b ≤ a`. -/
 unsafe def prove_lt_ge_fin : expr → expr → tactic (expr × Bool × expr)
   | a, b =>
-    (eval_rel a b) fun n a' b' na nb =>
+    eval_rel a b fun n a' b' na nb =>
       if na < nb then Prod.mk n <$> Prod.mk true <$> prove_lt_fin' n a b a' b'
       else Prod.mk n <$> Prod.mk false <$> prove_le_fin' n b a b' a'
 #align tactic.norm_fin.prove_lt_ge_fin tactic.norm_fin.prove_lt_ge_fin
@@ -548,7 +548,7 @@ unsafe def prove_lt_ge_fin : expr → expr → tactic (expr × Bool × expr)
 `(n, ff, p)` where `p : a ≠ b`. -/
 unsafe def prove_eq_ne_fin : expr → expr → tactic (expr × Bool × expr)
   | a, b =>
-    (eval_rel a b) fun n a' b' na nb =>
+    eval_rel a b fun n a' b' na nb =>
       if na = nb then Prod.mk n <$> Prod.mk true <$> prove_eq_fin' n a b a' b'
       else
         if na < nb then do

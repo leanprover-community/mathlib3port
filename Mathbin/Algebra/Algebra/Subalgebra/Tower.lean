@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Anne Baanen
 
 ! This file was ported from Lean 3 source module algebra.algebra.subalgebra.tower
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,7 +69,7 @@ instance subalgebra (S₀ : Subalgebra R S) : IsScalarTower S₀ S A :=
 variable [Algebra R A] [IsScalarTower R S A]
 
 instance subalgebra' (S₀ : Subalgebra R S) : IsScalarTower R S₀ A :=
-  (@IsScalarTower.of_algebra_map_eq R S₀ A _ _ _ _ _ _) fun _ =>
+  @IsScalarTower.of_algebra_map_eq R S₀ A _ _ _ _ _ _ fun _ =>
     (IsScalarTower.algebra_map_apply R S A _ : _)
 #align is_scalar_tower.subalgebra' IsScalarTower.subalgebra'
 

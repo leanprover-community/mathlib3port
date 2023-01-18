@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.convex.krein_milman
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -87,7 +87,7 @@ theorem IsCompact.has_extreme_point (hscomp : IsCompact s) (hsnemp : s.Nonempty)
   refine'
     ⟨⋂₀ F,
       ⟨_, is_closed_sInter fun t ht => (hFS ht).2.1,
-        (is_extreme_sInter hFnemp) fun t ht => (hFS ht).2.2⟩,
+        is_extreme_sInter hFnemp fun t ht => (hFS ht).2.2⟩,
       fun t ht => sInter_subset_of_mem ht⟩
   haveI : Nonempty ↥F := hFnemp.to_subtype
   rw [sInter_eq_Inter]

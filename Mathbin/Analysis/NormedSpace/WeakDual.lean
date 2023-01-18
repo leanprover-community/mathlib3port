@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.normed_space.weak_dual
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -132,7 +132,7 @@ theorem to_weak_dual_eq_iff (x' y' : Dual 𝕜 E) : x'.toWeakDual = y'.toWeakDua
 #align normed_space.dual.to_weak_dual_eq_iff NormedSpace.Dual.to_weak_dual_eq_iff
 
 theorem to_weak_dual_continuous : Continuous fun x' : Dual 𝕜 E => x'.toWeakDual :=
-  (WeakBilin.continuous_of_continuous_eval _) fun z => (inclusionInDoubleDual 𝕜 E z).Continuous
+  WeakBilin.continuous_of_continuous_eval _ fun z => (inclusionInDoubleDual 𝕜 E z).Continuous
 #align normed_space.dual.to_weak_dual_continuous NormedSpace.Dual.to_weak_dual_continuous
 
 /-- For a normed space `E`, according to `to_weak_dual_continuous` the "identity mapping"

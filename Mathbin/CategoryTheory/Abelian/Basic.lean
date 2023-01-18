@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel, Johan Commelin, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.abelian.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -611,11 +611,10 @@ variable [Limits.HasPullbacks C] {W X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z)
 /-- In an abelian category, the pullback of an epimorphism is an epimorphism.
     Proof from [aluffi2016, IX.2.3], cf. [borceux-vol2, 1.7.6] -/
 instance epi_pullback_of_epi_f [Epi f] : Epi (pullback.snd : pullback f g ⟶ Y) :=
-  (-- It will suffice to consider some morphism e : Y ⟶ R such that
-      -- pullback.snd ≫ e = 0 and show that e = 0.
-      epi_of_cancel_zero
-      _)
-    fun R e h =>
+  -- It will suffice to consider some morphism e : Y ⟶ R such that
+    -- pullback.snd ≫ e = 0 and show that e = 0.
+    epi_of_cancel_zero
+    _ fun R e h =>
     by
     -- Consider the morphism u := (0, e) : X ⊞ Y⟶ R.
     let u := biprod.desc (0 : X ⟶ R) e
@@ -651,11 +650,10 @@ instance epi_pullback_of_epi_f [Epi f] : Epi (pullback.snd : pullback f g ⟶ Y)
 
 /-- In an abelian category, the pullback of an epimorphism is an epimorphism. -/
 instance epi_pullback_of_epi_g [Epi g] : Epi (pullback.fst : pullback f g ⟶ X) :=
-  (-- It will suffice to consider some morphism e : X ⟶ R such that
-      -- pullback.fst ≫ e = 0 and show that e = 0.
-      epi_of_cancel_zero
-      _)
-    fun R e h =>
+  -- It will suffice to consider some morphism e : X ⟶ R such that
+    -- pullback.fst ≫ e = 0 and show that e = 0.
+    epi_of_cancel_zero
+    _ fun R e h =>
     by
     -- Consider the morphism u := (e, 0) : X ⊞ Y ⟶ R.
     let u := biprod.desc e (0 : Y ⟶ R)
@@ -720,7 +718,7 @@ section MonoPushout
 variable [Limits.HasPushouts C] {W X Y Z : C} (f : X ⟶ Y) (g : X ⟶ Z)
 
 instance mono_pushout_of_mono_f [Mono f] : Mono (pushout.inr : Z ⟶ pushout f g) :=
-  (mono_of_cancel_zero _) fun R e h =>
+  mono_of_cancel_zero _ fun R e h =>
     by
     let u := biprod.lift (0 : R ⟶ Y) e
     have hu : u ≫ biproduct_to_pushout_is_cokernel.biproduct_to_pushout f g = 0 := by simpa
@@ -747,7 +745,7 @@ instance mono_pushout_of_mono_f [Mono f] : Mono (pushout.inr : Z ⟶ pushout f g
 #align category_theory.abelian.mono_pushout_of_mono_f CategoryTheory.Abelian.mono_pushout_of_mono_f
 
 instance mono_pushout_of_mono_g [Mono g] : Mono (pushout.inl : Y ⟶ pushout f g) :=
-  (mono_of_cancel_zero _) fun R e h =>
+  mono_of_cancel_zero _ fun R e h =>
     by
     let u := biprod.lift e (0 : R ⟶ Z)
     have hu : u ≫ biproduct_to_pushout_is_cokernel.biproduct_to_pushout f g = 0 := by simpa

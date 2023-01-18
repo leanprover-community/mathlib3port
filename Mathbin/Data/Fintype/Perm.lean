@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.fintype.perm
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -115,7 +115,7 @@ theorem nodup_perms_of_list : ∀ {l : List α} (hl : l.Nodup), (permsOfList l).
             have hix : x a = nth_le l i (lt_trans hij hj) := by
               rw [← hf.2, mul_apply, hmeml hf.1, swap_apply_left]
             have hiy : x a = nth_le l j hj := by rw [← hg.2, mul_apply, hmeml hg.1, swap_apply_left]
-            (absurd (hf.2.trans hg.2.symm)) fun h =>
+            absurd (hf.2.trans hg.2.symm) fun h =>
               ne_of_lt hij <|
                 nodup_iff_nth_le_inj.1 hl' i j (lt_trans hij hj) hj <| by rw [← hix, hiy]⟩,
           fun f hf₁ hf₂ =>

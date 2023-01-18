@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine Labelle
 
 ! This file was ported from Lean 3 source module representation_theory.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -302,7 +302,7 @@ theorem of_mul_action_apply {H : Type _} [MulAction G H] (g : G) (f : H →₀ k
 
 theorem of_mul_action_self_smul_eq_mul (x : MonoidAlgebra k G) (y : (ofMulAction k G G).AsModule) :
     x • y = (x * y : MonoidAlgebra k G) :=
-  x.induction_on (fun g => by show as_algebra_hom _ _ _ = _ <;> ext <;> simp)
+  x.inductionOn (fun g => by show as_algebra_hom _ _ _ = _ <;> ext <;> simp)
     (fun x y hx hy => by simp only [hx, hy, add_mul, add_smul]) fun r x hx => by
     show as_algebra_hom _ _ _ = _ <;> simpa [← hx]
 #align representation.of_mul_action_self_smul_eq_mul Representation.of_mul_action_self_smul_eq_mul

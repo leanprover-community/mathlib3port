@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Chris Hughes, Tim Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.determinant
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -161,7 +161,7 @@ theorem det_mul_aux {M N : Matrix n n R} {p : n → n} (H : ¬Bijective p) :
 theorem det_mul (M N : Matrix n n R) : det (M ⬝ N) = det M * det N :=
   calc
     det (M ⬝ N) = ∑ p : n → n, ∑ σ : Perm n, ε σ * ∏ i, M (σ i) (p i) * N (p i) i := by
-      simp only [det_apply', mul_apply, prod_univ_sum, mul_sum, Fintype.pi_finset_univ] <;>
+      simp only [det_apply', mul_apply, prod_univ_sum, mul_sum, Fintype.piFinset_univ] <;>
         rw [Finset.sum_comm]
     _ =
         ∑ p in (@univ (n → n) _).filter Bijective,
@@ -679,7 +679,7 @@ theorem det_from_blocks_zero₂₁ (A : Matrix m m R) (B : Matrix m n R) (D : Ma
     rw [(sum_bij (fun (σ : perm m × perm n) _ => Equiv.sumCongr σ.fst σ.snd) _ _ _ _).symm]
     · intro σ₁₂ h
       simp only
-      erw [Set.mem_to_finset, MonoidHom.mem_range]
+      erw [Set.mem_toFinset, MonoidHom.mem_range]
       use σ₁₂
       simp only [sum_congr_hom_apply]
     · simp only [forall_prop_of_true, Prod.forall, mem_univ]
@@ -702,7 +702,7 @@ theorem det_from_blocks_zero₂₁ (A : Matrix m m R) (B : Matrix m n R) (D : Ma
       · exact h2.left x
       · exact h2.right x
     · intro σ hσ
-      erw [Set.mem_to_finset, MonoidHom.mem_range] at hσ
+      erw [Set.mem_toFinset, MonoidHom.mem_range] at hσ
       obtain ⟨σ₁₂, hσ₁₂⟩ := hσ
       use σ₁₂
       rw [← hσ₁₂]
@@ -711,7 +711,7 @@ theorem det_from_blocks_zero₂₁ (A : Matrix m m R) (B : Matrix m n R) (D : Ma
       have h1 : ¬∀ x, ∃ y, Sum.inl y = σ (Sum.inl x) :=
         by
         by_contra
-        rw [Set.mem_to_finset] at hσn
+        rw [Set.mem_toFinset] at hσn
         apply absurd (mem_sum_congr_hom_range_of_perm_maps_to_inl _) hσn
         rintro x ⟨a, ha⟩
         rw [← ha]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module tactic.transform_decl
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -19,10 +19,9 @@ namespace Tactic
 unsafe def copy_attribute' (attr_name : Name) (src : Name) (tgt : Name) (p : Option Bool := none) :
     tactic Unit := do
   get_decl tgt <|> throwError "unknown declaration {← tgt}"
-  (-- if the source doesn't have the attribute we do not error and simply return
-        whenM
-        (succeeds (has_attribute attr_name src)))
-      do
+  -- if the source doesn't have the attribute we do not error and simply return
+      whenM
+      (succeeds (has_attribute attr_name src)) do
       let (p', prio) ← has_attribute attr_name src
       let p := p p'
       let s ← try_or_report_error (set_basic_attribute attr_name tgt p prio)
@@ -123,14 +122,14 @@ unsafe def transform_decl_with_prefix_fun_aux (f : Name → Option Name) (replac
       ← do
         dbg_trace "[to_additive] > generating
           {← pp_decl}"
-  (decorate_error
-        (f! "@[to_additive] failed. Type mismatch in additive declaration.
-            For help, see the docstring of `to_additive.attr`, section `Troubleshooting`.
-            Failed to add declaration
-            {pp_decl}
-            
-            Nested error message:
-            ").toString)
+  decorate_error
+      (f! "@[to_additive] failed. Type mismatch in additive declaration.
+          For help, see the docstring of `to_additive.attr`, section `Troubleshooting`.
+          Failed to add declaration
+          {pp_decl}
+          
+          Nested error message:
+          ").toString
       do
       if env src then add_protected_decl decl else add_decl decl
       -- we test that the declaration value type-checks, so that we get the decorated error message

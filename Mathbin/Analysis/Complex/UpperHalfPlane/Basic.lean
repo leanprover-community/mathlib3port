@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Kontorovich, Heather Macbeth, Marc Masdeu
 
 ! This file was ported from Lean 3 source module analysis.complex.upper_half_plane.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -222,7 +222,7 @@ theorem denom_cocycle (x y : GL(2, ℝ)⁺) (z : ℍ) :
   change _ = (_ * (_ / _) + _) * _
   field_simp [denom_ne_zero, -denom, -Num]
   simp only [Matrix.mul, dot_product, Fin.sum_univ_succ, denom, Num, coe_coe, Subgroup.coe_mul,
-    general_linear_group.coe_mul, Fintype.univ_of_subsingleton, Fin.mk_zero, Finset.sum_singleton,
+    general_linear_group.coe_mul, Fintype.univ_ofSubsingleton, Fin.mk_zero, Finset.sum_singleton,
     Fin.succ_zero_eq_one, Complex.of_real_add, Complex.of_real_mul]
   ring
 #align upper_half_plane.denom_cocycle UpperHalfPlane.denom_cocycle
@@ -234,7 +234,7 @@ theorem mul_smul' (x y : GL(2, ℝ)⁺) (z : ℍ) : smulAux (x * y) z = smulAux 
   rw [denom_cocycle]
   field_simp [denom_ne_zero, -denom, -Num]
   simp only [Matrix.mul, dot_product, Fin.sum_univ_succ, Num, denom, coe_coe, Subgroup.coe_mul,
-    general_linear_group.coe_mul, Fintype.univ_of_subsingleton, Fin.mk_zero, Finset.sum_singleton,
+    general_linear_group.coe_mul, Fintype.univ_ofSubsingleton, Fin.mk_zero, Finset.sum_singleton,
     Fin.succ_zero_eq_one, Complex.of_real_add, Complex.of_real_mul]
   ring
 #align upper_half_plane.mul_smul' UpperHalfPlane.mul_smul'

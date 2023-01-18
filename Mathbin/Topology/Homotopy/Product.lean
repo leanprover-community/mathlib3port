@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Praneeth Kolichala
 
 ! This file was ported from Lean 3 source module topology.homotopy.product
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -185,7 +185,7 @@ theorem proj_pi (i : ι) (paths : ∀ i, Path.Homotopic.Quotient (as i) (bs i)) 
 @[simp]
 theorem pi_proj (p : Path.Homotopic.Quotient as bs) : (pi fun i => proj i p) = p :=
   by
-  apply Quotient.induction_on p
+  apply Quotient.inductionOn p
   intro ; unfold proj
   simp_rw [← Path.Homotopic.map_lift]
   rw [pi_lift]
@@ -270,7 +270,7 @@ theorem proj_right_prod : projRight (prod q₁ q₂) = q₂ :=
 theorem prod_proj_left_proj_right (p : Path.Homotopic.Quotient (a₁, b₁) (a₂, b₂)) :
     prod (projLeft p) (projRight p) = p :=
   by
-  apply Quotient.induction_on p
+  apply Quotient.inductionOn p
   intro p'
   unfold proj_left; unfold proj_right
   simp only [← Path.Homotopic.map_lift, prod_lift]

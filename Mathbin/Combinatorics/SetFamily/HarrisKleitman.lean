@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module combinatorics.set_family.harris_kleitman
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -107,7 +107,7 @@ variable [Fintype α]
 /-- **Harris-Kleitman inequality**: Any two lower sets of finsets correlate. -/
 theorem IsLowerSet.le_card_inter_finset (h𝒜 : IsLowerSet (𝒜 : Set (Finset α)))
     (hℬ : IsLowerSet (ℬ : Set (Finset α))) : 𝒜.card * ℬ.card ≤ 2 ^ Fintype.card α * (𝒜 ∩ ℬ).card :=
-  (h𝒜.le_card_inter_finset' hℬ fun _ _ => subset_univ _) fun _ _ => subset_univ _
+  h𝒜.le_card_inter_finset' hℬ (fun _ _ => subset_univ _) fun _ _ => subset_univ _
 #align is_lower_set.le_card_inter_finset IsLowerSet.le_card_inter_finset
 
 /-- **Harris-Kleitman inequality**: Upper sets and lower sets of finsets anticorrelate. -/

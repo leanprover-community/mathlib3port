@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebraic_geometry.presheafed_space
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -450,7 +450,7 @@ def restrictTopIso (X : PresheafedSpaceCat C) : X.restrict (Opens.open_embedding
   Hom := X.of_restrict _
   inv := X.toRestrictTop
   hom_inv_id' :=
-    ext _ _ ((ConcreteCategory.hom_ext _ _) fun ⟨x, _⟩ => rfl) <|
+    ext _ _ (ConcreteCategory.hom_ext _ _ fun ⟨x, _⟩ => rfl) <|
       by
       erw [comp_c]
       rw [X.of_restrict_top_c]

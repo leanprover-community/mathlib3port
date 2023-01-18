@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module combinatorics.set_family.kleitman
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -90,7 +90,7 @@ theorem Finset.card_bUnion_le_of_intersecting (s : Finset ι) (f : ι → Finset
     refine' mul_le_mul_left' _ _
     refine'
       (add_le_add_left
-            ((ih ((card_le_of_subset <| subset_cons _).trans hs) _) fun i hi =>
+            (ih ((card_le_of_subset <| subset_cons _).trans hs) _ fun i hi =>
               (hf₁ _ <| subset_cons _ hi).2.2)
             _).trans
         _

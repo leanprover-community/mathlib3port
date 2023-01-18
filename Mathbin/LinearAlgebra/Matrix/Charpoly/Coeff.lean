@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Jalex Stark
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.charpoly.coeff
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -206,14 +206,14 @@ theorem mat_poly_equiv_eq_X_pow_sub_C {K : Type _} (k : ℕ) [Field K] (M : Matr
   by
   ext m
   rw [coeff_sub, coeff_C, mat_poly_equiv_coeff_apply, RingHom.map_matrix_apply, Matrix.map_apply,
-    AlgHom.coe_to_ring_hom, Dmatrix.sub_apply, coeff_X_pow]
+    AlgHom.coe_to_ring_hom, DMatrix.sub_apply, coeff_X_pow]
   by_cases hij : i = j
   · rw [hij, charmatrix_apply_eq, AlgHom.map_sub, expand_C, expand_X, coeff_sub, coeff_X_pow,
       coeff_C]
-    split_ifs with mp m0 <;> simp only [Matrix.one_apply_eq, Dmatrix.zero_apply]
+    split_ifs with mp m0 <;> simp only [Matrix.one_apply_eq, DMatrix.zero_apply]
   · rw [charmatrix_apply_ne _ _ _ hij, AlgHom.map_neg, expand_C, coeff_neg, coeff_C]
     split_ifs with m0 mp <;>
-      simp only [hij, zero_sub, Dmatrix.zero_apply, sub_zero, neg_zero, Matrix.one_apply_ne, Ne.def,
+      simp only [hij, zero_sub, DMatrix.zero_apply, sub_zero, neg_zero, Matrix.one_apply_ne, Ne.def,
         not_false_iff]
 #align mat_poly_equiv_eq_X_pow_sub_C mat_poly_equiv_eq_X_pow_sub_C
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Mario Carneiro
 
 ! This file was ported from Lean 3 source module logic.equiv.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2172,8 +2172,8 @@ def subtypeQuotientEquivQuotientSubtype (p₁ : α → Prop) [s₁ : Setoid α] 
   invFun a :=
     Quotient.liftOn a (fun a => (⟨⟦a.1⟧, (hp₂ _).1 a.2⟩ : { x // p₂ x })) fun a b hab =>
       Subtype.ext_val (Quotient.sound ((h _ _).1 hab))
-  left_inv := fun ⟨a, ha⟩ => Quotient.induction_on a (fun a ha => rfl) ha
-  right_inv a := Quotient.induction_on a fun ⟨a, ha⟩ => rfl
+  left_inv := fun ⟨a, ha⟩ => Quotient.inductionOn a (fun a ha => rfl) ha
+  right_inv a := Quotient.inductionOn a fun ⟨a, ha⟩ => rfl
 #align equiv.subtype_quotient_equiv_quotient_subtype Equiv.subtypeQuotientEquivQuotientSubtype
 -/
 

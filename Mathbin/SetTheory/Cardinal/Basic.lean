@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module set_theory.cardinal.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -119,12 +119,12 @@ def mk : Type u → Cardinal :=
 scoped prefix:0 "#" => Cardinal.mk
 
 instance canLiftCardinalType : CanLift Cardinal.{u} (Type u) mk fun _ => True :=
-  ⟨fun c _ => (Quot.induction_on c) fun α => ⟨α, rfl⟩⟩
+  ⟨fun c _ => Quot.inductionOn c fun α => ⟨α, rfl⟩⟩
 #align cardinal.can_lift_cardinal_Type Cardinal.canLiftCardinalType
 
 @[elab_as_elim]
 theorem induction_on {p : Cardinal → Prop} (c : Cardinal) (h : ∀ α, p (#α)) : p c :=
-  Quotient.induction_on c h
+  Quotient.inductionOn c h
 #align cardinal.induction_on Cardinal.induction_on
 
 @[elab_as_elim]
@@ -179,7 +179,7 @@ theorem map_mk (f : Type u → Type v) (hf : ∀ α β, α ≃ β → f α ≃ f
 /-- Lift a binary operation `Type* → Type* → Type*` to a binary operation on `cardinal`s. -/
 def map₂ (f : Type u → Type v → Type w) (hf : ∀ α β γ δ, α ≃ β → γ ≃ δ → f α γ ≃ f β δ) :
     Cardinal.{u} → Cardinal.{v} → Cardinal.{w} :=
-  (Quotient.map₂ f) fun α β ⟨e₁⟩ γ δ ⟨e₂⟩ => ⟨hf α β γ δ e₁ e₂⟩
+  Quotient.map₂ f fun α β ⟨e₁⟩ γ δ ⟨e₂⟩ => ⟨hf α β γ δ e₁ e₂⟩
 #align cardinal.map₂ Cardinal.map₂
 
 /-- The universe lift operation on cardinals. You can specify the universes explicitly with
@@ -197,7 +197,7 @@ theorem mk_ulift (α) : (#ULift.{v, u} α) = lift.{v} (#α) :=
     easier to understand what's happening when using this lemma. -/
 @[simp]
 theorem lift_umax : lift.{max u v, u} = lift.{v, u} :=
-  funext fun a => (induction_on a) fun α => (Equiv.ulift.trans Equiv.ulift.symm).cardinal_eq
+  funext fun a => induction_on a fun α => (Equiv.ulift.trans Equiv.ulift.symm).cardinal_eq
 #align cardinal.lift_umax Cardinal.lift_umax
 
 /-- `lift.{(max v u) u}` equals `lift.{v u}`. Using `set_option pp.universes true` will make it much
@@ -210,7 +210,7 @@ theorem lift_umax' : lift.{max v u, u} = lift.{v, u} :=
 /-- A cardinal lifted to a lower or equal universe equals itself. -/
 @[simp]
 theorem lift_id' (a : Cardinal.{max u v}) : lift.{u} a = a :=
-  (induction_on a) fun α => mk_congr Equiv.ulift
+  induction_on a fun α => mk_congr Equiv.ulift
 #align cardinal.lift_id' Cardinal.lift_id'
 
 /-- A cardinal lifted to the same universe equals itself. -/
@@ -227,14 +227,14 @@ theorem lift_uzero (a : Cardinal.{u}) : lift.{0} a = a :=
 
 @[simp]
 theorem lift_lift (a : Cardinal) : lift.{w} (lift.{v} a) = lift.{max v w} a :=
-  (induction_on a) fun α => (Equiv.ulift.trans <| Equiv.ulift.trans Equiv.ulift.symm).cardinal_eq
+  induction_on a fun α => (Equiv.ulift.trans <| Equiv.ulift.trans Equiv.ulift.symm).cardinal_eq
 #align cardinal.lift_lift Cardinal.lift_lift
 
 /-- We define the order on cardinal numbers by `#α ≤ #β` if and only if
   there exists an embedding (injective function) from α to β. -/
 instance : LE Cardinal.{u} :=
   ⟨fun q₁ q₂ =>
-    (Quotient.liftOn₂ q₁ q₂ fun α β => Nonempty <| α ↪ β) fun α β γ δ ⟨e₁⟩ ⟨e₂⟩ =>
+    Quotient.liftOn₂ q₁ q₂ (fun α β => Nonempty <| α ↪ β) fun α β γ δ ⟨e₁⟩ ⟨e₂⟩ =>
       propext ⟨fun ⟨e⟩ => ⟨e.congr e₁ e₂⟩, fun ⟨e⟩ => ⟨e.congr e₁.symm e₂.symm⟩⟩⟩
 
 instance : PartialOrder Cardinal.{u} where
@@ -262,7 +262,7 @@ theorem mk_le_of_surjective {α β : Type u} {f : α → β} (hf : Surjective f)
 #align cardinal.mk_le_of_surjective Cardinal.mk_le_of_surjective
 
 theorem le_mk_iff_exists_set {c : Cardinal} {α : Type u} : c ≤ (#α) ↔ ∃ p : Set α, (#p) = c :=
-  ⟨(induction_on c) fun β ⟨⟨f, hf⟩⟩ => ⟨Set.range f, (Equiv.ofInjective f hf).cardinal_eq.symm⟩,
+  ⟨induction_on c fun β ⟨⟨f, hf⟩⟩ => ⟨Set.range f, (Equiv.ofInjective f hf).cardinal_eq.symm⟩,
     fun ⟨p, e⟩ => e ▸ ⟨⟨Subtype.val, fun a b => Subtype.eq⟩⟩⟩
 #align cardinal.le_mk_iff_exists_set Cardinal.le_mk_iff_exists_set
 
@@ -312,7 +312,7 @@ theorem lift_mk_eq' {α : Type u} {β : Type v} : lift.{v} (#α) = lift.{u} (#β
 
 @[simp]
 theorem lift_le {a b : Cardinal} : lift a ≤ lift b ↔ a ≤ b :=
-  (induction_on₂ a b) fun α β => by
+  induction_on₂ a b fun α β => by
     rw [← lift_umax]
     exact lift_mk_le
 #align cardinal.lift_le Cardinal.lift_le
@@ -404,7 +404,7 @@ alias mk_le_one_iff_set_subsingleton ↔ _ _root_.set.subsingleton.cardinal_mk_l
 #align set.subsingleton.cardinal_mk_le_one Set.Subsingleton.cardinal_mk_le_one
 
 instance : Add Cardinal.{u} :=
-  ⟨(map₂ Sum) fun α β γ δ => Equiv.sumCongr⟩
+  ⟨map₂ Sum fun α β γ δ => Equiv.sumCongr⟩
 
 theorem add_def (α β : Type u) : (#α) + (#β) = (#Sum α β) :=
   rfl
@@ -442,7 +442,7 @@ theorem mk_fintype (α : Type u) [Fintype α] : (#α) = Fintype.card α :=
 #align cardinal.mk_fintype Cardinal.mk_fintype
 
 instance : Mul Cardinal.{u} :=
-  ⟨(map₂ Prod) fun α β γ δ => Equiv.prodCongr⟩
+  ⟨map₂ Prod fun α β γ δ => Equiv.prodCongr⟩
 
 theorem mul_def (α β : Type u) : (#α) * (#β) = (#α × β) :=
   rfl
@@ -454,7 +454,7 @@ theorem mk_prod (α : Type u) (β : Type v) : (#α × β) = lift.{v, u} (#α) * 
 #align cardinal.mk_prod Cardinal.mk_prod
 
 private theorem mul_comm' (a b : Cardinal.{u}) : a * b = b * a :=
-  (induction_on₂ a b) fun α β => mk_congr <| Equiv.prodComm α β
+  induction_on₂ a b fun α β => mk_congr <| Equiv.prodComm α β
 #align cardinal.mul_comm' cardinal.mul_comm'
 
 /-- The cardinal exponential. `#α ^ #β` is the cardinal of `β → α`. -/
@@ -477,22 +477,22 @@ theorem mk_arrow (α : Type u) (β : Type v) : (#α → β) = (lift.{u} (#β)^li
 
 @[simp]
 theorem lift_power (a b) : lift (a^b) = (lift a^lift b) :=
-  (induction_on₂ a b) fun α β =>
+  induction_on₂ a b fun α β =>
     mk_congr <| Equiv.ulift.trans (Equiv.ulift.arrowCongr Equiv.ulift).symm
 #align cardinal.lift_power Cardinal.lift_power
 
 @[simp]
 theorem power_zero {a : Cardinal} : (a^0) = 1 :=
-  (induction_on a) fun α => mk_congr <| Equiv.pemptyArrowEquivPUnit α
+  induction_on a fun α => mk_congr <| Equiv.pemptyArrowEquivPUnit α
 #align cardinal.power_zero Cardinal.power_zero
 
 @[simp]
 theorem power_one {a : Cardinal} : (a^1) = a :=
-  (induction_on a) fun α => mk_congr <| Equiv.punitArrowEquiv α
+  induction_on a fun α => mk_congr <| Equiv.punitArrowEquiv α
 #align cardinal.power_one Cardinal.power_one
 
 theorem power_add {a b c : Cardinal} : (a^b + c) = (a^b) * (a^c) :=
-  (induction_on₃ a b c) fun α β γ => mk_congr <| Equiv.sumArrowEquivProdArrow β γ α
+  induction_on₃ a b c fun α β γ => mk_congr <| Equiv.sumArrowEquivProdArrow β γ α
 #align cardinal.power_add Cardinal.power_add
 
 instance : CommSemiring Cardinal.{u} where
@@ -500,18 +500,18 @@ instance : CommSemiring Cardinal.{u} where
   one := 1
   add := (· + ·)
   mul := (· * ·)
-  zero_add a := (induction_on a) fun α => mk_congr <| Equiv.emptySum PEmpty α
-  add_zero a := (induction_on a) fun α => mk_congr <| Equiv.sumEmpty α PEmpty
-  add_assoc a b c := (induction_on₃ a b c) fun α β γ => mk_congr <| Equiv.sumAssoc α β γ
-  add_comm a b := (induction_on₂ a b) fun α β => mk_congr <| Equiv.sumComm α β
-  zero_mul a := (induction_on a) fun α => mk_congr <| Equiv.pemptyProd α
-  mul_zero a := (induction_on a) fun α => mk_congr <| Equiv.prodPEmpty α
-  one_mul a := (induction_on a) fun α => mk_congr <| Equiv.punitProd α
-  mul_one a := (induction_on a) fun α => mk_congr <| Equiv.prodPUnit α
-  mul_assoc a b c := (induction_on₃ a b c) fun α β γ => mk_congr <| Equiv.prodAssoc α β γ
+  zero_add a := induction_on a fun α => mk_congr <| Equiv.emptySum PEmpty α
+  add_zero a := induction_on a fun α => mk_congr <| Equiv.sumEmpty α PEmpty
+  add_assoc a b c := induction_on₃ a b c fun α β γ => mk_congr <| Equiv.sumAssoc α β γ
+  add_comm a b := induction_on₂ a b fun α β => mk_congr <| Equiv.sumComm α β
+  zero_mul a := induction_on a fun α => mk_congr <| Equiv.pemptyProd α
+  mul_zero a := induction_on a fun α => mk_congr <| Equiv.prodPEmpty α
+  one_mul a := induction_on a fun α => mk_congr <| Equiv.punitProd α
+  mul_one a := induction_on a fun α => mk_congr <| Equiv.prodPUnit α
+  mul_assoc a b c := induction_on₃ a b c fun α β γ => mk_congr <| Equiv.prodAssoc α β γ
   mul_comm := mul_comm'
-  left_distrib a b c := (induction_on₃ a b c) fun α β γ => mk_congr <| Equiv.prodSumDistrib α β γ
-  right_distrib a b c := (induction_on₃ a b c) fun α β γ => mk_congr <| Equiv.sumProdDistrib α β γ
+  left_distrib a b c := induction_on₃ a b c fun α β γ => mk_congr <| Equiv.prodSumDistrib α β γ
+  right_distrib a b c := induction_on₃ a b c fun α β γ => mk_congr <| Equiv.sumProdDistrib α β γ
   npow n c := c^n
   npow_zero' := @power_zero
   npow_succ' n c := show (c^n + 1) = c * (c^n) by rw [power_add, power_one, mul_comm']
@@ -526,7 +526,7 @@ theorem power_bit1 (a b : Cardinal) : (a^bit1 b) = (a^b) * (a^b) * a := by
 
 @[simp]
 theorem one_power {a : Cardinal} : (1^a) = 1 :=
-  (induction_on a) fun α => (Equiv.arrowPUnitEquivPUnit α).cardinal_eq
+  induction_on a fun α => (Equiv.arrowPUnitEquivPUnit α).cardinal_eq
 #align cardinal.one_power Cardinal.one_power
 
 @[simp]
@@ -539,7 +539,7 @@ theorem mk_Prop : (#Prop) = 2 := by simp
 
 @[simp]
 theorem zero_power {a : Cardinal} : a ≠ 0 → (0^a) = 0 :=
-  (induction_on a) fun α heq =>
+  induction_on a fun α heq =>
     mk_eq_zero_iff.2 <|
       isEmpty_pi.2 <|
         let ⟨a⟩ := mk_ne_zero_iff.1 HEq
@@ -547,13 +547,13 @@ theorem zero_power {a : Cardinal} : a ≠ 0 → (0^a) = 0 :=
 #align cardinal.zero_power Cardinal.zero_power
 
 theorem power_ne_zero {a : Cardinal} (b) : a ≠ 0 → (a^b) ≠ 0 :=
-  (induction_on₂ a b) fun α β h =>
+  induction_on₂ a b fun α β h =>
     let ⟨a⟩ := mk_ne_zero_iff.1 h
     mk_ne_zero_iff.2 ⟨fun _ => a⟩
 #align cardinal.power_ne_zero Cardinal.power_ne_zero
 
 theorem mul_power {a b c : Cardinal} : (a * b^c) = (a^c) * (b^c) :=
-  (induction_on₃ a b c) fun α β γ => mk_congr <| Equiv.arrowProdEquivProdArrow α β γ
+  induction_on₃ a b c fun α β γ => mk_congr <| Equiv.arrowProdEquivProdArrow α β γ
 #align cardinal.mul_power Cardinal.mul_power
 
 theorem power_mul {a b c : Cardinal} : (a^b * c) = ((a^b)^c) :=
@@ -574,13 +574,13 @@ theorem lift_one : lift 1 = 1 :=
 
 @[simp]
 theorem lift_add (a b) : lift (a + b) = lift a + lift b :=
-  (induction_on₂ a b) fun α β =>
+  induction_on₂ a b fun α β =>
     mk_congr <| Equiv.ulift.trans (Equiv.sumCongr Equiv.ulift Equiv.ulift).symm
 #align cardinal.lift_add Cardinal.lift_add
 
 @[simp]
 theorem lift_mul (a b) : lift (a * b) = lift a * lift b :=
-  (induction_on₂ a b) fun α β =>
+  induction_on₂ a b fun α β =>
     mk_congr <| Equiv.ulift.trans (Equiv.prodCongr Equiv.ulift Equiv.ulift).symm
 #align cardinal.lift_mul Cardinal.lift_mul
 
@@ -635,15 +635,14 @@ instance : CanonicallyOrderedCommSemiring Cardinal.{u} :=
     bot_le := Cardinal.zero_le
     add_le_add_left := fun a b => add_le_add_left
     exists_add_of_le := fun a b =>
-      (induction_on₂ a b) fun α β ⟨⟨f, hf⟩⟩ =>
+      induction_on₂ a b fun α β ⟨⟨f, hf⟩⟩ =>
         have : Sum α (range fᶜ : Set β) ≃ β :=
           (Equiv.sumCongr (Equiv.ofInjective f hf) (Equiv.refl _)).trans <|
             Equiv.Set.sumCompl (range f)
         ⟨#↥(range fᶜ), mk_congr this.symm⟩
     le_self_add := fun a b => (add_zero a).ge.trans <| add_le_add_left (Cardinal.zero_le _) _
     eq_zero_or_eq_zero_of_mul_eq_zero := fun a b =>
-      (induction_on₂ a b) fun α β => by
-        simpa only [mul_def, mk_eq_zero_iff, isEmpty_prod] using id }
+      induction_on₂ a b fun α β => by simpa only [mul_def, mk_eq_zero_iff, isEmpty_prod] using id }
 
 theorem zero_power_le (c : Cardinal.{u}) : ((0 : Cardinal.{u})^c) ≤ 1 :=
   by
@@ -704,7 +703,7 @@ theorem power_le_max_power_one {a b c : Cardinal} (h : b ≤ c) : (a^b) ≤ max 
 #align cardinal.power_le_max_power_one Cardinal.power_le_max_power_one
 
 theorem power_le_power_right {a b c : Cardinal} : a ≤ b → (a^c) ≤ (b^c) :=
-  (induction_on₃ a b c) fun α β γ ⟨e⟩ => ⟨Embedding.arrowCongrRight e⟩
+  induction_on₃ a b c fun α β γ ⟨e⟩ => ⟨Embedding.arrowCongrRight e⟩
 #align cardinal.power_le_power_right Cardinal.power_le_power_right
 
 theorem power_pos {a : Cardinal} (b) (ha : 0 < a) : 0 < (a^b) :=
@@ -793,7 +792,7 @@ theorem mk_sigma {ι} (f : ι → Type _) : (#Σi, f i) = sum fun i => #f i :=
 @[simp]
 theorem sum_const (ι : Type u) (a : Cardinal.{v}) :
     (sum fun i : ι => a) = lift.{v} (#ι) * lift.{u} a :=
-  (induction_on a) fun α =>
+  induction_on a fun α =>
     mk_congr <|
       calc
         (Σi : ι, Quotient.out (#α)) ≃ ι × Quotient.out (#α) := Equiv.sigmaEquivProd _ _
@@ -965,12 +964,12 @@ theorem mk_pi {ι : Type u} (α : ι → Type v) : (#∀ i, α i) = prod fun i =
 @[simp]
 theorem prod_const (ι : Type u) (a : Cardinal.{v}) :
     (prod fun i : ι => a) = (lift.{u} a^lift.{v} (#ι)) :=
-  (induction_on a) fun α =>
-    mk_congr <| (Equiv.piCongr Equiv.ulift.symm) fun i => outMkEquiv.trans Equiv.ulift.symm
+  induction_on a fun α =>
+    mk_congr <| Equiv.piCongr Equiv.ulift.symm fun i => outMkEquiv.trans Equiv.ulift.symm
 #align cardinal.prod_const Cardinal.prod_const
 
 theorem prod_const' (ι : Type u) (a : Cardinal.{u}) : (prod fun _ : ι => a) = (a^#ι) :=
-  (induction_on a) fun α => (mk_pi _).symm
+  induction_on a fun α => (mk_pi _).symm
 #align cardinal.prod_const' Cardinal.prod_const'
 
 theorem prod_le_prod {ι} (f g : ι → Cardinal) (H : ∀ i, f i ≤ g i) : prod f ≤ prod g :=
@@ -1030,13 +1029,13 @@ theorem lift_infi {ι} (f : ι → Cardinal) : lift (infᵢ f) = ⨅ i, lift (f 
 #align cardinal.lift_infi Cardinal.lift_infi
 
 theorem lift_down {a : Cardinal.{u}} {b : Cardinal.{max u v}} : b ≤ lift a → ∃ a', lift a' = b :=
-  (induction_on₂ a b) fun α β => by
+  induction_on₂ a b fun α β => by
     rw [← lift_id (#β), ← lift_umax, ← lift_umax.{u, v}, lift_mk_le] <;>
       exact fun ⟨f⟩ =>
         ⟨#Set.range f,
           Eq.symm <|
             lift_mk_eq.2
-              ⟨(embedding.equiv_of_surjective (embedding.cod_restrict _ f Set.mem_range_self))
+              ⟨embedding.equiv_of_surjective (embedding.cod_restrict _ f Set.mem_range_self)
                   fun ⟨a, ⟨b, e⟩⟩ => ⟨b, Subtype.eq e⟩⟩⟩
 #align cardinal.lift_down Cardinal.lift_down
 
@@ -1731,7 +1730,7 @@ theorem aleph_0_to_part_enat : toPartEnat ℵ₀ = ⊤ :=
 #align cardinal.aleph_0_to_part_enat Cardinal.aleph_0_to_part_enat
 
 theorem to_part_enat_surjective : Surjective toPartEnat := fun x =>
-  (PartEnat.cases_on x ⟨ℵ₀, to_part_enat_apply_of_aleph_0_le le_rfl⟩) fun n =>
+  PartEnat.cases_on x ⟨ℵ₀, to_part_enat_apply_of_aleph_0_le le_rfl⟩ fun n =>
     ⟨n, to_part_enat_cast n⟩
 #align cardinal.to_part_enat_surjective Cardinal.to_part_enat_surjective
 
@@ -2118,7 +2117,7 @@ theorem exists_not_mem_of_length_lt {α : Type _} (l : List α) (h : ↑l.length
     (#α) = (#(Set.univ : Set α)) := mk_univ.symm
     _ ≤ (#l.to_finset) := mk_le_mk_of_subset fun x _ => list.mem_to_finset.mpr (h x)
     _ = l.to_finset.card := Cardinal.mk_coe_finset
-    _ ≤ l.length := cardinal.nat_cast_le.mpr (List.to_finset_card_le l)
+    _ ≤ l.length := cardinal.nat_cast_le.mpr (List.toFinset_card_le l)
     
 #align cardinal.exists_not_mem_of_length_lt Cardinal.exists_not_mem_of_length_lt
 

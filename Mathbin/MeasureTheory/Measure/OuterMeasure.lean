@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module measure_theory.measure.outer_measure
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1452,11 +1452,11 @@ theorem extend_Union {β} [Countable β] {f : β → Set α} (hd : Pairwise (Dis
     (hm : ∀ i, P (f i)) : extend m (⋃ i, f i) = ∑' i, extend m (f i) :=
   by
   cases nonempty_encodable β
-  rw [← Encodable.Union_decode₂, ← tsum_Union_decode₂]
+  rw [← Encodable.unionᵢ_decode₂, ← tsum_Union_decode₂]
   ·
     exact
-      extend_Union_nat PU (fun n => Encodable.Union_decode₂_cases P0 hm)
-        (mU _ (Encodable.Union_decode₂_disjoint_on hd))
+      extend_Union_nat PU (fun n => Encodable.unionᵢ_decode₂_cases P0 hm)
+        (mU _ (Encodable.unionᵢ_decode₂_disjoint_on hd))
   · exact extend_empty P0 m0
 #align measure_theory.extend_Union MeasureTheory.extend_Union
 
@@ -1739,7 +1739,7 @@ theorem exists_measurable_superset_eq_trim (m : OuterMeasure α) (s : Set α) :
     have : tendsto (fun n : ℕ => ms + n⁻¹) at_top (𝓝 (ms + 0)) :=
       tendsto_const_nhds.add Ennreal.tendsto_inv_nat_nhds_zero
     rw [add_zero] at this
-    refine' le_antisymm ((ge_of_tendsto' this) fun n => _) _
+    refine' le_antisymm (ge_of_tendsto' this fun n => _) _
     · exact le_trans (m.mono' <| Inter_subset t n) (hm' n).le
     · refine' infᵢ_le_of_le (⋂ n, t n) _
       refine' infᵢ_le_of_le (subset_Inter hsub) _

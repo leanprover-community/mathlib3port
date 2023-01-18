@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.transvection
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -112,7 +112,7 @@ theorem update_row_eq_transvection [Finite n] (c : R) :
       Algebra.id.smul_eq_mul, mul_zero]
   ·
     simp only [update_row, transvection, ha, Ne.symm ha, std_basis_matrix.apply_of_ne, add_zero,
-      Algebra.id.smul_eq_mul, Function.update_noteq, Ne.def, not_false_iff, Dmatrix.add_apply,
+      Algebra.id.smul_eq_mul, Function.update_noteq, Ne.def, not_false_iff, DMatrix.add_apply,
       Pi.smul_apply, mul_zero, false_and_iff]
 #align matrix.update_row_eq_transvection Matrix.update_row_eq_transvection
 
@@ -325,7 +325,7 @@ theorem to_matrix_reindex_equiv (e : n ≃ p) (t : TransvectionStruct n R) :
   cases t
   ext (a b)
   simp only [reindex_equiv, transvection, mul_boole, Algebra.id.smul_eq_mul, to_matrix_mk,
-    submatrix_apply, reindex_apply, Dmatrix.add_apply, Pi.smul_apply, reindex_alg_equiv_apply]
+    submatrix_apply, reindex_apply, DMatrix.add_apply, Pi.smul_apply, reindex_alg_equiv_apply]
   by_cases ha : e t_i = a <;> by_cases hb : e t_j = b <;> by_cases hab : a = b <;>
     simp [ha, hb, hab, ← e.apply_eq_iff_eq_symm_apply, std_basis_matrix]
 #align
@@ -388,7 +388,7 @@ theorem list_transvec_col_mul_last_row_drop (i : Sum (Fin r) Unit) {k : ℕ} (hk
   by
   apply Nat.decreasingInduction' _ hk
   ·
-    simp only [list_transvec_col, List.length_of_fn, Matrix.one_mul, List.drop_eq_nil_of_le,
+    simp only [list_transvec_col, List.length_ofFn, Matrix.one_mul, List.drop_eq_nil_of_le,
       List.prod_nil]
   · intro n hn hk IH
     have hn' : n < (list_transvec_col M).length := by simpa [list_transvec_col] using hn
@@ -416,7 +416,7 @@ theorem list_transvec_col_mul_last_col (hM : M (inr unit) (inr unit) ≠ 0) (i :
   · simpa only [if_true, List.drop.equations._eqn_1] using H 0 (zero_le _)
   intro k hk
   apply Nat.decreasingInduction' _ hk
-  · simp only [list_transvec_col, List.length_of_fn, Matrix.one_mul, List.drop_eq_nil_of_le,
+  · simp only [list_transvec_col, List.length_ofFn, Matrix.one_mul, List.drop_eq_nil_of_le,
       List.prod_nil]
     rw [if_neg]
     simpa only [not_le] using i.2
@@ -462,7 +462,7 @@ theorem mul_list_transvec_row_last_col_take (i : Sum (Fin r) Unit) {k : ℕ} (hk
         ↑(transvection (inr Unit.unit) (inl k')
             (-M (inr Unit.unit) (inl k') / M (inr Unit.unit) (inr Unit.unit))) :=
       by
-      simp only [list_transvec_row, List.ofFnNthVal, hkr, dif_pos, List.nth_of_fn]
+      simp only [list_transvec_row, List.ofFnNthVal, hkr, dif_pos, List.get?_ofFn]
       rfl
     simp only [List.take_succ, ← Matrix.mul_assoc, this, List.prod_append, Matrix.mul_one,
       Matrix.mul_eq_mul, List.prod_cons, List.prod_nil, Option.to_list_some]
@@ -504,7 +504,7 @@ theorem mul_list_transvec_row_last_row (hM : M (inr unit) (inr unit) ≠ 0) (i :
         ↑(transvection (inr Unit.unit) (inl n')
             (-M (inr Unit.unit) (inl n') / M (inr Unit.unit) (inr Unit.unit))) :=
       by
-      simp only [list_transvec_row, List.ofFnNthVal, hnr, dif_pos, List.nth_of_fn]
+      simp only [list_transvec_row, List.ofFnNthVal, hnr, dif_pos, List.get?_ofFn]
       rfl
     simp only [List.take_succ, A, ← Matrix.mul_assoc, List.prod_append, Matrix.mul_one,
       Matrix.mul_eq_mul, List.prod_cons, List.prod_nil, Option.to_list_some]

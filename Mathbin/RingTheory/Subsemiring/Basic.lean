@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module ring_theory.subsemiring.basic
-! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
+! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -93,7 +93,7 @@ instance (priority := 75) toNonAssocSemiring : NonAssocSemiring s :=
 #align subsemiring_class.to_non_assoc_semiring SubsemiringClass.toNonAssocSemiring
 
 instance nontrivial [Nontrivial R] : Nontrivial s :=
-  (nontrivial_of_ne 0 1) fun H => zero_ne_one (congr_arg Subtype.val H)
+  nontrivial_of_ne 0 1 fun H => zero_ne_one (congr_arg Subtype.val H)
 #align subsemiring_class.nontrivial SubsemiringClass.nontrivial
 
 instance no_zero_divisors [NoZeroDivisors R] : NoZeroDivisors s
@@ -401,7 +401,7 @@ theorem coe_mul (x y : s) : ((x * y : s) : R) = (x * y : R) :=
 #align subsemiring.coe_mul Subsemiring.coe_mul
 
 instance nontrivial [Nontrivial R] : Nontrivial s :=
-  (nontrivial_of_ne 0 1) fun H => zero_ne_one (congr_arg Subtype.val H)
+  nontrivial_of_ne 0 1 fun H => zero_ne_one (congr_arg Subtype.val H)
 #align subsemiring.nontrivial Subsemiring.nontrivial
 
 protected theorem pow_mem {R : Type _} [Semiring R] (s : Subsemiring R) {x : R} (hx : x ∈ s)
@@ -1261,7 +1261,7 @@ theorem range_snd : (snd R S).srange = ⊤ :=
 @[simp]
 theorem prod_bot_sup_bot_prod (s : Subsemiring R) (t : Subsemiring S) :
     s.Prod ⊥ ⊔ prod ⊥ t = s.Prod t :=
-  (le_antisymm (sup_le (prod_mono_right s bot_le) (prod_mono_left t bot_le))) fun p hp =>
+  le_antisymm (sup_le (prod_mono_right s bot_le) (prod_mono_left t bot_le)) fun p hp =>
     Prod.fst_mul_snd p ▸
       mul_mem
         ((le_sup_left : s.Prod ⊥ ≤ s.Prod ⊥ ⊔ prod ⊥ t) ⟨hp.1, SetLike.mem_coe.2 <| one_mem ⊥⟩)
