@@ -998,13 +998,13 @@ protected def mkPiAlgebraFin : MultilinearMap R (fun i : Fin n => A) A
     intro m i x y
     have : (List.finRange n).indexOf i < n := by
       simpa using List.indexOf_lt_length.2 (List.mem_finRange i)
-    simp [List.of_fn_eq_map, (List.nodup_finRange n).map_update, List.prod_set, add_mul, this,
+    simp [List.ofFn_eq_map, (List.nodup_finRange n).map_update, List.prod_set, add_mul, this,
       mul_add, add_mul]
   map_smul' := by
     intro m i c x
     have : (List.finRange n).indexOf i < n := by
       simpa using List.indexOf_lt_length.2 (List.mem_finRange i)
-    simp [List.of_fn_eq_map, (List.nodup_finRange n).map_update, List.prod_set, this]
+    simp [List.ofFn_eq_map, (List.nodup_finRange n).map_update, List.prod_set, this]
 #align multilinear_map.mk_pi_algebra_fin MultilinearMap.mkPiAlgebraFin
 
 variable {R A n}

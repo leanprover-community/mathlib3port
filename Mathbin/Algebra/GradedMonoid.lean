@@ -427,7 +427,7 @@ theorem GradedMonoid.list_prod_map_eq_dprod (l : List α) (f : α → GradedMono
 theorem GradedMonoid.list_prod_of_fn_eq_dprod {n : ℕ} (f : Fin n → GradedMonoid A) :
     (List.ofFn f).Prod =
       GradedMonoid.mk _ ((List.finRange n).dprod (fun i => (f i).1) fun i => (f i).2) :=
-  by rw [List.of_fn_eq_map, GradedMonoid.list_prod_map_eq_dprod]
+  by rw [List.ofFn_eq_map, GradedMonoid.list_prod_map_eq_dprod]
 #align graded_monoid.list_prod_of_fn_eq_dprod GradedMonoid.list_prod_of_fn_eq_dprod
 
 end Dprod
@@ -569,7 +569,7 @@ theorem list_prod_map_mem_graded {ι'} (l : List ι') (i : ι' → ι) (r : ι' 
 theorem list_prod_of_fn_mem_graded {n} (i : Fin n → ι) (r : Fin n → R) (h : ∀ j, r j ∈ A (i j)) :
     (List.ofFn r).Prod ∈ A (List.ofFn i).Sum :=
   by
-  rw [List.of_fn_eq_map, List.of_fn_eq_map]
+  rw [List.ofFn_eq_map, List.ofFn_eq_map]
   exact list_prod_map_mem_graded _ _ _ fun _ _ => h _
 #align set_like.list_prod_of_fn_mem_graded SetLike.list_prod_of_fn_mem_graded
 

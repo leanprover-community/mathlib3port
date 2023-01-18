@@ -895,7 +895,7 @@ theorem norm_mk_pi_algebra_fin_succ_le : ‖ContinuousMultilinearMap.mkPiAlgebra
   have := fun f => @op_norm_le_bound 𝕜 (Fin n.succ) (fun i => A) A _ _ _ _ _ _ _ f _ zero_le_one
   refine' this _ _
   intro m
-  simp only [ContinuousMultilinearMap.mk_pi_algebra_fin_apply, one_mul, List.of_fn_eq_map,
+  simp only [ContinuousMultilinearMap.mk_pi_algebra_fin_apply, one_mul, List.ofFn_eq_map,
     Fin.prod_univ_def, Multiset.coe_map, Multiset.coe_prod]
   refine' (List.norm_prod_le' _).trans_eq _
   · rw [Ne.def, List.map_eq_nil, List.finRange_eq_nil]

@@ -563,7 +563,7 @@ protected def mkPiAlgebraFin : A[×n]→L[R] A
     where
   cont := by
     change Continuous fun m => (List.ofFn m).Prod
-    simp_rw [List.of_fn_eq_map]
+    simp_rw [List.ofFn_eq_map]
     exact continuous_list_prod _ fun i hi => continuous_apply _
   toMultilinearMap := MultilinearMap.mkPiAlgebraFin R n A
 #align continuous_multilinear_map.mk_pi_algebra_fin ContinuousMultilinearMap.mkPiAlgebraFin

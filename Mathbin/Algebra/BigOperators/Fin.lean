@@ -52,7 +52,7 @@ theorem prod_univ_def [CommMonoid β] {n : ℕ} (f : Fin n → β) :
 
 @[to_additive]
 theorem prod_of_fn [CommMonoid β] {n : ℕ} (f : Fin n → β) : (List.ofFn f).Prod = ∏ i, f i := by
-  rw [List.of_fn_eq_map, prod_univ_def]
+  rw [List.ofFn_eq_map, prod_univ_def]
 #align fin.prod_of_fn Fin.prod_of_fn
 
 /-- A product of a function `f : fin 0 → β` is `1` because `fin 0` is empty -/

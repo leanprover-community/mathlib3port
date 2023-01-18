@@ -285,7 +285,7 @@ theorem of_list_dprod {α} (l : List α) (fι : α → ι) (fA : ∀ a, A (fι a
 
 theorem list_prod_of_fn_of_eq_dprod (n : ℕ) (fι : Fin n → ι) (fA : ∀ a, A (fι a)) :
     (List.ofFn fun a => of A (fι a) (fA a)).Prod = of A _ ((List.finRange n).dprod fι fA) := by
-  rw [List.of_fn_eq_map, of_list_dprod]
+  rw [List.ofFn_eq_map, of_list_dprod]
 #align direct_sum.list_prod_of_fn_of_eq_dprod DirectSum.list_prod_of_fn_of_eq_dprod
 
 open BigOperators
