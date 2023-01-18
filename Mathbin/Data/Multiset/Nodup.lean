@@ -228,15 +228,11 @@ theorem nodup_map_iff_inj_on {f : α → β} {s : Multiset α} (d : Nodup s) :
   ⟨inj_on_of_nodup_map, fun h => d.map_on h⟩
 #align multiset.nodup_map_iff_inj_on Multiset.nodup_map_iff_inj_on
 
-/- warning: multiset.nodup.filter -> Multiset.Nodup.filter is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p] {s : Multiset.{u1} α}, (Multiset.Nodup.{u1} α s) -> (Multiset.Nodup.{u1} α (Multiset.filter.{u1} α p (fun (a : α) => _inst_1 a) s))
-but is expected to have type
-  forall {α : Type.{u1}} (p : α -> Bool) {_inst_1 : Multiset.{u1} α}, (Multiset.Nodup.{u1} α _inst_1) -> (Multiset.Nodup.{u1} α (Multiset.filter.{u1} α p _inst_1))
-Case conversion may be inaccurate. Consider using '#align multiset.nodup.filter Multiset.Nodup.filterₓ'. -/
+#print Multiset.Nodup.filter /-
 theorem Nodup.filter (p : α → Prop) [DecidablePred p] {s} : Nodup s → Nodup (filter p s) :=
   Quot.inductionOn s fun l => Nodup.filter p
 #align multiset.nodup.filter Multiset.Nodup.filter
+-/
 
 #print Multiset.nodup_attach /-
 @[simp]

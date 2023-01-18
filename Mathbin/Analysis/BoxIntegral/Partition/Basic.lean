@@ -497,7 +497,7 @@ theorem sum_of_with_bot {M : Type _} [AddCommMonoid M] (boxes : Finset (WithBot 
     (pairwise_disjoint : Set.Pairwise (boxes : Set (WithBot (Box ι))) Disjoint) (f : Box ι → M) :
     (∑ J in (ofWithBot boxes le_of_mem pairwise_disjoint).boxes, f J) =
       ∑ J in boxes, Option.elim' 0 f J :=
-  Finset.sum_erase_none _ _
+  Finset.sum_eraseNone _ _
 #align box_integral.prepartition.sum_of_with_bot BoxIntegral.Prepartition.sum_of_with_bot
 
 /-- Restrict a prepartition to a box. -/

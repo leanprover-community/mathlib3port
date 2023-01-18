@@ -302,14 +302,18 @@ theorem powersetLen_empty (n : ℕ) {s : Finset α} (h : s.card < n) : powersetL
 #align finset.powerset_len_empty Finset.powersetLen_empty
 -/
 
-#print Finset.powersetLen_eq_filter /-
+/- warning: finset.powerset_len_eq_filter -> Finset.powersetLen_eq_filter is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {n : Nat} {s : Finset.{u1} α}, Eq.{succ u1} (Finset.{u1} (Finset.{u1} α)) (Finset.powersetLen.{u1} α n s) (Finset.filter.{u1} (Finset.{u1} α) (fun (x : Finset.{u1} α) => Eq.{1} Nat (Finset.card.{u1} α x) n) (fun (a : Finset.{u1} α) => Nat.decidableEq (Finset.card.{u1} α a) n) (Finset.powerset.{u1} α s))
+but is expected to have type
+  forall {α : Type.{u1}} {n : Nat} {s : Finset.{u1} α}, Eq.{succ u1} (Finset.{u1} (Finset.{u1} α)) (Finset.powersetLen.{u1} α n s) (Finset.filter.{u1} (Finset.{u1} α) (fun (x : Finset.{u1} α) => Eq.{1} Nat (Finset.card.{u1} α x) n) (fun (a : Finset.{u1} α) => instDecidableEqNat (Finset.card.{u1} α a) n) (Finset.powerset.{u1} α s))
+Case conversion may be inaccurate. Consider using '#align finset.powerset_len_eq_filter Finset.powersetLen_eq_filterₓ'. -/
 theorem powersetLen_eq_filter {n} {s : Finset α} :
     powersetLen n s = (powerset s).filter fun x => x.card = n :=
   by
   ext
   simp [mem_powerset_len]
 #align finset.powerset_len_eq_filter Finset.powersetLen_eq_filter
--/
 
 #print Finset.powersetLen_succ_insert /-
 theorem powersetLen_succ_insert [DecidableEq α] {x : α} {s : Finset α} (h : x ∉ s) (n : ℕ) :

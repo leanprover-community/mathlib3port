@@ -699,7 +699,7 @@ theorem linear_independent_sum {v : Sum ι ι' → M} :
       0 :=
     by
     rw [Finset.sum_preimage', Finset.sum_preimage', ← Finset.sum_union, ← Finset.filter_or]
-    · simpa only [← mem_union, range_inl_union_range_inr, mem_univ, Finset.filter_true]
+    · simpa only [← mem_union, range_inl_union_range_inr, mem_univ, Finset.filter_True]
     · exact Finset.disjoint_filter.2 fun x _ hx => disjoint_left.1 is_compl_range_inl_range_inr.1 hx
   · rw [← eq_neg_iff_add_eq_zero] at this
     rw [disjoint_def'] at hlr

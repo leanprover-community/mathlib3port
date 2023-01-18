@@ -62,7 +62,7 @@ theorem coe_ne_locus : ↑(f.neLocus g) = { x | f x ≠ g x } :=
 theorem ne_locus_eq_empty {f g : α →₀ N} : f.neLocus g = ∅ ↔ f = g :=
   ⟨fun h =>
     ext fun a => not_not.mp (mem_ne_locus.Not.mp (Finset.eq_empty_iff_forall_not_mem.mp h a)),
-    fun h => h ▸ by simp only [ne_locus, Ne.def, eq_self_iff_true, not_true, Finset.filter_false]⟩
+    fun h => h ▸ by simp only [ne_locus, Ne.def, eq_self_iff_true, not_true, Finset.filter_False]⟩
 #align finsupp.ne_locus_eq_empty Finsupp.ne_locus_eq_empty
 
 @[simp]

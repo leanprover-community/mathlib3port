@@ -108,7 +108,7 @@ variable {M : Type _} [Fintype α] [CommMonoid M]
 
 @[simp, to_additive]
 theorem Fintype.prod_option (f : Option α → M) : (∏ i, f i) = f none * ∏ i, f (some i) :=
-  Finset.prod_insert_none f univ
+  Finset.prod_insertNone f univ
 #align fintype.prod_option Fintype.prod_option
 
 end

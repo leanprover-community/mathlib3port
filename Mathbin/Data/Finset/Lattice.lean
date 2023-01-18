@@ -2637,7 +2637,12 @@ theorem map_finset_sup [DecidableEq α] [DecidableEq β] (s : Finset γ) (f : γ
   Finset.comp_sup_eq_sup_comp _ (fun _ _ => map_union hg) (map_zero _)
 #align multiset.map_finset_sup Multiset.map_finset_sup
 
-#print Multiset.count_finset_sup /-
+/- warning: multiset.count_finset_sup -> Multiset.count_finset_sup is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} β] (s : Finset.{u1} α) (f : α -> (Multiset.{u2} β)) (b : β), Eq.{1} Nat (Multiset.count.{u2} β (fun (a : β) (b : β) => _inst_1 a b) b (Finset.sup.{u2, u1} (Multiset.{u2} β) α (Lattice.toSemilatticeSup.{u2} (Multiset.{u2} β) (Multiset.lattice.{u2} β (fun (a : β) (b : β) => _inst_1 a b))) (Multiset.orderBot.{u2} β) s f)) (Finset.sup.{0, u1} Nat α (CanonicallyLinearOrderedAddMonoid.semilatticeSup.{0} Nat Nat.canonicallyLinearOrderedAddMonoid) Nat.orderBot s (fun (a : α) => Multiset.count.{u2} β (fun (a : β) (b : β) => _inst_1 a b) b (f a)))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} β] (s : Finset.{u1} α) (f : α -> (Multiset.{u2} β)) (b : β), Eq.{1} Nat (Multiset.count.{u2} β (fun (a : β) (b : β) => _inst_1 a b) b (Finset.sup.{u2, u1} (Multiset.{u2} β) α (Lattice.toSemilatticeSup.{u2} (Multiset.{u2} β) (Multiset.instLatticeMultiset.{u2} β (fun (a : β) (b : β) => _inst_1 a b))) (Multiset.instOrderBotMultisetToLEToPreorderInstPartialOrderMultiset.{u2} β) s f)) (Finset.sup.{0, u1} Nat α (Lattice.toSemilatticeSup.{0} Nat (DistribLattice.toLattice.{0} Nat instDistribLatticeNat)) Nat.orderBot s (fun (a : α) => Multiset.count.{u2} β (fun (a : β) (b : β) => _inst_1 a b) b (f a)))
+Case conversion may be inaccurate. Consider using '#align multiset.count_finset_sup Multiset.count_finset_supₓ'. -/
 theorem count_finset_sup [DecidableEq β] (s : Finset α) (f : α → Multiset β) (b : β) :
     count b (s.sup f) = s.sup fun a => count b (f a) :=
   by
@@ -2648,7 +2653,6 @@ theorem count_finset_sup [DecidableEq β] (s : Finset α) (f : α → Multiset �
     rw [Finset.sup_insert, sup_eq_union, count_union, Finset.sup_insert, ih]
     rfl
 #align multiset.count_finset_sup Multiset.count_finset_sup
--/
 
 /- warning: multiset.mem_sup -> Multiset.mem_sup is a dubious translation:
 lean 3 declaration is
