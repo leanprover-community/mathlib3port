@@ -42,7 +42,7 @@ def toMultiset : (α →₀ ℕ) ≃+ Multiset α
       simp only [Sum, Multiset.count_sum', Multiset.count_singleton, mul_boole, coe_mk,
         mem_support_iff, Multiset.count_nsmul, Finset.sum_ite_eq, ite_not, ite_eq_right_iff]
       exact Eq.symm
-  right_inv s := by simp only [Sum, coe_mk, Multiset.to_finset_sum_count_nsmul_eq]
+  right_inv s := by simp only [Sum, coe_mk, Multiset.toFinset_sum_count_nsmul_eq]
   map_add' f g := sum_add_index' (fun a => zero_nsmul _) fun a => add_nsmul _
 #align finsupp.to_multiset Finsupp.toMultiset
 

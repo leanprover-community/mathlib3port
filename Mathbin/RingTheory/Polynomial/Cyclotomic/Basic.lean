@@ -183,7 +183,7 @@ theorem prod_cyclotomic'_eq_X_pow_sub_one {K : Type _} [CommRing K] [IsDomain K]
   by
   have hd : (n.divisors : Set ℕ).PairwiseDisjoint fun k => primitiveRoots k K :=
     fun x hx y hy hne => IsPrimitiveRoot.disjoint hne
-  simp only [X_pow_sub_one_eq_prod hpos h, cyclotomic', ← Finset.prod_bUnion hd,
+  simp only [X_pow_sub_one_eq_prod hpos h, cyclotomic', ← Finset.prod_bunionᵢ hd,
     h.nth_roots_one_eq_bUnion_primitive_roots]
 #align polynomial.prod_cyclotomic'_eq_X_pow_sub_one Polynomial.prod_cyclotomic'_eq_X_pow_sub_one
 

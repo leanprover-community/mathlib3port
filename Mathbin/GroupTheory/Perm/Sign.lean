@@ -773,7 +773,7 @@ theorem sign_prod_congr_right (σ : α → Perm β) : sign (prodCongrRight σ) =
     intro b _
     exact list.mem_to_finset.mpr (mem_l b)
   rw [← prod_prod_extend_right σ hl mem_l, sign.map_list_prod, List.map_map, ← l_to_finset,
-    List.prod_to_finset _ hl]
+    List.prod_toFinset _ hl]
   simp_rw [← fun a => sign_prod_extend_right a (σ a)]
 #align equiv.perm.sign_prod_congr_right Equiv.Perm.sign_prod_congr_right
 

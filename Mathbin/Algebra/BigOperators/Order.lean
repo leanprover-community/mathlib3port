@@ -202,7 +202,7 @@ theorem pow_card_le_prod (s : Finset ι) (f : ι → N) (n : N) (h : ∀ x ∈ s
 
 theorem card_bUnion_le_card_mul [DecidableEq β] (s : Finset ι) (f : ι → Finset β) (n : ℕ)
     (h : ∀ a ∈ s, (f a).card ≤ n) : (s.bUnion f).card ≤ s.card * n :=
-  card_bUnion_le.trans <| sum_le_card_nsmul _ _ _ h
+  card_bunionᵢ_le.trans <| sum_le_card_nsmul _ _ _ h
 #align finset.card_bUnion_le_card_mul Finset.card_bUnion_le_card_mul
 
 variable {ι' : Type _} [DecidableEq ι']

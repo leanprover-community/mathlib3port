@@ -95,18 +95,18 @@ theorem disjoint_map_inl_map_inr : Disjoint (s.map Embedding.inl) (t.map Embeddi
   rintro x ⟨a, _, rfl⟩ ⟨b, _, ⟨⟩⟩
 #align finset.disjoint_map_inl_map_inr Finset.disjoint_map_inl_map_inr
 
-/- warning: finset.map_inl_disj_union_map_inr -> Finset.map_inl_disj_union_map_inr is a dubious translation:
+/- warning: finset.map_inl_disj_union_map_inr -> Finset.map_inl_disjUnion_map_inr is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} (s : Finset.{u1} α) (t : Finset.{u2} β), Eq.{succ (max u1 u2)} (Finset.{max u1 u2} (Sum.{u1, u2} α β)) (Finset.disjUnion.{max u1 u2} (Sum.{u1, u2} α β) (Finset.map.{u1, max u1 u2} α (Sum.{u1, u2} α β) (Function.Embedding.inl.{u1, u2} α β) s) (Finset.map.{u2, max u1 u2} β (Sum.{u1, u2} α β) (Function.Embedding.inr.{u1, u2} α β) t) (Finset.disjoint_map_inl_map_inr.{u1, u2} α β s t)) (Finset.disjSum.{u1, u2} α β s t)
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (s : Finset.{u2} α) (t : Finset.{u1} β), Eq.{max (succ u2) (succ u1)} (Finset.{max u2 u1} (Sum.{u2, u1} α β)) (Finset.disjUnion.{max u2 u1} (Sum.{u2, u1} α β) (Finset.map.{u2, max u1 u2} α (Sum.{u2, u1} α β) (Function.Embedding.inl.{u2, u1} α β) s) (Finset.map.{u1, max u2 u1} β (Sum.{u2, u1} α β) (Function.Embedding.inr.{u2, u1} α β) t) (Finset.disjoint_map_inl_map_inr.{u2, u1} α β s t)) (Finset.disjSum.{u2, u1} α β s t)
-Case conversion may be inaccurate. Consider using '#align finset.map_inl_disj_union_map_inr Finset.map_inl_disj_union_map_inrₓ'. -/
+Case conversion may be inaccurate. Consider using '#align finset.map_inl_disj_union_map_inr Finset.map_inl_disjUnion_map_inrₓ'. -/
 @[simp]
-theorem map_inl_disj_union_map_inr :
+theorem map_inl_disjUnion_map_inr :
     (s.map Embedding.inl).disjUnion (t.map Embedding.inr) (disjoint_map_inl_map_inr _ _) =
       s.disjSum t :=
   rfl
-#align finset.map_inl_disj_union_map_inr Finset.map_inl_disj_union_map_inr
+#align finset.map_inl_disj_union_map_inr Finset.map_inl_disjUnion_map_inr
 
 variable {s t} {s₁ s₂ : Finset α} {t₁ t₂ : Finset β} {a : α} {b : β} {x : Sum α β}
 

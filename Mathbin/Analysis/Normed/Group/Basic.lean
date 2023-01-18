@@ -1338,7 +1338,7 @@ theorem norm_multiset_sum_le {E} [SeminormedAddCommGroup E] (m : Multiset E) :
 @[to_additive]
 theorem norm_multiset_prod_le (m : Multiset E) : ‖m.Prod‖ ≤ (m.map fun x => ‖x‖).Sum :=
   by
-  rw [← Multiplicative.ofAdd_le, of_add_multiset_prod, Multiset.map_map]
+  rw [← Multiplicative.ofAdd_le, ofAdd_multiset_prod, Multiset.map_map]
   refine' Multiset.le_prod_of_submultiplicative (Multiplicative.ofAdd ∘ norm) _ (fun x y => _) _
   · simp only [comp_app, norm_one', ofAdd_zero]
   · exact norm_mul_le' _ _
@@ -1352,7 +1352,7 @@ theorem norm_sum_le {E} [SeminormedAddCommGroup E] (s : Finset ι) (f : ι → E
 @[to_additive]
 theorem norm_prod_le (s : Finset ι) (f : ι → E) : ‖∏ i in s, f i‖ ≤ ∑ i in s, ‖f i‖ :=
   by
-  rw [← Multiplicative.ofAdd_le, of_add_sum]
+  rw [← Multiplicative.ofAdd_le, ofAdd_sum]
   refine' Finset.le_prod_of_submultiplicative (Multiplicative.ofAdd ∘ norm) _ (fun x y => _) _ _
   · simp only [comp_app, norm_one', ofAdd_zero]
   · exact norm_mul_le' _ _

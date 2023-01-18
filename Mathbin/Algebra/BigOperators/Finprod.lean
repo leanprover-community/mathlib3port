@@ -902,7 +902,7 @@ theorem finprod_mem_Union [Finite ι] {t : ι → Set α} (h : Pairwise (Disjoin
   lift t to ι → Finset α using ht
   classical
     rw [← bUnion_univ, ← Finset.coe_univ, ← Finset.coe_bunionᵢ, finprod_mem_coe_finset,
-      Finset.prod_bUnion]
+      Finset.prod_bunionᵢ]
     · simp only [finprod_mem_coe_finset, finprod_eq_prod_of_fintype]
     · exact fun x _ y _ hxy => Finset.disjoint_coe.1 (h hxy)
 #align finprod_mem_Union finprod_mem_Union

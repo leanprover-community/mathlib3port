@@ -420,7 +420,7 @@ roots of its derivative (counted with multiplicities) plus one. -/
 theorem card_roots_le_derivative (p : ℝ[X]) : p.roots.card ≤ p.derivative.roots.card + 1 :=
   calc
     p.roots.card = ∑ x in p.roots.toFinset, p.roots.count x :=
-      (Multiset.to_finset_sum_count_eq _).symm
+      (Multiset.toFinset_sum_count_eq _).symm
     _ = ∑ x in p.roots.toFinset, p.roots.count x - 1 + 1 :=
       Eq.symm <|
         Finset.sum_congr rfl fun x hx =>
@@ -448,7 +448,7 @@ theorem card_roots_le_derivative (p : ℝ[X]) : p.roots.card ≤ p.derivative.ro
     _ = p.derivative.roots.card + 1 :=
       by
       rw [← add_assoc, ← Finset.sum_union Finset.disjoint_sdiff, Finset.union_sdiff_self_eq_union, ←
-        Multiset.to_finset_sum_count_eq, ← Finset.sum_subset (Finset.subset_union_right _ _)]
+        Multiset.toFinset_sum_count_eq, ← Finset.sum_subset (Finset.subset_union_right _ _)]
       intro x hx₁ hx₂
       simpa only [Multiset.mem_toFinset, Multiset.count_eq_zero] using hx₂
     

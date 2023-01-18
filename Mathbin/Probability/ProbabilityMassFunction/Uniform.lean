@@ -177,7 +177,7 @@ def ofMultiset (s : Multiset α) (hs : s ≠ 0) : Pmf α :=
             (tsum_eq_sum fun a ha =>
               Nat.cast_eq_zero.2 <| by rwa [Multiset.count_eq_zero, ← Multiset.mem_toFinset])
         _ = 1 := by
-          rw [← Nat.cast_sum, Multiset.to_finset_sum_count_eq s,
+          rw [← Nat.cast_sum, Multiset.toFinset_sum_count_eq s,
             Ennreal.inv_mul_cancel (Nat.cast_ne_zero.2 (hs ∘ Multiset.card_eq_zero.1))
               (Ennreal.nat_ne_top _)]
         )⟩

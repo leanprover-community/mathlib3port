@@ -641,7 +641,7 @@ theorem sum_card_order_of_eq_card_pow_eq_one [Fintype G] [DecidableEq G] (hn : n
     (∑ m in (Finset.range n.succ).filter (· ∣ n),
           (Finset.univ.filter fun x : G => orderOf x = m).card) =
         _ :=
-      (Finset.card_bUnion
+      (Finset.card_bunionᵢ
           (by
             intros
             apply Finset.disjoint_filter.2

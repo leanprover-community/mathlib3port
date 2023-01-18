@@ -308,7 +308,7 @@ theorem pi'_pi [∀ i, SigmaFinite (μ i)] (s : ∀ i, Set (α i)) : pi' μ (pi 
   by
   rw [pi', ← MeasurableEquiv.pi_measurable_equiv_tprod_symm_apply, MeasurableEquiv.map_apply,
       MeasurableEquiv.pi_measurable_equiv_tprod_symm_apply, elim_preimage_pi, tprod_tprod _ μ, ←
-      List.prod_to_finset, sorted_univ_to_finset] <;>
+      List.prod_toFinset, sorted_univ_to_finset] <;>
     exact sorted_univ_nodup ι
 #align measure_theory.measure.pi'_pi MeasureTheory.Measure.pi'_pi
 
