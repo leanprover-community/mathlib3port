@@ -154,6 +154,12 @@ theorem mod_modEq (a n) : a % n ≡ a [ZMOD n] :=
 
 namespace Modeq
 
+/- warning: int.modeq.of_dvd -> Int.ModEq.of_dvd is a dubious translation:
+lean 3 declaration is
+  forall {m : Int} {n : Int} {a : Int} {b : Int}, (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) m n) -> (Int.ModEq n a b) -> (Int.ModEq m a b)
+but is expected to have type
+  forall {m : Int} {n : Int} {a : Int} {b : Int}, (Dvd.dvd.{0} Int Int.instDvdInt m n) -> (Int.ModEq n a b) -> (Int.ModEq m a b)
+Case conversion may be inaccurate. Consider using '#align int.modeq.of_dvd Int.ModEq.of_dvdₓ'. -/
 protected theorem of_dvd (d : m ∣ n) (h : a ≡ b [ZMOD n]) : a ≡ b [ZMOD m] :=
   modeq_of_dvd <| d.trans h.Dvd
 #align int.modeq.of_dvd Int.ModEq.of_dvd
@@ -283,13 +289,17 @@ protected theorem pow (m : ℕ) (h : a ≡ b [ZMOD n]) : a ^ m ≡ b ^ m [ZMOD n
   exact h.mul hd
 #align int.modeq.pow Int.ModEq.pow
 
+#print Int.ModEq.of_mul_left /-
 theorem of_mul_left (m : ℤ) (h : a ≡ b [ZMOD m * n]) : a ≡ b [ZMOD n] := by
   rw [modeq_iff_dvd] at * <;> exact (dvd_mul_left n m).trans h
 #align int.modeq.of_mul_left Int.ModEq.of_mul_left
+-/
 
+#print Int.ModEq.of_mul_right /-
 theorem of_mul_right (m : ℤ) : a ≡ b [ZMOD n * m] → a ≡ b [ZMOD n] :=
   mul_comm m n ▸ of_mul_left _
 #align int.modeq.of_mul_right Int.ModEq.of_mul_right
+-/
 
 end Modeq
 

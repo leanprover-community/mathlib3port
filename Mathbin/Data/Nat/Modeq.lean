@@ -144,9 +144,11 @@ theorem mod_modEq (a n) : a % n ≡ a [MOD n] :=
 
 namespace Modeq
 
+#print Nat.ModEq.of_dvd /-
 protected theorem of_dvd (d : m ∣ n) (h : a ≡ b [MOD n]) : a ≡ b [MOD m] :=
   modEq_of_dvd ((Int.coe_nat_dvd.2 d).trans h.Dvd)
 #align nat.modeq.of_dvd Nat.ModEq.of_dvd
+-/
 
 #print Nat.ModEq.mul_left' /-
 protected theorem mul_left' (c : ℕ) (h : a ≡ b [MOD n]) : c * a ≡ c * b [MOD c * n] := by
@@ -271,6 +273,7 @@ protected theorem mul_right_cancel_iff' {a b c m : ℕ} (hc : c ≠ 0) :
 #align nat.modeq.mul_right_cancel_iff' Nat.ModEq.mul_right_cancel_iff'
 -/
 
+#print Nat.ModEq.of_mul_left /-
 /-- Cancel left multiplication in the modulus.
 
 For cancelling left multiplication on both sides of the `≡`, see `nat.modeq.mul_left_cancel'`. -/
@@ -279,13 +282,16 @@ theorem of_mul_left (m : ℕ) (h : a ≡ b [MOD m * n]) : a ≡ b [MOD n] :=
   rw [modeq_iff_dvd] at *
   exact (dvd_mul_left (n : ℤ) (m : ℤ)).trans h
 #align nat.modeq.of_mul_left Nat.ModEq.of_mul_left
+-/
 
+#print Nat.ModEq.of_mul_right /-
 /-- Cancel right multiplication in the modulus.
 
 For cancelling right multiplication on both sides of the `≡`, see `nat.modeq.mul_right_cancel'`. -/
 theorem of_mul_right (m : ℕ) : a ≡ b [MOD n * m] → a ≡ b [MOD n] :=
   mul_comm m n ▸ of_mul_left _
 #align nat.modeq.of_mul_right Nat.ModEq.of_mul_right
+-/
 
 end Modeq
 
@@ -307,25 +313,17 @@ theorem modEq_zero_iff : a ≡ b [MOD 0] ↔ a = b := by rw [modeq, mod_zero, mo
 #align nat.modeq_zero_iff Nat.modEq_zero_iff
 -/
 
-/- warning: nat.add_modeq_left -> Nat.add_modEq_left is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {a : Nat}, Nat.ModEq n (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n a) a
-but is expected to have type
-  forall {n : Nat} {a : Nat}, Nat.ModEq a (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) a n) n
-Case conversion may be inaccurate. Consider using '#align nat.add_modeq_left Nat.add_modEq_leftₓ'. -/
+#print Nat.add_modEq_left /-
 @[simp]
 theorem add_modEq_left : n + a ≡ a [MOD n] := by rw [modeq, add_mod_left]
 #align nat.add_modeq_left Nat.add_modEq_left
+-/
 
-/- warning: nat.add_modeq_right -> Nat.add_modEq_right is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {a : Nat}, Nat.ModEq n (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) a n) a
-but is expected to have type
-  forall {n : Nat} {a : Nat}, Nat.ModEq a (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n a) n
-Case conversion may be inaccurate. Consider using '#align nat.add_modeq_right Nat.add_modEq_rightₓ'. -/
+#print Nat.add_modEq_right /-
 @[simp]
 theorem add_modEq_right : a + n ≡ a [MOD n] := by rw [modeq, add_mod_right]
 #align nat.add_modeq_right Nat.add_modEq_right
+-/
 
 namespace Modeq
 
@@ -343,13 +341,16 @@ theorem add_le_of_lt (h1 : a ≡ b [MOD m]) (h2 : a < b) : a + m ≤ b :=
 #align nat.modeq.add_le_of_lt Nat.ModEq.add_le_of_lt
 -/
 
+#print Nat.ModEq.dvd_iff /-
 theorem dvd_iff (h : a ≡ b [MOD m]) (hdm : d ∣ m) : d ∣ a ↔ d ∣ b :=
   by
   simp only [← modeq_zero_iff_dvd]
   replace h := h.of_dvd hdm
   exact ⟨h.symm.trans, h.trans⟩
 #align nat.modeq.dvd_iff Nat.ModEq.dvd_iff
+-/
 
+#print Nat.ModEq.gcd_eq /-
 theorem gcd_eq (h : a ≡ b [MOD m]) : gcd a m = gcd b m :=
   by
   have h1 := gcd_dvd_right a m
@@ -358,7 +359,14 @@ theorem gcd_eq (h : a ≡ b [MOD m]) : gcd a m = gcd b m :=
     dvd_antisymm (dvd_gcd ((h.dvd_iff h1).mp (gcd_dvd_left a m)) h1)
       (dvd_gcd ((h.dvd_iff h2).mpr (gcd_dvd_left b m)) h2)
 #align nat.modeq.gcd_eq Nat.ModEq.gcd_eq
+-/
 
+/- warning: nat.modeq.eq_of_abs_lt -> Nat.ModEq.eq_of_abs_lt is a dubious translation:
+lean 3 declaration is
+  forall {m : Nat} {a : Nat} {b : Nat}, (Nat.ModEq m a b) -> (LT.lt.{0} Int Int.hasLt (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.hasNeg (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (LinearOrder.toLattice.{0} Int Int.linearOrder)))) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.hasSub) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) b) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) a))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) m)) -> (Eq.{1} Nat a b)
+but is expected to have type
+  forall {m : Nat} {a : Nat} {b : Nat}, (Nat.ModEq m a b) -> (LT.lt.{0} Int Int.instLTInt (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.instNegInt (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (DistribLattice.toLattice.{0} Int (instDistribLattice.{0} Int Int.instLinearOrderInt))))) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) (Nat.cast.{0} Int Int.instNatCastInt b) (Nat.cast.{0} Int Int.instNatCastInt a))) (Nat.cast.{0} Int Int.instNatCastInt m)) -> (Eq.{1} Nat a b)
+Case conversion may be inaccurate. Consider using '#align nat.modeq.eq_of_abs_lt Nat.ModEq.eq_of_abs_ltₓ'. -/
 theorem eq_of_abs_lt (h : a ≡ b [MOD m]) (h2 : |(b - a : ℤ)| < m) : a = b :=
   by
   apply Int.ofNat.inj
@@ -366,13 +374,16 @@ theorem eq_of_abs_lt (h : a ≡ b [MOD m]) (h2 : |(b - a : ℤ)| < m) : a = b :=
   exact Int.eq_zero_of_abs_lt_dvd (modeq_iff_dvd.mp h) h2
 #align nat.modeq.eq_of_abs_lt Nat.ModEq.eq_of_abs_lt
 
+#print Nat.ModEq.eq_of_lt_of_lt /-
 theorem eq_of_lt_of_lt (h : a ≡ b [MOD m]) (ha : a < m) (hb : b < m) : a = b :=
   h.eq_of_abs_lt <|
     abs_sub_lt_iff.2
       ⟨(sub_le_self _ <| Int.coe_nat_nonneg _).trans_lt <| cast_lt.2 hb,
         (sub_le_self _ <| Int.coe_nat_nonneg _).trans_lt <| cast_lt.2 ha⟩
 #align nat.modeq.eq_of_lt_of_lt Nat.ModEq.eq_of_lt_of_lt
+-/
 
+#print Nat.ModEq.cancel_left_div_gcd /-
 /-- To cancel a common factor `c` from a `modeq` we must divide the modulus `m` by `gcd m c` -/
 theorem cancel_left_div_gcd (hm : 0 < m) (h : c * a ≡ c * b [MOD m]) : a ≡ b [MOD m / gcd m c] :=
   by
@@ -391,23 +402,31 @@ theorem cancel_left_div_gcd (hm : 0 < m) (h : c * a ≡ c * b [MOD m]) : a ≡ b
     simp only [← Int.coe_nat_div, Int.coe_nat_gcd (m / d) (c / d), gcd_div hmd hcd,
       Nat.div_self (gcd_pos_of_pos_left c hm)]
 #align nat.modeq.cancel_left_div_gcd Nat.ModEq.cancel_left_div_gcd
+-/
 
+#print Nat.ModEq.cancel_right_div_gcd /-
 theorem cancel_right_div_gcd (hm : 0 < m) (h : a * c ≡ b * c [MOD m]) : a ≡ b [MOD m / gcd m c] :=
   by
   apply cancel_left_div_gcd hm
   simpa [mul_comm] using h
 #align nat.modeq.cancel_right_div_gcd Nat.ModEq.cancel_right_div_gcd
+-/
 
+#print Nat.ModEq.cancel_left_div_gcd' /-
 theorem cancel_left_div_gcd' (hm : 0 < m) (hcd : c ≡ d [MOD m]) (h : c * a ≡ d * b [MOD m]) :
     a ≡ b [MOD m / gcd m c] :=
   (h.trans (ModEq.mul_right b hcd).symm).cancel_left_div_gcd hm
 #align nat.modeq.cancel_left_div_gcd' Nat.ModEq.cancel_left_div_gcd'
+-/
 
+#print Nat.ModEq.cancel_right_div_gcd' /-
 theorem cancel_right_div_gcd' (hm : 0 < m) (hcd : c ≡ d [MOD m]) (h : a * c ≡ b * d [MOD m]) :
     a ≡ b [MOD m / gcd m c] :=
   hcd.cancel_left_div_gcd' hm <| by simpa [mul_comm] using h
 #align nat.modeq.cancel_right_div_gcd' Nat.ModEq.cancel_right_div_gcd'
+-/
 
+#print Nat.ModEq.cancel_left_of_coprime /-
 /-- A common factor that's coprime with the modulus can be cancelled from a `modeq` -/
 theorem cancel_left_of_coprime (hmc : gcd m c = 1) (h : c * a ≡ c * b [MOD m]) : a ≡ b [MOD m] :=
   by
@@ -417,11 +436,14 @@ theorem cancel_left_of_coprime (hmc : gcd m c = 1) (h : c * a ≡ c * b [MOD m])
     subst h
   simpa [hmc] using h.cancel_left_div_gcd hm
 #align nat.modeq.cancel_left_of_coprime Nat.ModEq.cancel_left_of_coprime
+-/
 
+#print Nat.ModEq.cancel_right_of_coprime /-
 /-- A common factor that's coprime with the modulus can be cancelled from a `modeq` -/
 theorem cancel_right_of_coprime (hmc : gcd m c = 1) (h : a * c ≡ b * c [MOD m]) : a ≡ b [MOD m] :=
   cancel_left_of_coprime hmc <| by simpa [mul_comm] using h
 #align nat.modeq.cancel_right_of_coprime Nat.ModEq.cancel_right_of_coprime
+-/
 
 end Modeq
 
