@@ -4173,7 +4173,7 @@ theorem eq_one_of_noncomm_prod_eq_one_of_independent {ι : Type _} (s : Finset �
         have : K x ≤ ⨆ i ∈ (s : Set ι), K i := le_supᵢ₂ x hx
         exact this (hmem.2 x hx)
       intro heq1
-      rw [Finset.noncomm_prod_insert_of_not_mem _ _ _ _ hnmem] at heq1
+      rw [Finset.noncommProd_insert_of_not_mem _ _ _ _ hnmem] at heq1
       have hnmem' : i ∉ (s : Set ι) := by simpa
       obtain ⟨heq1i : f i = 1, heq1S : s.noncomm_prod f _ = 1⟩ :=
         subgroup.disjoint_iff_mul_eq_one.mp (hind.disjoint_bsupr hnmem') hmem.1 hmem_bsupr heq1

@@ -157,7 +157,7 @@ theorem multiset_noncomm_prod_mem (S : Submonoid M) (m : Multiset M) (comm) (h :
     m.noncommProd comm ∈ S :=
   by
   induction' m using Quotient.inductionOn with l
-  simp only [Multiset.quot_mk_to_coe, Multiset.noncomm_prod_coe]
+  simp only [Multiset.quot_mk_to_coe, Multiset.noncommProd_coe]
   exact Submonoid.list_prod_mem _ h
 #align submonoid.multiset_noncomm_prod_mem Submonoid.multiset_noncomm_prod_mem
 #align add_submonoid.multiset_noncomm_sum_mem AddSubmonoid.multiset_noncomm_sum_mem

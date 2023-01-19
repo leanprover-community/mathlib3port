@@ -78,12 +78,12 @@ def noncommPiCoprod : (∀ i : ι, N i) →* M
     where
   toFun f := Finset.univ.noncommProd (fun i => ϕ i (f i)) fun i _ j _ h => hcomm h _ _
   map_one' := by
-    apply (Finset.noncomm_prod_eq_pow_card _ _ _ _ _).trans (one_pow _)
+    apply (Finset.noncommProd_eq_pow_card _ _ _ _ _).trans (one_pow _)
     simp
   map_mul' f g := by
     classical
       convert
-        @Finset.noncomm_prod_mul_distrib _ _ _ _ (fun i => ϕ i (f i)) (fun i => ϕ i (g i)) _ _ _
+        @Finset.noncommProd_mul_distrib _ _ _ _ (fun i => ϕ i (f i)) (fun i => ϕ i (g i)) _ _ _
       · ext i
         exact map_mul (ϕ i) (f i) (g i)
       · rintro i - j - h
@@ -101,9 +101,9 @@ theorem noncomm_pi_coprod_mul_single (i : ι) (y : N i) :
   by
   change finset.univ.noncomm_prod (fun j => ϕ j (Pi.mulSingle i y j)) _ = ϕ i y
   simp (config := { singlePass := true }) only [← Finset.insert_erase (Finset.mem_univ i)]
-  rw [Finset.noncomm_prod_insert_of_not_mem _ _ _ _ (Finset.not_mem_erase i _)]
+  rw [Finset.noncommProd_insert_of_not_mem _ _ _ _ (Finset.not_mem_erase i _)]
   rw [Pi.mulSingle_eq_same]
-  rw [Finset.noncomm_prod_eq_pow_card]
+  rw [Finset.noncommProd_eq_pow_card]
   · rw [one_pow]
     exact mul_one _
   · intro j hj

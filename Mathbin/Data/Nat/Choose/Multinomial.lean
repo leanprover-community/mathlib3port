@@ -260,8 +260,8 @@ theorem sum_pow_of_commute [Semiring R] (x : α → R)
   refine' (Fintype.sum_equiv (sym_insert_equiv ha) _ _ fun m => _).symm
   rw [m.1.1.multinomial_filter_ne a]
   conv in m.1.1.map _ => rw [← m.1.1.filter_add_not ((· = ·) a), Multiset.map_add]
-  simp_rw [Multiset.noncomm_prod_add, m.1.1.filter_eq, Multiset.map_replicate, m.1.2]
-  rw [Multiset.noncomm_prod_eq_pow_card _ _ _ fun _ => Multiset.eq_of_mem_replicate]
+  simp_rw [Multiset.noncommProd_add, m.1.1.filter_eq, Multiset.map_replicate, m.1.2]
+  rw [Multiset.noncommProd_eq_pow_card _ _ _ fun _ => Multiset.eq_of_mem_replicate]
   rw [Multiset.card_replicate, Nat.cast_mul, mul_assoc, Nat.cast_comm]
   congr 1; simp_rw [← mul_assoc, Nat.cast_comm]; rfl
 #align finset.sum_pow_of_commute Finset.sum_pow_of_commute
@@ -271,7 +271,7 @@ theorem sum_pow [CommSemiring R] (x : α → R) (n : ℕ) :
   by
   conv_rhs => rw [← sum_coe_sort]
   convert sum_pow_of_commute s x (fun _ _ _ _ _ => mul_comm _ _) n
-  ext1; rw [Multiset.noncomm_prod_eq_prod]; rfl
+  ext1; rw [Multiset.noncommProd_eq_prod]; rfl
 #align finset.sum_pow Finset.sum_pow
 
 end Finset

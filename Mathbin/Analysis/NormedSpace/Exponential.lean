@@ -507,7 +507,7 @@ theorem exp_sum_of_commute {ι} (s : Finset ι) (f : ι → 𝔸)
   classical
     induction' s using Finset.induction_on with a s ha ih
     · simp
-    rw [Finset.noncomm_prod_insert_of_not_mem _ _ _ _ ha, Finset.sum_insert ha, exp_add_of_commute,
+    rw [Finset.noncommProd_insert_of_not_mem _ _ _ _ ha, Finset.sum_insert ha, exp_add_of_commute,
       ih (h.mono <| Finset.subset_insert _ _)]
     refine' Commute.sum_right _ _ _ fun i hi => _
     exact h.of_refl (Finset.mem_insert_self _ _) (Finset.mem_insert_of_mem hi)
@@ -642,7 +642,7 @@ theorem exp_add {x y : 𝔸} : exp 𝕂 (x + y) = exp 𝕂 x * exp 𝕂 y :=
 /-- A version of `exp_sum_of_commute` for a commutative Banach-algebra. -/
 theorem exp_sum {ι} (s : Finset ι) (f : ι → 𝔸) : exp 𝕂 (∑ i in s, f i) = ∏ i in s, exp 𝕂 (f i) :=
   by
-  rw [exp_sum_of_commute, Finset.noncomm_prod_eq_prod]
+  rw [exp_sum_of_commute, Finset.noncommProd_eq_prod]
   exact fun i hi j hj _ => Commute.all _ _
 #align exp_sum exp_sum
 
