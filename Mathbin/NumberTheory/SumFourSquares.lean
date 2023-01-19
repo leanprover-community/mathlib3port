@@ -103,7 +103,7 @@ private theorem sum_four_squares_of_two_mul_sum_four_squares {m a b c d : ℤ}
         ∃ i : Fin 4,
           f i ^ 2 + f (swap i 0 1) ^ 2 = 0 ∧ f (swap i 0 2) ^ 2 + f (swap i 0 3) ^ 2 = 0 :=
     by decide
-  let f : Fin 4 → ℤ := Vector.nth (a ::ᵥ b ::ᵥ c ::ᵥ d ::ᵥ Vector.nil)
+  let f : Fin 4 → ℤ := Vector.get (a ::ᵥ b ::ᵥ c ::ᵥ d ::ᵥ Vector.nil)
   let ⟨i, hσ⟩ :=
     this (coe ∘ f)
       (by

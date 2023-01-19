@@ -286,7 +286,7 @@ theorem exists_code {n} {f : Vector ℕ n →. ℕ} (hf : Nat.Partrec' f) :
     refine' Fin.succRec (fun n => _) (fun n i IH => _) i
     · exact ⟨head, fun ⟨List.cons a as, _⟩ => by simp <;> rfl⟩
     · obtain ⟨c, h⟩ := IH
-      exact ⟨c.comp tail, fun v => by simpa [← Vector.nth_tail] using h v.tail⟩
+      exact ⟨c.comp tail, fun v => by simpa [← Vector.get_tail] using h v.tail⟩
   case prim.comp m n f g hf hg IHf IHg => simpa [Part.bind_eq_bind] using exists_code.comp IHf IHg
   case prim.prec n f g hf hg IHf IHg =>
     obtain ⟨cf, hf⟩ := IHf
@@ -297,7 +297,7 @@ theorem exists_code {n} {f : Vector ℕ n →. ℕ} (hf : Nat.Partrec' f) :
     specialize hf v.tail
     replace hg := fun a b => hg (a ::ᵥ b ::ᵥ v.tail)
     simp only [Vector.cons_val, Vector.tail_val] at hf hg
-    simp only [Part.map_eq_map, Part.map_some, Vector.cons_val, Vector.cons_tail, Vector.cons_head,
+    simp only [Part.map_eq_map, Part.map_some, Vector.cons_val, Vector.tail_cons, Vector.head_cons,
       Pfun.coe_val, Vector.tail_val]
     simp only [← Part.pure_eq_some] at hf hg⊢
     induction' v.head with n IH <;>

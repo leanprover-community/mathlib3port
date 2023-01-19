@@ -246,7 +246,7 @@ theorem continuous_at_remove_nth {n : ℕ} {i : Fin (n + 1)} :
   --| ⟨l, hl⟩ :=
   by
     rw [ContinuousAt, remove_nth, tendsto_subtype_rng]
-    simp only [← Subtype.val_eq_coe, Vector.remove_nth_val]
+    simp only [← Subtype.val_eq_coe, Vector.removeNth_val]
     exact tendsto.comp List.tendsto_remove_nth continuous_at_subtype_coe
 #align vector.continuous_at_remove_nth Vector.continuous_at_remove_nth
 

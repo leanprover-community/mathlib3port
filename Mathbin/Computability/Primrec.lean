@@ -1320,10 +1320,10 @@ theorem vector_tail {n} : Primrec (@Vector.tail α n) :=
   vector_to_list_iff.1 <| (list_tail.comp vector_to_list).of_eq fun ⟨l, h⟩ => by cases l <;> rfl
 #align primrec.vector_tail Primrec.vector_tail
 
-theorem vector_nth {n} : Primrec₂ (@Vector.nth α n) :=
+theorem vector_nth {n} : Primrec₂ (@Vector.get α n) :=
   option_some_iff.1 <|
     (list_nth.comp (vector_to_list.comp fst) (fin_val.comp snd)).of_eq fun a => by
-      simp [Vector.nth_eq_nth_le] <;> rw [← List.nthLe_get?]
+      simp [Vector.get_eq_get] <;> rw [← List.nthLe_get?]
 #align primrec.vector_nth Primrec.vector_nth
 
 theorem list_of_fn :
@@ -1338,7 +1338,7 @@ theorem vector_of_fn {n} {f : Fin n → α → σ} (hf : ∀ i, Primrec (f i)) :
   vector_to_list_iff.1 <| by simp [list_of_fn hf]
 #align primrec.vector_of_fn Primrec.vector_of_fn
 
-theorem vector_nth' {n} : Primrec (@Vector.nth α n) :=
+theorem vector_nth' {n} : Primrec (@Vector.get α n) :=
   of_equiv_symm
 #align primrec.vector_nth' Primrec.vector_nth'
 

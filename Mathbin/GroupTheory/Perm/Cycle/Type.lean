@@ -438,7 +438,7 @@ theorem zero_eq : vectorsProdEqOne G 0 = {Vector.nil} :=
 
 theorem one_eq : vectorsProdEqOne G 1 = {Vector.nil.cons 1} :=
   by
-  simp_rw [Set.eq_singleton_iff_unique_mem, mem_iff, Vector.to_list_singleton, List.prod_singleton,
+  simp_rw [Set.eq_singleton_iff_unique_mem, mem_iff, Vector.toList_singleton, List.prod_singleton,
     Vector.head_cons]
   exact ⟨rfl, fun v hv => v.cons_head_tail.symm.trans (congr_arg₂ Vector.cons hv v.tail.eq_nil)⟩
 #align equiv.perm.vectors_prod_eq_one.one_eq Equiv.Perm.vectorsProdEqOne.one_eq

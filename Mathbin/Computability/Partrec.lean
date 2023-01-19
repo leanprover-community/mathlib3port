@@ -403,11 +403,11 @@ theorem vector_tail {n} : Computable (@Vector.tail α n) :=
   Primrec.vector_tail.to_comp
 #align computable.vector_tail Computable.vector_tail
 
-theorem vector_nth {n} : Computable₂ (@Vector.nth α n) :=
+theorem vector_nth {n} : Computable₂ (@Vector.get α n) :=
   Primrec.vector_nth.to_comp
 #align computable.vector_nth Computable.vector_nth
 
-theorem vector_nth' {n} : Computable (@Vector.nth α n) :=
+theorem vector_nth' {n} : Computable (@Vector.get α n) :=
   Primrec.vector_nth'.to_comp
 #align computable.vector_nth' Computable.vector_nth'
 
@@ -642,7 +642,7 @@ end Partrec
 @[simp]
 theorem Vector.m_of_fn_part_some {α n} :
     ∀ f : Fin n → α, (Vector.mOfFn fun i => Part.some (f i)) = Part.some (Vector.ofFn f) :=
-  Vector.m_of_fn_pure
+  Vector.mOfFn_pure
 #align vector.m_of_fn_part_some Vector.m_of_fn_part_some
 
 namespace Computable
