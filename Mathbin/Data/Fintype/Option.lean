@@ -29,30 +29,47 @@ open Finset Function
 instance {α : Type _} [Fintype α] : Fintype (Option α) :=
   ⟨univ.insertNone, fun a => by simp⟩
 
+/- warning: univ_option -> univ_option is a dubious translation:
+lean 3 declaration is
+  forall (α : Type.{u1}) [_inst_1 : Fintype.{u1} α], Eq.{succ u1} (Finset.{u1} (Option.{u1} α)) (Finset.univ.{u1} (Option.{u1} α) (Option.fintype.{u1} α _inst_1)) (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Option.{u1} α)) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Preorder.toLE.{u1} (Finset.{u1} (Option.{u1} α)) (PartialOrder.toPreorder.{u1} (Finset.{u1} (Option.{u1} α)) (Finset.partialOrder.{u1} (Option.{u1} α))))) (fun (_x : RelEmbedding.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Option.{u1} α)) (LE.le.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)))) (LE.le.{u1} (Finset.{u1} (Option.{u1} α)) (Preorder.toLE.{u1} (Finset.{u1} (Option.{u1} α)) (PartialOrder.toPreorder.{u1} (Finset.{u1} (Option.{u1} α)) (Finset.partialOrder.{u1} (Option.{u1} α)))))) => (Finset.{u1} α) -> (Finset.{u1} (Option.{u1} α))) (RelEmbedding.hasCoeToFun.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Option.{u1} α)) (LE.le.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)))) (LE.le.{u1} (Finset.{u1} (Option.{u1} α)) (Preorder.toLE.{u1} (Finset.{u1} (Option.{u1} α)) (PartialOrder.toPreorder.{u1} (Finset.{u1} (Option.{u1} α)) (Finset.partialOrder.{u1} (Option.{u1} α)))))) (Finset.insertNone.{u1} α) (Finset.univ.{u1} α _inst_1))
+but is expected to have type
+  forall (α : Type.{u1}) [_inst_1 : Fintype.{u1} α], Eq.{succ u1} (Finset.{u1} (Option.{u1} α)) (Finset.univ.{u1} (Option.{u1} α) (instFintypeOption.{u1} α _inst_1)) (FunLike.coe.{succ u1, succ u1, succ u1} (Function.Embedding.{succ u1, succ u1} (Finset.{u1} α) (Finset.{u1} (Option.{u1} α))) (Finset.{u1} α) (fun (_x : Finset.{u1} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Finset.{u1} α) => Finset.{u1} (Option.{u1} α)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Function.Embedding.{succ u1, succ u1} (Finset.{u1} α) (Finset.{u1} (Option.{u1} α))) (Finset.{u1} α) (Finset.{u1} (Option.{u1} α)) (Function.instEmbeddingLikeEmbedding.{succ u1, succ u1} (Finset.{u1} α) (Finset.{u1} (Option.{u1} α)))) (RelEmbedding.toEmbedding.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Option.{u1} α)) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.744 : Finset.{u1} α) (x._@.Mathlib.Order.Hom.Basic._hyg.746 : Finset.{u1} α) => LE.le.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) x._@.Mathlib.Order.Hom.Basic._hyg.744 x._@.Mathlib.Order.Hom.Basic._hyg.746) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.759 : Finset.{u1} (Option.{u1} α)) (x._@.Mathlib.Order.Hom.Basic._hyg.761 : Finset.{u1} (Option.{u1} α)) => LE.le.{u1} (Finset.{u1} (Option.{u1} α)) (Preorder.toLE.{u1} (Finset.{u1} (Option.{u1} α)) (PartialOrder.toPreorder.{u1} (Finset.{u1} (Option.{u1} α)) (Finset.partialOrder.{u1} (Option.{u1} α)))) x._@.Mathlib.Order.Hom.Basic._hyg.759 x._@.Mathlib.Order.Hom.Basic._hyg.761) (Finset.insertNone.{u1} α)) (Finset.univ.{u1} α _inst_1))
+Case conversion may be inaccurate. Consider using '#align univ_option univ_optionₓ'. -/
 theorem univ_option (α : Type _) [Fintype α] : (univ : Finset (Option α)) = insertNone univ :=
   rfl
 #align univ_option univ_option
 
+/- warning: fintype.card_option -> Fintype.card_option is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Fintype.{u1} α], Eq.{1} Nat (Fintype.card.{u1} (Option.{u1} α) (Option.fintype.{u1} α _inst_1)) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (Fintype.card.{u1} α _inst_1) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Fintype.{u1} α], Eq.{1} Nat (Fintype.card.{u1} (Option.{u1} α) (instFintypeOption.{u1} α _inst_1)) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (Fintype.card.{u1} α _inst_1) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))
+Case conversion may be inaccurate. Consider using '#align fintype.card_option Fintype.card_optionₓ'. -/
 @[simp]
 theorem Fintype.card_option {α : Type _} [Fintype α] :
     Fintype.card (Option α) = Fintype.card α + 1 :=
   (Finset.card_cons _).trans <| congr_arg₂ _ (card_map _) rfl
 #align fintype.card_option Fintype.card_option
 
+#print fintypeOfOption /-
 /-- If `option α` is a `fintype` then so is `α` -/
 def fintypeOfOption {α : Type _} [Fintype (Option α)] : Fintype α :=
   ⟨Finset.eraseNone (Fintype.elems (Option α)), fun x =>
     mem_eraseNone.mpr (Fintype.complete (some x))⟩
 #align fintype_of_option fintypeOfOption
+-/
 
+#print fintypeOfOptionEquiv /-
 /-- A type is a `fintype` if its successor (using `option`) is a `fintype`. -/
 def fintypeOfOptionEquiv [Fintype α] (f : α ≃ Option β) : Fintype β :=
   haveI := Fintype.ofEquiv _ f
   fintypeOfOption
 #align fintype_of_option_equiv fintypeOfOptionEquiv
+-/
 
 namespace Fintype
 
+#print Fintype.truncRecEmptyOption /-
 /-- A recursor principle for finite types, analogous to `nat.rec`. It effectively says
 that every `fintype` is either `empty` or `option α`, up to an `equiv`. -/
 def truncRecEmptyOption {P : Type u → Sort v} (of_equiv : ∀ {α β}, α ≃ β → P α → P β)
@@ -81,7 +98,14 @@ def truncRecEmptyOption {P : Type u → Sort v} (of_equiv : ∀ {α β}, α ≃ 
     intro ih
     refine' of_equiv e (h_option ih)
 #align fintype.trunc_rec_empty_option Fintype.truncRecEmptyOption
+-/
 
+/- warning: fintype.induction_empty_option -> Fintype.induction_empty_option is a dubious translation:
+lean 3 declaration is
+  forall {P : forall (α : Type.{u1}) [_inst_1 : Fintype.{u1} α], Prop}, (forall (α : Type.{u1}) (β : Type.{u1}) [_inst_2 : Fintype.{u1} β] (e : Equiv.{succ u1, succ u1} α β), (P α (Fintype.ofEquiv.{u1, u1} α β _inst_2 (Equiv.symm.{succ u1, succ u1} α β e))) -> (P β _inst_2)) -> (P PEmpty.{succ u1} (Fintype.ofIsEmpty.{u1} PEmpty.{succ u1} PEmpty.is_empty.{succ u1})) -> (forall (α : Type.{u1}) [_inst_3 : Fintype.{u1} α], (P α _inst_3) -> (P (Option.{u1} α) (Option.fintype.{u1} α _inst_3))) -> (forall (α : Type.{u1}) [_inst_4 : Fintype.{u1} α], P α _inst_4)
+but is expected to have type
+  forall {P : forall (α : Type.{u1}) [_inst_1 : Fintype.{u1} α], Prop}, (forall (α : Type.{u1}) (β : Type.{u1}) [_inst_2 : Fintype.{u1} β] (e : Equiv.{succ u1, succ u1} α β), (P α (Fintype.ofEquiv.{u1, u1} α β _inst_2 (Equiv.symm.{succ u1, succ u1} α β e))) -> (P β _inst_2)) -> (P PEmpty.{succ u1} (Fintype.ofIsEmpty.{u1} PEmpty.{succ u1} instIsEmptyPEmpty.{succ u1})) -> (forall (α : Type.{u1}) [_inst_3 : Fintype.{u1} α], (P α _inst_3) -> (P (Option.{u1} α) (instFintypeOption.{u1} α _inst_3))) -> (forall (α : Type.{u1}) [_inst_4 : Fintype.{u1} α], P α _inst_4)
+Case conversion may be inaccurate. Consider using '#align fintype.induction_empty_option Fintype.induction_empty_optionₓ'. -/
 /-- An induction principle for finite types, analogous to `nat.rec`. It effectively says
 that every `fintype` is either `empty` or `option α`, up to an `equiv`. -/
 @[elab_as_elim]
@@ -101,6 +125,7 @@ theorem induction_empty_option {P : ∀ (α : Type u) [Fintype α], Prop}
 
 end Fintype
 
+#print Finite.induction_empty_option /-
 /-- An induction principle for finite types, analogous to `nat.rec`. It effectively says
 that every `fintype` is either `empty` or `option α`, up to an `equiv`. -/
 theorem Finite.induction_empty_option {P : Type u → Prop} (of_equiv : ∀ {α β}, α ≃ β → P α → P β)
@@ -110,4 +135,5 @@ theorem Finite.induction_empty_option {P : Type u → Prop} (of_equiv : ∀ {α 
   refine' Fintype.induction_empty_option _ _ _ α
   exacts[fun α β _ => of_equiv, h_empty, @h_option]
 #align finite.induction_empty_option Finite.induction_empty_option
+-/
 
