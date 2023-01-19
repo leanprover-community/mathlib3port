@@ -1776,6 +1776,7 @@ theorem map_at_top_finset_prod_le_of_prod_eq [CommMonoid α] {f : β → α} {g 
         let ⟨v, hv⟩ := h_eq b
         infᵢ_le_of_le v <| by simp [Set.image_subset_iff] <;> exact hv
 #align filter.map_at_top_finset_prod_le_of_prod_eq Filter.map_at_top_finset_prod_le_of_prod_eq
+#align filter.map_at_top_finset_sum_le_of_sum_eq Filter.map_at_top_finset_sum_le_of_sum_eq
 
 theorem HasAntitoneBasis.eventually_subset [Preorder ι] {l : Filter α} {s : ι → Set α}
     (hl : l.HasAntitoneBasis s) {t : Set α} (ht : t ∈ l) : ∀ᶠ i in at_top, s i ⊆ t :=
@@ -2005,6 +2006,7 @@ theorem Function.Injective.map_at_top_finset_prod_eq [CommMonoid α] {g : γ →
     simp only [← prod_preimage _ _ (hg.inj_on _) _ fun x _ => hf x]
     exact ⟨_, (image_subset_iff_subset_preimage _).1 ht, rfl⟩
 #align function.injective.map_at_top_finset_prod_eq Function.Injective.map_at_top_finset_prod_eq
+#align function.injective.map_at_top_finset_sum_eq Function.Injective.map_at_top_finset_sum_eq
 
 /-- Let `g : γ → β` be an injective function and `f : β → α` be a function from the codomain of `g`
 to an additive commutative monoid. Suppose that `f x = 0` outside of the range of `g`. Then the

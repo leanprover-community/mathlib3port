@@ -44,6 +44,7 @@ class OrderedCancelCommMonoid (α : Type u) extends CommMonoid α, PartialOrder 
   mul_le_mul_left : ∀ a b : α, a ≤ b → ∀ c : α, c * a ≤ c * b
   le_of_mul_le_mul_left : ∀ a b c : α, a * b ≤ a * c → b ≤ c
 #align ordered_cancel_comm_monoid OrderedCancelCommMonoid
+#align ordered_cancel_add_comm_monoid OrderedCancelAddCommMonoid
 -/
 
 section OrderedCancelCommMonoid
@@ -63,6 +64,8 @@ instance (priority := 200) OrderedCancelCommMonoid.to_contravariantClass_le_left
   ⟨OrderedCancelCommMonoid.le_of_mul_le_mul_left⟩
 #align
   ordered_cancel_comm_monoid.to_contravariant_class_le_left OrderedCancelCommMonoid.to_contravariantClass_le_left
+#align
+  ordered_cancel_add_comm_monoid.to_contravariant_class_le_left OrderedCancelAddCommMonoid.to_contravariantClass_le_left
 
 /- warning: ordered_cancel_comm_monoid.lt_of_mul_lt_mul_left -> OrderedCancelCommMonoid.lt_of_mul_lt_mul_left is a dubious translation:
 lean 3 declaration is
@@ -77,6 +80,8 @@ theorem OrderedCancelCommMonoid.lt_of_mul_lt_mul_left : ∀ a b c : α, a * b < 
     mt (fun h => OrderedCancelCommMonoid.mul_le_mul_left _ _ h _) (not_le_of_gt h)
 #align
   ordered_cancel_comm_monoid.lt_of_mul_lt_mul_left OrderedCancelCommMonoid.lt_of_mul_lt_mul_left
+#align
+  ordered_cancel_add_comm_monoid.lt_of_add_lt_add_left OrderedCancelAddCommMonoid.lt_of_add_lt_add_left
 
 /- warning: ordered_cancel_comm_monoid.to_contravariant_class_left -> OrderedCancelCommMonoid.to_contravariantClass_left is a dubious translation:
 lean 3 declaration is
@@ -90,6 +95,8 @@ instance OrderedCancelCommMonoid.to_contravariantClass_left (M : Type _)
     where elim a b c := OrderedCancelCommMonoid.lt_of_mul_lt_mul_left _ _ _
 #align
   ordered_cancel_comm_monoid.to_contravariant_class_left OrderedCancelCommMonoid.to_contravariantClass_left
+#align
+  ordered_cancel_add_comm_monoid.to_contravariant_class_left OrderedCancelAddCommMonoid.to_contravariantClass_left
 
 /- warning: ordered_cancel_comm_monoid.to_contravariant_class_right -> OrderedCancelCommMonoid.to_contravariantClass_right is a dubious translation:
 lean 3 declaration is
@@ -107,6 +114,8 @@ instance OrderedCancelCommMonoid.to_contravariantClass_right (M : Type _)
   contravariant_swap_mul_lt_of_contravariant_mul_lt M
 #align
   ordered_cancel_comm_monoid.to_contravariant_class_right OrderedCancelCommMonoid.to_contravariantClass_right
+#align
+  ordered_cancel_add_comm_monoid.to_contravariant_class_right OrderedCancelAddCommMonoid.to_contravariantClass_right
 
 #print OrderedCancelCommMonoid.toOrderedCommMonoid /-
 -- see Note [lower instance priority]
@@ -114,6 +123,8 @@ instance OrderedCancelCommMonoid.to_contravariantClass_right (M : Type _)
 instance (priority := 100) OrderedCancelCommMonoid.toOrderedCommMonoid : OrderedCommMonoid α :=
   { ‹OrderedCancelCommMonoid α› with }
 #align ordered_cancel_comm_monoid.to_ordered_comm_monoid OrderedCancelCommMonoid.toOrderedCommMonoid
+#align
+  ordered_cancel_add_comm_monoid.to_ordered_comm_monoid OrderedCancelAddCommMonoid.toOrderedAddCommMonoid
 -/
 
 #print OrderedCancelCommMonoid.toCancelCommMonoid /-
@@ -124,6 +135,8 @@ instance (priority := 100) OrderedCancelCommMonoid.toCancelCommMonoid : CancelCo
     mul_left_cancel := fun a b c h =>
       (le_of_mul_le_mul_left' h.le).antisymm <| le_of_mul_le_mul_left' h.ge }
 #align ordered_cancel_comm_monoid.to_cancel_comm_monoid OrderedCancelCommMonoid.toCancelCommMonoid
+#align
+  ordered_cancel_add_comm_monoid.to_cancel_add_comm_monoid OrderedCancelAddCommMonoid.toCancelAddCommMonoid
 -/
 
 end OrderedCancelCommMonoid
@@ -146,5 +159,6 @@ in which multiplication is cancellative and monotone. -/
 class LinearOrderedCancelCommMonoid (α : Type u) extends OrderedCancelCommMonoid α,
   LinearOrderedCommMonoid α
 #align linear_ordered_cancel_comm_monoid LinearOrderedCancelCommMonoid
+#align linear_ordered_cancel_add_comm_monoid LinearOrderedCancelAddCommMonoid
 -/
 

@@ -55,6 +55,7 @@ noncomputable def diff : A :=
         QuotientGroup.left_rel_apply.mp <|
           Quotient.exact' ((α.symm_apply_apply q).trans (β.symm_apply_apply q).symm)⟩
 #align subgroup.left_transversals.diff Subgroup.leftTransversals.diff
+#align add_subgroup.left_transversals.diff AddSubgroup.leftTransversals.diff
 
 @[to_additive]
 theorem diff_mul_diff : diff ϕ R S * diff ϕ S T = diff ϕ R T :=
@@ -64,16 +65,19 @@ theorem diff_mul_diff : diff ϕ R S * diff ϕ S T = diff ϕ R T :=
         (congr_arg ϕ
           (by simp_rw [Subtype.ext_iff, coe_mul, coe_mk, mul_assoc, mul_inv_cancel_left])))
 #align subgroup.left_transversals.diff_mul_diff Subgroup.leftTransversals.diff_mul_diff
+#align add_subgroup.left_transversals.diff_add_diff AddSubgroup.leftTransversals.diff_add_diff
 
 @[to_additive]
 theorem diff_self : diff ϕ T T = 1 :=
   mul_right_eq_self.mp (diff_mul_diff ϕ T T T)
 #align subgroup.left_transversals.diff_self Subgroup.leftTransversals.diff_self
+#align add_subgroup.left_transversals.diff_self AddSubgroup.leftTransversals.diff_self
 
 @[to_additive]
 theorem diff_inv : (diff ϕ S T)⁻¹ = diff ϕ T S :=
   inv_eq_of_mul_eq_one_right <| (diff_mul_diff ϕ S T S).trans <| diff_self ϕ S
 #align subgroup.left_transversals.diff_inv Subgroup.leftTransversals.diff_inv
+#align add_subgroup.left_transversals.diff_neg AddSubgroup.leftTransversals.diff_neg
 
 @[to_additive]
 theorem smul_diff_smul (g : G) : diff ϕ (g • S) (g • T) = diff ϕ S T :=
@@ -87,6 +91,7 @@ theorem smul_diff_smul (g : G) : diff ϕ (g • S) (g • T) = diff ϕ S T :=
     (fun q _ => g • q) (fun _ _ => mem_univ _) (fun q _ => smul_inv_smul g q) fun q _ =>
     inv_smul_smul g q
 #align subgroup.left_transversals.smul_diff_smul Subgroup.leftTransversals.smul_diff_smul
+#align add_subgroup.left_transversals.vadd_diff_vadd AddSubgroup.leftTransversals.vadd_diff_vadd
 
 end LeftTransversals
 
@@ -106,6 +111,7 @@ noncomputable def transfer [FiniteIndex H] : G →* A :=
     map_one' := by rw [one_smul, diff_self]
     map_mul' := fun g h => by rw [mul_smul, ← diff_mul_diff, smul_diff_smul] }
 #align monoid_hom.transfer MonoidHom.transfer
+#align add_monoid_hom.transfer AddMonoidHom.transfer
 
 variable (T : leftTransversals (H : Set G))
 
@@ -113,6 +119,7 @@ variable (T : leftTransversals (H : Set G))
 theorem transfer_def [FiniteIndex H] (g : G) : transfer ϕ g = diff ϕ T (g • T) := by
   rw [transfer, ← diff_mul_diff, ← smul_diff_smul, mul_comm, diff_mul_diff] <;> rfl
 #align monoid_hom.transfer_def MonoidHom.transfer_def
+#align add_monoid_hom.transfer_def AddMonoidHom.transfer_def
 
 /-- Explicit computation of the transfer homomorphism. -/
 theorem transfer_eq_prod_quotient_orbit_rel_zpowers_quot [FiniteIndex H] (g : G)

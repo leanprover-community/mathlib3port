@@ -1562,7 +1562,7 @@ theorem cauchy_seq_finset_iff_vanishing :
     exact hde _ (h _ Finset.sdiff_disjoint) _ (h _ Finset.sdiff_disjoint)
 #align cauchy_seq_finset_iff_vanishing cauchy_seq_finset_iff_vanishing
 
-attribute [local instance] TopologicalAddGroup.t3Space
+attribute [local instance] TopologicalAddGroup.t3_space
 
 /-- The sum over the complement of a finset tends to `0` when the finset grows to cover the whole
 space. This does not need a summability assumption, as otherwise all sums are zero. -/

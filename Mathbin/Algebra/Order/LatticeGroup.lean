@@ -101,6 +101,7 @@ theorem mul_sup [CovariantClass α α (· * ·) (· ≤ ·)] (a b c : α) : c * 
   rw [← mul_le_mul_iff_left c⁻¹, ← mul_assoc, inv_mul_self, one_mul]
   exact sup_le (by simp) (by simp)
 #align mul_sup mul_sup
+#align add_sup add_sup
 
 /- warning: mul_inf -> mul_inf is a dubious translation:
 lean 3 declaration is
@@ -115,6 +116,7 @@ theorem mul_inf [CovariantClass α α (· * ·) (· ≤ ·)] (a b c : α) : c * 
   rw [← mul_le_mul_iff_left c⁻¹, ← mul_assoc, inv_mul_self, one_mul]
   exact le_inf (by simp) (by simp)
 #align mul_inf mul_inf
+#align add_inf add_inf
 
 /- warning: inv_sup_eq_inv_inf_inv -> inv_sup_eq_inv_inf_inv is a dubious translation:
 lean 3 declaration is
@@ -140,6 +142,7 @@ theorem inv_sup_eq_inv_inf_inv [CovariantClass α α (· * ·) (· ≤ ·)] (a b
     · rw [← inv_le_inv_iff]
       simp
 #align inv_sup_eq_inv_inf_inv inv_sup_eq_inv_inf_inv
+#align neg_sup_eq_neg_inf_neg neg_sup_eq_neg_inf_neg
 
 /- warning: inv_inf_eq_sup_inv -> inv_inf_eq_sup_inv is a dubious translation:
 lean 3 declaration is
@@ -152,6 +155,7 @@ Case conversion may be inaccurate. Consider using '#align inv_inf_eq_sup_inv inv
 theorem inv_inf_eq_sup_inv [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) : (a ⊓ b)⁻¹ = a⁻¹ ⊔ b⁻¹ :=
   by rw [← inv_inv (a⁻¹ ⊔ b⁻¹), inv_sup_eq_inv_inf_inv a⁻¹ b⁻¹, inv_inv, inv_inv]
 #align inv_inf_eq_sup_inv inv_inf_eq_sup_inv
+#align neg_inf_eq_sup_neg neg_inf_eq_sup_neg
 
 /- warning: inf_mul_sup -> inf_mul_sup is a dubious translation:
 lean 3 declaration is
@@ -172,6 +176,7 @@ theorem inf_mul_sup [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) : (a
     _ = a * b := by rw [mul_comm, inv_mul_cancel_right]
     
 #align inf_mul_sup inf_mul_sup
+#align inf_add_sup inf_add_sup
 
 namespace LatticeOrderedCommGroup
 
@@ -187,6 +192,8 @@ instance (priority := 100) hasOneLatticeHasPosPart : PosPart α :=
   ⟨fun a => a ⊔ 1⟩
 #align
   lattice_ordered_comm_group.has_one_lattice_has_pos_part LatticeOrderedCommGroup.hasOneLatticeHasPosPart
+#align
+  lattice_ordered_comm_group.has_zero_lattice_has_pos_part LatticeOrderedCommGroup.hasZeroLatticeHasPosPart
 -/
 
 /- warning: lattice_ordered_comm_group.m_pos_part_def -> LatticeOrderedCommGroup.m_pos_part_def is a dubious translation:
@@ -199,6 +206,7 @@ Case conversion may be inaccurate. Consider using '#align lattice_ordered_comm_g
 theorem m_pos_part_def (a : α) : a⁺ = a ⊔ 1 :=
   rfl
 #align lattice_ordered_comm_group.m_pos_part_def LatticeOrderedCommGroup.m_pos_part_def
+#align lattice_ordered_comm_group.pos_part_def LatticeOrderedCommGroup.pos_part_def
 
 #print LatticeOrderedCommGroup.hasOneLatticeHasNegPart /-
 -- see Note [lower instance priority]
@@ -212,6 +220,8 @@ instance (priority := 100) hasOneLatticeHasNegPart : NegPart α :=
   ⟨fun a => a⁻¹ ⊔ 1⟩
 #align
   lattice_ordered_comm_group.has_one_lattice_has_neg_part LatticeOrderedCommGroup.hasOneLatticeHasNegPart
+#align
+  lattice_ordered_comm_group.has_zero_lattice_has_neg_part LatticeOrderedCommGroup.hasZeroLatticeHasNegPart
 -/
 
 /- warning: lattice_ordered_comm_group.m_neg_part_def -> LatticeOrderedCommGroup.m_neg_part_def is a dubious translation:
@@ -224,6 +234,7 @@ Case conversion may be inaccurate. Consider using '#align lattice_ordered_comm_g
 theorem m_neg_part_def (a : α) : a⁻ = a⁻¹ ⊔ 1 :=
   rfl
 #align lattice_ordered_comm_group.m_neg_part_def LatticeOrderedCommGroup.m_neg_part_def
+#align lattice_ordered_comm_group.neg_part_def LatticeOrderedCommGroup.neg_part_def
 
 /- warning: lattice_ordered_comm_group.pos_one -> LatticeOrderedCommGroup.pos_one is a dubious translation:
 lean 3 declaration is
@@ -235,6 +246,7 @@ Case conversion may be inaccurate. Consider using '#align lattice_ordered_comm_g
 theorem pos_one : (1 : α)⁺ = 1 :=
   sup_idem
 #align lattice_ordered_comm_group.pos_one LatticeOrderedCommGroup.pos_one
+#align lattice_ordered_comm_group.pos_zero LatticeOrderedCommGroup.pos_zero
 
 /- warning: lattice_ordered_comm_group.neg_one -> LatticeOrderedCommGroup.neg_one is a dubious translation:
 lean 3 declaration is
@@ -245,6 +257,7 @@ Case conversion may be inaccurate. Consider using '#align lattice_ordered_comm_g
 @[simp, to_additive]
 theorem neg_one : (1 : α)⁻ = 1 := by rw [m_neg_part_def, inv_one, sup_idem]
 #align lattice_ordered_comm_group.neg_one LatticeOrderedCommGroup.neg_one
+#align lattice_ordered_comm_group.neg_zero LatticeOrderedCommGroup.neg_zero
 
 /- warning: lattice_ordered_comm_group.neg_eq_inv_inf_one -> LatticeOrderedCommGroup.neg_eq_inv_inf_one is a dubious translation:
 lean 3 declaration is
@@ -257,6 +270,7 @@ Case conversion may be inaccurate. Consider using '#align lattice_ordered_comm_g
 theorem neg_eq_inv_inf_one [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) : a⁻ = (a ⊓ 1)⁻¹ := by
   rw [m_neg_part_def, ← inv_inj, inv_sup_eq_inv_inf_inv, inv_inv, inv_inv, inv_one]
 #align lattice_ordered_comm_group.neg_eq_inv_inf_one LatticeOrderedCommGroup.neg_eq_inv_inf_one
+#align lattice_ordered_comm_group.neg_eq_neg_inf_zero LatticeOrderedCommGroup.neg_eq_neg_inf_zero
 
 /- warning: lattice_ordered_comm_group.le_mabs -> LatticeOrderedCommGroup.le_mabs is a dubious translation:
 lean 3 declaration is
@@ -268,6 +282,7 @@ Case conversion may be inaccurate. Consider using '#align lattice_ordered_comm_g
 theorem le_mabs (a : α) : a ≤ |a| :=
   le_sup_left
 #align lattice_ordered_comm_group.le_mabs LatticeOrderedCommGroup.le_mabs
+#align lattice_ordered_comm_group.le_abs LatticeOrderedCommGroup.le_abs
 
 /- warning: lattice_ordered_comm_group.inv_le_abs -> LatticeOrderedCommGroup.inv_le_abs is a dubious translation:
 lean 3 declaration is
@@ -280,6 +295,7 @@ Case conversion may be inaccurate. Consider using '#align lattice_ordered_comm_g
 theorem inv_le_abs (a : α) : a⁻¹ ≤ |a| :=
   le_sup_right
 #align lattice_ordered_comm_group.inv_le_abs LatticeOrderedCommGroup.inv_le_abs
+#align lattice_ordered_comm_group.neg_le_abs LatticeOrderedCommGroup.neg_le_abs
 
 /- warning: lattice_ordered_comm_group.one_le_pos -> LatticeOrderedCommGroup.one_le_pos is a dubious translation:
 lean 3 declaration is
@@ -292,6 +308,7 @@ Case conversion may be inaccurate. Consider using '#align lattice_ordered_comm_g
 theorem one_le_pos (a : α) : 1 ≤ a⁺ :=
   le_sup_right
 #align lattice_ordered_comm_group.one_le_pos LatticeOrderedCommGroup.one_le_pos
+#align lattice_ordered_comm_group.pos_nonneg LatticeOrderedCommGroup.pos_nonneg
 
 /- warning: lattice_ordered_comm_group.one_le_neg -> LatticeOrderedCommGroup.one_le_neg is a dubious translation:
 lean 3 declaration is
@@ -304,6 +321,7 @@ Case conversion may be inaccurate. Consider using '#align lattice_ordered_comm_g
 theorem one_le_neg (a : α) : 1 ≤ a⁻ :=
   le_sup_right
 #align lattice_ordered_comm_group.one_le_neg LatticeOrderedCommGroup.one_le_neg
+#align lattice_ordered_comm_group.neg_nonneg LatticeOrderedCommGroup.neg_nonneg
 
 /- warning: lattice_ordered_comm_group.pos_le_one_iff -> LatticeOrderedCommGroup.pos_le_one_iff is a dubious translation:
 lean 3 declaration is
@@ -318,6 +336,7 @@ theorem pos_le_one_iff {a : α} : a⁺ ≤ 1 ↔ a ≤ 1 :=
   rw [m_pos_part_def, sup_le_iff]
   simp
 #align lattice_ordered_comm_group.pos_le_one_iff LatticeOrderedCommGroup.pos_le_one_iff
+#align lattice_ordered_comm_group.pos_nonpos_iff LatticeOrderedCommGroup.pos_nonpos_iff
 
 /- warning: lattice_ordered_comm_group.neg_le_one_iff -> LatticeOrderedCommGroup.neg_le_one_iff is a dubious translation:
 lean 3 declaration is
@@ -332,6 +351,7 @@ theorem neg_le_one_iff {a : α} : a⁻ ≤ 1 ↔ a⁻¹ ≤ 1 :=
   rw [m_neg_part_def, sup_le_iff]
   simp
 #align lattice_ordered_comm_group.neg_le_one_iff LatticeOrderedCommGroup.neg_le_one_iff
+#align lattice_ordered_comm_group.neg_nonpos_iff LatticeOrderedCommGroup.neg_nonpos_iff
 
 /- warning: lattice_ordered_comm_group.pos_eq_one_iff -> LatticeOrderedCommGroup.pos_eq_one_iff is a dubious translation:
 lean 3 declaration is
@@ -346,6 +366,7 @@ theorem pos_eq_one_iff {a : α} : a⁺ = 1 ↔ a ≤ 1 :=
   simp only [one_le_pos, and_true_iff]
   exact pos_le_one_iff
 #align lattice_ordered_comm_group.pos_eq_one_iff LatticeOrderedCommGroup.pos_eq_one_iff
+#align lattice_ordered_comm_group.pos_eq_zero_iff LatticeOrderedCommGroup.pos_eq_zero_iff
 
 /- warning: lattice_ordered_comm_group.neg_eq_one_iff' -> LatticeOrderedCommGroup.neg_eq_one_iff' is a dubious translation:
 lean 3 declaration is
@@ -360,6 +381,7 @@ theorem neg_eq_one_iff' {a : α} : a⁻ = 1 ↔ a⁻¹ ≤ 1 :=
   simp only [one_le_neg, and_true_iff]
   rw [neg_le_one_iff]
 #align lattice_ordered_comm_group.neg_eq_one_iff' LatticeOrderedCommGroup.neg_eq_one_iff'
+#align lattice_ordered_comm_group.neg_eq_zero_iff' LatticeOrderedCommGroup.neg_eq_zero_iff'
 
 /- warning: lattice_ordered_comm_group.neg_eq_one_iff -> LatticeOrderedCommGroup.neg_eq_one_iff is a dubious translation:
 lean 3 declaration is
@@ -374,12 +396,14 @@ theorem neg_eq_one_iff [CovariantClass α α Mul.mul LE.le] {a : α} : a⁻ = 1 
   simp only [one_le_neg, and_true_iff]
   rw [neg_le_one_iff, inv_le_one']
 #align lattice_ordered_comm_group.neg_eq_one_iff LatticeOrderedCommGroup.neg_eq_one_iff
+#align lattice_ordered_comm_group.neg_eq_zero_iff LatticeOrderedCommGroup.neg_eq_zero_iff
 
 #print LatticeOrderedCommGroup.m_le_pos /-
 @[to_additive le_pos]
 theorem m_le_pos (a : α) : a ≤ a⁺ :=
   le_sup_left
 #align lattice_ordered_comm_group.m_le_pos LatticeOrderedCommGroup.m_le_pos
+#align lattice_ordered_comm_group.le_pos LatticeOrderedCommGroup.le_pos
 -/
 
 /- warning: lattice_ordered_comm_group.inv_le_neg -> LatticeOrderedCommGroup.inv_le_neg is a dubious translation:
@@ -393,6 +417,7 @@ Case conversion may be inaccurate. Consider using '#align lattice_ordered_comm_g
 theorem inv_le_neg (a : α) : a⁻¹ ≤ a⁻ :=
   le_sup_left
 #align lattice_ordered_comm_group.inv_le_neg LatticeOrderedCommGroup.inv_le_neg
+#align lattice_ordered_comm_group.neg_le_neg LatticeOrderedCommGroup.neg_le_neg
 
 /- warning: lattice_ordered_comm_group.neg_eq_pos_inv -> LatticeOrderedCommGroup.neg_eq_pos_inv is a dubious translation:
 lean 3 declaration is
@@ -406,6 +431,7 @@ Case conversion may be inaccurate. Consider using '#align lattice_ordered_comm_g
 theorem neg_eq_pos_inv (a : α) : a⁻ = a⁻¹⁺ :=
   rfl
 #align lattice_ordered_comm_group.neg_eq_pos_inv LatticeOrderedCommGroup.neg_eq_pos_inv
+#align lattice_ordered_comm_group.neg_eq_pos_neg LatticeOrderedCommGroup.neg_eq_pos_neg
 
 /- warning: lattice_ordered_comm_group.pos_eq_neg_inv -> LatticeOrderedCommGroup.pos_eq_neg_inv is a dubious translation:
 lean 3 declaration is
@@ -417,6 +443,7 @@ Case conversion may be inaccurate. Consider using '#align lattice_ordered_comm_g
 @[to_additive]
 theorem pos_eq_neg_inv (a : α) : a⁺ = a⁻¹⁻ := by simp [neg_eq_pos_inv]
 #align lattice_ordered_comm_group.pos_eq_neg_inv LatticeOrderedCommGroup.pos_eq_neg_inv
+#align lattice_ordered_comm_group.pos_eq_neg_neg LatticeOrderedCommGroup.pos_eq_neg_neg
 
 /- warning: lattice_ordered_comm_group.mul_inf_eq_mul_inf_mul -> LatticeOrderedCommGroup.mul_inf_eq_mul_inf_mul is a dubious translation:
 lean 3 declaration is
@@ -435,6 +462,8 @@ theorem mul_inf_eq_mul_inf_mul [CovariantClass α α (· * ·) (· ≤ ·)] (a b
   simp
 #align
   lattice_ordered_comm_group.mul_inf_eq_mul_inf_mul LatticeOrderedCommGroup.mul_inf_eq_mul_inf_mul
+#align
+  lattice_ordered_comm_group.add_inf_eq_add_inf_add LatticeOrderedCommGroup.add_inf_eq_add_inf_add
 
 /- warning: lattice_ordered_comm_group.pos_div_neg -> LatticeOrderedCommGroup.pos_div_neg is a dubious translation:
 lean 3 declaration is
@@ -452,6 +481,7 @@ theorem pos_div_neg [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) : a⁺
   apply eq_mul_inv_of_mul_eq
   rw [m_neg_part_def, mul_sup, mul_one, mul_right_inv, sup_comm, m_pos_part_def]
 #align lattice_ordered_comm_group.pos_div_neg LatticeOrderedCommGroup.pos_div_neg
+#align lattice_ordered_comm_group.pos_sub_neg LatticeOrderedCommGroup.pos_sub_neg
 
 /- warning: lattice_ordered_comm_group.pos_inf_neg_eq_one -> LatticeOrderedCommGroup.pos_inf_neg_eq_one is a dubious translation:
 lean 3 declaration is
@@ -466,6 +496,7 @@ theorem pos_inf_neg_eq_one [CovariantClass α α (· * ·) (· ≤ ·)] (a : α)
   rw [← mul_right_inj (a⁻)⁻¹, mul_inf_eq_mul_inf_mul, mul_one, mul_left_inv, mul_comm, ←
     div_eq_mul_inv, pos_div_neg, neg_eq_inv_inf_one, inv_inv]
 #align lattice_ordered_comm_group.pos_inf_neg_eq_one LatticeOrderedCommGroup.pos_inf_neg_eq_one
+#align lattice_ordered_comm_group.pos_inf_neg_eq_zero LatticeOrderedCommGroup.pos_inf_neg_eq_zero
 
 /- warning: lattice_ordered_comm_group.sup_eq_mul_pos_div -> LatticeOrderedCommGroup.sup_eq_mul_pos_div is a dubious translation:
 lean 3 declaration is
@@ -483,6 +514,7 @@ theorem sup_eq_mul_pos_div [CovariantClass α α (· * ·) (· ≤ ·)] (a b : �
     _ = b * (a / b ⊔ 1) := by rw [← mul_sup (a / b) 1 b]
     
 #align lattice_ordered_comm_group.sup_eq_mul_pos_div LatticeOrderedCommGroup.sup_eq_mul_pos_div
+#align lattice_ordered_comm_group.sup_eq_add_pos_sub LatticeOrderedCommGroup.sup_eq_add_pos_sub
 
 /- warning: lattice_ordered_comm_group.inf_eq_div_pos_div -> LatticeOrderedCommGroup.inf_eq_div_pos_div is a dubious translation:
 lean 3 declaration is
@@ -507,6 +539,7 @@ theorem inf_eq_div_pos_div [CovariantClass α α (· * ·) (· ≤ ·)] (a b : �
     _ = a / (a / b ⊔ 1) := by rw [← inv_sup_eq_inv_inf_inv, ← div_eq_mul_inv]
     
 #align lattice_ordered_comm_group.inf_eq_div_pos_div LatticeOrderedCommGroup.inf_eq_div_pos_div
+#align lattice_ordered_comm_group.inf_eq_sub_pos_sub LatticeOrderedCommGroup.inf_eq_sub_pos_sub
 
 /- warning: lattice_ordered_comm_group.m_le_iff_pos_le_neg_ge -> LatticeOrderedCommGroup.m_le_iff_pos_le_neg_ge is a dubious translation:
 lean 3 declaration is
@@ -527,6 +560,7 @@ theorem m_le_iff_pos_le_neg_ge [CovariantClass α α (· * ·) (· ≤ ·)] (a b
     exact div_le_div'' h.1 h.2
 #align
   lattice_ordered_comm_group.m_le_iff_pos_le_neg_ge LatticeOrderedCommGroup.m_le_iff_pos_le_neg_ge
+#align lattice_ordered_comm_group.le_iff_pos_le_neg_ge LatticeOrderedCommGroup.le_iff_pos_le_neg_ge
 
 /- warning: lattice_ordered_comm_group.m_neg_abs -> LatticeOrderedCommGroup.m_neg_abs is a dubious translation:
 lean 3 declaration is
@@ -545,6 +579,7 @@ theorem m_neg_abs [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) : |a|⁻
     · exact And.right (Iff.mp (m_le_iff_pos_le_neg_ge _ _) (le_mabs a))
   · exact one_le_neg _
 #align lattice_ordered_comm_group.m_neg_abs LatticeOrderedCommGroup.m_neg_abs
+#align lattice_ordered_comm_group.neg_abs LatticeOrderedCommGroup.neg_abs
 
 /- warning: lattice_ordered_comm_group.m_pos_abs -> LatticeOrderedCommGroup.m_pos_abs is a dubious translation:
 lean 3 declaration is
@@ -561,6 +596,7 @@ theorem m_pos_abs [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) : |a|⁺
   rw [mul_right_eq_self, inv_eq_one]
   exact m_neg_abs a
 #align lattice_ordered_comm_group.m_pos_abs LatticeOrderedCommGroup.m_pos_abs
+#align lattice_ordered_comm_group.pos_abs LatticeOrderedCommGroup.pos_abs
 
 /- warning: lattice_ordered_comm_group.one_le_abs -> LatticeOrderedCommGroup.one_le_abs is a dubious translation:
 lean 3 declaration is
@@ -574,6 +610,7 @@ theorem one_le_abs [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) : 1 ≤
   rw [← m_pos_abs]
   exact one_le_pos _
 #align lattice_ordered_comm_group.one_le_abs LatticeOrderedCommGroup.one_le_abs
+#align lattice_ordered_comm_group.abs_nonneg LatticeOrderedCommGroup.abs_nonneg
 
 /- warning: lattice_ordered_comm_group.pos_mul_neg -> LatticeOrderedCommGroup.pos_mul_neg is a dubious translation:
 lean 3 declaration is
@@ -598,6 +635,7 @@ theorem pos_mul_neg [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) : |a| 
     · rw [neg_eq_pos_inv]
       exact ((m_le_iff_pos_le_neg_ge _ _).mp (inv_le_abs a)).left
 #align lattice_ordered_comm_group.pos_mul_neg LatticeOrderedCommGroup.pos_mul_neg
+#align lattice_ordered_comm_group.pos_add_neg LatticeOrderedCommGroup.pos_add_neg
 
 /- warning: lattice_ordered_comm_group.sup_div_inf_eq_abs_div -> LatticeOrderedCommGroup.sup_div_inf_eq_abs_div is a dubious translation:
 lean 3 declaration is
@@ -617,6 +655,8 @@ theorem sup_div_inf_eq_abs_div [CovariantClass α α (· * ·) (· ≤ ·)] (a b
   rw [mul_inv_rev, ← div_eq_mul_inv, inv_inv, ← pos_mul_neg]
 #align
   lattice_ordered_comm_group.sup_div_inf_eq_abs_div LatticeOrderedCommGroup.sup_div_inf_eq_abs_div
+#align
+  lattice_ordered_comm_group.sup_sub_inf_eq_abs_sub LatticeOrderedCommGroup.sup_sub_inf_eq_abs_sub
 
 /- warning: lattice_ordered_comm_group.sup_sq_eq_mul_mul_abs_div -> LatticeOrderedCommGroup.sup_sq_eq_mul_mul_abs_div is a dubious translation:
 lean 3 declaration is
@@ -632,6 +672,8 @@ theorem sup_sq_eq_mul_mul_abs_div [CovariantClass α α (· * ·) (· ≤ ·)] (
     ← pow_two, inv_mul_cancel_left]
 #align
   lattice_ordered_comm_group.sup_sq_eq_mul_mul_abs_div LatticeOrderedCommGroup.sup_sq_eq_mul_mul_abs_div
+#align
+  lattice_ordered_comm_group.two_sup_eq_add_add_abs_sub LatticeOrderedCommGroup.two_sup_eq_add_add_abs_sub
 
 /- warning: lattice_ordered_comm_group.inf_sq_eq_mul_div_abs_div -> LatticeOrderedCommGroup.inf_sq_eq_mul_div_abs_div is a dubious translation:
 lean 3 declaration is
@@ -647,6 +689,8 @@ theorem inf_sq_eq_mul_div_abs_div [CovariantClass α α (· * ·) (· ≤ ·)] (
     inv_inv, mul_assoc, mul_inv_cancel_comm_assoc, ← pow_two]
 #align
   lattice_ordered_comm_group.inf_sq_eq_mul_div_abs_div LatticeOrderedCommGroup.inf_sq_eq_mul_div_abs_div
+#align
+  lattice_ordered_comm_group.two_inf_eq_add_sub_abs_sub LatticeOrderedCommGroup.two_inf_eq_add_sub_abs_sub
 
 /- warning: lattice_ordered_comm_group.lattice_ordered_comm_group_to_distrib_lattice -> LatticeOrderedCommGroup.latticeOrderedCommGroupToDistribLattice is a dubious translation:
 lean 3 declaration is
@@ -677,6 +721,8 @@ def latticeOrderedCommGroupToDistribLattice (α : Type u) [s : Lattice α] [Comm
         · apply inf_le_right }
 #align
   lattice_ordered_comm_group.lattice_ordered_comm_group_to_distrib_lattice LatticeOrderedCommGroup.latticeOrderedCommGroupToDistribLattice
+#align
+  lattice_ordered_comm_group.lattice_ordered_add_comm_group_to_distrib_lattice LatticeOrderedCommGroup.latticeOrderedAddCommGroupToDistribLattice
 
 /- warning: lattice_ordered_comm_group.abs_div_sup_mul_abs_div_inf -> LatticeOrderedCommGroup.abs_div_sup_mul_abs_div_inf is a dubious translation:
 lean 3 declaration is
@@ -714,6 +760,8 @@ theorem abs_div_sup_mul_abs_div_inf [CovariantClass α α (· * ·) (· ≤ ·)]
     
 #align
   lattice_ordered_comm_group.abs_div_sup_mul_abs_div_inf LatticeOrderedCommGroup.abs_div_sup_mul_abs_div_inf
+#align
+  lattice_ordered_comm_group.abs_sub_sup_add_abs_sub_inf LatticeOrderedCommGroup.abs_sub_sup_add_abs_sub_inf
 
 /- warning: lattice_ordered_comm_group.pos_of_one_le -> LatticeOrderedCommGroup.pos_of_one_le is a dubious translation:
 lean 3 declaration is
@@ -729,6 +777,7 @@ theorem pos_of_one_le (a : α) (h : 1 ≤ a) : a⁺ = a :=
   rw [m_pos_part_def]
   exact sup_of_le_left h
 #align lattice_ordered_comm_group.pos_of_one_le LatticeOrderedCommGroup.pos_of_one_le
+#align lattice_ordered_comm_group.pos_of_nonneg LatticeOrderedCommGroup.pos_of_nonneg
 
 /- warning: lattice_ordered_comm_group.pos_eq_self_of_one_lt_pos -> LatticeOrderedCommGroup.pos_eq_self_of_one_lt_pos is a dubious translation:
 lean 3 declaration is
@@ -745,6 +794,8 @@ theorem pos_eq_self_of_one_lt_pos {α} [LinearOrder α] [CommGroup α] {x : α} 
   exact hx.le
 #align
   lattice_ordered_comm_group.pos_eq_self_of_one_lt_pos LatticeOrderedCommGroup.pos_eq_self_of_one_lt_pos
+#align
+  lattice_ordered_comm_group.pos_eq_self_of_pos_pos LatticeOrderedCommGroup.pos_eq_self_of_pos_pos
 
 /- warning: lattice_ordered_comm_group.pos_of_le_one -> LatticeOrderedCommGroup.pos_of_le_one is a dubious translation:
 lean 3 declaration is
@@ -758,6 +809,7 @@ Case conversion may be inaccurate. Consider using '#align lattice_ordered_comm_g
 theorem pos_of_le_one (a : α) (h : a ≤ 1) : a⁺ = 1 :=
   pos_eq_one_iff.mpr h
 #align lattice_ordered_comm_group.pos_of_le_one LatticeOrderedCommGroup.pos_of_le_one
+#align lattice_ordered_comm_group.pos_of_nonpos LatticeOrderedCommGroup.pos_of_nonpos
 
 /- warning: lattice_ordered_comm_group.neg_of_one_le_inv -> LatticeOrderedCommGroup.neg_of_one_le_inv is a dubious translation:
 lean 3 declaration is
@@ -771,6 +823,7 @@ theorem neg_of_one_le_inv (a : α) (h : 1 ≤ a⁻¹) : a⁻ = a⁻¹ :=
   rw [neg_eq_pos_inv]
   exact pos_of_one_le _ h
 #align lattice_ordered_comm_group.neg_of_one_le_inv LatticeOrderedCommGroup.neg_of_one_le_inv
+#align lattice_ordered_comm_group.neg_of_inv_nonneg LatticeOrderedCommGroup.neg_of_inv_nonneg
 
 /- warning: lattice_ordered_comm_group.neg_of_inv_le_one -> LatticeOrderedCommGroup.neg_of_inv_le_one is a dubious translation:
 lean 3 declaration is
@@ -783,6 +836,7 @@ Case conversion may be inaccurate. Consider using '#align lattice_ordered_comm_g
 theorem neg_of_inv_le_one (a : α) (h : a⁻¹ ≤ 1) : a⁻ = 1 :=
   neg_eq_one_iff'.mpr h
 #align lattice_ordered_comm_group.neg_of_inv_le_one LatticeOrderedCommGroup.neg_of_inv_le_one
+#align lattice_ordered_comm_group.neg_of_neg_nonpos LatticeOrderedCommGroup.neg_of_neg_nonpos
 
 /- warning: lattice_ordered_comm_group.neg_of_le_one -> LatticeOrderedCommGroup.neg_of_le_one is a dubious translation:
 lean 3 declaration is
@@ -798,6 +852,7 @@ theorem neg_of_le_one [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) (h :
   rw [one_le_inv']
   exact h
 #align lattice_ordered_comm_group.neg_of_le_one LatticeOrderedCommGroup.neg_of_le_one
+#align lattice_ordered_comm_group.neg_of_nonpos LatticeOrderedCommGroup.neg_of_nonpos
 
 /- warning: lattice_ordered_comm_group.neg_of_one_le -> LatticeOrderedCommGroup.neg_of_one_le is a dubious translation:
 lean 3 declaration is
@@ -810,6 +865,7 @@ Case conversion may be inaccurate. Consider using '#align lattice_ordered_comm_g
 theorem neg_of_one_le [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) (h : 1 ≤ a) : a⁻ = 1 :=
   neg_eq_one_iff.mpr h
 #align lattice_ordered_comm_group.neg_of_one_le LatticeOrderedCommGroup.neg_of_one_le
+#align lattice_ordered_comm_group.neg_of_nonneg LatticeOrderedCommGroup.neg_of_nonneg
 
 /- warning: lattice_ordered_comm_group.mabs_of_one_le -> LatticeOrderedCommGroup.mabs_of_one_le is a dubious translation:
 lean 3 declaration is
@@ -827,6 +883,7 @@ theorem mabs_of_one_le [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) (h 
   rw [pow_two]
   apply one_le_mul h h
 #align lattice_ordered_comm_group.mabs_of_one_le LatticeOrderedCommGroup.mabs_of_one_le
+#align lattice_ordered_comm_group.abs_of_nonneg LatticeOrderedCommGroup.abs_of_nonneg
 
 /- warning: lattice_ordered_comm_group.mabs_mabs -> LatticeOrderedCommGroup.mabs_mabs is a dubious translation:
 lean 3 declaration is
@@ -839,6 +896,7 @@ Case conversion may be inaccurate. Consider using '#align lattice_ordered_comm_g
 theorem mabs_mabs [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) : ||a|| = |a| :=
   mabs_of_one_le _ (one_le_abs _)
 #align lattice_ordered_comm_group.mabs_mabs LatticeOrderedCommGroup.mabs_mabs
+#align lattice_ordered_comm_group.abs_abs LatticeOrderedCommGroup.abs_abs
 
 /- warning: lattice_ordered_comm_group.mabs_sup_div_sup_le_mabs -> LatticeOrderedCommGroup.mabs_sup_div_sup_le_mabs is a dubious translation:
 lean 3 declaration is
@@ -855,6 +913,8 @@ theorem mabs_sup_div_sup_le_mabs [CovariantClass α α (· * ·) (· ≤ ·)] (a
   · exact one_le_abs _
 #align
   lattice_ordered_comm_group.mabs_sup_div_sup_le_mabs LatticeOrderedCommGroup.mabs_sup_div_sup_le_mabs
+#align
+  lattice_ordered_comm_group.abs_sup_sub_sup_le_abs LatticeOrderedCommGroup.abs_sup_sub_sup_le_abs
 
 /- warning: lattice_ordered_comm_group.mabs_inf_div_inf_le_mabs -> LatticeOrderedCommGroup.mabs_inf_div_inf_le_mabs is a dubious translation:
 lean 3 declaration is
@@ -871,6 +931,8 @@ theorem mabs_inf_div_inf_le_mabs [CovariantClass α α (· * ·) (· ≤ ·)] (a
   · exact one_le_abs _
 #align
   lattice_ordered_comm_group.mabs_inf_div_inf_le_mabs LatticeOrderedCommGroup.mabs_inf_div_inf_le_mabs
+#align
+  lattice_ordered_comm_group.abs_inf_sub_inf_le_abs LatticeOrderedCommGroup.abs_inf_sub_inf_le_abs
 
 /- warning: lattice_ordered_comm_group.m_Birkhoff_inequalities -> LatticeOrderedCommGroup.m_Birkhoff_inequalities is a dubious translation:
 lean 3 declaration is
@@ -887,6 +949,8 @@ theorem m_Birkhoff_inequalities [CovariantClass α α (· * ·) (· ≤ ·)] (a 
   sup_le (mabs_sup_div_sup_le_mabs a b c) (mabs_inf_div_inf_le_mabs a b c)
 #align
   lattice_ordered_comm_group.m_Birkhoff_inequalities LatticeOrderedCommGroup.m_Birkhoff_inequalities
+#align
+  lattice_ordered_comm_group.Birkhoff_inequalities LatticeOrderedCommGroup.Birkhoff_inequalities
 
 /- warning: lattice_ordered_comm_group.mabs_mul_le -> LatticeOrderedCommGroup.mabs_mul_le is a dubious translation:
 lean 3 declaration is
@@ -905,6 +969,7 @@ theorem mabs_mul_le [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) : |a
   · rw [mul_inv]
     exact mul_le_mul' (inv_le_abs _) (inv_le_abs _)
 #align lattice_ordered_comm_group.mabs_mul_le LatticeOrderedCommGroup.mabs_mul_le
+#align lattice_ordered_comm_group.abs_add_le LatticeOrderedCommGroup.abs_add_le
 
 /- warning: lattice_ordered_comm_group.abs_inv_comm -> LatticeOrderedCommGroup.abs_inv_comm is a dubious translation:
 lean 3 declaration is
@@ -919,6 +984,7 @@ theorem abs_inv_comm (a b : α) : |a / b| = |b / a| :=
   unfold Abs.abs
   rw [inv_div a b, ← inv_inv (a / b), inv_div, sup_comm]
 #align lattice_ordered_comm_group.abs_inv_comm LatticeOrderedCommGroup.abs_inv_comm
+#align lattice_ordered_comm_group.abs_neg_comm LatticeOrderedCommGroup.abs_neg_comm
 
 /- warning: lattice_ordered_comm_group.abs_abs_div_abs_le -> LatticeOrderedCommGroup.abs_abs_div_abs_le is a dubious translation:
 lean 3 declaration is
@@ -944,6 +1010,7 @@ theorem abs_abs_div_abs_le [CovariantClass α α (· * ·) (· ≤ ·)] (a b : �
     · rw [div_mul_cancel']
     · rw [div_mul_cancel']
 #align lattice_ordered_comm_group.abs_abs_div_abs_le LatticeOrderedCommGroup.abs_abs_div_abs_le
+#align lattice_ordered_comm_group.abs_abs_sub_abs_le LatticeOrderedCommGroup.abs_abs_sub_abs_le
 
 end LatticeOrderedCommGroup
 

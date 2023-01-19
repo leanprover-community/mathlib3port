@@ -391,6 +391,7 @@ theorem prod_range_succ {α : Type u} [Monoid α] (f : ℕ → α) (n : ℕ) :
     ((range n.succ).map f).Prod = ((range n).map f).Prod * f n := by
   rw [range_succ, map_append, map_singleton, prod_append, prod_cons, prod_nil, mul_one]
 #align list.prod_range_succ List.prod_range_succ
+#align list.sum_range_succ List.sum_range_succ
 
 /- warning: list.prod_range_succ' -> List.prod_range_succ' is a dubious translation:
 lean 3 declaration is
@@ -407,6 +408,7 @@ theorem prod_range_succ' {α : Type u} [Monoid α] (f : ℕ → α) (n : ℕ) :
   Nat.recOn n (show 1 * f 0 = f 0 * 1 by rw [one_mul, mul_one]) fun _ hd => by
     rw [List.prod_range_succ, hd, mul_assoc, ← List.prod_range_succ]
 #align list.prod_range_succ' List.prod_range_succ'
+#align list.sum_range_succ' List.sum_range_succ'
 
 #print List.enum_from_map_fst /-
 @[simp]

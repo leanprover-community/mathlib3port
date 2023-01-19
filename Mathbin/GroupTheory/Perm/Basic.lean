@@ -1037,31 +1037,37 @@ variable [Group α] (a b : α)
 theorem mul_left_one : Equiv.mulLeft (1 : α) = 1 :=
   ext one_mul
 #align equiv.mul_left_one Equiv.mul_left_one
+#align equiv.add_left_zero Equiv.add_left_zero
 
 @[simp, to_additive]
 theorem mul_right_one : Equiv.mulRight (1 : α) = 1 :=
   ext mul_one
 #align equiv.mul_right_one Equiv.mul_right_one
+#align equiv.add_right_zero Equiv.add_right_zero
 
 @[simp, to_additive]
 theorem mul_left_mul : Equiv.mulLeft (a * b) = Equiv.mulLeft a * Equiv.mulLeft b :=
   ext <| mul_assoc _ _
 #align equiv.mul_left_mul Equiv.mul_left_mul
+#align equiv.add_left_add Equiv.add_left_add
 
 @[simp, to_additive]
 theorem mul_right_mul : Equiv.mulRight (a * b) = Equiv.mulRight b * Equiv.mulRight a :=
   ext fun _ => (mul_assoc _ _ _).symm
 #align equiv.mul_right_mul Equiv.mul_right_mul
+#align equiv.add_right_add Equiv.add_right_add
 
 @[simp, to_additive inv_add_left]
 theorem inv_mul_left : (Equiv.mulLeft a)⁻¹ = Equiv.mulLeft a⁻¹ :=
   Equiv.coe_inj.1 rfl
 #align equiv.inv_mul_left Equiv.inv_mul_left
+#align equiv.inv_add_left Equiv.inv_add_left
 
 @[simp, to_additive inv_add_right]
 theorem inv_mul_right : (Equiv.mulRight a)⁻¹ = Equiv.mulRight a⁻¹ :=
   Equiv.coe_inj.1 rfl
 #align equiv.inv_mul_right Equiv.inv_mul_right
+#align equiv.inv_add_right Equiv.inv_add_right
 
 @[simp, to_additive pow_add_left]
 theorem pow_mul_left (n : ℕ) : Equiv.mulLeft a ^ n = Equiv.mulLeft (a ^ n) :=
@@ -1069,6 +1075,7 @@ theorem pow_mul_left (n : ℕ) : Equiv.mulLeft a ^ n = Equiv.mulLeft (a ^ n) :=
   ext
   simp [perm.coe_pow]
 #align equiv.pow_mul_left Equiv.pow_mul_left
+#align equiv.pow_add_left Equiv.pow_add_left
 
 @[simp, to_additive pow_add_right]
 theorem pow_mul_right (n : ℕ) : Equiv.mulRight a ^ n = Equiv.mulRight (a ^ n) :=
@@ -1076,17 +1083,20 @@ theorem pow_mul_right (n : ℕ) : Equiv.mulRight a ^ n = Equiv.mulRight (a ^ n) 
   ext
   simp [perm.coe_pow]
 #align equiv.pow_mul_right Equiv.pow_mul_right
+#align equiv.pow_add_right Equiv.pow_add_right
 
 @[simp, to_additive zpow_add_left]
 theorem zpow_mul_left (n : ℤ) : Equiv.mulLeft a ^ n = Equiv.mulLeft (a ^ n) :=
   (map_zpow (⟨Equiv.mulLeft, mul_left_one, mul_left_mul⟩ : α →* Perm α) _ _).symm
 #align equiv.zpow_mul_left Equiv.zpow_mul_left
+#align equiv.zpow_add_left Equiv.zpow_add_left
 
 @[simp, to_additive zpow_add_right]
 theorem zpow_mul_right : ∀ n : ℤ, Equiv.mulRight a ^ n = Equiv.mulRight (a ^ n)
   | Int.ofNat n => by simp
   | Int.negSucc n => by simp
 #align equiv.zpow_mul_right Equiv.zpow_mul_right
+#align equiv.zpow_add_right Equiv.zpow_add_right
 
 end Group
 

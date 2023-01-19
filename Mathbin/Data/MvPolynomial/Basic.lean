@@ -1139,6 +1139,7 @@ theorem eval_prod {ι : Type _} (s : Finset ι) (f : ι → MvPolynomial σ R) (
     eval g (∏ i in s, f i) = ∏ i in s, eval g (f i) :=
   (eval g).map_prod _ _
 #align mv_polynomial.eval_prod MvPolynomial.eval_prod
+#align mv_polynomial.eval_sum MvPolynomial.eval_sum
 
 theorem eval_assoc {τ} (f : σ → MvPolynomial τ R) (g : τ → R) (p : MvPolynomial σ R) :
     eval (eval g ∘ f) p = eval g (eval₂ c f p) :=
@@ -1525,6 +1526,7 @@ theorem aeval_prod {ι : Type _} (s : Finset ι) (φ : ι → MvPolynomial σ R)
     aeval f (∏ i in s, φ i) = ∏ i in s, aeval f (φ i) :=
   (MvPolynomial.aeval f).map_prod _ _
 #align mv_polynomial.aeval_prod MvPolynomial.aeval_prod
+#align mv_polynomial.aeval_sum MvPolynomial.aeval_sum
 
 variable (R)
 

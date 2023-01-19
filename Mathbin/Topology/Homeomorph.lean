@@ -382,6 +382,7 @@ theorem HasCompactMulSupport.comp_homeomorph {M} [One M] {f : β → M} (hf : Ha
     (φ : α ≃ₜ β) : HasCompactMulSupport (f ∘ φ) :=
   hf.comp_closed_embedding φ.ClosedEmbedding
 #align has_compact_mul_support.comp_homeomorph HasCompactMulSupport.comp_homeomorph
+#align has_compact_support.comp_homeomorph HasCompactSupport.comp_homeomorph
 
 @[simp]
 theorem map_nhds_eq (h : α ≃ₜ β) (x : α) : map h (𝓝 x) = 𝓝 (h x) :=

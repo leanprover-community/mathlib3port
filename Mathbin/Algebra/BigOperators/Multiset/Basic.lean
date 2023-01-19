@@ -50,6 +50,7 @@ variable [CommMonoid α] {s t : Multiset α} {a : α} {m : Multiset ι} {f g : �
 def prod : Multiset α → α :=
   foldr (· * ·) (fun x y z => by simp [mul_left_comm]) 1
 #align multiset.prod Multiset.prod
+#align multiset.sum Multiset.sum
 -/
 
 /- warning: multiset.prod_eq_foldr -> Multiset.prod_eq_foldr is a dubious translation:
@@ -63,6 +64,7 @@ theorem prod_eq_foldr (s : Multiset α) :
     prod s = foldr (· * ·) (fun x y z => by simp [mul_left_comm]) 1 s :=
   rfl
 #align multiset.prod_eq_foldr Multiset.prod_eq_foldr
+#align multiset.sum_eq_foldr Multiset.sum_eq_foldr
 
 /- warning: multiset.prod_eq_foldl -> Multiset.prod_eq_foldl is a dubious translation:
 lean 3 declaration is
@@ -75,6 +77,7 @@ theorem prod_eq_foldl (s : Multiset α) :
     prod s = foldl (· * ·) (fun x y z => by simp [mul_right_comm]) 1 s :=
   (foldr_swap _ _ _ _).trans (by simp [mul_comm])
 #align multiset.prod_eq_foldl Multiset.prod_eq_foldl
+#align multiset.sum_eq_foldl Multiset.sum_eq_foldl
 
 /- warning: multiset.coe_prod -> Multiset.coe_prod is a dubious translation:
 lean 3 declaration is
@@ -86,6 +89,7 @@ Case conversion may be inaccurate. Consider using '#align multiset.coe_prod Mult
 theorem coe_prod (l : List α) : prod ↑l = l.Prod :=
   prod_eq_foldl _
 #align multiset.coe_prod Multiset.coe_prod
+#align multiset.coe_sum Multiset.coe_sum
 
 /- warning: multiset.prod_to_list -> Multiset.prod_toList is a dubious translation:
 lean 3 declaration is
@@ -110,6 +114,7 @@ Case conversion may be inaccurate. Consider using '#align multiset.prod_zero Mul
 theorem prod_zero : @prod α _ 0 = 1 :=
   rfl
 #align multiset.prod_zero Multiset.prod_zero
+#align multiset.sum_zero Multiset.sum_zero
 
 /- warning: multiset.prod_cons -> Multiset.prod_cons is a dubious translation:
 lean 3 declaration is
@@ -121,6 +126,7 @@ Case conversion may be inaccurate. Consider using '#align multiset.prod_cons Mul
 theorem prod_cons (a : α) (s) : prod (a ::ₘ s) = a * prod s :=
   foldr_cons _ _ _ _ _
 #align multiset.prod_cons Multiset.prod_cons
+#align multiset.sum_cons Multiset.sum_cons
 
 /- warning: multiset.prod_erase -> Multiset.prod_erase is a dubious translation:
 lean 3 declaration is
@@ -132,6 +138,7 @@ Case conversion may be inaccurate. Consider using '#align multiset.prod_erase Mu
 theorem prod_erase [DecidableEq α] (h : a ∈ s) : a * (s.erase a).Prod = s.Prod := by
   rw [← s.coe_to_list, coe_erase, coe_prod, coe_prod, List.prod_erase (mem_to_list.2 h)]
 #align multiset.prod_erase Multiset.prod_erase
+#align multiset.sum_erase Multiset.sum_erase
 
 /- warning: multiset.prod_map_erase -> Multiset.prod_map_erase is a dubious translation:
 lean 3 declaration is
@@ -145,12 +152,14 @@ theorem prod_map_erase [DecidableEq ι] {a : ι} (h : a ∈ m) :
   rw [← m.coe_to_list, coe_erase, coe_map, coe_map, coe_prod, coe_prod,
     List.prod_map_erase f (mem_to_list.2 h)]
 #align multiset.prod_map_erase Multiset.prod_map_erase
+#align multiset.sum_map_erase Multiset.sum_map_erase
 
 #print Multiset.prod_singleton /-
 @[simp, to_additive]
 theorem prod_singleton (a : α) : prod {a} = a := by
   simp only [mul_one, prod_cons, ← cons_zero, eq_self_iff_true, prod_zero]
 #align multiset.prod_singleton Multiset.prod_singleton
+#align multiset.sum_singleton Multiset.sum_singleton
 -/
 
 /- warning: multiset.prod_pair -> Multiset.prod_pair is a dubious translation:
@@ -163,6 +172,7 @@ Case conversion may be inaccurate. Consider using '#align multiset.prod_pair Mul
 theorem prod_pair (a b : α) : ({a, b} : Multiset α).Prod = a * b := by
   rw [insert_eq_cons, prod_cons, prod_singleton]
 #align multiset.prod_pair Multiset.prod_pair
+#align multiset.sum_pair Multiset.sum_pair
 
 /- warning: multiset.prod_add -> Multiset.prod_add is a dubious translation:
 lean 3 declaration is
@@ -174,6 +184,7 @@ Case conversion may be inaccurate. Consider using '#align multiset.prod_add Mult
 theorem prod_add (s t : Multiset α) : prod (s + t) = prod s * prod t :=
   Quotient.induction_on₂ s t fun l₁ l₂ => by simp
 #align multiset.prod_add Multiset.prod_add
+#align multiset.sum_add Multiset.sum_add
 
 /- warning: multiset.prod_nsmul -> Multiset.prod_nsmul is a dubious translation:
 lean 3 declaration is
@@ -193,6 +204,7 @@ theorem prod_nsmul (m : Multiset α) : ∀ n : ℕ, (n • m).Prod = m.Prod ^ n
 theorem prod_replicate (n : ℕ) (a : α) : (replicate n a).Prod = a ^ n := by
   simp [replicate, List.prod_replicate]
 #align multiset.prod_replicate Multiset.prod_replicate
+#align multiset.sum_replicate Multiset.sum_replicate
 -/
 
 /- warning: multiset.prod_map_eq_pow_single -> Multiset.prod_map_eq_pow_single is a dubious translation:
@@ -243,6 +255,7 @@ theorem prod_hom [CommMonoid β] (s : Multiset α) {F : Type _} [MonoidHomClass 
     (s.map f).Prod = f s.Prod :=
   Quotient.inductionOn s fun l => by simp only [l.prod_hom f, quot_mk_to_coe, coe_map, coe_prod]
 #align multiset.prod_hom Multiset.prod_hom
+#align multiset.sum_hom Multiset.sum_hom
 
 /- warning: multiset.prod_hom' -> Multiset.prod_hom' is a dubious translation:
 lean 3 declaration is
@@ -257,6 +270,7 @@ theorem prod_hom' [CommMonoid β] (s : Multiset ι) {F : Type _} [MonoidHomClass
   convert (s.map g).prod_hom f
   exact (map_map _ _ _).symm
 #align multiset.prod_hom' Multiset.prod_hom'
+#align multiset.sum_hom' Multiset.sum_hom'
 
 /- warning: multiset.prod_hom₂ -> Multiset.prod_hom₂ is a dubious translation:
 lean 3 declaration is
@@ -271,6 +285,7 @@ theorem prod_hom₂ [CommMonoid β] [CommMonoid γ] (s : Multiset ι) (f : α �
   Quotient.inductionOn s fun l => by
     simp only [l.prod_hom₂ f hf hf', quot_mk_to_coe, coe_map, coe_prod]
 #align multiset.prod_hom₂ Multiset.prod_hom₂
+#align multiset.sum_hom₂ Multiset.sum_hom₂
 
 /- warning: multiset.prod_hom_rel -> Multiset.prod_hom_rel is a dubious translation:
 lean 3 declaration is
@@ -285,6 +300,7 @@ theorem prod_hom_rel [CommMonoid β] (s : Multiset ι) {r : α → β → Prop} 
   Quotient.inductionOn s fun l => by
     simp only [l.prod_hom_rel h₁ h₂, quot_mk_to_coe, coe_map, coe_prod]
 #align multiset.prod_hom_rel Multiset.prod_hom_rel
+#align multiset.sum_hom_rel Multiset.sum_hom_rel
 
 /- warning: multiset.prod_map_one -> Multiset.prod_map_one is a dubious translation:
 lean 3 declaration is
@@ -296,6 +312,7 @@ Case conversion may be inaccurate. Consider using '#align multiset.prod_map_one 
 theorem prod_map_one : prod (m.map fun i => (1 : α)) = 1 := by
   rw [map_const, prod_replicate, one_pow]
 #align multiset.prod_map_one Multiset.prod_map_one
+#align multiset.sum_map_zero Multiset.sum_map_zero
 
 /- warning: multiset.prod_map_mul -> Multiset.prod_map_mul is a dubious translation:
 lean 3 declaration is
@@ -307,6 +324,7 @@ Case conversion may be inaccurate. Consider using '#align multiset.prod_map_mul 
 theorem prod_map_mul : (m.map fun i => f i * g i).Prod = (m.map f).Prod * (m.map g).Prod :=
   m.prod_hom₂ (· * ·) mul_mul_mul_comm (mul_one _) _ _
 #align multiset.prod_map_mul Multiset.prod_map_mul
+#align multiset.sum_map_add Multiset.sum_map_add
 
 /- warning: multiset.prod_map_neg -> Multiset.prod_map_neg is a dubious translation:
 lean 3 declaration is
@@ -341,6 +359,7 @@ theorem prod_map_prod_map (m : Multiset β) (n : Multiset γ) {f : β → γ →
       prod (n.map fun b => Prod <| m.map fun a => f a b) :=
   Multiset.induction_on m (by simp) fun a m ih => by simp [ih]
 #align multiset.prod_map_prod_map Multiset.prod_map_prod_map
+#align multiset.sum_map_sum_map Multiset.sum_map_sum_map
 
 /- warning: multiset.prod_induction -> Multiset.prod_induction is a dubious translation:
 lean 3 declaration is
@@ -355,6 +374,7 @@ theorem prod_induction (p : α → Prop) (s : Multiset α) (p_mul : ∀ a b, p a
   rw [prod_eq_foldr]
   exact foldr_induction (· * ·) (fun x y z => by simp [mul_left_comm]) 1 p s p_mul p_one p_s
 #align multiset.prod_induction Multiset.prod_induction
+#align multiset.sum_induction Multiset.sum_induction
 
 /- warning: multiset.prod_induction_nonempty -> Multiset.prod_induction_nonempty is a dubious translation:
 lean 3 declaration is
@@ -377,6 +397,7 @@ theorem prod_induction_nonempty (p : α → Prop) (p_mul : ∀ a b, p a → p b 
   have hps : ∀ x, x ∈ s → p x := fun x hxs => hpsa x (mem_cons_of_mem hxs)
   exact p_mul a s.prod (hpsa a (mem_cons_self a s)) (hs hs_empty hps)
 #align multiset.prod_induction_nonempty Multiset.prod_induction_nonempty
+#align multiset.sum_induction_nonempty Multiset.sum_induction_nonempty
 
 /- warning: multiset.prod_dvd_prod_of_le -> Multiset.prod_dvd_prod_of_le is a dubious translation:
 lean 3 declaration is
@@ -489,6 +510,7 @@ Case conversion may be inaccurate. Consider using '#align multiset.prod_map_inv'
 theorem prod_map_inv' (m : Multiset α) : (m.map Inv.inv).Prod = m.Prod⁻¹ :=
   m.prod_hom (invMonoidHom : α →* α)
 #align multiset.prod_map_inv' Multiset.prod_map_inv'
+#align multiset.sum_map_neg' Multiset.sum_map_neg'
 
 /- warning: multiset.prod_map_inv -> Multiset.prod_map_inv is a dubious translation:
 lean 3 declaration is
@@ -502,6 +524,7 @@ theorem prod_map_inv : (m.map fun i => (f i)⁻¹).Prod = (m.map f).Prod⁻¹ :=
   convert (m.map f).prod_map_inv'
   rw [map_map]
 #align multiset.prod_map_inv Multiset.prod_map_inv
+#align multiset.sum_map_neg Multiset.sum_map_neg
 
 /- warning: multiset.prod_map_div -> Multiset.prod_map_div is a dubious translation:
 lean 3 declaration is
@@ -513,6 +536,7 @@ Case conversion may be inaccurate. Consider using '#align multiset.prod_map_div 
 theorem prod_map_div : (m.map fun i => f i / g i).Prod = (m.map f).Prod / (m.map g).Prod :=
   m.prod_hom₂ (· / ·) mul_div_mul_comm (div_one _) _ _
 #align multiset.prod_map_div Multiset.prod_map_div
+#align multiset.sum_map_sub Multiset.sum_map_sub
 
 #print Multiset.prod_map_zpow /-
 @[to_additive]
@@ -522,6 +546,7 @@ theorem prod_map_zpow {n : ℤ} : (m.map fun i => f i ^ n).Prod = (m.map f).Prod
   rw [map_map]
   rfl
 #align multiset.prod_map_zpow Multiset.prod_map_zpow
+#align multiset.sum_map_zsmul Multiset.sum_map_zsmul
 -/
 
 end DivisionCommMonoid
@@ -584,6 +609,7 @@ Case conversion may be inaccurate. Consider using '#align multiset.one_le_prod_o
 theorem one_le_prod_of_one_le : (∀ x ∈ s, (1 : α) ≤ x) → 1 ≤ s.Prod :=
   Quotient.inductionOn s fun l hl => by simpa using List.one_le_prod_of_one_le hl
 #align multiset.one_le_prod_of_one_le Multiset.one_le_prod_of_one_le
+#align multiset.sum_nonneg Multiset.sum_nonneg
 
 /- warning: multiset.single_le_prod -> Multiset.single_le_prod is a dubious translation:
 lean 3 declaration is
@@ -595,6 +621,7 @@ Case conversion may be inaccurate. Consider using '#align multiset.single_le_pro
 theorem single_le_prod : (∀ x ∈ s, (1 : α) ≤ x) → ∀ x ∈ s, x ≤ s.Prod :=
   Quotient.inductionOn s fun l hl x hx => by simpa using List.single_le_prod hl x hx
 #align multiset.single_le_prod Multiset.single_le_prod
+#align multiset.single_le_sum Multiset.single_le_sum
 
 /- warning: multiset.prod_le_pow_card -> Multiset.prod_le_pow_card is a dubious translation:
 lean 3 declaration is
@@ -608,6 +635,7 @@ theorem prod_le_pow_card (s : Multiset α) (n : α) (h : ∀ x ∈ s, x ≤ n) :
   induction s using Quotient.inductionOn
   simpa using List.prod_le_pow_card _ _ h
 #align multiset.prod_le_pow_card Multiset.prod_le_pow_card
+#align multiset.sum_le_card_nsmul Multiset.sum_le_card_nsmul
 
 /- warning: multiset.all_one_of_le_one_le_of_prod_eq_one -> Multiset.all_one_of_le_one_le_of_prod_eq_one is a dubious translation:
 lean 3 declaration is
@@ -623,6 +651,7 @@ theorem all_one_of_le_one_le_of_prod_eq_one :
   simp only [quot_mk_to_coe, coe_prod, mem_coe]
   exact fun l => List.all_one_of_le_one_le_of_prod_eq_one
 #align multiset.all_one_of_le_one_le_of_prod_eq_one Multiset.all_one_of_le_one_le_of_prod_eq_one
+#align multiset.all_zero_of_le_zero_le_of_sum_eq_zero Multiset.all_zero_of_le_zero_le_of_sum_eq_zero
 
 #print Multiset.prod_le_prod_of_rel_le /-
 @[to_additive]
@@ -633,6 +662,7 @@ theorem prod_le_prod_of_rel_le (h : s.Rel (· ≤ ·) t) : s.Prod ≤ t.Prod :=
   · rw [prod_cons, prod_cons]
     exact mul_le_mul' rh rt
 #align multiset.prod_le_prod_of_rel_le Multiset.prod_le_prod_of_rel_le
+#align multiset.sum_le_sum_of_rel_le Multiset.sum_le_sum_of_rel_le
 -/
 
 /- warning: multiset.prod_map_le_prod_map -> Multiset.prod_map_le_prod_map is a dubious translation:
@@ -646,12 +676,14 @@ theorem prod_map_le_prod_map {s : Multiset ι} (f : ι → α) (g : ι → α) (
     (s.map f).Prod ≤ (s.map g).Prod :=
   prod_le_prod_of_rel_le <| rel_map.2 <| rel_refl_of_refl_on h
 #align multiset.prod_map_le_prod_map Multiset.prod_map_le_prod_map
+#align multiset.sum_map_le_sum_map Multiset.sum_map_le_sum_map
 
 #print Multiset.prod_map_le_prod /-
 @[to_additive]
 theorem prod_map_le_prod (f : α → α) (h : ∀ x, x ∈ s → f x ≤ x) : (s.map f).Prod ≤ s.Prod :=
   prod_le_prod_of_rel_le <| rel_map_left.2 <| rel_refl_of_refl_on h
 #align multiset.prod_map_le_prod Multiset.prod_map_le_prod
+#align multiset.sum_map_le_sum Multiset.sum_map_le_sum
 -/
 
 #print Multiset.prod_le_prod_map /-
@@ -659,6 +691,7 @@ theorem prod_map_le_prod (f : α → α) (h : ∀ x, x ∈ s → f x ≤ x) : (s
 theorem prod_le_prod_map (f : α → α) (h : ∀ x, x ∈ s → x ≤ f x) : s.Prod ≤ (s.map f).Prod :=
   @prod_map_le_prod αᵒᵈ _ _ f h
 #align multiset.prod_le_prod_map Multiset.prod_le_prod_map
+#align multiset.sum_le_sum_map Multiset.sum_le_sum_map
 -/
 
 /- warning: multiset.pow_card_le_prod -> Multiset.pow_card_le_prod is a dubious translation:
@@ -673,6 +706,7 @@ theorem pow_card_le_prod (h : ∀ x ∈ s, a ≤ x) : a ^ s.card ≤ s.Prod :=
   rw [← Multiset.prod_replicate, ← Multiset.map_const]
   exact prod_map_le_prod _ h
 #align multiset.pow_card_le_prod Multiset.pow_card_le_prod
+#align multiset.card_nsmul_le_sum Multiset.card_nsmul_le_sum
 
 end OrderedCommMonoid
 
@@ -708,6 +742,7 @@ theorem prod_eq_one [CommMonoid α] {m : Multiset α} (h : ∀ x ∈ m, x = (1 :
   induction' m using Quotient.inductionOn with l
   simp [List.prod_eq_one h]
 #align multiset.prod_eq_one Multiset.prod_eq_one
+#align multiset.sum_eq_zero Multiset.sum_eq_zero
 
 #print Multiset.le_prod_of_mem /-
 @[to_additive]
@@ -717,6 +752,7 @@ theorem le_prod_of_mem [CanonicallyOrderedMonoid α] {m : Multiset α} {a : α} 
   rw [prod_cons]
   exact _root_.le_mul_right (le_refl a)
 #align multiset.le_prod_of_mem Multiset.le_prod_of_mem
+#align multiset.le_sum_of_mem Multiset.le_sum_of_mem
 -/
 
 /- warning: multiset.le_prod_of_submultiplicative_on_pred -> Multiset.le_prod_of_submultiplicative_on_pred is a dubious translation:
@@ -740,6 +776,7 @@ theorem le_prod_of_submultiplicative_on_pred [CommMonoid α] [OrderedCommMonoid 
   rw [prod_cons, map_cons, prod_cons]
   exact (h_mul a s.prod (hpsa a (mem_cons_self a s)) hp_prod).trans (mul_le_mul_left' (hs hps) _)
 #align multiset.le_prod_of_submultiplicative_on_pred Multiset.le_prod_of_submultiplicative_on_pred
+#align multiset.le_sum_of_subadditive_on_pred Multiset.le_sum_of_subadditive_on_pred
 
 /- warning: multiset.le_prod_of_submultiplicative -> Multiset.le_prod_of_submultiplicative is a dubious translation:
 lean 3 declaration is
@@ -754,6 +791,7 @@ theorem le_prod_of_submultiplicative [CommMonoid α] [OrderedCommMonoid β] (f :
   le_prod_of_submultiplicative_on_pred f (fun i => True) h_one trivial (fun x y _ _ => h_mul x y)
     (by simp) s (by simp)
 #align multiset.le_prod_of_submultiplicative Multiset.le_prod_of_submultiplicative
+#align multiset.le_sum_of_subadditive Multiset.le_sum_of_subadditive
 
 /- warning: multiset.le_prod_nonempty_of_submultiplicative_on_pred -> Multiset.le_prod_nonempty_of_submultiplicative_on_pred is a dubious translation:
 lean 3 declaration is
@@ -782,6 +820,8 @@ theorem le_prod_nonempty_of_submultiplicative_on_pred [CommMonoid α] [OrderedCo
   exact (h_mul a _ hp_a hp_sup).trans (mul_le_mul_left' (hs hs_empty hsa_restrict) _)
 #align
   multiset.le_prod_nonempty_of_submultiplicative_on_pred Multiset.le_prod_nonempty_of_submultiplicative_on_pred
+#align
+  multiset.le_sum_nonempty_of_subadditive_on_pred Multiset.le_sum_nonempty_of_subadditive_on_pred
 
 /- warning: multiset.le_prod_nonempty_of_submultiplicative -> Multiset.le_prod_nonempty_of_submultiplicative is a dubious translation:
 lean 3 declaration is
@@ -796,6 +836,7 @@ theorem le_prod_nonempty_of_submultiplicative [CommMonoid α] [OrderedCommMonoid
   le_prod_nonempty_of_submultiplicative_on_pred f (fun i => True) (by simp [h_mul]) (by simp) s
     hs_nonempty (by simp)
 #align multiset.le_prod_nonempty_of_submultiplicative Multiset.le_prod_nonempty_of_submultiplicative
+#align multiset.le_sum_nonempty_of_subadditive Multiset.le_sum_nonempty_of_subadditive
 
 /- warning: multiset.sum_map_singleton -> Multiset.sum_map_singleton is a dubious translation:
 lean 3 declaration is
@@ -832,6 +873,7 @@ theorem map_multiset_prod [CommMonoid α] [CommMonoid β] {F : Type _} [MonoidHo
     (s : Multiset α) : f s.Prod = (s.map f).Prod :=
   (s.prod_hom f).symm
 #align map_multiset_prod map_multiset_prod
+#align map_multiset_sum map_multiset_sum
 
 /- warning: monoid_hom.map_multiset_prod -> MonoidHom.map_multiset_prod is a dubious translation:
 lean 3 declaration is
@@ -844,4 +886,5 @@ protected theorem MonoidHom.map_multiset_prod [CommMonoid α] [CommMonoid β] (f
     (s : Multiset α) : f s.Prod = (s.map f).Prod :=
   (s.prod_hom f).symm
 #align monoid_hom.map_multiset_prod MonoidHom.map_multiset_prod
+#align add_monoid_hom.map_multiset_sum AddMonoidHom.map_multiset_sum
 

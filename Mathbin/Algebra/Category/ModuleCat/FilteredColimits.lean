@@ -162,7 +162,7 @@ it is a linear map, i.e. preserves scalar multiplication.
 -/
 def colimitDesc (t : cocone F) : colimit ⟶ t.x :=
   {
-    (AddCommGroupCat.FilteredColimits.colimitCoconeIsColimit
+    (AddCommGroupCat.FilteredColimits.colimit_cocone_is_colimit
           (F ⋙ forget₂ (ModuleCat R) AddCommGroupCat.{max v u})).desc
       ((forget₂ (ModuleCat R) AddCommGroupCat.{max v u}).mapCocone t) with
     map_smul' := fun r x => by
@@ -192,7 +192,7 @@ instance forget₂AddCommGroupPreservesFilteredColimits :
     {
       PreservesColimit := fun F =>
         preserves_colimit_of_preserves_colimit_cocone (colimit_cocone_is_colimit F)
-          (AddCommGroupCat.FilteredColimits.colimitCoconeIsColimit
+          (AddCommGroupCat.FilteredColimits.colimit_cocone_is_colimit
             (F ⋙ forget₂ (ModuleCat.{u} R) AddCommGroupCat.{u})) }
 #align
   Module.filtered_colimits.forget₂_AddCommGroup_preserves_filtered_colimits ModuleCat.FilteredColimits.forget₂AddCommGroupPreservesFilteredColimits

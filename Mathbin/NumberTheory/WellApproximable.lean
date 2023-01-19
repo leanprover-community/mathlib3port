@@ -69,12 +69,14 @@ elements within a distance `δ` of a point of order `n`. -/
 def approxOrderOf (A : Type _) [SeminormedGroup A] (n : ℕ) (δ : ℝ) : Set A :=
   thickening δ { y | orderOf y = n }
 #align approx_order_of approxOrderOf
+#align approx_add_order_of approxAddOrderOf
 
 @[to_additive mem_approx_add_order_of_iff]
 theorem mem_approx_order_of_iff {A : Type _} [SeminormedGroup A] {n : ℕ} {δ : ℝ} {a : A} :
     a ∈ approxOrderOf A n δ ↔ ∃ b : A, orderOf b = n ∧ a ∈ ball b δ := by
   simp only [approxOrderOf, thickening_eq_bUnion_ball, mem_Union₂, mem_set_of_eq, exists_prop]
 #align mem_approx_order_of_iff mem_approx_order_of_iff
+#align mem_approx_add_order_of_iff mem_approx_add_order_of_iff
 
 /-- In a seminormed group `A`, given a sequence of distances `δ₁, δ₂, ...`, `well_approximable A δ`
 is the limsup as `n → ∞` of the sets `approx_order_of A n δₙ`. Thus, it is the set of points that
@@ -84,6 +86,7 @@ lie in infinitely many of the sets `approx_order_of A n δₙ`. -/
 def wellApproximable (A : Type _) [SeminormedGroup A] (δ : ℕ → ℝ) : Set A :=
   blimsup (fun n => approxOrderOf A n (δ n)) atTop fun n => 0 < n
 #align well_approximable wellApproximable
+#align add_well_approximable addWellApproximable
 
 @[to_additive mem_add_well_approximable_iff]
 theorem mem_well_approximable_iff {A : Type _} [SeminormedGroup A] {δ : ℕ → ℝ} {a : A} :
@@ -91,6 +94,7 @@ theorem mem_well_approximable_iff {A : Type _} [SeminormedGroup A] {δ : ℕ →
       a ∈ blimsup (fun n => approxOrderOf A n (δ n)) atTop fun n => 0 < n :=
   Iff.rfl
 #align mem_well_approximable_iff mem_well_approximable_iff
+#align mem_add_well_approximable_iff mem_add_well_approximable_iff
 
 namespace approxOrderOf
 
@@ -109,6 +113,8 @@ theorem image_pow_subset_of_coprime (hm : 0 < m) (hmn : n.Coprime m) :
   convert pow_mem_ball hm hab using 1
   simp only [nsmul_eq_mul, Algebra.id.smul_eq_mul]
 #align approx_order_of.image_pow_subset_of_coprime approxOrderOf.image_pow_subset_of_coprime
+#align
+  approx_add_order_of.image_nsmul_subset_of_coprime approxAddOrderOf.image_nsmul_subset_of_coprime
 
 @[to_additive]
 theorem image_pow_subset (n : ℕ) (hm : 0 < m) :
@@ -122,6 +128,7 @@ theorem image_pow_subset (n : ℕ) (hm : 0 < m) :
   convert pow_mem_ball hm hab
   simp only [nsmul_eq_mul]
 #align approx_order_of.image_pow_subset approxOrderOf.image_pow_subset
+#align approx_add_order_of.image_nsmul_subset approxAddOrderOf.image_nsmul_subset
 
 @[to_additive]
 theorem smul_subset_of_coprime (han : (orderOf a).Coprime n) :
@@ -135,6 +142,7 @@ theorem smul_subset_of_coprime (han : (orderOf a).Coprime n) :
   rw [← hb] at han⊢
   exact (Commute.all a b).order_of_mul_eq_mul_order_of_of_coprime han
 #align approx_order_of.smul_subset_of_coprime approxOrderOf.smul_subset_of_coprime
+#align approx_add_order_of.vadd_subset_of_coprime approxAddOrderOf.vadd_subset_of_coprime
 
 @[to_additive vadd_eq_of_mul_dvd]
 theorem smul_eq_of_mul_dvd (hn : 0 < n) (han : orderOf a ^ 2 ∣ n) :
@@ -159,6 +167,7 @@ theorem smul_eq_of_mul_dvd (hn : 0 < n) (han : orderOf a ^ 2 ∣ n) :
   simpa only [f, mem_set_of_eq, Subtype.coe_mk, Union_coe_set] using
     hf.Union_comp fun b => ball (b : A) δ
 #align approx_order_of.smul_eq_of_mul_dvd approxOrderOf.smul_eq_of_mul_dvd
+#align approx_add_order_of.vadd_eq_of_mul_dvd approxAddOrderOf.vadd_eq_of_mul_dvd
 
 end approxOrderOf
 

@@ -30,6 +30,7 @@ theorem IsPwo.mul [OrderedCancelCommMonoid α] (hs : s.IsPwo) (ht : t.IsPwo) : I
   rw [← image_mul_prod]
   exact (hs.prod ht).image_of_monotone (monotone_fst.mul' monotone_snd)
 #align set.is_pwo.mul Set.IsPwo.mul
+#align set.is_pwo.add Set.IsPwo.add
 
 variable [LinearOrderedCancelCommMonoid α]
 
@@ -37,6 +38,7 @@ variable [LinearOrderedCancelCommMonoid α]
 theorem IsWf.mul (hs : s.IsWf) (ht : t.IsWf) : IsWf (s * t) :=
   (hs.IsPwo.mul ht.IsPwo).IsWf
 #align set.is_wf.mul Set.IsWf.mul
+#align set.is_wf.add Set.IsWf.add
 
 @[to_additive]
 theorem IsWf.min_mul (hs : s.IsWf) (ht : t.IsWf) (hsn : s.Nonempty) (htn : t.Nonempty) :
@@ -47,6 +49,7 @@ theorem IsWf.min_mul (hs : s.IsWf) (ht : t.IsWf) (hsn : s.Nonempty) (htn : t.Non
   rintro _ ⟨x, y, hx, hy, rfl⟩
   exact mul_le_mul' (hs.min_le _ hx) (ht.min_le _ hy)
 #align set.is_wf.min_mul Set.IsWf.min_mul
+#align set.is_wf.min_add Set.IsWf.min_add
 
 end Set
 
@@ -66,6 +69,7 @@ well-ordered. -/
 noncomputable def mulAntidiagonal : Finset (α × α) :=
   (Set.mulAntidiagonal.finite_of_is_pwo hs ht a).toFinset
 #align finset.mul_antidiagonal Finset.mulAntidiagonal
+#align finset.add_antidiagonal Finset.addAntidiagonal
 
 variable {hs ht a} {u : Set α} {hu : u.IsPwo} {x : α × α}
 
@@ -73,24 +77,28 @@ variable {hs ht a} {u : Set α} {hu : u.IsPwo} {x : α × α}
 theorem mem_mul_antidiagonal : x ∈ mulAntidiagonal hs ht a ↔ x.1 ∈ s ∧ x.2 ∈ t ∧ x.1 * x.2 = a := by
   simp [mul_antidiagonal, and_rotate]
 #align finset.mem_mul_antidiagonal Finset.mem_mul_antidiagonal
+#align finset.mem_add_antidiagonal Finset.mem_add_antidiagonal
 
 @[to_additive]
 theorem mul_antidiagonal_mono_left (h : u ⊆ s) :
     mulAntidiagonal hu ht a ⊆ mulAntidiagonal hs ht a :=
   Set.Finite.to_finset_mono <| Set.mul_antidiagonal_mono_left h
 #align finset.mul_antidiagonal_mono_left Finset.mul_antidiagonal_mono_left
+#align finset.add_antidiagonal_mono_left Finset.add_antidiagonal_mono_left
 
 @[to_additive]
 theorem mul_antidiagonal_mono_right (h : u ⊆ t) :
     mulAntidiagonal hs hu a ⊆ mulAntidiagonal hs ht a :=
   Set.Finite.to_finset_mono <| Set.mul_antidiagonal_mono_right h
 #align finset.mul_antidiagonal_mono_right Finset.mul_antidiagonal_mono_right
+#align finset.add_antidiagonal_mono_right Finset.add_antidiagonal_mono_right
 
 @[simp, to_additive]
 theorem swap_mem_mul_antidiagonal :
     x.swap ∈ Finset.mulAntidiagonal hs ht a ↔ x ∈ Finset.mulAntidiagonal ht hs a := by
   simp [mul_comm, and_left_comm]
 #align finset.swap_mem_mul_antidiagonal Finset.swap_mem_mul_antidiagonal
+#align finset.swap_mem_add_antidiagonal Finset.swap_mem_add_antidiagonal
 
 @[to_additive]
 theorem support_mul_antidiagonal_subset_mul : { a | (mulAntidiagonal hs ht a).Nonempty } ⊆ s * t :=
@@ -98,11 +106,13 @@ theorem support_mul_antidiagonal_subset_mul : { a | (mulAntidiagonal hs ht a).No
   rw [mem_mul_antidiagonal] at hb
   exact ⟨b.1, b.2, hb⟩
 #align finset.support_mul_antidiagonal_subset_mul Finset.support_mul_antidiagonal_subset_mul
+#align finset.support_add_antidiagonal_subset_add Finset.support_add_antidiagonal_subset_add
 
 @[to_additive]
 theorem is_pwo_support_mul_antidiagonal : { a | (mulAntidiagonal hs ht a).Nonempty }.IsPwo :=
   (hs.mul ht).mono support_mul_antidiagonal_subset_mul
 #align finset.is_pwo_support_mul_antidiagonal Finset.is_pwo_support_mul_antidiagonal
+#align finset.is_pwo_support_add_antidiagonal Finset.is_pwo_support_add_antidiagonal
 
 @[to_additive]
 theorem mul_antidiagonal_min_mul_min {α} [LinearOrderedCancelCommMonoid α] {s t : Set α}
@@ -120,6 +130,7 @@ theorem mul_antidiagonal_min_mul_min {α} [LinearOrderedCancelCommMonoid α] {s 
   · rintro ⟨rfl, rfl⟩
     exact ⟨hs.min_mem _, ht.min_mem _, rfl⟩
 #align finset.mul_antidiagonal_min_mul_min Finset.mul_antidiagonal_min_mul_min
+#align finset.add_antidiagonal_min_add_min Finset.add_antidiagonal_min_add_min
 
 end Finset
 

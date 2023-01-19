@@ -1001,6 +1001,7 @@ theorem IndepFun.mul [IsProbabilityMeasure μ] {ι : Type _} {β : Type _} {m : 
   change indep_fun ((fun p : β × β => p.fst * p.snd) ∘ fun ω => (f i ω, f j ω)) (id ∘ f k) μ
   exact indep_fun.comp this (measurable_fst.mul measurable_snd) measurable_id
 #align probability_theory.Indep_fun.mul ProbabilityTheory.IndepFun.mul
+#align probability_theory.Indep_fun.add ProbabilityTheory.IndepFun.add
 
 @[to_additive]
 theorem IndepFun.indepFunFinsetProdOfNotMem [IsProbabilityMeasure μ] {ι : Type _} {β : Type _}
@@ -1030,6 +1031,8 @@ theorem IndepFun.indepFunFinsetProdOfNotMem [IsProbabilityMeasure μ] {ι : Type
         h_meas_left h_meas_right
 #align
   probability_theory.Indep_fun.indep_fun_finset_prod_of_not_mem ProbabilityTheory.IndepFun.indepFunFinsetProdOfNotMem
+#align
+  probability_theory.Indep_fun.indep_fun_finset_sum_of_not_mem ProbabilityTheory.IndepFun.indep_fun_finset_sum_of_not_mem
 
 @[to_additive]
 theorem IndepFun.indepFunProdRangeSucc [IsProbabilityMeasure μ] {β : Type _} {m : MeasurableSpace β}
@@ -1038,6 +1041,8 @@ theorem IndepFun.indepFunProdRangeSucc [IsProbabilityMeasure μ] {β : Type _} {
   hf_Indep.indepFunFinsetProdOfNotMem hf_meas Finset.not_mem_range_self
 #align
   probability_theory.Indep_fun.indep_fun_prod_range_succ ProbabilityTheory.IndepFun.indepFunProdRangeSucc
+#align
+  probability_theory.Indep_fun.indep_fun_sum_range_succ ProbabilityTheory.IndepFun.indep_fun_sum_range_succ
 
 theorem IndepSet.indepFunIndicator [Zero β] [One β] {m : MeasurableSpace β} {s : ι → Set Ω}
     (hs : IndepSet s μ) : IndepFun (fun n => m) (fun n => (s n).indicator fun ω => 1) μ := by

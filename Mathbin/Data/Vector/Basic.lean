@@ -631,6 +631,7 @@ theorem prod_update_nth [Monoid α] (v : Vector α n) (i : Fin n) (a : α) :
   have : ↑i < v.to_list.length := lt_of_lt_of_le i.2 (le_of_eq v.2.symm)
   simp_all
 #align vector.prod_update_nth Vector.prod_update_nth
+#align vector.sum_update_nth Vector.sum_update_nth
 
 @[to_additive]
 theorem prod_update_nth' [CommGroup α] (v : Vector α n) (i : Fin n) (a : α) :
@@ -640,6 +641,7 @@ theorem prod_update_nth' [CommGroup α] (v : Vector α n) (i : Fin n) (a : α) :
   have : ↑i < v.to_list.length := lt_of_lt_of_le i.2 (le_of_eq v.2.symm)
   simp [this, nth_eq_nth_le, mul_assoc]
 #align vector.prod_update_nth' Vector.prod_update_nth'
+#align vector.sum_update_nth' Vector.sum_update_nth'
 
 end UpdateNth
 

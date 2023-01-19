@@ -423,7 +423,9 @@ closure of the set of linear maps. -/
 @[simps (config := { fullyApplied := false })]
 def linearMapOfMemClosureRangeCoe (f : M₁ → M₂)
     (hf : f ∈ closure (Set.range (coeFn : (M₁ →ₛₗ[σ] M₂) → M₁ → M₂))) : M₁ →ₛₗ[σ] M₂ :=
-  { addMonoidHomOfMemClosureRangeCoe f hf with
+  {
+    add_monoid_hom_of_mem_closure_range_coe f
+      hf with
     toFun := f
     map_smul' :=
       (is_closed_set_of_map_smul M₁ M₂ σ).closure_subset_iff.2
@@ -2763,7 +2765,7 @@ variable {R M : Type _} [Ring R] [AddCommGroup M] [Module R M] [TopologicalSpace
   (S : Submodule R M)
 
 theorem is_open_map_mkq [TopologicalAddGroup M] : IsOpenMap S.mkq :=
-  QuotientAddGroup.is_open_map_coe S.toAddSubgroup
+  quotientAddGroup.is_open_map_coe S.toAddSubgroup
 #align submodule.is_open_map_mkq Submodule.is_open_map_mkq
 
 instance topological_add_group_quotient [TopologicalAddGroup M] : TopologicalAddGroup (M ⧸ S) :=

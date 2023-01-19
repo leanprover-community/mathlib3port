@@ -40,6 +40,7 @@ Case conversion may be inaccurate. Consider using '#align list.prod_nil List.pro
 theorem prod_nil : ([] : List M).Prod = 1 :=
   rfl
 #align list.prod_nil List.prod_nil
+#align list.sum_nil List.sum_nil
 
 /- warning: list.prod_singleton -> List.prod_singleton is a dubious translation:
 lean 3 declaration is
@@ -51,6 +52,7 @@ Case conversion may be inaccurate. Consider using '#align list.prod_singleton Li
 theorem prod_singleton : [a].Prod = a :=
   one_mul a
 #align list.prod_singleton List.prod_singleton
+#align list.sum_singleton List.sum_singleton
 
 /- warning: list.prod_cons -> List.prod_cons is a dubious translation:
 lean 3 declaration is
@@ -66,6 +68,7 @@ theorem prod_cons : (a :: l).Prod = a * l.Prod :=
     _ = _ := foldl_assoc
     
 #align list.prod_cons List.prod_cons
+#align list.sum_cons List.sum_cons
 
 /- warning: list.prod_append -> List.prod_append is a dubious translation:
 lean 3 declaration is
@@ -80,6 +83,7 @@ theorem prod_append : (l₁ ++ l₂).Prod = l₁.Prod * l₂.Prod :=
     _ = l₁.Prod * l₂.Prod := foldl_assoc
     
 #align list.prod_append List.prod_append
+#align list.sum_append List.sum_append
 
 /- warning: list.prod_concat -> List.prod_concat is a dubious translation:
 lean 3 declaration is
@@ -91,6 +95,7 @@ Case conversion may be inaccurate. Consider using '#align list.prod_concat List.
 theorem prod_concat : (l.concat a).Prod = l.Prod * a := by
   rw [concat_eq_append, prod_append, prod_singleton]
 #align list.prod_concat List.prod_concat
+#align list.sum_concat List.sum_concat
 
 /- warning: list.prod_join -> List.prod_join is a dubious translation:
 lean 3 declaration is
@@ -102,6 +107,7 @@ Case conversion may be inaccurate. Consider using '#align list.prod_join List.pr
 theorem prod_join {l : List (List M)} : l.join.Prod = (l.map List.prod).Prod := by
   induction l <;> [rfl, simp only [*, List.join, map, prod_append, prod_cons]]
 #align list.prod_join List.prod_join
+#align list.sum_join List.sum_join
 
 /- warning: list.prod_eq_foldr -> List.prod_eq_foldr is a dubious translation:
 lean 3 declaration is
@@ -113,6 +119,7 @@ Case conversion may be inaccurate. Consider using '#align list.prod_eq_foldr Lis
 theorem prod_eq_foldr : l.Prod = foldr (· * ·) 1 l :=
   List.recOn l rfl fun a l ihl => by rw [prod_cons, foldr_cons, ihl]
 #align list.prod_eq_foldr List.prod_eq_foldr
+#align list.sum_eq_foldr List.sum_eq_foldr
 
 /- warning: list.prod_replicate -> List.prod_replicate is a dubious translation:
 lean 3 declaration is
@@ -128,6 +135,7 @@ theorem prod_replicate (n : ℕ) (a : M) : (replicate n a).Prod = a ^ n :=
     rfl
   · rw [List.replicate_succ, List.prod_cons, ih, pow_succ]
 #align list.prod_replicate List.prod_replicate
+#align list.sum_replicate List.sum_replicate
 
 /- warning: list.prod_eq_pow_card -> List.prod_eq_pow_card is a dubious translation:
 lean 3 declaration is
@@ -139,6 +147,7 @@ Case conversion may be inaccurate. Consider using '#align list.prod_eq_pow_card 
 theorem prod_eq_pow_card (l : List M) (m : M) (h : ∀ x ∈ l, x = m) : l.Prod = m ^ l.length := by
   rw [← prod_replicate, ← eq_replicate_length.2 h]
 #align list.prod_eq_pow_card List.prod_eq_pow_card
+#align list.sum_eq_card_nsmul List.sum_eq_card_nsmul
 
 /- warning: list.prod_hom_rel -> List.prod_hom_rel is a dubious translation:
 lean 3 declaration is
@@ -151,6 +160,7 @@ theorem prod_hom_rel (l : List ι) {r : M → N → Prop} {f : ι → M} {g : ι
     (h₂ : ∀ ⦃i a b⦄, r a b → r (f i * a) (g i * b)) : r (l.map f).Prod (l.map g).Prod :=
   List.recOn l h₁ fun a l hl => by simp only [map_cons, prod_cons, h₂ hl]
 #align list.prod_hom_rel List.prod_hom_rel
+#align list.sum_hom_rel List.sum_hom_rel
 
 /- warning: list.prod_hom -> List.prod_hom is a dubious translation:
 lean 3 declaration is
@@ -165,6 +175,7 @@ theorem prod_hom (l : List M) {F : Type _} [MonoidHomClass F M N] (f : F) :
   simp only [Prod, foldl_map, ← map_one f]
   exact l.foldl_hom _ _ _ 1 (map_mul f)
 #align list.prod_hom List.prod_hom
+#align list.sum_hom List.sum_hom
 
 /- warning: list.prod_hom₂ -> List.prod_hom₂ is a dubious translation:
 lean 3 declaration is
@@ -182,6 +193,7 @@ theorem prod_hom₂ (l : List ι) (f : M → N → P) (hf : ∀ a b c d, f (a * 
   · exact hf'.symm
   · exact hf _ _ _ _
 #align list.prod_hom₂ List.prod_hom₂
+#align list.sum_hom₂ List.sum_hom₂
 
 /- warning: list.prod_map_mul -> List.prod_map_mul is a dubious translation:
 lean 3 declaration is
@@ -194,6 +206,7 @@ theorem prod_map_mul {α : Type _} [CommMonoid α] {l : List ι} {f g : ι → �
     (l.map fun i => f i * g i).Prod = (l.map f).Prod * (l.map g).Prod :=
   l.prod_hom₂ (· * ·) mul_mul_mul_comm (mul_one _) _ _
 #align list.prod_map_mul List.prod_map_mul
+#align list.sum_map_add List.sum_map_add
 
 /- warning: list.prod_map_neg -> List.prod_map_neg is a dubious translation:
 lean 3 declaration is
@@ -218,6 +231,7 @@ Case conversion may be inaccurate. Consider using '#align list.prod_map_hom List
 theorem prod_map_hom (L : List ι) (f : ι → M) {G : Type _} [MonoidHomClass G M N] (g : G) :
     (L.map (g ∘ f)).Prod = g (L.map f).Prod := by rw [← prod_hom, map_map]
 #align list.prod_map_hom List.prod_map_hom
+#align list.sum_map_hom List.sum_map_hom
 
 /- warning: list.prod_is_unit -> List.prod_isUnit is a dubious translation:
 lean 3 declaration is
@@ -264,6 +278,7 @@ theorem prod_take_mul_prod_drop : ∀ (L : List M) (i : ℕ), (L.take i).Prod * 
     dsimp
     rw [prod_cons, prod_cons, mul_assoc, prod_take_mul_prod_drop]
 #align list.prod_take_mul_prod_drop List.prod_take_mul_prod_drop
+#align list.sum_take_add_sum_drop List.sum_take_add_sum_drop
 
 /- warning: list.prod_take_succ -> List.prod_take_succ is a dubious translation:
 lean 3 declaration is
@@ -280,6 +295,7 @@ theorem prod_take_succ :
     dsimp
     rw [prod_cons, prod_cons, prod_take_succ, mul_assoc]
 #align list.prod_take_succ List.prod_take_succ
+#align list.sum_take_succ List.sum_take_succ
 
 /- warning: list.length_pos_of_prod_ne_one -> List.length_pos_of_prod_ne_one is a dubious translation:
 lean 3 declaration is
@@ -296,6 +312,7 @@ theorem length_pos_of_prod_ne_one (L : List M) (h : L.Prod ≠ 1) : 0 < L.length
     simp
   · simp
 #align list.length_pos_of_prod_ne_one List.length_pos_of_prod_ne_one
+#align list.length_pos_of_sum_ne_zero List.length_pos_of_sum_ne_zero
 
 /- warning: list.length_pos_of_one_lt_prod -> List.length_pos_of_one_lt_prod is a dubious translation:
 lean 3 declaration is
@@ -308,6 +325,7 @@ Case conversion may be inaccurate. Consider using '#align list.length_pos_of_one
 theorem length_pos_of_one_lt_prod [Preorder M] (L : List M) (h : 1 < L.Prod) : 0 < L.length :=
   length_pos_of_prod_ne_one L h.ne'
 #align list.length_pos_of_one_lt_prod List.length_pos_of_one_lt_prod
+#align list.length_pos_of_sum_pos List.length_pos_of_sum_pos
 
 /- warning: list.length_pos_of_prod_lt_one -> List.length_pos_of_prod_lt_one is a dubious translation:
 lean 3 declaration is
@@ -320,6 +338,7 @@ Case conversion may be inaccurate. Consider using '#align list.length_pos_of_pro
 theorem length_pos_of_prod_lt_one [Preorder M] (L : List M) (h : L.Prod < 1) : 0 < L.length :=
   length_pos_of_prod_ne_one L h.Ne
 #align list.length_pos_of_prod_lt_one List.length_pos_of_prod_lt_one
+#align list.length_pos_of_sum_neg List.length_pos_of_sum_neg
 
 /- warning: list.prod_update_nth -> List.prod_set is a dubious translation:
 lean 3 declaration is
@@ -384,6 +403,7 @@ theorem Commute.list_prod_right (l : List M) (y : M) (h : ∀ x ∈ l, Commute y
     rw [List.prod_cons]
     exact Commute.mul_right h.1 (IH h.2)
 #align commute.list_prod_right Commute.list_prod_right
+#align add_commute.list_sum_right AddCommute.list_sum_right
 
 /- warning: commute.list_prod_left -> Commute.list_prod_left is a dubious translation:
 lean 3 declaration is
@@ -395,6 +415,7 @@ Case conversion may be inaccurate. Consider using '#align commute.list_prod_left
 theorem Commute.list_prod_left (l : List M) (y : M) (h : ∀ x ∈ l, Commute x y) : Commute l.Prod y :=
   (Commute.list_prod_right _ _ fun x hx => (h _ hx).symm).symm
 #align commute.list_prod_left Commute.list_prod_left
+#align add_commute.list_sum_left AddCommute.list_sum_left
 
 /- warning: list.forall₂.prod_le_prod' -> List.Forall₂.prod_le_prod' is a dubious translation:
 lean 3 declaration is
@@ -410,6 +431,7 @@ theorem Forall₂.prod_le_prod' [Preorder M] [CovariantClass M M (Function.swap 
   · rfl
   · simpa only [prod_cons] using mul_le_mul' hab ih'
 #align list.forall₂.prod_le_prod' List.Forall₂.prod_le_prod'
+#align list.forall₂.sum_le_sum List.Forall₂.sum_le_sum
 
 /- warning: list.sublist.prod_le_prod' -> List.Sublist.prod_le_prod' is a dubious translation:
 lean 3 declaration is
@@ -434,6 +456,7 @@ theorem Sublist.prod_le_prod' [Preorder M] [CovariantClass M M (Function.swap (�
     simp only [prod_cons, forall_mem_cons] at h₁⊢
     exact mul_le_mul_left' (ih' h₁.2) _
 #align list.sublist.prod_le_prod' List.Sublist.prod_le_prod'
+#align list.sublist.sum_le_sum List.Sublist.sum_le_sum
 
 /- warning: list.sublist_forall₂.prod_le_prod' -> List.SublistForall₂.prod_le_prod' is a dubious translation:
 lean 3 declaration is
@@ -449,6 +472,7 @@ theorem SublistForall₂.prod_le_prod' [Preorder M]
   let ⟨l, hall, hsub⟩ := sublistForall₂_iff.1 h
   hall.prod_le_prod'.trans <| hsub.prod_le_prod' h₁
 #align list.sublist_forall₂.prod_le_prod' List.SublistForall₂.prod_le_prod'
+#align list.sublist_forall₂.sum_le_sum List.SublistForall₂.sum_le_sum
 
 /- warning: list.prod_le_prod' -> List.prod_le_prod' is a dubious translation:
 lean 3 declaration is
@@ -462,6 +486,7 @@ theorem prod_le_prod' [Preorder M] [CovariantClass M M (Function.swap (· * ·))
     (l.map f).Prod ≤ (l.map g).Prod :=
   forall₂.prod_le_prod' <| by simpa
 #align list.prod_le_prod' List.prod_le_prod'
+#align list.sum_le_sum List.sum_le_sum
 
 /- warning: list.prod_lt_prod' -> List.prod_lt_prod' is a dubious translation:
 lean 3 declaration is
@@ -480,6 +505,7 @@ theorem prod_lt_prod' [Preorder M] [CovariantClass M M (· * ·) (· < ·)]
   cases h₂
   exacts[mul_lt_mul_of_lt_of_le h₂ (prod_le_prod' h₁.2), mul_lt_mul_of_le_of_lt h₁.1 <| ihl h₁.2 h₂]
 #align list.prod_lt_prod' List.prod_lt_prod'
+#align list.sum_lt_sum List.sum_lt_sum
 
 /- warning: list.prod_lt_prod_of_ne_nil -> List.prod_lt_prod_of_ne_nil is a dubious translation:
 lean 3 declaration is
@@ -495,6 +521,7 @@ theorem prod_lt_prod_of_ne_nil [Preorder M] [CovariantClass M M (· * ·) (· < 
   (prod_lt_prod' f g fun i hi => (hlt i hi).le) <|
     (exists_mem_of_ne_nil l hl).imp fun i hi => ⟨hi, hlt i hi⟩
 #align list.prod_lt_prod_of_ne_nil List.prod_lt_prod_of_ne_nil
+#align list.sum_lt_sum_of_ne_nil List.sum_lt_sum_of_ne_nil
 
 /- warning: list.prod_le_pow_card -> List.prod_le_pow_card is a dubious translation:
 lean 3 declaration is
@@ -508,6 +535,7 @@ theorem prod_le_pow_card [Preorder M] [CovariantClass M M (Function.swap (· * �
     l.Prod ≤ n ^ l.length := by
   simpa only [map_id'', map_const, prod_replicate] using prod_le_prod' h
 #align list.prod_le_pow_card List.prod_le_pow_card
+#align list.sum_le_card_nsmul List.sum_le_card_nsmul
 
 /- warning: list.exists_lt_of_prod_lt' -> List.exists_lt_of_prod_lt' is a dubious translation:
 lean 3 declaration is
@@ -523,6 +551,7 @@ theorem exists_lt_of_prod_lt' [LinearOrder M] [CovariantClass M M (Function.swap
   contrapose! h
   exact prod_le_prod' h
 #align list.exists_lt_of_prod_lt' List.exists_lt_of_prod_lt'
+#align list.exists_lt_of_sum_lt List.exists_lt_of_sum_lt
 
 /- warning: list.exists_le_of_prod_le' -> List.exists_le_of_prod_le' is a dubious translation:
 lean 3 declaration is
@@ -539,6 +568,7 @@ theorem exists_le_of_prod_le' [LinearOrder M] [CovariantClass M M (· * ·) (· 
   contrapose! h
   exact prod_lt_prod_of_ne_nil hl _ _ h
 #align list.exists_le_of_prod_le' List.exists_le_of_prod_le'
+#align list.exists_le_of_sum_le List.exists_le_of_sum_le
 
 /- warning: list.one_le_prod_of_one_le -> List.one_le_prod_of_one_le is a dubious translation:
 lean 3 declaration is
@@ -557,6 +587,7 @@ theorem one_le_prod_of_one_le [Preorder M] [CovariantClass M M (· * ·) (· ≤
   rw [prod_cons]
   exact one_le_mul (hl₁ hd (mem_cons_self hd tl)) (ih fun x h => hl₁ x (mem_cons_of_mem hd h))
 #align list.one_le_prod_of_one_le List.one_le_prod_of_one_le
+#align list.sum_nonneg List.sum_nonneg
 
 end Monoid
 
@@ -627,6 +658,7 @@ theorem prod_inv_reverse : ∀ L : List G, L.Prod⁻¹ = (L.map fun x => x⁻¹)
   | [] => by simp
   | x :: xs => by simp [prod_inv_reverse xs]
 #align list.prod_inv_reverse List.prod_inv_reverse
+#align list.sum_neg_reverse List.sum_neg_reverse
 
 /- warning: list.prod_reverse_noncomm -> List.prod_reverse_noncomm is a dubious translation:
 lean 3 declaration is
@@ -639,6 +671,7 @@ Case conversion may be inaccurate. Consider using '#align list.prod_reverse_nonc
 theorem prod_reverse_noncomm : ∀ L : List G, L.reverse.Prod = (L.map fun x => x⁻¹).Prod⁻¹ := by
   simp [prod_inv_reverse]
 #align list.prod_reverse_noncomm List.prod_reverse_noncomm
+#align list.sum_reverse_noncomm List.sum_reverse_noncomm
 
 /- warning: list.prod_drop_succ -> List.prod_drop_succ is a dubious translation:
 lean 3 declaration is
@@ -654,6 +687,7 @@ theorem prod_drop_succ :
   | x :: xs, 0, p => by simp
   | x :: xs, i + 1, p => prod_drop_succ xs i _
 #align list.prod_drop_succ List.prod_drop_succ
+#align list.sum_drop_succ List.sum_drop_succ
 
 end Group
 
@@ -673,6 +707,7 @@ theorem prod_inv : ∀ L : List G, L.Prod⁻¹ = (L.map fun x => x⁻¹).Prod
   | [] => by simp
   | x :: xs => by simp [mul_comm, prod_inv xs]
 #align list.prod_inv List.prod_inv
+#align list.sum_neg List.sum_neg
 
 /- warning: list.prod_update_nth' -> List.prod_set' is a dubious translation:
 lean 3 declaration is
@@ -712,6 +747,7 @@ theorem eq_of_prod_take_eq [LeftCancelMonoid M] {L L' : List M} (h : L.length = 
   rw [prod_take_succ L i h₁, prod_take_succ L' i h₂, h' i (le_of_lt h₁)] at this
   convert mul_left_cancel this
 #align list.eq_of_prod_take_eq List.eq_of_prod_take_eq
+#align list.eq_of_sum_take_eq List.eq_of_sum_take_eq
 
 /- warning: list.monotone_prod_take -> List.monotone_prod_take is a dubious translation:
 lean 3 declaration is
@@ -729,6 +765,7 @@ theorem monotone_prod_take [CanonicallyOrderedMonoid M] (L : List M) :
     exact le_self_mul
   · simp [take_all_of_le h, take_all_of_le (le_trans h (Nat.le_succ _))]
 #align list.monotone_prod_take List.monotone_prod_take
+#align list.monotone_sum_take List.monotone_sum_take
 
 /- warning: list.one_lt_prod_of_one_lt -> List.one_lt_prod_of_one_lt is a dubious translation:
 lean 3 declaration is
@@ -748,6 +785,7 @@ theorem one_lt_prod_of_one_lt [OrderedCommMonoid M] :
     apply one_lt_mul_of_lt_of_le' hl₁.1
     apply le_of_lt ((b :: l).one_lt_prod_of_one_lt hl₁.2 (l.cons_ne_nil b))
 #align list.one_lt_prod_of_one_lt List.one_lt_prod_of_one_lt
+#align list.sum_pos List.sum_pos
 
 /- warning: list.single_le_prod -> List.single_le_prod is a dubious translation:
 lean 3 declaration is
@@ -765,6 +803,7 @@ theorem single_le_prod [OrderedCommMonoid M] {l : List M} (hl₁ : ∀ x ∈ l, 
   · exact le_mul_of_one_le_right' (one_le_prod_of_one_le hl₁.2)
   · exact fun x H => le_mul_of_one_le_of_le hl₁.1 (l_ih hl₁.right x H)
 #align list.single_le_prod List.single_le_prod
+#align list.single_le_sum List.single_le_sum
 
 /- warning: list.all_one_of_le_one_le_of_prod_eq_one -> List.all_one_of_le_one_le_of_prod_eq_one is a dubious translation:
 lean 3 declaration is
@@ -777,6 +816,7 @@ theorem all_one_of_le_one_le_of_prod_eq_one [OrderedCommMonoid M] {l : List M}
     (hl₁ : ∀ x ∈ l, (1 : M) ≤ x) (hl₂ : l.Prod = 1) {x : M} (hx : x ∈ l) : x = 1 :=
   le_antisymm (hl₂ ▸ single_le_prod hl₁ _ hx) (hl₁ x hx)
 #align list.all_one_of_le_one_le_of_prod_eq_one List.all_one_of_le_one_le_of_prod_eq_one
+#align list.all_zero_of_le_zero_le_of_sum_eq_zero List.all_zero_of_le_zero_le_of_sum_eq_zero
 
 /- warning: list.prod_eq_one -> List.prod_eq_one is a dubious translation:
 lean 3 declaration is
@@ -794,6 +834,7 @@ theorem prod_eq_one [Monoid M] {l : List M} (hl : ∀ x ∈ l, x = (1 : M)) : l.
   rw [List.prod_cons, hil fun x hx => hl _ (mem_cons_of_mem i hx), hl _ (mem_cons_self i l),
     one_mul]
 #align list.prod_eq_one List.prod_eq_one
+#align list.sum_eq_zero List.sum_eq_zero
 
 /- warning: list.exists_mem_ne_one_of_prod_ne_one -> List.exists_mem_ne_one_of_prod_ne_one is a dubious translation:
 lean 3 declaration is
@@ -805,6 +846,7 @@ Case conversion may be inaccurate. Consider using '#align list.exists_mem_ne_one
 theorem exists_mem_ne_one_of_prod_ne_one [Monoid M] {l : List M} (h : l.Prod ≠ 1) :
     ∃ x ∈ l, x ≠ (1 : M) := by simpa only [not_forall] using mt prod_eq_one h
 #align list.exists_mem_ne_one_of_prod_ne_one List.exists_mem_ne_one_of_prod_ne_one
+#align list.exists_mem_ne_zero_of_sum_ne_zero List.exists_mem_ne_zero_of_sum_ne_zero
 
 /- warning: list.sum_le_foldr_max -> List.sum_le_foldr_max is a dubious translation:
 lean 3 declaration is
@@ -836,6 +878,7 @@ theorem prod_erase [DecidableEq M] [CommMonoid M] {a} :
     · simp only [List.erase, if_pos, prod_cons]
     · simp only [List.erase, if_neg (mt Eq.symm Ne), prod_cons, prod_erase h, mul_left_comm a b]
 #align list.prod_erase List.prod_erase
+#align list.sum_erase List.sum_erase
 
 /- warning: list.prod_map_erase -> List.prod_map_erase is a dubious translation:
 lean 3 declaration is
@@ -853,6 +896,7 @@ theorem prod_map_erase [DecidableEq ι] [CommMonoid M] (f : ι → M) {a} :
       simp only [map, erase_cons_tail _ Ne.symm, prod_cons, prod_map_erase h,
         mul_left_comm (f a) (f b)]
 #align list.prod_map_erase List.prod_map_erase
+#align list.sum_map_erase List.sum_map_erase
 
 #print List.sum_const_nat /-
 theorem sum_const_nat (m n : ℕ) : sum (replicate m n) = m * n := by rw [sum_replicate, smul_eq_mul]
@@ -996,6 +1040,7 @@ theorem map_list_prod {F : Type _} [MonoidHomClass F M N] (f : F) (l : List M) :
     f l.Prod = (l.map f).Prod :=
   (l.prod_hom f).symm
 #align map_list_prod map_list_prod
+#align map_list_sum map_list_sum
 
 namespace MonoidHom
 
@@ -1010,6 +1055,7 @@ Case conversion may be inaccurate. Consider using '#align monoid_hom.map_list_pr
 protected theorem map_list_prod (f : M →* N) (l : List M) : f l.Prod = (l.map f).Prod :=
   map_list_prod f l
 #align monoid_hom.map_list_prod MonoidHom.map_list_prod
+#align add_monoid_hom.map_list_sum AddMonoidHom.map_list_sum
 
 end MonoidHom
 

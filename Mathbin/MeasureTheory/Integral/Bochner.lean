@@ -1135,7 +1135,7 @@ theorem has_sum_integral_of_dominated_convergence {ι} [Countable ι] {F : ι �
   refine'
     tendsto_integral_filter_of_dominated_convergence (fun a => ∑' n, bound n a) _ _ bound_integrable
       h_lim
-  · exact eventually_of_forall fun s => s.aeStronglyMeasurableSum fun n hn => hF_meas n
+  · exact eventually_of_forall fun s => s.ae_strongly_measurable_sum fun n hn => hF_meas n
   · refine' eventually_of_forall fun s => _
     filter_upwards [eventually_countable_forall.2 h_bound, hb_nonneg,
       bound_summable] with a hFa ha0 has

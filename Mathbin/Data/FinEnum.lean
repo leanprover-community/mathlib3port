@@ -32,7 +32,7 @@ lean 3 declaration is
 but is expected to have type
   Sort.{u1} -> Sort.{max 1 u1}
 Case conversion may be inaccurate. Consider using '#align fin_enum FinEnumₓ'. -/
-/- ./././Mathport/Syntax/Translate/Command.lean:379:30: infer kinds are unsupported in Lean 4: #[`Equiv] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`Equiv] [] -/
 /-- `fin_enum α` means that `α` is finite and can be enumerated in some order,
   i.e. `α` has an explicit bijection with `fin n` for some n. -/
 class FinEnum (α : Sort _) where

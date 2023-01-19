@@ -593,12 +593,14 @@ protected def mul [Mul X] [HasContinuousMul X] {a₁ b₁ a₂ b₂ : X} (γ₁ 
     (γ₂ : Path a₂ b₂) : Path (a₁ * a₂) (b₁ * b₂) :=
   (γ₁.Prod γ₂).map continuous_mul
 #align path.mul Path.mul
+#align path.add Path.add
 
 @[to_additive]
 protected theorem mul_apply [Mul X] [HasContinuousMul X] {a₁ b₁ a₂ b₂ : X} (γ₁ : Path a₁ b₁)
     (γ₂ : Path a₂ b₂) (t : unitInterval) : (γ₁.mul γ₂) t = γ₁ t * γ₂ t :=
   rfl
 #align path.mul_apply Path.mul_apply
+#align path.add_apply Path.add_apply
 
 /-! #### Truncating a path -/
 

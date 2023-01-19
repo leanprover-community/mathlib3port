@@ -48,6 +48,7 @@ variable (α) [Monoid α] [MulAction α β]
 def orbit (b : β) :=
   Set.range fun x : α => x • b
 #align mul_action.orbit MulAction.orbit
+#align add_action.orbit AddAction.orbit
 
 variable {α}
 
@@ -55,36 +56,43 @@ variable {α}
 theorem mem_orbit_iff {b₁ b₂ : β} : b₂ ∈ orbit α b₁ ↔ ∃ x : α, x • b₁ = b₂ :=
   Iff.rfl
 #align mul_action.mem_orbit_iff MulAction.mem_orbit_iff
+#align add_action.mem_orbit_iff AddAction.mem_orbit_iff
 
 @[simp, to_additive]
 theorem mem_orbit (b : β) (x : α) : x • b ∈ orbit α b :=
   ⟨x, rfl⟩
 #align mul_action.mem_orbit MulAction.mem_orbit
+#align add_action.mem_orbit AddAction.mem_orbit
 
 @[simp, to_additive]
 theorem mem_orbit_self (b : β) : b ∈ orbit α b :=
   ⟨1, by simp [MulAction.one_smul]⟩
 #align mul_action.mem_orbit_self MulAction.mem_orbit_self
+#align add_action.mem_orbit_self AddAction.mem_orbit_self
 
 @[to_additive]
 theorem orbit_nonempty (b : β) : Set.Nonempty (orbit α b) :=
   Set.range_nonempty _
 #align mul_action.orbit_nonempty MulAction.orbit_nonempty
+#align add_action.orbit_nonempty AddAction.orbit_nonempty
 
 @[to_additive]
 theorem maps_to_smul_orbit (a : α) (b : β) : Set.MapsTo ((· • ·) a) (orbit α b) (orbit α b) :=
   Set.range_subset_iff.2 fun a' => ⟨a * a', mul_smul _ _ _⟩
 #align mul_action.maps_to_smul_orbit MulAction.maps_to_smul_orbit
+#align add_action.maps_to_vadd_orbit AddAction.maps_to_vadd_orbit
 
 @[to_additive]
 theorem smul_orbit_subset (a : α) (b : β) : a • orbit α b ⊆ orbit α b :=
   (maps_to_smul_orbit a b).image_subset
 #align mul_action.smul_orbit_subset MulAction.smul_orbit_subset
+#align add_action.vadd_orbit_subset AddAction.vadd_orbit_subset
 
 @[to_additive]
 theorem orbit_smul_subset (a : α) (b : β) : orbit α (a • b) ⊆ orbit α b :=
   Set.range_subset_iff.2 fun a' => mul_smul a' a b ▸ mem_orbit _ _
 #align mul_action.orbit_smul_subset MulAction.orbit_smul_subset
+#align add_action.orbit_vadd_subset AddAction.orbit_vadd_subset
 
 @[to_additive]
 instance {b : β} : MulAction α (orbit α b)
@@ -97,6 +105,7 @@ instance {b : β} : MulAction α (orbit α b)
 theorem orbit.coe_smul {b : β} {a : α} {b' : orbit α b} : ↑(a • b') = a • (b' : β) :=
   rfl
 #align mul_action.orbit.coe_smul MulAction.orbit.coe_smul
+#align add_action.orbit.coe_vadd AddAction.orbit.coe_vadd
 
 variable (α) (β)
 
@@ -105,18 +114,21 @@ variable (α) (β)
 def fixedPoints : Set β :=
   { b : β | ∀ x : α, x • b = b }
 #align mul_action.fixed_points MulAction.fixedPoints
+#align add_action.fixed_points AddAction.fixedPoints
 
 /-- `fixed_by g` is the subfield of elements fixed by `g`. -/
 @[to_additive "`fixed_by g` is the subfield of elements fixed by `g`."]
 def fixedBy (g : α) : Set β :=
   { x | g • x = x }
 #align mul_action.fixed_by MulAction.fixedBy
+#align add_action.fixed_by AddAction.fixedBy
 
 @[to_additive]
 theorem fixed_eq_Inter_fixed_by : fixedPoints α β = ⋂ g : α, fixedBy α β g :=
   Set.ext fun x =>
     ⟨fun hx => Set.mem_interᵢ.2 fun g => hx g, fun hx g => (Set.mem_interᵢ.1 hx g : _)⟩
 #align mul_action.fixed_eq_Inter_fixed_by MulAction.fixed_eq_Inter_fixed_by
+#align add_action.fixed_eq_Inter_fixed_by AddAction.fixed_eq_Inter_fixed_by
 
 variable {α} (β)
 
@@ -124,11 +136,13 @@ variable {α} (β)
 theorem mem_fixed_points {b : β} : b ∈ fixedPoints α β ↔ ∀ x : α, x • b = b :=
   Iff.rfl
 #align mul_action.mem_fixed_points MulAction.mem_fixed_points
+#align add_action.mem_fixed_points AddAction.mem_fixed_points
 
 @[simp, to_additive]
 theorem mem_fixed_by {g : α} {b : β} : b ∈ fixedBy α β g ↔ g • b = b :=
   Iff.rfl
 #align mul_action.mem_fixed_by MulAction.mem_fixed_by
+#align add_action.mem_fixed_by AddAction.mem_fixed_by
 
 @[to_additive]
 theorem mem_fixed_points' {b : β} : b ∈ fixedPoints α β ↔ ∀ b', b' ∈ orbit α b → b' = b :=
@@ -137,6 +151,7 @@ theorem mem_fixed_points' {b : β} : b ∈ fixedPoints α β ↔ ∀ b', b' ∈ 
     hx ▸ h x,
     fun h b => h _ (mem_orbit _ _)⟩
 #align mul_action.mem_fixed_points' MulAction.mem_fixed_points'
+#align add_action.mem_fixed_points' AddAction.mem_fixed_points'
 
 variable (α) {β}
 
@@ -149,16 +164,19 @@ def Stabilizer.submonoid (b : β) : Submonoid α
   mul_mem' a a' (ha : a • b = b) (hb : a' • b = b) :=
     show (a * a') • b = b by rw [← smul_smul, hb, ha]
 #align mul_action.stabilizer.submonoid MulAction.Stabilizer.submonoid
+#align add_action.stabilizer.add_submonoid AddAction.Stabilizer.addSubmonoid
 
 @[simp, to_additive]
 theorem mem_stabilizer_submonoid_iff {b : β} {a : α} : a ∈ Stabilizer.submonoid α b ↔ a • b = b :=
   Iff.rfl
 #align mul_action.mem_stabilizer_submonoid_iff MulAction.mem_stabilizer_submonoid_iff
+#align add_action.mem_stabilizer_add_submonoid_iff AddAction.mem_stabilizer_add_submonoid_iff
 
 @[to_additive]
 theorem orbit_eq_univ [IsPretransitive α β] (x : β) : orbit α x = Set.univ :=
   (surjective_smul α x).range_eq
 #align mul_action.orbit_eq_univ MulAction.orbit_eq_univ
+#align add_action.orbit_eq_univ AddAction.orbit_eq_univ
 
 variable {α} {β}
 
@@ -177,6 +195,8 @@ theorem mem_fixed_points_iff_card_orbit_eq_one {a : β} [Fintype (orbit α a)] :
       
 #align
   mul_action.mem_fixed_points_iff_card_orbit_eq_one MulAction.mem_fixed_points_iff_card_orbit_eq_one
+#align
+  add_action.mem_fixed_points_iff_card_orbit_eq_zero AddAction.mem_fixed_points_iff_card_orbit_eq_zero
 
 end MulAction
 
@@ -194,6 +214,7 @@ def stabilizer (b : β) : Subgroup α :=
   { Stabilizer.submonoid α b with
     inv_mem' := fun a (ha : a • b = b) => show a⁻¹ • b = b by rw [inv_smul_eq_iff, ha] }
 #align mul_action.stabilizer MulAction.stabilizer
+#align add_action.stabilizer AddAction.stabilizer
 
 variable {α} {β}
 
@@ -201,6 +222,7 @@ variable {α} {β}
 theorem mem_stabilizer_iff {b : β} {a : α} : a ∈ stabilizer α b ↔ a • b = b :=
   Iff.rfl
 #align mul_action.mem_stabilizer_iff MulAction.mem_stabilizer_iff
+#align add_action.mem_stabilizer_iff AddAction.mem_stabilizer_iff
 
 @[simp, to_additive]
 theorem smul_orbit (a : α) (b : β) : a • orbit α b = orbit α b :=
@@ -210,6 +232,7 @@ theorem smul_orbit (a : α) (b : β) : a • orbit α b = orbit α b :=
       _ ⊆ a • orbit α b := Set.image_subset _ (smul_orbit_subset _ _)
       
 #align mul_action.smul_orbit MulAction.smul_orbit
+#align add_action.vadd_orbit AddAction.vadd_orbit
 
 @[simp, to_additive]
 theorem orbit_smul (a : α) (b : β) : orbit α (a • b) = orbit α b :=
@@ -219,6 +242,7 @@ theorem orbit_smul (a : α) (b : β) : orbit α (a • b) = orbit α b :=
       _ ⊆ orbit α (a • b) := orbit_smul_subset _ _
       
 #align mul_action.orbit_smul MulAction.orbit_smul
+#align add_action.orbit_vadd AddAction.orbit_vadd
 
 /-- The action of a group on an orbit is transitive. -/
 @[to_additive "The action of an additive group on an orbit is transitive."]
@@ -233,6 +257,7 @@ instance (x : β) : IsPretransitive α (orbit α x) :=
 theorem orbit_eq_iff {a b : β} : orbit α a = orbit α b ↔ a ∈ orbit α b :=
   ⟨fun h => h ▸ mem_orbit_self _, fun ⟨c, hc⟩ => hc ▸ orbit_smul _ _⟩
 #align mul_action.orbit_eq_iff MulAction.orbit_eq_iff
+#align add_action.orbit_eq_iff AddAction.orbit_eq_iff
 
 variable (α) {β}
 
@@ -240,11 +265,13 @@ variable (α) {β}
 theorem mem_orbit_smul (g : α) (a : β) : a ∈ orbit α (g • a) := by
   simp only [orbit_smul, mem_orbit_self]
 #align mul_action.mem_orbit_smul MulAction.mem_orbit_smul
+#align add_action.mem_orbit_vadd AddAction.mem_orbit_vadd
 
 @[to_additive]
 theorem smul_mem_orbit_smul (g h : α) (a : β) : g • a ∈ orbit α (h • a) := by
   simp only [orbit_smul, mem_orbit]
 #align mul_action.smul_mem_orbit_smul MulAction.smul_mem_orbit_smul
+#align add_action.vadd_mem_orbit_vadd AddAction.vadd_mem_orbit_vadd
 
 variable (α) (β)
 
@@ -256,6 +283,7 @@ def orbitRel : Setoid β where
     ⟨mem_orbit_self, fun a b => by simp [orbit_eq_iff.symm, eq_comm], fun a b => by
       simp (config := { contextual := true }) [orbit_eq_iff.symm, eq_comm]⟩
 #align mul_action.orbit_rel MulAction.orbitRel
+#align add_action.orbit_rel AddAction.orbitRel
 
 attribute [local instance] orbit_rel
 
@@ -285,6 +313,8 @@ theorem quotient_preimage_image_eq_union_mul (U : Set β) :
     simp only [inv_smul_smul]
 #align
   mul_action.quotient_preimage_image_eq_union_mul MulAction.quotient_preimage_image_eq_union_mul
+#align
+  add_action.quotient_preimage_image_eq_union_add AddAction.quotient_preimage_image_eq_union_add
 
 @[to_additive]
 theorem disjoint_image_image_iff {U V : Set β} :
@@ -301,12 +331,14 @@ theorem disjoint_image_image_iff {U V : Set β} :
     obtain ⟨a, rfl⟩ := Quotient.exact (hz₂.trans hy₂.symm)
     exact h y hy₁ a hz₁
 #align mul_action.disjoint_image_image_iff MulAction.disjoint_image_image_iff
+#align add_action.disjoint_image_image_iff AddAction.disjoint_image_image_iff
 
 @[to_additive]
 theorem image_inter_image_iff (U V : Set β) :
     Quotient.mk'' '' U ∩ Quotient.mk'' '' V = ∅ ↔ ∀ x ∈ U, ∀ a : α, a • x ∉ V :=
   Set.disjoint_iff_inter_eq_empty.symm.trans disjoint_image_image_iff
 #align mul_action.image_inter_image_iff MulAction.image_inter_image_iff
+#align add_action.image_inter_image_iff AddAction.image_inter_image_iff
 
 variable (α β)
 
@@ -316,6 +348,7 @@ variable (α β)
 def orbitRel.Quotient : Type _ :=
   Quotient <| orbitRel α β
 #align mul_action.orbit_rel.quotient MulAction.orbitRel.Quotient
+#align add_action.orbit_rel.quotient AddAction.orbitRel.Quotient
 
 variable {α β}
 
@@ -324,12 +357,14 @@ variable {α β}
 def orbitRel.Quotient.orbit (x : orbitRel.Quotient α β) : Set β :=
   Quotient.liftOn' x (orbit α) fun _ _ => MulAction.orbit_eq_iff.2
 #align mul_action.orbit_rel.quotient.orbit MulAction.orbitRel.Quotient.orbit
+#align add_action.orbit_rel.quotient.orbit AddAction.orbitRel.Quotient.orbit
 
 @[simp, to_additive]
 theorem orbitRel.Quotient.orbit_mk (b : β) :
     orbitRel.Quotient.orbit (Quotient.mk' b : orbitRel.Quotient α β) = orbit α b :=
   rfl
 #align mul_action.orbit_rel.quotient.orbit_mk MulAction.orbitRel.Quotient.orbit_mk
+#align add_action.orbit_rel.quotient.orbit_mk AddAction.orbitRel.Quotient.orbit_mk
 
 @[to_additive]
 theorem orbitRel.Quotient.mem_orbit {b : β} {x : orbitRel.Quotient α β} :
@@ -339,6 +374,7 @@ theorem orbitRel.Quotient.mem_orbit {b : β} {x : orbitRel.Quotient α β} :
   rw [Quotient.eq']
   rfl
 #align mul_action.orbit_rel.quotient.mem_orbit MulAction.orbitRel.Quotient.mem_orbit
+#align add_action.orbit_rel.quotient.mem_orbit AddAction.orbitRel.Quotient.mem_orbit
 
 /-- Note that `hφ = quotient.out_eq'` is a useful choice here. -/
 @[to_additive "Note that `hφ = quotient.out_eq'` is a useful choice here."]
@@ -351,6 +387,8 @@ theorem orbitRel.Quotient.orbit_eq_orbit_out (x : orbitRel.Quotient α β)
   rfl
 #align
   mul_action.orbit_rel.quotient.orbit_eq_orbit_out MulAction.orbitRel.Quotient.orbit_eq_orbit_out
+#align
+  add_action.orbit_rel.quotient.orbit_eq_orbit_out AddAction.orbitRel.Quotient.orbit_eq_orbit_out
 
 variable (α) (β)
 
@@ -371,6 +409,7 @@ def selfEquivSigmaOrbits' : β ≃ Σω : Ω, ω.orbit :=
         Equiv.subtypeEquivRight fun x => orbitRel.Quotient.mem_orbit.symm
     
 #align mul_action.self_equiv_sigma_orbits' MulAction.selfEquivSigmaOrbits'
+#align add_action.self_equiv_sigma_orbits' AddAction.selfEquivSigmaOrbits'
 
 /-- Decomposition of a type `X` as a disjoint union of its orbits under a group action. -/
 @[to_additive
@@ -380,6 +419,7 @@ def selfEquivSigmaOrbits : β ≃ Σω : Ω, orbit α ω.out' :=
     Equiv.sigmaCongrRight fun i =>
       Equiv.Set.ofEq <| orbitRel.Quotient.orbit_eq_orbit_out _ Quotient.out_eq'
 #align mul_action.self_equiv_sigma_orbits MulAction.selfEquivSigmaOrbits
+#align add_action.self_equiv_sigma_orbits AddAction.selfEquivSigmaOrbits
 
 variable {α β}
 

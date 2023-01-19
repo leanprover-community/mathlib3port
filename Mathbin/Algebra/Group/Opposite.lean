@@ -187,6 +187,7 @@ Case conversion may be inaccurate. Consider using '#align mul_opposite.unop_div 
 theorem unop_div [DivInvMonoid α] (x y : αᵐᵒᵖ) : unop (x / y) = (unop y)⁻¹ * unop x :=
   rfl
 #align mul_opposite.unop_div MulOpposite.unop_div
+#align add_opposite.unop_sub AddOpposite.unop_sub
 
 /- warning: mul_opposite.op_div -> MulOpposite.op_div is a dubious translation:
 lean 3 declaration is
@@ -197,12 +198,14 @@ Case conversion may be inaccurate. Consider using '#align mul_opposite.op_div Mu
 @[simp, to_additive]
 theorem op_div [DivInvMonoid α] (x y : α) : op (x / y) = (op y)⁻¹ * op x := by simp [div_eq_mul_inv]
 #align mul_opposite.op_div MulOpposite.op_div
+#align add_opposite.op_sub AddOpposite.op_sub
 
 #print MulOpposite.semiconjBy_op /-
 @[simp, to_additive]
 theorem semiconjBy_op [Mul α] {a x y : α} : SemiconjBy (op a) (op y) (op x) ↔ SemiconjBy a x y := by
   simp only [SemiconjBy, ← op_mul, op_inj, eq_comm]
 #align mul_opposite.semiconj_by_op MulOpposite.semiconjBy_op
+#align add_opposite.semiconj_by_op AddOpposite.semiconjBy_op
 -/
 
 #print MulOpposite.semiconjBy_unop /-
@@ -211,6 +214,7 @@ theorem semiconjBy_unop [Mul α] {a x y : αᵐᵒᵖ} :
     SemiconjBy (unop a) (unop y) (unop x) ↔ SemiconjBy a x y := by
   conv_rhs => rw [← op_unop a, ← op_unop x, ← op_unop y, semiconj_by_op]
 #align mul_opposite.semiconj_by_unop MulOpposite.semiconjBy_unop
+#align add_opposite.semiconj_by_unop AddOpposite.semiconjBy_unop
 -/
 
 #print SemiconjBy.op /-
@@ -219,6 +223,7 @@ theorem SemiconjBy.op [Mul α] {a x y : α} (h : SemiconjBy a x y) :
     SemiconjBy (op a) (op y) (op x) :=
   semiconjBy_op.2 h
 #align semiconj_by.op SemiconjBy.op
+#align add_semiconj_by.op AddSemiconjBy.op
 -/
 
 #print SemiconjBy.unop /-
@@ -227,6 +232,7 @@ theorem SemiconjBy.unop [Mul α] {a x y : αᵐᵒᵖ} (h : SemiconjBy a x y) :
     SemiconjBy (unop a) (unop y) (unop x) :=
   semiconjBy_unop.2 h
 #align semiconj_by.unop SemiconjBy.unop
+#align add_semiconj_by.unop AddSemiconjBy.unop
 -/
 
 #print Commute.op /-
@@ -234,6 +240,7 @@ theorem SemiconjBy.unop [Mul α] {a x y : αᵐᵒᵖ} (h : SemiconjBy a x y) :
 theorem Commute.op [Mul α] {x y : α} (h : Commute x y) : Commute (op x) (op y) :=
   h.op
 #align commute.op Commute.op
+#align add_commute.op AddCommute.op
 -/
 
 #print MulOpposite.Commute.unop /-
@@ -241,6 +248,7 @@ theorem Commute.op [Mul α] {x y : α} (h : Commute x y) : Commute (op x) (op y)
 theorem Commute.unop [Mul α] {x y : αᵐᵒᵖ} (h : Commute x y) : Commute (unop x) (unop y) :=
   h.unop
 #align mul_opposite.commute.unop MulOpposite.Commute.unop
+#align add_opposite.commute.unop AddOpposite.Commute.unop
 -/
 
 #print MulOpposite.commute_op /-
@@ -248,6 +256,7 @@ theorem Commute.unop [Mul α] {x y : αᵐᵒᵖ} (h : Commute x y) : Commute (u
 theorem commute_op [Mul α] {x y : α} : Commute (op x) (op y) ↔ Commute x y :=
   semiconj_by_op
 #align mul_opposite.commute_op MulOpposite.commute_op
+#align add_opposite.commute_op AddOpposite.commute_op
 -/
 
 #print MulOpposite.commute_unop /-
@@ -255,6 +264,7 @@ theorem commute_op [Mul α] {x y : α} : Commute (op x) (op y) ↔ Commute x y :
 theorem commute_unop [Mul α] {x y : αᵐᵒᵖ} : Commute (unop x) (unop y) ↔ Commute x y :=
   semiconj_by_unop
 #align mul_opposite.commute_unop MulOpposite.commute_unop
+#align add_opposite.commute_unop AddOpposite.commute_unop
 -/
 
 #print MulOpposite.opAddEquiv /-
@@ -379,6 +389,7 @@ Case conversion may be inaccurate. Consider using '#align mul_equiv.inv' MulEqui
 def MulEquiv.inv' (G : Type _) [DivisionMonoid G] : G ≃* Gᵐᵒᵖ :=
   { (Equiv.inv G).trans opEquiv with map_mul' := fun x y => unop_injective <| mul_inv_rev x y }
 #align mul_equiv.inv' MulEquiv.inv'
+#align add_equiv.neg' AddEquiv.neg'
 
 #print MulHom.toOpposite /-
 /-- A semigroup homomorphism `f : M →ₙ* N` such that `f x` commutes with `f y` for all `x, y`
@@ -392,6 +403,7 @@ def MulHom.toOpposite {M N : Type _} [Mul M] [Mul N] (f : M →ₙ* N)
   toFun := MulOpposite.op ∘ f
   map_mul' x y := by simp [(hf x y).Eq]
 #align mul_hom.to_opposite MulHom.toOpposite
+#align add_hom.to_opposite AddHom.toOpposite
 -/
 
 #print MulHom.fromOpposite /-
@@ -406,6 +418,7 @@ def MulHom.fromOpposite {M N : Type _} [Mul M] [Mul N] (f : M →ₙ* N)
   toFun := f ∘ MulOpposite.unop
   map_mul' x y := (f.map_mul _ _).trans (hf _ _).Eq
 #align mul_hom.from_opposite MulHom.fromOpposite
+#align add_hom.from_opposite AddHom.fromOpposite
 -/
 
 /- warning: monoid_hom.to_opposite -> MonoidHom.toOpposite is a dubious translation:
@@ -426,6 +439,7 @@ def MonoidHom.toOpposite {M N : Type _} [MulOneClass M] [MulOneClass N] (f : M �
   map_one' := congr_arg op f.map_one
   map_mul' x y := by simp [(hf x y).Eq]
 #align monoid_hom.to_opposite MonoidHom.toOpposite
+#align add_monoid_hom.to_opposite AddMonoidHom.toOpposite
 
 /- warning: monoid_hom.from_opposite -> MonoidHom.fromOpposite is a dubious translation:
 lean 3 declaration is
@@ -445,6 +459,7 @@ def MonoidHom.fromOpposite {M N : Type _} [MulOneClass M] [MulOneClass N] (f : M
   map_one' := f.map_one
   map_mul' x y := (f.map_mul _ _).trans (hf _ _).Eq
 #align monoid_hom.from_opposite MonoidHom.fromOpposite
+#align add_monoid_hom.from_opposite AddMonoidHom.fromOpposite
 
 /- warning: units.op_equiv -> Units.opEquiv is a dubious translation:
 lean 3 declaration is
@@ -463,6 +478,7 @@ def Units.opEquiv {M} [Monoid M] : Mᵐᵒᵖˣ ≃* Mˣᵐᵒᵖ
   left_inv x := Units.ext <| by simp
   right_inv x := unop_injective <| Units.ext <| rfl
 #align units.op_equiv Units.opEquiv
+#align add_units.op_equiv AddUnits.opEquiv
 
 /- warning: units.coe_unop_op_equiv -> Units.coe_unop_opEquiv is a dubious translation:
 lean 3 declaration is
@@ -475,6 +491,7 @@ theorem Units.coe_unop_opEquiv {M} [Monoid M] (u : Mᵐᵒᵖˣ) :
     ((Units.opEquiv u).unop : M) = unop (u : Mᵐᵒᵖ) :=
   rfl
 #align units.coe_unop_op_equiv Units.coe_unop_opEquiv
+#align add_units.coe_unop_op_equiv AddUnits.coe_unop_opEquiv
 
 /- warning: units.coe_op_equiv_symm -> Units.coe_opEquiv_symm is a dubious translation:
 lean 3 declaration is
@@ -487,6 +504,7 @@ theorem Units.coe_opEquiv_symm {M} [Monoid M] (u : Mˣᵐᵒᵖ) :
     (Units.opEquiv.symm u : Mᵐᵒᵖ) = op (u.unop : M) :=
   rfl
 #align units.coe_op_equiv_symm Units.coe_opEquiv_symm
+#align add_units.coe_op_equiv_symm AddUnits.coe_opEquiv_symm
 
 #print MulHom.op /-
 /-- A semigroup homomorphism `M →ₙ* N` can equivalently be viewed as a semigroup homomorphism
@@ -509,6 +527,7 @@ def MulHom.op {M N} [Mul M] [Mul N] : (M →ₙ* N) ≃ (Mᵐᵒᵖ →ₙ* Nᵐ
     ext x
     simp
 #align mul_hom.op MulHom.op
+#align add_hom.op AddHom.op
 -/
 
 #print MulHom.unop /-
@@ -519,6 +538,7 @@ def MulHom.op {M N} [Mul M] [Mul N] : (M →ₙ* N) ≃ (Mᵐᵒᵖ →ₙ* Nᵐ
 def MulHom.unop {M N} [Mul M] [Mul N] : (Mᵐᵒᵖ →ₙ* Nᵐᵒᵖ) ≃ (M →ₙ* N) :=
   MulHom.op.symm
 #align mul_hom.unop MulHom.unop
+#align add_hom.unop AddHom.unop
 -/
 
 #print AddHom.mulOp /-
@@ -580,6 +600,7 @@ def MonoidHom.op {M N} [MulOneClass M] [MulOneClass N] : (M →* N) ≃ (Mᵐᵒ
     ext x
     simp
 #align monoid_hom.op MonoidHom.op
+#align add_monoid_hom.op AddMonoidHom.op
 
 /- warning: monoid_hom.unop -> MonoidHom.unop is a dubious translation:
 lean 3 declaration is
@@ -594,6 +615,7 @@ Case conversion may be inaccurate. Consider using '#align monoid_hom.unop Monoid
 def MonoidHom.unop {M N} [MulOneClass M] [MulOneClass N] : (Mᵐᵒᵖ →* Nᵐᵒᵖ) ≃ (M →* N) :=
   MonoidHom.op.symm
 #align monoid_hom.unop MonoidHom.unop
+#align add_monoid_hom.unop AddMonoidHom.unop
 
 /- warning: add_monoid_hom.mul_op -> AddMonoidHom.mulOp is a dubious translation:
 lean 3 declaration is
@@ -683,6 +705,7 @@ def MulEquiv.op {α β} [Mul α] [Mul β] : α ≃* β ≃ (αᵐᵒᵖ ≃* β�
     ext
     simp
 #align mul_equiv.op MulEquiv.op
+#align add_equiv.op AddEquiv.op
 -/
 
 #print MulEquiv.unop /-
@@ -691,6 +714,7 @@ def MulEquiv.op {α β} [Mul α] [Mul β] : α ≃* β ≃ (αᵐᵒᵖ ≃* β�
 def MulEquiv.unop {α β} [Mul α] [Mul β] : αᵐᵒᵖ ≃* βᵐᵒᵖ ≃ (α ≃* β) :=
   MulEquiv.op.symm
 #align mul_equiv.unop MulEquiv.unop
+#align add_equiv.unop AddEquiv.unop
 -/
 
 section Ext

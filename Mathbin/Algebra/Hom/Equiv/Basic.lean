@@ -57,6 +57,7 @@ def MulHom.inverse [Mul M] [Mul N] (f : M →ₙ* N) (g : N → M) (h₁ : Funct
       _ = g x * g y := h₁ _
       
 #align mul_hom.inverse MulHom.inverse
+#align add_hom.inverse AddHom.inverse
 -/
 
 /- warning: monoid_hom.inverse -> MonoidHom.inverse is a dubious translation:
@@ -73,6 +74,7 @@ def MonoidHom.inverse {A B : Type _} [Monoid A] [Monoid B] (f : A →* B) (g : B
     toFun := g
     map_one' := by rw [← f.map_one, h₁] }
 #align monoid_hom.inverse MonoidHom.inverse
+#align add_monoid_hom.inverse AddMonoidHom.inverse
 
 #print AddEquiv /-
 /-- add_equiv α β is the type of an equiv α ≃ β which preserves addition. -/
@@ -99,6 +101,7 @@ add_decl_doc AddEquiv.toAddHom
 @[to_additive]
 structure MulEquiv (M N : Type _) [Mul M] [Mul N] extends M ≃ N, M →ₙ* N
 #align mul_equiv MulEquiv
+#align add_equiv AddEquiv
 -/
 
 /-- The `equiv` underlying a `mul_equiv`. -/
@@ -114,6 +117,7 @@ You should extend this class when you extend `mul_equiv`. -/
 class MulEquivClass (F A B : Type _) [Mul A] [Mul B] extends EquivLike F A B where
   map_mul : ∀ (f : F) (a b), f (a * b) = f a * f b
 #align mul_equiv_class MulEquivClass
+#align add_equiv_class AddEquivClass
 -/
 
 -- mathport name: «expr ≃* »
@@ -179,6 +183,7 @@ theorem map_eq_one_iff {M N} [MulOneClass M] [MulOneClass N] [MulEquivClass F M 
     h x = 1 ↔ x = 1 :=
   map_eq_one_iff h (EquivLike.injective h)
 #align mul_equiv_class.map_eq_one_iff MulEquivClass.map_eq_one_iff
+#align add_equiv_class.map_eq_zero_iff AddEquivClass.map_eq_zero_iff
 
 /- warning: mul_equiv_class.map_ne_one_iff -> MulEquivClass.map_ne_one_iff is a dubious translation:
 lean 3 declaration is
@@ -191,6 +196,7 @@ theorem map_ne_one_iff {M N} [MulOneClass M] [MulOneClass N] [MulEquivClass F M 
     h x ≠ 1 ↔ x ≠ 1 :=
   map_ne_one_iff h (EquivLike.injective h)
 #align mul_equiv_class.map_ne_one_iff MulEquivClass.map_ne_one_iff
+#align add_equiv_class.map_ne_zero_iff AddEquivClass.map_ne_zero_iff
 
 end MulEquivClass
 
@@ -282,6 +288,7 @@ Case conversion may be inaccurate. Consider using '#align mul_equiv.map_mul MulE
 protected theorem map_mul (f : M ≃* N) : ∀ x y, f (x * y) = f x * f y :=
   map_mul f
 #align mul_equiv.map_mul MulEquiv.map_mul
+#align add_equiv.map_add AddEquiv.map_add
 
 #print MulEquiv.mk' /-
 /-- Makes a multiplicative isomorphism from a bijection which preserves multiplication. -/
@@ -289,6 +296,7 @@ protected theorem map_mul (f : M ≃* N) : ∀ x y, f (x * y) = f x * f y :=
 def mk' (f : M ≃ N) (h : ∀ x y, f (x * y) = f x * f y) : M ≃* N :=
   ⟨f.1, f.2, f.3, f.4, h⟩
 #align mul_equiv.mk' MulEquiv.mk'
+#align add_equiv.mk' AddEquiv.mk'
 -/
 
 /- warning: mul_equiv.bijective -> MulEquiv.bijective is a dubious translation:
@@ -301,6 +309,7 @@ Case conversion may be inaccurate. Consider using '#align mul_equiv.bijective Mu
 protected theorem bijective (e : M ≃* N) : Function.Bijective e :=
   EquivLike.bijective e
 #align mul_equiv.bijective MulEquiv.bijective
+#align add_equiv.bijective AddEquiv.bijective
 
 /- warning: mul_equiv.injective -> MulEquiv.injective is a dubious translation:
 lean 3 declaration is
@@ -312,6 +321,7 @@ Case conversion may be inaccurate. Consider using '#align mul_equiv.injective Mu
 protected theorem injective (e : M ≃* N) : Function.Injective e :=
   EquivLike.injective e
 #align mul_equiv.injective MulEquiv.injective
+#align add_equiv.injective AddEquiv.injective
 
 /- warning: mul_equiv.surjective -> MulEquiv.surjective is a dubious translation:
 lean 3 declaration is
@@ -323,6 +333,7 @@ Case conversion may be inaccurate. Consider using '#align mul_equiv.surjective M
 protected theorem surjective (e : M ≃* N) : Function.Surjective e :=
   EquivLike.surjective e
 #align mul_equiv.surjective MulEquiv.surjective
+#align add_equiv.surjective AddEquiv.surjective
 
 #print MulEquiv.refl /-
 /-- The identity map is a multiplicative isomorphism. -/
@@ -330,6 +341,7 @@ protected theorem surjective (e : M ≃* N) : Function.Surjective e :=
 def refl (M : Type _) [Mul M] : M ≃* M :=
   { Equiv.refl _ with map_mul' := fun _ _ => rfl }
 #align mul_equiv.refl MulEquiv.refl
+#align add_equiv.refl AddEquiv.refl
 -/
 
 @[to_additive]
@@ -343,6 +355,7 @@ def symm (h : M ≃* N) : N ≃* M :=
   { h.toEquiv.symm with
     map_mul' := (h.toMulHom.inverse h.toEquiv.symm h.left_inv h.right_inv).map_mul }
 #align mul_equiv.symm MulEquiv.symm
+#align add_equiv.symm AddEquiv.symm
 -/
 
 /- warning: mul_equiv.inv_fun_eq_symm -> MulEquiv.invFun_eq_symm is a dubious translation:
@@ -355,6 +368,7 @@ Case conversion may be inaccurate. Consider using '#align mul_equiv.inv_fun_eq_s
 theorem invFun_eq_symm {f : M ≃* N} : f.invFun = f.symm :=
   rfl
 #align mul_equiv.inv_fun_eq_symm MulEquiv.invFun_eq_symm
+#align add_equiv.inv_fun_eq_symm AddEquiv.invFun_eq_symm
 
 #print MulEquiv.Simps.symmApply /-
 -- we don't hyperlink the note in the additive version, since that breaks syntax highlighting
@@ -364,6 +378,7 @@ theorem invFun_eq_symm {f : M ≃* N} : f.invFun = f.symm :=
 def Simps.symmApply (e : M ≃* N) : N → M :=
   e.symm
 #align mul_equiv.simps.symm_apply MulEquiv.Simps.symmApply
+#align add_equiv.simps.symm_apply AddEquiv.Simps.symmApply
 -/
 
 initialize_simps_projections AddEquiv (toFun → apply, invFun → symmApply)
@@ -380,6 +395,7 @@ Case conversion may be inaccurate. Consider using '#align mul_equiv.to_equiv_sym
 theorem toEquiv_symm (f : M ≃* N) : f.symm.toEquiv = f.toEquiv.symm :=
   rfl
 #align mul_equiv.to_equiv_symm MulEquiv.toEquiv_symm
+#align add_equiv.to_equiv_symm AddEquiv.toEquiv_symm
 
 /- warning: mul_equiv.coe_mk clashes with [anonymous] -> [anonymous]
 warning: mul_equiv.coe_mk -> [anonymous] is a dubious translation:
@@ -416,6 +432,7 @@ Case conversion may be inaccurate. Consider using '#align mul_equiv.symm_symm Mu
 theorem symm_symm : ∀ f : M ≃* N, f.symm.symm = f
   | ⟨f, g, h₁, h₂, h₃⟩ => rfl
 #align mul_equiv.symm_symm MulEquiv.symm_symm
+#align add_equiv.symm_symm AddEquiv.symm_symm
 
 /- warning: mul_equiv.symm_bijective -> MulEquiv.symm_bijective is a dubious translation:
 lean 3 declaration is
@@ -427,6 +444,7 @@ Case conversion may be inaccurate. Consider using '#align mul_equiv.symm_bijecti
 theorem symm_bijective : Function.Bijective (symm : M ≃* N → N ≃* M) :=
   Equiv.bijective ⟨symm, symm, symm_symm, symm_symm⟩
 #align mul_equiv.symm_bijective MulEquiv.symm_bijective
+#align add_equiv.symm_bijective AddEquiv.symm_bijective
 
 @[simp, to_additive]
 theorem symm_mk (f : M → N) (g h₁ h₂ h₃) :
@@ -436,12 +454,14 @@ theorem symm_mk (f : M → N) (g h₁ h₂ h₃) :
         invFun := f } :=
   rfl
 #align mul_equiv.symm_mk MulEquiv.symm_mkₓ
+#align add_equiv.symm_mk AddEquiv.symm_mkₓ
 
 #print MulEquiv.refl_symm /-
 @[simp, to_additive]
 theorem refl_symm : (refl M).symm = refl M :=
   rfl
 #align mul_equiv.refl_symm MulEquiv.refl_symm
+#align add_equiv.refl_symm AddEquiv.refl_symm
 -/
 
 #print MulEquiv.trans /-
@@ -452,6 +472,7 @@ def trans (h1 : M ≃* N) (h2 : N ≃* P) : M ≃* P :=
     map_mul' := fun x y =>
       show h2 (h1 (x * y)) = h2 (h1 x) * h2 (h1 y) by rw [h1.map_mul, h2.map_mul] }
 #align mul_equiv.trans MulEquiv.trans
+#align add_equiv.trans AddEquiv.trans
 -/
 
 /- warning: mul_equiv.apply_symm_apply -> MulEquiv.apply_symm_apply is a dubious translation:
@@ -465,6 +486,7 @@ Case conversion may be inaccurate. Consider using '#align mul_equiv.apply_symm_a
 theorem apply_symm_apply (e : M ≃* N) (y : N) : e (e.symm y) = y :=
   e.toEquiv.apply_symm_apply y
 #align mul_equiv.apply_symm_apply MulEquiv.apply_symm_apply
+#align add_equiv.apply_symm_apply AddEquiv.apply_symm_apply
 
 /- warning: mul_equiv.symm_apply_apply -> MulEquiv.symm_apply_apply is a dubious translation:
 lean 3 declaration is
@@ -477,6 +499,7 @@ Case conversion may be inaccurate. Consider using '#align mul_equiv.symm_apply_a
 theorem symm_apply_apply (e : M ≃* N) (x : M) : e.symm (e x) = x :=
   e.toEquiv.symm_apply_apply x
 #align mul_equiv.symm_apply_apply MulEquiv.symm_apply_apply
+#align add_equiv.symm_apply_apply AddEquiv.symm_apply_apply
 
 /- warning: mul_equiv.symm_comp_self -> MulEquiv.symm_comp_self is a dubious translation:
 lean 3 declaration is
@@ -488,6 +511,7 @@ Case conversion may be inaccurate. Consider using '#align mul_equiv.symm_comp_se
 theorem symm_comp_self (e : M ≃* N) : e.symm ∘ e = id :=
   funext e.symm_apply_apply
 #align mul_equiv.symm_comp_self MulEquiv.symm_comp_self
+#align add_equiv.symm_comp_self AddEquiv.symm_comp_self
 
 /- warning: mul_equiv.self_comp_symm -> MulEquiv.self_comp_symm is a dubious translation:
 lean 3 declaration is
@@ -499,6 +523,7 @@ Case conversion may be inaccurate. Consider using '#align mul_equiv.self_comp_sy
 theorem self_comp_symm (e : M ≃* N) : e ∘ e.symm = id :=
   funext e.apply_symm_apply
 #align mul_equiv.self_comp_symm MulEquiv.self_comp_symm
+#align add_equiv.self_comp_symm AddEquiv.self_comp_symm
 
 /- warning: mul_equiv.coe_refl -> MulEquiv.coe_refl is a dubious translation:
 lean 3 declaration is
@@ -510,6 +535,7 @@ Case conversion may be inaccurate. Consider using '#align mul_equiv.coe_refl Mul
 theorem coe_refl : ⇑(refl M) = id :=
   rfl
 #align mul_equiv.coe_refl MulEquiv.coe_refl
+#align add_equiv.coe_refl AddEquiv.coe_refl
 
 /- warning: mul_equiv.refl_apply -> MulEquiv.refl_apply is a dubious translation:
 lean 3 declaration is
@@ -521,6 +547,7 @@ Case conversion may be inaccurate. Consider using '#align mul_equiv.refl_apply M
 theorem refl_apply (m : M) : refl M m = m :=
   rfl
 #align mul_equiv.refl_apply MulEquiv.refl_apply
+#align add_equiv.refl_apply AddEquiv.refl_apply
 
 /- warning: mul_equiv.coe_trans -> MulEquiv.coe_trans is a dubious translation:
 lean 3 declaration is
@@ -532,6 +559,7 @@ Case conversion may be inaccurate. Consider using '#align mul_equiv.coe_trans Mu
 theorem coe_trans (e₁ : M ≃* N) (e₂ : N ≃* P) : ⇑(e₁.trans e₂) = e₂ ∘ e₁ :=
   rfl
 #align mul_equiv.coe_trans MulEquiv.coe_trans
+#align add_equiv.coe_trans AddEquiv.coe_trans
 
 /- warning: mul_equiv.trans_apply -> MulEquiv.trans_apply is a dubious translation:
 lean 3 declaration is
@@ -543,6 +571,7 @@ Case conversion may be inaccurate. Consider using '#align mul_equiv.trans_apply 
 theorem trans_apply (e₁ : M ≃* N) (e₂ : N ≃* P) (m : M) : e₁.trans e₂ m = e₂ (e₁ m) :=
   rfl
 #align mul_equiv.trans_apply MulEquiv.trans_apply
+#align add_equiv.trans_apply AddEquiv.trans_apply
 
 /- warning: mul_equiv.symm_trans_apply -> MulEquiv.symm_trans_apply is a dubious translation:
 lean 3 declaration is
@@ -555,6 +584,7 @@ theorem symm_trans_apply (e₁ : M ≃* N) (e₂ : N ≃* P) (p : P) :
     (e₁.trans e₂).symm p = e₁.symm (e₂.symm p) :=
   rfl
 #align mul_equiv.symm_trans_apply MulEquiv.symm_trans_apply
+#align add_equiv.symm_trans_apply AddEquiv.symm_trans_apply
 
 /- warning: mul_equiv.apply_eq_iff_eq -> MulEquiv.apply_eq_iff_eq is a dubious translation:
 lean 3 declaration is
@@ -566,6 +596,7 @@ Case conversion may be inaccurate. Consider using '#align mul_equiv.apply_eq_iff
 theorem apply_eq_iff_eq (e : M ≃* N) {x y : M} : e x = e y ↔ x = y :=
   e.Injective.eq_iff
 #align mul_equiv.apply_eq_iff_eq MulEquiv.apply_eq_iff_eq
+#align add_equiv.apply_eq_iff_eq AddEquiv.apply_eq_iff_eq
 
 /- warning: mul_equiv.apply_eq_iff_symm_apply -> MulEquiv.apply_eq_iff_symm_apply is a dubious translation:
 lean 3 declaration is
@@ -577,6 +608,7 @@ Case conversion may be inaccurate. Consider using '#align mul_equiv.apply_eq_iff
 theorem apply_eq_iff_symm_apply (e : M ≃* N) {x : M} {y : N} : e x = y ↔ x = e.symm y :=
   e.toEquiv.apply_eq_iff_eq_symm_apply
 #align mul_equiv.apply_eq_iff_symm_apply MulEquiv.apply_eq_iff_symm_apply
+#align add_equiv.apply_eq_iff_symm_apply AddEquiv.apply_eq_iff_symm_apply
 
 /- warning: mul_equiv.symm_apply_eq -> MulEquiv.symm_apply_eq is a dubious translation:
 lean 3 declaration is
@@ -588,6 +620,7 @@ Case conversion may be inaccurate. Consider using '#align mul_equiv.symm_apply_e
 theorem symm_apply_eq (e : M ≃* N) {x y} : e.symm x = y ↔ x = e y :=
   e.toEquiv.symm_apply_eq
 #align mul_equiv.symm_apply_eq MulEquiv.symm_apply_eq
+#align add_equiv.symm_apply_eq AddEquiv.symm_apply_eq
 
 /- warning: mul_equiv.eq_symm_apply -> MulEquiv.eq_symm_apply is a dubious translation:
 lean 3 declaration is
@@ -599,6 +632,7 @@ Case conversion may be inaccurate. Consider using '#align mul_equiv.eq_symm_appl
 theorem eq_symm_apply (e : M ≃* N) {x y} : y = e.symm x ↔ e y = x :=
   e.toEquiv.eq_symm_apply
 #align mul_equiv.eq_symm_apply MulEquiv.eq_symm_apply
+#align add_equiv.eq_symm_apply AddEquiv.eq_symm_apply
 
 /- warning: mul_equiv.eq_comp_symm -> MulEquiv.eq_comp_symm is a dubious translation:
 lean 3 declaration is
@@ -611,6 +645,7 @@ theorem eq_comp_symm {α : Type _} (e : M ≃* N) (f : N → α) (g : M → α) 
     f = g ∘ e.symm ↔ f ∘ e = g :=
   e.toEquiv.eq_comp_symm f g
 #align mul_equiv.eq_comp_symm MulEquiv.eq_comp_symm
+#align add_equiv.eq_comp_symm AddEquiv.eq_comp_symm
 
 /- warning: mul_equiv.comp_symm_eq -> MulEquiv.comp_symm_eq is a dubious translation:
 lean 3 declaration is
@@ -623,6 +658,7 @@ theorem comp_symm_eq {α : Type _} (e : M ≃* N) (f : N → α) (g : M → α) 
     g ∘ e.symm = f ↔ g = f ∘ e :=
   e.toEquiv.comp_symm_eq f g
 #align mul_equiv.comp_symm_eq MulEquiv.comp_symm_eq
+#align add_equiv.comp_symm_eq AddEquiv.comp_symm_eq
 
 /- warning: mul_equiv.eq_symm_comp -> MulEquiv.eq_symm_comp is a dubious translation:
 lean 3 declaration is
@@ -635,6 +671,7 @@ theorem eq_symm_comp {α : Type _} (e : M ≃* N) (f : α → M) (g : α → N) 
     f = e.symm ∘ g ↔ e ∘ f = g :=
   e.toEquiv.eq_symm_comp f g
 #align mul_equiv.eq_symm_comp MulEquiv.eq_symm_comp
+#align add_equiv.eq_symm_comp AddEquiv.eq_symm_comp
 
 /- warning: mul_equiv.symm_comp_eq -> MulEquiv.symm_comp_eq is a dubious translation:
 lean 3 declaration is
@@ -647,6 +684,7 @@ theorem symm_comp_eq {α : Type _} (e : M ≃* N) (f : α → M) (g : α → N) 
     e.symm ∘ g = f ↔ g = e ∘ f :=
   e.toEquiv.symm_comp_eq f g
 #align mul_equiv.symm_comp_eq MulEquiv.symm_comp_eq
+#align add_equiv.symm_comp_eq AddEquiv.symm_comp_eq
 
 /- warning: mul_equiv.symm_trans_self -> MulEquiv.symm_trans_self is a dubious translation:
 lean 3 declaration is
@@ -658,6 +696,7 @@ Case conversion may be inaccurate. Consider using '#align mul_equiv.symm_trans_s
 theorem symm_trans_self (e : M ≃* N) : e.symm.trans e = refl N :=
   FunLike.ext _ _ e.apply_symm_apply
 #align mul_equiv.symm_trans_self MulEquiv.symm_trans_self
+#align add_equiv.symm_trans_self AddEquiv.symm_trans_self
 
 /- warning: mul_equiv.self_trans_symm -> MulEquiv.self_trans_symm is a dubious translation:
 lean 3 declaration is
@@ -669,6 +708,7 @@ Case conversion may be inaccurate. Consider using '#align mul_equiv.self_trans_s
 theorem self_trans_symm (e : M ≃* N) : e.trans e.symm = refl M :=
   FunLike.ext _ _ e.symm_apply_apply
 #align mul_equiv.self_trans_symm MulEquiv.self_trans_symm
+#align add_equiv.self_trans_symm AddEquiv.self_trans_symm
 
 /- warning: mul_equiv.coe_monoid_hom_refl -> MulEquiv.coe_monoidHom_refl is a dubious translation:
 lean 3 declaration is
@@ -680,6 +720,7 @@ Case conversion may be inaccurate. Consider using '#align mul_equiv.coe_monoid_h
 theorem coe_monoidHom_refl {M} [MulOneClass M] : (refl M : M →* M) = MonoidHom.id M :=
   rfl
 #align mul_equiv.coe_monoid_hom_refl MulEquiv.coe_monoidHom_refl
+#align add_equiv.coe_add_monoid_hom_refl AddEquiv.coe_addMonoidHom_refl
 
 /- warning: mul_equiv.coe_monoid_hom_trans -> MulEquiv.coe_monoidHom_trans is a dubious translation:
 lean 3 declaration is
@@ -692,6 +733,7 @@ theorem coe_monoidHom_trans {M N P} [MulOneClass M] [MulOneClass N] [MulOneClass
     (e₂ : N ≃* P) : (e₁.trans e₂ : M →* P) = (e₂ : N →* P).comp ↑e₁ :=
   rfl
 #align mul_equiv.coe_monoid_hom_trans MulEquiv.coe_monoidHom_trans
+#align add_equiv.coe_add_monoid_hom_trans AddEquiv.coe_addMonoidHom_trans
 
 /- warning: mul_equiv.ext -> MulEquiv.ext is a dubious translation:
 lean 3 declaration is
@@ -707,6 +749,7 @@ Case conversion may be inaccurate. Consider using '#align mul_equiv.ext MulEquiv
 theorem ext {f g : MulEquiv M N} (h : ∀ x, f x = g x) : f = g :=
   FunLike.ext f g h
 #align mul_equiv.ext MulEquiv.ext
+#align add_equiv.ext AddEquiv.ext
 
 /- warning: mul_equiv.ext_iff -> MulEquiv.ext_iff is a dubious translation:
 lean 3 declaration is
@@ -718,6 +761,7 @@ Case conversion may be inaccurate. Consider using '#align mul_equiv.ext_iff MulE
 theorem ext_iff {f g : MulEquiv M N} : f = g ↔ ∀ x, f x = g x :=
   FunLike.ext_iff
 #align mul_equiv.ext_iff MulEquiv.ext_iff
+#align add_equiv.ext_iff AddEquiv.ext_iff
 
 /- warning: mul_equiv.mk_coe -> MulEquiv.mk_coe is a dubious translation:
 lean 3 declaration is
@@ -729,6 +773,7 @@ Case conversion may be inaccurate. Consider using '#align mul_equiv.mk_coe MulEq
 theorem mk_coe (e : M ≃* N) (e' h₁ h₂ h₃) : (⟨e, e', h₁, h₂, h₃⟩ : M ≃* N) = e :=
   ext fun _ => rfl
 #align mul_equiv.mk_coe MulEquiv.mk_coe
+#align add_equiv.mk_coe AddEquiv.mk_coe
 
 /- warning: mul_equiv.mk_coe' -> MulEquiv.mk_coe' is a dubious translation:
 lean 3 declaration is
@@ -740,6 +785,7 @@ Case conversion may be inaccurate. Consider using '#align mul_equiv.mk_coe' MulE
 theorem mk_coe' (e : M ≃* N) (f h₁ h₂ h₃) : (MulEquiv.mk f (⇑e) h₁ h₂ h₃ : N ≃* M) = e.symm :=
   symm_bijective.Injective <| ext fun x => rfl
 #align mul_equiv.mk_coe' MulEquiv.mk_coe'
+#align add_equiv.mk_coe' AddEquiv.mk_coe'
 
 /- warning: mul_equiv.congr_arg -> MulEquiv.congr_arg is a dubious translation:
 lean 3 declaration is
@@ -751,6 +797,7 @@ Case conversion may be inaccurate. Consider using '#align mul_equiv.congr_arg Mu
 protected theorem congr_arg {f : MulEquiv M N} {x x' : M} : x = x' → f x = f x' :=
   FunLike.congr_arg f
 #align mul_equiv.congr_arg MulEquiv.congr_arg
+#align add_equiv.congr_arg AddEquiv.congr_arg
 
 /- warning: mul_equiv.congr_fun -> MulEquiv.congr_fun is a dubious translation:
 lean 3 declaration is
@@ -762,6 +809,7 @@ Case conversion may be inaccurate. Consider using '#align mul_equiv.congr_fun Mu
 protected theorem congr_fun {f g : MulEquiv M N} (h : f = g) (x : M) : f x = g x :=
   FunLike.congr_fun h x
 #align mul_equiv.congr_fun MulEquiv.congr_fun
+#align add_equiv.congr_fun AddEquiv.congr_fun
 
 #print MulEquiv.mulEquivOfUnique /-
 /-- The `mul_equiv` between two monoids with a unique element. -/
@@ -769,6 +817,7 @@ protected theorem congr_fun {f g : MulEquiv M N} (h : f = g) (x : M) : f x = g x
 def mulEquivOfUnique {M N} [Unique M] [Unique N] [Mul M] [Mul N] : M ≃* N :=
   { Equiv.equivOfUnique M N with map_mul' := fun _ _ => Subsingleton.elim _ _ }
 #align mul_equiv.mul_equiv_of_unique MulEquiv.mulEquivOfUnique
+#align add_equiv.add_equiv_of_unique AddEquiv.addEquivOfUnique
 -/
 
 /-- There is a unique monoid homomorphism between two monoids with a unique element. -/
@@ -796,6 +845,7 @@ Case conversion may be inaccurate. Consider using '#align mul_equiv.map_one MulE
 protected theorem map_one {M N} [MulOneClass M] [MulOneClass N] (h : M ≃* N) : h 1 = 1 :=
   map_one h
 #align mul_equiv.map_one MulEquiv.map_one
+#align add_equiv.map_zero AddEquiv.map_zero
 
 /- warning: mul_equiv.map_eq_one_iff -> MulEquiv.map_eq_one_iff is a dubious translation:
 lean 3 declaration is
@@ -808,6 +858,7 @@ protected theorem map_eq_one_iff {M N} [MulOneClass M] [MulOneClass N] (h : M �
     h x = 1 ↔ x = 1 :=
   MulEquivClass.map_eq_one_iff h
 #align mul_equiv.map_eq_one_iff MulEquiv.map_eq_one_iff
+#align add_equiv.map_eq_zero_iff AddEquiv.map_eq_zero_iff
 
 /- warning: mul_equiv.map_ne_one_iff -> MulEquiv.map_ne_one_iff is a dubious translation:
 lean 3 declaration is
@@ -820,6 +871,7 @@ theorem map_ne_one_iff {M N} [MulOneClass M] [MulOneClass N] (h : M ≃* N) {x :
     h x ≠ 1 ↔ x ≠ 1 :=
   MulEquivClass.map_ne_one_iff h
 #align mul_equiv.map_ne_one_iff MulEquiv.map_ne_one_iff
+#align add_equiv.map_ne_zero_iff AddEquiv.map_ne_zero_iff
 
 #print MulEquiv.ofBijective /-
 /-- A bijective `semigroup` homomorphism is an isomorphism -/
@@ -828,6 +880,7 @@ noncomputable def ofBijective {M N F} [Mul M] [Mul N] [MulHomClass F M N] (f : F
     (hf : Function.Bijective f) : M ≃* N :=
   { Equiv.ofBijective f hf with map_mul' := map_mul f }
 #align mul_equiv.of_bijective MulEquiv.ofBijective
+#align add_equiv.of_bijective AddEquiv.ofBijective
 -/
 
 /- warning: mul_equiv.of_bijective_apply_symm_apply -> MulEquiv.ofBijective_apply_symm_apply is a dubious translation:
@@ -856,6 +909,7 @@ as a multiplication-preserving function.
 def toMonoidHom {M N} [MulOneClass M] [MulOneClass N] (h : M ≃* N) : M →* N :=
   { h with map_one' := h.map_one }
 #align mul_equiv.to_monoid_hom MulEquiv.toMonoidHom
+#align add_equiv.to_add_monoid_hom AddEquiv.toAddMonoidHom
 
 /- warning: mul_equiv.coe_to_monoid_hom -> MulEquiv.coe_toMonoidHom is a dubious translation:
 lean 3 declaration is
@@ -867,6 +921,7 @@ Case conversion may be inaccurate. Consider using '#align mul_equiv.coe_to_monoi
 theorem coe_toMonoidHom {M N} [MulOneClass M] [MulOneClass N] (e : M ≃* N) : ⇑e.toMonoidHom = e :=
   rfl
 #align mul_equiv.coe_to_monoid_hom MulEquiv.coe_toMonoidHom
+#align add_equiv.coe_to_add_monoid_hom AddEquiv.coe_toAddMonoidHom
 
 /- warning: mul_equiv.to_monoid_hom_injective -> MulEquiv.toMonoidHom_injective is a dubious translation:
 lean 3 declaration is
@@ -879,6 +934,7 @@ theorem toMonoidHom_injective {M N} [MulOneClass M] [MulOneClass N] :
     Function.Injective (toMonoidHom : M ≃* N → M →* N) := fun f g h =>
   MulEquiv.ext (MonoidHom.ext_iff.1 h)
 #align mul_equiv.to_monoid_hom_injective MulEquiv.toMonoidHom_injective
+#align add_equiv.to_add_monoid_hom_injective AddEquiv.toAddMonoidHom_injective
 
 #print MulEquiv.arrowCongr /-
 /-- A multiplicative analogue of `equiv.arrow_congr`,
@@ -901,6 +957,7 @@ def arrowCongr {M N P Q : Type _} [Mul P] [Mul Q] (f : M ≃ N) (g : P ≃* Q) :
     ext
     simp
 #align mul_equiv.arrow_congr MulEquiv.arrowCongr
+#align add_equiv.arrow_congr AddEquiv.arrowCongr
 -/
 
 /- warning: mul_equiv.monoid_hom_congr -> MulEquiv.monoidHomCongr is a dubious translation:
@@ -930,6 +987,7 @@ def monoidHomCongr {M N P Q} [MulOneClass M] [MulOneClass N] [CommMonoid P] [Com
     ext
     simp
 #align mul_equiv.monoid_hom_congr MulEquiv.monoidHomCongr
+#align add_equiv.add_monoid_hom_congr AddEquiv.addMonoidHomCongr
 
 #print MulEquiv.piCongrRight /-
 /-- A family of multiplicative equivalences `Π j, (Ms j ≃* Ns j)` generates a
@@ -950,6 +1008,7 @@ def piCongrRight {η : Type _} {Ms Ns : η → Type _} [∀ j, Mul (Ms j)] [∀ 
     invFun := fun x j => (es j).symm (x j)
     map_mul' := fun x y => funext fun j => (es j).map_mul (x j) (y j) }
 #align mul_equiv.Pi_congr_right MulEquiv.piCongrRight
+#align add_equiv.Pi_congr_right AddEquiv.piCongrRight
 -/
 
 /- warning: mul_equiv.Pi_congr_right_refl -> MulEquiv.piCongrRight_refl is a dubious translation:
@@ -963,6 +1022,7 @@ theorem piCongrRight_refl {η : Type _} {Ms : η → Type _} [∀ j, Mul (Ms j)]
     (piCongrRight fun j => MulEquiv.refl (Ms j)) = MulEquiv.refl _ :=
   rfl
 #align mul_equiv.Pi_congr_right_refl MulEquiv.piCongrRight_refl
+#align add_equiv.Pi_congr_right_refl AddEquiv.piCongrRight_refl
 
 /- warning: mul_equiv.Pi_congr_right_symm -> MulEquiv.piCongrRight_symm is a dubious translation:
 lean 3 declaration is
@@ -975,6 +1035,7 @@ theorem piCongrRight_symm {η : Type _} {Ms Ns : η → Type _} [∀ j, Mul (Ms 
     (es : ∀ j, Ms j ≃* Ns j) : (piCongrRight es).symm = Pi_congr_right fun i => (es i).symm :=
   rfl
 #align mul_equiv.Pi_congr_right_symm MulEquiv.piCongrRight_symm
+#align add_equiv.Pi_congr_right_symm AddEquiv.piCongrRight_symm
 
 /- warning: mul_equiv.Pi_congr_right_trans -> MulEquiv.piCongrRight_trans is a dubious translation:
 lean 3 declaration is
@@ -988,6 +1049,7 @@ theorem piCongrRight_trans {η : Type _} {Ms Ns Ps : η → Type _} [∀ j, Mul 
     (piCongrRight es).trans (piCongrRight fs) = Pi_congr_right fun i => (es i).trans (fs i) :=
   rfl
 #align mul_equiv.Pi_congr_right_trans MulEquiv.piCongrRight_trans
+#align add_equiv.Pi_congr_right_trans AddEquiv.piCongrRight_trans
 
 #print MulEquiv.piSubsingleton /-
 /-- A family indexed by a nonempty subsingleton type is equivalent to the element at the single
@@ -999,6 +1061,7 @@ def piSubsingleton {ι : Type _} (M : ι → Type _) [∀ j, Mul (M j)] [Subsing
     (∀ j, M j) ≃* M i :=
   { Equiv.piSubsingleton M i with map_mul' := fun f1 f2 => Pi.mul_apply _ _ _ }
 #align mul_equiv.Pi_subsingleton MulEquiv.piSubsingleton
+#align add_equiv.Pi_subsingleton AddEquiv.piSubsingleton
 -/
 
 /-!
@@ -1017,6 +1080,7 @@ Case conversion may be inaccurate. Consider using '#align mul_equiv.map_inv MulE
 protected theorem map_inv [Group G] [DivisionMonoid H] (h : G ≃* H) (x : G) : h x⁻¹ = (h x)⁻¹ :=
   map_inv h x
 #align mul_equiv.map_inv MulEquiv.map_inv
+#align add_equiv.map_neg AddEquiv.map_neg
 
 /- warning: mul_equiv.map_div -> MulEquiv.map_div is a dubious translation:
 lean 3 declaration is
@@ -1030,6 +1094,7 @@ protected theorem map_div [Group G] [DivisionMonoid H] (h : G ≃* H) (x y : G) 
     h (x / y) = h x / h y :=
   map_div h x y
 #align mul_equiv.map_div MulEquiv.map_div
+#align add_equiv.map_sub AddEquiv.map_sub
 
 end MulEquiv
 
@@ -1050,6 +1115,7 @@ def MulHom.toMulEquiv [Mul M] [Mul N] (f : M →ₙ* N) (g : N →ₙ* M) (h₁ 
   right_inv := MulHom.congr_fun h₂
   map_mul' := f.map_mul
 #align mul_hom.to_mul_equiv MulHom.toMulEquiv
+#align add_hom.to_add_equiv AddHom.toAddEquiv
 -/
 
 /- warning: monoid_hom.to_mul_equiv -> MonoidHom.toMulEquiv is a dubious translation:
@@ -1073,6 +1139,7 @@ def MonoidHom.toMulEquiv [MulOneClass M] [MulOneClass N] (f : M →* N) (g : N �
   right_inv := MonoidHom.congr_fun h₂
   map_mul' := f.map_mul
 #align monoid_hom.to_mul_equiv MonoidHom.toMulEquiv
+#align add_monoid_hom.to_add_mul_equiv AddMonoidHom.toAddEquiv
 
 namespace Equiv
 
@@ -1087,6 +1154,7 @@ variable (G) [InvolutiveInv G]
 protected def inv : Perm G :=
   inv_involutive.toPerm _
 #align equiv.inv Equiv.inv
+#align equiv.neg Equiv.neg
 -/
 
 variable {G}
@@ -1096,6 +1164,7 @@ variable {G}
 theorem inv_symm : (Equiv.inv G).symm = Equiv.inv G :=
   rfl
 #align equiv.inv_symm Equiv.inv_symm
+#align equiv.neg_symm Equiv.neg_symm
 -/
 
 end InvolutiveNeg

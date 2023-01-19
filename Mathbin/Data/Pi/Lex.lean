@@ -294,6 +294,7 @@ instance Lex.orderedCommGroup [LinearOrder ι] [∀ a, OrderedCommGroup (β a)] 
         Or.inr
           ⟨i, fun j hji => show z j * x j = z j * y j by rw [hi.1 j hji], mul_lt_mul_left' hi.2 _⟩ }
 #align pi.lex.ordered_comm_group Pi.Lex.orderedCommGroup
+#align pi.lex.ordered_add_comm_group Pi.Lex.orderedAddCommGroup
 -/
 
 #print Pi.lex_desc /-

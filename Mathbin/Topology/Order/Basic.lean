@@ -813,6 +813,8 @@ theorem Continuous.bdd_below_range_of_has_compact_mul_support [One α] {f : β �
   (h.is_compact_range hf).BddBelow
 #align
   continuous.bdd_below_range_of_has_compact_mul_support Continuous.bdd_below_range_of_has_compact_mul_support
+#align
+  continuous.bdd_below_range_of_has_compact_support Continuous.bdd_below_range_of_has_compact_support
 
 /-- A continuous function with compact support is bounded above. -/
 @[to_additive " A continuous function with compact support is bounded above. "]
@@ -821,6 +823,8 @@ theorem Continuous.bdd_above_range_of_has_compact_mul_support [One α] {f : β �
   @Continuous.bdd_below_range_of_has_compact_mul_support αᵒᵈ _ _ _ _ _ _ _ _ hf h
 #align
   continuous.bdd_above_range_of_has_compact_mul_support Continuous.bdd_above_range_of_has_compact_mul_support
+#align
+  continuous.bdd_above_range_of_has_compact_support Continuous.bdd_above_range_of_has_compact_support
 
 end LinearOrder
 

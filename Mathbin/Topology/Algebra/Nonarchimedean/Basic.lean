@@ -46,6 +46,7 @@ class NonarchimedeanGroup (G : Type _) [Group G] [TopologicalSpace G] extends To
   Prop where
   is_nonarchimedean : ∀ U ∈ nhds (1 : G), ∃ V : OpenSubgroup G, (V : Set G) ⊆ U
 #align nonarchimedean_group NonarchimedeanGroup
+#align nonarchimedean_add_group NonarchimedeanAddGroup
 
 /-- An topological ring is nonarchimedean if its underlying topological additive
   group is nonarchimedean. -/
@@ -83,6 +84,7 @@ theorem nonarchimedean_of_emb (f : G →* H) (emb : OpenEmbedding f) : Nonarchim
       let ⟨V, hV⟩ := is_nonarchimedean (f ⁻¹' U) h₁
       ⟨{ Subgroup.map f V with is_open' := emb.IsOpenMap _ V.IsOpen }, Set.image_subset_iff.2 hV⟩ }
 #align nonarchimedean_group.nonarchimedean_of_emb NonarchimedeanGroup.nonarchimedean_of_emb
+#align nonarchimedean_add_group.nonarchimedean_of_emb NonarchimedeanAddGroup.nonarchimedean_of_emb
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- An open neighborhood of the identity in the cartesian product of two nonarchimedean groups
@@ -101,6 +103,7 @@ theorem prod_subset {U} (hU : U ∈ nhds (1 : G × K)) :
   intro x hX y hY
   exact Set.Subset.trans (Set.prod_mono hV hW) h (Set.mem_sep hX hY)
 #align nonarchimedean_group.prod_subset NonarchimedeanGroup.prod_subset
+#align nonarchimedean_add_group.prod_subset NonarchimedeanAddGroup.prod_subset
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- An open neighborhood of the identity in the cartesian square of a nonarchimedean group
@@ -112,6 +115,7 @@ theorem prod_self_subset {U} (hU : U ∈ nhds (1 : G × G)) :
   let ⟨V, W, h⟩ := prod_subset hU
   ⟨V ⊓ W, by refine' Set.Subset.trans (Set.prod_mono _ _) ‹_› <;> simp⟩
 #align nonarchimedean_group.prod_self_subset NonarchimedeanGroup.prod_self_subset
+#align nonarchimedean_add_group.prod_self_subset NonarchimedeanAddGroup.prod_self_subset
 
 /-- The cartesian product of two nonarchimedean groups is nonarchimedean. -/
 @[to_additive "The cartesian product of two nonarchimedean groups is nonarchimedean."]

@@ -489,11 +489,13 @@ instance {α : Type _} [PseudoEmetricSpace α] : PseudoEmetricSpace αᵐᵒᵖ 
 theorem edist_unop (x y : αᵐᵒᵖ) : edist (unop x) (unop y) = edist x y :=
   rfl
 #align mul_opposite.edist_unop MulOpposite.edist_unop
+#align add_opposite.edist_unop AddOpposite.edist_unop
 
 @[to_additive]
 theorem edist_op (x y : α) : edist (op x) (op y) = edist x y :=
   rfl
 #align mul_opposite.edist_op MulOpposite.edist_op
+#align add_opposite.edist_op AddOpposite.edist_op
 
 end MulOpposite
 

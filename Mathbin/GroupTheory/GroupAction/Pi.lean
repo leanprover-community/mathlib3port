@@ -45,6 +45,7 @@ namespace Pi
 instance smul' {g : I → Type _} [∀ i, SMul (f i) (g i)] : SMul (∀ i, f i) (∀ i : I, g i) :=
   ⟨fun s x => fun i => s i • x i⟩
 #align pi.has_smul' Pi.smul'
+#align pi.has_vadd' Pi.vadd'
 -/
 
 /- warning: pi.smul_apply' -> Pi.smul_apply' is a dubious translation:
@@ -58,6 +59,7 @@ theorem smul_apply' {g : I → Type _} [∀ i, SMul (f i) (g i)] (s : ∀ i, f i
     (s • x) i = s i • x i :=
   rfl
 #align pi.smul_apply' Pi.smul_apply'
+#align pi.vadd_apply' Pi.vadd_apply'
 
 #print Pi.isScalarTower /-
 @[to_additive]
@@ -65,6 +67,7 @@ instance isScalarTower {α β : Type _} [SMul α β] [∀ i, SMul β <| f i] [�
     [∀ i, IsScalarTower α β (f i)] : IsScalarTower α β (∀ i : I, f i) :=
   ⟨fun x y z => funext fun i => smul_assoc x y (z i)⟩
 #align pi.is_scalar_tower Pi.isScalarTower
+#align pi.vadd_assoc_class Pi.vaddAssocClass
 -/
 
 #print Pi.isScalarTower' /-
@@ -74,6 +77,7 @@ instance isScalarTower' {g : I → Type _} {α : Type _} [∀ i, SMul α <| f i]
     IsScalarTower α (∀ i : I, f i) (∀ i : I, g i) :=
   ⟨fun x y z => funext fun i => smul_assoc x (y i) (z i)⟩
 #align pi.is_scalar_tower' Pi.isScalarTower'
+#align pi.vadd_assoc_class' Pi.vaddAssocClass'
 -/
 
 #print Pi.isScalarTower'' /-
@@ -83,6 +87,7 @@ instance isScalarTower'' {g : I → Type _} {h : I → Type _} [∀ i, SMul (f i
     IsScalarTower (∀ i, f i) (∀ i, g i) (∀ i, h i) :=
   ⟨fun x y z => funext fun i => smul_assoc (x i) (y i) (z i)⟩
 #align pi.is_scalar_tower'' Pi.isScalarTower''
+#align pi.vadd_assoc_class'' Pi.vaddAssocClass''
 -/
 
 #print Pi.smulCommClass /-
@@ -91,6 +96,7 @@ instance smulCommClass {α β : Type _} [∀ i, SMul α <| f i] [∀ i, SMul β 
     [∀ i, SMulCommClass α β (f i)] : SMulCommClass α β (∀ i : I, f i) :=
   ⟨fun x y z => funext fun i => smul_comm x y (z i)⟩
 #align pi.smul_comm_class Pi.smulCommClass
+#align pi.vadd_comm_class Pi.vaddCommClass
 -/
 
 #print Pi.smulCommClass' /-
@@ -99,6 +105,7 @@ instance smulCommClass' {g : I → Type _} {α : Type _} [∀ i, SMul α <| g i]
     [∀ i, SMulCommClass α (f i) (g i)] : SMulCommClass α (∀ i : I, f i) (∀ i : I, g i) :=
   ⟨fun x y z => funext fun i => smul_comm x (y i) (z i)⟩
 #align pi.smul_comm_class' Pi.smulCommClass'
+#align pi.vadd_comm_class' Pi.vaddCommClass'
 -/
 
 #print Pi.smulCommClass'' /-
@@ -108,6 +115,7 @@ instance smulCommClass'' {g : I → Type _} {h : I → Type _} [∀ i, SMul (g i
     SMulCommClass (∀ i, f i) (∀ i, g i) (∀ i, h i) :=
   ⟨fun x y z => funext fun i => smul_comm (x i) (y i) (z i)⟩
 #align pi.smul_comm_class'' Pi.smulCommClass''
+#align pi.vadd_comm_class'' Pi.vaddCommClass''
 -/
 
 @[to_additive]
@@ -135,6 +143,7 @@ theorem faithfulSMul_at {α : Type _} [∀ i, SMul α <| f i] [∀ i, Nonempty (
             i
         simpa using this⟩
 #align pi.has_faithful_smul_at Pi.faithfulSMul_at
+#align pi.has_faithful_vadd_at Pi.faithfulVAdd_at
 
 #print Pi.faithfulSMul /-
 @[to_additive Pi.faithfulVAdd]
@@ -143,6 +152,7 @@ instance faithfulSMul {α : Type _} [Nonempty I] [∀ i, SMul α <| f i] [∀ i,
   let ⟨i⟩ := ‹Nonempty I›
   faithfulSMul_at i
 #align pi.has_faithful_smul Pi.faithfulSMul
+#align pi.has_faithful_vadd Pi.faithfulVAdd
 -/
 
 #print Pi.mulAction /-
@@ -153,6 +163,7 @@ instance mulAction (α) {m : Monoid α} [∀ i, MulAction α <| f i] : @MulActio
   mul_smul r s f := funext fun i => mul_smul _ _ _
   one_smul f := funext fun i => one_smul α _
 #align pi.mul_action Pi.mulAction
+#align pi.add_action Pi.addAction
 -/
 
 #print Pi.mulAction' /-
@@ -164,6 +175,7 @@ instance mulAction' {g : I → Type _} {m : ∀ i, Monoid (f i)} [∀ i, MulActi
   mul_smul r s f := funext fun i => mul_smul _ _ _
   one_smul f := funext fun i => one_smul _ _
 #align pi.mul_action' Pi.mulAction'
+#align pi.add_action' Pi.addAction'
 -/
 
 #print Pi.smulZeroClass /-
@@ -313,6 +325,7 @@ theorem update_smul {α : Type _} [∀ i, SMul α (f i)] [DecidableEq I] (c : α
     (x₁ : f i) : update (c • f₁) i (c • x₁) = c • update f₁ i x₁ :=
   funext fun j => (apply_update (fun i => (· • ·) c) f₁ i x₁ j).symm
 #align function.update_smul Function.update_smul
+#align function.update_vadd Function.update_vadd
 
 end Function
 
@@ -329,6 +342,7 @@ theorem piecewise_smul {α : Type _} [∀ i, SMul α (f i)] (s : Set I) [∀ i, 
     (f₁ g₁ : ∀ i, f i) : s.piecewise (c • f₁) (c • g₁) = c • s.piecewise f₁ g₁ :=
   s.piecewise_op _ _ fun _ => (· • ·) c
 #align set.piecewise_smul Set.piecewise_smul
+#align set.piecewise_vadd Set.piecewise_vadd
 
 end Set
 
@@ -345,6 +359,7 @@ theorem Function.extend_smul {R α β γ : Type _} [SMul R γ] (r : R) (f : α �
     (e : β → γ) : Function.extend f (r • g) (r • e) = r • Function.extend f g e :=
   funext fun _ => by convert (apply_dite ((· • ·) r) _ _ _).symm
 #align function.extend_smul Function.extend_smul
+#align function.extend_vadd Function.extend_vadd
 
 end Extend
 

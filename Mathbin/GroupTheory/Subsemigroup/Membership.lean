@@ -113,6 +113,7 @@ Case conversion may be inaccurate. Consider using '#align subsemigroup.mem_sup_l
 theorem mem_sup_left {S T : Subsemigroup M} : ∀ {x : M}, x ∈ S → x ∈ S ⊔ T :=
   show S ≤ S ⊔ T from le_sup_left
 #align subsemigroup.mem_sup_left Subsemigroup.mem_sup_left
+#align add_subsemigroup.mem_sup_left AddSubsemigroup.mem_sup_left
 
 /- warning: subsemigroup.mem_sup_right -> Subsemigroup.mem_sup_right is a dubious translation:
 lean 3 declaration is
@@ -124,6 +125,7 @@ Case conversion may be inaccurate. Consider using '#align subsemigroup.mem_sup_r
 theorem mem_sup_right {S T : Subsemigroup M} : ∀ {x : M}, x ∈ T → x ∈ S ⊔ T :=
   show T ≤ S ⊔ T from le_sup_right
 #align subsemigroup.mem_sup_right Subsemigroup.mem_sup_right
+#align add_subsemigroup.mem_sup_right AddSubsemigroup.mem_sup_right
 
 /- warning: subsemigroup.mul_mem_sup -> Subsemigroup.mul_mem_sup is a dubious translation:
 lean 3 declaration is
@@ -135,6 +137,7 @@ Case conversion may be inaccurate. Consider using '#align subsemigroup.mul_mem_s
 theorem mul_mem_sup {S T : Subsemigroup M} {x y : M} (hx : x ∈ S) (hy : y ∈ T) : x * y ∈ S ⊔ T :=
   mul_mem (mem_sup_left hx) (mem_sup_right hy)
 #align subsemigroup.mul_mem_sup Subsemigroup.mul_mem_sup
+#align add_subsemigroup.add_mem_sup AddSubsemigroup.add_mem_sup
 
 /- warning: subsemigroup.mem_supr_of_mem -> Subsemigroup.mem_supᵢ_of_mem is a dubious translation:
 lean 3 declaration is

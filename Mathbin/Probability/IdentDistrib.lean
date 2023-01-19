@@ -288,24 +288,28 @@ theorem mulConst [Mul γ] [HasMeasurableMul γ] (h : IdentDistrib f g μ ν) (c 
     IdentDistrib (fun x => f x * c) (fun x => g x * c) μ ν :=
   h.comp (measurable_mul_const c)
 #align probability_theory.ident_distrib.mul_const ProbabilityTheory.IdentDistrib.mulConst
+#align probability_theory.ident_distrib.add_const ProbabilityTheory.IdentDistrib.add_const
 
 @[to_additive]
 theorem constMul [Mul γ] [HasMeasurableMul γ] (h : IdentDistrib f g μ ν) (c : γ) :
     IdentDistrib (fun x => c * f x) (fun x => c * g x) μ ν :=
   h.comp (measurable_const_mul c)
 #align probability_theory.ident_distrib.const_mul ProbabilityTheory.IdentDistrib.constMul
+#align probability_theory.ident_distrib.const_add ProbabilityTheory.IdentDistrib.const_add
 
 @[to_additive]
 theorem divConst [Div γ] [HasMeasurableDiv γ] (h : IdentDistrib f g μ ν) (c : γ) :
     IdentDistrib (fun x => f x / c) (fun x => g x / c) μ ν :=
   h.comp (HasMeasurableDiv.measurable_div_const c)
 #align probability_theory.ident_distrib.div_const ProbabilityTheory.IdentDistrib.divConst
+#align probability_theory.ident_distrib.sub_const ProbabilityTheory.IdentDistrib.sub_const
 
 @[to_additive]
 theorem constDiv [Div γ] [HasMeasurableDiv γ] (h : IdentDistrib f g μ ν) (c : γ) :
     IdentDistrib (fun x => c / f x) (fun x => c / g x) μ ν :=
   h.comp (HasMeasurableDiv.measurable_const_div c)
 #align probability_theory.ident_distrib.const_div ProbabilityTheory.IdentDistrib.constDiv
+#align probability_theory.ident_distrib.const_sub ProbabilityTheory.IdentDistrib.const_sub
 
 theorem evariance_eq {f : α → ℝ} {g : β → ℝ} (h : IdentDistrib f g μ ν) :
     evariance f μ = evariance g ν :=

@@ -56,6 +56,7 @@ theorem prod_mul_prod_eq_prod_zip_with [CommMonoid α] (x y : Vector α n) :
   List.prod_mul_prod_eq_prod_zipWith_of_length_eq x.toList y.toList
     ((toList_length x).trans (toList_length y).symm)
 #align vector.prod_mul_prod_eq_prod_zip_with Vector.prod_mul_prod_eq_prod_zip_with
+#align vector.sum_add_sum_eq_sum_zip_with Vector.sum_add_sum_eq_sum_zip_with
 
 end ZipWith
 

@@ -104,6 +104,7 @@ class SubmultiplicativeHomClass (F : Type _) (α β : outParam <| Type _) [Mul �
   [LE β] extends FunLike F α fun _ => β where
   map_mul_le_mul (f : F) : ∀ a b, f (a * b) ≤ f a * f b
 #align submultiplicative_hom_class SubmultiplicativeHomClass
+#align subadditive_hom_class SubadditiveHomClass
 -/
 
 #print MulLEAddHomClass /-
@@ -113,6 +114,7 @@ class MulLEAddHomClass (F : Type _) (α β : outParam <| Type _) [Mul α] [Add �
   FunLike F α fun _ => β where
   map_mul_le_add (f : F) : ∀ a b, f (a * b) ≤ f a + f b
 #align mul_le_add_hom_class MulLEAddHomClass
+#align subadditive_hom_class SubadditiveHomClass
 -/
 
 #print NonarchimedeanHomClass /-
@@ -146,6 +148,7 @@ theorem le_map_mul_map_div [Group α] [CommSemigroup β] [LE β] [Submultiplicat
     (f : F) (a b : α) : f a ≤ f b * f (a / b) := by
   simpa only [mul_comm, div_mul_cancel'] using map_mul_le_mul f (a / b) b
 #align le_map_mul_map_div le_map_mul_map_div
+#align le_map_add_map_sub le_map_add_map_sub
 
 /- warning: le_map_add_map_div -> le_map_add_map_div is a dubious translation:
 lean 3 declaration is
@@ -158,6 +161,7 @@ theorem le_map_add_map_div [Group α] [AddCommSemigroup β] [LE β] [MulLEAddHom
     (a b : α) : f a ≤ f b + f (a / b) := by
   simpa only [add_comm, div_mul_cancel'] using map_mul_le_add f (a / b) b
 #align le_map_add_map_div le_map_add_map_div
+#align le_map_add_map_sub le_map_add_map_sub
 
 /- warning: le_map_div_mul_map_div -> le_map_div_mul_map_div is a dubious translation:
 lean 3 declaration is
@@ -170,6 +174,7 @@ theorem le_map_div_mul_map_div [Group α] [CommSemigroup β] [LE β] [Submultipl
     (f : F) (a b c : α) : f (a / c) ≤ f (a / b) * f (b / c) := by
   simpa only [div_mul_div_cancel'] using map_mul_le_mul f (a / b) (b / c)
 #align le_map_div_mul_map_div le_map_div_mul_map_div
+#align le_map_sub_add_map_sub le_map_sub_add_map_sub
 
 /- warning: le_map_div_add_map_div -> le_map_div_add_map_div is a dubious translation:
 lean 3 declaration is
@@ -182,6 +187,7 @@ theorem le_map_div_add_map_div [Group α] [AddCommSemigroup β] [LE β] [MulLEAd
     (f : F) (a b c : α) : f (a / c) ≤ f (a / b) + f (b / c) := by
   simpa only [div_mul_div_cancel'] using map_mul_le_add f (a / b) (b / c)
 #align le_map_div_add_map_div le_map_div_add_map_div
+#align le_map_sub_add_map_sub le_map_sub_add_map_sub
 
 /-! ### Group (semi)norms -/
 
@@ -205,6 +211,7 @@ class GroupSeminormClass (F : Type _) (α β : outParam <| Type _) [Group α]
   map_one_eq_zero (f : F) : f 1 = 0
   map_inv_eq_map (f : F) (a : α) : f a⁻¹ = f a
 #align group_seminorm_class GroupSeminormClass
+#align add_group_seminorm_class AddGroupSeminormClass
 
 /-- `add_group_norm_class F α` states that `F` is a type of `β`-valued norms on the additive group
 `α`.
@@ -223,6 +230,7 @@ class GroupNormClass (F : Type _) (α β : outParam <| Type _) [Group α]
   [OrderedAddCommMonoid β] extends GroupSeminormClass F α β where
   eq_one_of_map_eq_zero (f : F) {a : α} : f a = 0 → a = 1
 #align group_norm_class GroupNormClass
+#align add_group_norm_class AddGroupNormClass
 
 export AddGroupSeminormClass (map_neg_eq_map)
 
@@ -260,15 +268,18 @@ theorem map_div_le_add : f (x / y) ≤ f x + f y :=
   rw [div_eq_mul_inv, ← map_inv_eq_map f y]
   exact map_mul_le_add _ _ _
 #align map_div_le_add map_div_le_add
+#align map_sub_le_add map_sub_le_add
 
 @[to_additive]
 theorem map_div_rev : f (x / y) = f (y / x) := by rw [← inv_div, map_inv_eq_map]
 #align map_div_rev map_div_rev
+#align map_sub_rev map_sub_rev
 
 @[to_additive]
 theorem le_map_add_map_div' : f x ≤ f y + f (y / x) := by
   simpa only [add_comm, map_div_rev, div_mul_cancel'] using map_mul_le_add f (x / y) y
 #align le_map_add_map_div' le_map_add_map_div'
+#align le_map_add_map_sub' le_map_add_map_sub'
 
 end GroupSeminormClass
 
@@ -282,6 +293,7 @@ theorem abs_sub_map_le_div [Group α] [LinearOrderedAddCommGroup β] [GroupSemin
   rw [abs_sub_le_iff, sub_le_iff_le_add', sub_le_iff_le_add']
   exact ⟨le_map_add_map_div _ _ _, le_map_add_map_div' _ _ _⟩
 #align abs_sub_map_le_div abs_sub_map_le_div
+#align abs_sub_map_le_sub abs_sub_map_le_sub
 
 -- See note [lower instance priority]
 @[to_additive]
@@ -294,6 +306,7 @@ instance (priority := 100) GroupSeminormClass.toNonnegHomClass [Group α]
         rw [two_nsmul, ← map_one_eq_zero f, ← div_self' a]
         exact map_div_le_add _ _ _ }
 #align group_seminorm_class.to_nonneg_hom_class GroupSeminormClass.toNonnegHomClass
+#align add_group_seminorm_class.to_nonneg_hom_class AddGroupSeminormClass.to_nonneg_hom_class
 
 section GroupNormClass
 
@@ -307,11 +320,13 @@ theorem map_eq_zero_iff_eq_one : f x = 0 ↔ x = 1 :=
     rintro rfl
     exact map_one_eq_zero _⟩
 #align map_eq_zero_iff_eq_one map_eq_zero_iff_eq_one
+#align map_eq_zero_iff_eq_zero map_eq_zero_iff_eq_zero
 
 @[to_additive]
 theorem map_ne_zero_iff_ne_one : f x ≠ 0 ↔ x ≠ 1 :=
   (map_eq_zero_iff_eq_one _).Not
 #align map_ne_zero_iff_ne_one map_ne_zero_iff_ne_one
+#align map_ne_zero_iff_ne_zero map_ne_zero_iff_ne_zero
 
 end GroupNormClass
 
@@ -320,6 +335,7 @@ theorem map_pos_of_ne_one [Group α] [LinearOrderedAddCommMonoid β] [GroupNormC
     {x : α} (hx : x ≠ 1) : 0 < f x :=
   (map_nonneg _ _).lt_of_ne <| ((map_ne_zero_iff_ne_one _).2 hx).symm
 #align map_pos_of_ne_one map_pos_of_ne_one
+#align map_pos_of_ne_zero map_pos_of_ne_zero
 
 /-! ### Ring (semi)norms -/
 
@@ -358,7 +374,7 @@ class MulRingNormClass (F : Type _) (α β : outParam <| Type _) [NonAssocRing �
 -- See note [lower instance priority]
 instance (priority := 100) RingSeminormClass.toNonnegHomClass [NonUnitalNonAssocRing α]
     [LinearOrderedSemiring β] [RingSeminormClass F α β] : NonnegHomClass F α β :=
-  AddGroupSeminormClass.toNonnegHomClass
+  AddGroupSeminormClass.to_nonneg_hom_class
 #align ring_seminorm_class.to_nonneg_hom_class RingSeminormClass.toNonnegHomClass
 
 -- See note [lower instance priority]

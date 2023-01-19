@@ -390,12 +390,14 @@ theorem sum_proper_divisors_dvd (h : (∑ x in n.properDivisors, x) ∣ n) :
 theorem Prime.prod_proper_divisors {α : Type _} [CommMonoid α] {p : ℕ} {f : ℕ → α} (h : p.Prime) :
     (∏ x in p.properDivisors, f x) = f 1 := by simp [h.proper_divisors]
 #align nat.prime.prod_proper_divisors Nat.Prime.prod_proper_divisors
+#align nat.prime.sum_proper_divisors Nat.Prime.sum_proper_divisors
 
 @[simp, to_additive]
 theorem Prime.prod_divisors {α : Type _} [CommMonoid α] {p : ℕ} {f : ℕ → α} (h : p.Prime) :
     (∏ x in p.divisors, f x) = f p * f 1 := by
   rw [← cons_self_proper_divisors h.ne_zero, prod_cons, h.prod_proper_divisors]
 #align nat.prime.prod_divisors Nat.Prime.prod_divisors
+#align nat.prime.sum_divisors Nat.Prime.sum_divisors
 
 theorem proper_divisors_eq_singleton_one_iff_prime : n.properDivisors = {1} ↔ n.Prime :=
   ⟨fun h => by
@@ -451,12 +453,14 @@ theorem prod_proper_divisors_prime_pow {α : Type _} [CommMonoid α] {k p : ℕ}
     (h : p.Prime) : (∏ x in (p ^ k).properDivisors, f x) = ∏ x in range k, f (p ^ x) := by
   simp [h, proper_divisors_prime_pow]
 #align nat.prod_proper_divisors_prime_pow Nat.prod_proper_divisors_prime_pow
+#align nat.sum_proper_divisors_prime_nsmul Nat.sum_proper_divisors_prime_nsmul
 
 @[simp, to_additive sum_divisors_prime_pow]
 theorem prod_divisors_prime_pow {α : Type _} [CommMonoid α] {k p : ℕ} {f : ℕ → α} (h : p.Prime) :
     (∏ x in (p ^ k).divisors, f x) = ∏ x in range (k + 1), f (p ^ x) := by
   simp [h, divisors_prime_pow]
 #align nat.prod_divisors_prime_pow Nat.prod_divisors_prime_pow
+#align nat.sum_divisors_prime_pow Nat.sum_divisors_prime_pow
 
 @[to_additive]
 theorem prod_divisors_antidiagonal {M : Type _} [CommMonoid M] (f : ℕ → ℕ → M) {n : ℕ} :
@@ -465,6 +469,7 @@ theorem prod_divisors_antidiagonal {M : Type _} [CommMonoid M] (f : ℕ → ℕ 
   rw [← map_div_right_divisors, Finset.prod_map]
   rfl
 #align nat.prod_divisors_antidiagonal Nat.prod_divisors_antidiagonal
+#align nat.sum_divisors_antidiagonal Nat.sum_divisors_antidiagonal
 
 @[to_additive]
 theorem prod_divisors_antidiagonal' {M : Type _} [CommMonoid M] (f : ℕ → ℕ → M) {n : ℕ} :
@@ -473,6 +478,7 @@ theorem prod_divisors_antidiagonal' {M : Type _} [CommMonoid M] (f : ℕ → ℕ
   rw [← map_swap_divisors_antidiagonal, Finset.prod_map]
   exact prod_divisors_antidiagonal fun i j => f j i
 #align nat.prod_divisors_antidiagonal' Nat.prod_divisors_antidiagonal'
+#align nat.sum_divisors_antidiagonal' Nat.sum_divisors_antidiagonal'
 
 /-- The factors of `n` are the prime divisors -/
 theorem prime_divisors_eq_to_filter_divisors_prime (n : ℕ) :
@@ -513,6 +519,7 @@ theorem prod_div_divisors {α : Type _} [CommMonoid α] (n : ℕ) (f : ℕ → �
     rw [mem_divisors] at hx hy
     exact (div_eq_iff_eq_of_dvd_dvd hn hx.1 hy.1).mp h
 #align nat.prod_div_divisors Nat.prod_div_divisors
+#align nat.sum_div_divisors Nat.sum_div_divisors
 
 end Nat
 

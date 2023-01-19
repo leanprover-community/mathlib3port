@@ -69,23 +69,27 @@ open SmulMemClass
 instance (priority := 900) hasSmul : SMul R s :=
   ⟨fun r x => ⟨r • x.1, smul_mem r x.2⟩⟩
 #align set_like.has_smul SetLike.hasSmul
+#align set_like.has_vadd SetLike.hasVadd
 
 -- lower priority so later simp lemmas are used first; to appease simp_nf
 @[simp, norm_cast, to_additive]
 protected theorem coe_smul (r : R) (x : s) : (↑(r • x) : M) = r • x :=
   rfl
 #align set_like.coe_smul SetLike.coe_smul
+#align set_like.coe_vadd SetLike.coe_vadd
 
 -- lower priority so later simp lemmas are used first; to appease simp_nf
 @[simp, to_additive]
 theorem mk_smul_mk (r : R) (x : M) (hx : x ∈ s) : r • (⟨x, hx⟩ : s) = ⟨r • x, smul_mem r hx⟩ :=
   rfl
 #align set_like.mk_smul_mk SetLike.mk_smul_mk
+#align set_like.mk_vadd_mk SetLike.mk_vadd_mk
 
 @[to_additive]
 theorem smul_def (r : R) (x : s) : r • x = ⟨r • x, smul_mem r x.2⟩ :=
   rfl
 #align set_like.smul_def SetLike.smul_def
+#align set_like.vadd_def SetLike.vadd_def
 
 omit hS
 

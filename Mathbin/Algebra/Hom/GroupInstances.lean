@@ -147,6 +147,7 @@ theorem ext_iff₂ {mM : MulOneClass M} {mN : MulOneClass N} {mP : CommMonoid P}
     f = g ↔ ∀ x y, f x y = g x y :=
   MonoidHom.ext_iff.trans <| forall_congr' fun _ => MonoidHom.ext_iff
 #align monoid_hom.ext_iff₂ MonoidHom.ext_iff₂
+#align add_monoid_hom.ext_iff₂ AddMonoidHom.ext_iff₂
 
 #print MonoidHom.flip /-
 /-- `flip` arguments of `f : M →* N →* P` -/
@@ -159,6 +160,7 @@ def flip {mM : MulOneClass M} {mN : MulOneClass N} {mP : CommMonoid P} (f : M �
   map_one' := ext fun x => (f x).map_one
   map_mul' y₁ y₂ := ext fun x => (f x).map_mul y₁ y₂
 #align monoid_hom.flip MonoidHom.flip
+#align add_monoid_hom.flip AddMonoidHom.flip
 -/
 
 /- warning: monoid_hom.flip_apply -> MonoidHom.flip_apply is a dubious translation:
@@ -172,6 +174,7 @@ theorem flip_apply {mM : MulOneClass M} {mN : MulOneClass N} {mP : CommMonoid P}
     (x : M) (y : N) : f.flip y x = f x y :=
   rfl
 #align monoid_hom.flip_apply MonoidHom.flip_apply
+#align add_monoid_hom.flip_apply AddMonoidHom.flip_apply
 
 /- warning: monoid_hom.map_one₂ -> MonoidHom.map_one₂ is a dubious translation:
 lean 3 declaration is
@@ -184,6 +187,7 @@ theorem map_one₂ {mM : MulOneClass M} {mN : MulOneClass N} {mP : CommMonoid P}
     (n : N) : f 1 n = 1 :=
   (flip f n).map_one
 #align monoid_hom.map_one₂ MonoidHom.map_one₂
+#align add_monoid_hom.map_one₂ AddMonoidHom.map_one₂
 
 /- warning: monoid_hom.map_mul₂ -> MonoidHom.map_mul₂ is a dubious translation:
 lean 3 declaration is
@@ -196,6 +200,7 @@ theorem map_mul₂ {mM : MulOneClass M} {mN : MulOneClass N} {mP : CommMonoid P}
     (m₁ m₂ : M) (n : N) : f (m₁ * m₂) n = f m₁ n * f m₂ n :=
   (flip f n).map_mul _ _
 #align monoid_hom.map_mul₂ MonoidHom.map_mul₂
+#align add_monoid_hom.map_mul₂ AddMonoidHom.map_mul₂
 
 /- warning: monoid_hom.map_inv₂ -> MonoidHom.map_inv₂ is a dubious translation:
 lean 3 declaration is
@@ -208,6 +213,7 @@ theorem map_inv₂ {mM : Group M} {mN : MulOneClass N} {mP : CommGroup P} (f : M
     (n : N) : f m⁻¹ n = (f m n)⁻¹ :=
   (flip f n).map_inv _
 #align monoid_hom.map_inv₂ MonoidHom.map_inv₂
+#align add_monoid_hom.map_inv₂ AddMonoidHom.map_inv₂
 
 /- warning: monoid_hom.map_div₂ -> MonoidHom.map_div₂ is a dubious translation:
 lean 3 declaration is
@@ -220,6 +226,7 @@ theorem map_div₂ {mM : Group M} {mN : MulOneClass N} {mP : CommGroup P} (f : M
     (m₁ m₂ : M) (n : N) : f (m₁ / m₂) n = f m₁ n / f m₂ n :=
   (flip f n).map_div _ _
 #align monoid_hom.map_div₂ MonoidHom.map_div₂
+#align add_monoid_hom.map_div₂ AddMonoidHom.map_div₂
 
 #print MonoidHom.eval /-
 /-- Evaluation of a `monoid_hom` at a point as a monoid homomorphism. See also `monoid_hom.apply`
@@ -230,6 +237,7 @@ for the evaluation of any function at a point. -/
 def eval [MulOneClass M] [CommMonoid N] : M →* (M →* N) →* N :=
   (MonoidHom.id (M →* N)).flip
 #align monoid_hom.eval MonoidHom.eval
+#align add_monoid_hom.eval AddMonoidHom.eval
 -/
 
 #print MonoidHom.compHom' /-
@@ -241,6 +249,7 @@ Equivalently, `(λ g, monoid_hom.comp g f)` as a `monoid_hom`. -/
 def compHom' [MulOneClass M] [MulOneClass N] [CommMonoid P] (f : M →* N) : (N →* P) →* M →* P :=
   flip <| eval.comp f
 #align monoid_hom.comp_hom' MonoidHom.compHom'
+#align add_monoid_hom.comp_hom' AddMonoidHom.compHom'
 -/
 
 #print MonoidHom.compHom /-
@@ -263,6 +272,7 @@ def compHom [MulOneClass M] [CommMonoid N] [CommMonoid P] : (N →* P) →* (M �
     ext1 f
     exact mul_comp g₁ g₂ f
 #align monoid_hom.comp_hom MonoidHom.compHom
+#align add_monoid_hom.comp_hom AddMonoidHom.compHom
 -/
 
 #print MonoidHom.flipHom /-
@@ -276,6 +286,7 @@ def flipHom {mM : MulOneClass M} {mN : MulOneClass N} {mP : CommMonoid P} :
   map_one' := rfl
   map_mul' f g := rfl
 #align monoid_hom.flip_hom MonoidHom.flipHom
+#align add_monoid_hom.flip_hom AddMonoidHom.flipHom
 -/
 
 #print MonoidHom.compl₂ /-
@@ -288,6 +299,7 @@ def compl₂ [MulOneClass M] [MulOneClass N] [CommMonoid P] [MulOneClass Q] (f :
     (g : Q →* N) : M →* Q →* P :=
   (compHom' g).comp f
 #align monoid_hom.compl₂ MonoidHom.compl₂
+#align add_monoid_hom.compl₂ AddMonoidHom.compl₂
 -/
 
 /- warning: monoid_hom.compl₂_apply -> MonoidHom.compl₂_apply is a dubious translation:
@@ -301,6 +313,7 @@ theorem compl₂_apply [MulOneClass M] [MulOneClass N] [CommMonoid P] [MulOneCla
     (f : M →* N →* P) (g : Q →* N) (m : M) (q : Q) : (compl₂ f g) m q = f m (g q) :=
   rfl
 #align monoid_hom.compl₂_apply MonoidHom.compl₂_apply
+#align add_monoid_hom.compl₂_apply AddMonoidHom.compl₂_apply
 
 #print MonoidHom.compr₂ /-
 /-- The expression `λ m n, g (f m n)` as a `monoid_hom`. -/
@@ -310,6 +323,7 @@ def compr₂ [MulOneClass M] [MulOneClass N] [CommMonoid P] [CommMonoid Q] (f : 
     (g : P →* Q) : M →* N →* Q :=
   (compHom g).comp f
 #align monoid_hom.compr₂ MonoidHom.compr₂
+#align add_monoid_hom.compr₂ AddMonoidHom.compr₂
 -/
 
 /- warning: monoid_hom.compr₂_apply -> MonoidHom.compr₂_apply is a dubious translation:
@@ -323,6 +337,7 @@ theorem compr₂_apply [MulOneClass M] [MulOneClass N] [CommMonoid P] [CommMonoi
     (g : P →* Q) (m : M) (n : N) : (compr₂ f g) m n = g (f m n) :=
   rfl
 #align monoid_hom.compr₂_apply MonoidHom.compr₂_apply
+#align add_monoid_hom.compr₂_apply AddMonoidHom.compr₂_apply
 
 end MonoidHom
 

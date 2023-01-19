@@ -120,6 +120,7 @@ instance : MulMemClass (Subsemigroup M) M where mul_mem := Subsemigroup.mul_mem'
 def Simps.coe (S : Subsemigroup M) : Set M :=
   S
 #align subsemigroup.simps.coe Subsemigroup.Simps.coe
+#align add_subsemigroup.simps.coe AddSubsemigroup.Simps.coe
 -/
 
 initialize_simps_projections Subsemigroup (carrier → coe)
@@ -131,6 +132,7 @@ initialize_simps_projections AddSubsemigroup (carrier → coe)
 theorem mem_carrier {s : Subsemigroup M} {x : M} : x ∈ s.carrier ↔ x ∈ s :=
   Iff.rfl
 #align subsemigroup.mem_carrier Subsemigroup.mem_carrier
+#align add_subsemigroup.mem_carrier AddSubsemigroup.mem_carrier
 -/
 
 #print Subsemigroup.mem_mk /-
@@ -138,6 +140,7 @@ theorem mem_carrier {s : Subsemigroup M} {x : M} : x ∈ s.carrier ↔ x ∈ s :
 theorem mem_mk {s : Set M} {x : M} (h_mul) : x ∈ mk s h_mul ↔ x ∈ s :=
   Iff.rfl
 #align subsemigroup.mem_mk Subsemigroup.mem_mk
+#align add_subsemigroup.mem_mk AddSubsemigroup.mem_mk
 -/
 
 #print Subsemigroup.coe_set_mk /-
@@ -145,6 +148,7 @@ theorem mem_mk {s : Set M} {x : M} (h_mul) : x ∈ mk s h_mul ↔ x ∈ s :=
 theorem coe_set_mk {s : Set M} (h_mul) : (mk s h_mul : Set M) = s :=
   rfl
 #align subsemigroup.coe_set_mk Subsemigroup.coe_set_mk
+#align add_subsemigroup.coe_set_mk AddSubsemigroup.coe_set_mk
 -/
 
 /- warning: subsemigroup.mk_le_mk -> Subsemigroup.mk_le_mk is a dubious translation:
@@ -157,6 +161,7 @@ Case conversion may be inaccurate. Consider using '#align subsemigroup.mk_le_mk 
 theorem mk_le_mk {s t : Set M} (h_mul) (h_mul') : mk s h_mul ≤ mk t h_mul' ↔ s ⊆ t :=
   Iff.rfl
 #align subsemigroup.mk_le_mk Subsemigroup.mk_le_mk
+#align add_subsemigroup.mk_le_mk AddSubsemigroup.mk_le_mk
 
 #print Subsemigroup.ext /-
 /-- Two subsemigroups are equal if they have the same elements. -/
@@ -164,6 +169,7 @@ theorem mk_le_mk {s t : Set M} (h_mul) (h_mul') : mk s h_mul ≤ mk t h_mul' ↔
 theorem ext {S T : Subsemigroup M} (h : ∀ x, x ∈ S ↔ x ∈ T) : S = T :=
   SetLike.ext h
 #align subsemigroup.ext Subsemigroup.ext
+#align add_subsemigroup.ext AddSubsemigroup.ext
 -/
 
 #print Subsemigroup.copy /-
@@ -174,6 +180,7 @@ protected def copy (S : Subsemigroup M) (s : Set M) (hs : s = S) : Subsemigroup 
   carrier := s
   mul_mem' _ _ := hs.symm ▸ S.mul_mem'
 #align subsemigroup.copy Subsemigroup.copy
+#align add_subsemigroup.copy AddSubsemigroup.copy
 -/
 
 variable {S : Subsemigroup M}
@@ -183,6 +190,7 @@ variable {S : Subsemigroup M}
 theorem coe_copy {s : Set M} (hs : s = S) : (S.copy s hs : Set M) = s :=
   rfl
 #align subsemigroup.coe_copy Subsemigroup.coe_copy
+#align add_subsemigroup.coe_copy AddSubsemigroup.coe_copy
 -/
 
 #print Subsemigroup.copy_eq /-
@@ -190,6 +198,7 @@ theorem coe_copy {s : Set M} (hs : s = S) : (S.copy s hs : Set M) = s :=
 theorem copy_eq {s : Set M} (hs : s = S) : S.copy s hs = S :=
   SetLike.coe_injective hs
 #align subsemigroup.copy_eq Subsemigroup.copy_eq
+#align add_subsemigroup.copy_eq AddSubsemigroup.copy_eq
 -/
 
 variable (S)
@@ -200,6 +209,7 @@ variable (S)
 protected theorem mul_mem {x y : M} : x ∈ S → y ∈ S → x * y ∈ S :=
   Subsemigroup.mul_mem' S
 #align subsemigroup.mul_mem Subsemigroup.mul_mem
+#align add_subsemigroup.mul_mem AddSubsemigroup.add_mem
 -/
 
 /-- The subsemigroup `M` of the magma `M`. -/
@@ -223,6 +233,7 @@ instance : Inhabited (Subsemigroup M) :=
 theorem not_mem_bot {x : M} : x ∉ (⊥ : Subsemigroup M) :=
   Set.not_mem_empty x
 #align subsemigroup.not_mem_bot Subsemigroup.not_mem_bot
+#align add_subsemigroup.not_mem_bot AddSubsemigroup.not_mem_bot
 -/
 
 #print Subsemigroup.mem_top /-
@@ -230,6 +241,7 @@ theorem not_mem_bot {x : M} : x ∉ (⊥ : Subsemigroup M) :=
 theorem mem_top (x : M) : x ∈ (⊤ : Subsemigroup M) :=
   Set.mem_univ x
 #align subsemigroup.mem_top Subsemigroup.mem_top
+#align add_subsemigroup.mem_top AddSubsemigroup.mem_top
 -/
 
 #print Subsemigroup.coe_top /-
@@ -237,6 +249,7 @@ theorem mem_top (x : M) : x ∈ (⊤ : Subsemigroup M) :=
 theorem coe_top : ((⊤ : Subsemigroup M) : Set M) = Set.univ :=
   rfl
 #align subsemigroup.coe_top Subsemigroup.coe_top
+#align add_subsemigroup.coe_top AddSubsemigroup.coe_top
 -/
 
 #print Subsemigroup.coe_bot /-
@@ -244,6 +257,7 @@ theorem coe_top : ((⊤ : Subsemigroup M) : Set M) = Set.univ :=
 theorem coe_bot : ((⊥ : Subsemigroup M) : Set M) = ∅ :=
   rfl
 #align subsemigroup.coe_bot Subsemigroup.coe_bot
+#align add_subsemigroup.coe_bot AddSubsemigroup.coe_bot
 -/
 
 /-- The inf of two subsemigroups is their intersection. -/
@@ -263,6 +277,7 @@ Case conversion may be inaccurate. Consider using '#align subsemigroup.coe_inf S
 theorem coe_inf (p p' : Subsemigroup M) : ((p ⊓ p' : Subsemigroup M) : Set M) = p ∩ p' :=
   rfl
 #align subsemigroup.coe_inf Subsemigroup.coe_inf
+#align add_subsemigroup.coe_inf AddSubsemigroup.coe_inf
 
 /- warning: subsemigroup.mem_inf -> Subsemigroup.mem_inf is a dubious translation:
 lean 3 declaration is
@@ -274,6 +289,7 @@ Case conversion may be inaccurate. Consider using '#align subsemigroup.mem_inf S
 theorem mem_inf {p p' : Subsemigroup M} {x : M} : x ∈ p ⊓ p' ↔ x ∈ p ∧ x ∈ p' :=
   Iff.rfl
 #align subsemigroup.mem_inf Subsemigroup.mem_inf
+#align add_subsemigroup.mem_inf AddSubsemigroup.mem_inf
 
 @[to_additive]
 instance : InfSet (Subsemigroup M) :=
@@ -293,6 +309,7 @@ Case conversion may be inaccurate. Consider using '#align subsemigroup.coe_Inf S
 theorem coe_infₛ (S : Set (Subsemigroup M)) : ((infₛ S : Subsemigroup M) : Set M) = ⋂ s ∈ S, ↑s :=
   rfl
 #align subsemigroup.coe_Inf Subsemigroup.coe_infₛ
+#align add_subsemigroup.coe_Inf AddSubsemigroup.coe_infₛ
 
 /- warning: subsemigroup.mem_Inf -> Subsemigroup.mem_infₛ is a dubious translation:
 lean 3 declaration is
@@ -304,6 +321,7 @@ Case conversion may be inaccurate. Consider using '#align subsemigroup.mem_Inf S
 theorem mem_infₛ {S : Set (Subsemigroup M)} {x : M} : x ∈ infₛ S ↔ ∀ p ∈ S, x ∈ p :=
   Set.mem_interᵢ₂
 #align subsemigroup.mem_Inf Subsemigroup.mem_infₛ
+#align add_subsemigroup.mem_Inf AddSubsemigroup.mem_infₛ
 
 /- warning: subsemigroup.mem_infi -> Subsemigroup.mem_infᵢ is a dubious translation:
 lean 3 declaration is
@@ -315,6 +333,7 @@ Case conversion may be inaccurate. Consider using '#align subsemigroup.mem_infi 
 theorem mem_infᵢ {ι : Sort _} {S : ι → Subsemigroup M} {x : M} : (x ∈ ⨅ i, S i) ↔ ∀ i, x ∈ S i := by
   simp only [infᵢ, mem_Inf, Set.forall_range_iff]
 #align subsemigroup.mem_infi Subsemigroup.mem_infᵢ
+#align add_subsemigroup.mem_infi AddSubsemigroup.mem_infᵢ
 
 /- warning: subsemigroup.coe_infi -> Subsemigroup.coe_infᵢ is a dubious translation:
 lean 3 declaration is
@@ -326,6 +345,7 @@ Case conversion may be inaccurate. Consider using '#align subsemigroup.coe_infi 
 theorem coe_infᵢ {ι : Sort _} {S : ι → Subsemigroup M} : (↑(⨅ i, S i) : Set M) = ⋂ i, S i := by
   simp only [infᵢ, coe_Inf, Set.binterᵢ_range]
 #align subsemigroup.coe_infi Subsemigroup.coe_infᵢ
+#align add_subsemigroup.coe_infi AddSubsemigroup.coe_infᵢ
 
 /-- subsemigroups of a monoid form a complete lattice. -/
 @[to_additive "The `add_subsemigroup`s of an `add_monoid` form a complete lattice."]
@@ -354,6 +374,7 @@ theorem subsingleton_of_subsingleton [Subsingleton (Subsemigroup M)] : Subsingle
   have : ∀ a : M, a ∈ (⊥ : Subsemigroup M) := by simp [Subsingleton.elim (⊥ : Subsemigroup M) ⊤]
   exact absurd (this x) not_mem_bot
 #align subsemigroup.subsingleton_of_subsingleton Subsemigroup.subsingleton_of_subsingleton
+#align add_subsemigroup.subsingleton_of_subsingleton AddSubsemigroup.subsingleton_of_subsingleton
 -/
 
 @[to_additive]
@@ -369,6 +390,7 @@ instance [hn : Nonempty M] : Nontrivial (Subsemigroup M) :=
 def closure (s : Set M) : Subsemigroup M :=
   infₛ { S | s ⊆ S }
 #align subsemigroup.closure Subsemigroup.closure
+#align add_subsemigroup.closure AddSubsemigroup.closure
 -/
 
 #print Subsemigroup.mem_closure /-
@@ -376,6 +398,7 @@ def closure (s : Set M) : Subsemigroup M :=
 theorem mem_closure {x : M} : x ∈ closure s ↔ ∀ S : Subsemigroup M, s ⊆ S → x ∈ S :=
   mem_Inf
 #align subsemigroup.mem_closure Subsemigroup.mem_closure
+#align add_subsemigroup.mem_closure AddSubsemigroup.mem_closure
 -/
 
 #print Subsemigroup.subset_closure /-
@@ -383,6 +406,7 @@ theorem mem_closure {x : M} : x ∈ closure s ↔ ∀ S : Subsemigroup M, s ⊆ 
 @[simp, to_additive "The `add_subsemigroup` generated by a set includes the set."]
 theorem subset_closure : s ⊆ closure s := fun x hx => mem_closure.2 fun S hS => hS hx
 #align subsemigroup.subset_closure Subsemigroup.subset_closure
+#align add_subsemigroup.subset_closure AddSubsemigroup.subset_closure
 -/
 
 #print Subsemigroup.not_mem_of_not_mem_closure /-
@@ -390,6 +414,7 @@ theorem subset_closure : s ⊆ closure s := fun x hx => mem_closure.2 fun S hS =
 theorem not_mem_of_not_mem_closure {P : M} (hP : P ∉ closure s) : P ∉ s := fun h =>
   hP (subset_closure h)
 #align subsemigroup.not_mem_of_not_mem_closure Subsemigroup.not_mem_of_not_mem_closure
+#align add_subsemigroup.not_mem_of_not_mem_closure AddSubsemigroup.not_mem_of_not_mem_closure
 -/
 
 variable {S}
@@ -408,6 +433,7 @@ Case conversion may be inaccurate. Consider using '#align subsemigroup.closure_l
 theorem closure_le : closure s ≤ S ↔ s ⊆ S :=
   ⟨Subset.trans subset_closure, fun h => infₛ_le h⟩
 #align subsemigroup.closure_le Subsemigroup.closure_le
+#align add_subsemigroup.closure_le AddSubsemigroup.closure_le
 
 /- warning: subsemigroup.closure_mono -> Subsemigroup.closure_mono is a dubious translation:
 lean 3 declaration is
@@ -422,6 +448,7 @@ then `closure s ≤ closure t`. -/
 theorem closure_mono ⦃s t : Set M⦄ (h : s ⊆ t) : closure s ≤ closure t :=
   closure_le.2 <| Subset.trans h subset_closure
 #align subsemigroup.closure_mono Subsemigroup.closure_mono
+#align add_subsemigroup.closure_mono AddSubsemigroup.closure_mono
 
 /- warning: subsemigroup.closure_eq_of_le -> Subsemigroup.closure_eq_of_le is a dubious translation:
 lean 3 declaration is
@@ -433,6 +460,7 @@ Case conversion may be inaccurate. Consider using '#align subsemigroup.closure_e
 theorem closure_eq_of_le (h₁ : s ⊆ S) (h₂ : S ≤ closure s) : closure s = S :=
   le_antisymm (closure_le.2 h₁) h₂
 #align subsemigroup.closure_eq_of_le Subsemigroup.closure_eq_of_le
+#align add_subsemigroup.closure_eq_of_le AddSubsemigroup.closure_eq_of_le
 
 variable (S)
 
@@ -446,6 +474,7 @@ theorem closure_induction {p : M → Prop} {x} (h : x ∈ closure s) (Hs : ∀ x
     (Hmul : ∀ x y, p x → p y → p (x * y)) : p x :=
   (@closure_le _ _ _ ⟨p, Hmul⟩).2 Hs h
 #align subsemigroup.closure_induction Subsemigroup.closure_induction
+#align add_subsemigroup.closure_induction AddSubsemigroup.closure_induction
 -/
 
 #print Subsemigroup.closure_induction' /-
@@ -460,6 +489,7 @@ theorem closure_induction' (s : Set M) {p : ∀ x, x ∈ closure s → Prop}
     closure_induction hx (fun x hx => ⟨_, Hs x hx⟩) fun x y ⟨hx', hx⟩ ⟨hy', hy⟩ =>
       ⟨_, Hmul _ _ _ _ hx hy⟩
 #align subsemigroup.closure_induction' Subsemigroup.closure_induction'
+#align add_subsemigroup.closure_induction' AddSubsemigroup.closure_induction'
 -/
 
 #print Subsemigroup.closure_induction₂ /-
@@ -474,6 +504,7 @@ theorem closure_induction₂ {p : M → M → Prop} {x} {y : M} (hx : x ∈ clos
     (fun x xs => closure_induction hy (Hs x xs) fun z y h₁ h₂ => Hmul_right z _ _ h₁ h₂)
     fun x z h₁ h₂ => Hmul_left _ _ _ h₁ h₂
 #align subsemigroup.closure_induction₂ Subsemigroup.closure_induction₂
+#align add_subsemigroup.closure_induction₂ AddSubsemigroup.closure_induction₂
 -/
 
 #print Subsemigroup.dense_induction /-
@@ -489,6 +520,7 @@ theorem dense_induction {p : M → Prop} (x : M) {s : Set M} (hs : closure s = �
   have : ∀ x ∈ closure s, p x := fun x hx => closure_induction hx Hs Hmul
   simpa [hs] using this x
 #align subsemigroup.dense_induction Subsemigroup.dense_induction
+#align add_subsemigroup.dense_induction AddSubsemigroup.dense_induction
 -/
 
 variable (M)
@@ -508,6 +540,7 @@ protected def gi : GaloisInsertion (@closure M _) coe
   le_l_u s := subset_closure
   choice_eq s h := rfl
 #align subsemigroup.gi Subsemigroup.gi
+#align add_subsemigroup.gi AddSubsemigroup.gi
 
 variable {M}
 
@@ -517,6 +550,7 @@ variable {M}
 theorem closure_eq : closure (S : Set M) = S :=
   (Subsemigroup.gi M).l_u_eq S
 #align subsemigroup.closure_eq Subsemigroup.closure_eq
+#align add_subsemigroup.closure_eq AddSubsemigroup.closure_eq
 -/
 
 #print Subsemigroup.closure_empty /-
@@ -524,6 +558,7 @@ theorem closure_eq : closure (S : Set M) = S :=
 theorem closure_empty : closure (∅ : Set M) = ⊥ :=
   (Subsemigroup.gi M).gc.l_bot
 #align subsemigroup.closure_empty Subsemigroup.closure_empty
+#align add_subsemigroup.closure_empty AddSubsemigroup.closure_empty
 -/
 
 #print Subsemigroup.closure_univ /-
@@ -531,6 +566,7 @@ theorem closure_empty : closure (∅ : Set M) = ⊥ :=
 theorem closure_univ : closure (univ : Set M) = ⊤ :=
   @coe_top M _ ▸ closure_eq ⊤
 #align subsemigroup.closure_univ Subsemigroup.closure_univ
+#align add_subsemigroup.closure_univ AddSubsemigroup.closure_univ
 -/
 
 /- warning: subsemigroup.closure_union -> Subsemigroup.closure_union is a dubious translation:
@@ -543,6 +579,7 @@ Case conversion may be inaccurate. Consider using '#align subsemigroup.closure_u
 theorem closure_union (s t : Set M) : closure (s ∪ t) = closure s ⊔ closure t :=
   (Subsemigroup.gi M).gc.l_sup
 #align subsemigroup.closure_union Subsemigroup.closure_union
+#align add_subsemigroup.closure_union AddSubsemigroup.closure_union
 
 /- warning: subsemigroup.closure_Union -> Subsemigroup.closure_unionᵢ is a dubious translation:
 lean 3 declaration is
@@ -554,6 +591,7 @@ Case conversion may be inaccurate. Consider using '#align subsemigroup.closure_U
 theorem closure_unionᵢ {ι} (s : ι → Set M) : closure (⋃ i, s i) = ⨆ i, closure (s i) :=
   (Subsemigroup.gi M).gc.l_supr
 #align subsemigroup.closure_Union Subsemigroup.closure_unionᵢ
+#align add_subsemigroup.closure_Union AddSubsemigroup.closure_unionᵢ
 
 /- warning: subsemigroup.closure_singleton_le_iff_mem -> Subsemigroup.closure_singleton_le_iff_mem is a dubious translation:
 lean 3 declaration is
@@ -565,6 +603,7 @@ Case conversion may be inaccurate. Consider using '#align subsemigroup.closure_s
 theorem closure_singleton_le_iff_mem (m : M) (p : Subsemigroup M) : closure {m} ≤ p ↔ m ∈ p := by
   rw [closure_le, singleton_subset_iff, SetLike.mem_coe]
 #align subsemigroup.closure_singleton_le_iff_mem Subsemigroup.closure_singleton_le_iff_mem
+#align add_subsemigroup.closure_singleton_le_iff_mem AddSubsemigroup.closure_singleton_le_iff_mem
 
 /- warning: subsemigroup.mem_supr -> Subsemigroup.mem_supᵢ is a dubious translation:
 lean 3 declaration is
@@ -579,6 +618,7 @@ theorem mem_supᵢ {ι : Sort _} (p : ι → Subsemigroup M) {m : M} :
   rw [← closure_singleton_le_iff_mem, le_supᵢ_iff]
   simp only [closure_singleton_le_iff_mem]
 #align subsemigroup.mem_supr Subsemigroup.mem_supᵢ
+#align add_subsemigroup.mem_supr AddSubsemigroup.mem_supᵢ
 
 /- warning: subsemigroup.supr_eq_closure -> Subsemigroup.supᵢ_eq_closure is a dubious translation:
 lean 3 declaration is
@@ -591,6 +631,7 @@ theorem supᵢ_eq_closure {ι : Sort _} (p : ι → Subsemigroup M) :
     (⨆ i, p i) = Subsemigroup.closure (⋃ i, (p i : Set M)) := by
   simp_rw [Subsemigroup.closure_unionᵢ, Subsemigroup.closure_eq]
 #align subsemigroup.supr_eq_closure Subsemigroup.supᵢ_eq_closure
+#align add_subsemigroup.supr_eq_closure AddSubsemigroup.supᵢ_eq_closure
 
 end Subsemigroup
 
@@ -608,6 +649,7 @@ def eqLocus (f g : M →ₙ* N) : Subsemigroup M
   carrier := { x | f x = g x }
   mul_mem' x y (hx : _ = _) (hy : _ = _) := by simp [*]
 #align mul_hom.eq_mlocus MulHom.eqLocus
+#align add_hom.eq_mlocus AddHom.eqLocus
 -/
 
 /- warning: mul_hom.eq_on_mclosure -> MulHom.eqOn_closure is a dubious translation:
@@ -622,6 +664,7 @@ Case conversion may be inaccurate. Consider using '#align mul_hom.eq_on_mclosure
 theorem eqOn_closure {f g : M →ₙ* N} {s : Set M} (h : Set.EqOn f g s) : Set.EqOn f g (closure s) :=
   show closure s ≤ f.eqMlocus g from closure_le.2 h
 #align mul_hom.eq_on_mclosure MulHom.eqOn_closure
+#align add_hom.eq_on_mclosure AddHom.eqOn_closure
 
 /- warning: mul_hom.eq_of_eq_on_mtop -> MulHom.eq_of_eqOn_top is a dubious translation:
 lean 3 declaration is
@@ -633,6 +676,7 @@ Case conversion may be inaccurate. Consider using '#align mul_hom.eq_of_eq_on_mt
 theorem eq_of_eqOn_top {f g : M →ₙ* N} (h : Set.EqOn f g (⊤ : Subsemigroup M)) : f = g :=
   ext fun x => h trivial
 #align mul_hom.eq_of_eq_on_mtop MulHom.eq_of_eqOn_top
+#align add_hom.eq_of_eq_on_mtop AddHom.eq_of_eqOn_top
 
 /- warning: mul_hom.eq_of_eq_on_mdense -> MulHom.eq_of_eqOn_dense is a dubious translation:
 lean 3 declaration is
@@ -645,6 +689,7 @@ theorem eq_of_eqOn_dense {s : Set M} (hs : closure s = ⊤) {f g : M →ₙ* N} 
     f = g :=
   eq_of_eq_on_mtop <| hs ▸ eqOn_closure h
 #align mul_hom.eq_of_eq_on_mdense MulHom.eq_of_eqOn_dense
+#align add_hom.eq_of_eq_on_mdense AddHom.eq_of_eqOn_dense
 
 end MulHom
 
@@ -674,6 +719,7 @@ def ofDense {M N} [Semigroup M] [Semigroup N] {s : Set M} (f : M → N) (hs : cl
     dense_induction y hs (fun y hy x => hmul x y hy)
       (fun y₁ y₂ h₁ h₂ x => by simp only [← mul_assoc, h₁, h₂]) x
 #align mul_hom.of_mdense MulHom.ofDense
+#align add_hom.of_mdense AddHom.ofDense
 
 /-- Let `s` be a subset of an additive semigroup `M` such that the closure of `s` is the whole
 semigroup.  Then `add_hom.of_mdense` defines an additive homomorphism from `M` asking for a proof
@@ -691,6 +737,7 @@ theorem coe_ofDense [Semigroup M] [Semigroup N] {s : Set M} (f : M → N) (hs : 
     (hmul) : (ofDense f hs hmul : M → N) = f :=
   rfl
 #align mul_hom.coe_of_mdense MulHom.coe_ofDense
+#align add_hom.coe_of_mdense AddHom.coe_ofDense
 
 end MulHom
 

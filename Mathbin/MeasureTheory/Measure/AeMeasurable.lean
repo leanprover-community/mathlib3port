@@ -300,6 +300,7 @@ theorem ae_measurable_restrict_iff_comap_subtype {s : Set α} (hs : MeasurableSe
 theorem aeMeasurableOne [One β] : AeMeasurable (fun a : α => (1 : β)) μ :=
   measurable_one.AeMeasurable
 #align ae_measurable_one aeMeasurableOne
+#align ae_measurable_zero ae_measurable_zero
 
 @[simp]
 theorem ae_measurable_smul_measure_iff {c : ℝ≥0∞} (hc : c ≠ 0) :

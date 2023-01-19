@@ -73,8 +73,8 @@ open FirstOrder
 
 open StructureCat Fin
 
-/- ./././Mathport/Syntax/Translate/Command.lean:355:30: infer kinds are unsupported in Lean 4: var {} -/
-/- ./././Mathport/Syntax/Translate/Command.lean:355:30: infer kinds are unsupported in Lean 4: func {} -/
+/- ./././Mathport/Syntax/Translate/Command.lean:364:30: infer kinds are unsupported in Lean 4: var {} -/
+/- ./././Mathport/Syntax/Translate/Command.lean:364:30: infer kinds are unsupported in Lean 4: func {} -/
 /-- A term on `α` is either a variable indexed by an element of `α`
   or a function symbol applied to simpler terms. -/
 inductive Term (α : Type u') : Type max u u'
@@ -364,7 +364,7 @@ def LequivCat.onTerm (φ : L ≃ᴸ L') : L.term α ≃ L'.term α
 
 variable (L) (α)
 
-/- ./././Mathport/Syntax/Translate/Command.lean:355:30: infer kinds are unsupported in Lean 4: falsum {} -/
+/- ./././Mathport/Syntax/Translate/Command.lean:364:30: infer kinds are unsupported in Lean 4: falsum {} -/
 /-- `bounded_formula α n` is the type of formulas with free variables indexed by `α` and up to `n`
   additional free variables. -/
 inductive BoundedFormula : ℕ → Type max u v u'

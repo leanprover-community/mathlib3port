@@ -54,6 +54,7 @@ theorem pow_le_pow_of_le_left' [CovariantClass M M (swap (· * ·)) (· ≤ ·)]
     rw [pow_succ, pow_succ]
     exact mul_le_mul' hab (pow_le_pow_of_le_left' k)
 #align pow_le_pow_of_le_left' pow_le_pow_of_le_left'
+#align nsmul_le_nsmul_of_le_right nsmul_le_nsmul_of_le_right
 
 attribute [mono] nsmul_le_nsmul_of_le_right
 
@@ -70,6 +71,7 @@ theorem one_le_pow_of_one_le' {a : M} (H : 1 ≤ a) : ∀ n : ℕ, 1 ≤ a ^ n
     rw [pow_succ]
     exact one_le_mul H (one_le_pow_of_one_le' k)
 #align one_le_pow_of_one_le' one_le_pow_of_one_le'
+#align nsmul_nonneg nsmul_nonneg
 
 /- warning: pow_le_one' -> pow_le_one' is a dubious translation:
 lean 3 declaration is
@@ -81,6 +83,7 @@ Case conversion may be inaccurate. Consider using '#align pow_le_one' pow_le_one
 theorem pow_le_one' {a : M} (H : a ≤ 1) (n : ℕ) : a ^ n ≤ 1 :=
   @one_le_pow_of_one_le' Mᵒᵈ _ _ _ _ H n
 #align pow_le_one' pow_le_one'
+#align nsmul_nonpos nsmul_nonpos
 
 /- warning: pow_le_pow' -> pow_le_pow' is a dubious translation:
 lean 3 declaration is
@@ -96,6 +99,7 @@ theorem pow_le_pow' {a : M} {n m : ℕ} (ha : 1 ≤ a) (h : n ≤ m) : a ^ n ≤
     _ = a ^ m := by rw [← hk, pow_add]
     
 #align pow_le_pow' pow_le_pow'
+#align nsmul_le_nsmul nsmul_le_nsmul
 
 /- warning: pow_le_pow_of_le_one' -> pow_le_pow_of_le_one' is a dubious translation:
 lean 3 declaration is
@@ -107,6 +111,7 @@ Case conversion may be inaccurate. Consider using '#align pow_le_pow_of_le_one' 
 theorem pow_le_pow_of_le_one' {a : M} {n m : ℕ} (ha : a ≤ 1) (h : n ≤ m) : a ^ m ≤ a ^ n :=
   @pow_le_pow' Mᵒᵈ _ _ _ _ _ _ ha h
 #align pow_le_pow_of_le_one' pow_le_pow_of_le_one'
+#align nsmul_le_nsmul_of_nonpos nsmul_le_nsmul_of_nonpos
 
 /- warning: one_lt_pow' -> one_lt_pow' is a dubious translation:
 lean 3 declaration is
@@ -124,6 +129,7 @@ theorem one_lt_pow' {a : M} (ha : 1 < a) {k : ℕ} (hk : k ≠ 0) : 1 < a ^ k :=
   · rw [pow_succ]
     exact one_lt_mul'' ha IH
 #align one_lt_pow' one_lt_pow'
+#align nsmul_pos nsmul_pos
 
 /- warning: pow_lt_one' -> pow_lt_one' is a dubious translation:
 lean 3 declaration is
@@ -135,6 +141,7 @@ Case conversion may be inaccurate. Consider using '#align pow_lt_one' pow_lt_one
 theorem pow_lt_one' {a : M} (ha : a < 1) {k : ℕ} (hk : k ≠ 0) : a ^ k < 1 :=
   @one_lt_pow' Mᵒᵈ _ _ _ _ ha k hk
 #align pow_lt_one' pow_lt_one'
+#align nsmul_neg nsmul_neg
 
 /- warning: pow_lt_pow' -> pow_lt_pow' is a dubious translation:
 lean 3 declaration is
@@ -150,6 +157,7 @@ theorem pow_lt_pow' [CovariantClass M M (· * ·) (· < ·)] {a : M} {n m : ℕ}
   rw [pow_add, pow_succ', mul_assoc, ← pow_succ]
   exact lt_mul_of_one_lt_right' _ (one_lt_pow' ha k.succ_ne_zero)
 #align pow_lt_pow' pow_lt_pow'
+#align nsmul_lt_nsmul nsmul_lt_nsmul
 
 /- warning: pow_strict_mono_left -> pow_strictMono_left is a dubious translation:
 lean 3 declaration is
@@ -175,6 +183,7 @@ theorem Left.one_le_pow_of_le (hx : 1 ≤ x) : ∀ {n : ℕ}, 1 ≤ x ^ n
     rw [pow_succ]
     exact Left.one_le_mul hx Left.one_le_pow_of_le
 #align left.one_le_pow_of_le Left.one_le_pow_of_le
+#align left.pow_nonneg Left.pow_nonneg
 
 /- warning: left.pow_le_one_of_le -> Left.pow_le_one_of_le is a dubious translation:
 lean 3 declaration is
@@ -189,6 +198,7 @@ theorem Left.pow_le_one_of_le (hx : x ≤ 1) : ∀ {n : ℕ}, x ^ n ≤ 1
     rw [pow_succ]
     exact Left.mul_le_one hx Left.pow_le_one_of_le
 #align left.pow_le_one_of_le Left.pow_le_one_of_le
+#align left.pow_nonpos Left.pow_nonpos
 
 end Left
 
@@ -209,6 +219,7 @@ theorem Right.one_le_pow_of_le (hx : 1 ≤ x) : ∀ {n : ℕ}, 1 ≤ x ^ n
     rw [pow_succ]
     exact Right.one_le_mul hx Right.one_le_pow_of_le
 #align right.one_le_pow_of_le Right.one_le_pow_of_le
+#align right.pow_nonneg Right.pow_nonneg
 
 /- warning: right.pow_le_one_of_le -> Right.pow_le_one_of_le is a dubious translation:
 lean 3 declaration is
@@ -223,6 +234,7 @@ theorem Right.pow_le_one_of_le (hx : x ≤ 1) : ∀ {n : ℕ}, x ^ n ≤ 1
     rw [pow_succ]
     exact Right.mul_le_one hx Right.pow_le_one_of_le
 #align right.pow_le_one_of_le Right.pow_le_one_of_le
+#align right.pow_nonpos Right.pow_nonpos
 
 end Right
 
@@ -239,12 +251,14 @@ theorem StrictMono.pow_right' (hf : StrictMono f) : ∀ {n : ℕ}, n ≠ 0 → S
     simp_rw [pow_succ _ (n + 1)]
     exact hf.mul' (StrictMono.pow_right' n.succ_ne_zero)
 #align strict_mono.pow_right' StrictMono.pow_right'
+#align strict_mono.nsmul_left StrictMono.nsmul_left
 
 /-- See also `pow_strict_mono_right` -/
 @[nolint to_additive_doc, to_additive nsmul_strict_mono_left]
 theorem pow_strict_mono_right' {n : ℕ} (hn : n ≠ 0) : StrictMono fun a : M => a ^ n :=
   strictMono_id.pow_right' hn
 #align pow_strict_mono_right' pow_strict_mono_right'
+#align nsmul_strict_mono_left nsmul_strict_mono_left
 
 end CovariantLtSwap
 
@@ -260,11 +274,13 @@ theorem Monotone.pow_right {f : β → M} (hf : Monotone f) : ∀ n : ℕ, Monot
     simp_rw [pow_succ]
     exact hf.mul' (Monotone.pow_right _)
 #align monotone.pow_right Monotone.pow_right
+#align monotone.nsmul_left Monotone.nsmul_left
 
 @[to_additive nsmul_mono_left]
 theorem pow_mono_right (n : ℕ) : Monotone fun a : M => a ^ n :=
   monotone_id.pow_right _
 #align pow_mono_right pow_mono_right
+#align nsmul_mono_left nsmul_mono_left
 
 end CovariantLeSwap
 
@@ -283,6 +299,7 @@ theorem Left.pow_lt_one_of_lt [CovariantClass M M (· * ·) (· < ·)] {n : ℕ}
       exact mul_lt_one h ih)
     _ (Nat.succ_le_iff.2 hn)
 #align left.pow_lt_one_of_lt Left.pow_lt_one_of_lt
+#align left.pow_neg Left.pow_neg
 
 /- warning: right.pow_lt_one_of_lt -> Right.pow_lt_one_of_lt is a dubious translation:
 lean 3 declaration is
@@ -299,6 +316,7 @@ theorem Right.pow_lt_one_of_lt [CovariantClass M M (swap (· * ·)) (· < ·)] {
       exact Right.mul_lt_one h ih)
     _ (Nat.succ_le_iff.2 hn)
 #align right.pow_lt_one_of_lt Right.pow_lt_one_of_lt
+#align right.pow_neg Right.pow_neg
 
 end Preorder
 
@@ -320,6 +338,7 @@ Case conversion may be inaccurate. Consider using '#align one_le_pow_iff one_le_
 theorem one_le_pow_iff {x : M} {n : ℕ} (hn : n ≠ 0) : 1 ≤ x ^ n ↔ 1 ≤ x :=
   ⟨le_imp_le_of_lt_imp_lt fun h => pow_lt_one' h hn, fun h => one_le_pow_of_one_le' h n⟩
 #align one_le_pow_iff one_le_pow_iff
+#align nsmul_nonneg_iff nsmul_nonneg_iff
 
 /- warning: pow_le_one_iff -> pow_le_one_iff is a dubious translation:
 lean 3 declaration is
@@ -342,6 +361,7 @@ Case conversion may be inaccurate. Consider using '#align one_lt_pow_iff one_lt_
 theorem one_lt_pow_iff {x : M} {n : ℕ} (hn : n ≠ 0) : 1 < x ^ n ↔ 1 < x :=
   lt_iff_lt_of_le_iff_le (pow_le_one_iff hn)
 #align one_lt_pow_iff one_lt_pow_iff
+#align nsmul_pos_iff nsmul_pos_iff
 
 /- warning: pow_lt_one_iff -> pow_lt_one_iff is a dubious translation:
 lean 3 declaration is
@@ -377,6 +397,7 @@ Case conversion may be inaccurate. Consider using '#align pow_le_pow_iff' pow_le
 theorem pow_le_pow_iff' (ha : 1 < a) : a ^ m ≤ a ^ n ↔ m ≤ n :=
   (pow_strictMono_left ha).le_iff_le
 #align pow_le_pow_iff' pow_le_pow_iff'
+#align nsmul_le_nsmul_iff nsmul_le_nsmul_iff
 
 /- warning: pow_lt_pow_iff' -> pow_lt_pow_iff' is a dubious translation:
 lean 3 declaration is
@@ -388,6 +409,7 @@ Case conversion may be inaccurate. Consider using '#align pow_lt_pow_iff' pow_lt
 theorem pow_lt_pow_iff' (ha : 1 < a) : a ^ m < a ^ n ↔ m < n :=
   (pow_strictMono_left ha).lt_iff_lt
 #align pow_lt_pow_iff' pow_lt_pow_iff'
+#align nsmul_lt_nsmul_iff nsmul_lt_nsmul_iff
 
 end CovariantLe
 
@@ -399,6 +421,7 @@ variable [CovariantClass M M (· * ·) (· ≤ ·)] [CovariantClass M M (swap (�
 theorem lt_of_pow_lt_pow' {a b : M} (n : ℕ) : a ^ n < b ^ n → a < b :=
   (pow_mono_right _).reflect_lt
 #align lt_of_pow_lt_pow' lt_of_pow_lt_pow'
+#align lt_of_nsmul_lt_nsmul lt_of_nsmul_lt_nsmul
 
 @[to_additive]
 theorem min_lt_max_of_mul_lt_mul {a b c d : M} (h : a * b < c * d) : min a b < max c d :=
@@ -408,16 +431,19 @@ theorem min_lt_max_of_mul_lt_mul {a b c d : M} (h : a * b < c * d) : min a b < m
       (mul_le_mul' inf_le_left inf_le_right).trans_lt
         (h.trans_le <| mul_le_mul' le_sup_left le_sup_right)
 #align min_lt_max_of_mul_lt_mul min_lt_max_of_mul_lt_mul
+#align min_lt_max_of_add_lt_add min_lt_max_of_add_lt_add
 
 @[to_additive min_lt_of_add_lt_two_nsmul]
 theorem min_lt_of_mul_lt_sq {a b c : M} (h : a * b < c ^ 2) : min a b < c := by
   simpa using min_lt_max_of_mul_lt_mul (h.trans_eq <| pow_two _)
 #align min_lt_of_mul_lt_sq min_lt_of_mul_lt_sq
+#align min_lt_of_add_lt_two_nsmul min_lt_of_add_lt_two_nsmul
 
 @[to_additive lt_max_of_two_nsmul_lt_add]
 theorem lt_max_of_sq_lt_mul {a b c : M} (h : a ^ 2 < b * c) : a < max b c := by
   simpa using min_lt_max_of_mul_lt_mul ((pow_two _).symm.trans_lt h)
 #align lt_max_of_sq_lt_mul lt_max_of_sq_lt_mul
+#align lt_max_of_two_nsmul_lt_add lt_max_of_two_nsmul_lt_add
 
 end CovariantLeSwap
 
@@ -429,16 +455,19 @@ variable [CovariantClass M M (· * ·) (· < ·)] [CovariantClass M M (swap (· 
 theorem le_of_pow_le_pow' {a b : M} {n : ℕ} (hn : n ≠ 0) : a ^ n ≤ b ^ n → a ≤ b :=
   (pow_strict_mono_right' hn).le_iff_le.1
 #align le_of_pow_le_pow' le_of_pow_le_pow'
+#align le_of_nsmul_le_nsmul le_of_nsmul_le_nsmul
 
 @[to_additive min_le_of_add_le_two_nsmul]
 theorem min_le_of_mul_le_sq {a b c : M} (h : a * b ≤ c ^ 2) : min a b ≤ c := by
   simpa using min_le_max_of_mul_le_mul (h.trans_eq <| pow_two _)
 #align min_le_of_mul_le_sq min_le_of_mul_le_sq
+#align min_le_of_add_le_two_nsmul min_le_of_add_le_two_nsmul
 
 @[to_additive le_max_of_two_nsmul_le_add]
 theorem le_max_of_sq_le_mul {a b c : M} (h : a ^ 2 ≤ b * c) : a ≤ max b c := by
   simpa using min_le_max_of_mul_le_mul ((pow_two _).symm.trans_le h)
 #align le_max_of_sq_le_mul le_max_of_sq_le_mul
+#align le_max_of_two_nsmul_le_add le_max_of_two_nsmul_le_add
 
 end CovariantLtSwap
 
@@ -454,6 +483,7 @@ theorem Left.pow_lt_one_iff [CovariantClass M M (· * ·) (· < ·)] {n : ℕ} {
   haveI := Mul.to_covariantClass_left M
   pow_lt_one_iff hn.ne'
 #align left.pow_lt_one_iff Left.pow_lt_one_iff
+#align left.nsmul_neg_iff Left.nsmul_neg_iff
 
 /- warning: right.pow_lt_one_iff -> Right.pow_lt_one_iff is a dubious translation:
 lean 3 declaration is
@@ -471,6 +501,7 @@ theorem Right.pow_lt_one_iff [CovariantClass M M (swap (· * ·)) (· < ·)] {n 
         Right.one_le_pow_of_le k,
     Right.pow_lt_one_of_lt hn⟩
 #align right.pow_lt_one_iff Right.pow_lt_one_iff
+#align right.nsmul_neg_iff Right.nsmul_neg_iff
 
 end LinearOrder
 
@@ -493,6 +524,7 @@ theorem one_le_zpow {x : G} (H : 1 ≤ x) {n : ℤ} (hn : 0 ≤ n) : 1 ≤ x ^ n
   rw [zpow_ofNat]
   apply one_le_pow_of_one_le' H
 #align one_le_zpow one_le_zpow
+#align zsmul_nonneg zsmul_nonneg
 
 end DivInvMonoid
 

@@ -174,7 +174,7 @@ theorem coe_eq_zero_of_pos_iff (hp : 0 < p) {x : 𝕜} (hx : 0 < x) :
 #align add_circle.coe_eq_zero_of_pos_iff AddCircle.coe_eq_zero_of_pos_iff
 
 theorem coe_period : (p : AddCircle p) = 0 :=
-  (QuotientAddGroup.eq_zero_iff p).2 <| mem_zmultiples p
+  (quotientAddGroup.eq_zero_iff p).2 <| mem_zmultiples p
 #align add_circle.coe_period AddCircle.coe_period
 
 @[simp]
@@ -184,7 +184,7 @@ theorem coe_add_period (x : 𝕜) : ((x + p : 𝕜) : AddCircle p) = x := by
 
 @[continuity, nolint unused_arguments]
 protected theorem continuous_mk' :
-    Continuous (QuotientAddGroup.mk' (zmultiples p) : 𝕜 → AddCircle p) :=
+    Continuous (quotientAddGroup.mk' (zmultiples p) : 𝕜 → AddCircle p) :=
   continuous_coinduced_rng
 #align add_circle.continuous_mk' AddCircle.continuous_mk'
 
@@ -197,13 +197,13 @@ variable (a : 𝕜) [Archimedean 𝕜]
 /-- The equivalence between `add_circle p` and the half-open interval `[a, a + p)`, whose inverse
 is the natural quotient map. -/
 def equivIco : AddCircle p ≃ Ico a (a + p) :=
-  QuotientAddGroup.equivIcoMod a hp.out
+  quotientAddGroup.equivIcoMod a hp.out
 #align add_circle.equiv_Ico AddCircle.equivIco
 
 /-- The equivalence between `add_circle p` and the half-open interval `(a, a + p]`, whose inverse
 is the natural quotient map. -/
 def equivIoc : AddCircle p ≃ Ioc a (a + p) :=
-  QuotientAddGroup.equivIocMod a hp.out
+  quotientAddGroup.equivIocMod a hp.out
 #align add_circle.equiv_Ioc AddCircle.equivIoc
 
 /-- Given a function on `𝕜`, return the unique function on `add_circle p` agreeing with `f` on
@@ -270,15 +270,15 @@ include hx
 
 theorem continuous_at_equiv_Ico : ContinuousAt (equivIco p a) x :=
   by
-  induction x using QuotientAddGroup.induction_on'
-  rw [ContinuousAt, Filter.Tendsto, QuotientAddGroup.nhds_eq, Filter.map_map]
+  induction x using quotientAddGroup.induction_on'
+  rw [ContinuousAt, Filter.Tendsto, quotientAddGroup.nhds_eq, Filter.map_map]
   apply ContinuousAt.cod_restrict; exact continuous_at_to_Ico_mod a hp.out hx
 #align add_circle.continuous_at_equiv_Ico AddCircle.continuous_at_equiv_Ico
 
 theorem continuous_at_equiv_Ioc : ContinuousAt (equivIoc p a) x :=
   by
-  induction x using QuotientAddGroup.induction_on'
-  rw [ContinuousAt, Filter.Tendsto, QuotientAddGroup.nhds_eq, Filter.map_map]
+  induction x using quotientAddGroup.induction_on'
+  rw [ContinuousAt, Filter.Tendsto, quotientAddGroup.nhds_eq, Filter.map_map]
   apply ContinuousAt.cod_restrict; exact continuous_at_to_Ioc_mod a hp.out hx
 #align add_circle.continuous_at_equiv_Ioc AddCircle.continuous_at_equiv_Ioc
 
@@ -317,7 +317,7 @@ variable [LinearOrderedField 𝕜] [TopologicalSpace 𝕜] [OrderTopology 𝕜] 
 
 /-- The rescaling equivalence between additive circles with different periods. -/
 def equivAddCircle (hp : p ≠ 0) (hq : q ≠ 0) : AddCircle p ≃+ AddCircle q :=
-  QuotientAddGroup.congr _ _ (AddAut.mulRight <| (Units.mk0 p hp)⁻¹ * Units.mk0 q hq) <| by
+  quotientAddGroup.congr _ _ (AddAut.mulRight <| (Units.mk0 p hp)⁻¹ * Units.mk0 q hq) <| by
     rw [AddMonoidHom.map_zmultiples, AddMonoidHom.coe_coe, AddAut.mulRight_apply, Units.val_mul,
       Units.val_mk0, Units.val_inv_eq_inv_val, Units.val_mk0, mul_inv_cancel_left₀ hp]
 #align add_circle.equiv_add_circle AddCircle.equivAddCircle
@@ -344,19 +344,19 @@ variable [FloorRing 𝕜]
 
 @[simp]
 theorem coe_equiv_Ico_mk_apply (x : 𝕜) :
-    (equivIco p 0 <| QuotientAddGroup.mk x : 𝕜) = Int.fract (x / p) * p :=
+    (equivIco p 0 <| quotientAddGroup.mk x : 𝕜) = Int.fract (x / p) * p :=
   to_Ico_mod_eq_fract_mul _ x
 #align add_circle.coe_equiv_Ico_mk_apply AddCircle.coe_equiv_Ico_mk_apply
 
 instance : DivisibleBy (AddCircle p) ℤ
     where
   div x n := (↑((n : 𝕜)⁻¹ * (equivIco p 0 x : 𝕜)) : AddCircle p)
-  div_zero x := by simp only [algebraMap.coe_zero, QuotientAddGroup.coe_zero, inv_zero, zero_mul]
+  div_zero x := by simp only [algebraMap.coe_zero, quotientAddGroup.coe_zero, inv_zero, zero_mul]
   div_cancel n x hn := by
     replace hn : (n : 𝕜) ≠ 0;
     · norm_cast
       assumption
-    change n • QuotientAddGroup.mk' _ ((n : 𝕜)⁻¹ * ↑(equiv_Ico p 0 x)) = x
+    change n • quotientAddGroup.mk' _ ((n : 𝕜)⁻¹ * ↑(equiv_Ico p 0 x)) = x
     rw [← map_zsmul, ← smul_mul_assoc, zsmul_eq_mul, mul_inv_cancel hn, one_mul]
     exact (equiv_Ico p 0).symm_apply_apply x
 
@@ -423,7 +423,7 @@ theorem add_order_of_coe_rat {q : ℚ} : addOrderOf (↑(↑q * p) : AddCircle p
 theorem add_order_of_eq_pos_iff {u : AddCircle p} {n : ℕ} (h : 0 < n) :
     addOrderOf u = n ↔ ∃ m < n, m.gcd n = 1 ∧ ↑(↑m / ↑n * p) = u :=
   by
-  refine' ⟨QuotientAddGroup.induction_on' u fun k hk => _, _⟩; swap
+  refine' ⟨quotientAddGroup.induction_on' u fun k hk => _, _⟩; swap
   · rintro ⟨m, h₀, h₁, rfl⟩
     exact add_order_of_div_of_gcd_eq_one h h₁
   have h0 := add_order_of_nsmul_eq_zero (k : AddCircle p)
@@ -527,7 +527,7 @@ instance : ProperlyDiscontinuousVadd (zmultiples p).opposite ℝ :=
 
 /-- The "additive circle" `ℝ ⧸ (ℤ ∙ p)` is Hausdorff. -/
 instance : T2Space (AddCircle p) :=
-  t2SpaceOfProperlyDiscontinuousVaddOfT2Space
+  t2_space_of_properly_discontinuous_vadd_of_t2_space
 
 /-- The "additive circle" `ℝ ⧸ (ℤ ∙ p)` is normal. -/
 instance [Fact (0 < p)] : NormalSpace (AddCircle p) :=
@@ -535,13 +535,13 @@ instance [Fact (0 < p)] : NormalSpace (AddCircle p) :=
 
 /-- The "additive circle" `ℝ ⧸ (ℤ ∙ p)` is second-countable. -/
 instance : SecondCountableTopology (AddCircle p) :=
-  QuotientAddGroup.second_countable_topology
+  quotientAddGroup.second_countable_topology
 
 end AddCircle
 
 attribute [local instance] Real.fact_zero_lt_one
 
-/- ./././Mathport/Syntax/Translate/Command.lean:315:31: unsupported: @[derive] abbrev -/
+/- ./././Mathport/Syntax/Translate/Command.lean:323:31: unsupported: @[derive] abbrev -/
 /-- The unit circle `ℝ ⧸ ℤ`. -/
 abbrev UnitAddCircle :=
   AddCircle (1 : ℝ)

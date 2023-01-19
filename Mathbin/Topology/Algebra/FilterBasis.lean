@@ -94,6 +94,7 @@ def groupFilterBasisOfComm {G : Type _} [CommGroup G] (sets : Set (Set G))
     inv' := inv
     conj' := fun x U U_in => ⟨U, U_in, by simp⟩ }
 #align group_filter_basis_of_comm groupFilterBasisOfComm
+#align add_group_filter_basis_of_comm addGroupFilterBasisOfComm
 
 namespace GroupFilterBasis
 
@@ -107,21 +108,25 @@ instance : Membership (Set G) (GroupFilterBasis G) :=
 theorem one {U : Set G} : U ∈ B → (1 : G) ∈ U :=
   GroupFilterBasis.one'
 #align group_filter_basis.one GroupFilterBasis.one
+#align add_group_filter_basis.zero AddGroupFilterBasis.zero
 
 @[to_additive]
 theorem mul {U : Set G} : U ∈ B → ∃ V ∈ B, V * V ⊆ U :=
   GroupFilterBasis.mul'
 #align group_filter_basis.mul GroupFilterBasis.mul
+#align add_group_filter_basis.add AddGroupFilterBasis.add
 
 @[to_additive]
 theorem inv {U : Set G} : U ∈ B → ∃ V ∈ B, V ⊆ (fun x => x⁻¹) ⁻¹' U :=
   GroupFilterBasis.inv'
 #align group_filter_basis.inv GroupFilterBasis.inv
+#align add_group_filter_basis.neg AddGroupFilterBasis.neg
 
 @[to_additive]
 theorem conj : ∀ x₀, ∀ {U}, U ∈ B → ∃ V ∈ B, V ⊆ (fun x => x₀ * x * x₀⁻¹) ⁻¹' U :=
   GroupFilterBasis.conj'
 #align group_filter_basis.conj GroupFilterBasis.conj
+#align add_group_filter_basis.conj AddGroupFilterBasis.conj
 
 /-- The trivial group filter basis consists of `{1}` only. The associated topology
 is discrete. -/
@@ -151,29 +156,34 @@ instance : Inhabited (GroupFilterBasis G) :=
 theorem prod_subset_self (B : GroupFilterBasis G) {U : Set G} (h : U ∈ B) : U ⊆ U * U :=
   fun x x_in => ⟨1, x, one h, x_in, one_mul x⟩
 #align group_filter_basis.prod_subset_self GroupFilterBasis.prod_subset_self
+#align add_group_filter_basis.sum_subset_self AddGroupFilterBasis.sum_subset_self
 
 /-- The neighborhood function of a `group_filter_basis` -/
 @[to_additive "The neighborhood function of a `add_group_filter_basis`"]
 def n (B : GroupFilterBasis G) : G → Filter G := fun x =>
   map (fun y => x * y) B.toFilterBasis.filter
 #align group_filter_basis.N GroupFilterBasis.n
+#align add_group_filter_basis.N AddGroupFilterBasis.n
 
 @[simp, to_additive]
 theorem N_one (B : GroupFilterBasis G) : B.n 1 = B.toFilterBasis.filter := by
   simp only [N, one_mul, map_id']
 #align group_filter_basis.N_one GroupFilterBasis.N_one
+#align add_group_filter_basis.N_zero AddGroupFilterBasis.N_zero
 
 @[to_additive]
 protected theorem has_basis (B : GroupFilterBasis G) (x : G) :
     HasBasis (B.n x) (fun V : Set G => V ∈ B) fun V => (fun y => x * y) '' V :=
   HasBasis.map (fun y => x * y) toFilterBasis.HasBasis
 #align group_filter_basis.has_basis GroupFilterBasis.has_basis
+#align add_group_filter_basis.has_basis AddGroupFilterBasis.has_basis
 
 /-- The topological space structure coming from a group filter basis. -/
 @[to_additive "The topological space structure coming from an additive group filter basis."]
 def topology (B : GroupFilterBasis G) : TopologicalSpace G :=
   TopologicalSpace.mkOfNhds B.n
 #align group_filter_basis.topology GroupFilterBasis.topology
+#align add_group_filter_basis.topology AddGroupFilterBasis.topology
 
 @[to_additive]
 theorem nhds_eq (B : GroupFilterBasis G) {x₀ : G} : @nhds G B.topology x₀ = B.n x₀ :=
@@ -199,6 +209,7 @@ theorem nhds_eq (B : GroupFilterBasis G) {x₀ : G} : @nhds G B.topology x₀ = 
       rintro z ⟨w, wW, rfl⟩
       exact ⟨t * w, hW (mul_mem_mul tW wW), by simp [mul_assoc]⟩
 #align group_filter_basis.nhds_eq GroupFilterBasis.nhds_eq
+#align add_group_filter_basis.nhds_eq AddGroupFilterBasis.nhds_eq
 
 @[to_additive]
 theorem nhds_one_eq (B : GroupFilterBasis G) :
@@ -208,6 +219,7 @@ theorem nhds_one_eq (B : GroupFilterBasis G) :
   simp only [N, one_mul]
   exact map_id
 #align group_filter_basis.nhds_one_eq GroupFilterBasis.nhds_one_eq
+#align add_group_filter_basis.nhds_zero_eq AddGroupFilterBasis.nhds_zero_eq
 
 @[to_additive]
 theorem nhds_has_basis (B : GroupFilterBasis G) (x₀ : G) :
@@ -216,6 +228,7 @@ theorem nhds_has_basis (B : GroupFilterBasis G) (x₀ : G) :
   rw [B.nhds_eq]
   apply B.has_basis
 #align group_filter_basis.nhds_has_basis GroupFilterBasis.nhds_has_basis
+#align add_group_filter_basis.nhds_has_basis AddGroupFilterBasis.nhds_has_basis
 
 @[to_additive]
 theorem nhds_one_has_basis (B : GroupFilterBasis G) :
@@ -224,6 +237,7 @@ theorem nhds_one_has_basis (B : GroupFilterBasis G) :
   rw [B.nhds_one_eq]
   exact B.to_filter_basis.has_basis
 #align group_filter_basis.nhds_one_has_basis GroupFilterBasis.nhds_one_has_basis
+#align add_group_filter_basis.nhds_zero_has_basis AddGroupFilterBasis.nhds_zero_has_basis
 
 @[to_additive]
 theorem mem_nhds_one (B : GroupFilterBasis G) {U : Set G} (hU : U ∈ B) : U ∈ @nhds G B.topology 1 :=
@@ -231,6 +245,7 @@ theorem mem_nhds_one (B : GroupFilterBasis G) {U : Set G} (hU : U ∈ B) : U ∈
   rw [B.nhds_one_has_basis.mem_iff]
   exact ⟨U, hU, rfl.subset⟩
 #align group_filter_basis.mem_nhds_one GroupFilterBasis.mem_nhds_one
+#align add_group_filter_basis.mem_nhds_zero AddGroupFilterBasis.mem_nhds_zero
 
 -- See note [lower instance priority]
 /-- If a group is endowed with a topological structure coming from a group filter basis then it's a
@@ -261,6 +276,7 @@ instance (priority := 100) is_topological_group (B : GroupFilterBasis G) :
     intro U U_in
     exact conj x₀ U_in
 #align group_filter_basis.is_topological_group GroupFilterBasis.is_topological_group
+#align add_group_filter_basis.is_topological_add_group AddGroupFilterBasis.is_topological_add_group
 
 end GroupFilterBasis
 

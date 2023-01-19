@@ -50,6 +50,7 @@ Case conversion may be inaccurate. Consider using '#align cSup_one csupₛ_one�
 theorem csupₛ_one : supₛ (1 : Set α) = 1 :=
   csupₛ_singleton _
 #align cSup_one csupₛ_one
+#align cSup_zero csupₛ_zero
 
 /- warning: cInf_one -> cinfₛ_one is a dubious translation:
 lean 3 declaration is
@@ -61,6 +62,7 @@ Case conversion may be inaccurate. Consider using '#align cInf_one cinfₛ_one�
 theorem cinfₛ_one : infₛ (1 : Set α) = 1 :=
   cinfₛ_singleton _
 #align cInf_one cinfₛ_one
+#align cInf_zero cinfₛ_zero
 
 end One
 
@@ -81,6 +83,7 @@ theorem csupₛ_inv (hs₀ : s.Nonempty) (hs₁ : BddBelow s) : supₛ s⁻¹ = 
   rw [← image_inv]
   exact ((OrderIso.inv α).map_cInf' hs₀ hs₁).symm
 #align cSup_inv csupₛ_inv
+#align cSup_neg csupₛ_neg
 
 /- warning: cInf_inv -> cinfₛ_inv is a dubious translation:
 lean 3 declaration is
@@ -94,6 +97,7 @@ theorem cinfₛ_inv (hs₀ : s.Nonempty) (hs₁ : BddAbove s) : infₛ s⁻¹ = 
   rw [← image_inv]
   exact ((OrderIso.inv α).map_cSup' hs₀ hs₁).symm
 #align cInf_inv cinfₛ_inv
+#align cInf_neg cinfₛ_neg
 
 /- warning: cSup_mul -> csupₛ_mul is a dubious translation:
 lean 3 declaration is
@@ -107,6 +111,7 @@ theorem csupₛ_mul (hs₀ : s.Nonempty) (hs₁ : BddAbove s) (ht₀ : t.Nonempt
   csupₛ_image2_eq_csupₛ_csupₛ (fun _ => (OrderIso.mulRight _).to_galois_connection)
     (fun _ => (OrderIso.mulLeft _).to_galois_connection) hs₀ hs₁ ht₀ ht₁
 #align cSup_mul csupₛ_mul
+#align cSup_add csupₛ_add
 
 /- warning: cInf_mul -> cinfₛ_mul is a dubious translation:
 lean 3 declaration is
@@ -120,6 +125,7 @@ theorem cinfₛ_mul (hs₀ : s.Nonempty) (hs₁ : BddBelow s) (ht₀ : t.Nonempt
   cinfₛ_image2_eq_cinfₛ_cinfₛ (fun _ => (OrderIso.mulRight _).symm.to_galois_connection)
     (fun _ => (OrderIso.mulLeft _).symm.to_galois_connection) hs₀ hs₁ ht₀ ht₁
 #align cInf_mul cinfₛ_mul
+#align cInf_add cinfₛ_add
 
 /- warning: cSup_div -> csupₛ_div is a dubious translation:
 lean 3 declaration is
@@ -132,6 +138,7 @@ theorem csupₛ_div (hs₀ : s.Nonempty) (hs₁ : BddAbove s) (ht₀ : t.Nonempt
     supₛ (s / t) = supₛ s / infₛ t := by
   rw [div_eq_mul_inv, csupₛ_mul hs₀ hs₁ ht₀.inv ht₁.inv, csupₛ_inv ht₀ ht₁, div_eq_mul_inv]
 #align cSup_div csupₛ_div
+#align cSup_sub csupₛ_sub
 
 /- warning: cInf_div -> cinfₛ_div is a dubious translation:
 lean 3 declaration is
@@ -144,6 +151,7 @@ theorem cinfₛ_div (hs₀ : s.Nonempty) (hs₁ : BddBelow s) (ht₀ : t.Nonempt
     infₛ (s / t) = infₛ s / supₛ t := by
   rw [div_eq_mul_inv, cinfₛ_mul hs₀ hs₁ ht₀.inv ht₁.inv, cinfₛ_inv ht₀ ht₁, div_eq_mul_inv]
 #align cInf_div cinfₛ_div
+#align cInf_sub cinfₛ_sub
 
 end Group
 
@@ -167,6 +175,7 @@ Case conversion may be inaccurate. Consider using '#align Sup_one supₛ_oneₓ'
 theorem supₛ_one : supₛ (1 : Set α) = 1 :=
   supₛ_singleton
 #align Sup_one supₛ_one
+#align Sup_zero supₛ_zero
 
 /- warning: Inf_one -> infₛ_one is a dubious translation:
 lean 3 declaration is
@@ -178,6 +187,7 @@ Case conversion may be inaccurate. Consider using '#align Inf_one infₛ_oneₓ'
 theorem infₛ_one : infₛ (1 : Set α) = 1 :=
   infₛ_singleton
 #align Inf_one infₛ_one
+#align Inf_zero infₛ_zero
 
 end One
 
@@ -198,6 +208,7 @@ theorem supₛ_inv (s : Set α) : supₛ s⁻¹ = (infₛ s)⁻¹ :=
   rw [← image_inv, supₛ_image]
   exact ((OrderIso.inv α).map_Inf _).symm
 #align Sup_inv supₛ_inv
+#align Sup_neg supₛ_neg
 
 /- warning: Inf_inv -> infₛ_inv is a dubious translation:
 lean 3 declaration is
@@ -211,6 +222,7 @@ theorem infₛ_inv (s : Set α) : infₛ s⁻¹ = (supₛ s)⁻¹ :=
   rw [← image_inv, infₛ_image]
   exact ((OrderIso.inv α).map_Sup _).symm
 #align Inf_inv infₛ_inv
+#align Inf_neg infₛ_neg
 
 /- warning: Sup_mul -> supₛ_mul is a dubious translation:
 lean 3 declaration is
@@ -223,6 +235,7 @@ theorem supₛ_mul : supₛ (s * t) = supₛ s * supₛ t :=
   supₛ_image2_eq_supₛ_supₛ (fun _ => (OrderIso.mulRight _).to_galois_connection) fun _ =>
     (OrderIso.mulLeft _).to_galois_connection
 #align Sup_mul supₛ_mul
+#align Sup_add supₛ_add
 
 /- warning: Inf_mul -> infₛ_mul is a dubious translation:
 lean 3 declaration is
@@ -235,6 +248,7 @@ theorem infₛ_mul : infₛ (s * t) = infₛ s * infₛ t :=
   infₛ_image2_eq_infₛ_infₛ (fun _ => (OrderIso.mulRight _).symm.to_galois_connection) fun _ =>
     (OrderIso.mulLeft _).symm.to_galois_connection
 #align Inf_mul infₛ_mul
+#align Inf_add infₛ_add
 
 /- warning: Sup_div -> supₛ_div is a dubious translation:
 lean 3 declaration is
@@ -245,6 +259,7 @@ Case conversion may be inaccurate. Consider using '#align Sup_div supₛ_divₓ'
 @[to_additive]
 theorem supₛ_div : supₛ (s / t) = supₛ s / infₛ t := by simp_rw [div_eq_mul_inv, supₛ_mul, supₛ_inv]
 #align Sup_div supₛ_div
+#align Sup_sub supₛ_sub
 
 /- warning: Inf_div -> infₛ_div is a dubious translation:
 lean 3 declaration is
@@ -255,6 +270,7 @@ Case conversion may be inaccurate. Consider using '#align Inf_div infₛ_divₓ'
 @[to_additive]
 theorem infₛ_div : infₛ (s / t) = infₛ s / supₛ t := by simp_rw [div_eq_mul_inv, infₛ_mul, infₛ_inv]
 #align Inf_div infₛ_div
+#align Inf_sub infₛ_sub
 
 end Group
 

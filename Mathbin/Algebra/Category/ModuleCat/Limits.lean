@@ -128,7 +128,7 @@ end HasLimits
 
 open HasLimits
 
-/- ./././Mathport/Syntax/Translate/Command.lean:309:38: unsupported irreducible non-definition -/
+/- ./././Mathport/Syntax/Translate/Command.lean:317:38: unsupported irreducible non-definition -/
 /-- The category of R-modules has all limits. -/
 irreducible_def hasLimitsOfSize : HasLimitsOfSize.{v, v} (ModuleCat.{max v w} R) :=
   {
@@ -148,7 +148,7 @@ instance has_limits : HasLimits (ModuleCat.{w} R) :=
 -/
 def forget₂AddCommGroupPreservesLimitsAux (F : J ⥤ ModuleCat.{max v w} R) :
     IsLimit ((forget₂ (ModuleCat R) AddCommGroupCat).mapCone (limitCone F)) :=
-  AddCommGroupCat.limitConeIsLimit (F ⋙ forget₂ (ModuleCat R) AddCommGroupCat.{max v w})
+  AddCommGroupCat.limit_cone_is_limit (F ⋙ forget₂ (ModuleCat R) AddCommGroupCat.{max v w})
 #align
   Module.forget₂_AddCommGroup_preserves_limits_aux ModuleCat.forget₂AddCommGroupPreservesLimitsAux
 

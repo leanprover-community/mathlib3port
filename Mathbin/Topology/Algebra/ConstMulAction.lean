@@ -86,6 +86,7 @@ theorem Filter.Tendsto.const_smul {f : β → α} {l : Filter β} {a : α} (hf :
     (c : M) : Tendsto (fun x => c • f x) l (𝓝 (c • a)) :=
   ((continuous_const_smul _).Tendsto _).comp hf
 #align filter.tendsto.const_smul Filter.Tendsto.const_smul
+#align filter.tendsto.const_vadd Filter.Tendsto.const_vadd
 
 variable [TopologicalSpace β] {f : β → M} {g : β → α} {b : β} {s : Set β}
 
@@ -94,22 +95,26 @@ theorem ContinuousWithinAt.const_smul (hg : ContinuousWithinAt g s b) (c : M) :
     ContinuousWithinAt (fun x => c • g x) s b :=
   hg.const_smul c
 #align continuous_within_at.const_smul ContinuousWithinAt.const_smul
+#align continuous_within_at.const_vadd ContinuousWithinAt.const_vadd
 
 @[to_additive]
 theorem ContinuousAt.const_smul (hg : ContinuousAt g b) (c : M) :
     ContinuousAt (fun x => c • g x) b :=
   hg.const_smul c
 #align continuous_at.const_smul ContinuousAt.const_smul
+#align continuous_at.const_vadd ContinuousAt.const_vadd
 
 @[to_additive]
 theorem ContinuousOn.const_smul (hg : ContinuousOn g s) (c : M) :
     ContinuousOn (fun x => c • g x) s := fun x hx => (hg x hx).const_smul c
 #align continuous_on.const_smul ContinuousOn.const_smul
+#align continuous_on.const_vadd ContinuousOn.const_vadd
 
 @[continuity, to_additive]
 theorem Continuous.const_smul (hg : Continuous g) (c : M) : Continuous fun x => c • g x :=
   (continuous_const_smul _).comp hg
 #align continuous.const_smul Continuous.const_smul
+#align continuous.const_vadd Continuous.const_vadd
 
 /-- If a scalar is central, then its right action is continuous when its left action is. -/
 @[to_additive
@@ -118,11 +123,13 @@ instance HasContinuousConstSmul.op [SMul Mᵐᵒᵖ α] [IsCentralScalar M α] :
     HasContinuousConstSmul Mᵐᵒᵖ α :=
   ⟨MulOpposite.rec' fun c => by simpa only [op_smul_eq_smul] using continuous_const_smul c⟩
 #align has_continuous_const_smul.op HasContinuousConstSmul.op
+#align has_continuous_const_vadd.op HasContinuousConstVadd.op
 
 @[to_additive]
 instance MulOpposite.has_continuous_const_smul : HasContinuousConstSmul M αᵐᵒᵖ :=
   ⟨fun c => MulOpposite.continuous_op.comp <| MulOpposite.continuous_unop.const_smul c⟩
 #align mul_opposite.has_continuous_const_smul MulOpposite.has_continuous_const_smul
+#align add_opposite.has_continuous_const_vadd AddOpposite.has_continuous_const_vadd
 
 @[to_additive]
 instance : HasContinuousConstSmul M αᵒᵈ :=
@@ -132,6 +139,7 @@ instance : HasContinuousConstSmul M αᵒᵈ :=
 instance OrderDual.has_continuous_const_smul' : HasContinuousConstSmul Mᵒᵈ α :=
   ‹HasContinuousConstSmul M α›
 #align order_dual.has_continuous_const_smul' OrderDual.has_continuous_const_smul'
+#align order_dual.has_continuous_const_vadd' OrderDual.has_continuous_const_vadd'
 
 @[to_additive]
 instance [SMul M β] [HasContinuousConstSmul M β] : HasContinuousConstSmul M (α × β) :=
@@ -147,6 +155,7 @@ theorem IsCompact.smul {α β} [SMul α β] [TopologicalSpace β] [HasContinuous
     {s : Set β} (hs : IsCompact s) : IsCompact (a • s) :=
   hs.image (continuous_id'.const_smul a)
 #align is_compact.smul IsCompact.smul
+#align is_compact.vadd IsCompact.vadd
 
 end SMul
 
@@ -160,17 +169,20 @@ variable [Monoid M] [MulAction M α] [HasContinuousConstSmul M α]
 instance Units.has_continuous_const_smul : HasContinuousConstSmul Mˣ α
     where continuous_const_smul m := (continuous_const_smul (m : M) : _)
 #align units.has_continuous_const_smul Units.has_continuous_const_smul
+#align add_units.has_continuous_const_vadd AddUnits.has_continuous_const_vadd
 
 @[to_additive]
 theorem smul_closure_subset (c : M) (s : Set α) : c • closure s ⊆ closure (c • s) :=
   ((Set.mapsTo_image _ _).closure <| continuous_id.const_smul c).image_subset
 #align smul_closure_subset smul_closure_subset
+#align vadd_closure_subset vadd_closure_subset
 
 @[to_additive]
 theorem smul_closure_orbit_subset (c : M) (x : α) :
     c • closure (MulAction.orbit M x) ⊆ closure (MulAction.orbit M x) :=
   (smul_closure_subset c _).trans <| closure_mono <| MulAction.smul_orbit_subset _ _
 #align smul_closure_orbit_subset smul_closure_orbit_subset
+#align vadd_closure_orbit_subset vadd_closure_orbit_subset
 
 end Monoid
 
@@ -183,6 +195,7 @@ theorem tendsto_const_smul_iff {f : β → α} {l : Filter β} {a : α} (c : G) 
     Tendsto (fun x => c • f x) l (𝓝 <| c • a) ↔ Tendsto f l (𝓝 a) :=
   ⟨fun h => by simpa only [inv_smul_smul] using h.const_smul c⁻¹, fun h => h.const_smul _⟩
 #align tendsto_const_smul_iff tendsto_const_smul_iff
+#align tendsto_const_vadd_iff tendsto_const_vadd_iff
 
 variable [TopologicalSpace β] {f : β → α} {b : β} {s : Set β}
 
@@ -191,23 +204,27 @@ theorem continuous_within_at_const_smul_iff (c : G) :
     ContinuousWithinAt (fun x => c • f x) s b ↔ ContinuousWithinAt f s b :=
   tendsto_const_smul_iff c
 #align continuous_within_at_const_smul_iff continuous_within_at_const_smul_iff
+#align continuous_within_at_const_vadd_iff continuous_within_at_const_vadd_iff
 
 @[to_additive]
 theorem continuous_on_const_smul_iff (c : G) :
     ContinuousOn (fun x => c • f x) s ↔ ContinuousOn f s :=
   forall₂_congr fun b hb => continuous_within_at_const_smul_iff c
 #align continuous_on_const_smul_iff continuous_on_const_smul_iff
+#align continuous_on_const_vadd_iff continuous_on_const_vadd_iff
 
 @[to_additive]
 theorem continuous_at_const_smul_iff (c : G) :
     ContinuousAt (fun x => c • f x) b ↔ ContinuousAt f b :=
   tendsto_const_smul_iff c
 #align continuous_at_const_smul_iff continuous_at_const_smul_iff
+#align continuous_at_const_vadd_iff continuous_at_const_vadd_iff
 
 @[to_additive]
 theorem continuous_const_smul_iff (c : G) : (Continuous fun x => c • f x) ↔ Continuous f := by
   simp only [continuous_iff_continuous_at, continuous_at_const_smul_iff]
 #align continuous_const_smul_iff continuous_const_smul_iff
+#align continuous_const_vadd_iff continuous_const_vadd_iff
 
 /-- The homeomorphism given by scalar multiplication by a given element of a group `Γ` acting on
   `T` is a homeomorphism from `T` to itself. -/
@@ -218,6 +235,7 @@ def Homeomorph.smul (γ : G) : α ≃ₜ α
   continuous_to_fun := continuous_const_smul γ
   continuous_inv_fun := continuous_const_smul γ⁻¹
 #align homeomorph.smul Homeomorph.smul
+#align homeomorph.vadd Homeomorph.vadd
 
 /-- The homeomorphism given by affine-addition by an element of an additive group `Γ` acting on
   `T` is a homeomorphism from `T` to itself. -/
@@ -227,36 +245,43 @@ add_decl_doc Homeomorph.vadd
 theorem is_open_map_smul (c : G) : IsOpenMap fun x : α => c • x :=
   (Homeomorph.smul c).IsOpenMap
 #align is_open_map_smul is_open_map_smul
+#align is_open_map_vadd is_open_map_vadd
 
 @[to_additive]
 theorem IsOpen.smul {s : Set α} (hs : IsOpen s) (c : G) : IsOpen (c • s) :=
   is_open_map_smul c s hs
 #align is_open.smul IsOpen.smul
+#align is_open.vadd IsOpen.vadd
 
 @[to_additive]
 theorem is_closed_map_smul (c : G) : IsClosedMap fun x : α => c • x :=
   (Homeomorph.smul c).IsClosedMap
 #align is_closed_map_smul is_closed_map_smul
+#align is_closed_map_vadd is_closed_map_vadd
 
 @[to_additive]
 theorem IsClosed.smul {s : Set α} (hs : IsClosed s) (c : G) : IsClosed (c • s) :=
   is_closed_map_smul c s hs
 #align is_closed.smul IsClosed.smul
+#align is_closed.vadd IsClosed.vadd
 
 @[to_additive]
 theorem closure_smul (c : G) (s : Set α) : closure (c • s) = c • closure s :=
   ((Homeomorph.smul c).image_closure s).symm
 #align closure_smul closure_smul
+#align closure_vadd closure_vadd
 
 @[to_additive]
 theorem Dense.smul (c : G) {s : Set α} (hs : Dense s) : Dense (c • s) := by
   rw [dense_iff_closure_eq] at hs⊢ <;> rw [closure_smul, hs, smul_set_univ]
 #align dense.smul Dense.smul
+#align dense.vadd Dense.vadd
 
 @[to_additive]
 theorem interior_smul (c : G) (s : Set α) : interior (c • s) = c • interior s :=
   ((Homeomorph.smul c).image_interior s).symm
 #align interior_smul interior_smul
+#align interior_vadd interior_vadd
 
 end Group
 
@@ -443,6 +468,7 @@ variable {Γ : Type _} [Group Γ] {T : Type _} [TopologicalSpace T] [MulAction �
 instance (priority := 100) Finite.to_properly_discontinuous_smul [Finite Γ] :
     ProperlyDiscontinuousSmul Γ T where finite_disjoint_inter_image _ _ _ _ := Set.to_finite _
 #align finite.to_properly_discontinuous_smul Finite.to_properly_discontinuous_smul
+#align finite.to_properly_discontinuous_vadd Finite.to_properly_discontinuous_vadd
 
 export ProperlyDiscontinuousSmul (finite_disjoint_inter_image)
 
@@ -459,6 +485,7 @@ theorem is_open_map_quotient_mk_mul [HasContinuousConstSmul Γ T] :
   rw [is_open_coinduced, MulAction.quotient_preimage_image_eq_union_mul U]
   exact is_open_Union fun γ => (Homeomorph.smul γ).IsOpenMap U hU
 #align is_open_map_quotient_mk_mul is_open_map_quotient_mk_mul
+#align is_open_map_quotient_mk_add is_open_map_quotient_mk_add
 
 /-- The quotient by a discontinuous group action of a locally compact t2 space is t2. -/
 @[to_additive "The quotient by a discontinuous group action of a locally compact t2\nspace is t2."]
@@ -497,6 +524,8 @@ instance (priority := 100) t2SpaceOfProperlyDiscontinuousSmulOfT2Space [T2Space 
     exact eq_empty_iff_forall_not_mem.mp H (γ • x) ⟨mem_image_of_mem _ x_in_K₀, h'⟩
 #align
   t2_space_of_properly_discontinuous_smul_of_t2_space t2SpaceOfProperlyDiscontinuousSmulOfT2Space
+#align
+  t2_space_of_properly_discontinuous_vadd_of_t2_space t2_space_of_properly_discontinuous_vadd_of_t2_space
 
 /-- The quotient of a second countable space by a group action is second countable. -/
 @[to_additive
@@ -506,6 +535,8 @@ theorem HasContinuousConstSmul.second_countable_topology [SecondCountableTopolog
   TopologicalSpace.Quotient.second_countable_topology is_open_map_quotient_mk_mul
 #align
   has_continuous_const_smul.second_countable_topology HasContinuousConstSmul.second_countable_topology
+#align
+  has_continuous_const_vadd.second_countable_topology HasContinuousConstVadd.second_countable_topology
 
 section nhds
 

@@ -83,6 +83,7 @@ theorem invOf_pow (m : M) [Invertible m] (n : ℕ) [Invertible (m ^ n)] : ⅟ (m
 theorem IsUnit.pow {m : M} (n : ℕ) : IsUnit m → IsUnit (m ^ n) := fun ⟨u, hu⟩ =>
   ⟨u ^ n, hu ▸ u.coe_pow _⟩
 #align is_unit.pow IsUnit.pow
+#align is_add_unit.smul IsAddUnit.smul
 -/
 
 #print Units.ofPow /-
@@ -93,6 +94,7 @@ def Units.ofPow (u : Mˣ) (x : M) {n : ℕ} (hn : n ≠ 0) (hu : x ^ n = u) : M�
     (by rwa [← pow_succ, Nat.sub_add_cancel (Nat.succ_le_of_lt <| Nat.pos_of_ne_zero hn)])
     (Commute.self_pow _ _)
 #align units.of_pow Units.ofPow
+#align units.of_smul AddUnits.ofSMul
 -/
 
 #print isUnit_pow_iff /-
@@ -100,6 +102,7 @@ def Units.ofPow (u : Mˣ) (x : M) {n : ℕ} (hn : n ≠ 0) (hu : x ^ n = u) : M�
 theorem isUnit_pow_iff {a : M} {n : ℕ} (hn : n ≠ 0) : IsUnit (a ^ n) ↔ IsUnit a :=
   ⟨fun ⟨u, hu⟩ => (u.ofPow a hn hu.symm).IsUnit, fun h => h.pow n⟩
 #align is_unit_pow_iff isUnit_pow_iff
+#align is_addUnit_smul_iff isAddUnit_smul_iff
 -/
 
 #print isUnit_pow_succ_iff /-
@@ -107,6 +110,7 @@ theorem isUnit_pow_iff {a : M} {n : ℕ} (hn : n ≠ 0) : IsUnit (a ^ n) ↔ IsU
 theorem isUnit_pow_succ_iff {m : M} {n : ℕ} : IsUnit (m ^ (n + 1)) ↔ IsUnit m :=
   isUnit_pow_iff n.succ_ne_zero
 #align is_unit_pow_succ_iff isUnit_pow_succ_iff
+#align is_add_unit_smul_succ_iff isAddUnit_smul_succ_iff
 -/
 
 /- warning: units.of_pow_eq_one -> Units.ofPowEqOne is a dubious translation:
@@ -120,6 +124,7 @@ Case conversion may be inaccurate. Consider using '#align units.of_pow_eq_one Un
 def Units.ofPowEqOne (x : M) (n : ℕ) (hx : x ^ n = 1) (hn : n ≠ 0) : Mˣ :=
   Units.ofPow 1 x hn hx
 #align units.of_pow_eq_one Units.ofPowEqOne
+#align add_units.of_smul_eq_zero AddUnits.ofSMulEqZero
 
 /- warning: units.pow_of_pow_eq_one -> Units.pow_ofPowEqOne is a dubious translation:
 lean 3 declaration is
@@ -132,6 +137,7 @@ theorem Units.pow_ofPowEqOne {x : M} {n : ℕ} (hx : x ^ n = 1) (hn : n ≠ 0) :
     Units.ofPowEqOne x n hx hn ^ n = 1 :=
   Units.ext <| by rwa [Units.val_pow_eq_pow_val, Units.coe_of_pow_eq_one, Units.val_one]
 #align units.pow_of_pow_eq_one Units.pow_ofPowEqOne
+#align add_units.smul_of_smul_eq_zero AddUnits.smul_ofSMulEqZero
 
 /- warning: is_unit_of_pow_eq_one -> isUnit_ofPowEqOne is a dubious translation:
 lean 3 declaration is
@@ -143,6 +149,7 @@ Case conversion may be inaccurate. Consider using '#align is_unit_of_pow_eq_one 
 theorem isUnit_ofPowEqOne {x : M} {n : ℕ} (hx : x ^ n = 1) (hn : n ≠ 0) : IsUnit x :=
   (Units.ofPowEqOne x n hx hn).IsUnit
 #align is_unit_of_pow_eq_one isUnit_ofPowEqOne
+#align is_add_unit_of_smul_eq_zero isAddUnit_ofSMulEqZero
 
 /- warning: invertible_of_pow_eq_one -> invertibleOfPowEqOne is a dubious translation:
 lean 3 declaration is
@@ -219,12 +226,14 @@ theorem zpow_mul (a : α) : ∀ m n : ℤ, a ^ (m * n) = (a ^ m) ^ n
       zpow_ofNat]
     rfl
 #align zpow_mul zpow_mul
+#align mul_zsmul' mul_zsmul'
 -/
 
 #print zpow_mul' /-
 @[to_additive mul_zsmul]
 theorem zpow_mul' (a : α) (m n : ℤ) : a ^ (m * n) = (a ^ n) ^ m := by rw [mul_comm, zpow_mul]
 #align zpow_mul' zpow_mul'
+#align mul_zsmul mul_zsmul
 -/
 
 /- warning: zpow_bit0 -> zpow_bit0 is a dubious translation:
@@ -241,6 +250,7 @@ theorem zpow_bit0 (a : α) : ∀ n : ℤ, a ^ bit0 n = a ^ n * a ^ n
     rw [neg_succ_of_nat_eq, bit0_neg, zpow_neg]
     norm_cast
 #align zpow_bit0 zpow_bit0
+#align bit0_zsmul bit0_zsmul
 
 /- warning: zpow_bit0' -> zpow_bit0' is a dubious translation:
 lean 3 declaration is
@@ -252,6 +262,7 @@ Case conversion may be inaccurate. Consider using '#align zpow_bit0' zpow_bit0'�
 theorem zpow_bit0' (a : α) (n : ℤ) : a ^ bit0 n = (a * a) ^ n :=
   (zpow_bit0 a n).trans ((Commute.refl a).mul_zpow n).symm
 #align zpow_bit0' zpow_bit0'
+#align bit0_zsmul' bit0_zsmul'
 
 /- warning: zpow_bit0_neg -> zpow_bit0_neg is a dubious translation:
 lean 3 declaration is
@@ -285,6 +296,7 @@ theorem zpow_add_one (a : G) : ∀ n : ℤ, a ^ (n + 1) = a ^ n * a
     rw [Int.negSucc_eq, neg_add, add_assoc, neg_add_self, add_zero]
     exact zpow_negSucc _ _
 #align zpow_add_one zpow_add_one
+#align add_one_zsmul add_one_zsmul
 
 /- warning: zpow_sub_one -> zpow_sub_one is a dubious translation:
 lean 3 declaration is
@@ -299,6 +311,7 @@ theorem zpow_sub_one (a : G) (n : ℤ) : a ^ (n - 1) = a ^ n * a⁻¹ :=
     _ = a ^ n * a⁻¹ := by rw [← zpow_add_one, sub_add_cancel]
     
 #align zpow_sub_one zpow_sub_one
+#align sub_one_zsmul sub_one_zsmul
 
 /- warning: zpow_add -> zpow_add is a dubious translation:
 lean 3 declaration is
@@ -314,6 +327,7 @@ theorem zpow_add (a : G) (m n : ℤ) : a ^ (m + n) = a ^ m * a ^ n :=
   · simp only [← add_assoc, zpow_add_one, ihn, mul_assoc]
   · rw [zpow_sub_one, ← mul_assoc, ← ihn, ← zpow_sub_one, add_sub_assoc]
 #align zpow_add zpow_add
+#align add_zsmul add_zsmul
 
 /- warning: mul_self_zpow -> mul_self_zpow is a dubious translation:
 lean 3 declaration is
@@ -329,6 +343,7 @@ theorem mul_self_zpow (b : G) (m : ℤ) : b * b ^ m = b ^ (m + 1) :=
     rw [← zpow_one b]
   rw [← zpow_add, add_comm]
 #align mul_self_zpow mul_self_zpow
+#align add_zsmul_self add_zsmul_self
 
 /- warning: mul_zpow_self -> mul_zpow_self is a dubious translation:
 lean 3 declaration is
@@ -345,6 +360,7 @@ theorem mul_zpow_self (b : G) (m : ℤ) : b ^ m * b = b ^ (m + 1) :=
     rw [← zpow_one b]
   rw [← zpow_add, add_comm]
 #align mul_zpow_self mul_zpow_self
+#align add_self_zsmul add_self_zsmul
 
 /- warning: zpow_sub -> zpow_sub is a dubious translation:
 lean 3 declaration is
@@ -356,6 +372,7 @@ Case conversion may be inaccurate. Consider using '#align zpow_sub zpow_subₓ'.
 theorem zpow_sub (a : G) (m n : ℤ) : a ^ (m - n) = a ^ m * (a ^ n)⁻¹ := by
   rw [sub_eq_add_neg, zpow_add, zpow_neg]
 #align zpow_sub zpow_sub
+#align sub_zsmul sub_zsmul
 
 /- warning: zpow_one_add -> zpow_one_add is a dubious translation:
 lean 3 declaration is
@@ -366,6 +383,7 @@ Case conversion may be inaccurate. Consider using '#align zpow_one_add zpow_one_
 @[to_additive one_add_zsmul]
 theorem zpow_one_add (a : G) (i : ℤ) : a ^ (1 + i) = a * a ^ i := by rw [zpow_add, zpow_one]
 #align zpow_one_add zpow_one_add
+#align one_add_zsmul one_add_zsmul
 
 /- warning: zpow_mul_comm -> zpow_mul_comm is a dubious translation:
 lean 3 declaration is
@@ -377,6 +395,7 @@ Case conversion may be inaccurate. Consider using '#align zpow_mul_comm zpow_mul
 theorem zpow_mul_comm (a : G) (i j : ℤ) : a ^ i * a ^ j = a ^ j * a ^ i :=
   (Commute.refl _).zpow_zpow _ _
 #align zpow_mul_comm zpow_mul_comm
+#align zsmul_add_comm zsmul_add_comm
 
 /- warning: zpow_bit1 -> zpow_bit1 is a dubious translation:
 lean 3 declaration is
@@ -388,6 +407,7 @@ Case conversion may be inaccurate. Consider using '#align zpow_bit1 zpow_bit1ₓ
 theorem zpow_bit1 (a : G) (n : ℤ) : a ^ bit1 n = a ^ n * a ^ n * a := by
   rw [bit1, zpow_add, zpow_bit0, zpow_one]
 #align zpow_bit1 zpow_bit1
+#align bit1_zsmul bit1_zsmul
 
 end Group
 
@@ -416,6 +436,7 @@ theorem one_lt_zpow' (ha : 1 < a) {k : ℤ} (hk : (0 : ℤ) < k) : 1 < a ^ k :=
   rw [zpow_ofNat]
   exact one_lt_pow' ha (coe_nat_pos.mp hk).ne'
 #align one_lt_zpow' one_lt_zpow'
+#align zsmul_pos zsmul_pos
 
 /- warning: zpow_strict_mono_right -> zpow_strictMono_right is a dubious translation:
 lean 3 declaration is
@@ -433,6 +454,7 @@ theorem zpow_strictMono_right (ha : 1 < a) : StrictMono fun n : ℤ => a ^ n := 
       simp
     
 #align zpow_strict_mono_right zpow_strictMono_right
+#align zsmul_strict_mono_left zsmul_strictMono_left
 
 /- warning: zpow_mono_right -> zpow_mono_right is a dubious translation:
 lean 3 declaration is
@@ -450,6 +472,7 @@ theorem zpow_mono_right (ha : 1 ≤ a) : Monotone fun n : ℤ => a ^ n := fun m 
       simp
     
 #align zpow_mono_right zpow_mono_right
+#align zsmul_mono_left zsmul_mono_left
 
 /- warning: zpow_le_zpow -> zpow_le_zpow is a dubious translation:
 lean 3 declaration is
@@ -461,6 +484,7 @@ Case conversion may be inaccurate. Consider using '#align zpow_le_zpow zpow_le_z
 theorem zpow_le_zpow (ha : 1 ≤ a) (h : m ≤ n) : a ^ m ≤ a ^ n :=
   zpow_mono_right ha h
 #align zpow_le_zpow zpow_le_zpow
+#align zsmul_le_zsmul zsmul_le_zsmul
 
 /- warning: zpow_lt_zpow -> zpow_lt_zpow is a dubious translation:
 lean 3 declaration is
@@ -472,6 +496,7 @@ Case conversion may be inaccurate. Consider using '#align zpow_lt_zpow zpow_lt_z
 theorem zpow_lt_zpow (ha : 1 < a) (h : m < n) : a ^ m < a ^ n :=
   zpow_strictMono_right ha h
 #align zpow_lt_zpow zpow_lt_zpow
+#align zsmul_lt_zsmul zsmul_lt_zsmul
 
 /- warning: zpow_le_zpow_iff -> zpow_le_zpow_iff is a dubious translation:
 lean 3 declaration is
@@ -483,6 +508,7 @@ Case conversion may be inaccurate. Consider using '#align zpow_le_zpow_iff zpow_
 theorem zpow_le_zpow_iff (ha : 1 < a) : a ^ m ≤ a ^ n ↔ m ≤ n :=
   (zpow_strictMono_right ha).le_iff_le
 #align zpow_le_zpow_iff zpow_le_zpow_iff
+#align zsmul_le_zsmul_iff zsmul_le_zsmul_iff
 
 /- warning: zpow_lt_zpow_iff -> zpow_lt_zpow_iff is a dubious translation:
 lean 3 declaration is
@@ -494,6 +520,7 @@ Case conversion may be inaccurate. Consider using '#align zpow_lt_zpow_iff zpow_
 theorem zpow_lt_zpow_iff (ha : 1 < a) : a ^ m < a ^ n ↔ m < n :=
   (zpow_strictMono_right ha).lt_iff_lt
 #align zpow_lt_zpow_iff zpow_lt_zpow_iff
+#align zsmul_lt_zsmul_iff zsmul_lt_zsmul_iff
 
 variable (α)
 
@@ -504,6 +531,7 @@ theorem zpow_strictMono_left (hn : 0 < n) : StrictMono ((· ^ n) : α → α) :=
   rw [← one_lt_div', ← div_zpow]
   exact one_lt_zpow' (one_lt_div'.2 hab) hn
 #align zpow_strict_mono_left zpow_strictMono_left
+#align zsmul_strict_mono_right zsmul_strictMono_right
 -/
 
 #print zpow_mono_left /-
@@ -513,6 +541,7 @@ theorem zpow_mono_left (hn : 0 ≤ n) : Monotone ((· ^ n) : α → α) := fun a
   rw [← one_le_div', ← div_zpow]
   exact one_le_zpow (one_le_div'.2 hab) hn
 #align zpow_mono_left zpow_mono_left
+#align zsmul_mono_right zsmul_mono_right
 -/
 
 variable {α}
@@ -522,6 +551,7 @@ variable {α}
 theorem zpow_le_zpow' (hn : 0 ≤ n) (h : a ≤ b) : a ^ n ≤ b ^ n :=
   zpow_mono_left α hn h
 #align zpow_le_zpow' zpow_le_zpow'
+#align zsmul_le_zsmul' zsmul_le_zsmul'
 -/
 
 #print zpow_lt_zpow' /-
@@ -529,6 +559,7 @@ theorem zpow_le_zpow' (hn : 0 ≤ n) (h : a ≤ b) : a ^ n ≤ b ^ n :=
 theorem zpow_lt_zpow' (hn : 0 < n) (h : a < b) : a ^ n < b ^ n :=
   zpow_strictMono_left α hn h
 #align zpow_lt_zpow' zpow_lt_zpow'
+#align zsmul_lt_zsmul' zsmul_lt_zsmul'
 -/
 
 end OrderedAddCommGroup
@@ -542,6 +573,7 @@ variable [LinearOrderedCommGroup α] {n : ℤ} {a b : α}
 theorem zpow_le_zpow_iff' (hn : 0 < n) {a b : α} : a ^ n ≤ b ^ n ↔ a ≤ b :=
   (zpow_strictMono_left α hn).le_iff_le
 #align zpow_le_zpow_iff' zpow_le_zpow_iff'
+#align zsmul_le_zsmul_iff' zsmul_le_zsmul_iff'
 -/
 
 #print zpow_lt_zpow_iff' /-
@@ -549,6 +581,7 @@ theorem zpow_le_zpow_iff' (hn : 0 < n) {a b : α} : a ^ n ≤ b ^ n ↔ a ≤ b 
 theorem zpow_lt_zpow_iff' (hn : 0 < n) {a b : α} : a ^ n < b ^ n ↔ a < b :=
   (zpow_strictMono_left α hn).lt_iff_lt
 #align zpow_lt_zpow_iff' zpow_lt_zpow_iff'
+#align zsmul_lt_zsmul_iff' zsmul_lt_zsmul_iff'
 -/
 
 #print zpow_left_injective /-
@@ -562,6 +595,7 @@ theorem zpow_left_injective (hn : n ≠ 0) : Function.Injective ((· ^ n) : α �
   · refine' fun a b (hab : a ^ n = b ^ n) => (zpow_strictMono_left α (neg_pos.mpr h)).Injective _
     rw [zpow_neg, zpow_neg, hab]
 #align zpow_left_injective zpow_left_injective
+#align zsmul_right_injective zsmul_right_injective
 -/
 
 #print zpow_left_inj /-
@@ -569,6 +603,7 @@ theorem zpow_left_injective (hn : n ≠ 0) : Function.Injective ((· ^ n) : α �
 theorem zpow_left_inj (hn : n ≠ 0) : a ^ n = b ^ n ↔ a = b :=
   (zpow_left_injective hn).eq_iff
 #align zpow_left_inj zpow_left_inj
+#align zsmul_right_inj zsmul_right_inj
 -/
 
 #print zpow_eq_zpow_iff' /-
@@ -579,6 +614,7 @@ theorem zpow_left_inj (hn : n ≠ 0) : a ^ n = b ^ n ↔ a = b :=
 theorem zpow_eq_zpow_iff' (hn : n ≠ 0) : a ^ n = b ^ n ↔ a = b :=
   zpow_left_inj hn
 #align zpow_eq_zpow_iff' zpow_eq_zpow_iff'
+#align zsmul_eq_zsmul_iff' zsmul_eq_zsmul_iff'
 -/
 
 end LinearOrderedCommGroup
@@ -1561,6 +1597,7 @@ theorem units_zpow_right {a : M} {x y : Mˣ} (h : SemiconjBy a x y) :
   | (n : ℕ) => by simp only [zpow_ofNat, Units.val_pow_eq_pow_val, h, pow_right]
   | -[n+1] => by simp only [zpow_negSucc, Units.val_pow_eq_pow_val, units_inv_right, h, pow_right]
 #align semiconj_by.units_zpow_right SemiconjBy.units_zpow_right
+#align add_semiconj_by.units_zsmul_right AddSemiconjBy.addUnits_zsmul_right
 
 variable {a b x y x' y' : R}
 
@@ -1686,6 +1723,7 @@ Case conversion may be inaccurate. Consider using '#align commute.units_zpow_rig
 theorem units_zpow_right {a : M} {u : Mˣ} (h : Commute a u) (m : ℤ) : Commute a ↑(u ^ m) :=
   h.units_zpow_right m
 #align commute.units_zpow_right Commute.units_zpow_right
+#align add_commute.add_units_zsmul_right AddCommute.addUnits_zsmul_right
 
 /- warning: commute.units_zpow_left -> Commute.units_zpow_left is a dubious translation:
 lean 3 declaration is
@@ -1697,6 +1735,7 @@ Case conversion may be inaccurate. Consider using '#align commute.units_zpow_lef
 theorem units_zpow_left {u : Mˣ} {a : M} (h : Commute (↑u) a) (m : ℤ) : Commute (↑(u ^ m)) a :=
   (h.symm.units_zpow_right m).symm
 #align commute.units_zpow_left Commute.units_zpow_left
+#align add_commute.add_units_zsmul_left AddCommute.addUnits_zsmul_left
 
 variable {a b : R}
 

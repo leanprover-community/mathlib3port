@@ -66,11 +66,13 @@ theorem Periodic.comp_add_hom [Add α] [Add γ] (h : Periodic f c) (g : AddHom �
 theorem Periodic.mul [Add α] [Mul β] (hf : Periodic f c) (hg : Periodic g c) : Periodic (f * g) c :=
   by simp_all
 #align function.periodic.mul Function.Periodic.mul
+#align function.periodic.add Function.Periodic.add
 
 @[to_additive]
 theorem Periodic.div [Add α] [Div β] (hf : Periodic f c) (hg : Periodic g c) : Periodic (f / g) c :=
   by simp_all
 #align function.periodic.div Function.Periodic.div
+#align function.periodic.sub Function.Periodic.sub
 
 @[to_additive]
 theorem List.periodic_prod [Add α] [CommMonoid β] (l : List (α → β)) (hl : ∀ f ∈ l, Periodic f c) :
@@ -82,23 +84,27 @@ theorem List.periodic_prod [Add α] [CommMonoid β] (l : List (α → β)) (hl :
     simp only [List.prod_cons]
     exact hg.mul (ih hl)
 #align list.periodic_prod List.periodic_prod
+#align list.periodic_sum List.periodic_sum
 
 @[to_additive]
 theorem Multiset.periodic_prod [Add α] [CommMonoid β] (s : Multiset (α → β))
     (hs : ∀ f ∈ s, Periodic f c) : Periodic s.Prod c :=
   (s.prod_to_list ▸ s.toList.periodic_prod) fun f hf => hs f <| Multiset.mem_toList.mp hf
 #align multiset.periodic_prod Multiset.periodic_prod
+#align multiset.periodic_sum Multiset.periodic_sum
 
 @[to_additive]
 theorem Finset.periodic_prod [Add α] [CommMonoid β] {ι : Type _} {f : ι → α → β} (s : Finset ι)
     (hs : ∀ i ∈ s, Periodic (f i) c) : Periodic (∏ i in s, f i) c :=
   s.prod_to_list f ▸ (s.toList.map f).periodic_prod (by simpa [-periodic] )
 #align finset.periodic_prod Finset.periodic_prod
+#align finset.periodic_sum Finset.periodic_sum
 
 @[to_additive]
 theorem Periodic.smul [Add α] [SMul γ β] (h : Periodic f c) (a : γ) : Periodic (a • f) c := by
   simp_all
 #align function.periodic.smul Function.Periodic.smul
+#align function.periodic.vadd Function.Periodic.vadd
 
 theorem Periodic.const_smul [AddMonoid α] [Group γ] [DistribMulAction γ α] (h : Periodic f c)
     (a : γ) : Periodic (fun x => f (a • x)) (a⁻¹ • c) := fun x => by
@@ -332,7 +338,7 @@ theorem Periodic.map_vadd_multiples [AddCommMonoid α] (hf : Periodic f c)
 def Periodic.lift [AddGroup α] (h : Periodic f c) (x : α ⧸ AddSubgroup.zmultiples c) : β :=
   Quotient.liftOn' x f fun a b h' =>
     by
-    rw [QuotientAddGroup.left_rel_apply] at h'
+    rw [quotientAddGroup.left_rel_apply] at h'
     obtain ⟨k, hk⟩ := h'
     exact (h.zsmul k _).symm.trans (congr_arg f (add_eq_of_eq_neg_add hk))
 #align function.periodic.lift Function.Periodic.lift

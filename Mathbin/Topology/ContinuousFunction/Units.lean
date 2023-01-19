@@ -54,6 +54,7 @@ def unitsLift : C(X, Mˣ) ≃ C(X, M)ˣ
     ext
     rfl
 #align continuous_map.units_lift ContinuousMap.unitsLift
+#align continuous_map.add_units_lift ContinuousMap.addUnitsLift
 
 end Monoid
 

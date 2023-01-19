@@ -95,7 +95,7 @@ the previous paragraph kicks in.
 
 noncomputable section
 
-open QuotientAddGroup Metric Set
+open quotientAddGroup Metric Set
 
 open TopologicalSpace Nnreal
 
@@ -236,8 +236,8 @@ theorem norm_mk_lt' (S : AddSubgroup M) (m : M) {ε : ℝ} (hε : 0 < ε) :
     ∃ s ∈ S, ‖m + s‖ < ‖mk' S m‖ + ε :=
   by
   obtain ⟨n : M, hn : mk' S n = mk' S m, hn' : ‖n‖ < ‖mk' S m‖ + ε⟩ :=
-    norm_mk_lt (QuotientAddGroup.mk' S m) hε
-  erw [eq_comm, QuotientAddGroup.eq] at hn
+    norm_mk_lt (quotientAddGroup.mk' S m) hε
+  erw [eq_comm, quotientAddGroup.eq] at hn
   use -m + n, hn
   rwa [add_neg_cancel_left]
 #align norm_mk_lt' norm_mk_lt'
@@ -297,7 +297,7 @@ theorem quotient_nhd_basis (S : AddSubgroup M) :
       clear h U this
       apply IsOpen.mem_nhds
       · change IsOpen (mk' S ⁻¹' _)
-        erw [QuotientAddGroup.preimage_image_coe]
+        erw [quotientAddGroup.preimage_image_coe]
         apply is_open_Union
         rintro ⟨s, s_in⟩
         exact (continuous_add_right s).is_open_preimage _ is_open_ball
@@ -353,7 +353,7 @@ noncomputable instance AddSubgroup.normedAddCommGroupQuotient (S : AddSubgroup M
     eq_of_dist_eq_zero := by
       rintro ⟨m⟩ ⟨m'⟩ (h : ‖mk' S m - mk' S m'‖ = 0)
       erw [← (mk' S).map_sub, quotient_norm_eq_zero_iff, ‹IsClosed _›.closure_eq, ←
-        QuotientAddGroup.eq_iff_sub_mem] at h
+        quotientAddGroup.eq_iff_sub_mem] at h
       exact h }
 #align add_subgroup.normed_add_comm_group_quotient AddSubgroup.normedAddCommGroupQuotient
 
@@ -369,13 +369,13 @@ open NormedAddGroupHom
 
 /-- The morphism from a seminormed group to the quotient by a subgroup. -/
 noncomputable def normedMk (S : AddSubgroup M) : NormedAddGroupHom M (M ⧸ S) :=
-  { QuotientAddGroup.mk' S with
+  { quotientAddGroup.mk' S with
     bound' := ⟨1, fun m => by simpa [one_mul] using quotient_norm_mk_le _ m⟩ }
 #align add_subgroup.normed_mk AddSubgroup.normedMk
 
 /-- `S.normed_mk` agrees with `quotient_add_group.mk' S`. -/
 @[simp]
-theorem normedMk.apply (S : AddSubgroup M) (m : M) : normedMk S m = QuotientAddGroup.mk' S m :=
+theorem normedMk.apply (S : AddSubgroup M) (m : M) : normedMk S m = quotientAddGroup.mk' S m :=
   rfl
 #align add_subgroup.normed_mk.apply AddSubgroup.normedMk.apply
 
@@ -386,7 +386,7 @@ theorem surjective_normed_mk (S : AddSubgroup M) : Function.Surjective (normedMk
 
 /-- The kernel of `S.normed_mk` is `S`. -/
 theorem ker_normed_mk (S : AddSubgroup M) : S.normedMk.ker = S :=
-  QuotientAddGroup.ker_mk _
+  quotientAddGroup.ker_mk _
 #align add_subgroup.ker_normed_mk AddSubgroup.ker_normed_mk
 
 /-- The operator norm of the projection is at most `1`. -/
@@ -465,7 +465,7 @@ structure IsQuotient (f : NormedAddGroupHom M N) : Prop where
 `S : add_subgroup M` is closed, the induced morphism `normed_add_group_hom (M ⧸ S) N`. -/
 noncomputable def lift {N : Type _} [SeminormedAddCommGroup N] (S : AddSubgroup M)
     (f : NormedAddGroupHom M N) (hf : ∀ s ∈ S, f s = 0) : NormedAddGroupHom (M ⧸ S) N :=
-  { QuotientAddGroup.lift S f.toAddMonoidHom hf with
+  { quotientAddGroup.lift S f.toAddMonoidHom hf with
     bound' := by
       obtain ⟨c : ℝ, hcpos : (0 : ℝ) < c, hc : ∀ x, ‖f x‖ ≤ c * ‖x‖⟩ := f.bound
       refine' ⟨c, fun mbar => le_of_forall_pos_le_add fun ε hε => _⟩
@@ -593,7 +593,7 @@ instance Submodule.Quotient.normedAddCommGroup [hS : IsClosed (S : Set M)] :
 #align submodule.quotient.normed_add_comm_group Submodule.Quotient.normedAddCommGroup
 
 instance Submodule.Quotient.complete_space [CompleteSpace M] : CompleteSpace (M ⧸ S) :=
-  QuotientAddGroup.complete_space M S.toAddSubgroup
+  quotientAddGroup.complete_space M S.toAddSubgroup
 #align submodule.quotient.complete_space Submodule.Quotient.complete_space
 
 /-- For any `x : M ⧸ S` and any `0 < ε`, there is `m : M` such that `submodule.quotient.mk m = x`

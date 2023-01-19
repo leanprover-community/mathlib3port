@@ -63,6 +63,7 @@ instance OrderedCommMonoid.to_covariantClass_left (M : Type _) [OrderedCommMonoi
     CovariantClass M M (· * ·) (· ≤ ·)
     where elim a b c bc := OrderedCommMonoid.mul_le_mul_left _ _ bc a
 #align ordered_comm_monoid.to_covariant_class_left OrderedCommMonoid.to_covariantClass_left
+#align ordered_add_comm_monoid.to_covariant_class_left OrderedAddCommMonoid.to_covariantClass_left
 
 /- warning: ordered_comm_monoid.to_covariant_class_right -> OrderedCommMonoid.to_covariantClass_right is a dubious translation:
 lean 3 declaration is
@@ -77,6 +78,7 @@ instance OrderedCommMonoid.to_covariantClass_right (M : Type _) [OrderedCommMono
     CovariantClass M M (swap (· * ·)) (· ≤ ·) :=
   covariant_swap_mul_le_of_covariant_mul_le M
 #align ordered_comm_monoid.to_covariant_class_right OrderedCommMonoid.to_covariantClass_right
+#align ordered_add_comm_monoid.to_covariant_class_right OrderedAddCommMonoid.to_covariantClass_right
 
 #print Mul.to_covariantClass_left /-
 /- This is not an instance, to avoid creating a loop in the type-class system: in a
@@ -87,6 +89,7 @@ theorem Mul.to_covariantClass_left (M : Type _) [Mul M] [PartialOrder M]
     [CovariantClass M M (· * ·) (· < ·)] : CovariantClass M M (· * ·) (· ≤ ·) :=
   ⟨covariant_le_of_covariant_lt _ _ _ CovariantClass.elim⟩
 #align has_mul.to_covariant_class_left Mul.to_covariantClass_left
+#align has_add.to_covariant_class_left Add.to_covariantClass_left
 -/
 
 #print Mul.to_covariantClass_right /-
@@ -99,6 +102,7 @@ theorem Mul.to_covariantClass_right (M : Type _) [Mul M] [PartialOrder M]
     [CovariantClass M M (swap (· * ·)) (· < ·)] : CovariantClass M M (swap (· * ·)) (· ≤ ·) :=
   ⟨covariant_le_of_covariant_lt _ _ _ CovariantClass.elim⟩
 #align has_mul.to_covariant_class_right Mul.to_covariantClass_right
+#align has_add.to_covariant_class_right Add.to_covariantClass_right
 -/
 
 end OrderedInstances
@@ -125,6 +129,7 @@ class LinearOrderedAddCommMonoid (α : Type _) extends LinearOrder α, OrderedAd
 @[protect_proj, to_additive]
 class LinearOrderedCommMonoid (α : Type _) extends LinearOrder α, OrderedCommMonoid α
 #align linear_ordered_comm_monoid LinearOrderedCommMonoid
+#align linear_ordered_add_comm_monoid LinearOrderedAddCommMonoid
 -/
 
 #print LinearOrderedAddCommMonoidWithTop /-

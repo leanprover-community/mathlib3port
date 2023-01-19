@@ -56,6 +56,8 @@ theorem TopologicalSpace.PositiveCompacts.locally_compact_space_of_group [T2Spac
   exact mem_interior_iff_mem_nhds.1 hy
 #align
   topological_space.positive_compacts.locally_compact_space_of_group TopologicalSpace.PositiveCompacts.locally_compact_space_of_group
+#align
+  topological_space.positive_compacts.locally_compact_space_of_add_group TopologicalSpace.PositiveCompacts.locally_compact_space_of_add_group
 
 end
 
@@ -75,6 +77,7 @@ instance QuotientGroup.has_continuous_smul [LocallyCompactSpace G] : HasContinuo
       refine' continuous_coinduced_rng.comp continuous_mul
     exact QuotientMap.continuous_lift_prod_right quotient_map_quotient_mk H
 #align quotient_group.has_continuous_smul QuotientGroup.has_continuous_smul
+#align quotient_add_group.has_continuous_vadd quotientAddGroup.has_continuous_vadd
 
 end Quotient
 

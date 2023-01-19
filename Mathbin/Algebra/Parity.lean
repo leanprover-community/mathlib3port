@@ -54,6 +54,7 @@ for some `r : α`. -/
 def IsSquare (a : α) : Prop :=
   ∃ r, a = r * r
 #align is_square IsSquare
+#align even Even
 -/
 
 #print isSquare_mul_self /-
@@ -61,6 +62,7 @@ def IsSquare (a : α) : Prop :=
 theorem isSquare_mul_self (m : α) : IsSquare (m * m) :=
   ⟨m, rfl⟩
 #align is_square_mul_self isSquare_mul_self
+#align even_add_self even_add_self
 -/
 
 #print isSquare_op_iff /-
@@ -68,6 +70,7 @@ theorem isSquare_mul_self (m : α) : IsSquare (m * m) :=
 theorem isSquare_op_iff (a : α) : IsSquare (op a) ↔ IsSquare a :=
   ⟨fun ⟨c, hc⟩ => ⟨unop c, by rw [← unop_mul, ← hc, unop_op]⟩, fun ⟨c, hc⟩ => by simp [hc]⟩
 #align is_square_op_iff isSquare_op_iff
+#align even_op_iff even_op_iff
 -/
 
 end Mul
@@ -82,6 +85,7 @@ Case conversion may be inaccurate. Consider using '#align is_square_one isSquare
 theorem isSquare_one [MulOneClass α] : IsSquare (1 : α) :=
   ⟨1, (mul_one _).symm⟩
 #align is_square_one isSquare_one
+#align even_zero even_zero
 
 /- warning: is_square.map -> IsSquare.map is a dubious translation:
 lean 3 declaration is
@@ -95,6 +99,7 @@ theorem IsSquare.map [MulOneClass α] [MulOneClass β] [MonoidHomClass F α β] 
   rintro ⟨m, rfl⟩
   exact ⟨f m, by simp⟩
 #align is_square.map IsSquare.map
+#align even.map Even.map
 
 section Monoid
 
@@ -109,6 +114,7 @@ Case conversion may be inaccurate. Consider using '#align is_square_iff_exists_s
 @[to_additive even_iff_exists_two_nsmul]
 theorem isSquare_iff_exists_sq (m : α) : IsSquare m ↔ ∃ c, m = c ^ 2 := by simp [IsSquare, pow_two]
 #align is_square_iff_exists_sq isSquare_iff_exists_sq
+#align even_iff_exists_two_nsmul even_iff_exists_two_nsmul
 
 /- warning: is_square.exists_sq -> IsSquare.exists_sq is a dubious translation:
 lean 3 declaration is
@@ -142,6 +148,7 @@ theorem IsSquare.pow (n : ℕ) : IsSquare a → IsSquare (a ^ n) :=
   rintro ⟨a, rfl⟩
   exact ⟨a ^ n, (Commute.refl _).mul_pow _⟩
 #align is_square.pow IsSquare.pow
+#align even.nsmul Even.nsmul
 
 /- warning: even.is_square_pow -> Even.isSquare_pow is a dubious translation:
 lean 3 declaration is
@@ -155,6 +162,7 @@ theorem Even.isSquare_pow : Even n → ∀ a : α, IsSquare (a ^ n) :=
   rintro ⟨n, rfl⟩ a
   exact ⟨a ^ n, pow_add _ _ _⟩
 #align even.is_square_pow Even.isSquare_pow
+#align even.nsmul' Even.nsmul'
 
 /- warning: is_square_sq -> IsSquare_sq is a dubious translation:
 lean 3 declaration is
@@ -166,6 +174,7 @@ Case conversion may be inaccurate. Consider using '#align is_square_sq IsSquare_
 theorem IsSquare_sq (a : α) : IsSquare (a ^ 2) :=
   ⟨a, pow_two _⟩
 #align is_square_sq IsSquare_sq
+#align even_two_nsmul even_two_nsmul
 
 variable [HasDistribNeg α]
 
@@ -204,6 +213,7 @@ theorem IsSquare.mul [CommSemigroup α] {a b : α} : IsSquare a → IsSquare b �
   rintro ⟨a, rfl⟩ ⟨b, rfl⟩
   exact ⟨a * b, mul_mul_mul_comm _ _ _ _⟩
 #align is_square.mul IsSquare.mul
+#align even.add Even.add
 
 variable (α)
 
@@ -238,6 +248,7 @@ theorem isSquare_inv : IsSquare a⁻¹ ↔ IsSquare a :=
     exact h.map (MulEquiv.inv' α)
   · exact ((isSquare_op_iff a).mpr h).map (MulEquiv.inv' α).symm
 #align is_square_inv isSquare_inv
+#align even_neg even_neg
 
 /- warning: is_square.inv -> IsSquare.inv is a dubious translation:
 lean 3 declaration is
@@ -262,6 +273,7 @@ theorem IsSquare.zpow (n : ℤ) : IsSquare a → IsSquare (a ^ n) :=
   rintro ⟨a, rfl⟩
   exact ⟨a ^ n, (Commute.refl _).mul_zpow _⟩
 #align is_square.zpow IsSquare.zpow
+#align even.zsmul Even.zsmul
 
 variable [HasDistribNeg α] {n : ℤ}
 
@@ -310,6 +322,7 @@ theorem IsSquare.div [DivisionCommMonoid α] {a b : α} (ha : IsSquare a) (hb : 
   rw [div_eq_mul_inv]
   exact ha.mul hb.inv
 #align is_square.div IsSquare.div
+#align even.sub Even.sub
 
 /- warning: even.is_square_zpow -> Even.isSquare_zpow is a dubious translation:
 lean 3 declaration is
@@ -323,6 +336,7 @@ theorem Even.isSquare_zpow [Group α] {n : ℤ} : Even n → ∀ a : α, IsSquar
   rintro ⟨n, rfl⟩ a
   exact ⟨a ^ n, zpow_add _ _ _⟩
 #align even.is_square_zpow Even.isSquare_zpow
+#align even.zsmul' Even.zsmul'
 
 /- warning: even.tsub -> Even.tsub is a dubious translation:
 lean 3 declaration is

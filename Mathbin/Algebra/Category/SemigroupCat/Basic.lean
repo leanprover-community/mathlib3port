@@ -42,6 +42,7 @@ open CategoryTheory
 def MagmaCat : Type (u + 1) :=
   Bundled Mul
 #align Magma MagmaCat
+#align AddMagma AddMagmaCat
 
 /-- The category of additive magmas and additive magma morphisms. -/
 add_decl_doc AddMagmaCat
@@ -52,6 +53,7 @@ namespace MagmaCat
 instance bundledHom : BundledHom @MulHom :=
   ⟨@MulHom.toFun, @MulHom.id, @MulHom.comp, @MulHom.coe_inj⟩
 #align Magma.bundled_hom MagmaCat.bundledHom
+#align AddMagma.bundled_hom AddMagmaCat.bundledHom
 
 deriving instance LargeCategory, ConcreteCategory for MagmaCat
 
@@ -66,6 +68,7 @@ instance : CoeSort MagmaCat (Type _) :=
 def of (M : Type u) [Mul M] : MagmaCat :=
   Bundled.of M
 #align Magma.of MagmaCat.of
+#align AddMagma.of AddMagmaCat.of
 
 /-- Construct a bundled `AddMagma` from the underlying type and typeclass. -/
 add_decl_doc AddMagmaCat.of
@@ -75,6 +78,7 @@ add_decl_doc AddMagmaCat.of
 def ofHom {X Y : Type u} [Mul X] [Mul Y] (f : X →ₙ* Y) : of X ⟶ of Y :=
   f
 #align Magma.of_hom MagmaCat.ofHom
+#align AddMagma.of_hom AddMagmaCat.ofHom
 
 /-- Typecheck a `add_hom` as a morphism in `AddMagma`. -/
 add_decl_doc AddMagmaCat.ofHom
@@ -83,6 +87,7 @@ add_decl_doc AddMagmaCat.ofHom
 theorem of_hom_apply {X Y : Type u} [Mul X] [Mul Y] (f : X →ₙ* Y) (x : X) : ofHom f x = f x :=
   rfl
 #align Magma.of_hom_apply MagmaCat.of_hom_apply
+#align AddMagma.of_hom_apply AddMagmaCat.of_hom_apply
 
 @[to_additive]
 instance : Inhabited MagmaCat :=
@@ -96,6 +101,7 @@ instance (M : MagmaCat) : Mul M :=
 theorem coe_of (R : Type u) [Mul R] : (MagmaCat.of R : Type u) = R :=
   rfl
 #align Magma.coe_of MagmaCat.coe_of
+#align AddMagma.coe_of AddMagmaCat.coe_of
 
 end MagmaCat
 
@@ -104,6 +110,7 @@ end MagmaCat
 def SemigroupCat : Type (u + 1) :=
   Bundled Semigroup
 #align Semigroup SemigroupCat
+#align AddSemigroup AddSemigroupCat
 
 /-- The category of additive semigroups and semigroup morphisms. -/
 add_decl_doc AddSemigroupCat
@@ -127,6 +134,7 @@ instance : CoeSort SemigroupCat (Type _) :=
 def of (M : Type u) [Semigroup M] : SemigroupCat :=
   Bundled.of M
 #align Semigroup.of SemigroupCat.of
+#align AddSemigroup.of AddSemigroupCat.of
 
 /-- Construct a bundled `AddSemigroup` from the underlying type and typeclass. -/
 add_decl_doc AddSemigroupCat.of
@@ -136,6 +144,7 @@ add_decl_doc AddSemigroupCat.of
 def ofHom {X Y : Type u} [Semigroup X] [Semigroup Y] (f : X →ₙ* Y) : of X ⟶ of Y :=
   f
 #align Semigroup.of_hom SemigroupCat.ofHom
+#align AddSemigroup.of_hom AddSemigroupCat.ofHom
 
 /-- Typecheck a `add_hom` as a morphism in `AddSemigroup`. -/
 add_decl_doc AddSemigroupCat.ofHom
@@ -145,6 +154,7 @@ theorem of_hom_apply {X Y : Type u} [Semigroup X] [Semigroup Y] (f : X →ₙ* Y
     ofHom f x = f x :=
   rfl
 #align Semigroup.of_hom_apply SemigroupCat.of_hom_apply
+#align AddSemigroup.of_hom_apply AddSemigroupCat.of_hom_apply
 
 @[to_additive]
 instance : Inhabited SemigroupCat :=
@@ -158,11 +168,13 @@ instance (M : SemigroupCat) : Semigroup M :=
 theorem coe_of (R : Type u) [Semigroup R] : (SemigroupCat.of R : Type u) = R :=
   rfl
 #align Semigroup.coe_of SemigroupCat.coe_of
+#align AddSemigroup.coe_of AddSemigroupCat.coe_of
 
 @[to_additive has_forget_to_AddMagma]
 instance hasForgetToMagma : HasForget₂ SemigroupCat MagmaCat :=
   BundledHom.forget₂ _ _
 #align Semigroup.has_forget_to_Magma SemigroupCat.hasForgetToMagma
+#align AddSemigroup.has_forget_to_AddMagma AddSemigroupCat.hasForgetToAddMagma
 
 end SemigroupCat
 
@@ -181,6 +193,7 @@ def MulEquiv.toMagmaIso (e : X ≃* Y) : MagmaCat.of X ≅ MagmaCat.of Y
   Hom := e.toMulHom
   inv := e.symm.toMulHom
 #align mul_equiv.to_Magma_iso MulEquiv.toMagmaIso
+#align add_equiv.to_AddMagma_iso AddEquiv.toAddMagmaIso
 
 end
 
@@ -197,6 +210,7 @@ def MulEquiv.toSemigroupIso (e : X ≃* Y) : SemigroupCat.of X ≅ SemigroupCat.
   Hom := e.toMulHom
   inv := e.symm.toMulHom
 #align mul_equiv.to_Semigroup_iso MulEquiv.toSemigroupIso
+#align add_equiv.to_AddSemigroup_iso AddEquiv.toAddSemigroupIso
 
 end
 
@@ -213,6 +227,7 @@ def magmaIsoToMulEquiv {X Y : MagmaCat} (i : X ≅ Y) : X ≃* Y
   right_inv y := by simp
   map_mul' := by simp
 #align category_theory.iso.Magma_iso_to_mul_equiv CategoryTheory.Iso.magmaIsoToMulEquiv
+#align category_theory.iso.AddMagma_iso_to_add_equiv CategoryTheory.Iso.addMagmaIsoToAddEquiv
 
 /-- Build a `mul_equiv` from an isomorphism in the category `Semigroup`. -/
 @[to_additive "Build an `add_equiv` from an isomorphism in the category\n`AddSemigroup`."]
@@ -224,6 +239,7 @@ def semigroupIsoToMulEquiv {X Y : SemigroupCat} (i : X ≅ Y) : X ≃* Y
   right_inv y := by simp
   map_mul' := by simp
 #align category_theory.iso.Semigroup_iso_to_mul_equiv CategoryTheory.Iso.semigroupIsoToMulEquiv
+#align category_theory.iso.Semigroup_iso_to_add_equiv CategoryTheory.Iso.semigroupIsoToAddEquiv
 
 end CategoryTheory.Iso
 
@@ -236,6 +252,7 @@ def mulEquivIsoMagmaIso {X Y : Type u} [Mul X] [Mul Y] : X ≃* Y ≅ MagmaCat.o
   Hom e := e.toMagmaIso
   inv i := i.magmaIsoToMulEquiv
 #align mul_equiv_iso_Magma_iso mulEquivIsoMagmaIso
+#align add_equiv_iso_AddMagma_iso addEquivIsoAddMagmaIso
 
 /-- multiplicative equivalences between `semigroup`s are the same as (isomorphic to) isomorphisms
 in `Semigroup` -/
@@ -247,6 +264,7 @@ def mulEquivIsoSemigroupIso {X Y : Type u} [Semigroup X] [Semigroup Y] :
   Hom e := e.toSemigroupIso
   inv i := i.semigroupIsoToMulEquiv
 #align mul_equiv_iso_Semigroup_iso mulEquivIsoSemigroupIso
+#align add_equiv_iso_AddSemigroup_iso addEquivIsoAddSemigroupIso
 
 @[to_additive]
 instance MagmaCat.forget_reflects_isos : ReflectsIsomorphisms (forget MagmaCat.{u})
@@ -256,6 +274,7 @@ instance MagmaCat.forget_reflects_isos : ReflectsIsomorphisms (forget MagmaCat.{
     let e : X ≃* Y := { f, i.to_equiv with }
     exact ⟨(is_iso.of_iso e.to_Magma_iso).1⟩
 #align Magma.forget_reflects_isos MagmaCat.forget_reflects_isos
+#align AddMagma.forget_reflects_isos AddMagmaCat.forget_reflects_isos
 
 @[to_additive]
 instance SemigroupCat.forget_reflects_isos : ReflectsIsomorphisms (forget SemigroupCat.{u})
@@ -265,6 +284,7 @@ instance SemigroupCat.forget_reflects_isos : ReflectsIsomorphisms (forget Semigr
     let e : X ≃* Y := { f, i.to_equiv with }
     exact ⟨(is_iso.of_iso e.to_Semigroup_iso).1⟩
 #align Semigroup.forget_reflects_isos SemigroupCat.forget_reflects_isos
+#align AddSemigroup.forget_reflects_isos AddSemigroupCat.forget_reflects_isos
 
 /-!
 Once we've shown that the forgetful functors to type reflect isomorphisms,

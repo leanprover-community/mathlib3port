@@ -28,7 +28,7 @@ namespace CategoryTheory.Limits
 
 variable (C : Type u) [Category.{v} C]
 
-/- ./././Mathport/Syntax/Translate/Command.lean:379:30: infer kinds are unsupported in Lean 4: #[`out] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`out] [] -/
 /-- A category has finite products if there is a chosen limit for every diagram
 with shape `discrete J`, where we have `[finite J]`.
 
@@ -66,7 +66,7 @@ theorem hasFiniteProductsOfHasProducts [HasProducts.{w} C] : HasFiniteProducts C
 #align
   category_theory.limits.has_finite_products_of_has_products CategoryTheory.Limits.hasFiniteProductsOfHasProducts
 
-/- ./././Mathport/Syntax/Translate/Command.lean:379:30: infer kinds are unsupported in Lean 4: #[`out] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`out] [] -/
 /-- A category has finite coproducts if there is a chosen colimit for every diagram
 with shape `discrete J`, where we have `[fintype J]`.
 

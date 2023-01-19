@@ -90,6 +90,7 @@ variable {ι : Sort _} {κ : ι → Sort _} [SMul α β] {s s₁ s₂ : Set α} 
 theorem image2_smul : image2 SMul.smul s t = s • t :=
   rfl
 #align set.image2_smul Set.image2_smul
+#align set.image2_vadd Set.image2_vadd
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -98,6 +99,7 @@ theorem image2_smul : image2 SMul.smul s t = s • t :=
 theorem image_smul_prod : (fun x : α × β => x.fst • x.snd) '' s ×ˢ t = s • t :=
   image_prod _
 #align set.image_smul_prod Set.image_smul_prod
+#align set.add_image_prod Set.add_image_prod
 -/
 
 #print Set.mem_smul /-
@@ -105,6 +107,7 @@ theorem image_smul_prod : (fun x : α × β => x.fst • x.snd) '' s ×ˢ t = s 
 theorem mem_smul : b ∈ s • t ↔ ∃ x y, x ∈ s ∧ y ∈ t ∧ x • y = b :=
   Iff.rfl
 #align set.mem_smul Set.mem_smul
+#align set.mem_vadd Set.mem_vadd
 -/
 
 /- warning: set.smul_mem_smul -> Set.smul_mem_smul is a dubious translation:
@@ -117,12 +120,14 @@ Case conversion may be inaccurate. Consider using '#align set.smul_mem_smul Set.
 theorem smul_mem_smul : a ∈ s → b ∈ t → a • b ∈ s • t :=
   mem_image2_of_mem
 #align set.smul_mem_smul Set.smul_mem_smul
+#align set.vadd_mem_vadd Set.vadd_mem_vadd
 
 #print Set.empty_smul /-
 @[simp, to_additive]
 theorem empty_smul : (∅ : Set α) • t = ∅ :=
   image2_empty_left
 #align set.empty_smul Set.empty_smul
+#align set.empty_vadd Set.empty_vadd
 -/
 
 #print Set.smul_empty /-
@@ -130,6 +135,7 @@ theorem empty_smul : (∅ : Set α) • t = ∅ :=
 theorem smul_empty : s • (∅ : Set β) = ∅ :=
   image2_empty_right
 #align set.smul_empty Set.smul_empty
+#align set.vadd_empty Set.vadd_empty
 -/
 
 #print Set.smul_eq_empty /-
@@ -137,6 +143,7 @@ theorem smul_empty : s • (∅ : Set β) = ∅ :=
 theorem smul_eq_empty : s • t = ∅ ↔ s = ∅ ∨ t = ∅ :=
   image2_eq_empty_iff
 #align set.smul_eq_empty Set.smul_eq_empty
+#align set.vadd_eq_empty Set.vadd_eq_empty
 -/
 
 #print Set.smul_nonempty /-
@@ -144,6 +151,7 @@ theorem smul_eq_empty : s • t = ∅ ↔ s = ∅ ∨ t = ∅ :=
 theorem smul_nonempty : (s • t).Nonempty ↔ s.Nonempty ∧ t.Nonempty :=
   image2_nonempty_iff
 #align set.smul_nonempty Set.smul_nonempty
+#align set.vadd_nonempty Set.vadd_nonempty
 -/
 
 /- warning: set.nonempty.smul -> Set.Nonempty.smul is a dubious translation:
@@ -156,12 +164,14 @@ Case conversion may be inaccurate. Consider using '#align set.nonempty.smul Set.
 theorem Nonempty.smul : s.Nonempty → t.Nonempty → (s • t).Nonempty :=
   nonempty.image2
 #align set.nonempty.smul Set.Nonempty.smul
+#align set.nonempty.vadd Set.Nonempty.vadd
 
 #print Set.Nonempty.of_smul_left /-
 @[to_additive]
 theorem Nonempty.of_smul_left : (s • t).Nonempty → s.Nonempty :=
   nonempty.of_image2_left
 #align set.nonempty.of_smul_left Set.Nonempty.of_smul_left
+#align set.nonempty.of_vadd_left Set.Nonempty.of_vadd_left
 -/
 
 #print Set.Nonempty.of_smul_right /-
@@ -169,6 +179,7 @@ theorem Nonempty.of_smul_left : (s • t).Nonempty → s.Nonempty :=
 theorem Nonempty.of_smul_right : (s • t).Nonempty → t.Nonempty :=
   nonempty.of_image2_right
 #align set.nonempty.of_smul_right Set.Nonempty.of_smul_right
+#align set.nonempty.of_vadd_right Set.Nonempty.of_vadd_right
 -/
 
 #print Set.smul_singleton /-
@@ -176,6 +187,7 @@ theorem Nonempty.of_smul_right : (s • t).Nonempty → t.Nonempty :=
 theorem smul_singleton : s • {b} = (· • b) '' s :=
   image2_singleton_right
 #align set.smul_singleton Set.smul_singleton
+#align set.vadd_singleton Set.vadd_singleton
 -/
 
 #print Set.singleton_smul /-
@@ -183,6 +195,7 @@ theorem smul_singleton : s • {b} = (· • b) '' s :=
 theorem singleton_smul : ({a} : Set α) • t = a • t :=
   image2_singleton_left
 #align set.singleton_smul Set.singleton_smul
+#align set.singleton_vadd Set.singleton_vadd
 -/
 
 #print Set.singleton_smul_singleton /-
@@ -190,6 +203,7 @@ theorem singleton_smul : ({a} : Set α) • t = a • t :=
 theorem singleton_smul_singleton : ({a} : Set α) • ({b} : Set β) = {a • b} :=
   image2_singleton
 #align set.singleton_smul_singleton Set.singleton_smul_singleton
+#align set.singleton_vadd_singleton Set.singleton_vadd_singleton
 -/
 
 /- warning: set.smul_subset_smul -> Set.smul_subset_smul is a dubious translation:
@@ -202,12 +216,14 @@ Case conversion may be inaccurate. Consider using '#align set.smul_subset_smul S
 theorem smul_subset_smul : s₁ ⊆ s₂ → t₁ ⊆ t₂ → s₁ • t₁ ⊆ s₂ • t₂ :=
   image2_subset
 #align set.smul_subset_smul Set.smul_subset_smul
+#align set.vadd_subset_vadd Set.vadd_subset_vadd
 
 #print Set.smul_subset_smul_left /-
 @[to_additive]
 theorem smul_subset_smul_left : t₁ ⊆ t₂ → s • t₁ ⊆ s • t₂ :=
   image2_subset_left
 #align set.smul_subset_smul_left Set.smul_subset_smul_left
+#align set.vadd_subset_vadd_left Set.vadd_subset_vadd_left
 -/
 
 /- warning: set.smul_subset_smul_right -> Set.smul_subset_smul_right is a dubious translation:
@@ -220,12 +236,14 @@ Case conversion may be inaccurate. Consider using '#align set.smul_subset_smul_r
 theorem smul_subset_smul_right : s₁ ⊆ s₂ → s₁ • t ⊆ s₂ • t :=
   image2_subset_right
 #align set.smul_subset_smul_right Set.smul_subset_smul_right
+#align set.vadd_subset_vadd_right Set.vadd_subset_vadd_right
 
 #print Set.smul_subset_iff /-
 @[to_additive]
 theorem smul_subset_iff : s • t ⊆ u ↔ ∀ a ∈ s, ∀ b ∈ t, a • b ∈ u :=
   image2_subset_iff
 #align set.smul_subset_iff Set.smul_subset_iff
+#align set.vadd_subset_iff Set.vadd_subset_iff
 -/
 
 attribute [mono] vadd_subset_vadd
@@ -240,6 +258,7 @@ Case conversion may be inaccurate. Consider using '#align set.union_smul Set.uni
 theorem union_smul : (s₁ ∪ s₂) • t = s₁ • t ∪ s₂ • t :=
   image2_union_left
 #align set.union_smul Set.union_smul
+#align set.union_vadd Set.union_vadd
 
 /- warning: set.smul_union -> Set.smul_union is a dubious translation:
 lean 3 declaration is
@@ -251,6 +270,7 @@ Case conversion may be inaccurate. Consider using '#align set.smul_union Set.smu
 theorem smul_union : s • (t₁ ∪ t₂) = s • t₁ ∪ s • t₂ :=
   image2_union_right
 #align set.smul_union Set.smul_union
+#align set.vadd_union Set.vadd_union
 
 /- warning: set.inter_smul_subset -> Set.inter_smul_subset is a dubious translation:
 lean 3 declaration is
@@ -262,6 +282,7 @@ Case conversion may be inaccurate. Consider using '#align set.inter_smul_subset 
 theorem inter_smul_subset : (s₁ ∩ s₂) • t ⊆ s₁ • t ∩ s₂ • t :=
   image2_inter_subset_left
 #align set.inter_smul_subset Set.inter_smul_subset
+#align set.inter_vadd_subset Set.inter_vadd_subset
 
 /- warning: set.smul_inter_subset -> Set.smul_inter_subset is a dubious translation:
 lean 3 declaration is
@@ -273,6 +294,7 @@ Case conversion may be inaccurate. Consider using '#align set.smul_inter_subset 
 theorem smul_inter_subset : s • (t₁ ∩ t₂) ⊆ s • t₁ ∩ s • t₂ :=
   image2_inter_subset_right
 #align set.smul_inter_subset Set.smul_inter_subset
+#align set.vadd_inter_subset Set.vadd_inter_subset
 
 #print Set.unionᵢ_smul_left_image /-
 @[to_additive]
@@ -410,6 +432,7 @@ variable {ι : Sort _} {κ : ι → Sort _} [SMul α β] {s t t₁ t₂ : Set β
 theorem image_smul : (fun x => a • x) '' t = a • t :=
   rfl
 #align set.image_smul Set.image_smul
+#align set.image_vadd Set.image_vadd
 -/
 
 #print Set.mem_smul_set /-
@@ -417,6 +440,7 @@ theorem image_smul : (fun x => a • x) '' t = a • t :=
 theorem mem_smul_set : x ∈ a • t ↔ ∃ y, y ∈ t ∧ a • y = x :=
   Iff.rfl
 #align set.mem_smul_set Set.mem_smul_set
+#align set.mem_vadd_set Set.mem_vadd_set
 -/
 
 #print Set.smul_mem_smul_set /-
@@ -424,6 +448,7 @@ theorem mem_smul_set : x ∈ a • t ↔ ∃ y, y ∈ t ∧ a • y = x :=
 theorem smul_mem_smul_set : b ∈ s → a • b ∈ a • s :=
   mem_image_of_mem _
 #align set.smul_mem_smul_set Set.smul_mem_smul_set
+#align set.vadd_mem_vadd_set Set.vadd_mem_vadd_set
 -/
 
 #print Set.smul_set_empty /-
@@ -431,6 +456,7 @@ theorem smul_mem_smul_set : b ∈ s → a • b ∈ a • s :=
 theorem smul_set_empty : a • (∅ : Set β) = ∅ :=
   image_empty _
 #align set.smul_set_empty Set.smul_set_empty
+#align set.vadd_set_empty Set.vadd_set_empty
 -/
 
 #print Set.smul_set_eq_empty /-
@@ -438,6 +464,7 @@ theorem smul_set_empty : a • (∅ : Set β) = ∅ :=
 theorem smul_set_eq_empty : a • s = ∅ ↔ s = ∅ :=
   image_eq_empty
 #align set.smul_set_eq_empty Set.smul_set_eq_empty
+#align set.vadd_set_eq_empty Set.vadd_set_eq_empty
 -/
 
 #print Set.smul_set_nonempty /-
@@ -445,6 +472,7 @@ theorem smul_set_eq_empty : a • s = ∅ ↔ s = ∅ :=
 theorem smul_set_nonempty : (a • s).Nonempty ↔ s.Nonempty :=
   nonempty_image_iff
 #align set.smul_set_nonempty Set.smul_set_nonempty
+#align set.vadd_set_nonempty Set.vadd_set_nonempty
 -/
 
 #print Set.smul_set_singleton /-
@@ -452,6 +480,7 @@ theorem smul_set_nonempty : (a • s).Nonempty ↔ s.Nonempty :=
 theorem smul_set_singleton : a • ({b} : Set β) = {a • b} :=
   image_singleton
 #align set.smul_set_singleton Set.smul_set_singleton
+#align set.vadd_set_singleton Set.vadd_set_singleton
 -/
 
 #print Set.smul_set_mono /-
@@ -459,6 +488,7 @@ theorem smul_set_singleton : a • ({b} : Set β) = {a • b} :=
 theorem smul_set_mono : s ⊆ t → a • s ⊆ a • t :=
   image_subset _
 #align set.smul_set_mono Set.smul_set_mono
+#align set.vadd_set_mono Set.vadd_set_mono
 -/
 
 #print Set.smul_set_subset_iff /-
@@ -466,6 +496,7 @@ theorem smul_set_mono : s ⊆ t → a • s ⊆ a • t :=
 theorem smul_set_subset_iff : a • s ⊆ t ↔ ∀ ⦃b⦄, b ∈ s → a • b ∈ t :=
   image_subset_iff
 #align set.smul_set_subset_iff Set.smul_set_subset_iff
+#align set.vadd_set_subset_iff Set.vadd_set_subset_iff
 -/
 
 /- warning: set.smul_set_union -> Set.smul_set_union is a dubious translation:
@@ -478,6 +509,7 @@ Case conversion may be inaccurate. Consider using '#align set.smul_set_union Set
 theorem smul_set_union : a • (t₁ ∪ t₂) = a • t₁ ∪ a • t₂ :=
   image_union _ _ _
 #align set.smul_set_union Set.smul_set_union
+#align set.vadd_set_union Set.vadd_set_union
 
 /- warning: set.smul_set_inter_subset -> Set.smul_set_inter_subset is a dubious translation:
 lean 3 declaration is
@@ -489,6 +521,7 @@ Case conversion may be inaccurate. Consider using '#align set.smul_set_inter_sub
 theorem smul_set_inter_subset : a • (t₁ ∩ t₂) ⊆ a • t₁ ∩ a • t₂ :=
   image_inter_subset _ _ _
 #align set.smul_set_inter_subset Set.smul_set_inter_subset
+#align set.vadd_set_inter_subset Set.vadd_set_inter_subset
 
 /- warning: set.smul_set_Union -> Set.smul_set_Union is a dubious translation:
 lean 3 declaration is
@@ -500,6 +533,7 @@ Case conversion may be inaccurate. Consider using '#align set.smul_set_Union Set
 theorem smul_set_Union (a : α) (s : ι → Set β) : (a • ⋃ i, s i) = ⋃ i, a • s i :=
   image_Union
 #align set.smul_set_Union Set.smul_set_Union
+#align set.vadd_set_Union Set.vadd_set_Union
 
 /- warning: set.smul_set_Union₂ -> Set.smul_set_unionᵢ₂ is a dubious translation:
 lean 3 declaration is
@@ -545,6 +579,7 @@ theorem smul_set_interᵢ₂_subset (a : α) (t : ∀ i, κ i → Set β) :
 theorem Nonempty.smul_set : s.Nonempty → (a • s).Nonempty :=
   Nonempty.image _
 #align set.nonempty.smul_set Set.Nonempty.smul_set
+#align set.nonempty.vadd_set Set.Nonempty.vadd_set
 -/
 
 end HasSmulSet
@@ -573,6 +608,7 @@ theorem range_smul_range {ι κ : Type _} [SMul α β] (b : ι → α) (c : κ �
       ⟨(i, j), hpq ▸ hi ▸ hj ▸ rfl⟩,
       fun ⟨⟨i, j⟩, h⟩ => Set.mem_smul.2 ⟨b i, c j, ⟨i, rfl⟩, ⟨j, rfl⟩, h⟩⟩
 #align set.range_smul_range Set.range_smul_range
+#align set.range_vadd_range Set.range_vadd_range
 
 /- warning: set.smul_set_range -> Set.smul_set_range is a dubious translation:
 lean 3 declaration is
@@ -584,6 +620,7 @@ Case conversion may be inaccurate. Consider using '#align set.smul_set_range Set
 theorem smul_set_range [SMul α β] {ι : Sort _} {f : ι → β} : a • range f = range fun i => a • f i :=
   (range_comp _ _).symm
 #align set.smul_set_range Set.smul_set_range
+#align set.vadd_set_range Set.vadd_set_range
 
 #print Set.smulCommClass_set /-
 @[to_additive]
@@ -624,6 +661,7 @@ instance isScalarTower [SMul α β] [SMul α γ] [SMul β γ] [IsScalarTower α 
     IsScalarTower α β (Set γ)
     where smul_assoc a b T := by simp only [← image_smul, image_image, smul_assoc]
 #align set.is_scalar_tower Set.isScalarTower
+#align set.vadd_assoc_class Set.vAddAssocClass
 -/
 
 #print Set.isScalarTower' /-
@@ -632,6 +670,7 @@ instance isScalarTower' [SMul α β] [SMul α γ] [SMul β γ] [IsScalarTower α
     IsScalarTower α (Set β) (Set γ) :=
   ⟨fun _ _ _ => image2_image_left_comm <| smul_assoc _⟩
 #align set.is_scalar_tower' Set.isScalarTower'
+#align set.vadd_assoc_class' Set.vAddAssocClass'
 -/
 
 #print Set.isScalarTower'' /-
@@ -639,6 +678,7 @@ instance isScalarTower' [SMul α β] [SMul α γ] [SMul β γ] [IsScalarTower α
 instance isScalarTower'' [SMul α β] [SMul α γ] [SMul β γ] [IsScalarTower α β γ] :
     IsScalarTower (Set α) (Set β) (Set γ) where smul_assoc T T' T'' := image2_assoc smul_assoc
 #align set.is_scalar_tower'' Set.isScalarTower''
+#align set.vadd_assoc_class'' Set.vAddAssocClass''
 -/
 
 #print Set.isCentralScalar /-
@@ -658,6 +698,7 @@ protected def mulAction [Monoid α] [MulAction α β] : MulAction (Set α) (Set 
   mul_smul _ _ _ := image2_assoc mul_smul
   one_smul s := image2_singleton_left.trans <| by simp_rw [one_smul, image_id']
 #align set.mul_action Set.mulAction
+#align set.add_action Set.addAction
 -/
 
 #print Set.mulActionSet /-
@@ -673,6 +714,7 @@ protected def mulActionSet [Monoid α] [MulAction α β] : MulAction α (Set β)
     intros
     simp only [← image_smul, one_smul, image_id']
 #align set.mul_action_set Set.mulActionSet
+#align set.add_action_set Set.addActionSet
 -/
 
 scoped[Pointwise] attribute [instance] Set.mulActionSet Set.addActionSet Set.mulAction Set.addAction
@@ -1180,6 +1222,7 @@ variable [Group α] [MulAction α β] {s t A B : Set β} {a : α} {x : β}
 theorem smul_mem_smul_set_iff : a • x ∈ a • s ↔ x ∈ s :=
   (MulAction.injective _).mem_set_image
 #align set.smul_mem_smul_set_iff Set.smul_mem_smul_set_iff
+#align set.vadd_mem_vadd_set_iff Set.vadd_mem_vadd_set_iff
 -/
 
 /- warning: set.mem_smul_set_iff_inv_smul_mem -> Set.mem_smul_set_iff_inv_smul_mem is a dubious translation:
@@ -1192,6 +1235,7 @@ Case conversion may be inaccurate. Consider using '#align set.mem_smul_set_iff_i
 theorem mem_smul_set_iff_inv_smul_mem : x ∈ a • A ↔ a⁻¹ • x ∈ A :=
   show x ∈ MulAction.toPerm a '' A ↔ _ from mem_image_equiv
 #align set.mem_smul_set_iff_inv_smul_mem Set.mem_smul_set_iff_inv_smul_mem
+#align set.mem_vadd_set_iff_neg_vadd_mem Set.mem_vadd_set_iff_neg_vadd_mem
 
 /- warning: set.mem_inv_smul_set_iff -> Set.mem_inv_smul_set_iff is a dubious translation:
 lean 3 declaration is
@@ -1203,6 +1247,7 @@ Case conversion may be inaccurate. Consider using '#align set.mem_inv_smul_set_i
 theorem mem_inv_smul_set_iff : x ∈ a⁻¹ • A ↔ a • x ∈ A := by
   simp only [← image_smul, mem_image, inv_smul_eq_iff, exists_eq_right]
 #align set.mem_inv_smul_set_iff Set.mem_inv_smul_set_iff
+#align set.mem_neg_vadd_set_iff Set.mem_neg_vadd_set_iff
 
 /- warning: set.preimage_smul -> Set.preimage_smul is a dubious translation:
 lean 3 declaration is
@@ -1214,6 +1259,7 @@ Case conversion may be inaccurate. Consider using '#align set.preimage_smul Set.
 theorem preimage_smul (a : α) (t : Set β) : (fun x => a • x) ⁻¹' t = a⁻¹ • t :=
   ((MulAction.toPerm a).symm.image_eq_preimage _).symm
 #align set.preimage_smul Set.preimage_smul
+#align set.preimage_vadd Set.preimage_vadd
 
 /- warning: set.preimage_smul_inv -> Set.preimage_smul_inv is a dubious translation:
 lean 3 declaration is
@@ -1225,12 +1271,14 @@ Case conversion may be inaccurate. Consider using '#align set.preimage_smul_inv 
 theorem preimage_smul_inv (a : α) (t : Set β) : (fun x => a⁻¹ • x) ⁻¹' t = a • t :=
   preimage_smul (toUnits a)⁻¹ t
 #align set.preimage_smul_inv Set.preimage_smul_inv
+#align set.preimage_vadd_neg Set.preimage_vadd_neg
 
 #print Set.set_smul_subset_set_smul_iff /-
 @[simp, to_additive]
 theorem set_smul_subset_set_smul_iff : a • A ⊆ a • B ↔ A ⊆ B :=
   image_subset_image_iff <| MulAction.injective _
 #align set.set_smul_subset_set_smul_iff Set.set_smul_subset_set_smul_iff
+#align set.set_vadd_subset_set_vadd_iff Set.set_vadd_subset_set_vadd_iff
 -/
 
 /- warning: set.set_smul_subset_iff -> Set.set_smul_subset_iff is a dubious translation:
@@ -1244,6 +1292,7 @@ theorem set_smul_subset_iff : a • A ⊆ B ↔ A ⊆ a⁻¹ • B :=
   image_subset_iff.trans <|
     iff_of_eq <| congr_arg _ <| preimage_equiv_eq_image_symm _ <| MulAction.toPerm _
 #align set.set_smul_subset_iff Set.set_smul_subset_iff
+#align set.set_vadd_subset_iff Set.set_vadd_subset_iff
 
 /- warning: set.subset_set_smul_iff -> Set.subset_set_smul_iff is a dubious translation:
 lean 3 declaration is
@@ -1257,6 +1306,7 @@ theorem subset_set_smul_iff : A ⊆ a • B ↔ a⁻¹ • A ⊆ B :=
     image_subset_iff.trans <|
       Iff.symm <| iff_of_eq <| congr_arg _ <| image_equiv_eq_preimage_symm _ <| MulAction.toPerm _
 #align set.subset_set_smul_iff Set.subset_set_smul_iff
+#align set.subset_set_vadd_iff Set.subset_set_vadd_iff
 
 /- warning: set.smul_set_inter -> Set.smul_set_inter is a dubious translation:
 lean 3 declaration is
@@ -1268,6 +1318,7 @@ Case conversion may be inaccurate. Consider using '#align set.smul_set_inter Set
 theorem smul_set_inter : a • (s ∩ t) = a • s ∩ a • t :=
   image_inter <| MulAction.injective a
 #align set.smul_set_inter Set.smul_set_inter
+#align set.vadd_set_inter Set.vadd_set_inter
 
 /- warning: set.smul_set_sdiff -> Set.smul_set_sdiff is a dubious translation:
 lean 3 declaration is
@@ -1279,6 +1330,7 @@ Case conversion may be inaccurate. Consider using '#align set.smul_set_sdiff Set
 theorem smul_set_sdiff : a • (s \ t) = a • s \ a • t :=
   image_diff (MulAction.injective a) _ _
 #align set.smul_set_sdiff Set.smul_set_sdiff
+#align set.vadd_set_sdiff Set.vadd_set_sdiff
 
 /- warning: set.smul_set_symm_diff -> Set.smul_set_symm_diff is a dubious translation:
 lean 3 declaration is
@@ -1290,12 +1342,14 @@ Case conversion may be inaccurate. Consider using '#align set.smul_set_symm_diff
 theorem smul_set_symm_diff : a • s ∆ t = (a • s) ∆ (a • t) :=
   image_symm_diff (MulAction.injective a) _ _
 #align set.smul_set_symm_diff Set.smul_set_symm_diff
+#align set.vadd_set_symm_diff Set.vadd_set_symm_diff
 
 #print Set.smul_set_univ /-
 @[simp, to_additive]
 theorem smul_set_univ : a • (univ : Set β) = univ :=
   image_univ_of_surjective <| MulAction.surjective a
 #align set.smul_set_univ Set.smul_set_univ
+#align set.vadd_set_univ Set.vadd_set_univ
 -/
 
 /- warning: set.smul_univ -> Set.smul_univ is a dubious translation:
@@ -1309,6 +1363,7 @@ theorem smul_univ {s : Set α} (hs : s.Nonempty) : s • (univ : Set β) = univ 
   let ⟨a, ha⟩ := hs
   eq_univ_of_forall fun b => ⟨a, a⁻¹ • b, ha, trivial, smul_inv_smul _ _⟩
 #align set.smul_univ Set.smul_univ
+#align set.vadd_univ Set.vadd_univ
 
 /- warning: set.smul_inter_ne_empty_iff -> Set.smul_inter_ne_empty_iff is a dubious translation:
 lean 3 declaration is
@@ -1328,6 +1383,7 @@ theorem smul_inter_ne_empty_iff {s t : Set α} {x : α} :
   · rintro ⟨a, b, ⟨ha, hb⟩, rfl⟩
     exact ⟨a, mem_inter (mem_smul_set.mpr ⟨b, hb, by simp⟩) ha⟩
 #align set.smul_inter_ne_empty_iff Set.smul_inter_ne_empty_iff
+#align set.vadd_inter_ne_empty_iff Set.vadd_inter_ne_empty_iff
 
 /- warning: set.smul_inter_ne_empty_iff' -> Set.smul_inter_ne_empty_iff' is a dubious translation:
 lean 3 declaration is
@@ -1340,6 +1396,7 @@ theorem smul_inter_ne_empty_iff' {s t : Set α} {x : α} :
     x • s ∩ t ≠ ∅ ↔ ∃ a b, (a ∈ t ∧ b ∈ s) ∧ a / b = x := by
   simp_rw [smul_inter_ne_empty_iff, div_eq_mul_inv]
 #align set.smul_inter_ne_empty_iff' Set.smul_inter_ne_empty_iff'
+#align set.vadd_inter_ne_empty_iff' Set.vadd_inter_ne_empty_iff'
 
 /- warning: set.op_smul_inter_ne_empty_iff -> Set.op_smul_inter_ne_empty_iff is a dubious translation:
 lean 3 declaration is
@@ -1360,6 +1417,7 @@ theorem op_smul_inter_ne_empty_iff {s t : Set α} {x : αᵐᵒᵖ} :
     have : MulOpposite.op (a⁻¹ * b) = x := congr_arg MulOpposite.op H
     exact ⟨b, mem_inter (mem_smul_set.mpr ⟨a, ha, by simp [← this]⟩) hb⟩
 #align set.op_smul_inter_ne_empty_iff Set.op_smul_inter_ne_empty_iff
+#align set.op_vadd_inter_ne_empty_iff Set.op_vadd_inter_ne_empty_iff
 
 /- warning: set.Union_inv_smul -> Set.unionᵢ_inv_smul is a dubious translation:
 lean 3 declaration is

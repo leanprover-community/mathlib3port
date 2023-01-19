@@ -598,6 +598,8 @@ theorem HasCompactMulSupport.eq_one_or_finite_dimensional {X : Type _} [Topologi
   exact finite_dimensional_of_is_compact_closed_ball 𝕜 rpos this
 #align
   has_compact_mul_support.eq_one_or_finite_dimensional HasCompactMulSupport.eq_one_or_finite_dimensional
+#align
+  has_compact_support.eq_zero_or_finite_dimensional HasCompactSupport.eq_zero_or_finite_dimensional
 
 end Riesz
 

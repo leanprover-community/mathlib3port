@@ -154,6 +154,7 @@ theorem prod_preimage' [CommMonoid β] (f : α → γ) [DecidablePred fun x => x
       _ = ∏ x in s.filter fun x => x ∈ Set.range f, g x := by rw [image_preimage]
       
 #align finset.prod_preimage' Finset.prod_preimage'
+#align finset.sum_preimage' Finset.sum_preimage'
 
 @[to_additive]
 theorem prod_preimage [CommMonoid β] (f : α → γ) (s : Finset γ) (hf : Set.InjOn f (f ⁻¹' ↑s))
@@ -163,6 +164,7 @@ theorem prod_preimage [CommMonoid β] (f : α → γ) (s : Finset γ) (hf : Set.
     rw [prod_preimage', prod_filter_of_ne]
     exact fun x hx => Not.imp_symm (hg x hx)
 #align finset.prod_preimage Finset.prod_preimage
+#align finset.sum_preimage Finset.sum_preimage
 
 @[to_additive]
 theorem prod_preimage_of_bij [CommMonoid β] (f : α → γ) (s : Finset γ)
@@ -170,6 +172,7 @@ theorem prod_preimage_of_bij [CommMonoid β] (f : α → γ) (s : Finset γ)
     (∏ x in s.Preimage f hf.InjOn, g (f x)) = ∏ x in s, g x :=
   prod_preimage _ _ hf.InjOn g fun x hxs hxf => (hxf <| hf.subset_range hxs).elim
 #align finset.prod_preimage_of_bij Finset.prod_preimage_of_bij
+#align finset.sum_preimage_of_bij Finset.sum_preimage_of_bij
 
 end Finset
 

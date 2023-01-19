@@ -132,6 +132,7 @@ def commMonoid [h : MulOneClass X]
     mul_comm := (mul_comm h₁ MulOneClass.isUnital Distrib).comm
     mul_assoc := (mul_assoc h₁ MulOneClass.isUnital Distrib).assoc }
 #align eckmann_hilton.comm_monoid EckmannHilton.commMonoid
+#align eckmann_hilton.add_comm_monoid EckmannHilton.addCommMonoid
 
 /- warning: eckmann_hilton.comm_group -> EckmannHilton.commGroup is a dubious translation:
 lean 3 declaration is
@@ -148,6 +149,7 @@ def commGroup [G : Group X] (distrib : ∀ a b c d, ((a * b) <m₁> c * d) = (a 
     CommGroup X :=
   { EckmannHilton.commMonoid h₁ Distrib, G with }
 #align eckmann_hilton.comm_group EckmannHilton.commGroup
+#align eckmann_hilton.add_comm_group EckmannHilton.addCommGroup
 
 end EckmannHilton
 

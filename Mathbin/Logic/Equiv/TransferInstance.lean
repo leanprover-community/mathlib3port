@@ -49,44 +49,52 @@ variable (e : α ≃ β)
 protected def hasOne [One β] : One α :=
   ⟨e.symm 1⟩
 #align equiv.has_one Equiv.hasOne
+#align equiv.has_zero Equiv.hasZero
 
 @[to_additive]
 theorem one_def [One β] : @One.one _ (Equiv.hasOne e) = e.symm 1 :=
   rfl
 #align equiv.one_def Equiv.one_def
+#align equiv.zero_def Equiv.zero_def
 
 /-- Transfer `has_mul` across an `equiv` -/
 @[reducible, to_additive "Transfer `has_add` across an `equiv`"]
 protected def hasMul [Mul β] : Mul α :=
   ⟨fun x y => e.symm (e x * e y)⟩
 #align equiv.has_mul Equiv.hasMul
+#align equiv.has_add Equiv.hasAdd
 
 @[to_additive]
 theorem mul_def [Mul β] (x y : α) : @Mul.mul _ (Equiv.hasMul e) x y = e.symm (e x * e y) :=
   rfl
 #align equiv.mul_def Equiv.mul_def
+#align equiv.add_def Equiv.add_def
 
 /-- Transfer `has_div` across an `equiv` -/
 @[reducible, to_additive "Transfer `has_sub` across an `equiv`"]
 protected def hasDiv [Div β] : Div α :=
   ⟨fun x y => e.symm (e x / e y)⟩
 #align equiv.has_div Equiv.hasDiv
+#align equiv.has_sub Equiv.hasSub
 
 @[to_additive]
 theorem div_def [Div β] (x y : α) : @Div.div _ (Equiv.hasDiv e) x y = e.symm (e x / e y) :=
   rfl
 #align equiv.div_def Equiv.div_def
+#align equiv.sub_def Equiv.sub_def
 
 /-- Transfer `has_inv` across an `equiv` -/
 @[reducible, to_additive "Transfer `has_neg` across an `equiv`"]
 protected def hasInv [Inv β] : Inv α :=
   ⟨fun x => e.symm (e x)⁻¹⟩
 #align equiv.has_inv Equiv.hasInv
+#align equiv.has_neg Equiv.hasNeg
 
 @[to_additive]
 theorem inv_def [Inv β] (x : α) : @Inv.inv _ (Equiv.hasInv e) x = e.symm (e x)⁻¹ :=
   rfl
 #align equiv.inv_def Equiv.inv_def
+#align equiv.neg_def Equiv.neg_def
 
 /-- Transfer `has_smul` across an `equiv` -/
 @[reducible]
@@ -104,6 +112,7 @@ theorem smul_def {R : Type _} [SMul R β] (r : R) (x : α) :
 protected def hasPow (N : Type _) [Pow β N] : Pow α N :=
   ⟨fun x n => e.symm (e x ^ n)⟩
 #align equiv.has_pow Equiv.hasPow
+#align equiv.has_smul Equiv.hasSmul
 
 theorem pow_def {N : Type _} [Pow β N] (n : N) (x : α) :
     @Pow.pow _ _ (e.HasPow N) x n = e.symm (e x ^ n) :=
@@ -127,11 +136,13 @@ def mulEquiv (e : α ≃ β) [Mul β] :
         apply e.symm.injective
         simp }
 #align equiv.mul_equiv Equiv.mulEquiv
+#align equiv.add_equiv Equiv.addEquiv
 
 @[simp, to_additive]
 theorem mul_equiv_apply (e : α ≃ β) [Mul β] (a : α) : (mulEquiv e) a = e a :=
   rfl
 #align equiv.mul_equiv_apply Equiv.mul_equiv_apply
+#align equiv.add_equiv_apply Equiv.add_equiv_apply
 
 @[to_additive]
 theorem mul_equiv_symm_apply (e : α ≃ β) [Mul β] (b : β) :
@@ -139,6 +150,7 @@ theorem mul_equiv_symm_apply (e : α ≃ β) [Mul β] (b : β) :
     (MulEquiv e).symm b = e.symm b :=
   by intros ; rfl
 #align equiv.mul_equiv_symm_apply Equiv.mul_equiv_symm_apply
+#align equiv.add_equiv_symm_apply Equiv.add_equiv_symm_apply
 
 /-- An equivalence `e : α ≃ β` gives a ring equivalence `α ≃+* β`
 where the ring structure on `α` is
@@ -180,6 +192,7 @@ protected def semigroup [Semigroup β] : Semigroup α :=
   let mul := e.HasMul
   skip <;> apply e.injective.semigroup _ <;> intros <;> exact e.apply_symm_apply _
 #align equiv.semigroup Equiv.semigroup
+#align equiv.add_semigroup Equiv.addSemigroup
 
 /-- Transfer `semigroup_with_zero` across an `equiv` -/
 @[reducible]
@@ -197,6 +210,7 @@ protected def commSemigroup [CommSemigroup β] : CommSemigroup α :=
   let mul := e.HasMul
   skip <;> apply e.injective.comm_semigroup _ <;> intros <;> exact e.apply_symm_apply _
 #align equiv.comm_semigroup Equiv.commSemigroup
+#align equiv.add_comm_semigroup Equiv.addCommSemigroup
 
 /-- Transfer `mul_zero_class` across an `equiv` -/
 @[reducible]
@@ -215,6 +229,7 @@ protected def mulOneClass [MulOneClass β] : MulOneClass α :=
   let mul := e.HasMul
   skip <;> apply e.injective.mul_one_class _ <;> intros <;> exact e.apply_symm_apply _
 #align equiv.mul_one_class Equiv.mulOneClass
+#align equiv.add_zero_class Equiv.addZeroClass
 
 /-- Transfer `mul_zero_one_class` across an `equiv` -/
 @[reducible]
@@ -235,6 +250,7 @@ protected def monoid [Monoid β] : Monoid α :=
   let pow := e.HasPow ℕ
   skip <;> apply e.injective.monoid _ <;> intros <;> exact e.apply_symm_apply _
 #align equiv.monoid Equiv.monoid
+#align equiv.add_monoid Equiv.addMonoid
 
 /-- Transfer `comm_monoid` across an `equiv` -/
 @[reducible, to_additive "Transfer `add_comm_monoid` across an `equiv`"]
@@ -245,6 +261,7 @@ protected def commMonoid [CommMonoid β] : CommMonoid α :=
   let pow := e.HasPow ℕ
   skip <;> apply e.injective.comm_monoid _ <;> intros <;> exact e.apply_symm_apply _
 #align equiv.comm_monoid Equiv.commMonoid
+#align equiv.add_comm_monoid Equiv.addCommMonoid
 
 /-- Transfer `group` across an `equiv` -/
 @[reducible, to_additive "Transfer `add_group` across an `equiv`"]
@@ -258,6 +275,7 @@ protected def group [Group β] : Group α :=
   let zpow := e.HasPow ℤ
   skip <;> apply e.injective.group _ <;> intros <;> exact e.apply_symm_apply _
 #align equiv.group Equiv.group
+#align equiv.add_group Equiv.addGroup
 
 /-- Transfer `comm_group` across an `equiv` -/
 @[reducible, to_additive "Transfer `add_comm_group` across an `equiv`"]
@@ -271,6 +289,7 @@ protected def commGroup [CommGroup β] : CommGroup α :=
   let zpow := e.HasPow ℤ
   skip <;> apply e.injective.comm_group _ <;> intros <;> exact e.apply_symm_apply _
 #align equiv.comm_group Equiv.commGroup
+#align equiv.add_comm_group Equiv.addCommGroup
 
 /-- Transfer `non_unital_non_assoc_semiring` across an `equiv` -/
 @[reducible]

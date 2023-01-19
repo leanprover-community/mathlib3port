@@ -40,6 +40,7 @@ instance : One (WithTop α) :=
 theorem coe_one : ((1 : α) : WithTop α) = 1 :=
   rfl
 #align with_top.coe_one WithTop.coe_one
+#align with_top.coe_zero WithTop.coe_zero
 -/
 
 #print WithTop.coe_eq_one /-
@@ -47,6 +48,7 @@ theorem coe_one : ((1 : α) : WithTop α) = 1 :=
 theorem coe_eq_one {a : α} : (a : WithTop α) = 1 ↔ a = 1 :=
   coe_eq_coe
 #align with_top.coe_eq_one WithTop.coe_eq_one
+#align with_top.coe_eq_zero WithTop.coe_eq_zero
 -/
 
 /- warning: with_top.one_lt_coe -> WithTop.one_lt_coe is a dubious translation:
@@ -59,6 +61,7 @@ Case conversion may be inaccurate. Consider using '#align with_top.one_lt_coe Wi
 theorem one_lt_coe [LT α] {a : α} : 1 < (a : WithTop α) ↔ 1 < a :=
   coe_lt_coe
 #align with_top.one_lt_coe WithTop.one_lt_coe
+#align with_top.coe_pos WithTop.coe_pos
 
 /- warning: with_top.coe_lt_one -> WithTop.coe_lt_one is a dubious translation:
 lean 3 declaration is
@@ -70,6 +73,7 @@ Case conversion may be inaccurate. Consider using '#align with_top.coe_lt_one Wi
 theorem coe_lt_one [LT α] {a : α} : (a : WithTop α) < 1 ↔ a < 1 :=
   coe_lt_coe
 #align with_top.coe_lt_one WithTop.coe_lt_one
+#align with_top.coe_lt_zero WithTop.coe_lt_zero
 
 /- warning: with_top.map_one -> WithTop.map_one is a dubious translation:
 lean 3 declaration is
@@ -81,12 +85,14 @@ Case conversion may be inaccurate. Consider using '#align with_top.map_one WithT
 protected theorem map_one {β} (f : α → β) : (1 : WithTop α).map f = (f 1 : WithTop β) :=
   rfl
 #align with_top.map_one WithTop.map_one
+#align with_top.map_zero WithTop.map_zero
 
 #print WithTop.one_eq_coe /-
 @[simp, norm_cast, to_additive]
 theorem one_eq_coe {a : α} : 1 = (a : WithTop α) ↔ a = 1 :=
   trans eq_comm coe_eq_one
 #align with_top.one_eq_coe WithTop.one_eq_coe
+#align with_top.zero_eq_coe WithTop.zero_eq_coe
 -/
 
 #print WithTop.top_ne_one /-
@@ -94,6 +100,7 @@ theorem one_eq_coe {a : α} : 1 = (a : WithTop α) ↔ a = 1 :=
 theorem top_ne_one : ⊤ ≠ (1 : WithTop α) :=
   fun.
 #align with_top.top_ne_one WithTop.top_ne_one
+#align with_top.top_ne_zero WithTop.top_ne_zero
 -/
 
 #print WithTop.one_ne_top /-
@@ -101,6 +108,7 @@ theorem top_ne_one : ⊤ ≠ (1 : WithTop α) :=
 theorem one_ne_top : (1 : WithTop α) ≠ ⊤ :=
   fun.
 #align with_top.one_ne_top WithTop.one_ne_top
+#align with_top.zero_ne_top WithTop.zero_ne_top
 -/
 
 instance [Zero α] [LE α] [ZeroLEOneClass α] : ZeroLEOneClass (WithTop α) :=
@@ -522,6 +530,7 @@ protected def OneHom.withTopMap {M N : Type _} [One M] [One N] (f : OneHom M N) 
   toFun := WithTop.map f
   map_one' := by rw [WithTop.map_one, map_one, coe_one]
 #align one_hom.with_top_map OneHom.withTopMap
+#align zero_hom.with_top_map ZeroHom.withTopMap
 -/
 
 #print AddHom.withTopMap /-
@@ -584,6 +593,7 @@ instance [Zero α] [One α] [LE α] [ZeroLEOneClass α] : ZeroLEOneClass (WithBo
 theorem coe_one [One α] : ((1 : α) : WithBot α) = 1 :=
   rfl
 #align with_bot.coe_one WithBot.coe_one
+#align with_bot.coe_zero WithBot.coe_zero
 -/
 
 #print WithBot.coe_eq_one /-
@@ -592,6 +602,7 @@ theorem coe_one [One α] : ((1 : α) : WithBot α) = 1 :=
 theorem coe_eq_one [One α] {a : α} : (a : WithBot α) = 1 ↔ a = 1 :=
   WithTop.coe_eq_one
 #align with_bot.coe_eq_one WithBot.coe_eq_one
+#align with_bot.coe_eq_zero WithBot.coe_eq_zero
 -/
 
 /- warning: with_bot.one_lt_coe -> WithBot.one_lt_coe is a dubious translation:
@@ -604,6 +615,7 @@ Case conversion may be inaccurate. Consider using '#align with_bot.one_lt_coe Wi
 theorem one_lt_coe [One α] [LT α] {a : α} : 1 < (a : WithBot α) ↔ 1 < a :=
   coe_lt_coe
 #align with_bot.one_lt_coe WithBot.one_lt_coe
+#align with_bot.coe_pos WithBot.coe_pos
 
 /- warning: with_bot.coe_lt_one -> WithBot.coe_lt_one is a dubious translation:
 lean 3 declaration is
@@ -615,6 +627,7 @@ Case conversion may be inaccurate. Consider using '#align with_bot.coe_lt_one Wi
 theorem coe_lt_one [One α] [LT α] {a : α} : (a : WithBot α) < 1 ↔ a < 1 :=
   coe_lt_coe
 #align with_bot.coe_lt_one WithBot.coe_lt_one
+#align with_bot.coe_lt_zero WithBot.coe_lt_zero
 
 /- warning: with_bot.map_one -> WithBot.map_one is a dubious translation:
 lean 3 declaration is
@@ -626,6 +639,7 @@ Case conversion may be inaccurate. Consider using '#align with_bot.map_one WithB
 protected theorem map_one {β} [One α] (f : α → β) : (1 : WithBot α).map f = (f 1 : WithBot β) :=
   rfl
 #align with_bot.map_one WithBot.map_one
+#align with_bot.map_zero WithBot.map_zero
 
 #print WithBot.coe_nat /-
 @[norm_cast]
@@ -745,6 +759,7 @@ protected def OneHom.withBotMap {M N : Type _} [One M] [One N] (f : OneHom M N) 
   toFun := WithBot.map f
   map_one' := by rw [WithBot.map_one, map_one, coe_one]
 #align one_hom.with_bot_map OneHom.withBotMap
+#align zero_hom.with_bot_map ZeroHom.withBotMap
 -/
 
 #print AddHom.withBotMap /-

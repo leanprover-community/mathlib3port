@@ -81,7 +81,7 @@ open Measure TopologicalSpace.PositiveCompacts FiniteDimensional
 
 
 /-- The Haar measure equals the Lebesgue measure on `ℝ`. -/
-theorem add_haar_measure_eq_volume : addHaarMeasure icc01 = volume :=
+theorem add_haar_measure_eq_volume : add_haar_measure icc01 = volume :=
   by
   convert (add_haar_measure_unique volume Icc01).symm
   simp [Icc01]
@@ -89,7 +89,7 @@ theorem add_haar_measure_eq_volume : addHaarMeasure icc01 = volume :=
 
 /-- The Haar measure equals the Lebesgue measure on `ℝ^ι`. -/
 theorem add_haar_measure_eq_volume_pi (ι : Type _) [Fintype ι] :
-    addHaarMeasure (piIcc01 ι) = volume :=
+    add_haar_measure (piIcc01 ι) = volume :=
   by
   convert (add_haar_measure_unique volume (pi_Icc01 ι)).symm
   simp only [pi_Icc01, volume_pi_pi fun i => Icc (0 : ℝ) 1, positive_compacts.coe_mk,
@@ -257,7 +257,7 @@ theorem map_linear_map_add_haar_eq_smul_add_haar {f : E →ₗ[ℝ] E} (hf : f.d
   have Cg : Continuous g := LinearMap.continuous_of_finite_dimensional g
   have Cesymm : Continuous e.symm := (e.symm : (ι → ℝ) →ₗ[ℝ] E).continuous_of_finite_dimensional
   rw [← map_map Cesymm.measurable (Cg.comp Ce).Measurable, ← map_map Cg.measurable Ce.measurable]
-  haveI : is_add_haar_measure (map e μ) := (e : E ≃+ (ι → ℝ)).isAddHaarMeasureMap μ Ce Cesymm
+  haveI : is_add_haar_measure (map e μ) := (e : E ≃+ (ι → ℝ)).is_add_haar_measure_map μ Ce Cesymm
   have ecomp : e.symm ∘ e = id := by
     ext x
     simp only [id.def, Function.comp_apply, LinearEquiv.symm_apply_apply]
@@ -645,7 +645,7 @@ variable {ι G : Type _} [Fintype ι] [DecidableEq ι] [NormedAddCommGroup G] [N
   [MeasurableSpace G] [BorelSpace G]
 
 theorem add_haar_parallelepiped (b : Basis ι ℝ G) (v : ι → G) :
-    b.addHaar (parallelepiped v) = Ennreal.ofReal (|b.det v|) :=
+    b.add_haar (parallelepiped v) = Ennreal.ofReal (|b.det v|) :=
   by
   have : FiniteDimensional ℝ G := FiniteDimensional.of_fintype_basis b
   have A : parallelepiped v = b.constr ℕ v '' parallelepiped b :=
@@ -667,7 +667,7 @@ parallelepiped spanned by the vectors `v₁, ..., vₙ`. Note that it is not alw
 as it can be zero, but it is always locally finite and translation invariant. -/
 noncomputable irreducible_def AlternatingMap.measure (ω : AlternatingMap ℝ G ℝ (Fin n)) :
   Measure G :=
-  ‖ω (finBasisOfFinrankEq ℝ G _i.out)‖₊ • (finBasisOfFinrankEq ℝ G _i.out).addHaar
+  ‖ω (finBasisOfFinrankEq ℝ G _i.out)‖₊ • (finBasisOfFinrankEq ℝ G _i.out).add_haar
 #align alternating_map.measure AlternatingMap.measure
 
 theorem AlternatingMap.measure_parallelepiped (ω : AlternatingMap ℝ G ℝ (Fin n)) (v : Fin n → G) :

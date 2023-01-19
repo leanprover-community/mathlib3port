@@ -40,6 +40,7 @@ instance Discrete.monoidal : MonoidalCategory (Discrete M)
   rightUnitor X := Discrete.eqToIso (mul_one X.as)
   associator X Y Z := Discrete.eqToIso (mul_assoc _ _ _)
 #align category_theory.discrete.monoidal CategoryTheory.Discrete.monoidal
+#align discrete.add_monoidal Discrete.addMonoidal
 
 variable {M} {N : Type u} [Monoid N]
 
@@ -56,6 +57,7 @@ def Discrete.monoidalFunctor (F : M →* N) : MonoidalFunctor (Discrete M) (Disc
   ε := Discrete.eqToHom F.map_one.symm
   μ X Y := Discrete.eqToHom (F.map_mul X.as Y.as).symm
 #align category_theory.discrete.monoidal_functor CategoryTheory.Discrete.monoidalFunctor
+#align discrete.add_monoidal_functor Discrete.addMonoidalFunctor
 
 variable {K : Type u} [Monoid K]
 
@@ -70,6 +72,7 @@ def Discrete.monoidalFunctorComp (F : M →* N) (G : N →* K) :
   Hom := { app := fun X => 𝟙 _ }
   inv := { app := fun X => 𝟙 _ }
 #align category_theory.discrete.monoidal_functor_comp CategoryTheory.Discrete.monoidalFunctorComp
+#align discrete.add_monoidal_functor_comp Discrete.addMonoidalFunctorComp
 
 end CategoryTheory
 

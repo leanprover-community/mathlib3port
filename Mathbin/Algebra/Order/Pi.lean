@@ -45,6 +45,7 @@ instance orderedCommMonoid {ι : Type _} {Z : ι → Type _} [∀ i, OrderedComm
   { Pi.partialOrder, Pi.commMonoid with
     mul_le_mul_left := fun f g w h i => mul_le_mul_left' (w i) _ }
 #align pi.ordered_comm_monoid Pi.orderedCommMonoid
+#align pi.ordered_add_comm_monoid Pi.orderedAddCommMonoid
 -/
 
 @[to_additive]
@@ -86,6 +87,7 @@ instance orderedCommGroup [∀ i, OrderedCommGroup <| f i] : OrderedCommGroup (�
     lt := (· < ·)
     npow := Monoid.npow }
 #align pi.ordered_comm_group Pi.orderedCommGroup
+#align pi.ordered_add_comm_group Pi.orderedAddCommGroup
 -/
 
 instance [∀ i, OrderedSemiring (f i)] : OrderedSemiring (∀ i, f i) :=
@@ -120,6 +122,7 @@ Case conversion may be inaccurate. Consider using '#align function.one_le_const_
 @[to_additive const_nonneg_of_nonneg]
 theorem one_le_const_of_one_le (ha : 1 ≤ a) : 1 ≤ const β a := fun _ => ha
 #align function.one_le_const_of_one_le Function.one_le_const_of_one_le
+#align function.const_nonneg_of_nonneg Function.const_nonneg_of_nonneg
 
 /- warning: function.const_le_one_of_le_one -> Function.const_le_one_of_le_one is a dubious translation:
 lean 3 declaration is
@@ -130,6 +133,7 @@ Case conversion may be inaccurate. Consider using '#align function.const_le_one_
 @[to_additive]
 theorem const_le_one_of_le_one (ha : a ≤ 1) : const β a ≤ 1 := fun _ => ha
 #align function.const_le_one_of_le_one Function.const_le_one_of_le_one
+#align function.const_nonpos_of_nonpos Function.const_nonpos_of_nonpos
 
 variable {β} [Nonempty β]
 
@@ -143,6 +147,7 @@ Case conversion may be inaccurate. Consider using '#align function.one_le_const 
 theorem one_le_const : 1 ≤ const β a ↔ 1 ≤ a :=
   @const_le_const _ _ _ _ 1 _
 #align function.one_le_const Function.one_le_const
+#align function.const_nonneg Function.const_nonneg
 
 /- warning: function.one_lt_const -> Function.one_lt_const is a dubious translation:
 lean 3 declaration is
@@ -154,6 +159,7 @@ Case conversion may be inaccurate. Consider using '#align function.one_lt_const 
 theorem one_lt_const : 1 < const β a ↔ 1 < a :=
   @const_lt_const _ _ _ _ 1 a
 #align function.one_lt_const Function.one_lt_const
+#align function.const_pos Function.const_pos
 
 /- warning: function.const_le_one -> Function.const_le_one is a dubious translation:
 lean 3 declaration is
@@ -165,6 +171,7 @@ Case conversion may be inaccurate. Consider using '#align function.const_le_one 
 theorem const_le_one : const β a ≤ 1 ↔ a ≤ 1 :=
   @const_le_const _ _ _ _ _ 1
 #align function.const_le_one Function.const_le_one
+#align function.const_nonpos Function.const_nonpos
 
 /- warning: function.const_lt_one -> Function.const_lt_one is a dubious translation:
 lean 3 declaration is
@@ -176,6 +183,7 @@ Case conversion may be inaccurate. Consider using '#align function.const_lt_one 
 theorem const_lt_one : const β a < 1 ↔ a < 1 :=
   @const_lt_const _ _ _ _ _ 1
 #align function.const_lt_one Function.const_lt_one
+#align function.const_neg Function.const_neg
 
 end Function
 

@@ -41,6 +41,7 @@ variable (M)
 def center [Mul M] : Set M :=
   { z | ∀ m, m * z = z * m }
 #align set.center Set.center
+#align set.add_center Set.addCenter
 -/
 
 #print Set.mem_center_iff /-
@@ -48,6 +49,7 @@ def center [Mul M] : Set M :=
 theorem mem_center_iff [Mul M] {z : M} : z ∈ center M ↔ ∀ g, g * z = z * g :=
   Iff.rfl
 #align set.mem_center_iff Set.mem_center_iff
+#align set.mem_add_center Set.mem_addCenter_iff
 -/
 
 #print Set.decidableMemCenter /-
@@ -65,6 +67,7 @@ Case conversion may be inaccurate. Consider using '#align set.one_mem_center Set
 @[simp, to_additive zero_mem_add_center]
 theorem one_mem_center [MulOneClass M] : (1 : M) ∈ Set.center M := by simp [mem_center_iff]
 #align set.one_mem_center Set.one_mem_center
+#align set.zero_mem_add_center Set.zero_mem_addCenter
 
 /- warning: set.zero_mem_center -> Set.zero_mem_center is a dubious translation:
 lean 3 declaration is
@@ -88,6 +91,7 @@ Case conversion may be inaccurate. Consider using '#align set.mul_mem_center Set
 theorem mul_mem_center [Semigroup M] {a b : M} (ha : a ∈ Set.center M) (hb : b ∈ Set.center M) :
     a * b ∈ Set.center M := fun g => by rw [mul_assoc, ← hb g, ← mul_assoc, ha g, mul_assoc]
 #align set.mul_mem_center Set.mul_mem_center
+#align set.add_mem_add_center Set.add_mem_addCenter
 
 /- warning: set.inv_mem_center -> Set.inv_mem_center is a dubious translation:
 lean 3 declaration is
@@ -99,6 +103,7 @@ Case conversion may be inaccurate. Consider using '#align set.inv_mem_center Set
 theorem inv_mem_center [Group M] {a : M} (ha : a ∈ Set.center M) : a⁻¹ ∈ Set.center M := fun g => by
   rw [← inv_inj, mul_inv_rev, inv_inv, ← ha, mul_inv_rev, inv_inv]
 #align set.inv_mem_center Set.inv_mem_center
+#align set.neg_mem_add_center Set.neg_mem_addCenter
 
 /- warning: set.add_mem_center -> Set.add_mem_center is a dubious translation:
 lean 3 declaration is
@@ -132,6 +137,7 @@ Case conversion may be inaccurate. Consider using '#align set.subset_center_unit
 theorem subset_center_units [Monoid M] : (coe : Mˣ → M) ⁻¹' center M ⊆ Set.center Mˣ :=
   fun a ha b => Units.ext <| ha _
 #align set.subset_center_units Set.subset_center_units
+#align set.subset_add_center_add_units Set.subset_addCenter_add_units
 
 /- warning: set.center_units_subset -> Set.center_units_subset is a dubious translation:
 lean 3 declaration is
@@ -186,6 +192,7 @@ theorem div_mem_center [Group M] {a b : M} (ha : a ∈ Set.center M) (hb : b ∈
   rw [div_eq_mul_inv]
   exact mul_mem_center ha (inv_mem_center hb)
 #align set.div_mem_center Set.div_mem_center
+#align set.sub_mem_add_center Set.sub_mem_addCenter
 
 /- warning: set.div_mem_center₀ -> Set.div_mem_center₀ is a dubious translation:
 lean 3 declaration is
@@ -213,6 +220,7 @@ Case conversion may be inaccurate. Consider using '#align set.center_eq_univ Set
 theorem center_eq_univ [CommSemigroup M] : center M = Set.univ :=
   Subset.antisymm (subset_univ _) fun x _ y => mul_comm y x
 #align set.center_eq_univ Set.center_eq_univ
+#align set.add_center_eq_univ Set.addCenter_eq_univ
 
 end Set
 
@@ -235,6 +243,7 @@ def center : Subsemigroup M where
   carrier := Set.center M
   mul_mem' a b := Set.mul_mem_center
 #align subsemigroup.center Subsemigroup.center
+#align add_subsemigroup.center AddSubsemigroup.center
 
 /- warning: subsemigroup.coe_center clashes with [anonymous] -> [anonymous]
 warning: subsemigroup.coe_center -> [anonymous] is a dubious translation:
@@ -260,6 +269,7 @@ Case conversion may be inaccurate. Consider using '#align subsemigroup.mem_cente
 theorem mem_center_iff {z : M} : z ∈ center M ↔ ∀ g, g * z = z * g :=
   Iff.rfl
 #align subsemigroup.mem_center_iff Subsemigroup.mem_center_iff
+#align add_subsemigroup.mem_center_iff AddSubsemigroup.mem_center_iff
 
 /- warning: subsemigroup.decidable_mem_center -> Subsemigroup.decidableMemCenter is a dubious translation:
 lean 3 declaration is
@@ -271,6 +281,7 @@ Case conversion may be inaccurate. Consider using '#align subsemigroup.decidable
 instance decidableMemCenter (a) [Decidable <| ∀ b : M, b * a = a * b] : Decidable (a ∈ center M) :=
   decidable_of_iff' _ mem_center_iff
 #align subsemigroup.decidable_mem_center Subsemigroup.decidableMemCenter
+#align add_subsemigroup.decidable_mem_center AddSubsemigroup.decidableMemCenter
 
 /-- The center of a semigroup is commutative. -/
 @[to_additive "The center of an additive semigroup is commutative."]
@@ -293,6 +304,7 @@ Case conversion may be inaccurate. Consider using '#align subsemigroup.center_eq
 theorem center_eq_top : center M = ⊤ :=
   SetLike.coe_injective (Set.center_eq_univ M)
 #align subsemigroup.center_eq_top Subsemigroup.center_eq_top
+#align add_subsemigroup.center_eq_top AddSubsemigroup.center_eq_top
 
 end
 

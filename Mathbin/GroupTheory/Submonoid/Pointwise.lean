@@ -68,11 +68,13 @@ theorem mul_subset {S : Submonoid M} (hs : s ⊆ S) (ht : t ⊆ S) : s * t ⊆ S
   rintro _ ⟨p, q, hp, hq, rfl⟩
   exact Submonoid.mul_mem _ (hs hp) (ht hq)
 #align submonoid.mul_subset Submonoid.mul_subset
+#align add_submonoid.add_subset AddSubmonoid.add_subset
 
 @[to_additive]
 theorem mul_subset_closure (hs : s ⊆ u) (ht : t ⊆ u) : s * t ⊆ Submonoid.closure u :=
   mul_subset (Subset.trans hs Submonoid.subset_closure) (Subset.trans ht Submonoid.subset_closure)
 #align submonoid.mul_subset_closure Submonoid.mul_subset_closure
+#align add_submonoid.add_subset_closure AddSubmonoid.add_subset_closure
 
 @[to_additive]
 theorem coe_mul_self_eq (s : Submonoid M) : (s : Set M) * s = s :=
@@ -82,6 +84,7 @@ theorem coe_mul_self_eq (s : Submonoid M) : (s : Set M) * s = s :=
   rintro ⟨a, b, ha, hb, rfl⟩
   exact s.mul_mem ha hb
 #align submonoid.coe_mul_self_eq Submonoid.coe_mul_self_eq
+#align add_submonoid.coe_add_self_eq AddSubmonoid.coe_add_self_eq
 
 @[to_additive]
 theorem closure_mul_le (S T : Set M) : closure (S * T) ≤ closure S ⊔ closure T :=
@@ -90,6 +93,7 @@ theorem closure_mul_le (S T : Set M) : closure (S * T) ≤ closure S ⊔ closure
       (closure S ⊔ closure T).mul_mem (SetLike.le_def.mp le_sup_left <| subset_closure hs)
         (SetLike.le_def.mp le_sup_right <| subset_closure ht)
 #align submonoid.closure_mul_le Submonoid.closure_mul_le
+#align add_submonoid.closure_add_le AddSubmonoid.closure_add_le
 
 @[to_additive]
 theorem sup_eq_closure (H K : Submonoid M) : H ⊔ K = closure (H * K) :=
@@ -98,6 +102,7 @@ theorem sup_eq_closure (H K : Submonoid M) : H ⊔ K = closure (H * K) :=
       subset_closure ⟨1, k, H.one_mem, hk, one_mul k⟩)
     (by conv_rhs => rw [← closure_eq H, ← closure_eq K] <;> apply closure_mul_le)
 #align submonoid.sup_eq_closure Submonoid.sup_eq_closure
+#align add_submonoid.sup_eq_closure AddSubmonoid.sup_eq_closure
 
 @[to_additive]
 theorem pow_smul_mem_closure_smul {N : Type _} [CommMonoid N] [MulAction M N] [IsScalarTower M N N]
@@ -112,6 +117,7 @@ theorem pow_smul_mem_closure_smul {N : Type _} [CommMonoid N] [MulAction M N] [I
     convert mul_mem hx hy
     rw [pow_add, smul_mul_assoc, mul_smul, mul_comm, ← smul_mul_assoc, mul_comm]
 #align submonoid.pow_smul_mem_closure_smul Submonoid.pow_smul_mem_closure_smul
+#align add_submonoid.nsmul_vadd_mem_closure_vadd AddSubmonoid.nsmul_vadd_mem_closure_vadd
 
 variable [Group G]
 
@@ -131,6 +137,7 @@ protected def hasInv : Inv (Submonoid G)
           rw [mul_inv_rev]
           exact S.mul_mem hb ha }
 #align submonoid.has_inv Submonoid.hasInv
+#align add_submonoid.has_neg AddSubmonoid.hasNeg
 
 scoped[Pointwise] attribute [instance] Submonoid.hasInv
 
@@ -140,11 +147,13 @@ open Pointwise
 theorem coe_inv (S : Submonoid G) : ↑S⁻¹ = (S : Set G)⁻¹ :=
   rfl
 #align submonoid.coe_inv Submonoid.coe_inv
+#align add_submonoid.coe_neg AddSubmonoid.coe_neg
 
 @[simp, to_additive]
 theorem mem_inv {g : G} {S : Submonoid G} : g ∈ S⁻¹ ↔ g⁻¹ ∈ S :=
   Iff.rfl
 #align submonoid.mem_inv Submonoid.mem_inv
+#align add_submonoid.mem_neg AddSubmonoid.mem_neg
 
 @[to_additive]
 instance : InvolutiveInv (Submonoid G) :=
@@ -154,11 +163,13 @@ instance : InvolutiveInv (Submonoid G) :=
 theorem inv_le_inv (S T : Submonoid G) : S⁻¹ ≤ T⁻¹ ↔ S ≤ T :=
   SetLike.coe_subset_coe.symm.trans Set.inv_subset_inv
 #align submonoid.inv_le_inv Submonoid.inv_le_inv
+#align add_submonoid.neg_le_neg AddSubmonoid.neg_le_neg
 
 @[to_additive]
 theorem inv_le (S T : Submonoid G) : S⁻¹ ≤ T ↔ S ≤ T⁻¹ :=
   SetLike.coe_subset_coe.symm.trans Set.inv_subset
 #align submonoid.inv_le Submonoid.inv_le
+#align add_submonoid.neg_le AddSubmonoid.neg_le
 
 /-- `submonoid.has_inv` as an order isomorphism. -/
 @[to_additive " `add_submonoid.has_neg` as an order isomorphism ", simps]
@@ -167,6 +178,7 @@ def invOrderIso : Submonoid G ≃o Submonoid G
   toEquiv := Equiv.inv _
   map_rel_iff' := inv_le_inv
 #align submonoid.inv_order_iso Submonoid.invOrderIso
+#align add_submonoid.neg_order_iso AddSubmonoid.negOrderIso
 
 @[to_additive]
 theorem closure_inv (s : Set G) : closure s⁻¹ = (closure s)⁻¹ :=
@@ -177,36 +189,43 @@ theorem closure_inv (s : Set G) : closure s⁻¹ = (closure s)⁻¹ :=
   · rw [inv_le, closure_le, coe_inv, ← Set.inv_subset]
     exact subset_closure
 #align submonoid.closure_inv Submonoid.closure_inv
+#align add_submonoid.closure_neg AddSubmonoid.closure_neg
 
 @[simp, to_additive]
 theorem inv_inf (S T : Submonoid G) : (S ⊓ T)⁻¹ = S⁻¹ ⊓ T⁻¹ :=
   SetLike.coe_injective Set.inter_inv
 #align submonoid.inv_inf Submonoid.inv_inf
+#align add_submonoid.neg_inf AddSubmonoid.neg_inf
 
 @[simp, to_additive]
 theorem inv_sup (S T : Submonoid G) : (S ⊔ T)⁻¹ = S⁻¹ ⊔ T⁻¹ :=
   (invOrderIso : Submonoid G ≃o Submonoid G).map_sup S T
 #align submonoid.inv_sup Submonoid.inv_sup
+#align add_submonoid.neg_sup AddSubmonoid.neg_sup
 
 @[simp, to_additive]
 theorem inv_bot : (⊥ : Submonoid G)⁻¹ = ⊥ :=
   SetLike.coe_injective <| (Set.inv_singleton 1).trans <| congr_arg _ inv_one
 #align submonoid.inv_bot Submonoid.inv_bot
+#align add_submonoid.neg_bot AddSubmonoid.neg_bot
 
 @[simp, to_additive]
 theorem inv_top : (⊤ : Submonoid G)⁻¹ = ⊤ :=
   SetLike.coe_injective <| Set.inv_univ
 #align submonoid.inv_top Submonoid.inv_top
+#align add_submonoid.neg_top AddSubmonoid.neg_top
 
 @[simp, to_additive]
 theorem inv_infi {ι : Sort _} (S : ι → Submonoid G) : (⨅ i, S i)⁻¹ = ⨅ i, (S i)⁻¹ :=
   (invOrderIso : Submonoid G ≃o Submonoid G).map_infi _
 #align submonoid.inv_infi Submonoid.inv_infi
+#align add_submonoid.neg_infi AddSubmonoid.neg_infi
 
 @[simp, to_additive]
 theorem inv_supr {ι : Sort _} (S : ι → Submonoid G) : (⨆ i, S i)⁻¹ = ⨆ i, (S i)⁻¹ :=
   (invOrderIso : Submonoid G ≃o Submonoid G).map_supr _
 #align submonoid.inv_supr Submonoid.inv_supr
+#align add_submonoid.neg_supr AddSubmonoid.neg_supr
 
 end Submonoid
 
@@ -348,6 +367,7 @@ open Pointwise
 theorem mem_closure_inv {G : Type _} [Group G] (S : Set G) (x : G) :
     x ∈ Submonoid.closure S⁻¹ ↔ x⁻¹ ∈ Submonoid.closure S := by rw [closure_inv, mem_inv]
 #align submonoid.mem_closure_inv Submonoid.mem_closure_inv
+#align add_submonoid.mem_closure_neg AddSubmonoid.mem_closure_neg
 
 end Submonoid
 
@@ -723,6 +743,7 @@ theorem submonoid_closure (hpos : ∀ x : α, x ∈ s → 1 ≤ x) (h : s.IsPwo)
   refine' (h.partially_well_ordered_on_sublist_forall₂ (· ≤ ·)).image_of_monotone_on _
   exact fun l1 hl1 l2 hl2 h12 => h12.prod_le_prod' fun x hx => hpos x <| hl2 x hx
 #align set.is_pwo.submonoid_closure Set.IsPwo.submonoid_closure
+#align set.is_pwo.add_submonoid_closure Set.IsPwo.add_submonoid_closure
 
 end Set.IsPwo
 

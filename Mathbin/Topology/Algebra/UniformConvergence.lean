@@ -130,6 +130,7 @@ protected theorem UniformFun.has_basis_nhds_one_of_basis {p : ι → Prop} {b : 
   ext (i f)
   simp [UniformFun.gen]
 #align uniform_fun.has_basis_nhds_one_of_basis UniformFun.has_basis_nhds_one_of_basis
+#align uniform_fun.has_basis_nhds_zero_of_basis UniformFun.has_basis_nhds_zero_of_basis
 
 @[to_additive]
 protected theorem UniformFun.has_basis_nhds_one :
@@ -137,6 +138,7 @@ protected theorem UniformFun.has_basis_nhds_one :
       { f : α → G | ∀ x, f x ∈ V } :=
   UniformFun.has_basis_nhds_one_of_basis (basis_sets _)
 #align uniform_fun.has_basis_nhds_one UniformFun.has_basis_nhds_one
+#align uniform_fun.has_basis_nhds_zero UniformFun.has_basis_nhds_zero
 
 /-- Let `𝔖 : set (set α)`. If `G` is a uniform group, then `α →ᵤ[𝔖] G` is a uniform group as
 well. -/
@@ -165,6 +167,7 @@ protected theorem UniformOnFun.has_basis_nhds_one_of_basis (𝔖 : Set <| Set α
   ext (i f)
   simp [UniformOnFun.gen]
 #align uniform_on_fun.has_basis_nhds_one_of_basis UniformOnFun.has_basis_nhds_one_of_basis
+#align uniform_on_fun.has_basis_nhds_zero_of_basis UniformOnFun.has_basis_nhds_zero_of_basis
 
 @[to_additive]
 protected theorem UniformOnFun.has_basis_nhds_one (𝔖 : Set <| Set α) (h𝔖₁ : 𝔖.Nonempty)
@@ -174,6 +177,7 @@ protected theorem UniformOnFun.has_basis_nhds_one (𝔖 : Set <| Set α) (h𝔖�
       { f : α →ᵤ[𝔖] G | ∀ x ∈ SV.1, f x ∈ SV.2 } :=
   UniformOnFun.has_basis_nhds_one_of_basis 𝔖 h𝔖₁ h𝔖₂ (basis_sets _)
 #align uniform_on_fun.has_basis_nhds_one UniformOnFun.has_basis_nhds_one
+#align uniform_on_fun.has_basis_nhds_zero UniformOnFun.has_basis_nhds_zero
 
 end Group
 

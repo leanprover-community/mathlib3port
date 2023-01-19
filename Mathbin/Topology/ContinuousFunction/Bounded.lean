@@ -659,23 +659,29 @@ instance : One (α →ᵇ β) :=
 theorem coe_one : ((1 : α →ᵇ β) : α → β) = 1 :=
   rfl
 #align bounded_continuous_function.coe_one BoundedContinuousFunction.coe_one
+#align bounded_continuous_function.coe_zero BoundedContinuousFunction.coe_zero
 
 @[simp, to_additive]
 theorem mk_of_compact_one [CompactSpace α] : mkOfCompact (1 : C(α, β)) = 1 :=
   rfl
 #align bounded_continuous_function.mk_of_compact_one BoundedContinuousFunction.mk_of_compact_one
+#align bounded_continuous_function.mk_of_compact_zero BoundedContinuousFunction.mk_of_compact_zero
 
 @[to_additive]
 theorem forall_coe_one_iff_one (f : α →ᵇ β) : (∀ x, f x = 1) ↔ f = 1 :=
   (@FunLike.ext_iff _ _ _ _ f 1).symm
 #align
   bounded_continuous_function.forall_coe_one_iff_one BoundedContinuousFunction.forall_coe_one_iff_one
+#align
+  bounded_continuous_function.forall_coe_zero_iff_zero BoundedContinuousFunction.forall_coe_zero_iff_zero
 
 @[simp, to_additive]
 theorem one_comp_continuous [TopologicalSpace γ] (f : C(γ, α)) :
     (1 : α →ᵇ β).comp_continuous f = 1 :=
   rfl
 #align bounded_continuous_function.one_comp_continuous BoundedContinuousFunction.one_comp_continuous
+#align
+  bounded_continuous_function.zero_comp_continuous BoundedContinuousFunction.zero_comp_continuous
 
 end One
 

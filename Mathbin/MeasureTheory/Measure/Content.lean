@@ -235,6 +235,8 @@ theorem is_mul_left_invariant_inner_content [Group G] [TopologicalGroup G]
   convert μ.inner_content_comap (Homeomorph.mulLeft g) (fun K => h g) U
 #align
   measure_theory.content.is_mul_left_invariant_inner_content MeasureTheory.Content.is_mul_left_invariant_inner_content
+#align
+  measure_theory.content.is_add_left_invariant_inner_content MeasureTheory.Content.is_add_left_invariant_inner_content
 
 @[to_additive]
 theorem inner_content_pos_of_is_mul_left_invariant [T2Space G] [Group G] [TopologicalGroup G]
@@ -254,6 +256,8 @@ theorem inner_content_pos_of_is_mul_left_invariant [T2Space G] [Group G] [Topolo
   simp only [μ.is_mul_left_invariant_inner_content h3, Finset.sum_const, nsmul_eq_mul, le_refl]
 #align
   measure_theory.content.inner_content_pos_of_is_mul_left_invariant MeasureTheory.Content.inner_content_pos_of_is_mul_left_invariant
+#align
+  measure_theory.content.inner_content_pos_of_is_add_left_invariant MeasureTheory.Content.inner_content_pos_of_is_add_left_invariant
 
 theorem inner_content_mono' ⦃U V : Set G⦄ (hU : IsOpen U) (hV : IsOpen V) (h2 : U ⊆ V) :
     μ.innerContent ⟨U, hU⟩ ≤ μ.innerContent ⟨V, hV⟩ :=
@@ -352,6 +356,8 @@ theorem is_mul_left_invariant_outer_measure [Group G] [TopologicalGroup G]
   convert μ.outer_measure_preimage (Homeomorph.mulLeft g) (fun K => h g) A
 #align
   measure_theory.content.is_mul_left_invariant_outer_measure MeasureTheory.Content.is_mul_left_invariant_outer_measure
+#align
+  measure_theory.content.is_add_left_invariant_outer_measure MeasureTheory.Content.is_add_left_invariant_outer_measure
 
 theorem outer_measure_caratheodory (A : Set G) :
     measurable_set[μ.OuterMeasure.caratheodory] A ↔
@@ -373,6 +379,8 @@ theorem outer_measure_pos_of_is_mul_left_invariant [Group G] [TopologicalGroup G
   exact μ.outer_measure_opens ⟨U, h1U⟩
 #align
   measure_theory.content.outer_measure_pos_of_is_mul_left_invariant MeasureTheory.Content.outer_measure_pos_of_is_mul_left_invariant
+#align
+  measure_theory.content.outer_measure_pos_of_is_add_left_invariant MeasureTheory.Content.outer_measure_pos_of_is_add_left_invariant
 
 variable [S : MeasurableSpace G] [BorelSpace G]
 

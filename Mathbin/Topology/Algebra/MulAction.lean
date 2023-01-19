@@ -77,6 +77,7 @@ variable [SMul M X] [HasContinuousSmul M X]
 instance (priority := 100) HasContinuousSmul.has_continuous_const_smul : HasContinuousConstSmul M X
     where continuous_const_smul _ := continuous_smul.comp (continuous_const.prod_mk continuous_id)
 #align has_continuous_smul.has_continuous_const_smul HasContinuousSmul.has_continuous_const_smul
+#align has_continuous_vadd.has_continuous_const_vadd HasContinuousVadd.has_continuous_const_vadd
 
 @[to_additive]
 theorem Filter.Tendsto.smul {f : α → M} {g : α → X} {l : Filter α} {c : M} {a : X}
@@ -84,12 +85,14 @@ theorem Filter.Tendsto.smul {f : α → M} {g : α → X} {l : Filter α} {c : M
     Tendsto (fun x => f x • g x) l (𝓝 <| c • a) :=
   (continuous_smul.Tendsto _).comp (hf.prod_mk_nhds hg)
 #align filter.tendsto.smul Filter.Tendsto.smul
+#align filter.tendsto.vadd Filter.Tendsto.vadd
 
 @[to_additive]
 theorem Filter.Tendsto.smul_const {f : α → M} {l : Filter α} {c : M} (hf : Tendsto f l (𝓝 c))
     (a : X) : Tendsto (fun x => f x • a) l (𝓝 (c • a)) :=
   hf.smul tendsto_const_nhds
 #align filter.tendsto.smul_const Filter.Tendsto.smul_const
+#align filter.tendsto.vadd_const Filter.Tendsto.vadd_const
 
 variable {f : Y → M} {g : Y → X} {b : Y} {s : Set Y}
 
@@ -98,22 +101,26 @@ theorem ContinuousWithinAt.smul (hf : ContinuousWithinAt f s b) (hg : Continuous
     ContinuousWithinAt (fun x => f x • g x) s b :=
   hf.smul hg
 #align continuous_within_at.smul ContinuousWithinAt.smul
+#align continuous_within_at.vadd ContinuousWithinAt.vadd
 
 @[to_additive]
 theorem ContinuousAt.smul (hf : ContinuousAt f b) (hg : ContinuousAt g b) :
     ContinuousAt (fun x => f x • g x) b :=
   hf.smul hg
 #align continuous_at.smul ContinuousAt.smul
+#align continuous_at.vadd ContinuousAt.vadd
 
 @[to_additive]
 theorem ContinuousOn.smul (hf : ContinuousOn f s) (hg : ContinuousOn g s) :
     ContinuousOn (fun x => f x • g x) s := fun x hx => (hf x hx).smul (hg x hx)
 #align continuous_on.smul ContinuousOn.smul
+#align continuous_on.vadd ContinuousOn.vadd
 
 @[continuity, to_additive]
 theorem Continuous.smul (hf : Continuous f) (hg : Continuous g) : Continuous fun x => f x • g x :=
   continuous_smul.comp (hf.prod_mk hg)
 #align continuous.smul Continuous.smul
+#align continuous.vadd Continuous.vadd
 
 /-- If a scalar action is central, then its right action is continuous when its left action is. -/
 @[to_additive
@@ -124,12 +131,14 @@ instance HasContinuousSmul.op [SMul Mᵐᵒᵖ X] [IsCentralScalar M X] : HasCon
       this.comp (MulOpposite.continuous_unop.prod_map continuous_id)
     simpa only [op_smul_eq_smul] using (continuous_smul : Continuous fun p : M × X => _)⟩
 #align has_continuous_smul.op HasContinuousSmul.op
+#align has_continuous_vadd.op HasContinuousVadd.op
 
 @[to_additive]
 instance MulOpposite.has_continuous_smul : HasContinuousSmul M Xᵐᵒᵖ :=
   ⟨MulOpposite.continuous_op.comp <|
       continuous_smul.comp <| continuous_id.prod_map MulOpposite.continuous_unop⟩
 #align mul_opposite.has_continuous_smul MulOpposite.has_continuous_smul
+#align add_opposite.has_continuous_vadd AddOpposite.has_continuous_vadd
 
 end SMul
 
@@ -143,6 +152,7 @@ instance Units.has_continuous_smul : HasContinuousSmul Mˣ X
     show Continuous ((fun p : M × X => p.fst • p.snd) ∘ fun p : Mˣ × X => (p.1, p.2)) from
       continuous_smul.comp ((Units.continuous_coe.comp continuous_fst).prod_mk continuous_snd)
 #align units.has_continuous_smul Units.has_continuous_smul
+#align add_units.has_continuous_vadd AddUnits.has_continuous_vadd
 
 end Monoid
 
@@ -176,12 +186,14 @@ theorem has_continuous_smul_Inf {ts : Set (TopologicalSpace X)}
           continuous_Inf_dom₂ (Eq.refl _) ht
             (@HasContinuousSmul.continuous_smul _ _ _ _ t (h t ht)) }
 #align has_continuous_smul_Inf has_continuous_smul_Inf
+#align has_continuous_vadd_Inf has_continuous_vadd_Inf
 
 @[to_additive]
 theorem has_continuous_smul_infi {ts' : ι → TopologicalSpace X}
     (h : ∀ i, @HasContinuousSmul M X _ _ (ts' i)) : @HasContinuousSmul M X _ _ (⨅ i, ts' i) :=
   has_continuous_smul_Inf <| Set.forall_range_iff.mpr h
 #align has_continuous_smul_infi has_continuous_smul_infi
+#align has_continuous_vadd_infi has_continuous_vadd_infi
 
 @[to_additive]
 theorem has_continuous_smul_inf {t₁ t₂ : TopologicalSpace X} [@HasContinuousSmul M X _ _ t₁]
@@ -191,6 +203,7 @@ theorem has_continuous_smul_inf {t₁ t₂ : TopologicalSpace X} [@HasContinuous
   refine' has_continuous_smul_infi fun b => _
   cases b <;> assumption
 #align has_continuous_smul_inf has_continuous_smul_inf
+#align has_continuous_vadd_inf has_continuous_vadd_inf
 
 end LatticeOps
 

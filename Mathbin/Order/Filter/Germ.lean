@@ -344,6 +344,7 @@ instance [Mul M] : Mul (Germ l M) :=
 theorem coe_mul [Mul M] (f g : α → M) : ↑(f * g) = (f * g : Germ l M) :=
   rfl
 #align filter.germ.coe_mul Filter.Germ.coe_mul
+#align filter.germ.coe_add Filter.Germ.coe_add
 
 @[to_additive]
 instance [One M] : One (Germ l M) :=
@@ -353,6 +354,7 @@ instance [One M] : One (Germ l M) :=
 theorem coe_one [One M] : ↑(1 : α → M) = (1 : Germ l M) :=
   rfl
 #align filter.germ.coe_one Filter.Germ.coe_one
+#align filter.germ.coe_zero Filter.Germ.coe_zero
 
 @[to_additive]
 instance [Semigroup M] : Semigroup (Germ l M) :=
@@ -393,21 +395,25 @@ instance [Pow G M] : Pow (Germ l G) M :=
 theorem coe_smul [SMul M G] (n : M) (f : α → G) : ↑(n • f) = (n • f : Germ l G) :=
   rfl
 #align filter.germ.coe_smul Filter.Germ.coe_smul
+#align filter.germ.coe_vadd Filter.Germ.coe_vadd
 
 @[simp, norm_cast, to_additive]
 theorem const_smul [SMul M G] (n : M) (a : G) : (↑(n • a) : Germ l G) = n • ↑a :=
   rfl
 #align filter.germ.const_smul Filter.Germ.const_smul
+#align filter.germ.const_vadd Filter.Germ.const_vadd
 
 @[simp, norm_cast, to_additive coe_smul]
 theorem coe_pow [Pow G M] (f : α → G) (n : M) : ↑(f ^ n) = (f ^ n : Germ l G) :=
   rfl
 #align filter.germ.coe_pow Filter.Germ.coe_pow
+#align filter.germ.coe_smul Filter.Germ.coe_smul
 
 @[simp, norm_cast, to_additive const_smul]
 theorem const_pow [Pow G M] (a : G) (n : M) : (↑(a ^ n) : Germ l G) = ↑a ^ n :=
   rfl
 #align filter.germ.const_pow Filter.Germ.const_pow
+#align filter.germ.const_smul Filter.Germ.const_smul
 
 @[to_additive]
 instance [Monoid M] : Monoid (Germ l M) :=
@@ -418,11 +424,13 @@ instance [Monoid M] : Monoid (Germ l M) :=
 def coeMulHom [Monoid M] (l : Filter α) : (α → M) →* Germ l M :=
   ⟨coe, rfl, fun f g => rfl⟩
 #align filter.germ.coe_mul_hom Filter.Germ.coeMulHom
+#align filter.germ.coe_add_hom Filter.Germ.coeAddHom
 
 @[simp, to_additive]
 theorem coe_coe_mul_hom [Monoid M] : (coeMulHom l : (α → M) → Germ l M) = coe :=
   rfl
 #align filter.germ.coe_coe_mul_hom Filter.Germ.coe_coe_mul_hom
+#align filter.germ.coe_coe_add_hom Filter.Germ.coe_coe_add_hom
 
 @[to_additive]
 instance [CommMonoid M] : CommMonoid (Germ l M) :=
@@ -444,11 +452,13 @@ instance [Inv G] : Inv (Germ l G) :=
 theorem coe_inv [Inv G] (f : α → G) : ↑f⁻¹ = (f⁻¹ : Germ l G) :=
   rfl
 #align filter.germ.coe_inv Filter.Germ.coe_inv
+#align filter.germ.coe_neg Filter.Germ.coe_neg
 
 @[simp, norm_cast, to_additive]
 theorem const_inv [Inv G] (a : G) : (↑a⁻¹ : Germ l G) = (↑a)⁻¹ :=
   rfl
 #align filter.germ.const_inv Filter.Germ.const_inv
+#align filter.germ.const_neg Filter.Germ.const_neg
 
 @[to_additive]
 instance [Div M] : Div (Germ l M) :=
@@ -458,11 +468,13 @@ instance [Div M] : Div (Germ l M) :=
 theorem coe_div [Div M] (f g : α → M) : ↑(f / g) = (f / g : Germ l M) :=
   rfl
 #align filter.germ.coe_div Filter.Germ.coe_div
+#align filter.germ.coe_sub Filter.Germ.coe_sub
 
 @[simp, norm_cast, to_additive]
 theorem const_div [Div M] (a b : M) : (↑(a / b) : Germ l M) = ↑a / ↑b :=
   rfl
 #align filter.germ.const_div Filter.Germ.const_div
+#align filter.germ.const_sub Filter.Germ.const_sub
 
 @[to_additive SubNegMonoid]
 instance [DivInvMonoid G] : DivInvMonoid (Germ l G) :=
@@ -554,11 +566,13 @@ variable {M N R : Type _}
 instance hasSmul' [SMul M β] : SMul (Germ l M) (Germ l β) :=
   ⟨map₂ (· • ·)⟩
 #align filter.germ.has_smul' Filter.Germ.hasSmul'
+#align filter.germ.has_vadd' Filter.Germ.hasVadd'
 
 @[simp, norm_cast, to_additive]
 theorem coe_smul' [SMul M β] (c : α → M) (f : α → β) : ↑(c • f) = (c : Germ l M) • (f : Germ l β) :=
   rfl
 #align filter.germ.coe_smul' Filter.Germ.coe_smul'
+#align filter.germ.coe_vadd' Filter.Germ.coe_vadd'
 
 @[to_additive]
 instance [Monoid M] [MulAction M β] : MulAction M (Germ l β)
@@ -581,6 +595,7 @@ instance mulAction' [Monoid M] [MulAction M β] : MulAction (Germ l M) (Germ l �
       norm_cast
       simp only [mul_smul]
 #align filter.germ.mul_action' Filter.Germ.mulAction'
+#align filter.germ.add_action' Filter.Germ.addAction'
 
 instance [Monoid M] [AddMonoid N] [DistribMulAction M N] : DistribMulAction M (Germ l N)
     where

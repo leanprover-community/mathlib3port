@@ -106,7 +106,7 @@ end HasLimits
 
 open HasLimits
 
-/- ./././Mathport/Syntax/Translate/Command.lean:309:38: unsupported irreducible non-definition -/
+/- ./././Mathport/Syntax/Translate/Command.lean:317:38: unsupported irreducible non-definition -/
 /-- The category of rings has all limits. -/
 irreducible_def hasLimitsOfSize : HasLimitsOfSize.{v} SemiRingCat.{max v u} :=
   {
@@ -126,7 +126,7 @@ instance has_limits : HasLimits SemiRingCat.{u} :=
 -/
 def forget₂AddCommMonPreservesLimitsAux (F : J ⥤ SemiRingCat.{max v u}) :
     IsLimit ((forget₂ SemiRingCat AddCommMonCat).mapCone (limitCone F)) := by
-  apply AddCommMonCat.limitConeIsLimit (F ⋙ forget₂ SemiRingCat AddCommMonCat.{max v u})
+  apply AddCommMonCat.limit_cone_is_limit (F ⋙ forget₂ SemiRingCat AddCommMonCat.{max v u})
 #align
   SemiRing.forget₂_AddCommMon_preserves_limits_aux SemiRingCat.forget₂AddCommMonPreservesLimitsAux
 
@@ -240,7 +240,7 @@ def limitConeIsLimit (F : J ⥤ CommSemiRingCat.{max v u}) : IsLimit (limitCone 
   liftedLimitIsLimit _
 #align CommSemiRing.limit_cone_is_limit CommSemiRingCat.limitConeIsLimit
 
-/- ./././Mathport/Syntax/Translate/Command.lean:309:38: unsupported irreducible non-definition -/
+/- ./././Mathport/Syntax/Translate/Command.lean:317:38: unsupported irreducible non-definition -/
 /-- The category of rings has all limits. -/
 irreducible_def hasLimitsOfSize : HasLimitsOfSize.{v, v} CommSemiRingCat.{max v u} :=
   {
@@ -343,7 +343,7 @@ def limitConeIsLimit (F : J ⥤ RingCat.{max v u}) : IsLimit (limitCone F) :=
   liftedLimitIsLimit _
 #align Ring.limit_cone_is_limit RingCat.limitConeIsLimit
 
-/- ./././Mathport/Syntax/Translate/Command.lean:309:38: unsupported irreducible non-definition -/
+/- ./././Mathport/Syntax/Translate/Command.lean:317:38: unsupported irreducible non-definition -/
 /-- The category of rings has all limits. -/
 irreducible_def hasLimitsOfSize : HasLimitsOfSize.{v, v} RingCat.{max v u} :=
   {
@@ -370,7 +370,7 @@ instance forget₂SemiRingPreservesLimits : PreservesLimits (forget₂ RingCat S
 -/
 def forget₂AddCommGroupPreservesLimitsAux (F : J ⥤ RingCat.{max v u}) :
     IsLimit ((forget₂ RingCat AddCommGroupCat).mapCone (limitCone F)) := by
-  apply AddCommGroupCat.limitConeIsLimit (F ⋙ forget₂ RingCat AddCommGroupCat.{max v u})
+  apply AddCommGroupCat.limit_cone_is_limit (F ⋙ forget₂ RingCat AddCommGroupCat.{max v u})
 #align Ring.forget₂_AddCommGroup_preserves_limits_aux RingCat.forget₂AddCommGroupPreservesLimitsAux
 
 /-- The forgetful functor from rings to additive commutative groups preserves all limits.
@@ -472,7 +472,7 @@ def limitConeIsLimit (F : J ⥤ CommRingCat.{max v u}) : IsLimit (limitCone F) :
   liftedLimitIsLimit _
 #align CommRing.limit_cone_is_limit CommRingCat.limitConeIsLimit
 
-/- ./././Mathport/Syntax/Translate/Command.lean:309:38: unsupported irreducible non-definition -/
+/- ./././Mathport/Syntax/Translate/Command.lean:317:38: unsupported irreducible non-definition -/
 /-- The category of commutative rings has all limits. -/
 irreducible_def hasLimitsOfSize : HasLimitsOfSize.{v, v} CommRingCat.{max v u} :=
   {

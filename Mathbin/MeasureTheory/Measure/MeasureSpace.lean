@@ -2670,6 +2670,8 @@ theorem smul_ae_eq_of_ae_eq {G α : Type _} [Group G] [MulAction G α] [Measurab
   simpa only [← preimage_smul_inv] using h_qmp.ae_eq h_ae_eq
 #align
   measure_theory.measure.quasi_measure_preserving.smul_ae_eq_of_ae_eq MeasureTheory.Measure.QuasiMeasurePreserving.smul_ae_eq_of_ae_eq
+#align
+  measure_theory.measure.quasi_measure_preserving.vadd_ae_eq_of_ae_eq MeasureTheory.Measure.QuasiMeasurePreserving.vadd_ae_eq_of_ae_eq
 
 end QuasiMeasurePreserving
 
@@ -2697,6 +2699,8 @@ theorem pairwise_ae_disjoint_of_ae_disjoint_forall_ne_one {G α : Type _} [Group
   exact this ▸ (h_qmp g₂⁻¹).preimage_null (h_ae_disjoint g hg)
 #align
   measure_theory.measure.pairwise_ae_disjoint_of_ae_disjoint_forall_ne_one MeasureTheory.Measure.pairwise_ae_disjoint_of_ae_disjoint_forall_ne_one
+#align
+  measure_theory.measure.pairwise_ae_disjoint_of_ae_disjoint_forall_ne_zero MeasureTheory.Measure.pairwise_ae_disjoint_of_ae_disjoint_forall_ne_zero
 
 end Pointwise
 

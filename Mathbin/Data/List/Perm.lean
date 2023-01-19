@@ -739,6 +739,7 @@ theorem Perm.prod_eq' [Monoid α] {l₁ l₂ : List α} (h : l₁ ~ l₂) (hc : 
       hc.imp fun x y h z => by simp only [mul_assoc, h.eq])
     _
 #align list.perm.prod_eq' List.Perm.prod_eq'
+#align list.perm.sum_eq' List.Perm.sum_eq'
 
 variable [CommMonoid α]
 
@@ -752,6 +753,7 @@ Case conversion may be inaccurate. Consider using '#align list.perm.prod_eq List
 theorem Perm.prod_eq {l₁ l₂ : List α} (h : Perm l₁ l₂) : prod l₁ = prod l₂ :=
   h.fold_op_eq
 #align list.perm.prod_eq List.Perm.prod_eq
+#align list.perm.sum_eq List.Perm.sum_eq
 
 /- warning: list.prod_reverse -> List.prod_reverse is a dubious translation:
 lean 3 declaration is
@@ -763,6 +765,7 @@ Case conversion may be inaccurate. Consider using '#align list.prod_reverse List
 theorem prod_reverse (l : List α) : prod l.reverse = prod l :=
   (reverse_perm l).prod_eq
 #align list.prod_reverse List.prod_reverse
+#align list.sum_reverse List.sum_reverse
 
 end CommMonoid
 

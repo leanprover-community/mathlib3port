@@ -60,6 +60,7 @@ instance instSMulOrderDual' [h : SMul α β] : SMul αᵒᵈ β :=
 instance instPowOrderDual [h : Pow α β] : Pow αᵒᵈ β :=
   h
 #align order_dual.has_pow instPowOrderDual
+#align order_dual.has_smul instSMulOrderDual
 -/
 
 #print instPowOrderDual' /-
@@ -67,6 +68,7 @@ instance instPowOrderDual [h : Pow α β] : Pow αᵒᵈ β :=
 instance instPowOrderDual' [h : Pow α β] : Pow α βᵒᵈ :=
   h
 #align order_dual.has_pow' instPowOrderDual'
+#align order_dual.has_smul' instSMulOrderDual'
 -/
 
 @[to_additive]
@@ -142,6 +144,7 @@ instance [h : CommGroup α] : CommGroup αᵒᵈ :=
 theorem toDual_one [One α] : toDual (1 : α) = 1 :=
   rfl
 #align to_dual_one toDual_one
+#align to_dual_zero toDual_zero
 -/
 
 #print ofDual_one /-
@@ -149,6 +152,7 @@ theorem toDual_one [One α] : toDual (1 : α) = 1 :=
 theorem ofDual_one [One α] : (ofDual 1 : α) = 1 :=
   rfl
 #align of_dual_one ofDual_one
+#align of_dual_zero ofDual_zero
 -/
 
 #print toDual_mul /-
@@ -156,6 +160,7 @@ theorem ofDual_one [One α] : (ofDual 1 : α) = 1 :=
 theorem toDual_mul [Mul α] (a b : α) : toDual (a * b) = toDual a * toDual b :=
   rfl
 #align to_dual_mul toDual_mul
+#align to_dual_add toDual_add
 -/
 
 #print ofDual_mul /-
@@ -163,6 +168,7 @@ theorem toDual_mul [Mul α] (a b : α) : toDual (a * b) = toDual a * toDual b :=
 theorem ofDual_mul [Mul α] (a b : αᵒᵈ) : ofDual (a * b) = ofDual a * ofDual b :=
   rfl
 #align of_dual_mul ofDual_mul
+#align of_dual_add ofDual_add
 -/
 
 #print toDual_inv /-
@@ -170,6 +176,7 @@ theorem ofDual_mul [Mul α] (a b : αᵒᵈ) : ofDual (a * b) = ofDual a * ofDua
 theorem toDual_inv [Inv α] (a : α) : toDual a⁻¹ = (toDual a)⁻¹ :=
   rfl
 #align to_dual_inv toDual_inv
+#align to_dual_neg toDual_neg
 -/
 
 #print ofDual_inv /-
@@ -177,6 +184,7 @@ theorem toDual_inv [Inv α] (a : α) : toDual a⁻¹ = (toDual a)⁻¹ :=
 theorem ofDual_inv [Inv α] (a : αᵒᵈ) : ofDual a⁻¹ = (ofDual a)⁻¹ :=
   rfl
 #align of_dual_inv ofDual_inv
+#align of_dual_neg ofDual_neg
 -/
 
 #print toDual_div /-
@@ -184,6 +192,7 @@ theorem ofDual_inv [Inv α] (a : αᵒᵈ) : ofDual a⁻¹ = (ofDual a)⁻¹ :=
 theorem toDual_div [Div α] (a b : α) : toDual (a / b) = toDual a / toDual b :=
   rfl
 #align to_dual_div toDual_div
+#align to_dual_sub toDual_sub
 -/
 
 #print ofDual_div /-
@@ -191,6 +200,7 @@ theorem toDual_div [Div α] (a b : α) : toDual (a / b) = toDual a / toDual b :=
 theorem ofDual_div [Div α] (a b : αᵒᵈ) : ofDual (a / b) = ofDual a / ofDual b :=
   rfl
 #align of_dual_div ofDual_div
+#align of_dual_sub ofDual_sub
 -/
 
 /- warning: to_dual_smul -> toDual_smul is a dubious translation:
@@ -203,6 +213,7 @@ Case conversion may be inaccurate. Consider using '#align to_dual_smul toDual_sm
 theorem toDual_smul [SMul α β] (a : α) (b : β) : toDual (a • b) = a • toDual b :=
   rfl
 #align to_dual_smul toDual_smul
+#align to_dual_vadd toDual_vadd
 
 /- warning: of_dual_smul -> ofDual_smul is a dubious translation:
 lean 3 declaration is
@@ -214,16 +225,19 @@ Case conversion may be inaccurate. Consider using '#align of_dual_smul ofDual_sm
 theorem ofDual_smul [SMul α β] (a : α) (b : βᵒᵈ) : ofDual (a • b) = a • ofDual b :=
   rfl
 #align of_dual_smul ofDual_smul
+#align of_dual_vadd ofDual_vadd
 
 @[simp, to_additive]
 theorem to_dual_smul' [SMul α β] (a : α) (b : β) : toDual a • b = a • b :=
   rfl
 #align to_dual_smul' to_dual_smul'
+#align to_dual_vadd' toDual_vadd'
 
 @[simp, to_additive]
 theorem of_dual_smul' [SMul α β] (a : αᵒᵈ) (b : β) : ofDual a • b = a • b :=
   rfl
 #align of_dual_smul' of_dual_smul'
+#align of_dual_vadd' ofDual_vadd'
 
 /- warning: to_dual_pow -> toDual_pow is a dubious translation:
 lean 3 declaration is
@@ -235,6 +249,7 @@ Case conversion may be inaccurate. Consider using '#align to_dual_pow toDual_pow
 theorem toDual_pow [Pow α β] (a : α) (b : β) : toDual (a ^ b) = toDual a ^ b :=
   rfl
 #align to_dual_pow toDual_pow
+#align to_dual_smul toDual_smul
 
 /- warning: of_dual_pow -> ofDual_pow is a dubious translation:
 lean 3 declaration is
@@ -246,6 +261,7 @@ Case conversion may be inaccurate. Consider using '#align of_dual_pow ofDual_pow
 theorem ofDual_pow [Pow α β] (a : αᵒᵈ) (b : β) : ofDual (a ^ b) = ofDual a ^ b :=
   rfl
 #align of_dual_pow ofDual_pow
+#align of_dual_smul ofDual_smul
 
 /- warning: pow_to_dual -> pow_toDual is a dubious translation:
 lean 3 declaration is
@@ -257,6 +273,7 @@ Case conversion may be inaccurate. Consider using '#align pow_to_dual pow_toDual
 theorem pow_toDual [Pow α β] (a : α) (b : β) : a ^ toDual b = a ^ b :=
   rfl
 #align pow_to_dual pow_toDual
+#align smul_to_dual toDual_smul'
 
 /- warning: pow_of_dual -> pow_ofDual is a dubious translation:
 lean 3 declaration is
@@ -268,6 +285,7 @@ Case conversion may be inaccurate. Consider using '#align pow_of_dual pow_ofDual
 theorem pow_ofDual [Pow α β] (a : α) (b : βᵒᵈ) : a ^ ofDual b = a ^ b :=
   rfl
 #align pow_of_dual pow_ofDual
+#align smul_of_dual ofDual_smul'
 
 /-! ### Lexicographical order -/
 
@@ -304,6 +322,7 @@ instance instSMulLex' [h : SMul α β] : SMul (Lex α) β :=
 instance instPowLex [h : Pow α β] : Pow (Lex α) β :=
   h
 #align lex.has_pow instPowLex
+#align lex.has_smul instSMulLex
 -/
 
 #print instPowLex' /-
@@ -311,6 +330,7 @@ instance instPowLex [h : Pow α β] : Pow (Lex α) β :=
 instance instPowLex' [h : Pow α β] : Pow α (Lex β) :=
   h
 #align lex.has_pow' instPowLex'
+#align lex.has_smul' instSMulLex'
 -/
 
 @[to_additive]
@@ -386,6 +406,7 @@ instance [h : CommGroup α] : CommGroup (Lex α) :=
 theorem toLex_one [One α] : toLex (1 : α) = 1 :=
   rfl
 #align to_lex_one toLex_one
+#align to_lex_zero toLex_zero
 -/
 
 #print ofLex_one /-
@@ -393,6 +414,7 @@ theorem toLex_one [One α] : toLex (1 : α) = 1 :=
 theorem ofLex_one [One α] : (ofLex 1 : α) = 1 :=
   rfl
 #align of_lex_one ofLex_one
+#align of_lex_zero ofLex_zero
 -/
 
 #print toLex_mul /-
@@ -400,6 +422,7 @@ theorem ofLex_one [One α] : (ofLex 1 : α) = 1 :=
 theorem toLex_mul [Mul α] (a b : α) : toLex (a * b) = toLex a * toLex b :=
   rfl
 #align to_lex_mul toLex_mul
+#align to_lex_add toLex_add
 -/
 
 #print ofLex_mul /-
@@ -407,6 +430,7 @@ theorem toLex_mul [Mul α] (a b : α) : toLex (a * b) = toLex a * toLex b :=
 theorem ofLex_mul [Mul α] (a b : Lex α) : ofLex (a * b) = ofLex a * ofLex b :=
   rfl
 #align of_lex_mul ofLex_mul
+#align of_lex_add ofLex_add
 -/
 
 #print toLex_inv /-
@@ -414,6 +438,7 @@ theorem ofLex_mul [Mul α] (a b : Lex α) : ofLex (a * b) = ofLex a * ofLex b :=
 theorem toLex_inv [Inv α] (a : α) : toLex a⁻¹ = (toLex a)⁻¹ :=
   rfl
 #align to_lex_inv toLex_inv
+#align to_lex_neg toLex_neg
 -/
 
 #print ofLex_inv /-
@@ -421,6 +446,7 @@ theorem toLex_inv [Inv α] (a : α) : toLex a⁻¹ = (toLex a)⁻¹ :=
 theorem ofLex_inv [Inv α] (a : Lex α) : ofLex a⁻¹ = (ofLex a)⁻¹ :=
   rfl
 #align of_lex_inv ofLex_inv
+#align of_lex_neg ofLex_neg
 -/
 
 #print toLex_div /-
@@ -428,6 +454,7 @@ theorem ofLex_inv [Inv α] (a : Lex α) : ofLex a⁻¹ = (ofLex a)⁻¹ :=
 theorem toLex_div [Div α] (a b : α) : toLex (a / b) = toLex a / toLex b :=
   rfl
 #align to_lex_div toLex_div
+#align to_lex_sub toLex_sub
 -/
 
 #print ofLex_div /-
@@ -435,6 +462,7 @@ theorem toLex_div [Div α] (a b : α) : toLex (a / b) = toLex a / toLex b :=
 theorem ofLex_div [Div α] (a b : Lex α) : ofLex (a / b) = ofLex a / ofLex b :=
   rfl
 #align of_lex_div ofLex_div
+#align of_lex_sub ofLex_sub
 -/
 
 /- warning: to_lex_smul -> toLex_smul is a dubious translation:
@@ -447,6 +475,7 @@ Case conversion may be inaccurate. Consider using '#align to_lex_smul toLex_smul
 theorem toLex_smul [SMul α β] (a : α) (b : β) : toLex (a • b) = a • toLex b :=
   rfl
 #align to_lex_smul toLex_smul
+#align to_lex_vadd toLex_vadd
 
 /- warning: of_lex_smul -> ofLex_smul is a dubious translation:
 lean 3 declaration is
@@ -458,16 +487,19 @@ Case conversion may be inaccurate. Consider using '#align of_lex_smul ofLex_smul
 theorem ofLex_smul [SMul α β] (a : α) (b : Lex β) : ofLex (a • b) = a • ofLex b :=
   rfl
 #align of_lex_smul ofLex_smul
+#align of_lex_vadd ofLex_vadd
 
 @[simp, to_additive]
 theorem to_lex_smul' [SMul α β] (a : α) (b : β) : toLex a • b = a • b :=
   rfl
 #align to_lex_smul' to_lex_smul'
+#align to_lex_vadd' toLex_vadd'
 
 @[simp, to_additive]
 theorem of_lex_smul' [SMul α β] (a : Lex α) (b : β) : ofLex a • b = a • b :=
   rfl
 #align of_lex_smul' of_lex_smul'
+#align of_lex_vadd' ofLex_vadd'
 
 /- warning: to_lex_pow -> toLex_pow is a dubious translation:
 lean 3 declaration is
@@ -479,6 +511,7 @@ Case conversion may be inaccurate. Consider using '#align to_lex_pow toLex_pow�
 theorem toLex_pow [Pow α β] (a : α) (b : β) : toLex (a ^ b) = toLex a ^ b :=
   rfl
 #align to_lex_pow toLex_pow
+#align to_lex_smul toLex_smul
 
 /- warning: of_lex_pow -> ofLex_pow is a dubious translation:
 lean 3 declaration is
@@ -490,6 +523,7 @@ Case conversion may be inaccurate. Consider using '#align of_lex_pow ofLex_pow�
 theorem ofLex_pow [Pow α β] (a : Lex α) (b : β) : ofLex (a ^ b) = ofLex a ^ b :=
   rfl
 #align of_lex_pow ofLex_pow
+#align of_lex_smul ofLex_smul
 
 /- warning: pow_to_lex -> pow_toLex is a dubious translation:
 lean 3 declaration is
@@ -501,6 +535,7 @@ Case conversion may be inaccurate. Consider using '#align pow_to_lex pow_toLex�
 theorem pow_toLex [Pow α β] (a : α) (b : β) : a ^ toLex b = a ^ b :=
   rfl
 #align pow_to_lex pow_toLex
+#align smul_to_lex toLex_smul'
 
 /- warning: pow_of_lex -> pow_ofLex is a dubious translation:
 lean 3 declaration is
@@ -512,4 +547,5 @@ Case conversion may be inaccurate. Consider using '#align pow_of_lex pow_ofLex�
 theorem pow_ofLex [Pow α β] (a : α) (b : Lex β) : a ^ ofLex b = a ^ b :=
   rfl
 #align pow_of_lex pow_ofLex
+#align smul_of_lex ofLex_smul'
 

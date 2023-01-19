@@ -34,6 +34,7 @@ theorem equicontinuous_of_equicontinuous_at_one {ι G M hom : Type _} [Topologic
       map_mul' := fun a b => by ext <;> exact map_mul _ _ _ }
   exact continuous_of_continuous_at_one φ hf
 #align equicontinuous_of_equicontinuous_at_one equicontinuous_of_equicontinuous_at_one
+#align equicontinuous_of_equicontinuous_at_zero equicontinuous_of_equicontinuous_at_zero
 
 @[to_additive]
 theorem uniform_equicontinuous_of_equicontinuous_at_one {ι G M hom : Type _} [UniformSpace G]
@@ -50,4 +51,6 @@ theorem uniform_equicontinuous_of_equicontinuous_at_one {ι G M hom : Type _} [U
   exact uniform_continuous_of_continuous_at_one φ hf
 #align
   uniform_equicontinuous_of_equicontinuous_at_one uniform_equicontinuous_of_equicontinuous_at_one
+#align
+  uniform_equicontinuous_of_equicontinuous_at_zero uniform_equicontinuous_of_equicontinuous_at_zero
 

@@ -44,6 +44,7 @@ class HasUniformContinuousConstVadd [VAdd M X] : Prop where
 class HasUniformContinuousConstSmul [SMul M X] : Prop where
   uniform_continuous_const_smul : ∀ c : M, UniformContinuous ((· • ·) c : X → X)
 #align has_uniform_continuous_const_smul HasUniformContinuousConstSmul
+#align has_uniform_continuous_const_vadd HasUniformContinuousConstVadd
 
 export HasUniformContinuousConstVadd (uniform_continuous_const_vadd)
 
@@ -95,6 +96,8 @@ instance (priority := 100) HasUniformContinuousConstSmul.to_has_continuous_const
   ⟨fun c => (uniform_continuous_const_smul c).Continuous⟩
 #align
   has_uniform_continuous_const_smul.to_has_continuous_const_smul HasUniformContinuousConstSmul.to_has_continuous_const_smul
+#align
+  has_uniform_continuous_const_vadd.to_has_continuous_const_vadd HasUniformContinuousConstVadd.to_has_continuous_const_vadd
 
 variable {M X Y}
 
@@ -103,6 +106,7 @@ theorem UniformContinuous.const_smul [HasUniformContinuousConstSmul M X] {f : Y 
     (hf : UniformContinuous f) (c : M) : UniformContinuous (c • f) :=
   (uniform_continuous_const_smul c).comp hf
 #align uniform_continuous.const_smul UniformContinuous.const_smul
+#align uniform_continuous.const_vadd UniformContinuous.const_vadd
 
 /-- If a scalar action is central, then its right action is uniform continuous when its left action
 is. -/
@@ -116,6 +120,7 @@ instance (priority := 100) HasUniformContinuousConstSmul.op [SMul Mᵐᵒᵖ X] 
       simp_rw [op_smul_eq_smul]
       exact uniform_continuous_const_smul c⟩
 #align has_uniform_continuous_const_smul.op HasUniformContinuousConstSmul.op
+#align has_uniform_continuous_const_vadd.op HasUniformContinuousConstVadd.op
 
 @[to_additive]
 instance MulOpposite.has_uniform_continuous_const_smul [HasUniformContinuousConstSmul M X] :
@@ -123,6 +128,7 @@ instance MulOpposite.has_uniform_continuous_const_smul [HasUniformContinuousCons
   ⟨fun c =>
     MulOpposite.uniform_continuous_op.comp <| MulOpposite.uniform_continuous_unop.const_smul c⟩
 #align mul_opposite.has_uniform_continuous_const_smul MulOpposite.has_uniform_continuous_const_smul
+#align add_opposite.has_uniform_continuous_const_vadd AddOpposite.has_uniform_continuous_const_vadd
 
 end SMul
 
@@ -132,6 +138,8 @@ instance UniformGroup.to_has_uniform_continuous_const_smul {G : Type u} [Group G
   ⟨fun c => uniform_continuous_const.mul uniform_continuous_id⟩
 #align
   uniform_group.to_has_uniform_continuous_const_smul UniformGroup.to_has_uniform_continuous_const_smul
+#align
+  uniform_add_group.to_has_uniform_continuous_const_vadd UniformAddGroup.to_has_uniform_continuous_const_vadd
 
 namespace UniformSpace
 
@@ -149,6 +157,7 @@ instance : SMul M (Completion X) :=
 theorem smul_def (c : M) (x : Completion X) : c • x = Completion.map ((· • ·) c) x :=
   rfl
 #align uniform_space.completion.smul_def UniformSpace.Completion.smul_def
+#align uniform_space.completion.vadd_def UniformSpace.Completion.vadd_def
 
 @[to_additive]
 instance : HasUniformContinuousConstSmul M (Completion X) :=
@@ -185,6 +194,7 @@ variable {M X} [HasUniformContinuousConstSmul M X]
 theorem coe_smul (c : M) (x : X) : ↑(c • x) = (c • x : Completion X) :=
   (map_coe (uniform_continuous_const_smul c) x).symm
 #align uniform_space.completion.coe_smul UniformSpace.Completion.coe_smul
+#align uniform_space.completion.coe_vadd UniformSpace.Completion.coe_vadd
 
 end SMul
 

@@ -43,6 +43,7 @@ variable {α : Type u} {β : Type v} {γ : Type w}
 def WithOne (α) :=
   Option α
 #align with_one WithOne
+#align with_zero WithZero
 -/
 
 namespace WithOne
@@ -104,6 +105,7 @@ instance : CoeTC α (WithOne α) :=
 def recOneCoe {C : WithOne α → Sort _} (h₁ : C 1) (h₂ : ∀ a : α, C a) : ∀ n : WithOne α, C n :=
   Option.rec h₁ h₂
 #align with_one.rec_one_coe WithOne.recOneCoe
+#align with_zero.rec_zero_coe WithZero.recZeroCoe
 -/
 
 #print WithOne.unone /-
@@ -113,6 +115,7 @@ def recOneCoe {C : WithOne α → Sort _} (h₁ : C 1) (h₂ : ∀ a : α, C a) 
 def unone {x : WithOne α} (hx : x ≠ 1) : α :=
   WithBot.unbot x hx
 #align with_one.unone WithOne.unone
+#align with_zero.unzero WithZero.unzero
 -/
 
 #print WithOne.unone_coe /-
@@ -120,6 +123,7 @@ def unone {x : WithOne α} (hx : x ≠ 1) : α :=
 theorem unone_coe {x : α} (hx : (x : WithOne α) ≠ 1) : unone hx = x :=
   rfl
 #align with_one.unone_coe WithOne.unone_coe
+#align with_zero.unzero_coe WithZero.unzero_coe
 -/
 
 #print WithOne.coe_unone /-
@@ -127,6 +131,7 @@ theorem unone_coe {x : α} (hx : (x : WithOne α) ≠ 1) : unone hx = x :=
 theorem coe_unone {x : WithOne α} (hx : x ≠ 1) : ↑(unone hx) = x :=
   WithBot.coe_unbot x hx
 #align with_one.coe_unone WithOne.coe_unone
+#align with_zero.coe_unzero WithZero.coe_unzero
 -/
 
 /- warning: with_one.some_eq_coe clashes with [anonymous] -> [anonymous]
@@ -146,6 +151,7 @@ theorem [anonymous] {a : α} : (some a : WithOne α) = ↑a :=
 theorem coe_ne_one {a : α} : (a : WithOne α) ≠ (1 : WithOne α) :=
   Option.some_ne_none a
 #align with_one.coe_ne_one WithOne.coe_ne_one
+#align with_zero.coe_ne_zero WithZero.coe_ne_zero
 -/
 
 #print WithOne.one_ne_coe /-
@@ -153,6 +159,7 @@ theorem coe_ne_one {a : α} : (a : WithOne α) ≠ (1 : WithOne α) :=
 theorem one_ne_coe {a : α} : (1 : WithOne α) ≠ a :=
   coe_ne_one.symm
 #align with_one.one_ne_coe WithOne.one_ne_coe
+#align with_zero.zero_ne_coe WithZero.zero_ne_coe
 -/
 
 #print WithOne.ne_one_iff_exists /-
@@ -160,12 +167,14 @@ theorem one_ne_coe {a : α} : (1 : WithOne α) ≠ a :=
 theorem ne_one_iff_exists {x : WithOne α} : x ≠ 1 ↔ ∃ a : α, ↑a = x :=
   Option.ne_none_iff_exists
 #align with_one.ne_one_iff_exists WithOne.ne_one_iff_exists
+#align with_zero.ne_zero_iff_exists WithZero.ne_zero_iff_exists
 -/
 
 #print WithOne.canLift /-
 @[to_additive]
 instance canLift : CanLift (WithOne α) α coe fun a => a ≠ 1 where prf a := ne_one_iff_exists.1
 #align with_one.can_lift WithOne.canLift
+#align with_zero.can_lift WithZero.canLift
 -/
 
 #print WithOne.coe_inj /-
@@ -173,6 +182,7 @@ instance canLift : CanLift (WithOne α) α coe fun a => a ≠ 1 where prf a := n
 theorem coe_inj {a b : α} : (a : WithOne α) = b ↔ a = b :=
   Option.some_inj
 #align with_one.coe_inj WithOne.coe_inj
+#align with_zero.coe_inj WithZero.coe_inj
 -/
 
 #print WithOne.cases_on /-
@@ -180,6 +190,7 @@ theorem coe_inj {a b : α} : (a : WithOne α) = b ↔ a = b :=
 protected theorem cases_on {P : WithOne α → Prop} : ∀ x : WithOne α, P 1 → (∀ a : α, P a) → P x :=
   Option.casesOn
 #align with_one.cases_on WithOne.cases_on
+#align with_zero.cases_on WithZero.cases_on
 -/
 
 @[to_additive]
@@ -206,6 +217,7 @@ instance [CommSemigroup α] : CommMonoid (WithOne α) :=
 theorem coe_mul [Mul α] (a b : α) : ((a * b : α) : WithOne α) = a * b :=
   rfl
 #align with_one.coe_mul WithOne.coe_mul
+#align with_zero.coe_add WithZero.coe_add
 -/
 
 #print WithOne.coe_inv /-
@@ -213,6 +225,7 @@ theorem coe_mul [Mul α] (a b : α) : ((a * b : α) : WithOne α) = a * b :=
 theorem coe_inv [Inv α] (a : α) : ((a⁻¹ : α) : WithOne α) = a⁻¹ :=
   rfl
 #align with_one.coe_inv WithOne.coe_inv
+#align with_zero.coe_neg WithZero.coe_neg
 -/
 
 end WithOne

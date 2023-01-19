@@ -1853,21 +1853,25 @@ instance : PseudoMetricSpace αᵐᵒᵖ :=
 theorem dist_unop (x y : αᵐᵒᵖ) : dist (unop x) (unop y) = dist x y :=
   rfl
 #align mul_opposite.dist_unop MulOpposite.dist_unop
+#align add_opposite.dist_unop AddOpposite.dist_unop
 
 @[simp, to_additive]
 theorem dist_op (x y : α) : dist (op x) (op y) = dist x y :=
   rfl
 #align mul_opposite.dist_op MulOpposite.dist_op
+#align add_opposite.dist_op AddOpposite.dist_op
 
 @[simp, to_additive]
 theorem nndist_unop (x y : αᵐᵒᵖ) : nndist (unop x) (unop y) = nndist x y :=
   rfl
 #align mul_opposite.nndist_unop MulOpposite.nndist_unop
+#align add_opposite.nndist_unop AddOpposite.nndist_unop
 
 @[simp, to_additive]
 theorem nndist_op (x y : α) : nndist (op x) (op y) = nndist x y :=
   rfl
 #align mul_opposite.nndist_op MulOpposite.nndist_op
+#align add_opposite.nndist_op AddOpposite.nndist_op
 
 end MulOpposite
 

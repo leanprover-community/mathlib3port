@@ -61,7 +61,7 @@ lean 3 declaration is
 but is expected to have type
   forall (V : Type.{u3}) [_inst_1 : Quiver.{u1, u3} V] (W : Type.{u4}) [_inst_2 : Quiver.{u2, u4} W], Sort.{max (max (max (succ u3) (succ u4)) u1) u2}
 Case conversion may be inaccurate. Consider using '#align prefunctor Prefunctorₓ'. -/
-/- ./././Mathport/Syntax/Translate/Command.lean:379:30: infer kinds are unsupported in Lean 4: #[`obj] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`obj] [] -/
 -- type as \h
 /-- A morphism of quivers. As we will later have categorical functors extend this structure,
 we call it a `prefunctor`.

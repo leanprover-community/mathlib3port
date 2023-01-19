@@ -47,6 +47,7 @@ theorem Set.preimage_one {α β : Type _} [One β] (s : Set β) [Decidable ((1 :
     (1 : α → β) ⁻¹' s = if (1 : β) ∈ s then Set.univ else ∅ :=
   Set.preimage_const 1 s
 #align set.preimage_one Set.preimage_one
+#align set.preimage_zero Set.preimage_zero
 
 namespace Pi
 
@@ -55,6 +56,7 @@ namespace Pi
 instance semigroup [∀ i, Semigroup <| f i] : Semigroup (∀ i : I, f i) := by
   refine_struct { mul := (· * ·).. } <;> pi_instance_derive_field
 #align pi.semigroup Pi.semigroup
+#align pi.add_semigroup Pi.addSemigroup
 -/
 
 #print Pi.semigroupWithZero /-
@@ -71,6 +73,7 @@ instance semigroupWithZero [∀ i, SemigroupWithZero <| f i] : SemigroupWithZero
 instance commSemigroup [∀ i, CommSemigroup <| f i] : CommSemigroup (∀ i : I, f i) := by
   refine_struct { mul := (· * ·).. } <;> pi_instance_derive_field
 #align pi.comm_semigroup Pi.commSemigroup
+#align pi.add_comm_semigroup Pi.addCommSemigroup
 -/
 
 #print Pi.mulOneClass /-
@@ -81,6 +84,7 @@ instance mulOneClass [∀ i, MulOneClass <| f i] : MulOneClass (∀ i : I, f i) 
         mul := (· * ·).. } <;>
     pi_instance_derive_field
 #align pi.mul_one_class Pi.mulOneClass
+#align pi.add_zero_class Pi.addZeroClass
 -/
 
 #print Pi.monoid /-
@@ -92,6 +96,7 @@ instance monoid [∀ i, Monoid <| f i] : Monoid (∀ i : I, f i) := by
         npow := fun n x i => x i ^ n } <;>
     pi_instance_derive_field
 #align pi.monoid Pi.monoid
+#align pi.add_monoid Pi.addMonoid
 -/
 
 #print Pi.commMonoid /-
@@ -103,6 +108,7 @@ instance commMonoid [∀ i, CommMonoid <| f i] : CommMonoid (∀ i : I, f i) := 
         npow := Monoid.npow } <;>
     pi_instance_derive_field
 #align pi.comm_monoid Pi.commMonoid
+#align pi.add_comm_monoid Pi.addCommMonoid
 -/
 
 @[to_additive Pi.subNegMonoid]
@@ -147,6 +153,7 @@ instance group [∀ i, Group <| f i] : Group (∀ i : I, f i) := by
         zpow := DivInvMonoid.zpow } <;>
     pi_instance_derive_field
 #align pi.group Pi.group
+#align pi.add_group Pi.addGroup
 -/
 
 #print Pi.commGroup /-
@@ -161,6 +168,7 @@ instance commGroup [∀ i, CommGroup <| f i] : CommGroup (∀ i : I, f i) := by
         zpow := DivInvMonoid.zpow } <;>
     pi_instance_derive_field
 #align pi.comm_group Pi.commGroup
+#align pi.add_comm_group Pi.addCommGroup
 -/
 
 #print Pi.leftCancelSemigroup /-
@@ -169,6 +177,7 @@ instance leftCancelSemigroup [∀ i, LeftCancelSemigroup <| f i] :
     LeftCancelSemigroup (∀ i : I, f i) := by
   refine_struct { mul := (· * ·) } <;> pi_instance_derive_field
 #align pi.left_cancel_semigroup Pi.leftCancelSemigroup
+#align pi.add_left_cancel_semigroup Pi.addLeftCancelSemigroup
 -/
 
 #print Pi.rightCancelSemigroup /-
@@ -177,6 +186,7 @@ instance rightCancelSemigroup [∀ i, RightCancelSemigroup <| f i] :
     RightCancelSemigroup (∀ i : I, f i) := by
   refine_struct { mul := (· * ·) } <;> pi_instance_derive_field
 #align pi.right_cancel_semigroup Pi.rightCancelSemigroup
+#align pi.add_right_cancel_semigroup Pi.addRightCancelSemigroup
 -/
 
 #print Pi.leftCancelMonoid /-
@@ -188,6 +198,7 @@ instance leftCancelMonoid [∀ i, LeftCancelMonoid <| f i] : LeftCancelMonoid (�
         npow := Monoid.npow } <;>
     pi_instance_derive_field
 #align pi.left_cancel_monoid Pi.leftCancelMonoid
+#align pi.add_left_cancel_monoid Pi.addLeftCancelMonoid
 -/
 
 #print Pi.rightCancelMonoid /-
@@ -199,6 +210,7 @@ instance rightCancelMonoid [∀ i, RightCancelMonoid <| f i] : RightCancelMonoid
         npow := Monoid.npow.. } <;>
     pi_instance_derive_field
 #align pi.right_cancel_monoid Pi.rightCancelMonoid
+#align pi.add_right_cancel_monoid Pi.addRightCancelMonoid
 -/
 
 #print Pi.cancelMonoid /-
@@ -210,6 +222,7 @@ instance cancelMonoid [∀ i, CancelMonoid <| f i] : CancelMonoid (∀ i : I, f 
         npow := Monoid.npow } <;>
     pi_instance_derive_field
 #align pi.cancel_monoid Pi.cancelMonoid
+#align pi.add_cancel_monoid Pi.addCancelMonoid
 -/
 
 #print Pi.cancelCommMonoid /-
@@ -221,6 +234,7 @@ instance cancelCommMonoid [∀ i, CancelCommMonoid <| f i] : CancelCommMonoid (�
         npow := Monoid.npow } <;>
     pi_instance_derive_field
 #align pi.cancel_comm_monoid Pi.cancelCommMonoid
+#align pi.add_cancel_comm_monoid Pi.addCancelCommMonoid
 -/
 
 #print Pi.mulZeroClass /-
@@ -280,6 +294,7 @@ theorem coe_mul {M N} {mM : Mul M} {mN : CommSemigroup N} (f g : M →ₙ* N) :
     (f * g : M → N) = fun x => f x * g x :=
   rfl
 #align mul_hom.coe_mul MulHom.coe_mul
+#align add_hom.coe_add AddHom.coe_add
 
 end MulHom
 
@@ -296,6 +311,7 @@ def Pi.mulHom {γ : Type w} [∀ i, Mul (f i)] [Mul γ] (g : ∀ i, γ →ₙ* f
   toFun x i := g i x
   map_mul' x y := funext fun i => (g i).map_mul x y
 #align pi.mul_hom Pi.mulHom
+#align pi.add_hom Pi.addHom
 -/
 
 #print Pi.mulHom_injective /-
@@ -305,6 +321,7 @@ theorem Pi.mulHom_injective {γ : Type w} [Nonempty I] [∀ i, Mul (f i)] [Mul �
   let ⟨i⟩ := ‹Nonempty I›
   hg i ((Function.funext_iff.mp h : _) i)
 #align pi.mul_hom_injective Pi.mulHom_injective
+#align pi.add_hom_injective Pi.addHom_injective
 -/
 
 #print Pi.monoidHom /-
@@ -320,6 +337,7 @@ def Pi.monoidHom {γ : Type w} [∀ i, MulOneClass (f i)] [MulOneClass γ] (g : 
     toFun := fun x i => g i x
     map_one' := funext fun i => (g i).map_one }
 #align pi.monoid_hom Pi.monoidHom
+#align pi.add_monoid_hom Pi.addMonoidHom
 -/
 
 /- warning: pi.monoid_hom_injective -> Pi.monoidHom_injective is a dubious translation:
@@ -334,6 +352,7 @@ theorem Pi.monoidHom_injective {γ : Type w} [Nonempty I] [∀ i, MulOneClass (f
     Function.Injective (Pi.monoidHom g) :=
   Pi.mulHom_injective (fun i => (g i).toMulHom) hg
 #align pi.monoid_hom_injective Pi.monoidHom_injective
+#align pi.add_monoid_hom_injective Pi.addMonoidHom_injective
 
 variable (f) [∀ i, Mul (f i)]
 
@@ -349,6 +368,7 @@ def Pi.evalMulHom (i : I) : (∀ i, f i) →ₙ* f i
   toFun g := g i
   map_mul' x y := Pi.mul_apply _ _ i
 #align pi.eval_mul_hom Pi.evalMulHom
+#align pi.eval_add_hom Pi.evalAddHom
 -/
 
 #print Pi.constMulHom /-
@@ -359,6 +379,7 @@ def Pi.constMulHom (α β : Type _) [Mul β] : β →ₙ* α → β
   toFun := Function.const α
   map_mul' _ _ := rfl
 #align pi.const_mul_hom Pi.constMulHom
+#align pi.const_add_hom Pi.constAddHom
 -/
 
 /- warning: mul_hom.coe_fn -> MulHom.coeFn is a dubious translation:
@@ -377,6 +398,7 @@ def MulHom.coeFn (α β : Type _) [Mul α] [CommSemigroup β] : (α →ₙ* β) 
   toFun g := g
   map_mul' x y := rfl
 #align mul_hom.coe_fn MulHom.coeFn
+#align add_hom.coe_fn AddHom.coeFn
 
 #print MulHom.compLeft /-
 /-- Semigroup homomorphism between the function spaces `I → α` and `I → β`, induced by a semigroup
@@ -389,6 +411,7 @@ protected def MulHom.compLeft {α β : Type _} [Mul α] [Mul β] (f : α →ₙ*
   toFun h := f ∘ h
   map_mul' _ _ := by ext <;> simp
 #align mul_hom.comp_left MulHom.compLeft
+#align add_hom.comp_left AddHom.compLeft
 -/
 
 end MulHom
@@ -410,6 +433,7 @@ def Pi.evalMonoidHom (i : I) : (∀ i, f i) →* f i
   map_one' := Pi.one_apply i
   map_mul' x y := Pi.mul_apply _ _ i
 #align pi.eval_monoid_hom Pi.evalMonoidHom
+#align pi.eval_add_monoid_hom Pi.evalAddMonoidHom
 -/
 
 #print Pi.constMonoidHom /-
@@ -421,6 +445,7 @@ def Pi.constMonoidHom (α β : Type _) [MulOneClass β] : β →* α → β
   map_one' := rfl
   map_mul' _ _ := rfl
 #align pi.const_monoid_hom Pi.constMonoidHom
+#align pi.const_add_monoid_hom Pi.constAddMonoidHom
 -/
 
 #print MonoidHom.coeFn /-
@@ -436,6 +461,7 @@ def MonoidHom.coeFn (α β : Type _) [MulOneClass α] [CommMonoid β] : (α →*
   map_one' := rfl
   map_mul' x y := rfl
 #align monoid_hom.coe_fn MonoidHom.coeFn
+#align add_monoid_hom.coe_fn AddMonoidHom.coeFn
 -/
 
 #print MonoidHom.compLeft /-
@@ -450,6 +476,7 @@ protected def MonoidHom.compLeft {α β : Type _} [MulOneClass α] [MulOneClass 
   map_one' := by ext <;> simp
   map_mul' _ _ := by ext <;> simp
 #align monoid_hom.comp_left MonoidHom.compLeft
+#align add_monoid_hom.comp_left AddMonoidHom.compLeft
 -/
 
 end MonoidHom
@@ -474,6 +501,7 @@ def OneHom.single [∀ i, One <| f i] (i : I) : OneHom (f i) (∀ i, f i)
   toFun := mulSingle i
   map_one' := mulSingle_one i
 #align one_hom.single OneHom.single
+#align zero_hom.single ZeroHom.single
 -/
 
 #print OneHom.single_apply /-
@@ -482,6 +510,7 @@ theorem OneHom.single_apply [∀ i, One <| f i] (i : I) (x : f i) :
     OneHom.single f i x = mulSingle i x :=
   rfl
 #align one_hom.single_apply OneHom.single_apply
+#align zero_hom.single_apply ZeroHom.single_apply
 -/
 
 #print MonoidHom.single /-
@@ -494,6 +523,7 @@ This is the `monoid_hom` version of `pi.mul_single`. -/
 def MonoidHom.single [∀ i, MulOneClass <| f i] (i : I) : f i →* ∀ i, f i :=
   { OneHom.single f i with map_mul' := mulSingle_op₂ (fun _ => (· * ·)) (fun _ => one_mul _) _ }
 #align monoid_hom.single MonoidHom.single
+#align add_monoid_hom.single AddMonoidHom.single
 -/
 
 /- warning: monoid_hom.single_apply -> MonoidHom.single_apply is a dubious translation:
@@ -507,6 +537,7 @@ theorem MonoidHom.single_apply [∀ i, MulOneClass <| f i] (i : I) (x : f i) :
     MonoidHom.single f i x = mulSingle i x :=
   rfl
 #align monoid_hom.single_apply MonoidHom.single_apply
+#align add_monoid_hom.single_apply AddMonoidHom.single_apply
 
 /- warning: mul_hom.single -> MulHom.single is a dubious translation:
 lean 3 declaration is
@@ -538,6 +569,7 @@ theorem Pi.mulSingle_mul [∀ i, MulOneClass <| f i] (i : I) (x y : f i) :
     mulSingle i (x * y) = mulSingle i x * mulSingle i y :=
   (MonoidHom.single f i).map_mul x y
 #align pi.mul_single_mul Pi.mulSingle_mul
+#align pi.single_add Pi.single_add
 
 /- warning: pi.mul_single_inv -> Pi.mulSingle_inv is a dubious translation:
 lean 3 declaration is
@@ -550,6 +582,7 @@ theorem Pi.mulSingle_inv [∀ i, Group <| f i] (i : I) (x : f i) :
     mulSingle i x⁻¹ = (mulSingle i x)⁻¹ :=
   (MonoidHom.single f i).map_inv x
 #align pi.mul_single_inv Pi.mulSingle_inv
+#align pi.single_neg Pi.single_neg
 
 /- warning: pi.single_div -> Pi.single_div is a dubious translation:
 lean 3 declaration is
@@ -562,6 +595,7 @@ theorem Pi.single_div [∀ i, Group <| f i] (i : I) (x y : f i) :
     mulSingle i (x / y) = mulSingle i x / mulSingle i y :=
   (MonoidHom.single f i).map_div x y
 #align pi.single_div Pi.single_div
+#align pi.single_sub Pi.single_sub
 
 /- warning: pi.single_mul -> Pi.single_mul is a dubious translation:
 lean 3 declaration is
@@ -597,6 +631,7 @@ theorem Pi.mulSingle_commute [∀ i, MulOneClass <| f i] :
     simp [hij]
   simp [h1, h2]
 #align pi.mul_single_commute Pi.mulSingle_commute
+#align pi.single_commute Pi.single_commute
 
 /- warning: pi.mul_single_apply_commute -> Pi.mulSingle_apply_commute is a dubious translation:
 lean 3 declaration is
@@ -613,6 +648,7 @@ theorem Pi.mulSingle_apply_commute [∀ i, MulOneClass <| f i] (x : ∀ i, f i) 
   · rfl
   · exact Pi.mulSingle_commute hij _ _
 #align pi.mul_single_apply_commute Pi.mulSingle_apply_commute
+#align pi.single_apply_commute Pi.single_apply_commute
 
 /- warning: pi.update_eq_div_mul_single -> Pi.update_eq_div_mul_mulSingle is a dubious translation:
 lean 3 declaration is
@@ -669,6 +705,7 @@ theorem Pi.mulSingle_mul_mulSingle_eq_mulSingle_mul_mulSingle {M : Type _} [Comm
     · simp_rw [← Pi.mulSingle_mul, h, mul_single_one]
 #align
   pi.mul_single_mul_mul_single_eq_mul_single_mul_mul_single Pi.mulSingle_mul_mulSingle_eq_mulSingle_mul_mulSingle
+#align pi.single_add_single_eq_single_add_single Pi.single_add_single_eq_single_add_single
 
 end Single
 
@@ -679,6 +716,7 @@ namespace Function
 theorem update_one [∀ i, One (f i)] [DecidableEq I] (i : I) : update (1 : ∀ i, f i) i 1 = 1 :=
   update_eq_self i 1
 #align function.update_one Function.update_one
+#align function.update_zero Function.update_zero
 -/
 
 #print Function.update_mul /-
@@ -687,6 +725,7 @@ theorem update_mul [∀ i, Mul (f i)] [DecidableEq I] (f₁ f₂ : ∀ i, f i) (
     (x₂ : f i) : update (f₁ * f₂) i (x₁ * x₂) = update f₁ i x₁ * update f₂ i x₂ :=
   funext fun j => (apply_update₂ (fun i => (· * ·)) f₁ f₂ i x₁ x₂ j).symm
 #align function.update_mul Function.update_mul
+#align function.update_add Function.update_add
 -/
 
 #print Function.update_inv /-
@@ -695,6 +734,7 @@ theorem update_inv [∀ i, Inv (f i)] [DecidableEq I] (f₁ : ∀ i, f i) (i : I
     update f₁⁻¹ i x₁⁻¹ = (update f₁ i x₁)⁻¹ :=
   funext fun j => (apply_update (fun i => Inv.inv) f₁ i x₁ j).symm
 #align function.update_inv Function.update_inv
+#align function.update_neg Function.update_neg
 -/
 
 #print Function.update_div /-
@@ -703,6 +743,7 @@ theorem update_div [∀ i, Div (f i)] [DecidableEq I] (f₁ f₂ : ∀ i, f i) (
     (x₂ : f i) : update (f₁ / f₂) i (x₁ / x₂) = update f₁ i x₁ / update f₂ i x₂ :=
   funext fun j => (apply_update₂ (fun i => (· / ·)) f₁ f₂ i x₁ x₂ j).symm
 #align function.update_div Function.update_div
+#align function.update_sub Function.update_sub
 -/
 
 variable [One α] [Nonempty ι] {a : α}
@@ -717,6 +758,7 @@ Case conversion may be inaccurate. Consider using '#align function.const_eq_one 
 theorem const_eq_one : const ι a = 1 ↔ a = 1 :=
   @const_inj _ _ _ _ 1
 #align function.const_eq_one Function.const_eq_one
+#align function.const_eq_zero Function.const_eq_zero
 
 /- warning: function.const_ne_one -> Function.const_ne_one is a dubious translation:
 lean 3 declaration is
@@ -728,6 +770,7 @@ Case conversion may be inaccurate. Consider using '#align function.const_ne_one 
 theorem const_ne_one : const ι a ≠ 1 ↔ a ≠ 1 :=
   const_eq_one.Not
 #align function.const_ne_one Function.const_ne_one
+#align function.const_ne_zero Function.const_ne_zero
 
 end Function
 
@@ -740,6 +783,7 @@ theorem Set.piecewise_mul [∀ i, Mul (f i)] (s : Set I) [∀ i, Decidable (i �
     s.piecewise (f₁ * f₂) (g₁ * g₂) = s.piecewise f₁ g₁ * s.piecewise f₂ g₂ :=
   s.piecewise_op₂ _ _ _ _ fun _ => (· * ·)
 #align set.piecewise_mul Set.piecewise_mul
+#align set.piecewise_add Set.piecewise_add
 -/
 
 #print Set.piecewise_inv /-
@@ -748,6 +792,7 @@ theorem Set.piecewise_inv [∀ i, Inv (f i)] (s : Set I) [∀ i, Decidable (i �
     s.piecewise f₁⁻¹ g₁⁻¹ = (s.piecewise f₁ g₁)⁻¹ :=
   s.piecewise_op f₁ g₁ fun _ x => x⁻¹
 #align set.piecewise_inv Set.piecewise_inv
+#align set.piecewise_neg Set.piecewise_neg
 -/
 
 #print Set.piecewise_div /-
@@ -757,6 +802,7 @@ theorem Set.piecewise_div [∀ i, Div (f i)] (s : Set I) [∀ i, Decidable (i �
     s.piecewise (f₁ / f₂) (g₁ / g₂) = s.piecewise f₁ g₁ / s.piecewise f₂ g₂ :=
   s.piecewise_op₂ _ _ _ _ fun _ => (· / ·)
 #align set.piecewise_div Set.piecewise_div
+#align set.piecewise_sub Set.piecewise_sub
 -/
 
 end Piecewise
@@ -774,6 +820,7 @@ noncomputable def Function.ExtendByOne.hom [MulOneClass R] : (ι → R) →* η 
   map_one' := Function.extend_one s
   map_mul' f g := by simpa using Function.extend_mul s f g 1 1
 #align function.extend_by_one.hom Function.ExtendByOne.hom
+#align function.extend_by_zero.hom Function.ExtendByZero.hom
 -/
 
 end Extend

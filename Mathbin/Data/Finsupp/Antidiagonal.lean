@@ -98,6 +98,7 @@ theorem prod_antidiagonal_swap {M : Type _} [CommMonoid M] (n : α →₀ ℕ)
     (fun p₁ p₂ _ _ h => Prod.swap_injective h) fun p hp =>
     ⟨p.swap, swap_mem_antidiagonal.2 hp, p.swap_swap.symm⟩
 #align finsupp.prod_antidiagonal_swap Finsupp.prod_antidiagonal_swap
+#align finsupp.sum_antidiagonal_swap Finsupp.sum_antidiagonal_swap
 
 end Finsupp
 

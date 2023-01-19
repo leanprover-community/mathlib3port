@@ -161,11 +161,13 @@ instance (R : Type _) [SMul R α] : SMul R αˢʸᵐ where smul r a := sym (r �
 theorem sym_one [One α] : sym (1 : α) = 1 :=
   rfl
 #align sym_alg.sym_one SymAlg.sym_one
+#align sym_alg.sym_zero SymAlg.sym_zero
 
 @[simp, to_additive]
 theorem unsym_one [One α] : unsym (1 : αˢʸᵐ) = 1 :=
   rfl
 #align sym_alg.unsym_one SymAlg.unsym_one
+#align sym_alg.unsym_zero SymAlg.unsym_zero
 
 @[simp]
 theorem sym_add [Add α] (a b : α) : sym (a + b) = sym a + sym b :=
@@ -214,11 +216,13 @@ theorem sym_mul_sym [Mul α] [Add α] [One α] [Invertible (2 : α)] (a b : α) 
 theorem sym_inv [Inv α] (a : α) : sym a⁻¹ = (sym a)⁻¹ :=
   rfl
 #align sym_alg.sym_inv SymAlg.sym_inv
+#align sym_alg.sym_neg SymAlg.sym_neg
 
 @[simp, to_additive]
 theorem unsym_inv [Inv α] (a : αˢʸᵐ) : unsym a⁻¹ = (unsym a)⁻¹ :=
   rfl
 #align sym_alg.unsym_inv SymAlg.unsym_inv
+#align sym_alg.unsym_neg SymAlg.unsym_neg
 
 @[simp]
 theorem sym_smul {R : Type _} [SMul R α] (c : R) (a : α) : sym (c • a) = c • sym a :=
@@ -234,21 +238,25 @@ theorem unsym_smul {R : Type _} [SMul R α] (c : R) (a : αˢʸᵐ) : unsym (c �
 theorem unsym_eq_one_iff [One α] (a : αˢʸᵐ) : a.unsym = 1 ↔ a = 1 :=
   unsym_injective.eq_iff' rfl
 #align sym_alg.unsym_eq_one_iff SymAlg.unsym_eq_one_iff
+#align sym_alg.unsym_eq_zero_iff SymAlg.unsym_eq_zero_iff
 
 @[simp, to_additive]
 theorem sym_eq_one_iff [One α] (a : α) : sym a = 1 ↔ a = 1 :=
   sym_injective.eq_iff' rfl
 #align sym_alg.sym_eq_one_iff SymAlg.sym_eq_one_iff
+#align sym_alg.sym_eq_zero_iff SymAlg.sym_eq_zero_iff
 
 @[to_additive]
 theorem unsym_ne_one_iff [One α] (a : αˢʸᵐ) : a.unsym ≠ (1 : α) ↔ a ≠ (1 : αˢʸᵐ) :=
   not_congr <| unsym_eq_one_iff a
 #align sym_alg.unsym_ne_one_iff SymAlg.unsym_ne_one_iff
+#align sym_alg.unsym_ne_zero_iff SymAlg.unsym_ne_zero_iff
 
 @[to_additive]
 theorem sym_ne_one_iff [One α] (a : α) : sym a ≠ (1 : αˢʸᵐ) ↔ a ≠ (1 : α) :=
   not_congr <| sym_eq_one_iff a
 #align sym_alg.sym_ne_one_iff SymAlg.sym_ne_one_iff
+#align sym_alg.sym_ne_zero_iff SymAlg.sym_ne_zero_iff
 
 instance [AddCommSemigroup α] : AddCommSemigroup αˢʸᵐ :=
   unsym_injective.AddCommSemigroup _ unsym_add

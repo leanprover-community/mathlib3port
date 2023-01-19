@@ -1059,7 +1059,7 @@ theorem uniformIntegrableAverage (hp : 1 ≤ p) {f : ℕ → α → ℝ} (hf : U
   refine' ⟨fun n => _, fun ε hε => _, _⟩
   · simp_rw [div_eq_mul_inv]
     exact
-      (Finset.aeStronglyMeasurableSum' _ fun i _ => hf₁ i).mul
+      (Finset.ae_strongly_measurable_sum' _ fun i _ => hf₁ i).mul
         (ae_strongly_measurable_const : ae_strongly_measurable (fun x => (↑n : ℝ)⁻¹) μ)
   · obtain ⟨δ, hδ₁, hδ₂⟩ := hf₂ hε
     refine' ⟨δ, hδ₁, fun n s hs hle => _⟩

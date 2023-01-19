@@ -96,9 +96,9 @@ def toCircle : AddCircle T → circle :=
 theorem to_circle_add (x : AddCircle T) (y : AddCircle T) :
     toCircle (x + y) = toCircle x * toCircle y :=
   by
-  induction x using QuotientAddGroup.induction_on'
-  induction y using QuotientAddGroup.induction_on'
-  simp_rw [← QuotientAddGroup.coe_add, to_circle, Function.Periodic.lift_coe, mul_add,
+  induction x using quotientAddGroup.induction_on'
+  induction y using quotientAddGroup.induction_on'
+  simp_rw [← quotientAddGroup.coe_add, to_circle, Function.Periodic.lift_coe, mul_add,
     exp_map_circle_add]
 #align add_circle.to_circle_add AddCircle.to_circle_add
 
@@ -109,11 +109,11 @@ theorem continuous_to_circle : Continuous (@toCircle T) :=
 theorem injective_to_circle (hT : T ≠ 0) : Function.Injective (@toCircle T) :=
   by
   intro a b h
-  induction a using QuotientAddGroup.induction_on'
-  induction b using QuotientAddGroup.induction_on'
+  induction a using quotientAddGroup.induction_on'
+  induction b using quotientAddGroup.induction_on'
   simp_rw [to_circle, Function.Periodic.lift_coe] at h
   obtain ⟨m, hm⟩ := exp_map_circle_eq_exp_map_circle.mp h.symm
-  simp_rw [QuotientAddGroup.eq, AddSubgroup.mem_zmultiples_iff, zsmul_eq_mul]
+  simp_rw [quotientAddGroup.eq, AddSubgroup.mem_zmultiples_iff, zsmul_eq_mul]
   use m
   field_simp [real.two_pi_pos.ne']  at hm
   rw [← mul_right_inj' real.two_pi_pos.ne']
@@ -132,7 +132,7 @@ include hT
 
 /-- Haar measure on the additive circle, normalised to have total measure 1. -/
 def haarAddCircle : Measure (AddCircle T) :=
-  addHaarMeasure ⊤deriving IsAddHaarMeasure
+  add_haar_measure ⊤deriving IsAddHaarMeasure
 #align add_circle.haar_add_circle AddCircle.haarAddCircle
 
 instance : IsProbabilityMeasure (@haarAddCircle T _) :=
@@ -167,7 +167,7 @@ theorem fourier_apply {n : ℤ} {x : AddCircle T} : fourier n x = toCircle (n �
 theorem fourier_coe_apply {n : ℤ} {x : ℝ} :
     fourier n (x : AddCircle T) = Complex.exp (2 * π * Complex.i * n * x / T) :=
   by
-  rw [fourier_apply, ← QuotientAddGroup.coe_zsmul, to_circle, Function.Periodic.lift_coe,
+  rw [fourier_apply, ← quotientAddGroup.coe_zsmul, to_circle, Function.Periodic.lift_coe,
     exp_map_circle_apply, Complex.of_real_mul, Complex.of_real_div, Complex.of_real_mul,
     zsmul_eq_mul, Complex.of_real_mul, Complex.of_real_int_cast, Complex.of_real_bit0,
     Complex.of_real_one]
@@ -177,13 +177,13 @@ theorem fourier_coe_apply {n : ℤ} {x : ℝ} :
 @[simp]
 theorem fourier_zero {x : AddCircle T} : fourier 0 x = 1 :=
   by
-  induction x using QuotientAddGroup.induction_on'
+  induction x using quotientAddGroup.induction_on'
   simp only [fourier_coe_apply, algebraMap.coe_zero, mul_zero, zero_mul, zero_div, Complex.exp_zero]
 #align fourier_zero fourier_zero
 
 @[simp]
 theorem fourier_eval_zero (n : ℤ) : fourier n (0 : AddCircle T) = 1 := by
-  rw [← QuotientAddGroup.coe_zero, fourier_coe_apply, Complex.of_real_zero, mul_zero, zero_div,
+  rw [← quotientAddGroup.coe_zero, fourier_coe_apply, Complex.of_real_zero, mul_zero, zero_div,
     Complex.exp_zero]
 #align fourier_eval_zero fourier_eval_zero
 
@@ -194,8 +194,8 @@ theorem fourier_one {x : AddCircle T} : fourier 1 x = toCircle x := by rw [fouri
 @[simp]
 theorem fourier_neg {n : ℤ} {x : AddCircle T} : fourier (-n) x = conj (fourier n x) :=
   by
-  induction x using QuotientAddGroup.induction_on'
-  simp_rw [fourier_apply, to_circle, ← QuotientAddGroup.coe_zsmul, Function.Periodic.lift_coe, ←
+  induction x using quotientAddGroup.induction_on'
+  simp_rw [fourier_apply, to_circle, ← quotientAddGroup.coe_zsmul, Function.Periodic.lift_coe, ←
     coe_inv_circle_eq_conj, ← exp_map_circle_neg, neg_smul, mul_neg]
 #align fourier_neg fourier_neg
 
@@ -216,7 +216,7 @@ theorem fourier_norm [Fact (0 < T)] (n : ℤ) : ‖@fourier T n‖ = 1 :=
 theorem fourier_add_half_inv_index {n : ℤ} (hn : n ≠ 0) (hT : 0 < T) (x : AddCircle T) :
     fourier n (x + (T / 2 / n : ℝ)) = -fourier n x :=
   by
-  rw [fourier_apply, zsmul_add, ← QuotientAddGroup.coe_zsmul, to_circle_add, coe_mul_unit_sphere]
+  rw [fourier_apply, zsmul_add, ← quotientAddGroup.coe_zsmul, to_circle_add, coe_mul_unit_sphere]
   have : (n : ℂ) ≠ 0 := by simpa using hn
   have : (@to_circle T (n • (T / 2 / n) : ℝ) : ℂ) = -1 :=
     by
@@ -332,7 +332,7 @@ theorem orthonormalFourier : Orthonormal ℂ (@fourierLp T _ 2 _) :=
     rw [add_comm]
     exact sub_ne_zero.mpr (Ne.symm h)
   convert integral_eq_zero_of_add_right_eq_neg (fourier_add_half_inv_index hij hT.elim)
-  exact IsAddLeftInvariant.isAddRightInvariant
+  exact IsAddLeftInvariant.is_add_right_invariant
 #align orthonormal_fourier orthonormalFourier
 
 end Monomials

@@ -178,6 +178,7 @@ instance : SubmonoidClass (Submonoid M) M
 def Simps.coe (S : Submonoid M) : Set M :=
   S
 #align submonoid.simps.coe Submonoid.Simps.coe
+#align add_submonoid.simps.coe AddSubmonoid.Simps.coe
 -/
 
 initialize_simps_projections Submonoid (carrier → coe)
@@ -194,6 +195,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.mem_carrier 
 theorem mem_carrier {s : Submonoid M} {x : M} : x ∈ s.carrier ↔ x ∈ s :=
   Iff.rfl
 #align submonoid.mem_carrier Submonoid.mem_carrier
+#align add_submonoid.mem_carrier AddSubmonoid.mem_carrier
 
 /- warning: submonoid.mem_mk -> Submonoid.mem_mk is a dubious translation:
 lean 3 declaration is
@@ -205,6 +207,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.mem_mk Submo
 theorem mem_mk {s : Set M} {x : M} (h_one) (h_mul) : x ∈ mk s h_one h_mul ↔ x ∈ s :=
   Iff.rfl
 #align submonoid.mem_mk Submonoid.mem_mk
+#align add_submonoid.mem_mk AddSubmonoid.mem_mk
 
 /- warning: submonoid.coe_set_mk -> Submonoid.coe_set_mk is a dubious translation:
 lean 3 declaration is
@@ -216,6 +219,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.coe_set_mk S
 theorem coe_set_mk {s : Set M} (h_one) (h_mul) : (mk s h_one h_mul : Set M) = s :=
   rfl
 #align submonoid.coe_set_mk Submonoid.coe_set_mk
+#align add_submonoid.coe_set_mk AddSubmonoid.coe_set_mk
 
 /- warning: submonoid.mk_le_mk -> Submonoid.mk_le_mk is a dubious translation:
 lean 3 declaration is
@@ -228,6 +232,7 @@ theorem mk_le_mk {s t : Set M} (h_one) (h_mul) (h_one') (h_mul') :
     mk s h_one h_mul ≤ mk t h_one' h_mul' ↔ s ⊆ t :=
   Iff.rfl
 #align submonoid.mk_le_mk Submonoid.mk_le_mk
+#align add_submonoid.mk_le_mk AddSubmonoid.mk_le_mk
 
 /- warning: submonoid.ext -> Submonoid.ext is a dubious translation:
 lean 3 declaration is
@@ -240,6 +245,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.ext Submonoi
 theorem ext {S T : Submonoid M} (h : ∀ x, x ∈ S ↔ x ∈ T) : S = T :=
   SetLike.ext h
 #align submonoid.ext Submonoid.ext
+#align add_submonoid.ext AddSubmonoid.ext
 
 /- warning: submonoid.copy -> Submonoid.copy is a dubious translation:
 lean 3 declaration is
@@ -255,6 +261,7 @@ protected def copy (S : Submonoid M) (s : Set M) (hs : s = S) : Submonoid M
   one_mem' := hs.symm ▸ S.one_mem'
   mul_mem' _ _ := hs.symm ▸ S.mul_mem'
 #align submonoid.copy Submonoid.copy
+#align add_submonoid.copy AddSubmonoid.copy
 
 variable {S : Submonoid M}
 
@@ -268,6 +275,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.coe_copy Sub
 theorem coe_copy {s : Set M} (hs : s = S) : (S.copy s hs : Set M) = s :=
   rfl
 #align submonoid.coe_copy Submonoid.coe_copy
+#align add_submonoid.coe_copy AddSubmonoid.coe_copy
 
 /- warning: submonoid.copy_eq -> Submonoid.copy_eq is a dubious translation:
 lean 3 declaration is
@@ -279,6 +287,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.copy_eq Subm
 theorem copy_eq {s : Set M} (hs : s = S) : S.copy s hs = S :=
   SetLike.coe_injective hs
 #align submonoid.copy_eq Submonoid.copy_eq
+#align add_submonoid.copy_eq AddSubmonoid.copy_eq
 
 variable (S)
 
@@ -293,6 +302,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.one_mem Subm
 protected theorem one_mem : (1 : M) ∈ S :=
   one_mem S
 #align submonoid.one_mem Submonoid.one_mem
+#align add_submonoid.zero_mem AddSubmonoid.zero_mem
 
 /- warning: submonoid.mul_mem -> Submonoid.mul_mem is a dubious translation:
 lean 3 declaration is
@@ -305,6 +315,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.mul_mem Subm
 protected theorem mul_mem {x y : M} : x ∈ S → y ∈ S → x * y ∈ S :=
   mul_mem
 #align submonoid.mul_mem Submonoid.mul_mem
+#align add_submonoid.add_mem AddSubmonoid.add_mem
 
 /-- The submonoid `M` of the monoid `M`. -/
 @[to_additive "The additive submonoid `M` of the `add_monoid M`."]
@@ -337,6 +348,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.mem_bot Subm
 theorem mem_bot {x : M} : x ∈ (⊥ : Submonoid M) ↔ x = 1 :=
   Set.mem_singleton_iff
 #align submonoid.mem_bot Submonoid.mem_bot
+#align add_submonoid.mem_bot AddSubmonoid.mem_bot
 
 /- warning: submonoid.mem_top -> Submonoid.mem_top is a dubious translation:
 lean 3 declaration is
@@ -348,6 +360,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.mem_top Subm
 theorem mem_top (x : M) : x ∈ (⊤ : Submonoid M) :=
   Set.mem_univ x
 #align submonoid.mem_top Submonoid.mem_top
+#align add_submonoid.mem_top AddSubmonoid.mem_top
 
 /- warning: submonoid.coe_top -> Submonoid.coe_top is a dubious translation:
 lean 3 declaration is
@@ -359,6 +372,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.coe_top Subm
 theorem coe_top : ((⊤ : Submonoid M) : Set M) = Set.univ :=
   rfl
 #align submonoid.coe_top Submonoid.coe_top
+#align add_submonoid.coe_top AddSubmonoid.coe_top
 
 /- warning: submonoid.coe_bot -> Submonoid.coe_bot is a dubious translation:
 lean 3 declaration is
@@ -370,6 +384,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.coe_bot Subm
 theorem coe_bot : ((⊥ : Submonoid M) : Set M) = {1} :=
   rfl
 #align submonoid.coe_bot Submonoid.coe_bot
+#align add_submonoid.coe_bot AddSubmonoid.coe_bot
 
 /-- The inf of two submonoids is their intersection. -/
 @[to_additive "The inf of two `add_submonoid`s is their intersection."]
@@ -389,6 +404,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.coe_inf Subm
 theorem coe_inf (p p' : Submonoid M) : ((p ⊓ p' : Submonoid M) : Set M) = p ∩ p' :=
   rfl
 #align submonoid.coe_inf Submonoid.coe_inf
+#align add_submonoid.coe_inf AddSubmonoid.coe_inf
 
 /- warning: submonoid.mem_inf -> Submonoid.mem_inf is a dubious translation:
 lean 3 declaration is
@@ -400,6 +416,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.mem_inf Subm
 theorem mem_inf {p p' : Submonoid M} {x : M} : x ∈ p ⊓ p' ↔ x ∈ p ∧ x ∈ p' :=
   Iff.rfl
 #align submonoid.mem_inf Submonoid.mem_inf
+#align add_submonoid.mem_inf AddSubmonoid.mem_inf
 
 @[to_additive]
 instance : InfSet (Submonoid M) :=
@@ -484,6 +501,7 @@ theorem subsingleton_iff : Subsingleton (Submonoid M) ↔ Subsingleton M :=
     fun h =>
     ⟨fun x y => Submonoid.ext fun i => Subsingleton.elim 1 i ▸ by simp [Submonoid.one_mem]⟩⟩
 #align submonoid.subsingleton_iff Submonoid.subsingleton_iff
+#align add_submonoid.subsingleton_iff AddSubmonoid.subsingleton_iff
 -/
 
 #print Submonoid.nontrivial_iff /-
@@ -493,6 +511,7 @@ theorem nontrivial_iff : Nontrivial (Submonoid M) ↔ Nontrivial M :=
     ((not_nontrivial_iff_subsingleton.trans subsingleton_iff).trans
       not_nontrivial_iff_subsingleton.symm)
 #align submonoid.nontrivial_iff Submonoid.nontrivial_iff
+#align add_submonoid.nontrivial_iff AddSubmonoid.nontrivial_iff
 -/
 
 @[to_additive]
@@ -509,6 +528,7 @@ instance [Nontrivial M] : Nontrivial (Submonoid M) :=
 def closure (s : Set M) : Submonoid M :=
   infₛ { S | s ⊆ S }
 #align submonoid.closure Submonoid.closure
+#align add_submonoid.closure AddSubmonoid.closure
 -/
 
 /- warning: submonoid.mem_closure -> Submonoid.mem_closure is a dubious translation:
@@ -521,6 +541,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.mem_closure 
 theorem mem_closure {x : M} : x ∈ closure s ↔ ∀ S : Submonoid M, s ⊆ S → x ∈ S :=
   mem_Inf
 #align submonoid.mem_closure Submonoid.mem_closure
+#align add_submonoid.mem_closure AddSubmonoid.mem_closure
 
 /- warning: submonoid.subset_closure -> Submonoid.subset_closure is a dubious translation:
 lean 3 declaration is
@@ -532,6 +553,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.subset_closu
 @[simp, to_additive "The `add_submonoid` generated by a set includes the set."]
 theorem subset_closure : s ⊆ closure s := fun x hx => mem_closure.2 fun S hS => hS hx
 #align submonoid.subset_closure Submonoid.subset_closure
+#align add_submonoid.subset_closure AddSubmonoid.subset_closure
 
 /- warning: submonoid.not_mem_of_not_mem_closure -> Submonoid.not_mem_of_not_mem_closure is a dubious translation:
 lean 3 declaration is
@@ -543,6 +565,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.not_mem_of_n
 theorem not_mem_of_not_mem_closure {P : M} (hP : P ∉ closure s) : P ∉ s := fun h =>
   hP (subset_closure h)
 #align submonoid.not_mem_of_not_mem_closure Submonoid.not_mem_of_not_mem_closure
+#align add_submonoid.not_mem_of_not_mem_closure AddSubmonoid.not_mem_of_not_mem_closure
 
 variable {S}
 
@@ -559,6 +582,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.closure_le S
 theorem closure_le : closure s ≤ S ↔ s ⊆ S :=
   ⟨Subset.trans subset_closure, fun h => infₛ_le h⟩
 #align submonoid.closure_le Submonoid.closure_le
+#align add_submonoid.closure_le AddSubmonoid.closure_le
 
 /- warning: submonoid.closure_mono -> Submonoid.closure_mono is a dubious translation:
 lean 3 declaration is
@@ -573,6 +597,7 @@ then `closure s ≤ closure t`. -/
 theorem closure_mono ⦃s t : Set M⦄ (h : s ⊆ t) : closure s ≤ closure t :=
   closure_le.2 <| Subset.trans h subset_closure
 #align submonoid.closure_mono Submonoid.closure_mono
+#align add_submonoid.closure_mono AddSubmonoid.closure_mono
 
 /- warning: submonoid.closure_eq_of_le -> Submonoid.closure_eq_of_le is a dubious translation:
 lean 3 declaration is
@@ -584,6 +609,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.closure_eq_o
 theorem closure_eq_of_le (h₁ : s ⊆ S) (h₂ : S ≤ closure s) : closure s = S :=
   le_antisymm (closure_le.2 h₁) h₂
 #align submonoid.closure_eq_of_le Submonoid.closure_eq_of_le
+#align add_submonoid.closure_eq_of_le AddSubmonoid.closure_eq_of_le
 
 variable (S)
 
@@ -602,6 +628,7 @@ theorem closure_induction {p : M → Prop} {x} (h : x ∈ closure s) (Hs : ∀ x
     (Hmul : ∀ x y, p x → p y → p (x * y)) : p x :=
   (@closure_le _ _ _ ⟨p, Hmul, H1⟩).2 Hs h
 #align submonoid.closure_induction Submonoid.closure_induction
+#align add_submonoid.closure_induction AddSubmonoid.closure_induction
 
 /- warning: submonoid.closure_induction' -> Submonoid.closure_induction' is a dubious translation:
 lean 3 declaration is
@@ -620,6 +647,7 @@ theorem closure_induction' (s : Set M) {p : ∀ x, x ∈ closure s → Prop}
     closure_induction hx (fun x hx => ⟨_, Hs x hx⟩) ⟨_, H1⟩ fun x y ⟨hx', hx⟩ ⟨hy', hy⟩ =>
       ⟨_, Hmul _ _ _ _ hx hy⟩
 #align submonoid.closure_induction' Submonoid.closure_induction'
+#align add_submonoid.closure_induction' AddSubmonoid.closure_induction'
 
 /- warning: submonoid.closure_induction₂ -> Submonoid.closure_induction₂ is a dubious translation:
 lean 3 declaration is
@@ -640,6 +668,7 @@ theorem closure_induction₂ {p : M → M → Prop} {x} {y : M} (hx : x ∈ clos
       closure_induction hy (Hs x xs) (H1_right x) fun z y h₁ h₂ => Hmul_right z _ _ h₁ h₂)
     (H1_left y) fun x z h₁ h₂ => Hmul_left _ _ _ h₁ h₂
 #align submonoid.closure_induction₂ Submonoid.closure_induction₂
+#align add_submonoid.closure_induction₂ AddSubmonoid.closure_induction₂
 
 /- warning: submonoid.dense_induction -> Submonoid.dense_induction is a dubious translation:
 lean 3 declaration is
@@ -659,6 +688,7 @@ theorem dense_induction {p : M → Prop} (x : M) {s : Set M} (hs : closure s = �
   have : ∀ x ∈ closure s, p x := fun x hx => closure_induction hx Hs H1 Hmul
   simpa [hs] using this x
 #align submonoid.dense_induction Submonoid.dense_induction
+#align add_submonoid.dense_induction AddSubmonoid.dense_induction
 
 variable (M)
 
@@ -677,6 +707,7 @@ protected def gi : GaloisInsertion (@closure M _) coe
   le_l_u s := subset_closure
   choice_eq s h := rfl
 #align submonoid.gi Submonoid.gi
+#align add_submonoid.gi AddSubmonoid.gi
 
 variable {M}
 
@@ -691,6 +722,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.closure_eq S
 theorem closure_eq : closure (S : Set M) = S :=
   (Submonoid.gi M).l_u_eq S
 #align submonoid.closure_eq Submonoid.closure_eq
+#align add_submonoid.closure_eq AddSubmonoid.closure_eq
 
 /- warning: submonoid.closure_empty -> Submonoid.closure_empty is a dubious translation:
 lean 3 declaration is
@@ -702,6 +734,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.closure_empt
 theorem closure_empty : closure (∅ : Set M) = ⊥ :=
   (Submonoid.gi M).gc.l_bot
 #align submonoid.closure_empty Submonoid.closure_empty
+#align add_submonoid.closure_empty AddSubmonoid.closure_empty
 
 /- warning: submonoid.closure_univ -> Submonoid.closure_univ is a dubious translation:
 lean 3 declaration is
@@ -713,6 +746,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.closure_univ
 theorem closure_univ : closure (univ : Set M) = ⊤ :=
   @coe_top M _ ▸ closure_eq ⊤
 #align submonoid.closure_univ Submonoid.closure_univ
+#align add_submonoid.closure_univ AddSubmonoid.closure_univ
 
 /- warning: submonoid.closure_union -> Submonoid.closure_union is a dubious translation:
 lean 3 declaration is
@@ -724,6 +758,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.closure_unio
 theorem closure_union (s t : Set M) : closure (s ∪ t) = closure s ⊔ closure t :=
   (Submonoid.gi M).gc.l_sup
 #align submonoid.closure_union Submonoid.closure_union
+#align add_submonoid.closure_union AddSubmonoid.closure_union
 
 /- warning: submonoid.closure_Union -> Submonoid.closure_unionᵢ is a dubious translation:
 lean 3 declaration is
@@ -746,6 +781,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.closure_sing
 theorem closure_singleton_le_iff_mem (m : M) (p : Submonoid M) : closure {m} ≤ p ↔ m ∈ p := by
   rw [closure_le, singleton_subset_iff, SetLike.mem_coe]
 #align submonoid.closure_singleton_le_iff_mem Submonoid.closure_singleton_le_iff_mem
+#align add_submonoid.closure_singleton_le_iff_mem AddSubmonoid.closure_singleton_le_iff_mem
 
 /- warning: submonoid.mem_supr -> Submonoid.mem_supᵢ is a dubious translation:
 lean 3 declaration is
@@ -783,6 +819,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.disjoint_def
 theorem disjoint_def {p₁ p₂ : Submonoid M} : Disjoint p₁ p₂ ↔ ∀ {x : M}, x ∈ p₁ → x ∈ p₂ → x = 1 :=
   by simp_rw [disjoint_iff_inf_le, SetLike.le_def, mem_inf, and_imp, mem_bot]
 #align submonoid.disjoint_def Submonoid.disjoint_def
+#align add_submonoid.disjoint_def AddSubmonoid.disjoint_def
 
 /- warning: submonoid.disjoint_def' -> Submonoid.disjoint_def' is a dubious translation:
 lean 3 declaration is
@@ -795,6 +832,7 @@ theorem disjoint_def' {p₁ p₂ : Submonoid M} :
     Disjoint p₁ p₂ ↔ ∀ {x y : M}, x ∈ p₁ → y ∈ p₂ → x = y → x = 1 :=
   disjoint_def.trans ⟨fun h x y hx hy hxy => h hx <| hxy.symm ▸ hy, fun h x hx hx' => h hx hx' rfl⟩
 #align submonoid.disjoint_def' Submonoid.disjoint_def'
+#align add_submonoid.disjoint_def' AddSubmonoid.disjoint_def'
 
 end Submonoid
 
@@ -884,6 +922,7 @@ def IsUnit.submonoid (M : Type _) [Monoid M] : Submonoid M
     rw [Set.mem_setOf_eq] at *
     exact IsUnit.mul ha hb
 #align is_unit.submonoid IsUnit.submonoid
+#align is_add_unit.add_submonoid IsAddUnit.addSubmonoid
 -/
 
 /- warning: is_unit.mem_submonoid_iff -> IsUnit.mem_submonoid_iff is a dubious translation:

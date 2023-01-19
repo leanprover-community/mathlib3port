@@ -1620,30 +1620,35 @@ theorem EventuallyEq.mul [Mul β] {f f' g g' : α → β} {l : Filter α} (h : f
     (h' : f' =ᶠ[l] g') : (fun x => f x * f' x) =ᶠ[l] fun x => g x * g' x :=
   h.comp₂ (· * ·) h'
 #align filter.eventually_eq.mul Filter.EventuallyEq.mul
+#align filter.eventually_eq.add Filter.EventuallyEq.add
 
 @[to_additive]
 theorem EventuallyEq.inv [Inv β] {f g : α → β} {l : Filter α} (h : f =ᶠ[l] g) :
     (fun x => (f x)⁻¹) =ᶠ[l] fun x => (g x)⁻¹ :=
   h.fun_comp Inv.inv
 #align filter.eventually_eq.inv Filter.EventuallyEq.inv
+#align filter.eventually_eq.neg Filter.EventuallyEq.neg
 
 @[to_additive]
 theorem EventuallyEq.div [Div β] {f f' g g' : α → β} {l : Filter α} (h : f =ᶠ[l] g)
     (h' : f' =ᶠ[l] g') : (fun x => f x / f' x) =ᶠ[l] fun x => g x / g' x :=
   h.comp₂ (· / ·) h'
 #align filter.eventually_eq.div Filter.EventuallyEq.div
+#align filter.eventually_eq.sub Filter.EventuallyEq.sub
 
 @[to_additive]
 theorem EventuallyEq.const_smul {𝕜} [SMul 𝕜 β] {l : Filter α} {f g : α → β} (h : f =ᶠ[l] g)
     (c : 𝕜) : (fun x => c • f x) =ᶠ[l] fun x => c • g x :=
   h.fun_comp fun x => c • x
 #align filter.eventually_eq.const_smul Filter.EventuallyEq.const_smul
+#align filter.eventually_eq.const_vadd Filter.EventuallyEq.const_vadd
 
 @[to_additive]
 theorem EventuallyEq.smul {𝕜} [SMul 𝕜 β] {l : Filter α} {f f' : α → 𝕜} {g g' : α → β}
     (hf : f =ᶠ[l] f') (hg : g =ᶠ[l] g') : (fun x => f x • g x) =ᶠ[l] fun x => f' x • g' x :=
   hf.comp₂ (· • ·) hg
 #align filter.eventually_eq.smul Filter.EventuallyEq.smul
+#align filter.eventually_eq.vadd Filter.EventuallyEq.vadd
 
 theorem EventuallyEq.sup [HasSup β] {l : Filter α} {f f' g g' : α → β} (hf : f =ᶠ[l] f')
     (hg : g =ᶠ[l] g') : (fun x => f x ⊔ g x) =ᶠ[l] fun x => f' x ⊔ g' x :=
@@ -1842,6 +1847,7 @@ theorem EventuallyLe.mul_le_mul' [Mul β] [Preorder β] [CovariantClass β β (�
     (hf : f₁ ≤ᶠ[l] f₂) (hg : g₁ ≤ᶠ[l] g₂) : f₁ * g₁ ≤ᶠ[l] f₂ * g₂ := by
   filter_upwards [hf, hg] with x hfx hgx using mul_le_mul' hfx hgx
 #align filter.eventually_le.mul_le_mul' Filter.EventuallyLe.mul_le_mul'
+#align eventually_le.add_le_add EventuallyLe.add_le_add
 
 theorem EventuallyLe.mul_nonneg [OrderedSemiring β] {l : Filter α} {f g : α → β} (hf : 0 ≤ᶠ[l] f)
     (hg : 0 ≤ᶠ[l] g) : 0 ≤ᶠ[l] f * g := by filter_upwards [hf, hg] with x using mul_nonneg

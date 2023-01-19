@@ -1182,7 +1182,7 @@ theorem not_mem_Ioo_mod_iff_eq_add_zsmul : ¬MemIooMod a b x ↔ ∃ z : ℤ, x 
 
 theorem not_mem_Ioo_mod_iff_eq_mod_zmultiples :
     ¬MemIooMod a b x ↔ (x : α ⧸ AddSubgroup.zmultiples b) = a := by
-  simp_rw [not_mem_Ioo_mod_iff_eq_add_zsmul hb, QuotientAddGroup.eq_iff_sub_mem,
+  simp_rw [not_mem_Ioo_mod_iff_eq_add_zsmul hb, quotientAddGroup.eq_iff_sub_mem,
     AddSubgroup.mem_zmultiples_iff, eq_sub_iff_add_eq', eq_comm]
 #align not_mem_Ioo_mod_iff_eq_mod_zmultiples not_mem_Ioo_mod_iff_eq_mod_zmultiples
 
@@ -1281,47 +1281,47 @@ theorem to_Ioc_mod_periodic (a : α) {b : α} (hb : 0 < b) : Function.Periodic (
 
 /-- `to_Ico_mod` as an equiv from the quotient. -/
 @[simps symmApply]
-def QuotientAddGroup.equivIcoMod (a : α) {b : α} (hb : 0 < b) :
+def quotientAddGroup.equivIcoMod (a : α) {b : α} (hb : 0 < b) :
     α ⧸ AddSubgroup.zmultiples b ≃ Set.Ico a (a + b)
     where
   toFun x :=
-    ⟨(to_Ico_mod_periodic a hb).lift x, QuotientAddGroup.induction_on' x <| to_Ico_mod_mem_Ico a hb⟩
+    ⟨(to_Ico_mod_periodic a hb).lift x, quotientAddGroup.induction_on' x <| to_Ico_mod_mem_Ico a hb⟩
   invFun := coe
   right_inv x := Subtype.ext <| (to_Ico_mod_eq_self hb).mpr x.Prop
   left_inv x := by
-    induction x using QuotientAddGroup.induction_on'
+    induction x using quotientAddGroup.induction_on'
     dsimp
-    rw [QuotientAddGroup.eq_iff_sub_mem, to_Ico_mod_sub_self]
+    rw [quotientAddGroup.eq_iff_sub_mem, to_Ico_mod_sub_self]
     apply AddSubgroup.zsmul_mem_zmultiples
-#align quotient_add_group.equiv_Ico_mod QuotientAddGroup.equivIcoMod
+#align quotient_add_group.equiv_Ico_mod quotientAddGroup.equivIcoMod
 
 @[simp]
-theorem QuotientAddGroup.equiv_Ico_mod_coe (a : α) {b : α} (hb : 0 < b) (x : α) :
-    QuotientAddGroup.equivIcoMod a hb ↑x = ⟨toIcoMod a hb x, to_Ico_mod_mem_Ico a hb _⟩ :=
+theorem quotientAddGroup.equiv_Ico_mod_coe (a : α) {b : α} (hb : 0 < b) (x : α) :
+    quotientAddGroup.equivIcoMod a hb ↑x = ⟨toIcoMod a hb x, to_Ico_mod_mem_Ico a hb _⟩ :=
   rfl
-#align quotient_add_group.equiv_Ico_mod_coe QuotientAddGroup.equiv_Ico_mod_coe
+#align quotient_add_group.equiv_Ico_mod_coe quotientAddGroup.equiv_Ico_mod_coe
 
 /-- `to_Ioc_mod` as an equiv  from the quotient. -/
 @[simps symmApply]
-def QuotientAddGroup.equivIocMod (a : α) {b : α} (hb : 0 < b) :
+def quotientAddGroup.equivIocMod (a : α) {b : α} (hb : 0 < b) :
     α ⧸ AddSubgroup.zmultiples b ≃ Set.Ioc a (a + b)
     where
   toFun x :=
-    ⟨(to_Ioc_mod_periodic a hb).lift x, QuotientAddGroup.induction_on' x <| to_Ioc_mod_mem_Ioc a hb⟩
+    ⟨(to_Ioc_mod_periodic a hb).lift x, quotientAddGroup.induction_on' x <| to_Ioc_mod_mem_Ioc a hb⟩
   invFun := coe
   right_inv x := Subtype.ext <| (to_Ioc_mod_eq_self hb).mpr x.Prop
   left_inv x := by
-    induction x using QuotientAddGroup.induction_on'
+    induction x using quotientAddGroup.induction_on'
     dsimp
-    rw [QuotientAddGroup.eq_iff_sub_mem, to_Ioc_mod_sub_self]
+    rw [quotientAddGroup.eq_iff_sub_mem, to_Ioc_mod_sub_self]
     apply AddSubgroup.zsmul_mem_zmultiples
-#align quotient_add_group.equiv_Ioc_mod QuotientAddGroup.equivIocMod
+#align quotient_add_group.equiv_Ioc_mod quotientAddGroup.equivIocMod
 
 @[simp]
-theorem QuotientAddGroup.equiv_Ioc_mod_coe (a : α) {b : α} (hb : 0 < b) (x : α) :
-    QuotientAddGroup.equivIocMod a hb ↑x = ⟨toIocMod a hb x, to_Ioc_mod_mem_Ioc a hb _⟩ :=
+theorem quotientAddGroup.equiv_Ioc_mod_coe (a : α) {b : α} (hb : 0 < b) (x : α) :
+    quotientAddGroup.equivIocMod a hb ↑x = ⟨toIocMod a hb x, to_Ioc_mod_mem_Ioc a hb _⟩ :=
   rfl
-#align quotient_add_group.equiv_Ioc_mod_coe QuotientAddGroup.equiv_Ioc_mod_coe
+#align quotient_add_group.equiv_Ioc_mod_coe quotientAddGroup.equiv_Ioc_mod_coe
 
 end LinearOrderedAddCommGroup
 

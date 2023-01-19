@@ -37,6 +37,7 @@ Case conversion may be inaccurate. Consider using '#align finset.prod_insert_non
 theorem prod_insertNone (f : Option α → M) (s : Finset α) :
     (∏ x in s.insertNone, f x) = f none * ∏ x in s, f (some x) := by simp [insert_none]
 #align finset.prod_insert_none Finset.prod_insertNone
+#align finset.sum_insert_none Finset.sum_insertNone
 
 /- warning: finset.prod_erase_none -> Finset.prod_eraseNone is a dubious translation:
 lean 3 declaration is
@@ -54,6 +55,7 @@ theorem prod_eraseNone (f : α → M) (s : Finset (Option α)) :
       _ = ∏ x in s, Option.elim' 1 f x := prod_erase _ rfl
       
 #align finset.prod_erase_none Finset.prod_eraseNone
+#align finset.sum_erase_none Finset.sum_eraseNone
 
 end Finset
 

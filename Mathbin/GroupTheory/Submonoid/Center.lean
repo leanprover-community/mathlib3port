@@ -42,6 +42,7 @@ def center : Submonoid M where
   one_mem' := Set.one_mem_center M
   mul_mem' a b := Set.mul_mem_center
 #align submonoid.center Submonoid.center
+#align add_submonoid.center AddSubmonoid.center
 -/
 
 /- warning: submonoid.coe_center -> Submonoid.coe_center is a dubious translation:
@@ -54,6 +55,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.coe_center S
 theorem coe_center : ↑(center M) = Set.center M :=
   rfl
 #align submonoid.coe_center Submonoid.coe_center
+#align add_submonoid.coe_center AddSubmonoid.coe_center
 
 /- warning: submonoid.center_to_subsemigroup -> Submonoid.center_toSubsemigroup is a dubious translation:
 lean 3 declaration is
@@ -91,6 +93,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.mem_center_i
 theorem mem_center_iff {z : M} : z ∈ center M ↔ ∀ g, g * z = z * g :=
   Iff.rfl
 #align submonoid.mem_center_iff Submonoid.mem_center_iff
+#align add_submonoid.mem_center_iff AddSubmonoid.mem_center_iff
 
 /- warning: submonoid.decidable_mem_center -> Submonoid.decidableMemCenter is a dubious translation:
 lean 3 declaration is
@@ -102,6 +105,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.decidable_me
 instance decidableMemCenter (a) [Decidable <| ∀ b : M, b * a = a * b] : Decidable (a ∈ center M) :=
   decidable_of_iff' _ mem_center_iff
 #align submonoid.decidable_mem_center Submonoid.decidableMemCenter
+#align add_submonoid.decidable_mem_center AddSubmonoid.decidableMemCenter
 
 /-- The center of a monoid is commutative. -/
 instance : CommMonoid (center M) :=

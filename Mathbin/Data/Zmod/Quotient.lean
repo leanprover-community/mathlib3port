@@ -35,7 +35,7 @@ zmod, quotient group, quotient ring, ideal quotient
 -/
 
 
-open QuotientAddGroup
+open quotientAddGroup
 
 open Zmod
 
@@ -143,6 +143,7 @@ theorem orbit_zpowers_equiv_symm_apply (k : Zmod (minimalPeriod ((· • ·) a) 
       (⟨a, mem_zpowers a⟩ : zpowers a) ^ (k : ℤ) • ⟨b, mem_orbit_self b⟩ :=
   rfl
 #align mul_action.orbit_zpowers_equiv_symm_apply MulAction.orbit_zpowers_equiv_symm_apply
+#align add_action.orbit_zmultiples_equiv_symm_apply AddAction.orbit_zmultiples_equiv_symm_apply
 
 theorem orbit_zpowers_equiv_symm_apply' (k : ℤ) :
     (orbitZpowersEquiv a b).symm k = (⟨a, mem_zpowers a⟩ : zpowers a) ^ k • ⟨b, mem_orbit_self b⟩ :=
@@ -167,6 +168,7 @@ theorem minimal_period_eq_card [Fintype (orbit (zpowers a) b)] :
     minimalPeriod ((· • ·) a) b = Fintype.card (orbit (zpowers a) b) := by
   rw [← Fintype.of_equiv_card (orbit_zpowers_equiv a b), Zmod.card]
 #align mul_action.minimal_period_eq_card MulAction.minimal_period_eq_card
+#align add_action.minimal_period_eq_card AddAction.minimal_period_eq_card
 
 @[to_additive]
 instance minimal_period_pos [Finite <| orbit (zpowers a) b] :
@@ -177,6 +179,7 @@ instance minimal_period_pos [Finite <| orbit (zpowers a) b] :
     rw [minimal_period_eq_card]
     exact Fintype.card_ne_zero⟩
 #align mul_action.minimal_period_pos MulAction.minimal_period_pos
+#align add_action.minimal_period_pos AddAction.minimal_period_pos
 
 end MulAction
 
@@ -193,6 +196,7 @@ theorem order_eq_card_zpowers' : orderOf a = Nat.card (zpowers a) :=
   have := Nat.card_congr (MulAction.orbitZpowersEquiv a (1 : α))
   rwa [Nat.card_zmod, orbit_subgroup_one_eq_self, eq_comm] at this
 #align order_eq_card_zpowers' order_eq_card_zpowers'
+#align add_order_eq_card_zmultiples' add_order_eq_card_zmultiples'
 
 variable {a}
 
@@ -202,6 +206,7 @@ theorem IsOfFinOrder.finite_zpowers (h : IsOfFinOrder a) : Finite <| zpowers a :
   rw [← order_of_pos_iff, order_eq_card_zpowers'] at h
   exact Nat.finite_of_card_ne_zero h.ne.symm
 #align is_of_fin_order.finite_zpowers IsOfFinOrder.finite_zpowers
+#align is_of_fin_add_order.finite_zmultiples IsOfFinAddOrder.finite_zmultiples
 
 end Group
 

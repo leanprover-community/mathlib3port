@@ -370,6 +370,7 @@ theorem Continuous.is_open_mul_support [T1Space α] [One α] [TopologicalSpace �
     (hf : Continuous f) : IsOpen (mulSupport f) :=
   is_open_ne.Preimage hf
 #align continuous.is_open_mul_support Continuous.is_open_mul_support
+#align continuous.is_open_support Continuous.is_open_support
 
 theorem Ne.nhds_within_compl_singleton [T1Space α] {x y : α} (h : x ≠ y) : 𝓝[{y}ᶜ] x = 𝓝 x :=
   is_open_ne.nhds_within_eq h

@@ -42,6 +42,7 @@ def centralizer : Submonoid M where
   one_mem' := S.one_mem_centralizer
   mul_mem' a b := Set.mul_mem_centralizer
 #align submonoid.centralizer Submonoid.centralizer
+#align add_submonoid.centralizer AddSubmonoid.centralizer
 -/
 
 /- warning: submonoid.coe_centralizer -> Submonoid.coe_centralizer is a dubious translation:
@@ -54,6 +55,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.coe_centrali
 theorem coe_centralizer : ↑(centralizer S) = S.centralizer :=
   rfl
 #align submonoid.coe_centralizer Submonoid.coe_centralizer
+#align add_submonoid.coe_centralizer AddSubmonoid.coe_centralizer
 
 /- warning: submonoid.centralizer_to_subsemigroup -> Submonoid.centralizer_toSubsemigroup is a dubious translation:
 lean 3 declaration is
@@ -91,6 +93,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.mem_centrali
 theorem mem_centralizer_iff {z : M} : z ∈ centralizer S ↔ ∀ g ∈ S, g * z = z * g :=
   Iff.rfl
 #align submonoid.mem_centralizer_iff Submonoid.mem_centralizer_iff
+#align add_submonoid.mem_centralizer_iff AddSubmonoid.mem_centralizer_iff
 
 /- warning: submonoid.decidable_mem_centralizer -> Submonoid.decidableMemCentralizer is a dubious translation:
 lean 3 declaration is
@@ -103,6 +106,7 @@ instance decidableMemCentralizer (a) [Decidable <| ∀ b ∈ S, b * a = a * b] :
     Decidable (a ∈ centralizer S) :=
   decidable_of_iff' _ mem_centralizer_iff
 #align submonoid.decidable_mem_centralizer Submonoid.decidableMemCentralizer
+#align add_submonoid.decidable_mem_centralizer AddSubmonoid.decidableMemCentralizer
 
 /- warning: submonoid.centralizer_le -> Submonoid.centralizer_le is a dubious translation:
 lean 3 declaration is
@@ -114,6 +118,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.centralizer_
 theorem centralizer_le (h : S ⊆ T) : centralizer T ≤ centralizer S :=
   Set.centralizer_subset h
 #align submonoid.centralizer_le Submonoid.centralizer_le
+#align add_submonoid.centralizer_le AddSubmonoid.centralizer_le
 
 variable (M)
 
@@ -122,6 +127,7 @@ variable (M)
 theorem centralizer_univ : centralizer Set.univ = center M :=
   SetLike.ext' (Set.centralizer_univ M)
 #align submonoid.centralizer_univ Submonoid.centralizer_univ
+#align add_submonoid.centralizer_univ AddSubmonoid.centralizer_univ
 -/
 
 end

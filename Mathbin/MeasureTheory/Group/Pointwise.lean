@@ -30,6 +30,7 @@ theorem MeasurableSet.const_smul {G α : Type _} [Group G] [MulAction G α] [Mea
   rw [← preimage_smul_inv]
   exact measurable_const_smul _ hs
 #align measurable_set.const_smul MeasurableSet.const_smul
+#align measurable_set.const_vadd MeasurableSet.const_vadd
 
 theorem MeasurableSet.const_smul_of_ne_zero {G₀ α : Type _} [GroupWithZero G₀] [MulAction G₀ α]
     [MeasurableSpace G₀] [MeasurableSpace α] [HasMeasurableSmul G₀ α] {s : Set α}

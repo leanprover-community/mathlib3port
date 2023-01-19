@@ -35,6 +35,7 @@ def mulLeftEmbedding {G : Type _} [LeftCancelSemigroup G] (g : G) : G ↪ G
   toFun h := g * h
   inj' := mul_right_injective g
 #align mul_left_embedding mulLeftEmbedding
+#align add_left_embedding addLeftEmbedding
 -/
 
 #print mulRightEmbedding /-
@@ -49,6 +50,7 @@ def mulRightEmbedding {G : Type _} [RightCancelSemigroup G] (g : G) : G ↪ G
   toFun h := h * g
   inj' := mul_left_injective g
 #align mul_right_embedding mulRightEmbedding
+#align add_right_embedding addRightEmbedding
 -/
 
 #print mul_left_embedding_eq_mul_right_embedding /-
@@ -58,6 +60,7 @@ theorem mul_left_embedding_eq_mul_right_embedding {G : Type _} [CancelCommMonoid
   ext
   exact mul_comm _ _
 #align mul_left_embedding_eq_mul_right_embedding mul_left_embedding_eq_mul_right_embedding
+#align add_left_embedding_eq_add_right_embedding add_left_embedding_eq_add_right_embedding
 -/
 
 end LeftOrRightCancelSemigroup

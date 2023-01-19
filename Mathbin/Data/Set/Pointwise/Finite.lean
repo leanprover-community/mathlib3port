@@ -28,6 +28,7 @@ variable [InvolutiveInv α] {s : Set α}
 theorem Finite.inv (hs : s.Finite) : s⁻¹.Finite :=
   hs.Preimage <| inv_injective.InjOn _
 #align set.finite.inv Set.Finite.inv
+#align set.finite.neg Set.Finite.neg
 
 end InvolutiveInv
 
@@ -39,12 +40,14 @@ variable [Mul α] {s t : Set α}
 theorem Finite.mul : s.Finite → t.Finite → (s * t).Finite :=
   Finite.image2 _
 #align set.finite.mul Set.Finite.mul
+#align set.finite.add Set.Finite.add
 
 /-- Multiplication preserves finiteness. -/
 @[to_additive "Addition preserves finiteness."]
 def fintypeMul [DecidableEq α] (s t : Set α) [Fintype s] [Fintype t] : Fintype (s * t : Set α) :=
   Set.fintypeImage2 _ _ _
 #align set.fintype_mul Set.fintypeMul
+#align set.fintype_add Set.fintypeAdd
 
 end Mul
 
@@ -56,6 +59,7 @@ variable [Monoid α] {s t : Set α}
 instance decidableMemMul [Fintype α] [DecidableEq α] [DecidablePred (· ∈ s)]
     [DecidablePred (· ∈ t)] : DecidablePred (· ∈ s * t) := fun _ => decidable_of_iff _ mem_mul.symm
 #align set.decidable_mem_mul Set.decidableMemMul
+#align set.decidable_mem_add Set.decidableMemAdd
 
 @[to_additive]
 instance decidableMemPow [Fintype α] [DecidableEq α] [DecidablePred (· ∈ s)] (n : ℕ) :
@@ -67,6 +71,7 @@ instance decidableMemPow [Fintype α] [DecidableEq α] [DecidablePred (· ∈ s)
     rw [pow_succ]
     infer_instance
 #align set.decidable_mem_pow Set.decidableMemPow
+#align set.decidable_mem_nsmul Set.decidableMemNsmul
 
 end Monoid
 
@@ -78,6 +83,7 @@ variable [SMul α β] {s : Set α} {t : Set β}
 theorem Finite.smul : s.Finite → t.Finite → (s • t).Finite :=
   Finite.image2 _
 #align set.finite.smul Set.Finite.smul
+#align set.finite.vadd Set.Finite.vadd
 
 end SMul
 
@@ -89,6 +95,7 @@ variable [SMul α β] {s : Set β} {a : α}
 theorem Finite.smul_set : s.Finite → (a • s).Finite :=
   Finite.image _
 #align set.finite.smul_set Set.Finite.smul_set
+#align set.finite.vadd_set Set.Finite.vadd_set
 
 end HasSmulSet
 
@@ -141,6 +148,7 @@ theorem card_pow_eq_card_pow_card_univ [∀ k : ℕ, DecidablePred (· ∈ S ^ k
   rintro _ ⟨b, c, hb, hc, rfl⟩
   rwa [set.mem_singleton_iff.mp hb, inv_mul_cancel_left]
 #align group.card_pow_eq_card_pow_card_univ Group.card_pow_eq_card_pow_card_univ
+#align add_group.card_nsmul_eq_card_nsmul_card_univ AddGroup.card_nsmul_eq_card_nsmul_card_univ
 
 end Group
 

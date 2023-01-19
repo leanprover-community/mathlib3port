@@ -196,11 +196,13 @@ theorem tendsto_prod [Monoid α] [HasContinuousMul α] {l : List α} :
   rw [ContinuousAt, nhds_prod_eq] at this
   exact this.comp (tendsto_id.prod_map ih)
 #align list.tendsto_prod List.tendsto_prod
+#align list.tendsto_sum List.tendsto_sum
 
 @[to_additive]
 theorem continuous_prod [Monoid α] [HasContinuousMul α] : Continuous (prod : List α → α) :=
   continuous_iff_continuous_at.mpr fun l => tendsto_prod
 #align list.continuous_prod List.continuous_prod
+#align list.continuous_sum List.continuous_sum
 
 end List
 

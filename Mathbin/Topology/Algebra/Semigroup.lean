@@ -77,6 +77,8 @@ theorem exists_idempotent_of_compact_t2_of_continuous_mul_left {M} [Nonempty M] 
     exact fun t ht => (hcs ht).2.2 m (set.mem_sInter.mp hm t ht) m' (set.mem_sInter.mp hm' t ht)
 #align
   exists_idempotent_of_compact_t2_of_continuous_mul_left exists_idempotent_of_compact_t2_of_continuous_mul_left
+#align
+  exists_idempotent_of_compact_t2_of_continuous_add_left exists_idempotent_of_compact_t2_of_continuous_add_left
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 /-- A version of `exists_idempotent_of_compact_t2_of_continuous_mul_left` where the idempotent lies
@@ -98,4 +100,5 @@ theorem exists_idempotent_in_compact_subsemigroup {M} [Semigroup M] [Topological
   obtain ⟨⟨m, hm⟩, idem⟩ := exists_idempotent_of_compact_t2_of_continuous_mul_left this
   exact ⟨m, hm, subtype.ext_iff.mp idem⟩
 #align exists_idempotent_in_compact_subsemigroup exists_idempotent_in_compact_subsemigroup
+#align exists_idempotent_in_compact_add_subsemigroup exists_idempotent_in_compact_add_subsemigroup
 

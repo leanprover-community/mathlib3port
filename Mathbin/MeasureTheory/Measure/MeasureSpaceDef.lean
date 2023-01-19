@@ -590,6 +590,7 @@ theorem Set.mul_indicator_ae_eq_one {M : Type _} [One M] {f : α → M} {s : Set
     (h : s.mulIndicator f =ᵐ[μ] 1) : μ (s ∩ Function.mulSupport f) = 0 := by
   simpa [Filter.EventuallyEq, ae_iff] using h
 #align set.mul_indicator_ae_eq_one Set.mul_indicator_ae_eq_one
+#align set.indicator_ae_eq_zero Set.indicator_ae_eq_zero
 
 /-- If `s ⊆ t` modulo a set of measure `0`, then `μ s ≤ μ t`. -/
 @[mono]

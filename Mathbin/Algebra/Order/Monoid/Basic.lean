@@ -50,6 +50,7 @@ def Function.Injective.orderedCommMonoid [OrderedCommMonoid α] {β : Type _} [O
         apply mul_le_mul_left'
         exact ab }
 #align function.injective.ordered_comm_monoid Function.Injective.orderedCommMonoid
+#align function.injective.ordered_add_comm_monoid Function.Injective.orderedAddCommMonoid
 
 /- warning: function.injective.linear_ordered_comm_monoid -> Function.Injective.linearOrderedCommMonoid is a dubious translation:
 lean 3 declaration is
@@ -69,6 +70,8 @@ def Function.Injective.linearOrderedCommMonoid [LinearOrderedCommMonoid α] {β 
     LinearOrderedCommMonoid β :=
   { hf.OrderedCommMonoid f one mul npow, LinearOrder.lift f hf hsup hinf with }
 #align function.injective.linear_ordered_comm_monoid Function.Injective.linearOrderedCommMonoid
+#align
+  function.injective.linear_ordered_add_comm_monoid Function.Injective.linearOrderedAddCommMonoid
 
 #print OrderEmbedding.mulLeft /-
 -- TODO find a better home for the next two constructions.
@@ -81,6 +84,7 @@ def OrderEmbedding.mulLeft {α : Type _} [Mul α] [LinearOrder α] [CovariantCla
     (m : α) : α ↪o α :=
   OrderEmbedding.ofStrictMono (fun n => m * n) fun a b w => mul_lt_mul_left' w m
 #align order_embedding.mul_left OrderEmbedding.mulLeft
+#align order_embedding.add_left OrderEmbedding.addLeft
 -/
 
 #print OrderEmbedding.mulRight /-
@@ -93,5 +97,6 @@ def OrderEmbedding.mulRight {α : Type _} [Mul α] [LinearOrder α]
     [CovariantClass α α (swap (· * ·)) (· < ·)] (m : α) : α ↪o α :=
   OrderEmbedding.ofStrictMono (fun n => n * m) fun a b w => mul_lt_mul_right' w m
 #align order_embedding.mul_right OrderEmbedding.mulRight
+#align order_embedding.add_right OrderEmbedding.addRight
 -/
 

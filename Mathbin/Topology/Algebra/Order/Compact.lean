@@ -340,6 +340,8 @@ theorem Continuous.exists_forall_le_of_has_compact_mul_support [Nonempty β] [On
   exact ⟨x, hx⟩
 #align
   continuous.exists_forall_le_of_has_compact_mul_support Continuous.exists_forall_le_of_has_compact_mul_support
+#align
+  continuous.exists_forall_le_of_has_compact_support Continuous.exists_forall_le_of_has_compact_support
 
 /-- A continuous function with compact support has a global maximum. -/
 @[to_additive "A continuous function with compact support has a global maximum."]
@@ -348,6 +350,8 @@ theorem Continuous.exists_forall_ge_of_has_compact_mul_support [Nonempty β] [On
   @Continuous.exists_forall_le_of_has_compact_mul_support αᵒᵈ _ _ _ _ _ _ _ _ hf h
 #align
   continuous.exists_forall_ge_of_has_compact_mul_support Continuous.exists_forall_ge_of_has_compact_mul_support
+#align
+  continuous.exists_forall_ge_of_has_compact_support Continuous.exists_forall_ge_of_has_compact_support
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem IsCompact.continuous_Sup {f : γ → β → α} {K : Set β} (hK : IsCompact K)

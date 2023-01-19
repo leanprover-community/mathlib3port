@@ -40,6 +40,7 @@ carrying their own group structure. -/
 class NormedOrderedGroup (α : Type _) extends OrderedCommGroup α, HasNorm α, MetricSpace α where
   dist_eq : ∀ x y, dist x y = ‖x / y‖ := by obviously
 #align normed_ordered_group NormedOrderedGroup
+#align normed_ordered_add_group NormedOrderedAddGroup
 
 /-- A `normed_linear_ordered_add_group` is an additive group that is both a `normed_add_comm_group`
 and a `linear_ordered_add_comm_group`. This class is necessary to avoid diamonds caused by both
@@ -57,6 +58,7 @@ class NormedLinearOrderedGroup (α : Type _) extends LinearOrderedCommGroup α, 
   MetricSpace α where
   dist_eq : ∀ x y, dist x y = ‖x / y‖ := by obviously
 #align normed_linear_ordered_group NormedLinearOrderedGroup
+#align normed_linear_ordered_add_group NormedLinearOrderedAddGroup
 
 /-- A `normed_linear_ordered_field` is a field that is both a `normed_field` and a
     `linear_ordered_field`. This class is necessary to avoid diamonds. -/
@@ -71,6 +73,7 @@ instance (priority := 100) NormedOrderedGroup.toNormedCommGroup [NormedOrderedGr
     NormedCommGroup α :=
   ⟨NormedOrderedGroup.dist_eq⟩
 #align normed_ordered_group.to_normed_comm_group NormedOrderedGroup.toNormedCommGroup
+#align normed_ordered_add_group.to_normed_add_comm_group NormedOrderedAddGroup.toNormedAddCommGroup
 
 @[to_additive]
 instance (priority := 100) NormedLinearOrderedGroup.toNormedOrderedGroup
@@ -78,6 +81,8 @@ instance (priority := 100) NormedLinearOrderedGroup.toNormedOrderedGroup
   ⟨NormedLinearOrderedGroup.dist_eq⟩
 #align
   normed_linear_ordered_group.to_normed_ordered_group NormedLinearOrderedGroup.toNormedOrderedGroup
+#align
+  normed_linear_ordered_add_group.to_normed_ordered_add_group NormedLinearOrderedAddGroup.toNormedOrderedAddGroup
 
 instance (priority := 100) NormedLinearOrderedField.toNormedField (α : Type _)
     [NormedLinearOrderedField α] : NormedField α

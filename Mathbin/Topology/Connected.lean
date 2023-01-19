@@ -1563,7 +1563,7 @@ theorem is_totally_disconnected_of_is_totally_separated {s : Set α} (H : IsTota
 alias is_totally_disconnected_of_is_totally_separated ← IsTotallySeparated.is_totally_disconnected
 #align is_totally_separated.is_totally_disconnected IsTotallySeparated.is_totally_disconnected
 
-/- ./././Mathport/Syntax/Translate/Command.lean:379:30: infer kinds are unsupported in Lean 4: #[`is_totally_separated_univ] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`is_totally_separated_univ] [] -/
 /-- A space is totally separated if any two points can be separated by two disjoint open sets
 covering the whole space. -/
 class TotallySeparatedSpace (α : Type u) [TopologicalSpace α] : Prop where

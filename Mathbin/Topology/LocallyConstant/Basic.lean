@@ -850,23 +850,27 @@ theorem range_finite [CompactSpace X] {f : X → Y} (hf : IsLocallyConstant f) :
 theorem one [One Y] : IsLocallyConstant (1 : X → Y) :=
   const 1
 #align is_locally_constant.one IsLocallyConstant.one
+#align is_locally_constant.zero IsLocallyConstant.zero
 
 @[to_additive]
 theorem inv [Inv Y] ⦃f : X → Y⦄ (hf : IsLocallyConstant f) : IsLocallyConstant f⁻¹ :=
   hf.comp fun x => x⁻¹
 #align is_locally_constant.inv IsLocallyConstant.inv
+#align is_locally_constant.neg IsLocallyConstant.neg
 
 @[to_additive]
 theorem mul [Mul Y] ⦃f g : X → Y⦄ (hf : IsLocallyConstant f) (hg : IsLocallyConstant g) :
     IsLocallyConstant (f * g) :=
   hf.comp₂ hg (· * ·)
 #align is_locally_constant.mul IsLocallyConstant.mul
+#align is_locally_constant.add IsLocallyConstant.add
 
 @[to_additive]
 theorem div [Div Y] ⦃f g : X → Y⦄ (hf : IsLocallyConstant f) (hg : IsLocallyConstant g) :
     IsLocallyConstant (f / g) :=
   hf.comp₂ hg (· / ·)
 #align is_locally_constant.div IsLocallyConstant.div
+#align is_locally_constant.sub IsLocallyConstant.sub
 
 /-- If a composition of a function `f` followed by an injection `g` is locally
 constant, then the locally constant property descends to `f`. -/
@@ -1252,6 +1256,7 @@ noncomputable def mulIndicator (hU : IsClopen U) : LocallyConstant X R
       rw [Set.mem_compl_iff] at hy
       simp [h, hy]
 #align locally_constant.mul_indicator LocallyConstant.mulIndicator
+#align locally_constant.indicator LocallyConstant.indicator
 
 variable (a : X)
 
@@ -1260,6 +1265,7 @@ theorem mul_indicator_apply_eq_if (hU : IsClopen U) :
     mulIndicator f hU a = if a ∈ U then f a else 1 :=
   Set.mul_indicator_apply U f a
 #align locally_constant.mul_indicator_apply_eq_if LocallyConstant.mul_indicator_apply_eq_if
+#align locally_constant.indicator_apply_eq_if LocallyConstant.indicator_apply_eq_if
 
 variable {a}
 
@@ -1269,6 +1275,7 @@ theorem mul_indicator_of_mem (hU : IsClopen U) (h : a ∈ U) : f.mulIndicator hU
   rw [mul_indicator_apply]
   apply Set.mul_indicator_of_mem h
 #align locally_constant.mul_indicator_of_mem LocallyConstant.mul_indicator_of_mem
+#align locally_constant.indicator_of_mem LocallyConstant.indicator_of_mem
 
 @[to_additive]
 theorem mul_indicator_of_not_mem (hU : IsClopen U) (h : a ∉ U) : f.mulIndicator hU a = 1 :=
@@ -1276,6 +1283,7 @@ theorem mul_indicator_of_not_mem (hU : IsClopen U) (h : a ∉ U) : f.mulIndicato
   rw [mul_indicator_apply]
   apply Set.mul_indicator_of_not_mem h
 #align locally_constant.mul_indicator_of_not_mem LocallyConstant.mul_indicator_of_not_mem
+#align locally_constant.indicator_of_not_mem LocallyConstant.indicator_of_not_mem
 
 end Indicator
 

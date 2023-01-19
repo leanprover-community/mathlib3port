@@ -620,6 +620,8 @@ instance pi.isMulLeftInvariant [∀ i, Group (α i)] [∀ i, HasMeasurableMul (�
     show (· * ·) v ⁻¹' univ.pi s = univ.pi fun i => (· * ·) (v i) ⁻¹' s i by rfl, pi_pi]
   simp_rw [measure_preimage_mul]
 #align measure_theory.measure.pi.is_mul_left_invariant MeasureTheory.Measure.pi.isMulLeftInvariant
+#align
+  measure_theory.measure.pi.is_add_left_invariant MeasureTheory.Measure.pi.is_add_left_invariant
 
 @[to_additive]
 instance pi.isMulRightInvariant [∀ i, Group (α i)] [∀ i, HasMeasurableMul (α i)]
@@ -630,6 +632,8 @@ instance pi.isMulRightInvariant [∀ i, Group (α i)] [∀ i, HasMeasurableMul (
     show (· * v) ⁻¹' univ.pi s = univ.pi fun i => (· * v i) ⁻¹' s i by rfl, pi_pi]
   simp_rw [measure_preimage_mul_right]
 #align measure_theory.measure.pi.is_mul_right_invariant MeasureTheory.Measure.pi.isMulRightInvariant
+#align
+  measure_theory.measure.pi.is_add_right_invariant MeasureTheory.Measure.pi.is_add_right_invariant
 
 @[to_additive]
 instance pi.isInvInvariant [∀ i, Group (α i)] [∀ i, HasMeasurableInv (α i)]
@@ -643,6 +647,7 @@ instance pi.isInvInvariant [∀ i, Group (α i)] [∀ i, HasMeasurableInv (α i)
   simp_rw [measure.inv, measure.map_apply measurable_inv (MeasurableSet.univ_pi hs), A, pi_pi,
     measure_preimage_inv]
 #align measure_theory.measure.pi.is_inv_invariant MeasureTheory.Measure.pi.isInvInvariant
+#align measure_theory.measure.pi.is_neg_invariant MeasureTheory.Measure.pi.is_neg_invariant
 
 end Measure
 
@@ -683,6 +688,7 @@ instance Pi.isMulLeftInvariantVolume {α} [Group α] [MeasureSpace α]
     [IsMulLeftInvariant (volume : Measure α)] : IsMulLeftInvariant (volume : Measure (ι → α)) :=
   pi.isMulLeftInvariant _
 #align measure_theory.pi.is_mul_left_invariant_volume MeasureTheory.Pi.isMulLeftInvariantVolume
+#align measure_theory.pi.is_add_left_invariant_volume MeasureTheory.Pi.is_add_left_invariant_volume
 
 /-- We intentionally restrict this only to the nondependent function space, since type-class
 inference cannot find an instance for `ι → ℝ` when this is stated for dependent function spaces. -/
@@ -693,6 +699,7 @@ instance Pi.isInvInvariantVolume {α} [Group α] [MeasureSpace α] [SigmaFinite 
     IsInvInvariant (volume : Measure (ι → α)) :=
   pi.isInvInvariant _
 #align measure_theory.pi.is_inv_invariant_volume MeasureTheory.Pi.isInvInvariantVolume
+#align measure_theory.pi.is_neg_invariant_volume MeasureTheory.Pi.is_neg_invariant_volume
 
 /-!
 ### Measure preserving equivalences

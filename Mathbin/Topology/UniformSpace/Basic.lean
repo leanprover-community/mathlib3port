@@ -1652,12 +1652,14 @@ theorem uniformity_mul_opposite [UniformSpace α] :
     𝓤 αᵐᵒᵖ = comap (fun q : αᵐᵒᵖ × αᵐᵒᵖ => (q.1.unop, q.2.unop)) (𝓤 α) :=
   rfl
 #align uniformity_mul_opposite uniformity_mul_opposite
+#align uniformity_add_opposite uniformity_add_opposite
 
 @[simp, to_additive]
 theorem comap_uniformity_mul_opposite [UniformSpace α] :
     comap (fun p : α × α => (MulOpposite.op p.1, MulOpposite.op p.2)) (𝓤 αᵐᵒᵖ) = 𝓤 α := by
   simpa [uniformity_mul_opposite, comap_comap, (· ∘ ·)] using comap_id
 #align comap_uniformity_mul_opposite comap_uniformity_mul_opposite
+#align comap_uniformity_add_opposite comap_uniformity_add_opposite
 
 namespace MulOpposite
 
@@ -1665,11 +1667,13 @@ namespace MulOpposite
 theorem uniform_continuous_unop [UniformSpace α] : UniformContinuous (unop : αᵐᵒᵖ → α) :=
   uniform_continuous_comap
 #align mul_opposite.uniform_continuous_unop MulOpposite.uniform_continuous_unop
+#align add_opposite.uniform_continuous_unop AddOpposite.uniform_continuous_unop
 
 @[to_additive]
 theorem uniform_continuous_op [UniformSpace α] : UniformContinuous (op : α → αᵐᵒᵖ) :=
   uniform_continuous_comap' uniform_continuous_id
 #align mul_opposite.uniform_continuous_op MulOpposite.uniform_continuous_op
+#align add_opposite.uniform_continuous_op AddOpposite.uniform_continuous_op
 
 end MulOpposite
 

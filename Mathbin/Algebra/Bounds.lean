@@ -44,6 +44,7 @@ Case conversion may be inaccurate. Consider using '#align bdd_above_inv bddAbove
 theorem bddAbove_inv : BddAbove s⁻¹ ↔ BddBelow s :=
   (OrderIso.inv G).bdd_above_preimage
 #align bdd_above_inv bddAbove_inv
+#align bdd_above_neg bddAbove_neg
 
 /- warning: bdd_below_inv -> bddBelow_inv is a dubious translation:
 lean 3 declaration is
@@ -55,6 +56,7 @@ Case conversion may be inaccurate. Consider using '#align bdd_below_inv bddBelow
 theorem bddBelow_inv : BddBelow s⁻¹ ↔ BddAbove s :=
   (OrderIso.inv G).bdd_below_preimage
 #align bdd_below_inv bddBelow_inv
+#align bdd_below_neg bddBelow_neg
 
 /- warning: bdd_above.inv -> BddAbove.inv is a dubious translation:
 lean 3 declaration is
@@ -66,6 +68,7 @@ Case conversion may be inaccurate. Consider using '#align bdd_above.inv BddAbove
 theorem BddAbove.inv (h : BddAbove s) : BddBelow s⁻¹ :=
   bddBelow_inv.2 h
 #align bdd_above.inv BddAbove.inv
+#align bdd_above.neg BddAbove.neg
 
 /- warning: bdd_below.inv -> BddBelow.inv is a dubious translation:
 lean 3 declaration is
@@ -77,6 +80,7 @@ Case conversion may be inaccurate. Consider using '#align bdd_below.inv BddBelow
 theorem BddBelow.inv (h : BddBelow s) : BddAbove s⁻¹ :=
   bddAbove_inv.2 h
 #align bdd_below.inv BddBelow.inv
+#align bdd_below.neg BddBelow.neg
 
 /- warning: is_lub_inv -> isLUB_inv is a dubious translation:
 lean 3 declaration is
@@ -88,6 +92,7 @@ Case conversion may be inaccurate. Consider using '#align is_lub_inv isLUB_inv�
 theorem isLUB_inv : IsLUB s⁻¹ a ↔ IsGLB s a⁻¹ :=
   (OrderIso.inv G).is_lub_preimage
 #align is_lub_inv isLUB_inv
+#align is_lub_neg isLUB_neg
 
 /- warning: is_lub_inv' -> isLUB_inv' is a dubious translation:
 lean 3 declaration is
@@ -99,6 +104,7 @@ Case conversion may be inaccurate. Consider using '#align is_lub_inv' isLUB_inv'
 theorem isLUB_inv' : IsLUB s⁻¹ a⁻¹ ↔ IsGLB s a :=
   (OrderIso.inv G).is_lub_preimage'
 #align is_lub_inv' isLUB_inv'
+#align is_lub_neg' isLUB_neg'
 
 /- warning: is_glb.inv -> IsGLB.inv is a dubious translation:
 lean 3 declaration is
@@ -110,6 +116,7 @@ Case conversion may be inaccurate. Consider using '#align is_glb.inv IsGLB.inv�
 theorem IsGLB.inv (h : IsGLB s a) : IsLUB s⁻¹ a⁻¹ :=
   isLUB_inv'.2 h
 #align is_glb.inv IsGLB.inv
+#align is_glb.neg IsGLB.neg
 
 /- warning: is_glb_inv -> isGLB_inv is a dubious translation:
 lean 3 declaration is
@@ -121,6 +128,7 @@ Case conversion may be inaccurate. Consider using '#align is_glb_inv isGLB_inv�
 theorem isGLB_inv : IsGLB s⁻¹ a ↔ IsLUB s a⁻¹ :=
   (OrderIso.inv G).is_glb_preimage
 #align is_glb_inv isGLB_inv
+#align is_glb_neg isGLB_neg
 
 /- warning: is_glb_inv' -> isGLB_inv' is a dubious translation:
 lean 3 declaration is
@@ -132,6 +140,7 @@ Case conversion may be inaccurate. Consider using '#align is_glb_inv' isGLB_inv'
 theorem isGLB_inv' : IsGLB s⁻¹ a⁻¹ ↔ IsLUB s a :=
   (OrderIso.inv G).is_glb_preimage'
 #align is_glb_inv' isGLB_inv'
+#align is_glb_neg' isGLB_neg'
 
 /- warning: is_lub.inv -> IsLUB.inv is a dubious translation:
 lean 3 declaration is
@@ -143,6 +152,7 @@ Case conversion may be inaccurate. Consider using '#align is_lub.inv IsLUB.inv�
 theorem IsLUB.inv (h : IsLUB s a) : IsGLB s⁻¹ a⁻¹ :=
   isGLB_inv'.2 h
 #align is_lub.inv IsLUB.inv
+#align is_lub.neg IsLUB.neg
 
 end InvNeg
 
@@ -157,6 +167,7 @@ theorem mul_mem_upperBounds_mul {s t : Set M} {a b : M} (ha : a ∈ upperBounds 
     (hb : b ∈ upperBounds t) : a * b ∈ upperBounds (s * t) :=
   forall_image2_iff.2 fun x hx y hy => mul_le_mul' (ha hx) (hb hy)
 #align mul_mem_upper_bounds_mul mul_mem_upperBounds_mul
+#align add_mem_upper_bounds_add add_mem_upperBounds_add
 -/
 
 #print subset_upperBounds_mul /-
@@ -165,6 +176,7 @@ theorem subset_upperBounds_mul (s t : Set M) :
     upperBounds s * upperBounds t ⊆ upperBounds (s * t) :=
   image2_subset_iff.2 fun x hx y hy => mul_mem_upperBounds_mul hx hy
 #align subset_upper_bounds_mul subset_upperBounds_mul
+#align subset_upper_bounds_add subset_upperBounds_add
 -/
 
 #print mul_mem_lowerBounds_mul /-
@@ -173,6 +185,7 @@ theorem mul_mem_lowerBounds_mul {s t : Set M} {a b : M} (ha : a ∈ lowerBounds 
     (hb : b ∈ lowerBounds t) : a * b ∈ lowerBounds (s * t) :=
   @mul_mem_upperBounds_mul Mᵒᵈ _ _ _ _ _ _ _ _ ha hb
 #align mul_mem_lower_bounds_mul mul_mem_lowerBounds_mul
+#align add_mem_lower_bounds_add add_mem_lowerBounds_add
 -/
 
 #print subset_lowerBounds_mul /-
@@ -181,6 +194,7 @@ theorem subset_lowerBounds_mul (s t : Set M) :
     lowerBounds s * lowerBounds t ⊆ lowerBounds (s * t) :=
   @subset_upperBounds_mul Mᵒᵈ _ _ _ _ _ _
 #align subset_lower_bounds_mul subset_lowerBounds_mul
+#align subset_lower_bounds_add subset_lowerBounds_add
 -/
 
 #print BddAbove.mul /-
@@ -188,6 +202,7 @@ theorem subset_lowerBounds_mul (s t : Set M) :
 theorem BddAbove.mul {s t : Set M} (hs : BddAbove s) (ht : BddAbove t) : BddAbove (s * t) :=
   (hs.mul ht).mono (subset_upperBounds_mul s t)
 #align bdd_above.mul BddAbove.mul
+#align bdd_above.add BddAbove.add
 -/
 
 #print BddBelow.mul /-
@@ -195,6 +210,7 @@ theorem BddAbove.mul {s t : Set M} (hs : BddAbove s) (ht : BddAbove t) : BddAbov
 theorem BddBelow.mul {s t : Set M} (hs : BddBelow s) (ht : BddBelow t) : BddBelow (s * t) :=
   (hs.mul ht).mono (subset_lowerBounds_mul s t)
 #align bdd_below.mul BddBelow.mul
+#align bdd_below.add BddBelow.add
 -/
 
 end mul_add
@@ -216,6 +232,7 @@ Case conversion may be inaccurate. Consider using '#align csupr_mul csupᵢ_mul�
 theorem csupᵢ_mul (hf : BddAbove (Set.range f)) (a : G) : (⨆ i, f i) * a = ⨆ i, f i * a :=
   (OrderIso.mulRight a).map_csupr hf
 #align csupr_mul csupᵢ_mul
+#align csupr_add csupᵢ_add
 
 /- warning: csupr_div -> csupᵢ_div is a dubious translation:
 lean 3 declaration is
@@ -227,6 +244,7 @@ Case conversion may be inaccurate. Consider using '#align csupr_div csupᵢ_div�
 theorem csupᵢ_div (hf : BddAbove (Set.range f)) (a : G) : (⨆ i, f i) / a = ⨆ i, f i / a := by
   simp only [div_eq_mul_inv, csupᵢ_mul hf]
 #align csupr_div csupᵢ_div
+#align csupr_sub csupᵢ_sub
 
 end Right
 
@@ -245,6 +263,7 @@ Case conversion may be inaccurate. Consider using '#align mul_csupr mul_csupᵢ�
 theorem mul_csupᵢ (hf : BddAbove (Set.range f)) (a : G) : (a * ⨆ i, f i) = ⨆ i, a * f i :=
   (OrderIso.mulLeft a).map_csupr hf
 #align mul_csupr mul_csupᵢ
+#align add_csupr add_csupᵢ
 
 end Left
 

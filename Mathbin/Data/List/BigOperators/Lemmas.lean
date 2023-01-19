@@ -74,6 +74,7 @@ theorem pow_card_le_prod [Monoid M] [Preorder M]
     (l : List M) (n : M) (h : ∀ x ∈ l, n ≤ x) : n ^ l.length ≤ l.Prod :=
   @prod_le_pow_card Mᵒᵈ _ _ _ _ l n h
 #align list.pow_card_le_prod List.pow_card_le_prod
+#align list.card_nsmul_le_sum List.card_nsmul_le_sum
 
 /- warning: list.prod_eq_one_iff -> List.prod_eq_one_iff is a dubious translation:
 lean 3 declaration is
@@ -87,6 +88,7 @@ theorem prod_eq_one_iff [CanonicallyOrderedMonoid M] (l : List M) :
   ⟨all_one_of_le_one_le_of_prod_eq_one fun _ _ => one_le _, fun h => by
     rw [eq_replicate.2 ⟨rfl, h⟩, prod_replicate, one_pow]⟩
 #align list.prod_eq_one_iff List.prod_eq_one_iff
+#align list.sum_eq_zero_iff List.sum_eq_zero_iff
 
 #print List.neg_one_mem_of_prod_eq_neg_one /-
 /-- If a product of integers is `-1`, then at least one factor must be `-1`. -/

@@ -483,26 +483,31 @@ instance [LE β] : LE (α →ₛ β) :=
 theorem const_one [One β] : const α (1 : β) = 1 :=
   rfl
 #align measure_theory.simple_func.const_one MeasureTheory.SimpleFunc.const_one
+#align measure_theory.simple_func.const_zero MeasureTheory.SimpleFunc.const_zero
 
 @[simp, norm_cast, to_additive]
 theorem coe_one [One β] : ⇑(1 : α →ₛ β) = 1 :=
   rfl
 #align measure_theory.simple_func.coe_one MeasureTheory.SimpleFunc.coe_one
+#align measure_theory.simple_func.coe_zero MeasureTheory.SimpleFunc.coe_zero
 
 @[simp, norm_cast, to_additive]
 theorem coe_mul [Mul β] (f g : α →ₛ β) : ⇑(f * g) = f * g :=
   rfl
 #align measure_theory.simple_func.coe_mul MeasureTheory.SimpleFunc.coe_mul
+#align measure_theory.simple_func.coe_add MeasureTheory.SimpleFunc.coe_add
 
 @[simp, norm_cast, to_additive]
 theorem coe_inv [Inv β] (f : α →ₛ β) : ⇑f⁻¹ = f⁻¹ :=
   rfl
 #align measure_theory.simple_func.coe_inv MeasureTheory.SimpleFunc.coe_inv
+#align measure_theory.simple_func.coe_neg MeasureTheory.SimpleFunc.coe_neg
 
 @[simp, norm_cast, to_additive]
 theorem coe_div [Div β] (f g : α →ₛ β) : ⇑(f / g) = f / g :=
   rfl
 #align measure_theory.simple_func.coe_div MeasureTheory.SimpleFunc.coe_div
+#align measure_theory.simple_func.coe_sub MeasureTheory.SimpleFunc.coe_sub
 
 @[simp, norm_cast]
 theorem coe_le [Preorder β] {f g : α →ₛ β} : (f : α → β) ≤ g ↔ f ≤ g :=
@@ -523,16 +528,19 @@ theorem coe_inf [HasInf β] (f g : α →ₛ β) : ⇑(f ⊓ g) = f ⊓ g :=
 theorem mul_apply [Mul β] (f g : α →ₛ β) (a : α) : (f * g) a = f a * g a :=
   rfl
 #align measure_theory.simple_func.mul_apply MeasureTheory.SimpleFunc.mul_apply
+#align measure_theory.simple_func.add_apply MeasureTheory.SimpleFunc.add_apply
 
 @[to_additive]
 theorem div_apply [Div β] (f g : α →ₛ β) (x : α) : (f / g) x = f x / g x :=
   rfl
 #align measure_theory.simple_func.div_apply MeasureTheory.SimpleFunc.div_apply
+#align measure_theory.simple_func.sub_apply MeasureTheory.SimpleFunc.sub_apply
 
 @[to_additive]
 theorem inv_apply [Inv β] (f : α →ₛ β) (x : α) : f⁻¹ x = (f x)⁻¹ :=
   rfl
 #align measure_theory.simple_func.inv_apply MeasureTheory.SimpleFunc.inv_apply
+#align measure_theory.simple_func.neg_apply MeasureTheory.SimpleFunc.neg_apply
 
 theorem sup_apply [HasSup β] (f g : α →ₛ β) (a : α) : (f ⊔ g) a = f a ⊔ g a :=
   rfl
@@ -546,6 +554,7 @@ theorem inf_apply [HasInf β] (f g : α →ₛ β) (a : α) : (f ⊓ g) a = f a 
 theorem range_one [Nonempty α] [One β] : (1 : α →ₛ β).range = {1} :=
   Finset.ext fun x => by simp [eq_comm]
 #align measure_theory.simple_func.range_one MeasureTheory.SimpleFunc.range_one
+#align measure_theory.simple_func.range_zero MeasureTheory.SimpleFunc.range_zero
 
 @[simp]
 theorem range_eq_empty_of_is_empty {β} [hα : IsEmpty α] (f : α →ₛ β) : f.range = ∅ :=
@@ -569,6 +578,7 @@ theorem eq_zero_of_mem_range_zero [Zero β] : ∀ {y : β}, y ∈ (0 : α →ₛ
 theorem mul_eq_map₂ [Mul β] (f g : α →ₛ β) : f * g = (pair f g).map fun p : β × β => p.1 * p.2 :=
   rfl
 #align measure_theory.simple_func.mul_eq_map₂ MeasureTheory.SimpleFunc.mul_eq_map₂
+#align measure_theory.simple_func.add_eq_map₂ MeasureTheory.SimpleFunc.add_eq_map₂
 
 theorem sup_eq_map₂ [HasSup β] (f g : α →ₛ β) : f ⊔ g = (pair f g).map fun p : β × β => p.1 ⊔ p.2 :=
   rfl
@@ -578,12 +588,14 @@ theorem sup_eq_map₂ [HasSup β] (f g : α →ₛ β) : f ⊔ g = (pair f g).ma
 theorem const_mul_eq_map [Mul β] (f : α →ₛ β) (b : β) : const α b * f = f.map fun a => b * a :=
   rfl
 #align measure_theory.simple_func.const_mul_eq_map MeasureTheory.SimpleFunc.const_mul_eq_map
+#align measure_theory.simple_func.const_add_eq_map MeasureTheory.SimpleFunc.const_add_eq_map
 
 @[to_additive]
 theorem map_mul [Mul β] [Mul γ] {g : β → γ} (hg : ∀ x y, g (x * y) = g x * g y) (f₁ f₂ : α →ₛ β) :
     (f₁ * f₂).map g = f₁.map g * f₂.map g :=
   ext fun x => hg _ _
 #align measure_theory.simple_func.map_mul MeasureTheory.SimpleFunc.map_mul
+#align measure_theory.simple_func.map_add MeasureTheory.SimpleFunc.map_add
 
 variable {K : Type _}
 
@@ -2512,7 +2524,7 @@ theorem lintegral_tsum [Countable β] {f : β → α → ℝ≥0∞} (hf : ∀ i
   rw [lintegral_supr_directed]
   · simp [lintegral_finset_sum' _ fun i _ => hf i]
   · intro b
-    exact Finset.aeMeasurableSum _ fun i _ => hf i
+    exact Finset.ae_measurable_sum _ fun i _ => hf i
   · intro s t
     use s ∪ t
     constructor

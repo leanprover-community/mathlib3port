@@ -44,6 +44,7 @@ def coeMulHom [Mul α] : α →ₙ* WithOne α where
   toFun := coe
   map_mul' x y := rfl
 #align with_one.coe_mul_hom WithOne.coeMulHom
+#align with_zero.coe_add_hom WithZero.coeAddHom
 -/
 
 end
@@ -82,6 +83,7 @@ def lift : (α →ₙ* β) ≃ (WithOne α →* β)
   left_inv f := MulHom.ext fun x => rfl
   right_inv F := MonoidHom.ext fun x => WithOne.cases_on x F.map_one.symm fun x => rfl
 #align with_one.lift WithOne.lift
+#align with_zero.lift WithZero.lift
 
 variable (f : α →ₙ* β)
 
@@ -95,6 +97,7 @@ Case conversion may be inaccurate. Consider using '#align with_one.lift_coe With
 theorem lift_coe (x : α) : lift f x = f x :=
   rfl
 #align with_one.lift_coe WithOne.lift_coe
+#align with_zero.lift_coe WithZero.lift_coe
 
 /- warning: with_one.lift_one -> WithOne.lift_one is a dubious translation:
 lean 3 declaration is
@@ -106,12 +109,14 @@ Case conversion may be inaccurate. Consider using '#align with_one.lift_one With
 theorem lift_one : lift f 1 = 1 :=
   rfl
 #align with_one.lift_one WithOne.lift_one
+#align with_zero.lift_zero WithZero.lift_zero
 
 #print WithOne.lift_unique /-
 @[to_additive]
 theorem lift_unique (f : WithOne α →* β) : f = lift (f.toMulHom.comp coeMulHom) :=
   (lift.apply_symm_apply f).symm
 #align with_one.lift_unique WithOne.lift_unique
+#align with_zero.lift_unique WithZero.lift_unique
 -/
 
 end lift
@@ -128,6 +133,7 @@ variable [Mul α] [Mul β] [Mul γ]
 def map (f : α →ₙ* β) : WithOne α →* WithOne β :=
   lift (coeMulHom.comp f)
 #align with_one.map WithOne.map
+#align with_zero.map WithZero.map
 -/
 
 /- warning: with_one.map_coe -> WithOne.map_coe is a dubious translation:
@@ -140,6 +146,7 @@ Case conversion may be inaccurate. Consider using '#align with_one.map_coe WithO
 theorem map_coe (f : α →ₙ* β) (a : α) : map f (a : WithOne α) = f a :=
   lift_coe _ _
 #align with_one.map_coe WithOne.map_coe
+#align with_zero.map_coe WithZero.map_coe
 
 #print WithOne.map_id /-
 @[simp, to_additive]
@@ -148,6 +155,7 @@ theorem map_id : map (MulHom.id α) = MonoidHom.id (WithOne α) :=
   ext
   induction x using WithOne.cases_on <;> rfl
 #align with_one.map_id WithOne.map_id
+#align with_zero.map_id WithZero.map_id
 -/
 
 /- warning: with_one.map_map -> WithOne.map_map is a dubious translation:
@@ -160,12 +168,14 @@ Case conversion may be inaccurate. Consider using '#align with_one.map_map WithO
 theorem map_map (f : α →ₙ* β) (g : β →ₙ* γ) (x) : map g (map f x) = map (g.comp f) x := by
   induction x using WithOne.cases_on <;> rfl
 #align with_one.map_map WithOne.map_map
+#align with_zero.map_map WithZero.map_map
 
 #print WithOne.map_comp /-
 @[simp, to_additive]
 theorem map_comp (f : α →ₙ* β) (g : β →ₙ* γ) : map (g.comp f) = (map g).comp (map f) :=
   MonoidHom.ext fun x => (map_map f g x).symm
 #align with_one.map_comp WithOne.map_comp
+#align with_zero.map_comp WithZero.map_comp
 -/
 
 #print MulEquiv.withOneCongr /-
@@ -179,6 +189,7 @@ def MulEquiv.withOneCongr (e : α ≃* β) : WithOne α ≃* WithOne β :=
     right_inv := fun x =>
       (map_map _ _ _).trans <| by induction x using WithOne.cases_on <;> · simp }
 #align mul_equiv.with_one_congr MulEquiv.withOneCongr
+#align add_equiv.with_zero_congr AddEquiv.withZeroCongr
 -/
 
 #print MulEquiv.withOneCongr_refl /-

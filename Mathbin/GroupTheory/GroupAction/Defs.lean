@@ -76,6 +76,7 @@ class FaithfulVAdd (G : Type _) (P : Type _) [VAdd G P] : Prop where
 class FaithfulSMul (M : Type _) (α : Type _) [SMul M α] : Prop where
   eq_of_smul_eq_smul : ∀ {m₁ m₂ : M}, (∀ a : α, m₁ • a = m₂ • a) → m₁ = m₂
 #align has_faithful_smul FaithfulSMul
+#align has_faithful_vadd FaithfulVAdd
 -/
 
 export FaithfulSMul (eq_of_smul_eq_smul)
@@ -93,6 +94,7 @@ theorem smul_left_injective' [SMul M α] [FaithfulSMul M α] :
     Function.Injective ((· • ·) : M → α → α) := fun m₁ m₂ h =>
   FaithfulSMul.eq_of_smul_eq_smul (congr_fun h)
 #align smul_left_injective' smul_left_injective'
+#align vadd_left_injective' vadd_left_injective'
 
 #print Mul.toSMul /-
 -- see Note [lower instance priority]
@@ -108,6 +110,7 @@ instance (priority := 910) Mul.toSMul (α : Type _) [Mul α] : SMul α α :=
 theorem smul_eq_mul (α : Type _) [Mul α] {a a' : α} : a • a' = a * a' :=
   rfl
 #align smul_eq_mul smul_eq_mul
+#align vadd_eq_add vadd_eq_add
 -/
 
 #print AddAction /-
@@ -126,6 +129,7 @@ class MulAction (α : Type _) (β : Type _) [Monoid α] extends SMul α β where
   one_smul : ∀ b : β, (1 : α) • b = b
   mul_smul : ∀ (x y : α) (b : β), (x * y) • b = x • y • b
 #align mul_action MulAction
+#align add_action AddAction
 -/
 
 /-!
@@ -156,6 +160,7 @@ class AddAction.IsPretransitive (M α : Type _) [VAdd M α] : Prop where
 class MulAction.IsPretransitive (M α : Type _) [SMul M α] : Prop where
   exists_smul_eq : ∀ x y : α, ∃ g : M, g • x = y
 #align mul_action.is_pretransitive MulAction.IsPretransitive
+#align add_action.is_pretransitive AddAction.IsPretransitive
 -/
 
 namespace MulAction
@@ -172,6 +177,7 @@ Case conversion may be inaccurate. Consider using '#align mul_action.exists_smul
 theorem exists_smul_eq (x y : α) : ∃ m : M, m • x = y :=
   IsPretransitive.exists_smul_eq x y
 #align mul_action.exists_smul_eq MulAction.exists_smul_eq
+#align add_action.exists_vadd_eq AddAction.exists_vadd_eq
 
 /- warning: mul_action.surjective_smul -> MulAction.surjective_smul is a dubious translation:
 lean 3 declaration is
@@ -183,6 +189,7 @@ Case conversion may be inaccurate. Consider using '#align mul_action.surjective_
 theorem surjective_smul (x : α) : Surjective fun c : M => c • x :=
   exists_smul_eq M x
 #align mul_action.surjective_smul MulAction.surjective_smul
+#align add_action.surjective_vadd AddAction.surjective_vadd
 
 /- warning: mul_action.regular.is_pretransitive -> MulAction.Regular.isPretransitive is a dubious translation:
 lean 3 declaration is
@@ -216,6 +223,7 @@ class VAddCommClass (M N α : Type _) [VAdd M α] [VAdd N α] : Prop where
 class SMulCommClass (M N α : Type _) [SMul M α] [SMul N α] : Prop where
   smul_comm : ∀ (m : M) (n : N) (a : α), m • n • a = n • m • a
 #align smul_comm_class SMulCommClass
+#align vadd_comm_class VAddCommClass
 -/
 
 export MulAction (mul_smul)
@@ -257,6 +265,7 @@ theorem SMulCommClass.symm (M N α : Type _) [SMul M α] [SMul N α] [SMulCommCl
     SMulCommClass N M α :=
   ⟨fun a' a b => (smul_comm a a' b).symm⟩
 #align smul_comm_class.symm SMulCommClass.symm
+#align vadd_comm_class.symm VAddCommClass.symm
 
 /-- Commutativity of additive actions is a symmetric relation. This lemma can't be an instance
 because this would cause a loop in the instance search graph. -/
@@ -285,6 +294,7 @@ and `N` on `α`. -/
 class IsScalarTower (M N α : Type _) [SMul M N] [SMul N α] [SMul M α] : Prop where
   smul_assoc : ∀ (x : M) (y : N) (z : α), (x • y) • z = x • y • z
 #align is_scalar_tower IsScalarTower
+#align vadd_assoc_class VAddAssocClass
 -/
 
 /- warning: smul_assoc -> smul_assoc is a dubious translation:
@@ -298,6 +308,7 @@ theorem smul_assoc {M N} [SMul M N] [SMul N α] [SMul M α] [IsScalarTower M N �
     (z : α) : (x • y) • z = x • y • z :=
   IsScalarTower.smul_assoc x y z
 #align smul_assoc smul_assoc
+#align vadd_assoc vadd_assoc
 
 /- warning: semigroup.is_scalar_tower -> Semigroup.isScalarTower is a dubious translation:
 lean 3 declaration is
@@ -327,6 +338,7 @@ for `•`. -/
 class IsCentralScalar (M α : Type _) [SMul M α] [SMul Mᵐᵒᵖ α] : Prop where
   op_smul_eq_smul : ∀ (m : M) (a : α), MulOpposite.op m • a = m • a
 #align is_central_scalar IsCentralScalar
+#align is_central_vadd IsCentralVAdd
 -/
 
 /- warning: is_central_scalar.unop_smul_eq_smul -> IsCentralScalar.unop_smul_eq_smul is a dubious translation:
@@ -340,6 +352,7 @@ theorem IsCentralScalar.unop_smul_eq_smul {M α : Type _} [SMul M α] [SMul Mᵐ
     [IsCentralScalar M α] (m : Mᵐᵒᵖ) (a : α) : MulOpposite.unop m • a = m • a :=
   MulOpposite.rec' (fun m => (IsCentralScalar.op_smul_eq_smul _ _).symm) m
 #align is_central_scalar.unop_smul_eq_smul IsCentralScalar.unop_smul_eq_smul
+#align is_central_vadd.unop_vadd_eq_vadd IsCentralVAdd.unop_vadd_eq_vadd
 
 export IsCentralVAdd (op_vadd_eq_vadd unop_vadd_eq_vadd)
 
@@ -352,6 +365,7 @@ instance (priority := 50) SMulCommClass.op_left [SMul M α] [SMul Mᵐᵒᵖ α]
     [SMul N α] [SMulCommClass M N α] : SMulCommClass Mᵐᵒᵖ N α :=
   ⟨fun m n a => by rw [← unop_smul_eq_smul m (n • a), ← unop_smul_eq_smul m a, smul_comm]⟩
 #align smul_comm_class.op_left SMulCommClass.op_left
+#align vadd_comm_class.op_left VAddCommClass.op_left
 -/
 
 #print SMulCommClass.op_right /-
@@ -360,6 +374,7 @@ instance (priority := 50) SMulCommClass.op_right [SMul M α] [SMul N α] [SMul N
     [IsCentralScalar N α] [SMulCommClass M N α] : SMulCommClass M Nᵐᵒᵖ α :=
   ⟨fun m n a => by rw [← unop_smul_eq_smul n (m • a), ← unop_smul_eq_smul n a, smul_comm]⟩
 #align smul_comm_class.op_right SMulCommClass.op_right
+#align vadd_comm_class.op_right VAddCommClass.op_right
 -/
 
 #print IsScalarTower.op_left /-
@@ -369,6 +384,7 @@ instance (priority := 50) IsScalarTower.op_left [SMul M α] [SMul Mᵐᵒᵖ α]
     IsScalarTower Mᵐᵒᵖ N α :=
   ⟨fun m n a => by rw [← unop_smul_eq_smul m (n • a), ← unop_smul_eq_smul m n, smul_assoc]⟩
 #align is_scalar_tower.op_left IsScalarTower.op_left
+#align vadd_assoc_class.op_left VAddAssocClass.op_left
 -/
 
 #print IsScalarTower.op_right /-
@@ -378,6 +394,7 @@ instance (priority := 50) IsScalarTower.op_right [SMul M α] [SMul M N] [SMul N 
   ⟨fun m n a => by
     rw [← unop_smul_eq_smul n a, ← unop_smul_eq_smul (m • n) a, MulOpposite.unop_smul, smul_assoc]⟩
 #align is_scalar_tower.op_right IsScalarTower.op_right
+#align vadd_assoc_class.op_right VAddAssocClass.op_right
 -/
 
 namespace SMul
@@ -405,6 +422,7 @@ See note [reducible non-instances]. Since this is reducible, we make sure to go 
       " An additive action of `M` on `α` and a function `N → M` induces\n  an additive action of `N` on `α` "]
 def comp (g : N → M) : SMul N α where smul := SMul.comp.smul g
 #align has_smul.comp SMul.comp
+#align has_vadd.comp VAdd.comp
 -/
 
 variable {α}
@@ -475,6 +493,7 @@ theorem mul_smul_comm [Mul β] [SMul α β] [SMulCommClass α β β] (s : α) (x
     x * s • y = s • (x * y) :=
   (smul_comm s x y).symm
 #align mul_smul_comm mul_smul_comm
+#align add_vadd_comm add_vadd_comm
 -/
 
 #print smul_mul_assoc /-
@@ -485,6 +504,7 @@ theorem smul_mul_assoc [Mul β] [SMul α β] [IsScalarTower α β β] (r : α) (
     r • x * y = r • (x * y) :=
   smul_assoc r x y
 #align smul_mul_assoc smul_mul_assoc
+#align vadd_add_assoc vadd_add_assoc
 -/
 
 /- warning: smul_smul_smul_comm -> smul_smul_smul_comm is a dubious translation:
@@ -501,6 +521,7 @@ theorem smul_smul_smul_comm [SMul α β] [SMul α γ] [SMul β δ] [SMul α δ] 
   rw [smul_assoc, smul_assoc, smul_comm b]
   infer_instance
 #align smul_smul_smul_comm smul_smul_smul_comm
+#align vadd_vadd_vadd_comm vadd_vadd_vadd_comm
 
 variable [SMul M α]
 
@@ -510,6 +531,7 @@ theorem Commute.smul_right [Mul α] [SMulCommClass M α α] [IsScalarTower M α 
     (h : Commute a b) (r : M) : Commute a (r • b) :=
   (mul_smul_comm _ _ _).trans ((congr_arg _ h).trans <| (smul_mul_assoc _ _ _).symm)
 #align commute.smul_right Commute.smul_right
+#align add_commute.vadd_right AddCommute.vadd_right
 -/
 
 #print Commute.smul_left /-
@@ -518,6 +540,7 @@ theorem Commute.smul_left [Mul α] [SMulCommClass M α α] [IsScalarTower M α �
     (h : Commute a b) (r : M) : Commute (r • a) b :=
   (h.symm.smul_right r).symm
 #align commute.smul_left Commute.smul_left
+#align add_commute.vadd_left AddCommute.vadd_left
 -/
 
 end
@@ -531,6 +554,7 @@ variable [SMul M α] (p : Prop) [Decidable p]
 theorem ite_smul (a₁ a₂ : M) (b : α) : ite p a₁ a₂ • b = ite p (a₁ • b) (a₂ • b) := by
   split_ifs <;> rfl
 #align ite_smul ite_smul
+#align ite_vadd ite_vadd
 -/
 
 #print smul_ite /-
@@ -538,6 +562,7 @@ theorem ite_smul (a₁ a₂ : M) (b : α) : ite p a₁ a₂ • b = ite p (a₁ 
 theorem smul_ite (a : M) (b₁ b₂ : α) : a • ite p b₁ b₂ = ite p (a • b₁) (a • b₂) := by
   split_ifs <;> rfl
 #align smul_ite smul_ite
+#align vadd_ite vadd_ite
 -/
 
 end ite
@@ -556,6 +581,7 @@ Case conversion may be inaccurate. Consider using '#align smul_smul smul_smulₓ
 theorem smul_smul (a₁ a₂ : M) (b : α) : a₁ • a₂ • b = (a₁ * a₂) • b :=
   (mul_smul _ _ _).symm
 #align smul_smul smul_smul
+#align vadd_vadd vadd_vadd
 
 variable (M)
 
@@ -569,6 +595,7 @@ Case conversion may be inaccurate. Consider using '#align one_smul one_smulₓ'.
 theorem one_smul (b : α) : (1 : M) • b = b :=
   MulAction.one_smul _
 #align one_smul one_smul
+#align zero_vadd zero_vadd
 
 /- warning: one_smul_eq_id -> one_smul_eq_id is a dubious translation:
 lean 3 declaration is
@@ -581,6 +608,7 @@ Case conversion may be inaccurate. Consider using '#align one_smul_eq_id one_smu
 theorem one_smul_eq_id : ((· • ·) (1 : M) : α → α) = id :=
   funext <| one_smul _
 #align one_smul_eq_id one_smul_eq_id
+#align zero_vadd_eq_id zero_vadd_eq_id
 
 /- warning: comp_smul_left -> comp_smul_left is a dubious translation:
 lean 3 declaration is
@@ -593,6 +621,7 @@ Case conversion may be inaccurate. Consider using '#align comp_smul_left comp_sm
 theorem comp_smul_left (a₁ a₂ : M) : (· • ·) a₁ ∘ (· • ·) a₂ = ((· • ·) (a₁ * a₂) : α → α) :=
   funext fun _ => (mul_smul _ _ _).symm
 #align comp_smul_left comp_smul_left
+#align comp_vadd_left comp_vadd_left
 
 variable {M}
 
@@ -607,6 +636,7 @@ protected def Function.Injective.mulAction [SMul M β] (f : β → α) (hf : Inj
   one_smul x := hf <| (smul _ _).trans <| one_smul _ (f x)
   mul_smul c₁ c₂ x := hf <| by simp only [smul, mul_smul]
 #align function.injective.mul_action Function.Injective.mulAction
+#align function.injective.add_action Function.Injective.addAction
 -/
 
 #print Function.Surjective.mulAction /-
@@ -624,6 +654,7 @@ protected def Function.Surjective.mulAction [SMul M β] (f : α → β) (hf : Su
     rcases hf y with ⟨x, rfl⟩
     simp only [← smul, mul_smul]
 #align function.surjective.mul_action Function.Surjective.mulAction
+#align function.surjective.add_action Function.Surjective.addAction
 -/
 
 /- warning: function.surjective.mul_action_left -> Function.Surjective.mulActionLeft is a dubious translation:
@@ -646,6 +677,7 @@ def Function.Surjective.mulActionLeft {R S M : Type _} [Monoid R] [MulAction R M
   one_smul b := by rw [← f.map_one, hsmul, one_smul]
   mul_smul := hf.Forall₂.mpr fun a b x => by simp only [← f.map_mul, hsmul, mul_smul]
 #align function.surjective.mul_action_left Function.Surjective.mulActionLeft
+#align function.surjective.add_action_left Function.Surjective.addActionLeft
 
 section
 
@@ -663,6 +695,7 @@ instance (priority := 910) Monoid.toMulAction : MulAction M M
   one_smul := one_mul
   mul_smul := mul_assoc
 #align monoid.to_mul_action Monoid.toMulAction
+#align add_monoid.to_add_action AddMonoid.toAddAction
 -/
 
 /-- The regular action of a monoid on itself by left addition.
@@ -680,6 +713,7 @@ Case conversion may be inaccurate. Consider using '#align is_scalar_tower.left I
 instance IsScalarTower.left : IsScalarTower M M α :=
   ⟨fun x y z => mul_smul x y z⟩
 #align is_scalar_tower.left IsScalarTower.left
+#align vadd_assoc_class.left VAddAssocClass.left
 
 variable {M}
 
@@ -696,6 +730,7 @@ theorem smul_mul_smul [Mul α] (r s : M) (x y : α) [IsScalarTower M α α] [SMu
     r • x * s • y = (r * s) • (x * y) := by
   rw [smul_mul_assoc, mul_smul_comm, ← smul_assoc, smul_eq_mul]
 #align smul_mul_smul smul_mul_smul
+#align vadd_add_vadd vadd_add_vadd
 
 end
 
@@ -709,6 +744,7 @@ variable (M α)
 def toFun : α ↪ M → α :=
   ⟨fun y x => x • y, fun y₁ y₂ H => one_smul M y₁ ▸ one_smul M y₂ ▸ by convert congr_fun H 1⟩
 #align mul_action.to_fun MulAction.toFun
+#align add_action.to_fun AddAction.toFun
 -/
 
 /-- Embedding of `α` into functions `M → α` induced by an additive action of `M` on `α`. -/
@@ -737,6 +773,7 @@ def compHom [Monoid N] (g : N →* M) : MulAction N α
   one_smul := by simp [g.map_one, MulAction.one_smul]
   mul_smul := by simp [g.map_mul, MulAction.mul_smul]
 #align mul_action.comp_hom MulAction.compHom
+#align add_action.comp_hom AddAction.compHom
 -/
 
 /-- An additive action of `M` on `α` and an additive monoid homomorphism `N → M` induce
@@ -761,6 +798,7 @@ Case conversion may be inaccurate. Consider using '#align smul_one_smul smul_one
 theorem smul_one_smul {M} (N) [Monoid N] [SMul M N] [MulAction N α] [SMul M α] [IsScalarTower M N α]
     (x : M) (y : α) : (x • (1 : N)) • y = x • y := by rw [smul_assoc, one_smul]
 #align smul_one_smul smul_one_smul
+#align vadd_zero_vadd vadd_zero_vadd
 
 /- warning: smul_one_mul -> smul_one_mul is a dubious translation:
 lean 3 declaration is
@@ -772,6 +810,7 @@ Case conversion may be inaccurate. Consider using '#align smul_one_mul smul_one_
 theorem smul_one_mul {M N} [MulOneClass N] [SMul M N] [IsScalarTower M N N] (x : M) (y : N) :
     x • 1 * y = x • y := by rw [smul_mul_assoc, one_mul]
 #align smul_one_mul smul_one_mul
+#align vadd_zero_add vadd_zero_add
 
 /- warning: mul_smul_one -> mul_smul_one is a dubious translation:
 lean 3 declaration is
@@ -783,6 +822,7 @@ Case conversion may be inaccurate. Consider using '#align mul_smul_one mul_smul_
 theorem mul_smul_one {M N} [MulOneClass N] [SMul M N] [SMulCommClass M N N] (x : M) (y : N) :
     y * x • 1 = x • y := by rw [← smul_eq_mul, ← smul_comm, smul_eq_mul, mul_one]
 #align mul_smul_one mul_smul_one
+#align add_vadd_zero add_vadd_zero
 
 /- warning: is_scalar_tower.of_smul_one_mul -> IsScalarTower.of_smul_one_mul is a dubious translation:
 lean 3 declaration is
@@ -795,6 +835,7 @@ theorem IsScalarTower.of_smul_one_mul {M N} [Monoid N] [SMul M N]
     (h : ∀ (x : M) (y : N), x • (1 : N) * y = x • y) : IsScalarTower M N N :=
   ⟨fun x y z => by rw [← h, smul_eq_mul, mul_assoc, h, smul_eq_mul]⟩
 #align is_scalar_tower.of_smul_one_mul IsScalarTower.of_smul_one_mul
+#align vadd_assoc_class.of_vadd_zero_add VAddAssocClass.of_vadd_zero_add
 
 /- warning: smul_comm_class.of_mul_smul_one -> SMulCommClass.of_mul_smul_one is a dubious translation:
 lean 3 declaration is
@@ -807,6 +848,7 @@ theorem SMulCommClass.of_mul_smul_one {M N} [Monoid N] [SMul M N]
     (H : ∀ (x : M) (y : N), y * x • (1 : N) = x • y) : SMulCommClass M N N :=
   ⟨fun x y z => by rw [← H x z, smul_eq_mul, ← H, smul_eq_mul, mul_assoc]⟩
 #align smul_comm_class.of_mul_smul_one SMulCommClass.of_mul_smul_one
+#align vadd_comm_class.of_add_vadd_zero VAddCommClass.of_add_vadd_zero
 
 /- warning: smul_one_hom -> smulOneHom is a dubious translation:
 lean 3 declaration is
@@ -825,6 +867,7 @@ def smulOneHom {M N} [Monoid M] [Monoid N] [MulAction M N] [IsScalarTower M N N]
   map_one' := one_smul _ _
   map_mul' x y := by rw [smul_one_mul, smul_smul]
 #align smul_one_hom smulOneHom
+#align vadd_zero_hom vaddZeroHom
 
 end CompatibleScalar
 

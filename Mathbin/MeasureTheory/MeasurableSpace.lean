@@ -259,6 +259,7 @@ theorem measurable_of_subsingleton_codomain [Subsingleton β] (f : α → β) : 
 theorem measurable_one [One α] : Measurable (1 : β → α) :=
   @measurable_const _ _ _ _ 1
 #align measurable_one measurable_one
+#align measurable_zero measurable_zero
 
 theorem measurable_of_empty [IsEmpty α] (f : α → β) : Measurable f :=
   Subsingleton.measurable
@@ -338,6 +339,7 @@ theorem measurable_set_mul_support [One β] [MeasurableSingletonClass β] (hf : 
     MeasurableSet (mulSupport f) :=
   hf (measurable_set_singleton 1).compl
 #align measurable_set_mul_support measurable_set_mul_support
+#align measurable_set_support measurable_set_support
 
 /-- If a function coincides with a measurable function outside of a countable set, it is
 measurable. -/
@@ -472,6 +474,7 @@ instance QuotientGroup.measurableSpace {G} [Group G] [MeasurableSpace G] (S : Su
     MeasurableSpace (G ⧸ S) :=
   Quotient.measurableSpace
 #align quotient_group.measurable_space QuotientGroup.measurableSpace
+#align quotient_add_group.measurable_space quotientAddGroup.measurableSpace
 
 theorem measurable_set_quotient {s : Setoid α} {t : Set (Quotient s)} :
     MeasurableSet t ↔ MeasurableSet (Quotient.mk' ⁻¹' t) :=
@@ -502,14 +505,16 @@ theorem QuotientGroup.measurable_coe {G} [Group G] [MeasurableSpace G] {S : Subg
     Measurable (coe : G → G ⧸ S) :=
   measurable_quotient_mk'
 #align quotient_group.measurable_coe QuotientGroup.measurable_coe
+#align quotient_add_group.measurable_coe quotientAddGroup.measurable_coe
 
-attribute [measurability] QuotientGroup.measurable_coe QuotientAddGroup.measurable_coe
+attribute [measurability] QuotientGroup.measurable_coe quotientAddGroup.measurable_coe
 
 @[to_additive]
 theorem QuotientGroup.measurable_from_quotient {G} [Group G] [MeasurableSpace G] {S : Subgroup G}
     {f : G ⧸ S → α} : Measurable f ↔ Measurable (f ∘ (coe : G → G ⧸ S)) :=
   measurable_from_quotient
 #align quotient_group.measurable_from_quotient QuotientGroup.measurable_from_quotient
+#align quotient_add_group.measurable_from_quotient quotientAddGroup.measurable_from_quotient
 
 end Quotient
 

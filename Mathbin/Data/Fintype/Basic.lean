@@ -54,7 +54,7 @@ universe u v
 variable {α β γ : Type _}
 
 #print Fintype /-
-/- ./././Mathport/Syntax/Translate/Command.lean:379:30: infer kinds are unsupported in Lean 4: #[`elems] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`elems] [] -/
 /-- `fintype α` means that `α` is finite, i.e. there are only
   finitely many distinct elements of type `α`. The evidence of this
   is a finset `elems` (a list up to permutation without duplicates),
@@ -587,6 +587,7 @@ instance decidableEqOneHomFintype [DecidableEq β] [Fintype α] [One α] [One β
     DecidableEq (OneHom α β) := fun a b =>
   decidable_of_iff ((a : α → β) = b) (Injective.eq_iff OneHom.coe_inj)
 #align fintype.decidable_eq_one_hom_fintype Fintype.decidableEqOneHomFintype
+#align fintype.decidable_eq_zero_hom_fintype Fintype.decidableEqZeroHomFintype
 -/
 
 #print Fintype.decidableEqMulHomFintype /-
@@ -595,6 +596,7 @@ instance decidableEqMulHomFintype [DecidableEq β] [Fintype α] [Mul α] [Mul β
     DecidableEq (α →ₙ* β) := fun a b =>
   decidable_of_iff ((a : α → β) = b) (Injective.eq_iff MulHom.coe_inj)
 #align fintype.decidable_eq_mul_hom_fintype Fintype.decidableEqMulHomFintype
+#align fintype.decidable_eq_add_hom_fintype Fintype.decidableEqAddHomFintype
 -/
 
 #print Fintype.decidableEqMonoidHomFintype /-
@@ -603,6 +605,7 @@ instance decidableEqMonoidHomFintype [DecidableEq β] [Fintype α] [MulOneClass 
     DecidableEq (α →* β) := fun a b =>
   decidable_of_iff ((a : α → β) = b) (Injective.eq_iff MonoidHom.coe_inj)
 #align fintype.decidable_eq_monoid_hom_fintype Fintype.decidableEqMonoidHomFintype
+#align fintype.decidable_eq_add_monoid_hom_fintype Fintype.decidableEqAddMonoidHomFintype
 -/
 
 #print Fintype.decidableEqMonoidWithZeroHomFintype /-

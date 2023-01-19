@@ -40,6 +40,7 @@ Case conversion may be inaccurate. Consider using '#align le_of_forall_lt_one_mu
 theorem le_of_forall_lt_one_mul_le (h : ∀ ε < 1, a * ε ≤ b) : a ≤ b :=
   @le_of_forall_one_lt_le_mul αᵒᵈ _ _ _ _ _ _ _ _ h
 #align le_of_forall_lt_one_mul_le le_of_forall_lt_one_mul_le
+#align le_of_forall_neg_add_le le_of_forall_neg_add_le
 
 /- warning: le_of_forall_one_lt_div_le -> le_of_forall_one_lt_div_le is a dubious translation:
 lean 3 declaration is
@@ -52,6 +53,7 @@ theorem le_of_forall_one_lt_div_le (h : ∀ ε : α, 1 < ε → a / ε ≤ b) : 
   le_of_forall_lt_one_mul_le fun ε ε1 => by
     simpa only [div_eq_mul_inv, inv_inv] using h ε⁻¹ (Left.one_lt_inv_iff.2 ε1)
 #align le_of_forall_one_lt_div_le le_of_forall_one_lt_div_le
+#align le_of_forall_pos_sub_le le_of_forall_pos_sub_le
 
 /- warning: le_iff_forall_one_lt_le_mul -> le_iff_forall_one_lt_le_mul is a dubious translation:
 lean 3 declaration is
@@ -63,6 +65,7 @@ Case conversion may be inaccurate. Consider using '#align le_iff_forall_one_lt_l
 theorem le_iff_forall_one_lt_le_mul : a ≤ b ↔ ∀ ε, 1 < ε → a ≤ b * ε :=
   ⟨fun h ε ε_pos => le_mul_of_le_of_one_le h ε_pos.le, le_of_forall_one_lt_le_mul⟩
 #align le_iff_forall_one_lt_le_mul le_iff_forall_one_lt_le_mul
+#align le_iff_forall_pos_le_add le_iff_forall_pos_le_add
 
 /- warning: le_iff_forall_lt_one_mul_le -> le_iff_forall_lt_one_mul_le is a dubious translation:
 lean 3 declaration is
@@ -74,6 +77,7 @@ Case conversion may be inaccurate. Consider using '#align le_iff_forall_lt_one_m
 theorem le_iff_forall_lt_one_mul_le : a ≤ b ↔ ∀ ε < 1, a * ε ≤ b :=
   @le_iff_forall_one_lt_le_mul αᵒᵈ _ _ _ _ _ _
 #align le_iff_forall_lt_one_mul_le le_iff_forall_lt_one_mul_le
+#align le_iff_forall_neg_add_le le_iff_forall_neg_add_le
 
 end DenselyOrdered
 

@@ -44,7 +44,7 @@ theorem continuous_coe : Continuous (coe : ℝ → Angle) :=
 
 /-- Coercion `ℝ → angle` as an additive homomorphism. -/
 def coeHom : ℝ →+ angle :=
-  QuotientAddGroup.mk' _
+  quotientAddGroup.mk' _
 #align real.angle.coe_hom Real.Angle.coeHom
 
 @[simp]
@@ -98,7 +98,7 @@ theorem coe_int_mul_eq_zsmul (x : ℝ) (n : ℤ) : ↑((n : ℝ) * x : ℝ) = n 
 #align real.angle.coe_int_mul_eq_zsmul Real.Angle.coe_int_mul_eq_zsmul
 
 theorem angle_eq_iff_two_pi_dvd_sub {ψ θ : ℝ} : (θ : Angle) = ψ ↔ ∃ k : ℤ, θ - ψ = 2 * π * k := by
-  simp only [QuotientAddGroup.eq, AddSubgroup.zmultiples_eq_closure,
+  simp only [quotientAddGroup.eq, AddSubgroup.zmultiples_eq_closure,
     AddSubgroup.mem_closure_singleton, zsmul_eq_mul', (sub_eq_neg_add _ _).symm, eq_comm]
 #align real.angle.angle_eq_iff_two_pi_dvd_sub Real.Angle.angle_eq_iff_two_pi_dvd_sub
 
@@ -152,12 +152,12 @@ theorem coe_pi_add_coe_pi : (π : Real.Angle) + π = 0 := by rw [← two_nsmul, 
 
 theorem zsmul_eq_iff {ψ θ : Angle} {z : ℤ} (hz : z ≠ 0) :
     z • ψ = z • θ ↔ ∃ k : Fin z.natAbs, ψ = θ + (k : ℕ) • (2 * π / z : ℝ) :=
-  QuotientAddGroup.zmultiples_zsmul_eq_zsmul_iff hz
+  quotientAddGroup.zmultiples_zsmul_eq_zsmul_iff hz
 #align real.angle.zsmul_eq_iff Real.Angle.zsmul_eq_iff
 
 theorem nsmul_eq_iff {ψ θ : Angle} {n : ℕ} (hz : n ≠ 0) :
     n • ψ = n • θ ↔ ∃ k : Fin n, ψ = θ + (k : ℕ) • (2 * π / n : ℝ) :=
-  QuotientAddGroup.zmultiples_nsmul_eq_nsmul_iff hz
+  quotientAddGroup.zmultiples_nsmul_eq_nsmul_iff hz
 #align real.angle.nsmul_eq_iff Real.Angle.nsmul_eq_iff
 
 theorem two_zsmul_eq_iff {ψ θ : Angle} : (2 : ℤ) • ψ = (2 : ℤ) • θ ↔ ψ = θ ∨ ψ = θ + π := by

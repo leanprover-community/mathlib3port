@@ -44,7 +44,7 @@ universe u v
 variable {α : Type u} {β : Type v}
 
 #print IsAddHom /-
-/- ./././Mathport/Syntax/Translate/Command.lean:379:30: infer kinds are unsupported in Lean 4: #[`map_add] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`map_add] [] -/
 /-- Predicate for maps which preserve an addition. -/
 structure IsAddHom {α β : Type _} [Add α] [Add β] (f : α → β) : Prop where
   map_add : ∀ x y, f (x + y) = f x + f y
@@ -52,12 +52,13 @@ structure IsAddHom {α β : Type _} [Add α] [Add β] (f : α → β) : Prop whe
 -/
 
 #print IsMulHom /-
-/- ./././Mathport/Syntax/Translate/Command.lean:379:30: infer kinds are unsupported in Lean 4: #[`map_mul] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`map_mul] [] -/
 /-- Predicate for maps which preserve a multiplication. -/
 @[to_additive]
 structure IsMulHom {α β : Type _} [Mul α] [Mul β] (f : α → β) : Prop where
   map_mul : ∀ x y, f (x * y) = f x * f y
 #align is_mul_hom IsMulHom
+#align is_add_hom IsAddHom
 -/
 
 namespace IsMulHom
@@ -70,6 +71,7 @@ variable [Mul α] [Mul β] {γ : Type _} [Mul γ]
 theorem id : IsMulHom (id : α → α) :=
   { map_mul := fun _ _ => rfl }
 #align is_mul_hom.id IsMulHom.id
+#align is_add_hom.id IsAddHom.id
 -/
 
 /- warning: is_mul_hom.comp -> IsMulHom.comp is a dubious translation:
@@ -83,6 +85,7 @@ Case conversion may be inaccurate. Consider using '#align is_mul_hom.comp IsMulH
 theorem comp {f : α → β} {g : β → γ} (hf : IsMulHom f) (hg : IsMulHom g) : IsMulHom (g ∘ f) :=
   { map_mul := fun x y => by simp only [Function.comp, hf.map_mul, hg.map_mul] }
 #align is_mul_hom.comp IsMulHom.comp
+#align is_add_hom.comp IsAddHom.comp
 
 /- warning: is_mul_hom.mul -> IsMulHom.mul is a dubious translation:
 lean 3 declaration is
@@ -100,6 +103,7 @@ theorem mul {α β} [Semigroup α] [CommSemigroup β] {f g : α → β} (hf : Is
     map_mul := fun a b => by
       simp only [hf.map_mul, hg.map_mul, mul_comm, mul_assoc, mul_left_comm] }
 #align is_mul_hom.mul IsMulHom.mul
+#align is_add_hom.add IsAddHom.add
 
 /- warning: is_mul_hom.inv -> IsMulHom.inv is a dubious translation:
 lean 3 declaration is
@@ -114,11 +118,12 @@ preserves multiplication when the target is commutative. -/
 theorem inv {α β} [Mul α] [CommGroup β] {f : α → β} (hf : IsMulHom f) : IsMulHom fun a => (f a)⁻¹ :=
   { map_mul := fun a b => (hf.map_mul a b).symm ▸ mul_inv _ _ }
 #align is_mul_hom.inv IsMulHom.inv
+#align is_add_hom.neg IsAddHom.neg
 
 end IsMulHom
 
 #print IsAddMonoidHom /-
-/- ./././Mathport/Syntax/Translate/Command.lean:379:30: infer kinds are unsupported in Lean 4: #[`map_zero] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`map_zero] [] -/
 /-- Predicate for add_monoid homomorphisms (deprecated -- use the bundled `monoid_hom` version). -/
 structure IsAddMonoidHom [AddZeroClass α] [AddZeroClass β] (f : α → β) extends IsAddHom f :
   Prop where
@@ -129,12 +134,13 @@ structure IsAddMonoidHom [AddZeroClass α] [AddZeroClass β] (f : α → β) ext
 /- warning: is_monoid_hom clashes with isMonoidHom -> IsMonoidHom
 Case conversion may be inaccurate. Consider using '#align is_monoid_hom IsMonoidHomₓ'. -/
 #print IsMonoidHom /-
-/- ./././Mathport/Syntax/Translate/Command.lean:379:30: infer kinds are unsupported in Lean 4: #[`map_one] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`map_one] [] -/
 /-- Predicate for monoid homomorphisms (deprecated -- use the bundled `monoid_hom` version). -/
 @[to_additive]
 structure IsMonoidHom [MulOneClass α] [MulOneClass β] (f : α → β) extends IsMulHom f : Prop where
   map_one : f 1 = 1
 #align is_monoid_hom IsMonoidHom
+#align is_add_monoid_hom IsAddMonoidHom
 -/
 
 namespace MonoidHom
@@ -152,6 +158,7 @@ def of {f : M → N} (h : IsMonoidHom f) : M →* N
   map_one' := h.2
   map_mul' := h.1.1
 #align monoid_hom.of MonoidHom.of
+#align add_monoid_hom.of AddMonoidHom.of
 -/
 
 variable {mM mN}
@@ -166,12 +173,14 @@ Case conversion may be inaccurate. Consider using '#align monoid_hom.coe_of Mono
 theorem coe_of {f : M → N} (hf : IsMonoidHom f) : ⇑(MonoidHom.of hf) = f :=
   rfl
 #align monoid_hom.coe_of MonoidHom.coe_of
+#align add_monoid_hom.coe_of AddMonoidHom.coe_of
 
 @[to_additive]
 theorem is_monoid_hom_coe (f : M →* N) : IsMonoidHom (f : M → N) :=
   { map_mul := f.map_mul
     map_one := f.map_one }
 #align monoid_hom.is_monoid_hom_coe MonoidHom.is_monoid_hom_coe
+#align add_monoid_hom.is_add_monoid_hom_coe AddMonoidHom.is_add_monoid_hom_coe
 
 end MonoidHom
 
@@ -199,6 +208,7 @@ theorem is_monoid_hom (h : M ≃* N) : IsMonoidHom h :=
   { map_mul := h.map_mul
     map_one := h.map_one }
 #align mul_equiv.is_monoid_hom MulEquiv.is_monoid_hom
+#align add_equiv.is_add_monoid_hom AddEquiv.is_add_monoid_hom
 
 end MulEquiv
 
@@ -211,6 +221,7 @@ variable [MulOneClass α] [MulOneClass β] {f : α → β} (hf : IsMonoidHom f)
 theorem map_mul (x y) : f (x * y) = f x * f y :=
   hf.map_mul x y
 #align is_monoid_hom.map_mul IsMonoidHom.map_mul
+#align is_add_monoid_hom.map_add IsAddMonoidHom.map_add
 
 /- warning: is_monoid_hom.inv clashes with isMonoidHom.inv -> IsMonoidHom.inv
 warning: is_monoid_hom.inv -> IsMonoidHom.inv is a dubious translation:
@@ -228,6 +239,7 @@ theorem inv {α β} [MulOneClass α] [CommGroup β] {f : α → β} (hf : IsMono
   { map_one := hf.map_one.symm ▸ inv_one
     map_mul := fun a b => (hf.map_mul a b).symm ▸ mul_inv _ _ }
 #align is_monoid_hom.inv IsMonoidHom.inv
+#align is_add_monoid_hom.neg IsAddMonoidHom.neg
 
 end IsMonoidHom
 
@@ -238,6 +250,7 @@ theorem IsMulHom.to_is_monoid_hom [MulOneClass α] [Group β] {f : α → β} (h
   { map_one := mul_right_eq_self.1 <| by rw [← hf.map_mul, one_mul]
     map_mul := hf.map_mul }
 #align is_mul_hom.to_is_monoid_hom IsMulHom.to_is_monoid_hom
+#align is_add_hom.to_is_add_monoid_hom IsAddHom.to_is_add_monoid_hom
 
 namespace IsMonoidHom
 
@@ -252,6 +265,7 @@ theorem id : IsMonoidHom (@id α) :=
   { map_one := rfl
     map_mul := fun _ _ => rfl }
 #align is_monoid_hom.id IsMonoidHom.id
+#align is_add_monoid_hom.id IsAddMonoidHom.id
 -/
 
 /- warning: is_monoid_hom.comp clashes with isMonoidHom.comp -> IsMonoidHom.comp
@@ -269,6 +283,7 @@ theorem comp (hf : IsMonoidHom f) {γ} [MulOneClass γ] {g : β → γ} (hg : Is
   { IsMulHom.comp hf.to_is_mul_hom hg.to_is_mul_hom with
     map_one := show g _ = 1 by rw [hf.map_one, hg.map_one] }
 #align is_monoid_hom.comp IsMonoidHom.comp
+#align is_add_monoid_hom.comp IsAddMonoidHom.comp
 
 end IsMonoidHom
 
@@ -313,6 +328,7 @@ structure IsAddGroupHom [AddGroup α] [AddGroup β] (f : α → β) extends IsAd
 @[to_additive]
 structure IsGroupHom [Group α] [Group β] (f : α → β) extends IsMulHom f : Prop
 #align is_group_hom IsGroupHom
+#align is_add_group_hom IsAddGroupHom
 -/
 
 /- warning: monoid_hom.is_group_hom -> MonoidHom.isGroupHom is a dubious translation:
@@ -351,6 +367,7 @@ theorem IsGroupHom.mk' [Group α] [Group β] {f : α → β} (hf : ∀ x y, f (x
     IsGroupHom f :=
   { map_mul := hf }
 #align is_group_hom.mk' IsGroupHom.mk'
+#align is_add_group_hom.mk' IsAddGroupHom.mk'
 
 namespace IsGroupHom
 
@@ -373,6 +390,7 @@ theorem map_mul' : ∀ x y, f (x * y) = f x * f y :=
 theorem to_is_monoid_hom : IsMonoidHom f :=
   hf.to_is_mul_hom.to_is_monoid_hom
 #align is_group_hom.to_is_monoid_hom IsGroupHom.to_is_monoid_hom
+#align is_add_group_hom.to_is_add_monoid_hom IsAddGroupHom.to_is_add_monoid_hom
 
 /- warning: is_group_hom.map_one -> IsGroupHom.map_one is a dubious translation:
 lean 3 declaration is
@@ -385,6 +403,7 @@ Case conversion may be inaccurate. Consider using '#align is_group_hom.map_one I
 theorem map_one : f 1 = 1 :=
   hf.to_is_monoid_hom.map_one
 #align is_group_hom.map_one IsGroupHom.map_one
+#align is_add_group_hom.map_zero IsAddGroupHom.map_zero
 
 /- warning: is_group_hom.map_inv -> IsGroupHom.map_inv is a dubious translation:
 lean 3 declaration is
@@ -397,6 +416,7 @@ Case conversion may be inaccurate. Consider using '#align is_group_hom.map_inv I
 theorem map_inv (hf : IsGroupHom f) (a : α) : f a⁻¹ = (f a)⁻¹ :=
   eq_inv_of_mul_eq_one_left <| by rw [← hf.map_mul, inv_mul_self, hf.map_one]
 #align is_group_hom.map_inv IsGroupHom.map_inv
+#align is_add_group_hom.map_neg IsAddGroupHom.map_neg
 
 /- warning: is_group_hom.map_div -> IsGroupHom.map_div is a dubious translation:
 lean 3 declaration is
@@ -408,6 +428,7 @@ Case conversion may be inaccurate. Consider using '#align is_group_hom.map_div I
 theorem map_div (hf : IsGroupHom f) (a b : α) : f (a / b) = f a / f b := by
   simp_rw [div_eq_mul_inv, hf.map_mul, hf.map_inv]
 #align is_group_hom.map_div IsGroupHom.map_div
+#align is_add_group_hom.map_sub IsAddGroupHom.map_sub
 
 #print IsGroupHom.id /-
 /-- The identity is a group homomorphism. -/
@@ -415,6 +436,7 @@ theorem map_div (hf : IsGroupHom f) (a b : α) : f (a / b) = f a / f b := by
 theorem id : IsGroupHom (@id α) :=
   { map_mul := fun _ _ => rfl }
 #align is_group_hom.id IsGroupHom.id
+#align is_add_group_hom.id IsAddGroupHom.id
 -/
 
 /- warning: is_group_hom.comp -> IsGroupHom.comp is a dubious translation:
@@ -430,6 +452,7 @@ theorem comp (hf : IsGroupHom f) {γ} [Group γ] {g : β → γ} (hg : IsGroupHo
     IsGroupHom (g ∘ f) :=
   { IsMulHom.comp hf.to_is_mul_hom hg.to_is_mul_hom with }
 #align is_group_hom.comp IsGroupHom.comp
+#align is_add_group_hom.comp IsAddGroupHom.comp
 
 /- warning: is_group_hom.injective_iff -> IsGroupHom.injective_iff is a dubious translation:
 lean 3 declaration is
@@ -444,6 +467,7 @@ theorem injective_iff {f : α → β} (hf : IsGroupHom f) :
   ⟨fun h _ => by rw [← hf.map_one] <;> exact @h _ _, fun h x y hxy =>
     eq_of_div_eq_one <| h _ <| by rwa [hf.map_div, div_eq_one]⟩
 #align is_group_hom.injective_iff IsGroupHom.injective_iff
+#align is_add_group_hom.injective_iff IsAddGroupHom.injective_iff
 
 /- warning: is_group_hom.mul -> IsGroupHom.mul is a dubious translation:
 lean 3 declaration is
@@ -458,6 +482,7 @@ theorem mul {α β} [Group α] [CommGroup β] {f g : α → β} (hf : IsGroupHom
     IsGroupHom fun a => f a * g a :=
   { map_mul := (hf.to_is_mul_hom.mul hg.to_is_mul_hom).map_mul }
 #align is_group_hom.mul IsGroupHom.mul
+#align is_add_group_hom.add IsAddGroupHom.add
 
 /- warning: is_group_hom.inv -> IsGroupHom.inv is a dubious translation:
 lean 3 declaration is
@@ -472,6 +497,7 @@ theorem inv {α β} [Group α] [CommGroup β] {f : α → β} (hf : IsGroupHom f
     IsGroupHom fun a => (f a)⁻¹ :=
   { map_mul := hf.to_is_mul_hom.inv.map_mul }
 #align is_group_hom.inv IsGroupHom.inv
+#align is_add_group_hom.neg IsAddGroupHom.neg
 
 end IsGroupHom
 

@@ -48,6 +48,7 @@ in the two arguments. -/
 class HasLipschitzMul [Monoid β] : Prop where
   lipschitz_mul : ∃ C, LipschitzWith C fun p : β × β => p.1 * p.2
 #align has_lipschitz_mul HasLipschitzMul
+#align has_lipschitz_add HasLipschitzAdd
 
 variable [Monoid β]
 
@@ -56,6 +57,7 @@ variable [Monoid β]
 def HasLipschitzMul.c [_i : HasLipschitzMul β] : ℝ≥0 :=
   Classical.choose _i.lipschitz_mul
 #align has_lipschitz_mul.C HasLipschitzMul.c
+#align has_lipschitz_add.C HasLipschitzAdd.c
 
 variable {β}
 
@@ -64,6 +66,7 @@ theorem lipschitz_with_lipschitz_const_mul_edist [_i : HasLipschitzMul β] :
     LipschitzWith (HasLipschitzMul.c β) fun p : β × β => p.1 * p.2 :=
   Classical.choose_spec _i.lipschitz_mul
 #align lipschitz_with_lipschitz_const_mul_edist lipschitz_with_lipschitz_const_mul_edist
+#align lipschitz_with_lipschitz_const_add_edist lipschitz_with_lipschitz_const_add_edist
 
 variable [HasLipschitzMul β]
 
@@ -74,12 +77,14 @@ theorem lipschitz_with_lipschitz_const_mul :
   rw [← lipschitz_with_iff_dist_le_mul]
   exact lipschitz_with_lipschitz_const_mul_edist
 #align lipschitz_with_lipschitz_const_mul lipschitz_with_lipschitz_const_mul
+#align lipschitz_with_lipschitz_const_add lipschitz_with_lipschitz_const_add
 
 -- see Note [lower instance priority]
 @[to_additive]
 instance (priority := 100) HasLipschitzMul.has_continuous_mul : HasContinuousMul β :=
   ⟨lipschitz_with_lipschitz_const_mul_edist.Continuous⟩
 #align has_lipschitz_mul.has_continuous_mul HasLipschitzMul.has_continuous_mul
+#align has_lipschitz_add.has_continuous_add HasLipschitzAdd.has_continuous_add
 
 @[to_additive]
 instance Submonoid.has_lipschitz_mul (s : Submonoid β) : HasLipschitzMul s
@@ -88,6 +93,7 @@ instance Submonoid.has_lipschitz_mul (s : Submonoid β) : HasLipschitzMul s
       rintro ⟨x₁, x₂⟩ ⟨y₁, y₂⟩
       convert lipschitz_with_lipschitz_const_mul_edist ⟨(x₁ : β), x₂⟩ ⟨y₁, y₂⟩ using 1⟩
 #align submonoid.has_lipschitz_mul Submonoid.has_lipschitz_mul
+#align add_submonoid.has_lipschitz_add AddSubmonoid.has_lipschitz_add
 
 @[to_additive]
 instance MulOpposite.has_lipschitz_mul : HasLipschitzMul βᵐᵒᵖ
@@ -96,6 +102,7 @@ instance MulOpposite.has_lipschitz_mul : HasLipschitzMul βᵐᵒᵖ
       (lipschitz_with_lipschitz_const_mul_edist ⟨x₂.unop, x₁.unop⟩ ⟨y₂.unop, y₁.unop⟩).trans_eq
         (congr_arg _ <| max_comm _ _)⟩
 #align mul_opposite.has_lipschitz_mul MulOpposite.has_lipschitz_mul
+#align add_opposite.has_lipschitz_add AddOpposite.has_lipschitz_add
 
 -- this instance could be deduced from `normed_add_comm_group.has_lipschitz_add`, but we prove it
 -- separately here so that it is available earlier in the hierarchy

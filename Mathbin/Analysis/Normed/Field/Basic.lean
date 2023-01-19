@@ -873,11 +873,13 @@ variable [SeminormedCommGroup α]
 theorem norm_zpow_le_mul_norm (n : ℤ) (a : α) : ‖a ^ n‖ ≤ ‖n‖ * ‖a‖ := by
   rcases n.eq_coe_or_neg with ⟨n, rfl | rfl⟩ <;> simpa using norm_pow_le_mul_norm n a
 #align norm_zpow_le_mul_norm norm_zpow_le_mul_norm
+#align norm_zsmul_le norm_zsmul_le
 
 @[to_additive nnnorm_zsmul_le]
 theorem nnnorm_zpow_le_mul_norm (n : ℤ) (a : α) : ‖a ^ n‖₊ ≤ ‖n‖₊ * ‖a‖₊ := by
   simpa only [← Nnreal.coe_le_coe, Nnreal.coe_mul] using norm_zpow_le_mul_norm n a
 #align nnnorm_zpow_le_mul_norm nnnorm_zpow_le_mul_norm
+#align nnnorm_zsmul_le nnnorm_zsmul_le
 
 end
 

@@ -56,6 +56,7 @@ theorem mul_le_mul_left' [CovariantClass α α (· * ·) (· ≤ ·)] {b c : α}
     a * b ≤ a * c :=
   CovariantClass.elim _ bc
 #align mul_le_mul_left' mul_le_mul_left'
+#align add_le_add_left add_le_add_left
 -/
 
 #print le_of_mul_le_mul_left' /-
@@ -64,6 +65,7 @@ theorem le_of_mul_le_mul_left' [ContravariantClass α α (· * ·) (· ≤ ·)] 
     (bc : a * b ≤ a * c) : b ≤ c :=
   ContravariantClass.elim _ bc
 #align le_of_mul_le_mul_left' le_of_mul_le_mul_left'
+#align le_of_add_le_add_left le_of_add_le_add_left
 -/
 
 #print mul_le_mul_right' /-
@@ -74,6 +76,7 @@ theorem mul_le_mul_right' [CovariantClass α α (swap (· * ·)) (· ≤ ·)] {b
     (a : α) : b * a ≤ c * a :=
   CovariantClass.elim a bc
 #align mul_le_mul_right' mul_le_mul_right'
+#align add_le_add_right add_le_add_right
 -/
 
 #print le_of_mul_le_mul_right' /-
@@ -82,6 +85,7 @@ theorem le_of_mul_le_mul_right' [ContravariantClass α α (swap (· * ·)) (· �
     (bc : b * a ≤ c * a) : b ≤ c :=
   ContravariantClass.elim a bc
 #align le_of_mul_le_mul_right' le_of_mul_le_mul_right'
+#align le_of_add_le_add_right le_of_add_le_add_right
 -/
 
 #print mul_le_mul_iff_left /-
@@ -90,6 +94,7 @@ theorem mul_le_mul_iff_left [CovariantClass α α (· * ·) (· ≤ ·)]
     [ContravariantClass α α (· * ·) (· ≤ ·)] (a : α) {b c : α} : a * b ≤ a * c ↔ b ≤ c :=
   rel_iff_cov α α (· * ·) (· ≤ ·) a
 #align mul_le_mul_iff_left mul_le_mul_iff_left
+#align add_le_add_iff_left add_le_add_iff_left
 -/
 
 #print mul_le_mul_iff_right /-
@@ -98,6 +103,7 @@ theorem mul_le_mul_iff_right [CovariantClass α α (swap (· * ·)) (· ≤ ·)]
     [ContravariantClass α α (swap (· * ·)) (· ≤ ·)] (a : α) {b c : α} : b * a ≤ c * a ↔ b ≤ c :=
   rel_iff_cov α α (swap (· * ·)) (· ≤ ·) a
 #align mul_le_mul_iff_right mul_le_mul_iff_right
+#align add_le_add_iff_right add_le_add_iff_right
 -/
 
 end LE
@@ -112,6 +118,7 @@ theorem mul_lt_mul_iff_left [CovariantClass α α (· * ·) (· < ·)]
     [ContravariantClass α α (· * ·) (· < ·)] (a : α) {b c : α} : a * b < a * c ↔ b < c :=
   rel_iff_cov α α (· * ·) (· < ·) a
 #align mul_lt_mul_iff_left mul_lt_mul_iff_left
+#align add_lt_add_iff_left add_lt_add_iff_left
 -/
 
 #print mul_lt_mul_iff_right /-
@@ -120,6 +127,7 @@ theorem mul_lt_mul_iff_right [CovariantClass α α (swap (· * ·)) (· < ·)]
     [ContravariantClass α α (swap (· * ·)) (· < ·)] (a : α) {b c : α} : b * a < c * a ↔ b < c :=
   rel_iff_cov α α (swap (· * ·)) (· < ·) a
 #align mul_lt_mul_iff_right mul_lt_mul_iff_right
+#align add_lt_add_iff_right add_lt_add_iff_right
 -/
 
 #print mul_lt_mul_left' /-
@@ -128,6 +136,7 @@ theorem mul_lt_mul_left' [CovariantClass α α (· * ·) (· < ·)] {b c : α} (
     a * b < a * c :=
   CovariantClass.elim _ bc
 #align mul_lt_mul_left' mul_lt_mul_left'
+#align add_lt_add_left add_lt_add_left
 -/
 
 #print lt_of_mul_lt_mul_left' /-
@@ -136,6 +145,7 @@ theorem lt_of_mul_lt_mul_left' [ContravariantClass α α (· * ·) (· < ·)] {a
     (bc : a * b < a * c) : b < c :=
   ContravariantClass.elim _ bc
 #align lt_of_mul_lt_mul_left' lt_of_mul_lt_mul_left'
+#align lt_of_add_lt_add_left lt_of_add_lt_add_left
 -/
 
 #print mul_lt_mul_right' /-
@@ -144,6 +154,7 @@ theorem mul_lt_mul_right' [CovariantClass α α (swap (· * ·)) (· < ·)] {b c
     (a : α) : b * a < c * a :=
   CovariantClass.elim a bc
 #align mul_lt_mul_right' mul_lt_mul_right'
+#align add_lt_add_right add_lt_add_right
 -/
 
 #print lt_of_mul_lt_mul_right' /-
@@ -152,6 +163,7 @@ theorem lt_of_mul_lt_mul_right' [ContravariantClass α α (swap (· * ·)) (· <
     (bc : b * a < c * a) : b < c :=
   ContravariantClass.elim a bc
 #align lt_of_mul_lt_mul_right' lt_of_mul_lt_mul_right'
+#align lt_of_add_lt_add_right lt_of_add_lt_add_right
 -/
 
 end LT
@@ -170,6 +182,7 @@ theorem mul_lt_mul_of_lt_of_lt [CovariantClass α α (· * ·) (· < ·)]
     _ < b * d := mul_lt_mul_right' h₁ d
     
 #align mul_lt_mul_of_lt_of_lt mul_lt_mul_of_lt_of_lt
+#align add_lt_add_of_lt_of_lt add_lt_add_of_lt_of_lt
 -/
 
 alias add_lt_add_of_lt_of_lt ← add_lt_add
@@ -182,6 +195,7 @@ theorem mul_lt_mul_of_le_of_lt [CovariantClass α α (· * ·) (· < ·)]
     a * c < b * d :=
   (mul_le_mul_right' h₁ _).trans_lt (mul_lt_mul_left' h₂ b)
 #align mul_lt_mul_of_le_of_lt mul_lt_mul_of_le_of_lt
+#align add_lt_add_of_le_of_lt add_lt_add_of_le_of_lt
 -/
 
 #print mul_lt_mul_of_lt_of_le /-
@@ -191,6 +205,7 @@ theorem mul_lt_mul_of_lt_of_le [CovariantClass α α (· * ·) (· ≤ ·)]
     a * c < b * d :=
   (mul_le_mul_left' h₂ _).trans_lt (mul_lt_mul_right' h₁ d)
 #align mul_lt_mul_of_lt_of_le mul_lt_mul_of_lt_of_le
+#align add_lt_add_of_lt_of_le add_lt_add_of_lt_of_le
 -/
 
 #print Left.mul_lt_mul /-
@@ -201,6 +216,7 @@ theorem Left.mul_lt_mul [CovariantClass α α (· * ·) (· < ·)]
     a * c < b * d :=
   mul_lt_mul_of_le_of_lt h₁.le h₂
 #align left.mul_lt_mul Left.mul_lt_mul
+#align left.add_lt_add Left.add_lt_add
 -/
 
 #print Right.mul_lt_mul /-
@@ -211,6 +227,7 @@ theorem Right.mul_lt_mul [CovariantClass α α (· * ·) (· ≤ ·)]
     a * c < b * d :=
   mul_lt_mul_of_lt_of_le h₁ h₂.le
 #align right.mul_lt_mul Right.mul_lt_mul
+#align right.add_lt_add Right.add_lt_add
 -/
 
 #print mul_le_mul' /-
@@ -219,6 +236,7 @@ theorem mul_le_mul' [CovariantClass α α (· * ·) (· ≤ ·)] [CovariantClass
     {a b c d : α} (h₁ : a ≤ b) (h₂ : c ≤ d) : a * c ≤ b * d :=
   (mul_le_mul_left' h₂ _).trans (mul_le_mul_right' h₁ d)
 #align mul_le_mul' mul_le_mul'
+#align add_le_add add_le_add
 -/
 
 #print mul_le_mul_three /-
@@ -228,6 +246,7 @@ theorem mul_le_mul_three [CovariantClass α α (· * ·) (· ≤ ·)]
     (h₃ : c ≤ f) : a * b * c ≤ d * e * f :=
   mul_le_mul' (mul_le_mul' h₁ h₂) h₃
 #align mul_le_mul_three mul_le_mul_three
+#align add_le_add_three add_le_add_three
 -/
 
 #print mul_lt_of_mul_lt_left /-
@@ -236,6 +255,7 @@ theorem mul_lt_of_mul_lt_left [CovariantClass α α (· * ·) (· ≤ ·)] {a b 
     (hle : d ≤ b) : a * d < c :=
   (mul_le_mul_left' hle a).trans_lt h
 #align mul_lt_of_mul_lt_left mul_lt_of_mul_lt_left
+#align add_lt_of_add_lt_left add_lt_of_add_lt_left
 -/
 
 #print mul_le_of_mul_le_left /-
@@ -244,6 +264,7 @@ theorem mul_le_of_mul_le_left [CovariantClass α α (· * ·) (· ≤ ·)] {a b 
     (hle : d ≤ b) : a * d ≤ c :=
   @act_rel_of_rel_of_act_rel _ _ _ (· ≤ ·) _ ⟨fun _ _ _ => le_trans⟩ a _ _ _ hle h
 #align mul_le_of_mul_le_left mul_le_of_mul_le_left
+#align add_le_of_add_le_left add_le_of_add_le_left
 -/
 
 #print mul_lt_of_mul_lt_right /-
@@ -252,6 +273,7 @@ theorem mul_lt_of_mul_lt_right [CovariantClass α α (swap (· * ·)) (· ≤ ·
     (h : a * b < c) (hle : d ≤ a) : d * b < c :=
   (mul_le_mul_right' hle b).trans_lt h
 #align mul_lt_of_mul_lt_right mul_lt_of_mul_lt_right
+#align add_lt_of_add_lt_right add_lt_of_add_lt_right
 -/
 
 #print mul_le_of_mul_le_right /-
@@ -260,6 +282,7 @@ theorem mul_le_of_mul_le_right [CovariantClass α α (swap (· * ·)) (· ≤ ·
     (h : a * b ≤ c) (hle : d ≤ a) : d * b ≤ c :=
   (mul_le_mul_right' hle b).trans h
 #align mul_le_of_mul_le_right mul_le_of_mul_le_right
+#align add_le_of_add_le_right add_le_of_add_le_right
 -/
 
 #print lt_mul_of_lt_mul_left /-
@@ -268,6 +291,7 @@ theorem lt_mul_of_lt_mul_left [CovariantClass α α (· * ·) (· ≤ ·)] {a b 
     (hle : c ≤ d) : a < b * d :=
   h.trans_le (mul_le_mul_left' hle b)
 #align lt_mul_of_lt_mul_left lt_mul_of_lt_mul_left
+#align lt_add_of_lt_add_left lt_add_of_lt_add_left
 -/
 
 #print le_mul_of_le_mul_left /-
@@ -276,6 +300,7 @@ theorem le_mul_of_le_mul_left [CovariantClass α α (· * ·) (· ≤ ·)] {a b 
     (hle : c ≤ d) : a ≤ b * d :=
   @rel_act_of_rel_of_rel_act _ _ _ (· ≤ ·) _ ⟨fun _ _ _ => le_trans⟩ b _ _ _ hle h
 #align le_mul_of_le_mul_left le_mul_of_le_mul_left
+#align le_add_of_le_add_left le_add_of_le_add_left
 -/
 
 #print lt_mul_of_lt_mul_right /-
@@ -284,6 +309,7 @@ theorem lt_mul_of_lt_mul_right [CovariantClass α α (swap (· * ·)) (· ≤ ·
     (h : a < b * c) (hle : b ≤ d) : a < d * c :=
   h.trans_le (mul_le_mul_right' hle c)
 #align lt_mul_of_lt_mul_right lt_mul_of_lt_mul_right
+#align lt_add_of_lt_add_right lt_add_of_lt_add_right
 -/
 
 #print le_mul_of_le_mul_right /-
@@ -292,6 +318,7 @@ theorem le_mul_of_le_mul_right [CovariantClass α α (swap (· * ·)) (· ≤ ·
     (h : a ≤ b * c) (hle : b ≤ d) : a ≤ d * c :=
   h.trans (mul_le_mul_right' hle c)
 #align le_mul_of_le_mul_right le_mul_of_le_mul_right
+#align le_add_of_le_add_right le_add_of_le_add_right
 -/
 
 end Preorder
@@ -306,6 +333,7 @@ theorem mul_left_cancel'' [ContravariantClass α α (· * ·) (· ≤ ·)] {a b 
     b = c :=
   (le_of_mul_le_mul_left' h.le).antisymm (le_of_mul_le_mul_left' h.ge)
 #align mul_left_cancel'' mul_left_cancel''
+#align add_left_cancel'' add_left_cancel''
 -/
 
 #print mul_right_cancel'' /-
@@ -314,6 +342,7 @@ theorem mul_right_cancel'' [ContravariantClass α α (swap (· * ·)) (· ≤ ·
     (h : a * b = c * b) : a = c :=
   le_antisymm (le_of_mul_le_mul_right' h.le) (le_of_mul_le_mul_right' h.ge)
 #align mul_right_cancel'' mul_right_cancel''
+#align add_right_cancel'' add_right_cancel''
 -/
 
 end PartialOrder
@@ -336,6 +365,7 @@ theorem min_le_max_of_mul_le_mul (h : a * b ≤ c * d) : min a b ≤ max c d :=
   contrapose! h
   exact mul_lt_mul_of_lt_of_lt h.1.1 h.2.2
 #align min_le_max_of_mul_le_mul min_le_max_of_mul_le_mul
+#align min_le_max_of_add_le_add min_le_max_of_add_le_add
 
 end LinearOrder
 
@@ -364,6 +394,7 @@ theorem le_mul_of_one_le_right' [CovariantClass α α (· * ·) (· ≤ ·)] {a 
     _ ≤ a * b := mul_le_mul_left' h a
     
 #align le_mul_of_one_le_right' le_mul_of_one_le_right'
+#align le_add_of_nonneg_right le_add_of_nonneg_right
 
 /- warning: mul_le_of_le_one_right' -> mul_le_of_le_one_right' is a dubious translation:
 lean 3 declaration is
@@ -379,6 +410,7 @@ theorem mul_le_of_le_one_right' [CovariantClass α α (· * ·) (· ≤ ·)] {a 
     _ = a := mul_one a
     
 #align mul_le_of_le_one_right' mul_le_of_le_one_right'
+#align add_le_of_nonpos_right add_le_of_nonpos_right
 
 /- warning: le_mul_of_one_le_left' -> le_mul_of_one_le_left' is a dubious translation:
 lean 3 declaration is
@@ -394,6 +426,7 @@ theorem le_mul_of_one_le_left' [CovariantClass α α (swap (· * ·)) (· ≤ ·
     _ ≤ b * a := mul_le_mul_right' h a
     
 #align le_mul_of_one_le_left' le_mul_of_one_le_left'
+#align le_add_of_nonneg_left le_add_of_nonneg_left
 
 /- warning: mul_le_of_le_one_left' -> mul_le_of_le_one_left' is a dubious translation:
 lean 3 declaration is
@@ -409,6 +442,7 @@ theorem mul_le_of_le_one_left' [CovariantClass α α (swap (· * ·)) (· ≤ ·
     _ = a := one_mul a
     
 #align mul_le_of_le_one_left' mul_le_of_le_one_left'
+#align add_le_of_nonpos_left add_le_of_nonpos_left
 
 /- warning: one_le_of_le_mul_right -> one_le_of_le_mul_right is a dubious translation:
 lean 3 declaration is
@@ -421,6 +455,7 @@ theorem one_le_of_le_mul_right [ContravariantClass α α (· * ·) (· ≤ ·)] 
     1 ≤ b :=
   le_of_mul_le_mul_left' <| by simpa only [mul_one]
 #align one_le_of_le_mul_right one_le_of_le_mul_right
+#align nonneg_of_le_add_right nonneg_of_le_add_right
 
 /- warning: le_one_of_mul_le_right -> le_one_of_mul_le_right is a dubious translation:
 lean 3 declaration is
@@ -433,6 +468,7 @@ theorem le_one_of_mul_le_right [ContravariantClass α α (· * ·) (· ≤ ·)] 
     b ≤ 1 :=
   le_of_mul_le_mul_left' <| by simpa only [mul_one]
 #align le_one_of_mul_le_right le_one_of_mul_le_right
+#align nonpos_of_add_le_right nonpos_of_add_le_right
 
 /- warning: one_le_of_le_mul_left -> one_le_of_le_mul_left is a dubious translation:
 lean 3 declaration is
@@ -445,6 +481,7 @@ theorem one_le_of_le_mul_left [ContravariantClass α α (swap (· * ·)) (· ≤
     (h : b ≤ a * b) : 1 ≤ a :=
   le_of_mul_le_mul_right' <| by simpa only [one_mul]
 #align one_le_of_le_mul_left one_le_of_le_mul_left
+#align nonneg_of_le_add_left nonneg_of_le_add_left
 
 /- warning: le_one_of_mul_le_left -> le_one_of_mul_le_left is a dubious translation:
 lean 3 declaration is
@@ -457,6 +494,7 @@ theorem le_one_of_mul_le_left [ContravariantClass α α (swap (· * ·)) (· ≤
     (h : a * b ≤ b) : a ≤ 1 :=
   le_of_mul_le_mul_right' <| by simpa only [one_mul]
 #align le_one_of_mul_le_left le_one_of_mul_le_left
+#align nonpos_of_add_le_left nonpos_of_add_le_left
 
 /- warning: le_mul_iff_one_le_right' -> le_mul_iff_one_le_right' is a dubious translation:
 lean 3 declaration is
@@ -469,6 +507,7 @@ theorem le_mul_iff_one_le_right' [CovariantClass α α (· * ·) (· ≤ ·)]
     [ContravariantClass α α (· * ·) (· ≤ ·)] (a : α) {b : α} : a ≤ a * b ↔ 1 ≤ b :=
   Iff.trans (by rw [mul_one]) (mul_le_mul_iff_left a)
 #align le_mul_iff_one_le_right' le_mul_iff_one_le_right'
+#align le_add_iff_nonneg_right le_add_iff_nonneg_right
 
 /- warning: le_mul_iff_one_le_left' -> le_mul_iff_one_le_left' is a dubious translation:
 lean 3 declaration is
@@ -481,6 +520,7 @@ theorem le_mul_iff_one_le_left' [CovariantClass α α (swap (· * ·)) (· ≤ �
     [ContravariantClass α α (swap (· * ·)) (· ≤ ·)] (a : α) {b : α} : a ≤ b * a ↔ 1 ≤ b :=
   Iff.trans (by rw [one_mul]) (mul_le_mul_iff_right a)
 #align le_mul_iff_one_le_left' le_mul_iff_one_le_left'
+#align le_add_iff_nonneg_left le_add_iff_nonneg_left
 
 /- warning: mul_le_iff_le_one_right' -> mul_le_iff_le_one_right' is a dubious translation:
 lean 3 declaration is
@@ -493,6 +533,7 @@ theorem mul_le_iff_le_one_right' [CovariantClass α α (· * ·) (· ≤ ·)]
     [ContravariantClass α α (· * ·) (· ≤ ·)] (a : α) {b : α} : a * b ≤ a ↔ b ≤ 1 :=
   Iff.trans (by rw [mul_one]) (mul_le_mul_iff_left a)
 #align mul_le_iff_le_one_right' mul_le_iff_le_one_right'
+#align add_le_iff_nonpos_right add_le_iff_nonpos_right
 
 /- warning: mul_le_iff_le_one_left' -> mul_le_iff_le_one_left' is a dubious translation:
 lean 3 declaration is
@@ -505,6 +546,7 @@ theorem mul_le_iff_le_one_left' [CovariantClass α α (swap (· * ·)) (· ≤ �
     [ContravariantClass α α (swap (· * ·)) (· ≤ ·)] {a b : α} : a * b ≤ b ↔ a ≤ 1 :=
   Iff.trans (by rw [one_mul]) (mul_le_mul_iff_right b)
 #align mul_le_iff_le_one_left' mul_le_iff_le_one_left'
+#align add_le_iff_nonpos_left add_le_iff_nonpos_left
 
 end LE
 
@@ -526,6 +568,7 @@ theorem lt_mul_of_one_lt_right' [CovariantClass α α (· * ·) (· < ·)] (a : 
     _ < a * b := mul_lt_mul_left' h a
     
 #align lt_mul_of_one_lt_right' lt_mul_of_one_lt_right'
+#align lt_add_of_pos_right lt_add_of_pos_right
 
 /- warning: mul_lt_of_lt_one_right' -> mul_lt_of_lt_one_right' is a dubious translation:
 lean 3 declaration is
@@ -541,6 +584,7 @@ theorem mul_lt_of_lt_one_right' [CovariantClass α α (· * ·) (· < ·)] (a : 
     _ = a := mul_one a
     
 #align mul_lt_of_lt_one_right' mul_lt_of_lt_one_right'
+#align add_lt_of_neg_right add_lt_of_neg_right
 
 /- warning: lt_mul_of_one_lt_left' -> lt_mul_of_one_lt_left' is a dubious translation:
 lean 3 declaration is
@@ -556,6 +600,7 @@ theorem lt_mul_of_one_lt_left' [CovariantClass α α (swap (· * ·)) (· < ·)]
     _ < b * a := mul_lt_mul_right' h a
     
 #align lt_mul_of_one_lt_left' lt_mul_of_one_lt_left'
+#align lt_add_of_pos_left lt_add_of_pos_left
 
 /- warning: mul_lt_of_lt_one_left' -> mul_lt_of_lt_one_left' is a dubious translation:
 lean 3 declaration is
@@ -571,6 +616,7 @@ theorem mul_lt_of_lt_one_left' [CovariantClass α α (swap (· * ·)) (· < ·)]
     _ = a := one_mul a
     
 #align mul_lt_of_lt_one_left' mul_lt_of_lt_one_left'
+#align add_lt_of_neg_left add_lt_of_neg_left
 
 /- warning: one_lt_of_lt_mul_right -> one_lt_of_lt_mul_right is a dubious translation:
 lean 3 declaration is
@@ -583,6 +629,7 @@ theorem one_lt_of_lt_mul_right [ContravariantClass α α (· * ·) (· < ·)] {a
     1 < b :=
   lt_of_mul_lt_mul_left' <| by simpa only [mul_one]
 #align one_lt_of_lt_mul_right one_lt_of_lt_mul_right
+#align pos_of_lt_add_right pos_of_lt_add_right
 
 /- warning: lt_one_of_mul_lt_right -> lt_one_of_mul_lt_right is a dubious translation:
 lean 3 declaration is
@@ -595,6 +642,7 @@ theorem lt_one_of_mul_lt_right [ContravariantClass α α (· * ·) (· < ·)] {a
     b < 1 :=
   lt_of_mul_lt_mul_left' <| by simpa only [mul_one]
 #align lt_one_of_mul_lt_right lt_one_of_mul_lt_right
+#align neg_of_add_lt_right neg_of_add_lt_right
 
 /- warning: one_lt_of_lt_mul_left -> one_lt_of_lt_mul_left is a dubious translation:
 lean 3 declaration is
@@ -607,6 +655,7 @@ theorem one_lt_of_lt_mul_left [ContravariantClass α α (swap (· * ·)) (· < �
     (h : b < a * b) : 1 < a :=
   lt_of_mul_lt_mul_right' <| by simpa only [one_mul]
 #align one_lt_of_lt_mul_left one_lt_of_lt_mul_left
+#align pos_of_lt_add_left pos_of_lt_add_left
 
 /- warning: lt_one_of_mul_lt_left -> lt_one_of_mul_lt_left is a dubious translation:
 lean 3 declaration is
@@ -619,6 +668,7 @@ theorem lt_one_of_mul_lt_left [ContravariantClass α α (swap (· * ·)) (· < �
     (h : a * b < b) : a < 1 :=
   lt_of_mul_lt_mul_right' <| by simpa only [one_mul]
 #align lt_one_of_mul_lt_left lt_one_of_mul_lt_left
+#align neg_of_add_lt_left neg_of_add_lt_left
 
 /- warning: lt_mul_iff_one_lt_right' -> lt_mul_iff_one_lt_right' is a dubious translation:
 lean 3 declaration is
@@ -631,6 +681,7 @@ theorem lt_mul_iff_one_lt_right' [CovariantClass α α (· * ·) (· < ·)]
     [ContravariantClass α α (· * ·) (· < ·)] (a : α) {b : α} : a < a * b ↔ 1 < b :=
   Iff.trans (by rw [mul_one]) (mul_lt_mul_iff_left a)
 #align lt_mul_iff_one_lt_right' lt_mul_iff_one_lt_right'
+#align lt_add_iff_pos_right lt_add_iff_pos_right
 
 /- warning: lt_mul_iff_one_lt_left' -> lt_mul_iff_one_lt_left' is a dubious translation:
 lean 3 declaration is
@@ -643,6 +694,7 @@ theorem lt_mul_iff_one_lt_left' [CovariantClass α α (swap (· * ·)) (· < ·)
     [ContravariantClass α α (swap (· * ·)) (· < ·)] (a : α) {b : α} : a < b * a ↔ 1 < b :=
   Iff.trans (by rw [one_mul]) (mul_lt_mul_iff_right a)
 #align lt_mul_iff_one_lt_left' lt_mul_iff_one_lt_left'
+#align lt_add_iff_pos_left lt_add_iff_pos_left
 
 /- warning: mul_lt_iff_lt_one_left' -> mul_lt_iff_lt_one_left' is a dubious translation:
 lean 3 declaration is
@@ -655,6 +707,7 @@ theorem mul_lt_iff_lt_one_left' [CovariantClass α α (· * ·) (· < ·)]
     [ContravariantClass α α (· * ·) (· < ·)] {a b : α} : a * b < a ↔ b < 1 :=
   Iff.trans (by rw [mul_one]) (mul_lt_mul_iff_left a)
 #align mul_lt_iff_lt_one_left' mul_lt_iff_lt_one_left'
+#align add_lt_iff_neg_left add_lt_iff_neg_left
 
 /- warning: mul_lt_iff_lt_one_right' -> mul_lt_iff_lt_one_right' is a dubious translation:
 lean 3 declaration is
@@ -667,6 +720,7 @@ theorem mul_lt_iff_lt_one_right' [CovariantClass α α (swap (· * ·)) (· < ·
     [ContravariantClass α α (swap (· * ·)) (· < ·)] {a : α} (b : α) : a * b < b ↔ a < 1 :=
   Iff.trans (by rw [one_mul]) (mul_lt_mul_iff_right b)
 #align mul_lt_iff_lt_one_right' mul_lt_iff_lt_one_right'
+#align add_lt_iff_neg_right add_lt_iff_neg_right
 
 end LT
 
@@ -693,6 +747,7 @@ theorem mul_le_of_le_of_le_one [CovariantClass α α (· * ·) (· ≤ ·)] {a b
     _ ≤ c := hbc
     
 #align mul_le_of_le_of_le_one mul_le_of_le_of_le_one
+#align add_le_of_le_of_nonpos add_le_of_le_of_nonpos
 
 /- warning: mul_lt_of_le_of_lt_one -> mul_lt_of_le_of_lt_one is a dubious translation:
 lean 3 declaration is
@@ -709,6 +764,7 @@ theorem mul_lt_of_le_of_lt_one [CovariantClass α α (· * ·) (· < ·)] {a b c
     _ ≤ c := hbc
     
 #align mul_lt_of_le_of_lt_one mul_lt_of_le_of_lt_one
+#align add_lt_of_le_of_neg add_lt_of_le_of_neg
 
 /- warning: mul_lt_of_lt_of_le_one -> mul_lt_of_lt_of_le_one is a dubious translation:
 lean 3 declaration is
@@ -725,6 +781,7 @@ theorem mul_lt_of_lt_of_le_one [CovariantClass α α (· * ·) (· ≤ ·)] {a b
     _ < c := hbc
     
 #align mul_lt_of_lt_of_le_one mul_lt_of_lt_of_le_one
+#align add_lt_of_lt_of_nonpos add_lt_of_lt_of_nonpos
 
 /- warning: mul_lt_of_lt_of_lt_one -> mul_lt_of_lt_of_lt_one is a dubious translation:
 lean 3 declaration is
@@ -741,6 +798,7 @@ theorem mul_lt_of_lt_of_lt_one [CovariantClass α α (· * ·) (· < ·)] {a b c
     _ < c := hbc
     
 #align mul_lt_of_lt_of_lt_one mul_lt_of_lt_of_lt_one
+#align add_lt_of_lt_of_neg add_lt_of_lt_of_neg
 
 /- warning: mul_lt_of_lt_of_lt_one' -> mul_lt_of_lt_of_lt_one' is a dubious translation:
 lean 3 declaration is
@@ -753,6 +811,7 @@ theorem mul_lt_of_lt_of_lt_one' [CovariantClass α α (· * ·) (· ≤ ·)] {a 
     (ha : a < 1) : b * a < c :=
   mul_lt_of_lt_of_le_one hbc ha.le
 #align mul_lt_of_lt_of_lt_one' mul_lt_of_lt_of_lt_one'
+#align add_lt_of_lt_of_neg' add_lt_of_lt_of_neg'
 
 /- warning: left.mul_le_one -> Left.mul_le_one is a dubious translation:
 lean 3 declaration is
@@ -768,6 +827,7 @@ theorem Left.mul_le_one [CovariantClass α α (· * ·) (· ≤ ·)] {a b : α} 
     a * b ≤ 1 :=
   mul_le_of_le_of_le_one ha hb
 #align left.mul_le_one Left.mul_le_one
+#align left.add_nonpos Left.add_nonpos
 
 /- warning: left.mul_lt_one_of_le_of_lt -> Left.mul_lt_one_of_le_of_lt is a dubious translation:
 lean 3 declaration is
@@ -783,6 +843,7 @@ theorem Left.mul_lt_one_of_le_of_lt [CovariantClass α α (· * ·) (· < ·)] {
     (hb : b < 1) : a * b < 1 :=
   mul_lt_of_le_of_lt_one ha hb
 #align left.mul_lt_one_of_le_of_lt Left.mul_lt_one_of_le_of_lt
+#align left.add_neg_of_nonpos_of_neg Left.add_neg_of_nonpos_of_neg
 
 /- warning: left.mul_lt_one_of_lt_of_le -> Left.mul_lt_one_of_lt_of_le is a dubious translation:
 lean 3 declaration is
@@ -798,6 +859,7 @@ theorem Left.mul_lt_one_of_lt_of_le [CovariantClass α α (· * ·) (· ≤ ·)]
     (hb : b ≤ 1) : a * b < 1 :=
   mul_lt_of_lt_of_le_one ha hb
 #align left.mul_lt_one_of_lt_of_le Left.mul_lt_one_of_lt_of_le
+#align left.add_neg_of_neg_of_nonpos Left.add_neg_of_neg_of_nonpos
 
 /- warning: left.mul_lt_one -> Left.mul_lt_one is a dubious translation:
 lean 3 declaration is
@@ -812,6 +874,7 @@ theorem Left.mul_lt_one [CovariantClass α α (· * ·) (· < ·)] {a b : α} (h
     a * b < 1 :=
   mul_lt_of_lt_of_lt_one ha hb
 #align left.mul_lt_one Left.mul_lt_one
+#align left.add_neg Left.add_neg
 
 /- warning: left.mul_lt_one' -> Left.mul_lt_one' is a dubious translation:
 lean 3 declaration is
@@ -826,6 +889,7 @@ theorem Left.mul_lt_one' [CovariantClass α α (· * ·) (· ≤ ·)] {a b : α}
     a * b < 1 :=
   mul_lt_of_lt_of_lt_one' ha hb
 #align left.mul_lt_one' Left.mul_lt_one'
+#align left.add_neg' Left.add_neg'
 
 /-! Lemmas of the form `b ≤ c → 1 ≤ a → b ≤ c * a`,
 which assume left covariance. -/
@@ -846,6 +910,7 @@ theorem le_mul_of_le_of_one_le [CovariantClass α α (· * ·) (· ≤ ·)] {a b
     _ ≤ c * a := mul_le_mul_left' ha c
     
 #align le_mul_of_le_of_one_le le_mul_of_le_of_one_le
+#align le_add_of_le_of_nonneg le_add_of_le_of_nonneg
 
 /- warning: lt_mul_of_le_of_one_lt -> lt_mul_of_le_of_one_lt is a dubious translation:
 lean 3 declaration is
@@ -862,6 +927,7 @@ theorem lt_mul_of_le_of_one_lt [CovariantClass α α (· * ·) (· < ·)] {a b c
     _ < c * a := mul_lt_mul_left' ha c
     
 #align lt_mul_of_le_of_one_lt lt_mul_of_le_of_one_lt
+#align lt_add_of_le_of_pos lt_add_of_le_of_pos
 
 /- warning: lt_mul_of_lt_of_one_le -> lt_mul_of_lt_of_one_le is a dubious translation:
 lean 3 declaration is
@@ -878,6 +944,7 @@ theorem lt_mul_of_lt_of_one_le [CovariantClass α α (· * ·) (· ≤ ·)] {a b
     _ ≤ c * a := mul_le_mul_left' ha c
     
 #align lt_mul_of_lt_of_one_le lt_mul_of_lt_of_one_le
+#align lt_add_of_lt_of_nonneg lt_add_of_lt_of_nonneg
 
 /- warning: lt_mul_of_lt_of_one_lt -> lt_mul_of_lt_of_one_lt is a dubious translation:
 lean 3 declaration is
@@ -894,6 +961,7 @@ theorem lt_mul_of_lt_of_one_lt [CovariantClass α α (· * ·) (· < ·)] {a b c
     _ < c * a := mul_lt_mul_left' ha c
     
 #align lt_mul_of_lt_of_one_lt lt_mul_of_lt_of_one_lt
+#align lt_add_of_lt_of_pos lt_add_of_lt_of_pos
 
 /- warning: lt_mul_of_lt_of_one_lt' -> lt_mul_of_lt_of_one_lt' is a dubious translation:
 lean 3 declaration is
@@ -906,6 +974,7 @@ theorem lt_mul_of_lt_of_one_lt' [CovariantClass α α (· * ·) (· ≤ ·)] {a 
     (ha : 1 < a) : b < c * a :=
   lt_mul_of_lt_of_one_le hbc ha.le
 #align lt_mul_of_lt_of_one_lt' lt_mul_of_lt_of_one_lt'
+#align lt_add_of_lt_of_pos' lt_add_of_lt_of_pos'
 
 /- warning: left.one_le_mul -> Left.one_le_mul is a dubious translation:
 lean 3 declaration is
@@ -921,6 +990,7 @@ theorem Left.one_le_mul [CovariantClass α α (· * ·) (· ≤ ·)] {a b : α} 
     1 ≤ a * b :=
   le_mul_of_le_of_one_le ha hb
 #align left.one_le_mul Left.one_le_mul
+#align left.add_nonneg Left.add_nonneg
 
 /- warning: left.one_lt_mul_of_le_of_lt -> Left.one_lt_mul_of_le_of_lt is a dubious translation:
 lean 3 declaration is
@@ -936,6 +1006,7 @@ theorem Left.one_lt_mul_of_le_of_lt [CovariantClass α α (· * ·) (· < ·)] {
     (hb : 1 < b) : 1 < a * b :=
   lt_mul_of_le_of_one_lt ha hb
 #align left.one_lt_mul_of_le_of_lt Left.one_lt_mul_of_le_of_lt
+#align left.add_pos_of_nonneg_of_pos Left.add_pos_of_nonneg_of_pos
 
 /- warning: left.one_lt_mul_of_lt_of_le -> Left.one_lt_mul_of_lt_of_le is a dubious translation:
 lean 3 declaration is
@@ -951,6 +1022,7 @@ theorem Left.one_lt_mul_of_lt_of_le [CovariantClass α α (· * ·) (· ≤ ·)]
     (hb : 1 ≤ b) : 1 < a * b :=
   lt_mul_of_lt_of_one_le ha hb
 #align left.one_lt_mul_of_lt_of_le Left.one_lt_mul_of_lt_of_le
+#align left.add_pos_of_pos_of_nonneg Left.add_pos_of_pos_of_nonneg
 
 /- warning: left.one_lt_mul -> Left.one_lt_mul is a dubious translation:
 lean 3 declaration is
@@ -966,6 +1038,7 @@ theorem Left.one_lt_mul [CovariantClass α α (· * ·) (· < ·)] {a b : α} (h
     1 < a * b :=
   lt_mul_of_lt_of_one_lt ha hb
 #align left.one_lt_mul Left.one_lt_mul
+#align left.add_pos Left.add_pos
 
 /- warning: left.one_lt_mul' -> Left.one_lt_mul' is a dubious translation:
 lean 3 declaration is
@@ -981,6 +1054,7 @@ theorem Left.one_lt_mul' [CovariantClass α α (· * ·) (· ≤ ·)] {a b : α}
     1 < a * b :=
   lt_mul_of_lt_of_one_lt' ha hb
 #align left.one_lt_mul' Left.one_lt_mul'
+#align left.add_pos' Left.add_pos'
 
 /-! Lemmas of the form `a ≤ 1 → b ≤ c → a * b ≤ c`,
 which assume right covariance. -/
@@ -1001,6 +1075,7 @@ theorem mul_le_of_le_one_of_le [CovariantClass α α (swap (· * ·)) (· ≤ ·
     _ ≤ c := hbc
     
 #align mul_le_of_le_one_of_le mul_le_of_le_one_of_le
+#align add_le_of_nonpos_of_le add_le_of_nonpos_of_le
 
 /- warning: mul_lt_of_lt_one_of_le -> mul_lt_of_lt_one_of_le is a dubious translation:
 lean 3 declaration is
@@ -1017,6 +1092,7 @@ theorem mul_lt_of_lt_one_of_le [CovariantClass α α (swap (· * ·)) (· < ·)]
     _ ≤ c := hbc
     
 #align mul_lt_of_lt_one_of_le mul_lt_of_lt_one_of_le
+#align add_lt_of_neg_of_le add_lt_of_neg_of_le
 
 /- warning: mul_lt_of_le_one_of_lt -> mul_lt_of_le_one_of_lt is a dubious translation:
 lean 3 declaration is
@@ -1033,6 +1109,7 @@ theorem mul_lt_of_le_one_of_lt [CovariantClass α α (swap (· * ·)) (· ≤ ·
     _ < c := hb
     
 #align mul_lt_of_le_one_of_lt mul_lt_of_le_one_of_lt
+#align add_lt_of_nonpos_of_lt add_lt_of_nonpos_of_lt
 
 /- warning: mul_lt_of_lt_one_of_lt -> mul_lt_of_lt_one_of_lt is a dubious translation:
 lean 3 declaration is
@@ -1049,6 +1126,7 @@ theorem mul_lt_of_lt_one_of_lt [CovariantClass α α (swap (· * ·)) (· < ·)]
     _ < c := hb
     
 #align mul_lt_of_lt_one_of_lt mul_lt_of_lt_one_of_lt
+#align add_lt_of_neg_of_lt add_lt_of_neg_of_lt
 
 /- warning: mul_lt_of_lt_one_of_lt' -> mul_lt_of_lt_one_of_lt' is a dubious translation:
 lean 3 declaration is
@@ -1061,6 +1139,7 @@ theorem mul_lt_of_lt_one_of_lt' [CovariantClass α α (swap (· * ·)) (· ≤ �
     (hbc : b < c) : a * b < c :=
   mul_lt_of_le_one_of_lt ha.le hbc
 #align mul_lt_of_lt_one_of_lt' mul_lt_of_lt_one_of_lt'
+#align add_lt_of_neg_of_lt' add_lt_of_neg_of_lt'
 
 /- warning: right.mul_le_one -> Right.mul_le_one is a dubious translation:
 lean 3 declaration is
@@ -1075,6 +1154,7 @@ theorem Right.mul_le_one [CovariantClass α α (swap (· * ·)) (· ≤ ·)] {a 
     (hb : b ≤ 1) : a * b ≤ 1 :=
   mul_le_of_le_one_of_le ha hb
 #align right.mul_le_one Right.mul_le_one
+#align right.add_nonpos Right.add_nonpos
 
 /- warning: right.mul_lt_one_of_lt_of_le -> Right.mul_lt_one_of_lt_of_le is a dubious translation:
 lean 3 declaration is
@@ -1090,6 +1170,7 @@ theorem Right.mul_lt_one_of_lt_of_le [CovariantClass α α (swap (· * ·)) (· 
     (ha : a < 1) (hb : b ≤ 1) : a * b < 1 :=
   mul_lt_of_lt_one_of_le ha hb
 #align right.mul_lt_one_of_lt_of_le Right.mul_lt_one_of_lt_of_le
+#align right.add_neg_of_neg_of_nonpos Right.add_neg_of_neg_of_nonpos
 
 /- warning: right.mul_lt_one_of_le_of_lt -> Right.mul_lt_one_of_le_of_lt is a dubious translation:
 lean 3 declaration is
@@ -1105,6 +1186,7 @@ theorem Right.mul_lt_one_of_le_of_lt [CovariantClass α α (swap (· * ·)) (· 
     (ha : a ≤ 1) (hb : b < 1) : a * b < 1 :=
   mul_lt_of_le_one_of_lt ha hb
 #align right.mul_lt_one_of_le_of_lt Right.mul_lt_one_of_le_of_lt
+#align right.add_neg_of_nonpos_of_neg Right.add_neg_of_nonpos_of_neg
 
 /- warning: right.mul_lt_one -> Right.mul_lt_one is a dubious translation:
 lean 3 declaration is
@@ -1119,6 +1201,7 @@ theorem Right.mul_lt_one [CovariantClass α α (swap (· * ·)) (· < ·)] {a b 
     (hb : b < 1) : a * b < 1 :=
   mul_lt_of_lt_one_of_lt ha hb
 #align right.mul_lt_one Right.mul_lt_one
+#align right.add_neg Right.add_neg
 
 /- warning: right.mul_lt_one' -> Right.mul_lt_one' is a dubious translation:
 lean 3 declaration is
@@ -1133,6 +1216,7 @@ theorem Right.mul_lt_one' [CovariantClass α α (swap (· * ·)) (· ≤ ·)] {a
     (hb : b < 1) : a * b < 1 :=
   mul_lt_of_lt_one_of_lt' ha hb
 #align right.mul_lt_one' Right.mul_lt_one'
+#align right.add_neg' Right.add_neg'
 
 /-! Lemmas of the form `1 ≤ a → b ≤ c → b ≤ a * c`,
 which assume right covariance. -/
@@ -1153,6 +1237,7 @@ theorem le_mul_of_one_le_of_le [CovariantClass α α (swap (· * ·)) (· ≤ ·
     _ ≤ a * c := mul_le_mul_right' ha c
     
 #align le_mul_of_one_le_of_le le_mul_of_one_le_of_le
+#align le_add_of_nonneg_of_le le_add_of_nonneg_of_le
 
 /- warning: lt_mul_of_one_lt_of_le -> lt_mul_of_one_lt_of_le is a dubious translation:
 lean 3 declaration is
@@ -1169,6 +1254,7 @@ theorem lt_mul_of_one_lt_of_le [CovariantClass α α (swap (· * ·)) (· < ·)]
     _ < a * c := mul_lt_mul_right' ha c
     
 #align lt_mul_of_one_lt_of_le lt_mul_of_one_lt_of_le
+#align lt_add_of_pos_of_le lt_add_of_pos_of_le
 
 /- warning: lt_mul_of_one_le_of_lt -> lt_mul_of_one_le_of_lt is a dubious translation:
 lean 3 declaration is
@@ -1185,6 +1271,7 @@ theorem lt_mul_of_one_le_of_lt [CovariantClass α α (swap (· * ·)) (· ≤ ·
     _ ≤ a * c := mul_le_mul_right' ha c
     
 #align lt_mul_of_one_le_of_lt lt_mul_of_one_le_of_lt
+#align lt_add_of_nonneg_of_lt lt_add_of_nonneg_of_lt
 
 /- warning: lt_mul_of_one_lt_of_lt -> lt_mul_of_one_lt_of_lt is a dubious translation:
 lean 3 declaration is
@@ -1201,6 +1288,7 @@ theorem lt_mul_of_one_lt_of_lt [CovariantClass α α (swap (· * ·)) (· < ·)]
     _ < a * c := mul_lt_mul_right' ha c
     
 #align lt_mul_of_one_lt_of_lt lt_mul_of_one_lt_of_lt
+#align lt_add_of_pos_of_lt lt_add_of_pos_of_lt
 
 /- warning: lt_mul_of_one_lt_of_lt' -> lt_mul_of_one_lt_of_lt' is a dubious translation:
 lean 3 declaration is
@@ -1213,6 +1301,7 @@ theorem lt_mul_of_one_lt_of_lt' [CovariantClass α α (swap (· * ·)) (· ≤ �
     (hbc : b < c) : b < a * c :=
   lt_mul_of_one_le_of_lt ha.le hbc
 #align lt_mul_of_one_lt_of_lt' lt_mul_of_one_lt_of_lt'
+#align lt_add_of_pos_of_lt' lt_add_of_pos_of_lt'
 
 /- warning: right.one_le_mul -> Right.one_le_mul is a dubious translation:
 lean 3 declaration is
@@ -1228,6 +1317,7 @@ theorem Right.one_le_mul [CovariantClass α α (swap (· * ·)) (· ≤ ·)] {a 
     (hb : 1 ≤ b) : 1 ≤ a * b :=
   le_mul_of_one_le_of_le ha hb
 #align right.one_le_mul Right.one_le_mul
+#align right.add_nonneg Right.add_nonneg
 
 /- warning: right.one_lt_mul_of_lt_of_le -> Right.one_lt_mul_of_lt_of_le is a dubious translation:
 lean 3 declaration is
@@ -1243,6 +1333,7 @@ theorem Right.one_lt_mul_of_lt_of_le [CovariantClass α α (swap (· * ·)) (· 
     (ha : 1 < a) (hb : 1 ≤ b) : 1 < a * b :=
   lt_mul_of_one_lt_of_le ha hb
 #align right.one_lt_mul_of_lt_of_le Right.one_lt_mul_of_lt_of_le
+#align right.add_pos_of_pos_of_nonneg Right.add_pos_of_pos_of_nonneg
 
 /- warning: right.one_lt_mul_of_le_of_lt -> Right.one_lt_mul_of_le_of_lt is a dubious translation:
 lean 3 declaration is
@@ -1258,6 +1349,7 @@ theorem Right.one_lt_mul_of_le_of_lt [CovariantClass α α (swap (· * ·)) (· 
     (ha : 1 ≤ a) (hb : 1 < b) : 1 < a * b :=
   lt_mul_of_one_le_of_lt ha hb
 #align right.one_lt_mul_of_le_of_lt Right.one_lt_mul_of_le_of_lt
+#align right.add_pos_of_nonneg_of_pos Right.add_pos_of_nonneg_of_pos
 
 /- warning: right.one_lt_mul -> Right.one_lt_mul is a dubious translation:
 lean 3 declaration is
@@ -1273,6 +1365,7 @@ theorem Right.one_lt_mul [CovariantClass α α (swap (· * ·)) (· < ·)] {a b 
     (hb : 1 < b) : 1 < a * b :=
   lt_mul_of_one_lt_of_lt ha hb
 #align right.one_lt_mul Right.one_lt_mul
+#align right.add_pos Right.add_pos
 
 /- warning: right.one_lt_mul' -> Right.one_lt_mul' is a dubious translation:
 lean 3 declaration is
@@ -1288,6 +1381,7 @@ theorem Right.one_lt_mul' [CovariantClass α α (swap (· * ·)) (· ≤ ·)] {a
     (hb : 1 < b) : 1 < a * b :=
   lt_mul_of_one_lt_of_lt' ha hb
 #align right.one_lt_mul' Right.one_lt_mul'
+#align right.add_pos' Right.add_pos'
 
 /- warning: mul_le_one' -> mul_le_one' is a dubious translation:
 lean 3 declaration is
@@ -1414,6 +1508,7 @@ theorem lt_of_mul_lt_of_one_le_left [CovariantClass α α (· * ·) (· ≤ ·)]
     (hle : 1 ≤ b) : a < c :=
   (le_mul_of_one_le_right' hle).trans_lt h
 #align lt_of_mul_lt_of_one_le_left lt_of_mul_lt_of_one_le_left
+#align lt_of_add_lt_of_nonneg_left lt_of_add_lt_of_nonneg_left
 
 /- warning: le_of_mul_le_of_one_le_left -> le_of_mul_le_of_one_le_left is a dubious translation:
 lean 3 declaration is
@@ -1426,6 +1521,7 @@ theorem le_of_mul_le_of_one_le_left [CovariantClass α α (· * ·) (· ≤ ·)]
     (hle : 1 ≤ b) : a ≤ c :=
   (le_mul_of_one_le_right' hle).trans h
 #align le_of_mul_le_of_one_le_left le_of_mul_le_of_one_le_left
+#align le_of_add_le_of_nonneg_left le_of_add_le_of_nonneg_left
 
 /- warning: lt_of_lt_mul_of_le_one_left -> lt_of_lt_mul_of_le_one_left is a dubious translation:
 lean 3 declaration is
@@ -1438,6 +1534,7 @@ theorem lt_of_lt_mul_of_le_one_left [CovariantClass α α (· * ·) (· ≤ ·)]
     (hle : c ≤ 1) : a < b :=
   h.trans_le (mul_le_of_le_one_right' hle)
 #align lt_of_lt_mul_of_le_one_left lt_of_lt_mul_of_le_one_left
+#align lt_of_lt_add_of_nonpos_left lt_of_lt_add_of_nonpos_left
 
 /- warning: le_of_le_mul_of_le_one_left -> le_of_le_mul_of_le_one_left is a dubious translation:
 lean 3 declaration is
@@ -1450,6 +1547,7 @@ theorem le_of_le_mul_of_le_one_left [CovariantClass α α (· * ·) (· ≤ ·)]
     (hle : c ≤ 1) : a ≤ b :=
   h.trans (mul_le_of_le_one_right' hle)
 #align le_of_le_mul_of_le_one_left le_of_le_mul_of_le_one_left
+#align le_of_le_add_of_nonpos_left le_of_le_add_of_nonpos_left
 
 /- warning: lt_of_mul_lt_of_one_le_right -> lt_of_mul_lt_of_one_le_right is a dubious translation:
 lean 3 declaration is
@@ -1462,6 +1560,7 @@ theorem lt_of_mul_lt_of_one_le_right [CovariantClass α α (swap (· * ·)) (· 
     (h : a * b < c) (hle : 1 ≤ a) : b < c :=
   (le_mul_of_one_le_left' hle).trans_lt h
 #align lt_of_mul_lt_of_one_le_right lt_of_mul_lt_of_one_le_right
+#align lt_of_add_lt_of_nonneg_right lt_of_add_lt_of_nonneg_right
 
 /- warning: le_of_mul_le_of_one_le_right -> le_of_mul_le_of_one_le_right is a dubious translation:
 lean 3 declaration is
@@ -1474,6 +1573,7 @@ theorem le_of_mul_le_of_one_le_right [CovariantClass α α (swap (· * ·)) (· 
     (h : a * b ≤ c) (hle : 1 ≤ a) : b ≤ c :=
   (le_mul_of_one_le_left' hle).trans h
 #align le_of_mul_le_of_one_le_right le_of_mul_le_of_one_le_right
+#align le_of_add_le_of_nonneg_right le_of_add_le_of_nonneg_right
 
 /- warning: lt_of_lt_mul_of_le_one_right -> lt_of_lt_mul_of_le_one_right is a dubious translation:
 lean 3 declaration is
@@ -1486,6 +1586,7 @@ theorem lt_of_lt_mul_of_le_one_right [CovariantClass α α (swap (· * ·)) (· 
     (h : a < b * c) (hle : b ≤ 1) : a < c :=
   h.trans_le (mul_le_of_le_one_left' hle)
 #align lt_of_lt_mul_of_le_one_right lt_of_lt_mul_of_le_one_right
+#align lt_of_lt_add_of_nonpos_right lt_of_lt_add_of_nonpos_right
 
 /- warning: le_of_le_mul_of_le_one_right -> le_of_le_mul_of_le_one_right is a dubious translation:
 lean 3 declaration is
@@ -1498,6 +1599,7 @@ theorem le_of_le_mul_of_le_one_right [CovariantClass α α (swap (· * ·)) (· 
     (h : a ≤ b * c) (hle : b ≤ 1) : a ≤ c :=
   h.trans (mul_le_of_le_one_left' hle)
 #align le_of_le_mul_of_le_one_right le_of_le_mul_of_le_one_right
+#align le_of_le_add_of_nonpos_right le_of_le_add_of_nonpos_right
 
 end Preorder
 
@@ -1524,6 +1626,7 @@ theorem mul_eq_one_iff' [CovariantClass α α (· * ·) (· ≤ ·)]
       And.intro ‹a = 1› ‹b = 1›)
     fun ⟨ha', hb'⟩ => by rw [ha', hb', mul_one]
 #align mul_eq_one_iff' mul_eq_one_iff'
+#align add_eq_zero_iff' add_eq_zero_iff'
 
 /- warning: mul_le_mul_iff_of_ge -> mul_le_mul_iff_of_ge is a dubious translation:
 lean 3 declaration is
@@ -1546,6 +1649,7 @@ theorem mul_le_mul_iff_of_ge [CovariantClass α α (· * ·) (· ≤ ·)]
   · exact mul_lt_mul_of_lt_of_le ha hb
   · exact mul_lt_mul_of_le_of_lt ha hb
 #align mul_le_mul_iff_of_ge mul_le_mul_iff_of_ge
+#align add_le_add_iff_of_ge add_le_add_iff_of_ge
 
 section Left
 
@@ -1561,6 +1665,7 @@ Case conversion may be inaccurate. Consider using '#align eq_one_of_one_le_mul_l
 theorem eq_one_of_one_le_mul_left (ha : a ≤ 1) (hb : b ≤ 1) (hab : 1 ≤ a * b) : a = 1 :=
   ha.eq_of_not_lt fun h => hab.not_lt <| mul_lt_one_of_lt_of_le h hb
 #align eq_one_of_one_le_mul_left eq_one_of_one_le_mul_left
+#align eq_zero_of_add_nonneg_left eq_zero_of_add_nonneg_left
 
 /- warning: eq_one_of_mul_le_one_left -> eq_one_of_mul_le_one_left is a dubious translation:
 lean 3 declaration is
@@ -1572,6 +1677,7 @@ Case conversion may be inaccurate. Consider using '#align eq_one_of_mul_le_one_l
 theorem eq_one_of_mul_le_one_left (ha : 1 ≤ a) (hb : 1 ≤ b) (hab : a * b ≤ 1) : a = 1 :=
   ha.eq_of_not_gt fun h => hab.not_lt <| one_lt_mul_of_lt_of_le' h hb
 #align eq_one_of_mul_le_one_left eq_one_of_mul_le_one_left
+#align eq_zero_of_add_nonpos_left eq_zero_of_add_nonpos_left
 
 end Left
 
@@ -1589,6 +1695,7 @@ Case conversion may be inaccurate. Consider using '#align eq_one_of_one_le_mul_r
 theorem eq_one_of_one_le_mul_right (ha : a ≤ 1) (hb : b ≤ 1) (hab : 1 ≤ a * b) : b = 1 :=
   hb.eq_of_not_lt fun h => hab.not_lt <| Right.mul_lt_one_of_le_of_lt ha h
 #align eq_one_of_one_le_mul_right eq_one_of_one_le_mul_right
+#align eq_zero_of_add_nonneg_right eq_zero_of_add_nonneg_right
 
 /- warning: eq_one_of_mul_le_one_right -> eq_one_of_mul_le_one_right is a dubious translation:
 lean 3 declaration is
@@ -1600,6 +1707,7 @@ Case conversion may be inaccurate. Consider using '#align eq_one_of_mul_le_one_r
 theorem eq_one_of_mul_le_one_right (ha : 1 ≤ a) (hb : 1 ≤ b) (hab : a * b ≤ 1) : b = 1 :=
   hb.eq_of_not_gt fun h => hab.not_lt <| Right.one_lt_mul_of_le_of_lt ha h
 #align eq_one_of_mul_le_one_right eq_one_of_mul_le_one_right
+#align eq_zero_of_add_nonpos_right eq_zero_of_add_nonpos_right
 
 end Right
 
@@ -1655,6 +1763,7 @@ def Contravariant.toLeftCancelSemigroup [ContravariantClass α α (· * ·) (· 
     LeftCancelSemigroup α :=
   { ‹Semigroup α› with mul_left_cancel := fun a b c => mul_left_cancel'' }
 #align contravariant.to_left_cancel_semigroup Contravariant.toLeftCancelSemigroup
+#align contravariant.to_left_cancel_add_semigroup Contravariant.toAddLeftCancelSemigroup
 
 /- warning: contravariant.to_right_cancel_semigroup -> Contravariant.toRightCancelSemigroup is a dubious translation:
 lean 3 declaration is
@@ -1672,6 +1781,7 @@ def Contravariant.toRightCancelSemigroup [ContravariantClass α α (swap (· * �
     RightCancelSemigroup α :=
   { ‹Semigroup α› with mul_right_cancel := fun a b c => mul_right_cancel'' }
 #align contravariant.to_right_cancel_semigroup Contravariant.toRightCancelSemigroup
+#align contravariant.to_right_cancel_add_semigroup Contravariant.toAddRightCancelSemigroup
 
 /- warning: left.mul_eq_mul_iff_eq_and_eq -> Left.mul_eq_mul_iff_eq_and_eq is a dubious translation:
 lean 3 declaration is
@@ -1692,6 +1802,7 @@ theorem Left.mul_eq_mul_iff_eq_and_eq [CovariantClass α α (· * ·) (· < ·)]
   · exact ⟨mul_right_cancel'' h, rfl⟩
   exact ((Left.mul_lt_mul hac hbd).Ne h).elim
 #align left.mul_eq_mul_iff_eq_and_eq Left.mul_eq_mul_iff_eq_and_eq
+#align left.add_eq_add_iff_eq_and_eq Left.add_eq_add_iff_eq_and_eq
 
 /- warning: right.mul_eq_mul_iff_eq_and_eq -> Right.mul_eq_mul_iff_eq_and_eq is a dubious translation:
 lean 3 declaration is
@@ -1712,6 +1823,7 @@ theorem Right.mul_eq_mul_iff_eq_and_eq [CovariantClass α α (· * ·) (· ≤ �
   · exact ⟨mul_right_cancel'' h, rfl⟩
   exact ((Right.mul_lt_mul hac hbd).Ne h).elim
 #align right.mul_eq_mul_iff_eq_and_eq Right.mul_eq_mul_iff_eq_and_eq
+#align right.add_eq_add_iff_eq_and_eq Right.add_eq_add_iff_eq_and_eq
 
 /- warning: mul_eq_mul_iff_eq_and_eq -> mul_eq_mul_iff_eq_and_eq is a dubious translation:
 lean 3 declaration is
@@ -1742,6 +1854,7 @@ Case conversion may be inaccurate. Consider using '#align monotone.const_mul' Mo
 theorem Monotone.const_mul' [CovariantClass α α (· * ·) (· ≤ ·)] (hf : Monotone f) (a : α) :
     Monotone fun x => a * f x := fun x y h => mul_le_mul_left' (hf h) a
 #align monotone.const_mul' Monotone.const_mul'
+#align monotone.const_add Monotone.const_add
 
 /- warning: monotone_on.const_mul' -> MonotoneOn.const_mul' is a dubious translation:
 lean 3 declaration is
@@ -1753,6 +1866,7 @@ Case conversion may be inaccurate. Consider using '#align monotone_on.const_mul'
 theorem MonotoneOn.const_mul' [CovariantClass α α (· * ·) (· ≤ ·)] (hf : MonotoneOn f s) (a : α) :
     MonotoneOn (fun x => a * f x) s := fun x hx y hy h => mul_le_mul_left' (hf hx hy h) a
 #align monotone_on.const_mul' MonotoneOn.const_mul'
+#align monotone_on.const_add MonotoneOn.const_add
 
 /- warning: antitone.const_mul' -> Antitone.const_mul' is a dubious translation:
 lean 3 declaration is
@@ -1764,6 +1878,7 @@ Case conversion may be inaccurate. Consider using '#align antitone.const_mul' An
 theorem Antitone.const_mul' [CovariantClass α α (· * ·) (· ≤ ·)] (hf : Antitone f) (a : α) :
     Antitone fun x => a * f x := fun x y h => mul_le_mul_left' (hf h) a
 #align antitone.const_mul' Antitone.const_mul'
+#align antitone.const_add Antitone.const_add
 
 /- warning: antitone_on.const_mul' -> AntitoneOn.const_mul' is a dubious translation:
 lean 3 declaration is
@@ -1775,6 +1890,7 @@ Case conversion may be inaccurate. Consider using '#align antitone_on.const_mul'
 theorem AntitoneOn.const_mul' [CovariantClass α α (· * ·) (· ≤ ·)] (hf : AntitoneOn f s) (a : α) :
     AntitoneOn (fun x => a * f x) s := fun x hx y hy h => mul_le_mul_left' (hf hx hy h) a
 #align antitone_on.const_mul' AntitoneOn.const_mul'
+#align antitone_on.const_add AntitoneOn.const_add
 
 /- warning: monotone.mul_const' -> Monotone.mul_const' is a dubious translation:
 lean 3 declaration is
@@ -1786,6 +1902,7 @@ Case conversion may be inaccurate. Consider using '#align monotone.mul_const' Mo
 theorem Monotone.mul_const' [CovariantClass α α (swap (· * ·)) (· ≤ ·)] (hf : Monotone f) (a : α) :
     Monotone fun x => f x * a := fun x y h => mul_le_mul_right' (hf h) a
 #align monotone.mul_const' Monotone.mul_const'
+#align monotone.add_const Monotone.add_const
 
 /- warning: monotone_on.mul_const' -> MonotoneOn.mul_const' is a dubious translation:
 lean 3 declaration is
@@ -1797,6 +1914,7 @@ Case conversion may be inaccurate. Consider using '#align monotone_on.mul_const'
 theorem MonotoneOn.mul_const' [CovariantClass α α (swap (· * ·)) (· ≤ ·)] (hf : MonotoneOn f s)
     (a : α) : MonotoneOn (fun x => f x * a) s := fun x hx y hy h => mul_le_mul_right' (hf hx hy h) a
 #align monotone_on.mul_const' MonotoneOn.mul_const'
+#align monotone_on.add_const MonotoneOn.add_const
 
 /- warning: antitone.mul_const' -> Antitone.mul_const' is a dubious translation:
 lean 3 declaration is
@@ -1808,6 +1926,7 @@ Case conversion may be inaccurate. Consider using '#align antitone.mul_const' An
 theorem Antitone.mul_const' [CovariantClass α α (swap (· * ·)) (· ≤ ·)] (hf : Antitone f) (a : α) :
     Antitone fun x => f x * a := fun x y h => mul_le_mul_right' (hf h) a
 #align antitone.mul_const' Antitone.mul_const'
+#align antitone.add_const Antitone.add_const
 
 /- warning: antitone_on.mul_const' -> AntitoneOn.mul_const' is a dubious translation:
 lean 3 declaration is
@@ -1819,6 +1938,7 @@ Case conversion may be inaccurate. Consider using '#align antitone_on.mul_const'
 theorem AntitoneOn.mul_const' [CovariantClass α α (swap (· * ·)) (· ≤ ·)] (hf : AntitoneOn f s)
     (a : α) : AntitoneOn (fun x => f x * a) s := fun x hx y hy h => mul_le_mul_right' (hf hx hy h) a
 #align antitone_on.mul_const' AntitoneOn.mul_const'
+#align antitone_on.add_const AntitoneOn.add_const
 
 /- warning: monotone.mul' -> Monotone.mul' is a dubious translation:
 lean 3 declaration is
@@ -1832,6 +1952,7 @@ theorem Monotone.mul' [CovariantClass α α (· * ·) (· ≤ ·)]
     [CovariantClass α α (swap (· * ·)) (· ≤ ·)] (hf : Monotone f) (hg : Monotone g) :
     Monotone fun x => f x * g x := fun x y h => mul_le_mul' (hf h) (hg h)
 #align monotone.mul' Monotone.mul'
+#align monotone.add Monotone.add
 
 /- warning: monotone_on.mul' -> MonotoneOn.mul' is a dubious translation:
 lean 3 declaration is
@@ -1845,6 +1966,7 @@ theorem MonotoneOn.mul' [CovariantClass α α (· * ·) (· ≤ ·)]
     [CovariantClass α α (swap (· * ·)) (· ≤ ·)] (hf : MonotoneOn f s) (hg : MonotoneOn g s) :
     MonotoneOn (fun x => f x * g x) s := fun x hx y hy h => mul_le_mul' (hf hx hy h) (hg hx hy h)
 #align monotone_on.mul' MonotoneOn.mul'
+#align monotone_on.add MonotoneOn.add
 
 /- warning: antitone.mul' -> Antitone.mul' is a dubious translation:
 lean 3 declaration is
@@ -1858,6 +1980,7 @@ theorem Antitone.mul' [CovariantClass α α (· * ·) (· ≤ ·)]
     [CovariantClass α α (swap (· * ·)) (· ≤ ·)] (hf : Antitone f) (hg : Antitone g) :
     Antitone fun x => f x * g x := fun x y h => mul_le_mul' (hf h) (hg h)
 #align antitone.mul' Antitone.mul'
+#align antitone.add Antitone.add
 
 /- warning: antitone_on.mul' -> AntitoneOn.mul' is a dubious translation:
 lean 3 declaration is
@@ -1871,6 +1994,7 @@ theorem AntitoneOn.mul' [CovariantClass α α (· * ·) (· ≤ ·)]
     [CovariantClass α α (swap (· * ·)) (· ≤ ·)] (hf : AntitoneOn f s) (hg : AntitoneOn g s) :
     AntitoneOn (fun x => f x * g x) s := fun x hx y hy h => mul_le_mul' (hf hx hy h) (hg hx hy h)
 #align antitone_on.mul' AntitoneOn.mul'
+#align antitone_on.add AntitoneOn.add
 
 section Left
 
@@ -1881,6 +2005,7 @@ variable [CovariantClass α α (· * ·) (· < ·)]
 theorem StrictMono.const_mul' (hf : StrictMono f) (c : α) : StrictMono fun x => c * f x :=
   fun a b ab => mul_lt_mul_left' (hf ab) c
 #align strict_mono.const_mul' StrictMono.const_mul'
+#align strict_mono.const_add StrictMono.const_add
 -/
 
 #print StrictMonoOn.const_mul' /-
@@ -1888,6 +2013,7 @@ theorem StrictMono.const_mul' (hf : StrictMono f) (c : α) : StrictMono fun x =>
 theorem StrictMonoOn.const_mul' (hf : StrictMonoOn f s) (c : α) :
     StrictMonoOn (fun x => c * f x) s := fun a ha b hb ab => mul_lt_mul_left' (hf ha hb ab) c
 #align strict_mono_on.const_mul' StrictMonoOn.const_mul'
+#align strict_mono_on.const_add StrictMonoOn.const_add
 -/
 
 #print StrictAnti.const_mul' /-
@@ -1895,6 +2021,7 @@ theorem StrictMonoOn.const_mul' (hf : StrictMonoOn f s) (c : α) :
 theorem StrictAnti.const_mul' (hf : StrictAnti f) (c : α) : StrictAnti fun x => c * f x :=
   fun a b ab => mul_lt_mul_left' (hf ab) c
 #align strict_anti.const_mul' StrictAnti.const_mul'
+#align strict_anti.const_add StrictAnti.const_add
 -/
 
 #print StrictAntiOn.const_mul' /-
@@ -1902,6 +2029,7 @@ theorem StrictAnti.const_mul' (hf : StrictAnti f) (c : α) : StrictAnti fun x =>
 theorem StrictAntiOn.const_mul' (hf : StrictAntiOn f s) (c : α) :
     StrictAntiOn (fun x => c * f x) s := fun a ha b hb ab => mul_lt_mul_left' (hf ha hb ab) c
 #align strict_anti_on.const_mul' StrictAntiOn.const_mul'
+#align strict_anti_on.const_add StrictAntiOn.const_add
 -/
 
 end Left
@@ -1915,6 +2043,7 @@ variable [CovariantClass α α (swap (· * ·)) (· < ·)]
 theorem StrictMono.mul_const' (hf : StrictMono f) (c : α) : StrictMono fun x => f x * c :=
   fun a b ab => mul_lt_mul_right' (hf ab) c
 #align strict_mono.mul_const' StrictMono.mul_const'
+#align strict_mono.add_const StrictMono.add_const
 -/
 
 #print StrictMonoOn.mul_const' /-
@@ -1922,6 +2051,7 @@ theorem StrictMono.mul_const' (hf : StrictMono f) (c : α) : StrictMono fun x =>
 theorem StrictMonoOn.mul_const' (hf : StrictMonoOn f s) (c : α) :
     StrictMonoOn (fun x => f x * c) s := fun a ha b hb ab => mul_lt_mul_right' (hf ha hb ab) c
 #align strict_mono_on.mul_const' StrictMonoOn.mul_const'
+#align strict_mono_on.add_const StrictMonoOn.add_const
 -/
 
 #print StrictAnti.mul_const' /-
@@ -1929,6 +2059,7 @@ theorem StrictMonoOn.mul_const' (hf : StrictMonoOn f s) (c : α) :
 theorem StrictAnti.mul_const' (hf : StrictAnti f) (c : α) : StrictAnti fun x => f x * c :=
   fun a b ab => mul_lt_mul_right' (hf ab) c
 #align strict_anti.mul_const' StrictAnti.mul_const'
+#align strict_anti.add_const StrictAnti.add_const
 -/
 
 #print StrictAntiOn.mul_const' /-
@@ -1936,6 +2067,7 @@ theorem StrictAnti.mul_const' (hf : StrictAnti f) (c : α) : StrictAnti fun x =>
 theorem StrictAntiOn.mul_const' (hf : StrictAntiOn f s) (c : α) :
     StrictAntiOn (fun x => f x * c) s := fun a ha b hb ab => mul_lt_mul_right' (hf ha hb ab) c
 #align strict_anti_on.mul_const' StrictAntiOn.mul_const'
+#align strict_anti_on.add_const StrictAntiOn.add_const
 -/
 
 end Right
@@ -1952,6 +2084,7 @@ theorem StrictMono.mul' [CovariantClass α α (· * ·) (· < ·)]
     [CovariantClass α α (swap (· * ·)) (· < ·)] (hf : StrictMono f) (hg : StrictMono g) :
     StrictMono fun x => f x * g x := fun a b ab => mul_lt_mul_of_lt_of_lt (hf ab) (hg ab)
 #align strict_mono.mul' StrictMono.mul'
+#align strict_mono.add StrictMono.add
 
 /- warning: strict_mono_on.mul' -> StrictMonoOn.mul' is a dubious translation:
 lean 3 declaration is
@@ -1966,6 +2099,7 @@ theorem StrictMonoOn.mul' [CovariantClass α α (· * ·) (· < ·)]
     StrictMonoOn (fun x => f x * g x) s := fun a ha b hb ab =>
   mul_lt_mul_of_lt_of_lt (hf ha hb ab) (hg ha hb ab)
 #align strict_mono_on.mul' StrictMonoOn.mul'
+#align strict_mono_on.add StrictMonoOn.add
 
 /- warning: strict_anti.mul' -> StrictAnti.mul' is a dubious translation:
 lean 3 declaration is
@@ -1979,6 +2113,7 @@ theorem StrictAnti.mul' [CovariantClass α α (· * ·) (· < ·)]
     [CovariantClass α α (swap (· * ·)) (· < ·)] (hf : StrictAnti f) (hg : StrictAnti g) :
     StrictAnti fun x => f x * g x := fun a b ab => mul_lt_mul_of_lt_of_lt (hf ab) (hg ab)
 #align strict_anti.mul' StrictAnti.mul'
+#align strict_anti.add StrictAnti.add
 
 /- warning: strict_anti_on.mul' -> StrictAntiOn.mul' is a dubious translation:
 lean 3 declaration is
@@ -1993,6 +2128,7 @@ theorem StrictAntiOn.mul' [CovariantClass α α (· * ·) (· < ·)]
     StrictAntiOn (fun x => f x * g x) s := fun a ha b hb ab =>
   mul_lt_mul_of_lt_of_lt (hf ha hb ab) (hg ha hb ab)
 #align strict_anti_on.mul' StrictAntiOn.mul'
+#align strict_anti_on.add StrictAntiOn.add
 
 /- warning: monotone.mul_strict_mono' -> Monotone.mul_strict_mono' is a dubious translation:
 lean 3 declaration is
@@ -2008,6 +2144,7 @@ theorem Monotone.mul_strict_mono' [CovariantClass α α (· * ·) (· < ·)]
     (hg : StrictMono g) : StrictMono fun x => f x * g x := fun x y h =>
   mul_lt_mul_of_le_of_lt (hf h.le) (hg h)
 #align monotone.mul_strict_mono' Monotone.mul_strict_mono'
+#align monotone.add_strict_mono Monotone.add_strict_mono
 
 /- warning: monotone_on.mul_strict_mono' -> MonotoneOn.mul_strict_mono' is a dubious translation:
 lean 3 declaration is
@@ -2023,6 +2160,7 @@ theorem MonotoneOn.mul_strict_mono' [CovariantClass α α (· * ·) (· < ·)]
     (hg : StrictMonoOn g s) : StrictMonoOn (fun x => f x * g x) s := fun x hx y hy h =>
   mul_lt_mul_of_le_of_lt (hf hx hy h.le) (hg hx hy h)
 #align monotone_on.mul_strict_mono' MonotoneOn.mul_strict_mono'
+#align monotone_on.add_strict_mono MonotoneOn.add_strict_mono
 
 /- warning: antitone.mul_strict_anti' -> Antitone.mul_strict_anti' is a dubious translation:
 lean 3 declaration is
@@ -2038,6 +2176,7 @@ theorem Antitone.mul_strict_anti' [CovariantClass α α (· * ·) (· < ·)]
     (hg : StrictAnti g) : StrictAnti fun x => f x * g x := fun x y h =>
   mul_lt_mul_of_le_of_lt (hf h.le) (hg h)
 #align antitone.mul_strict_anti' Antitone.mul_strict_anti'
+#align antitone.add_strict_anti Antitone.add_strict_anti
 
 /- warning: antitone_on.mul_strict_anti' -> AntitoneOn.mul_strict_anti' is a dubious translation:
 lean 3 declaration is
@@ -2053,6 +2192,7 @@ theorem AntitoneOn.mul_strict_anti' [CovariantClass α α (· * ·) (· < ·)]
     (hg : StrictAntiOn g s) : StrictAntiOn (fun x => f x * g x) s := fun x hx y hy h =>
   mul_lt_mul_of_le_of_lt (hf hx hy h.le) (hg hx hy h)
 #align antitone_on.mul_strict_anti' AntitoneOn.mul_strict_anti'
+#align antitone_on.add_strict_anti AntitoneOn.add_strict_anti
 
 variable [CovariantClass α α (· * ·) (· ≤ ·)] [CovariantClass α α (swap (· * ·)) (· < ·)]
 
@@ -2063,6 +2203,7 @@ variable [CovariantClass α α (· * ·) (· ≤ ·)] [CovariantClass α α (swa
 theorem StrictMono.mul_monotone' (hf : StrictMono f) (hg : Monotone g) :
     StrictMono fun x => f x * g x := fun x y h => mul_lt_mul_of_lt_of_le (hf h) (hg h.le)
 #align strict_mono.mul_monotone' StrictMono.mul_monotone'
+#align strict_mono.add_monotone StrictMono.add_monotone
 -/
 
 #print StrictMonoOn.mul_monotone' /-
@@ -2073,6 +2214,7 @@ theorem StrictMonoOn.mul_monotone' (hf : StrictMonoOn f s) (hg : MonotoneOn g s)
     StrictMonoOn (fun x => f x * g x) s := fun x hx y hy h =>
   mul_lt_mul_of_lt_of_le (hf hx hy h) (hg hx hy h.le)
 #align strict_mono_on.mul_monotone' StrictMonoOn.mul_monotone'
+#align strict_mono_on.add_monotone StrictMonoOn.add_monotone
 -/
 
 #print StrictAnti.mul_antitone' /-
@@ -2082,6 +2224,7 @@ theorem StrictMonoOn.mul_monotone' (hf : StrictMonoOn f s) (hg : MonotoneOn g s)
 theorem StrictAnti.mul_antitone' (hf : StrictAnti f) (hg : Antitone g) :
     StrictAnti fun x => f x * g x := fun x y h => mul_lt_mul_of_lt_of_le (hf h) (hg h.le)
 #align strict_anti.mul_antitone' StrictAnti.mul_antitone'
+#align strict_anti.add_antitone StrictAnti.add_antitone
 -/
 
 #print StrictAntiOn.mul_antitone' /-
@@ -2092,6 +2235,7 @@ theorem StrictAntiOn.mul_antitone' (hf : StrictAntiOn f s) (hg : AntitoneOn g s)
     StrictAntiOn (fun x => f x * g x) s := fun x hx y hy h =>
   mul_lt_mul_of_lt_of_le (hf hx hy h) (hg hx hy h.le)
 #align strict_anti_on.mul_antitone' StrictAntiOn.mul_antitone'
+#align strict_anti_on.add_antitone StrictAntiOn.add_antitone
 -/
 
 #print cmp_mul_left' /-
@@ -2100,6 +2244,7 @@ theorem cmp_mul_left' {α : Type _} [Mul α] [LinearOrder α] [CovariantClass α
     (a b c : α) : cmp (a * b) (a * c) = cmp b c :=
   (strictMono_id.const_mul' a).cmp_map_eq b c
 #align cmp_mul_left' cmp_mul_left'
+#align cmp_add_left cmp_add_left
 -/
 
 #print cmp_mul_right' /-
@@ -2108,6 +2253,7 @@ theorem cmp_mul_right' {α : Type _} [Mul α] [LinearOrder α]
     [CovariantClass α α (swap (· * ·)) (· < ·)] (a b c : α) : cmp (a * c) (b * c) = cmp a b :=
   (strictMono_id.mul_const' c).cmp_map_eq a b
 #align cmp_mul_right' cmp_mul_right'
+#align cmp_add_right cmp_add_right
 -/
 
 end Mono
@@ -2123,6 +2269,7 @@ like `ennreal`, where we can replace the assumption `add_le_cancellable x` by `x
 def MulLECancellable [Mul α] [LE α] (a : α) : Prop :=
   ∀ ⦃b c⦄, a * b ≤ a * c → b ≤ c
 #align mul_le_cancellable MulLECancellable
+#align add_le_cancellable AddLECancellable
 -/
 
 #print Contravariant.MulLECancellable /-
@@ -2130,6 +2277,7 @@ def MulLECancellable [Mul α] [LE α] (a : α) : Prop :=
 theorem Contravariant.MulLECancellable [Mul α] [LE α] [ContravariantClass α α (· * ·) (· ≤ ·)]
     {a : α} : MulLECancellable a := fun b c => le_of_mul_le_mul_left'
 #align contravariant.mul_le_cancellable Contravariant.MulLECancellable
+#align contravariant.add_le_cancellable Contravariant.AddLECancellable
 -/
 
 /- warning: mul_le_cancellable_one -> mulLECancellable_one is a dubious translation:
@@ -2142,6 +2290,7 @@ Case conversion may be inaccurate. Consider using '#align mul_le_cancellable_one
 theorem mulLECancellable_one [Monoid α] [LE α] : MulLECancellable (1 : α) := fun a b => by
   simpa only [one_mul] using id
 #align mul_le_cancellable_one mulLECancellable_one
+#align add_le_cancellable_zero addLECancellable_zero
 
 namespace MulLECancellable
 
@@ -2150,6 +2299,7 @@ namespace MulLECancellable
 protected theorem Injective [Mul α] [PartialOrder α] {a : α} (ha : MulLECancellable a) :
     Injective ((· * ·) a) := fun b c h => le_antisymm (ha h.le) (ha h.ge)
 #align mul_le_cancellable.injective MulLECancellable.Injective
+#align add_le_cancellable.injective AddLECancellable.Injective
 -/
 
 #print MulLECancellable.inj /-
@@ -2158,6 +2308,7 @@ protected theorem inj [Mul α] [PartialOrder α] {a b c : α} (ha : MulLECancell
     a * b = a * c ↔ b = c :=
   ha.Injective.eq_iff
 #align mul_le_cancellable.inj MulLECancellable.inj
+#align add_le_cancellable.inj AddLECancellable.inj
 -/
 
 /- warning: mul_le_cancellable.injective_left -> MulLECancellable.injective_left is a dubious translation:
@@ -2171,6 +2322,7 @@ protected theorem injective_left [CommSemigroup α] [PartialOrder α] {a : α}
     (ha : MulLECancellable a) : Injective (· * a) := fun b c h =>
   ha.Injective <| by rwa [mul_comm a, mul_comm a]
 #align mul_le_cancellable.injective_left MulLECancellable.injective_left
+#align add_le_cancellable.injective_left AddLECancellable.injective_left
 
 /- warning: mul_le_cancellable.inj_left -> MulLECancellable.inj_left is a dubious translation:
 lean 3 declaration is
@@ -2183,6 +2335,7 @@ protected theorem inj_left [CommSemigroup α] [PartialOrder α] {a b c : α}
     (hc : MulLECancellable c) : a * c = b * c ↔ a = b :=
   hc.injective_left.eq_iff
 #align mul_le_cancellable.inj_left MulLECancellable.inj_left
+#align add_le_cancellable.inj_left AddLECancellable.inj_left
 
 variable [LE α]
 
@@ -2192,6 +2345,7 @@ protected theorem mul_le_mul_iff_left [Mul α] [CovariantClass α α (· * ·) (
     (ha : MulLECancellable a) : a * b ≤ a * c ↔ b ≤ c :=
   ⟨fun h => ha h, fun h => mul_le_mul_left' h a⟩
 #align mul_le_cancellable.mul_le_mul_iff_left MulLECancellable.mul_le_mul_iff_left
+#align add_le_cancellable.add_le_add_iff_left AddLECancellable.add_le_add_iff_left
 -/
 
 /- warning: mul_le_cancellable.mul_le_mul_iff_right -> MulLECancellable.mul_le_mul_iff_right is a dubious translation:
@@ -2205,6 +2359,7 @@ protected theorem mul_le_mul_iff_right [CommSemigroup α] [CovariantClass α α 
     {a b c : α} (ha : MulLECancellable a) : b * a ≤ c * a ↔ b ≤ c := by
   rw [mul_comm b, mul_comm c, ha.mul_le_mul_iff_left]
 #align mul_le_cancellable.mul_le_mul_iff_right MulLECancellable.mul_le_mul_iff_right
+#align add_le_cancellable.add_le_add_iff_right AddLECancellable.add_le_add_iff_right
 
 /- warning: mul_le_cancellable.le_mul_iff_one_le_right -> MulLECancellable.le_mul_iff_one_le_right is a dubious translation:
 lean 3 declaration is
@@ -2217,6 +2372,7 @@ protected theorem le_mul_iff_one_le_right [MulOneClass α] [CovariantClass α α
     {a b : α} (ha : MulLECancellable a) : a ≤ a * b ↔ 1 ≤ b :=
   Iff.trans (by rw [mul_one]) ha.mul_le_mul_iff_left
 #align mul_le_cancellable.le_mul_iff_one_le_right MulLECancellable.le_mul_iff_one_le_right
+#align add_le_cancellable.le_add_iff_nonneg_right AddLECancellable.le_add_iff_nonneg_right
 
 /- warning: mul_le_cancellable.mul_le_iff_le_one_right -> MulLECancellable.mul_le_iff_le_one_right is a dubious translation:
 lean 3 declaration is
@@ -2229,6 +2385,7 @@ protected theorem mul_le_iff_le_one_right [MulOneClass α] [CovariantClass α α
     {a b : α} (ha : MulLECancellable a) : a * b ≤ a ↔ b ≤ 1 :=
   Iff.trans (by rw [mul_one]) ha.mul_le_mul_iff_left
 #align mul_le_cancellable.mul_le_iff_le_one_right MulLECancellable.mul_le_iff_le_one_right
+#align add_le_cancellable.add_le_iff_nonpos_right AddLECancellable.add_le_iff_nonpos_right
 
 /- warning: mul_le_cancellable.le_mul_iff_one_le_left -> MulLECancellable.le_mul_iff_one_le_left is a dubious translation:
 lean 3 declaration is
@@ -2241,6 +2398,7 @@ protected theorem le_mul_iff_one_le_left [CommMonoid α] [CovariantClass α α (
     {a b : α} (ha : MulLECancellable a) : a ≤ b * a ↔ 1 ≤ b := by
   rw [mul_comm, ha.le_mul_iff_one_le_right]
 #align mul_le_cancellable.le_mul_iff_one_le_left MulLECancellable.le_mul_iff_one_le_left
+#align add_le_cancellable.le_add_iff_nonneg_left AddLECancellable.le_add_iff_nonneg_left
 
 /- warning: mul_le_cancellable.mul_le_iff_le_one_left -> MulLECancellable.mul_le_iff_le_one_left is a dubious translation:
 lean 3 declaration is
@@ -2253,6 +2411,7 @@ protected theorem mul_le_iff_le_one_left [CommMonoid α] [CovariantClass α α (
     {a b : α} (ha : MulLECancellable a) : b * a ≤ a ↔ b ≤ 1 := by
   rw [mul_comm, ha.mul_le_iff_le_one_right]
 #align mul_le_cancellable.mul_le_iff_le_one_left MulLECancellable.mul_le_iff_le_one_left
+#align add_le_cancellable.add_le_iff_nonpos_left AddLECancellable.add_le_iff_nonpos_left
 
 end MulLECancellable
 

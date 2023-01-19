@@ -1278,6 +1278,7 @@ theorem cont_mdiff_const : ContMdiff I I' n fun x : M => c :=
 theorem cont_mdiff_one [One M'] : ContMdiff I I' n (1 : M → M') := by
   simp only [Pi.one_def, cont_mdiff_const]
 #align cont_mdiff_one cont_mdiff_one
+#align cont_mdiff_zero cont_mdiff_zero
 
 theorem smooth_const : Smooth I I' fun x : M => c :=
   cont_mdiff_const
@@ -1286,6 +1287,7 @@ theorem smooth_const : Smooth I I' fun x : M => c :=
 @[to_additive]
 theorem smooth_one [One M'] : Smooth I I' (1 : M → M') := by simp only [Pi.one_def, smooth_const]
 #align smooth_one smooth_one
+#align smooth_zero smooth_zero
 
 theorem cont_mdiff_on_const : ContMdiffOn I I' n (fun x : M => c) s :=
   cont_mdiff_const.ContMdiffOn
@@ -1295,6 +1297,7 @@ theorem cont_mdiff_on_const : ContMdiffOn I I' n (fun x : M => c) s :=
 theorem cont_mdiff_on_one [One M'] : ContMdiffOn I I' n (1 : M → M') s :=
   cont_mdiff_one.ContMdiffOn
 #align cont_mdiff_on_one cont_mdiff_on_one
+#align cont_mdiff_on_zero cont_mdiff_on_zero
 
 theorem smooth_on_const : SmoothOn I I' (fun x : M => c) s :=
   cont_mdiff_on_const
@@ -1304,6 +1307,7 @@ theorem smooth_on_const : SmoothOn I I' (fun x : M => c) s :=
 theorem smooth_on_one [One M'] : SmoothOn I I' (1 : M → M') s :=
   cont_mdiff_on_one
 #align smooth_on_one smooth_on_one
+#align smooth_on_zero smooth_on_zero
 
 theorem cont_mdiff_at_const : ContMdiffAt I I' n (fun x : M => c) x :=
   cont_mdiff_const.ContMdiffAt
@@ -1313,6 +1317,7 @@ theorem cont_mdiff_at_const : ContMdiffAt I I' n (fun x : M => c) x :=
 theorem cont_mdiff_at_one [One M'] : ContMdiffAt I I' n (1 : M → M') x :=
   cont_mdiff_one.ContMdiffAt
 #align cont_mdiff_at_one cont_mdiff_at_one
+#align cont_mdiff_at_zero cont_mdiff_at_zero
 
 theorem smooth_at_const : SmoothAt I I' (fun x : M => c) x :=
   cont_mdiff_at_const
@@ -1322,6 +1327,7 @@ theorem smooth_at_const : SmoothAt I I' (fun x : M => c) x :=
 theorem smooth_at_one [One M'] : SmoothAt I I' (1 : M → M') x :=
   cont_mdiff_at_one
 #align smooth_at_one smooth_at_one
+#align smooth_at_zero smooth_at_zero
 
 theorem cont_mdiff_within_at_const : ContMdiffWithinAt I I' n (fun x : M => c) s x :=
   cont_mdiff_at_const.ContMdiffWithinAt
@@ -1331,6 +1337,7 @@ theorem cont_mdiff_within_at_const : ContMdiffWithinAt I I' n (fun x : M => c) s
 theorem cont_mdiff_within_at_one [One M'] : ContMdiffWithinAt I I' n (1 : M → M') s x :=
   cont_mdiff_at_const.ContMdiffWithinAt
 #align cont_mdiff_within_at_one cont_mdiff_within_at_one
+#align cont_mdiff_within_at_zero cont_mdiff_within_at_zero
 
 theorem smooth_within_at_const : SmoothWithinAt I I' (fun x : M => c) s x :=
   cont_mdiff_within_at_const
@@ -1340,6 +1347,7 @@ theorem smooth_within_at_const : SmoothWithinAt I I' (fun x : M => c) s x :=
 theorem smooth_within_at_one [One M'] : SmoothWithinAt I I' (1 : M → M') s x :=
   cont_mdiff_within_at_one
 #align smooth_within_at_one smooth_within_at_one
+#align smooth_within_at_zero smooth_within_at_zero
 
 end id
 

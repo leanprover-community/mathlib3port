@@ -235,6 +235,7 @@ def comap (f : F) (S : Submonoid N) : Submonoid M
   one_mem' := show f 1 ∈ S by rw [map_one] <;> exact S.one_mem
   mul_mem' a b ha hb := show f (a * b) ∈ S by rw [map_mul] <;> exact S.mul_mem ha hb
 #align submonoid.comap Submonoid.comap
+#align add_submonoid.comap AddSubmonoid.comap
 -/
 
 /- warning: submonoid.coe_comap -> Submonoid.coe_comap is a dubious translation:
@@ -247,6 +248,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.coe_comap Su
 theorem coe_comap (S : Submonoid N) (f : F) : (S.comap f : Set M) = f ⁻¹' S :=
   rfl
 #align submonoid.coe_comap Submonoid.coe_comap
+#align add_submonoid.coe_comap AddSubmonoid.coe_comap
 
 /- warning: submonoid.mem_comap -> Submonoid.mem_comap is a dubious translation:
 lean 3 declaration is
@@ -258,6 +260,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.mem_comap Su
 theorem mem_comap {S : Submonoid N} {f : F} {x : M} : x ∈ S.comap f ↔ f x ∈ S :=
   Iff.rfl
 #align submonoid.mem_comap Submonoid.mem_comap
+#align add_submonoid.mem_comap AddSubmonoid.mem_comap
 
 omit mc
 
@@ -267,6 +270,7 @@ theorem comap_comap (S : Submonoid P) (g : N →* P) (f : M →* N) :
     (S.comap g).comap f = S.comap (g.comp f) :=
   rfl
 #align submonoid.comap_comap Submonoid.comap_comap
+#align add_submonoid.comap_comap AddSubmonoid.comap_comap
 -/
 
 #print Submonoid.comap_id /-
@@ -274,6 +278,7 @@ theorem comap_comap (S : Submonoid P) (g : N →* P) (f : M →* N) :
 theorem comap_id (S : Submonoid P) : S.comap (MonoidHom.id P) = S :=
   ext (by simp)
 #align submonoid.comap_id Submonoid.comap_id
+#align add_submonoid.comap_id AddSubmonoid.comap_id
 -/
 
 include mc
@@ -289,6 +294,7 @@ def map (f : F) (S : Submonoid M) : Submonoid N
   mul_mem' := by rintro _ _ ⟨x, hx, rfl⟩ ⟨y, hy, rfl⟩;
     exact ⟨x * y, S.mul_mem hx hy, by rw [map_mul] <;> rfl⟩
 #align submonoid.map Submonoid.map
+#align add_submonoid.map AddSubmonoid.map
 -/
 
 /- warning: submonoid.coe_map -> Submonoid.coe_map is a dubious translation:
@@ -301,6 +307,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.coe_map Subm
 theorem coe_map (f : F) (S : Submonoid M) : (S.map f : Set N) = f '' S :=
   rfl
 #align submonoid.coe_map Submonoid.coe_map
+#align add_submonoid.coe_map AddSubmonoid.coe_map
 
 /- warning: submonoid.mem_map -> Submonoid.mem_map is a dubious translation:
 lean 3 declaration is
@@ -312,6 +319,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.mem_map Subm
 theorem mem_map {f : F} {S : Submonoid M} {y : N} : y ∈ S.map f ↔ ∃ x ∈ S, f x = y :=
   mem_image_iff_bex
 #align submonoid.mem_map Submonoid.mem_map
+#align add_submonoid.mem_map AddSubmonoid.mem_map
 
 /- warning: submonoid.mem_map_of_mem -> Submonoid.mem_map_of_mem is a dubious translation:
 lean 3 declaration is
@@ -323,6 +331,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.mem_map_of_m
 theorem mem_map_of_mem (f : F) {S : Submonoid M} {x : M} (hx : x ∈ S) : f x ∈ S.map f :=
   mem_image_of_mem f hx
 #align submonoid.mem_map_of_mem Submonoid.mem_map_of_mem
+#align add_submonoid.mem_map_of_mem AddSubmonoid.mem_map_of_mem
 
 /- warning: submonoid.apply_coe_mem_map -> Submonoid.apply_coe_mem_map is a dubious translation:
 lean 3 declaration is
@@ -334,6 +343,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.apply_coe_me
 theorem apply_coe_mem_map (f : F) (S : Submonoid M) (x : S) : f x ∈ S.map f :=
   mem_map_of_mem f x.Prop
 #align submonoid.apply_coe_mem_map Submonoid.apply_coe_mem_map
+#align add_submonoid.apply_coe_mem_map AddSubmonoid.apply_coe_mem_map
 
 omit mc
 
@@ -347,6 +357,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.map_map Subm
 theorem map_map (g : N →* P) (f : M →* N) : (S.map f).map g = S.map (g.comp f) :=
   SetLike.coe_injective <| image_image _ _ _
 #align submonoid.map_map Submonoid.map_map
+#align add_submonoid.map_map AddSubmonoid.map_map
 
 include mc
 
@@ -361,6 +372,7 @@ theorem mem_map_iff_mem {f : F} (hf : Function.Injective f) {S : Submonoid M} {x
     f x ∈ S.map f ↔ x ∈ S :=
   hf.mem_set_image
 #align submonoid.mem_map_iff_mem Submonoid.mem_map_iff_mem
+#align add_submonoid.mem_map_iff_mem AddSubmonoid.mem_map_iff_mem
 
 /- warning: submonoid.map_le_iff_le_comap -> Submonoid.map_le_iff_le_comap is a dubious translation:
 lean 3 declaration is
@@ -373,6 +385,7 @@ theorem map_le_iff_le_comap {f : F} {S : Submonoid M} {T : Submonoid N} :
     S.map f ≤ T ↔ S ≤ T.comap f :=
   image_subset_iff
 #align submonoid.map_le_iff_le_comap Submonoid.map_le_iff_le_comap
+#align add_submonoid.map_le_iff_le_comap AddSubmonoid.map_le_iff_le_comap
 
 /- warning: submonoid.gc_map_comap -> Submonoid.gc_map_comap is a dubious translation:
 lean 3 declaration is
@@ -383,6 +396,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.gc_map_comap
 @[to_additive]
 theorem gc_map_comap (f : F) : GaloisConnection (map f) (comap f) := fun S T => map_le_iff_le_comap
 #align submonoid.gc_map_comap Submonoid.gc_map_comap
+#align add_submonoid.gc_map_comap AddSubmonoid.gc_map_comap
 
 /- warning: submonoid.map_le_of_le_comap -> Submonoid.map_le_of_le_comap is a dubious translation:
 lean 3 declaration is
@@ -394,6 +408,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.map_le_of_le
 theorem map_le_of_le_comap {T : Submonoid N} {f : F} : S ≤ T.comap f → S.map f ≤ T :=
   (gc_map_comap f).l_le
 #align submonoid.map_le_of_le_comap Submonoid.map_le_of_le_comap
+#align add_submonoid.map_le_of_le_comap AddSubmonoid.map_le_of_le_comap
 
 /- warning: submonoid.le_comap_of_map_le -> Submonoid.le_comap_of_map_le is a dubious translation:
 lean 3 declaration is
@@ -405,6 +420,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.le_comap_of_
 theorem le_comap_of_map_le {T : Submonoid N} {f : F} : S.map f ≤ T → S ≤ T.comap f :=
   (gc_map_comap f).le_u
 #align submonoid.le_comap_of_map_le Submonoid.le_comap_of_map_le
+#align add_submonoid.le_comap_of_map_le AddSubmonoid.le_comap_of_map_le
 
 /- warning: submonoid.le_comap_map -> Submonoid.le_comap_map is a dubious translation:
 lean 3 declaration is
@@ -416,6 +432,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.le_comap_map
 theorem le_comap_map {f : F} : S ≤ (S.map f).comap f :=
   (gc_map_comap f).le_u_l _
 #align submonoid.le_comap_map Submonoid.le_comap_map
+#align add_submonoid.le_comap_map AddSubmonoid.le_comap_map
 
 /- warning: submonoid.map_comap_le -> Submonoid.map_comap_le is a dubious translation:
 lean 3 declaration is
@@ -427,6 +444,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.map_comap_le
 theorem map_comap_le {S : Submonoid N} {f : F} : (S.comap f).map f ≤ S :=
   (gc_map_comap f).l_u_le _
 #align submonoid.map_comap_le Submonoid.map_comap_le
+#align add_submonoid.map_comap_le AddSubmonoid.map_comap_le
 
 /- warning: submonoid.monotone_map -> Submonoid.monotone_map is a dubious translation:
 lean 3 declaration is
@@ -438,6 +456,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.monotone_map
 theorem monotone_map {f : F} : Monotone (map f) :=
   (gc_map_comap f).monotone_l
 #align submonoid.monotone_map Submonoid.monotone_map
+#align add_submonoid.monotone_map AddSubmonoid.monotone_map
 
 /- warning: submonoid.monotone_comap -> Submonoid.monotone_comap is a dubious translation:
 lean 3 declaration is
@@ -449,6 +468,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.monotone_com
 theorem monotone_comap {f : F} : Monotone (comap f) :=
   (gc_map_comap f).monotone_u
 #align submonoid.monotone_comap Submonoid.monotone_comap
+#align add_submonoid.monotone_comap AddSubmonoid.monotone_comap
 
 /- warning: submonoid.map_comap_map -> Submonoid.map_comap_map is a dubious translation:
 lean 3 declaration is
@@ -460,6 +480,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.map_comap_ma
 theorem map_comap_map {f : F} : ((S.map f).comap f).map f = S.map f :=
   (gc_map_comap f).l_u_l_eq_l _
 #align submonoid.map_comap_map Submonoid.map_comap_map
+#align add_submonoid.map_comap_map AddSubmonoid.map_comap_map
 
 /- warning: submonoid.comap_map_comap -> Submonoid.comap_map_comap is a dubious translation:
 lean 3 declaration is
@@ -471,6 +492,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.comap_map_co
 theorem comap_map_comap {S : Submonoid N} {f : F} : ((S.comap f).map f).comap f = S.comap f :=
   (gc_map_comap f).u_l_u_eq_u _
 #align submonoid.comap_map_comap Submonoid.comap_map_comap
+#align add_submonoid.comap_map_comap AddSubmonoid.comap_map_comap
 
 /- warning: submonoid.map_sup -> Submonoid.map_sup is a dubious translation:
 lean 3 declaration is
@@ -482,6 +504,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.map_sup Subm
 theorem map_sup (S T : Submonoid M) (f : F) : (S ⊔ T).map f = S.map f ⊔ T.map f :=
   (gc_map_comap f : GaloisConnection (map f) (comap f)).l_sup
 #align submonoid.map_sup Submonoid.map_sup
+#align add_submonoid.map_sup AddSubmonoid.map_sup
 
 /- warning: submonoid.map_supr -> Submonoid.map_supᵢ is a dubious translation:
 lean 3 declaration is
@@ -493,6 +516,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.map_supr Sub
 theorem map_supᵢ {ι : Sort _} (f : F) (s : ι → Submonoid M) : (supᵢ s).map f = ⨆ i, (s i).map f :=
   (gc_map_comap f : GaloisConnection (map f) (comap f)).l_supr
 #align submonoid.map_supr Submonoid.map_supᵢ
+#align add_submonoid.map_supr AddSubmonoid.map_supᵢ
 
 /- warning: submonoid.comap_inf -> Submonoid.comap_inf is a dubious translation:
 lean 3 declaration is
@@ -504,6 +528,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.comap_inf Su
 theorem comap_inf (S T : Submonoid N) (f : F) : (S ⊓ T).comap f = S.comap f ⊓ T.comap f :=
   (gc_map_comap f : GaloisConnection (map f) (comap f)).u_inf
 #align submonoid.comap_inf Submonoid.comap_inf
+#align add_submonoid.comap_inf AddSubmonoid.comap_inf
 
 /- warning: submonoid.comap_infi -> Submonoid.comap_infᵢ is a dubious translation:
 lean 3 declaration is
@@ -516,6 +541,7 @@ theorem comap_infᵢ {ι : Sort _} (f : F) (s : ι → Submonoid N) :
     (infᵢ s).comap f = ⨅ i, (s i).comap f :=
   (gc_map_comap f : GaloisConnection (map f) (comap f)).u_infi
 #align submonoid.comap_infi Submonoid.comap_infᵢ
+#align add_submonoid.comap_infi AddSubmonoid.comap_infᵢ
 
 /- warning: submonoid.map_bot -> Submonoid.map_bot is a dubious translation:
 lean 3 declaration is
@@ -527,6 +553,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.map_bot Subm
 theorem map_bot (f : F) : (⊥ : Submonoid M).map f = ⊥ :=
   (gc_map_comap f).l_bot
 #align submonoid.map_bot Submonoid.map_bot
+#align add_submonoid.map_bot AddSubmonoid.map_bot
 
 /- warning: submonoid.comap_top -> Submonoid.comap_top is a dubious translation:
 lean 3 declaration is
@@ -538,6 +565,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.comap_top Su
 theorem comap_top (f : F) : (⊤ : Submonoid N).comap f = ⊤ :=
   (gc_map_comap f).u_top
 #align submonoid.comap_top Submonoid.comap_top
+#align add_submonoid.comap_top AddSubmonoid.comap_top
 
 omit mc
 
@@ -546,6 +574,7 @@ omit mc
 theorem map_id (S : Submonoid M) : S.map (MonoidHom.id M) = S :=
   ext fun x => ⟨fun ⟨_, h, rfl⟩ => h, fun h => ⟨_, h, rfl⟩⟩
 #align submonoid.map_id Submonoid.map_id
+#align add_submonoid.map_id AddSubmonoid.map_id
 -/
 
 section GaloisCoinsertion
@@ -565,6 +594,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.gci_map_coma
 def gciMapComap : GaloisCoinsertion (map f) (comap f) :=
   (gc_map_comap f).toGaloisCoinsertion fun S x => by simp [mem_comap, mem_map, hf.eq_iff]
 #align submonoid.gci_map_comap Submonoid.gciMapComap
+#align add_submonoid.gci_map_comap AddSubmonoid.gciMapComap
 
 /- warning: submonoid.comap_map_eq_of_injective -> Submonoid.comap_map_eq_of_injective is a dubious translation:
 lean 3 declaration is
@@ -576,6 +606,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.comap_map_eq
 theorem comap_map_eq_of_injective (S : Submonoid M) : (S.map f).comap f = S :=
   (gciMapComap hf).u_l_eq _
 #align submonoid.comap_map_eq_of_injective Submonoid.comap_map_eq_of_injective
+#align add_submonoid.comap_map_eq_of_injective AddSubmonoid.comap_map_eq_of_injective
 
 /- warning: submonoid.comap_surjective_of_injective -> Submonoid.comap_surjective_of_injective is a dubious translation:
 lean 3 declaration is
@@ -587,6 +618,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.comap_surjec
 theorem comap_surjective_of_injective : Function.Surjective (comap f) :=
   (gciMapComap hf).u_surjective
 #align submonoid.comap_surjective_of_injective Submonoid.comap_surjective_of_injective
+#align add_submonoid.comap_surjective_of_injective AddSubmonoid.comap_surjective_of_injective
 
 /- warning: submonoid.map_injective_of_injective -> Submonoid.map_injective_of_injective is a dubious translation:
 lean 3 declaration is
@@ -598,6 +630,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.map_injectiv
 theorem map_injective_of_injective : Function.Injective (map f) :=
   (gciMapComap hf).l_injective
 #align submonoid.map_injective_of_injective Submonoid.map_injective_of_injective
+#align add_submonoid.map_injective_of_injective AddSubmonoid.map_injective_of_injective
 
 /- warning: submonoid.comap_inf_map_of_injective -> Submonoid.comap_inf_map_of_injective is a dubious translation:
 lean 3 declaration is
@@ -609,6 +642,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.comap_inf_ma
 theorem comap_inf_map_of_injective (S T : Submonoid M) : (S.map f ⊓ T.map f).comap f = S ⊓ T :=
   (gciMapComap hf).u_inf_l _ _
 #align submonoid.comap_inf_map_of_injective Submonoid.comap_inf_map_of_injective
+#align add_submonoid.comap_inf_map_of_injective AddSubmonoid.comap_inf_map_of_injective
 
 /- warning: submonoid.comap_infi_map_of_injective -> Submonoid.comap_infᵢ_map_of_injective is a dubious translation:
 lean 3 declaration is
@@ -620,6 +654,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.comap_infi_m
 theorem comap_infᵢ_map_of_injective (S : ι → Submonoid M) : (⨅ i, (S i).map f).comap f = infᵢ S :=
   (gciMapComap hf).u_infi_l _
 #align submonoid.comap_infi_map_of_injective Submonoid.comap_infᵢ_map_of_injective
+#align add_submonoid.comap_infi_map_of_injective AddSubmonoid.comap_infᵢ_map_of_injective
 
 /- warning: submonoid.comap_sup_map_of_injective -> Submonoid.comap_sup_map_of_injective is a dubious translation:
 lean 3 declaration is
@@ -631,6 +666,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.comap_sup_ma
 theorem comap_sup_map_of_injective (S T : Submonoid M) : (S.map f ⊔ T.map f).comap f = S ⊔ T :=
   (gciMapComap hf).u_sup_l _ _
 #align submonoid.comap_sup_map_of_injective Submonoid.comap_sup_map_of_injective
+#align add_submonoid.comap_sup_map_of_injective AddSubmonoid.comap_sup_map_of_injective
 
 /- warning: submonoid.comap_supr_map_of_injective -> Submonoid.comap_supᵢ_map_of_injective is a dubious translation:
 lean 3 declaration is
@@ -642,6 +678,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.comap_supr_m
 theorem comap_supᵢ_map_of_injective (S : ι → Submonoid M) : (⨆ i, (S i).map f).comap f = supᵢ S :=
   (gciMapComap hf).u_supr_l _
 #align submonoid.comap_supr_map_of_injective Submonoid.comap_supᵢ_map_of_injective
+#align add_submonoid.comap_supr_map_of_injective AddSubmonoid.comap_supᵢ_map_of_injective
 
 /- warning: submonoid.map_le_map_iff_of_injective -> Submonoid.map_le_map_iff_of_injective is a dubious translation:
 lean 3 declaration is
@@ -653,6 +690,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.map_le_map_i
 theorem map_le_map_iff_of_injective {S T : Submonoid M} : S.map f ≤ T.map f ↔ S ≤ T :=
   (gciMapComap hf).l_le_l_iff
 #align submonoid.map_le_map_iff_of_injective Submonoid.map_le_map_iff_of_injective
+#align add_submonoid.map_le_map_iff_of_injective AddSubmonoid.map_le_map_iff_of_injective
 
 /- warning: submonoid.map_strict_mono_of_injective -> Submonoid.map_strict_mono_of_injective is a dubious translation:
 lean 3 declaration is
@@ -664,6 +702,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.map_strict_m
 theorem map_strict_mono_of_injective : StrictMono (map f) :=
   (gciMapComap hf).strict_mono_l
 #align submonoid.map_strict_mono_of_injective Submonoid.map_strict_mono_of_injective
+#align add_submonoid.map_strict_mono_of_injective AddSubmonoid.map_strict_mono_of_injective
 
 end GaloisCoinsertion
 
@@ -686,6 +725,7 @@ def giMapComap : GaloisInsertion (map f) (comap f) :=
     let ⟨y, hy⟩ := hf x
     mem_map.2 ⟨y, by simp [hy, h]⟩
 #align submonoid.gi_map_comap Submonoid.giMapComap
+#align add_submonoid.gi_map_comap AddSubmonoid.giMapComap
 
 /- warning: submonoid.map_comap_eq_of_surjective -> Submonoid.map_comap_eq_of_surjective is a dubious translation:
 lean 3 declaration is
@@ -697,6 +737,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.map_comap_eq
 theorem map_comap_eq_of_surjective (S : Submonoid N) : (S.comap f).map f = S :=
   (giMapComap hf).l_u_eq _
 #align submonoid.map_comap_eq_of_surjective Submonoid.map_comap_eq_of_surjective
+#align add_submonoid.map_comap_eq_of_surjective AddSubmonoid.map_comap_eq_of_surjective
 
 /- warning: submonoid.map_surjective_of_surjective -> Submonoid.map_surjective_of_surjective is a dubious translation:
 lean 3 declaration is
@@ -708,6 +749,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.map_surjecti
 theorem map_surjective_of_surjective : Function.Surjective (map f) :=
   (giMapComap hf).l_surjective
 #align submonoid.map_surjective_of_surjective Submonoid.map_surjective_of_surjective
+#align add_submonoid.map_surjective_of_surjective AddSubmonoid.map_surjective_of_surjective
 
 /- warning: submonoid.comap_injective_of_surjective -> Submonoid.comap_injective_of_surjective is a dubious translation:
 lean 3 declaration is
@@ -719,6 +761,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.comap_inject
 theorem comap_injective_of_surjective : Function.Injective (comap f) :=
   (giMapComap hf).u_injective
 #align submonoid.comap_injective_of_surjective Submonoid.comap_injective_of_surjective
+#align add_submonoid.comap_injective_of_surjective AddSubmonoid.comap_injective_of_surjective
 
 /- warning: submonoid.map_inf_comap_of_surjective -> Submonoid.map_inf_comap_of_surjective is a dubious translation:
 lean 3 declaration is
@@ -730,6 +773,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.map_inf_coma
 theorem map_inf_comap_of_surjective (S T : Submonoid N) : (S.comap f ⊓ T.comap f).map f = S ⊓ T :=
   (giMapComap hf).l_inf_u _ _
 #align submonoid.map_inf_comap_of_surjective Submonoid.map_inf_comap_of_surjective
+#align add_submonoid.map_inf_comap_of_surjective AddSubmonoid.map_inf_comap_of_surjective
 
 /- warning: submonoid.map_infi_comap_of_surjective -> Submonoid.map_infᵢ_comap_of_surjective is a dubious translation:
 lean 3 declaration is
@@ -741,6 +785,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.map_infi_com
 theorem map_infᵢ_comap_of_surjective (S : ι → Submonoid N) : (⨅ i, (S i).comap f).map f = infᵢ S :=
   (giMapComap hf).l_infi_u _
 #align submonoid.map_infi_comap_of_surjective Submonoid.map_infᵢ_comap_of_surjective
+#align add_submonoid.map_infi_comap_of_surjective AddSubmonoid.map_infᵢ_comap_of_surjective
 
 /- warning: submonoid.map_sup_comap_of_surjective -> Submonoid.map_sup_comap_of_surjective is a dubious translation:
 lean 3 declaration is
@@ -752,6 +797,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.map_sup_coma
 theorem map_sup_comap_of_surjective (S T : Submonoid N) : (S.comap f ⊔ T.comap f).map f = S ⊔ T :=
   (giMapComap hf).l_sup_u _ _
 #align submonoid.map_sup_comap_of_surjective Submonoid.map_sup_comap_of_surjective
+#align add_submonoid.map_sup_comap_of_surjective AddSubmonoid.map_sup_comap_of_surjective
 
 /- warning: submonoid.map_supr_comap_of_surjective -> Submonoid.map_supᵢ_comap_of_surjective is a dubious translation:
 lean 3 declaration is
@@ -763,6 +809,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.map_supr_com
 theorem map_supᵢ_comap_of_surjective (S : ι → Submonoid N) : (⨆ i, (S i).comap f).map f = supᵢ S :=
   (giMapComap hf).l_supr_u _
 #align submonoid.map_supr_comap_of_surjective Submonoid.map_supᵢ_comap_of_surjective
+#align add_submonoid.map_supr_comap_of_surjective AddSubmonoid.map_supᵢ_comap_of_surjective
 
 /- warning: submonoid.comap_le_comap_iff_of_surjective -> Submonoid.comap_le_comap_iff_of_surjective is a dubious translation:
 lean 3 declaration is
@@ -774,6 +821,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.comap_le_com
 theorem comap_le_comap_iff_of_surjective {S T : Submonoid N} : S.comap f ≤ T.comap f ↔ S ≤ T :=
   (giMapComap hf).u_le_u_iff
 #align submonoid.comap_le_comap_iff_of_surjective Submonoid.comap_le_comap_iff_of_surjective
+#align add_submonoid.comap_le_comap_iff_of_surjective AddSubmonoid.comap_le_comap_iff_of_surjective
 
 /- warning: submonoid.comap_strict_mono_of_surjective -> Submonoid.comap_strict_mono_of_surjective is a dubious translation:
 lean 3 declaration is
@@ -785,6 +833,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.comap_strict
 theorem comap_strict_mono_of_surjective : StrictMono (comap f) :=
   (giMapComap hf).strict_mono_u
 #align submonoid.comap_strict_mono_of_surjective Submonoid.comap_strict_mono_of_surjective
+#align add_submonoid.comap_strict_mono_of_surjective AddSubmonoid.comap_strict_mono_of_surjective
 
 end GaloisInsertion
 
@@ -802,6 +851,7 @@ include hA
 instance one : One S' :=
   ⟨⟨1, OneMemClass.one_mem S'⟩⟩
 #align one_mem_class.has_one OneMemClass.one
+#align zero_mem_class.has_zero ZeroMemClass.zero
 -/
 
 #print OneMemClass.coe_one /-
@@ -809,6 +859,7 @@ instance one : One S' :=
 theorem coe_one : ((1 : S') : M₁) = 1 :=
   rfl
 #align one_mem_class.coe_one OneMemClass.coe_one
+#align zero_mem_class.coe_zero ZeroMemClass.coe_zero
 -/
 
 variable {S'}
@@ -818,6 +869,7 @@ variable {S'}
 theorem coe_eq_one {x : S'} : (↑x : M₁) = 1 ↔ x = 1 :=
   (Subtype.ext_iff.symm : (x : M₁) = (1 : S') ↔ x = 1)
 #align one_mem_class.coe_eq_one OneMemClass.coe_eq_one
+#align zero_mem_class.coe_eq_zero ZeroMemClass.coe_eq_zero
 -/
 
 variable (S')
@@ -827,6 +879,7 @@ variable (S')
 theorem one_def : (1 : S') = ⟨1, OneMemClass.one_mem S'⟩ :=
   rfl
 #align one_mem_class.one_def OneMemClass.one_def
+#align zero_mem_class.zero_def ZeroMemClass.zero_def
 -/
 
 end OneMemClass
@@ -863,6 +916,7 @@ theorem coe_pow {M} [Monoid M] {A : Type _} [SetLike A M] [SubmonoidClass A M] {
     (n : ℕ) : (↑(x ^ n) : M) = ↑x ^ n :=
   rfl
 #align submonoid_class.coe_pow SubmonoidClass.coe_pow
+#align add_submonoid_class.coe_smul AddSubmonoidClass.coe_smul
 
 /- warning: submonoid_class.mk_pow -> SubmonoidClass.mk_pow is a dubious translation:
 lean 3 declaration is
@@ -875,6 +929,7 @@ theorem mk_pow {M} [Monoid M] {A : Type _} [SetLike A M] [SubmonoidClass A M] {S
     (hx : x ∈ S) (n : ℕ) : (⟨x, hx⟩ : S) ^ n = ⟨x ^ n, pow_mem hx n⟩ :=
   rfl
 #align submonoid_class.mk_pow SubmonoidClass.mk_pow
+#align add_submonoid_class.mk_smul AddSubmonoidClass.mk_smul
 
 #print SubmonoidClass.toMulOneClass /-
 -- Prefer subclasses of `monoid` over subclasses of `submonoid_class`.
@@ -885,6 +940,7 @@ instance (priority := 75) toMulOneClass {M : Type _} [MulOneClass M] {A : Type _
     [SubmonoidClass A M] (S : A) : MulOneClass S :=
   Subtype.coe_injective.MulOneClass _ rfl fun _ _ => rfl
 #align submonoid_class.to_mul_one_class SubmonoidClass.toMulOneClass
+#align add_submonoid_class.to_add_zero_class AddSubmonoidClass.toAddZeroClass
 -/
 
 #print SubmonoidClass.toMonoid /-
@@ -895,6 +951,7 @@ instance (priority := 75) toMonoid {M : Type _} [Monoid M] {A : Type _} [SetLike
     [SubmonoidClass A M] (S : A) : Monoid S :=
   Subtype.coe_injective.Monoid coe rfl (fun _ _ => rfl) fun _ _ => rfl
 #align submonoid_class.to_monoid SubmonoidClass.toMonoid
+#align add_submonoid_class.to_add_monoid AddSubmonoidClass.toAddMonoid
 -/
 
 #print SubmonoidClass.toCommMonoid /-
@@ -905,6 +962,7 @@ instance (priority := 75) toCommMonoid {M} [CommMonoid M] {A : Type _} [SetLike 
     [SubmonoidClass A M] (S : A) : CommMonoid S :=
   Subtype.coe_injective.CommMonoid coe rfl (fun _ _ => rfl) fun _ _ => rfl
 #align submonoid_class.to_comm_monoid SubmonoidClass.toCommMonoid
+#align add_submonoid_class.to_add_comm_monoid AddSubmonoidClass.toAddCommMonoid
 -/
 
 #print SubmonoidClass.toOrderedCommMonoid /-
@@ -916,6 +974,7 @@ instance (priority := 75) toOrderedCommMonoid {M} [OrderedCommMonoid M] {A : Typ
     [SubmonoidClass A M] (S : A) : OrderedCommMonoid S :=
   Subtype.coe_injective.OrderedCommMonoid coe rfl (fun _ _ => rfl) fun _ _ => rfl
 #align submonoid_class.to_ordered_comm_monoid SubmonoidClass.toOrderedCommMonoid
+#align add_submonoid_class.to_ordered_add_comm_monoid AddSubmonoidClass.toOrderedAddCommMonoid
 -/
 
 #print SubmonoidClass.toLinearOrderedCommMonoid /-
@@ -928,6 +987,8 @@ instance (priority := 75) toLinearOrderedCommMonoid {M} [LinearOrderedCommMonoid
   Subtype.coe_injective.LinearOrderedCommMonoid coe rfl (fun _ _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) fun _ _ => rfl
 #align submonoid_class.to_linear_ordered_comm_monoid SubmonoidClass.toLinearOrderedCommMonoid
+#align
+  add_submonoid_class.to_linear_ordered_add_comm_monoid AddSubmonoidClass.toLinearOrderedAddCommMonoid
 -/
 
 #print SubmonoidClass.toOrderedCancelCommMonoid /-
@@ -939,6 +1000,8 @@ instance (priority := 75) toOrderedCancelCommMonoid {M} [OrderedCancelCommMonoid
     [SetLike A M] [SubmonoidClass A M] (S : A) : OrderedCancelCommMonoid S :=
   Subtype.coe_injective.OrderedCancelCommMonoid coe rfl (fun _ _ => rfl) fun _ _ => rfl
 #align submonoid_class.to_ordered_cancel_comm_monoid SubmonoidClass.toOrderedCancelCommMonoid
+#align
+  add_submonoid_class.to_ordered_cancel_add_comm_monoid AddSubmonoidClass.toOrderedCancelAddCommMonoid
 -/
 
 #print SubmonoidClass.toLinearOrderedCancelCommMonoid /-
@@ -953,6 +1016,8 @@ instance (priority := 75) toLinearOrderedCancelCommMonoid {M} [LinearOrderedCanc
     (fun _ _ => rfl) fun _ _ => rfl
 #align
   submonoid_class.to_linear_ordered_cancel_comm_monoid SubmonoidClass.toLinearOrderedCancelCommMonoid
+#align
+  add_submonoid_class.to_linear_ordered_cancel_add_comm_monoid AddSubmonoidClass.toLinearOrderedCancelAddCommMonoid
 -/
 
 include hA
@@ -963,6 +1028,7 @@ include hA
 def Subtype : S' →* M :=
   ⟨coe, rfl, fun _ _ => rfl⟩
 #align submonoid_class.subtype SubmonoidClass.Subtype
+#align add_submonoid_class.subtype AddSubmonoidClass.Subtype
 -/
 
 /- warning: submonoid_class.coe_subtype -> SubmonoidClass.coe_subtype is a dubious translation:
@@ -975,6 +1041,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid_class.coe_su
 theorem coe_subtype : (SubmonoidClass.Subtype S' : S' → M) = coe :=
   rfl
 #align submonoid_class.coe_subtype SubmonoidClass.coe_subtype
+#align add_submonoid_class.coe_subtype AddSubmonoidClass.coe_subtype
 
 end SubmonoidClass
 
@@ -991,6 +1058,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.has_mul Subm
 instance mul : Mul S :=
   ⟨fun a b => ⟨a.1 * b.1, S.mul_mem a.2 b.2⟩⟩
 #align submonoid.has_mul Submonoid.mul
+#align add_submonoid.has_add AddSubmonoid.add
 
 /- warning: submonoid.has_one -> Submonoid.one is a dubious translation:
 lean 3 declaration is
@@ -1003,6 +1071,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.has_one Subm
 instance one : One S :=
   ⟨⟨_, S.one_mem⟩⟩
 #align submonoid.has_one Submonoid.one
+#align add_submonoid.has_zero AddSubmonoid.zero
 
 /- warning: submonoid.coe_mul -> Submonoid.coe_mul is a dubious translation:
 lean 3 declaration is
@@ -1014,6 +1083,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.coe_mul Subm
 theorem coe_mul (x y : S) : (↑(x * y) : M) = ↑x * ↑y :=
   rfl
 #align submonoid.coe_mul Submonoid.coe_mul
+#align add_submonoid.coe_add AddSubmonoid.coe_add
 
 /- warning: submonoid.coe_one -> Submonoid.coe_one is a dubious translation:
 lean 3 declaration is
@@ -1025,6 +1095,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.coe_one Subm
 theorem coe_one : ((1 : S) : M) = 1 :=
   rfl
 #align submonoid.coe_one Submonoid.coe_one
+#align add_submonoid.coe_zero AddSubmonoid.coe_zero
 
 /- warning: submonoid.mk_mul_mk -> Submonoid.mk_mul_mk is a dubious translation:
 lean 3 declaration is
@@ -1037,6 +1108,7 @@ theorem mk_mul_mk (x y : M) (hx : x ∈ S) (hy : y ∈ S) :
     (⟨x, hx⟩ : S) * ⟨y, hy⟩ = ⟨x * y, S.mul_mem hx hy⟩ :=
   rfl
 #align submonoid.mk_mul_mk Submonoid.mk_mul_mk
+#align add_submonoid.mk_add_mk AddSubmonoid.mk_add_mk
 
 /- warning: submonoid.mul_def -> Submonoid.mul_def is a dubious translation:
 lean 3 declaration is
@@ -1048,6 +1120,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.mul_def Subm
 theorem mul_def (x y : S) : x * y = ⟨x * y, S.mul_mem x.2 y.2⟩ :=
   rfl
 #align submonoid.mul_def Submonoid.mul_def
+#align add_submonoid.add_def AddSubmonoid.add_def
 
 /- warning: submonoid.one_def -> Submonoid.one_def is a dubious translation:
 lean 3 declaration is
@@ -1059,6 +1132,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.one_def Subm
 theorem one_def : (1 : S) = ⟨1, S.one_mem⟩ :=
   rfl
 #align submonoid.one_def Submonoid.one_def
+#align add_submonoid.zero_def AddSubmonoid.zero_def
 
 /- warning: submonoid.to_mul_one_class -> Submonoid.toMulOneClass is a dubious translation:
 lean 3 declaration is
@@ -1072,6 +1146,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.to_mul_one_c
 instance toMulOneClass {M : Type _} [MulOneClass M] (S : Submonoid M) : MulOneClass S :=
   Subtype.coe_injective.MulOneClass coe rfl fun _ _ => rfl
 #align submonoid.to_mul_one_class Submonoid.toMulOneClass
+#align add_submonoid.to_add_zero_class AddSubmonoid.toAddZeroClass
 
 /- warning: submonoid.pow_mem -> Submonoid.pow_mem is a dubious translation:
 lean 3 declaration is
@@ -1084,6 +1159,7 @@ protected theorem pow_mem {M : Type _} [Monoid M] (S : Submonoid M) {x : M} (hx 
     x ^ n ∈ S :=
   pow_mem hx n
 #align submonoid.pow_mem Submonoid.pow_mem
+#align add_submonoid.smul_mem AddSubmonoid.smul_mem
 
 /- warning: submonoid.coe_pow clashes with [anonymous] -> [anonymous]
 warning: submonoid.coe_pow -> [anonymous] is a dubious translation:
@@ -1109,6 +1185,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.to_monoid Su
 instance toMonoid {M : Type _} [Monoid M] (S : Submonoid M) : Monoid S :=
   Subtype.coe_injective.Monoid coe rfl (fun _ _ => rfl) fun _ _ => rfl
 #align submonoid.to_monoid Submonoid.toMonoid
+#align add_submonoid.to_add_monoid AddSubmonoid.toAddMonoid
 
 /- warning: submonoid.to_comm_monoid -> Submonoid.toCommMonoid is a dubious translation:
 lean 3 declaration is
@@ -1121,6 +1198,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.to_comm_mono
 instance toCommMonoid {M} [CommMonoid M] (S : Submonoid M) : CommMonoid S :=
   Subtype.coe_injective.CommMonoid coe rfl (fun _ _ => rfl) fun _ _ => rfl
 #align submonoid.to_comm_monoid Submonoid.toCommMonoid
+#align add_submonoid.to_add_comm_monoid AddSubmonoid.toAddCommMonoid
 
 /- warning: submonoid.to_ordered_comm_monoid -> Submonoid.toOrderedCommMonoid is a dubious translation:
 lean 3 declaration is
@@ -1134,6 +1212,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.to_ordered_c
 instance toOrderedCommMonoid {M} [OrderedCommMonoid M] (S : Submonoid M) : OrderedCommMonoid S :=
   Subtype.coe_injective.OrderedCommMonoid coe rfl (fun _ _ => rfl) fun _ _ => rfl
 #align submonoid.to_ordered_comm_monoid Submonoid.toOrderedCommMonoid
+#align add_submonoid.to_ordered_add_comm_monoid AddSubmonoid.toOrderedAddCommMonoid
 
 /- warning: submonoid.to_linear_ordered_comm_monoid -> Submonoid.toLinearOrderedCommMonoid is a dubious translation:
 lean 3 declaration is
@@ -1149,6 +1228,7 @@ instance toLinearOrderedCommMonoid {M} [LinearOrderedCommMonoid M] (S : Submonoi
   Subtype.coe_injective.LinearOrderedCommMonoid coe rfl (fun _ _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) fun _ _ => rfl
 #align submonoid.to_linear_ordered_comm_monoid Submonoid.toLinearOrderedCommMonoid
+#align add_submonoid.to_linear_ordered_add_comm_monoid AddSubmonoid.toLinearOrderedAddCommMonoid
 
 /- warning: submonoid.to_ordered_cancel_comm_monoid -> Submonoid.toOrderedCancelCommMonoid is a dubious translation:
 lean 3 declaration is
@@ -1163,6 +1243,7 @@ instance toOrderedCancelCommMonoid {M} [OrderedCancelCommMonoid M] (S : Submonoi
     OrderedCancelCommMonoid S :=
   Subtype.coe_injective.OrderedCancelCommMonoid coe rfl (fun _ _ => rfl) fun _ _ => rfl
 #align submonoid.to_ordered_cancel_comm_monoid Submonoid.toOrderedCancelCommMonoid
+#align add_submonoid.to_ordered_cancel_add_comm_monoid AddSubmonoid.toOrderedCancelAddCommMonoid
 
 /- warning: submonoid.to_linear_ordered_cancel_comm_monoid -> Submonoid.toLinearOrderedCancelCommMonoid is a dubious translation:
 lean 3 declaration is
@@ -1179,6 +1260,8 @@ instance toLinearOrderedCancelCommMonoid {M} [LinearOrderedCancelCommMonoid M] (
   Subtype.coe_injective.LinearOrderedCancelCommMonoid coe rfl (fun _ _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) fun _ _ => rfl
 #align submonoid.to_linear_ordered_cancel_comm_monoid Submonoid.toLinearOrderedCancelCommMonoid
+#align
+  add_submonoid.to_linear_ordered_cancel_add_comm_monoid AddSubmonoid.toLinearOrderedCancelAddCommMonoid
 
 /- warning: submonoid.subtype -> Submonoid.subtype is a dubious translation:
 lean 3 declaration is
@@ -1191,6 +1274,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.subtype Subm
 def subtype : S →* M :=
   ⟨coe, rfl, fun _ _ => rfl⟩
 #align submonoid.subtype Submonoid.subtype
+#align add_submonoid.subtype AddSubmonoid.subtype
 
 /- warning: submonoid.coe_subtype -> Submonoid.coe_subtype is a dubious translation:
 lean 3 declaration is
@@ -1202,6 +1286,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.coe_subtype 
 theorem coe_subtype : ⇑S.Subtype = coe :=
   rfl
 #align submonoid.coe_subtype Submonoid.coe_subtype
+#align add_submonoid.coe_subtype AddSubmonoid.coe_subtype
 
 /- warning: submonoid.top_equiv -> Submonoid.topEquiv is a dubious translation:
 lean 3 declaration is
@@ -1218,6 +1303,7 @@ def topEquiv : (⊤ : Submonoid M) ≃* M where
   right_inv _ := rfl
   map_mul' _ _ := rfl
 #align submonoid.top_equiv Submonoid.topEquiv
+#align add_submonoid.top_equiv AddSubmonoid.topEquiv
 
 /- warning: submonoid.top_equiv_to_monoid_hom -> Submonoid.top_equiv_toMonoidHom is a dubious translation:
 lean 3 declaration is
@@ -1229,6 +1315,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.top_equiv_to
 theorem top_equiv_toMonoidHom : (topEquiv : _ ≃* M).toMonoidHom = (⊤ : Submonoid M).Subtype :=
   rfl
 #align submonoid.top_equiv_to_monoid_hom Submonoid.top_equiv_toMonoidHom
+#align add_submonoid.top_equiv_to_add_monoid_hom AddSubmonoid.top_equiv_toAddMonoidHom
 
 /- warning: submonoid.equiv_map_of_injective -> Submonoid.equivMapOfInjective is a dubious translation:
 lean 3 declaration is
@@ -1243,6 +1330,7 @@ use `mul_equiv.submonoid_map` for better definitional equalities. -/
 noncomputable def equivMapOfInjective (f : M →* N) (hf : Function.Injective f) : S ≃* S.map f :=
   { Equiv.Set.image f S hf with map_mul' := fun _ _ => Subtype.ext (f.map_mul _ _) }
 #align submonoid.equiv_map_of_injective Submonoid.equivMapOfInjective
+#align add_submonoid.equiv_map_of_injective AddSubmonoid.equivMapOfInjective
 
 /- warning: submonoid.coe_equiv_map_of_injective_apply -> Submonoid.coe_equiv_map_of_injective_apply is a dubious translation:
 lean 3 declaration is
@@ -1255,6 +1343,7 @@ theorem coe_equiv_map_of_injective_apply (f : M →* N) (hf : Function.Injective
     (equivMapOfInjective S f hf x : N) = f x :=
   rfl
 #align submonoid.coe_equiv_map_of_injective_apply Submonoid.coe_equiv_map_of_injective_apply
+#align add_submonoid.coe_equiv_map_of_injective_apply AddSubmonoid.coe_equiv_map_of_injective_apply
 
 /- warning: submonoid.closure_closure_coe_preimage -> Submonoid.closure_closure_coe_preimage is a dubious translation:
 lean 3 declaration is
@@ -1272,6 +1361,7 @@ theorem closure_closure_coe_preimage {s : Set M} : closure ((coe : closure s →
       · exact Submonoid.one_mem _
       · exact Submonoid.mul_mem _
 #align submonoid.closure_closure_coe_preimage Submonoid.closure_closure_coe_preimage
+#align add_submonoid.closure_closure_coe_preimage AddSubmonoid.closure_closure_coe_preimage
 
 /- warning: submonoid.prod -> Submonoid.prod is a dubious translation:
 lean 3 declaration is
@@ -1290,6 +1380,7 @@ def prod (s : Submonoid M) (t : Submonoid N) : Submonoid (M × N)
   one_mem' := ⟨s.one_mem, t.one_mem⟩
   mul_mem' p q hp hq := ⟨s.mul_mem hp.1 hq.1, t.mul_mem hp.2 hq.2⟩
 #align submonoid.prod Submonoid.prod
+#align add_submonoid.prod AddSubmonoid.prod
 
 /- warning: submonoid.coe_prod -> Submonoid.coe_prod is a dubious translation:
 lean 3 declaration is
@@ -1302,6 +1393,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.coe_prod Sub
 theorem coe_prod (s : Submonoid M) (t : Submonoid N) : (s.Prod t : Set (M × N)) = s ×ˢ t :=
   rfl
 #align submonoid.coe_prod Submonoid.coe_prod
+#align add_submonoid.coe_prod AddSubmonoid.coe_prod
 
 /- warning: submonoid.mem_prod -> Submonoid.mem_prod is a dubious translation:
 lean 3 declaration is
@@ -1314,6 +1406,7 @@ theorem mem_prod {s : Submonoid M} {t : Submonoid N} {p : M × N} :
     p ∈ s.Prod t ↔ p.1 ∈ s ∧ p.2 ∈ t :=
   Iff.rfl
 #align submonoid.mem_prod Submonoid.mem_prod
+#align add_submonoid.mem_prod AddSubmonoid.mem_prod
 
 /- warning: submonoid.prod_mono -> Submonoid.prod_mono is a dubious translation:
 lean 3 declaration is
@@ -1326,6 +1419,7 @@ theorem prod_mono {s₁ s₂ : Submonoid M} {t₁ t₂ : Submonoid N} (hs : s₁
     s₁.Prod t₁ ≤ s₂.Prod t₂ :=
   Set.prod_mono hs ht
 #align submonoid.prod_mono Submonoid.prod_mono
+#align add_submonoid.prod_mono AddSubmonoid.prod_mono
 
 /- warning: submonoid.prod_top -> Submonoid.prod_top is a dubious translation:
 lean 3 declaration is
@@ -1337,6 +1431,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.prod_top Sub
 theorem prod_top (s : Submonoid M) : s.Prod (⊤ : Submonoid N) = s.comap (MonoidHom.fst M N) :=
   ext fun x => by simp [mem_prod, MonoidHom.coe_fst]
 #align submonoid.prod_top Submonoid.prod_top
+#align add_submonoid.prod_top AddSubmonoid.prod_top
 
 /- warning: submonoid.top_prod -> Submonoid.top_prod is a dubious translation:
 lean 3 declaration is
@@ -1348,6 +1443,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.top_prod Sub
 theorem top_prod (s : Submonoid N) : (⊤ : Submonoid M).Prod s = s.comap (MonoidHom.snd M N) :=
   ext fun x => by simp [mem_prod, MonoidHom.coe_snd]
 #align submonoid.top_prod Submonoid.top_prod
+#align add_submonoid.top_prod AddSubmonoid.top_prod
 
 /- warning: submonoid.top_prod_top -> Submonoid.top_prod_top is a dubious translation:
 lean 3 declaration is
@@ -1359,6 +1455,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.top_prod_top
 theorem top_prod_top : (⊤ : Submonoid M).Prod (⊤ : Submonoid N) = ⊤ :=
   (top_prod _).trans <| comap_top _
 #align submonoid.top_prod_top Submonoid.top_prod_top
+#align add_submonoid.top_prod_top AddSubmonoid.top_prod_top
 
 /- warning: submonoid.bot_prod_bot -> Submonoid.bot_prod_bot is a dubious translation:
 lean 3 declaration is
@@ -1370,6 +1467,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.bot_prod_bot
 theorem bot_prod_bot : (⊥ : Submonoid M).Prod (⊥ : Submonoid N) = ⊥ :=
   SetLike.coe_injective <| by simp [coe_prod, Prod.one_eq_mk]
 #align submonoid.bot_prod_bot Submonoid.bot_prod_bot
+#align add_submonoid.bot_prod_bot AddSubmonoid.bot_prod_bot
 
 /- warning: submonoid.prod_equiv -> Submonoid.prodEquiv is a dubious translation:
 lean 3 declaration is
@@ -1383,6 +1481,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.prod_equiv S
 def prodEquiv (s : Submonoid M) (t : Submonoid N) : s.Prod t ≃* s × t :=
   { Equiv.Set.prod ↑s ↑t with map_mul' := fun x y => rfl }
 #align submonoid.prod_equiv Submonoid.prodEquiv
+#align add_submonoid.prod_equiv AddSubmonoid.prodEquiv
 
 open MonoidHom
 
@@ -1398,6 +1497,7 @@ theorem map_inl (s : Submonoid M) : s.map (inl M N) = s.Prod ⊥ :=
     ⟨fun ⟨x, hx, hp⟩ => hp ▸ ⟨hx, Set.mem_singleton 1⟩, fun ⟨hps, hp1⟩ =>
       ⟨p.1, hps, Prod.ext rfl <| (Set.eq_of_mem_singleton hp1).symm⟩⟩
 #align submonoid.map_inl Submonoid.map_inl
+#align add_submonoid.map_inl AddSubmonoid.map_inl
 
 /- warning: submonoid.map_inr -> Submonoid.map_inr is a dubious translation:
 lean 3 declaration is
@@ -1411,6 +1511,7 @@ theorem map_inr (s : Submonoid N) : s.map (inr M N) = prod ⊥ s :=
     ⟨fun ⟨x, hx, hp⟩ => hp ▸ ⟨Set.mem_singleton 1, hx⟩, fun ⟨hp1, hps⟩ =>
       ⟨p.2, hps, Prod.ext (Set.eq_of_mem_singleton hp1).symm rfl⟩⟩
 #align submonoid.map_inr Submonoid.map_inr
+#align add_submonoid.map_inr AddSubmonoid.map_inr
 
 /- warning: submonoid.prod_bot_sup_bot_prod -> Submonoid.prod_bot_sup_bot_prod is a dubious translation:
 lean 3 declaration is
@@ -1426,6 +1527,7 @@ theorem prod_bot_sup_bot_prod (s : Submonoid M) (t : Submonoid N) :
       mul_mem ((le_sup_left : s.Prod ⊥ ≤ s.Prod ⊥ ⊔ prod ⊥ t) ⟨hp.1, Set.mem_singleton 1⟩)
         ((le_sup_right : prod ⊥ t ≤ s.Prod ⊥ ⊔ prod ⊥ t) ⟨Set.mem_singleton 1, hp.2⟩)
 #align submonoid.prod_bot_sup_bot_prod Submonoid.prod_bot_sup_bot_prod
+#align add_submonoid.prod_bot_sup_bot_prod AddSubmonoid.prod_bot_sup_bot_prod
 
 /- warning: submonoid.mem_map_equiv -> Submonoid.mem_map_equiv is a dubious translation:
 lean 3 declaration is
@@ -1438,6 +1540,7 @@ theorem mem_map_equiv {f : M ≃* N} {K : Submonoid M} {x : N} :
     x ∈ K.map f.toMonoidHom ↔ f.symm x ∈ K :=
   @Set.mem_image_equiv _ _ (↑K) f.toEquiv x
 #align submonoid.mem_map_equiv Submonoid.mem_map_equiv
+#align add_submonoid.mem_map_equiv AddSubmonoid.mem_map_equiv
 
 /- warning: submonoid.map_equiv_eq_comap_symm -> Submonoid.map_equiv_eq_comap_symm is a dubious translation:
 lean 3 declaration is
@@ -1450,6 +1553,7 @@ theorem map_equiv_eq_comap_symm (f : M ≃* N) (K : Submonoid M) :
     K.map f.toMonoidHom = K.comap f.symm.toMonoidHom :=
   SetLike.coe_injective (f.toEquiv.image_eq_preimage K)
 #align submonoid.map_equiv_eq_comap_symm Submonoid.map_equiv_eq_comap_symm
+#align add_submonoid.map_equiv_eq_comap_symm AddSubmonoid.map_equiv_eq_comap_symm
 
 /- warning: submonoid.comap_equiv_eq_map_symm -> Submonoid.comap_equiv_eq_map_symm is a dubious translation:
 lean 3 declaration is
@@ -1462,6 +1566,7 @@ theorem comap_equiv_eq_map_symm (f : N ≃* M) (K : Submonoid M) :
     K.comap f.toMonoidHom = K.map f.symm.toMonoidHom :=
   (map_equiv_eq_comap_symm f.symm K).symm
 #align submonoid.comap_equiv_eq_map_symm Submonoid.comap_equiv_eq_map_symm
+#align add_submonoid.comap_equiv_eq_map_symm AddSubmonoid.comap_equiv_eq_map_symm
 
 /- warning: submonoid.map_equiv_top -> Submonoid.map_equiv_top is a dubious translation:
 lean 3 declaration is
@@ -1473,6 +1578,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.map_equiv_to
 theorem map_equiv_top (f : M ≃* N) : (⊤ : Submonoid M).map f.toMonoidHom = ⊤ :=
   SetLike.coe_injective <| Set.image_univ.trans f.Surjective.range_eq
 #align submonoid.map_equiv_top Submonoid.map_equiv_top
+#align add_submonoid.map_equiv_top AddSubmonoid.map_equiv_top
 
 /- warning: submonoid.le_prod_iff -> Submonoid.le_prod_iff is a dubious translation:
 lean 3 declaration is
@@ -1494,6 +1600,7 @@ theorem le_prod_iff {s : Submonoid M} {t : Submonoid N} {u : Submonoid (M × N)}
   · rintro ⟨hH, hK⟩ ⟨x1, x2⟩ h
     exact ⟨hH ⟨_, h, rfl⟩, hK ⟨_, h, rfl⟩⟩
 #align submonoid.le_prod_iff Submonoid.le_prod_iff
+#align add_submonoid.le_prod_iff AddSubmonoid.le_prod_iff
 
 /- warning: submonoid.prod_le_iff -> Submonoid.prod_le_iff is a dubious translation:
 lean 3 declaration is
@@ -1523,6 +1630,7 @@ theorem prod_le_iff {s : Submonoid M} {t : Submonoid N} {u : Submonoid (M × N)}
       simpa using h2
     simpa using Submonoid.mul_mem _ h1' h2'
 #align submonoid.prod_le_iff Submonoid.prod_le_iff
+#align add_submonoid.prod_le_iff AddSubmonoid.prod_le_iff
 
 end Submonoid
 
@@ -1572,6 +1680,7 @@ include mc
 def mrange (f : F) : Submonoid N :=
   ((⊤ : Submonoid M).map f).copy (Set.range f) Set.image_univ.symm
 #align monoid_hom.mrange MonoidHom.mrange
+#align add_monoid_hom.mrange AddMonoidHom.mrange
 -/
 
 /- warning: monoid_hom.coe_mrange -> MonoidHom.coe_mrange is a dubious translation:
@@ -1584,6 +1693,7 @@ Case conversion may be inaccurate. Consider using '#align monoid_hom.coe_mrange 
 theorem coe_mrange (f : F) : (mrange f : Set N) = Set.range f :=
   rfl
 #align monoid_hom.coe_mrange MonoidHom.coe_mrange
+#align add_monoid_hom.coe_mrange AddMonoidHom.coe_mrange
 
 /- warning: monoid_hom.mem_mrange -> MonoidHom.mem_mrange is a dubious translation:
 lean 3 declaration is
@@ -1595,6 +1705,7 @@ Case conversion may be inaccurate. Consider using '#align monoid_hom.mem_mrange 
 theorem mem_mrange {f : F} {y : N} : y ∈ mrange f ↔ ∃ x, f x = y :=
   Iff.rfl
 #align monoid_hom.mem_mrange MonoidHom.mem_mrange
+#align add_monoid_hom.mem_mrange AddMonoidHom.mem_mrange
 
 /- warning: monoid_hom.mrange_eq_map -> MonoidHom.mrange_eq_map is a dubious translation:
 lean 3 declaration is
@@ -1606,6 +1717,7 @@ Case conversion may be inaccurate. Consider using '#align monoid_hom.mrange_eq_m
 theorem mrange_eq_map (f : F) : mrange f = (⊤ : Submonoid M).map f :=
   Submonoid.copy_eq _
 #align monoid_hom.mrange_eq_map MonoidHom.mrange_eq_map
+#align add_monoid_hom.mrange_eq_map AddMonoidHom.mrange_eq_map
 
 omit mc
 
@@ -1619,6 +1731,7 @@ Case conversion may be inaccurate. Consider using '#align monoid_hom.map_mrange 
 theorem map_mrange (g : N →* P) (f : M →* N) : f.mrange.map g = (g.comp f).mrange := by
   simpa only [mrange_eq_map] using (⊤ : Submonoid M).map_map g f
 #align monoid_hom.map_mrange MonoidHom.map_mrange
+#align add_monoid_hom.map_mrange AddMonoidHom.map_mrange
 
 include mc
 
@@ -1632,6 +1745,7 @@ Case conversion may be inaccurate. Consider using '#align monoid_hom.mrange_top_
 theorem mrange_top_iff_surjective {f : F} : mrange f = (⊤ : Submonoid N) ↔ Function.Surjective f :=
   SetLike.ext'_iff.trans <| Iff.trans (by rw [coe_mrange, coe_top]) Set.range_iff_surjective
 #align monoid_hom.mrange_top_iff_surjective MonoidHom.mrange_top_iff_surjective
+#align add_monoid_hom.mrange_top_iff_surjective AddMonoidHom.mrange_top_iff_surjective
 
 /- warning: monoid_hom.mrange_top_of_surjective -> MonoidHom.mrange_top_of_surjective is a dubious translation:
 lean 3 declaration is
@@ -1645,6 +1759,7 @@ theorem mrange_top_of_surjective (f : F) (hf : Function.Surjective f) :
     mrange f = (⊤ : Submonoid N) :=
   mrange_top_iff_surjective.2 hf
 #align monoid_hom.mrange_top_of_surjective MonoidHom.mrange_top_of_surjective
+#align add_monoid_hom.mrange_top_of_surjective AddMonoidHom.mrange_top_of_surjective
 
 /- warning: monoid_hom.mclosure_preimage_le -> MonoidHom.mclosure_preimage_le is a dubious translation:
 lean 3 declaration is
@@ -1656,6 +1771,7 @@ Case conversion may be inaccurate. Consider using '#align monoid_hom.mclosure_pr
 theorem mclosure_preimage_le (f : F) (s : Set N) : closure (f ⁻¹' s) ≤ (closure s).comap f :=
   closure_le.2 fun x hx => SetLike.mem_coe.2 <| mem_comap.2 <| subset_closure hx
 #align monoid_hom.mclosure_preimage_le MonoidHom.mclosure_preimage_le
+#align add_monoid_hom.mclosure_preimage_le AddMonoidHom.mclosure_preimage_le
 
 /- warning: monoid_hom.map_mclosure -> MonoidHom.map_mclosure is a dubious translation:
 lean 3 declaration is
@@ -1673,6 +1789,7 @@ theorem map_mclosure (f : F) (s : Set M) : (closure s).map f = closure (f '' s) 
       le_trans (closure_mono <| Set.subset_preimage_image _ _) (mclosure_preimage_le _ _))
     (closure_le.2 <| Set.image_subset _ subset_closure)
 #align monoid_hom.map_mclosure MonoidHom.map_mclosure
+#align add_monoid_hom.map_mclosure AddMonoidHom.map_mclosure
 
 omit mc
 
@@ -1683,6 +1800,7 @@ def restrict {N S : Type _} [MulOneClass N] [SetLike S M] [SubmonoidClass S M] (
     (s : S) : s →* N :=
   f.comp (SubmonoidClass.Subtype _)
 #align monoid_hom.restrict MonoidHom.restrict
+#align add_monoid_hom.restrict AddMonoidHom.restrict
 -/
 
 /- warning: monoid_hom.restrict_apply -> MonoidHom.restrict_apply is a dubious translation:
@@ -1696,6 +1814,7 @@ theorem restrict_apply {N S : Type _} [MulOneClass N] [SetLike S M] [SubmonoidCl
     (f : M →* N) (s : S) (x : s) : f.restrict s x = f x :=
   rfl
 #align monoid_hom.restrict_apply MonoidHom.restrict_apply
+#align add_monoid_hom.restrict_apply AddMonoidHom.restrict_apply
 
 /- warning: monoid_hom.restrict_mrange -> MonoidHom.restrict_mrange is a dubious translation:
 lean 3 declaration is
@@ -1708,6 +1827,7 @@ theorem restrict_mrange (f : M →* N) : (f.restrict S).mrange = S.map f := by
   simp_rw [SetLike.ext_iff, mem_mrange, mem_map, restrict_apply, SetLike.exists, Subtype.coe_mk,
     iff_self_iff, forall_const]
 #align monoid_hom.restrict_mrange MonoidHom.restrict_mrange
+#align add_monoid_hom.restrict_mrange AddMonoidHom.restrict_mrange
 
 /- warning: monoid_hom.cod_restrict -> MonoidHom.codRestrict is a dubious translation:
 lean 3 declaration is
@@ -1724,6 +1844,7 @@ def codRestrict {S} [SetLike S N] [SubmonoidClass S N] (f : M →* N) (s : S) (h
   map_one' := Subtype.eq f.map_one
   map_mul' x y := Subtype.eq (f.map_mul x y)
 #align monoid_hom.cod_restrict MonoidHom.codRestrict
+#align add_monoid_hom.codRestrict AddMonoidHom.codRestrict
 
 /- warning: monoid_hom.mrange_restrict -> MonoidHom.mrangeRestrict is a dubious translation:
 lean 3 declaration is
@@ -1736,6 +1857,7 @@ Case conversion may be inaccurate. Consider using '#align monoid_hom.mrange_rest
 def mrangeRestrict {N} [MulOneClass N] (f : M →* N) : M →* f.mrange :=
   f.codRestrict f.mrange fun x => ⟨x, rfl⟩
 #align monoid_hom.mrange_restrict MonoidHom.mrangeRestrict
+#align add_monoid_hom.mrangeRestrict AddMonoidHom.mrangeRestrict
 
 /- warning: monoid_hom.coe_mrange_restrict -> MonoidHom.coe_mrangeRestrict is a dubious translation:
 lean 3 declaration is
@@ -1748,6 +1870,7 @@ theorem coe_mrangeRestrict {N} [MulOneClass N] (f : M →* N) (x : M) :
     (f.mrangeRestrict x : N) = f x :=
   rfl
 #align monoid_hom.coe_mrange_restrict MonoidHom.coe_mrangeRestrict
+#align add_monoid_hom.coe_mrange_restrict AddMonoidHom.coe_mrangeRestrict
 
 /- warning: monoid_hom.mrange_restrict_surjective -> MonoidHom.mrangeRestrict_surjective is a dubious translation:
 lean 3 declaration is
@@ -1759,6 +1882,7 @@ Case conversion may be inaccurate. Consider using '#align monoid_hom.mrange_rest
 theorem mrangeRestrict_surjective (f : M →* N) : Function.Surjective f.mrangeRestrict :=
   fun ⟨_, ⟨x, rfl⟩⟩ => ⟨x, rfl⟩
 #align monoid_hom.mrange_restrict_surjective MonoidHom.mrangeRestrict_surjective
+#align add_monoid_hom.mrange_restrict_surjective AddMonoidHom.mrangeRestrict_surjective
 
 include mc
 
@@ -1770,6 +1894,7 @@ that `f x = 1` -/
 def mker (f : F) : Submonoid M :=
   (⊥ : Submonoid N).comap f
 #align monoid_hom.mker MonoidHom.mker
+#align add_monoid_hom.mker AddMonoidHom.mker
 -/
 
 /- warning: monoid_hom.mem_mker -> MonoidHom.mem_mker is a dubious translation:
@@ -1782,6 +1907,7 @@ Case conversion may be inaccurate. Consider using '#align monoid_hom.mem_mker Mo
 theorem mem_mker (f : F) {x : M} : x ∈ mker f ↔ f x = 1 :=
   Iff.rfl
 #align monoid_hom.mem_mker MonoidHom.mem_mker
+#align add_monoid_hom.mem_mker AddMonoidHom.mem_mker
 
 /- warning: monoid_hom.coe_mker -> MonoidHom.coe_mker is a dubious translation:
 lean 3 declaration is
@@ -1793,6 +1919,7 @@ Case conversion may be inaccurate. Consider using '#align monoid_hom.coe_mker Mo
 theorem coe_mker (f : F) : (mker f : Set M) = (f : M → N) ⁻¹' {1} :=
   rfl
 #align monoid_hom.coe_mker MonoidHom.coe_mker
+#align add_monoid_hom.coe_mker AddMonoidHom.coe_mker
 
 /- warning: monoid_hom.decidable_mem_mker -> MonoidHom.decidableMemMker is a dubious translation:
 lean 3 declaration is
@@ -1804,6 +1931,7 @@ Case conversion may be inaccurate. Consider using '#align monoid_hom.decidable_m
 instance decidableMemMker [DecidableEq N] (f : F) : DecidablePred (· ∈ mker f) := fun x =>
   decidable_of_iff (f x = 1) (mem_mker f)
 #align monoid_hom.decidable_mem_mker MonoidHom.decidableMemMker
+#align add_monoid_hom.decidable_mem_mker AddMonoidHom.decidableMemMker
 
 omit mc
 
@@ -1817,6 +1945,7 @@ Case conversion may be inaccurate. Consider using '#align monoid_hom.comap_mker 
 theorem comap_mker (g : N →* P) (f : M →* N) : g.mker.comap f = (g.comp f).mker :=
   rfl
 #align monoid_hom.comap_mker MonoidHom.comap_mker
+#align add_monoid_hom.comap_mker AddMonoidHom.comap_mker
 
 include mc
 
@@ -1830,6 +1959,7 @@ Case conversion may be inaccurate. Consider using '#align monoid_hom.comap_bot' 
 theorem comap_bot' (f : F) : (⊥ : Submonoid N).comap f = mker f :=
   rfl
 #align monoid_hom.comap_bot' MonoidHom.comap_bot'
+#align add_monoid_hom.comap_bot' AddMonoidHom.comap_bot'
 
 omit mc
 
@@ -1843,6 +1973,7 @@ Case conversion may be inaccurate. Consider using '#align monoid_hom.restrict_mk
 theorem restrict_mker (f : M →* N) : (f.restrict S).mker = f.mker.comap S.Subtype :=
   rfl
 #align monoid_hom.restrict_mker MonoidHom.restrict_mker
+#align add_monoid_hom.restrict_mker AddMonoidHom.restrict_mker
 
 /- warning: monoid_hom.range_restrict_mker -> MonoidHom.mrangeRestrict_mker is a dubious translation:
 lean 3 declaration is
@@ -1857,6 +1988,7 @@ theorem mrangeRestrict_mker (f : M →* N) : mker (mrangeRestrict f) = mker f :=
   change (⟨f x, _⟩ : mrange f) = ⟨1, _⟩ ↔ f x = 1
   simp only
 #align monoid_hom.range_restrict_mker MonoidHom.mrangeRestrict_mker
+#align add_monoid_hom.range_restrict_mker AddMonoidHom.mrangeRestrict_mker
 
 /- warning: monoid_hom.mker_one -> MonoidHom.mker_one is a dubious translation:
 lean 3 declaration is
@@ -1869,6 +2001,7 @@ theorem mker_one : (1 : M →* N).mker = ⊤ := by
   ext
   simp [mem_mker]
 #align monoid_hom.mker_one MonoidHom.mker_one
+#align add_monoid_hom.mker_zero AddMonoidHom.mker_zero
 
 /- warning: monoid_hom.prod_map_comap_prod' -> MonoidHom.prod_map_comap_prod' is a dubious translation:
 lean 3 declaration is
@@ -1882,6 +2015,7 @@ theorem prod_map_comap_prod' {M' : Type _} {N' : Type _} [MulOneClass M'] [MulOn
     (S.Prod S').comap (prodMap f g) = (S.comap f).Prod (S'.comap g) :=
   SetLike.coe_injective <| Set.preimage_prod_map_prod f g _ _
 #align monoid_hom.prod_map_comap_prod' MonoidHom.prod_map_comap_prod'
+#align add_monoid_hom.prod_map_comap_prod' AddMonoidHom.prod_map_comap_prod'
 
 /- warning: monoid_hom.mker_prod_map -> MonoidHom.mker_prod_map is a dubious translation:
 lean 3 declaration is
@@ -1894,6 +2028,7 @@ theorem mker_prod_map {M' : Type _} {N' : Type _} [MulOneClass M'] [MulOneClass 
     (g : M' →* N') : (prodMap f g).mker = f.mker.Prod g.mker := by
   rw [← comap_bot', ← comap_bot', ← comap_bot', ← prod_map_comap_prod', bot_prod_bot]
 #align monoid_hom.mker_prod_map MonoidHom.mker_prod_map
+#align add_monoid_hom.mker_prod_map AddMonoidHom.mker_prod_map
 
 /- warning: monoid_hom.mker_inl -> MonoidHom.mker_inl is a dubious translation:
 lean 3 declaration is
@@ -1906,6 +2041,7 @@ theorem mker_inl : (inl M N).mker = ⊥ := by
   ext x
   simp [mem_mker]
 #align monoid_hom.mker_inl MonoidHom.mker_inl
+#align add_monoid_hom.mker_inl AddMonoidHom.mker_inl
 
 /- warning: monoid_hom.mker_inr -> MonoidHom.mker_inr is a dubious translation:
 lean 3 declaration is
@@ -1918,6 +2054,7 @@ theorem mker_inr : (inr M N).mker = ⊥ := by
   ext x
   simp [mem_mker]
 #align monoid_hom.mker_inr MonoidHom.mker_inr
+#align add_monoid_hom.mker_inr AddMonoidHom.mker_inr
 
 /- warning: monoid_hom.submonoid_comap -> MonoidHom.submonoidComap is a dubious translation:
 lean 3 declaration is
@@ -1933,6 +2070,7 @@ def submonoidComap (f : M →* N) (N' : Submonoid N) : N'.comap f →* N'
   map_one' := Subtype.eq f.map_one
   map_mul' x y := Subtype.eq (f.map_mul x y)
 #align monoid_hom.submonoid_comap MonoidHom.submonoidComap
+#align add_monoid_hom.add_submonoid_comap AddMonoidHom.addSubmonoidComap
 
 /- warning: monoid_hom.submonoid_map -> MonoidHom.submonoidMap is a dubious translation:
 lean 3 declaration is
@@ -1951,6 +2089,7 @@ def submonoidMap (f : M →* N) (M' : Submonoid M) : M' →* M'.map f
   map_one' := Subtype.eq <| f.map_one
   map_mul' x y := Subtype.eq <| f.map_mul x y
 #align monoid_hom.submonoid_map MonoidHom.submonoidMap
+#align add_monoid_hom.add_submonoid_map AddMonoidHom.addSubmonoidMap
 
 /- warning: monoid_hom.submonoid_map_surjective -> MonoidHom.submonoidMap_surjective is a dubious translation:
 lean 3 declaration is
@@ -1965,6 +2104,7 @@ theorem submonoidMap_surjective (f : M →* N) (M' : Submonoid M) :
   rintro ⟨_, x, hx, rfl⟩
   exact ⟨⟨x, hx⟩, rfl⟩
 #align monoid_hom.submonoid_map_surjective MonoidHom.submonoidMap_surjective
+#align add_monoid_hom.add_submonoid_map_surjective AddMonoidHom.addSubmonoidMap_surjective
 
 end MonoidHom
 
@@ -1981,6 +2121,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.mrange_inl S
 @[to_additive]
 theorem mrange_inl : (inl M N).mrange = prod ⊤ ⊥ := by simpa only [mrange_eq_map] using map_inl ⊤
 #align submonoid.mrange_inl Submonoid.mrange_inl
+#align add_submonoid.mrange_inl AddSubmonoid.mrange_inl
 
 /- warning: submonoid.mrange_inr -> Submonoid.mrange_inr is a dubious translation:
 lean 3 declaration is
@@ -1991,6 +2132,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.mrange_inr S
 @[to_additive]
 theorem mrange_inr : (inr M N).mrange = prod ⊥ ⊤ := by simpa only [mrange_eq_map] using map_inr ⊤
 #align submonoid.mrange_inr Submonoid.mrange_inr
+#align add_submonoid.mrange_inr AddSubmonoid.mrange_inr
 
 /- warning: submonoid.mrange_inl' -> Submonoid.mrange_inl' is a dubious translation:
 lean 3 declaration is
@@ -2002,6 +2144,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.mrange_inl' 
 theorem mrange_inl' : (inl M N).mrange = comap (snd M N) ⊥ :=
   mrange_inl.trans (top_prod _)
 #align submonoid.mrange_inl' Submonoid.mrange_inl'
+#align add_submonoid.mrange_inl' AddSubmonoid.mrange_inl'
 
 /- warning: submonoid.mrange_inr' -> Submonoid.mrange_inr' is a dubious translation:
 lean 3 declaration is
@@ -2013,6 +2156,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.mrange_inr' 
 theorem mrange_inr' : (inr M N).mrange = comap (fst M N) ⊥ :=
   mrange_inr.trans (prod_top _)
 #align submonoid.mrange_inr' Submonoid.mrange_inr'
+#align add_submonoid.mrange_inr' AddSubmonoid.mrange_inr'
 
 /- warning: submonoid.mrange_fst -> Submonoid.mrange_fst is a dubious translation:
 lean 3 declaration is
@@ -2024,6 +2168,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.mrange_fst S
 theorem mrange_fst : (fst M N).mrange = ⊤ :=
   mrange_top_of_surjective (fst M N) <| @Prod.fst_surjective _ _ ⟨1⟩
 #align submonoid.mrange_fst Submonoid.mrange_fst
+#align add_submonoid.mrange_fst AddSubmonoid.mrange_fst
 
 /- warning: submonoid.mrange_snd -> Submonoid.mrange_snd is a dubious translation:
 lean 3 declaration is
@@ -2035,6 +2180,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.mrange_snd S
 theorem mrange_snd : (snd M N).mrange = ⊤ :=
   mrange_top_of_surjective (snd M N) <| @Prod.snd_surjective _ _ ⟨1⟩
 #align submonoid.mrange_snd Submonoid.mrange_snd
+#align add_submonoid.mrange_snd AddSubmonoid.mrange_snd
 
 /- warning: submonoid.prod_eq_bot_iff -> Submonoid.prod_eq_bot_iff is a dubious translation:
 lean 3 declaration is
@@ -2046,6 +2192,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.prod_eq_bot_
 theorem prod_eq_bot_iff {s : Submonoid M} {t : Submonoid N} : s.Prod t = ⊥ ↔ s = ⊥ ∧ t = ⊥ := by
   simp only [eq_bot_iff, prod_le_iff, (gc_map_comap _).le_iff_le, comap_bot', mker_inl, mker_inr]
 #align submonoid.prod_eq_bot_iff Submonoid.prod_eq_bot_iff
+#align add_submonoid.prod_eq_bot_iff AddSubmonoid.prod_eq_bot_iff
 
 /- warning: submonoid.prod_eq_top_iff -> Submonoid.prod_eq_top_iff is a dubious translation:
 lean 3 declaration is
@@ -2058,6 +2205,7 @@ theorem prod_eq_top_iff {s : Submonoid M} {t : Submonoid N} : s.Prod t = ⊤ ↔
   simp only [eq_top_iff, le_prod_iff, ← (gc_map_comap _).le_iff_le, ← mrange_eq_map, mrange_fst,
     mrange_snd]
 #align submonoid.prod_eq_top_iff Submonoid.prod_eq_top_iff
+#align add_submonoid.prod_eq_top_iff AddSubmonoid.prod_eq_top_iff
 
 /- warning: submonoid.mrange_inl_sup_mrange_inr -> Submonoid.mrange_inl_sup_mrange_inr is a dubious translation:
 lean 3 declaration is
@@ -2069,6 +2217,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.mrange_inl_s
 theorem mrange_inl_sup_mrange_inr : (inl M N).mrange ⊔ (inr M N).mrange = ⊤ := by
   simp only [mrange_inl, mrange_inr, prod_bot_sup_bot_prod, top_prod_top]
 #align submonoid.mrange_inl_sup_mrange_inr Submonoid.mrange_inl_sup_mrange_inr
+#align add_submonoid.mrange_inl_sup_mrange_inr AddSubmonoid.mrange_inl_sup_mrange_inr
 
 /- warning: submonoid.inclusion -> Submonoid.inclusion is a dubious translation:
 lean 3 declaration is
@@ -2081,6 +2230,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.inclusion Su
 def inclusion {S T : Submonoid M} (h : S ≤ T) : S →* T :=
   S.Subtype.codRestrict _ fun x => h x.2
 #align submonoid.inclusion Submonoid.inclusion
+#align add_submonoid.inclusion AddSubmonoid.inclusion
 
 /- warning: submonoid.range_subtype -> Submonoid.range_subtype is a dubious translation:
 lean 3 declaration is
@@ -2092,6 +2242,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.range_subtyp
 theorem range_subtype (s : Submonoid M) : s.Subtype.mrange = s :=
   SetLike.coe_injective <| (coe_mrange _).trans <| Subtype.range_coe
 #align submonoid.range_subtype Submonoid.range_subtype
+#align add_submonoid.range_subtype AddSubmonoid.range_subtype
 
 /- warning: submonoid.eq_top_iff' -> Submonoid.eq_top_iff' is a dubious translation:
 lean 3 declaration is
@@ -2103,6 +2254,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.eq_top_iff' 
 theorem eq_top_iff' : S = ⊤ ↔ ∀ x : M, x ∈ S :=
   eq_top_iff.trans ⟨fun h m => h <| mem_top m, fun h m _ => h m⟩
 #align submonoid.eq_top_iff' Submonoid.eq_top_iff'
+#align add_submonoid.eq_top_iff' AddSubmonoid.eq_top_iff'
 
 /- warning: submonoid.eq_bot_iff_forall -> Submonoid.eq_bot_iff_forall is a dubious translation:
 lean 3 declaration is
@@ -2114,6 +2266,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.eq_bot_iff_f
 theorem eq_bot_iff_forall : S = ⊥ ↔ ∀ x ∈ S, x = (1 : M) :=
   SetLike.ext_iff.trans <| by simp (config := { contextual := true }) [iff_def, S.one_mem]
 #align submonoid.eq_bot_iff_forall Submonoid.eq_bot_iff_forall
+#align add_submonoid.eq_bot_iff_forall AddSubmonoid.eq_bot_iff_forall
 
 /- warning: submonoid.nontrivial_iff_exists_ne_one -> Submonoid.nontrivial_iff_exists_ne_one is a dubious translation:
 lean 3 declaration is
@@ -2129,6 +2282,7 @@ theorem nontrivial_iff_exists_ne_one (S : Submonoid M) : Nontrivial S ↔ ∃ x 
     _ ↔ ∃ x ∈ S, x ≠ (1 : M) := by simp only [Ne.def]
     
 #align submonoid.nontrivial_iff_exists_ne_one Submonoid.nontrivial_iff_exists_ne_one
+#align add_submonoid.nontrivial_iff_exists_ne_zero AddSubmonoid.nontrivial_iff_exists_ne_zero
 
 /- warning: submonoid.bot_or_nontrivial -> Submonoid.bot_or_nontrivial is a dubious translation:
 lean 3 declaration is
@@ -2141,6 +2295,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.bot_or_nontr
 theorem bot_or_nontrivial (S : Submonoid M) : S = ⊥ ∨ Nontrivial S := by
   simp only [eq_bot_iff_forall, nontrivial_iff_exists_ne_one, ← not_forall, Classical.em]
 #align submonoid.bot_or_nontrivial Submonoid.bot_or_nontrivial
+#align add_submonoid.bot_or_nontrivial AddSubmonoid.bot_or_nontrivial
 
 /- warning: submonoid.bot_or_exists_ne_one -> Submonoid.bot_or_exists_ne_one is a dubious translation:
 lean 3 declaration is
@@ -2154,6 +2309,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.bot_or_exist
 theorem bot_or_exists_ne_one (S : Submonoid M) : S = ⊥ ∨ ∃ x ∈ S, x ≠ (1 : M) :=
   S.bot_or_nontrivial.imp_right S.nontrivial_iff_exists_ne_one.mp
 #align submonoid.bot_or_exists_ne_one Submonoid.bot_or_exists_ne_one
+#align add_submonoid.bot_or_exists_ne_zero AddSubmonoid.bot_or_exists_ne_zero
 
 end Submonoid
 
@@ -2174,6 +2330,7 @@ Case conversion may be inaccurate. Consider using '#align mul_equiv.submonoid_co
 def submonoidCongr (h : S = T) : S ≃* T :=
   { Equiv.setCongr <| congr_arg _ h with map_mul' := fun _ _ => rfl }
 #align mul_equiv.submonoid_congr MulEquiv.submonoidCongr
+#align add_equiv.add_submonoid_congr AddEquiv.addSubmonoidCongr
 
 /- warning: mul_equiv.of_left_inverse' -> MulEquiv.ofLeftInverse' is a dubious translation:
 lean 3 declaration is
@@ -2199,6 +2356,7 @@ def ofLeftInverse' (f : M →* N) {g : N → M} (h : Function.LeftInverse g f) :
         let ⟨x', hx'⟩ := MonoidHom.mem_mrange.mp x.Prop
         show f (g x) = x by rw [← hx', h x'] }
 #align mul_equiv.of_left_inverse' MulEquiv.ofLeftInverse'
+#align add_equiv.of_left_inverse' AddEquiv.ofLeftInverse'
 
 /- warning: mul_equiv.submonoid_map -> MulEquiv.submonoidMap is a dubious translation:
 lean 3 declaration is
@@ -2214,18 +2372,21 @@ See `monoid_hom.submonoid_map` for a variant for `monoid_hom`s. -/
 def submonoidMap (e : M ≃* N) (S : Submonoid M) : S ≃* S.map e.toMonoidHom :=
   { (e : M ≃ N).image S with map_mul' := fun _ _ => Subtype.ext (map_mul e _ _) }
 #align mul_equiv.submonoid_map MulEquiv.submonoidMap
+#align add_equiv.add_submonoid_map AddEquiv.addSubmonoidMap
 
 @[simp, to_additive]
 theorem coe_submonoid_map_apply (e : M ≃* N) (S : Submonoid M) (g : S) :
     ((submonoidMap e S g : S.map (e : M →* N)) : N) = e g :=
   rfl
 #align mul_equiv.coe_submonoid_map_apply MulEquiv.coe_submonoid_map_apply
+#align add_equiv.coe_add_submonoid_map_apply AddEquiv.coe_add_submonoid_map_apply
 
 @[simp, to_additive AddEquiv.add_submonoid_map_symm_apply]
 theorem submonoid_map_symm_apply (e : M ≃* N) (S : Submonoid M) (g : S.map (e : M →* N)) :
     (e.submonoidMap S).symm g = ⟨e.symm g, SetLike.mem_coe.1 <| Set.mem_image_equiv.1 g.2⟩ :=
   rfl
 #align mul_equiv.submonoid_map_symm_apply MulEquiv.submonoid_map_symm_apply
+#align add_equiv.add_submonoid_map_symm_apply AddEquiv.add_submonoid_map_symm_apply
 
 end MulEquiv
 
@@ -2236,6 +2397,8 @@ theorem Submonoid.equiv_map_of_injective_coe_mul_equiv (e : M ≃* N) :
   ext
   rfl
 #align submonoid.equiv_map_of_injective_coe_mul_equiv Submonoid.equiv_map_of_injective_coe_mul_equiv
+#align
+  add_submonoid.equiv_map_of_injective_coe_add_equiv AddSubmonoid.equiv_map_of_injective_coe_add_equiv
 
 section Actions
 
@@ -2272,6 +2435,7 @@ instance smulCommClass_left [SMul M' β] [SMul α β] [SMulCommClass M' α β] (
     SMulCommClass S α β :=
   ⟨fun a => (smul_comm (a : M') : _)⟩
 #align submonoid.smul_comm_class_left Submonoid.smulCommClass_left
+#align add_submonoid.vadd_comm_class_left AddSubmonoid.vaddCommClass_left
 
 /- warning: submonoid.smul_comm_class_right -> Submonoid.smulCommClass_right is a dubious translation:
 lean 3 declaration is
@@ -2284,6 +2448,7 @@ instance smulCommClass_right [SMul α β] [SMul M' β] [SMulCommClass α M' β] 
     SMulCommClass α S β :=
   ⟨fun a s => (smul_comm a (s : M') : _)⟩
 #align submonoid.smul_comm_class_right Submonoid.smulCommClass_right
+#align add_submonoid.vadd_comm_class_right AddSubmonoid.vaddCommClass_right
 
 /-- Note that this provides `is_scalar_tower S M' M'` which is needed by `smul_mul_assoc`. -/
 instance [SMul α β] [SMul M' α] [SMul M' β] [IsScalarTower M' α β] (S : Submonoid M') :
@@ -2300,6 +2465,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.smul_def Sub
 theorem smul_def [SMul M' α] {S : Submonoid M'} (g : S) (m : α) : g • m = (g : M') • m :=
   rfl
 #align submonoid.smul_def Submonoid.smul_def
+#align add_submonoid.vadd_def AddSubmonoid.vadd_def
 
 instance [SMul M' α] [FaithfulSMul M' α] (S : Submonoid M') : FaithfulSMul S α :=
   ⟨fun x y h => Subtype.ext <| eq_of_smul_eq_smul h⟩

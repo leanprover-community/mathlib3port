@@ -260,7 +260,7 @@ theorem snorm_zero' : snorm (fun x : α => (0 : F)) p μ = 0 := by convert snorm
 #align measure_theory.snorm_zero' MeasureTheory.snorm_zero'
 
 theorem zeroMemℒp : Memℒp (0 : α → E) p μ :=
-  ⟨aeStronglyMeasurableZero, by
+  ⟨ae_strongly_measurable_zero, by
     rw [snorm_zero]
     exact Ennreal.coe_lt_top⟩
 #align measure_theory.zero_mem_ℒp MeasureTheory.zeroMemℒp
@@ -2879,7 +2879,7 @@ private theorem lintegral_rpow_tsum_coe_nnnorm_sub_le_tsum {f : ℕ → α → E
   refine' (lintegral_liminf_le' _).trans _
   ·
     exact fun n =>
-      (Finset.aeMeasurableSum (Finset.range (n + 1)) fun i _ =>
+      (Finset.ae_measurable_sum (Finset.range (n + 1)) fun i _ =>
             ((hf (i + 1)).sub (hf i)).ennnorm).pow_const
         _
   · exact liminf_le_of_frequently_le' (frequently_of_forall h)
@@ -3083,7 +3083,7 @@ variable (E p μ)
 bounded continuous representative. -/
 def MeasureTheory.lp.boundedContinuousFunction : AddSubgroup (lp E p μ) :=
   AddSubgroup.addSubgroupOf
-    ((ContinuousMap.toAeEqFunAddHom μ).comp (toContinuousMapAddHom α E)).range (lp E p μ)
+    ((ContinuousMap.to_ae_eq_fun_add_hom μ).comp (toContinuousMapAddHom α E)).range (lp E p μ)
 #align measure_theory.Lp.bounded_continuous_function MeasureTheory.lp.boundedContinuousFunction
 
 variable {E p μ}
@@ -3128,8 +3128,9 @@ variable (p μ)
 space as an element of `Lp`. -/
 def toLpHom [Fact (1 ≤ p)] : NormedAddGroupHom (α →ᵇ E) (lp E p μ) :=
   {
-    AddMonoidHom.codRestrict ((ContinuousMap.toAeEqFunAddHom μ).comp (toContinuousMapAddHom α E))
-      (lp E p μ) mem_Lp with
+    AddMonoidHom.codRestrict
+      ((ContinuousMap.to_ae_eq_fun_add_hom μ).comp (toContinuousMapAddHom α E)) (lp E p μ)
+      mem_Lp with
     bound' := ⟨_, Lp_norm_le⟩ }
 #align bounded_continuous_function.to_Lp_hom BoundedContinuousFunction.toLpHom
 
@@ -3140,7 +3141,7 @@ theorem range_to_Lp_hom [Fact (1 ≤ p)] :
   symm
   convert
     AddMonoidHom.add_subgroup_of_range_eq_of_le
-      ((ContinuousMap.toAeEqFunAddHom μ).comp (to_continuous_map_add_hom α E))
+      ((ContinuousMap.to_ae_eq_fun_add_hom μ).comp (to_continuous_map_add_hom α E))
       (by
         rintro - ⟨f, rfl⟩
         exact mem_Lp f : _ ≤ Lp E p μ)

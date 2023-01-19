@@ -73,6 +73,8 @@ instance (priority := 100) OrderedCommGroup.toOrderedCancelCommMonoid [OrderedCo
     OrderedCancelCommMonoid α :=
   { ‹OrderedCommGroup α› with le_of_mul_le_mul_left := fun a b c => le_of_mul_le_mul_left' }
 #align ordered_comm_group.to_ordered_cancel_comm_monoid OrderedCommGroup.toOrderedCancelCommMonoid
+#align
+  ordered_add_comm_group.to_ordered_cancel_add_comm_monoid OrderedAddCommGroup.toOrderedCancelAddCommMonoid
 -/
 
 example (α : Type u) [OrderedAddCommGroup α] : CovariantClass α α (swap (· + ·)) (· < ·) :=
@@ -127,6 +129,7 @@ theorem Left.inv_le_one_iff : a⁻¹ ≤ 1 ↔ 1 ≤ a :=
   rw [← mul_le_mul_iff_left a]
   simp
 #align left.inv_le_one_iff Left.inv_le_one_iff
+#align left.neg_nonpos_iff Left.neg_nonpos_iff
 
 /- warning: left.one_le_inv_iff -> Left.one_le_inv_iff is a dubious translation:
 lean 3 declaration is
@@ -141,6 +144,7 @@ theorem Left.one_le_inv_iff : 1 ≤ a⁻¹ ↔ a ≤ 1 :=
   rw [← mul_le_mul_iff_left a]
   simp
 #align left.one_le_inv_iff Left.one_le_inv_iff
+#align left.nonneg_neg_iff Left.nonneg_neg_iff
 
 /- warning: le_inv_mul_iff_mul_le -> le_inv_mul_iff_mul_le is a dubious translation:
 lean 3 declaration is
@@ -154,6 +158,7 @@ theorem le_inv_mul_iff_mul_le : b ≤ a⁻¹ * c ↔ a * b ≤ c :=
   rw [← mul_le_mul_iff_left a]
   simp
 #align le_inv_mul_iff_mul_le le_inv_mul_iff_mul_le
+#align le_neg_add_iff_add_le le_neg_add_iff_add_le
 
 /- warning: inv_mul_le_iff_le_mul -> inv_mul_le_iff_le_mul is a dubious translation:
 lean 3 declaration is
@@ -165,6 +170,7 @@ Case conversion may be inaccurate. Consider using '#align inv_mul_le_iff_le_mul 
 theorem inv_mul_le_iff_le_mul : b⁻¹ * a ≤ c ↔ a ≤ b * c := by
   rw [← mul_le_mul_iff_left b, mul_inv_cancel_left]
 #align inv_mul_le_iff_le_mul inv_mul_le_iff_le_mul
+#align neg_add_le_iff_le_add neg_add_le_iff_le_add
 
 /- warning: inv_le_iff_one_le_mul' -> inv_le_iff_one_le_mul' is a dubious translation:
 lean 3 declaration is
@@ -176,6 +182,7 @@ Case conversion may be inaccurate. Consider using '#align inv_le_iff_one_le_mul'
 theorem inv_le_iff_one_le_mul' : a⁻¹ ≤ b ↔ 1 ≤ a * b :=
   (mul_le_mul_iff_left a).symm.trans <| by rw [mul_inv_self]
 #align inv_le_iff_one_le_mul' inv_le_iff_one_le_mul'
+#align neg_le_iff_add_nonneg' neg_le_iff_add_nonneg'
 
 /- warning: le_inv_iff_mul_le_one_left -> le_inv_iff_mul_le_one_left is a dubious translation:
 lean 3 declaration is
@@ -187,6 +194,7 @@ Case conversion may be inaccurate. Consider using '#align le_inv_iff_mul_le_one_
 theorem le_inv_iff_mul_le_one_left : a ≤ b⁻¹ ↔ b * a ≤ 1 :=
   (mul_le_mul_iff_left b).symm.trans <| by rw [mul_inv_self]
 #align le_inv_iff_mul_le_one_left le_inv_iff_mul_le_one_left
+#align le_neg_iff_add_nonpos_left le_neg_iff_add_nonpos_left
 
 /- warning: le_inv_mul_iff_le -> le_inv_mul_iff_le is a dubious translation:
 lean 3 declaration is
@@ -198,6 +206,7 @@ Case conversion may be inaccurate. Consider using '#align le_inv_mul_iff_le le_i
 theorem le_inv_mul_iff_le : 1 ≤ b⁻¹ * a ↔ b ≤ a := by
   rw [← mul_le_mul_iff_left b, mul_one, mul_inv_cancel_left]
 #align le_inv_mul_iff_le le_inv_mul_iff_le
+#align le_neg_add_iff_le le_neg_add_iff_le
 
 /- warning: inv_mul_le_one_iff -> inv_mul_le_one_iff is a dubious translation:
 lean 3 declaration is
@@ -209,6 +218,7 @@ Case conversion may be inaccurate. Consider using '#align inv_mul_le_one_iff inv
 theorem inv_mul_le_one_iff : a⁻¹ * b ≤ 1 ↔ b ≤ a :=
   trans inv_mul_le_iff_le_mul <| by rw [mul_one]
 #align inv_mul_le_one_iff inv_mul_le_one_iff
+#align neg_add_nonpos_iff neg_add_nonpos_iff
 
 end TypeclassesLeftLe
 
@@ -227,6 +237,7 @@ Case conversion may be inaccurate. Consider using '#align left.one_lt_inv_iff Le
 theorem Left.one_lt_inv_iff : 1 < a⁻¹ ↔ a < 1 := by
   rw [← mul_lt_mul_iff_left a, mul_inv_self, mul_one]
 #align left.one_lt_inv_iff Left.one_lt_inv_iff
+#align left.neg_pos_iff Left.neg_pos_iff
 
 /- warning: left.inv_lt_one_iff -> Left.inv_lt_one_iff is a dubious translation:
 lean 3 declaration is
@@ -239,6 +250,7 @@ Case conversion may be inaccurate. Consider using '#align left.inv_lt_one_iff Le
 theorem Left.inv_lt_one_iff : a⁻¹ < 1 ↔ 1 < a := by
   rw [← mul_lt_mul_iff_left a, mul_inv_self, mul_one]
 #align left.inv_lt_one_iff Left.inv_lt_one_iff
+#align left.neg_neg_iff Left.neg_neg_iff
 
 /- warning: lt_inv_mul_iff_mul_lt -> lt_inv_mul_iff_mul_lt is a dubious translation:
 lean 3 declaration is
@@ -252,6 +264,7 @@ theorem lt_inv_mul_iff_mul_lt : b < a⁻¹ * c ↔ a * b < c :=
   rw [← mul_lt_mul_iff_left a]
   simp
 #align lt_inv_mul_iff_mul_lt lt_inv_mul_iff_mul_lt
+#align lt_neg_add_iff_add_lt lt_neg_add_iff_add_lt
 
 /- warning: inv_mul_lt_iff_lt_mul -> inv_mul_lt_iff_lt_mul is a dubious translation:
 lean 3 declaration is
@@ -263,6 +276,7 @@ Case conversion may be inaccurate. Consider using '#align inv_mul_lt_iff_lt_mul 
 theorem inv_mul_lt_iff_lt_mul : b⁻¹ * a < c ↔ a < b * c := by
   rw [← mul_lt_mul_iff_left b, mul_inv_cancel_left]
 #align inv_mul_lt_iff_lt_mul inv_mul_lt_iff_lt_mul
+#align neg_add_lt_iff_lt_add neg_add_lt_iff_lt_add
 
 /- warning: inv_lt_iff_one_lt_mul' -> inv_lt_iff_one_lt_mul' is a dubious translation:
 lean 3 declaration is
@@ -274,6 +288,7 @@ Case conversion may be inaccurate. Consider using '#align inv_lt_iff_one_lt_mul'
 theorem inv_lt_iff_one_lt_mul' : a⁻¹ < b ↔ 1 < a * b :=
   (mul_lt_mul_iff_left a).symm.trans <| by rw [mul_inv_self]
 #align inv_lt_iff_one_lt_mul' inv_lt_iff_one_lt_mul'
+#align neg_lt_iff_pos_add' neg_lt_iff_pos_add'
 
 /- warning: lt_inv_iff_mul_lt_one' -> lt_inv_iff_mul_lt_one' is a dubious translation:
 lean 3 declaration is
@@ -285,6 +300,7 @@ Case conversion may be inaccurate. Consider using '#align lt_inv_iff_mul_lt_one'
 theorem lt_inv_iff_mul_lt_one' : a < b⁻¹ ↔ b * a < 1 :=
   (mul_lt_mul_iff_left b).symm.trans <| by rw [mul_inv_self]
 #align lt_inv_iff_mul_lt_one' lt_inv_iff_mul_lt_one'
+#align lt_neg_iff_add_neg' lt_neg_iff_add_neg'
 
 /- warning: lt_inv_mul_iff_lt -> lt_inv_mul_iff_lt is a dubious translation:
 lean 3 declaration is
@@ -296,6 +312,7 @@ Case conversion may be inaccurate. Consider using '#align lt_inv_mul_iff_lt lt_i
 theorem lt_inv_mul_iff_lt : 1 < b⁻¹ * a ↔ b < a := by
   rw [← mul_lt_mul_iff_left b, mul_one, mul_inv_cancel_left]
 #align lt_inv_mul_iff_lt lt_inv_mul_iff_lt
+#align lt_neg_add_iff_lt lt_neg_add_iff_lt
 
 /- warning: inv_mul_lt_one_iff -> inv_mul_lt_one_iff is a dubious translation:
 lean 3 declaration is
@@ -307,6 +324,7 @@ Case conversion may be inaccurate. Consider using '#align inv_mul_lt_one_iff inv
 theorem inv_mul_lt_one_iff : a⁻¹ * b < 1 ↔ b < a :=
   trans inv_mul_lt_iff_lt_mul <| by rw [mul_one]
 #align inv_mul_lt_one_iff inv_mul_lt_one_iff
+#align neg_add_neg_iff neg_add_neg_iff
 
 end TypeclassesLeftLt
 
@@ -327,6 +345,7 @@ theorem Right.inv_le_one_iff : a⁻¹ ≤ 1 ↔ 1 ≤ a :=
   rw [← mul_le_mul_iff_right a]
   simp
 #align right.inv_le_one_iff Right.inv_le_one_iff
+#align right.neg_nonpos_iff Right.neg_nonpos_iff
 
 /- warning: right.one_le_inv_iff -> Right.one_le_inv_iff is a dubious translation:
 lean 3 declaration is
@@ -341,6 +360,7 @@ theorem Right.one_le_inv_iff : 1 ≤ a⁻¹ ↔ a ≤ 1 :=
   rw [← mul_le_mul_iff_right a]
   simp
 #align right.one_le_inv_iff Right.one_le_inv_iff
+#align right.nonneg_neg_iff Right.nonneg_neg_iff
 
 /- warning: inv_le_iff_one_le_mul -> inv_le_iff_one_le_mul is a dubious translation:
 lean 3 declaration is
@@ -352,6 +372,7 @@ Case conversion may be inaccurate. Consider using '#align inv_le_iff_one_le_mul 
 theorem inv_le_iff_one_le_mul : a⁻¹ ≤ b ↔ 1 ≤ b * a :=
   (mul_le_mul_iff_right a).symm.trans <| by rw [inv_mul_self]
 #align inv_le_iff_one_le_mul inv_le_iff_one_le_mul
+#align neg_le_iff_add_nonneg neg_le_iff_add_nonneg
 
 /- warning: le_inv_iff_mul_le_one_right -> le_inv_iff_mul_le_one_right is a dubious translation:
 lean 3 declaration is
@@ -363,6 +384,7 @@ Case conversion may be inaccurate. Consider using '#align le_inv_iff_mul_le_one_
 theorem le_inv_iff_mul_le_one_right : a ≤ b⁻¹ ↔ a * b ≤ 1 :=
   (mul_le_mul_iff_right b).symm.trans <| by rw [inv_mul_self]
 #align le_inv_iff_mul_le_one_right le_inv_iff_mul_le_one_right
+#align le_neg_iff_add_nonpos_right le_neg_iff_add_nonpos_right
 
 /- warning: mul_inv_le_iff_le_mul -> mul_inv_le_iff_le_mul is a dubious translation:
 lean 3 declaration is
@@ -374,6 +396,7 @@ Case conversion may be inaccurate. Consider using '#align mul_inv_le_iff_le_mul 
 theorem mul_inv_le_iff_le_mul : a * b⁻¹ ≤ c ↔ a ≤ c * b :=
   (mul_le_mul_iff_right b).symm.trans <| by rw [inv_mul_cancel_right]
 #align mul_inv_le_iff_le_mul mul_inv_le_iff_le_mul
+#align add_neg_le_iff_le_add add_neg_le_iff_le_add
 
 /- warning: le_mul_inv_iff_mul_le -> le_mul_inv_iff_mul_le is a dubious translation:
 lean 3 declaration is
@@ -385,6 +408,7 @@ Case conversion may be inaccurate. Consider using '#align le_mul_inv_iff_mul_le 
 theorem le_mul_inv_iff_mul_le : c ≤ a * b⁻¹ ↔ c * b ≤ a :=
   (mul_le_mul_iff_right b).symm.trans <| by rw [inv_mul_cancel_right]
 #align le_mul_inv_iff_mul_le le_mul_inv_iff_mul_le
+#align le_add_neg_iff_add_le le_add_neg_iff_add_le
 
 /- warning: mul_inv_le_one_iff_le -> mul_inv_le_one_iff_le is a dubious translation:
 lean 3 declaration is
@@ -396,6 +420,7 @@ Case conversion may be inaccurate. Consider using '#align mul_inv_le_one_iff_le 
 theorem mul_inv_le_one_iff_le : a * b⁻¹ ≤ 1 ↔ a ≤ b :=
   mul_inv_le_iff_le_mul.trans <| by rw [one_mul]
 #align mul_inv_le_one_iff_le mul_inv_le_one_iff_le
+#align add_neg_nonpos_iff_le add_neg_nonpos_iff_le
 
 /- warning: le_mul_inv_iff_le -> le_mul_inv_iff_le is a dubious translation:
 lean 3 declaration is
@@ -407,6 +432,7 @@ Case conversion may be inaccurate. Consider using '#align le_mul_inv_iff_le le_m
 theorem le_mul_inv_iff_le : 1 ≤ a * b⁻¹ ↔ b ≤ a := by
   rw [← mul_le_mul_iff_right b, one_mul, inv_mul_cancel_right]
 #align le_mul_inv_iff_le le_mul_inv_iff_le
+#align le_add_neg_iff_le le_add_neg_iff_le
 
 /- warning: mul_inv_le_one_iff -> mul_inv_le_one_iff is a dubious translation:
 lean 3 declaration is
@@ -418,6 +444,7 @@ Case conversion may be inaccurate. Consider using '#align mul_inv_le_one_iff mul
 theorem mul_inv_le_one_iff : b * a⁻¹ ≤ 1 ↔ b ≤ a :=
   trans mul_inv_le_iff_le_mul <| by rw [one_mul]
 #align mul_inv_le_one_iff mul_inv_le_one_iff
+#align add_neg_nonpos_iff add_neg_nonpos_iff
 
 end TypeclassesRightLe
 
@@ -436,6 +463,7 @@ Case conversion may be inaccurate. Consider using '#align right.inv_lt_one_iff R
 theorem Right.inv_lt_one_iff : a⁻¹ < 1 ↔ 1 < a := by
   rw [← mul_lt_mul_iff_right a, inv_mul_self, one_mul]
 #align right.inv_lt_one_iff Right.inv_lt_one_iff
+#align right.neg_neg_iff Right.neg_neg_iff
 
 /- warning: right.one_lt_inv_iff -> Right.one_lt_inv_iff is a dubious translation:
 lean 3 declaration is
@@ -448,6 +476,7 @@ Case conversion may be inaccurate. Consider using '#align right.one_lt_inv_iff R
 theorem Right.one_lt_inv_iff : 1 < a⁻¹ ↔ a < 1 := by
   rw [← mul_lt_mul_iff_right a, inv_mul_self, one_mul]
 #align right.one_lt_inv_iff Right.one_lt_inv_iff
+#align right.neg_pos_iff Right.neg_pos_iff
 
 /- warning: inv_lt_iff_one_lt_mul -> inv_lt_iff_one_lt_mul is a dubious translation:
 lean 3 declaration is
@@ -459,6 +488,7 @@ Case conversion may be inaccurate. Consider using '#align inv_lt_iff_one_lt_mul 
 theorem inv_lt_iff_one_lt_mul : a⁻¹ < b ↔ 1 < b * a :=
   (mul_lt_mul_iff_right a).symm.trans <| by rw [inv_mul_self]
 #align inv_lt_iff_one_lt_mul inv_lt_iff_one_lt_mul
+#align neg_lt_iff_pos_add neg_lt_iff_pos_add
 
 /- warning: lt_inv_iff_mul_lt_one -> lt_inv_iff_mul_lt_one is a dubious translation:
 lean 3 declaration is
@@ -470,6 +500,7 @@ Case conversion may be inaccurate. Consider using '#align lt_inv_iff_mul_lt_one 
 theorem lt_inv_iff_mul_lt_one : a < b⁻¹ ↔ a * b < 1 :=
   (mul_lt_mul_iff_right b).symm.trans <| by rw [inv_mul_self]
 #align lt_inv_iff_mul_lt_one lt_inv_iff_mul_lt_one
+#align lt_neg_iff_add_neg lt_neg_iff_add_neg
 
 /- warning: mul_inv_lt_iff_lt_mul -> mul_inv_lt_iff_lt_mul is a dubious translation:
 lean 3 declaration is
@@ -481,6 +512,7 @@ Case conversion may be inaccurate. Consider using '#align mul_inv_lt_iff_lt_mul 
 theorem mul_inv_lt_iff_lt_mul : a * b⁻¹ < c ↔ a < c * b := by
   rw [← mul_lt_mul_iff_right b, inv_mul_cancel_right]
 #align mul_inv_lt_iff_lt_mul mul_inv_lt_iff_lt_mul
+#align add_neg_lt_iff_lt_add add_neg_lt_iff_lt_add
 
 /- warning: lt_mul_inv_iff_mul_lt -> lt_mul_inv_iff_mul_lt is a dubious translation:
 lean 3 declaration is
@@ -492,6 +524,7 @@ Case conversion may be inaccurate. Consider using '#align lt_mul_inv_iff_mul_lt 
 theorem lt_mul_inv_iff_mul_lt : c < a * b⁻¹ ↔ c * b < a :=
   (mul_lt_mul_iff_right b).symm.trans <| by rw [inv_mul_cancel_right]
 #align lt_mul_inv_iff_mul_lt lt_mul_inv_iff_mul_lt
+#align lt_add_neg_iff_add_lt lt_add_neg_iff_add_lt
 
 /- warning: inv_mul_lt_one_iff_lt -> inv_mul_lt_one_iff_lt is a dubious translation:
 lean 3 declaration is
@@ -503,6 +536,7 @@ Case conversion may be inaccurate. Consider using '#align inv_mul_lt_one_iff_lt 
 theorem inv_mul_lt_one_iff_lt : a * b⁻¹ < 1 ↔ a < b := by
   rw [← mul_lt_mul_iff_right b, inv_mul_cancel_right, one_mul]
 #align inv_mul_lt_one_iff_lt inv_mul_lt_one_iff_lt
+#align neg_add_neg_iff_lt neg_add_neg_iff_lt
 
 /- warning: lt_mul_inv_iff_lt -> lt_mul_inv_iff_lt is a dubious translation:
 lean 3 declaration is
@@ -514,6 +548,7 @@ Case conversion may be inaccurate. Consider using '#align lt_mul_inv_iff_lt lt_m
 theorem lt_mul_inv_iff_lt : 1 < a * b⁻¹ ↔ b < a := by
   rw [← mul_lt_mul_iff_right b, one_mul, inv_mul_cancel_right]
 #align lt_mul_inv_iff_lt lt_mul_inv_iff_lt
+#align lt_add_neg_iff_lt lt_add_neg_iff_lt
 
 /- warning: mul_inv_lt_one_iff -> mul_inv_lt_one_iff is a dubious translation:
 lean 3 declaration is
@@ -525,6 +560,7 @@ Case conversion may be inaccurate. Consider using '#align mul_inv_lt_one_iff mul
 theorem mul_inv_lt_one_iff : b * a⁻¹ < 1 ↔ b < a :=
   trans mul_inv_lt_iff_lt_mul <| by rw [one_mul]
 #align mul_inv_lt_one_iff mul_inv_lt_one_iff
+#align add_neg_neg_iff add_neg_neg_iff
 
 end TypeclassesRightLt
 
@@ -545,6 +581,7 @@ theorem inv_le_inv_iff : a⁻¹ ≤ b⁻¹ ↔ b ≤ a :=
   rw [← mul_le_mul_iff_left a, ← mul_le_mul_iff_right b]
   simp
 #align inv_le_inv_iff inv_le_inv_iff
+#align neg_le_neg_iff neg_le_neg_iff
 
 /- warning: le_of_neg_le_neg -> le_of_neg_le_neg is a dubious translation:
 lean 3 declaration is
@@ -566,6 +603,7 @@ theorem mul_inv_le_inv_mul_iff : a * b⁻¹ ≤ d⁻¹ * c ↔ d * a ≤ c * b :
   rw [← mul_le_mul_iff_left d, ← mul_le_mul_iff_right b, mul_inv_cancel_left, mul_assoc,
     inv_mul_cancel_right]
 #align mul_inv_le_inv_mul_iff mul_inv_le_inv_mul_iff
+#align add_neg_le_neg_add_iff add_neg_le_neg_add_iff
 
 /- warning: div_le_self_iff -> div_le_self_iff is a dubious translation:
 lean 3 declaration is
@@ -576,6 +614,7 @@ Case conversion may be inaccurate. Consider using '#align div_le_self_iff div_le
 @[simp, to_additive]
 theorem div_le_self_iff (a : α) {b : α} : a / b ≤ a ↔ 1 ≤ b := by simp [div_eq_mul_inv]
 #align div_le_self_iff div_le_self_iff
+#align sub_le_self_iff sub_le_self_iff
 
 /- warning: le_div_self_iff -> le_div_self_iff is a dubious translation:
 lean 3 declaration is
@@ -586,6 +625,7 @@ Case conversion may be inaccurate. Consider using '#align le_div_self_iff le_div
 @[simp, to_additive]
 theorem le_div_self_iff (a : α) {b : α} : a ≤ a / b ↔ b ≤ 1 := by simp [div_eq_mul_inv]
 #align le_div_self_iff le_div_self_iff
+#align le_sub_self_iff le_sub_self_iff
 
 /- warning: sub_le_self -> sub_le_self is a dubious translation:
 lean 3 declaration is
@@ -615,6 +655,7 @@ theorem inv_lt_inv_iff : a⁻¹ < b⁻¹ ↔ b < a :=
   rw [← mul_lt_mul_iff_left a, ← mul_lt_mul_iff_right b]
   simp
 #align inv_lt_inv_iff inv_lt_inv_iff
+#align neg_lt_neg_iff neg_lt_neg_iff
 
 /- warning: inv_lt' -> inv_lt' is a dubious translation:
 lean 3 declaration is
@@ -625,6 +666,7 @@ Case conversion may be inaccurate. Consider using '#align inv_lt' inv_lt'ₓ'. -
 @[to_additive neg_lt]
 theorem inv_lt' : a⁻¹ < b ↔ b⁻¹ < a := by rw [← inv_lt_inv_iff, inv_inv]
 #align inv_lt' inv_lt'
+#align neg_lt neg_lt
 
 /- warning: lt_inv' -> lt_inv' is a dubious translation:
 lean 3 declaration is
@@ -635,6 +677,7 @@ Case conversion may be inaccurate. Consider using '#align lt_inv' lt_inv'ₓ'. -
 @[to_additive lt_neg]
 theorem lt_inv' : a < b⁻¹ ↔ b < a⁻¹ := by rw [← inv_lt_inv_iff, inv_inv]
 #align lt_inv' lt_inv'
+#align lt_neg lt_neg
 
 /- warning: lt_inv_of_lt_inv -> lt_inv_of_lt_inv is a dubious translation:
 lean 3 declaration is
@@ -669,6 +712,7 @@ theorem mul_inv_lt_inv_mul_iff : a * b⁻¹ < d⁻¹ * c ↔ d * a < c * b := by
   rw [← mul_lt_mul_iff_left d, ← mul_lt_mul_iff_right b, mul_inv_cancel_left, mul_assoc,
     inv_mul_cancel_right]
 #align mul_inv_lt_inv_mul_iff mul_inv_lt_inv_mul_iff
+#align add_neg_lt_neg_add_iff add_neg_lt_neg_add_iff
 
 /- warning: div_lt_self_iff -> div_lt_self_iff is a dubious translation:
 lean 3 declaration is
@@ -679,6 +723,7 @@ Case conversion may be inaccurate. Consider using '#align div_lt_self_iff div_lt
 @[simp, to_additive]
 theorem div_lt_self_iff (a : α) {b : α} : a / b < a ↔ 1 < b := by simp [div_eq_mul_inv]
 #align div_lt_self_iff div_lt_self_iff
+#align sub_lt_self_iff sub_lt_self_iff
 
 /- warning: sub_lt_self -> sub_lt_self is a dubious translation:
 lean 3 declaration is
@@ -709,6 +754,7 @@ Case conversion may be inaccurate. Consider using '#align left.inv_le_self Left.
 theorem Left.inv_le_self (h : 1 ≤ a) : a⁻¹ ≤ a :=
   le_trans (Left.inv_le_one_iff.mpr h) h
 #align left.inv_le_self Left.inv_le_self
+#align left.neg_le_self Left.neg_le_self
 
 /- warning: neg_le_self -> neg_le_self is a dubious translation:
 lean 3 declaration is
@@ -729,6 +775,7 @@ Case conversion may be inaccurate. Consider using '#align left.self_le_inv Left.
 theorem Left.self_le_inv (h : a ≤ 1) : a ≤ a⁻¹ :=
   le_trans h (Left.one_le_inv_iff.mpr h)
 #align left.self_le_inv Left.self_le_inv
+#align left.self_le_neg Left.self_le_neg
 
 end LeftLe
 
@@ -746,6 +793,7 @@ Case conversion may be inaccurate. Consider using '#align left.inv_lt_self Left.
 theorem Left.inv_lt_self (h : 1 < a) : a⁻¹ < a :=
   (Left.inv_lt_one_iff.mpr h).trans h
 #align left.inv_lt_self Left.inv_lt_self
+#align left.neg_lt_self Left.neg_lt_self
 
 /- warning: neg_lt_self -> neg_lt_self is a dubious translation:
 lean 3 declaration is
@@ -766,6 +814,7 @@ Case conversion may be inaccurate. Consider using '#align left.self_lt_inv Left.
 theorem Left.self_lt_inv (h : a < 1) : a < a⁻¹ :=
   lt_trans h (Left.one_lt_inv_iff.mpr h)
 #align left.self_lt_inv Left.self_lt_inv
+#align left.self_lt_neg Left.self_lt_neg
 
 end LeftLt
 
@@ -783,6 +832,7 @@ Case conversion may be inaccurate. Consider using '#align right.inv_le_self Righ
 theorem Right.inv_le_self (h : 1 ≤ a) : a⁻¹ ≤ a :=
   le_trans (Right.inv_le_one_iff.mpr h) h
 #align right.inv_le_self Right.inv_le_self
+#align right.neg_le_self Right.neg_le_self
 
 /- warning: right.self_le_inv -> Right.self_le_inv is a dubious translation:
 lean 3 declaration is
@@ -794,6 +844,7 @@ Case conversion may be inaccurate. Consider using '#align right.self_le_inv Righ
 theorem Right.self_le_inv (h : a ≤ 1) : a ≤ a⁻¹ :=
   le_trans h (Right.one_le_inv_iff.mpr h)
 #align right.self_le_inv Right.self_le_inv
+#align right.self_le_neg Right.self_le_neg
 
 end RightLe
 
@@ -811,6 +862,7 @@ Case conversion may be inaccurate. Consider using '#align right.inv_lt_self Righ
 theorem Right.inv_lt_self (h : 1 < a) : a⁻¹ < a :=
   (Right.inv_lt_one_iff.mpr h).trans h
 #align right.inv_lt_self Right.inv_lt_self
+#align right.neg_lt_self Right.neg_lt_self
 
 /- warning: right.self_lt_inv -> Right.self_lt_inv is a dubious translation:
 lean 3 declaration is
@@ -822,6 +874,7 @@ Case conversion may be inaccurate. Consider using '#align right.self_lt_inv Righ
 theorem Right.self_lt_inv (h : a < 1) : a < a⁻¹ :=
   lt_trans h (Right.one_lt_inv_iff.mpr h)
 #align right.self_lt_inv Right.self_lt_inv
+#align right.self_lt_neg Right.self_lt_neg
 
 end RightLt
 
@@ -846,6 +899,7 @@ Case conversion may be inaccurate. Consider using '#align inv_mul_le_iff_le_mul'
 @[to_additive]
 theorem inv_mul_le_iff_le_mul' : c⁻¹ * a ≤ b ↔ a ≤ b * c := by rw [inv_mul_le_iff_le_mul, mul_comm]
 #align inv_mul_le_iff_le_mul' inv_mul_le_iff_le_mul'
+#align neg_add_le_iff_le_add' neg_add_le_iff_le_add'
 
 /- warning: mul_inv_le_iff_le_mul' -> mul_inv_le_iff_le_mul' is a dubious translation:
 lean 3 declaration is
@@ -857,6 +911,7 @@ Case conversion may be inaccurate. Consider using '#align mul_inv_le_iff_le_mul'
 theorem mul_inv_le_iff_le_mul' : a * b⁻¹ ≤ c ↔ a ≤ b * c := by
   rw [← inv_mul_le_iff_le_mul, mul_comm]
 #align mul_inv_le_iff_le_mul' mul_inv_le_iff_le_mul'
+#align add_neg_le_iff_le_add' add_neg_le_iff_le_add'
 
 /- warning: mul_inv_le_mul_inv_iff' -> mul_inv_le_mul_inv_iff' is a dubious translation:
 lean 3 declaration is
@@ -868,6 +923,7 @@ Case conversion may be inaccurate. Consider using '#align mul_inv_le_mul_inv_iff
 theorem mul_inv_le_mul_inv_iff' : a * b⁻¹ ≤ c * d⁻¹ ↔ a * d ≤ c * b := by
   rw [mul_comm c, mul_inv_le_inv_mul_iff, mul_comm]
 #align mul_inv_le_mul_inv_iff' mul_inv_le_mul_inv_iff'
+#align add_neg_le_add_neg_iff add_neg_le_add_neg_iff
 
 end LE
 
@@ -884,6 +940,7 @@ Case conversion may be inaccurate. Consider using '#align inv_mul_lt_iff_lt_mul'
 @[to_additive]
 theorem inv_mul_lt_iff_lt_mul' : c⁻¹ * a < b ↔ a < b * c := by rw [inv_mul_lt_iff_lt_mul, mul_comm]
 #align inv_mul_lt_iff_lt_mul' inv_mul_lt_iff_lt_mul'
+#align neg_add_lt_iff_lt_add' neg_add_lt_iff_lt_add'
 
 /- warning: mul_inv_lt_iff_le_mul' -> mul_inv_lt_iff_le_mul' is a dubious translation:
 lean 3 declaration is
@@ -895,6 +952,7 @@ Case conversion may be inaccurate. Consider using '#align mul_inv_lt_iff_le_mul'
 theorem mul_inv_lt_iff_le_mul' : a * b⁻¹ < c ↔ a < b * c := by
   rw [← inv_mul_lt_iff_lt_mul, mul_comm]
 #align mul_inv_lt_iff_le_mul' mul_inv_lt_iff_le_mul'
+#align add_neg_lt_iff_le_add' add_neg_lt_iff_le_add'
 
 /- warning: mul_inv_lt_mul_inv_iff' -> mul_inv_lt_mul_inv_iff' is a dubious translation:
 lean 3 declaration is
@@ -906,6 +964,7 @@ Case conversion may be inaccurate. Consider using '#align mul_inv_lt_mul_inv_iff
 theorem mul_inv_lt_mul_inv_iff' : a * b⁻¹ < c * d⁻¹ ↔ a * d < c * b := by
   rw [mul_comm c, mul_inv_lt_inv_mul_iff, mul_comm]
 #align mul_inv_lt_mul_inv_iff' mul_inv_lt_mul_inv_iff'
+#align add_neg_lt_add_neg_iff add_neg_lt_add_neg_iff
 
 end LT
 
@@ -1155,6 +1214,7 @@ Case conversion may be inaccurate. Consider using '#align div_le_div_iff_right d
 theorem div_le_div_iff_right (c : α) : a / c ≤ b / c ↔ a ≤ b := by
   simpa only [div_eq_mul_inv] using mul_le_mul_iff_right _
 #align div_le_div_iff_right div_le_div_iff_right
+#align sub_le_sub_iff_right sub_le_sub_iff_right
 
 /- warning: div_le_div_right' -> div_le_div_right' is a dubious translation:
 lean 3 declaration is
@@ -1166,6 +1226,7 @@ Case conversion may be inaccurate. Consider using '#align div_le_div_right' div_
 theorem div_le_div_right' (h : a ≤ b) (c : α) : a / c ≤ b / c :=
   (div_le_div_iff_right c).2 h
 #align div_le_div_right' div_le_div_right'
+#align sub_le_sub_right sub_le_sub_right
 
 /- warning: one_le_div' -> one_le_div' is a dubious translation:
 lean 3 declaration is
@@ -1177,6 +1238,7 @@ Case conversion may be inaccurate. Consider using '#align one_le_div' one_le_div
 theorem one_le_div' : 1 ≤ a / b ↔ b ≤ a := by
   rw [← mul_le_mul_iff_right b, one_mul, div_eq_mul_inv, inv_mul_cancel_right]
 #align one_le_div' one_le_div'
+#align sub_nonneg sub_nonneg
 
 /- warning: le_of_sub_nonneg -> le_of_sub_nonneg is a dubious translation:
 lean 3 declaration is
@@ -1204,6 +1266,7 @@ Case conversion may be inaccurate. Consider using '#align div_le_one' div_le_one
 theorem div_le_one' : a / b ≤ 1 ↔ a ≤ b := by
   rw [← mul_le_mul_iff_right b, one_mul, div_eq_mul_inv, inv_mul_cancel_right]
 #align div_le_one' div_le_one'
+#align sub_nonpos sub_nonpos
 
 /- warning: le_of_sub_nonpos -> le_of_sub_nonpos is a dubious translation:
 lean 3 declaration is
@@ -1231,6 +1294,7 @@ Case conversion may be inaccurate. Consider using '#align le_div_iff_mul_le le_d
 theorem le_div_iff_mul_le : a ≤ c / b ↔ a * b ≤ c := by
   rw [← mul_le_mul_iff_right b, div_eq_mul_inv, inv_mul_cancel_right]
 #align le_div_iff_mul_le le_div_iff_mul_le
+#align le_sub_iff_add_le le_sub_iff_add_le
 
 /- warning: add_le_of_le_sub_right -> add_le_of_le_sub_right is a dubious translation:
 lean 3 declaration is
@@ -1258,6 +1322,7 @@ Case conversion may be inaccurate. Consider using '#align div_le_iff_le_mul div_
 theorem div_le_iff_le_mul : a / c ≤ b ↔ a ≤ b * c := by
   rw [← mul_le_mul_iff_right c, div_eq_mul_inv, inv_mul_cancel_right]
 #align div_le_iff_le_mul div_le_iff_le_mul
+#align sub_le_iff_le_add sub_le_iff_le_add
 
 /- warning: add_group.to_has_ordered_sub -> AddGroup.toHasOrderedSub is a dubious translation:
 lean 3 declaration is
@@ -1292,6 +1357,7 @@ theorem div_le_div_iff_left (a : α) : a / b ≤ a / c ↔ c ≤ b := by
   rw [div_eq_mul_inv, div_eq_mul_inv, ← mul_le_mul_iff_left a⁻¹, inv_mul_cancel_left,
     inv_mul_cancel_left, inv_le_inv_iff]
 #align div_le_div_iff_left div_le_div_iff_left
+#align sub_le_sub_iff_left sub_le_sub_iff_left
 
 /- warning: div_le_div_left' -> div_le_div_left' is a dubious translation:
 lean 3 declaration is
@@ -1303,6 +1369,7 @@ Case conversion may be inaccurate. Consider using '#align div_le_div_left' div_l
 theorem div_le_div_left' (h : a ≤ b) (c : α) : c / b ≤ c / a :=
   (div_le_div_iff_left c).2 h
 #align div_le_div_left' div_le_div_left'
+#align sub_le_sub_left sub_le_sub_left
 
 end Left
 
@@ -1326,6 +1393,7 @@ Case conversion may be inaccurate. Consider using '#align div_le_div_iff' div_le
 theorem div_le_div_iff' : a / b ≤ c / d ↔ a * d ≤ c * b := by
   simpa only [div_eq_mul_inv] using mul_inv_le_mul_inv_iff'
 #align div_le_div_iff' div_le_div_iff'
+#align sub_le_sub_iff sub_le_sub_iff
 
 /- warning: le_div_iff_mul_le' -> le_div_iff_mul_le' is a dubious translation:
 lean 3 declaration is
@@ -1336,6 +1404,7 @@ Case conversion may be inaccurate. Consider using '#align le_div_iff_mul_le' le_
 @[to_additive]
 theorem le_div_iff_mul_le' : b ≤ c / a ↔ a * b ≤ c := by rw [le_div_iff_mul_le, mul_comm]
 #align le_div_iff_mul_le' le_div_iff_mul_le'
+#align le_sub_iff_add_le' le_sub_iff_add_le'
 
 /- warning: add_le_of_le_sub_left -> add_le_of_le_sub_left is a dubious translation:
 lean 3 declaration is
@@ -1362,6 +1431,7 @@ Case conversion may be inaccurate. Consider using '#align div_le_iff_le_mul' div
 @[to_additive]
 theorem div_le_iff_le_mul' : a / b ≤ c ↔ a ≤ b * c := by rw [div_le_iff_le_mul, mul_comm]
 #align div_le_iff_le_mul' div_le_iff_le_mul'
+#align sub_le_iff_le_add' sub_le_iff_le_add'
 
 /- warning: le_add_of_sub_left_le -> le_add_of_sub_left_le is a dubious translation:
 lean 3 declaration is
@@ -1389,6 +1459,7 @@ Case conversion may be inaccurate. Consider using '#align inv_le_div_iff_le_mul 
 theorem inv_le_div_iff_le_mul : b⁻¹ ≤ a / c ↔ c ≤ a * b :=
   le_div_iff_mul_le.trans inv_mul_le_iff_le_mul'
 #align inv_le_div_iff_le_mul inv_le_div_iff_le_mul
+#align neg_le_sub_iff_le_add neg_le_sub_iff_le_add
 
 /- warning: inv_le_div_iff_le_mul' -> inv_le_div_iff_le_mul' is a dubious translation:
 lean 3 declaration is
@@ -1399,6 +1470,7 @@ Case conversion may be inaccurate. Consider using '#align inv_le_div_iff_le_mul'
 @[to_additive]
 theorem inv_le_div_iff_le_mul' : a⁻¹ ≤ b / c ↔ c ≤ a * b := by rw [inv_le_div_iff_le_mul, mul_comm]
 #align inv_le_div_iff_le_mul' inv_le_div_iff_le_mul'
+#align neg_le_sub_iff_le_add' neg_le_sub_iff_le_add'
 
 /- warning: div_le_comm -> div_le_comm is a dubious translation:
 lean 3 declaration is
@@ -1410,6 +1482,7 @@ Case conversion may be inaccurate. Consider using '#align div_le_comm div_le_com
 theorem div_le_comm : a / b ≤ c ↔ a / c ≤ b :=
   div_le_iff_le_mul'.trans div_le_iff_le_mul.symm
 #align div_le_comm div_le_comm
+#align sub_le_comm sub_le_comm
 
 /- warning: le_div_comm -> le_div_comm is a dubious translation:
 lean 3 declaration is
@@ -1421,6 +1494,7 @@ Case conversion may be inaccurate. Consider using '#align le_div_comm le_div_com
 theorem le_div_comm : a ≤ b / c ↔ c ≤ b / a :=
   le_div_iff_mul_le'.trans le_div_iff_mul_le.symm
 #align le_div_comm le_div_comm
+#align le_sub_comm le_sub_comm
 
 end LE
 
@@ -1440,6 +1514,7 @@ theorem div_le_div'' (hab : a ≤ b) (hcd : c ≤ d) : a / d ≤ b / c :=
   rw [div_eq_mul_inv, div_eq_mul_inv, mul_comm b, mul_inv_le_inv_mul_iff, mul_comm]
   exact mul_le_mul' hab hcd
 #align div_le_div'' div_le_div''
+#align sub_le_sub sub_le_sub
 
 end Preorder
 
@@ -1465,6 +1540,7 @@ Case conversion may be inaccurate. Consider using '#align div_lt_div_iff_right d
 theorem div_lt_div_iff_right (c : α) : a / c < b / c ↔ a < b := by
   simpa only [div_eq_mul_inv] using mul_lt_mul_iff_right _
 #align div_lt_div_iff_right div_lt_div_iff_right
+#align sub_lt_sub_iff_right sub_lt_sub_iff_right
 
 /- warning: div_lt_div_right' -> div_lt_div_right' is a dubious translation:
 lean 3 declaration is
@@ -1476,6 +1552,7 @@ Case conversion may be inaccurate. Consider using '#align div_lt_div_right' div_
 theorem div_lt_div_right' (h : a < b) (c : α) : a / c < b / c :=
   (div_lt_div_iff_right c).2 h
 #align div_lt_div_right' div_lt_div_right'
+#align sub_lt_sub_right sub_lt_sub_right
 
 /- warning: one_lt_div' -> one_lt_div' is a dubious translation:
 lean 3 declaration is
@@ -1487,6 +1564,7 @@ Case conversion may be inaccurate. Consider using '#align one_lt_div' one_lt_div
 theorem one_lt_div' : 1 < a / b ↔ b < a := by
   rw [← mul_lt_mul_iff_right b, one_mul, div_eq_mul_inv, inv_mul_cancel_right]
 #align one_lt_div' one_lt_div'
+#align sub_pos sub_pos
 
 /- warning: lt_of_sub_pos -> lt_of_sub_pos is a dubious translation:
 lean 3 declaration is
@@ -1514,6 +1592,7 @@ Case conversion may be inaccurate. Consider using '#align div_lt_one' div_lt_one
 theorem div_lt_one' : a / b < 1 ↔ a < b := by
   rw [← mul_lt_mul_iff_right b, one_mul, div_eq_mul_inv, inv_mul_cancel_right]
 #align div_lt_one' div_lt_one'
+#align sub_neg sub_neg
 
 /- warning: lt_of_sub_neg -> lt_of_sub_neg is a dubious translation:
 lean 3 declaration is
@@ -1550,6 +1629,7 @@ Case conversion may be inaccurate. Consider using '#align lt_div_iff_mul_lt lt_d
 theorem lt_div_iff_mul_lt : a < c / b ↔ a * b < c := by
   rw [← mul_lt_mul_iff_right b, div_eq_mul_inv, inv_mul_cancel_right]
 #align lt_div_iff_mul_lt lt_div_iff_mul_lt
+#align lt_sub_iff_add_lt lt_sub_iff_add_lt
 
 /- warning: add_lt_of_lt_sub_right -> add_lt_of_lt_sub_right is a dubious translation:
 lean 3 declaration is
@@ -1577,6 +1657,7 @@ Case conversion may be inaccurate. Consider using '#align div_lt_iff_lt_mul div_
 theorem div_lt_iff_lt_mul : a / c < b ↔ a < b * c := by
   rw [← mul_lt_mul_iff_right c, div_eq_mul_inv, inv_mul_cancel_right]
 #align div_lt_iff_lt_mul div_lt_iff_lt_mul
+#align sub_lt_iff_lt_add sub_lt_iff_lt_add
 
 /- warning: lt_add_of_sub_right_lt -> lt_add_of_sub_right_lt is a dubious translation:
 lean 3 declaration is
@@ -1612,6 +1693,7 @@ theorem div_lt_div_iff_left (a : α) : a / b < a / c ↔ c < b := by
   rw [div_eq_mul_inv, div_eq_mul_inv, ← mul_lt_mul_iff_left a⁻¹, inv_mul_cancel_left,
     inv_mul_cancel_left, inv_lt_inv_iff]
 #align div_lt_div_iff_left div_lt_div_iff_left
+#align sub_lt_sub_iff_left sub_lt_sub_iff_left
 
 /- warning: inv_lt_div_iff_lt_mul -> inv_lt_div_iff_lt_mul is a dubious translation:
 lean 3 declaration is
@@ -1623,6 +1705,7 @@ Case conversion may be inaccurate. Consider using '#align inv_lt_div_iff_lt_mul 
 theorem inv_lt_div_iff_lt_mul : a⁻¹ < b / c ↔ c < a * b := by
   rw [div_eq_mul_inv, lt_mul_inv_iff_mul_lt, inv_mul_lt_iff_lt_mul]
 #align inv_lt_div_iff_lt_mul inv_lt_div_iff_lt_mul
+#align neg_lt_sub_iff_lt_add neg_lt_sub_iff_lt_add
 
 /- warning: div_lt_div_left' -> div_lt_div_left' is a dubious translation:
 lean 3 declaration is
@@ -1634,6 +1717,7 @@ Case conversion may be inaccurate. Consider using '#align div_lt_div_left' div_l
 theorem div_lt_div_left' (h : a < b) (c : α) : c / b < c / a :=
   (div_lt_div_iff_left c).2 h
 #align div_lt_div_left' div_lt_div_left'
+#align sub_lt_sub_left sub_lt_sub_left
 
 end Left
 
@@ -1657,6 +1741,7 @@ Case conversion may be inaccurate. Consider using '#align div_lt_div_iff' div_lt
 theorem div_lt_div_iff' : a / b < c / d ↔ a * d < c * b := by
   simpa only [div_eq_mul_inv] using mul_inv_lt_mul_inv_iff'
 #align div_lt_div_iff' div_lt_div_iff'
+#align sub_lt_sub_iff sub_lt_sub_iff
 
 /- warning: lt_div_iff_mul_lt' -> lt_div_iff_mul_lt' is a dubious translation:
 lean 3 declaration is
@@ -1667,6 +1752,7 @@ Case conversion may be inaccurate. Consider using '#align lt_div_iff_mul_lt' lt_
 @[to_additive]
 theorem lt_div_iff_mul_lt' : b < c / a ↔ a * b < c := by rw [lt_div_iff_mul_lt, mul_comm]
 #align lt_div_iff_mul_lt' lt_div_iff_mul_lt'
+#align lt_sub_iff_add_lt' lt_sub_iff_add_lt'
 
 /- warning: add_lt_of_lt_sub_left -> add_lt_of_lt_sub_left is a dubious translation:
 lean 3 declaration is
@@ -1693,6 +1779,7 @@ Case conversion may be inaccurate. Consider using '#align div_lt_iff_lt_mul' div
 @[to_additive]
 theorem div_lt_iff_lt_mul' : a / b < c ↔ a < b * c := by rw [div_lt_iff_lt_mul, mul_comm]
 #align div_lt_iff_lt_mul' div_lt_iff_lt_mul'
+#align sub_lt_iff_lt_add' sub_lt_iff_lt_add'
 
 /- warning: lt_add_of_sub_left_lt -> lt_add_of_sub_left_lt is a dubious translation:
 lean 3 declaration is
@@ -1720,6 +1807,7 @@ Case conversion may be inaccurate. Consider using '#align inv_lt_div_iff_lt_mul'
 theorem inv_lt_div_iff_lt_mul' : b⁻¹ < a / c ↔ c < a * b :=
   lt_div_iff_mul_lt.trans inv_mul_lt_iff_lt_mul'
 #align inv_lt_div_iff_lt_mul' inv_lt_div_iff_lt_mul'
+#align neg_lt_sub_iff_lt_add' neg_lt_sub_iff_lt_add'
 
 /- warning: div_lt_comm -> div_lt_comm is a dubious translation:
 lean 3 declaration is
@@ -1731,6 +1819,7 @@ Case conversion may be inaccurate. Consider using '#align div_lt_comm div_lt_com
 theorem div_lt_comm : a / b < c ↔ a / c < b :=
   div_lt_iff_lt_mul'.trans div_lt_iff_lt_mul.symm
 #align div_lt_comm div_lt_comm
+#align sub_lt_comm sub_lt_comm
 
 /- warning: lt_div_comm -> lt_div_comm is a dubious translation:
 lean 3 declaration is
@@ -1742,6 +1831,7 @@ Case conversion may be inaccurate. Consider using '#align lt_div_comm lt_div_com
 theorem lt_div_comm : a < b / c ↔ c < b / a :=
   lt_div_iff_mul_lt'.trans lt_div_iff_mul_lt.symm
 #align lt_div_comm lt_div_comm
+#align lt_sub_comm lt_sub_comm
 
 end LT
 
@@ -1761,6 +1851,7 @@ theorem div_lt_div'' (hab : a < b) (hcd : c < d) : a / d < b / c :=
   rw [div_eq_mul_inv, div_eq_mul_inv, mul_comm b, mul_inv_lt_inv_mul_iff, mul_comm]
   exact mul_lt_mul_of_lt_of_lt hab hcd
 #align div_lt_div'' div_lt_div''
+#align sub_lt_sub sub_lt_sub
 
 end Preorder
 
@@ -1780,6 +1871,7 @@ Case conversion may be inaccurate. Consider using '#align cmp_div_one' cmp_div_o
 theorem cmp_div_one' [CovariantClass α α (swap (· * ·)) (· ≤ ·)] (a b : α) :
     cmp (a / b) 1 = cmp a b := by rw [← cmp_mul_right' _ _ b, one_mul, div_mul_cancel']
 #align cmp_div_one' cmp_div_one'
+#align cmp_sub_zero cmp_sub_zero
 
 variable [CovariantClass α α (· * ·) (· ≤ ·)]
 
@@ -1797,6 +1889,7 @@ Case conversion may be inaccurate. Consider using '#align le_of_forall_one_lt_lt
 theorem le_of_forall_one_lt_lt_mul (h : ∀ ε : α, 1 < ε → a < b * ε) : a ≤ b :=
   le_of_not_lt fun h₁ => lt_irrefl a (by simpa using h _ (lt_inv_mul_iff_lt.mpr h₁))
 #align le_of_forall_one_lt_lt_mul le_of_forall_one_lt_lt_mul
+#align le_of_forall_pos_lt_add le_of_forall_pos_lt_add
 
 /- warning: le_iff_forall_one_lt_lt_mul -> le_iff_forall_one_lt_lt_mul is a dubious translation:
 lean 3 declaration is
@@ -1808,6 +1901,7 @@ Case conversion may be inaccurate. Consider using '#align le_iff_forall_one_lt_l
 theorem le_iff_forall_one_lt_lt_mul : a ≤ b ↔ ∀ ε, 1 < ε → a < b * ε :=
   ⟨fun h ε => lt_mul_of_le_of_one_lt h, le_of_forall_one_lt_lt_mul⟩
 #align le_iff_forall_one_lt_lt_mul le_iff_forall_one_lt_lt_mul
+#align le_iff_forall_pos_lt_add le_iff_forall_pos_lt_add
 
 /- warning: div_le_inv_mul_iff -> div_le_inv_mul_iff is a dubious translation:
 lean 3 declaration is
@@ -1825,6 +1919,7 @@ theorem div_le_inv_mul_iff [CovariantClass α α (swap (· * ·)) (· ≤ ·)] :
     ⟨fun h => not_lt.mp fun k => not_lt.mpr h (mul_lt_mul_of_lt_of_lt k k), fun h =>
       mul_le_mul' h h⟩
 #align div_le_inv_mul_iff div_le_inv_mul_iff
+#align sub_le_neg_add_iff sub_le_neg_add_iff
 
 /- warning: div_le_div_flip -> div_le_div_flip is a dubious translation:
 lean 3 declaration is
@@ -1840,6 +1935,7 @@ theorem div_le_div_flip {α : Type _} [CommGroup α] [LinearOrder α]
   rw [div_eq_mul_inv b, mul_comm]
   exact div_le_inv_mul_iff
 #align div_le_div_flip div_le_div_flip
+#align sub_le_sub_flip sub_le_sub_flip
 
 end VariableNames
 
@@ -1877,6 +1973,7 @@ multiplication is monotone. -/
 @[protect_proj, to_additive]
 class LinearOrderedCommGroup (α : Type u) extends OrderedCommGroup α, LinearOrder α
 #align linear_ordered_comm_group LinearOrderedCommGroup
+#align linear_ordered_add_comm_group LinearOrderedAddCommGroup
 -/
 
 section LinearOrderedCommGroup
@@ -1893,6 +1990,7 @@ Case conversion may be inaccurate. Consider using '#align linear_ordered_comm_gr
 theorem LinearOrderedCommGroup.mul_lt_mul_left' (a b : α) (h : a < b) (c : α) : c * a < c * b :=
   mul_lt_mul_left' h c
 #align linear_ordered_comm_group.mul_lt_mul_left' LinearOrderedCommGroup.mul_lt_mul_left'
+#align linear_ordered_add_comm_group.add_lt_add_left LinearOrderedAddCommGroup.add_lt_add_left
 
 /- warning: eq_one_of_inv_eq' -> eq_one_of_inv_eq' is a dubious translation:
 lean 3 declaration is
@@ -1911,6 +2009,7 @@ theorem eq_one_of_inv_eq' (h : a⁻¹ = a) : a = 1 :=
     have : a < 1 := h ▸ inv_lt_one'.mpr h₁
     absurd h₁ this.asymm
 #align eq_one_of_inv_eq' eq_one_of_inv_eq'
+#align eq_zero_of_neg_eq eq_zero_of_neg_eq
 
 /- warning: exists_one_lt' -> exists_one_lt' is a dubious translation:
 lean 3 declaration is
@@ -1926,6 +2025,7 @@ theorem exists_one_lt' [Nontrivial α] : ∃ a : α, 1 < a :=
   · exact ⟨y⁻¹, one_lt_inv'.mpr h⟩
   · exact ⟨y, h⟩
 #align exists_one_lt' exists_one_lt'
+#align exists_zero_lt exists_zero_lt
 
 #print LinearOrderedCommGroup.to_noMaxOrder /-
 -- see Note [lower instance priority]
@@ -1955,6 +2055,8 @@ instance (priority := 100) LinearOrderedCommGroup.toLinearOrderedCancelCommMonoi
   { ‹LinearOrderedCommGroup α›, OrderedCommGroup.toOrderedCancelCommMonoid with }
 #align
   linear_ordered_comm_group.to_linear_ordered_cancel_comm_monoid LinearOrderedCommGroup.toLinearOrderedCancelCommMonoid
+#align
+  linear_ordered_add_comm_group.to_linear_ordered_cancel_add_comm_monoid LinearOrderedAddCommGroup.toLinearOrderedAddCancelCommMonoid
 -/
 
 end LinearOrderedCommGroup
@@ -2057,6 +2159,7 @@ Case conversion may be inaccurate. Consider using '#align inv_le_inv' inv_le_inv
 theorem inv_le_inv' : a ≤ b → b⁻¹ ≤ a⁻¹ :=
   inv_le_inv_iff.mpr
 #align inv_le_inv' inv_le_inv'
+#align neg_le_neg neg_le_neg
 
 /- warning: inv_lt_inv' -> inv_lt_inv' is a dubious translation:
 lean 3 declaration is
@@ -2068,6 +2171,7 @@ Case conversion may be inaccurate. Consider using '#align inv_lt_inv' inv_lt_inv
 theorem inv_lt_inv' : a < b → b⁻¹ < a⁻¹ :=
   inv_lt_inv_iff.mpr
 #align inv_lt_inv' inv_lt_inv'
+#align neg_lt_neg neg_lt_neg
 
 /- warning: inv_lt_one_of_one_lt -> inv_lt_one_of_one_lt is a dubious translation:
 lean 3 declaration is
@@ -2080,6 +2184,7 @@ Case conversion may be inaccurate. Consider using '#align inv_lt_one_of_one_lt i
 theorem inv_lt_one_of_one_lt : 1 < a → a⁻¹ < 1 :=
   inv_lt_one_iff_one_lt.mpr
 #align inv_lt_one_of_one_lt inv_lt_one_of_one_lt
+#align neg_neg_of_pos neg_neg_of_pos
 
 /- warning: inv_le_one_of_one_le -> inv_le_one_of_one_le is a dubious translation:
 lean 3 declaration is
@@ -2092,6 +2197,7 @@ Case conversion may be inaccurate. Consider using '#align inv_le_one_of_one_le i
 theorem inv_le_one_of_one_le : 1 ≤ a → a⁻¹ ≤ 1 :=
   inv_le_one'.mpr
 #align inv_le_one_of_one_le inv_le_one_of_one_le
+#align neg_nonpos_of_nonneg neg_nonpos_of_nonneg
 
 /- warning: one_le_inv_of_le_one -> one_le_inv_of_le_one is a dubious translation:
 lean 3 declaration is
@@ -2103,6 +2209,7 @@ Case conversion may be inaccurate. Consider using '#align one_le_inv_of_le_one o
 theorem one_le_inv_of_le_one : a ≤ 1 → 1 ≤ a⁻¹ :=
   one_le_inv'.mpr
 #align one_le_inv_of_le_one one_le_inv_of_le_one
+#align neg_nonneg_of_nonpos neg_nonneg_of_nonpos
 
 end NormNumLemmas
 
@@ -2121,6 +2228,7 @@ Case conversion may be inaccurate. Consider using '#align monotone.inv Monotone.
 theorem Monotone.inv (hf : Monotone f) : Antitone fun x => (f x)⁻¹ := fun x y hxy =>
   inv_le_inv_iff.2 (hf hxy)
 #align monotone.inv Monotone.inv
+#align monotone.neg Monotone.neg
 
 /- warning: antitone.inv -> Antitone.inv is a dubious translation:
 lean 3 declaration is
@@ -2132,6 +2240,7 @@ Case conversion may be inaccurate. Consider using '#align antitone.inv Antitone.
 theorem Antitone.inv (hf : Antitone f) : Monotone fun x => (f x)⁻¹ := fun x y hxy =>
   inv_le_inv_iff.2 (hf hxy)
 #align antitone.inv Antitone.inv
+#align antitone.neg Antitone.neg
 
 /- warning: monotone_on.inv -> MonotoneOn.inv is a dubious translation:
 lean 3 declaration is
@@ -2143,6 +2252,7 @@ Case conversion may be inaccurate. Consider using '#align monotone_on.inv Monoto
 theorem MonotoneOn.inv (hf : MonotoneOn f s) : AntitoneOn (fun x => (f x)⁻¹) s :=
   fun x hx y hy hxy => inv_le_inv_iff.2 (hf hx hy hxy)
 #align monotone_on.inv MonotoneOn.inv
+#align monotone_on.neg MonotoneOn.neg
 
 /- warning: antitone_on.inv -> AntitoneOn.inv is a dubious translation:
 lean 3 declaration is
@@ -2154,6 +2264,7 @@ Case conversion may be inaccurate. Consider using '#align antitone_on.inv Antito
 theorem AntitoneOn.inv (hf : AntitoneOn f s) : MonotoneOn (fun x => (f x)⁻¹) s :=
   fun x hx y hy hxy => inv_le_inv_iff.2 (hf hx hy hxy)
 #align antitone_on.inv AntitoneOn.inv
+#align antitone_on.neg AntitoneOn.neg
 
 end
 
@@ -2172,6 +2283,7 @@ Case conversion may be inaccurate. Consider using '#align strict_mono.inv Strict
 theorem StrictMono.inv (hf : StrictMono f) : StrictAnti fun x => (f x)⁻¹ := fun x y hxy =>
   inv_lt_inv_iff.2 (hf hxy)
 #align strict_mono.inv StrictMono.inv
+#align strict_mono.neg StrictMono.neg
 
 /- warning: strict_anti.inv -> StrictAnti.inv is a dubious translation:
 lean 3 declaration is
@@ -2183,6 +2295,7 @@ Case conversion may be inaccurate. Consider using '#align strict_anti.inv Strict
 theorem StrictAnti.inv (hf : StrictAnti f) : StrictMono fun x => (f x)⁻¹ := fun x y hxy =>
   inv_lt_inv_iff.2 (hf hxy)
 #align strict_anti.inv StrictAnti.inv
+#align strict_anti.neg StrictAnti.neg
 
 /- warning: strict_mono_on.inv -> StrictMonoOn.inv is a dubious translation:
 lean 3 declaration is
@@ -2194,6 +2307,7 @@ Case conversion may be inaccurate. Consider using '#align strict_mono_on.inv Str
 theorem StrictMonoOn.inv (hf : StrictMonoOn f s) : StrictAntiOn (fun x => (f x)⁻¹) s :=
   fun x hx y hy hxy => inv_lt_inv_iff.2 (hf hx hy hxy)
 #align strict_mono_on.inv StrictMonoOn.inv
+#align strict_mono_on.neg StrictMonoOn.neg
 
 /- warning: strict_anti_on.inv -> StrictAntiOn.inv is a dubious translation:
 lean 3 declaration is
@@ -2205,6 +2319,7 @@ Case conversion may be inaccurate. Consider using '#align strict_anti_on.inv Str
 theorem StrictAntiOn.inv (hf : StrictAntiOn f s) : StrictMonoOn (fun x => (f x)⁻¹) s :=
   fun x hx y hy hxy => inv_lt_inv_iff.2 (hf hx hy hxy)
 #align strict_anti_on.inv StrictAntiOn.inv
+#align strict_anti_on.neg StrictAntiOn.neg
 
 end
 

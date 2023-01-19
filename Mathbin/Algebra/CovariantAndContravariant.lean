@@ -196,6 +196,7 @@ theorem Group.covariant_iff_contravariant [Group N] :
   · rw [← inv_mul_cancel_left a b, ← inv_mul_cancel_left a c] at bc
     exact h a⁻¹ bc
 #align group.covariant_iff_contravariant Group.covariant_iff_contravariant
+#align add_group.covariant_iff_contravariant AddGroup.covariant_iff_contravariant
 
 /- warning: group.covconv -> Group.covconv is a dubious translation:
 lean 3 declaration is
@@ -208,6 +209,7 @@ instance (priority := 100) Group.covconv [Group N] [CovariantClass N N (· * ·)
     ContravariantClass N N (· * ·) r :=
   ⟨Group.covariant_iff_contravariant.mp CovariantClass.elim⟩
 #align group.covconv Group.covconv
+#align add_group.covconv AddGroup.covconv
 
 /- warning: group.covariant_swap_iff_contravariant_swap -> Group.covariant_swap_iff_contravariant_swap is a dubious translation:
 lean 3 declaration is
@@ -225,6 +227,8 @@ theorem Group.covariant_swap_iff_contravariant_swap [Group N] :
   · rw [← mul_inv_cancel_right b a, ← mul_inv_cancel_right c a] at bc
     exact h a⁻¹ bc
 #align group.covariant_swap_iff_contravariant_swap Group.covariant_swap_iff_contravariant_swap
+#align
+  add_group.covariant_swap_iff_contravariant_swap AddGroup.covariant_swap_iff_contravariant_swap
 
 /- warning: group.covconv_swap -> Group.covconv_swap is a dubious translation:
 lean 3 declaration is
@@ -237,6 +241,7 @@ instance (priority := 100) Group.covconv_swap [Group N] [CovariantClass N N (swa
     ContravariantClass N N (swap (· * ·)) r :=
   ⟨Group.covariant_swap_iff_contravariant_swap.mp CovariantClass.elim⟩
 #align group.covconv_swap Group.covconv_swap
+#align add_group.covconv_swap AddGroup.covconv_swap
 
 section IsTrans
 
@@ -442,6 +447,7 @@ Case conversion may be inaccurate. Consider using '#align covariant_flip_mul_iff
 theorem covariant_flip_mul_iff [CommSemigroup N] :
     Covariant N N (flip (· * ·)) r ↔ Covariant N N (· * ·) r := by rw [IsSymmOp.flip_eq]
 #align covariant_flip_mul_iff covariant_flip_mul_iff
+#align covariant_flip_add_iff covariant_flip_add_iff
 
 /- warning: contravariant_flip_mul_iff -> contravariant_flip_mul_iff is a dubious translation:
 lean 3 declaration is
@@ -453,6 +459,7 @@ Case conversion may be inaccurate. Consider using '#align contravariant_flip_mul
 theorem contravariant_flip_mul_iff [CommSemigroup N] :
     Contravariant N N (flip (· * ·)) r ↔ Contravariant N N (· * ·) r := by rw [IsSymmOp.flip_eq]
 #align contravariant_flip_mul_iff contravariant_flip_mul_iff
+#align contravariant_flip_add_iff contravariant_flip_add_iff
 
 #print contravariant_mul_lt_of_covariant_mul_le /-
 @[to_additive]
@@ -460,6 +467,7 @@ instance contravariant_mul_lt_of_covariant_mul_le [Mul N] [LinearOrder N]
     [CovariantClass N N (· * ·) (· ≤ ·)] : ContravariantClass N N (· * ·) (· < ·)
     where elim := (covariant_le_iff_contravariant_lt N N (· * ·)).mp CovariantClass.elim
 #align contravariant_mul_lt_of_covariant_mul_le contravariant_mul_lt_of_covariant_mul_le
+#align contravariant_add_lt_of_covariant_add_le contravariant_add_lt_of_covariant_add_le
 -/
 
 #print covariant_mul_lt_of_contravariant_mul_le /-
@@ -468,6 +476,7 @@ instance covariant_mul_lt_of_contravariant_mul_le [Mul N] [LinearOrder N]
     [ContravariantClass N N (· * ·) (· ≤ ·)] : CovariantClass N N (· * ·) (· < ·)
     where elim := (covariant_lt_iff_contravariant_le N N (· * ·)).mpr ContravariantClass.elim
 #align covariant_mul_lt_of_contravariant_mul_le covariant_mul_lt_of_contravariant_mul_le
+#align covariant_add_lt_of_contravariant_add_le covariant_add_lt_of_contravariant_add_le
 -/
 
 /- warning: covariant_swap_mul_le_of_covariant_mul_le -> covariant_swap_mul_le_of_covariant_mul_le is a dubious translation:
@@ -481,6 +490,7 @@ instance covariant_swap_mul_le_of_covariant_mul_le [CommSemigroup N] [LE N]
     [CovariantClass N N (· * ·) (· ≤ ·)] : CovariantClass N N (swap (· * ·)) (· ≤ ·)
     where elim := (covariant_flip_mul_iff N (· ≤ ·)).mpr CovariantClass.elim
 #align covariant_swap_mul_le_of_covariant_mul_le covariant_swap_mul_le_of_covariant_mul_le
+#align covariant_swap_add_le_of_covariant_add_le covariant_swap_add_le_of_covariant_add_le
 
 /- warning: contravariant_swap_mul_le_of_contravariant_mul_le -> contravariant_swap_mul_le_of_contravariant_mul_le is a dubious translation:
 lean 3 declaration is
@@ -494,6 +504,8 @@ instance contravariant_swap_mul_le_of_contravariant_mul_le [CommSemigroup N] [LE
     where elim := (contravariant_flip_mul_iff N (· ≤ ·)).mpr ContravariantClass.elim
 #align
   contravariant_swap_mul_le_of_contravariant_mul_le contravariant_swap_mul_le_of_contravariant_mul_le
+#align
+  contravariant_swap_add_le_of_contravariant_add_le contravariant_swap_add_le_of_contravariant_add_le
 
 /- warning: contravariant_swap_mul_lt_of_contravariant_mul_lt -> contravariant_swap_mul_lt_of_contravariant_mul_lt is a dubious translation:
 lean 3 declaration is
@@ -507,6 +519,8 @@ instance contravariant_swap_mul_lt_of_contravariant_mul_lt [CommSemigroup N] [LT
     where elim := (contravariant_flip_mul_iff N (· < ·)).mpr ContravariantClass.elim
 #align
   contravariant_swap_mul_lt_of_contravariant_mul_lt contravariant_swap_mul_lt_of_contravariant_mul_lt
+#align
+  contravariant_swap_add_lt_of_contravariant_add_lt contravariant_swap_add_lt_of_contravariant_add_lt
 
 /- warning: covariant_swap_mul_lt_of_covariant_mul_lt -> covariant_swap_mul_lt_of_covariant_mul_lt is a dubious translation:
 lean 3 declaration is
@@ -519,6 +533,7 @@ instance covariant_swap_mul_lt_of_covariant_mul_lt [CommSemigroup N] [LT N]
     [CovariantClass N N (· * ·) (· < ·)] : CovariantClass N N (swap (· * ·)) (· < ·)
     where elim := (covariant_flip_mul_iff N (· < ·)).mpr CovariantClass.elim
 #align covariant_swap_mul_lt_of_covariant_mul_lt covariant_swap_mul_lt_of_covariant_mul_lt
+#align covariant_swap_add_lt_of_covariant_add_lt covariant_swap_add_lt_of_covariant_add_lt
 
 /- warning: left_cancel_semigroup.covariant_mul_lt_of_covariant_mul_le -> LeftCancelSemigroup.covariant_mul_lt_of_covariant_mul_le is a dubious translation:
 lean 3 declaration is
@@ -534,6 +549,8 @@ instance LeftCancelSemigroup.covariant_mul_lt_of_covariant_mul_le [LeftCancelSem
     exact lt_iff_le_and_ne.mpr ⟨CovariantClass.elim a bc, (mul_ne_mul_right a).mpr cb⟩
 #align
   left_cancel_semigroup.covariant_mul_lt_of_covariant_mul_le LeftCancelSemigroup.covariant_mul_lt_of_covariant_mul_le
+#align
+  add_left_cancel_semigroup.covariant_add_lt_of_covariant_add_le AddLeftCancelSemigroup.covariant_add_lt_of_covariant_add_le
 
 /- warning: right_cancel_semigroup.covariant_swap_mul_lt_of_covariant_swap_mul_le -> RightCancelSemigroup.covariant_swap_mul_lt_of_covariant_swap_mul_le is a dubious translation:
 lean 3 declaration is
@@ -550,6 +567,8 @@ instance RightCancelSemigroup.covariant_swap_mul_lt_of_covariant_swap_mul_le
     exact lt_iff_le_and_ne.mpr ⟨CovariantClass.elim a bc, (mul_ne_mul_left a).mpr cb⟩
 #align
   right_cancel_semigroup.covariant_swap_mul_lt_of_covariant_swap_mul_le RightCancelSemigroup.covariant_swap_mul_lt_of_covariant_swap_mul_le
+#align
+  add_right_cancel_semigroup.covariant_swap_add_lt_of_covariant_swap_add_le AddRightCancelSemigroup.covariant_swap_add_lt_of_covariant_swap_add_le
 
 /- warning: left_cancel_semigroup.contravariant_mul_le_of_contravariant_mul_lt -> LeftCancelSemigroup.contravariant_mul_le_of_contravariant_mul_lt is a dubious translation:
 lean 3 declaration is
@@ -567,6 +586,8 @@ instance LeftCancelSemigroup.contravariant_mul_le_of_contravariant_mul_lt [LeftC
     · exact (ContravariantClass.elim _ h).le
 #align
   left_cancel_semigroup.contravariant_mul_le_of_contravariant_mul_lt LeftCancelSemigroup.contravariant_mul_le_of_contravariant_mul_lt
+#align
+  add_left_cancel_semigroup.contravariant_add_le_of_contravariant_add_lt AddLeftCancelSemigroup.contravariant_add_le_of_contravariant_add_lt
 
 /- warning: right_cancel_semigroup.contravariant_swap_mul_le_of_contravariant_swap_mul_lt -> RightCancelSemigroup.contravariant_swap_mul_le_of_contravariant_swap_mul_lt is a dubious translation:
 lean 3 declaration is
@@ -584,6 +605,8 @@ instance RightCancelSemigroup.contravariant_swap_mul_le_of_contravariant_swap_mu
     · exact (ContravariantClass.elim _ h).le
 #align
   right_cancel_semigroup.contravariant_swap_mul_le_of_contravariant_swap_mul_lt RightCancelSemigroup.contravariant_swap_mul_le_of_contravariant_swap_mul_lt
+#align
+  add_right_cancel_semigroup.contravariant_swap_add_le_of_contravariant_swap_add_lt AddRightCancelSemigroup.contravariant_swap_add_le_of_contravariant_swap_add_lt
 
 end Variants
 

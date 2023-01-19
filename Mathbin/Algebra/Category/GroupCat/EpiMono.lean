@@ -36,6 +36,7 @@ variable [Group A] [Group B]
 theorem ker_eq_bot_of_cancel {f : A →* B} (h : ∀ u v : f.ker →* A, f.comp u = f.comp v → u = v) :
     f.ker = ⊥ := by simpa using _root_.congr_arg range (h f.ker.subtype 1 (by tidy))
 #align monoid_hom.ker_eq_bot_of_cancel MonoidHom.ker_eq_bot_of_cancel
+#align add_monoid_hom.ker_eq_bot_of_cancel AddMonoidHom.ker_eq_bot_of_cancel
 
 end
 
@@ -56,6 +57,7 @@ theorem range_eq_top_of_cancel {f : A →* B}
   replace h : (QuotientGroup.mk' _).ker = (1 : B →* B ⧸ f.range).ker := by rw [h]
   rwa [ker_one, QuotientGroup.ker_mk] at h
 #align monoid_hom.range_eq_top_of_cancel MonoidHom.range_eq_top_of_cancel
+#align add_monoid_hom.range_eq_top_of_cancel AddMonoidHom.range_eq_top_of_cancel
 
 end
 
@@ -74,17 +76,20 @@ theorem ker_eq_bot_of_mono [Mono f] : f.ker = ⊥ :=
   MonoidHom.ker_eq_bot_of_cancel fun u v =>
     (@cancel_mono _ _ _ _ _ f _ (show GroupCat.of f.ker ⟶ A from u) _).1
 #align Group.ker_eq_bot_of_mono GroupCat.ker_eq_bot_of_mono
+#align AddGroup.ker_eq_bot_of_mono AddGroupCat.ker_eq_bot_of_mono
 
 @[to_additive AddGroupCat.mono_iff_ker_eq_bot]
 theorem mono_iff_ker_eq_bot : Mono f ↔ f.ker = ⊥ :=
   ⟨fun h => @ker_eq_bot_of_mono f h, fun h =>
     ConcreteCategory.mono_of_injective _ <| (MonoidHom.ker_eq_bot_iff f).1 h⟩
 #align Group.mono_iff_ker_eq_bot GroupCat.mono_iff_ker_eq_bot
+#align AddGroup.mono_iff_ker_eq_bot AddGroupCat.mono_iff_ker_eq_bot
 
 @[to_additive AddGroupCat.mono_iff_injective]
 theorem mono_iff_injective : Mono f ↔ Function.Injective f :=
   Iff.trans (mono_iff_ker_eq_bot f) <| MonoidHom.ker_eq_bot_iff f
 #align Group.mono_iff_injective GroupCat.mono_iff_injective
+#align AddGroup.mono_iff_injective AddGroupCat.mono_iff_injective
 
 namespace SurjectiveOfEpiAuxs
 
@@ -388,11 +393,13 @@ variable {A B : GroupCat.{u}} (f : A ⟶ B)
 instance forget_Group_preserves_mono : (forget GroupCat).PreservesMonomorphisms
     where preserves X Y f e := by rwa [mono_iff_injective, ← CategoryTheory.mono_iff_injective] at e
 #align Group.forget_Group_preserves_mono GroupCat.forget_Group_preserves_mono
+#align AddGroup.forget_Group_preserves_mono AddGroupCat.forget_Group_preserves_mono
 
 @[to_additive]
 instance forget_Group_preserves_epi : (forget GroupCat).PreservesEpimorphisms
     where preserves X Y f e := by rwa [epi_iff_surjective, ← CategoryTheory.epi_iff_surjective] at e
 #align Group.forget_Group_preserves_epi GroupCat.forget_Group_preserves_epi
+#align AddGroup.forget_Group_preserves_epi AddGroupCat.forget_Group_preserves_epi
 
 end GroupCat
 
@@ -405,44 +412,52 @@ theorem ker_eq_bot_of_mono [Mono f] : f.ker = ⊥ :=
   MonoidHom.ker_eq_bot_of_cancel fun u v =>
     (@cancel_mono _ _ _ _ _ f _ (show CommGroupCat.of f.ker ⟶ A from u) _).1
 #align CommGroup.ker_eq_bot_of_mono CommGroupCat.ker_eq_bot_of_mono
+#align AddCommGroup.ker_eq_bot_of_mono AddCommGroupCat.ker_eq_bot_of_mono
 
 @[to_additive AddCommGroupCat.mono_iff_ker_eq_bot]
 theorem mono_iff_ker_eq_bot : Mono f ↔ f.ker = ⊥ :=
   ⟨fun h => @ker_eq_bot_of_mono f h, fun h =>
     ConcreteCategory.mono_of_injective _ <| (MonoidHom.ker_eq_bot_iff f).1 h⟩
 #align CommGroup.mono_iff_ker_eq_bot CommGroupCat.mono_iff_ker_eq_bot
+#align AddCommGroup.mono_iff_ker_eq_bot AddCommGroupCat.mono_iff_ker_eq_bot
 
 @[to_additive AddCommGroupCat.mono_iff_injective]
 theorem mono_iff_injective : Mono f ↔ Function.Injective f :=
   Iff.trans (mono_iff_ker_eq_bot f) <| MonoidHom.ker_eq_bot_iff f
 #align CommGroup.mono_iff_injective CommGroupCat.mono_iff_injective
+#align AddCommGroup.mono_iff_injective AddCommGroupCat.mono_iff_injective
 
 @[to_additive]
 theorem range_eq_top_of_epi [Epi f] : f.range = ⊤ :=
   MonoidHom.range_eq_top_of_cancel fun u v h =>
     (@cancel_epi _ _ _ _ _ f _ (show B ⟶ ⟨B ⧸ MonoidHom.range f⟩ from u) v).1 h
 #align CommGroup.range_eq_top_of_epi CommGroupCat.range_eq_top_of_epi
+#align AddCommGroup.range_eq_top_of_epi AddCommGroupCat.range_eq_top_of_epi
 
 @[to_additive]
 theorem epi_iff_range_eq_top : Epi f ↔ f.range = ⊤ :=
   ⟨fun hf => range_eq_top_of_epi _, fun hf =>
     ConcreteCategory.epi_of_surjective _ <| MonoidHom.range_top_iff_surjective.mp hf⟩
 #align CommGroup.epi_iff_range_eq_top CommGroupCat.epi_iff_range_eq_top
+#align AddCommGroup.epi_iff_range_eq_top AddCommGroupCat.epi_iff_range_eq_top
 
 @[to_additive]
 theorem epi_iff_surjective : Epi f ↔ Function.Surjective f := by
   rw [epi_iff_range_eq_top, MonoidHom.range_top_iff_surjective]
 #align CommGroup.epi_iff_surjective CommGroupCat.epi_iff_surjective
+#align AddCommGroup.epi_iff_surjective AddCommGroupCat.epi_iff_surjective
 
 @[to_additive]
 instance forget_CommGroup_preserves_mono : (forget CommGroupCat).PreservesMonomorphisms
     where preserves X Y f e := by rwa [mono_iff_injective, ← CategoryTheory.mono_iff_injective] at e
 #align CommGroup.forget_CommGroup_preserves_mono CommGroupCat.forget_CommGroup_preserves_mono
+#align AddCommGroup.forget_CommGroup_preserves_mono AddCommGroupCat.forget_CommGroup_preserves_mono
 
 @[to_additive]
 instance forget_CommGroup_preserves_epi : (forget CommGroupCat).PreservesEpimorphisms
     where preserves X Y f e := by rwa [epi_iff_surjective, ← CategoryTheory.epi_iff_surjective] at e
 #align CommGroup.forget_CommGroup_preserves_epi CommGroupCat.forget_CommGroup_preserves_epi
+#align AddCommGroup.forget_CommGroup_preserves_epi AddCommGroupCat.forget_CommGroup_preserves_epi
 
 end CommGroupCat
 

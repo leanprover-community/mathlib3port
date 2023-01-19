@@ -332,6 +332,7 @@ unsafe def eval_finset (decide_eq : expr → expr → tactic (Bool × expr)) :
 theorem List.prod_cons_congr {α : Type _} [Monoid α] (xs : List α) (x y z : α) (his : xs.Prod = y)
     (hi : x * y = z) : (x::xs).Prod = z := by rw [List.prod_cons, his, hi]
 #align tactic.norm_num.list.prod_cons_congr Tactic.NormNum.List.prod_cons_congr
+#align tactic.norm_num.list.sum_cons_congr Tactic.NormNum.List.sum_cons_congr
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 -- failed to format: unknown constant 'term.pseudo.antiquot'
@@ -419,12 +420,14 @@ theorem List.prod_cons_congr {α : Type _} [Monoid α] (xs : List α) (x y z : �
 theorem List.prod_congr {α : Type _} [Monoid α] {xs xs' : List α} {z : α} (h₁ : xs = xs')
     (h₂ : xs'.Prod = z) : xs.Prod = z := by cc
 #align tactic.norm_num.list.prod_congr Tactic.NormNum.List.prod_congr
+#align tactic.norm_num.list.sum_congr Tactic.NormNum.List.sum_congr
 
 @[to_additive]
 theorem Multiset.prod_congr {α : Type _} [CommMonoid α] {xs : Multiset α} {xs' : List α} {z : α}
     (h₁ : xs = (xs' : Multiset α)) (h₂ : xs'.Prod = z) : xs.Prod = z := by
   rw [← h₂, ← Multiset.coe_prod, h₁]
 #align tactic.norm_num.multiset.prod_congr Tactic.NormNum.Multiset.prod_congr
+#align tactic.norm_num.multiset.sum_congr Tactic.NormNum.Multiset.sum_congr
 
 /-- Evaluate `(%%xs.map (%%ef : %%α → %%β)).prod`,
 producing the evaluated expression and an equality proof. -/
@@ -450,6 +453,7 @@ theorem Finset.eval_prod_of_list {β α : Type _} [CommMonoid β] (s : Finset α
     (hx : (is.map f).Prod = x) : s.Prod f = x := by
   rw [← hs, Finset.prod_mk, Multiset.coe_map, Multiset.coe_prod, hx]
 #align tactic.norm_num.finset.eval_prod_of_list Tactic.NormNum.Finset.eval_prod_of_list
+#align tactic.norm_num.finset.eval_sum_of_list Tactic.NormNum.Finset.eval_sum_of_list
 
 /-- `norm_num` plugin for evaluating big operators:
  * `list.prod`

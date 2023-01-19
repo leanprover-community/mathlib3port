@@ -98,6 +98,7 @@ scoped[Pointwise] attribute [instance] Set.one Set.hasZero
 theorem singleton_one : ({1} : Set α) = 1 :=
   rfl
 #align set.singleton_one Set.singleton_one
+#align set.singleton_zero Set.singleton_zero
 -/
 
 #print Set.mem_one /-
@@ -105,6 +106,7 @@ theorem singleton_one : ({1} : Set α) = 1 :=
 theorem mem_one : a ∈ (1 : Set α) ↔ a = 1 :=
   Iff.rfl
 #align set.mem_one Set.mem_one
+#align set.mem_zero Set.mem_zero
 -/
 
 #print Set.one_mem_one /-
@@ -112,6 +114,7 @@ theorem mem_one : a ∈ (1 : Set α) ↔ a = 1 :=
 theorem one_mem_one : (1 : α) ∈ (1 : Set α) :=
   Eq.refl _
 #align set.one_mem_one Set.one_mem_one
+#align set.zero_mem_zero Set.zero_mem_zero
 -/
 
 #print Set.one_subset /-
@@ -119,6 +122,7 @@ theorem one_mem_one : (1 : α) ∈ (1 : Set α) :=
 theorem one_subset : 1 ⊆ s ↔ (1 : α) ∈ s :=
   singleton_subset_iff
 #align set.one_subset Set.one_subset
+#align set.zero_subset Set.zero_subset
 -/
 
 #print Set.one_nonempty /-
@@ -126,6 +130,7 @@ theorem one_subset : 1 ⊆ s ↔ (1 : α) ∈ s :=
 theorem one_nonempty : (1 : Set α).Nonempty :=
   ⟨1, rfl⟩
 #align set.one_nonempty Set.one_nonempty
+#align set.zero_nonempty Set.zero_nonempty
 -/
 
 #print Set.image_one /-
@@ -133,6 +138,7 @@ theorem one_nonempty : (1 : Set α).Nonempty :=
 theorem image_one {f : α → β} : f '' 1 = {f 1} :=
   image_singleton
 #align set.image_one Set.image_one
+#align set.image_zero Set.image_zero
 -/
 
 #print Set.subset_one_iff_eq /-
@@ -140,6 +146,7 @@ theorem image_one {f : α → β} : f '' 1 = {f 1} :=
 theorem subset_one_iff_eq : s ⊆ 1 ↔ s = ∅ ∨ s = 1 :=
   subset_singleton_iff_eq
 #align set.subset_one_iff_eq Set.subset_one_iff_eq
+#align set.subset_zero_iff_eq Set.subset_zero_iff_eq
 -/
 
 #print Set.Nonempty.subset_one_iff /-
@@ -147,6 +154,7 @@ theorem subset_one_iff_eq : s ⊆ 1 ↔ s = ∅ ∨ s = 1 :=
 theorem Nonempty.subset_one_iff (h : s.Nonempty) : s ⊆ 1 ↔ s = 1 :=
   h.subset_singleton_iff
 #align set.nonempty.subset_one_iff Set.Nonempty.subset_one_iff
+#align set.nonempty.subset_zero_iff Set.Nonempty.subset_zero_iff
 -/
 
 #print Set.singletonOneHom /-
@@ -155,6 +163,7 @@ theorem Nonempty.subset_one_iff (h : s.Nonempty) : s ⊆ 1 ↔ s = 1 :=
 def singletonOneHom : OneHom α (Set α) :=
   ⟨singleton, singleton_one⟩
 #align set.singleton_one_hom Set.singletonOneHom
+#align set.singleton_zero_hom Set.singletonZeroHom
 -/
 
 #print Set.coe_singletonOneHom /-
@@ -192,6 +201,7 @@ variable {ι : Sort _} [Inv α] {s t : Set α} {a : α}
 theorem mem_inv : a ∈ s⁻¹ ↔ a⁻¹ ∈ s :=
   Iff.rfl
 #align set.mem_inv Set.mem_inv
+#align set.mem_neg Set.mem_neg
 -/
 
 #print Set.inv_preimage /-
@@ -199,6 +209,7 @@ theorem mem_inv : a ∈ s⁻¹ ↔ a⁻¹ ∈ s :=
 theorem inv_preimage : Inv.inv ⁻¹' s = s⁻¹ :=
   rfl
 #align set.inv_preimage Set.inv_preimage
+#align set.neg_preimage Set.neg_preimage
 -/
 
 #print Set.inv_empty /-
@@ -206,6 +217,7 @@ theorem inv_preimage : Inv.inv ⁻¹' s = s⁻¹ :=
 theorem inv_empty : (∅ : Set α)⁻¹ = ∅ :=
   rfl
 #align set.inv_empty Set.inv_empty
+#align set.neg_empty Set.neg_empty
 -/
 
 #print Set.inv_univ /-
@@ -213,6 +225,7 @@ theorem inv_empty : (∅ : Set α)⁻¹ = ∅ :=
 theorem inv_univ : (univ : Set α)⁻¹ = univ :=
   rfl
 #align set.inv_univ Set.inv_univ
+#align set.neg_univ Set.neg_univ
 -/
 
 /- warning: set.inter_inv -> Set.inter_inv is a dubious translation:
@@ -225,6 +238,7 @@ Case conversion may be inaccurate. Consider using '#align set.inter_inv Set.inte
 theorem inter_inv : (s ∩ t)⁻¹ = s⁻¹ ∩ t⁻¹ :=
   preimage_inter
 #align set.inter_inv Set.inter_inv
+#align set.inter_neg Set.inter_neg
 
 /- warning: set.union_inv -> Set.union_inv is a dubious translation:
 lean 3 declaration is
@@ -236,6 +250,7 @@ Case conversion may be inaccurate. Consider using '#align set.union_inv Set.unio
 theorem union_inv : (s ∪ t)⁻¹ = s⁻¹ ∪ t⁻¹ :=
   preimage_union
 #align set.union_inv Set.union_inv
+#align set.union_neg Set.union_neg
 
 /- warning: set.Inter_inv -> Set.interᵢ_inv is a dubious translation:
 lean 3 declaration is
@@ -269,6 +284,7 @@ Case conversion may be inaccurate. Consider using '#align set.compl_inv Set.comp
 theorem compl_inv : (sᶜ)⁻¹ = s⁻¹ᶜ :=
   preimage_compl
 #align set.compl_inv Set.compl_inv
+#align set.compl_neg Set.compl_neg
 
 end Inv
 
@@ -285,6 +301,7 @@ Case conversion may be inaccurate. Consider using '#align set.inv_mem_inv Set.in
 @[to_additive]
 theorem inv_mem_inv : a⁻¹ ∈ s⁻¹ ↔ a ∈ s := by simp only [mem_inv, inv_inv]
 #align set.inv_mem_inv Set.inv_mem_inv
+#align set.neg_mem_neg Set.neg_mem_neg
 
 /- warning: set.nonempty_inv -> Set.nonempty_inv is a dubious translation:
 lean 3 declaration is
@@ -296,6 +313,7 @@ Case conversion may be inaccurate. Consider using '#align set.nonempty_inv Set.n
 theorem nonempty_inv : s⁻¹.Nonempty ↔ s.Nonempty :=
   inv_involutive.Surjective.nonempty_preimage
 #align set.nonempty_inv Set.nonempty_inv
+#align set.nonempty_neg Set.nonempty_neg
 
 /- warning: set.nonempty.inv -> Set.Nonempty.inv is a dubious translation:
 lean 3 declaration is
@@ -307,6 +325,7 @@ Case conversion may be inaccurate. Consider using '#align set.nonempty.inv Set.N
 theorem Nonempty.inv (h : s.Nonempty) : s⁻¹.Nonempty :=
   nonempty_inv.2 h
 #align set.nonempty.inv Set.Nonempty.inv
+#align set.nonempty.neg Set.Nonempty.neg
 
 /- warning: set.image_inv -> Set.image_inv is a dubious translation:
 lean 3 declaration is
@@ -318,6 +337,7 @@ Case conversion may be inaccurate. Consider using '#align set.image_inv Set.imag
 theorem image_inv : Inv.inv '' s = s⁻¹ :=
   congr_fun (image_eq_preimage_of_inverse inv_involutive.LeftInverse inv_involutive.RightInverse) _
 #align set.image_inv Set.image_inv
+#align set.image_neg Set.image_neg
 
 @[simp, to_additive]
 instance : InvolutiveInv (Set α) where
@@ -334,6 +354,7 @@ Case conversion may be inaccurate. Consider using '#align set.inv_subset_inv Set
 theorem inv_subset_inv : s⁻¹ ⊆ t⁻¹ ↔ s ⊆ t :=
   (Equiv.inv α).Surjective.preimage_subset_preimage_iff
 #align set.inv_subset_inv Set.inv_subset_inv
+#align set.neg_subset_neg Set.neg_subset_neg
 
 /- warning: set.inv_subset -> Set.inv_subset is a dubious translation:
 lean 3 declaration is
@@ -344,6 +365,7 @@ Case conversion may be inaccurate. Consider using '#align set.inv_subset Set.inv
 @[to_additive]
 theorem inv_subset : s⁻¹ ⊆ t ↔ s ⊆ t⁻¹ := by rw [← inv_subset_inv, inv_inv]
 #align set.inv_subset Set.inv_subset
+#align set.neg_subset Set.neg_subset
 
 /- warning: set.inv_singleton -> Set.inv_singleton is a dubious translation:
 lean 3 declaration is
@@ -354,6 +376,7 @@ Case conversion may be inaccurate. Consider using '#align set.inv_singleton Set.
 @[simp, to_additive]
 theorem inv_singleton (a : α) : ({a} : Set α)⁻¹ = {a⁻¹} := by rw [← image_inv, image_singleton]
 #align set.inv_singleton Set.inv_singleton
+#align set.neg_singleton Set.neg_singleton
 
 /- warning: set.inv_insert -> Set.inv_insert is a dubious translation:
 lean 3 declaration is
@@ -365,6 +388,7 @@ Case conversion may be inaccurate. Consider using '#align set.inv_insert Set.inv
 theorem inv_insert (a : α) (s : Set α) : (insert a s)⁻¹ = insert a⁻¹ s⁻¹ := by
   rw [insert_eq, union_inv, inv_singleton, insert_eq]
 #align set.inv_insert Set.inv_insert
+#align set.neg_insert Set.neg_insert
 
 /- warning: set.inv_range -> Set.inv_range is a dubious translation:
 lean 3 declaration is
@@ -378,6 +402,7 @@ theorem inv_range {ι : Sort _} {f : ι → α} : (range f)⁻¹ = range fun i =
   rw [← image_inv]
   exact (range_comp _ _).symm
 #align set.inv_range Set.inv_range
+#align set.neg_range Set.neg_range
 
 open MulOpposite
 
@@ -391,6 +416,7 @@ Case conversion may be inaccurate. Consider using '#align set.image_op_inv Set.i
 theorem image_op_inv : op '' s⁻¹ = (op '' s)⁻¹ := by
   simp_rw [← image_inv, Function.Semiconj.set_image op_inv s]
 #align set.image_op_inv Set.image_op_inv
+#align set.image_op_neg Set.image_op_neg
 
 end InvolutiveInv
 
@@ -422,6 +448,7 @@ scoped[Pointwise] attribute [instance] Set.mul Set.hasAdd
 theorem image2_mul : image2 Mul.mul s t = s * t :=
   rfl
 #align set.image2_mul Set.image2_mul
+#align set.image2_add Set.image2_add
 -/
 
 #print Set.mem_mul /-
@@ -429,6 +456,7 @@ theorem image2_mul : image2 Mul.mul s t = s * t :=
 theorem mem_mul : a ∈ s * t ↔ ∃ x y, x ∈ s ∧ y ∈ t ∧ x * y = a :=
   Iff.rfl
 #align set.mem_mul Set.mem_mul
+#align set.mem_add Set.mem_add
 -/
 
 #print Set.mul_mem_mul /-
@@ -436,6 +464,7 @@ theorem mem_mul : a ∈ s * t ↔ ∃ x y, x ∈ s ∧ y ∈ t ∧ x * y = a :=
 theorem mul_mem_mul : a ∈ s → b ∈ t → a * b ∈ s * t :=
   mem_image2_of_mem
 #align set.mul_mem_mul Set.mul_mem_mul
+#align set.add_mem_add Set.add_mem_add
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -444,6 +473,7 @@ theorem mul_mem_mul : a ∈ s → b ∈ t → a * b ∈ s * t :=
 theorem image_mul_prod : (fun x : α × α => x.fst * x.snd) '' s ×ˢ t = s * t :=
   image_prod _
 #align set.image_mul_prod Set.image_mul_prod
+#align set.add_image_prod Set.add_image_prod
 -/
 
 #print Set.empty_mul /-
@@ -451,6 +481,7 @@ theorem image_mul_prod : (fun x : α × α => x.fst * x.snd) '' s ×ˢ t = s * t
 theorem empty_mul : ∅ * s = ∅ :=
   image2_empty_left
 #align set.empty_mul Set.empty_mul
+#align set.empty_add Set.empty_add
 -/
 
 #print Set.mul_empty /-
@@ -458,6 +489,7 @@ theorem empty_mul : ∅ * s = ∅ :=
 theorem mul_empty : s * ∅ = ∅ :=
   image2_empty_right
 #align set.mul_empty Set.mul_empty
+#align set.add_empty Set.add_empty
 -/
 
 #print Set.mul_eq_empty /-
@@ -465,6 +497,7 @@ theorem mul_empty : s * ∅ = ∅ :=
 theorem mul_eq_empty : s * t = ∅ ↔ s = ∅ ∨ t = ∅ :=
   image2_eq_empty_iff
 #align set.mul_eq_empty Set.mul_eq_empty
+#align set.add_eq_empty Set.add_eq_empty
 -/
 
 #print Set.mul_nonempty /-
@@ -472,6 +505,7 @@ theorem mul_eq_empty : s * t = ∅ ↔ s = ∅ ∨ t = ∅ :=
 theorem mul_nonempty : (s * t).Nonempty ↔ s.Nonempty ∧ t.Nonempty :=
   image2_nonempty_iff
 #align set.mul_nonempty Set.mul_nonempty
+#align set.add_nonempty Set.add_nonempty
 -/
 
 #print Set.Nonempty.mul /-
@@ -479,6 +513,7 @@ theorem mul_nonempty : (s * t).Nonempty ↔ s.Nonempty ∧ t.Nonempty :=
 theorem Nonempty.mul : s.Nonempty → t.Nonempty → (s * t).Nonempty :=
   nonempty.image2
 #align set.nonempty.mul Set.Nonempty.mul
+#align set.nonempty.add Set.Nonempty.add
 -/
 
 #print Set.Nonempty.of_mul_left /-
@@ -486,6 +521,7 @@ theorem Nonempty.mul : s.Nonempty → t.Nonempty → (s * t).Nonempty :=
 theorem Nonempty.of_mul_left : (s * t).Nonempty → s.Nonempty :=
   nonempty.of_image2_left
 #align set.nonempty.of_mul_left Set.Nonempty.of_mul_left
+#align set.nonempty.of_add_left Set.Nonempty.of_add_left
 -/
 
 #print Set.Nonempty.of_mul_right /-
@@ -493,6 +529,7 @@ theorem Nonempty.of_mul_left : (s * t).Nonempty → s.Nonempty :=
 theorem Nonempty.of_mul_right : (s * t).Nonempty → t.Nonempty :=
   nonempty.of_image2_right
 #align set.nonempty.of_mul_right Set.Nonempty.of_mul_right
+#align set.nonempty.of_add_right Set.Nonempty.of_add_right
 -/
 
 #print Set.mul_singleton /-
@@ -500,6 +537,7 @@ theorem Nonempty.of_mul_right : (s * t).Nonempty → t.Nonempty :=
 theorem mul_singleton : s * {b} = (· * b) '' s :=
   image2_singleton_right
 #align set.mul_singleton Set.mul_singleton
+#align set.add_singleton Set.add_singleton
 -/
 
 #print Set.singleton_mul /-
@@ -507,6 +545,7 @@ theorem mul_singleton : s * {b} = (· * b) '' s :=
 theorem singleton_mul : {a} * t = (· * ·) a '' t :=
   image2_singleton_left
 #align set.singleton_mul Set.singleton_mul
+#align set.singleton_add Set.singleton_add
 -/
 
 #print Set.singleton_mul_singleton /-
@@ -514,6 +553,7 @@ theorem singleton_mul : {a} * t = (· * ·) a '' t :=
 theorem singleton_mul_singleton : ({a} : Set α) * {b} = {a * b} :=
   image2_singleton
 #align set.singleton_mul_singleton Set.singleton_mul_singleton
+#align set.singleton_add_singleton Set.singleton_add_singleton
 -/
 
 #print Set.mul_subset_mul /-
@@ -521,6 +561,7 @@ theorem singleton_mul_singleton : ({a} : Set α) * {b} = {a * b} :=
 theorem mul_subset_mul : s₁ ⊆ t₁ → s₂ ⊆ t₂ → s₁ * s₂ ⊆ t₁ * t₂ :=
   image2_subset
 #align set.mul_subset_mul Set.mul_subset_mul
+#align set.add_subset_add Set.add_subset_add
 -/
 
 #print Set.mul_subset_mul_left /-
@@ -528,6 +569,7 @@ theorem mul_subset_mul : s₁ ⊆ t₁ → s₂ ⊆ t₂ → s₁ * s₂ ⊆ t�
 theorem mul_subset_mul_left : t₁ ⊆ t₂ → s * t₁ ⊆ s * t₂ :=
   image2_subset_left
 #align set.mul_subset_mul_left Set.mul_subset_mul_left
+#align set.add_subset_add_left Set.add_subset_add_left
 -/
 
 #print Set.mul_subset_mul_right /-
@@ -535,6 +577,7 @@ theorem mul_subset_mul_left : t₁ ⊆ t₂ → s * t₁ ⊆ s * t₂ :=
 theorem mul_subset_mul_right : s₁ ⊆ s₂ → s₁ * t ⊆ s₂ * t :=
   image2_subset_right
 #align set.mul_subset_mul_right Set.mul_subset_mul_right
+#align set.add_subset_add_right Set.add_subset_add_right
 -/
 
 #print Set.mul_subset_iff /-
@@ -542,6 +585,7 @@ theorem mul_subset_mul_right : s₁ ⊆ s₂ → s₁ * t ⊆ s₂ * t :=
 theorem mul_subset_iff : s * t ⊆ u ↔ ∀ x ∈ s, ∀ y ∈ t, x * y ∈ u :=
   image2_subset_iff
 #align set.mul_subset_iff Set.mul_subset_iff
+#align set.add_subset_iff Set.add_subset_iff
 -/
 
 attribute [mono] add_subset_add
@@ -556,6 +600,7 @@ Case conversion may be inaccurate. Consider using '#align set.union_mul Set.unio
 theorem union_mul : (s₁ ∪ s₂) * t = s₁ * t ∪ s₂ * t :=
   image2_union_left
 #align set.union_mul Set.union_mul
+#align set.union_add Set.union_add
 
 /- warning: set.mul_union -> Set.mul_union is a dubious translation:
 lean 3 declaration is
@@ -567,6 +612,7 @@ Case conversion may be inaccurate. Consider using '#align set.mul_union Set.mul_
 theorem mul_union : s * (t₁ ∪ t₂) = s * t₁ ∪ s * t₂ :=
   image2_union_right
 #align set.mul_union Set.mul_union
+#align set.add_union Set.add_union
 
 /- warning: set.inter_mul_subset -> Set.inter_mul_subset is a dubious translation:
 lean 3 declaration is
@@ -578,6 +624,7 @@ Case conversion may be inaccurate. Consider using '#align set.inter_mul_subset S
 theorem inter_mul_subset : s₁ ∩ s₂ * t ⊆ s₁ * t ∩ (s₂ * t) :=
   image2_inter_subset_left
 #align set.inter_mul_subset Set.inter_mul_subset
+#align set.inter_add_subset Set.inter_add_subset
 
 /- warning: set.mul_inter_subset -> Set.mul_inter_subset is a dubious translation:
 lean 3 declaration is
@@ -589,6 +636,7 @@ Case conversion may be inaccurate. Consider using '#align set.mul_inter_subset S
 theorem mul_inter_subset : s * (t₁ ∩ t₂) ⊆ s * t₁ ∩ (s * t₂) :=
   image2_inter_subset_right
 #align set.mul_inter_subset Set.mul_inter_subset
+#align set.add_inter_subset Set.add_inter_subset
 
 #print Set.unionᵢ_mul_left_image /-
 @[to_additive]
@@ -710,6 +758,7 @@ theorem mul_interᵢ₂_subset (s : Set α) (t : ∀ i, κ i → Set α) :
 def singletonMulHom : α →ₙ* Set α :=
   ⟨singleton, fun a b => singleton_mul_singleton.symm⟩
 #align set.singleton_mul_hom Set.singletonMulHom
+#align set.singleton_add_hom Set.singletonAddHom
 -/
 
 #print Set.coe_singletonMulHom /-
@@ -733,6 +782,7 @@ open MulOpposite
 theorem image_op_mul : op '' (s * t) = op '' t * op '' s :=
   image_image2_antidistrib op_mul
 #align set.image_op_mul Set.image_op_mul
+#align set.image_op_add Set.image_op_add
 -/
 
 end Mul
@@ -761,6 +811,7 @@ scoped[Pointwise] attribute [instance] Set.div Set.hasSub
 theorem image2_div : image2 Div.div s t = s / t :=
   rfl
 #align set.image2_div Set.image2_div
+#align set.image2_sub Set.image2_sub
 -/
 
 #print Set.mem_div /-
@@ -768,6 +819,7 @@ theorem image2_div : image2 Div.div s t = s / t :=
 theorem mem_div : a ∈ s / t ↔ ∃ x y, x ∈ s ∧ y ∈ t ∧ x / y = a :=
   Iff.rfl
 #align set.mem_div Set.mem_div
+#align set.mem_sub Set.mem_sub
 -/
 
 #print Set.div_mem_div /-
@@ -775,6 +827,7 @@ theorem mem_div : a ∈ s / t ↔ ∃ x y, x ∈ s ∧ y ∈ t ∧ x / y = a :=
 theorem div_mem_div : a ∈ s → b ∈ t → a / b ∈ s / t :=
   mem_image2_of_mem
 #align set.div_mem_div Set.div_mem_div
+#align set.sub_mem_sub Set.sub_mem_sub
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -783,6 +836,7 @@ theorem div_mem_div : a ∈ s → b ∈ t → a / b ∈ s / t :=
 theorem image_div_prod : (fun x : α × α => x.fst / x.snd) '' s ×ˢ t = s / t :=
   image_prod _
 #align set.image_div_prod Set.image_div_prod
+#align set.add_image_prod Set.add_image_prod
 -/
 
 #print Set.empty_div /-
@@ -790,6 +844,7 @@ theorem image_div_prod : (fun x : α × α => x.fst / x.snd) '' s ×ˢ t = s / t
 theorem empty_div : ∅ / s = ∅ :=
   image2_empty_left
 #align set.empty_div Set.empty_div
+#align set.empty_sub Set.empty_sub
 -/
 
 #print Set.div_empty /-
@@ -797,6 +852,7 @@ theorem empty_div : ∅ / s = ∅ :=
 theorem div_empty : s / ∅ = ∅ :=
   image2_empty_right
 #align set.div_empty Set.div_empty
+#align set.sub_empty Set.sub_empty
 -/
 
 #print Set.div_eq_empty /-
@@ -804,6 +860,7 @@ theorem div_empty : s / ∅ = ∅ :=
 theorem div_eq_empty : s / t = ∅ ↔ s = ∅ ∨ t = ∅ :=
   image2_eq_empty_iff
 #align set.div_eq_empty Set.div_eq_empty
+#align set.sub_eq_empty Set.sub_eq_empty
 -/
 
 #print Set.div_nonempty /-
@@ -811,6 +868,7 @@ theorem div_eq_empty : s / t = ∅ ↔ s = ∅ ∨ t = ∅ :=
 theorem div_nonempty : (s / t).Nonempty ↔ s.Nonempty ∧ t.Nonempty :=
   image2_nonempty_iff
 #align set.div_nonempty Set.div_nonempty
+#align set.sub_nonempty Set.sub_nonempty
 -/
 
 #print Set.Nonempty.div /-
@@ -818,6 +876,7 @@ theorem div_nonempty : (s / t).Nonempty ↔ s.Nonempty ∧ t.Nonempty :=
 theorem Nonempty.div : s.Nonempty → t.Nonempty → (s / t).Nonempty :=
   nonempty.image2
 #align set.nonempty.div Set.Nonempty.div
+#align set.nonempty.sub Set.Nonempty.sub
 -/
 
 #print Set.Nonempty.of_div_left /-
@@ -825,6 +884,7 @@ theorem Nonempty.div : s.Nonempty → t.Nonempty → (s / t).Nonempty :=
 theorem Nonempty.of_div_left : (s / t).Nonempty → s.Nonempty :=
   nonempty.of_image2_left
 #align set.nonempty.of_div_left Set.Nonempty.of_div_left
+#align set.nonempty.of_sub_left Set.Nonempty.of_sub_left
 -/
 
 #print Set.Nonempty.of_div_right /-
@@ -832,6 +892,7 @@ theorem Nonempty.of_div_left : (s / t).Nonempty → s.Nonempty :=
 theorem Nonempty.of_div_right : (s / t).Nonempty → t.Nonempty :=
   nonempty.of_image2_right
 #align set.nonempty.of_div_right Set.Nonempty.of_div_right
+#align set.nonempty.of_sub_right Set.Nonempty.of_sub_right
 -/
 
 #print Set.div_singleton /-
@@ -839,6 +900,7 @@ theorem Nonempty.of_div_right : (s / t).Nonempty → t.Nonempty :=
 theorem div_singleton : s / {b} = (· / b) '' s :=
   image2_singleton_right
 #align set.div_singleton Set.div_singleton
+#align set.sub_singleton Set.sub_singleton
 -/
 
 #print Set.singleton_div /-
@@ -846,6 +908,7 @@ theorem div_singleton : s / {b} = (· / b) '' s :=
 theorem singleton_div : {a} / t = (· / ·) a '' t :=
   image2_singleton_left
 #align set.singleton_div Set.singleton_div
+#align set.singleton_sub Set.singleton_sub
 -/
 
 #print Set.singleton_div_singleton /-
@@ -853,6 +916,7 @@ theorem singleton_div : {a} / t = (· / ·) a '' t :=
 theorem singleton_div_singleton : ({a} : Set α) / {b} = {a / b} :=
   image2_singleton
 #align set.singleton_div_singleton Set.singleton_div_singleton
+#align set.singleton_sub_singleton Set.singleton_sub_singleton
 -/
 
 #print Set.div_subset_div /-
@@ -860,6 +924,7 @@ theorem singleton_div_singleton : ({a} : Set α) / {b} = {a / b} :=
 theorem div_subset_div : s₁ ⊆ t₁ → s₂ ⊆ t₂ → s₁ / s₂ ⊆ t₁ / t₂ :=
   image2_subset
 #align set.div_subset_div Set.div_subset_div
+#align set.sub_subset_sub Set.sub_subset_sub
 -/
 
 #print Set.div_subset_div_left /-
@@ -867,6 +932,7 @@ theorem div_subset_div : s₁ ⊆ t₁ → s₂ ⊆ t₂ → s₁ / s₂ ⊆ t�
 theorem div_subset_div_left : t₁ ⊆ t₂ → s / t₁ ⊆ s / t₂ :=
   image2_subset_left
 #align set.div_subset_div_left Set.div_subset_div_left
+#align set.sub_subset_sub_left Set.sub_subset_sub_left
 -/
 
 #print Set.div_subset_div_right /-
@@ -874,6 +940,7 @@ theorem div_subset_div_left : t₁ ⊆ t₂ → s / t₁ ⊆ s / t₂ :=
 theorem div_subset_div_right : s₁ ⊆ s₂ → s₁ / t ⊆ s₂ / t :=
   image2_subset_right
 #align set.div_subset_div_right Set.div_subset_div_right
+#align set.sub_subset_sub_right Set.sub_subset_sub_right
 -/
 
 #print Set.div_subset_iff /-
@@ -881,6 +948,7 @@ theorem div_subset_div_right : s₁ ⊆ s₂ → s₁ / t ⊆ s₂ / t :=
 theorem div_subset_iff : s / t ⊆ u ↔ ∀ x ∈ s, ∀ y ∈ t, x / y ∈ u :=
   image2_subset_iff
 #align set.div_subset_iff Set.div_subset_iff
+#align set.sub_subset_iff Set.sub_subset_iff
 -/
 
 attribute [mono] sub_subset_sub
@@ -895,6 +963,7 @@ Case conversion may be inaccurate. Consider using '#align set.union_div Set.unio
 theorem union_div : (s₁ ∪ s₂) / t = s₁ / t ∪ s₂ / t :=
   image2_union_left
 #align set.union_div Set.union_div
+#align set.union_sub Set.union_sub
 
 /- warning: set.div_union -> Set.div_union is a dubious translation:
 lean 3 declaration is
@@ -906,6 +975,7 @@ Case conversion may be inaccurate. Consider using '#align set.div_union Set.div_
 theorem div_union : s / (t₁ ∪ t₂) = s / t₁ ∪ s / t₂ :=
   image2_union_right
 #align set.div_union Set.div_union
+#align set.sub_union Set.sub_union
 
 /- warning: set.inter_div_subset -> Set.inter_div_subset is a dubious translation:
 lean 3 declaration is
@@ -917,6 +987,7 @@ Case conversion may be inaccurate. Consider using '#align set.inter_div_subset S
 theorem inter_div_subset : s₁ ∩ s₂ / t ⊆ s₁ / t ∩ (s₂ / t) :=
   image2_inter_subset_left
 #align set.inter_div_subset Set.inter_div_subset
+#align set.inter_sub_subset Set.inter_sub_subset
 
 /- warning: set.div_inter_subset -> Set.div_inter_subset is a dubious translation:
 lean 3 declaration is
@@ -928,6 +999,7 @@ Case conversion may be inaccurate. Consider using '#align set.div_inter_subset S
 theorem div_inter_subset : s / (t₁ ∩ t₂) ⊆ s / t₁ ∩ (s / t₂) :=
   image2_inter_subset_right
 #align set.div_inter_subset Set.div_inter_subset
+#align set.sub_inter_subset Set.sub_inter_subset
 
 #print Set.unionᵢ_div_left_image /-
 @[to_additive]
@@ -1062,6 +1134,7 @@ protected def NSMul [Zero α] [Add α] : SMul ℕ (Set α) :=
 protected def NPow [One α] [Mul α] : Pow (Set α) ℕ :=
   ⟨fun s n => npowRec n s⟩
 #align set.has_npow Set.NPow
+#align set.has_nsmul Set.NSMul
 -/
 
 #print Set.ZSMul /-
@@ -1079,6 +1152,7 @@ multiplication/division!) of a `set`. See note [pointwise nat action]. -/
 protected def ZPow [One α] [Mul α] [Inv α] : Pow (Set α) ℤ :=
   ⟨fun s n => zpowRec n s⟩
 #align set.has_zpow Set.ZPow
+#align set.has_zsmul Set.ZSMul
 -/
 
 scoped[Pointwise] attribute [instance] Set.NSMul Set.NPow Set.ZSMul Set.ZPow
@@ -1089,6 +1163,7 @@ scoped[Pointwise] attribute [instance] Set.NSMul Set.NPow Set.ZSMul Set.ZPow
 protected def semigroup [Semigroup α] : Semigroup (Set α) :=
   { Set.mul with mul_assoc := fun _ _ _ => image2_assoc mul_assoc }
 #align set.semigroup Set.semigroup
+#align set.add_semigroup Set.addSemigroup
 -/
 
 #print Set.commSemigroup /-
@@ -1097,6 +1172,7 @@ protected def semigroup [Semigroup α] : Semigroup (Set α) :=
 protected def commSemigroup [CommSemigroup α] : CommSemigroup (Set α) :=
   { Set.semigroup with mul_comm := fun s t => image2_comm mul_comm }
 #align set.comm_semigroup Set.commSemigroup
+#align set.add_comm_semigroup Set.addCommSemigroup
 -/
 
 section MulOneClass
@@ -1112,6 +1188,7 @@ protected def mulOneClass : MulOneClass (Set α) :=
     mul_one := fun s => by simp only [← singleton_one, mul_singleton, mul_one, image_id']
     one_mul := fun s => by simp only [← singleton_one, singleton_mul, one_mul, image_id'] }
 #align set.mul_one_class Set.mulOneClass
+#align set.add_zero_class Set.addZeroClass
 -/
 
 scoped[Pointwise]
@@ -1128,6 +1205,7 @@ Case conversion may be inaccurate. Consider using '#align set.subset_mul_left Se
 theorem subset_mul_left (s : Set α) {t : Set α} (ht : (1 : α) ∈ t) : s ⊆ s * t := fun x hx =>
   ⟨x, 1, hx, ht, mul_one _⟩
 #align set.subset_mul_left Set.subset_mul_left
+#align set.subset_add_left Set.subset_add_left
 
 /- warning: set.subset_mul_right -> Set.subset_mul_right is a dubious translation:
 lean 3 declaration is
@@ -1139,6 +1217,7 @@ Case conversion may be inaccurate. Consider using '#align set.subset_mul_right S
 theorem subset_mul_right {s : Set α} (t : Set α) (hs : (1 : α) ∈ s) : t ⊆ s * t := fun x hx =>
   ⟨1, x, hs, hx, one_mul _⟩
 #align set.subset_mul_right Set.subset_mul_right
+#align set.subset_add_right Set.subset_add_right
 
 #print Set.singletonMonoidHom /-
 /-- The singleton operation as a `monoid_hom`. -/
@@ -1146,6 +1225,7 @@ theorem subset_mul_right {s : Set α} (t : Set α) (hs : (1 : α) ∈ s) : t ⊆
 def singletonMonoidHom : α →* Set α :=
   { singletonMulHom, singletonOneHom with }
 #align set.singleton_monoid_hom Set.singletonMonoidHom
+#align set.singleton_add_monoid_hom Set.singletonAddMonoidHom
 -/
 
 /- warning: set.coe_singleton_monoid_hom -> Set.coe_singletonMonoidHom is a dubious translation:
@@ -1182,6 +1262,7 @@ variable [Monoid α] {s t : Set α} {a : α} {m n : ℕ}
 protected def monoid : Monoid (Set α) :=
   { Set.semigroup, Set.mulOneClass, Set.NPow with }
 #align set.monoid Set.monoid
+#align set.add_monoid Set.addMonoid
 -/
 
 scoped[Pointwise] attribute [instance] Set.monoid Set.addMonoid
@@ -1201,6 +1282,7 @@ theorem pow_mem_pow (ha : a ∈ s) : ∀ n : ℕ, a ^ n ∈ s ^ n
     rw [pow_succ]
     exact mul_mem_mul ha (pow_mem_pow _)
 #align set.pow_mem_pow Set.pow_mem_pow
+#align set.nsmul_mem_nsmul Set.nsmul_mem_nsmul
 
 /- warning: set.pow_subset_pow -> Set.pow_subset_pow is a dubious translation:
 lean 3 declaration is
@@ -1217,6 +1299,7 @@ theorem pow_subset_pow (hst : s ⊆ t) : ∀ n : ℕ, s ^ n ⊆ t ^ n
     rw [pow_succ]
     exact mul_subset_mul hst (pow_subset_pow _)
 #align set.pow_subset_pow Set.pow_subset_pow
+#align set.nsmul_subset_nsmul Set.nsmul_subset_nsmul
 
 /- warning: set.pow_subset_pow_of_one_mem -> Set.pow_subset_pow_of_one_mem is a dubious translation:
 lean 3 declaration is
@@ -1232,6 +1315,7 @@ theorem pow_subset_pow_of_one_mem (hs : (1 : α) ∈ s) : m ≤ n → s ^ m ⊆ 
   · rw [pow_succ]
     exact ih.trans (subset_mul_right _ hs)
 #align set.pow_subset_pow_of_one_mem Set.pow_subset_pow_of_one_mem
+#align set.nsmul_subset_nsmul_of_zero_mem Set.nsmul_subset_nsmul_of_zero_mem
 
 /- warning: set.empty_pow -> Set.empty_pow is a dubious translation:
 lean 3 declaration is
@@ -1243,6 +1327,7 @@ Case conversion may be inaccurate. Consider using '#align set.empty_pow Set.empt
 theorem empty_pow {n : ℕ} (hn : n ≠ 0) : (∅ : Set α) ^ n = ∅ := by
   rw [← tsub_add_cancel_of_le (Nat.succ_le_of_lt <| Nat.pos_of_ne_zero hn), pow_succ, empty_mul]
 #align set.empty_pow Set.empty_pow
+#align set.empty_nsmul Set.empty_nsmul
 
 /- warning: set.mul_univ_of_one_mem -> Set.mul_univ_of_one_mem is a dubious translation:
 lean 3 declaration is
@@ -1254,6 +1339,7 @@ Case conversion may be inaccurate. Consider using '#align set.mul_univ_of_one_me
 theorem mul_univ_of_one_mem (hs : (1 : α) ∈ s) : s * univ = univ :=
   eq_univ_iff_forall.2 fun a => mem_mul.2 ⟨_, _, hs, mem_univ _, one_mul _⟩
 #align set.mul_univ_of_one_mem Set.mul_univ_of_one_mem
+#align set.add_univ_of_zero_mem Set.add_univ_of_zero_mem
 
 /- warning: set.univ_mul_of_one_mem -> Set.univ_mul_of_one_mem is a dubious translation:
 lean 3 declaration is
@@ -1265,6 +1351,7 @@ Case conversion may be inaccurate. Consider using '#align set.univ_mul_of_one_me
 theorem univ_mul_of_one_mem (ht : (1 : α) ∈ t) : univ * t = univ :=
   eq_univ_iff_forall.2 fun a => mem_mul.2 ⟨_, _, mem_univ _, ht, mul_one _⟩
 #align set.univ_mul_of_one_mem Set.univ_mul_of_one_mem
+#align set.univ_add_of_zero_mem Set.univ_add_of_zero_mem
 
 /- warning: set.univ_mul_univ -> Set.univ_mul_univ is a dubious translation:
 lean 3 declaration is
@@ -1276,6 +1363,7 @@ Case conversion may be inaccurate. Consider using '#align set.univ_mul_univ Set.
 theorem univ_mul_univ : (univ : Set α) * univ = univ :=
   mul_univ_of_one_mem <| mem_univ _
 #align set.univ_mul_univ Set.univ_mul_univ
+#align set.univ_add_univ Set.univ_add_univ
 
 /- warning: set.nsmul_univ -> Set.nsmul_univ is a dubious translation:
 lean 3 declaration is
@@ -1303,12 +1391,14 @@ theorem univ_pow : ∀ {n : ℕ}, n ≠ 0 → (univ : Set α) ^ n = univ
   | 1 => fun _ => pow_one _
   | n + 2 => fun _ => by rw [pow_succ, univ_pow n.succ_ne_zero, univ_mul_univ]
 #align set.univ_pow Set.univ_pow
+#align set.nsmul_univ Set.nsmul_univ
 
 #print IsUnit.set /-
 @[to_additive]
 protected theorem IsUnit.set : IsUnit a → IsUnit ({a} : Set α) :=
   IsUnit.map (singletonMonoidHom : α →* Set α)
 #align is_unit.set IsUnit.set
+#align is_add_unit.set IsAddUnit.set
 -/
 
 end Monoid
@@ -1319,6 +1409,7 @@ end Monoid
 protected def commMonoid [CommMonoid α] : CommMonoid (Set α) :=
   { Set.monoid, Set.commSemigroup with }
 #align set.comm_monoid Set.commMonoid
+#align set.add_comm_monoid Set.addCommMonoid
 -/
 
 scoped[Pointwise] attribute [instance] Set.commMonoid Set.addCommMonoid
@@ -1350,6 +1441,7 @@ protected theorem mul_eq_one_iff : s * t = 1 ↔ ∃ a b, s = {a} ∧ t = {b} �
   · rintro ⟨b, c, rfl, rfl, h⟩
     rw [singleton_mul_singleton, h, singleton_one]
 #align set.mul_eq_one_iff Set.mul_eq_one_iff
+#align set.add_eq_zero_iff Set.add_eq_zero_iff
 
 #print Set.divisionMonoid /-
 /-- `set α` is a division monoid under pointwise operations if `α` is. -/
@@ -1368,6 +1460,7 @@ protected def divisionMonoid : DivisionMonoid (Set α) :=
       rw [← image_id (s / t), ← image_inv]
       exact image_image2_distrib_right div_eq_mul_inv }
 #align set.division_monoid Set.divisionMonoid
+#align set.subtraction_monoid Set.subtractionMonoid
 -/
 
 #print Set.isUnit_iff /-
@@ -1394,6 +1487,7 @@ end DivisionMonoid
 protected def divisionCommMonoid [DivisionCommMonoid α] : DivisionCommMonoid (Set α) :=
   { Set.divisionMonoid, Set.commSemigroup with }
 #align set.division_comm_monoid Set.divisionCommMonoid
+#align set.subtraction_comm_monoid Set.subtractionCommMonoid
 -/
 
 #print Set.hasDistribNeg /-
@@ -1510,6 +1604,7 @@ Case conversion may be inaccurate. Consider using '#align set.one_mem_div_iff Se
 theorem one_mem_div_iff : (1 : α) ∈ s / t ↔ ¬Disjoint s t := by
   simp [not_disjoint_iff_nonempty_inter, mem_div, div_eq_one, Set.Nonempty]
 #align set.one_mem_div_iff Set.one_mem_div_iff
+#align set.zero_mem_sub_iff Set.zero_mem_sub_iff
 
 /- warning: set.not_one_mem_div_iff -> Set.not_one_mem_div_iff is a dubious translation:
 lean 3 declaration is
@@ -1521,6 +1616,7 @@ Case conversion may be inaccurate. Consider using '#align set.not_one_mem_div_if
 theorem not_one_mem_div_iff : (1 : α) ∉ s / t ↔ Disjoint s t :=
   one_mem_div_iff.not_left
 #align set.not_one_mem_div_iff Set.not_one_mem_div_iff
+#align set.not_zero_mem_sub_iff Set.not_zero_mem_sub_iff
 
 /- warning: disjoint.one_not_mem_div_set -> Disjoint.one_not_mem_div_set is a dubious translation:
 lean 3 declaration is
@@ -1544,6 +1640,7 @@ theorem Nonempty.one_mem_div (h : s.Nonempty) : (1 : α) ∈ s / s :=
   let ⟨a, ha⟩ := h
   mem_div.2 ⟨a, a, ha, ha, div_self' _⟩
 #align set.nonempty.one_mem_div Set.Nonempty.one_mem_div
+#align set.nonempty.zero_mem_sub Set.Nonempty.zero_mem_sub
 
 #print Set.isUnit_singleton /-
 @[to_additive]
@@ -1569,6 +1666,7 @@ Case conversion may be inaccurate. Consider using '#align set.image_mul_left Set
 theorem image_mul_left : (· * ·) a '' t = (· * ·) a⁻¹ ⁻¹' t := by
   rw [image_eq_preimage_of_inverse] <;> intro c <;> simp
 #align set.image_mul_left Set.image_mul_left
+#align set.image_add_left Set.image_add_left
 
 /- warning: set.image_mul_right -> Set.image_mul_right is a dubious translation:
 lean 3 declaration is
@@ -1580,6 +1678,7 @@ Case conversion may be inaccurate. Consider using '#align set.image_mul_right Se
 theorem image_mul_right : (· * b) '' t = (· * b⁻¹) ⁻¹' t := by
   rw [image_eq_preimage_of_inverse] <;> intro c <;> simp
 #align set.image_mul_right Set.image_mul_right
+#align set.image_add_right Set.image_add_right
 
 /- warning: set.image_mul_left' -> Set.image_mul_left' is a dubious translation:
 lean 3 declaration is
@@ -1590,6 +1689,7 @@ Case conversion may be inaccurate. Consider using '#align set.image_mul_left' Se
 @[to_additive]
 theorem image_mul_left' : (fun b => a⁻¹ * b) '' t = (fun b => a * b) ⁻¹' t := by simp
 #align set.image_mul_left' Set.image_mul_left'
+#align set.image_add_left' Set.image_add_left'
 
 /- warning: set.image_mul_right' -> Set.image_mul_right' is a dubious translation:
 lean 3 declaration is
@@ -1600,6 +1700,7 @@ Case conversion may be inaccurate. Consider using '#align set.image_mul_right' S
 @[to_additive]
 theorem image_mul_right' : (· * b⁻¹) '' t = (· * b) ⁻¹' t := by simp
 #align set.image_mul_right' Set.image_mul_right'
+#align set.image_add_right' Set.image_add_right'
 
 /- warning: set.preimage_mul_left_singleton -> Set.preimage_mul_left_singleton is a dubious translation:
 lean 3 declaration is
@@ -1611,6 +1712,7 @@ Case conversion may be inaccurate. Consider using '#align set.preimage_mul_left_
 theorem preimage_mul_left_singleton : (· * ·) a ⁻¹' {b} = {a⁻¹ * b} := by
   rw [← image_mul_left', image_singleton]
 #align set.preimage_mul_left_singleton Set.preimage_mul_left_singleton
+#align set.preimage_add_left_singleton Set.preimage_add_left_singleton
 
 /- warning: set.preimage_mul_right_singleton -> Set.preimage_mul_right_singleton is a dubious translation:
 lean 3 declaration is
@@ -1622,6 +1724,7 @@ Case conversion may be inaccurate. Consider using '#align set.preimage_mul_right
 theorem preimage_mul_right_singleton : (· * a) ⁻¹' {b} = {b * a⁻¹} := by
   rw [← image_mul_right', image_singleton]
 #align set.preimage_mul_right_singleton Set.preimage_mul_right_singleton
+#align set.preimage_add_right_singleton Set.preimage_add_right_singleton
 
 /- warning: set.preimage_mul_left_one -> Set.preimage_mul_left_one is a dubious translation:
 lean 3 declaration is
@@ -1633,6 +1736,7 @@ Case conversion may be inaccurate. Consider using '#align set.preimage_mul_left_
 theorem preimage_mul_left_one : (· * ·) a ⁻¹' 1 = {a⁻¹} := by
   rw [← image_mul_left', image_one, mul_one]
 #align set.preimage_mul_left_one Set.preimage_mul_left_one
+#align set.preimage_add_left_zero Set.preimage_add_left_zero
 
 /- warning: set.preimage_mul_right_one -> Set.preimage_mul_right_one is a dubious translation:
 lean 3 declaration is
@@ -1644,6 +1748,7 @@ Case conversion may be inaccurate. Consider using '#align set.preimage_mul_right
 theorem preimage_mul_right_one : (· * b) ⁻¹' 1 = {b⁻¹} := by
   rw [← image_mul_right', image_one, one_mul]
 #align set.preimage_mul_right_one Set.preimage_mul_right_one
+#align set.preimage_add_right_zero Set.preimage_add_right_zero
 
 /- warning: set.preimage_mul_left_one' -> Set.preimage_mul_left_one' is a dubious translation:
 lean 3 declaration is
@@ -1654,6 +1759,7 @@ Case conversion may be inaccurate. Consider using '#align set.preimage_mul_left_
 @[to_additive]
 theorem preimage_mul_left_one' : (fun b => a⁻¹ * b) ⁻¹' 1 = {a} := by simp
 #align set.preimage_mul_left_one' Set.preimage_mul_left_one'
+#align set.preimage_add_left_zero' Set.preimage_add_left_zero'
 
 /- warning: set.preimage_mul_right_one' -> Set.preimage_mul_right_one' is a dubious translation:
 lean 3 declaration is
@@ -1664,6 +1770,7 @@ Case conversion may be inaccurate. Consider using '#align set.preimage_mul_right
 @[to_additive]
 theorem preimage_mul_right_one' : (· * b⁻¹) ⁻¹' 1 = {b} := by simp
 #align set.preimage_mul_right_one' Set.preimage_mul_right_one'
+#align set.preimage_add_right_zero' Set.preimage_add_right_zero'
 
 /- warning: set.mul_univ -> Set.mul_univ is a dubious translation:
 lean 3 declaration is
@@ -1676,6 +1783,7 @@ theorem mul_univ (hs : s.Nonempty) : s * (univ : Set α) = univ :=
   let ⟨a, ha⟩ := hs
   eq_univ_of_forall fun b => ⟨a, a⁻¹ * b, ha, trivial, mul_inv_cancel_left _ _⟩
 #align set.mul_univ Set.mul_univ
+#align set.add_univ Set.add_univ
 
 /- warning: set.univ_mul -> Set.univ_mul is a dubious translation:
 lean 3 declaration is
@@ -1688,6 +1796,7 @@ theorem univ_mul (ht : t.Nonempty) : (univ : Set α) * t = univ :=
   let ⟨a, ha⟩ := ht
   eq_univ_of_forall fun b => ⟨b * a⁻¹, a, trivial, ha, inv_mul_cancel_right _ _⟩
 #align set.univ_mul Set.univ_mul
+#align set.univ_add Set.univ_add
 
 end Group
 
@@ -1746,6 +1855,7 @@ include α β
 theorem image_mul : m '' (s * t) = m '' s * m '' t :=
   image_image2_distrib <| map_mul m
 #align set.image_mul Set.image_mul
+#align set.image_add Set.image_add
 -/
 
 #print Set.preimage_mul_preimage_subset /-
@@ -1755,6 +1865,7 @@ theorem preimage_mul_preimage_subset {s t : Set β} : m ⁻¹' s * m ⁻¹' t �
   rintro _ ⟨_, _, _, _, rfl⟩
   exact ⟨_, _, ‹_›, ‹_›, (map_mul m _ _).symm⟩
 #align set.preimage_mul_preimage_subset Set.preimage_mul_preimage_subset
+#align set.preimage_add_preimage_subset Set.preimage_add_preimage_subset
 -/
 
 end Mul
@@ -1775,6 +1886,7 @@ Case conversion may be inaccurate. Consider using '#align set.image_div Set.imag
 theorem image_div : m '' (s / t) = m '' s / m '' t :=
   image_image2_distrib <| map_div m
 #align set.image_div Set.image_div
+#align set.image_sub Set.image_sub
 
 /- warning: set.preimage_div_preimage_subset -> Set.preimage_div_preimage_subset is a dubious translation:
 lean 3 declaration is
@@ -1788,6 +1900,7 @@ theorem preimage_div_preimage_subset {s t : Set β} : m ⁻¹' s / m ⁻¹' t �
   rintro _ ⟨_, _, _, _, rfl⟩
   exact ⟨_, _, ‹_›, ‹_›, (map_div m _ _).symm⟩
 #align set.preimage_div_preimage_subset Set.preimage_div_preimage_subset
+#align set.preimage_sub_preimage_subset Set.preimage_sub_preimage_subset
 
 end Group
 

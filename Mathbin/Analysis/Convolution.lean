@@ -277,7 +277,7 @@ theorem MeasureTheory.AeStronglyMeasurable.convolutionIntegrandSnd (hf : AeStron
     (hg : AeStronglyMeasurable g μ) (x : G) :
     AeStronglyMeasurable (fun t => L (f t) (g (x - t))) μ :=
   hf.convolutionIntegrandSnd' L <|
-    hg.mono' <| (quasiMeasurePreservingSubLeftOfRightInvariant μ x).AbsolutelyContinuous
+    hg.mono' <| (quasi_measure_preserving_sub_left_of_right_invariant μ x).AbsolutelyContinuous
 #align
   measure_theory.ae_strongly_measurable.convolution_integrand_snd MeasureTheory.AeStronglyMeasurable.convolutionIntegrandSnd
 
@@ -285,7 +285,7 @@ theorem MeasureTheory.AeStronglyMeasurable.convolutionIntegrandSwapSnd
     (hf : AeStronglyMeasurable f μ) (hg : AeStronglyMeasurable g μ) (x : G) :
     AeStronglyMeasurable (fun t => L (f (x - t)) (g t)) μ :=
   (hf.mono'
-        (quasiMeasurePreservingSubLeftOfRightInvariant μ
+        (quasi_measure_preserving_sub_left_of_right_invariant μ
             x).AbsolutelyContinuous).convolutionIntegrandSwapSnd'
     L hg
 #align
@@ -297,7 +297,7 @@ theorem ConvolutionExistsAt.ofNorm {x₀ : G}
     (hmf : AeStronglyMeasurable f μ) (hmg : AeStronglyMeasurable g μ) :
     ConvolutionExistsAt f g x₀ L μ :=
   h.ofNorm' L hmf <|
-    hmg.mono' (quasiMeasurePreservingSubLeftOfRightInvariant μ x₀).AbsolutelyContinuous
+    hmg.mono' (quasi_measure_preserving_sub_left_of_right_invariant μ x₀).AbsolutelyContinuous
 #align convolution_exists_at.of_norm ConvolutionExistsAt.ofNorm
 
 end Left
@@ -311,7 +311,7 @@ theorem MeasureTheory.AeStronglyMeasurable.convolutionIntegrand (hf : AeStrongly
     (hg : AeStronglyMeasurable g μ) :
     AeStronglyMeasurable (fun p : G × G => L (f p.2) (g (p.1 - p.2))) (μ.Prod ν) :=
   hf.convolutionIntegrand' L <|
-    hg.mono' (quasiMeasurePreservingSubOfRightInvariant μ ν).AbsolutelyContinuous
+    hg.mono' (quasi_measure_preserving_sub_of_right_invariant μ ν).AbsolutelyContinuous
 #align
   measure_theory.ae_strongly_measurable.convolution_integrand MeasureTheory.AeStronglyMeasurable.convolutionIntegrand
 

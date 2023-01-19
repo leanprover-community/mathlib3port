@@ -43,6 +43,7 @@ most one way as a product of an element of `A` and an element of `B`. -/
 def UniqueMul {G} [Mul G] (A B : Finset G) (a0 b0 : G) : Prop :=
   ∀ ⦃a b⦄, a ∈ A → b ∈ B → a * b = a0 * b0 → a = a0 ∧ b = b0
 #align unique_mul UniqueMul
+#align unique_add UniqueAdd
 
 namespace UniqueMul
 
@@ -63,6 +64,7 @@ theorem subsingleton (A B : Finset G) (a0 b0 : G) (h : UniqueMul A B a0 b0) :
       Prod.ext ((h ha hb ab).1.trans (h ha' hb' ab').1.symm) <|
         (h ha hb ab).2.trans (h ha' hb' ab').2.symm⟩
 #align unique_mul.subsingleton UniqueMul.subsingleton
+#align unique_add.subsingleton UniqueAdd.subsingleton
 
 @[to_additive]
 theorem set_subsingleton (A B : Finset G) (a0 b0 : G) (h : UniqueMul A B a0 b0) :
@@ -74,6 +76,7 @@ theorem set_subsingleton (A B : Finset G) (a0 b0 : G) (h : UniqueMul A B a0 b0) 
   rcases h hy.1 hy.2.1 hy.2.2 with ⟨rfl, rfl⟩
   rfl
 #align unique_mul.set_subsingleton UniqueMul.set_subsingleton
+#align unique_add.set_subsingleton UniqueAdd.set_subsingleton
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (ab «expr ∈ » [finset.product/multiset.product/set.prod/list.product](A, B)) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -87,6 +90,7 @@ theorem iff_exists_unique (aA : a0 ∈ A) (bB : b0 ∈ B) :
         rcases prod.mk.inj_iff.mp (J (a0, b0) (Finset.mk_mem_product aA bB) rfl) with ⟨rfl, rfl⟩
         exact prod.mk.inj_iff.mp (J (x, y) (Finset.mk_mem_product hx hy) l))⟩
 #align unique_mul.iff_exists_unique UniqueMul.iff_exists_unique
+#align unique_add.iff_exists_unique UniqueAdd.iff_exists_unique
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (ab «expr ∈ » [finset.product/multiset.product/set.prod/list.product](A, B)) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -101,6 +105,7 @@ theorem exists_iff_exists_exists_unique :
     cases' finset.mem_product.mp hab with ha hb
     exact ⟨a, b, ha, hb, (iff_exists_unique ha hb).mpr h⟩⟩
 #align unique_mul.exists_iff_exists_exists_unique UniqueMul.exists_iff_exists_exists_unique
+#align unique_add.exists_iff_exists_exists_unique UniqueAdd.exists_iff_exists_exists_unique
 
 /-- `unique_mul` is preserved by inverse images under injective, multiplicative maps. -/
 @[to_additive "`unique_add` is preserved by inverse images under injective, additive maps."]
@@ -114,6 +119,7 @@ theorem mul_hom_preimage (f : G →ₙ* H) (hf : Function.Injective f) (a0 b0 : 
   rw [← hf.eq_iff, map_mul, map_mul] at ab
   exact u (finset.mem_preimage.mp ha) (finset.mem_preimage.mp hb) ab
 #align unique_mul.mul_hom_preimage UniqueMul.mul_hom_preimage
+#align unique_add.add_hom_preimage UniqueAdd.add_hom_preimage
 
 /-- `unique_mul` is preserved under multiplicative maps that are injective.
 
@@ -135,6 +141,7 @@ theorem mul_hom_image_iff [DecidableEq H] (f : G →ₙ* H) (hf : Function.Injec
     rw [← map_mul, ← map_mul, hf.eq_iff] at ab
     exact h ha hb ab
 #align unique_mul.mul_hom_image_iff UniqueMul.mul_hom_image_iff
+#align unique_add.add_hom_image_iff UniqueAdd.add_hom_image_iff
 
 /-- `unique_mul` is preserved under embeddings that are multiplicative.
 
@@ -147,6 +154,7 @@ theorem mul_hom_map_iff (f : G ↪ H) (mul : ∀ x y, f (x * y) = f x * f y) :
       · ext
         simp only [Finset.mem_map, MulHom.coe_mk, Finset.mem_image]
 #align unique_mul.mul_hom_map_iff UniqueMul.mul_hom_map_iff
+#align unique_add.add_hom_map_iff UniqueAdd.add_hom_map_iff
 
 end UniqueMul
 
@@ -204,6 +212,7 @@ theorem eq_and_eq_of_le_of_le_of_mul_le {A} [Mul A] [LinearOrder A]
   push_neg  at ha' hb'
   exact ⟨ha.antisymm' (ha' ab), hb.antisymm' (hb' ab)⟩
 #align eq_and_eq_of_le_of_le_of_mul_le eq_and_eq_of_le_of_le_of_mul_le
+#align eq_and_eq_of_le_of_le_of_add_le eq_and_eq_of_le_of_le_of_add_le
 
 -- see Note [lower instance priority]
 /-- This instance asserts that if `A` has a multiplication, a linear order, and multiplication
@@ -217,4 +226,5 @@ instance (priority := 100) Covariants.to_unique_prods {A} [Mul A] [LinearOrder A
     ⟨_, A.min'_mem ‹_›, _, B.min'_mem ‹_›, fun a b ha hb ab =>
       eq_and_eq_of_le_of_le_of_mul_le (Finset.min'_le _ _ ‹_›) (Finset.min'_le _ _ ‹_›) ab.le⟩
 #align covariants.to_unique_prods Covariants.to_unique_prods
+#align covariants.to_unique_sums Covariants.to_unique_sums
 

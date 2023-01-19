@@ -44,6 +44,7 @@ class MulAction.IsMinimal (M α : Type _) [Monoid M] [TopologicalSpace α] [MulA
   Prop where
   dense_orbit : ∀ x : α, Dense (MulAction.orbit M x)
 #align mul_action.is_minimal MulAction.IsMinimal
+#align add_action.is_minimal AddAction.IsMinimal
 
 open MulAction Set
 
@@ -54,29 +55,34 @@ variable (M G : Type _) {α : Type _} [Monoid M] [Group G] [TopologicalSpace α]
 theorem MulAction.dense_orbit [IsMinimal M α] (x : α) : Dense (orbit M x) :=
   MulAction.IsMinimal.dense_orbit x
 #align mul_action.dense_orbit MulAction.dense_orbit
+#align add_action.dense_orbit AddAction.dense_orbit
 
 @[to_additive]
 theorem dense_range_smul [IsMinimal M α] (x : α) : DenseRange fun c : M => c • x :=
   MulAction.dense_orbit M x
 #align dense_range_smul dense_range_smul
+#align dense_range_vadd dense_range_vadd
 
 @[to_additive]
 instance (priority := 100) MulAction.is_minimal_of_pretransitive [IsPretransitive M α] :
     IsMinimal M α :=
   ⟨fun x => (surjective_smul M x).DenseRange⟩
 #align mul_action.is_minimal_of_pretransitive MulAction.is_minimal_of_pretransitive
+#align add_action.is_minimal_of_pretransitive AddAction.is_minimal_of_pretransitive
 
 @[to_additive]
 theorem IsOpen.exists_smul_mem [IsMinimal M α] (x : α) {U : Set α} (hUo : IsOpen U)
     (hne : U.Nonempty) : ∃ c : M, c • x ∈ U :=
   (dense_range_smul M x).exists_mem_open hUo hne
 #align is_open.exists_smul_mem IsOpen.exists_smul_mem
+#align is_open.exists_vadd_mem IsOpen.exists_vadd_mem
 
 @[to_additive]
 theorem IsOpen.Union_preimage_smul [IsMinimal M α] {U : Set α} (hUo : IsOpen U) (hne : U.Nonempty) :
     (⋃ c : M, (· • ·) c ⁻¹' U) = univ :=
   unionᵢ_eq_univ_iff.2 fun x => hUo.exists_smul_mem M x hne
 #align is_open.Union_preimage_smul IsOpen.Union_preimage_smul
+#align is_open.Union_preimage_vadd IsOpen.Union_preimage_vadd
 
 @[to_additive]
 theorem IsOpen.Union_smul [IsMinimal G α] {U : Set α} (hUo : IsOpen U) (hne : U.Nonempty) :
@@ -85,6 +91,7 @@ theorem IsOpen.Union_smul [IsMinimal G α] {U : Set α} (hUo : IsOpen U) (hne : 
     let ⟨g, hg⟩ := hUo.exists_smul_mem G x hne
     ⟨g⁻¹, _, hg, inv_smul_smul _ _⟩
 #align is_open.Union_smul IsOpen.Union_smul
+#align is_open.Union_vadd IsOpen.Union_vadd
 
 @[to_additive]
 theorem IsCompact.exists_finite_cover_smul [IsMinimal G α] [HasContinuousConstSmul G α]
@@ -96,6 +103,7 @@ theorem IsCompact.exists_finite_cover_smul [IsMinimal G α] [HasContinuousConstS
       _ = ⋃ g : G, g • U := (hUo.Union_smul G hne).symm
       
 #align is_compact.exists_finite_cover_smul IsCompact.exists_finite_cover_smul
+#align is_compact.exists_finite_cover_vadd IsCompact.exists_finite_cover_vadd
 
 @[to_additive]
 theorem dense_of_nonempty_smul_invariant [IsMinimal M α] {s : Set α} (hne : s.Nonempty)
@@ -103,6 +111,7 @@ theorem dense_of_nonempty_smul_invariant [IsMinimal M α] {s : Set α} (hne : s.
   let ⟨x, hx⟩ := hne
   (MulAction.dense_orbit M x).mono (range_subset_iff.2 fun c => hsmul c <| ⟨x, hx, rfl⟩)
 #align dense_of_nonempty_smul_invariant dense_of_nonempty_smul_invariant
+#align dense_of_nonempty_vadd_invariant dense_of_nonempty_vadd_invariant
 
 @[to_additive]
 theorem eq_empty_or_univ_of_smul_invariant_closed [IsMinimal M α] {s : Set α} (hs : IsClosed s)
@@ -110,6 +119,7 @@ theorem eq_empty_or_univ_of_smul_invariant_closed [IsMinimal M α] {s : Set α} 
   s.eq_empty_or_nonempty.imp_right fun hne =>
     hs.closure_eq ▸ (dense_of_nonempty_smul_invariant M hne hsmul).closure_eq
 #align eq_empty_or_univ_of_smul_invariant_closed eq_empty_or_univ_of_smul_invariant_closed
+#align eq_empty_or_univ_of_vadd_invariant_closed eq_empty_or_univ_of_vadd_invariant_closed
 
 @[to_additive]
 theorem is_minimal_iff_closed_smul_invariant [HasContinuousConstSmul M α] :
@@ -122,4 +132,5 @@ theorem is_minimal_iff_closed_smul_invariant [HasContinuousConstSmul M α] :
   exacts[is_closed_closure, fun c => smul_closure_orbit_subset _ _,
     (orbit_nonempty _).closure.ne_empty]
 #align is_minimal_iff_closed_smul_invariant is_minimal_iff_closed_smul_invariant
+#align is_minimal_iff_closed_vadd_invariant is_minimal_iff_closed_vadd_invariant
 

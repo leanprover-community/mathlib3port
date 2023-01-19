@@ -54,6 +54,7 @@ theorem Monoid.ext {M : Type u} ⦃m₁ m₂ : Monoid M⦄ (h_mul : m₁.mul = m
   cases m₂
   congr <;> assumption
 #align monoid.ext Monoid.ext
+#align add_monoid.ext AddMonoid.ext
 
 #print CommMonoid.toMonoid_injective /-
 @[to_additive]
@@ -74,6 +75,7 @@ Case conversion may be inaccurate. Consider using '#align comm_monoid.ext CommMo
 theorem CommMonoid.ext {M : Type _} ⦃m₁ m₂ : CommMonoid M⦄ (h_mul : m₁.mul = m₂.mul) : m₁ = m₂ :=
   CommMonoid.toMonoid_injective <| Monoid.ext h_mul
 #align comm_monoid.ext CommMonoid.ext
+#align add_comm_monoid.ext AddCommMonoid.ext
 
 #print LeftCancelMonoid.toMonoid_injective /-
 @[to_additive]
@@ -96,6 +98,7 @@ theorem LeftCancelMonoid.ext {M : Type u} ⦃m₁ m₂ : LeftCancelMonoid M⦄ (
     m₁ = m₂ :=
   LeftCancelMonoid.toMonoid_injective <| Monoid.ext h_mul
 #align left_cancel_monoid.ext LeftCancelMonoid.ext
+#align add_left_cancel_monoid.ext AddLeftCancelMonoid.ext
 
 #print RightCancelMonoid.toMonoid_injective /-
 @[to_additive]
@@ -118,6 +121,7 @@ theorem RightCancelMonoid.ext {M : Type u} ⦃m₁ m₂ : RightCancelMonoid M⦄
     m₁ = m₂ :=
   RightCancelMonoid.toMonoid_injective <| Monoid.ext h_mul
 #align right_cancel_monoid.ext RightCancelMonoid.ext
+#align add_right_cancel_monoid.ext AddRightCancelMonoid.ext
 
 #print CancelMonoid.toLeftCancelMonoid_injective /-
 @[to_additive]
@@ -140,6 +144,7 @@ theorem CancelMonoid.ext {M : Type _} ⦃m₁ m₂ : CancelMonoid M⦄ (h_mul : 
     m₁ = m₂ :=
   CancelMonoid.toLeftCancelMonoid_injective <| LeftCancelMonoid.ext h_mul
 #align cancel_monoid.ext CancelMonoid.ext
+#align add_cancel_monoid.ext AddCancelMonoid.ext
 
 #print CancelCommMonoid.toCommMonoid_injective /-
 @[to_additive]
@@ -162,6 +167,7 @@ theorem CancelCommMonoid.ext {M : Type _} ⦃m₁ m₂ : CancelCommMonoid M⦄ (
     m₁ = m₂ :=
   CancelCommMonoid.toCommMonoid_injective <| CommMonoid.ext h_mul
 #align cancel_comm_monoid.ext CancelCommMonoid.ext
+#align add_cancel_comm_monoid.ext AddCancelCommMonoid.ext
 
 /- warning: div_inv_monoid.ext -> DivInvMonoid.ext is a dubious translation:
 lean 3 declaration is
@@ -192,6 +198,7 @@ theorem DivInvMonoid.ext {M : Type _} ⦃m₁ m₂ : DivInvMonoid M⦄ (h_mul : 
   congr
   exacts[h_mul, h₁, hpow, h_inv, hdiv, hzpow]
 #align div_inv_monoid.ext DivInvMonoid.ext
+#align sub_neg_monoid.ext SubNegMonoid.ext
 
 /- warning: group.ext -> Group.ext is a dubious translation:
 lean 3 declaration is
@@ -210,6 +217,7 @@ theorem Group.ext {G : Type _} ⦃g₁ g₂ : Group G⦄ (h_mul : g₁.mul = g�
       (DivInvMonoid.ext h_mul
         (funext <| @MonoidHom.map_inv G G g₁ (@Group.toDivisionMonoid _ g₂) f))
 #align group.ext Group.ext
+#align add_group.ext AddGroup.ext
 
 /- warning: comm_group.ext -> CommGroup.ext is a dubious translation:
 lean 3 declaration is
@@ -221,4 +229,5 @@ Case conversion may be inaccurate. Consider using '#align comm_group.ext CommGro
 theorem CommGroup.ext {G : Type _} ⦃g₁ g₂ : CommGroup G⦄ (h_mul : g₁.mul = g₂.mul) : g₁ = g₂ :=
   CommGroup.toGroup_injective <| Group.ext h_mul
 #align comm_group.ext CommGroup.ext
+#align add_comm_group.ext AddCommGroup.ext
 

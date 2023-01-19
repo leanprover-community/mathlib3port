@@ -59,15 +59,18 @@ namespace Adapted
 theorem mul [Mul β] [HasContinuousMul β] (hu : Adapted f u) (hv : Adapted f v) :
     Adapted f (u * v) := fun i => (hu i).mul (hv i)
 #align measure_theory.adapted.mul MeasureTheory.Adapted.mul
+#align measure_theory.adapted.add MeasureTheory.Adapted.add
 
 @[protected, to_additive]
 theorem div [Div β] [HasContinuousDiv β] (hu : Adapted f u) (hv : Adapted f v) :
     Adapted f (u / v) := fun i => (hu i).div (hv i)
 #align measure_theory.adapted.div MeasureTheory.Adapted.div
+#align measure_theory.adapted.sub MeasureTheory.Adapted.sub
 
 @[protected, to_additive]
 theorem inv [Group β] [TopologicalGroup β] (hu : Adapted f u) : Adapted f u⁻¹ := fun i => (hu i).inv
 #align measure_theory.adapted.inv MeasureTheory.Adapted.inv
+#align measure_theory.adapted.neg MeasureTheory.Adapted.neg
 
 @[protected]
 theorem smul [SMul ℝ β] [HasContinuousSmul ℝ β] (c : ℝ) (hu : Adapted f u) : Adapted f (c • u) :=
@@ -156,6 +159,7 @@ protected theorem mul [Mul β] [HasContinuousMul β] (hu : ProgMeasurable f u)
     (hv : ProgMeasurable f v) : ProgMeasurable f fun i ω => u i ω * v i ω := fun i =>
   (hu i).mul (hv i)
 #align measure_theory.prog_measurable.mul MeasureTheory.ProgMeasurable.mul
+#align measure_theory.prog_measurable.add MeasureTheory.ProgMeasurable.add
 
 @[to_additive]
 protected theorem finset_prod' {γ} [CommMonoid β] [HasContinuousMul β] {U : γ → ι → Ω → β}
@@ -163,6 +167,7 @@ protected theorem finset_prod' {γ} [CommMonoid β] [HasContinuousMul β] {U : �
   Finset.prod_induction U (ProgMeasurable f) (fun _ _ => ProgMeasurable.mul)
     (prog_measurable_const _ 1) h
 #align measure_theory.prog_measurable.finset_prod' MeasureTheory.ProgMeasurable.finset_prod'
+#align measure_theory.prog_measurable.finset_sum' MeasureTheory.ProgMeasurable.finset_sum'
 
 @[to_additive]
 protected theorem finset_prod {γ} [CommMonoid β] [HasContinuousMul β] {U : γ → ι → Ω → β}
@@ -173,17 +178,20 @@ protected theorem finset_prod {γ} [CommMonoid β] [HasContinuousMul β] {U : γ
   ext (i a)
   simp only [Finset.prod_apply]
 #align measure_theory.prog_measurable.finset_prod MeasureTheory.ProgMeasurable.finset_prod
+#align measure_theory.prog_measurable.finset_sum MeasureTheory.ProgMeasurable.finset_sum
 
 @[to_additive]
 protected theorem inv [Group β] [TopologicalGroup β] (hu : ProgMeasurable f u) :
     ProgMeasurable f fun i ω => (u i ω)⁻¹ := fun i => (hu i).inv
 #align measure_theory.prog_measurable.inv MeasureTheory.ProgMeasurable.inv
+#align measure_theory.prog_measurable.neg MeasureTheory.ProgMeasurable.neg
 
 @[to_additive]
 protected theorem div [Group β] [TopologicalGroup β] (hu : ProgMeasurable f u)
     (hv : ProgMeasurable f v) : ProgMeasurable f fun i ω => u i ω / v i ω := fun i =>
   (hu i).div (hv i)
 #align measure_theory.prog_measurable.div MeasureTheory.ProgMeasurable.div
+#align measure_theory.prog_measurable.sub MeasureTheory.ProgMeasurable.sub
 
 end Arithmetic
 

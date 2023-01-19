@@ -290,6 +290,7 @@ theorem prod_bind [CommMonoid β] (s : Multiset α) (t : α → Multiset β) :
     (s.bind t).Prod = (s.map fun a => (t a).Prod).Prod :=
   Multiset.induction_on s (by simp) fun a s ih => by simp [ih, cons_bind]
 #align multiset.prod_bind Multiset.prod_bind
+#align multiset.sum_bind Multiset.sum_bind
 -/
 
 /- warning: multiset.rel_bind -> Multiset.rel_bind is a dubious translation:

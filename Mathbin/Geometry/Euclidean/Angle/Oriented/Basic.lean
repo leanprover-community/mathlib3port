@@ -86,7 +86,7 @@ theorem oangle_zero_right (x : V) : o.oangle x 0 = 0 := by simp [oangle]
 theorem oangle_self (x : V) : o.oangle x x = 0 :=
   by
   simp only [oangle, kahler_apply_self, ← Complex.of_real_pow]
-  convert QuotientAddGroup.coe_zero _
+  convert quotientAddGroup.coe_zero _
   apply arg_of_real_of_nonneg
   positivity
 #align orientation.oangle_self Orientation.oangle_self

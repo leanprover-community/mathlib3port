@@ -142,7 +142,7 @@ def colimitCoconeIsColimit : IsColimit colimit_cocone
       (MonCat.FilteredColimits.colimitCoconeIsColimit
             (F ⋙ forget₂ SemiRingCat MonCat.{max v u})).desc
         ((forget₂ SemiRingCat MonCat.{max v u}).mapCocone t),
-      (AddCommMonCat.FilteredColimits.colimitCoconeIsColimit
+      (AddCommMonCat.FilteredColimits.colimit_cocone_is_colimit
             (F ⋙ forget₂ SemiRingCat AddCommMonCat.{max v u})).desc
         ((forget₂ SemiRingCat AddCommMonCat.{max v u}).mapCocone t) with }
   fac' t j :=

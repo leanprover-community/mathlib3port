@@ -32,6 +32,7 @@ open CategoryTheory
 def GroupCat : Type (u + 1) :=
   Bundled Group
 #align Group GroupCat
+#align AddGroup AddGroupCat
 
 /-- The category of additive groups and group morphisms -/
 add_decl_doc AddGroupCat
@@ -55,6 +56,7 @@ instance : CoeSort GroupCat (Type _) :=
 def of (X : Type u) [Group X] : GroupCat :=
   Bundled.of X
 #align Group.of GroupCat.of
+#align AddGroup.of AddGroupCat.of
 
 /-- Construct a bundled `AddGroup` from the underlying type and typeclass. -/
 add_decl_doc AddGroupCat.of
@@ -64,6 +66,7 @@ add_decl_doc AddGroupCat.of
 def ofHom {X Y : Type u} [Group X] [Group Y] (f : X →* Y) : of X ⟶ of Y :=
   f
 #align Group.of_hom GroupCat.ofHom
+#align AddGroup.of_hom AddGroupCat.ofHom
 
 /-- Typecheck a `add_monoid_hom` as a morphism in `AddGroup`. -/
 add_decl_doc AddGroupCat.ofHom
@@ -72,6 +75,7 @@ add_decl_doc AddGroupCat.ofHom
 theorem of_hom_apply {X Y : Type _} [Group X] [Group Y] (f : X →* Y) (x : X) : ofHom f x = f x :=
   rfl
 #align Group.of_hom_apply GroupCat.of_hom_apply
+#align AddGroup.of_hom_apply AddGroupCat.of_hom_apply
 
 @[to_additive]
 instance (G : GroupCat) : Group G :=
@@ -81,6 +85,7 @@ instance (G : GroupCat) : Group G :=
 theorem coe_of (R : Type u) [Group R] : (GroupCat.of R : Type u) = R :=
   rfl
 #align Group.coe_of GroupCat.coe_of
+#align AddGroup.coe_of AddGroupCat.coe_of
 
 @[to_additive]
 instance : Inhabited GroupCat :=
@@ -90,11 +95,13 @@ instance : Inhabited GroupCat :=
 instance ofUnique (G : Type _) [Group G] [i : Unique G] : Unique (GroupCat.of G) :=
   i
 #align Group.of_unique GroupCat.ofUnique
+#align AddGroup.of_unique AddGroupCat.ofUnique
 
 @[simp, to_additive]
 theorem one_apply (G H : GroupCat) (g : G) : (1 : G ⟶ H) g = 1 :=
   rfl
 #align Group.one_apply GroupCat.one_apply
+#align AddGroup.zero_apply AddGroupCat.zero_apply
 
 @[ext, to_additive]
 theorem ext (G H : GroupCat) (f₁ f₂ : G ⟶ H) (w : ∀ x, f₁ x = f₂ x) : f₁ = f₂ :=
@@ -102,11 +109,13 @@ theorem ext (G H : GroupCat) (f₁ f₂ : G ⟶ H) (w : ∀ x, f₁ x = f₂ x) 
   ext1
   apply w
 #align Group.ext GroupCat.ext
+#align AddGroup.ext AddGroupCat.ext
 
 @[to_additive has_forget_to_AddMon]
 instance hasForgetToMon : HasForget₂ GroupCat MonCat :=
   BundledHom.forget₂ _ _
 #align Group.has_forget_to_Mon GroupCat.hasForgetToMon
+#align AddGroup.has_forget_to_AddMon AddGroupCat.hasForgetToAddMon
 
 @[to_additive]
 instance : Coe GroupCat.{u} MonCat.{u} where coe := (forget₂ GroupCat MonCat).obj
@@ -118,6 +127,7 @@ end GroupCat
 def CommGroupCat : Type (u + 1) :=
   Bundled CommGroup
 #align CommGroup CommGroupCat
+#align AddCommGroup AddCommGroupCat
 
 /-- The category of additive commutative groups and group morphisms. -/
 add_decl_doc AddCommGroupCat
@@ -146,6 +156,7 @@ instance : CoeSort CommGroupCat (Type _) :=
 def of (G : Type u) [CommGroup G] : CommGroupCat :=
   Bundled.of G
 #align CommGroup.of CommGroupCat.of
+#align AddCommGroup.of AddCommGroupCat.of
 
 /-- Construct a bundled `AddCommGroup` from the underlying type and typeclass. -/
 add_decl_doc AddCommGroupCat.of
@@ -155,6 +166,7 @@ add_decl_doc AddCommGroupCat.of
 def ofHom {X Y : Type u} [CommGroup X] [CommGroup Y] (f : X →* Y) : of X ⟶ of Y :=
   f
 #align CommGroup.of_hom CommGroupCat.ofHom
+#align AddCommGroup.of_hom AddCommGroupCat.ofHom
 
 /-- Typecheck a `add_monoid_hom` as a morphism in `AddCommGroup`. -/
 add_decl_doc AddCommGroupCat.ofHom
@@ -164,16 +176,19 @@ theorem of_hom_apply {X Y : Type _} [CommGroup X] [CommGroup Y] (f : X →* Y) (
     ofHom f x = f x :=
   rfl
 #align CommGroup.of_hom_apply CommGroupCat.of_hom_apply
+#align AddCommGroup.of_hom_apply AddCommGroupCat.of_hom_apply
 
 @[to_additive]
 instance commGroupInstance (G : CommGroupCat) : CommGroup G :=
   G.str
 #align CommGroup.comm_group_instance CommGroupCat.commGroupInstance
+#align AddCommGroup.add_comm_group_instance AddCommGroupCat.addCommGroupInstance
 
 @[simp, to_additive]
 theorem coe_of (R : Type u) [CommGroup R] : (CommGroupCat.of R : Type u) = R :=
   rfl
 #align CommGroup.coe_of CommGroupCat.coe_of
+#align AddCommGroup.coe_of AddCommGroupCat.coe_of
 
 @[to_additive]
 instance : Inhabited CommGroupCat :=
@@ -183,11 +198,13 @@ instance : Inhabited CommGroupCat :=
 instance ofUnique (G : Type _) [CommGroup G] [i : Unique G] : Unique (CommGroupCat.of G) :=
   i
 #align CommGroup.of_unique CommGroupCat.ofUnique
+#align AddCommGroup.of_unique AddCommGroupCat.ofUnique
 
 @[simp, to_additive]
 theorem one_apply (G H : CommGroupCat) (g : G) : (1 : G ⟶ H) g = 1 :=
   rfl
 #align CommGroup.one_apply CommGroupCat.one_apply
+#align AddCommGroup.zero_apply AddCommGroupCat.zero_apply
 
 @[ext, to_additive]
 theorem ext (G H : CommGroupCat) (f₁ f₂ : G ⟶ H) (w : ∀ x, f₁ x = f₂ x) : f₁ = f₂ :=
@@ -195,11 +212,13 @@ theorem ext (G H : CommGroupCat) (f₁ f₂ : G ⟶ H) (w : ∀ x, f₁ x = f₂
   ext1
   apply w
 #align CommGroup.ext CommGroupCat.ext
+#align AddCommGroup.ext AddCommGroupCat.ext
 
 @[to_additive has_forget_to_AddGroup]
 instance hasForgetToGroup : HasForget₂ CommGroupCat GroupCat :=
   BundledHom.forget₂ _ _
 #align CommGroup.has_forget_to_Group CommGroupCat.hasForgetToGroup
+#align AddCommGroup.has_forget_to_AddGroup AddCommGroupCat.hasForgetToAddGroup
 
 @[to_additive]
 instance : Coe CommGroupCat.{u} GroupCat.{u} where coe := (forget₂ CommGroupCat GroupCat).obj
@@ -208,6 +227,7 @@ instance : Coe CommGroupCat.{u} GroupCat.{u} where coe := (forget₂ CommGroupCa
 instance hasForgetToCommMon : HasForget₂ CommGroupCat CommMonCat :=
   InducedCategory.hasForget₂ fun G : CommGroupCat => CommMonCat.of G
 #align CommGroup.has_forget_to_CommMon CommGroupCat.hasForgetToCommMon
+#align AddCommGroup.has_forget_to_AddCommMon AddCommGroupCat.hasForgetToAddCommMon
 
 @[to_additive]
 instance : Coe CommGroupCat.{u} CommMonCat.{u} where coe := (forget₂ CommGroupCat CommMonCat).obj
@@ -268,6 +288,7 @@ def MulEquiv.toGroupIso {X Y : GroupCat} (e : X ≃* Y) : X ≅ Y
   Hom := e.toMonoidHom
   inv := e.symm.toMonoidHom
 #align mul_equiv.to_Group_iso MulEquiv.toGroupIso
+#align add_equiv.to_AddGroup_iso AddEquiv.toAddGroupIso
 
 /-- Build an isomorphism in the category `AddGroup` from an `add_equiv` between `add_group`s. -/
 add_decl_doc AddEquiv.toAddGroupIso
@@ -279,6 +300,7 @@ def MulEquiv.toCommGroupIso {X Y : CommGroupCat} (e : X ≃* Y) : X ≅ Y
   Hom := e.toMonoidHom
   inv := e.symm.toMonoidHom
 #align mul_equiv.to_CommGroup_iso MulEquiv.toCommGroupIso
+#align add_equiv.to_AddCommGroup_iso AddEquiv.toAddCommGroupIso
 
 /-- Build an isomorphism in the category `AddCommGroup` from a `add_equiv` between
 `add_comm_group`s. -/
@@ -293,6 +315,7 @@ namespace CategoryTheory.Iso
 def groupIsoToMulEquiv {X Y : GroupCat} (i : X ≅ Y) : X ≃* Y :=
   i.Hom.toMulEquiv i.inv i.hom_inv_id i.inv_hom_id
 #align category_theory.iso.Group_iso_to_mul_equiv CategoryTheory.Iso.groupIsoToMulEquiv
+#align category_theory.iso.AddGroup_iso_to_add_equiv CategoryTheory.Iso.addGroupIsoToAddEquiv
 
 /-- Build a `mul_equiv` from an isomorphism in the category `CommGroup`. -/
 @[to_additive AddCommGroup_iso_to_add_equiv
@@ -301,6 +324,8 @@ def groupIsoToMulEquiv {X Y : GroupCat} (i : X ≅ Y) : X ≃* Y :=
 def commGroupIsoToMulEquiv {X Y : CommGroupCat} (i : X ≅ Y) : X ≃* Y :=
   i.Hom.toMulEquiv i.inv i.hom_inv_id i.inv_hom_id
 #align category_theory.iso.CommGroup_iso_to_mul_equiv CategoryTheory.Iso.commGroupIsoToMulEquiv
+#align
+  category_theory.iso.AddCommGroup_iso_to_add_equiv CategoryTheory.Iso.addCommGroupIsoToAddEquiv
 
 end CategoryTheory.Iso
 
@@ -313,6 +338,7 @@ def mulEquivIsoGroupIso {X Y : GroupCat.{u}} : X ≃* Y ≅ X ≅ Y
   Hom e := e.toGroupIso
   inv i := i.groupIsoToMulEquiv
 #align mul_equiv_iso_Group_iso mulEquivIsoGroupIso
+#align add_equiv_iso_AddGroup_iso addEquivIsoAddGroupIso
 
 /-- multiplicative equivalences between `comm_group`s are the same as (isomorphic to) isomorphisms
 in `CommGroup` -/
@@ -323,6 +349,7 @@ def mulEquivIsoCommGroupIso {X Y : CommGroupCat.{u}} : X ≃* Y ≅ X ≅ Y
   Hom e := e.toCommGroupIso
   inv i := i.commGroupIsoToMulEquiv
 #align mul_equiv_iso_CommGroup_iso mulEquivIsoCommGroupIso
+#align add_equiv_iso_AddCommGroup_iso addEquivIsoAddCommGroupIso
 
 namespace CategoryTheory.AutCat
 
@@ -350,6 +377,7 @@ instance GroupCat.forget_reflects_isos : ReflectsIsomorphisms (forget GroupCat.{
     let e : X ≃* Y := { f, i.to_equiv with }
     exact ⟨(is_iso.of_iso e.to_Group_iso).1⟩
 #align Group.forget_reflects_isos GroupCat.forget_reflects_isos
+#align AddGroup.forget_reflects_isos AddGroupCat.forget_reflects_isos
 
 @[to_additive]
 instance CommGroupCat.forget_reflects_isos : ReflectsIsomorphisms (forget CommGroupCat.{u})
@@ -359,4 +387,5 @@ instance CommGroupCat.forget_reflects_isos : ReflectsIsomorphisms (forget CommGr
     let e : X ≃* Y := { f, i.to_equiv with }
     exact ⟨(is_iso.of_iso e.to_CommGroup_iso).1⟩
 #align CommGroup.forget_reflects_isos CommGroupCat.forget_reflects_isos
+#align AddCommGroup.forget_reflects_isos AddCommGroupCat.forget_reflects_isos
 

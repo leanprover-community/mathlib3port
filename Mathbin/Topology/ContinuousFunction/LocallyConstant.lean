@@ -37,6 +37,7 @@ def toContinuousMapMonoidHom [Monoid Y] [HasContinuousMul Y] : LocallyConstant X
     ext
     simp
 #align locally_constant.to_continuous_map_monoid_hom LocallyConstant.toContinuousMapMonoidHom
+#align locally_constant.to_continuous_map_add_monoid_hom LocallyConstant.toContinuousMapAddMonoidHom
 
 /-- The inclusion of locally-constant functions into continuous functions as a linear map. -/
 @[simps]

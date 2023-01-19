@@ -50,6 +50,7 @@ instance types : LargeCategory (Type u)
   id a := id
   comp _ _ _ f g := g ∘ f
 #align category_theory.types CategoryTheory.types
+#align category_theory.types CategoryTheory.types
 
 theorem types_hom {α β : Type u} : (α ⟶ β) = (α → β) :=
   rfl

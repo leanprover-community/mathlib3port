@@ -277,6 +277,7 @@ theorem Multiset.prod_eq_prod_coe [CommMonoid α] (m : Multiset α) : m.Prod = �
   congr
   simp
 #align multiset.prod_eq_prod_coe Multiset.prod_eq_prod_coe
+#align multiset.sum_eq_sum_coe Multiset.sum_eq_sum_coe
 
 @[to_additive]
 theorem Multiset.prod_eq_prod_to_enum_finset [CommMonoid α] (m : Multiset α) :
@@ -284,6 +285,7 @@ theorem Multiset.prod_eq_prod_to_enum_finset [CommMonoid α] (m : Multiset α) :
   congr
   simp
 #align multiset.prod_eq_prod_to_enum_finset Multiset.prod_eq_prod_to_enum_finset
+#align multiset.sum_eq_sum_to_enum_finset Multiset.sum_eq_sum_to_enum_finset
 
 @[to_additive]
 theorem Multiset.prod_to_enum_finset {β : Type _} [CommMonoid β] (m : Multiset α) (f : α → ℕ → β) :
@@ -294,4 +296,5 @@ theorem Multiset.prod_to_enum_finset {β : Type _} [CommMonoid β] (m : Multiset
     simp
   · simp
 #align multiset.prod_to_enum_finset Multiset.prod_to_enum_finset
+#align multiset.sum_to_enum_finset Multiset.sum_to_enum_finset
 

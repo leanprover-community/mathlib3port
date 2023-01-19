@@ -1738,6 +1738,7 @@ def prod [∀ i, Zero (β i)] [∀ (i) (x : β i), Decidable (x ≠ 0)] [CommMon
     (g : ∀ i, β i → γ) : γ :=
   ∏ i in f.support, g i (f i)
 #align dfinsupp.prod Dfinsupp.prod
+#align dfinsupp.sum Dfinsupp.sum
 
 @[to_additive]
 theorem prod_map_range_index {β₁ : ι → Type v₁} {β₂ : ι → Type v₂} [∀ i, Zero (β₁ i)]
@@ -1756,12 +1757,14 @@ theorem prod_map_range_index {β₁ : ι → Type v₁} {β₂ : ι → Type v�
     intro i h1
     simp [h1]
 #align dfinsupp.prod_map_range_index Dfinsupp.prod_map_range_index
+#align dfinsupp.sum_map_range_index Dfinsupp.sum_map_range_index
 
 @[to_additive]
 theorem prod_zero_index [∀ i, AddCommMonoid (β i)] [∀ (i) (x : β i), Decidable (x ≠ 0)]
     [CommMonoid γ] {h : ∀ i, β i → γ} : (0 : Π₀ i, β i).Prod h = 1 :=
   rfl
 #align dfinsupp.prod_zero_index Dfinsupp.prod_zero_index
+#align dfinsupp.sum_zero_index Dfinsupp.sum_zero_index
 
 @[to_additive]
 theorem prod_single_index [∀ i, Zero (β i)] [∀ (i) (x : β i), Decidable (x ≠ 0)] [CommMonoid γ]
@@ -1773,6 +1776,7 @@ theorem prod_single_index [∀ i, Zero (β i)] [∀ (i) (x : β i), Decidable (x
     simp [h, prod_zero_index, h_zero]
     rfl
 #align dfinsupp.prod_single_index Dfinsupp.prod_single_index
+#align dfinsupp.sum_single_index Dfinsupp.sum_single_index
 
 @[to_additive]
 theorem prod_neg_index [∀ i, AddGroup (β i)] [∀ (i) (x : β i), Decidable (x ≠ 0)] [CommMonoid γ]
@@ -1780,6 +1784,7 @@ theorem prod_neg_index [∀ i, AddGroup (β i)] [∀ (i) (x : β i), Decidable (
     (-g).Prod h = g.Prod fun i b => h i (-b) :=
   prod_map_range_index h0
 #align dfinsupp.prod_neg_index Dfinsupp.prod_neg_index
+#align dfinsupp.sum_neg_index Dfinsupp.sum_neg_index
 
 omit dec
 
@@ -1792,6 +1797,7 @@ theorem prod_comm {ι₁ ι₂ : Sort _} {β₁ : ι₁ → Type _} {β₂ : ι�
       f₂.Prod fun i₂ x₂ => f₁.Prod fun i₁ x₁ => h i₁ x₁ i₂ x₂ :=
   Finset.prod_comm
 #align dfinsupp.prod_comm Dfinsupp.prod_comm
+#align dfinsupp.sum_comm Dfinsupp.sum_comm
 
 @[simp]
 theorem sum_apply {ι₁ : Type u₁} [DecidableEq ι₁] {β₁ : ι₁ → Type v₁} [∀ i₁, Zero (β₁ i₁)]
@@ -1821,6 +1827,7 @@ theorem prod_one [∀ i, AddCommMonoid (β i)] [∀ (i) (x : β i), Decidable (x
     {f : Π₀ i, β i} : (f.Prod fun i b => (1 : γ)) = 1 :=
   Finset.prod_const_one
 #align dfinsupp.prod_one Dfinsupp.prod_one
+#align dfinsupp.sum_zero Dfinsupp.sum_zero
 
 @[simp, to_additive]
 theorem prod_mul [∀ i, AddCommMonoid (β i)] [∀ (i) (x : β i), Decidable (x ≠ 0)] [CommMonoid γ]
@@ -1828,18 +1835,21 @@ theorem prod_mul [∀ i, AddCommMonoid (β i)] [∀ (i) (x : β i), Decidable (x
     (f.Prod fun i b => h₁ i b * h₂ i b) = f.Prod h₁ * f.Prod h₂ :=
   Finset.prod_mul_distrib
 #align dfinsupp.prod_mul Dfinsupp.prod_mul
+#align dfinsupp.sum_add Dfinsupp.sum_add
 
 @[simp, to_additive]
 theorem prod_inv [∀ i, AddCommMonoid (β i)] [∀ (i) (x : β i), Decidable (x ≠ 0)] [CommGroup γ]
     {f : Π₀ i, β i} {h : ∀ i, β i → γ} : (f.Prod fun i b => (h i b)⁻¹) = (f.Prod h)⁻¹ :=
   ((invMonoidHom : γ →* γ).map_prod _ f.support).symm
 #align dfinsupp.prod_inv Dfinsupp.prod_inv
+#align dfinsupp.sum_neg Dfinsupp.sum_neg
 
 @[to_additive]
 theorem prod_eq_one [∀ i, Zero (β i)] [∀ (i) (x : β i), Decidable (x ≠ 0)] [CommMonoid γ]
     {f : Π₀ i, β i} {h : ∀ i, β i → γ} (hyp : ∀ i, h i (f i) = 1) : f.Prod h = 1 :=
   Finset.prod_eq_one fun i hi => hyp i
 #align dfinsupp.prod_eq_one Dfinsupp.prod_eq_one
+#align dfinsupp.sum_eq_zero Dfinsupp.sum_eq_zero
 
 theorem smul_sum {α : Type _} [Monoid α] [∀ i, Zero (β i)] [∀ (i) (x : β i), Decidable (x ≠ 0)]
     [AddCommMonoid γ] [DistribMulAction α γ] {f : Π₀ i, β i} {h : ∀ i, β i → γ} {c : α} :
@@ -1866,6 +1876,7 @@ theorem prod_add_index [∀ i, AddCommMonoid (β i)] [∀ (i) (x : β i), Decida
     _ = _ := by rw [f_eq, g_eq]
     
 #align dfinsupp.prod_add_index Dfinsupp.prod_add_index
+#align dfinsupp.sum_add_index Dfinsupp.sum_add_index
 
 @[to_additive]
 theorem dfinsupp_prod_mem [∀ i, Zero (β i)] [∀ (i) (x : β i), Decidable (x ≠ 0)] [CommMonoid γ]
@@ -1873,6 +1884,7 @@ theorem dfinsupp_prod_mem [∀ i, Zero (β i)] [∀ (i) (x : β i), Decidable (x
     (h : ∀ c, f c ≠ 0 → g c (f c) ∈ s) : f.Prod g ∈ s :=
   prod_mem fun i hi => h _ <| mem_support_iff.1 hi
 #align dfinsupp_prod_mem dfinsupp_prod_mem
+#align dfinsupp_sum_mem dfinsupp_sum_mem
 
 @[simp, to_additive]
 theorem prod_eq_prod_fintype [Fintype ι] [∀ i, Zero (β i)] [∀ (i : ι) (x : β i), Decidable (x ≠ 0)]
@@ -1885,6 +1897,7 @@ theorem prod_eq_prod_fintype [Fintype ι] [∀ i, Zero (β i)] [∀ (i : ι) (x 
   rw [mem_support_iff, not_not] at hi
   rw [hi, hf]
 #align dfinsupp.prod_eq_prod_fintype Dfinsupp.prod_eq_prod_fintype
+#align dfinsupp.sum_eq_sum_fintype Dfinsupp.sum_eq_sum_fintype
 
 /--
 When summing over an `add_monoid_hom`, the decidability assumption is not needed, and the result is
@@ -2131,6 +2144,7 @@ theorem prod_finset_sum_index {γ : Type w} {α : Type x} [∀ i, AddCommMonoid 
       Finset.induction_on s (by simp [prod_zero_index])
         (by simp (config := { contextual := true }) [prod_add_index, h_zero, h_add])
 #align dfinsupp.prod_finset_sum_index Dfinsupp.prod_finset_sum_index
+#align dfinsupp.sum_finset_sum_index Dfinsupp.sum_finset_sum_index
 
 @[to_additive]
 theorem prod_sum_index {ι₁ : Type u₁} [DecidableEq ι₁] {β₁ : ι₁ → Type v₁} [∀ i₁, Zero (β₁ i₁)]
@@ -2141,6 +2155,7 @@ theorem prod_sum_index {ι₁ : Type u₁} [DecidableEq ι₁] {β₁ : ι₁ �
     (f.Sum g).Prod h = f.Prod fun i b => (g i b).Prod h :=
   (prod_finset_sum_index h_zero h_add).symm
 #align dfinsupp.prod_sum_index Dfinsupp.prod_sum_index
+#align dfinsupp.sum_sum_index Dfinsupp.sum_sum_index
 
 @[simp]
 theorem sum_single [∀ i, AddCommMonoid (β i)] [∀ (i) (x : β i), Decidable (x ≠ 0)] {f : Π₀ i, β i} :
@@ -2158,6 +2173,7 @@ theorem prod_subtype_domain_index [∀ i, Zero (β i)] [∀ (i) (x : β i), Deci
   Finset.prod_bij (fun p _ => p) (by simp) (by simp) (fun ⟨a₀, ha₀⟩ ⟨a₁, ha₁⟩ => by simp)
     fun i hi => ⟨⟨i, hp i hi⟩, by simpa using hi, rfl⟩
 #align dfinsupp.prod_subtype_domain_index Dfinsupp.prod_subtype_domain_index
+#align dfinsupp.sum_subtype_domain_index Dfinsupp.sum_subtype_domain_index
 
 omit dec
 
@@ -2284,18 +2300,21 @@ theorem map_dfinsupp_prod [CommMonoid R] [CommMonoid S] (h : R →* S) (f : Π�
     (g : ∀ i, β i → R) : h (f.Prod g) = f.Prod fun a b => h (g a b) :=
   h.map_prod _ _
 #align monoid_hom.map_dfinsupp_prod MonoidHom.map_dfinsupp_prod
+#align add_monoid_hom.map_dfinsupp_sum AddMonoidHom.map_dfinsupp_sum
 
 @[to_additive]
 theorem coe_dfinsupp_prod [Monoid R] [CommMonoid S] (f : Π₀ i, β i) (g : ∀ i, β i → R →* S) :
     ⇑(f.Prod g) = f.Prod fun a b => g a b :=
   coe_finset_prod _ _
 #align monoid_hom.coe_dfinsupp_prod MonoidHom.coe_dfinsupp_prod
+#align add_monoid_hom.coe_dfinsupp_sum AddMonoidHom.coe_dfinsupp_sum
 
 @[simp, to_additive]
 theorem dfinsupp_prod_apply [Monoid R] [CommMonoid S] (f : Π₀ i, β i) (g : ∀ i, β i → R →* S)
     (r : R) : (f.Prod g) r = f.Prod fun a b => (g a b) r :=
   finset_prod_apply _ _ _
 #align monoid_hom.dfinsupp_prod_apply MonoidHom.dfinsupp_prod_apply
+#align add_monoid_hom.dfinsupp_sum_apply AddMonoidHom.dfinsupp_sum_apply
 
 end MonoidHom
 
@@ -2330,6 +2349,7 @@ theorem map_dfinsupp_prod [CommMonoid R] [CommMonoid S] (h : R ≃* S) (f : Π�
     (g : ∀ i, β i → R) : h (f.Prod g) = f.Prod fun a b => h (g a b) :=
   h.map_prod _ _
 #align mul_equiv.map_dfinsupp_prod MulEquiv.map_dfinsupp_prod
+#align add_equiv.map_dfinsupp_sum AddEquiv.map_dfinsupp_sum
 
 end MulEquiv
 

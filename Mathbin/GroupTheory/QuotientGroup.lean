@@ -66,38 +66,45 @@ protected def con : Con G where
       _ ∈ N := N.mul_mem (nN.conj_mem _ hab _) hcd
       
 #align quotient_group.con QuotientGroup.con
+#align quotient_add_group.con quotientAddGroup.con
 
 @[to_additive]
 instance Quotient.group : Group (G ⧸ N) :=
   (QuotientGroup.con N).Group
 #align quotient_group.quotient.group QuotientGroup.Quotient.group
+#align quotient_add_group.quotient.add_group quotientAddGroup.Quotient.addGroup
 
 /-- The group homomorphism from `G` to `G/N`. -/
 @[to_additive "The additive group homomorphism from `G` to `G/N`."]
 def mk' : G →* G ⧸ N :=
   MonoidHom.mk' QuotientGroup.mk fun _ _ => rfl
 #align quotient_group.mk' QuotientGroup.mk'
+#align quotient_add_group.mk' quotientAddGroup.mk'
 
 @[simp, to_additive]
 theorem coe_mk' : (mk' N : G → G ⧸ N) = coe :=
   rfl
 #align quotient_group.coe_mk' QuotientGroup.coe_mk'
+#align quotient_add_group.coe_mk' quotientAddGroup.coe_mk'
 
 @[simp, to_additive]
 theorem mk'_apply (x : G) : mk' N x = x :=
   rfl
 #align quotient_group.mk'_apply QuotientGroup.mk'_apply
+#align quotient_add_group.mk'_apply quotientAddGroup.mk'_apply
 
 @[to_additive]
 theorem mk'_surjective : surjective <| mk' N :=
   @mk_surjective _ _ N
 #align quotient_group.mk'_surjective QuotientGroup.mk'_surjective
+#align quotient_add_group.mk'_surjective quotientAddGroup.mk'_surjective
 
 @[to_additive]
 theorem mk'_eq_mk' {x y : G} : mk' N x = mk' N y ↔ ∃ z ∈ N, x * z = y :=
   QuotientGroup.eq'.trans <| by
     simp only [← _root_.eq_inv_mul_iff_mul_eq, exists_prop, exists_eq_right]
 #align quotient_group.mk'_eq_mk' QuotientGroup.mk'_eq_mk'
+#align quotient_add_group.mk'_eq_mk' quotientAddGroup.mk'_eq_mk'
 
 /-- Two `monoid_hom`s from a quotient group are equal if their compositions with
 `quotient_group.mk'` are equal.
@@ -109,6 +116,7 @@ See note [partially-applied ext lemmas]. -/
 theorem monoid_hom_ext ⦃f g : G ⧸ N →* H⦄ (h : f.comp (mk' N) = g.comp (mk' N)) : f = g :=
   MonoidHom.ext fun x => QuotientGroup.induction_on x <| (MonoidHom.congr_fun h : _)
 #align quotient_group.monoid_hom_ext QuotientGroup.monoid_hom_ext
+#align quotient_add_group.add_monoid_hom_ext quotientAddGroup.add_monoid_hom_ext
 
 @[simp, to_additive]
 theorem eq_one_iff {N : Subgroup G} [nN : N.Normal] (x : G) : (x : G ⧸ N) = 1 ↔ x ∈ N :=
@@ -116,11 +124,13 @@ theorem eq_one_iff {N : Subgroup G} [nN : N.Normal] (x : G) : (x : G ⧸ N) = 1 
   refine' quotient_group.eq.trans _
   rw [mul_one, Subgroup.inv_mem_iff]
 #align quotient_group.eq_one_iff QuotientGroup.eq_one_iff
+#align quotient_add_group.eq_zero_iff quotientAddGroup.eq_zero_iff
 
 @[simp, to_additive]
 theorem ker_mk : MonoidHom.ker (QuotientGroup.mk' N : G →* G ⧸ N) = N :=
   Subgroup.ext eq_one_iff
 #align quotient_group.ker_mk QuotientGroup.ker_mk
+#align quotient_add_group.ker_mk quotientAddGroup.ker_mk
 
 @[to_additive]
 theorem eq_iff_div_mem {N : Subgroup G} [nN : N.Normal] {x y : G} : (x : G ⧸ N) = y ↔ x / y ∈ N :=
@@ -128,6 +138,7 @@ theorem eq_iff_div_mem {N : Subgroup G} [nN : N.Normal] {x y : G} : (x : G ⧸ N
   refine' eq_comm.trans (quotient_group.eq.trans _)
   rw [nN.mem_comm_iff, div_eq_mul_inv]
 #align quotient_group.eq_iff_div_mem QuotientGroup.eq_iff_div_mem
+#align quotient_add_group.eq_iff_sub_mem quotientAddGroup.eq_iff_sub_mem
 
 -- for commutative groups we don't need normality assumption
 omit nN
@@ -137,6 +148,7 @@ instance Quotient.commGroup {G : Type _} [CommGroup G] (N : Subgroup G) : CommGr
   { @QuotientGroup.Quotient.group _ _ N N.normal_of_comm with
     mul_comm := fun a b => Quotient.inductionOn₂' a b fun a b => congr_arg mk (mul_comm a b) }
 #align quotient_group.quotient.comm_group QuotientGroup.Quotient.commGroup
+#align quotient_add_group.quotient.add_comm_group quotientAddGroup.Quotient.addCommGroup
 
 include nN
 
@@ -147,31 +159,37 @@ local notation " Q " => G ⧸ N
 theorem coe_one : ((1 : G) : Q ) = 1 :=
   rfl
 #align quotient_group.coe_one QuotientGroup.coe_one
+#align quotient_add_group.coe_zero quotientAddGroup.coe_zero
 
 @[simp, to_additive]
 theorem coe_mul (a b : G) : ((a * b : G) : Q ) = a * b :=
   rfl
 #align quotient_group.coe_mul QuotientGroup.coe_mul
+#align quotient_add_group.coe_add quotientAddGroup.coe_add
 
 @[simp, to_additive]
 theorem coe_inv (a : G) : ((a⁻¹ : G) : Q ) = a⁻¹ :=
   rfl
 #align quotient_group.coe_inv QuotientGroup.coe_inv
+#align quotient_add_group.coe_neg quotientAddGroup.coe_neg
 
 @[simp, to_additive]
 theorem coe_div (a b : G) : ((a / b : G) : Q ) = a / b :=
   rfl
 #align quotient_group.coe_div QuotientGroup.coe_div
+#align quotient_add_group.coe_sub quotientAddGroup.coe_sub
 
 @[simp, to_additive]
 theorem coe_pow (a : G) (n : ℕ) : ((a ^ n : G) : Q ) = a ^ n :=
   rfl
 #align quotient_group.coe_pow QuotientGroup.coe_pow
+#align quotient_add_group.coe_nsmul quotientAddGroup.coe_nsmul
 
 @[simp, to_additive]
 theorem coe_zpow (a : G) (n : ℤ) : ((a ^ n : G) : Q ) = a ^ n :=
   rfl
 #align quotient_group.coe_zpow QuotientGroup.coe_zpow
+#align quotient_add_group.coe_zsmul quotientAddGroup.coe_zsmul
 
 /-- A group homomorphism `φ : G →* H` with `N ⊆ ker(φ)` descends (i.e. `lift`s) to a
 group homomorphism `G/N →* H`. -/
@@ -186,22 +204,26 @@ def lift (φ : G →* H) (HN : ∀ x ∈ N, φ x = 1) : Q →* H :=
       _ = φ y := by rw [φ.map_mul, HN _ (N.inv_mem h), mul_one]
       
 #align quotient_group.lift QuotientGroup.lift
+#align quotient_add_group.lift quotientAddGroup.lift
 
 @[simp, to_additive]
 theorem lift_mk {φ : G →* H} (HN : ∀ x ∈ N, φ x = 1) (g : G) : lift N φ HN (g : Q ) = φ g :=
   rfl
 #align quotient_group.lift_mk QuotientGroup.lift_mk
+#align quotient_add_group.lift_mk quotientAddGroup.lift_mk
 
 @[simp, to_additive]
 theorem lift_mk' {φ : G →* H} (HN : ∀ x ∈ N, φ x = 1) (g : G) : lift N φ HN (mk g : Q ) = φ g :=
   rfl
 #align quotient_group.lift_mk' QuotientGroup.lift_mk'
+#align quotient_add_group.lift_mk' quotientAddGroup.lift_mk'
 
 @[simp, to_additive]
 theorem lift_quot_mk {φ : G →* H} (HN : ∀ x ∈ N, φ x = 1) (g : G) :
     lift N φ HN (Quot.mk _ g : Q ) = φ g :=
   rfl
 #align quotient_group.lift_quot_mk QuotientGroup.lift_quot_mk
+#align quotient_add_group.lift_quot_mk quotientAddGroup.lift_quot_mk
 
 /-- A group homomorphism `f : G →* H` induces a map `G/N →* H/M` if `N ⊆ f⁻¹(M)`. -/
 @[to_additive
@@ -214,30 +236,35 @@ def map (M : Subgroup H) [M.Normal] (f : G →* H) (h : N ≤ M.comap f) : G ⧸
   rw [mul_one, Subgroup.inv_mem_iff]
   exact h hx
 #align quotient_group.map QuotientGroup.map
+#align quotient_add_group.map quotientAddGroup.map
 
 @[simp, to_additive]
 theorem map_coe (M : Subgroup H) [M.Normal] (f : G →* H) (h : N ≤ M.comap f) (x : G) :
     map N M f h ↑x = ↑(f x) :=
   rfl
 #align quotient_group.map_coe QuotientGroup.map_coe
+#align quotient_add_group.map_coe quotientAddGroup.map_coe
 
 @[to_additive]
 theorem map_mk' (M : Subgroup H) [M.Normal] (f : G →* H) (h : N ≤ M.comap f) (x : G) :
     map N M f h (mk' _ x) = ↑(f x) :=
   rfl
 #align quotient_group.map_mk' QuotientGroup.map_mk'
+#align quotient_add_group.map_mk' quotientAddGroup.map_mk'
 
 @[to_additive]
 theorem map_id_apply (h : N ≤ Subgroup.comap (MonoidHom.id _) N := (Subgroup.comap_id N).le) (x) :
     map N N (MonoidHom.id _) h x = x :=
   induction_on' x fun x => rfl
 #align quotient_group.map_id_apply QuotientGroup.map_id_apply
+#align quotient_add_group.map_id_apply quotientAddGroup.map_id_apply
 
 @[simp, to_additive]
 theorem map_id (h : N ≤ Subgroup.comap (MonoidHom.id _) N := (Subgroup.comap_id N).le) :
     map N N (MonoidHom.id _) h = MonoidHom.id _ :=
   MonoidHom.ext (map_id_apply N h)
 #align quotient_group.map_id QuotientGroup.map_id
+#align quotient_add_group.map_id quotientAddGroup.map_id
 
 @[simp, to_additive]
 theorem map_map {I : Type _} [Group I] (M : Subgroup H) (O : Subgroup I) [M.Normal] [O.Normal]
@@ -249,6 +276,7 @@ theorem map_map {I : Type _} [Group I] (M : Subgroup H) (O : Subgroup I) [M.Norm
   refine' induction_on' x fun x => _
   simp only [map_coe, MonoidHom.comp_apply]
 #align quotient_group.map_map QuotientGroup.map_map
+#align quotient_add_group.map_map quotientAddGroup.map_map
 
 @[simp, to_additive]
 theorem map_comp_map {I : Type _} [Group I] (M : Subgroup H) (O : Subgroup I) [M.Normal] [O.Normal]
@@ -258,6 +286,7 @@ theorem map_comp_map {I : Type _} [Group I] (M : Subgroup H) (O : Subgroup I) [M
     (map M O g hg).comp (map N M f hf) = map N O (g.comp f) hgf :=
   MonoidHom.ext (map_map N M O f g hf hg hgf)
 #align quotient_group.map_comp_map QuotientGroup.map_comp_map
+#align quotient_add_group.map_comp_map quotientAddGroup.map_comp_map
 
 omit nN
 
@@ -287,6 +316,7 @@ def congr (e : G ≃* H) (he : G'.map ↑e = H') : G ⧸ G' ≃* H ⧸ H' :=
         simp only [← MulEquiv.coe_monoidHom_trans, MulEquiv.symm_trans_self,
           MulEquiv.coe_monoidHom_refl, map_id_apply] }
 #align quotient_group.congr QuotientGroup.congr
+#align quotient_add_group.congr quotientAddGroup.congr
 
 @[simp]
 theorem congr_mk (e : G ≃* H) (he : G'.map ↑e = H') (x) : congr G' H' e he (mk x) = e x :=
@@ -329,22 +359,26 @@ open MonoidHom
 def kerLift : G ⧸ ker φ →* H :=
   lift _ φ fun g => φ.mem_ker.mp
 #align quotient_group.ker_lift QuotientGroup.kerLift
+#align quotient_add_group.ker_lift quotientAddGroup.kerLift
 
 @[simp, to_additive]
 theorem ker_lift_mk (g : G) : (kerLift φ) g = φ g :=
   lift_mk _ _ _
 #align quotient_group.ker_lift_mk QuotientGroup.ker_lift_mk
+#align quotient_add_group.ker_lift_mk quotientAddGroup.ker_lift_mk
 
 @[simp, to_additive]
 theorem ker_lift_mk' (g : G) : (kerLift φ) (mk g) = φ g :=
   lift_mk' _ _ _
 #align quotient_group.ker_lift_mk' QuotientGroup.ker_lift_mk'
+#align quotient_add_group.ker_lift_mk' quotientAddGroup.ker_lift_mk'
 
 @[to_additive]
 theorem ker_lift_injective : Injective (kerLift φ) := fun a b =>
   Quotient.inductionOn₂' a b fun a b (h : φ a = φ b) =>
     Quotient.sound' <| by rw [left_rel_apply, mem_ker, φ.map_mul, ← h, φ.map_inv, inv_mul_self]
 #align quotient_group.ker_lift_injective QuotientGroup.ker_lift_injective
+#align quotient_add_group.ker_lift_injective quotientAddGroup.ker_lift_injective
 
 -- Note that `ker φ` isn't definitionally `ker (φ.range_restrict)`
 -- so there is a bit of annoying code duplication here
@@ -353,6 +387,7 @@ theorem ker_lift_injective : Injective (kerLift φ) := fun a b =>
 def rangeKerLift : G ⧸ ker φ →* φ.range :=
   lift _ φ.range_restrict fun g hg => (mem_ker _).mp <| by rwa [ker_range_restrict]
 #align quotient_group.range_ker_lift QuotientGroup.rangeKerLift
+#align quotient_add_group.range_ker_lift quotientAddGroup.rangeKerLift
 
 @[to_additive]
 theorem range_ker_lift_injective : Injective (rangeKerLift φ) := fun a b =>
@@ -361,6 +396,7 @@ theorem range_ker_lift_injective : Injective (rangeKerLift φ) := fun a b =>
       rw [left_rel_apply, ← ker_range_restrict, mem_ker, φ.range_restrict.map_mul, ← h,
         φ.range_restrict.map_inv, inv_mul_self]
 #align quotient_group.range_ker_lift_injective QuotientGroup.range_ker_lift_injective
+#align quotient_add_group.range_ker_lift_injective quotientAddGroup.range_ker_lift_injective
 
 @[to_additive]
 theorem range_ker_lift_surjective : Surjective (rangeKerLift φ) :=
@@ -369,6 +405,7 @@ theorem range_ker_lift_surjective : Surjective (rangeKerLift φ) :=
   use mk g
   rfl
 #align quotient_group.range_ker_lift_surjective QuotientGroup.range_ker_lift_surjective
+#align quotient_add_group.range_ker_lift_surjective quotientAddGroup.range_ker_lift_surjective
 
 /-- **Noether's first isomorphism theorem** (a definition): the canonical isomorphism between
 `G/(ker φ)` to `range φ`. -/
@@ -377,6 +414,7 @@ theorem range_ker_lift_surjective : Surjective (rangeKerLift φ) :=
 noncomputable def quotientKerEquivRange : G ⧸ ker φ ≃* range φ :=
   MulEquiv.ofBijective (rangeKerLift φ) ⟨range_ker_lift_injective φ, range_ker_lift_surjective φ⟩
 #align quotient_group.quotient_ker_equiv_range QuotientGroup.quotientKerEquivRange
+#align quotient_add_group.quotient_ker_equiv_range quotientAddGroup.quotientKerEquivRange
 
 /-- The canonical isomorphism `G/(ker φ) ≃* H` induced by a homomorphism `φ : G →* H`
 with a right inverse `ψ : H → G`. -/
@@ -391,12 +429,15 @@ def quotientKerEquivOfRightInverse (ψ : H → G) (hφ : RightInverse ψ φ) : G
     right_inv := hφ }
 #align
   quotient_group.quotient_ker_equiv_of_right_inverse QuotientGroup.quotientKerEquivOfRightInverse
+#align
+  quotient_add_group.quotient_ker_equiv_of_right_inverse quotientAddGroup.quotientKerEquivOfRightInverse
 
 /-- The canonical isomorphism `G/⊥ ≃* G`. -/
 @[to_additive "The canonical isomorphism `G/⊥ ≃+ G`.", simps]
 def quotientBot : G ⧸ (⊥ : Subgroup G) ≃* G :=
   quotientKerEquivOfRightInverse (MonoidHom.id G) id fun x => rfl
 #align quotient_group.quotient_bot QuotientGroup.quotientBot
+#align quotient_add_group.quotient_bot quotientAddGroup.quotientBot
 
 /-- The canonical isomorphism `G/(ker φ) ≃* H` induced by a surjection `φ : G →* H`.
 
@@ -407,6 +448,8 @@ For a `computable` version, see `quotient_group.quotient_ker_equiv_of_right_inve
 noncomputable def quotientKerEquivOfSurjective (hφ : Surjective φ) : G ⧸ ker φ ≃* H :=
   quotientKerEquivOfRightInverse φ _ hφ.HasRightInverse.some_spec
 #align quotient_group.quotient_ker_equiv_of_surjective QuotientGroup.quotientKerEquivOfSurjective
+#align
+  quotient_add_group.quotient_ker_equiv_of_surjective quotientAddGroup.quotientKerEquivOfSurjective
 
 /-- If two normal subgroups `M` and `N` of `G` are the same, their quotient groups are
 isomorphic. -/
@@ -416,12 +459,14 @@ def quotientMulEquivOfEq {M N : Subgroup G} [M.Normal] [N.Normal] (h : M = N) : 
   { Subgroup.quotientEquivOfEq h with
     map_mul' := fun q r => Quotient.inductionOn₂' q r fun g h => rfl }
 #align quotient_group.quotient_mul_equiv_of_eq QuotientGroup.quotientMulEquivOfEq
+#align quotient_add_group.quotient_add_equiv_of_eq quotientAddGroup.quotientAddEquivOfEq
 
 @[simp, to_additive]
 theorem quotient_mul_equiv_of_eq_mk {M N : Subgroup G} [M.Normal] [N.Normal] (h : M = N) (x : G) :
     QuotientGroup.quotientMulEquivOfEq h (QuotientGroup.mk x) = QuotientGroup.mk x :=
   rfl
 #align quotient_group.quotient_mul_equiv_of_eq_mk QuotientGroup.quotient_mul_equiv_of_eq_mk
+#align quotient_add_group.quotient_add_equiv_of_eq_mk quotientAddGroup.quotient_add_equiv_of_eq_mk
 
 /-- Let `A', A, B', B` be subgroups of `G`. If `A' ≤ B'` and `A ≤ B`,
 then there is a map `A / (A' ⊓ A) →* B / (B' ⊓ B)` induced by the inclusions. -/
@@ -432,6 +477,8 @@ def quotientMapSubgroupOfOfLe {A' A B' B : Subgroup G} [hAN : (A'.subgroupOf A).
     A ⧸ A'.subgroupOf A →* B ⧸ B'.subgroupOf B :=
   map _ _ (Subgroup.inclusion h) <| Subgroup.comap_mono h'
 #align quotient_group.quotient_map_subgroup_of_of_le QuotientGroup.quotientMapSubgroupOfOfLe
+#align
+  quotient_add_group.quotient_map_add_subgroup_of_of_le quotientAddGroup.quotientMapAddSubgroupOfOfLe
 
 @[simp, to_additive]
 theorem quotient_map_subgroup_of_of_le_coe {A' A B' B : Subgroup G} [hAN : (A'.subgroupOf A).Normal]
@@ -440,6 +487,8 @@ theorem quotient_map_subgroup_of_of_le_coe {A' A B' B : Subgroup G} [hAN : (A'.s
   rfl
 #align
   quotient_group.quotient_map_subgroup_of_of_le_coe QuotientGroup.quotient_map_subgroup_of_of_le_coe
+#align
+  quotient_add_group.quotient_map_add_subgroup_of_of_le_coe quotientAddGroup.quotient_map_add_subgroup_of_of_le_coe
 
 /-- Let `A', A, B', B` be subgroups of `G`.
 If `A' = B'` and `A = B`, then the quotients `A / (A' ⊓ A)` and `B / (B' ⊓ B)` are isomorphic.
@@ -460,6 +509,8 @@ def equivQuotientSubgroupOfOfEq {A' A B' B : Subgroup G} [hAN : (A'.subgroupOf A
       ext ⟨x, hx⟩
       rfl)
 #align quotient_group.equiv_quotient_subgroup_of_of_eq QuotientGroup.equivQuotientSubgroupOfOfEq
+#align
+  quotient_add_group.equiv_quotient_add_subgroup_of_of_eq quotientAddGroup.equivQuotientAddSubgroupOfOfEq
 
 section Zpow
 
@@ -475,11 +526,13 @@ def homQuotientZpowOfHom :
   lift _ ((mk' _).comp f) fun g ⟨h, (hg : h ^ n = g)⟩ =>
     (eq_one_iff _).mpr ⟨_, by simpa only [← hg, map_zpow] ⟩
 #align quotient_group.hom_quotient_zpow_of_hom QuotientGroup.homQuotientZpowOfHom
+#align quotient_add_group.hom_quotient_zsmul_of_hom quotientAddGroup.homQuotientZsmulOfHom
 
 @[simp, to_additive]
 theorem hom_quotient_zpow_of_hom_id : homQuotientZpowOfHom (MonoidHom.id A) n = MonoidHom.id _ :=
   monoid_hom_ext _ rfl
 #align quotient_group.hom_quotient_zpow_of_hom_id QuotientGroup.hom_quotient_zpow_of_hom_id
+#align quotient_add_group.hom_quotient_zsmul_of_hom_id quotientAddGroup.hom_quotient_zsmul_of_hom_id
 
 @[simp, to_additive]
 theorem hom_quotient_zpow_of_hom_comp :
@@ -487,6 +540,8 @@ theorem hom_quotient_zpow_of_hom_comp :
       (homQuotientZpowOfHom f n).comp (homQuotientZpowOfHom g n) :=
   monoid_hom_ext _ rfl
 #align quotient_group.hom_quotient_zpow_of_hom_comp QuotientGroup.hom_quotient_zpow_of_hom_comp
+#align
+  quotient_add_group.hom_quotient_zsmul_of_hom_comp quotientAddGroup.hom_quotient_zsmul_of_hom_comp
 
 @[simp, to_additive]
 theorem hom_quotient_zpow_of_hom_comp_of_right_inverse (i : Function.RightInverse g f) :
@@ -494,6 +549,8 @@ theorem hom_quotient_zpow_of_hom_comp_of_right_inverse (i : Function.RightInvers
   monoid_hom_ext _ <| MonoidHom.ext fun x => congr_arg coe <| i x
 #align
   quotient_group.hom_quotient_zpow_of_hom_comp_of_right_inverse QuotientGroup.hom_quotient_zpow_of_hom_comp_of_right_inverse
+#align
+  quotient_add_group.hom_quotient_zsmul_of_hom_comp_of_right_inverse quotientAddGroup.hom_quotient_zsmul_of_hom_comp_of_right_inverse
 
 /-- The equivalence of quotients by powers of an integer induced by a group isomorphism. -/
 @[to_additive
@@ -503,6 +560,7 @@ def equivQuotientZpowOfEquiv :
   MonoidHom.toMulEquiv _ _ (hom_quotient_zpow_of_hom_comp_of_right_inverse e.symm e n e.left_inv)
     (hom_quotient_zpow_of_hom_comp_of_right_inverse e e.symm n e.right_inv)
 #align quotient_group.equiv_quotient_zpow_of_equiv QuotientGroup.equivQuotientZpowOfEquiv
+#align quotient_add_group.equiv_quotient_zsmul_of_equiv quotientAddGroup.equivQuotientZsmulOfEquiv
 
 @[simp, to_additive]
 theorem equiv_quotient_zpow_of_equiv_refl :
@@ -514,6 +572,8 @@ theorem equiv_quotient_zpow_of_equiv_refl :
   rfl
 #align
   quotient_group.equiv_quotient_zpow_of_equiv_refl QuotientGroup.equiv_quotient_zpow_of_equiv_refl
+#align
+  quotient_add_group.equiv_quotient_zsmul_of_equiv_refl quotientAddGroup.equiv_quotient_zsmul_of_equiv_refl
 
 @[simp, to_additive]
 theorem equiv_quotient_zpow_of_equiv_symm :
@@ -521,6 +581,8 @@ theorem equiv_quotient_zpow_of_equiv_symm :
   rfl
 #align
   quotient_group.equiv_quotient_zpow_of_equiv_symm QuotientGroup.equiv_quotient_zpow_of_equiv_symm
+#align
+  quotient_add_group.equiv_quotient_zsmul_of_equiv_symm quotientAddGroup.equiv_quotient_zsmul_of_equiv_symm
 
 @[simp, to_additive]
 theorem equiv_quotient_zpow_of_equiv_trans :
@@ -532,6 +594,8 @@ theorem equiv_quotient_zpow_of_equiv_trans :
   rfl
 #align
   quotient_group.equiv_quotient_zpow_of_equiv_trans QuotientGroup.equiv_quotient_zpow_of_equiv_trans
+#align
+  quotient_add_group.equiv_quotient_zsmul_of_equiv_trans quotientAddGroup.equiv_quotient_zsmul_of_equiv_trans
 
 end Zpow
 
@@ -562,6 +626,8 @@ noncomputable def quotientInfEquivProdNormalQuotient (H N : Subgroup G) [N.Norma
   (quotientMulEquivOfEq (by simp [← comap_ker])).trans (quotientKerEquivOfSurjective φ φ_surjective)
 #align
   quotient_group.quotient_inf_equiv_prod_normal_quotient QuotientGroup.quotientInfEquivProdNormalQuotient
+#align
+  quotient_add_group.quotient_inf_equiv_sum_normal_quotient quotientAddGroup.quotientInfEquivSumNormalQuotient
 
 end SndIsomorphismThm
 
@@ -575,6 +641,7 @@ include nM nN
 instance map_normal : (M.map (QuotientGroup.mk' N)).Normal :=
   nM.map _ mk_surjective
 #align quotient_group.map_normal QuotientGroup.map_normal
+#align quotient_add_group.map_normal quotientAddGroup.map_normal
 
 variable (h : N ≤ M)
 
@@ -589,6 +656,8 @@ def quotientQuotientEquivQuotientAux : (G ⧸ N) ⧸ M.map (mk' N) →* G ⧸ M 
       exact (QuotientGroup.eq_one_iff _).mpr hx)
 #align
   quotient_group.quotient_quotient_equiv_quotient_aux QuotientGroup.quotientQuotientEquivQuotientAux
+#align
+  quotient_add_group.quotient_quotient_equiv_quotient_aux quotientAddGroup.quotientQuotientEquivQuotientAux
 
 @[simp, to_additive]
 theorem quotient_quotient_equiv_quotient_aux_coe (x : G ⧸ N) :
@@ -596,6 +665,8 @@ theorem quotient_quotient_equiv_quotient_aux_coe (x : G ⧸ N) :
   QuotientGroup.lift_mk' _ _ x
 #align
   quotient_group.quotient_quotient_equiv_quotient_aux_coe QuotientGroup.quotient_quotient_equiv_quotient_aux_coe
+#align
+  quotient_add_group.quotient_quotient_equiv_quotient_aux_coe quotientAddGroup.quotient_quotient_equiv_quotient_aux_coe
 
 @[to_additive]
 theorem quotient_quotient_equiv_quotient_aux_coe_coe (x : G) :
@@ -603,6 +674,8 @@ theorem quotient_quotient_equiv_quotient_aux_coe_coe (x : G) :
   QuotientGroup.lift_mk' _ _ x
 #align
   quotient_group.quotient_quotient_equiv_quotient_aux_coe_coe QuotientGroup.quotient_quotient_equiv_quotient_aux_coe_coe
+#align
+  quotient_add_group.quotient_quotient_equiv_quotient_aux_coe_coe quotientAddGroup.quotient_quotient_equiv_quotient_aux_coe_coe
 
 /-- **Noether's third isomorphism theorem** for groups: `(G / N) / (M / N) ≃* G / M`. -/
 @[to_additive
@@ -617,6 +690,8 @@ def quotientQuotientEquivQuotient : (G ⧸ N) ⧸ M.map (QuotientGroup.mk' N) �
       ext
       simp)
 #align quotient_group.quotient_quotient_equiv_quotient QuotientGroup.quotientQuotientEquivQuotient
+#align
+  quotient_add_group.quotient_quotient_equiv_quotient quotientAddGroup.quotientQuotientEquivQuotient
 
 end ThirdIsoThm
 
@@ -629,6 +704,7 @@ theorem subsingleton_quotient_top : Subsingleton (G ⧸ (⊤ : Subgroup G)) :=
   rw [left_rel_eq]
   exact @Trunc.subsingleton G
 #align quotient_group.subsingleton_quotient_top QuotientGroup.subsingleton_quotient_top
+#align quotient_add_group.subsingleton_quotient_top quotientAddGroup.subsingleton_quotient_top
 
 /-- If the quotient by a subgroup gives a singleton then the subgroup is the whole group. -/
 @[to_additive
@@ -639,6 +715,8 @@ theorem subgroup_eq_top_of_subsingleton (H : Subgroup G) (h : Subsingleton (G �
     have this : 1⁻¹ * x ∈ H := QuotientGroup.eq.1 (Subsingleton.elim _ _)
     rwa [inv_one, one_mul] at this
 #align quotient_group.subgroup_eq_top_of_subsingleton QuotientGroup.subgroup_eq_top_of_subsingleton
+#align
+  quotient_add_group.add_subgroup_eq_top_of_subsingleton quotientAddGroup.add_subgroup_eq_top_of_subsingleton
 
 end trivial
 
@@ -651,6 +729,7 @@ theorem comap_comap_center {H₁ : Subgroup G} [H₁.Normal] {H₂ : Subgroup (G
   simp only [mk'_apply, Subgroup.mem_comap, Subgroup.mem_center_iff, forall_coe, ← coe_mul,
     eq_iff_div_mem, coe_div]
 #align quotient_group.comap_comap_center QuotientGroup.comap_comap_center
+#align quotient_add_group.comap_comap_center quotientAddGroup.comap_comap_center
 
 end QuotientGroup
 
@@ -672,12 +751,14 @@ noncomputable def fintypeOfKerLeRange (h : g.ker ≤ f.range) : Fintype G :=
       Fintype.ofInjective _ <| inclusion_injective h)
     groupEquivQuotientTimesSubgroup.symm
 #align group.fintype_of_ker_le_range Group.fintypeOfKerLeRange
+#align add_group.fintype_of_ker_le_range AddGroup.fintypeOfKerLeRange
 
 /-- If `F` and `H` are finite such that `ker(G →* H) = im(F →* G)`, then `G` is finite. -/
 @[to_additive "If `F` and `H` are finite such that `ker(G →+ H) = im(F →+ G)`, then `G` is finite."]
 noncomputable def fintypeOfKerEqRange (h : g.ker = f.range) : Fintype G :=
   fintypeOfKerLeRange _ _ h.le
 #align group.fintype_of_ker_eq_range Group.fintypeOfKerEqRange
+#align add_group.fintype_of_ker_eq_range AddGroup.fintypeOfKerEqRange
 
 /-- If `ker(G →* H)` and `H` are finite, then `G` is finite. -/
 @[to_additive "If `ker(G →+ H)` and `H` are finite, then `G` is finite."]
@@ -685,12 +766,14 @@ noncomputable def fintypeOfKerOfCodom [Fintype g.ker] : Fintype G :=
   fintypeOfKerLeRange ((topEquiv : _ ≃* G).toMonoidHom.comp <| inclusion le_top) g fun x hx =>
     ⟨⟨x, hx⟩, rfl⟩
 #align group.fintype_of_ker_of_codom Group.fintypeOfKerOfCodom
+#align add_group.fintype_of_ker_of_codom AddGroup.fintypeOfKerOfCodom
 
 /-- If `F` and `coker(F →* G)` are finite, then `G` is finite. -/
 @[to_additive "If `F` and `coker(F →+ G)` are finite, then `G` is finite."]
 noncomputable def fintypeOfDomOfCoker [Normal f.range] [Fintype <| G ⧸ f.range] : Fintype G :=
   fintypeOfKerLeRange _ (mk' f.range) fun x => (eq_one_iff x).mp
 #align group.fintype_of_dom_of_coker Group.fintypeOfDomOfCoker
+#align add_group.fintype_of_dom_of_coker AddGroup.fintypeOfDomOfCoker
 
 end Group
 

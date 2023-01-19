@@ -150,7 +150,7 @@ end Primrec
 
 end Nat
 
-/- ./././Mathport/Syntax/Translate/Command.lean:379:30: infer kinds are unsupported in Lean 4: #[`prim] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`prim] [] -/
 /-- A `primcodable` type is an `encodable` type for which
   the encode/decode functions are primitive recursive. -/
 class Primcodable (α : Type _) extends Encodable α where
@@ -1399,7 +1399,7 @@ open Nat (Primrec')
 
 open Nat.Primrec'
 
-/- ./././Mathport/Syntax/Translate/Command.lean:681:6: unsupported: hide command -/
+/- ./././Mathport/Syntax/Translate/Command.lean:691:6: unsupported: hide command -/
 theorem to_prim {n f} (pf : @Primrec' n f) : Primrec f :=
   by
   induction pf

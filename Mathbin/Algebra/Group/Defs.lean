@@ -67,6 +67,7 @@ class VSub (G : outParam (Type _)) (P : Type _) where
 class SMul (M : Type _) (α : Type _) where
   smul : M → α → α
 #align has_smul SMul
+#align has_vadd VAdd
 -/
 
 -- mathport name: «expr +ᵥ »
@@ -113,6 +114,7 @@ variable [Mul G]
 @[to_additive "`left_add g` denotes left addition by `g`"]
 def leftMul : G → G → G := fun g : G => fun x : G => g * x
 #align left_mul leftMul
+#align left_add leftAdd
 -/
 
 #print rightMul /-
@@ -120,6 +122,7 @@ def leftMul : G → G → G := fun g : G => fun x : G => g * x
 @[to_additive "`right_add g` denotes right addition by `g`"]
 def rightMul : G → G → G := fun g : G => fun x : G => x * g
 #align right_mul rightMul
+#align right_add rightAdd
 -/
 
 #print IsLeftCancelMul /-
@@ -182,6 +185,7 @@ variable [IsLeftCancelMul G] {a b c : G}
 theorem mul_left_cancel : a * b = a * c → b = c :=
   IsLeftCancelMul.mul_left_cancel a b c
 #align mul_left_cancel mul_left_cancel
+#align add_left_cancel add_left_cancel
 -/
 
 #print mul_left_cancel_iff /-
@@ -189,12 +193,14 @@ theorem mul_left_cancel : a * b = a * c → b = c :=
 theorem mul_left_cancel_iff : a * b = a * c ↔ b = c :=
   ⟨mul_left_cancel, congr_arg _⟩
 #align mul_left_cancel_iff mul_left_cancel_iff
+#align add_left_cancel_iff add_left_cancel_iff
 -/
 
 #print mul_right_injective /-
 @[to_additive]
 theorem mul_right_injective (a : G) : Function.Injective ((· * ·) a) := fun b c => mul_left_cancel
 #align mul_right_injective mul_right_injective
+#align add_right_injective add_right_injective
 -/
 
 #print mul_right_inj /-
@@ -202,6 +208,7 @@ theorem mul_right_injective (a : G) : Function.Injective ((· * ·) a) := fun b 
 theorem mul_right_inj (a : G) {b c : G} : a * b = a * c ↔ b = c :=
   (mul_right_injective a).eq_iff
 #align mul_right_inj mul_right_inj
+#align add_right_inj add_right_inj
 -/
 
 #print mul_ne_mul_right /-
@@ -209,6 +216,7 @@ theorem mul_right_inj (a : G) {b c : G} : a * b = a * c ↔ b = c :=
 theorem mul_ne_mul_right (a : G) {b c : G} : a * b ≠ a * c ↔ b ≠ c :=
   (mul_right_injective a).ne_iff
 #align mul_ne_mul_right mul_ne_mul_right
+#align add_ne_add_right add_ne_add_right
 -/
 
 end IsLeftCancelMul
@@ -222,6 +230,7 @@ variable [IsRightCancelMul G] {a b c : G}
 theorem mul_right_cancel : a * b = c * b → a = c :=
   IsRightCancelMul.mul_right_cancel a b c
 #align mul_right_cancel mul_right_cancel
+#align add_right_cancel add_right_cancel
 -/
 
 #print mul_right_cancel_iff /-
@@ -229,6 +238,7 @@ theorem mul_right_cancel : a * b = c * b → a = c :=
 theorem mul_right_cancel_iff : b * a = c * a ↔ b = c :=
   ⟨mul_right_cancel, congr_arg _⟩
 #align mul_right_cancel_iff mul_right_cancel_iff
+#align add_right_cancel_iff add_right_cancel_iff
 -/
 
 #print mul_left_injective /-
@@ -236,6 +246,7 @@ theorem mul_right_cancel_iff : b * a = c * a ↔ b = c :=
 theorem mul_left_injective (a : G) : Function.Injective fun x => x * a := fun b c =>
   mul_right_cancel
 #align mul_left_injective mul_left_injective
+#align add_left_injective add_left_injective
 -/
 
 #print mul_left_inj /-
@@ -243,6 +254,7 @@ theorem mul_left_injective (a : G) : Function.Injective fun x => x * a := fun b 
 theorem mul_left_inj (a : G) {b c : G} : b * a = c * a ↔ b = c :=
   (mul_left_injective a).eq_iff
 #align mul_left_inj mul_left_inj
+#align add_left_inj add_left_inj
 -/
 
 #print mul_ne_mul_left /-
@@ -250,6 +262,7 @@ theorem mul_left_inj (a : G) {b c : G} : b * a = c * a ↔ b = c :=
 theorem mul_ne_mul_left (a : G) {b c : G} : b * a ≠ c * a ↔ b ≠ c :=
   (mul_left_injective a).ne_iff
 #align mul_ne_mul_left mul_ne_mul_left
+#align add_ne_add_left add_ne_add_left
 -/
 
 end IsRightCancelMul
@@ -288,6 +301,7 @@ Case conversion may be inaccurate. Consider using '#align mul_assoc mul_assocₓ
 theorem mul_assoc : ∀ a b c : G, a * b * c = a * (b * c) :=
   Semigroup.mul_assoc
 #align mul_assoc mul_assoc
+#align add_assoc add_assoc
 
 /- warning: semigroup.to_is_associative -> Semigroup.to_isAssociative is a dubious translation:
 lean 3 declaration is
@@ -334,6 +348,7 @@ Case conversion may be inaccurate. Consider using '#align mul_comm mul_commₓ'.
 theorem mul_comm : ∀ a b : G, a * b = b * a :=
   CommSemigroup.mul_comm
 #align mul_comm mul_comm
+#align add_comm add_comm
 
 /- warning: comm_semigroup.to_is_commutative -> CommSemigroup.to_isCommutative is a dubious translation:
 lean 3 declaration is
@@ -509,6 +524,7 @@ theorem MulOneClass.ext {M : Type u} : ∀ ⦃m₁ m₂ : MulOneClass M⦄, m₁
   congr
   exact (one_mul₂ one₁).symm.trans (mul_one₁ one₂)
 #align mul_one_class.ext MulOneClass.ext
+#align add_zero_class.ext AddZeroClass.ext
 
 section MulOneClass
 
@@ -524,6 +540,7 @@ Case conversion may be inaccurate. Consider using '#align one_mul one_mulₓ'. -
 theorem one_mul : ∀ a : M, 1 * a = a :=
   MulOneClass.one_mul
 #align one_mul one_mul
+#align zero_add zero_add
 
 /- warning: mul_one -> mul_one is a dubious translation:
 lean 3 declaration is
@@ -535,16 +552,19 @@ Case conversion may be inaccurate. Consider using '#align mul_one mul_oneₓ'. -
 theorem mul_one : ∀ a : M, a * 1 = a :=
   MulOneClass.mul_one
 #align mul_one mul_one
+#align add_zero add_zero
 
 @[to_additive]
 instance MulOneClass.to_is_left_id : IsLeftId M (· * ·) 1 :=
   ⟨MulOneClass.one_mul⟩
 #align mul_one_class.to_is_left_id MulOneClass.to_is_left_id
+#align add_zero_class.to_is_left_id AddZeroClass.to_is_left_id
 
 @[to_additive]
 instance MulOneClass.to_is_right_id : IsRightId M (· * ·) 1 :=
   ⟨MulOneClass.mul_one⟩
 #align mul_one_class.to_is_right_id MulOneClass.to_is_right_id
+#align add_zero_class.to_is_right_id AddZeroClass.to_is_right_id
 
 end MulOneClass
 
@@ -699,6 +719,7 @@ class Monoid (M : Type u) extends Semigroup M, MulOneClass M where
     intros
     rfl
 #align monoid Monoid
+#align add_monoid AddMonoid
 -/
 
 #print Monoid.Pow /-
@@ -724,6 +745,7 @@ variable {M : Type _} [Monoid M]
 theorem npow_eq_pow (n : ℕ) (x : M) : Monoid.npow n x = x ^ n :=
   rfl
 #align npow_eq_pow npow_eq_pow
+#align nsmul_eq_smul nsmul_eq_smul
 -/
 
 /- warning: pow_zero -> pow_zero is a dubious translation:
@@ -737,6 +759,7 @@ Case conversion may be inaccurate. Consider using '#align pow_zero pow_zeroₓ'.
 theorem pow_zero (a : M) : a ^ 0 = 1 :=
   Monoid.npow_zero _
 #align pow_zero pow_zero
+#align zero_nsmul zero_nsmul
 
 /- warning: pow_succ -> pow_succ is a dubious translation:
 lean 3 declaration is
@@ -748,6 +771,7 @@ Case conversion may be inaccurate. Consider using '#align pow_succ pow_succₓ'.
 theorem pow_succ (a : M) (n : ℕ) : a ^ (n + 1) = a * a ^ n :=
   Monoid.npow_succ n a
 #align pow_succ pow_succ
+#align succ_nsmul succ_nsmul
 
 end
 
@@ -765,6 +789,7 @@ Case conversion may be inaccurate. Consider using '#align left_inv_eq_right_inv 
 theorem left_inv_eq_right_inv {a b c : M} (hba : b * a = 1) (hac : a * c = 1) : b = c := by
   rw [← one_mul c, ← hba, mul_assoc, hac, mul_one b]
 #align left_inv_eq_right_inv left_inv_eq_right_inv
+#align left_neg_eq_right_neg left_neg_eq_right_neg
 
 end Monoid
 
@@ -780,6 +805,7 @@ class AddCommMonoid (M : Type u) extends AddMonoid M, AddCommSemigroup M
 @[protect_proj, to_additive]
 class CommMonoid (M : Type u) extends Monoid M, CommSemigroup M
 #align comm_monoid CommMonoid
+#align add_comm_monoid AddCommMonoid
 -/
 
 section LeftCancelMonoid
@@ -798,6 +824,7 @@ class AddLeftCancelMonoid (M : Type u) extends AddLeftCancelSemigroup M, AddMono
 @[protect_proj, to_additive AddLeftCancelMonoid]
 class LeftCancelMonoid (M : Type u) extends LeftCancelSemigroup M, Monoid M
 #align left_cancel_monoid LeftCancelMonoid
+#align add_left_cancel_monoid AddLeftCancelMonoid
 -/
 
 end LeftCancelMonoid
@@ -818,6 +845,7 @@ class AddRightCancelMonoid (M : Type u) extends AddRightCancelSemigroup M, AddMo
 @[protect_proj, to_additive AddRightCancelMonoid]
 class RightCancelMonoid (M : Type u) extends RightCancelSemigroup M, Monoid M
 #align right_cancel_monoid RightCancelMonoid
+#align add_right_cancel_monoid AddRightCancelMonoid
 -/
 
 end RightCancelMonoid
@@ -838,6 +866,7 @@ class AddCancelMonoid (M : Type u) extends AddLeftCancelMonoid M, AddRightCancel
 @[protect_proj, to_additive AddCancelMonoid]
 class CancelMonoid (M : Type u) extends LeftCancelMonoid M, RightCancelMonoid M
 #align cancel_monoid CancelMonoid
+#align add_cancel_monoid AddCancelMonoid
 -/
 
 #print AddCancelCommMonoid /-
@@ -852,6 +881,7 @@ class AddCancelCommMonoid (M : Type u) extends AddLeftCancelMonoid M, AddCommMon
 @[protect_proj, to_additive AddCancelCommMonoid]
 class CancelCommMonoid (M : Type u) extends LeftCancelMonoid M, CommMonoid M
 #align cancel_comm_monoid CancelCommMonoid
+#align add_cancel_comm_monoid AddCancelCommMonoid
 -/
 
 #print CancelCommMonoid.toCancelMonoid /-
@@ -876,6 +906,7 @@ instance (priority := 100) CancelMonoid.toIsCancelMul (M : Type u) [CancelMonoid
   mul_left_cancel := CancelMonoid.mul_left_cancel
   mul_right_cancel := CancelMonoid.mul_right_cancel
 #align cancel_monoid.to_is_cancel_mul CancelMonoid.toIsCancelMul
+#align add_cancel_monoid.to_is_cancel_add AddCancelMonoid.toIsCancelAdd
 
 end CancelMonoid
 
@@ -918,6 +949,7 @@ class InvolutiveNeg (A : Type _) extends Neg A where
 class InvolutiveInv (G : Type _) extends Inv G where
   inv_inv : ∀ x : G, x⁻¹⁻¹ = x
 #align has_involutive_inv InvolutiveInv
+#align has_involutive_neg InvolutiveNeg
 -/
 
 variable [InvolutiveInv G]
@@ -932,6 +964,7 @@ Case conversion may be inaccurate. Consider using '#align inv_inv inv_invₓ'. -
 theorem inv_inv (a : G) : a⁻¹⁻¹ = a :=
   InvolutiveInv.inv_inv _
 #align inv_inv inv_inv
+#align neg_neg neg_neg
 
 end InvolutiveInv
 
@@ -1078,6 +1111,7 @@ variable [DivInvMonoid G] {a b : G}
 theorem zpow_eq_pow (n : ℤ) (x : G) : DivInvMonoid.zpow n x = x ^ n :=
   rfl
 #align zpow_eq_pow zpow_eq_pow
+#align zsmul_eq_smul zsmul_eq_smul
 -/
 
 /- warning: zpow_zero -> zpow_zero is a dubious translation:
@@ -1090,6 +1124,7 @@ Case conversion may be inaccurate. Consider using '#align zpow_zero zpow_zeroₓ
 theorem zpow_zero (a : G) : a ^ (0 : ℤ) = 1 :=
   DivInvMonoid.zpow_zero' a
 #align zpow_zero zpow_zero
+#align zero_zsmul zero_zsmul
 
 #print zpow_ofNat /-
 @[simp, norm_cast, to_additive coe_nat_zsmul]
@@ -1125,6 +1160,7 @@ theorem zpow_negSucc (a : G) (n : ℕ) : a ^ -[n+1] = (a ^ (n + 1))⁻¹ :=
   rw [← zpow_ofNat]
   exact DivInvMonoid.zpow_neg' n a
 #align zpow_neg_succ_of_nat zpow_negSucc
+#align zsmul_neg_succ_of_nat negSucc_zsmul
 
 /- warning: div_eq_mul_inv -> div_eq_mul_inv is a dubious translation:
 lean 3 declaration is
@@ -1141,6 +1177,7 @@ This is a duplicate of `div_inv_monoid.div_eq_mul_inv` ensuring that the types u
 theorem div_eq_mul_inv (a b : G) : a / b = a * b⁻¹ :=
   DivInvMonoid.div_eq_mul_inv _ _
 #align div_eq_mul_inv div_eq_mul_inv
+#align sub_eq_add_neg sub_eq_add_neg
 
 /- warning: division_def -> division_def is a dubious translation:
 lean 3 declaration is
@@ -1177,6 +1214,7 @@ class SubNegZeroMonoid (G : Type _) extends SubNegMonoid G, NegZeroClass G
 class InvOneClass (G : Type _) extends One G, Inv G where
   inv_one : (1 : G)⁻¹ = 1
 #align inv_one_class InvOneClass
+#align neg_zero_class NegZeroClass
 -/
 
 attribute [to_additive NegZeroClass.toHasNeg] InvOneClass.toHasInv
@@ -1188,6 +1226,7 @@ attribute [to_additive NegZeroClass.toHasZero] InvOneClass.toHasOne
 @[to_additive SubNegZeroMonoid]
 class DivInvOneMonoid (G : Type _) extends DivInvMonoid G, InvOneClass G
 #align div_inv_one_monoid DivInvOneMonoid
+#align sub_neg_zero_monoid SubNegZeroMonoid
 -/
 
 attribute [to_additive SubNegZeroMonoid.toSubNegMonoid] DivInvOneMonoid.toDivInvMonoid
@@ -1206,6 +1245,7 @@ Case conversion may be inaccurate. Consider using '#align inv_one inv_oneₓ'. -
 theorem inv_one : (1 : G)⁻¹ = 1 :=
   InvOneClass.inv_one
 #align inv_one inv_one
+#align neg_zero neg_zero
 
 end InvOneClass
 
@@ -1233,6 +1273,7 @@ class DivisionMonoid (G : Type u) extends DivInvMonoid G, InvolutiveInv G where
   involutivity of inversion. -/
   inv_eq_of_mul (a b : G) : a * b = 1 → a⁻¹ = b
 #align division_monoid DivisionMonoid
+#align subtraction_monoid SubtractionMonoid
 -/
 
 section DivisionMonoid
@@ -1249,6 +1290,7 @@ Case conversion may be inaccurate. Consider using '#align mul_inv_rev mul_inv_re
 theorem mul_inv_rev (a b : G) : (a * b)⁻¹ = b⁻¹ * a⁻¹ :=
   DivisionMonoid.mul_inv_rev _ _
 #align mul_inv_rev mul_inv_rev
+#align neg_add_rev neg_add_rev
 
 /- warning: inv_eq_of_mul_eq_one_right -> inv_eq_of_mul_eq_one_right is a dubious translation:
 lean 3 declaration is
@@ -1260,6 +1302,7 @@ Case conversion may be inaccurate. Consider using '#align inv_eq_of_mul_eq_one_r
 theorem inv_eq_of_mul_eq_one_right : a * b = 1 → a⁻¹ = b :=
   DivisionMonoid.inv_eq_of_mul _ _
 #align inv_eq_of_mul_eq_one_right inv_eq_of_mul_eq_one_right
+#align neg_eq_of_add_eq_zero_right neg_eq_of_add_eq_zero_right
 
 end DivisionMonoid
 
@@ -1277,6 +1320,7 @@ This is the immediate common ancestor of `comm_group` and `comm_group_with_zero`
 @[protect_proj, to_additive SubtractionCommMonoid]
 class DivisionCommMonoid (G : Type u) extends DivisionMonoid G, CommMonoid G
 #align division_comm_monoid DivisionCommMonoid
+#align subtraction_comm_monoid SubtractionCommMonoid
 -/
 
 #print Group /-
@@ -1316,6 +1360,7 @@ See note [reducible non-instances]. -/
 def Group.toMonoid (G : Type u) [Group G] : Monoid G :=
   @DivInvMonoid.toMonoid _ (@Group.toDivInvMonoid _ _)
 #align group.to_monoid Group.toMonoid
+#align add_group.to_add_monoid AddGroup.toAddMonoid
 
 section Group
 
@@ -1331,6 +1376,7 @@ Case conversion may be inaccurate. Consider using '#align mul_left_inv mul_left_
 theorem mul_left_inv : ∀ a : G, a⁻¹ * a = 1 :=
   Group.mul_left_inv
 #align mul_left_inv mul_left_inv
+#align add_left_neg add_left_neg
 
 /- warning: inv_mul_self -> inv_mul_self is a dubious translation:
 lean 3 declaration is
@@ -1342,6 +1388,7 @@ Case conversion may be inaccurate. Consider using '#align inv_mul_self inv_mul_s
 theorem inv_mul_self (a : G) : a⁻¹ * a = 1 :=
   mul_left_inv a
 #align inv_mul_self inv_mul_self
+#align neg_add_self neg_add_self
 
 @[to_additive]
 private theorem inv_eq_of_mul (h : a * b = 1) : a⁻¹ = b :=
@@ -1358,6 +1405,7 @@ Case conversion may be inaccurate. Consider using '#align mul_right_inv mul_righ
 theorem mul_right_inv (a : G) : a * a⁻¹ = 1 := by
   rw [← mul_left_inv a⁻¹, inv_eq_of_mul (mul_left_inv a)]
 #align mul_right_inv mul_right_inv
+#align add_right_neg add_right_neg
 
 /- warning: mul_inv_self -> mul_inv_self is a dubious translation:
 lean 3 declaration is
@@ -1369,6 +1417,7 @@ Case conversion may be inaccurate. Consider using '#align mul_inv_self mul_inv_s
 theorem mul_inv_self (a : G) : a * a⁻¹ = 1 :=
   mul_right_inv a
 #align mul_inv_self mul_inv_self
+#align add_neg_self add_neg_self
 
 /- warning: inv_mul_cancel_left -> inv_mul_cancel_left is a dubious translation:
 lean 3 declaration is
@@ -1380,6 +1429,7 @@ Case conversion may be inaccurate. Consider using '#align inv_mul_cancel_left in
 theorem inv_mul_cancel_left (a b : G) : a⁻¹ * (a * b) = b := by
   rw [← mul_assoc, mul_left_inv, one_mul]
 #align inv_mul_cancel_left inv_mul_cancel_left
+#align neg_add_cancel_left neg_add_cancel_left
 
 /- warning: mul_inv_cancel_left -> mul_inv_cancel_left is a dubious translation:
 lean 3 declaration is
@@ -1391,6 +1441,7 @@ Case conversion may be inaccurate. Consider using '#align mul_inv_cancel_left mu
 theorem mul_inv_cancel_left (a b : G) : a * (a⁻¹ * b) = b := by
   rw [← mul_assoc, mul_right_inv, one_mul]
 #align mul_inv_cancel_left mul_inv_cancel_left
+#align add_neg_cancel_left add_neg_cancel_left
 
 /- warning: mul_inv_cancel_right -> mul_inv_cancel_right is a dubious translation:
 lean 3 declaration is
@@ -1402,6 +1453,7 @@ Case conversion may be inaccurate. Consider using '#align mul_inv_cancel_right m
 theorem mul_inv_cancel_right (a b : G) : a * b * b⁻¹ = a := by
   rw [mul_assoc, mul_right_inv, mul_one]
 #align mul_inv_cancel_right mul_inv_cancel_right
+#align add_neg_cancel_right add_neg_cancel_right
 
 /- warning: inv_mul_cancel_right -> inv_mul_cancel_right is a dubious translation:
 lean 3 declaration is
@@ -1412,6 +1464,7 @@ Case conversion may be inaccurate. Consider using '#align inv_mul_cancel_right i
 @[simp, to_additive]
 theorem inv_mul_cancel_right (a b : G) : a * b⁻¹ * b = a := by rw [mul_assoc, mul_left_inv, mul_one]
 #align inv_mul_cancel_right inv_mul_cancel_right
+#align neg_add_cancel_right neg_add_cancel_right
 
 #print Group.toDivisionMonoid /-
 @[to_additive AddGroup.toSubtractionMonoid]
@@ -1421,6 +1474,7 @@ instance (priority := 100) Group.toDivisionMonoid : DivisionMonoid G :=
     mul_inv_rev := fun a b => inv_eq_of_mul <| by rw [mul_assoc, mul_inv_cancel_left, mul_right_inv]
     inv_eq_of_mul := fun _ _ => inv_eq_of_mul }
 #align group.to_division_monoid Group.toDivisionMonoid
+#align add_group.to_subtraction_monoid AddGroup.toSubtractionMonoid
 -/
 
 #print Group.toCancelMonoid /-
@@ -1492,6 +1546,7 @@ instance (priority := 100) CommGroup.toCancelCommMonoid : CancelCommMonoid G :=
 instance (priority := 100) CommGroup.toDivisionCommMonoid : DivisionCommMonoid G :=
   { ‹CommGroup G›, Group.toDivisionMonoid with }
 #align comm_group.to_division_comm_monoid CommGroup.toDivisionCommMonoid
+#align add_comm_group.to_division_add_comm_monoid AddCommGroup.toDivisionAddCommMonoid
 -/
 
 end CommGroup

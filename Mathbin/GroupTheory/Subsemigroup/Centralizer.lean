@@ -41,6 +41,7 @@ variable (S)
 def centralizer [Mul M] : Set M :=
   { c | ∀ m ∈ S, m * c = c * m }
 #align set.centralizer Set.centralizer
+#align set.add_centralizer Set.addCentralizer
 -/
 
 variable {S}
@@ -50,6 +51,7 @@ variable {S}
 theorem mem_centralizer_iff [Mul M] {c : M} : c ∈ centralizer S ↔ ∀ m ∈ S, m * c = c * m :=
   Iff.rfl
 #align set.mem_centralizer_iff Set.mem_centralizer_iff
+#align set.mem_add_centralizer Set.mem_add_centralizer
 -/
 
 #print Set.decidableMemCentralizer /-
@@ -57,6 +59,7 @@ theorem mem_centralizer_iff [Mul M] {c : M} : c ∈ centralizer S ↔ ∀ m ∈ 
 instance decidableMemCentralizer [Mul M] [∀ a : M, Decidable <| ∀ b ∈ S, b * a = a * b] :
     DecidablePred (· ∈ centralizer S) := fun _ => decidable_of_iff' _ mem_centralizer_iff
 #align set.decidable_mem_centralizer Set.decidableMemCentralizer
+#align set.decidable_mem_add_centralizer Set.decidableMemAddCentralizer
 -/
 
 variable (S)
@@ -71,6 +74,7 @@ Case conversion may be inaccurate. Consider using '#align set.one_mem_centralize
 theorem one_mem_centralizer [MulOneClass M] : (1 : M) ∈ centralizer S := by
   simp [mem_centralizer_iff]
 #align set.one_mem_centralizer Set.one_mem_centralizer
+#align set.zero_mem_add_centralizer Set.zero_mem_add_centralizer
 
 /- warning: set.zero_mem_centralizer -> Set.zero_mem_centralizer is a dubious translation:
 lean 3 declaration is
@@ -96,6 +100,7 @@ theorem mul_mem_centralizer [Semigroup M] (ha : a ∈ centralizer S) (hb : b ∈
     a * b ∈ centralizer S := fun g hg => by
   rw [mul_assoc, ← hb g hg, ← mul_assoc, ha g hg, mul_assoc]
 #align set.mul_mem_centralizer Set.mul_mem_centralizer
+#align set.add_mem_add_centralizer Set.add_mem_add_centralizer
 
 /- warning: set.inv_mem_centralizer -> Set.inv_mem_centralizer is a dubious translation:
 lean 3 declaration is
@@ -107,6 +112,7 @@ Case conversion may be inaccurate. Consider using '#align set.inv_mem_centralize
 theorem inv_mem_centralizer [Group M] (ha : a ∈ centralizer S) : a⁻¹ ∈ centralizer S := fun g hg =>
   by rw [mul_inv_eq_iff_eq_mul, mul_assoc, eq_inv_mul_iff_mul_eq, ha g hg]
 #align set.inv_mem_centralizer Set.inv_mem_centralizer
+#align set.neg_mem_add_centralizer Set.neg_mem_add_centralizer
 
 /- warning: set.add_mem_centralizer -> Set.add_mem_centralizer is a dubious translation:
 lean 3 declaration is
@@ -158,6 +164,7 @@ theorem div_mem_centralizer [Group M] (ha : a ∈ centralizer S) (hb : b ∈ cen
   rw [div_eq_mul_inv]
   exact mul_mem_centralizer ha (inv_mem_centralizer hb)
 #align set.div_mem_centralizer Set.div_mem_centralizer
+#align set.sub_mem_add_centralizer Set.sub_mem_add_centralizer
 
 /- warning: set.div_mem_centralizer₀ -> Set.div_mem_centralizer₀ is a dubious translation:
 lean 3 declaration is
@@ -177,6 +184,7 @@ theorem div_mem_centralizer₀ [GroupWithZero M] (ha : a ∈ centralizer S) (hb 
 theorem centralizer_subset [Mul M] (h : S ⊆ T) : centralizer T ⊆ centralizer S := fun t ht s hs =>
   ht s (h hs)
 #align set.centralizer_subset Set.centralizer_subset
+#align set.add_centralizer_subset Set.add_centralizer_subset
 -/
 
 variable (M)
@@ -186,6 +194,7 @@ variable (M)
 theorem centralizer_univ [Mul M] : centralizer univ = center M :=
   Subset.antisymm (fun a ha b => ha b (Set.mem_univ b)) fun a ha b hb => ha b
 #align set.centralizer_univ Set.centralizer_univ
+#align set.add_centralizer_univ Set.add_centralizer_univ
 -/
 
 variable {M} (S)
@@ -200,6 +209,7 @@ Case conversion may be inaccurate. Consider using '#align set.centralizer_eq_uni
 theorem centralizer_eq_univ [CommSemigroup M] : centralizer S = univ :=
   Subset.antisymm (subset_univ _) fun x hx y hy => mul_comm y x
 #align set.centralizer_eq_univ Set.centralizer_eq_univ
+#align set.add_centralizer_eq_univ Set.add_centralizer_eq_univ
 
 end Set
 
@@ -221,6 +231,7 @@ def centralizer : Subsemigroup M where
   carrier := S.centralizer
   mul_mem' a b := Set.mul_mem_centralizer
 #align subsemigroup.centralizer Subsemigroup.centralizer
+#align add_subsemigroup.centralizer AddSubsemigroup.centralizer
 
 /- warning: subsemigroup.coe_centralizer -> Subsemigroup.coe_centralizer is a dubious translation:
 lean 3 declaration is
@@ -232,6 +243,7 @@ Case conversion may be inaccurate. Consider using '#align subsemigroup.coe_centr
 theorem coe_centralizer : ↑(centralizer S) = S.centralizer :=
   rfl
 #align subsemigroup.coe_centralizer Subsemigroup.coe_centralizer
+#align add_subsemigroup.coe_centralizer AddSubsemigroup.coe_centralizer
 
 variable {S}
 
@@ -245,6 +257,7 @@ Case conversion may be inaccurate. Consider using '#align subsemigroup.mem_centr
 theorem mem_centralizer_iff {z : M} : z ∈ centralizer S ↔ ∀ g ∈ S, g * z = z * g :=
   Iff.rfl
 #align subsemigroup.mem_centralizer_iff Subsemigroup.mem_centralizer_iff
+#align add_subsemigroup.mem_centralizer_iff AddSubsemigroup.mem_centralizer_iff
 
 /- warning: subsemigroup.decidable_mem_centralizer -> Subsemigroup.decidableMemCentralizer is a dubious translation:
 lean 3 declaration is
@@ -257,6 +270,7 @@ instance decidableMemCentralizer (a) [Decidable <| ∀ b ∈ S, b * a = a * b] :
     Decidable (a ∈ centralizer S) :=
   decidable_of_iff' _ mem_centralizer_iff
 #align subsemigroup.decidable_mem_centralizer Subsemigroup.decidableMemCentralizer
+#align add_subsemigroup.decidable_mem_centralizer AddSubsemigroup.decidableMemCentralizer
 
 /- warning: subsemigroup.centralizer_le -> Subsemigroup.centralizer_le is a dubious translation:
 lean 3 declaration is
@@ -268,6 +282,7 @@ Case conversion may be inaccurate. Consider using '#align subsemigroup.centraliz
 theorem centralizer_le (h : S ⊆ T) : centralizer T ≤ centralizer S :=
   Set.centralizer_subset h
 #align subsemigroup.centralizer_le Subsemigroup.centralizer_le
+#align add_subsemigroup.centralizer_le AddSubsemigroup.centralizer_le
 
 variable (M)
 
@@ -281,6 +296,7 @@ Case conversion may be inaccurate. Consider using '#align subsemigroup.centraliz
 theorem centralizer_univ : centralizer Set.univ = center M :=
   SetLike.ext' (Set.centralizer_univ M)
 #align subsemigroup.centralizer_univ Subsemigroup.centralizer_univ
+#align add_subsemigroup.centralizer_univ AddSubsemigroup.centralizer_univ
 
 end
 

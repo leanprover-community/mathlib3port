@@ -978,6 +978,7 @@ Case conversion may be inaccurate. Consider using '#align part.one_mem_one Part.
 theorem one_mem_one [One α] : (1 : α) ∈ (1 : Part α) :=
   ⟨trivial, rfl⟩
 #align part.one_mem_one Part.one_mem_one
+#align part.zero_mem_zero Part.zero_mem_zero
 
 /- warning: part.mul_mem_mul -> Part.mul_mem_mul is a dubious translation:
 lean 3 declaration is
@@ -989,6 +990,7 @@ Case conversion may be inaccurate. Consider using '#align part.mul_mem_mul Part.
 theorem mul_mem_mul [Mul α] (a b : Part α) (ma mb : α) (ha : ma ∈ a) (hb : mb ∈ b) :
     ma * mb ∈ a * b := by tidy
 #align part.mul_mem_mul Part.mul_mem_mul
+#align part.add_mem_add Part.add_mem_add
 
 /- warning: part.left_dom_of_mul_dom -> Part.left_dom_of_mul_dom is a dubious translation:
 lean 3 declaration is
@@ -999,6 +1001,7 @@ Case conversion may be inaccurate. Consider using '#align part.left_dom_of_mul_d
 @[to_additive]
 theorem left_dom_of_mul_dom [Mul α] {a b : Part α} (hab : Dom (a * b)) : a.Dom := by tidy
 #align part.left_dom_of_mul_dom Part.left_dom_of_mul_dom
+#align part.left_dom_of_add_dom Part.left_dom_of_add_dom
 
 /- warning: part.right_dom_of_mul_dom -> Part.right_dom_of_mul_dom is a dubious translation:
 lean 3 declaration is
@@ -1009,6 +1012,7 @@ Case conversion may be inaccurate. Consider using '#align part.right_dom_of_mul_
 @[to_additive]
 theorem right_dom_of_mul_dom [Mul α] {a b : Part α} (hab : Dom (a * b)) : b.Dom := by tidy
 #align part.right_dom_of_mul_dom Part.right_dom_of_mul_dom
+#align part.right_dom_of_add_dom Part.right_dom_of_add_dom
 
 /- warning: part.mul_get_eq -> Part.mul_get_eq is a dubious translation:
 lean 3 declaration is
@@ -1020,6 +1024,7 @@ Case conversion may be inaccurate. Consider using '#align part.mul_get_eq Part.m
 theorem mul_get_eq [Mul α] (a b : Part α) (hab : Dom (a * b)) :
     (a * b).get hab = a.get (left_dom_of_mul_dom hab) * b.get (right_dom_of_mul_dom hab) := by tidy
 #align part.mul_get_eq Part.mul_get_eq
+#align part.add_get_eq Part.add_get_eq
 
 /- warning: part.some_mul_some -> Part.some_mul_some is a dubious translation:
 lean 3 declaration is
@@ -1030,11 +1035,13 @@ Case conversion may be inaccurate. Consider using '#align part.some_mul_some Par
 @[to_additive]
 theorem some_mul_some [Mul α] (a b : α) : some a * some b = some (a * b) := by tidy
 #align part.some_mul_some Part.some_mul_some
+#align part.some_add_some Part.some_add_some
 
 #print Part.inv_mem_inv /-
 @[to_additive]
 theorem inv_mem_inv [Inv α] (a : Part α) (ma : α) (ha : ma ∈ a) : ma⁻¹ ∈ a⁻¹ := by tidy
 #align part.inv_mem_inv Part.inv_mem_inv
+#align part.neg_mem_neg Part.neg_mem_neg
 -/
 
 #print Part.inv_some /-
@@ -1042,6 +1049,7 @@ theorem inv_mem_inv [Inv α] (a : Part α) (ma : α) (ha : ma ∈ a) : ma⁻¹ �
 theorem inv_some [Inv α] (a : α) : (some a)⁻¹ = some a⁻¹ :=
   rfl
 #align part.inv_some Part.inv_some
+#align part.neg_some Part.neg_some
 -/
 
 /- warning: part.div_mem_div -> Part.div_mem_div is a dubious translation:
@@ -1054,6 +1062,7 @@ Case conversion may be inaccurate. Consider using '#align part.div_mem_div Part.
 theorem div_mem_div [Div α] (a b : Part α) (ma mb : α) (ha : ma ∈ a) (hb : mb ∈ b) :
     ma / mb ∈ a / b := by tidy
 #align part.div_mem_div Part.div_mem_div
+#align part.sub_mem_sub Part.sub_mem_sub
 
 /- warning: part.left_dom_of_div_dom -> Part.left_dom_of_div_dom is a dubious translation:
 lean 3 declaration is
@@ -1064,6 +1073,7 @@ Case conversion may be inaccurate. Consider using '#align part.left_dom_of_div_d
 @[to_additive]
 theorem left_dom_of_div_dom [Div α] {a b : Part α} (hab : Dom (a / b)) : a.Dom := by tidy
 #align part.left_dom_of_div_dom Part.left_dom_of_div_dom
+#align part.left_dom_of_sub_dom Part.left_dom_of_sub_dom
 
 /- warning: part.right_dom_of_div_dom -> Part.right_dom_of_div_dom is a dubious translation:
 lean 3 declaration is
@@ -1074,6 +1084,7 @@ Case conversion may be inaccurate. Consider using '#align part.right_dom_of_div_
 @[to_additive]
 theorem right_dom_of_div_dom [Div α] {a b : Part α} (hab : Dom (a / b)) : b.Dom := by tidy
 #align part.right_dom_of_div_dom Part.right_dom_of_div_dom
+#align part.right_dom_of_sub_dom Part.right_dom_of_sub_dom
 
 /- warning: part.div_get_eq -> Part.div_get_eq is a dubious translation:
 lean 3 declaration is
@@ -1085,6 +1096,7 @@ Case conversion may be inaccurate. Consider using '#align part.div_get_eq Part.d
 theorem div_get_eq [Div α] (a b : Part α) (hab : Dom (a / b)) :
     (a / b).get hab = a.get (left_dom_of_div_dom hab) / b.get (right_dom_of_div_dom hab) := by tidy
 #align part.div_get_eq Part.div_get_eq
+#align part.sub_get_eq Part.sub_get_eq
 
 /- warning: part.some_div_some -> Part.some_div_some is a dubious translation:
 lean 3 declaration is
@@ -1095,6 +1107,7 @@ Case conversion may be inaccurate. Consider using '#align part.some_div_some Par
 @[to_additive]
 theorem some_div_some [Div α] (a b : α) : some a / some b = some (a / b) := by tidy
 #align part.some_div_some Part.some_div_some
+#align part.some_sub_some Part.some_sub_some
 
 /- warning: part.mod_mem_mod -> Part.mod_mem_mod is a dubious translation:
 lean 3 declaration is

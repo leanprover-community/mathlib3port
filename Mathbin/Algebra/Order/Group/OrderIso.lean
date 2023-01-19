@@ -52,6 +52,7 @@ def OrderIso.inv : α ≃o αᵒᵈ
   toEquiv := (Equiv.inv α).trans OrderDual.toDual
   map_rel_iff' a b := @inv_le_inv_iff α _ _ _ _ _ _
 #align order_iso.inv OrderIso.inv
+#align order_iso.neg OrderIso.neg
 
 end
 
@@ -65,6 +66,7 @@ Case conversion may be inaccurate. Consider using '#align inv_le' inv_le'ₓ'. -
 theorem inv_le' : a⁻¹ ≤ b ↔ b⁻¹ ≤ a :=
   (OrderIso.inv α).symm_apply_le
 #align inv_le' inv_le'
+#align neg_le neg_le
 
 /- warning: inv_le_of_inv_le' -> inv_le_of_inv_le' is a dubious translation:
 lean 3 declaration is
@@ -87,6 +89,7 @@ Case conversion may be inaccurate. Consider using '#align le_inv' le_inv'ₓ'. -
 theorem le_inv' : a ≤ b⁻¹ ↔ b ≤ a⁻¹ :=
   (OrderIso.inv α).le_symm_apply
 #align le_inv' le_inv'
+#align le_neg le_neg
 
 end TypeclassesLeftRightLe
 
@@ -125,6 +128,7 @@ def OrderIso.mulRight (a : α) : α ≃o α
   map_rel_iff' _ _ := mul_le_mul_iff_right a
   toEquiv := Equiv.mulRight a
 #align order_iso.mul_right OrderIso.mulRight
+#align order_iso.add_right OrderIso.addRight
 
 /- warning: order_iso.mul_right_symm -> OrderIso.mulRight_symm is a dubious translation:
 lean 3 declaration is
@@ -138,6 +142,7 @@ theorem OrderIso.mulRight_symm (a : α) : (OrderIso.mulRight a).symm = OrderIso.
   ext x
   rfl
 #align order_iso.mul_right_symm OrderIso.mulRight_symm
+#align order_iso.add_right_symm OrderIso.addRight_symm
 
 end Right
 
@@ -159,6 +164,7 @@ def OrderIso.mulLeft (a : α) : α ≃o α
   map_rel_iff' _ _ := mul_le_mul_iff_left a
   toEquiv := Equiv.mulLeft a
 #align order_iso.mul_left OrderIso.mulLeft
+#align order_iso.add_left OrderIso.addLeft
 
 /- warning: order_iso.mul_left_symm -> OrderIso.mulLeft_symm is a dubious translation:
 lean 3 declaration is
@@ -172,6 +178,7 @@ theorem OrderIso.mulLeft_symm (a : α) : (OrderIso.mulLeft a).symm = OrderIso.mu
   ext x
   rfl
 #align order_iso.mul_left_symm OrderIso.mulLeft_symm
+#align order_iso.add_left_symm OrderIso.addLeft_symm
 
 end Left
 

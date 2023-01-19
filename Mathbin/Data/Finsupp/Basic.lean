@@ -699,6 +699,7 @@ theorem prod_map_domain_index [CommMonoid N] {f : α → β} {s : α →₀ M} {
     (mapDomain f s).Prod h = s.Prod fun a m => h (f a) m :=
   (prod_sum_index h_zero h_add).trans <| prod_congr fun _ _ => prod_single_index (h_zero _)
 #align finsupp.prod_map_domain_index Finsupp.prod_map_domain_index
+#align finsupp.sum_map_domain_index Finsupp.sum_map_domain_index
 
 -- Note that in `prod_map_domain_index`, `M` is still an additive monoid,
 -- so there is no analogous version in terms of `monoid_hom`.
@@ -726,6 +727,7 @@ theorem prod_map_domain_index_inj [CommMonoid N] {f : α → β} {s : α →₀ 
     (hf : Function.Injective f) : (s.mapDomain f).Prod h = s.Prod fun a b => h (f a) b := by
   rw [← Function.Embedding.coeFn_mk f hf, ← emb_domain_eq_map_domain, prod_emb_domain]
 #align finsupp.prod_map_domain_index_inj Finsupp.prod_map_domain_index_inj
+#align finsupp.sum_map_domain_index_inj Finsupp.sum_map_domain_index_inj
 
 theorem map_domain_injective {f : α → β} (hf : Function.Injective f) :
     Function.Injective (mapDomain f : (α →₀ M) → β →₀ M) :=
@@ -975,6 +977,7 @@ theorem prod_option_index [AddCommMonoid M] [CommMonoid N] (f : Option α →₀
     all_goals simp [h_zero, h_add]
   · rintro (_ | a) m <;> simp [h_zero, h_add]
 #align finsupp.prod_option_index Finsupp.prod_option_index
+#align finsupp.sum_option_index Finsupp.sum_option_index
 
 theorem sum_option_index_smul [Semiring R] [AddCommMonoid M] [Module R M] (f : Option α →₀ R)
     (b : Option α → M) :
@@ -1061,18 +1064,21 @@ theorem prod_filter_index [CommMonoid N] (g : α → M → N) :
   rw [support_filter, Finset.mem_filter] at hx
   rw [filter_apply_pos _ _ hx.2]
 #align finsupp.prod_filter_index Finsupp.prod_filter_index
+#align finsupp.sum_filter_index Finsupp.sum_filter_index
 
 @[simp, to_additive]
 theorem prod_filter_mul_prod_filter_not [CommMonoid N] (g : α → M → N) :
     (f.filter p).Prod g * (f.filter fun a => ¬p a).Prod g = f.Prod g := by
   simp_rw [prod_filter_index, support_filter, prod_filter_mul_prod_filter_not, Finsupp.prod]
 #align finsupp.prod_filter_mul_prod_filter_not Finsupp.prod_filter_mul_prod_filter_not
+#align finsupp.sum_filter_add_sum_filter_not Finsupp.sum_filter_add_sum_filter_not
 
 @[simp, to_additive]
 theorem prod_div_prod_filter [CommGroup G] (g : α → M → G) :
     f.Prod g / (f.filter p).Prod g = (f.filter fun a => ¬p a).Prod g :=
   div_eq_of_eq_mul' (prod_filter_mul_prod_filter_not _ _ _).symm
 #align finsupp.prod_div_prod_filter Finsupp.prod_div_prod_filter
+#align finsupp.sum_sub_sum_filter Finsupp.sum_sub_sum_filter
 
 end Zero
 
@@ -1159,6 +1165,7 @@ theorem prod_subtype_domain_index [CommMonoid N] {v : α →₀ M} {h : α → M
   prod_bij (fun p _ => p.val) (fun _ => mem_subtype.1) (fun _ _ => rfl) (fun _ _ _ _ => Subtype.eq)
     fun b hb => ⟨⟨b, hp b hb⟩, mem_subtype.2 hb, rfl⟩
 #align finsupp.prod_subtype_domain_index Finsupp.prod_subtype_domain_index
+#align finsupp.sum_subtype_domain_index Finsupp.sum_subtype_domain_index
 
 end Zero
 

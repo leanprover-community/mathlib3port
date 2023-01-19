@@ -37,6 +37,7 @@ theorem mem_prod_list_of_fn {a : α} {s : Fin n → Set α} :
       mem_mul, @ih, exists_and_left, exists_exists_eq_and, SetCoe.exists, Subtype.coe_mk,
       exists_prop]
 #align set.mem_prod_list_of_fn Set.mem_prod_list_of_fn
+#align set.mem_sum_list_of_fn Set.mem_sum_list_of_fn
 
 @[to_additive]
 theorem mem_list_prod {l : List (Set α)} {a : α} :
@@ -53,12 +54,14 @@ theorem mem_list_prod {l : List (Set α)} {a : α} :
   · rintro ⟨fi, rfl, rfl⟩
     exact ⟨fun i => _, rfl⟩
 #align set.mem_list_prod Set.mem_list_prod
+#align set.mem_list_sum Set.mem_list_sum
 
 @[to_additive]
 theorem mem_pow {a : α} {n : ℕ} :
     a ∈ s ^ n ↔ ∃ f : Fin n → s, (List.ofFn fun i => (f i : α)).Prod = a := by
   rw [← mem_prod_list_of_fn, List.ofFn_const, List.prod_replicate]
 #align set.mem_pow Set.mem_pow
+#align set.mem_nsmul Set.mem_nsmul
 
 end Set
 

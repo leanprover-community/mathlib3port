@@ -54,7 +54,7 @@ theorem nsmul_mem_zmultiples_iff_exists_sub_div {r : R} {n : ℕ} (hn : n ≠ 0)
 
 end AddSubgroup
 
-namespace QuotientAddGroup
+namespace quotientAddGroup
 
 theorem zmultiples_zsmul_eq_zsmul_iff {ψ θ : R ⧸ AddSubgroup.zmultiples p} {z : ℤ} (hz : z ≠ 0) :
     z • ψ = z • θ ↔ ∃ k : Fin z.natAbs, ψ = θ + (k : ℕ) • (p / z : R) :=
@@ -63,10 +63,10 @@ theorem zmultiples_zsmul_eq_zsmul_iff {ψ θ : R ⧸ AddSubgroup.zmultiples p} {
   induction θ using Quotient.inductionOn'
   have : (Quotient.mk' : R → R ⧸ AddSubgroup.zmultiples p) = coe := rfl
   simp only [this]
-  simp_rw [← coe_zsmul, ← coe_nsmul, ← coe_add, QuotientAddGroup.eq_iff_sub_mem, ← smul_sub, ←
+  simp_rw [← coe_zsmul, ← coe_nsmul, ← coe_add, quotientAddGroup.eq_iff_sub_mem, ← smul_sub, ←
     sub_sub, AddSubgroup.zsmul_mem_zmultiples_iff_exists_sub_div hz]
 #align
-  quotient_add_group.zmultiples_zsmul_eq_zsmul_iff QuotientAddGroup.zmultiples_zsmul_eq_zsmul_iff
+  quotient_add_group.zmultiples_zsmul_eq_zsmul_iff quotientAddGroup.zmultiples_zsmul_eq_zsmul_iff
 
 theorem zmultiples_nsmul_eq_nsmul_iff {ψ θ : R ⧸ AddSubgroup.zmultiples p} {n : ℕ} (hz : n ≠ 0) :
     n • ψ = n • θ ↔ ∃ k : Fin n, ψ = θ + (k : ℕ) • (p / n : R) :=
@@ -75,7 +75,7 @@ theorem zmultiples_nsmul_eq_nsmul_iff {ψ θ : R ⧸ AddSubgroup.zmultiples p} {
     zmultiples_zsmul_eq_zsmul_iff (int.coe_nat_ne_zero.mpr hz), Int.cast_ofNat]
   rfl
 #align
-  quotient_add_group.zmultiples_nsmul_eq_nsmul_iff QuotientAddGroup.zmultiples_nsmul_eq_nsmul_iff
+  quotient_add_group.zmultiples_nsmul_eq_nsmul_iff quotientAddGroup.zmultiples_nsmul_eq_nsmul_iff
 
-end QuotientAddGroup
+end quotientAddGroup
 

@@ -58,17 +58,20 @@ variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
 instance hasMul [Mul β] [HasContinuousMul β] : Mul C(α, β) :=
   ⟨fun f g => ⟨f * g, continuous_mul.comp (f.Continuous.prod_mk g.Continuous : _)⟩⟩
 #align continuous_map.has_mul ContinuousMap.hasMul
+#align continuous_map.has_add ContinuousMap.hasAdd
 
 @[simp, norm_cast, to_additive]
 theorem coe_mul [Mul β] [HasContinuousMul β] (f g : C(α, β)) : ⇑(f * g) = f * g :=
   rfl
 #align continuous_map.coe_mul ContinuousMap.coe_mul
+#align continuous_map.coe_add ContinuousMap.coe_add
 
 @[simp, to_additive]
 theorem mul_comp [Mul γ] [HasContinuousMul γ] (f₁ f₂ : C(β, γ)) (g : C(α, β)) :
     (f₁ * f₂).comp g = f₁.comp g * f₂.comp g :=
   rfl
 #align continuous_map.mul_comp ContinuousMap.mul_comp
+#align continuous_map.add_comp ContinuousMap.add_comp
 
 @[to_additive]
 instance [One β] : One C(α, β) :=
@@ -78,11 +81,13 @@ instance [One β] : One C(α, β) :=
 theorem coe_one [One β] : ⇑(1 : C(α, β)) = 1 :=
   rfl
 #align continuous_map.coe_one ContinuousMap.coe_one
+#align continuous_map.coe_zero ContinuousMap.coe_zero
 
 @[simp, to_additive]
 theorem one_comp [One γ] (g : C(α, β)) : (1 : C(β, γ)).comp g = 1 :=
   rfl
 #align continuous_map.one_comp ContinuousMap.one_comp
+#align continuous_map.zero_comp ContinuousMap.zero_comp
 
 instance [NatCast β] : NatCast C(α, β) :=
   ⟨fun n => ContinuousMap.const _ n⟩
@@ -108,11 +113,13 @@ instance hasNsmul [AddMonoid β] [HasContinuousAdd β] : SMul ℕ C(α, β) :=
 instance hasPow [Monoid β] [HasContinuousMul β] : Pow C(α, β) ℕ :=
   ⟨fun f n => ⟨f ^ n, f.Continuous.pow n⟩⟩
 #align continuous_map.has_pow ContinuousMap.hasPow
+#align continuous_map.has_nsmul ContinuousMap.hasNsmul
 
 @[norm_cast, to_additive]
 theorem coe_pow [Monoid β] [HasContinuousMul β] (f : C(α, β)) (n : ℕ) : ⇑(f ^ n) = f ^ n :=
   rfl
 #align continuous_map.coe_pow ContinuousMap.coe_pow
+#align continuous_map.coe_nsmul ContinuousMap.coe_nsmul
 
 -- don't make `coe_nsmul` simp as the linter complains it's redundant WRT `coe_smul`
 attribute [simp] coe_pow
@@ -122,6 +129,7 @@ theorem pow_comp [Monoid γ] [HasContinuousMul γ] (f : C(β, γ)) (n : ℕ) (g 
     (f ^ n).comp g = f.comp g ^ n :=
   rfl
 #align continuous_map.pow_comp ContinuousMap.pow_comp
+#align continuous_map.nsmul_comp ContinuousMap.nsmul_comp
 
 -- don't make `nsmul_comp` simp as the linter complains it's redundant WRT `smul_comp`
 attribute [simp] pow_comp
@@ -133,12 +141,14 @@ instance [Group β] [TopologicalGroup β] : Inv C(α, β) where inv f := ⟨f⁻
 theorem coe_inv [Group β] [TopologicalGroup β] (f : C(α, β)) : ⇑f⁻¹ = f⁻¹ :=
   rfl
 #align continuous_map.coe_inv ContinuousMap.coe_inv
+#align continuous_map.coe_neg ContinuousMap.coe_neg
 
 @[simp, to_additive]
 theorem inv_comp [Group γ] [TopologicalGroup γ] (f : C(β, γ)) (g : C(α, β)) :
     f⁻¹.comp g = (f.comp g)⁻¹ :=
   rfl
 #align continuous_map.inv_comp ContinuousMap.inv_comp
+#align continuous_map.neg_comp ContinuousMap.neg_comp
 
 @[to_additive]
 instance [Div β] [HasContinuousDiv β] : Div C(α, β)
@@ -148,12 +158,14 @@ instance [Div β] [HasContinuousDiv β] : Div C(α, β)
 theorem coe_div [Div β] [HasContinuousDiv β] (f g : C(α, β)) : ⇑(f / g) = f / g :=
   rfl
 #align continuous_map.coe_div ContinuousMap.coe_div
+#align continuous_map.coe_sub ContinuousMap.coe_sub
 
 @[simp, to_additive]
 theorem div_comp [Div γ] [HasContinuousDiv γ] (f g : C(β, γ)) (h : C(α, β)) :
     (f / g).comp h = f.comp h / g.comp h :=
   rfl
 #align continuous_map.div_comp ContinuousMap.div_comp
+#align continuous_map.sub_comp ContinuousMap.sub_comp
 
 instance hasZsmul [AddGroup β] [TopologicalAddGroup β] : SMul ℤ C(α, β)
     where smul z f := ⟨z • f, f.Continuous.zsmul z⟩
@@ -163,11 +175,13 @@ instance hasZsmul [AddGroup β] [TopologicalAddGroup β] : SMul ℤ C(α, β)
 instance hasZpow [Group β] [TopologicalGroup β] : Pow C(α, β) ℤ
     where pow f z := ⟨f ^ z, f.Continuous.zpow z⟩
 #align continuous_map.has_zpow ContinuousMap.hasZpow
+#align continuous_map.has_zsmul ContinuousMap.hasZsmul
 
 @[norm_cast, to_additive]
 theorem coe_zpow [Group β] [TopologicalGroup β] (f : C(α, β)) (z : ℤ) : ⇑(f ^ z) = f ^ z :=
   rfl
 #align continuous_map.coe_zpow ContinuousMap.coe_zpow
+#align continuous_map.coe_zsmul ContinuousMap.coe_zsmul
 
 -- don't make `coe_zsmul` simp as the linter complains it's redundant WRT `coe_smul`
 attribute [simp] coe_zpow
@@ -177,6 +191,7 @@ theorem zpow_comp [Group γ] [TopologicalGroup γ] (f : C(β, γ)) (z : ℤ) (g 
     (f ^ z).comp g = f.comp g ^ z :=
   rfl
 #align continuous_map.zpow_comp ContinuousMap.zpow_comp
+#align continuous_map.zsmul_comp ContinuousMap.zsmul_comp
 
 -- don't make `zsmul_comp` simp as the linter complains it's redundant WRT `smul_comp`
 attribute [simp] zpow_comp
@@ -204,6 +219,7 @@ def continuousSubmonoid (α : Type _) (β : Type _) [TopologicalSpace α] [Topol
   one_mem' := @continuous_const _ _ _ _ 1
   mul_mem' f g fc gc := fc.mul gc
 #align continuous_submonoid continuousSubmonoid
+#align continuous_add_submonoid continuousAddSubmonoid
 
 /-- The subgroup of continuous maps `α → β`. -/
 @[to_additive "The `add_subgroup` of continuous maps `α → β`. "]
@@ -211,6 +227,7 @@ def continuousSubgroup (α : Type _) (β : Type _) [TopologicalSpace α] [Topolo
     [TopologicalGroup β] : Subgroup (α → β) :=
   { continuousSubmonoid α β with inv_mem' := fun f fc => Continuous.inv fc }
 #align continuous_subgroup continuousSubgroup
+#align continuous_add_subgroup continuousAddSubgroup
 
 end Subtype
 
@@ -278,6 +295,7 @@ def coeFnMonoidHom {α : Type _} {β : Type _} [TopologicalSpace α] [Topologica
   map_one' := coe_one
   map_mul' := coe_mul
 #align continuous_map.coe_fn_monoid_hom ContinuousMap.coeFnMonoidHom
+#align continuous_map.coe_fn_add_monoid_hom ContinuousMap.coeFnAddMonoidHom
 
 /-- Composition on the left by a (continuous) homomorphism of topological monoids, as a
 `monoid_hom`. Similar to `monoid_hom.comp_left`. -/
@@ -292,6 +310,7 @@ protected def MonoidHom.compLeftContinuous (α : Type _) {β : Type _} {γ : Typ
   map_one' := ext fun x => g.map_one
   map_mul' f₁ f₂ := ext fun x => g.map_mul _ _
 #align monoid_hom.comp_left_continuous MonoidHom.compLeftContinuous
+#align add_monoid_hom.comp_left_continuous AddMonoidHom.compLeftContinuous
 
 /-- Composition on the right as a `monoid_hom`. Similar to `monoid_hom.comp_hom'`. -/
 @[to_additive
@@ -304,6 +323,7 @@ def compMonoidHom' {α : Type _} {β : Type _} {γ : Type _} [TopologicalSpace �
   map_one' := one_comp g
   map_mul' f₁ f₂ := mul_comp f₁ f₂ g
 #align continuous_map.comp_monoid_hom' ContinuousMap.compMonoidHom'
+#align continuous_map.comp_add_monoid_hom' ContinuousMap.compAddMonoidHom'
 
 open BigOperators
 
@@ -313,12 +333,14 @@ theorem coe_prod {α : Type _} {β : Type _} [CommMonoid β] [TopologicalSpace �
     ⇑(∏ i in s, f i) = ∏ i in s, (f i : α → β) :=
   (coeFnMonoidHom : C(α, β) →* _).map_prod f s
 #align continuous_map.coe_prod ContinuousMap.coe_prod
+#align continuous_map.coe_sum ContinuousMap.coe_sum
 
 @[to_additive]
 theorem prod_apply {α : Type _} {β : Type _} [CommMonoid β] [TopologicalSpace α]
     [TopologicalSpace β] [HasContinuousMul β] {ι : Type _} (s : Finset ι) (f : ι → C(α, β))
     (a : α) : (∏ i in s, f i) a = ∏ i in s, f i a := by simp
 #align continuous_map.prod_apply ContinuousMap.prod_apply
+#align continuous_map.sum_apply ContinuousMap.sum_apply
 
 @[to_additive]
 instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [Group β]
@@ -521,18 +543,21 @@ instance [LocallyCompactSpace α] [TopologicalSpace R] [SMul R M] [HasContinuous
 theorem coe_smul [SMul R M] [HasContinuousConstSmul R M] (c : R) (f : C(α, M)) : ⇑(c • f) = c • f :=
   rfl
 #align continuous_map.coe_smul ContinuousMap.coe_smul
+#align continuous_map.coe_vadd ContinuousMap.coe_vadd
 
 @[to_additive]
 theorem smul_apply [SMul R M] [HasContinuousConstSmul R M] (c : R) (f : C(α, M)) (a : α) :
     (c • f) a = c • f a :=
   rfl
 #align continuous_map.smul_apply ContinuousMap.smul_apply
+#align continuous_map.vadd_apply ContinuousMap.vadd_apply
 
 @[simp, to_additive]
 theorem smul_comp [SMul R M] [HasContinuousConstSmul R M] (r : R) (f : C(β, M)) (g : C(α, β)) :
     (r • f).comp g = r • f.comp g :=
   rfl
 #align continuous_map.smul_comp ContinuousMap.smul_comp
+#align continuous_map.vadd_comp ContinuousMap.vadd_comp
 
 @[to_additive]
 instance [SMul R M] [HasContinuousConstSmul R M] [SMul R₁ M] [HasContinuousConstSmul R₁ M]

@@ -877,6 +877,7 @@ instance (priority := 100) HasContinuousMul.has_measurable_mul [Mul γ] [HasCont
   measurable_const_mul c := (continuous_const.mul continuous_id).Measurable
   measurable_mul_const c := (continuous_id.mul continuous_const).Measurable
 #align has_continuous_mul.has_measurable_mul HasContinuousMul.has_measurable_mul
+#align has_continuous_add.has_measurable_add HasContinuousAdd.has_measurable_add
 
 instance (priority := 100) HasContinuousSub.has_measurable_sub [Sub γ] [HasContinuousSub γ] :
     HasMeasurableSub γ
@@ -890,6 +891,7 @@ instance (priority := 100) TopologicalGroup.has_measurable_inv [Group γ] [Topol
     HasMeasurableInv γ :=
   ⟨continuous_inv.Measurable⟩
 #align topological_group.has_measurable_inv TopologicalGroup.has_measurable_inv
+#align topological_add_group.has_measurable_neg TopologicalAddGroup.has_measurable_neg
 
 instance (priority := 100) HasContinuousSmul.has_measurable_smul {M α} [TopologicalSpace M]
     [TopologicalSpace α] [MeasurableSpace M] [MeasurableSpace α] [OpensMeasurableSpace M]
@@ -987,6 +989,7 @@ instance (priority := 100) HasContinuousMul.has_measurable_mul₂ [SecondCountab
     [HasContinuousMul γ] : HasMeasurableMul₂ γ :=
   ⟨continuous_mul.Measurable⟩
 #align has_continuous_mul.has_measurable_mul₂ HasContinuousMul.has_measurable_mul₂
+#align has_continuous_add.has_measurable_mul₂ HasContinuousAdd.has_measurable_mul₂
 
 instance (priority := 100) HasContinuousSub.has_measurable_sub₂ [SecondCountableTopology γ] [Sub γ]
     [HasContinuousSub γ] : HasMeasurableSub₂ γ :=
@@ -2023,7 +2026,7 @@ theorem AeMeasurable.ennrealTsum {ι} [Countable ι] {f : ι → α → ℝ≥0�
   by
   simp_rw [Ennreal.tsum_eq_supr_sum]
   apply aeMeasurableSupr
-  exact fun s => Finset.aeMeasurableSum s fun i _ => h i
+  exact fun s => Finset.ae_measurable_sum s fun i _ => h i
 #align ae_measurable.ennreal_tsum AeMeasurable.ennrealTsum
 
 @[measurability]

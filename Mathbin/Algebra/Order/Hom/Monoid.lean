@@ -120,6 +120,7 @@ structure OrderMonoidHom (α β : Type _) [Preorder α] [Preorder β] [MulOneCla
   [MulOneClass β] extends α →* β where
   monotone' : Monotone to_fun
 #align order_monoid_hom OrderMonoidHom
+#align order_add_monoid_hom OrderAddMonoidHom
 -/
 
 -- mathport name: «expr →*o »
@@ -136,6 +137,7 @@ class OrderMonoidHomClass (F : Type _) (α β : outParam <| Type _) [Preorder α
   [MulOneClass α] [MulOneClass β] extends MonoidHomClass F α β where
   Monotone (f : F) : Monotone f
 #align order_monoid_hom_class OrderMonoidHomClass
+#align order_add_monoid_hom_class OrderAddMonoidHomClass
 -/
 
 end
@@ -147,6 +149,7 @@ instance (priority := 100) OrderMonoidHomClass.toOrderHomClass [OrderMonoidHomCl
     OrderHomClass F α β :=
   { ‹OrderMonoidHomClass F α β› with map_rel := OrderMonoidHomClass.monotone }
 #align order_monoid_hom_class.to_order_hom_class OrderMonoidHomClass.toOrderHomClass
+#align order_add_monoid_hom_class.to_order_hom_class OrderAddMonoidHomClass.toOrderHomClass
 -/
 
 @[to_additive]
@@ -382,6 +385,7 @@ Case conversion may be inaccurate. Consider using '#align order_monoid_hom.ext O
 theorem ext (h : ∀ a, f a = g a) : f = g :=
   FunLike.ext f g h
 #align order_monoid_hom.ext OrderMonoidHom.ext
+#align order_add_monoid_hom.ext OrderAddMonoidHom.ext
 
 /- warning: order_monoid_hom.to_fun_eq_coe -> OrderMonoidHom.toFun_eq_coe is a dubious translation:
 lean 3 declaration is
@@ -393,6 +397,7 @@ Case conversion may be inaccurate. Consider using '#align order_monoid_hom.to_fu
 theorem toFun_eq_coe (f : α →*o β) : f.toFun = (f : α → β) :=
   rfl
 #align order_monoid_hom.to_fun_eq_coe OrderMonoidHom.toFun_eq_coe
+#align order_add_monoid_hom.to_fun_eq_coe OrderAddMonoidHom.toFun_eq_coe
 
 /- warning: order_monoid_hom.coe_mk -> OrderMonoidHom.coe_mk is a dubious translation:
 lean 3 declaration is
@@ -404,6 +409,7 @@ Case conversion may be inaccurate. Consider using '#align order_monoid_hom.coe_m
 theorem coe_mk (f : α →* β) (h) : (OrderMonoidHom.mk f h : α → β) = f :=
   rfl
 #align order_monoid_hom.coe_mk OrderMonoidHom.coe_mk
+#align order_add_monoid_hom.coe_mk OrderAddMonoidHom.coe_mk
 
 /- warning: order_monoid_hom.mk_coe -> OrderMonoidHom.mk_coe is a dubious translation:
 lean 3 declaration is
@@ -417,6 +423,7 @@ theorem mk_coe (f : α →*o β) (h) : OrderMonoidHom.mk (f : α →* β) h = f 
   ext
   rfl
 #align order_monoid_hom.mk_coe OrderMonoidHom.mk_coe
+#align order_add_monoid_hom.mk_coe OrderAddMonoidHom.mk_coe
 
 #print OrderMonoidHom.toOrderHom /-
 /-- Reinterpret an ordered monoid homomorphism as an order homomorphism. -/
@@ -424,6 +431,7 @@ theorem mk_coe (f : α →*o β) (h) : OrderMonoidHom.mk (f : α →* β) h = f 
 def toOrderHom (f : α →*o β) : α →o β :=
   { f with }
 #align order_monoid_hom.to_order_hom OrderMonoidHom.toOrderHom
+#align order_add_monoid_hom.to_order_hom OrderAddMonoidHom.toOrderHom
 -/
 
 /- warning: order_monoid_hom.coe_monoid_hom -> OrderMonoidHom.coe_monoidHom is a dubious translation:
@@ -436,6 +444,7 @@ Case conversion may be inaccurate. Consider using '#align order_monoid_hom.coe_m
 theorem coe_monoidHom (f : α →*o β) : ((f : α →* β) : α → β) = f :=
   rfl
 #align order_monoid_hom.coe_monoid_hom OrderMonoidHom.coe_monoidHom
+#align order_add_monoid_hom.coe_add_monoid_hom OrderAddMonoidHom.coe_addMonoidHom
 
 /- warning: order_monoid_hom.coe_order_hom -> OrderMonoidHom.coe_orderHom is a dubious translation:
 lean 3 declaration is
@@ -447,6 +456,7 @@ Case conversion may be inaccurate. Consider using '#align order_monoid_hom.coe_o
 theorem coe_orderHom (f : α →*o β) : ((f : α →o β) : α → β) = f :=
   rfl
 #align order_monoid_hom.coe_order_hom OrderMonoidHom.coe_orderHom
+#align order_add_monoid_hom.coe_order_hom OrderAddMonoidHom.coe_orderHom
 
 /- warning: order_monoid_hom.to_monoid_hom_injective -> OrderMonoidHom.toMonoidHom_injective is a dubious translation:
 lean 3 declaration is
@@ -458,6 +468,7 @@ Case conversion may be inaccurate. Consider using '#align order_monoid_hom.to_mo
 theorem toMonoidHom_injective : Injective (toMonoidHom : _ → α →* β) := fun f g h =>
   ext <| by convert FunLike.ext_iff.1 h
 #align order_monoid_hom.to_monoid_hom_injective OrderMonoidHom.toMonoidHom_injective
+#align order_add_monoid_hom.to_add_monoid_hom_injective OrderAddMonoidHom.toAddMonoidHom_injective
 
 /- warning: order_monoid_hom.to_order_hom_injective -> OrderMonoidHom.toOrderHom_injective is a dubious translation:
 lean 3 declaration is
@@ -469,6 +480,7 @@ Case conversion may be inaccurate. Consider using '#align order_monoid_hom.to_or
 theorem toOrderHom_injective : Injective (toOrderHom : _ → α →o β) := fun f g h =>
   ext <| by convert FunLike.ext_iff.1 h
 #align order_monoid_hom.to_order_hom_injective OrderMonoidHom.toOrderHom_injective
+#align order_add_monoid_hom.to_order_hom_injective OrderAddMonoidHom.toOrderHom_injective
 
 /- warning: order_monoid_hom.copy -> OrderMonoidHom.copy is a dubious translation:
 lean 3 declaration is
@@ -485,6 +497,7 @@ protected def copy (f : α →*o β) (f' : α → β) (h : f' = f) : α →*o β
     toFun := f'
     monotone' := h.symm.subst f.monotone' }
 #align order_monoid_hom.copy OrderMonoidHom.copy
+#align order_add_monoid_hom.copy OrderAddMonoidHom.copy
 
 /- warning: order_monoid_hom.coe_copy -> OrderMonoidHom.coe_copy is a dubious translation:
 lean 3 declaration is
@@ -496,6 +509,7 @@ Case conversion may be inaccurate. Consider using '#align order_monoid_hom.coe_c
 theorem coe_copy (f : α →*o β) (f' : α → β) (h : f' = f) : ⇑(f.copy f' h) = f' :=
   rfl
 #align order_monoid_hom.coe_copy OrderMonoidHom.coe_copy
+#align order_add_monoid_hom.coe_copy OrderAddMonoidHom.coe_copy
 
 /- warning: order_monoid_hom.copy_eq -> OrderMonoidHom.copy_eq is a dubious translation:
 lean 3 declaration is
@@ -507,6 +521,7 @@ Case conversion may be inaccurate. Consider using '#align order_monoid_hom.copy_
 theorem copy_eq (f : α →*o β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
   FunLike.ext' h
 #align order_monoid_hom.copy_eq OrderMonoidHom.copy_eq
+#align order_add_monoid_hom.copy_eq OrderAddMonoidHom.copy_eq
 
 variable (α)
 
@@ -516,6 +531,7 @@ variable (α)
 protected def id : α →*o α :=
   { MonoidHom.id α, OrderHom.id with }
 #align order_monoid_hom.id OrderMonoidHom.id
+#align order_add_monoid_hom.id OrderAddMonoidHom.id
 -/
 
 /- warning: order_monoid_hom.coe_id -> OrderMonoidHom.coe_id is a dubious translation:
@@ -528,6 +544,7 @@ Case conversion may be inaccurate. Consider using '#align order_monoid_hom.coe_i
 theorem coe_id : ⇑(OrderMonoidHom.id α) = id :=
   rfl
 #align order_monoid_hom.coe_id OrderMonoidHom.coe_id
+#align order_add_monoid_hom.coe_id OrderAddMonoidHom.coe_id
 
 @[to_additive]
 instance : Inhabited (α →*o α) :=
@@ -541,6 +558,7 @@ variable {α}
 def comp (f : β →*o γ) (g : α →*o β) : α →*o γ :=
   { f.toMonoidHom.comp (g : α →* β), f.toOrderHom.comp (g : α →o β) with }
 #align order_monoid_hom.comp OrderMonoidHom.comp
+#align order_add_monoid_hom.comp OrderAddMonoidHom.comp
 -/
 
 /- warning: order_monoid_hom.coe_comp -> OrderMonoidHom.coe_comp is a dubious translation:
@@ -553,6 +571,7 @@ Case conversion may be inaccurate. Consider using '#align order_monoid_hom.coe_c
 theorem coe_comp (f : β →*o γ) (g : α →*o β) : (f.comp g : α → γ) = f ∘ g :=
   rfl
 #align order_monoid_hom.coe_comp OrderMonoidHom.coe_comp
+#align order_add_monoid_hom.coe_comp OrderAddMonoidHom.coe_comp
 
 /- warning: order_monoid_hom.comp_apply -> OrderMonoidHom.comp_apply is a dubious translation:
 lean 3 declaration is
@@ -564,6 +583,7 @@ Case conversion may be inaccurate. Consider using '#align order_monoid_hom.comp_
 theorem comp_apply (f : β →*o γ) (g : α →*o β) (a : α) : (f.comp g) a = f (g a) :=
   rfl
 #align order_monoid_hom.comp_apply OrderMonoidHom.comp_apply
+#align order_add_monoid_hom.comp_apply OrderAddMonoidHom.comp_apply
 
 /- warning: order_monoid_hom.coe_comp_monoid_hom -> OrderMonoidHom.coe_comp_monoidHom is a dubious translation:
 lean 3 declaration is
@@ -576,6 +596,7 @@ theorem coe_comp_monoidHom (f : β →*o γ) (g : α →*o β) :
     (f.comp g : α →* γ) = (f : β →* γ).comp g :=
   rfl
 #align order_monoid_hom.coe_comp_monoid_hom OrderMonoidHom.coe_comp_monoidHom
+#align order_add_monoid_hom.coe_comp_add_monoid_hom OrderAddMonoidHom.coe_comp_addMonoidHom
 
 /- warning: order_monoid_hom.coe_comp_order_hom -> OrderMonoidHom.coe_comp_orderHom is a dubious translation:
 lean 3 declaration is
@@ -587,6 +608,7 @@ Case conversion may be inaccurate. Consider using '#align order_monoid_hom.coe_c
 theorem coe_comp_orderHom (f : β →*o γ) (g : α →*o β) : (f.comp g : α →o γ) = (f : β →o γ).comp g :=
   rfl
 #align order_monoid_hom.coe_comp_order_hom OrderMonoidHom.coe_comp_orderHom
+#align order_add_monoid_hom.coe_comp_order_hom OrderAddMonoidHom.coe_comp_orderHom
 
 /- warning: order_monoid_hom.comp_assoc -> OrderMonoidHom.comp_assoc is a dubious translation:
 lean 3 declaration is
@@ -599,6 +621,7 @@ theorem comp_assoc (f : γ →*o δ) (g : β →*o γ) (h : α →*o β) :
     (f.comp g).comp h = f.comp (g.comp h) :=
   rfl
 #align order_monoid_hom.comp_assoc OrderMonoidHom.comp_assoc
+#align order_add_monoid_hom.comp_assoc OrderAddMonoidHom.comp_assoc
 
 /- warning: order_monoid_hom.comp_id -> OrderMonoidHom.comp_id is a dubious translation:
 lean 3 declaration is
@@ -610,6 +633,7 @@ Case conversion may be inaccurate. Consider using '#align order_monoid_hom.comp_
 theorem comp_id (f : α →*o β) : f.comp (OrderMonoidHom.id α) = f :=
   ext fun a => rfl
 #align order_monoid_hom.comp_id OrderMonoidHom.comp_id
+#align order_add_monoid_hom.comp_id OrderAddMonoidHom.comp_id
 
 /- warning: order_monoid_hom.id_comp -> OrderMonoidHom.id_comp is a dubious translation:
 lean 3 declaration is
@@ -621,6 +645,7 @@ Case conversion may be inaccurate. Consider using '#align order_monoid_hom.id_co
 theorem id_comp (f : α →*o β) : (OrderMonoidHom.id β).comp f = f :=
   ext fun a => rfl
 #align order_monoid_hom.id_comp OrderMonoidHom.id_comp
+#align order_add_monoid_hom.id_comp OrderAddMonoidHom.id_comp
 
 /- warning: order_monoid_hom.cancel_right -> OrderMonoidHom.cancel_right is a dubious translation:
 lean 3 declaration is
@@ -633,6 +658,7 @@ theorem cancel_right {g₁ g₂ : β →*o γ} {f : α →*o β} (hf : Function.
     g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
   ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
 #align order_monoid_hom.cancel_right OrderMonoidHom.cancel_right
+#align order_add_monoid_hom.cancel_right OrderAddMonoidHom.cancel_right
 
 /- warning: order_monoid_hom.cancel_left -> OrderMonoidHom.cancel_left is a dubious translation:
 lean 3 declaration is
@@ -645,6 +671,7 @@ theorem cancel_left {g : β →*o γ} {f₁ f₂ : α →*o β} (hg : Function.I
     g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
   ⟨fun h => ext fun a => hg <| by rw [← comp_apply, h, comp_apply], congr_arg _⟩
 #align order_monoid_hom.cancel_left OrderMonoidHom.cancel_left
+#align order_add_monoid_hom.cancel_left OrderAddMonoidHom.cancel_left
 
 /-- `1` is the homomorphism sending all elements to `1`. -/
 @[to_additive "`1` is the homomorphism sending all elements to `1`."]
@@ -661,6 +688,7 @@ Case conversion may be inaccurate. Consider using '#align order_monoid_hom.coe_o
 theorem coe_one : ⇑(1 : α →*o β) = 1 :=
   rfl
 #align order_monoid_hom.coe_one OrderMonoidHom.coe_one
+#align order_add_monoid_hom.coe_zero OrderAddMonoidHom.coe_zero
 
 /- warning: order_monoid_hom.one_apply -> OrderMonoidHom.one_apply is a dubious translation:
 lean 3 declaration is
@@ -672,6 +700,7 @@ Case conversion may be inaccurate. Consider using '#align order_monoid_hom.one_a
 theorem one_apply (a : α) : (1 : α →*o β) a = 1 :=
   rfl
 #align order_monoid_hom.one_apply OrderMonoidHom.one_apply
+#align order_add_monoid_hom.zero_apply OrderAddMonoidHom.zero_apply
 
 /- warning: order_monoid_hom.one_comp -> OrderMonoidHom.one_comp is a dubious translation:
 lean 3 declaration is
@@ -683,6 +712,7 @@ Case conversion may be inaccurate. Consider using '#align order_monoid_hom.one_c
 theorem one_comp (f : α →*o β) : (1 : β →*o γ).comp f = 1 :=
   rfl
 #align order_monoid_hom.one_comp OrderMonoidHom.one_comp
+#align order_add_monoid_hom.zero_comp OrderAddMonoidHom.zero_comp
 
 /- warning: order_monoid_hom.comp_one -> OrderMonoidHom.comp_one is a dubious translation:
 lean 3 declaration is
@@ -696,6 +726,7 @@ theorem comp_one (f : β →*o γ) : f.comp (1 : α →*o β) = 1 :=
   ext
   exact map_one f
 #align order_monoid_hom.comp_one OrderMonoidHom.comp_one
+#align order_add_monoid_hom.comp_zero OrderAddMonoidHom.comp_zero
 
 end Preorder
 
@@ -720,6 +751,7 @@ Case conversion may be inaccurate. Consider using '#align order_monoid_hom.coe_m
 theorem coe_mul (f g : α →*o β) : ⇑(f * g) = f * g :=
   rfl
 #align order_monoid_hom.coe_mul OrderMonoidHom.coe_mul
+#align order_add_monoid_hom.coe_add OrderAddMonoidHom.coe_add
 
 /- warning: order_monoid_hom.mul_apply -> OrderMonoidHom.mul_apply is a dubious translation:
 lean 3 declaration is
@@ -731,6 +763,7 @@ Case conversion may be inaccurate. Consider using '#align order_monoid_hom.mul_a
 theorem mul_apply (f g : α →*o β) (a : α) : (f * g) a = f a * g a :=
   rfl
 #align order_monoid_hom.mul_apply OrderMonoidHom.mul_apply
+#align order_add_monoid_hom.add_apply OrderAddMonoidHom.add_apply
 
 /- warning: order_monoid_hom.mul_comp -> OrderMonoidHom.mul_comp is a dubious translation:
 lean 3 declaration is
@@ -742,6 +775,7 @@ Case conversion may be inaccurate. Consider using '#align order_monoid_hom.mul_c
 theorem mul_comp (g₁ g₂ : β →*o γ) (f : α →*o β) : (g₁ * g₂).comp f = g₁.comp f * g₂.comp f :=
   rfl
 #align order_monoid_hom.mul_comp OrderMonoidHom.mul_comp
+#align order_add_monoid_hom.add_comp OrderAddMonoidHom.add_comp
 
 /- warning: order_monoid_hom.comp_mul -> OrderMonoidHom.comp_mul is a dubious translation:
 lean 3 declaration is
@@ -755,6 +789,7 @@ theorem comp_mul (g : β →*o γ) (f₁ f₂ : α →*o β) : g.comp (f₁ * f�
   ext
   exact map_mul g _ _
 #align order_monoid_hom.comp_mul OrderMonoidHom.comp_mul
+#align order_add_monoid_hom.comp_add OrderAddMonoidHom.comp_add
 
 end Mul
 
@@ -776,6 +811,7 @@ theorem toMonoidHom_eq_coe (f : α →*o β) : f.toMonoidHom = f :=
   ext
   rfl
 #align order_monoid_hom.to_monoid_hom_eq_coe OrderMonoidHom.toMonoidHom_eq_coe
+#align order_add_monoid_hom.to_add_monoid_hom_eq_coe OrderAddMonoidHom.toAddMonoidHom_eq_coe
 
 /- warning: order_monoid_hom.to_order_hom_eq_coe -> OrderMonoidHom.toOrderHom_eq_coe is a dubious translation:
 lean 3 declaration is
@@ -787,6 +823,7 @@ Case conversion may be inaccurate. Consider using '#align order_monoid_hom.to_or
 theorem toOrderHom_eq_coe (f : α →*o β) : f.toOrderHom = f :=
   rfl
 #align order_monoid_hom.to_order_hom_eq_coe OrderMonoidHom.toOrderHom_eq_coe
+#align order_add_monoid_hom.to_order_hom_eq_coe OrderAddMonoidHom.toOrderHom_eq_coe
 
 end OrderedCommMonoid
 
@@ -809,6 +846,7 @@ Case conversion may be inaccurate. Consider using '#align order_monoid_hom.mk' O
 def mk' (f : α → β) (hf : Monotone f) (map_mul : ∀ a b : α, f (a * b) = f a * f b) : α →*o β :=
   { MonoidHom.mk' f map_mul with monotone' := hf }
 #align order_monoid_hom.mk' OrderMonoidHom.mk'
+#align order_add_monoid_hom.mk' OrderAddMonoidHom.mk'
 
 end OrderedCommGroup
 

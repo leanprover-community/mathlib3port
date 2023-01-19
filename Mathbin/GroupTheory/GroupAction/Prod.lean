@@ -56,12 +56,14 @@ Case conversion may be inaccurate. Consider using '#align prod.smul_fst Prod.smu
 theorem smul_fst : (a • x).1 = a • x.1 :=
   rfl
 #align prod.smul_fst Prod.smul_fst
+#align prod.vadd_fst Prod.vadd_fst
 
 #print Prod.smul_snd /-
 @[simp, to_additive]
 theorem smul_snd : (a • x).2 = a • x.2 :=
   rfl
 #align prod.smul_snd Prod.smul_snd
+#align prod.vadd_snd Prod.vadd_snd
 -/
 
 /- warning: prod.smul_mk -> Prod.smul_mk is a dubious translation:
@@ -74,6 +76,7 @@ Case conversion may be inaccurate. Consider using '#align prod.smul_mk Prod.smul
 theorem smul_mk (a : M) (b : α) (c : β) : a • (b, c) = (a • b, a • c) :=
   rfl
 #align prod.smul_mk Prod.smul_mk
+#align prod.vadd_mk Prod.vadd_mk
 
 /- warning: prod.smul_def -> Prod.smul_def is a dubious translation:
 lean 3 declaration is
@@ -85,6 +88,7 @@ Case conversion may be inaccurate. Consider using '#align prod.smul_def Prod.smu
 theorem smul_def (a : M) (x : α × β) : a • x = (a • x.1, a • x.2) :=
   rfl
 #align prod.smul_def Prod.smul_def
+#align prod.vadd_def Prod.vadd_def
 
 /- warning: prod.smul_swap -> Prod.smul_swap is a dubious translation:
 lean 3 declaration is
@@ -96,6 +100,7 @@ Case conversion may be inaccurate. Consider using '#align prod.smul_swap Prod.sm
 theorem smul_swap : (a • x).swap = a • x.swap :=
   rfl
 #align prod.smul_swap Prod.smul_swap
+#align prod.vadd_swap Prod.vadd_swap
 
 /- warning: prod.smul_zero_mk -> Prod.smul_zero_mk is a dubious translation:
 lean 3 declaration is
@@ -135,6 +140,7 @@ Case conversion may be inaccurate. Consider using '#align prod.pow_fst Prod.pow_
 theorem pow_fst (p : α × β) (c : E) : (p ^ c).fst = p.fst ^ c :=
   rfl
 #align prod.pow_fst Prod.pow_fst
+#align prod.smul_fst Prod.smul_fst
 
 /- warning: prod.pow_snd -> Prod.pow_snd is a dubious translation:
 lean 3 declaration is
@@ -146,6 +152,7 @@ Case conversion may be inaccurate. Consider using '#align prod.pow_snd Prod.pow_
 theorem pow_snd (p : α × β) (c : E) : (p ^ c).snd = p.snd ^ c :=
   rfl
 #align prod.pow_snd Prod.pow_snd
+#align prod.smul_snd Prod.smul_snd
 
 /- warning: prod.pow_mk -> Prod.pow_mk is a dubious translation:
 lean 3 declaration is
@@ -160,6 +167,7 @@ than two adjacent arguments -/
 theorem pow_mk (c : E) (a : α) (b : β) : Prod.mk a b ^ c = Prod.mk (a ^ c) (b ^ c) :=
   rfl
 #align prod.pow_mk Prod.pow_mk
+#align prod.smul_mk Prod.smul_mk
 
 /- warning: prod.pow_def -> Prod.pow_def is a dubious translation:
 lean 3 declaration is
@@ -171,6 +179,7 @@ Case conversion may be inaccurate. Consider using '#align prod.pow_def Prod.pow_
 theorem pow_def (p : α × β) (c : E) : p ^ c = (p.1 ^ c, p.2 ^ c) :=
   rfl
 #align prod.pow_def Prod.pow_def
+#align prod.smul_def Prod.smul_def
 
 /- warning: prod.pow_swap -> Prod.pow_swap is a dubious translation:
 lean 3 declaration is
@@ -182,6 +191,7 @@ Case conversion may be inaccurate. Consider using '#align prod.pow_swap Prod.pow
 theorem pow_swap (p : α × β) (c : E) : (p ^ c).swap = p.swap ^ c :=
   rfl
 #align prod.pow_swap Prod.pow_swap
+#align prod.smul_swap Prod.smul_swap
 
 @[to_additive]
 instance [SMul M N] [IsScalarTower M N α] [IsScalarTower M N β] : IsScalarTower M N (α × β) :=
@@ -203,6 +213,7 @@ instance faithfulSMulLeft [FaithfulSMul M α] [Nonempty β] : FaithfulSMul M (α
     let ⟨b⟩ := ‹Nonempty β›
     eq_of_smul_eq_smul fun a : α => by injection h (a, b)⟩
 #align prod.has_faithful_smul_left Prod.faithfulSMulLeft
+#align prod.has_faithful_vadd_left Prod.faithfulVAddLeft
 -/
 
 #print Prod.faithfulSMulRight /-
@@ -212,6 +223,7 @@ instance faithfulSMulRight [Nonempty α] [FaithfulSMul M β] : FaithfulSMul M (�
     let ⟨a⟩ := ‹Nonempty α›
     eq_of_smul_eq_smul fun b : β => by injection h (a, b)⟩
 #align prod.has_faithful_smul_right Prod.faithfulSMulRight
+#align prod.has_faithful_vadd_right Prod.faithfulVAddRight
 -/
 
 end
@@ -222,6 +234,7 @@ instance smulCommClassBoth [Mul N] [Mul P] [SMul M N] [SMul M P] [SMulCommClass 
     [SMulCommClass M P P] : SMulCommClass M (N × P) (N × P) :=
   ⟨fun c x y => by simp [smul_def, mul_def, mul_smul_comm]⟩
 #align prod.smul_comm_class_both Prod.smulCommClassBoth
+#align prod.vadd_comm_class_both Prod.vaddCommClassBoth
 -/
 
 #print Prod.isScalarTowerBoth /-

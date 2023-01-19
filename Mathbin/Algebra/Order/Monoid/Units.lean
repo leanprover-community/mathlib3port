@@ -57,6 +57,7 @@ instance [Monoid α] [LinearOrder α] : LinearOrder αˣ :=
 def orderEmbeddingVal [Monoid α] [LinearOrder α] : αˣ ↪o α :=
   ⟨⟨coe, ext⟩, fun _ _ => Iff.rfl⟩
 #align units.order_embedding_coe Units.orderEmbeddingVal
+#align add_units.order_embedding_coe AddUnits.orderEmbeddingVal
 -/
 
 /- warning: units.max_coe -> Units.max_val is a dubious translation:

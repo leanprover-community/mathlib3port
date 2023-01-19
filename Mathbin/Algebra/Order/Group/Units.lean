@@ -30,5 +30,6 @@ instance Units.orderedCommGroup [OrderedCommMonoid α] : OrderedCommGroup αˣ :
   { Units.instPartialOrderUnits, Units.instCommGroupUnitsToMonoid with
     mul_le_mul_left := fun a b h c => (mul_le_mul_left' (h : (a : α) ≤ b) _ : (c : α) * a ≤ c * b) }
 #align units.ordered_comm_group Units.orderedCommGroup
+#align add_units.ordered_add_comm_group AddUnits.orderedAddCommGroup
 -/
 

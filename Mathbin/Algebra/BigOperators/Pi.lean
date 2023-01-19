@@ -30,12 +30,14 @@ theorem list_prod_apply {α : Type _} {β : α → Type _} [∀ a, Monoid (β a)
     (l : List (∀ a, β a)) : l.Prod a = (l.map fun f : ∀ a, β a => f a).Prod :=
   (evalMonoidHom β a).map_list_prod _
 #align pi.list_prod_apply Pi.list_prod_apply
+#align pi.list_sum_apply Pi.list_sum_apply
 
 @[to_additive]
 theorem multiset_prod_apply {α : Type _} {β : α → Type _} [∀ a, CommMonoid (β a)] (a : α)
     (s : Multiset (∀ a, β a)) : s.Prod a = (s.map fun f : ∀ a, β a => f a).Prod :=
   (evalMonoidHom β a).map_multiset_prod _
 #align pi.multiset_prod_apply Pi.multiset_prod_apply
+#align pi.multiset_sum_apply Pi.multiset_sum_apply
 
 end Pi
 
@@ -44,6 +46,7 @@ theorem Finset.prod_apply {α : Type _} {β : α → Type _} {γ} [∀ a, CommMo
     (s : Finset γ) (g : γ → ∀ a, β a) : (∏ c in s, g c) a = ∏ c in s, g c a :=
   (Pi.evalMonoidHom β a).map_prod _ _
 #align finset.prod_apply Finset.prod_apply
+#align finset.sum_apply Finset.sum_apply
 
 /-- An 'unapplied' analogue of `finset.prod_apply`. -/
 @[to_additive "An 'unapplied' analogue of `finset.sum_apply`."]
@@ -51,12 +54,14 @@ theorem Finset.prod_fn {α : Type _} {β : α → Type _} {γ} [∀ a, CommMonoi
     (g : γ → ∀ a, β a) : (∏ c in s, g c) = fun a => ∏ c in s, g c a :=
   funext fun a => Finset.prod_apply _ _ _
 #align finset.prod_fn Finset.prod_fn
+#align finset.sum_fn Finset.sum_fn
 
 @[simp, to_additive]
 theorem Fintype.prod_apply {α : Type _} {β : α → Type _} {γ : Type _} [Fintype γ]
     [∀ a, CommMonoid (β a)] (a : α) (g : γ → ∀ a, β a) : (∏ c, g c) a = ∏ c, g c a :=
   Finset.prod_apply a Finset.univ g
 #align fintype.prod_apply Fintype.prod_apply
+#align fintype.sum_apply Fintype.sum_apply
 
 @[to_additive prod_mk_sum]
 theorem prod_mk_prod {α β γ : Type _} [CommMonoid α] [CommMonoid β] (s : Finset γ) (f : γ → α)
@@ -64,6 +69,7 @@ theorem prod_mk_prod {α β γ : Type _} [CommMonoid α] [CommMonoid β] (s : Fi
   haveI := Classical.decEq γ
   Finset.induction_on s rfl (by simp (config := { contextual := true }) [Prod.ext_iff])
 #align prod_mk_prod prod_mk_prod
+#align prod_mk_sum prod_mk_sum
 
 section Single
 
@@ -126,11 +132,13 @@ variable {α β γ : Type _} [CommMonoid α] [CommMonoid β] {s : Finset γ} {f 
 theorem fst_prod : (∏ c in s, f c).1 = ∏ c in s, (f c).1 :=
   (MonoidHom.fst α β).map_prod f s
 #align prod.fst_prod Prod.fst_prod
+#align prod.fst_sum Prod.fst_sum
 
 @[to_additive]
 theorem snd_prod : (∏ c in s, f c).2 = ∏ c in s, (f c).2 :=
   (MonoidHom.snd α β).map_prod f s
 #align prod.snd_prod Prod.snd_prod
+#align prod.snd_sum Prod.snd_sum
 
 end Prod
 

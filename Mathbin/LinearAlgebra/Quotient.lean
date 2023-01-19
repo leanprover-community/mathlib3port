@@ -29,14 +29,14 @@ variable {R M : Type _} {r : R} {x y : M} [Ring R] [AddCommGroup M] [Module R M]
 
 variable (p p' : Submodule R M)
 
-open LinearMap QuotientAddGroup
+open LinearMap quotientAddGroup
 
 /-- The equivalence relation associated to a submodule `p`, defined by `x ≈ y` iff `-x + y ∈ p`.
 
 Note this is equivalent to `y - x ∈ p`, but defined this way to be be defeq to the `add_subgroup`
 version, where commutativity can't be assumed. -/
 def quotientRel : Setoid M :=
-  QuotientAddGroup.leftRel p.toAddSubgroup
+  quotientAddGroup.leftRel p.toAddSubgroup
 #align submodule.quotient_rel Submodule.quotientRel
 
 theorem quotient_rel_r_def {x y : M} : @Setoid.r _ p.quotientRel x y ↔ x - y ∈ p :=
@@ -76,7 +76,7 @@ theorem quot_mk_eq_mk {p : Submodule R M} (x : M) : (Quot.mk _ x : M ⧸ p) = mk
 #align submodule.quotient.quot_mk_eq_mk Submodule.Quotient.quot_mk_eq_mk
 
 protected theorem eq' {x y : M} : (mk x : M ⧸ p) = mk y ↔ -x + y ∈ p :=
-  QuotientAddGroup.eq
+  quotientAddGroup.eq
 #align submodule.quotient.eq' Submodule.Quotient.eq'
 
 protected theorem eq {x y : M} : (mk x : M ⧸ p) = mk y ↔ x - y ∈ p :=
@@ -99,7 +99,7 @@ theorem mk_eq_zero : (mk x : M ⧸ p) = 0 ↔ x ∈ p := by simpa using (Quotien
 #align submodule.quotient.mk_eq_zero Submodule.Quotient.mk_eq_zero
 
 instance addCommGroup : AddCommGroup (M ⧸ p) :=
-  QuotientAddGroup.Quotient.addCommGroup p.toAddSubgroup
+  quotientAddGroup.Quotient.addCommGroup p.toAddSubgroup
 #align submodule.quotient.add_comm_group Submodule.Quotient.addCommGroup
 
 @[simp]
@@ -336,7 +336,7 @@ theorem linear_map_qext ⦃f g : M ⧸ p →ₛₗ[τ₁₂] M₂⦄ (h : f.comp
 /-- The map from the quotient of `M` by a submodule `p` to `M₂` induced by a linear map `f : M → M₂`
 vanishing on `p`, as a linear map. -/
 def liftq (f : M →ₛₗ[τ₁₂] M₂) (h : p ≤ f.ker) : M ⧸ p →ₛₗ[τ₁₂] M₂ :=
-  { QuotientAddGroup.lift p.toAddSubgroup f.toAddMonoidHom h with
+  { quotientAddGroup.lift p.toAddSubgroup f.toAddMonoidHom h with
     map_smul' := by rintro a ⟨x⟩ <;> exact f.map_smulₛₗ a x }
 #align submodule.liftq Submodule.liftq
 

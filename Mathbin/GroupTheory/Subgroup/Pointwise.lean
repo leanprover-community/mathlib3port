@@ -42,6 +42,7 @@ theorem inv_coe_set [SetLike S G] [SubgroupClass S G] {H : S} : (H : Set G)⁻¹
   ext
   simp
 #align inv_coe_set inv_coe_set
+#align neg_coe_set neg_coe_set
 
 namespace Subgroup
 
@@ -51,6 +52,7 @@ theorem inv_subset_closure (S : Set G) : S⁻¹ ⊆ closure S := fun s hs =>
   rw [SetLike.mem_coe, ← Subgroup.inv_mem_iff]
   exact subset_closure (mem_inv.mp hs)
 #align subgroup.inv_subset_closure Subgroup.inv_subset_closure
+#align add_subgroup.neg_subset_closure AddSubgroup.neg_subset_closure
 
 @[to_additive]
 theorem closure_to_submonoid (S : Set G) : (closure S).toSubmonoid = Submonoid.closure (S ∪ S⁻¹) :=
@@ -63,6 +65,7 @@ theorem closure_to_submonoid (S : Set G) : (closure S).toSubmonoid = Submonoid.c
     rwa [← Submonoid.mem_closure_inv, Set.union_inv, inv_inv, Set.union_comm]
   · simp only [true_and_iff, coe_to_submonoid, union_subset_iff, subset_closure, inv_subset_closure]
 #align subgroup.closure_to_submonoid Subgroup.closure_to_submonoid
+#align add_subgroup.closure_to_add_submonoid AddSubgroup.closure_to_add_submonoid
 
 @[to_additive]
 theorem closure_induction_left {p : G → Prop} {x : G} (h : x ∈ closure s) (H1 : p 1)
@@ -71,6 +74,7 @@ theorem closure_induction_left {p : G → Prop} {x : G} (h : x ∈ closure s) (H
   Submonoid.closure_induction_left (key h) H1 fun x hx =>
     hx.elim (Hmul x) fun hx y hy => (congr_arg _ <| inv_inv x).mp <| Hinv x⁻¹ hx y hy
 #align subgroup.closure_induction_left Subgroup.closure_induction_left
+#align add_subgroup.closure_induction_left AddSubgroup.closure_induction_left
 
 @[to_additive]
 theorem closure_induction_right {p : G → Prop} {x : G} (h : x ∈ closure s) (H1 : p 1)
@@ -79,11 +83,13 @@ theorem closure_induction_right {p : G → Prop} {x : G} (h : x ∈ closure s) (
   Submonoid.closure_induction_right (key h) H1 fun x y hy =>
     hy.elim (Hmul x y) fun hy hx => (congr_arg _ <| inv_inv y).mp <| Hinv x y⁻¹ hy hx
 #align subgroup.closure_induction_right Subgroup.closure_induction_right
+#align add_subgroup.closure_induction_right AddSubgroup.closure_induction_right
 
 @[simp, to_additive]
 theorem closure_inv (s : Set G) : closure s⁻¹ = closure s := by
   simp only [← to_submonoid_eq, closure_to_submonoid, inv_inv, union_comm]
 #align subgroup.closure_inv Subgroup.closure_inv
+#align add_subgroup.closure_neg AddSubgroup.closure_neg
 
 /-- An induction principle for closure membership. If `p` holds for `1` and all elements of
 `k` and their inverse, and is preserved under multiplication, then `p` holds for all elements of
@@ -95,6 +101,7 @@ theorem closure_induction'' {p : G → Prop} {x} (h : x ∈ closure s) (Hk : ∀
   closure_induction_left h H1 (fun x hx y hy => Hmul x y (Hk x hx) hy) fun x hx y =>
     Hmul x⁻¹ y <| Hk_inv x hx
 #align subgroup.closure_induction'' Subgroup.closure_induction''
+#align add_subgroup.closure_induction'' AddSubgroup.closure_induction''
 
 /-- An induction principle for elements of `⨆ i, S i`.
 If `C` holds for `1` and all elements of `S i` for all `i`, and is preserved under multiplication,
@@ -112,6 +119,7 @@ theorem supr_induction {ι : Sort _} (S : ι → Subgroup G) {C : G → Prop} {x
   · obtain ⟨i, hi⟩ := set.mem_Union.mp hx
     exact hp _ _ (inv_mem hi)
 #align subgroup.supr_induction Subgroup.supr_induction
+#align add_subgroup.supr_induction AddSubgroup.supr_induction
 
 /-- A dependent version of `subgroup.supr_induction`. -/
 @[elab_as_elim, to_additive "A dependent version of `add_subgroup.supr_induction`. "]
@@ -127,6 +135,7 @@ theorem supr_induction' {ι : Sort _} (S : ι → Subgroup G) {C : ∀ x, (x ∈
   · rintro ⟨_, Cx⟩ ⟨_, Cy⟩
     refine' ⟨_, hmul _ _ _ _ Cx Cy⟩
 #align subgroup.supr_induction' Subgroup.supr_induction'
+#align add_subgroup.supr_induction' AddSubgroup.supr_induction'
 
 @[to_additive]
 theorem closure_mul_le (S T : Set G) : closure (S * T) ≤ closure S ⊔ closure T :=
@@ -135,6 +144,7 @@ theorem closure_mul_le (S T : Set G) : closure (S * T) ≤ closure S ⊔ closure
       (closure S ⊔ closure T).mul_mem (SetLike.le_def.mp le_sup_left <| subset_closure hs)
         (SetLike.le_def.mp le_sup_right <| subset_closure ht)
 #align subgroup.closure_mul_le Subgroup.closure_mul_le
+#align add_subgroup.closure_add_le AddSubgroup.closure_add_le
 
 @[to_additive]
 theorem sup_eq_closure (H K : Subgroup G) : H ⊔ K = closure (H * K) :=
@@ -143,6 +153,7 @@ theorem sup_eq_closure (H K : Subgroup G) : H ⊔ K = closure (H * K) :=
       subset_closure ⟨1, k, H.one_mem, hk, one_mul k⟩)
     (by conv_rhs => rw [← closure_eq H, ← closure_eq K] <;> apply closure_mul_le)
 #align subgroup.sup_eq_closure Subgroup.sup_eq_closure
+#align add_subgroup.sup_eq_closure AddSubgroup.sup_eq_closure
 
 @[to_additive]
 private def mul_normal_aux (H N : Subgroup G) [hN : N.Normal] : Subgroup G
@@ -169,6 +180,7 @@ theorem mul_normal (H N : Subgroup G) [N.Normal] : (↑(H ⊔ N) : Set G) = H * 
       rfl)
     ((sup_eq_closure H N).symm ▸ subset_closure)
 #align subgroup.mul_normal Subgroup.mul_normal
+#align add_subgroup.add_normal AddSubgroup.add_normal
 
 @[to_additive]
 private def normal_mul_aux (N H : Subgroup G) [hN : N.Normal] : Subgroup G
@@ -195,6 +207,7 @@ theorem normal_mul (N H : Subgroup G) [N.Normal] : (↑(N ⊔ H) : Set G) = N * 
       rfl)
     ((sup_eq_closure N H).symm ▸ subset_closure)
 #align subgroup.normal_mul Subgroup.normal_mul
+#align add_subgroup.normal_add AddSubgroup.normal_add
 
 @[to_additive]
 theorem mul_inf_assoc (A B C : Subgroup G) (h : A ≤ C) : (A : Set G) * ↑(B ⊓ C) = A * B ⊓ C :=
@@ -210,6 +223,7 @@ theorem mul_inf_assoc (A B C : Subgroup G) (h : A ≤ C) : (A : Set G) * ↑(B �
   suffices y⁻¹ * (y * z) ∈ C by simpa
   exact mul_mem (inv_mem (h hy)) hyz
 #align subgroup.mul_inf_assoc Subgroup.mul_inf_assoc
+#align add_subgroup.add_inf_assoc AddSubgroup.add_inf_assoc
 
 @[to_additive]
 theorem inf_mul_assoc (A B C : Subgroup G) (h : C ≤ A) :
@@ -226,6 +240,7 @@ theorem inf_mul_assoc (A B C : Subgroup G) (h : C ≤ A) :
   suffices y * z * z⁻¹ ∈ A by simpa
   exact mul_mem hyz (inv_mem (h hz))
 #align subgroup.inf_mul_assoc Subgroup.inf_mul_assoc
+#align add_subgroup.inf_add_assoc AddSubgroup.inf_add_assoc
 
 instance sup_normal (H K : Subgroup G) [hH : H.Normal] [hK : K.Normal] : (H ⊔ K).Normal
     where conj_mem n hmem g := by
@@ -245,6 +260,7 @@ theorem smul_opposite_image_mul_preimage {H : Subgroup G} (g : G) (h : H.opposit
   cases h
   simp [(· • ·), mul_assoc]
 #align subgroup.smul_opposite_image_mul_preimage Subgroup.smul_opposite_image_mul_preimage
+#align add_subgroup.vadd_opposite_image_add_preimage AddSubgroup.vadd_opposite_image_add_preimage
 
 /-! ### Pointwise action -/
 

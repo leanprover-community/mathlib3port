@@ -47,6 +47,7 @@ Case conversion may be inaccurate. Consider using '#align units.smul_def Units.s
 theorem smul_def [Monoid M] [SMul M α] (m : Mˣ) (a : α) : m • a = (m : M) • a :=
   rfl
 #align units.smul_def Units.smul_def
+#align add_units.vadd_def AddUnits.vadd_def
 
 /- warning: units.smul_is_unit -> Units.smul_isUnit is a dubious translation:
 lean 3 declaration is

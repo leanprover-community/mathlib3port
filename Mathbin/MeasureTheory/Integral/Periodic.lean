@@ -32,7 +32,7 @@ open Set Function MeasureTheory MeasureTheory.Measure TopologicalSpace AddSubgro
 
 open MeasureTheory Nnreal Ennreal
 
-attribute [-instance] QuotientAddGroup.measurableSpace Quotient.measurableSpace
+attribute [-instance] quotientAddGroup.measurableSpace Quotient.measurableSpace
 
 theorem isAddFundamentalDomainIoc {T : ℝ} (hT : 0 < T) (t : ℝ)
     (μ : Measure ℝ := by exact MeasureTheory.MeasureSpace.volume) :
@@ -65,7 +65,7 @@ include hT
 /-- Equip the "additive circle" `ℝ ⧸ (ℤ ∙ T)` with, as a standard measure, the Haar measure of total
 mass `T` -/
 noncomputable instance measureSpace : MeasureSpace (AddCircle T) :=
-  { AddCircle.measurableSpace with volume := Ennreal.ofReal T • addHaarMeasure ⊤ }
+  { AddCircle.measurableSpace with volume := Ennreal.ofReal T • add_haar_measure ⊤ }
 #align add_circle.measure_space AddCircle.measureSpace
 
 @[simp]
@@ -163,7 +163,7 @@ protected theorem lintegral_preimage (t : ℝ) (f : AddCircle T → ℝ≥0∞) 
   have m : MeasurableSet (Ioc t (t + T)) := measurable_set_Ioc
   have := lintegral_map_equiv f (measurable_equiv_Ioc T t).symm
   swap; exact volume
-  simp only [measurable_equiv_Ioc, equiv_Ioc, QuotientAddGroup.equivIocMod, MeasurableEquiv.symm_mk,
+  simp only [measurable_equiv_Ioc, equiv_Ioc, quotientAddGroup.equivIocMod, MeasurableEquiv.symm_mk,
     MeasurableEquiv.coe_mk, Equiv.coe_fn_symm_mk] at this
   rw [← (AddCircle.measurePreservingMk T t).map_eq]
   convert this.symm using 1
@@ -189,7 +189,7 @@ protected theorem integral_preimage (t : ℝ) (f : AddCircle T → E) :
   by
   have m : MeasurableSet (Ioc t (t + T)) := measurable_set_Ioc
   have := integral_map_equiv (measurable_equiv_Ioc T t).symm f
-  simp only [measurable_equiv_Ioc, equiv_Ioc, QuotientAddGroup.equivIocMod, MeasurableEquiv.symm_mk,
+  simp only [measurable_equiv_Ioc, equiv_Ioc, quotientAddGroup.equivIocMod, MeasurableEquiv.symm_mk,
     MeasurableEquiv.coe_mk, Equiv.coe_fn_symm_mk, coe_coe] at this
   rw [← (AddCircle.measurePreservingMk T t).map_eq, set_integral_eq_subtype m, ← this]
   have : (coe : Ioc t (t + T) → AddCircle T) = (coe : ℝ → AddCircle T) ∘ (coe : _ → ℝ) :=

@@ -48,6 +48,7 @@ is injective. -/
 def IsLeftRegular (c : R) :=
   ((· * ·) c).Injective
 #align is_left_regular IsLeftRegular
+#align is_add_left_regular IsAddLeftRegular
 -/
 
 #print IsRightRegular /-
@@ -58,6 +59,7 @@ is injective. -/
 def IsRightRegular (c : R) :=
   (· * c).Injective
 #align is_right_regular IsRightRegular
+#align is_add_right_regular IsAddRightRegular
 -/
 
 #print IsAddRegular /-
@@ -86,6 +88,7 @@ protected theorem MulLECancellable.isLeftRegular [PartialOrder R] {a : R}
     (ha : MulLECancellable a) : IsLeftRegular a :=
   ha.Injective
 #align mul_le_cancellable.is_left_regular MulLECancellable.isLeftRegular
+#align add_le_cancellable.is_add_left_regular AddLECancellable.isAddLeftRegular
 -/
 
 #print IsLeftRegular.right_of_commute /-
@@ -117,6 +120,7 @@ Case conversion may be inaccurate. Consider using '#align is_left_regular.mul Is
 theorem IsLeftRegular.mul (lra : IsLeftRegular a) (lrb : IsLeftRegular b) : IsLeftRegular (a * b) :=
   show Function.Injective ((· * ·) (a * b)) from comp_mul_left a b ▸ lra.comp lrb
 #align is_left_regular.mul IsLeftRegular.mul
+#align is_add_left_regular.add IsAddLeftRegular.add
 
 /- warning: is_right_regular.mul -> IsRightRegular.mul is a dubious translation:
 lean 3 declaration is
@@ -131,6 +135,7 @@ theorem IsRightRegular.mul (rra : IsRightRegular a) (rrb : IsRightRegular b) :
     IsRightRegular (a * b) :=
   show Function.Injective (· * (a * b)) from comp_mul_right b a ▸ rrb.comp rra
 #align is_right_regular.mul IsRightRegular.mul
+#align is_add_right_regular.add IsAddRightRegular.add
 
 /- warning: is_left_regular.of_mul -> IsLeftRegular.of_mul is a dubious translation:
 lean 3 declaration is
@@ -145,6 +150,7 @@ element, then `b` is left-regular. -/
 theorem IsLeftRegular.of_mul (ab : IsLeftRegular (a * b)) : IsLeftRegular b :=
   Function.Injective.of_comp (by rwa [comp_mul_left a b])
 #align is_left_regular.of_mul IsLeftRegular.of_mul
+#align is_add_left_regular.of_add IsAddLeftRegular.of_add
 
 /- warning: mul_is_left_regular_iff -> mul_isLeftRegular_iff is a dubious translation:
 lean 3 declaration is
@@ -161,6 +167,7 @@ theorem mul_isLeftRegular_iff (b : R) (ha : IsLeftRegular a) :
     IsLeftRegular (a * b) ↔ IsLeftRegular b :=
   ⟨fun ab => IsLeftRegular.of_mul ab, fun ab => IsLeftRegular.mul ha ab⟩
 #align mul_is_left_regular_iff mul_isLeftRegular_iff
+#align add_is_add_left_regular_iff add_isAddLeftRegular_iff
 
 /- warning: is_right_regular.of_mul -> IsRightRegular.of_mul is a dubious translation:
 lean 3 declaration is
@@ -178,6 +185,7 @@ theorem IsRightRegular.of_mul (ab : IsRightRegular (b * a)) : IsRightRegular b :
   rw [← mul_assoc, ← mul_assoc]
   exact congr_fun (congr_arg (· * ·) xy) a
 #align is_right_regular.of_mul IsRightRegular.of_mul
+#align is_add_right_regular.of_add IsAddRightRegular.of_add
 
 /- warning: mul_is_right_regular_iff -> mul_isRightRegular_iff is a dubious translation:
 lean 3 declaration is
@@ -194,6 +202,7 @@ theorem mul_isRightRegular_iff (b : R) (ha : IsRightRegular a) :
     IsRightRegular (b * a) ↔ IsRightRegular b :=
   ⟨fun ab => IsRightRegular.of_mul ab, fun ab => IsRightRegular.mul ab ha⟩
 #align mul_is_right_regular_iff mul_isRightRegular_iff
+#align add_is_add_right_regular_iff add_isAddRightRegular_iff
 
 /- warning: is_regular_mul_and_mul_iff -> isRegular_mul_and_mul_iff is a dubious translation:
 lean 3 declaration is
@@ -220,6 +229,7 @@ theorem isRegular_mul_and_mul_iff :
         ⟨(mul_isLeftRegular_iff _ hb.left).mpr ha.left,
           (mul_isRightRegular_iff _ ha.right).mpr hb.right⟩⟩
 #align is_regular_mul_and_mul_iff isRegular_mul_and_mul_iff
+#align is_add_regular_add_and_add_iff isAddRegular_add_and_add_iff
 
 /- warning: is_regular.and_of_mul_of_mul -> IsRegular.and_of_mul_of_mul is a dubious translation:
 lean 3 declaration is
@@ -234,6 +244,7 @@ theorem IsRegular.and_of_mul_of_mul (ab : IsRegular (a * b)) (ba : IsRegular (b 
     IsRegular a ∧ IsRegular b :=
   isRegular_mul_and_mul_iff.mp ⟨ab, ba⟩
 #align is_regular.and_of_mul_of_mul IsRegular.and_of_mul_of_mul
+#align is_add_regular.and_of_add_of_add IsAddRegular.and_of_add_of_add
 
 end Semigroup
 
@@ -427,6 +438,7 @@ theorem isRegular_one : IsRegular (1 : R) :=
   ⟨fun a b ab => (one_mul a).symm.trans (Eq.trans ab (one_mul b)), fun a b ab =>
     (mul_one a).symm.trans (Eq.trans ab (mul_one b))⟩
 #align is_regular_one isRegular_one
+#align is_add_regular_zero isAddRegular_zero
 
 end MulOneClass
 
@@ -447,6 +459,7 @@ theorem isRegular_mul_iff : IsRegular (a * b) ↔ IsRegular a ∧ IsRegular b :=
   refine' Iff.trans _ isRegular_mul_and_mul_iff
   refine' ⟨fun ab => ⟨ab, by rwa [mul_comm]⟩, fun rab => rab.1⟩
 #align is_regular_mul_iff isRegular_mul_iff
+#align is_add_regular_add_iff isAddRegular_add_iff
 
 end CommSemigroup
 
@@ -468,6 +481,7 @@ theorem isLeftRegular_of_mul_eq_one (h : b * a = 1) : IsLeftRegular a :=
       rw [h]
       exact is_regular_one.left)
 #align is_left_regular_of_mul_eq_one isLeftRegular_of_mul_eq_one
+#align is_add_left_regular_of_add_eq_zero isAddLeftRegular_of_add_eq_zero
 
 /- warning: is_right_regular_of_mul_eq_one -> isRightRegular_of_mul_eq_one is a dubious translation:
 lean 3 declaration is
@@ -483,6 +497,7 @@ theorem isRightRegular_of_mul_eq_one (h : a * b = 1) : IsRightRegular a :=
       rw [h]
       exact is_regular_one.right)
 #align is_right_regular_of_mul_eq_one isRightRegular_of_mul_eq_one
+#align is_add_right_regular_of_add_eq_zero isAddRightRegular_of_add_eq_zero
 
 /- warning: units.is_regular -> Units.isRegular is a dubious translation:
 lean 3 declaration is
@@ -495,6 +510,7 @@ Case conversion may be inaccurate. Consider using '#align units.is_regular Units
 theorem Units.isRegular (a : Rˣ) : IsRegular (a : R) :=
   ⟨isLeftRegular_of_mul_eq_one a.inv_mul, isRightRegular_of_mul_eq_one a.mul_inv⟩
 #align units.is_regular Units.isRegular
+#align add_units.is_add_regular AddUnits.isAddRegular
 
 /- warning: is_unit.is_regular -> IsUnit.isRegular is a dubious translation:
 lean 3 declaration is
@@ -509,6 +525,7 @@ theorem IsUnit.isRegular (ua : IsUnit a) : IsRegular a :=
   rcases ua with ⟨a, rfl⟩
   exact Units.isRegular a
 #align is_unit.is_regular IsUnit.isRegular
+#align is_add_unit.is_add_regular IsAddUnit.isAddRegular
 
 end Monoid
 
@@ -523,6 +540,7 @@ Case conversion may be inaccurate. Consider using '#align is_left_regular_of_lef
 theorem isLeftRegular_of_leftCancelSemigroup [LeftCancelSemigroup R] (g : R) : IsLeftRegular g :=
   mul_right_injective g
 #align is_left_regular_of_left_cancel_semigroup isLeftRegular_of_leftCancelSemigroup
+#align is_add_left_regular_of_add_left_cancel_semigroup isAddLeftRegular_of_addLeftCancelSemigroup
 
 /- warning: is_right_regular_of_right_cancel_semigroup -> isRightRegular_of_rightCancelSemigroup is a dubious translation:
 lean 3 declaration is
@@ -536,6 +554,8 @@ theorem isRightRegular_of_rightCancelSemigroup [RightCancelSemigroup R] (g : R) 
     IsRightRegular g :=
   mul_left_injective g
 #align is_right_regular_of_right_cancel_semigroup isRightRegular_of_rightCancelSemigroup
+#align
+  is_add_right_regular_of_add_right_cancel_semigroup isAddRightRegular_of_addRightCancelSemigroup
 
 section CancelMonoid
 
@@ -553,6 +573,7 @@ Case conversion may be inaccurate. Consider using '#align is_regular_of_cancel_m
 theorem isRegular_of_cancelMonoid (g : R) : IsRegular g :=
   ⟨mul_right_injective g, mul_left_injective g⟩
 #align is_regular_of_cancel_monoid isRegular_of_cancelMonoid
+#align is_add_regular_of_add_cancel_monoid isAddRegular_of_addCancelMonoid
 
 end CancelMonoid
 

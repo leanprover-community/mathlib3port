@@ -270,12 +270,14 @@ theorem is_bounded_under_le_inv [OrderedCommGroup α] {l : Filter β} {u : β �
     (IsBoundedUnder (· ≤ ·) l fun x => (u x)⁻¹) ↔ IsBoundedUnder (· ≥ ·) l u :=
   (OrderIso.inv α).is_bounded_under_ge_comp
 #align filter.is_bounded_under_le_inv Filter.is_bounded_under_le_inv
+#align filter.is_bounded_under_le_neg Filter.is_bounded_under_le_neg
 
 @[simp, to_additive]
 theorem is_bounded_under_ge_inv [OrderedCommGroup α] {l : Filter β} {u : β → α} :
     (IsBoundedUnder (· ≥ ·) l fun x => (u x)⁻¹) ↔ IsBoundedUnder (· ≤ ·) l u :=
   (OrderIso.inv α).is_bounded_under_le_comp
 #align filter.is_bounded_under_ge_inv Filter.is_bounded_under_ge_inv
+#align filter.is_bounded_under_ge_neg Filter.is_bounded_under_ge_neg
 
 theorem IsBoundedUnder.sup [SemilatticeSup α] {f : Filter β} {u v : β → α} :
     f.IsBoundedUnder (· ≤ ·) u →

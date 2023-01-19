@@ -79,6 +79,7 @@ variable [Monoid M] [Monoid N] [AddMonoid A] [AddMonoid B]
 @[simp, to_additive one_nsmul]
 theorem pow_one (a : M) : a ^ 1 = a := by rw [pow_succ, pow_zero, mul_one]
 #align pow_one pow_one
+#align one_nsmul one_nsmul
 -/
 
 /- warning: pow_two -> pow_two is a dubious translation:
@@ -91,6 +92,7 @@ Case conversion may be inaccurate. Consider using '#align pow_two pow_twoₓ'. -
 @[to_additive two_nsmul, nolint to_additive_doc]
 theorem pow_two (a : M) : a ^ 2 = a * a := by rw [pow_succ, pow_one]
 #align pow_two pow_two
+#align two_nsmul two_nsmul
 
 /- warning: sq -> sq is a dubious translation:
 lean 3 declaration is
@@ -129,6 +131,7 @@ Case conversion may be inaccurate. Consider using '#align pow_mul_comm' pow_mul_
 theorem pow_mul_comm' (a : M) (n : ℕ) : a ^ n * a = a * a ^ n :=
   Commute.pow_self a n
 #align pow_mul_comm' pow_mul_comm'
+#align smul_add_comm' smul_add_comm'
 
 /- warning: pow_add -> pow_add is a dubious translation:
 lean 3 declaration is
@@ -141,6 +144,7 @@ theorem pow_add (a : M) (m n : ℕ) : a ^ (m + n) = a ^ m * a ^ n := by
   induction' n with n ih <;> [rw [Nat.add_zero, pow_zero, mul_one],
     rw [pow_succ', ← mul_assoc, ← ih, ← pow_succ', Nat.add_assoc]]
 #align pow_add pow_add
+#align add_nsmul add_nsmul
 
 /- warning: pow_boole -> pow_boole is a dubious translation:
 lean 3 declaration is
@@ -164,6 +168,7 @@ Case conversion may be inaccurate. Consider using '#align one_pow one_powₓ'. -
 theorem one_pow (n : ℕ) : (1 : M) ^ n = 1 := by
   induction' n with n ih <;> [exact pow_zero _, rw [pow_succ, ih, one_mul]]
 #align one_pow one_pow
+#align nsmul_zero nsmul_zero
 
 #print pow_mul /-
 @[to_additive mul_nsmul]
@@ -173,6 +178,7 @@ theorem pow_mul (a : M) (m n : ℕ) : a ^ (m * n) = (a ^ m) ^ n :=
   · rw [Nat.mul_zero, pow_zero, pow_zero]
   · rw [Nat.mul_succ, pow_add, pow_succ', ih]
 #align pow_mul pow_mul
+#align mul_nsmul' mul_nsmul
 -/
 
 #print pow_right_comm /-
@@ -180,12 +186,14 @@ theorem pow_mul (a : M) (m n : ℕ) : a ^ (m * n) = (a ^ m) ^ n :=
 theorem pow_right_comm (a : M) (m n : ℕ) : (a ^ m) ^ n = (a ^ n) ^ m := by
   rw [← pow_mul, Nat.mul_comm, pow_mul]
 #align pow_right_comm pow_right_comm
+#align nsmul_left_comm nsmul_left_comm
 -/
 
 #print pow_mul' /-
 @[to_additive mul_nsmul']
 theorem pow_mul' (a : M) (m n : ℕ) : a ^ (m * n) = (a ^ n) ^ m := by rw [Nat.mul_comm, pow_mul]
 #align pow_mul' pow_mul'
+#align mul_nsmul mul_nsmul'
 -/
 
 /- warning: pow_mul_pow_sub -> pow_mul_pow_sub is a dubious translation:
@@ -198,6 +206,7 @@ Case conversion may be inaccurate. Consider using '#align pow_mul_pow_sub pow_mu
 theorem pow_mul_pow_sub (a : M) {m n : ℕ} (h : m ≤ n) : a ^ m * a ^ (n - m) = a ^ n := by
   rw [← pow_add, Nat.add_comm, Nat.sub_add_cancel h]
 #align pow_mul_pow_sub pow_mul_pow_sub
+#align nsmul_add_sub_nsmul nsmul_add_sub_nsmul
 
 /- warning: pow_sub_mul_pow -> pow_sub_mul_pow is a dubious translation:
 lean 3 declaration is
@@ -209,6 +218,7 @@ Case conversion may be inaccurate. Consider using '#align pow_sub_mul_pow pow_su
 theorem pow_sub_mul_pow (a : M) {m n : ℕ} (h : m ≤ n) : a ^ (n - m) * a ^ m = a ^ n := by
   rw [← pow_add, Nat.sub_add_cancel h]
 #align pow_sub_mul_pow pow_sub_mul_pow
+#align sub_nsmul_nsmul_add sub_nsmul_nsmul_add
 
 /- warning: pow_eq_pow_mod -> pow_eq_pow_mod is a dubious translation:
 lean 3 declaration is
@@ -225,6 +235,7 @@ theorem pow_eq_pow_mod {M : Type _} [Monoid M] {x : M} (m : ℕ) {n : ℕ} (h : 
   dsimp at t
   rw [t, pow_add, pow_mul, h, one_pow, one_mul]
 #align pow_eq_pow_mod pow_eq_pow_mod
+#align nsmul_eq_mod_nsmul nsmul_eq_mod_nsmul
 
 /- warning: pow_bit0 -> pow_bit0 is a dubious translation:
 lean 3 declaration is
@@ -236,6 +247,7 @@ Case conversion may be inaccurate. Consider using '#align pow_bit0 pow_bit0ₓ'.
 theorem pow_bit0 (a : M) (n : ℕ) : a ^ bit0 n = a ^ n * a ^ n :=
   pow_add _ _ _
 #align pow_bit0 pow_bit0
+#align bit0_nsmul bit0_nsmul
 
 /- warning: pow_bit1 -> pow_bit1 is a dubious translation:
 lean 3 declaration is
@@ -247,6 +259,7 @@ Case conversion may be inaccurate. Consider using '#align pow_bit1 pow_bit1ₓ'.
 theorem pow_bit1 (a : M) (n : ℕ) : a ^ bit1 n = a ^ n * a ^ n * a := by
   rw [bit1, pow_succ', pow_bit0]
 #align pow_bit1 pow_bit1
+#align bit1_nsmul bit1_nsmul
 
 /- warning: pow_mul_comm -> pow_mul_comm is a dubious translation:
 lean 3 declaration is
@@ -258,6 +271,7 @@ Case conversion may be inaccurate. Consider using '#align pow_mul_comm pow_mul_c
 theorem pow_mul_comm (a : M) (m n : ℕ) : a ^ m * a ^ n = a ^ n * a ^ m :=
   Commute.pow_pow_self a m n
 #align pow_mul_comm pow_mul_comm
+#align nsmul_add_comm nsmul_add_comm
 
 /- warning: commute.mul_pow -> Commute.mul_pow is a dubious translation:
 lean 3 declaration is
@@ -270,6 +284,7 @@ theorem Commute.mul_pow {a b : M} (h : Commute a b) (n : ℕ) : (a * b) ^ n = a 
   Nat.recOn n (by simp only [pow_zero, one_mul]) fun n ihn => by
     simp only [pow_succ, ihn, ← mul_assoc, (h.pow_left n).right_comm]
 #align commute.mul_pow Commute.mul_pow
+#align add_commute.add_smul AddCommute.add_smul
 
 /- warning: pow_bit0' -> pow_bit0' is a dubious translation:
 lean 3 declaration is
@@ -281,6 +296,7 @@ Case conversion may be inaccurate. Consider using '#align pow_bit0' pow_bit0'ₓ
 theorem pow_bit0' (a : M) (n : ℕ) : a ^ bit0 n = (a * a) ^ n := by
   rw [pow_bit0, (Commute.refl a).mul_pow]
 #align pow_bit0' pow_bit0'
+#align bit0_nsmul' bit0_nsmul'
 
 /- warning: pow_bit1' -> pow_bit1' is a dubious translation:
 lean 3 declaration is
@@ -292,6 +308,7 @@ Case conversion may be inaccurate. Consider using '#align pow_bit1' pow_bit1'ₓ
 theorem pow_bit1' (a : M) (n : ℕ) : a ^ bit1 n = (a * a) ^ n * a := by
   rw [bit1, pow_succ', pow_bit0']
 #align pow_bit1' pow_bit1'
+#align bit1_nsmul' bit1_nsmul'
 
 /- warning: pow_mul_pow_eq_one -> pow_mul_pow_eq_one is a dubious translation:
 lean 3 declaration is
@@ -311,6 +328,7 @@ theorem pow_mul_pow_eq_one {a b : M} (n : ℕ) (h : a * b = 1) : a ^ n * b ^ n =
       _ = 1 := by simp [h, hn]
       
 #align pow_mul_pow_eq_one pow_mul_pow_eq_one
+#align nsmul_add_nsmul_eq_zero nsmul_add_nsmul_eq_zero
 
 #print dvd_pow /-
 theorem dvd_pow {x y : M} (hxy : x ∣ y) : ∀ {n : ℕ} (hn : n ≠ 0), x ∣ y ^ n
@@ -351,6 +369,7 @@ Case conversion may be inaccurate. Consider using '#align mul_pow mul_powₓ'. -
 theorem mul_pow (a b : M) (n : ℕ) : (a * b) ^ n = a ^ n * b ^ n :=
   (Commute.all a b).mul_pow n
 #align mul_pow mul_pow
+#align nsmul_add nsmul_add
 
 #print powMonoidHom /-
 /-- The `n`th power map on a commutative monoid for a natural `n`, considered as a morphism of
@@ -363,6 +382,7 @@ def powMonoidHom (n : ℕ) : M →* M where
   map_one' := one_pow _
   map_mul' a b := mul_pow a b n
 #align pow_monoid_hom powMonoidHom
+#align nsmul_add_monoid_hom nsmulAddMonoidHom
 -/
 
 -- the below line causes the linter to complain :-/
@@ -382,6 +402,7 @@ theorem zpow_one (a : G) : a ^ (1 : ℤ) = a :=
   convert pow_one a using 1
   exact zpow_ofNat a 1
 #align zpow_one zpow_one
+#align one_zsmul one_zsmul
 -/
 
 /- warning: zpow_two -> zpow_two is a dubious translation:
@@ -396,6 +417,7 @@ theorem zpow_two (a : G) : a ^ (2 : ℤ) = a * a :=
   convert pow_two a using 1
   exact zpow_ofNat a 2
 #align zpow_two zpow_two
+#align two_zsmul two_zsmul
 
 /- warning: zpow_neg_one -> zpow_neg_one is a dubious translation:
 lean 3 declaration is
@@ -407,6 +429,7 @@ Case conversion may be inaccurate. Consider using '#align zpow_neg_one zpow_neg_
 theorem zpow_neg_one (x : G) : x ^ (-1 : ℤ) = x⁻¹ :=
   (zpow_negSucc x 0).trans <| congr_arg Inv.inv (pow_one x)
 #align zpow_neg_one zpow_neg_one
+#align neg_one_zsmul neg_one_zsmul
 
 /- warning: zpow_neg_coe_of_pos -> zpow_neg_coe_of_pos is a dubious translation:
 lean 3 declaration is
@@ -418,6 +441,7 @@ Case conversion may be inaccurate. Consider using '#align zpow_neg_coe_of_pos zp
 theorem zpow_neg_coe_of_pos (a : G) : ∀ {n : ℕ}, 0 < n → a ^ (-(n : ℤ)) = (a ^ n)⁻¹
   | n + 1, _ => zpow_negSucc _ _
 #align zpow_neg_coe_of_pos zpow_neg_coe_of_pos
+#align zsmul_neg_coe_of_pos zsmul_neg_coe_of_pos
 
 end DivInvMonoid
 
@@ -436,6 +460,7 @@ theorem inv_pow (a : α) : ∀ n : ℕ, a⁻¹ ^ n = (a ^ n)⁻¹
   | 0 => by rw [pow_zero, pow_zero, inv_one]
   | n + 1 => by rw [pow_succ', pow_succ, inv_pow, mul_inv_rev]
 #align inv_pow inv_pow
+#align neg_nsmul neg_nsmul
 
 /- warning: one_zpow -> one_zpow is a dubious translation:
 lean 3 declaration is
@@ -449,6 +474,7 @@ theorem one_zpow : ∀ n : ℤ, (1 : α) ^ n = 1
   | (n : ℕ) => by rw [zpow_ofNat, one_pow]
   | -[n+1] => by rw [zpow_negSucc, one_pow, inv_one]
 #align one_zpow one_zpow
+#align zsmul_zero zsmul_zero
 
 /- warning: zpow_neg -> zpow_neg is a dubious translation:
 lean 3 declaration is
@@ -466,6 +492,7 @@ theorem zpow_neg (a : α) : ∀ n : ℤ, a ^ (-n) = (a ^ n)⁻¹
     rw [zpow_negSucc, inv_inv, ← zpow_ofNat]
     rfl
 #align zpow_neg zpow_neg
+#align neg_zsmul neg_zsmul
 
 /- warning: mul_zpow_neg_one -> mul_zpow_neg_one is a dubious translation:
 lean 3 declaration is
@@ -477,6 +504,7 @@ Case conversion may be inaccurate. Consider using '#align mul_zpow_neg_one mul_z
 theorem mul_zpow_neg_one (a b : α) : (a * b) ^ (-1 : ℤ) = b ^ (-1 : ℤ) * a ^ (-1 : ℤ) := by
   simp_rw [zpow_neg_one, mul_inv_rev]
 #align mul_zpow_neg_one mul_zpow_neg_one
+#align neg_one_zsmul_add neg_one_zsmul_add
 
 /- warning: inv_zpow -> inv_zpow is a dubious translation:
 lean 3 declaration is
@@ -489,6 +517,7 @@ theorem inv_zpow (a : α) : ∀ n : ℤ, a⁻¹ ^ n = (a ^ n)⁻¹
   | (n : ℕ) => by rw [zpow_ofNat, zpow_ofNat, inv_pow]
   | -[n+1] => by rw [zpow_negSucc, zpow_negSucc, inv_pow]
 #align inv_zpow inv_zpow
+#align zsmul_neg zsmul_neg
 
 /- warning: inv_zpow' -> inv_zpow' is a dubious translation:
 lean 3 declaration is
@@ -499,6 +528,7 @@ Case conversion may be inaccurate. Consider using '#align inv_zpow' inv_zpow'ₓ
 @[simp, to_additive zsmul_neg']
 theorem inv_zpow' (a : α) (n : ℤ) : a⁻¹ ^ n = a ^ (-n) := by rw [inv_zpow, zpow_neg]
 #align inv_zpow' inv_zpow'
+#align zsmul_neg' zsmul_neg'
 
 /- warning: one_div_pow -> one_div_pow is a dubious translation:
 lean 3 declaration is
@@ -509,6 +539,7 @@ Case conversion may be inaccurate. Consider using '#align one_div_pow one_div_po
 @[to_additive nsmul_zero_sub]
 theorem one_div_pow (a : α) (n : ℕ) : (1 / a) ^ n = 1 / a ^ n := by simp_rw [one_div, inv_pow]
 #align one_div_pow one_div_pow
+#align nsmul_zero_sub nsmul_zero_sub
 
 /- warning: one_div_zpow -> one_div_zpow is a dubious translation:
 lean 3 declaration is
@@ -519,6 +550,7 @@ Case conversion may be inaccurate. Consider using '#align one_div_zpow one_div_z
 @[to_additive zsmul_zero_sub]
 theorem one_div_zpow (a : α) (n : ℤ) : (1 / a) ^ n = 1 / a ^ n := by simp_rw [one_div, inv_zpow]
 #align one_div_zpow one_div_zpow
+#align zsmul_zero_sub zsmul_zero_sub
 
 /- warning: commute.mul_zpow -> Commute.mul_zpow is a dubious translation:
 lean 3 declaration is
@@ -531,6 +563,7 @@ protected theorem Commute.mul_zpow (h : Commute a b) : ∀ i : ℤ, (a * b) ^ i 
   | (n : ℕ) => by simp [h.mul_pow n]
   | -[n+1] => by simp [h.mul_pow, (h.pow_pow _ _).Eq, mul_inv_rev]
 #align commute.mul_zpow Commute.mul_zpow
+#align add_commute.zsmul_add AddCommute.zsmul_add
 
 end DivisionMonoid
 
@@ -548,6 +581,7 @@ Case conversion may be inaccurate. Consider using '#align mul_zpow mul_zpowₓ'.
 theorem mul_zpow (a b : α) : ∀ n : ℤ, (a * b) ^ n = a ^ n * b ^ n :=
   (Commute.all a b).mul_zpow
 #align mul_zpow mul_zpow
+#align zsmul_add zsmul_add
 
 /- warning: div_pow -> div_pow is a dubious translation:
 lean 3 declaration is
@@ -559,6 +593,7 @@ Case conversion may be inaccurate. Consider using '#align div_pow div_powₓ'. -
 theorem div_pow (a b : α) (n : ℕ) : (a / b) ^ n = a ^ n / b ^ n := by
   simp only [div_eq_mul_inv, mul_pow, inv_pow]
 #align div_pow div_pow
+#align nsmul_sub nsmul_sub
 
 /- warning: div_zpow -> div_zpow is a dubious translation:
 lean 3 declaration is
@@ -570,6 +605,7 @@ Case conversion may be inaccurate. Consider using '#align div_zpow div_zpowₓ'.
 theorem div_zpow (a b : α) (n : ℤ) : (a / b) ^ n = a ^ n / b ^ n := by
   simp only [div_eq_mul_inv, mul_zpow, inv_zpow]
 #align div_zpow div_zpow
+#align zsmul_sub zsmul_sub
 
 #print zpowGroupHom /-
 /-- The `n`-th power map (for an integer `n`) on a commutative group, considered as a group
@@ -582,6 +618,7 @@ def zpowGroupHom (n : ℤ) : α →* α where
   map_one' := one_zpow n
   map_mul' a b := mul_zpow a b n
 #align zpow_group_hom zpowGroupHom
+#align zsmul_add_group_hom zsmulAddGroupHom
 -/
 
 end DivisionCommMonoid
@@ -600,6 +637,7 @@ Case conversion may be inaccurate. Consider using '#align pow_sub pow_subₓ'. -
 theorem pow_sub (a : G) {m n : ℕ} (h : n ≤ m) : a ^ (m - n) = a ^ m * (a ^ n)⁻¹ :=
   eq_mul_inv_of_mul_eq <| by rw [← pow_add, Nat.sub_add_cancel h]
 #align pow_sub pow_sub
+#align sub_nsmul sub_nsmul
 
 /- warning: pow_inv_comm -> pow_inv_comm is a dubious translation:
 lean 3 declaration is
@@ -611,6 +649,7 @@ Case conversion may be inaccurate. Consider using '#align pow_inv_comm pow_inv_c
 theorem pow_inv_comm (a : G) (m n : ℕ) : a⁻¹ ^ m * a ^ n = a ^ n * a⁻¹ ^ m :=
   (Commute.refl a).inv_left.pow_pow _ _
 #align pow_inv_comm pow_inv_comm
+#align nsmul_neg_comm nsmul_neg_comm
 
 /- warning: inv_pow_sub -> inv_pow_sub is a dubious translation:
 lean 3 declaration is
@@ -622,6 +661,7 @@ Case conversion may be inaccurate. Consider using '#align inv_pow_sub inv_pow_su
 theorem inv_pow_sub (a : G) {m n : ℕ} (h : n ≤ m) : a⁻¹ ^ (m - n) = (a ^ m)⁻¹ * a ^ n := by
   rw [pow_sub a⁻¹ h, inv_pow, inv_pow, inv_inv]
 #align inv_pow_sub inv_pow_sub
+#align sub_nsmul_neg sub_nsmul_neg
 
 end Group
 
@@ -670,6 +710,7 @@ theorem SemiconjBy.zpow_right [Group G] {a x y : G} (h : SemiconjBy a x y) :
   | (n : ℕ) => by simp [zpow_ofNat, h.pow_right n]
   | -[n+1] => by simp [(h.pow_right n.succ).inv_right]
 #align semiconj_by.zpow_right SemiconjBy.zpow_right
+#align add_semiconj_by.zsmul_right AddSemiconjBy.zsmul_right
 
 namespace Commute
 
@@ -685,6 +726,7 @@ Case conversion may be inaccurate. Consider using '#align commute.zpow_right Com
 theorem zpow_right (h : Commute a b) (m : ℤ) : Commute a (b ^ m) :=
   h.zpow_right m
 #align commute.zpow_right Commute.zpow_right
+#align add_commute.zsmul_right AddCommute.zsmul_right
 
 /- warning: commute.zpow_left -> Commute.zpow_left is a dubious translation:
 lean 3 declaration is
@@ -696,6 +738,7 @@ Case conversion may be inaccurate. Consider using '#align commute.zpow_left Comm
 theorem zpow_left (h : Commute a b) (m : ℤ) : Commute (a ^ m) b :=
   (h.symm.zpow_right m).symm
 #align commute.zpow_left Commute.zpow_left
+#align add_commute.zsmul_left AddCommute.zsmul_left
 
 /- warning: commute.zpow_zpow -> Commute.zpow_zpow is a dubious translation:
 lean 3 declaration is
@@ -707,6 +750,7 @@ Case conversion may be inaccurate. Consider using '#align commute.zpow_zpow Comm
 theorem zpow_zpow (h : Commute a b) (m n : ℤ) : Commute (a ^ m) (b ^ n) :=
   (h.zpow_left m).zpow_right n
 #align commute.zpow_zpow Commute.zpow_zpow
+#align add_commute.zsmul_zsmul AddCommute.zsmul_zsmul
 
 variable (a) (m n : ℤ)
 
@@ -720,6 +764,7 @@ Case conversion may be inaccurate. Consider using '#align commute.self_zpow Comm
 theorem self_zpow : Commute a (a ^ n) :=
   (Commute.refl a).zpow_right n
 #align commute.self_zpow Commute.self_zpow
+#align add_commute.self_zsmul AddCommute.self_zsmul
 
 /- warning: commute.zpow_self -> Commute.zpow_self is a dubious translation:
 lean 3 declaration is
@@ -731,6 +776,7 @@ Case conversion may be inaccurate. Consider using '#align commute.zpow_self Comm
 theorem zpow_self : Commute (a ^ n) a :=
   (Commute.refl a).zpow_left n
 #align commute.zpow_self Commute.zpow_self
+#align add_commute.zsmul_self AddCommute.zsmul_self
 
 /- warning: commute.zpow_zpow_self -> Commute.zpow_zpow_self is a dubious translation:
 lean 3 declaration is
@@ -742,6 +788,7 @@ Case conversion may be inaccurate. Consider using '#align commute.zpow_zpow_self
 theorem zpow_zpow_self : Commute (a ^ m) (a ^ n) :=
   (Commute.refl a).zpow_zpow m n
 #align commute.zpow_zpow_self Commute.zpow_zpow_self
+#align add_commute.zsmul_zsmul_self AddCommute.zsmul_zsmul_self
 
 end Commute
 

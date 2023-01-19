@@ -34,6 +34,7 @@ variable {α : Type _} {β : Type _} {γ : Type _} {M : Type _} [Monoid M] {N : 
 def FreeMonoid (α) :=
   List α
 #align free_monoid FreeMonoid
+#align free_add_monoid FreeAddMonoid
 -/
 
 namespace FreeMonoid
@@ -48,6 +49,7 @@ instance [DecidableEq α] : DecidableEq (FreeMonoid α) :=
 def toList : FreeMonoid α ≃ List α :=
   Equiv.refl _
 #align free_monoid.to_list FreeMonoid.toList
+#align free_add_monoid.to_list FreeAddMonoid.toList
 -/
 
 #print FreeMonoid.ofList /-
@@ -56,6 +58,7 @@ def toList : FreeMonoid α ≃ List α :=
 def ofList : List α ≃ FreeMonoid α :=
   Equiv.refl _
 #align free_monoid.of_list FreeMonoid.ofList
+#align free_add_monoid.of_list FreeAddMonoid.ofList
 -/
 
 #print FreeMonoid.toList_symm /-
@@ -163,6 +166,7 @@ theorem ofList_join (xs : List (List α)) : ofList xs.join = (xs.map ofList).Pro
 def of (x : α) : FreeMonoid α :=
   ofList [x]
 #align free_monoid.of FreeMonoid.of
+#align free_add_monoid.of FreeAddMonoid.of
 -/
 
 #print FreeMonoid.toList_of /-
@@ -198,6 +202,7 @@ theorem toList_of_mul (x : α) (xs : FreeMonoid α) : toList (of x * xs) = x :: 
 theorem of_injective : Function.Injective (@of α) :=
   List.singleton_injective
 #align free_monoid.of_injective FreeMonoid.of_injective
+#align free_add_monoid.of_injective FreeAddMonoid.of_injective
 -/
 
 /- warning: free_monoid.rec_on -> FreeMonoid.recOn is a dubious translation:
@@ -215,6 +220,7 @@ def recOn {C : FreeMonoid α → Sort _} (xs : FreeMonoid α) (h0 : C 1)
     (ih : ∀ x xs, C xs → C (of x * xs)) : C xs :=
   List.recOn xs h0 ih
 #align free_monoid.rec_on FreeMonoid.recOn
+#align free_add_monoid.rec_on FreeAddMonoid.recOn
 
 /- warning: free_monoid.rec_on_one -> FreeMonoid.recOn_one is a dubious translation:
 lean 3 declaration is
@@ -255,6 +261,7 @@ def casesOn {C : FreeMonoid α → Sort _} (xs : FreeMonoid α) (h0 : C 1)
     (ih : ∀ x xs, C (of x * xs)) : C xs :=
   List.casesOn xs h0 ih
 #align free_monoid.cases_on FreeMonoid.casesOn
+#align free_add_monoid.cases_on FreeAddMonoid.casesOn
 
 /- warning: free_monoid.cases_on_one -> FreeMonoid.casesOn_one is a dubious translation:
 lean 3 declaration is
@@ -292,6 +299,7 @@ theorem hom_eq ⦃f g : FreeMonoid α →* M⦄ (h : ∀ x, f (of x) = g (of x))
     recOn l (f.map_one.trans g.map_one.symm) fun x xs hxs => by
       simp only [h, hxs, MonoidHom.map_mul]
 #align free_monoid.hom_eq FreeMonoid.hom_eq
+#align free_add_monoid.hom_eq FreeAddMonoid.hom_eq
 
 #print FreeMonoid.prodAux /-
 /-- A variant of `list.prod` that has `[x].prod = x` true definitionally.
@@ -302,6 +310,7 @@ The purpose is to make `free_monoid.lift_eval_of` true by `rfl`. -/
 def prodAux {M} [Monoid M] (l : List M) : M :=
   l.recOn 1 fun x xs (_ : M) => List.foldl (· * ·) x xs
 #align free_monoid.prod_aux FreeMonoid.prodAux
+#align free_add_monoid.sum_aux FreeAddMonoid.sumAux
 -/
 
 @[to_additive]
@@ -309,6 +318,7 @@ theorem prod_aux_eq : ∀ l : List M, FreeMonoid.prodAux l = l.Prod
   | [] => rfl
   | x :: xs => congr_arg (fun x => List.foldl (· * ·) x xs) (one_mul _).symm
 #align free_monoid.prod_aux_eq FreeMonoid.prod_aux_eq
+#align free_add_monoid.sum_aux_eq FreeAddMonoid.sum_aux_eq
 
 /- warning: free_monoid.lift -> FreeMonoid.lift is a dubious translation:
 lean 3 declaration is
@@ -328,6 +338,7 @@ def lift : (α → M) ≃ (FreeMonoid α →* M)
   left_inv f := rfl
   right_inv f := hom_eq fun x => rfl
 #align free_monoid.lift FreeMonoid.lift
+#align free_add_monoid.lift FreeAddMonoid.lift
 
 /- warning: free_monoid.lift_symm_apply -> FreeMonoid.lift_symm_apply is a dubious translation:
 lean 3 declaration is
@@ -339,6 +350,7 @@ Case conversion may be inaccurate. Consider using '#align free_monoid.lift_symm_
 theorem lift_symm_apply (f : FreeMonoid α →* M) : lift.symm f = f ∘ of :=
   rfl
 #align free_monoid.lift_symm_apply FreeMonoid.lift_symm_apply
+#align free_add_monoid.lift_symm_apply FreeAddMonoid.lift_symm_apply
 
 /- warning: free_monoid.lift_apply -> FreeMonoid.lift_apply is a dubious translation:
 lean 3 declaration is
@@ -350,6 +362,7 @@ Case conversion may be inaccurate. Consider using '#align free_monoid.lift_apply
 theorem lift_apply (f : α → M) (l : FreeMonoid α) : lift f l = (l.toList.map f).Prod :=
   prod_aux_eq _
 #align free_monoid.lift_apply FreeMonoid.lift_apply
+#align free_add_monoid.lift_apply FreeAddMonoid.lift_apply
 
 /- warning: free_monoid.lift_comp_of -> FreeMonoid.lift_comp_of is a dubious translation:
 lean 3 declaration is
@@ -361,6 +374,7 @@ Case conversion may be inaccurate. Consider using '#align free_monoid.lift_comp_
 theorem lift_comp_of (f : α → M) : lift f ∘ of = f :=
   rfl
 #align free_monoid.lift_comp_of FreeMonoid.lift_comp_of
+#align free_add_monoid.lift_comp_of FreeAddMonoid.lift_comp_of
 
 /- warning: free_monoid.lift_eval_of -> FreeMonoid.lift_eval_of is a dubious translation:
 lean 3 declaration is
@@ -372,6 +386,7 @@ Case conversion may be inaccurate. Consider using '#align free_monoid.lift_eval_
 theorem lift_eval_of (f : α → M) (x : α) : lift f (of x) = f x :=
   rfl
 #align free_monoid.lift_eval_of FreeMonoid.lift_eval_of
+#align free_add_monoid.lift_eval_of FreeAddMonoid.lift_eval_of
 
 /- warning: free_monoid.lift_restrict -> FreeMonoid.lift_restrict is a dubious translation:
 lean 3 declaration is
@@ -383,6 +398,7 @@ Case conversion may be inaccurate. Consider using '#align free_monoid.lift_restr
 theorem lift_restrict (f : FreeMonoid α →* M) : lift (f ∘ of) = f :=
   lift.apply_symm_apply f
 #align free_monoid.lift_restrict FreeMonoid.lift_restrict
+#align free_add_monoid.lift_restrict FreeAddMonoid.lift_restrict
 
 /- warning: free_monoid.comp_lift -> FreeMonoid.comp_lift is a dubious translation:
 lean 3 declaration is
@@ -396,6 +412,7 @@ theorem comp_lift (g : M →* N) (f : α → M) : g.comp (lift f) = lift (g ∘ 
   ext
   simp
 #align free_monoid.comp_lift FreeMonoid.comp_lift
+#align free_add_monoid.comp_lift FreeAddMonoid.comp_lift
 
 /- warning: free_monoid.hom_map_lift -> FreeMonoid.hom_map_lift is a dubious translation:
 lean 3 declaration is
@@ -407,6 +424,7 @@ Case conversion may be inaccurate. Consider using '#align free_monoid.hom_map_li
 theorem hom_map_lift (g : M →* N) (f : α → M) (x : FreeMonoid α) : g (lift f x) = lift (g ∘ f) x :=
   MonoidHom.ext_iff.1 (comp_lift g f) x
 #align free_monoid.hom_map_lift FreeMonoid.hom_map_lift
+#align free_add_monoid.hom_map_lift FreeAddMonoid.hom_map_lift
 
 /- warning: free_monoid.mk_mul_action -> FreeMonoid.mkMulAction is a dubious translation:
 lean 3 declaration is
@@ -422,6 +440,7 @@ def mkMulAction (f : α → β → β) : MulAction (FreeMonoid α) β
   one_smul x := rfl
   mul_smul xs ys b := List.foldr_append _ _ _ _
 #align free_monoid.mk_mul_action FreeMonoid.mkMulAction
+#align free_add_monoid.mk_add_action FreeAddMonoid.mkAddAction
 
 /- warning: free_monoid.smul_def -> FreeMonoid.smul_def is a dubious translation:
 lean 3 declaration is
@@ -435,6 +454,7 @@ theorem smul_def (f : α → β → β) (l : FreeMonoid α) (b : β) :
     l • b = l.to_list.foldr f b :=
   rfl
 #align free_monoid.smul_def FreeMonoid.smul_def
+#align free_add_monoid.vadd_def FreeAddMonoid.vadd_def
 
 /- warning: free_monoid.of_list_smul -> FreeMonoid.ofList_smul is a dubious translation:
 lean 3 declaration is
@@ -457,6 +477,7 @@ theorem of_smul (f : α → β → β) (x : α) (y : β) :
       f x y :=
   rfl
 #align free_monoid.of_smul FreeMonoid.of_smul
+#align free_add_monoid.of_vadd FreeAddMonoid.of_vadd
 -/
 
 /- warning: free_monoid.map -> FreeMonoid.map is a dubious translation:
@@ -475,6 +496,7 @@ def map (f : α → β) : FreeMonoid α →* FreeMonoid β
   map_one' := rfl
   map_mul' l₁ l₂ := List.map_append _ _ _
 #align free_monoid.map FreeMonoid.map
+#align free_add_monoid.map FreeAddMonoid.map
 
 /- warning: free_monoid.map_of -> FreeMonoid.map_of is a dubious translation:
 lean 3 declaration is
@@ -486,6 +508,7 @@ Case conversion may be inaccurate. Consider using '#align free_monoid.map_of Fre
 theorem map_of (f : α → β) (x : α) : map f (of x) = of (f x) :=
   rfl
 #align free_monoid.map_of FreeMonoid.map_of
+#align free_add_monoid.map_of FreeAddMonoid.map_of
 
 /- warning: free_monoid.to_list_map -> FreeMonoid.toList_map is a dubious translation:
 lean 3 declaration is
@@ -519,6 +542,7 @@ Case conversion may be inaccurate. Consider using '#align free_monoid.lift_of_co
 theorem lift_of_comp_eq_map (f : α → β) : (lift fun x => of (f x)) = map f :=
   hom_eq fun x => rfl
 #align free_monoid.lift_of_comp_eq_map FreeMonoid.lift_of_comp_eq_map
+#align free_add_monoid.lift_of_comp_eq_map FreeAddMonoid.lift_of_comp_eq_map
 
 /- warning: free_monoid.map_comp -> FreeMonoid.map_comp is a dubious translation:
 lean 3 declaration is
@@ -530,6 +554,7 @@ Case conversion may be inaccurate. Consider using '#align free_monoid.map_comp F
 theorem map_comp (g : β → γ) (f : α → β) : map (g ∘ f) = (map g).comp (map f) :=
   hom_eq fun x => rfl
 #align free_monoid.map_comp FreeMonoid.map_comp
+#align free_add_monoid.map_comp FreeAddMonoid.map_comp
 
 /- warning: free_monoid.map_id -> FreeMonoid.map_id is a dubious translation:
 lean 3 declaration is
@@ -541,6 +566,7 @@ Case conversion may be inaccurate. Consider using '#align free_monoid.map_id Fre
 theorem map_id : map (@id α) = MonoidHom.id (FreeMonoid α) :=
   hom_eq fun x => rfl
 #align free_monoid.map_id FreeMonoid.map_id
+#align free_add_monoid.map_id FreeAddMonoid.map_id
 
 end FreeMonoid
 

@@ -570,16 +570,19 @@ instance [One β] : One (α →ₘ[μ] β) :=
 theorem one_def [One β] : (1 : α →ₘ[μ] β) = mk (fun a : α => 1) aeStronglyMeasurableConst :=
   rfl
 #align measure_theory.ae_eq_fun.one_def MeasureTheory.AeEqFun.one_def
+#align measure_theory.ae_eq_fun.zero_def MeasureTheory.AeEqFun.zero_def
 
 @[to_additive]
 theorem coe_fn_one [One β] : ⇑(1 : α →ₘ[μ] β) =ᵐ[μ] 1 :=
   coe_fn_const _ _
 #align measure_theory.ae_eq_fun.coe_fn_one MeasureTheory.AeEqFun.coe_fn_one
+#align measure_theory.ae_eq_fun.coe_fn_zero MeasureTheory.AeEqFun.coe_fn_zero
 
 @[simp, to_additive]
 theorem one_to_germ [One β] : (1 : α →ₘ[μ] β).toGerm = 1 :=
   rfl
 #align measure_theory.ae_eq_fun.one_to_germ MeasureTheory.AeEqFun.one_to_germ
+#align measure_theory.ae_eq_fun.zero_to_germ MeasureTheory.AeEqFun.zero_to_germ
 
 -- Note we set up the scalar actions before the `monoid` structures in case we want to
 -- try to override the `nsmul` or `zsmul` fields in future.
@@ -632,16 +635,19 @@ theorem mk_mul_mk (f g : α → γ) (hf : AeStronglyMeasurable f μ) (hg : AeStr
     (mk f hf : α →ₘ[μ] γ) * mk g hg = mk (f * g) (hf.mul hg) :=
   rfl
 #align measure_theory.ae_eq_fun.mk_mul_mk MeasureTheory.AeEqFun.mk_mul_mk
+#align measure_theory.ae_eq_fun.mk_add_mk MeasureTheory.AeEqFun.mk_add_mk
 
 @[to_additive]
 theorem coe_fn_mul (f g : α →ₘ[μ] γ) : ⇑(f * g) =ᵐ[μ] f * g :=
   coe_fn_comp₂ _ _ _ _
 #align measure_theory.ae_eq_fun.coe_fn_mul MeasureTheory.AeEqFun.coe_fn_mul
+#align measure_theory.ae_eq_fun.coe_fn_add MeasureTheory.AeEqFun.coe_fn_add
 
 @[simp, to_additive]
 theorem mul_to_germ (f g : α →ₘ[μ] γ) : (f * g).toGerm = f.toGerm * g.toGerm :=
   comp₂_to_germ _ _ _ _
 #align measure_theory.ae_eq_fun.mul_to_germ MeasureTheory.AeEqFun.mul_to_germ
+#align measure_theory.ae_eq_fun.add_to_germ MeasureTheory.AeEqFun.add_to_germ
 
 end Mul
 
@@ -685,6 +691,7 @@ def toGermMonoidHom : (α →ₘ[μ] γ) →* μ.ae.Germ γ
   map_one' := one_to_germ
   map_mul' := mul_to_germ
 #align measure_theory.ae_eq_fun.to_germ_monoid_hom MeasureTheory.AeEqFun.toGermMonoidHom
+#align measure_theory.ae_eq_fun.to_germ_add_monoid_hom MeasureTheory.AeEqFun.to_germ_add_monoid_hom
 
 end Monoid
 
@@ -706,16 +713,19 @@ instance : Inv (α →ₘ[μ] γ) :=
 theorem inv_mk (f : α → γ) (hf) : (mk f hf : α →ₘ[μ] γ)⁻¹ = mk f⁻¹ hf.inv :=
   rfl
 #align measure_theory.ae_eq_fun.inv_mk MeasureTheory.AeEqFun.inv_mk
+#align measure_theory.ae_eq_fun.neg_mk MeasureTheory.AeEqFun.neg_mk
 
 @[to_additive]
 theorem coe_fn_inv (f : α →ₘ[μ] γ) : ⇑f⁻¹ =ᵐ[μ] f⁻¹ :=
   coe_fn_comp _ _ _
 #align measure_theory.ae_eq_fun.coe_fn_inv MeasureTheory.AeEqFun.coe_fn_inv
+#align measure_theory.ae_eq_fun.coe_fn_neg MeasureTheory.AeEqFun.coe_fn_neg
 
 @[to_additive]
 theorem inv_to_germ (f : α →ₘ[μ] γ) : f⁻¹.toGerm = f.toGerm⁻¹ :=
   comp_to_germ _ _ _
 #align measure_theory.ae_eq_fun.inv_to_germ MeasureTheory.AeEqFun.inv_to_germ
+#align measure_theory.ae_eq_fun.neg_to_germ MeasureTheory.AeEqFun.neg_to_germ
 
 end Inv
 
@@ -730,16 +740,19 @@ theorem mk_div (f g : α → γ) (hf : AeStronglyMeasurable f μ) (hg : AeStrong
     mk (f / g) (hf.div hg) = (mk f hf : α →ₘ[μ] γ) / mk g hg :=
   rfl
 #align measure_theory.ae_eq_fun.mk_div MeasureTheory.AeEqFun.mk_div
+#align measure_theory.ae_eq_fun.mk_sub MeasureTheory.AeEqFun.mk_sub
 
 @[to_additive]
 theorem coe_fn_div (f g : α →ₘ[μ] γ) : ⇑(f / g) =ᵐ[μ] f / g :=
   coe_fn_comp₂ _ _ _ _
 #align measure_theory.ae_eq_fun.coe_fn_div MeasureTheory.AeEqFun.coe_fn_div
+#align measure_theory.ae_eq_fun.coe_fn_sub MeasureTheory.AeEqFun.coe_fn_sub
 
 @[to_additive]
 theorem div_to_germ (f g : α →ₘ[μ] γ) : (f / g).toGerm = f.toGerm / g.toGerm :=
   comp₂_to_germ _ _ _ _
 #align measure_theory.ae_eq_fun.div_to_germ MeasureTheory.AeEqFun.div_to_germ
+#align measure_theory.ae_eq_fun.sub_to_germ MeasureTheory.AeEqFun.sub_to_germ
 
 end Div
 
@@ -794,12 +807,12 @@ instance [Monoid 𝕜] [MulAction 𝕜 γ] [HasContinuousConstSmul 𝕜 γ] : Mu
 
 instance [Monoid 𝕜] [AddMonoid γ] [HasContinuousAdd γ] [DistribMulAction 𝕜 γ]
     [HasContinuousConstSmul 𝕜 γ] : DistribMulAction 𝕜 (α →ₘ[μ] γ) :=
-  to_germ_injective.DistribMulAction (toGermAddMonoidHom : (α →ₘ[μ] γ) →+ _) fun c : 𝕜 =>
+  to_germ_injective.DistribMulAction (to_germ_add_monoid_hom : (α →ₘ[μ] γ) →+ _) fun c : 𝕜 =>
     smul_to_germ c
 
 instance [Semiring 𝕜] [AddCommMonoid γ] [HasContinuousAdd γ] [Module 𝕜 γ]
     [HasContinuousConstSmul 𝕜 γ] : Module 𝕜 (α →ₘ[μ] γ) :=
-  to_germ_injective.Module 𝕜 (toGermAddMonoidHom : (α →ₘ[μ] γ) →+ _) smul_to_germ
+  to_germ_injective.Module 𝕜 (to_germ_add_monoid_hom : (α →ₘ[μ] γ) →+ _) smul_to_germ
 
 end Module
 
@@ -907,6 +920,7 @@ def toAeEqFunMulHom : C(α, β) →* α →ₘ[μ] β
   map_mul' f g :=
     AeEqFun.mk_mul_mk _ _ f.Continuous.AeStronglyMeasurable g.Continuous.AeStronglyMeasurable
 #align continuous_map.to_ae_eq_fun_mul_hom ContinuousMap.toAeEqFunMulHom
+#align continuous_map.to_ae_eq_fun_add_hom ContinuousMap.to_ae_eq_fun_add_hom
 
 variable {𝕜 : Type _} [Semiring 𝕜]
 
@@ -916,7 +930,7 @@ variable [TopologicalSpace γ] [PseudoMetrizableSpace γ] [AddCommGroup γ] [Mod
 /-- The linear map from the group of continuous maps from `α` to `β` to the group of equivalence
 classes of `μ`-almost-everywhere measurable functions. -/
 def toAeEqFunLinearMap : C(α, γ) →ₗ[𝕜] α →ₘ[μ] γ :=
-  { toAeEqFunAddHom μ with
+  { to_ae_eq_fun_add_hom μ with
     map_smul' := fun c f => AeEqFun.smul_mk c f f.Continuous.AeStronglyMeasurable }
 #align continuous_map.to_ae_eq_fun_linear_map ContinuousMap.toAeEqFunLinearMap
 

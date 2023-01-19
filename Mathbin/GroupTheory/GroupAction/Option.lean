@@ -45,6 +45,7 @@ instance : SMul M (Option α) :=
 theorem smul_def : a • x = x.map ((· • ·) a) :=
   rfl
 #align option.smul_def Option.smul_def
+#align option.vadd_def Option.vadd_def
 -/
 
 #print Option.smul_none /-
@@ -52,6 +53,7 @@ theorem smul_def : a • x = x.map ((· • ·) a) :=
 theorem smul_none : a • (none : Option α) = none :=
   rfl
 #align option.smul_none Option.smul_none
+#align option.vadd_none Option.vadd_none
 -/
 
 #print Option.smul_some /-
@@ -59,6 +61,7 @@ theorem smul_none : a • (none : Option α) = none :=
 theorem smul_some : a • some b = some (a • b) :=
   rfl
 #align option.smul_some Option.smul_some
+#align option.vadd_some Option.vadd_some
 -/
 
 @[to_additive]

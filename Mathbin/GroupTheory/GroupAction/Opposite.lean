@@ -105,6 +105,7 @@ See also `monoid.to_opposite_mul_action` and `monoid_with_zero.to_opposite_mul_a
 instance Mul.toHasOppositeSMul [Mul α] : SMul αᵐᵒᵖ α :=
   ⟨fun c x => x * c.unop⟩
 #align has_mul.to_has_opposite_smul Mul.toHasOppositeSMul
+#align has_add.to_has_opposite_vadd Add.toHasOppositeVAdd
 -/
 
 #print op_smul_eq_mul /-
@@ -112,6 +113,7 @@ instance Mul.toHasOppositeSMul [Mul α] : SMul αᵐᵒᵖ α :=
 theorem op_smul_eq_mul [Mul α] {a a' : α} : op a • a' = a' * a :=
   rfl
 #align op_smul_eq_mul op_smul_eq_mul
+#align op_vadd_eq_add op_vadd_eq_add
 -/
 
 #print MulOpposite.smul_eq_mul_unop /-
@@ -119,6 +121,7 @@ theorem op_smul_eq_mul [Mul α] {a a' : α} : op a • a' = a' * a :=
 theorem MulOpposite.smul_eq_mul_unop [Mul α] {a : αᵐᵒᵖ} {a' : α} : a • a' = a' * a.unop :=
   rfl
 #align mul_opposite.smul_eq_mul_unop MulOpposite.smul_eq_mul_unop
+#align add_opposite.vadd_eq_add_unop AddOpposite.vadd_eq_add_unop
 -/
 
 /- warning: mul_action.opposite_regular.is_pretransitive -> MulAction.OppositeRegular.isPretransitive is a dubious translation:
@@ -133,6 +136,7 @@ instance MulAction.OppositeRegular.isPretransitive {G : Type _} [Group G] :
     MulAction.IsPretransitive Gᵐᵒᵖ G :=
   ⟨fun x y => ⟨op (x⁻¹ * y), mul_inv_cancel_left _ _⟩⟩
 #align mul_action.opposite_regular.is_pretransitive MulAction.OppositeRegular.isPretransitive
+#align add_action.opposite_regular.is_pretransitive AddAction.OppositeRegular.isPretransitive
 
 /- warning: semigroup.opposite_smul_comm_class -> Semigroup.opposite_smulCommClass is a dubious translation:
 lean 3 declaration is
@@ -144,6 +148,7 @@ Case conversion may be inaccurate. Consider using '#align semigroup.opposite_smu
 instance Semigroup.opposite_smulCommClass [Semigroup α] : SMulCommClass αᵐᵒᵖ α α
     where smul_comm x y z := mul_assoc _ _ _
 #align semigroup.opposite_smul_comm_class Semigroup.opposite_smulCommClass
+#align add_semigroup.opposite_vadd_comm_class AddSemigroup.opposite_vaddCommClass
 
 /- warning: semigroup.opposite_smul_comm_class' -> Semigroup.opposite_smulCommClass' is a dubious translation:
 lean 3 declaration is
@@ -155,6 +160,7 @@ Case conversion may be inaccurate. Consider using '#align semigroup.opposite_smu
 instance Semigroup.opposite_smulCommClass' [Semigroup α] : SMulCommClass α αᵐᵒᵖ α :=
   SMulCommClass.symm _ _ _
 #align semigroup.opposite_smul_comm_class' Semigroup.opposite_smulCommClass'
+#align add_semigroup.opposite_vadd_comm_class' AddSemigroup.opposite_vaddCommClass'
 
 /- warning: comm_semigroup.is_central_scalar -> CommSemigroup.isCentralScalar is a dubious translation:
 lean 3 declaration is
@@ -180,6 +186,7 @@ instance Monoid.toOppositeMulAction [Monoid α] : MulAction αᵐᵒᵖ α
   one_smul := mul_one
   mul_smul x y r := (mul_assoc _ _ _).symm
 #align monoid.to_opposite_mul_action Monoid.toOppositeMulAction
+#align add_monoid.to_opposite_add_action AddMonoid.toOppositeAddAction
 
 #print IsScalarTower.opposite_mid /-
 @[to_additive]
@@ -187,6 +194,7 @@ instance IsScalarTower.opposite_mid {M N} [Mul N] [SMul M N] [SMulCommClass M N 
     IsScalarTower M Nᵐᵒᵖ N :=
   ⟨fun x y z => mul_smul_comm _ _ _⟩
 #align is_scalar_tower.opposite_mid IsScalarTower.opposite_mid
+#align vadd_assoc_class.opposite_mid VAddAssocClass.opposite_mid
 -/
 
 #print SMulCommClass.opposite_mid /-
@@ -197,6 +205,7 @@ instance SMulCommClass.opposite_mid {M N} [Mul N] [SMul M N] [IsScalarTower M N 
     induction y using MulOpposite.rec'
     simp [smul_mul_assoc]⟩
 #align smul_comm_class.opposite_mid SMulCommClass.opposite_mid
+#align vadd_comm_class.opposite_mid VAddCommClass.opposite_mid
 -/
 
 -- The above instance does not create an unwanted diamond, the two paths to
@@ -215,6 +224,8 @@ Case conversion may be inaccurate. Consider using '#align left_cancel_monoid.to_
 instance LeftCancelMonoid.toFaithfulSMul_opposite [LeftCancelMonoid α] : FaithfulSMul αᵐᵒᵖ α :=
   ⟨fun x y h => unop_injective <| mul_left_cancel (h 1)⟩
 #align left_cancel_monoid.to_has_faithful_opposite_scalar LeftCancelMonoid.toFaithfulSMul_opposite
+#align
+  add_left_cancel_monoid.to_has_faithful_opposite_scalar AddLeftCancelMonoid.toFaithfulVAdd_opposite
 
 /- warning: cancel_monoid_with_zero.to_has_faithful_opposite_scalar -> CancelMonoidWithZero.toFaithfulSMul_opposite is a dubious translation:
 lean 3 declaration is

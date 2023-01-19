@@ -48,6 +48,7 @@ Case conversion may be inaccurate. Consider using '#align sigma.smul_def Sigma.s
 theorem smul_def : a • x = x.map id fun i => (· • ·) a :=
   rfl
 #align sigma.smul_def Sigma.smul_def
+#align sigma.vadd_def Sigma.vadd_def
 
 /- warning: sigma.smul_mk -> Sigma.smul_mk is a dubious translation:
 lean 3 declaration is
@@ -59,6 +60,7 @@ Case conversion may be inaccurate. Consider using '#align sigma.smul_mk Sigma.sm
 theorem smul_mk : a • mk i b = ⟨i, a • b⟩ :=
   rfl
 #align sigma.smul_mk Sigma.smul_mk
+#align sigma.vadd_mk Sigma.vadd_mk
 
 @[to_additive]
 instance [SMul M N] [∀ i, IsScalarTower M N (α i)] : IsScalarTower M N (Σi, α i) :=

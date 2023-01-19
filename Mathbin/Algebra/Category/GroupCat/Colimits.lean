@@ -331,7 +331,7 @@ end AddCommGroupCat.Colimits
 
 namespace AddCommGroupCat
 
-open QuotientAddGroup
+open quotientAddGroup
 
 /-- The categorical cokernel of a morphism in `AddCommGroup`
 agrees with the usual group-theoretical quotient.
@@ -349,7 +349,7 @@ noncomputable def cokernelIsoQuotient {G H : AddCommGroupCat.{u}} (f : G ⟶ H) 
         exact -x
         simp only [add_zero, AddMonoidHom.map_neg])
   inv :=
-    QuotientAddGroup.lift _ (cokernel.π f)
+    quotientAddGroup.lift _ (cokernel.π f)
       (by
         intro x H_1
         cases H_1

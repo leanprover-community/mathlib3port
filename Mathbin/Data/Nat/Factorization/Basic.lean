@@ -715,6 +715,7 @@ theorem prod_factors_gcd_mul_prod_factors_mul {β : Type _} [CommMonoid β] (m n
   · apply factors_mul_to_finset <;> assumption
   · simp only [← support_factorization, factorization_gcd hn0 hm0, Finsupp.support_inf]
 #align nat.prod_factors_gcd_mul_prod_factors_mul Nat.prod_factors_gcd_mul_prod_factors_mul
+#align nat.sum_factors_gcd_add_sum_factors_mul Nat.sum_factors_gcd_add_sum_factors_mul
 
 theorem set_of_pow_dvd_eq_Icc_factorization {n p : ℕ} (pp : p.Prime) (hn : n ≠ 0) :
     { i : ℕ | i ≠ 0 ∧ p ^ i ∣ n } = Set.Icc 1 (n.factorization p) :=

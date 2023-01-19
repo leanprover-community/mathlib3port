@@ -33,6 +33,7 @@ Case conversion may be inaccurate. Consider using '#align max_one_div_max_inv_on
 theorem max_one_div_max_inv_one_eq_self (a : α) : max a 1 / max a⁻¹ 1 = a := by
   rcases le_total a 1 with (h | h) <;> simp [h]
 #align max_one_div_max_inv_one_eq_self max_one_div_max_inv_one_eq_self
+#align max_zero_sub_max_neg_zero_eq_self max_zero_sub_max_neg_zero_eq_self
 
 /- warning: max_zero_sub_eq_self -> max_zero_sub_eq_self is a dubious translation:
 lean 3 declaration is
@@ -59,6 +60,7 @@ Case conversion may be inaccurate. Consider using '#align min_inv_inv' min_inv_i
 theorem min_inv_inv' (a b : α) : min a⁻¹ b⁻¹ = (max a b)⁻¹ :=
   Eq.symm <| @Monotone.map_max α αᵒᵈ _ _ Inv.inv a b fun a b => inv_le_inv_iff.mpr
 #align min_inv_inv' min_inv_inv'
+#align min_neg_neg min_neg_neg
 
 /- warning: max_inv_inv' -> max_inv_inv' is a dubious translation:
 lean 3 declaration is
@@ -70,6 +72,7 @@ Case conversion may be inaccurate. Consider using '#align max_inv_inv' max_inv_i
 theorem max_inv_inv' (a b : α) : max a⁻¹ b⁻¹ = (min a b)⁻¹ :=
   Eq.symm <| @Monotone.map_min α αᵒᵈ _ _ Inv.inv a b fun a b => inv_le_inv_iff.mpr
 #align max_inv_inv' max_inv_inv'
+#align max_neg_neg max_neg_neg
 
 /- warning: min_div_div_right' -> min_div_div_right' is a dubious translation:
 lean 3 declaration is
@@ -81,6 +84,7 @@ Case conversion may be inaccurate. Consider using '#align min_div_div_right' min
 theorem min_div_div_right' (a b c : α) : min (a / c) (b / c) = min a b / c := by
   simpa only [div_eq_mul_inv] using min_mul_mul_right a b c⁻¹
 #align min_div_div_right' min_div_div_right'
+#align min_sub_sub_right min_sub_sub_right
 
 /- warning: max_div_div_right' -> max_div_div_right' is a dubious translation:
 lean 3 declaration is
@@ -92,6 +96,7 @@ Case conversion may be inaccurate. Consider using '#align max_div_div_right' max
 theorem max_div_div_right' (a b c : α) : max (a / c) (b / c) = max a b / c := by
   simpa only [div_eq_mul_inv] using max_mul_mul_right a b c⁻¹
 #align max_div_div_right' max_div_div_right'
+#align max_sub_sub_right max_sub_sub_right
 
 /- warning: min_div_div_left' -> min_div_div_left' is a dubious translation:
 lean 3 declaration is
@@ -103,6 +108,7 @@ Case conversion may be inaccurate. Consider using '#align min_div_div_left' min_
 theorem min_div_div_left' (a b c : α) : min (a / b) (a / c) = a / max b c := by
   simp only [div_eq_mul_inv, min_mul_mul_left, min_inv_inv']
 #align min_div_div_left' min_div_div_left'
+#align min_sub_sub_left min_sub_sub_left
 
 /- warning: max_div_div_left' -> max_div_div_left' is a dubious translation:
 lean 3 declaration is
@@ -114,6 +120,7 @@ Case conversion may be inaccurate. Consider using '#align max_div_div_left' max_
 theorem max_div_div_left' (a b c : α) : max (a / b) (a / c) = a / min b c := by
   simp only [div_eq_mul_inv, max_mul_mul_left, max_inv_inv']
 #align max_div_div_left' max_div_div_left'
+#align max_sub_sub_left max_sub_sub_left
 
 end LinearOrderedCommGroup
 

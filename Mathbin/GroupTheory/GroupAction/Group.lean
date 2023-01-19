@@ -54,6 +54,7 @@ Case conversion may be inaccurate. Consider using '#align inv_smul_smul inv_smul
 @[simp, to_additive]
 theorem inv_smul_smul (c : α) (x : β) : c⁻¹ • c • x = x := by rw [smul_smul, mul_left_inv, one_smul]
 #align inv_smul_smul inv_smul_smul
+#align neg_vadd_vadd neg_vadd_vadd
 
 /- warning: smul_inv_smul -> smul_inv_smul is a dubious translation:
 lean 3 declaration is
@@ -65,6 +66,7 @@ Case conversion may be inaccurate. Consider using '#align smul_inv_smul smul_inv
 theorem smul_inv_smul (c : α) (x : β) : c • c⁻¹ • x = x := by
   rw [smul_smul, mul_right_inv, one_smul]
 #align smul_inv_smul smul_inv_smul
+#align vadd_neg_vadd vadd_neg_vadd
 
 #print MulAction.toPerm /-
 /-- Given an action of a group `α` on `β`, each `g : α` defines a permutation of `β`. -/
@@ -72,6 +74,7 @@ theorem smul_inv_smul (c : α) (x : β) : c • c⁻¹ • x = x := by
 def MulAction.toPerm (a : α) : Equiv.Perm β :=
   ⟨fun x => a • x, fun x => a⁻¹ • x, inv_smul_smul a, smul_inv_smul a⟩
 #align mul_action.to_perm MulAction.toPerm
+#align add_action.to_perm AddAction.toPerm
 -/
 
 /-- Given an action of an additive group `α` on `β`, each `g : α` defines a permutation of `β`. -/
@@ -149,6 +152,7 @@ Case conversion may be inaccurate. Consider using '#align inv_smul_eq_iff inv_sm
 theorem inv_smul_eq_iff {a : α} {x y : β} : a⁻¹ • x = y ↔ x = a • y :=
   (MulAction.toPerm a).symm_apply_eq
 #align inv_smul_eq_iff inv_smul_eq_iff
+#align neg_vadd_eq_iff neg_vadd_eq_iff
 
 /- warning: eq_inv_smul_iff -> eq_inv_smul_iff is a dubious translation:
 lean 3 declaration is
@@ -160,6 +164,7 @@ Case conversion may be inaccurate. Consider using '#align eq_inv_smul_iff eq_inv
 theorem eq_inv_smul_iff {a : α} {x y : β} : x = a⁻¹ • y ↔ a • x = y :=
   (MulAction.toPerm a).eq_symm_apply
 #align eq_inv_smul_iff eq_inv_smul_iff
+#align eq_neg_vadd_iff eq_neg_vadd_iff
 
 /- warning: smul_inv -> smul_inv is a dubious translation:
 lean 3 declaration is
@@ -203,6 +208,7 @@ theorem Commute.smul_left_iff [Mul β] [SMulCommClass α β β] [IsScalarTower �
 protected theorem MulAction.bijective (g : α) : Bijective ((· • ·) g : β → β) :=
   (MulAction.toPerm g).Bijective
 #align mul_action.bijective MulAction.bijective
+#align add_action.bijective AddAction.bijective
 -/
 
 #print MulAction.injective /-
@@ -210,6 +216,7 @@ protected theorem MulAction.bijective (g : α) : Bijective ((· • ·) g : β �
 protected theorem MulAction.injective (g : α) : Injective ((· • ·) g : β → β) :=
   (MulAction.bijective g).Injective
 #align mul_action.injective MulAction.injective
+#align add_action.injective AddAction.injective
 -/
 
 #print MulAction.surjective /-
@@ -217,6 +224,7 @@ protected theorem MulAction.injective (g : α) : Injective ((· • ·) g : β �
 protected theorem MulAction.surjective (g : α) : Surjective ((· • ·) g : β → β) :=
   (MulAction.bijective g).Surjective
 #align mul_action.surjective MulAction.surjective
+#align add_action.surjective AddAction.surjective
 -/
 
 #print smul_left_cancel /-
@@ -224,6 +232,7 @@ protected theorem MulAction.surjective (g : α) : Surjective ((· • ·) g : β
 theorem smul_left_cancel (g : α) {x y : β} (h : g • x = g • y) : x = y :=
   MulAction.injective g h
 #align smul_left_cancel smul_left_cancel
+#align vadd_left_cancel vadd_left_cancel
 -/
 
 #print smul_left_cancel_iff /-
@@ -231,6 +240,7 @@ theorem smul_left_cancel (g : α) {x y : β} (h : g • x = g • y) : x = y :=
 theorem smul_left_cancel_iff (g : α) {x y : β} : g • x = g • y ↔ x = y :=
   (MulAction.injective g).eq_iff
 #align smul_left_cancel_iff smul_left_cancel_iff
+#align vadd_left_cancel_iff vadd_left_cancel_iff
 -/
 
 /- warning: smul_eq_iff_eq_inv_smul -> smul_eq_iff_eq_inv_smul is a dubious translation:
@@ -243,6 +253,7 @@ Case conversion may be inaccurate. Consider using '#align smul_eq_iff_eq_inv_smu
 theorem smul_eq_iff_eq_inv_smul (g : α) {x y : β} : g • x = y ↔ x = g⁻¹ • y :=
   (MulAction.toPerm g).apply_eq_iff_eq_symm_apply
 #align smul_eq_iff_eq_inv_smul smul_eq_iff_eq_inv_smul
+#align vadd_eq_iff_eq_neg_vadd vadd_eq_iff_eq_neg_vadd
 
 end Group
 
@@ -515,6 +526,7 @@ def arrowAction {G A B : Type _} [DivisionMonoid G] [MulAction G A] : MulAction 
     intros
     simp only [mul_smul, mul_inv_rev]
 #align arrow_action arrowAction
+#align arrow_add_action arrowAddAction
 -/
 
 attribute [local instance] arrowAction
@@ -557,6 +569,7 @@ theorem smul_left_cancel {a : α} (ha : IsUnit a) {x y : β} : a • x = a • y
   let ⟨u, hu⟩ := ha
   hu ▸ smul_left_cancel_iff u
 #align is_unit.smul_left_cancel IsUnit.smul_left_cancel
+#align is_add_unit.vadd_left_cancel IsAddUnit.vadd_left_cancel
 -/
 
 end MulAction

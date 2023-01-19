@@ -63,6 +63,7 @@ class LieGroup {𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [Topo
   [Group G] [TopologicalSpace G] [ChartedSpace H G] extends HasSmoothMul I G : Prop where
   smooth_inv : Smooth I I fun a : G => a⁻¹
 #align lie_group LieGroup
+#align lie_add_group LieAddGroup
 
 section LieGroup
 
@@ -83,6 +84,7 @@ variable (I)
 theorem smooth_inv : Smooth I I fun x : G => x⁻¹ :=
   LieGroup.smooth_inv
 #align smooth_inv smooth_inv
+#align smooth_neg smooth_neg
 
 /-- A Lie group is a topological group. This is not an instance for technical reasons,
 see note [Design choices about smooth algebraic structures]. -/
@@ -91,6 +93,7 @@ see note [Design choices about smooth algebraic structures]. -/
 theorem topological_group_of_lie_group : TopologicalGroup G :=
   { has_continuous_mul_of_smooth I with continuous_inv := (smooth_inv I).Continuous }
 #align topological_group_of_lie_group topological_group_of_lie_group
+#align topological_add_group_of_lie_add_group topological_add_group_of_lie_add_group
 
 end
 
@@ -98,12 +101,14 @@ end
 theorem Smooth.inv {f : M → G} (hf : Smooth I' I f) : Smooth I' I fun x => (f x)⁻¹ :=
   (smooth_inv I).comp hf
 #align smooth.inv Smooth.inv
+#align smooth.neg Smooth.neg
 
 @[to_additive]
 theorem SmoothOn.inv {f : M → G} {s : Set M} (hf : SmoothOn I' I f s) :
     SmoothOn I' I (fun x => (f x)⁻¹) s :=
   (smooth_inv I).comp_smooth_on hf
 #align smooth_on.inv SmoothOn.inv
+#align smooth_on.neg SmoothOn.neg
 
 @[to_additive]
 theorem Smooth.div {f g : M → G} (hf : Smooth I' I f) (hg : Smooth I' I g) : Smooth I' I (f / g) :=
@@ -111,6 +116,7 @@ theorem Smooth.div {f g : M → G} (hf : Smooth I' I f) (hg : Smooth I' I g) : S
   rw [div_eq_mul_inv]
   exact ((smooth_mul I).comp (hf.prod_mk hg.inv) : _)
 #align smooth.div Smooth.div
+#align smooth.sub Smooth.sub
 
 @[to_additive]
 theorem SmoothOn.div {f g : M → G} {s : Set M} (hf : SmoothOn I' I f s) (hg : SmoothOn I' I g s) :
@@ -118,6 +124,7 @@ theorem SmoothOn.div {f g : M → G} {s : Set M} (hf : SmoothOn I' I f s) (hg : 
   rw [div_eq_mul_inv]
   exact ((smooth_mul I).comp_smooth_on (hf.prod_mk hg.inv) : _)
 #align smooth_on.div SmoothOn.div
+#align smooth_on.sub SmoothOn.sub
 
 end LieGroup
 

@@ -37,6 +37,7 @@ theorem is_zero_of_subsingleton (G : GroupCat) [Subsingleton G] : IsZero G :=
   · ext
     apply Subsingleton.elim
 #align Group.is_zero_of_subsingleton GroupCat.is_zero_of_subsingleton
+#align AddGroup.is_zero_of_subsingleton AddGroupCat.is_zero_of_subsingleton
 
 @[to_additive AddGroupCat.has_zero_object]
 instance : HasZeroObject GroupCat :=
@@ -56,6 +57,7 @@ theorem is_zero_of_subsingleton (G : CommGroupCat) [Subsingleton G] : IsZero G :
   · ext
     apply Subsingleton.elim
 #align CommGroup.is_zero_of_subsingleton CommGroupCat.is_zero_of_subsingleton
+#align AddCommGroup.is_zero_of_subsingleton AddCommGroupCat.is_zero_of_subsingleton
 
 @[to_additive AddCommGroupCat.has_zero_object]
 instance : HasZeroObject CommGroupCat :=

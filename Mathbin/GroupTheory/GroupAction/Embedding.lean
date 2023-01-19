@@ -45,6 +45,7 @@ theorem smul_def [Group G] [MulAction G β] (g : G) (f : α ↪ β) :
     g • f = f.trans (MulAction.toPerm g).toEmbedding :=
   rfl
 #align function.embedding.smul_def Function.Embedding.smul_def
+#align function.embedding.vadd_def Function.Embedding.vadd_def
 
 /- warning: function.embedding.smul_apply -> Function.Embedding.smul_apply is a dubious translation:
 lean 3 declaration is
@@ -56,6 +57,7 @@ Case conversion may be inaccurate. Consider using '#align function.embedding.smu
 theorem smul_apply [Group G] [MulAction G β] (g : G) (f : α ↪ β) (a : α) : (g • f) a = g • f a :=
   rfl
 #align function.embedding.smul_apply Function.Embedding.smul_apply
+#align function.embedding.vadd_apply Function.Embedding.vadd_apply
 
 /- warning: function.embedding.coe_smul -> Function.Embedding.coe_smul is a dubious translation:
 lean 3 declaration is
@@ -67,6 +69,7 @@ Case conversion may be inaccurate. Consider using '#align function.embedding.coe
 theorem coe_smul [Group G] [MulAction G β] (g : G) (f : α ↪ β) : ⇑(g • f) = g • f :=
   rfl
 #align function.embedding.coe_smul Function.Embedding.coe_smul
+#align function.embedding.coe_vadd Function.Embedding.coe_vadd
 
 instance [Group G] [Group G'] [SMul G G'] [MulAction G β] [MulAction G' β] [IsScalarTower G G' β] :
     IsScalarTower G G' (α ↪ β) :=

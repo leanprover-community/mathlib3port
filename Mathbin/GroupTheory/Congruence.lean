@@ -76,6 +76,7 @@ structure AddCon [Add M] extends Setoid M where
 structure Con [Mul M] extends Setoid M where
   mul' : ∀ {w x y z}, r w x → r y z → r (w * y) (x * z)
 #align con Con
+#align add_con AddCon
 -/
 
 /-- The equivalence relation underlying an additive congruence relation. -/
@@ -109,6 +110,7 @@ inductive ConGen.Rel [Mul M] (r : M → M → Prop) : M → M → Prop
   | trans : ∀ x y z, ConGen.Rel x y → ConGen.Rel y z → ConGen.Rel x z
   | mul : ∀ w x y z, ConGen.Rel w x → ConGen.Rel y z → ConGen.Rel (w * y) (x * z)
 #align con_gen.rel ConGen.Rel
+#align add_con_gen.rel AddConGen.Rel
 -/
 
 #print conGen /-
@@ -119,6 +121,7 @@ inductive ConGen.Rel [Mul M] (r : M → M → Prop) : M → M → Prop
 def conGen [Mul M] (r : M → M → Prop) : Con M :=
   ⟨⟨ConGen.Rel r, ⟨ConGen.Rel.refl, ConGen.Rel.symm, ConGen.Rel.trans⟩⟩, ConGen.Rel.mul⟩
 #align con_gen conGen
+#align add_con_get addConGen
 -/
 
 namespace Con
@@ -141,6 +144,7 @@ instance : CoeFun (Con M) fun _ => M → M → Prop :=
 theorem rel_eq_coe (c : Con M) : c.R = c :=
   rfl
 #align con.rel_eq_coe Con.rel_eq_coe
+#align add_con.rel_eq_coe AddCon.rel_eq_coe
 -/
 
 #print Con.refl /-
@@ -149,6 +153,7 @@ theorem rel_eq_coe (c : Con M) : c.R = c :=
 protected theorem refl (x) : c x x :=
   c.toSetoid.refl' x
 #align con.refl Con.refl
+#align add_con.refl AddCon.refl
 -/
 
 #print Con.symm /-
@@ -156,6 +161,7 @@ protected theorem refl (x) : c x x :=
 @[to_additive "Additive congruence relations are symmetric."]
 protected theorem symm : ∀ {x y}, c x y → c y x := fun _ _ h => c.toSetoid.symm' h
 #align con.symm Con.symm
+#align add_con.symm AddCon.symm
 -/
 
 #print Con.trans /-
@@ -163,6 +169,7 @@ protected theorem symm : ∀ {x y}, c x y → c y x := fun _ _ h => c.toSetoid.s
 @[to_additive "Additive congruence relations are transitive."]
 protected theorem trans : ∀ {x y z}, c x y → c y z → c x z := fun _ _ _ h => c.toSetoid.trans' h
 #align con.trans Con.trans
+#align add_con.trans AddCon.trans
 -/
 
 #print Con.mul /-
@@ -171,6 +178,7 @@ protected theorem trans : ∀ {x y z}, c x y → c y z → c x z := fun _ _ _ h 
 protected theorem mul : ∀ {w x y z}, c w x → c y z → c (w * y) (x * z) := fun _ _ _ _ h1 h2 =>
   c.mul' h1 h2
 #align con.mul Con.mul
+#align add_con.mul AddCon.add
 -/
 
 #print Con.rel_mk /-
@@ -178,6 +186,7 @@ protected theorem mul : ∀ {w x y z}, c w x → c y z → c (w * y) (x * z) := 
 theorem rel_mk {s : Setoid M} {h a b} : Con.mk s h a b ↔ r a b :=
   Iff.rfl
 #align con.rel_mk Con.rel_mk
+#align add_con.rel_mk AddCon.rel_mk
 -/
 
 /-- Given a type `M` with a multiplication, a congruence relation `c` on `M`, and elements of `M`
@@ -200,6 +209,7 @@ theorem ext' {c d : Con M} (H : c.R = d.R) : c = d :=
   cases H
   congr
 #align con.ext' Con.ext'
+#align add_con.ext' AddCon.ext'
 -/
 
 #print Con.ext /-
@@ -208,6 +218,7 @@ theorem ext' {c d : Con M} (H : c.R = d.R) : c = d :=
 theorem ext {c d : Con M} (H : ∀ x y, c x y ↔ d x y) : c = d :=
   ext' <| by ext <;> apply H
 #align con.ext Con.ext
+#align add_con.ext AddCon.ext
 -/
 
 #print Con.toSetoid_inj /-
@@ -217,6 +228,7 @@ theorem ext {c d : Con M} (H : ∀ x y, c x y ↔ d x y) : c = d :=
 theorem toSetoid_inj {c d : Con M} (H : c.toSetoid = d.toSetoid) : c = d :=
   ext <| ext_iff.1 H
 #align con.to_setoid_inj Con.toSetoid_inj
+#align add_con.to_setoid_inj AddCon.toSetoid_inj
 -/
 
 #print Con.ext_iff /-
@@ -225,6 +237,7 @@ theorem toSetoid_inj {c d : Con M} (H : c.toSetoid = d.toSetoid) : c = d :=
 theorem ext_iff {c d : Con M} : (∀ x y, c x y ↔ d x y) ↔ c = d :=
   ⟨ext, fun h _ _ => h ▸ Iff.rfl⟩
 #align con.ext_iff Con.ext_iff
+#align add_con.ext_iff AddCon.ext_iff
 -/
 
 #print Con.ext'_iff /-
@@ -234,6 +247,7 @@ theorem ext_iff {c d : Con M} : (∀ x y, c x y ↔ d x y) ↔ c = d :=
 theorem ext'_iff {c d : Con M} : c.R = d.R ↔ c = d :=
   ⟨ext', fun h => h ▸ rfl⟩
 #align con.ext'_iff Con.ext'_iff
+#align add_con.ext'_iff AddCon.ext'_iff
 -/
 
 #print Con.mulKer /-
@@ -246,6 +260,7 @@ def mulKer (f : M → P) (h : ∀ x y, f (x * y) = f x * f y) : Con M
     dsimp [Setoid.ker, on_fun] at *
     rw [h, h1, h2, h]
 #align con.mul_ker Con.mulKer
+#align add_con.add_ker AddCon.addKer
 -/
 
 #print Con.prod /-
@@ -258,6 +273,7 @@ protected def prod (c : Con M) (d : Con N) : Con (M × N) :=
   { c.toSetoid.Prod d.toSetoid with
     mul' := fun _ _ _ _ h1 h2 => ⟨c.mul h1.1 h2.1, d.mul h1.2 h2.2⟩ }
 #align con.prod Con.prod
+#align add_con.prod AddCon.prod
 -/
 
 #print Con.pi /-
@@ -267,6 +283,7 @@ def pi {ι : Type _} {f : ι → Type _} [∀ i, Mul (f i)] (C : ∀ i, Con (f i
   { @piSetoid _ _ fun i => (C i).toSetoid with
     mul' := fun _ _ _ _ h1 h2 i => (C i).mul (h1 i) (h2 i) }
 #align con.pi Con.pi
+#align add_con.pi AddCon.pi
 -/
 
 variable (c)
@@ -279,6 +296,7 @@ variable (c)
 protected def Quotient :=
   Quotient <| c.toSetoid
 #align con.quotient Con.Quotient
+#align add_con.quotient AddCon.Quotient
 -/
 
 /-- Coercion from a type with a multiplication to its quotient by a congruence relation.
@@ -300,6 +318,7 @@ instance (priority := 500) [d : ∀ a b, Decidable (c a b)] : DecidableEq c.Quot
 theorem quot_mk_eq_coe {M : Type _} [Mul M] (c : Con M) (x : M) : Quot.mk c x = (x : c.Quotient) :=
   rfl
 #align con.quot_mk_eq_coe Con.quot_mk_eq_coe
+#align add_con.quot_mk_eq_coe AddCon.quot_mk_eq_coe
 -/
 
 #print Con.liftOn /-
@@ -312,6 +331,7 @@ protected def liftOn {β} {c : Con M} (q : c.Quotient) (f : M → β) (h : ∀ a
     β :=
   Quotient.liftOn' q f h
 #align con.lift_on Con.liftOn
+#align add_con.lift_on AddCon.liftOn
 -/
 
 #print Con.liftOn₂ /-
@@ -324,6 +344,7 @@ protected def liftOn₂ {β} {c : Con M} (q r : c.Quotient) (f : M → M → β)
     (h : ∀ a₁ a₂ b₁ b₂, c a₁ b₁ → c a₂ b₂ → f a₁ a₂ = f b₁ b₂) : β :=
   Quotient.liftOn₂' q r f h
 #align con.lift_on₂ Con.liftOn₂
+#align add_con.lift_on₂ AddCon.liftOn₂
 -/
 
 #print Con.hrecOn₂ /-
@@ -334,6 +355,7 @@ protected def hrecOn₂ {cM : Con M} {cN : Con N} {φ : cM.Quotient → cN.Quoti
     (h : ∀ x y x' y', cM x x' → cN y y' → HEq (f x y) (f x' y')) : φ a b :=
   Quotient.hrecOn₂' a b f h
 #align con.hrec_on₂ Con.hrecOn₂
+#align add_con.hrec_on₂ AddCon.hrecOn₂
 -/
 
 /- warning: con.hrec_on₂_coe -> Con.hrec_on₂_coe is a dubious translation:
@@ -349,6 +371,7 @@ theorem hrec_on₂_coe {cM : Con M} {cN : Con N} {φ : cM.Quotient → cN.Quotie
     Con.hrecOn₂ (↑a) (↑b) f h = f a b :=
   rfl
 #align con.hrec_on₂_coe Con.hrec_on₂_coe
+#align add_con.hrec_on₂_coe AddCon.hrec_on₂_coe
 
 variable {c}
 
@@ -361,6 +384,7 @@ variable {c}
 protected theorem induction_on {C : c.Quotient → Prop} (q : c.Quotient) (H : ∀ x : M, C x) : C q :=
   Quotient.inductionOn' q H
 #align con.induction_on Con.induction_on
+#align add_con.induction_on AddCon.induction_on
 -/
 
 #print Con.induction_on₂ /-
@@ -371,6 +395,7 @@ protected theorem induction_on₂ {d : Con N} {C : c.Quotient → d.Quotient →
     (q : d.Quotient) (H : ∀ (x : M) (y : N), C x y) : C p q :=
   Quotient.inductionOn₂' p q H
 #align con.induction_on₂ Con.induction_on₂
+#align add_con.induction_on₂ AddCon.induction_on₂
 -/
 
 variable (c)
@@ -384,6 +409,7 @@ variable (c)
 protected theorem eq {a b : M} : (a : c.Quotient) = b ↔ c a b :=
   Quotient.eq'
 #align con.eq Con.eq
+#align add_con.eq AddCon.eq
 -/
 
 #print Con.hasMul /-
@@ -394,6 +420,7 @@ protected theorem eq {a b : M} : (a : c.Quotient) = b ↔ c a b :=
 instance hasMul : Mul c.Quotient :=
   ⟨Quotient.map₂' (· * ·) fun _ _ h1 _ _ h2 => c.mul h1 h2⟩
 #align con.has_mul Con.hasMul
+#align add_con.has_add AddCon.hasAdd
 -/
 
 #print Con.mul_ker_mk_eq /-
@@ -404,6 +431,7 @@ instance hasMul : Mul c.Quotient :=
 theorem mul_ker_mk_eq : (mulKer (coe : M → c.Quotient) fun x y => rfl) = c :=
   ext fun x y => Quotient.eq'
 #align con.mul_ker_mk_eq Con.mul_ker_mk_eq
+#align add_con.add_ker_mk_eq AddCon.add_ker_mk_eq
 -/
 
 variable {c}
@@ -417,6 +445,7 @@ variable {c}
 theorem coe_mul (x y : M) : (↑(x * y) : c.Quotient) = ↑x * ↑y :=
   rfl
 #align con.coe_mul Con.coe_mul
+#align add_con.coe_add AddCon.coe_add
 -/
 
 #print Con.liftOn_coe /-
@@ -429,6 +458,7 @@ protected theorem liftOn_coe {β} (c : Con M) (f : M → β) (h : ∀ a b, c a b
     Con.liftOn (x : c.Quotient) f h = f x :=
   rfl
 #align con.lift_on_coe Con.liftOn_coe
+#align add_con.lift_on_coe AddCon.liftOn_coe
 -/
 
 #print Con.congr /-
@@ -440,6 +470,7 @@ protected def congr {c d : Con M} (h : c = d) : c.Quotient ≃* d.Quotient :=
   { Quotient.congr (Equiv.refl M) <| by apply ext_iff.2 h with
     map_mul' := fun x y => by rcases x with ⟨⟩ <;> rcases y with ⟨⟩ <;> rfl }
 #align con.congr Con.congr
+#align add_con.congr AddCon.congr
 -/
 
 -- The complete lattice of congruence relations on a type
@@ -456,6 +487,7 @@ instance : LE (Con M) :=
 theorem le_def {c d : Con M} : c ≤ d ↔ ∀ {x y}, c x y → d x y :=
   Iff.rfl
 #align con.le_def Con.le_def
+#align add_con.le_def AddCon.le_def
 -/
 
 /-- The infimum of a set of congruence relations on a given type with a multiplication. -/
@@ -482,6 +514,7 @@ theorem infₛ_toSetoid (S : Set (Con M)) : (infₛ S).toSetoid = infₛ (to_set
   Setoid.ext' fun x y =>
     ⟨fun h r ⟨c, hS, hr⟩ => by rw [← hr] <;> exact h c hS, fun h c hS => h c.toSetoid ⟨c, hS, rfl⟩⟩
 #align con.Inf_to_setoid Con.infₛ_toSetoid
+#align add_con.Inf_to_setoid AddCon.infₛ_toSetoid
 
 /- warning: con.Inf_def -> Con.infₛ_def is a dubious translation:
 lean 3 declaration is
@@ -499,6 +532,7 @@ theorem infₛ_def (S : Set (Con M)) : ⇑(infₛ S) = infₛ (@Set.image (Con M
   simp only [infₛ_image, infᵢ_apply, infᵢ_Prop_eq]
   rfl
 #align con.Inf_def Con.infₛ_def
+#align add_con.Inf_def AddCon.infₛ_def
 
 @[to_additive]
 instance : PartialOrder (Con M) where
@@ -541,6 +575,7 @@ Case conversion may be inaccurate. Consider using '#align con.inf_def Con.inf_de
 theorem inf_def {c d : Con M} : (c ⊓ d).R = c.R ⊓ d.R :=
   rfl
 #align con.inf_def Con.inf_def
+#align add_con.inf_def AddCon.inf_def
 
 /- warning: con.inf_iff_and -> Con.inf_iff_and is a dubious translation:
 lean 3 declaration is
@@ -553,6 +588,7 @@ Case conversion may be inaccurate. Consider using '#align con.inf_iff_and Con.in
 theorem inf_iff_and {c d : Con M} {x y} : (c ⊓ d) x y ↔ c x y ∧ d x y :=
   Iff.rfl
 #align con.inf_iff_and Con.inf_iff_and
+#align add_con.inf_iff_and AddCon.inf_iff_and
 
 /- warning: con.con_gen_eq -> Con.conGen_eq is a dubious translation:
 lean 3 declaration is
@@ -571,6 +607,7 @@ theorem conGen_eq (r : M → M → Prop) : conGen r = infₛ { s : Con M | ∀ x
         (fun _ _ _ _ _ => Con.trans _) fun w x y z _ _ h1 h2 c hc => c.mul (h1 c hc) <| h2 c hc)
     (infₛ_le fun _ _ => ConGen.Rel.of _ _)
 #align con.con_gen_eq Con.conGen_eq
+#align add_con.con_gen_eq AddCon.addConGen_eq
 
 #print Con.conGen_le /-
 /-- The smallest congruence relation containing a binary relation `r` is contained in any
@@ -580,6 +617,7 @@ theorem conGen_eq (r : M → M → Prop) : conGen r = infₛ { s : Con M | ∀ x
 theorem conGen_le {r : M → M → Prop} {c : Con M} (h : ∀ x y, r x y → @Setoid.r _ c.toSetoid x y) :
     conGen r ≤ c := by rw [con_gen_eq] <;> exact infₛ_le h
 #align con.con_gen_le Con.conGen_le
+#align add_con.con_gen_le AddCon.addConGen_le
 -/
 
 #print Con.conGen_mono /-
@@ -590,6 +628,7 @@ theorem conGen_le {r : M → M → Prop} {c : Con M} (h : ∀ x y, r x y → @Se
 theorem conGen_mono {r s : M → M → Prop} (h : ∀ x y, r x y → s x y) : conGen r ≤ conGen s :=
   con_gen_le fun x y hr => ConGen.Rel.of _ _ <| h x y hr
 #align con.con_gen_mono Con.conGen_mono
+#align add_con.con_gen_mono AddCon.addConGen_mono
 -/
 
 #print Con.conGen_of_con /-
@@ -600,6 +639,7 @@ theorem conGen_mono {r s : M → M → Prop} (h : ∀ x y, r x y → s x y) : co
 theorem conGen_of_con (c : Con M) : conGen c = c :=
   le_antisymm (by rw [con_gen_eq] <;> exact infₛ_le fun _ _ => id) ConGen.Rel.of
 #align con.con_gen_of_con Con.conGen_of_con
+#align add_con.con_gen_of_con AddCon.addConGen_of_addCon
 -/
 
 #print Con.conGen_idem /-
@@ -611,6 +651,7 @@ theorem conGen_of_con (c : Con M) : conGen c = c :=
 theorem conGen_idem (r : M → M → Prop) : conGen (conGen r) = conGen r :=
   conGen_of_con _
 #align con.con_gen_idem Con.conGen_idem
+#align add_con.con_gen_idem AddCon.addConGen_idem
 -/
 
 /- warning: con.sup_eq_con_gen -> Con.sup_eq_conGen is a dubious translation:
@@ -629,6 +670,7 @@ theorem sup_eq_conGen (c d : Con M) : c ⊔ d = conGen fun x y => c x y ∨ d x 
   apply congr_arg Inf
   simp only [le_def, or_imp, ← forall_and]
 #align con.sup_eq_con_gen Con.sup_eq_conGen
+#align add_con.sup_eq_con_gen AddCon.sup_eq_addConGen
 
 /- warning: con.sup_def -> Con.sup_def is a dubious translation:
 lean 3 declaration is
@@ -642,6 +684,7 @@ Case conversion may be inaccurate. Consider using '#align con.sup_def Con.sup_de
       "The supremum of two additive congruence relations equals the smallest additive\ncongruence relation containing the supremum of the underlying binary operations."]
 theorem sup_def {c d : Con M} : c ⊔ d = conGen (c.R ⊔ d.R) := by rw [sup_eq_con_gen] <;> rfl
 #align con.sup_def Con.sup_def
+#align add_con.sup_def AddCon.sup_def
 
 /- warning: con.Sup_eq_con_gen -> Con.supₛ_eq_conGen is a dubious translation:
 lean 3 declaration is
@@ -661,6 +704,7 @@ theorem supₛ_eq_conGen (S : Set (Con M)) : supₛ S = conGen fun x y => ∃ c 
   ext
   exact ⟨fun h _ _ ⟨r, hr⟩ => h hr.1 hr.2, fun h r hS _ _ hr => h _ _ ⟨r, hS, hr⟩⟩
 #align con.Sup_eq_con_gen Con.supₛ_eq_conGen
+#align add_con.Sup_eq_con_gen AddCon.supₛ_eq_addConGen
 
 /- warning: con.Sup_def -> Con.supₛ_def is a dubious translation:
 lean 3 declaration is
@@ -679,6 +723,7 @@ theorem supₛ_def {S : Set (Con M)} :
   congr with (x y)
   simp only [supₛ_image, supᵢ_apply, supᵢ_Prop_eq, exists_prop, rel_eq_coe]
 #align con.Sup_def Con.supₛ_def
+#align add_con.Sup_def AddCon.supₛ_def
 
 variable (M)
 
@@ -699,6 +744,7 @@ protected def gi : @GaloisInsertion (M → M → Prop) (Con M) _ _ conGen coeFn
   le_l_u x := (conGen_of_con x).symm ▸ le_refl x
   choice_eq _ _ := rfl
 #align con.gi Con.gi
+#align add_con.gi AddCon.gi
 
 variable {M} (c)
 
@@ -711,6 +757,7 @@ variable {M} (c)
 def mapGen (f : M → N) : Con N :=
   conGen fun x y => ∃ a b, f a = x ∧ f b = y ∧ c a b
 #align con.map_gen Con.mapGen
+#align add_con.map_gen AddCon.mapGen
 -/
 
 #print Con.mapOfSurjective /-
@@ -725,6 +772,7 @@ def mapOfSurjective (f : M → N) (H : ∀ x y, f (x * y) = f x * f y) (h : mulK
     mul' := fun w x y z ⟨a, b, hw, hx, h1⟩ ⟨p, q, hy, hz, h2⟩ =>
       ⟨a * p, b * q, by rw [H, hw, hy], by rw [H, hx, hz], c.mul h1 h2⟩ }
 #align con.map_of_surjective Con.mapOfSurjective
+#align add_con.map_of_surjective AddCon.mapOfSurjective
 -/
 
 /- warning: con.map_of_surjective_eq_map_gen -> Con.mapOfSurjective_eq_mapGen is a dubious translation:
@@ -741,6 +789,7 @@ theorem mapOfSurjective_eq_mapGen {c : Con M} {f : M → N} (H : ∀ x y, f (x *
     (h : mulKer f H ≤ c) (hf : Surjective f) : c.mapGen f = c.mapOfSurjective f H h hf := by
   rw [← con_gen_of_con (c.map_of_surjective f H h hf)] <;> rfl
 #align con.map_of_surjective_eq_map_gen Con.mapOfSurjective_eq_mapGen
+#align add_con.map_of_surjective_eq_map_gen AddCon.mapOfSurjective_eq_mapGen
 
 #print Con.comap /-
 /-- Given types with multiplications `M, N` and a congruence relation `c` on `N`, a
@@ -752,6 +801,7 @@ def comap (f : M → N) (H : ∀ x y, f (x * y) = f x * f y) (c : Con N) : Con M
   { c.toSetoid.comap f with
     mul' := fun w x y z h1 h2 => show c (f (w * y)) (f (x * z)) by rw [H, H] <;> exact c.mul h1 h2 }
 #align con.comap Con.comap
+#align add_con.comap AddCon.comap
 -/
 
 #print Con.comap_rel /-
@@ -760,6 +810,7 @@ theorem comap_rel {f : M → N} (H : ∀ x y, f (x * y) = f x * f y) {c : Con N}
     comap f H c x y ↔ c (f x) (f y) :=
   Iff.rfl
 #align con.comap_rel Con.comap_rel
+#align add_con.comap_rel AddCon.comap_rel
 -/
 
 section
@@ -804,6 +855,7 @@ def correspondence : { d // c ≤ d } ≃o Con c.Quotient
       let ⟨a, b, hx, hy, Hs⟩ := hs
       ⟨a, b, hx, hy, h Hs⟩⟩
 #align con.correspondence Con.correspondence
+#align add_con.correspondence AddCon.correspondence
 -/
 
 end
@@ -830,6 +882,7 @@ instance mulOneClass : MulOneClass c.Quotient
   mul_one x := Quotient.inductionOn' x fun _ => congr_arg (coe : M → c.Quotient) <| mul_one _
   one_mul x := Quotient.inductionOn' x fun _ => congr_arg (coe : M → c.Quotient) <| one_mul _
 #align con.mul_one_class Con.mulOneClass
+#align add_con.add_zero_class AddCon.addZeroClass
 
 variable {c}
 
@@ -847,6 +900,7 @@ Case conversion may be inaccurate. Consider using '#align con.coe_one Con.coe_on
 theorem coe_one : ((1 : M) : c.Quotient) = 1 :=
   rfl
 #align con.coe_one Con.coe_one
+#align add_con.coe_zero AddCon.coe_zero
 
 variable (M c)
 
@@ -865,6 +919,7 @@ protected def submonoid : Submonoid (M × M)
   one_mem' := c.iseqv.1 1
   mul_mem' _ _ := c.mul
 #align con.submonoid Con.submonoid
+#align add_con.add_submonoid AddCon.addSubmonoid
 
 variable {M c}
 
@@ -884,6 +939,7 @@ def ofSubmonoid (N : Submonoid (M × M)) (H : Equivalence fun x y => (x, y) ∈ 
   iseqv := H
   mul' _ _ _ _ := N.mul_mem
 #align con.of_submonoid Con.ofSubmonoid
+#align add_con.of_add_submonoid AddCon.ofAddSubmonoid
 
 /- warning: con.to_submonoid -> Con.toSubmonoid is a dubious translation:
 lean 3 declaration is
@@ -898,6 +954,7 @@ Case conversion may be inaccurate. Consider using '#align con.to_submonoid Con.t
 instance toSubmonoid : Coe (Con M) (Submonoid (M × M)) :=
   ⟨fun c => c.Submonoid M⟩
 #align con.to_submonoid Con.toSubmonoid
+#align add_con.to_add_submonoid AddCon.toAddSubmonoid
 
 /- warning: con.mem_coe -> Con.mem_coe is a dubious translation:
 lean 3 declaration is
@@ -909,6 +966,7 @@ Case conversion may be inaccurate. Consider using '#align con.mem_coe Con.mem_co
 theorem mem_coe {c : Con M} {x y} : (x, y) ∈ (↑c : Submonoid (M × M)) ↔ (x, y) ∈ c :=
   Iff.rfl
 #align con.mem_coe Con.mem_coe
+#align add_con.mem_coe AddCon.mem_coe
 
 /- warning: con.to_submonoid_inj -> Con.to_submonoid_inj is a dubious translation:
 lean 3 declaration is
@@ -931,6 +989,7 @@ Case conversion may be inaccurate. Consider using '#align con.le_iff Con.le_iff�
 theorem le_iff {c d : Con M} : c ≤ d ↔ (c : Submonoid (M × M)) ≤ d :=
   ⟨fun h x H => h H, fun h x y hc => h <| show (x, y) ∈ c from hc⟩
 #align con.le_iff Con.le_iff
+#align add_con.le_iff AddCon.le_iff
 
 /- warning: con.ker -> Con.ker is a dubious translation:
 lean 3 declaration is
@@ -943,6 +1002,7 @@ Case conversion may be inaccurate. Consider using '#align con.ker Con.kerₓ'. -
 def ker (f : M →* P) : Con M :=
   mulKer f f.3
 #align con.ker Con.ker
+#align add_con.ker AddCon.ker
 
 /- warning: con.ker_rel -> Con.ker_rel is a dubious translation:
 lean 3 declaration is
@@ -957,6 +1017,7 @@ Case conversion may be inaccurate. Consider using '#align con.ker_rel Con.ker_re
 theorem ker_rel (f : M →* P) {x y} : ker f x y ↔ f x = f y :=
   Iff.rfl
 #align con.ker_rel Con.ker_rel
+#align add_con.ker_rel AddCon.ker_rel
 
 /- warning: con.quotient.inhabited -> Con.Quotient.inhabited is a dubious translation:
 lean 3 declaration is
@@ -970,6 +1031,7 @@ Case conversion may be inaccurate. Consider using '#align con.quotient.inhabited
 instance Quotient.inhabited : Inhabited c.Quotient :=
   ⟨((1 : M) : c.Quotient)⟩
 #align con.quotient.inhabited Con.Quotient.inhabited
+#align add_con.quotient.inhabited AddCon.Quotient.inhabited
 
 variable (c)
 
@@ -985,6 +1047,7 @@ Case conversion may be inaccurate. Consider using '#align con.mk' Con.mk'ₓ'. -
 def mk' : M →* c.Quotient :=
   ⟨coe, rfl, fun _ _ => rfl⟩
 #align con.mk' Con.mk'
+#align add_con.mk' AddCon.mk'
 
 variable (x y : M)
 
@@ -1002,6 +1065,7 @@ Case conversion may be inaccurate. Consider using '#align con.mk'_ker Con.mk'_ke
 theorem mk'_ker : ker c.mk' = c :=
   ext fun _ _ => c.Eq
 #align con.mk'_ker Con.mk'_ker
+#align add_con.mk'_ker AddCon.mk'_ker
 
 variable {c}
 
@@ -1018,6 +1082,7 @@ Case conversion may be inaccurate. Consider using '#align con.mk'_surjective Con
 theorem mk'_surjective : Surjective c.mk' :=
   Quotient.surjective_Quotient_mk''
 #align con.mk'_surjective Con.mk'_surjective
+#align add_con.mk'_surjective AddCon.mk'_surjective
 
 /- warning: con.coe_mk' -> Con.coe_mk' is a dubious translation:
 lean 3 declaration is
@@ -1029,6 +1094,7 @@ Case conversion may be inaccurate. Consider using '#align con.coe_mk' Con.coe_mk
 theorem coe_mk' : (c.mk' : M → c.Quotient) = coe :=
   rfl
 #align con.coe_mk' Con.coe_mk'
+#align add_con.coe_mk' AddCon.coe_mk'
 
 /- warning: con.mrange_mk' -> Con.mrange_mk' is a dubious translation:
 lean 3 declaration is
@@ -1040,6 +1106,7 @@ Case conversion may be inaccurate. Consider using '#align con.mrange_mk' Con.mra
 theorem mrange_mk' : c.mk'.mrange = ⊤ :=
   MonoidHom.mrange_top_iff_surjective.2 mk'_surjective
 #align con.mrange_mk' Con.mrange_mk'
+#align add_con.mrange_mk' AddCon.mrange_mk'
 
 /- warning: con.ker_apply_eq_preimage -> Con.ker_apply_eq_preimage is a dubious translation:
 lean 3 declaration is
@@ -1056,6 +1123,7 @@ theorem ker_apply_eq_preimage {f : M →* P} (x) : (ker f) x = f ⁻¹' {f x} :=
     ⟨fun h => Set.mem_preimage.2 <| Set.mem_singleton_iff.2 h.symm, fun h =>
       (Set.mem_singleton_iff.1 <| Set.mem_preimage.1 h).symm⟩
 #align con.ker_apply_eq_preimage Con.ker_apply_eq_preimage
+#align add_con.ker_apply_eq_preimage AddCon.ker_apply_eq_preimage
 
 /- warning: con.comap_eq -> Con.comap_eq is a dubious translation:
 lean 3 declaration is
@@ -1071,6 +1139,7 @@ Case conversion may be inaccurate. Consider using '#align con.comap_eq Con.comap
 theorem comap_eq {f : N →* M} : comap f f.map_mul c = ker (c.mk'.comp f) :=
   ext fun x y => show c _ _ ↔ c.mk' _ = c.mk' _ by rw [← c.eq] <;> rfl
 #align con.comap_eq Con.comap_eq
+#align add_con.comap_eq AddCon.comap_eq
 
 variable (c) (f : M →* P)
 
@@ -1090,6 +1159,7 @@ def lift (H : c ≤ ker f) : c.Quotient →* P
   map_one' := by rw [← f.map_one] <;> rfl
   map_mul' x y := Con.induction_on₂ x y fun m n => f.map_mul m n ▸ rfl
 #align con.lift Con.lift
+#align add_con.lift AddCon.lift
 
 variable {c f}
 
@@ -1105,6 +1175,7 @@ Case conversion may be inaccurate. Consider using '#align con.lift_mk' Con.lift_
 theorem lift_mk' (H : c ≤ ker f) (x) : c.lift f H (c.mk' x) = f x :=
   rfl
 #align con.lift_mk' Con.lift_mk'
+#align add_con.lift_mk' AddCon.lift_mk'
 
 /- warning: con.lift_coe -> Con.lift_coe is a dubious translation:
 lean 3 declaration is
@@ -1119,6 +1190,7 @@ Case conversion may be inaccurate. Consider using '#align con.lift_coe Con.lift_
 theorem lift_coe (H : c ≤ ker f) (x : M) : c.lift f H x = f x :=
   rfl
 #align con.lift_coe Con.lift_coe
+#align add_con.lift_coe AddCon.lift_coe
 
 /- warning: con.lift_comp_mk' -> Con.lift_comp_mk' is a dubious translation:
 lean 3 declaration is
@@ -1132,6 +1204,7 @@ Case conversion may be inaccurate. Consider using '#align con.lift_comp_mk' Con.
       "The diagram describing the universal property for quotients of `add_monoid`s\ncommutes."]
 theorem lift_comp_mk' (H : c ≤ ker f) : (c.lift f H).comp c.mk' = f := by ext <;> rfl
 #align con.lift_comp_mk' Con.lift_comp_mk'
+#align add_con.lift_comp_mk' AddCon.lift_comp_mk'
 
 /- warning: con.lift_apply_mk' -> Con.lift_apply_mk' is a dubious translation:
 lean 3 declaration is
@@ -1149,6 +1222,7 @@ theorem lift_apply_mk' (f : c.Quotient →* P) :
     (c.lift (f.comp c.mk') fun x y h => show f ↑x = f ↑y by rw [c.eq.2 h]) = f := by
   ext <;> rcases x with ⟨⟩ <;> rfl
 #align con.lift_apply_mk' Con.lift_apply_mk'
+#align add_con.lift_apply_mk' AddCon.lift_apply_mk'
 
 /- warning: con.lift_funext -> Con.lift_funext is a dubious translation:
 lean 3 declaration is
@@ -1166,6 +1240,7 @@ theorem lift_funext (f g : c.Quotient →* P) (h : ∀ a : M, f a = g a) : f = g
   congr 1
   exact MonoidHom.ext_iff.2 h
 #align con.lift_funext Con.lift_funext
+#align add_con.lift_funext AddCon.lift_funext
 
 /- warning: con.lift_unique -> Con.lift_unique is a dubious translation:
 lean 3 declaration is
@@ -1181,6 +1256,7 @@ theorem lift_unique (H : c ≤ ker f) (g : c.Quotient →* P) (Hg : g.comp c.mk'
     subst f
     rfl
 #align con.lift_unique Con.lift_unique
+#align add_con.lift_unique AddCon.lift_unique
 
 /- warning: con.lift_range -> Con.lift_range is a dubious translation:
 lean 3 declaration is
@@ -1196,6 +1272,7 @@ Case conversion may be inaccurate. Consider using '#align con.lift_range Con.lif
 theorem lift_range (H : c ≤ ker f) : (c.lift f H).mrange = f.mrange :=
   Submonoid.ext fun x => ⟨by rintro ⟨⟨y⟩, hy⟩ <;> exact ⟨y, hy⟩, fun ⟨y, hy⟩ => ⟨↑y, hy⟩⟩
 #align con.lift_range Con.lift_range
+#align add_con.lift_range AddCon.lift_range
 
 /- warning: con.lift_surjective_of_surjective -> Con.lift_surjective_of_surjective is a dubious translation:
 lean 3 declaration is
@@ -1210,6 +1287,7 @@ Case conversion may be inaccurate. Consider using '#align con.lift_surjective_of
 theorem lift_surjective_of_surjective (h : c ≤ ker f) (hf : Surjective f) :
     Surjective (c.lift f h) := fun y => Exists.elim (hf y) fun w hw => ⟨w, (lift_mk' h w).symm ▸ hw⟩
 #align con.lift_surjective_of_surjective Con.lift_surjective_of_surjective
+#align add_con.lift_surjective_of_surjective AddCon.lift_surjective_of_surjective
 
 variable (c f)
 
@@ -1226,6 +1304,7 @@ Case conversion may be inaccurate. Consider using '#align con.ker_eq_lift_of_inj
 theorem ker_eq_lift_of_injective (H : c ≤ ker f) (h : Injective (c.lift f H)) : ker f = c :=
   to_setoid_inj <| ker_eq_lift_of_injective f H h
 #align con.ker_eq_lift_of_injective Con.ker_eq_lift_of_injective
+#align add_con.ker_eq_lift_of_injective AddCon.ker_eq_lift_of_injective
 
 variable {c}
 
@@ -1236,6 +1315,7 @@ variable {c}
 def kerLift : (ker f).Quotient →* P :=
   (ker f).lift f fun _ _ => id
 #align con.ker_lift Con.kerLift
+#align add_con.ker_lift AddCon.kerLift
 -/
 
 variable {f}
@@ -1292,6 +1372,7 @@ Case conversion may be inaccurate. Consider using '#align con.map Con.mapₓ'. -
 def map (c d : Con M) (h : c ≤ d) : c.Quotient →* d.Quotient :=
   c.lift d.mk' fun x y hc => show (ker d.mk') x y from (mk'_ker d).symm ▸ h hc
 #align con.map Con.map
+#align add_con.map AddCon.map
 
 /- warning: con.map_apply -> Con.map_apply is a dubious translation:
 lean 3 declaration is
@@ -1308,6 +1389,7 @@ theorem map_apply {c d : Con M} (h : c ≤ d) (x) :
     c.map d h x = c.lift d.mk' (fun x y hc => d.Eq.2 <| h hc) x :=
   rfl
 #align con.map_apply Con.map_apply
+#align add_con.map_apply AddCon.map_apply
 
 variable (c)
 
@@ -1331,6 +1413,7 @@ noncomputable def quotientKerEquivRange (f : M →* P) : (ker f).Quotient ≃* f
           fun ⟨w, z, hz⟩ => ⟨z, by rcases hz with ⟨⟩ <;> rcases _x with ⟨⟩ <;> rfl⟩⟩ with
     map_mul' := MonoidHom.map_mul _ }
 #align con.quotient_ker_equiv_range Con.quotientKerEquivRange
+#align add_con.quotient_ker_equiv_range AddCon.quotientKerEquivRange
 
 /- warning: con.quotient_ker_equiv_of_right_inverse -> Con.quotientKerEquivOfRightInverse is a dubious translation:
 lean 3 declaration is
@@ -1350,6 +1433,7 @@ def quotientKerEquivOfRightInverse (f : M →* P) (g : P → M) (hf : Function.R
     left_inv := fun x => kerLift_injective _ (by rw [Function.comp_apply, ker_lift_mk, hf])
     right_inv := hf }
 #align con.quotient_ker_equiv_of_right_inverse Con.quotientKerEquivOfRightInverse
+#align add_con.quotient_ker_equiv_of_right_inverse AddCon.quotientKerEquivOfRightInverse
 
 /- warning: con.quotient_ker_equiv_of_surjective -> Con.quotientKerEquivOfSurjective is a dubious translation:
 lean 3 declaration is
@@ -1367,6 +1451,7 @@ noncomputable def quotientKerEquivOfSurjective (f : M →* P) (hf : Surjective f
     (ker f).Quotient ≃* P :=
   quotientKerEquivOfRightInverse _ _ hf.HasRightInverse.some_spec
 #align con.quotient_ker_equiv_of_surjective Con.quotientKerEquivOfSurjective
+#align add_con.quotient_ker_equiv_of_surjective AddCon.quotientKerEquivOfSurjective
 
 /- warning: con.comap_quotient_equiv -> Con.comapQuotientEquiv is a dubious translation:
 lean 3 declaration is
@@ -1380,6 +1465,7 @@ noncomputable def comapQuotientEquiv (f : N →* M) :
     (comap f f.map_mul c).Quotient ≃* (c.mk'.comp f).mrange :=
   (Con.congr comap_eq).trans <| quotient_ker_equiv_range <| c.mk'.comp f
 #align con.comap_quotient_equiv Con.comapQuotientEquiv
+#align add_con.comap_quotient_equiv AddCon.comapQuotientEquiv
 
 /- warning: con.quotient_quotient_equiv_quotient -> Con.quotientQuotientEquivQuotient is a dubious translation:
 lean 3 declaration is
@@ -1397,6 +1483,7 @@ def quotientQuotientEquivQuotient (c d : Con M) (h : c ≤ d) :
         Con.induction_on₂ w z fun a b =>
           show _ = d.mk' a * d.mk' b by rw [← d.mk'.map_mul] <;> rfl }
 #align con.quotient_quotient_equiv_quotient Con.quotientQuotientEquivQuotient
+#align add_con.quotient_quotient_equiv_quotient AddCon.quotientQuotientEquivQuotient
 
 end MulOneClass
 
@@ -1415,6 +1502,7 @@ protected theorem pow {M : Type _} [Monoid M] (c : Con M) :
   | 0, w, x, h => by simpa using c.refl _
   | Nat.succ n, w, x, h => by simpa [pow_succ] using c.mul h (pow n h)
 #align con.pow Con.pow
+#align add_con.nsmul AddCon.nsmul
 
 @[to_additive]
 instance {M : Type _} [MulOneClass M] (c : Con M) : One c.Quotient
@@ -1431,6 +1519,7 @@ theorem smul {α M : Type _} [MulOneClass M] [SMul α M] [IsScalarTower α M M] 
     {w x : M} (h : c w x) : c (a • w) (a • x) := by
   simpa only [smul_one_mul] using c.mul (c.refl' (a • 1 : M)) h
 #align con.smul Con.smul
+#align add_con.vadd AddCon.vadd
 
 /- warning: add_con.quotient.has_nsmul -> AddCon.Quotient.nsmul is a dubious translation:
 lean 3 declaration is
@@ -1458,6 +1547,7 @@ Case conversion may be inaccurate. Consider using '#align con.semigroup Con.semi
 instance semigroup {M : Type _} [Semigroup M] (c : Con M) : Semigroup c.Quotient :=
   Function.Surjective.semigroup _ Quotient.surjective_Quotient_mk'' fun _ _ => rfl
 #align con.semigroup Con.semigroup
+#align add_con.add_semigroup AddCon.addSemigroup
 
 /- warning: con.comm_semigroup -> Con.commSemigroup is a dubious translation:
 lean 3 declaration is
@@ -1471,6 +1561,7 @@ Case conversion may be inaccurate. Consider using '#align con.comm_semigroup Con
 instance commSemigroup {M : Type _} [CommSemigroup M] (c : Con M) : CommSemigroup c.Quotient :=
   Function.Surjective.commSemigroup _ Quotient.surjective_Quotient_mk'' fun _ _ => rfl
 #align con.comm_semigroup Con.commSemigroup
+#align add_con.add_comm_semigroup AddCon.addCommSemigroup
 
 /- warning: con.monoid -> Con.monoid is a dubious translation:
 lean 3 declaration is
@@ -1484,6 +1575,7 @@ Case conversion may be inaccurate. Consider using '#align con.monoid Con.monoid�
 instance monoid {M : Type _} [Monoid M] (c : Con M) : Monoid c.Quotient :=
   Function.Surjective.monoid _ Quotient.surjective_Quotient_mk'' rfl (fun _ _ => rfl) fun _ _ => rfl
 #align con.monoid Con.monoid
+#align add_con.add_monoid AddCon.addMonoid
 
 /- warning: con.comm_monoid -> Con.commMonoid is a dubious translation:
 lean 3 declaration is
@@ -1498,6 +1590,7 @@ instance commMonoid {M : Type _} [CommMonoid M] (c : Con M) : CommMonoid c.Quoti
   Function.Surjective.commMonoid _ Quotient.surjective_Quotient_mk'' rfl (fun _ _ => rfl) fun _ _ =>
     rfl
 #align con.comm_monoid Con.commMonoid
+#align add_con.add_comm_monoid AddCon.addCommMonoid
 
 end Monoids
 
@@ -1516,6 +1609,7 @@ Case conversion may be inaccurate. Consider using '#align con.inv Con.invₓ'. -
 protected theorem inv : ∀ {w x}, c w x → c w⁻¹ x⁻¹ := fun x y h => by
   simpa using c.symm (c.mul (c.mul (c.refl x⁻¹) h) (c.refl y⁻¹))
 #align con.inv Con.inv
+#align add_con.neg AddCon.neg
 
 /- warning: con.div -> Con.div is a dubious translation:
 lean 3 declaration is
@@ -1528,6 +1622,7 @@ Case conversion may be inaccurate. Consider using '#align con.div Con.divₓ'. -
 protected theorem div : ∀ {w x y z}, c w x → c y z → c (w / y) (x / z) := fun w x y z h1 h2 => by
   simpa only [div_eq_mul_inv] using c.mul h1 (c.inv h2)
 #align con.div Con.div
+#align add_con.sub AddCon.sub
 
 /- warning: con.zpow -> Con.zpow is a dubious translation:
 lean 3 declaration is
@@ -1541,6 +1636,7 @@ protected theorem zpow : ∀ (n : ℤ) {w x}, c w x → c (w ^ n) (x ^ n)
   | Int.ofNat n, w, x, h => by simpa only [zpow_ofNat] using c.pow _ h
   | -[n+1], w, x, h => by simpa only [zpow_negSucc] using c.inv (c.pow _ h)
 #align con.zpow Con.zpow
+#align add_con.zsmul AddCon.zsmul
 
 /- warning: con.has_inv -> Con.hasInv is a dubious translation:
 lean 3 declaration is
@@ -1555,6 +1651,7 @@ Case conversion may be inaccurate. Consider using '#align con.has_inv Con.hasInv
 instance hasInv : Inv c.Quotient :=
   ⟨Quotient.map' Inv.inv fun a b => c.inv⟩
 #align con.has_inv Con.hasInv
+#align add_con.has_neg AddCon.hasNeg
 
 /- warning: con.has_div -> Con.hasDiv is a dubious translation:
 lean 3 declaration is
@@ -1569,6 +1666,7 @@ Case conversion may be inaccurate. Consider using '#align con.has_div Con.hasDiv
 instance hasDiv : Div c.Quotient :=
   ⟨Quotient.map₂' (· / ·) fun _ _ h₁ _ _ h₂ => c.div h₁ h₂⟩
 #align con.has_div Con.hasDiv
+#align add_con.has_sub AddCon.hasSub
 
 /- warning: add_con.quotient.has_zsmul -> AddCon.Quotient.zsmul is a dubious translation:
 lean 3 declaration is
@@ -1594,6 +1692,7 @@ Case conversion may be inaccurate. Consider using '#align con.has_zpow Con.zpowi
 instance zpowinst : Pow c.Quotient ℤ :=
   ⟨fun x z => Quotient.map' (fun x => x ^ z) (fun x y h => c.zpow z h) x⟩
 #align con.has_zpow Con.zpowinst
+#align add_con.quotient.has_zsmul AddCon.Quotient.zsmul
 
 /- warning: con.group -> Con.group is a dubious translation:
 lean 3 declaration is
@@ -1608,6 +1707,7 @@ instance group : Group c.Quotient :=
   Function.Surjective.group _ Quotient.surjective_Quotient_mk'' rfl (fun _ _ => rfl) (fun _ => rfl)
     (fun _ _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
 #align con.group Con.group
+#align add_con.add_group AddCon.addGroup
 
 end Groups
 
@@ -1641,6 +1741,7 @@ def liftOnUnits (u : Units c.Quotient) (f : ∀ x y : M, c (x * y) 1 → c (y * 
   rintro Hyx Hyx' -
   exact heq_of_eq (Hf _ _ _ _ _ _ _ _ hx hy)
 #align con.lift_on_units Con.liftOnUnits
+#align add_con.lift_on_add_units AddCon.liftOnAddUnits
 
 /-- In order to define a function `(con.quotient c)ˣ → α` on the units of `con.quotient c`,
 where `c : con M` is a multiplicative congruence on a monoid, it suffices to define a function `f`
@@ -1661,6 +1762,7 @@ theorem liftOnUnits_mk (f : ∀ x y : M, c (x * y) 1 → c (y * x) 1 → α)
     liftOnUnits ⟨(x : c.Quotient), y, hxy, hyx⟩ f Hf = f x y (c.Eq.1 hxy) (c.Eq.1 hyx) :=
   rfl
 #align con.lift_on_units_mk Con.liftOnUnits_mk
+#align add_con.lift_on_add_units_mk AddCon.liftOnAddUnits_mk
 
 /- warning: con.induction_on_units -> Con.induction_on_units is a dubious translation:
 lean 3 declaration is
@@ -1702,6 +1804,7 @@ theorem coe_smul {α M : Type _} [MulOneClass M] [SMul α M] [IsScalarTower α M
     (x : M) : (↑(a • x) : c.Quotient) = a • ↑x :=
   rfl
 #align con.coe_smul Con.coe_smul
+#align add_con.coe_vadd AddCon.coe_vadd
 
 /- warning: con.mul_action -> Con.mulAction is a dubious translation:
 lean 3 declaration is
@@ -1717,6 +1820,7 @@ instance mulAction {α M : Type _} [Monoid α] [MulOneClass M] [MulAction α M] 
   one_smul := Quotient.ind' fun x => congr_arg Quotient.mk' <| one_smul _ _
   mul_smul a₁ a₂ := Quotient.ind' fun x => congr_arg Quotient.mk' <| mul_smul _ _ _
 #align con.mul_action Con.mulAction
+#align add_con.add_action AddCon.addAction
 
 /- warning: con.mul_distrib_mul_action -> Con.mulDistribMulAction is a dubious translation:
 lean 3 declaration is

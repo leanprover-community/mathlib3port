@@ -37,11 +37,13 @@ variable {N : Type w}
 instance hasSmulLeft [SMul R M] : SMul (ULift R) M :=
   ⟨fun s x => s.down • x⟩
 #align ulift.has_smul_left ULift.hasSmulLeft
+#align ulift.has_vadd_left ULift.hasVaddLeft
 
 @[simp, to_additive]
 theorem smul_def [SMul R M] (s : ULift R) (x : M) : s • x = s.down • x :=
   rfl
 #align ulift.smul_def ULift.smul_def
+#align ulift.vadd_def ULift.vadd_def
 
 instance is_scalar_tower [SMul R M] [SMul M N] [SMul R N] [IsScalarTower R M N] :
     IsScalarTower (ULift R) M N :=
@@ -68,6 +70,7 @@ instance mulAction [Monoid R] [MulAction R M] : MulAction (ULift R) M
   mul_smul _ _ := mul_smul _ _
   one_smul := one_smul _
 #align ulift.mul_action ULift.mulAction
+#align ulift.add_action ULift.addAction
 
 @[to_additive]
 instance mulAction' [Monoid R] [MulAction R M] : MulAction R (ULift M)
@@ -76,6 +79,7 @@ instance mulAction' [Monoid R] [MulAction R M] : MulAction R (ULift M)
   mul_smul := fun r s ⟨f⟩ => ext _ _ <| mul_smul _ _ _
   one_smul := fun ⟨f⟩ => ext _ _ <| one_smul _ _
 #align ulift.mul_action' ULift.mulAction'
+#align ulift.add_action' ULift.addAction'
 
 instance smulZeroClass [Zero M] [SMulZeroClass R M] : SMulZeroClass (ULift R) M :=
   { ULift.hasSmulLeft with smul_zero := fun _ => smul_zero _ }
