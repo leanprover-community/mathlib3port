@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca, Johan Commelin
 
 ! This file was ported from Lean 3 source module field_theory.minpoly.field
-! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
+! leanprover-community/mathlib commit 509de852e1de55e1efa8eacfa11df0823f26f226
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -95,6 +95,16 @@ theorem dvd_map_of_is_scalar_tower (A K : Type _) {R : Type _} [CommRing A] [Fie
   refine' minpoly.dvd K x _
   rw [aeval_map_algebra_map, minpoly.aeval]
 #align minpoly.dvd_map_of_is_scalar_tower minpoly.dvd_map_of_is_scalar_tower
+
+theorem dvd_map_of_is_scalar_tower' (R : Type _) {S : Type _} (K L : Type _) [CommRing R]
+    [CommRing S] [Field K] [CommRing L] [Algebra R S] [Algebra R K] [Algebra S L] [Algebra K L]
+    [Algebra R L] [IsScalarTower R K L] [IsScalarTower R S L] (s : S) :
+    minpoly K (algebraMap S L s) ∣ map (algebraMap R K) (minpoly R s) :=
+  by
+  apply minpoly.dvd K (algebraMap S L s)
+  rw [← map_aeval_eq_aeval_map, minpoly.aeval, map_zero]
+  rw [← IsScalarTower.algebra_map_eq, ← IsScalarTower.algebra_map_eq]
+#align minpoly.dvd_map_of_is_scalar_tower' minpoly.dvd_map_of_is_scalar_tower'
 
 /-- If `y` is a conjugate of `x` over a field `K`, then it is a conjugate over a subring `R`. -/
 theorem aeval_of_is_scalar_tower (R : Type _) {K T U : Type _} [CommRing R] [Field K] [CommRing T]

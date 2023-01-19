@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn, Scott Morrison
 
 ! This file was ported from Lean 3 source module combinatorics.quiver.basic
-! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
+! leanprover-community/mathlib commit 509de852e1de55e1efa8eacfa11df0823f26f226
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -161,7 +161,7 @@ theorem comp_assoc {U V W Z : Type _} [Quiver U] [Quiver V] [Quiver W] [Quiver Z
 infixl:50 " ⥤q " => Prefunctor
 
 -- mathport name: «expr ⋙q »
-infixl:50 " ⋙q " => Prefunctor.comp
+infixl:60 " ⋙q " => Prefunctor.comp
 
 -- mathport name: «expr𝟭q»
 notation "𝟭q" => id

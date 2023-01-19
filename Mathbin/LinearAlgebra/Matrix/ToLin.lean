@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.to_lin
-! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
+! leanprover-community/mathlib commit 509de852e1de55e1efa8eacfa11df0823f26f226
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -782,15 +782,9 @@ namespace Algebra
 
 section Lmul
 
-variable {R S T : Type _} [CommRing R] [CommRing S] [CommRing T]
+variable {R S : Type _} [CommRing R] [Ring S] [Algebra R S]
 
-variable [Algebra R S] [Algebra S T] [Algebra R T] [IsScalarTower R S T]
-
-variable {m n : Type _} [Fintype m] [DecidableEq m] [DecidableEq n]
-
-variable (b : Basis m R S) (c : Basis n S T)
-
-open Algebra
+variable {m : Type _} [Fintype m] [DecidableEq m] (b : Basis m R S)
 
 theorem to_matrix_lmul' (x : S) (i j) :
     LinearMap.toMatrix b b (lmul R S x) i j = b.repr (x * b j) i := by
@@ -852,7 +846,17 @@ theorem left_mul_matrix_injective : Function.Injective (leftMulMatrix b) := fun 
     
 #align algebra.left_mul_matrix_injective Algebra.left_mul_matrix_injective
 
-variable [Fintype n]
+end Lmul
+
+section LmulTower
+
+variable {R S T : Type _} [CommRing R] [CommRing S] [Ring T]
+
+variable [Algebra R S] [Algebra S T] [Algebra R T] [IsScalarTower R S T]
+
+variable {m n : Type _} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
+
+variable (b : Basis m R S) (c : Basis n S T)
 
 theorem smul_left_mul_matrix (x) (ik jk) :
     leftMulMatrix (b.smul c) x ik jk = leftMulMatrix b (leftMulMatrix c x ik.2 jk.2) ik.1 jk.1 := by
@@ -879,7 +883,7 @@ theorem smul_left_mul_matrix_algebra_map_ne (x : S) (i j) {k k'} (h : k ≠ k') 
   rw [smul_left_mul_matrix_algebra_map, block_diagonal_apply_ne _ _ _ h]
 #align algebra.smul_left_mul_matrix_algebra_map_ne Algebra.smul_left_mul_matrix_algebra_map_ne
 
-end Lmul
+end LmulTower
 
 end Algebra
 

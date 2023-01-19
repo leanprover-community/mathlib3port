@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.gauss_lemma
-! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
+! leanprover-community/mathlib commit 509de852e1de55e1efa8eacfa11df0823f26f226
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -147,6 +147,25 @@ theorem is_integrally_closed_iff' :
       degree_eq_one_of_irreducible_of_root ((H _ <| minpoly.monic hx).mp (minpoly.irreducible hx))
     rw [is_root, eval_map, ← aeval_def, minpoly.aeval R x]
 #align polynomial.is_integrally_closed_iff' Polynomial.is_integrally_closed_iff'
+
+theorem Monic.dvd_of_fraction_map_dvd_fraction_map [IsIntegrallyClosed R] {p q : R[X]}
+    (hp : p.Monic) (hq : q.Monic) (h : q.map (algebraMap R K) ∣ p.map (algebraMap R K)) : q ∣ p :=
+  by
+  obtain ⟨r, hr⟩ := h
+  obtain ⟨d', hr'⟩ := IsIntegrallyClosed.eq_map_mul_C_of_dvd K hp (dvd_of_mul_left_eq _ hr.symm)
+  rw [monic.leading_coeff, C_1, mul_one] at hr'
+  rw [← hr', ← Polynomial.map_mul] at hr
+  exact dvd_of_mul_right_eq _ (Polynomial.map_injective _ (IsFractionRing.injective R K) hr.symm)
+  · exact monic.of_mul_monic_left (hq.map (algebraMap R K)) (by simpa [← hr] using hp.map _)
+#align
+  polynomial.monic.dvd_of_fraction_map_dvd_fraction_map Polynomial.Monic.dvd_of_fraction_map_dvd_fraction_map
+
+theorem Monic.dvd_iff_fraction_map_dvd_fraction_map [IsIntegrallyClosed R] {p q : R[X]}
+    (hp : p.Monic) (hq : q.Monic) : q.map (algebraMap R K) ∣ p.map (algebraMap R K) ↔ q ∣ p :=
+  ⟨fun h => hp.dvd_of_fraction_map_dvd_fraction_map hq h, fun ⟨a, b⟩ =>
+    ⟨a.map (algebraMap R K), b.symm ▸ Polynomial.map_mul (algebraMap R K)⟩⟩
+#align
+  polynomial.monic.dvd_iff_fraction_map_dvd_fraction_map Polynomial.Monic.dvd_iff_fraction_map_dvd_fraction_map
 
 end IsIntegrallyClosed
 

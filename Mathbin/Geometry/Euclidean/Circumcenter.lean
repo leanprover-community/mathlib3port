@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module geometry.euclidean.circumcenter
-! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
+! leanprover-community/mathlib commit 509de852e1de55e1efa8eacfa11df0823f26f226
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -198,10 +198,11 @@ theorem exists_unique_dist_eq_of_insert {s : AffineSubspace ℝ P} [CompleteSpac
 /-- Given a finite nonempty affinely independent family of points,
 there is a unique (circumcenter, circumradius) pair for those points
 in the affine subspace they span. -/
-theorem AffineIndependent.exists_unique_dist_eq {ι : Type _} [hne : Nonempty ι] [Fintype ι]
+theorem AffineIndependent.exists_unique_dist_eq {ι : Type _} [hne : Nonempty ι] [Finite ι]
     {p : ι → P} (ha : AffineIndependent ℝ p) :
     ∃! cs : Sphere P, cs.center ∈ affineSpan ℝ (Set.range p) ∧ Set.range p ⊆ (cs : Set P) :=
   by
+  cases nonempty_fintype ι
   induction' hn : Fintype.card ι with m hm generalizing ι
   · exfalso
     have h := Fintype.card_pos_iff.2 hne
@@ -235,7 +236,7 @@ theorem AffineIndependent.exists_unique_dist_eq {ι : Type _} [hne : Nonempty ι
         · simp
       haveI : Nonempty ι2 := Fintype.card_pos_iff.1 (hc.symm ▸ Nat.zero_lt_succ _)
       have ha2 : AffineIndependent ℝ fun i2 : ι2 => p i2 := ha.subtype _
-      replace hm := hm ha2 hc
+      replace hm := hm ha2 _ hc
       have hr : Set.range p = insert (p i) (Set.range fun i2 : ι2 => p i2) :=
         by
         change _ = insert _ (Set.range fun i2 : { x | x ≠ i } => p i2)

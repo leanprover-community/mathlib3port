@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module data.polynomial.monic
-! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
+! leanprover-community/mathlib commit 509de852e1de55e1efa8eacfa11df0823f26f226
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -378,6 +378,10 @@ theorem monic_of_injective {p : R[X]} (hp : (p.map f).Monic) : p.Monic :=
   apply hf
   rw [← leading_coeff_of_injective hf, hp.leading_coeff, f.map_one]
 #align polynomial.monic_of_injective Polynomial.monic_of_injective
+
+theorem Function.Injective.monic_map_iff {p : R[X]} : p.Monic ↔ (p.map f).Monic :=
+  ⟨Monic.map _, Polynomial.monic_of_injective hf⟩
+#align function.injective.monic_map_iff Function.Injective.monic_map_iff
 
 end Injective
 

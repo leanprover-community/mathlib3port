@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Benjamin Davidson
 
 ! This file was ported from Lean 3 source module analysis.special_functions.integrals
-! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
+! leanprover-community/mathlib commit 509de852e1de55e1efa8eacfa11df0823f26f226
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -517,6 +517,72 @@ theorem integral_inv_one_add_sq : (∫ x : ℝ in a..b, (1 + x ^ 2)⁻¹) = arct
 theorem integral_one_div_one_add_sq : (∫ x : ℝ in a..b, 1 / (1 + x ^ 2)) = arctan b - arctan a := by
   simp only [one_div, integral_inv_one_add_sq]
 #align integral_one_div_one_add_sq integral_one_div_one_add_sq
+
+section RpowCpow
+
+open Complex
+
+theorem integral_mul_cpow_one_add_sq {t : ℂ} (ht : t ≠ -1) :
+    (∫ x : ℝ in a..b, (x : ℂ) * (1 + x ^ 2) ^ t) =
+      (1 + b ^ 2) ^ (t + 1) / (2 * (t + 1)) - (1 + a ^ 2) ^ (t + 1) / (2 * (t + 1)) :=
+  by
+  have : t + 1 ≠ 0 := by
+    contrapose! ht
+    rwa [add_eq_zero_iff_eq_neg] at ht
+  apply integral_eq_sub_of_has_deriv_at
+  · intro x hx
+    have f : HasDerivAt (fun y : ℂ => 1 + y ^ 2) (2 * x) x :=
+      by
+      convert (has_deriv_at_pow 2 (x : ℂ)).const_add 1
+      · norm_cast
+      · simp
+    have g :
+      ∀ {z : ℂ}, 0 < z.re → HasDerivAt (fun z => z ^ (t + 1) / (2 * (t + 1))) (z ^ t / 2) z :=
+      by
+      intro z hz
+      have : z ≠ 0 := by
+        contrapose! hz
+        rw [hz, zero_re]
+      convert (HasDerivAt.cpow_const (has_deriv_at_id _) (Or.inl hz)).div_const (2 * (t + 1)) using
+        1
+      field_simp
+      ring
+    convert (HasDerivAt.comp (↑x) (g _) f).comp_of_real using 1
+    · field_simp
+      ring
+    · rw [add_re, one_re, ← of_real_pow, of_real_re]
+      exact add_pos_of_pos_of_nonneg zero_lt_one (sq_nonneg x)
+  · apply Continuous.intervalIntegrable
+    refine' continuous_of_real.mul _
+    apply Continuous.cpow
+    · exact continuous_const.add (continuous_of_real.pow 2)
+    · exact continuous_const
+    · intro a
+      rw [add_re, one_re, ← of_real_pow, of_real_re]
+      exact Or.inl (add_pos_of_pos_of_nonneg zero_lt_one (sq_nonneg a))
+#align integral_mul_cpow_one_add_sq integral_mul_cpow_one_add_sq
+
+theorem integral_mul_rpow_one_add_sq {t : ℝ} (ht : t ≠ -1) :
+    (∫ x : ℝ in a..b, x * (1 + x ^ 2) ^ t) =
+      (1 + b ^ 2) ^ (t + 1) / (2 * (t + 1)) - (1 + a ^ 2) ^ (t + 1) / (2 * (t + 1)) :=
+  by
+  have : ∀ x s : ℝ, (((1 + x ^ 2) ^ s : ℝ) : ℂ) = (1 + (x : ℂ) ^ 2) ^ ↑s :=
+    by
+    intro x s
+    rw [of_real_cpow, of_real_add, of_real_pow, of_real_one]
+    exact add_nonneg zero_le_one (sq_nonneg x)
+  rw [← of_real_inj]
+  convert integral_mul_cpow_one_add_sq (_ : (t : ℂ) ≠ -1)
+  · rw [← intervalIntegral.integral_of_real]
+    congr with x : 1
+    rw [of_real_mul, this x t]
+  · simp_rw [of_real_sub, of_real_div, this a (t + 1), this b (t + 1)]
+    push_cast
+  · rw [← of_real_one, ← of_real_neg, Ne.def, of_real_inj]
+    exact ht
+#align integral_mul_rpow_one_add_sq integral_mul_rpow_one_add_sq
+
+end RpowCpow
 
 /-! ### Integral of `sin x ^ n` -/
 

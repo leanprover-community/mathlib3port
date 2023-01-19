@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module data.finset.nat_antidiagonal
-! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
+! leanprover-community/mathlib commit 509de852e1de55e1efa8eacfa11df0823f26f226
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Data.Multiset.NatAntidiagonal
 
 /-!
 # Antidiagonals in ℕ × ℕ as finsets
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines the antidiagonals of ℕ × ℕ as finsets: the `n`-th antidiagonal is the finset of
 pairs `(i, j)` such that `i + j = n`. This is useful for polynomial multiplication and more

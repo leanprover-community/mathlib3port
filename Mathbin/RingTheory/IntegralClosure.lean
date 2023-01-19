@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module ring_theory.integral_closure
-! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
+! leanprover-community/mathlib commit 509de852e1de55e1efa8eacfa11df0823f26f226
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -140,6 +140,17 @@ theorem map_is_integral {B C F : Type _} [Ring B] [Ring C] [Algebra R B] [Algebr
   rw [← aeval_def, show (aeval (f b)) P = (aeval (f b)) (P.map (algebraMap R A)) by simp,
     aeval_alg_hom_apply, aeval_map_algebra_map, aeval_def, hP.2, _root_.map_zero]
 #align map_is_integral map_is_integral
+
+theorem is_integral_map_of_comp_eq_of_is_integral {R S T U : Type _} [CommRing R] [CommRing S]
+    [CommRing T] [CommRing U] [Algebra R S] [Algebra T U] (φ : R →+* T) (ψ : S →+* U)
+    (h : (algebraMap T U).comp φ = ψ.comp (algebraMap R S)) {a : S} (ha : IsIntegral R a) :
+    IsIntegral T (ψ a) := by
+  rw [IsIntegral, RingHom.IsIntegralElem] at ha⊢
+  obtain ⟨p, hp⟩ := ha
+  refine' ⟨p.map φ, hp.left.map _, _⟩
+  rw [← eval_map, map_map, h, ← map_map, eval_map, eval₂_at_apply, eval_map, hp.right,
+    RingHom.map_zero]
+#align is_integral_map_of_comp_eq_of_is_integral is_integral_map_of_comp_eq_of_is_integral
 
 theorem is_integral_alg_hom_iff {A B : Type _} [Ring A] [Ring B] [Algebra R A] [Algebra R B]
     (f : A →ₐ[R] B) (hf : Function.Injective f) {x : A} : IsIntegral R (f x) ↔ IsIntegral R x :=

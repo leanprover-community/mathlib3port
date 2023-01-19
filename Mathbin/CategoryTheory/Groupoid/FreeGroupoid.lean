@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémi Bottinelli
 
 ! This file was ported from Lean 3 source module category_theory.groupoid.free_groupoid
-! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
+! leanprover-community/mathlib commit 509de852e1de55e1efa8eacfa11df0823f26f226
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -183,14 +183,14 @@ def lift (φ : V ⥤q V') : FreeGroupoid V ⥤ V' :=
       apply groupoid.comp_inv)
 #align category_theory.groupoid.free.lift CategoryTheory.Groupoid.Free.lift
 
-theorem lift_spec (φ : V ⥤q V') : (of V ⋙q (lift φ).toPrefunctor) = φ :=
+theorem lift_spec (φ : V ⥤q V') : of V ⋙q (lift φ).toPrefunctor = φ :=
   by
   rw [of_eq, Prefunctor.comp_assoc, Prefunctor.comp_assoc, functor.to_prefunctor_comp]
   dsimp [lift]
   rw [quotient.lift_spec, paths.lift_spec, Quiver.Symmetrify.lift_spec]
 #align category_theory.groupoid.free.lift_spec CategoryTheory.Groupoid.Free.lift_spec
 
-theorem lift_unique (φ : V ⥤q V') (Φ : FreeGroupoid V ⥤ V') (hΦ : (of V ⋙q Φ.toPrefunctor) = φ) :
+theorem lift_unique (φ : V ⥤q V') (Φ : FreeGroupoid V ⥤ V') (hΦ : of V ⋙q Φ.toPrefunctor = φ) :
     Φ = lift φ := by
   apply quotient.lift_unique
   apply paths.lift_unique

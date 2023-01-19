@@ -4,13 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module category_theory.single_obj
-! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
+! leanprover-community/mathlib commit 509de852e1de55e1efa8eacfa11df0823f26f226
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Endomorphism
 import Mathbin.CategoryTheory.Category.CatCat
 import Mathbin.Algebra.Category.MonCat.Basic
+import Mathbin.Combinatorics.Quiver.SingleObj
 
 /-!
 # Single-object category
@@ -44,10 +45,10 @@ universe u v w
 
 namespace CategoryTheory
 
-/-- Type tag on `unit` used to define single-object categories and groupoids. -/
-@[nolint unused_arguments has_nonempty_instance]
-def SingleObj (α : Type u) : Type :=
-  Unit
+/-- Abbreviation that allows writing `category_theory.single_obj` rather than `quiver.single_obj`.
+-/
+abbrev SingleObj :=
+  Quiver.SingleObj
 #align category_theory.single_obj CategoryTheory.SingleObj
 
 namespace SingleObj
@@ -95,9 +96,11 @@ theorem inv_as_inv [Group α] {x y : SingleObj α} (f : x ⟶ y) : inv f = f⁻�
   rw [comp_as_mul, inv_mul_self, id_as_one]
 #align category_theory.single_obj.inv_as_inv CategoryTheory.SingleObj.inv_as_inv
 
-/-- The single object in `single_obj α`. -/
-protected def star : SingleObj α :=
-  Unit.unit
+/-- Abbreviation that allows writing `category_theory.single_obj.star` rather than
+`quiver.single_obj.star`.
+-/
+abbrev star : SingleObj α :=
+  Quiver.SingleObj.star α
 #align category_theory.single_obj.star CategoryTheory.SingleObj.star
 
 /-- The endomorphisms monoid of the only object in `single_obj α` is equivalent to the original

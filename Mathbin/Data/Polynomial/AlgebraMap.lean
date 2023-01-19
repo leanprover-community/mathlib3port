@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module data.polynomial.algebra_map
-! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
+! leanprover-community/mathlib commit 509de852e1de55e1efa8eacfa11df0823f26f226
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -309,6 +309,22 @@ theorem coeff_zero_eq_aeval_zero (p : R[X]) : p.coeff 0 = aeval 0 p := by
 theorem coeff_zero_eq_aeval_zero' (p : R[X]) : algebraMap R A (p.coeff 0) = aeval (0 : A) p := by
   simp [aeval_def]
 #align polynomial.coeff_zero_eq_aeval_zero' Polynomial.coeff_zero_eq_aeval_zero'
+
+theorem map_aeval_eq_aeval_map {S T U : Type _} [CommSemiring S] [CommSemiring T] [Semiring U]
+    [Algebra R S] [Algebra T U] {φ : R →+* T} {ψ : S →+* U}
+    (h : (algebraMap T U).comp φ = ψ.comp (algebraMap R S)) (p : R[X]) (a : S) :
+    ψ (aeval a p) = aeval (ψ a) (p.map φ) :=
+  by
+  conv_rhs => rw [aeval_def, ← eval_map]
+  rw [map_map, h, ← map_map, eval_map, eval₂_at_apply, aeval_def, eval_map]
+#align polynomial.map_aeval_eq_aeval_map Polynomial.map_aeval_eq_aeval_map
+
+theorem aeval_eq_zero_of_dvd_aeval_eq_zero [CommSemiring S] [CommSemiring T] [Algebra S T]
+    {p q : S[X]} (h₁ : p ∣ q) {a : T} (h₂ : aeval a p = 0) : aeval a q = 0 :=
+  by
+  rw [aeval_def, ← eval_map] at h₂⊢
+  exact eval_eq_zero_of_dvd_of_eval_eq_zero (Polynomial.map_dvd (algebraMap S T) h₁) h₂
+#align polynomial.aeval_eq_zero_of_dvd_aeval_eq_zero Polynomial.aeval_eq_zero_of_dvd_aeval_eq_zero
 
 variable (R)
 

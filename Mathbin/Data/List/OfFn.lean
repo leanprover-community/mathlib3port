@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.list.of_fn
-! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
+! leanprover-community/mathlib commit 509de852e1de55e1efa8eacfa11df0823f26f226
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Data.List.Join
 
 /-!
 # Lists from functions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Theorems and lemmas for dealing with `list.of_fn`, which converts a function on `fin n` to a list
 of length `n`.
@@ -216,6 +219,12 @@ theorem ofFn_add {m n} (f : Fin (m + n) → α) :
     rfl
 #align list.of_fn_add List.ofFn_add
 
+@[simp]
+theorem of_fn_fin_append {m n} (a : Fin m → α) (b : Fin n → α) :
+    List.ofFn (Fin.append a b) = List.ofFn a ++ List.ofFn b := by
+  simp_rw [of_fn_add, Fin.append_left, Fin.append_right]
+#align list.of_fn_fin_append List.of_fn_fin_append
+
 #print List.ofFn_mul /-
 /-- This breaks a list of `m*n` items into `m` groups each containing `n` elements. -/
 theorem ofFn_mul {m n} (f : Fin (m * n) → α) :
@@ -291,6 +300,13 @@ theorem ofFn_const (n : ℕ) (c : α) : (ofFn fun i : Fin n => c) = replicate n 
   Nat.recOn n (by simp) fun n ihn => by simp [ihn]
 #align list.of_fn_const List.ofFn_const
 -/
+
+@[simp]
+theorem of_fn_fin_repeat {m} (a : Fin m → α) (n : ℕ) :
+    List.ofFn (Fin.repeat n a) = (List.replicate n (List.ofFn a)).join := by
+  simp_rw [of_fn_mul, ← of_fn_const, Fin.repeat, Fin.modNat, Fin.val_mk, add_comm,
+    Nat.add_mul_mod_self_right, Nat.mod_eq_of_lt (Fin.is_lt _), Fin.eta]
+#align list.of_fn_fin_repeat List.of_fn_fin_repeat
 
 #print List.equivSigmaTuple /-
 /-- Lists are equivalent to the sigma type of tuples of a given length. -/

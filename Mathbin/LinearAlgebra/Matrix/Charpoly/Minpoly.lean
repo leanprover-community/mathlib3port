@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Jalex Stark
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.charpoly.minpoly
-! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
+! leanprover-community/mathlib commit 509de852e1de55e1efa8eacfa11df0823f26f226
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -53,17 +53,16 @@ In combination with `det_eq_sign_charpoly_coeff` or `trace_eq_neg_charpoly_coeff
 and a bit of rewriting, this will allow us to conclude the
 field norm resp. trace of `x` is the product resp. sum of `x`'s conjugates.
 -/
-theorem charpoly_left_mul_matrix {K S : Type _} [Field K] [CommRing S] [Algebra K S]
-    (h : PowerBasis K S) : (leftMulMatrix h.Basis h.gen).charpoly = minpoly K h.gen :=
+theorem charpoly_left_mul_matrix {S : Type _} [Ring S] [Algebra R S] (h : PowerBasis R S) :
+    (leftMulMatrix h.Basis h.gen).charpoly = minpoly R h.gen :=
   by
-  apply minpoly.unique
-  · apply Matrix.charpoly_monic
+  cases subsingleton_or_nontrivial R; · apply Subsingleton.elim
+  apply minpoly.unique' R h.gen (charpoly_monic _)
   · apply (injective_iff_map_eq_zero (left_mul_matrix _)).mp (left_mul_matrix_injective h.basis)
     rw [← Polynomial.aeval_alg_hom_apply, aeval_self_charpoly]
-  · intro q q_monic root_q
-    rw [Matrix.charpoly_degree_eq_dim, Fintype.card_fin, degree_eq_nat_degree q_monic.ne_zero]
-    apply with_bot.some_le_some.mpr
-    exact h.dim_le_nat_degree_of_root q_monic.ne_zero root_q
+  refine' fun q hq => or_iff_not_imp_left.2 fun h0 => _
+  rw [Matrix.charpoly_degree_eq_dim, Fintype.card_fin] at hq
+  contrapose! hq; exact h.dim_le_degree_of_root h0 hq
 #align charpoly_left_mul_matrix charpoly_left_mul_matrix
 
 end PowerBasis

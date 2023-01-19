@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.norm
-! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
+! leanprover-community/mathlib commit 509de852e1de55e1efa8eacfa11df0823f26f226
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,7 +46,7 @@ See also `algebra.trace`, which is defined similarly as the trace of
 
 universe u v w
 
-variable {R S T : Type _} [CommRing R] [CommRing S]
+variable {R S T : Type _} [CommRing R] [Ring S]
 
 variable [Algebra R S]
 
@@ -96,7 +96,7 @@ theorem norm_eq_matrix_det [Fintype ι] [DecidableEq ι] (b : Basis ι R S) (s :
   rfl
 #align algebra.norm_eq_matrix_det Algebra.norm_eq_matrix_det
 
-/-- If `x` is in the base field `K`, then the norm is `x ^ [L : K]`. -/
+/-- If `x` is in the base ring `K`, then the norm is `x ^ [L : K]`. -/
 theorem norm_algebra_map_of_basis [Fintype ι] (b : Basis ι R S) (x : R) :
     norm R (algebraMap R S x) = x ^ Fintype.card ι :=
   by
@@ -113,7 +113,7 @@ theorem norm_algebra_map_of_basis [Fintype ι] (b : Basis ι R S) (x : R) :
 (If `L` is not finite-dimensional over `K`, then `norm = 1 = x ^ 0 = x ^ (finrank L K)`.)
 -/
 @[simp]
-protected theorem norm_algebra_map {K L : Type _} [Field K] [CommRing L] [Algebra K L] (x : K) :
+protected theorem norm_algebra_map {L : Type _} [Ring L] [Algebra K L] (x : K) :
     norm K (algebraMap K L x) = x ^ finrank K L :=
   by
   by_cases H : ∃ s : Finset L, Nonempty (Basis s K L)
@@ -127,25 +127,26 @@ section EqProdRoots
 
 /-- Given `pb : power_basis K S`, then the norm of `pb.gen` is
 `(-1) ^ pb.dim * coeff (minpoly K pb.gen) 0`. -/
-theorem PowerBasis.norm_gen_eq_coeff_zero_minpoly [Algebra K S] (pb : PowerBasis K S) :
-    norm K pb.gen = (-1) ^ pb.dim * coeff (minpoly K pb.gen) 0 := by
+theorem PowerBasis.norm_gen_eq_coeff_zero_minpoly (pb : PowerBasis R S) :
+    norm R pb.gen = (-1) ^ pb.dim * coeff (minpoly R pb.gen) 0 := by
   rw [norm_eq_matrix_det pb.basis, det_eq_sign_charpoly_coeff, charpoly_left_mul_matrix,
     Fintype.card_fin]
 #align
   algebra.power_basis.norm_gen_eq_coeff_zero_minpoly Algebra.PowerBasis.norm_gen_eq_coeff_zero_minpoly
 
-/-- Given `pb : power_basis K S`, then the norm of `pb.gen` is
-`((minpoly K pb.gen).map (algebra_map K F)).roots.prod`. -/
-theorem PowerBasis.norm_gen_eq_prod_roots [Algebra K S] (pb : PowerBasis K S)
-    (hf : (minpoly K pb.gen).Splits (algebraMap K F)) :
-    algebraMap K F (norm K pb.gen) = ((minpoly K pb.gen).map (algebraMap K F)).roots.Prod :=
+/-- Given `pb : power_basis R S`, then the norm of `pb.gen` is
+`((minpoly R pb.gen).map (algebra_map R F)).roots.prod`. -/
+theorem PowerBasis.norm_gen_eq_prod_roots [Algebra R F] (pb : PowerBasis R S)
+    (hf : (minpoly R pb.gen).Splits (algebraMap R F)) :
+    algebraMap R F (norm R pb.gen) = ((minpoly R pb.gen).map (algebraMap R F)).roots.Prod :=
   by
+  haveI := Module.nontrivial R F
+  have := minpoly.monic pb.is_integral_gen
   rw [power_basis.norm_gen_eq_coeff_zero_minpoly, ← pb.nat_degree_minpoly, RingHom.map_mul, ←
     coeff_map,
-    prod_roots_eq_coeff_zero_of_monic_of_split
-      ((minpoly.monic (PowerBasis.is_integral_gen _)).map _) ((splits_id_iff_splits _).2 hf),
-    nat_degree_map, map_pow, ← mul_assoc, ← mul_pow]
-  simp
+    prod_roots_eq_coeff_zero_of_monic_of_split (this.map _) ((splits_id_iff_splits _).2 hf),
+    this.nat_degree_map, map_pow, ← mul_assoc, ← mul_pow]
+  · simp only [map_neg, _root_.map_one, neg_mul, neg_neg, one_pow, one_mul]; infer_instance
 #align algebra.power_basis.norm_gen_eq_prod_roots Algebra.PowerBasis.norm_gen_eq_prod_roots
 
 end EqProdRoots
@@ -260,21 +261,21 @@ section EqProdEmbeddings
 
 open IntermediateField IntermediateField.AdjoinSimple Polynomial
 
-theorem norm_eq_prod_embeddings_gen {K L : Type _} [Field K] [CommRing L] [Algebra K L] (E : Type _)
-    [Field E] [Algebra K E] (pb : PowerBasis K L) (hE : (minpoly K pb.gen).Splits (algebraMap K E))
-    (hfx : (minpoly K pb.gen).Separable) :
-    algebraMap K E (norm K pb.gen) =
-      (@Finset.univ (PowerBasis.AlgHom.fintype pb)).Prod fun σ => σ pb.gen :=
+variable (F) (E : Type _) [Field E] [Algebra K E]
+
+theorem norm_eq_prod_embeddings_gen [Algebra R F] (pb : PowerBasis R S)
+    (hE : (minpoly R pb.gen).Splits (algebraMap R F)) (hfx : (minpoly R pb.gen).Separable) :
+    algebraMap R F (norm R pb.gen) = (@Finset.univ pb).Prod fun σ => σ pb.gen :=
   by
-  letI := Classical.decEq E
-  rw [power_basis.norm_gen_eq_prod_roots pb hE, Fintype.prod_equiv pb.lift_equiv',
-    Finset.prod_mem_multiset, Finset.prod_eq_multiset_prod, Multiset.toFinset_val,
-    multiset.dedup_eq_self.mpr, Multiset.map_id]
-  · exact nodup_roots ((separable_map _).mpr hfx)
+  letI := Classical.decEq F
+  rw [pb.norm_gen_eq_prod_roots hE, Fintype.prod_equiv pb.lift_equiv', Finset.prod_mem_multiset,
+    Finset.prod_eq_multiset_prod, Multiset.toFinset_val, multiset.dedup_eq_self.mpr,
+    Multiset.map_id]
+  · exact nodup_roots hfx.map
   · intro x
     rfl
   · intro σ
-    rw [PowerBasis.lift_equiv'_apply_coe, id.def]
+    rw [pb.lift_equiv'_apply_coe, id.def]
 #align algebra.norm_eq_prod_embeddings_gen Algebra.norm_eq_prod_embeddings_gen
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
@@ -285,13 +286,10 @@ theorem norm_eq_prod_roots [IsSeparable K L] [FiniteDimensional K L] {x : L}
   rw [norm_eq_norm_adjoin K x, map_pow, IntermediateField.AdjoinSimple.norm_gen_eq_prod_roots _ hF]
 #align algebra.norm_eq_prod_roots Algebra.norm_eq_prod_roots
 
-variable (F) (E : Type _) [Field E] [Algebra K E]
-
 theorem prod_embeddings_eq_finrank_pow [Algebra L F] [IsScalarTower K L F] [IsAlgClosed E]
     [IsSeparable K F] [FiniteDimensional K F] (pb : PowerBasis K L) :
     (∏ σ : F →ₐ[K] E, σ (algebraMap L F pb.gen)) =
-      ((@Finset.univ (PowerBasis.AlgHom.fintype pb)).Prod fun σ : L →ₐ[K] E => σ pb.gen) ^
-        finrank L F :=
+      ((@Finset.univ pb).Prod fun σ : L →ₐ[K] E => σ pb.gen) ^ finrank L F :=
   by
   haveI : FiniteDimensional L F := FiniteDimensional.right K L F
   haveI : IsSeparable L F := is_separable_tower_top_of_is_separable K L F
@@ -339,17 +337,17 @@ theorem norm_eq_prod_automorphisms [FiniteDimensional K L] [IsGalois K L] (x : L
       AlgEquiv.coe_of_bijective, AlgHom.restrict_normal_commutes, id.map_eq_id, RingHom.id_apply]
 #align algebra.norm_eq_prod_automorphisms Algebra.norm_eq_prod_automorphisms
 
-theorem is_integral_norm [Algebra S L] [Algebra S K] [IsScalarTower S K L] [IsSeparable K L]
-    [FiniteDimensional K L] {x : L} (hx : IsIntegral S x) : IsIntegral S (norm K x) :=
+theorem is_integral_norm [Algebra R L] [Algebra R K] [IsScalarTower R K L] [IsSeparable K L]
+    [FiniteDimensional K L] {x : L} (hx : IsIntegral R x) : IsIntegral R (norm K x) :=
   by
   have hx' : _root_.is_integral K x := is_integral_of_is_scalar_tower hx
   rw [← is_integral_algebra_map_iff (algebraMap K (AlgebraicClosure L)).Injective,
     norm_eq_prod_roots]
   · refine' (IsIntegral.multiset_prod fun y hy => _).pow _
     rw [mem_roots_map (minpoly.ne_zero hx')] at hy
-    use minpoly S x, minpoly.monic hx
+    use minpoly R x, minpoly.monic hx
     rw [← aeval_def] at hy⊢
-    exact minpoly.aeval_of_is_scalar_tower S x y hy
+    exact minpoly.aeval_of_is_scalar_tower R x y hy
   · apply IsAlgClosed.splits_codomain
   · infer_instance
 #align algebra.is_integral_norm Algebra.is_integral_norm

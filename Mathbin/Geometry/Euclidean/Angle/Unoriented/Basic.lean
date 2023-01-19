@@ -4,11 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Manuel Candales
 
 ! This file was ported from Lean 3 source module geometry.euclidean.angle.unoriented.basic
-! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
+! leanprover-community/mathlib commit 509de852e1de55e1efa8eacfa11df0823f26f226
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Analysis.Calculus.Conformal.NormedSpace
 import Mathbin.Analysis.InnerProductSpace.Basic
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.Inverse
 
@@ -23,6 +22,10 @@ This file defines unoriented angles in real inner product spaces.
 
 -/
 
+
+assert_not_exists has_fderiv_at
+
+assert_not_exists conformal_at
 
 noncomputable section
 
@@ -68,25 +71,6 @@ theorem LinearIsometry.angle_map {E F : Type _} [InnerProductSpace ℝ E] [Inner
 theorem Submodule.angle_coe {s : Submodule ℝ V} (x y : s) : angle (x : V) (y : V) = angle x y :=
   s.subtypeₗᵢ.angle_map x y
 #align submodule.angle_coe Submodule.angle_coe
-
-theorem IsConformalMap.preserves_angle {E F : Type _} [InnerProductSpace ℝ E]
-    [InnerProductSpace ℝ F] {f' : E →L[ℝ] F} (h : IsConformalMap f') (u v : E) :
-    angle (f' u) (f' v) = angle u v :=
-  by
-  obtain ⟨c, hc, li, rfl⟩ := h
-  exact (angle_smul_smul hc _ _).trans (li.angle_map _ _)
-#align
-  inner_product_geometry.is_conformal_map.preserves_angle InnerProductGeometry.IsConformalMap.preserves_angle
-
-/-- If a real differentiable map `f` is conformal at a point `x`,
-    then it preserves the angles at that point. -/
-theorem ConformalAt.preserves_angle {E F : Type _} [InnerProductSpace ℝ E] [InnerProductSpace ℝ F]
-    {f : E → F} {x : E} {f' : E →L[ℝ] F} (h : HasFderivAt f f' x) (H : ConformalAt f x) (u v : E) :
-    angle (f' u) (f' v) = angle u v :=
-  let ⟨f₁, h₁, c⟩ := H
-  h₁.unique h ▸ IsConformalMap.preserves_angle c u v
-#align
-  inner_product_geometry.conformal_at.preserves_angle InnerProductGeometry.ConformalAt.preserves_angle
 
 /-- The cosine of the angle between two vectors. -/
 theorem cos_angle (x y : V) : Real.cos (angle x y) = ⟪x, y⟫ / (‖x‖ * ‖y‖) :=

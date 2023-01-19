@@ -4,12 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module geometry.euclidean.angle.oriented.affine
-! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
+! leanprover-community/mathlib commit 509de852e1de55e1efa8eacfa11df0823f26f226
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Convex.Side
-import Mathbin.Geometry.Euclidean.Angle.Oriented.Basic
+import Mathbin.Geometry.Euclidean.Angle.Oriented.Rotation
 import Mathbin.Geometry.Euclidean.Angle.Unoriented.Affine
 
 /-!

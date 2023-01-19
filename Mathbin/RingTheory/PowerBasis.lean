@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.power_basis
-! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
+! leanprover-community/mathlib commit 509de852e1de55e1efa8eacfa11df0823f26f226
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -231,6 +231,29 @@ theorem degree_minpoly [Nontrivial A] (pb : PowerBasis A S) : degree (minpoly A 
 theorem nat_degree_minpoly [Nontrivial A] (pb : PowerBasis A S) :
     (minpoly A pb.gen).natDegree = pb.dim := by rw [← minpoly_gen_eq, nat_degree_minpoly_gen]
 #align power_basis.nat_degree_minpoly PowerBasis.nat_degree_minpoly
+
+protected theorem left_mul_matrix (pb : PowerBasis A S) :
+    Algebra.leftMulMatrix pb.Basis pb.gen =
+      Matrix.of fun i j =>
+        if ↑j + 1 = pb.dim then -pb.minpolyGen.coeff ↑i else if ↑i = ↑j + 1 then 1 else 0 :=
+  by
+  cases subsingleton_or_nontrivial A; · apply Subsingleton.elim
+  rw [Algebra.left_mul_matrix_apply, ← LinearEquiv.eq_symm_apply, LinearMap.to_matrix_symm]
+  refine' pb.basis.ext fun k => _
+  simp_rw [Matrix.to_lin_self, Matrix.of_apply, pb.basis_eq_pow]
+  apply (pow_succ _ _).symm.trans
+  split_ifs with h h
+  · simp_rw [h, neg_smul, Finset.sum_neg_distrib, eq_neg_iff_add_eq_zero]
+    convert pb.aeval_minpoly_gen
+    rw [add_comm, aeval_eq_sum_range, Finset.sum_range_succ, ← leading_coeff,
+      pb.minpoly_gen_monic.leading_coeff, one_smul, nat_degree_minpoly_gen, Finset.sum_range]
+  · rw [Fintype.sum_eq_single (⟨↑k + 1, lt_of_le_of_ne k.2 h⟩ : Fin pb.dim), if_pos, one_smul]
+    · rfl
+    · rfl
+    intro x hx
+    rw [if_neg, zero_smul]
+    apply mt Fin.ext hx
+#align power_basis.left_mul_matrix PowerBasis.left_mul_matrix
 
 end minpoly
 

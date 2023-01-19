@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module algebraic_topology.dold_kan.normalized
-! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
+! leanprover-community/mathlib commit 509de852e1de55e1efa8eacfa11df0823f26f226
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -142,15 +142,23 @@ and the inclusion in the Karoubi envelope. -/
 def n₁IsoNormalizedMooreComplexCompToKaroubi : N₁ ≅ normalizedMooreComplex A ⋙ toKaroubi _
     where
   Hom :=
-    {
-      app := fun X =>
+    { app := fun X =>
         { f := pInftyToNormalizedMooreComplex X
-          comm := by tidy } }
+          comm := by erw [comp_id, P_infty_comp_P_infty_to_normalized_Moore_complex] }
+      naturality' := fun X Y f => by
+        simp only [functor.comp_map, normalized_Moore_complex_map,
+          P_infty_to_normalized_Moore_complex_naturality, karoubi.hom_ext, karoubi.comp_f, N₁_map_f,
+          P_infty_comp_P_infty_to_normalized_Moore_complex_assoc, to_karoubi_map_f, assoc] }
   inv :=
-    {
-      app := fun X =>
+    { app := fun X =>
         { f := inclusionOfMooreComplexMap X
-          comm := by tidy } }
+          comm := by erw [inclusion_of_Moore_complex_map_comp_P_infty, id_comp] }
+      naturality' := fun X Y f => by
+        ext
+        simp only [functor.comp_map, normalized_Moore_complex_map, karoubi.comp_f, to_karoubi_map_f,
+          HomologicalComplex.comp_f, normalized_Moore_complex.map_f,
+          inclusion_of_Moore_complex_map_f, factor_thru_arrow, N₁_map_f,
+          inclusion_of_Moore_complex_map_comp_P_infty_assoc, alternating_face_map_complex.map_f] }
   hom_inv_id' := by
     ext X : 3
     simp only [P_infty_to_normalized_Moore_complex_comp_inclusion_of_Moore_complex_map,

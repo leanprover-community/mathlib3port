@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yourong Zang
 
 ! This file was ported from Lean 3 source module analysis.calculus.conformal.normed_space
-! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
+! leanprover-community/mathlib commit 509de852e1de55e1efa8eacfa11df0823f26f226
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -31,7 +31,7 @@ if it is real differentiable at that point and its differential `is_conformal_li
 In `analysis.calculus.conformal.inner_product`:
 * `conformal_at_iff`: an equivalent definition of the conformality of a map
 
-In `geometry.euclidean.basic`:
+In `geometry.euclidean.angle.unoriented.conformal`:
 * `conformal_at.preserves_angle`: if a map is conformal at `x`, then its differential
                                   preserves all angles at `x`
 

@@ -659,6 +659,7 @@ import Mathbin.Analysis.NormedSpace.Complemented
 import Mathbin.Analysis.NormedSpace.Completion
 import Mathbin.Analysis.NormedSpace.ConformalLinearMap
 import Mathbin.Analysis.NormedSpace.ContinuousAffineMap
+import Mathbin.Analysis.NormedSpace.ContinuousLinearMap
 import Mathbin.Analysis.NormedSpace.Dual
 import Mathbin.Analysis.NormedSpace.Enorm
 import Mathbin.Analysis.NormedSpace.Exponential
@@ -686,6 +687,7 @@ import Mathbin.Analysis.NormedSpace.Star.Basic
 import Mathbin.Analysis.NormedSpace.Star.Exponential
 import Mathbin.Analysis.NormedSpace.Star.GelfandDuality
 import Mathbin.Analysis.NormedSpace.Star.Matrix
+import Mathbin.Analysis.NormedSpace.Star.Mul
 import Mathbin.Analysis.NormedSpace.Star.Spectrum
 import Mathbin.Analysis.NormedSpace.Units
 import Mathbin.Analysis.NormedSpace.WeakDual
@@ -1119,6 +1121,7 @@ import Mathbin.Combinatorics.Quiver.Cast
 import Mathbin.Combinatorics.Quiver.ConnectedComponent
 import Mathbin.Combinatorics.Quiver.Path
 import Mathbin.Combinatorics.Quiver.Push
+import Mathbin.Combinatorics.Quiver.SingleObj
 import Mathbin.Combinatorics.Quiver.Subquiver
 import Mathbin.Combinatorics.Quiver.Symmetric
 import Mathbin.Combinatorics.SetFamily.Compression.Down
@@ -1765,9 +1768,11 @@ import Mathbin.FieldTheory.Tower
 import Mathbin.Geometry.Euclidean.Angle.Oriented.Affine
 import Mathbin.Geometry.Euclidean.Angle.Oriented.Basic
 import Mathbin.Geometry.Euclidean.Angle.Oriented.RightAngle
+import Mathbin.Geometry.Euclidean.Angle.Oriented.Rotation
 import Mathbin.Geometry.Euclidean.Angle.Sphere
 import Mathbin.Geometry.Euclidean.Angle.Unoriented.Affine
 import Mathbin.Geometry.Euclidean.Angle.Unoriented.Basic
+import Mathbin.Geometry.Euclidean.Angle.Unoriented.Conformal
 import Mathbin.Geometry.Euclidean.Angle.Unoriented.RightAngle
 import Mathbin.Geometry.Euclidean.Basic
 import Mathbin.Geometry.Euclidean.Circumcenter
@@ -2809,6 +2814,7 @@ import Mathbin.Topology.Algebra.Module.Basic
 import Mathbin.Topology.Algebra.Module.CharacterSpace
 import Mathbin.Topology.Algebra.Module.Determinant
 import Mathbin.Topology.Algebra.Module.FiniteDimension
+import Mathbin.Topology.Algebra.Module.InfiniteSum
 import Mathbin.Topology.Algebra.Module.LinearPmap
 import Mathbin.Topology.Algebra.Module.LocallyConvex
 import Mathbin.Topology.Algebra.Module.Multilinear

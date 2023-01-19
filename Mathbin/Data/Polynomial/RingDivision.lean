@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker, Johan Commelin
 
 ! This file was ported from Lean 3 source module data.polynomial.ring_division
-! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
+! leanprover-community/mathlib commit 509de852e1de55e1efa8eacfa11df0823f26f226
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -179,6 +179,30 @@ theorem degree_le_of_dvd {p q : R[X]} (h1 : p ∣ q) (h2 : q ≠ 0) : degree p �
   rcases h1 with ⟨q, rfl⟩; rw [mul_ne_zero_iff] at h2
   exact degree_le_mul_left p h2.2
 #align polynomial.degree_le_of_dvd Polynomial.degree_le_of_dvd
+
+theorem eq_zero_of_dvd_of_degree_lt {p q : R[X]} (h₁ : p ∣ q) (h₂ : degree q < degree p) : q = 0 :=
+  by
+  by_contra hc
+  exact (lt_iff_not_ge _ _).mp h₂ (degree_le_of_dvd h₁ hc)
+#align polynomial.eq_zero_of_dvd_of_degree_lt Polynomial.eq_zero_of_dvd_of_degree_lt
+
+theorem eq_zero_of_dvd_of_nat_degree_lt {p q : R[X]} (h₁ : p ∣ q) (h₂ : natDegree q < natDegree p) :
+    q = 0 := by
+  by_contra hc
+  exact (lt_iff_not_ge _ _).mp h₂ (nat_degree_le_of_dvd h₁ hc)
+#align polynomial.eq_zero_of_dvd_of_nat_degree_lt Polynomial.eq_zero_of_dvd_of_nat_degree_lt
+
+theorem not_dvd_of_degree_lt {p q : R[X]} (h0 : q ≠ 0) (hl : q.degree < p.degree) : ¬p ∣ q :=
+  by
+  by_contra hcontra
+  exact h0 (eq_zero_of_dvd_of_degree_lt hcontra hl)
+#align polynomial.not_dvd_of_degree_lt Polynomial.not_dvd_of_degree_lt
+
+theorem not_dvd_of_nat_degree_lt {p q : R[X]} (h0 : q ≠ 0) (hl : q.natDegree < p.natDegree) :
+    ¬p ∣ q := by
+  by_contra hcontra
+  exact h0 (eq_zero_of_dvd_of_nat_degree_lt hcontra hl)
+#align polynomial.not_dvd_of_nat_degree_lt Polynomial.not_dvd_of_nat_degree_lt
 
 /-- This lemma is useful for working with the `int_degree` of a rational function. -/
 theorem nat_degree_sub_eq_of_prod_eq {p₁ p₂ q₁ q₂ : R[X]} (hp₁ : p₁ ≠ 0) (hq₁ : q₁ ≠ 0)

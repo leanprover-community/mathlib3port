@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
 
 ! This file was ported from Lean 3 source module combinatorics.quiver.symmetric
-! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
+! leanprover-community/mathlib commit 509de852e1de55e1efa8eacfa11df0823f26f226
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -265,7 +265,7 @@ lean 3 declaration is
 but is expected to have type
   forall {V : Type.{u1}} [_inst_2 : Quiver.{succ u3, u1} V] {V' : Type.{u2}} [_inst_4 : Quiver.{succ u4, u2} V'] [_inst_5 : Quiver.HasReverse.{u4, u2} V' _inst_4] (φ : Prefunctor.{succ u3, succ u4, u1, u2} V _inst_2 V' _inst_4), Eq.{max (max (max (succ u3) (succ u4)) (succ u1)) (succ u2)} (Prefunctor.{succ u3, succ u4, u1, u2} V _inst_2 V' _inst_4) (Prefunctor.comp.{u1, succ u3, u1, succ u3, u2, succ u4} V _inst_2 (Quiver.Symmetrify.{u1} V) (Quiver.symmetrifyQuiver.{u1, u3} V _inst_2) V' _inst_4 (Quiver.Symmetrify.of.{u3, u1} V _inst_2) (Quiver.Symmetrify.lift.{u3, u4, u1, u2} V _inst_2 V' _inst_4 _inst_5 φ)) φ
 Case conversion may be inaccurate. Consider using '#align quiver.symmetrify.lift_spec Quiver.Symmetrify.lift_specₓ'. -/
-theorem lift_spec [HasReverse V'] (φ : V ⥤q V') : (of ⋙q lift φ) = φ :=
+theorem lift_spec [HasReverse V'] (φ : V ⥤q V') : of ⋙q lift φ = φ :=
   by
   fapply Prefunctor.ext
   · rintro X
@@ -297,7 +297,7 @@ but is expected to have type
   forall {V : Type.{u1}} [_inst_2 : Quiver.{succ u3, u1} V] {V' : Type.{u2}} [_inst_4 : Quiver.{succ u4, u2} V'] [_inst_5 : Quiver.HasReverse.{u4, u2} V' _inst_4] (φ : Prefunctor.{succ u3, succ u4, u1, u2} V _inst_2 V' _inst_4) (Φ : Prefunctor.{succ u3, succ u4, u1, u2} (Quiver.Symmetrify.{u1} V) (Quiver.symmetrifyQuiver.{u1, u3} V _inst_2) V' _inst_4), (Eq.{max (max (max (succ u3) (succ u4)) (succ u1)) (succ u2)} (Prefunctor.{succ u3, succ u4, u1, u2} V _inst_2 V' _inst_4) (Prefunctor.comp.{u1, succ u3, u1, succ u3, u2, succ u4} V _inst_2 (Quiver.Symmetrify.{u1} V) (Quiver.symmetrifyQuiver.{u1, u3} V _inst_2) V' _inst_4 (Quiver.Symmetrify.of.{u3, u1} V _inst_2) Φ) φ) -> (forall {X : Quiver.Symmetrify.{u1} V} {Y : Quiver.Symmetrify.{u1} V} (f : Quiver.Hom.{succ u3, u1} (Quiver.Symmetrify.{u1} V) (Quiver.symmetrifyQuiver.{u1, u3} V _inst_2) X Y), Eq.{succ u4} (Quiver.Hom.{succ u4, u2} V' _inst_4 (Prefunctor.obj.{succ u3, succ u4, u1, u2} (Quiver.Symmetrify.{u1} V) (Quiver.symmetrifyQuiver.{u1, u3} V _inst_2) V' _inst_4 Φ Y) (Prefunctor.obj.{succ u3, succ u4, u1, u2} (Quiver.Symmetrify.{u1} V) (Quiver.symmetrifyQuiver.{u1, u3} V _inst_2) V' _inst_4 Φ X)) (Prefunctor.map.{succ u3, succ u4, u1, u2} (Quiver.Symmetrify.{u1} V) (Quiver.symmetrifyQuiver.{u1, u3} V _inst_2) V' _inst_4 Φ Y X (Quiver.reverse.{u3, u1} (Quiver.Symmetrify.{u1} V) (Quiver.symmetrifyQuiver.{u1, u3} V _inst_2) (Quiver.instHasReverseSymmetrifySymmetrifyQuiver.{u3, u1} V _inst_2) X Y f)) (Quiver.reverse.{u4, u2} V' _inst_4 _inst_5 (Prefunctor.obj.{succ u3, succ u4, u1, u2} (Quiver.Symmetrify.{u1} V) (Quiver.symmetrifyQuiver.{u1, u3} V _inst_2) V' _inst_4 Φ X) (Prefunctor.obj.{succ u3, succ u4, u1, u2} (Quiver.Symmetrify.{u1} V) (Quiver.symmetrifyQuiver.{u1, u3} V _inst_2) V' _inst_4 Φ Y) (Prefunctor.map.{succ u3, succ u4, u1, u2} (Quiver.Symmetrify.{u1} V) (Quiver.symmetrifyQuiver.{u1, u3} V _inst_2) V' _inst_4 Φ X Y f))) -> (Eq.{max (max (max (succ u3) (succ u4)) (succ u1)) (succ u2)} (Prefunctor.{succ u3, succ u4, u1, u2} (Quiver.Symmetrify.{u1} V) (Quiver.symmetrifyQuiver.{u1, u3} V _inst_2) V' _inst_4) Φ (Quiver.Symmetrify.lift.{u3, u4, u1, u2} V _inst_2 V' _inst_4 _inst_5 φ))
 Case conversion may be inaccurate. Consider using '#align quiver.symmetrify.lift_unique Quiver.Symmetrify.lift_uniqueₓ'. -/
 /-- `lift φ` is the only prefunctor extending `φ` and preserving reverses. -/
-theorem lift_unique [HasReverse V'] (φ : V ⥤q V') (Φ : Symmetrify V ⥤q V') (hΦ : (of ⋙q Φ) = φ)
+theorem lift_unique [HasReverse V'] (φ : V ⥤q V') (Φ : Symmetrify V ⥤q V') (hΦ : of ⋙q Φ = φ)
     [hΦrev : Φ.MapReverse] : Φ = lift φ := by
   subst_vars
   fapply Prefunctor.ext

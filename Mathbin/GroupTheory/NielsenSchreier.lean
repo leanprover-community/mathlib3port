@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
 
 ! This file was ported from Lean 3 source module group_theory.nielsen_schreier
-! leanprover-community/mathlib commit 008205aa645b3f194c1da47025c5f110c8406eab
+! leanprover-community/mathlib commit 509de852e1de55e1efa8eacfa11df0823f26f226
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -83,7 +83,7 @@ class IsFreeGroupoid (G) [Groupoid.{v} G] where
   of : ∀ {a b : IsFreeGroupoid.Generators G}, (a ⟶ b) → ((show G from a) ⟶ b)
   unique_lift :
     ∀ {X : Type v} [Group X] (f : Labelling (IsFreeGroupoid.Generators G) X),
-      ∃! F : G ⥤ SingleObj X, ∀ (a b) (g : a ⟶ b), F.map (of g) = f g
+      ∃! F : G ⥤ CategoryTheory.SingleObj X, ∀ (a b) (g : a ⟶ b), F.map (of g) = f g
 #align is_free_groupoid IsFreeGroupoid
 
 namespace IsFreeGroupoid
@@ -94,7 +94,8 @@ attribute [instance] quiver_generators
 quiver. -/
 @[ext]
 theorem ext_functor {G} [Groupoid.{v} G] [IsFreeGroupoid G] {X : Type v} [Group X]
-    (f g : G ⥤ SingleObj X) (h : ∀ (a b) (e : a ⟶ b), f.map (of e) = g.map (of e)) : f = g :=
+    (f g : G ⥤ CategoryTheory.SingleObj X) (h : ∀ (a b) (e : a ⟶ b), f.map (of e) = g.map (of e)) :
+    f = g :=
   let ⟨_, _, u⟩ := @unique_lift G _ _ X _ fun (a b : Generators G) (e : a ⟶ b) => g.map (of e)
   trans (u _ h) (u _ fun _ _ _ => rfl).symm
 #align is_free_groupoid.ext_functor IsFreeGroupoid.ext_functor
@@ -204,7 +205,7 @@ theorem loop_of_hom_eq_id {a b : Generators G} (e) (_ : e ∈ wideSubquiverSymme
 /-- Since a hom gives a loop, any homomorphism from the vertex group at the root
     extends to a functor on the whole groupoid. -/
 @[simps]
-def functorOfMonoidHom {X} [Monoid X] (f : EndCat (root' T) →* X) : G ⥤ SingleObj X
+def functorOfMonoidHom {X} [Monoid X] (f : EndCat (root' T) →* X) : G ⥤ CategoryTheory.SingleObj X
     where
   obj _ := ()
   map a b p := f (loopOfHom T p)
@@ -280,7 +281,7 @@ theorem path_nonempty_of_hom {G} [Groupoid.{u, u} G] [IsFreeGroupoid G] {a b : G
     mul_inv_eq_one]
   let X := FreeGroup (weakly_connected_component <| generators G)
   let f : G → X := fun g => FreeGroup.of (weakly_connected_component.mk g)
-  let F : G ⥤ single_obj X := single_obj.difference_functor f
+  let F : G ⥤ CategoryTheory.SingleObj X := single_obj.difference_functor f
   change F.map p = ((CategoryTheory.Functor.const G).obj ()).map p
   congr ; ext
   rw [functor.const_obj_map, id_as_one, difference_functor_map, mul_inv_eq_one]
