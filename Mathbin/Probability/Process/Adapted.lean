@@ -224,8 +224,7 @@ theorem Adapted.prog_measurable_of_continuous [TopologicalSpace ι] [MetrizableS
     ProgMeasurable f u := fun i =>
   @strongly_measurable_uncurry_of_continuous_of_strongly_measurable _ _ (Set.Iic i) _ _ _ _ _ _ _
     (f i) _ (fun ω => (hu_cont ω).comp continuous_induced_dom) fun j => (h j).mono (f.mono j.Prop)
-#align
-  measure_theory.adapted.prog_measurable_of_continuous MeasureTheory.Adapted.prog_measurable_of_continuous
+#align measure_theory.adapted.prog_measurable_of_continuous MeasureTheory.Adapted.prog_measurable_of_continuous
 
 /-- For filtrations indexed by a discrete order, `adapted` and `prog_measurable` are equivalent.
 This lemma provides `adapted f u → prog_measurable f u`.
@@ -234,8 +233,7 @@ theorem Adapted.prog_measurable_of_discrete [TopologicalSpace ι] [DiscreteTopol
     [SecondCountableTopology ι] [MeasurableSpace ι] [OpensMeasurableSpace ι]
     [PseudoMetrizableSpace β] (h : Adapted f u) : ProgMeasurable f u :=
   h.prog_measurable_of_continuous fun _ => continuous_of_discrete_topology
-#align
-  measure_theory.adapted.prog_measurable_of_discrete MeasureTheory.Adapted.prog_measurable_of_discrete
+#align measure_theory.adapted.prog_measurable_of_discrete MeasureTheory.Adapted.prog_measurable_of_discrete
 
 -- this dot notation will make more sense once we have a more general definition for predictable
 theorem Predictable.adapted {f : Filtration ℕ m} {u : ℕ → Ω → β} (hu : Adapted f fun n => u (n + 1))

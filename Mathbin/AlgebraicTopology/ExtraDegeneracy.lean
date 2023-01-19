@@ -119,8 +119,7 @@ def map {D : Type _} [Category D] {X : SimplicialObject.Augmented C} (ed : Extra
     dsimp
     erw [← F.map_comp, ← F.map_comp, ed.s_comp_σ]
     rfl
-#align
-  simplicial_object.augmented.extra_degeneracy.map SimplicialObject.Augmented.ExtraDegeneracy.map
+#align simplicial_object.augmented.extra_degeneracy.map SimplicialObject.Augmented.ExtraDegeneracy.map
 
 /-- If `X` and `Y` are isomorphic augmented simplicial objects, then an extra
 degeneracy for `X` gives also an extra degeneracy for `Y` -/
@@ -150,8 +149,7 @@ def ofIso {X Y : SimplicialObject.Augmented C} (e : X ≅ Y) (ed : ExtraDegenera
     dsimp at h⊢
     simp only [assoc, ← simplicial_object.σ_naturality, reassoc_of h, ←
       simplicial_object.σ_naturality_assoc]
-#align
-  simplicial_object.augmented.extra_degeneracy.of_iso SimplicialObject.Augmented.ExtraDegeneracy.ofIso
+#align simplicial_object.augmented.extra_degeneracy.of_iso SimplicialObject.Augmented.ExtraDegeneracy.ofIso
 
 end ExtraDegeneracy
 
@@ -242,14 +240,12 @@ def extraDegeneracy (Δ : SimplexCategory) :
     · cases' Fin.eq_succ_of_ne_zero h with k hk
       subst hk
       simp only [Fin.succ_predAbove_succ, shift_fun_succ]
-#align
-  sSet.augmented.standard_simplex.extra_degeneracy SSet.Augmented.standardSimplex.extraDegeneracy
+#align sSet.augmented.standard_simplex.extra_degeneracy SSet.Augmented.standardSimplex.extraDegeneracy
 
 instance nonempty_extra_degeneracy_standard_simplex (Δ : SimplexCategory) :
     Nonempty (SimplicialObject.Augmented.ExtraDegeneracy (standardSimplex.obj Δ)) :=
   ⟨standardSimplex.extraDegeneracy Δ⟩
-#align
-  sSet.augmented.standard_simplex.nonempty_extra_degeneracy_standard_simplex SSet.Augmented.standardSimplex.nonempty_extra_degeneracy_standard_simplex
+#align sSet.augmented.standard_simplex.nonempty_extra_degeneracy_standard_simplex SSet.Augmented.standardSimplex.nonempty_extra_degeneracy_standard_simplex
 
 end StandardSimplex
 
@@ -284,8 +280,7 @@ noncomputable def ExtraDegeneracy.s (n : ℕ) :
     · subst h
       simp only [assoc, split_epi.id, comp_id]
     · simp only [wide_pullback.π_arrow]
-#align
-  category_theory.arrow.augmented_cech_nerve.extra_degeneracy.s CategoryTheory.Arrow.augmentedCechNerve.ExtraDegeneracy.s
+#align category_theory.arrow.augmented_cech_nerve.extra_degeneracy.s CategoryTheory.Arrow.augmentedCechNerve.ExtraDegeneracy.s
 
 @[simp]
 theorem ExtraDegeneracy.s_comp_π_0 (n : ℕ) :
@@ -293,8 +288,7 @@ theorem ExtraDegeneracy.s_comp_π_0 (n : ℕ) :
   by
   dsimp [extra_degeneracy.s]
   simpa only [wide_pullback.lift_π]
-#align
-  category_theory.arrow.augmented_cech_nerve.extra_degeneracy.s_comp_π_0 CategoryTheory.Arrow.augmentedCechNerve.ExtraDegeneracy.s_comp_π_0
+#align category_theory.arrow.augmented_cech_nerve.extra_degeneracy.s_comp_π_0 CategoryTheory.Arrow.augmentedCechNerve.ExtraDegeneracy.s_comp_π_0
 
 @[simp]
 theorem ExtraDegeneracy.s_comp_π_succ (n : ℕ) (i : Fin (n + 1)) :
@@ -307,15 +301,13 @@ theorem ExtraDegeneracy.s_comp_π_succ (n : ℕ) (i : Fin (n + 1)) :
     simpa only [Fin.ext_iff, Fin.val_succ, Fin.val_zero, Nat.succ_ne_zero] using h
   · congr
     apply Fin.pred_succ
-#align
-  category_theory.arrow.augmented_cech_nerve.extra_degeneracy.s_comp_π_succ CategoryTheory.Arrow.augmentedCechNerve.ExtraDegeneracy.s_comp_π_succ
+#align category_theory.arrow.augmented_cech_nerve.extra_degeneracy.s_comp_π_succ CategoryTheory.Arrow.augmentedCechNerve.ExtraDegeneracy.s_comp_π_succ
 
 @[simp]
 theorem ExtraDegeneracy.s_comp_base (n : ℕ) :
     ExtraDegeneracy.s f S n ≫ widePullback.base _ = widePullback.base _ := by
   apply wide_pullback.lift_base
-#align
-  category_theory.arrow.augmented_cech_nerve.extra_degeneracy.s_comp_base CategoryTheory.Arrow.augmentedCechNerve.ExtraDegeneracy.s_comp_base
+#align category_theory.arrow.augmented_cech_nerve.extra_degeneracy.s_comp_base CategoryTheory.Arrow.augmentedCechNerve.ExtraDegeneracy.s_comp_base
 
 /-- The augmented Čech nerve associated to a split epimorphism has an extra degeneracy. -/
 noncomputable def extraDegeneracy : SimplicialObject.Augmented.ExtraDegeneracy f.augmentedCechNerve
@@ -375,8 +367,7 @@ noncomputable def extraDegeneracy : SimplicialObject.Augmented.ExtraDegeneracy f
       erw [extra_degeneracy.s_comp_base, extra_degeneracy.s_comp_base]
       dsimp
       simp only [wide_pullback.lift_base]
-#align
-  category_theory.arrow.augmented_cech_nerve.extra_degeneracy CategoryTheory.Arrow.augmentedCechNerve.extraDegeneracy
+#align category_theory.arrow.augmented_cech_nerve.extra_degeneracy CategoryTheory.Arrow.augmentedCechNerve.extraDegeneracy
 
 end AugmentedCechNerve
 
@@ -436,8 +427,7 @@ noncomputable def homotopyEquiv {C : Type _} [Category C] [Preadditive C] [HasZe
             s_comp_δ, zsmul_neg]
           rw [add_comm (-𝟙 _), add_assoc, add_assoc, add_left_neg, add_zero, Finset.sum_neg_distrib,
             add_left_neg] }
-#align
-  simplicial_object.augmented.extra_degeneracy.homotopy_equiv SimplicialObject.Augmented.ExtraDegeneracy.homotopyEquiv
+#align simplicial_object.augmented.extra_degeneracy.homotopy_equiv SimplicialObject.Augmented.ExtraDegeneracy.homotopyEquiv
 
 end ExtraDegeneracy
 

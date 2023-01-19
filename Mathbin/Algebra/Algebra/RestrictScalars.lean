@@ -180,8 +180,7 @@ theorem RestrictScalars.add_equiv_symm_map_algebra_map_smul (r : R) (x : M) :
     (RestrictScalars.addEquiv R S M).symm (algebraMap R S r • x) =
       r • (RestrictScalars.addEquiv R S M).symm x :=
   rfl
-#align
-  restrict_scalars.add_equiv_symm_map_algebra_map_smul RestrictScalars.add_equiv_symm_map_algebra_map_smul
+#align restrict_scalars.add_equiv_symm_map_algebra_map_smul RestrictScalars.add_equiv_symm_map_algebra_map_smul
 
 theorem RestrictScalars.add_equiv_symm_map_smul_smul (r : R) (s : S) (x : M) :
     (RestrictScalars.addEquiv R S M).symm ((r • s) • x) =

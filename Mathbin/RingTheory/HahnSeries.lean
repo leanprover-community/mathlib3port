@@ -1444,8 +1444,7 @@ instance : CoeFun (SummableFamily Γ R α) fun _ => α → HahnSeries Γ R :=
 
 theorem is_pwo_Union_support (s : SummableFamily Γ R α) : Set.IsPwo (⋃ a : α, (s a).support) :=
   s.is_pwo_Union_support'
-#align
-  hahn_series.summable_family.is_pwo_Union_support HahnSeries.SummableFamily.is_pwo_Union_support
+#align hahn_series.summable_family.is_pwo_Union_support HahnSeries.SummableFamily.is_pwo_Union_support
 
 theorem finite_co_support (s : SummableFamily Γ R α) (g : Γ) :
     (Function.support fun a => (s a).coeff g).Finite :=
@@ -1780,8 +1779,7 @@ theorem emb_domain_image : s.embDomain f (f a) = s a :=
 @[simp]
 theorem emb_domain_notin_range (h : b ∉ Set.range f) : s.embDomain f b = 0 := by
   rw [emb_domain_apply, dif_neg h]
-#align
-  hahn_series.summable_family.emb_domain_notin_range HahnSeries.SummableFamily.emb_domain_notin_range
+#align hahn_series.summable_family.emb_domain_notin_range HahnSeries.SummableFamily.emb_domain_notin_range
 
 @[simp]
 theorem hsum_emb_domain : (s.embDomain f).hsum = s.hsum :=
@@ -1849,16 +1847,14 @@ theorem emb_domain_succ_smul_powers :
   · refine' Eq.trans (emb_domain_image _ ⟨Nat.succ, Nat.succ_injective⟩) _
     simp only [pow_succ, coe_powers, coe_sub, smul_apply, coe_of_finsupp, Pi.sub_apply]
     rw [Finsupp.single_eq_of_ne n.succ_ne_zero.symm, sub_zero]
-#align
-  hahn_series.summable_family.emb_domain_succ_smul_powers HahnSeries.SummableFamily.emb_domain_succ_smul_powers
+#align hahn_series.summable_family.emb_domain_succ_smul_powers HahnSeries.SummableFamily.emb_domain_succ_smul_powers
 
 theorem one_sub_self_mul_hsum_powers : (1 - x) * (powers x hx).hsum = 1 :=
   by
   rw [← hsum_smul, sub_smul, one_smul, hsum_sub, ←
     hsum_emb_domain (x • powers x hx) ⟨Nat.succ, Nat.succ_injective⟩, emb_domain_succ_smul_powers]
   simp
-#align
-  hahn_series.summable_family.one_sub_self_mul_hsum_powers HahnSeries.SummableFamily.one_sub_self_mul_hsum_powers
+#align hahn_series.summable_family.one_sub_self_mul_hsum_powers HahnSeries.SummableFamily.one_sub_self_mul_hsum_powers
 
 end Powers
 

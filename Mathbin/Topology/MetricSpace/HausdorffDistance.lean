@@ -180,8 +180,7 @@ theorem inf_edist_pos_iff_not_mem_closure {x : α} {E : Set α} : 0 < infEdist x
 theorem inf_edist_closure_pos_iff_not_mem_closure {x : α} {E : Set α} :
     0 < infEdist x (closure E) ↔ x ∉ closure E := by
   rw [inf_edist_closure, inf_edist_pos_iff_not_mem_closure]
-#align
-  emetric.inf_edist_closure_pos_iff_not_mem_closure Emetric.inf_edist_closure_pos_iff_not_mem_closure
+#align emetric.inf_edist_closure_pos_iff_not_mem_closure Emetric.inf_edist_closure_pos_iff_not_mem_closure
 
 theorem exists_real_pos_lt_inf_edist_of_not_mem_closure {x : α} {E : Set α} (h : x ∉ closure E) :
     ∃ ε : ℝ, 0 < ε ∧ Ennreal.ofReal ε < infEdist x E :=
@@ -189,8 +188,7 @@ theorem exists_real_pos_lt_inf_edist_of_not_mem_closure {x : α} {E : Set α} (h
   rw [← inf_edist_pos_iff_not_mem_closure, Ennreal.lt_iff_exists_real_btwn] at h
   rcases h with ⟨ε, ⟨_, ⟨ε_pos, ε_lt⟩⟩⟩
   exact ⟨ε, ⟨ennreal.of_real_pos.mp ε_pos, ε_lt⟩⟩
-#align
-  emetric.exists_real_pos_lt_inf_edist_of_not_mem_closure Emetric.exists_real_pos_lt_inf_edist_of_not_mem_closure
+#align emetric.exists_real_pos_lt_inf_edist_of_not_mem_closure Emetric.exists_real_pos_lt_inf_edist_of_not_mem_closure
 
 theorem disjoint_closed_ball_of_lt_inf_edist {r : ℝ≥0∞} (h : r < infEdist x s) :
     Disjoint (closedBall x r) s := by
@@ -356,8 +354,7 @@ theorem inf_edist_le_inf_edist_add_Hausdorff_edist :
       _ = inf_edist x s + Hausdorff_edist s t + ε := by
         simp [Ennreal.add_halves, add_comm, add_left_comm]
       
-#align
-  emetric.inf_edist_le_inf_edist_add_Hausdorff_edist Emetric.inf_edist_le_inf_edist_add_Hausdorff_edist
+#align emetric.inf_edist_le_inf_edist_add_Hausdorff_edist Emetric.inf_edist_le_inf_edist_add_Hausdorff_edist
 
 /-- The Hausdorff edistance is invariant under eisometries -/
 theorem Hausdorff_edist_image (h : Isometry Φ) :
@@ -416,8 +413,7 @@ theorem Hausdorff_edist_zero_iff_closure_eq_closure :
           (closure_minimal h.2 is_closed_closure),
         fun h => ⟨h ▸ subset_closure, h.symm ▸ subset_closure⟩⟩
     
-#align
-  emetric.Hausdorff_edist_zero_iff_closure_eq_closure Emetric.Hausdorff_edist_zero_iff_closure_eq_closure
+#align emetric.Hausdorff_edist_zero_iff_closure_eq_closure Emetric.Hausdorff_edist_zero_iff_closure_eq_closure
 
 /-- The Hausdorff edistance between a set and its closure vanishes -/
 @[simp]
@@ -483,8 +479,7 @@ theorem empty_or_nonempty_of_Hausdorff_edist_ne_top (fin : hausdorffEdist s t �
     · rw [Hausdorff_edist_comm] at fin
       exact Or.inr ⟨nonempty_of_Hausdorff_edist_ne_top ht Fin, ht⟩
   · exact Or.inr ⟨hs, nonempty_of_Hausdorff_edist_ne_top hs Fin⟩
-#align
-  emetric.empty_or_nonempty_of_Hausdorff_edist_ne_top Emetric.empty_or_nonempty_of_Hausdorff_edist_ne_top
+#align emetric.empty_or_nonempty_of_Hausdorff_edist_ne_top Emetric.empty_or_nonempty_of_Hausdorff_edist_ne_top
 
 end HausdorffEdist
 
@@ -776,8 +771,7 @@ theorem Hausdorff_edist_ne_top_of_nonempty_of_bounded (hs : s.Nonempty) (ht : t.
       rwa [edist_dist, Ennreal.of_real_le_of_real_iff]
       exact le_trans dist_nonneg this
   exact ne_top_of_le_ne_top Ennreal.of_real_ne_top this
-#align
-  metric.Hausdorff_edist_ne_top_of_nonempty_of_bounded Metric.Hausdorff_edist_ne_top_of_nonempty_of_bounded
+#align metric.Hausdorff_edist_ne_top_of_nonempty_of_bounded Metric.Hausdorff_edist_ne_top_of_nonempty_of_bounded
 
 /-- The Hausdorff distance between a set and itself is zero -/
 @[simp]
@@ -977,8 +971,7 @@ theorem Hausdorff_dist_zero_iff_closure_eq_closure (fin : hausdorffEdist s t ≠
     hausdorffDist s t = 0 ↔ closure s = closure t := by
   simp [Hausdorff_edist_zero_iff_closure_eq_closure.symm, Hausdorff_dist,
     Ennreal.to_real_eq_zero_iff, Fin]
-#align
-  metric.Hausdorff_dist_zero_iff_closure_eq_closure Metric.Hausdorff_dist_zero_iff_closure_eq_closure
+#align metric.Hausdorff_dist_zero_iff_closure_eq_closure Metric.Hausdorff_dist_zero_iff_closure_eq_closure
 
 /-- Two closed sets are at zero Hausdorff distance if and only if they coincide -/
 theorem IsClosed.Hausdorff_dist_zero_iff_eq (hs : IsClosed s) (ht : IsClosed t)
@@ -1203,8 +1196,7 @@ theorem closed_ball_subset_cthickening_singleton {α : Type _} [PseudoMetricSpac
   rcases lt_or_le δ 0 with (hδ | hδ)
   · simp only [closed_ball_eq_empty.mpr hδ, empty_subset]
   · simp only [cthickening_singleton x hδ]
-#align
-  metric.closed_ball_subset_cthickening_singleton Metric.closed_ball_subset_cthickening_singleton
+#align metric.closed_ball_subset_cthickening_singleton Metric.closed_ball_subset_cthickening_singleton
 
 /-- The closed thickening `cthickening δ E` with a fixed thickening radius `δ` is
 an increasing function of the subset `E`. -/
@@ -1542,8 +1534,7 @@ theorem cthickening_subset_Union_closed_ball_of_lt {α : Type _} [PseudoMetricSp
   refine' (cthickening_subset_thickening' hδ₀ hδδ' E).trans fun x hx => _
   obtain ⟨y, hy₁, hy₂⟩ := mem_thickening_iff.mp hx
   exact mem_Union₂.mpr ⟨y, hy₁, hy₂.le⟩
-#align
-  metric.cthickening_subset_Union_closed_ball_of_lt Metric.cthickening_subset_Union_closed_ball_of_lt
+#align metric.cthickening_subset_Union_closed_ball_of_lt Metric.cthickening_subset_Union_closed_ball_of_lt
 
 /-- The closed thickening of a compact set `E` is the union of the balls `closed_ball x δ` over
 `x ∈ E`.

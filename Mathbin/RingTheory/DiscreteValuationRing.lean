@@ -91,8 +91,7 @@ theorem irreducible_of_span_eq_maximal_ideal {R : Type _} [CommRing R] [LocalRin
   apply hϖ
   apply eq_zero_of_mul_eq_self_right _ hab.symm
   exact fun hh => h2 (isUnit_of_dvd_one ϖ ⟨_, hh.symm⟩)
-#align
-  discrete_valuation_ring.irreducible_of_span_eq_maximal_ideal DiscreteValuationRing.irreducible_of_span_eq_maximal_ideal
+#align discrete_valuation_ring.irreducible_of_span_eq_maximal_ideal DiscreteValuationRing.irreducible_of_span_eq_maximal_ideal
 
 /-- An element of a DVR is irreducible iff it is a uniformizer, that is, generates the
   maximal ideal of R -/
@@ -100,8 +99,7 @@ theorem irreducible_iff_uniformizer (ϖ : R) : Irreducible ϖ ↔ maximalIdeal R
   ⟨fun hϖ => (eq_maximal_ideal (isMaximalOfIrreducible hϖ)).symm, fun h =>
     irreducible_of_span_eq_maximal_ideal ϖ
       (fun e => not_a_field R <| by rwa [h, span_singleton_eq_bot]) h⟩
-#align
-  discrete_valuation_ring.irreducible_iff_uniformizer DiscreteValuationRing.irreducible_iff_uniformizer
+#align discrete_valuation_ring.irreducible_iff_uniformizer DiscreteValuationRing.irreducible_iff_uniformizer
 
 theorem Irreducible.maximal_ideal_eq {ϖ : R} (h : Irreducible ϖ) :
     maximalIdeal R = Ideal.span {ϖ} :=
@@ -155,15 +153,13 @@ theorem iff_pid_with_one_nonzero_prime (R : Type u) [CommRing R] [IsDomain R] :
     intro h
     rw [h, le_bot_iff] at hPM
     exact hP1 hPM
-#align
-  discrete_valuation_ring.iff_pid_with_one_nonzero_prime DiscreteValuationRing.iff_pid_with_one_nonzero_prime
+#align discrete_valuation_ring.iff_pid_with_one_nonzero_prime DiscreteValuationRing.iff_pid_with_one_nonzero_prime
 
 theorem associated_of_irreducible {a b : R} (ha : Irreducible a) (hb : Irreducible b) :
     Associated a b := by
   rw [irreducible_iff_uniformizer] at ha hb
   rw [← span_singleton_eq_span_singleton, ← ha, hb]
-#align
-  discrete_valuation_ring.associated_of_irreducible DiscreteValuationRing.associated_of_irreducible
+#align discrete_valuation_ring.associated_of_irreducible DiscreteValuationRing.associated_of_irreducible
 
 end DiscreteValuationRing
 
@@ -174,8 +170,7 @@ variable (R : Type _)
 /-- Alternative characterisation of discrete valuation rings. -/
 def HasUnitMulPowIrreducibleFactorization [CommRing R] : Prop :=
   ∃ p : R, Irreducible p ∧ ∀ {x : R}, x ≠ 0 → ∃ n : ℕ, Associated (p ^ n) x
-#align
-  discrete_valuation_ring.has_unit_mul_pow_irreducible_factorization DiscreteValuationRing.HasUnitMulPowIrreducibleFactorization
+#align discrete_valuation_ring.has_unit_mul_pow_irreducible_factorization DiscreteValuationRing.HasUnitMulPowIrreducibleFactorization
 
 namespace HasUnitMulPowIrreducibleFactorization
 
@@ -205,8 +200,7 @@ theorem unique_irreducible ⦃p q : R⦄ (hp : Irreducible p) (hq : Irreducible 
     · exact (hϖ.not_unit H0).elim
     · rw [add_comm, pow_succ] at H0
       exact (hϖ.not_unit (isUnit_of_mul_isUnit_left H0)).elim
-#align
-  discrete_valuation_ring.has_unit_mul_pow_irreducible_factorization.unique_irreducible DiscreteValuationRing.HasUnitMulPowIrreducibleFactorization.unique_irreducible
+#align discrete_valuation_ring.has_unit_mul_pow_irreducible_factorization.unique_irreducible DiscreteValuationRing.HasUnitMulPowIrreducibleFactorization.unique_irreducible
 
 variable [IsDomain R]
 
@@ -241,8 +235,7 @@ theorem to_unique_factorization_monoid : UniqueFactorizationMonoid R :=
       apply dvd_mul_of_dvd_left dvd_rfl _
     · rw [Multiset.prod_replicate]
       exact Classical.choose_spec (spec.2 hx)
-#align
-  discrete_valuation_ring.has_unit_mul_pow_irreducible_factorization.to_unique_factorization_monoid DiscreteValuationRing.HasUnitMulPowIrreducibleFactorization.to_unique_factorization_monoid
+#align discrete_valuation_ring.has_unit_mul_pow_irreducible_factorization.to_unique_factorization_monoid DiscreteValuationRing.HasUnitMulPowIrreducibleFactorization.to_unique_factorization_monoid
 
 omit hR
 
@@ -266,8 +259,7 @@ theorem of_ufd_of_unique_irreducible [UniqueFactorizationMonoid R] (h₁ : ∃ p
   rintro _ q hq rfl
   rw [Associates.mk_eq_mk_iff_associated]
   apply h₂ (hfx.1 _ hq) hp
-#align
-  discrete_valuation_ring.has_unit_mul_pow_irreducible_factorization.of_ufd_of_unique_irreducible DiscreteValuationRing.HasUnitMulPowIrreducibleFactorization.of_ufd_of_unique_irreducible
+#align discrete_valuation_ring.has_unit_mul_pow_irreducible_factorization.of_ufd_of_unique_irreducible DiscreteValuationRing.HasUnitMulPowIrreducibleFactorization.of_ufd_of_unique_irreducible
 
 end HasUnitMulPowIrreducibleFactorization
 
@@ -301,8 +293,7 @@ theorem auxPidOfUfdOfUniqueIrreducible (R : Type u) [CommRing R] [IsDomain R]
     simpa only [Units.mul_inv_cancel_right] using I.mul_mem_right (↑u⁻¹) hr
   · erw [Submodule.span_singleton_le_iff_mem]
     exact Nat.find_spec ex
-#align
-  discrete_valuation_ring.aux_pid_of_ufd_of_unique_irreducible DiscreteValuationRing.auxPidOfUfdOfUniqueIrreducible
+#align discrete_valuation_ring.aux_pid_of_ufd_of_unique_irreducible DiscreteValuationRing.auxPidOfUfdOfUniqueIrreducible
 
 /-- A unique factorization domain with at least one irreducible element
 in which all irreducible elements are associated
@@ -327,8 +318,7 @@ theorem ofUfdOfUniqueIrreducible {R : Type u} [CommRing R] [IsDomain R]
     erw [Ne.def, span_singleton_eq_bot] at I0
     rwa [UniqueFactorizationMonoid.irreducible_iff_prime, ← Ideal.span_singleton_prime I0]
     infer_instance
-#align
-  discrete_valuation_ring.of_ufd_of_unique_irreducible DiscreteValuationRing.ofUfdOfUniqueIrreducible
+#align discrete_valuation_ring.of_ufd_of_unique_irreducible DiscreteValuationRing.ofUfdOfUniqueIrreducible
 
 /-- An integral domain in which there is an irreducible element `p`
 such that every nonzero element is associated to a power of `p`
@@ -341,8 +331,7 @@ theorem ofHasUnitMulPowIrreducibleFactorization {R : Type u} [CommRing R] [IsDom
   apply of_ufd_of_unique_irreducible _ hR.unique_irreducible
   obtain ⟨p, hp, H⟩ := hR
   exact ⟨p, hp⟩
-#align
-  discrete_valuation_ring.of_has_unit_mul_pow_irreducible_factorization DiscreteValuationRing.ofHasUnitMulPowIrreducibleFactorization
+#align discrete_valuation_ring.of_has_unit_mul_pow_irreducible_factorization DiscreteValuationRing.ofHasUnitMulPowIrreducibleFactorization
 
 section
 
@@ -368,8 +357,7 @@ theorem associated_pow_irreducible {x : R} (hx : x ≠ 0) {ϖ : R} (hirr : Irred
   refine' associated_of_irreducible _ _ hirr
   apply hfx.1
   assumption
-#align
-  discrete_valuation_ring.associated_pow_irreducible DiscreteValuationRing.associated_pow_irreducible
+#align discrete_valuation_ring.associated_pow_irreducible DiscreteValuationRing.associated_pow_irreducible
 
 theorem eq_unit_mul_pow_irreducible {x : R} (hx : x ≠ 0) {ϖ : R} (hirr : Irreducible ϖ) :
     ∃ (n : ℕ)(u : Rˣ), x = u * ϖ ^ n :=
@@ -378,8 +366,7 @@ theorem eq_unit_mul_pow_irreducible {x : R} (hx : x ≠ 0) {ϖ : R} (hirr : Irre
   obtain ⟨u, rfl⟩ := hn.symm
   use n, u
   apply mul_comm
-#align
-  discrete_valuation_ring.eq_unit_mul_pow_irreducible DiscreteValuationRing.eq_unit_mul_pow_irreducible
+#align discrete_valuation_ring.eq_unit_mul_pow_irreducible DiscreteValuationRing.eq_unit_mul_pow_irreducible
 
 open Submodule.IsPrincipal
 
@@ -395,8 +382,7 @@ theorem ideal_eq_span_pow_irreducible {s : Ideal R} (hs : s ≠ ⊥) {ϖ : R} (h
   have : span _ = _ := span_singleton_generator s
   rw [← this, ← hnu, span_singleton_eq_span_singleton]
   use u
-#align
-  discrete_valuation_ring.ideal_eq_span_pow_irreducible DiscreteValuationRing.ideal_eq_span_pow_irreducible
+#align discrete_valuation_ring.ideal_eq_span_pow_irreducible DiscreteValuationRing.ideal_eq_span_pow_irreducible
 
 theorem unit_mul_pow_congr_pow {p q : R} (hp : Irreducible p) (hq : Irreducible q) (u v : Rˣ)
     (m n : ℕ) (h : ↑u * p ^ m = v * q ^ n) : m = n :=

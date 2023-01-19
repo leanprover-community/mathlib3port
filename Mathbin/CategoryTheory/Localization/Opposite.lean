@@ -47,8 +47,7 @@ def StrictUniversalPropertyFixedTarget.op {E : Type _} [Category E]
       rw [← F₁.right_op_left_op_eq, ← F₂.right_op_left_op_eq, this]
     have eq' := congr_arg functor.right_op Eq
     exact h.uniq _ _ eq'
-#align
-  category_theory.localization.strict_universal_property_fixed_target.op CategoryTheory.Localization.StrictUniversalPropertyFixedTarget.op
+#align category_theory.localization.strict_universal_property_fixed_target.op CategoryTheory.Localization.StrictUniversalPropertyFixedTarget.op
 
 instance isLocalizationOp : W.q.op.IsLocalization W.op :=
   Functor.IsLocalization.mk' W.q.op W.op (strictUniversalPropertyFixedTargetQ W _).op

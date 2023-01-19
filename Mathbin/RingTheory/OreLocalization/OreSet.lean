@@ -154,8 +154,7 @@ def oreSetOfCancelMonoidWithZero {R : Type _} [CancelMonoidWithZero R] {S : Subm
     oreNum
     oreDenom
     ore_eq }
-#align
-  ore_localization.ore_set_of_cancel_monoid_with_zero OreLocalization.oreSetOfCancelMonoidWithZero
+#align ore_localization.ore_set_of_cancel_monoid_with_zero OreLocalization.oreSetOfCancelMonoidWithZero
 
 /- warning: ore_localization.ore_set_of_no_zero_divisors -> OreLocalization.oreSetOfNoZeroDivisors is a dubious translation:
 lean 3 declaration is

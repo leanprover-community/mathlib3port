@@ -54,10 +54,8 @@ theorem TopologicalSpace.PositiveCompacts.locally_compact_space_of_group [T2Spac
   have : F.symm x = y := by simp [F, Homeomorph.mul_left_symm]
   rw [this]
   exact mem_interior_iff_mem_nhds.1 hy
-#align
-  topological_space.positive_compacts.locally_compact_space_of_group TopologicalSpace.PositiveCompacts.locally_compact_space_of_group
-#align
-  topological_space.positive_compacts.locally_compact_space_of_add_group TopologicalSpace.PositiveCompacts.locally_compact_space_of_add_group
+#align topological_space.positive_compacts.locally_compact_space_of_group TopologicalSpace.PositiveCompacts.locally_compact_space_of_group
+#align topological_space.positive_compacts.locally_compact_space_of_add_group TopologicalSpace.PositiveCompacts.locally_compact_space_of_add_group
 
 end
 

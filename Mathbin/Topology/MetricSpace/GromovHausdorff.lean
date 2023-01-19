@@ -181,8 +181,7 @@ theorem to_GH_space_eq_to_GH_space_iff_isometry_equiv {X : Type u} [MetricSpace 
       dsimp only [NonemptyCompacts.kuratowskiEmbedding]
       rfl
     exact ⟨cast I ((f.trans e).trans g)⟩⟩
-#align
-  Gromov_Hausdorff.to_GH_space_eq_to_GH_space_iff_isometry_equiv GromovHausdorff.to_GH_space_eq_to_GH_space_iff_isometry_equiv
+#align Gromov_Hausdorff.to_GH_space_eq_to_GH_space_iff_isometry_equiv GromovHausdorff.to_GH_space_eq_to_GH_space_iff_isometry_equiv
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Distance on `GH_space`: the distance between two nonempty compact spaces is the infimum
@@ -609,8 +608,7 @@ theorem GH_dist_le_nonempty_compacts_dist (p q : NonemptyCompacts X) :
   have J : ↑q = range (coe : q → X) := subtype.range_coe_subtype.symm
   rw [A, I, J]
   exact GH_dist_le_Hausdorff_dist ha hb
-#align
-  Gromov_Hausdorff.GH_dist_le_nonempty_compacts_dist GromovHausdorff.GH_dist_le_nonempty_compacts_dist
+#align Gromov_Hausdorff.GH_dist_le_nonempty_compacts_dist GromovHausdorff.GH_dist_le_nonempty_compacts_dist
 
 theorem to_GH_space_lipschitz :
     LipschitzWith 1 (NonemptyCompacts.toGHSpace : NonemptyCompacts X → GHSpace) :=

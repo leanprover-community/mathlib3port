@@ -437,8 +437,7 @@ theorem equiv_quotient_index_apply (x : α) : hs.equivQuotient (hs.index x) = hs
 @[simp]
 theorem equiv_quotient_symm_proj_apply (x : α) : hs.equivQuotient.symm (hs.proj x) = hs.index x :=
   rfl
-#align
-  indexed_partition.equiv_quotient_symm_proj_apply IndexedPartition.equiv_quotient_symm_proj_apply
+#align indexed_partition.equiv_quotient_symm_proj_apply IndexedPartition.equiv_quotient_symm_proj_apply
 
 theorem equiv_quotient_index : hs.equivQuotient ∘ hs.index = hs.proj :=
   funext hs.equiv_quotient_index_apply

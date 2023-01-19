@@ -394,8 +394,7 @@ theorem Sylow.conj_eq_normalizer_conj_of_mem_centralizer [Fact p.Prime] [Finite 
   simp_rw [Sylow.smul_subtype, smul_def, smul_smul] at hh
   refine' ⟨h * g, sylow.smul_eq_iff_mem_normalizer.mp (Sylow.subtype_injective hh), _⟩
   rw [← mul_assoc, Commute.right_comm (h.prop x (mem_zpowers x)), mul_inv_rev, inv_mul_cancel_right]
-#align
-  sylow.conj_eq_normalizer_conj_of_mem_centralizer Sylow.conj_eq_normalizer_conj_of_mem_centralizer
+#align sylow.conj_eq_normalizer_conj_of_mem_centralizer Sylow.conj_eq_normalizer_conj_of_mem_centralizer
 
 theorem Sylow.conj_eq_normalizer_conj_of_mem [Fact p.Prime] [Finite (Sylow p G)] (P : Sylow p G)
     [hP : (P : Subgroup G).IsCommutative] (x g : G) (hx : x ∈ P) (hy : g⁻¹ * x * g ∈ P) :
@@ -537,8 +536,7 @@ theorem mem_fixed_points_mul_left_cosets_iff_mem_normalizer {H : Subgroup G} [Fi
             (hx _).2 <|
               (mul_mem_cancel_left (inv_mem hb₁)).1 <| by
                 rw [hx] at hb₂ <;> simpa [mul_inv_rev, mul_assoc] using hb₂)⟩
-#align
-  sylow.mem_fixed_points_mul_left_cosets_iff_mem_normalizer Sylow.mem_fixed_points_mul_left_cosets_iff_mem_normalizer
+#align sylow.mem_fixed_points_mul_left_cosets_iff_mem_normalizer Sylow.mem_fixed_points_mul_left_cosets_iff_mem_normalizer
 
 /-- The fixed points of the action of `H` on its cosets correspond to `normalizer H / H`. -/
 def fixedPointsMulLeftCosetsEquivQuotient (H : Subgroup G) [Finite (H : Set G)] :
@@ -562,8 +560,7 @@ theorem card_quotient_normalizer_modeq_card_quotient [Fintype G] {p : ℕ} {n : 
   by
   rw [← Fintype.card_congr (fixed_points_mul_left_cosets_equiv_quotient H)]
   exact ((IsPGroup.of_card hH).card_modeq_card_fixed_points _).symm
-#align
-  sylow.card_quotient_normalizer_modeq_card_quotient Sylow.card_quotient_normalizer_modeq_card_quotient
+#align sylow.card_quotient_normalizer_modeq_card_quotient Sylow.card_quotient_normalizer_modeq_card_quotient
 
 /-- If `H` is a subgroup of `G` of cardinality `p ^ n`, then the cardinality of the
   normalizer of `H` is congruent mod `p ^ (n + 1)` to the cardinality of `G`.  -/

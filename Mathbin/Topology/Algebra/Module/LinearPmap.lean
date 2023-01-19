@@ -125,8 +125,7 @@ theorem IsClosable.graph_closure_eq_closure_graph {f : E →ₗ.[R] F} (hf : f.I
   by
   rw [closure_def hf]
   exact hf.some_spec
-#align
-  linear_pmap.is_closable.graph_closure_eq_closure_graph LinearPmap.IsClosable.graph_closure_eq_closure_graph
+#align linear_pmap.is_closable.graph_closure_eq_closure_graph LinearPmap.IsClosable.graph_closure_eq_closure_graph
 
 /-- A `linear_pmap` is contained in its closure. -/
 theorem le_closure (f : E →ₗ.[R] F) : f ≤ f.closure :=
@@ -162,8 +161,7 @@ theorem is_closable_iff_exists_closed_extension {f : E →ₗ.[R] F} :
     f.IsClosable ↔ ∃ (g : E →ₗ.[R] F)(hg : g.IsClosed), f ≤ g :=
   ⟨fun h => ⟨f.closure, h.closureIsClosed, f.le_closure⟩, fun ⟨_, hg, h⟩ =>
     hg.IsClosable.leIsClosable h⟩
-#align
-  linear_pmap.is_closable_iff_exists_closed_extension LinearPmap.is_closable_iff_exists_closed_extension
+#align linear_pmap.is_closable_iff_exists_closed_extension LinearPmap.is_closable_iff_exists_closed_extension
 
 /-! ### The core of a linear operator -/
 

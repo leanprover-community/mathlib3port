@@ -169,16 +169,14 @@ theorem derived_series_eq_derived_series_of_ideal_comap (k : ℕ) :
     exact
       comap_bracket_incl_of_le I (derived_series_of_ideal_le_self I k)
         (derived_series_of_ideal_le_self I k)
-#align
-  lie_ideal.derived_series_eq_derived_series_of_ideal_comap LieIdeal.derived_series_eq_derived_series_of_ideal_comap
+#align lie_ideal.derived_series_eq_derived_series_of_ideal_comap LieIdeal.derived_series_eq_derived_series_of_ideal_comap
 
 theorem derived_series_eq_derived_series_of_ideal_map (k : ℕ) :
     (derivedSeries R I k).map I.incl = derivedSeriesOfIdeal R L k I :=
   by
   rw [derived_series_eq_derived_series_of_ideal_comap, map_comap_incl, inf_eq_right]
   apply derived_series_of_ideal_le_self
-#align
-  lie_ideal.derived_series_eq_derived_series_of_ideal_map LieIdeal.derived_series_eq_derived_series_of_ideal_map
+#align lie_ideal.derived_series_eq_derived_series_of_ideal_map LieIdeal.derived_series_eq_derived_series_of_ideal_map
 
 theorem derived_series_eq_bot_iff (k : ℕ) :
     derivedSeries R I k = ⊥ ↔ derivedSeriesOfIdeal R L k I = ⊥ := by
@@ -347,8 +345,7 @@ theorem derived_series_of_derived_length_succ (I : LieIdeal R L) (k : ℕ) :
     rw [← h₁]
     exact derived_series_of_ideal_antitone I h₁₂
   exact Nat.Inf_upward_closed_eq_succ_iff hs k
-#align
-  lie_algebra.derived_series_of_derived_length_succ LieAlgebra.derived_series_of_derived_length_succ
+#align lie_algebra.derived_series_of_derived_length_succ LieAlgebra.derived_series_of_derived_length_succ
 
 theorem derived_length_eq_derived_length_of_ideal (I : LieIdeal R L) :
     derivedLength R I = derivedLengthOfIdeal R L I :=
@@ -357,8 +354,7 @@ theorem derived_length_eq_derived_length_of_ideal (I : LieIdeal R L) :
   let s₂ := { k | derived_series_of_ideal R L k I = ⊥ }
   change Inf s₁ = Inf s₂
   congr ; ext k; exact I.derived_series_eq_bot_iff k
-#align
-  lie_algebra.derived_length_eq_derived_length_of_ideal LieAlgebra.derived_length_eq_derived_length_of_ideal
+#align lie_algebra.derived_length_eq_derived_length_of_ideal LieAlgebra.derived_length_eq_derived_length_of_ideal
 
 variable {R L}
 
@@ -411,8 +407,7 @@ theorem abelian_of_solvable_ideal_eq_bot_iff (I : LieIdeal R L) [h : IsSolvable 
       apply derived_series_of_bot_eq_bot
     change derived_series_of_ideal R L k I = ⊥ ↔ I = ⊥
     constructor <;> contradiction
-#align
-  lie_algebra.abelian_of_solvable_ideal_eq_bot_iff LieAlgebra.abelian_of_solvable_ideal_eq_bot_iff
+#align lie_algebra.abelian_of_solvable_ideal_eq_bot_iff LieAlgebra.abelian_of_solvable_ideal_eq_bot_iff
 
 end LieAlgebra
 

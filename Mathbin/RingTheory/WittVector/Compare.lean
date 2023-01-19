@@ -60,8 +60,7 @@ theorem eq_of_le_of_cast_pow_eq_zero [CharP R p] (i : ℕ) (hin : i ≤ n)
   rw [WittVector.coeff_truncate, coeff_zero, Fin.val_mk, WittVector.coeff_p_pow]
   haveI : Nontrivial R := CharP.nontrivial_of_char_ne_one hp.1.ne_one
   exact one_ne_zero
-#align
-  truncated_witt_vector.eq_of_le_of_cast_pow_eq_zero TruncatedWittVector.eq_of_le_of_cast_pow_eq_zero
+#align truncated_witt_vector.eq_of_le_of_cast_pow_eq_zero TruncatedWittVector.eq_of_le_of_cast_pow_eq_zero
 
 section Iso
 
@@ -207,8 +206,7 @@ theorem to_padic_int_comp_from_padic_int :
 theorem to_padic_int_comp_from_padic_int_ext (x) :
     (toPadicInt p).comp (fromPadicInt p) x = RingHom.id ℤ_[p] x := by
   rw [to_padic_int_comp_from_padic_int]
-#align
-  witt_vector.to_padic_int_comp_from_padic_int_ext WittVector.to_padic_int_comp_from_padic_int_ext
+#align witt_vector.to_padic_int_comp_from_padic_int_ext WittVector.to_padic_int_comp_from_padic_int_ext
 
 theorem from_padic_int_comp_to_padic_int :
     (fromPadicInt p).comp (toPadicInt p) = RingHom.id (𝕎 (Zmod p)) :=
@@ -223,8 +221,7 @@ theorem from_padic_int_comp_to_padic_int :
 theorem from_padic_int_comp_to_padic_int_ext (x) :
     (fromPadicInt p).comp (toPadicInt p) x = RingHom.id (𝕎 (Zmod p)) x := by
   rw [from_padic_int_comp_to_padic_int]
-#align
-  witt_vector.from_padic_int_comp_to_padic_int_ext WittVector.from_padic_int_comp_to_padic_int_ext
+#align witt_vector.from_padic_int_comp_to_padic_int_ext WittVector.from_padic_int_comp_to_padic_int_ext
 
 /-- The ring of Witt vectors over `zmod p` is isomorphic to the ring of `p`-adic integers. This
 equivalence is witnessed by `witt_vector.to_padic_int` with inverse `witt_vector.from_padic_int`.

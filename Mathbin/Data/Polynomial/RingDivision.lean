@@ -342,8 +342,7 @@ theorem Monic.not_irreducible_iff_exists_add_mul_eq_coeff (hm : p.Monic) (hnd : 
     ring
   · rintro rfl
     simpa only [nat_degree_one] using hnd
-#align
-  polynomial.monic.not_irreducible_iff_exists_add_mul_eq_coeff Polynomial.Monic.not_irreducible_iff_exists_add_mul_eq_coeff
+#align polynomial.monic.not_irreducible_iff_exists_add_mul_eq_coeff Polynomial.Monic.not_irreducible_iff_exists_add_mul_eq_coeff
 
 theorem root_mul : IsRoot (p * q) a ↔ IsRoot p a ∨ IsRoot q a := by
   simp_rw [is_root, eval_mul, mul_eq_zero]
@@ -743,8 +742,7 @@ theorem nat_degree_multiset_prod_X_sub_C_eq_card (s : Multiset R) :
     simp only [(· ∘ ·), nat_degree_X_sub_C, Multiset.map_const, Multiset.sum_replicate, smul_eq_mul,
       mul_one]
   · exact Multiset.forall_mem_map_iff.2 fun a _ => monic_X_sub_C a
-#align
-  polynomial.nat_degree_multiset_prod_X_sub_C_eq_card Polynomial.nat_degree_multiset_prod_X_sub_C_eq_card
+#align polynomial.nat_degree_multiset_prod_X_sub_C_eq_card Polynomial.nat_degree_multiset_prod_X_sub_C_eq_card
 
 theorem card_roots_X_pow_sub_C {n : ℕ} (hn : 0 < n) (a : R) :
     (roots ((x : R[X]) ^ n - c a)).card ≤ n :=
@@ -992,8 +990,7 @@ theorem degree_eq_one_of_irreducible_of_root (hi : Irreducible p) {x : R} (hx : 
       have h₂ : degree (X - c x) = 0 := degree_eq_zero_of_is_unit h
       rw [h₁] at h₂ <;> exact absurd h₂ (by decide))
     fun hgu => by rw [hg, degree_mul, degree_X_sub_C, degree_eq_zero_of_is_unit hgu, add_zero]
-#align
-  polynomial.degree_eq_one_of_irreducible_of_root Polynomial.degree_eq_one_of_irreducible_of_root
+#align polynomial.degree_eq_one_of_irreducible_of_root Polynomial.degree_eq_one_of_irreducible_of_root
 
 /-- Division by a monic polynomial doesn't change the leading coefficient. -/
 theorem leading_coeff_div_by_monic_of_monic {R : Type u} [CommRing R] {p q : R[X]}
@@ -1033,8 +1030,7 @@ theorem eq_leading_coeff_mul_of_monic_of_dvd_of_nat_degree_le {R} [CommRing R] {
     convert leading_coeff_C _ using 1
     rw [hr, leading_coeff_mul_monic hp]
   · exact (add_right_inj _).1 (le_antisymm hdeg <| Nat.le.intro rfl)
-#align
-  polynomial.eq_leading_coeff_mul_of_monic_of_dvd_of_nat_degree_le Polynomial.eq_leading_coeff_mul_of_monic_of_dvd_of_nat_degree_le
+#align polynomial.eq_leading_coeff_mul_of_monic_of_dvd_of_nat_degree_le Polynomial.eq_leading_coeff_mul_of_monic_of_dvd_of_nat_degree_le
 
 theorem eq_of_monic_of_dvd_of_nat_degree_le {R} [CommRing R] {p q : R[X]} (hp : p.Monic)
     (hq : q.Monic) (hdiv : p ∣ q) (hdeg : q.natDegree ≤ p.natDegree) : q = p :=
@@ -1117,8 +1113,7 @@ theorem C_leading_coeff_mul_prod_multiset_X_sub_C (hroots : p.roots.card = p.nat
   (eq_leading_coeff_mul_of_monic_of_dvd_of_nat_degree_le monic_prod_multiset_X_sub_C
       p.prod_multiset_X_sub_C_dvd
       ((nat_degree_multiset_prod_X_sub_C_eq_card _).trans hroots).ge).symm
-#align
-  polynomial.C_leading_coeff_mul_prod_multiset_X_sub_C Polynomial.C_leading_coeff_mul_prod_multiset_X_sub_C
+#align polynomial.C_leading_coeff_mul_prod_multiset_X_sub_C Polynomial.C_leading_coeff_mul_prod_multiset_X_sub_C
 
 /-- A monic polynomial `p` that has as many roots as its degree
 can be written `p = ∏(X - a)`, for `a` in `p.roots`. -/
@@ -1127,8 +1122,7 @@ theorem prod_multiset_X_sub_C_of_monic_of_roots_card_eq (hp : p.Monic)
   by
   convert C_leading_coeff_mul_prod_multiset_X_sub_C hroots
   rw [hp.leading_coeff, C_1, one_mul]
-#align
-  polynomial.prod_multiset_X_sub_C_of_monic_of_roots_card_eq Polynomial.prod_multiset_X_sub_C_of_monic_of_roots_card_eq
+#align polynomial.prod_multiset_X_sub_C_of_monic_of_roots_card_eq Polynomial.prod_multiset_X_sub_C_of_monic_of_roots_card_eq
 
 end CommRing
 
@@ -1211,8 +1205,7 @@ theorem roots_map_of_injective_of_card_eq_nat_degree [IsDomain A] [IsDomain B] {
   by
   apply Multiset.eq_of_le_of_card_le (map_roots_le_of_injective p hf)
   simpa only [Multiset.card_map, hroots] using (card_roots' _).trans (nat_degree_map_le f p)
-#align
-  polynomial.roots_map_of_injective_of_card_eq_nat_degree Polynomial.roots_map_of_injective_of_card_eq_nat_degree
+#align polynomial.roots_map_of_injective_of_card_eq_nat_degree Polynomial.roots_map_of_injective_of_card_eq_nat_degree
 
 end
 
@@ -1235,8 +1228,7 @@ theorem is_unit_of_is_unit_leading_coeff_of_is_unit_map {f : R[X]} (hf : IsUnit 
     have u : IsUnit (φ f.leading_coeff) := IsUnit.map φ hf
     rw [h] at u
     simpa using u
-#align
-  polynomial.is_unit_of_is_unit_leading_coeff_of_is_unit_map Polynomial.is_unit_of_is_unit_leading_coeff_of_is_unit_map
+#align polynomial.is_unit_of_is_unit_leading_coeff_of_is_unit_map Polynomial.is_unit_of_is_unit_leading_coeff_of_is_unit_map
 
 end
 
@@ -1264,8 +1256,7 @@ theorem Monic.irreducible_of_irreducible_map (f : R[X]) (h_mon : Monic f)
   · exact q;
   · rw [mul_comm]
     exact q
-#align
-  polynomial.monic.irreducible_of_irreducible_map Polynomial.Monic.irreducible_of_irreducible_map
+#align polynomial.monic.irreducible_of_irreducible_map Polynomial.Monic.irreducible_of_irreducible_map
 
 end
 

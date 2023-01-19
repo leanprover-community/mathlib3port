@@ -74,21 +74,18 @@ def opObjUnop (X : Cᵒᵖ) : (const Jᵒᵖ).obj (unop X) ≅ ((const J).obj X)
 @[simp]
 theorem op_obj_unop_hom_app (X : Cᵒᵖ) (j : Jᵒᵖ) : (opObjUnop.{v₁, v₂} X).Hom.app j = 𝟙 _ :=
   rfl
-#align
-  category_theory.functor.const.op_obj_unop_hom_app CategoryTheory.Functor.const.op_obj_unop_hom_app
+#align category_theory.functor.const.op_obj_unop_hom_app CategoryTheory.Functor.const.op_obj_unop_hom_app
 
 @[simp]
 theorem op_obj_unop_inv_app (X : Cᵒᵖ) (j : Jᵒᵖ) : (opObjUnop.{v₁, v₂} X).inv.app j = 𝟙 _ :=
   rfl
-#align
-  category_theory.functor.const.op_obj_unop_inv_app CategoryTheory.Functor.const.op_obj_unop_inv_app
+#align category_theory.functor.const.op_obj_unop_inv_app CategoryTheory.Functor.const.op_obj_unop_inv_app
 
 @[simp]
 theorem unop_functor_op_obj_map (X : Cᵒᵖ) {j₁ j₂ : J} (f : j₁ ⟶ j₂) :
     (unop ((Functor.op (const J)).obj X)).map f = 𝟙 (unop X) :=
   rfl
-#align
-  category_theory.functor.const.unop_functor_op_obj_map CategoryTheory.Functor.const.unop_functor_op_obj_map
+#align category_theory.functor.const.unop_functor_op_obj_map CategoryTheory.Functor.const.unop_functor_op_obj_map
 
 end Const
 

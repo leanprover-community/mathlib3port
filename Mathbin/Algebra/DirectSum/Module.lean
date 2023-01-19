@@ -193,8 +193,7 @@ theorem linear_equiv_fun_on_fintype_symm_single [Fintype ι] [DecidableEq ι] (i
   change (dfinsupp.equiv_fun_on_fintype.symm (Pi.single i m)) a = _
   rw [Dfinsupp.equiv_fun_on_fintype_symm_single i m]
   rfl
-#align
-  direct_sum.linear_equiv_fun_on_fintype_symm_single DirectSum.linear_equiv_fun_on_fintype_symm_single
+#align direct_sum.linear_equiv_fun_on_fintype_symm_single DirectSum.linear_equiv_fun_on_fintype_symm_single
 
 @[simp]
 theorem linear_equiv_fun_on_fintype_symm_coe [Fintype ι] (f : ⨁ i, M i) :
@@ -202,8 +201,7 @@ theorem linear_equiv_fun_on_fintype_symm_coe [Fintype ι] (f : ⨁ i, M i) :
   by
   ext
   simp [linear_equiv_fun_on_fintype]
-#align
-  direct_sum.linear_equiv_fun_on_fintype_symm_coe DirectSum.linear_equiv_fun_on_fintype_symm_coe
+#align direct_sum.linear_equiv_fun_on_fintype_symm_coe DirectSum.linear_equiv_fun_on_fintype_symm_coe
 
 /-- The natural linear equivalence between `⨁ _ : ι, M` and `M` when `unique ι`. -/
 protected def lid (M : Type v) (ι : Type _ := PUnit) [AddCommMonoid M] [Module R M] [Unique ι] :
@@ -423,8 +421,7 @@ theorem is_internal_submodule_of_independent_of_supr_eq_top {A : ι → Submodul
     (hi : CompleteLattice.Independent A) (hs : supᵢ A = ⊤) : IsInternal A :=
   ⟨hi.dfinsupp_lsum_injective,
     LinearMap.range_eq_top.1 <| (Submodule.supr_eq_range_dfinsupp_lsum _).symm.trans hs⟩
-#align
-  direct_sum.is_internal_submodule_of_independent_of_supr_eq_top DirectSum.is_internal_submodule_of_independent_of_supr_eq_top
+#align direct_sum.is_internal_submodule_of_independent_of_supr_eq_top DirectSum.is_internal_submodule_of_independent_of_supr_eq_top
 
 /-- `iff` version of `direct_sum.is_internal_submodule_of_independent_of_supr_eq_top`,
 `direct_sum.is_internal.independent`, and `direct_sum.is_internal.supr_eq_top`.
@@ -433,8 +430,7 @@ theorem is_internal_submodule_iff_independent_and_supr_eq_top (A : ι → Submod
     IsInternal A ↔ CompleteLattice.Independent A ∧ supᵢ A = ⊤ :=
   ⟨fun i => ⟨i.submodule_independent, i.submodule_supr_eq_top⟩,
     And.ndrec is_internal_submodule_of_independent_of_supr_eq_top⟩
-#align
-  direct_sum.is_internal_submodule_iff_independent_and_supr_eq_top DirectSum.is_internal_submodule_iff_independent_and_supr_eq_top
+#align direct_sum.is_internal_submodule_iff_independent_and_supr_eq_top DirectSum.is_internal_submodule_iff_independent_and_supr_eq_top
 
 /-- If a collection of submodules has just two indices, `i` and `j`, then
 `direct_sum.is_internal` is equivalent to `is_compl`. -/
@@ -453,8 +449,7 @@ theorem is_internal_submodule_iff_is_compl (A : ι → Submodule R M) {i j : ι}
 theorem IsInternal.add_submonoid_independent {M : Type _} [AddCommMonoid M] {A : ι → AddSubmonoid M}
     (h : IsInternal A) : CompleteLattice.Independent A :=
   CompleteLattice.independent_of_dfinsupp_sum_add_hom_injective _ h.Injective
-#align
-  direct_sum.is_internal.add_submonoid_independent DirectSum.IsInternal.add_submonoid_independent
+#align direct_sum.is_internal.add_submonoid_independent DirectSum.IsInternal.add_submonoid_independent
 
 theorem IsInternal.add_subgroup_independent {M : Type _} [AddCommGroup M] {A : ι → AddSubgroup M}
     (h : IsInternal A) : CompleteLattice.Independent A :=

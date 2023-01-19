@@ -636,14 +636,12 @@ theorem total_degree_add_eq_left_of_total_degree_lt {p q : MvPolynomial σ R}
       exact ⟨hb₁, hb⟩
     rw [total_degree_eq, hb₂, total_degree_eq]
     exact Finset.le_sup hbb
-#align
-  mv_polynomial.total_degree_add_eq_left_of_total_degree_lt MvPolynomial.total_degree_add_eq_left_of_total_degree_lt
+#align mv_polynomial.total_degree_add_eq_left_of_total_degree_lt MvPolynomial.total_degree_add_eq_left_of_total_degree_lt
 
 theorem total_degree_add_eq_right_of_total_degree_lt {p q : MvPolynomial σ R}
     (h : q.totalDegree < p.totalDegree) : (q + p).totalDegree = p.totalDegree := by
   rw [add_comm, total_degree_add_eq_left_of_total_degree_lt h]
-#align
-  mv_polynomial.total_degree_add_eq_right_of_total_degree_lt MvPolynomial.total_degree_add_eq_right_of_total_degree_lt
+#align mv_polynomial.total_degree_add_eq_right_of_total_degree_lt MvPolynomial.total_degree_add_eq_right_of_total_degree_lt
 
 theorem total_degree_mul (a b : MvPolynomial σ R) :
     (a * b).totalDegree ≤ a.totalDegree + b.totalDegree :=
@@ -799,8 +797,7 @@ theorem eval₂_hom_eq_constant_coeff_of_vars (f : R →+* S) {g : σ → S} {p 
   · rw [constant_coeff_eq, coeff, ← Ne.def, ← Finsupp.mem_support_iff] at h0
     intro
     contradiction
-#align
-  mv_polynomial.eval₂_hom_eq_constant_coeff_of_vars MvPolynomial.eval₂_hom_eq_constant_coeff_of_vars
+#align mv_polynomial.eval₂_hom_eq_constant_coeff_of_vars MvPolynomial.eval₂_hom_eq_constant_coeff_of_vars
 
 theorem aeval_eq_constant_coeff_of_vars [Algebra R S] {g : σ → S} {p : MvPolynomial σ R}
     (hp : ∀ i ∈ p.vars, g i = 0) : aeval g p = algebraMap _ _ (constantCoeff p) :=
@@ -853,8 +850,7 @@ theorem exists_rename_eq_of_vars_subset_range (p : MvPolynomial σ R) (f : τ �
       rcases hf hip with ⟨i, rfl⟩
       simp [partial_inv_left hfi]
     · rfl⟩
-#align
-  mv_polynomial.exists_rename_eq_of_vars_subset_range MvPolynomial.exists_rename_eq_of_vars_subset_range
+#align mv_polynomial.exists_rename_eq_of_vars_subset_range MvPolynomial.exists_rename_eq_of_vars_subset_range
 
 theorem vars_bind₁ (f : σ → MvPolynomial τ R) (φ : MvPolynomial σ R) :
     (bind₁ f φ).vars ⊆ φ.vars.bUnion fun i => (f i).vars :=

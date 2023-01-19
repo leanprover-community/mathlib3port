@@ -157,8 +157,7 @@ theorem thickened_indicator_aux_tendsto_indicator_closure {δseq : ℕ → ℝ}
     refine' le_antisymm _ bot_le
     apply (thickened_indicator_aux_mono (lt_of_abs_lt (hN n n_large)).le E x).trans
     exact (thickened_indicator_aux_zero ε_pos E key).le
-#align
-  thickened_indicator_aux_tendsto_indicator_closure thickened_indicator_aux_tendsto_indicator_closure
+#align thickened_indicator_aux_tendsto_indicator_closure thickened_indicator_aux_tendsto_indicator_closure
 
 /-- The `δ`-thickened indicator of a set `E` is the function that equals `1` on `E`
 and `0` outside a `δ`-thickening of `E` and interpolates (continuously) between

@@ -149,8 +149,7 @@ instance has_limits : HasLimits (ModuleCat.{w} R) :=
 def forget₂AddCommGroupPreservesLimitsAux (F : J ⥤ ModuleCat.{max v w} R) :
     IsLimit ((forget₂ (ModuleCat R) AddCommGroupCat).mapCone (limitCone F)) :=
   AddCommGroupCat.limit_cone_is_limit (F ⋙ forget₂ (ModuleCat R) AddCommGroupCat.{max v w})
-#align
-  Module.forget₂_AddCommGroup_preserves_limits_aux ModuleCat.forget₂AddCommGroupPreservesLimitsAux
+#align Module.forget₂_AddCommGroup_preserves_limits_aux ModuleCat.forget₂AddCommGroupPreservesLimitsAux
 
 /-- The forgetful functor from R-modules to abelian groups preserves all limits.
 -/
@@ -161,8 +160,7 @@ instance forget₂AddCommGroupPreservesLimitsOfSize :
       PreservesLimit := fun F =>
         preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F)
           (forget₂_AddCommGroup_preserves_limits_aux F) }
-#align
-  Module.forget₂_AddCommGroup_preserves_limits_of_size ModuleCat.forget₂AddCommGroupPreservesLimitsOfSize
+#align Module.forget₂_AddCommGroup_preserves_limits_of_size ModuleCat.forget₂AddCommGroupPreservesLimitsOfSize
 
 instance forget₂AddCommGroupPreservesLimits :
     PreservesLimits (forget₂ (ModuleCat R) AddCommGroupCat.{w}) :=

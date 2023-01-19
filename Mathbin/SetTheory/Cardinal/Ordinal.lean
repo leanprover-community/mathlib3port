@@ -1207,7 +1207,7 @@ theorem mk_compl_eq_mk_compl_finite_lift {α : Type u} {β : Type v} [Finite α]
   by
   cases nonempty_fintype α
   rcases lift_mk_eq.1 h1 with ⟨e⟩; letI : Fintype β := Fintype.ofEquiv α e
-  replace h1 : Fintype.card α = Fintype.card β := (Fintype.of_equiv_card _).symm
+  replace h1 : Fintype.card α = Fintype.card β := (Fintype.ofEquiv_card _).symm
   classical
     lift s to Finset α using s.to_finite
     lift t to Finset β using t.to_finite

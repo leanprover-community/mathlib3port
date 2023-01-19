@@ -669,8 +669,7 @@ theorem pullback_map_open_embedding_of_open_embeddings {W X Y Z S T : TopCat} (f
     apply IsOpen.inter <;> apply Continuous.is_open_preimage
     continuity
     exacts[H₁.open_range, H₂.open_range]
-#align
-  Top.pullback_map_open_embedding_of_open_embeddings TopCat.pullback_map_open_embedding_of_open_embeddings
+#align Top.pullback_map_open_embedding_of_open_embeddings TopCat.pullback_map_open_embedding_of_open_embeddings
 
 theorem snd_embedding_of_left_embedding {X Y S : TopCat} {f : X ⟶ S} (H : Embedding f) (g : Y ⟶ S) :
     Embedding ⇑(pullback.snd : pullback f g ⟶ Y) :=
@@ -712,8 +711,7 @@ theorem snd_open_embedding_of_left_open_embedding {X Y S : TopCat} {f : X ⟶ S}
         (homeo_of_iso (iso.refl _)).OpenEmbedding (𝟙 _) rfl (by simp))
   erw [← coe_comp]
   simp
-#align
-  Top.snd_open_embedding_of_left_open_embedding TopCat.snd_open_embedding_of_left_open_embedding
+#align Top.snd_open_embedding_of_left_open_embedding TopCat.snd_open_embedding_of_left_open_embedding
 
 theorem fst_open_embedding_of_right_open_embedding {X Y S : TopCat} (f : X ⟶ S) {g : Y ⟶ S}
     (H : OpenEmbedding g) : OpenEmbedding ⇑(pullback.fst : pullback f g ⟶ X) :=
@@ -724,8 +722,7 @@ theorem fst_open_embedding_of_right_open_embedding {X Y S : TopCat} (f : X ⟶ S
         (homeo_of_iso (iso.refl _)).OpenEmbedding H (𝟙 _) rfl (by simp))
   erw [← coe_comp]
   simp
-#align
-  Top.fst_open_embedding_of_right_open_embedding TopCat.fst_open_embedding_of_right_open_embedding
+#align Top.fst_open_embedding_of_right_open_embedding TopCat.fst_open_embedding_of_right_open_embedding
 
 /-- If `X ⟶ S`, `Y ⟶ S` are open embeddings, then so is `X ×ₛ Y ⟶ S`. -/
 theorem open_embedding_of_pullback_open_embeddings {X Y S : TopCat} {f : X ⟶ S} {g : Y ⟶ S}
@@ -736,8 +733,7 @@ theorem open_embedding_of_pullback_open_embeddings {X Y S : TopCat} {f : X ⟶ S
   erw [← coe_comp]
   congr
   exact (limit.w _ walking_cospan.hom.inr).symm
-#align
-  Top.open_embedding_of_pullback_open_embeddings TopCat.open_embedding_of_pullback_open_embeddings
+#align Top.open_embedding_of_pullback_open_embeddings TopCat.open_embedding_of_pullback_open_embeddings
 
 theorem fst_iso_of_right_embedding_range_subset {X Y S : TopCat} (f : X ⟶ S) {g : Y ⟶ S}
     (hg : Embedding g) (H : Set.range f ⊆ Set.range g) : IsIso (pullback.fst : pullback f g ⟶ X) :=
@@ -1195,8 +1191,7 @@ theorem nonempty_limit_cone_of_compact_t2_cofiltered_system [IsCofiltered J]
         {⟨X, Y, by simp only [true_or_iff, eq_self_iff_true, Finset.mem_insert], by
             simp only [eq_self_iff_true, or_true_iff, Finset.mem_insert, Finset.mem_singleton], f⟩}⟩
     exact hu _ ⟨G, rfl⟩ (Finset.mem_singleton_self _)
-#align
-  Top.nonempty_limit_cone_of_compact_t2_cofiltered_system TopCat.nonempty_limit_cone_of_compact_t2_cofiltered_system
+#align Top.nonempty_limit_cone_of_compact_t2_cofiltered_system TopCat.nonempty_limit_cone_of_compact_t2_cofiltered_system
 
 end TopologicalKonig
 
@@ -1216,8 +1211,7 @@ theorem NonemptySectionsOfFintypeCofilteredSystem.init {J : Type u} [SmallCatego
   haveI : ∀ j : J, Nonempty (F'.obj j) := hne
   obtain ⟨⟨u, hu⟩⟩ := TopCat.nonempty_limit_cone_of_compact_t2_cofiltered_system F'
   exact ⟨u, fun _ _ f => hu f⟩
-#align
-  nonempty_sections_of_fintype_cofiltered_system.init NonemptySectionsOfFintypeCofilteredSystem.init
+#align nonempty_sections_of_fintype_cofiltered_system.init NonemptySectionsOfFintypeCofilteredSystem.init
 
 /-- The cofiltered limit of nonempty finite types is nonempty.
 

@@ -182,14 +182,12 @@ theorem intervalIntegrableOneDivOneAddSq :
   refine' (continuous_const.div _ fun x => _).IntervalIntegrable a b
   · continuity
   · nlinarith
-#align
-  interval_integral.interval_integrable_one_div_one_add_sq intervalIntegral.intervalIntegrableOneDivOneAddSq
+#align interval_integral.interval_integrable_one_div_one_add_sq intervalIntegral.intervalIntegrableOneDivOneAddSq
 
 @[simp]
 theorem intervalIntegrableInvOneAddSq : IntervalIntegrable (fun x : ℝ => (1 + x ^ 2)⁻¹) μ a b := by
   simpa only [one_div] using interval_integrable_one_div_one_add_sq
-#align
-  interval_integral.interval_integrable_inv_one_add_sq intervalIntegral.intervalIntegrableInvOneAddSq
+#align interval_integral.interval_integrable_inv_one_add_sq intervalIntegral.intervalIntegrableInvOneAddSq
 
 /-! ### Integrals of the form `c * ∫ x in a..b, f (c * x + d)` -/
 
@@ -225,15 +223,13 @@ theorem mul_integral_comp_add_mul :
 theorem inv_mul_integral_comp_div_add :
     (c⁻¹ * ∫ x in a..b, f (x / c + d)) = ∫ x in a / c + d..b / c + d, f x :=
   inv_smul_integral_comp_div_add f c d
-#align
-  interval_integral.inv_mul_integral_comp_div_add intervalIntegral.inv_mul_integral_comp_div_add
+#align interval_integral.inv_mul_integral_comp_div_add intervalIntegral.inv_mul_integral_comp_div_add
 
 @[simp]
 theorem inv_mul_integral_comp_add_div :
     (c⁻¹ * ∫ x in a..b, f (d + x / c)) = ∫ x in d + a / c..d + b / c, f x :=
   inv_smul_integral_comp_add_div f c d
-#align
-  interval_integral.inv_mul_integral_comp_add_div intervalIntegral.inv_mul_integral_comp_add_div
+#align interval_integral.inv_mul_integral_comp_add_div intervalIntegral.inv_mul_integral_comp_add_div
 
 @[simp]
 theorem mul_integral_comp_mul_sub :
@@ -251,15 +247,13 @@ theorem mul_integral_comp_sub_mul :
 theorem inv_mul_integral_comp_div_sub :
     (c⁻¹ * ∫ x in a..b, f (x / c - d)) = ∫ x in a / c - d..b / c - d, f x :=
   inv_smul_integral_comp_div_sub f c d
-#align
-  interval_integral.inv_mul_integral_comp_div_sub intervalIntegral.inv_mul_integral_comp_div_sub
+#align interval_integral.inv_mul_integral_comp_div_sub intervalIntegral.inv_mul_integral_comp_div_sub
 
 @[simp]
 theorem inv_mul_integral_comp_sub_div :
     (c⁻¹ * ∫ x in a..b, f (d - x / c)) = ∫ x in d - b / c..d - a / c, f x :=
   inv_smul_integral_comp_sub_div f c d
-#align
-  interval_integral.inv_mul_integral_comp_sub_div intervalIntegral.inv_mul_integral_comp_sub_div
+#align interval_integral.inv_mul_integral_comp_sub_div intervalIntegral.inv_mul_integral_comp_sub_div
 
 end intervalIntegral
 

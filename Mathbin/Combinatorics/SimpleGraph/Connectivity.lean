@@ -314,8 +314,7 @@ protected theorem reverse_aux_append :
 
 protected theorem reverse_aux_eq_reverse_append {u v w : V} (p : G.Walk u v) (q : G.Walk u w) :
     p.reverseAux q = p.reverse.append q := by simp [reverse]
-#align
-  simple_graph.walk.reverse_aux_eq_reverse_append SimpleGraph.Walk.reverse_aux_eq_reverse_append
+#align simple_graph.walk.reverse_aux_eq_reverse_append SimpleGraph.Walk.reverse_aux_eq_reverse_append
 
 @[simp]
 theorem reverse_cons {u v w : V} (h : G.Adj u v) (p : G.Walk v w) :
@@ -663,14 +662,12 @@ theorem dart_fst_mem_support_of_mem_darts :
     rcases hd with (rfl | hd)
     · exact Or.inl rfl
     · exact Or.inr (dart_fst_mem_support_of_mem_darts _ hd)
-#align
-  simple_graph.walk.dart_fst_mem_support_of_mem_darts SimpleGraph.Walk.dart_fst_mem_support_of_mem_darts
+#align simple_graph.walk.dart_fst_mem_support_of_mem_darts SimpleGraph.Walk.dart_fst_mem_support_of_mem_darts
 
 theorem dart_snd_mem_support_of_mem_darts {u v : V} (p : G.Walk u v) {d : G.Dart}
     (h : d ∈ p.darts) : d.snd ∈ p.support := by
   simpa using p.reverse.dart_fst_mem_support_of_mem_darts (by simp [h] : d.symm ∈ p.reverse.darts)
-#align
-  simple_graph.walk.dart_snd_mem_support_of_mem_darts SimpleGraph.Walk.dart_snd_mem_support_of_mem_darts
+#align simple_graph.walk.dart_snd_mem_support_of_mem_darts SimpleGraph.Walk.dart_snd_mem_support_of_mem_darts
 
 theorem fst_mem_support_of_mem_edges {t u v w : V} (p : G.Walk v w) (he : ⟦(t, u)⟧ ∈ p.edges) :
     t ∈ p.support := by
@@ -957,8 +954,7 @@ theorem mem_support_iff_exists_append {V : Type u} {G : SimpleGraph V} {u v w : 
     · exact fun h => ⟨_, _, (p.take_spec h).symm⟩
     · rintro ⟨q, r, rfl⟩
       simp only [mem_support_append_iff, end_mem_support, start_mem_support, or_self_iff]
-#align
-  simple_graph.walk.mem_support_iff_exists_append SimpleGraph.Walk.mem_support_iff_exists_append
+#align simple_graph.walk.mem_support_iff_exists_append SimpleGraph.Walk.mem_support_iff_exists_append
 
 @[simp]
 theorem count_support_take_until_eq_one {u v w : V} (p : G.Walk v w) (h : u ∈ p.support) :
@@ -972,8 +968,7 @@ theorem count_support_take_until_eq_one {u v w : V} (p : G.Walk v w) (h : u ∈ 
     · simp!
     · simp! only
       split_ifs with h' <;> rw [eq_comm] at h' <;> subst_vars <;> simp! [*, List.count_cons]
-#align
-  simple_graph.walk.count_support_take_until_eq_one SimpleGraph.Walk.count_support_take_until_eq_one
+#align simple_graph.walk.count_support_take_until_eq_one SimpleGraph.Walk.count_support_take_until_eq_one
 
 theorem count_edges_take_until_le_one {u v w : V} (p : G.Walk v w) (h : u ∈ p.support) (x : V) :
     (p.takeUntil u h).edges.count ⟦(u, x)⟧ ≤ 1 :=
@@ -995,8 +990,7 @@ theorem count_edges_take_until_le_one {u v w : V} (p : G.Walk v w) (h : u ∈ p.
           · exact (h' rfl).elim
           · cases p' <;> simp!
         · apply ih
-#align
-  simple_graph.walk.count_edges_take_until_le_one SimpleGraph.Walk.count_edges_take_until_le_one
+#align simple_graph.walk.count_edges_take_until_le_one SimpleGraph.Walk.count_edges_take_until_le_one
 
 @[simp]
 theorem take_until_copy {u v w v' w'} (p : G.Walk v w) (hv : v = v') (hw : w = w')
@@ -1450,8 +1444,7 @@ theorem map_is_trail_iff_of_injective (hinj : Function.Injective f) :
     change _ ∧ Sym2.map f ⟦(u, v)⟧ ∉ _ ↔ _
     rw [List.mem_map_of_injective (Sym2.map.injective hinj)]
     exact and_congr_left' ih
-#align
-  simple_graph.walk.map_is_trail_iff_of_injective SimpleGraph.Walk.map_is_trail_iff_of_injective
+#align simple_graph.walk.map_is_trail_iff_of_injective SimpleGraph.Walk.map_is_trail_iff_of_injective
 
 alias map_is_trail_iff_of_injective ↔ _ map_is_trail_of_injective
 #align simple_graph.walk.map_is_trail_of_injective SimpleGraph.Walk.map_is_trail_of_injective
@@ -1460,8 +1453,7 @@ theorem map_is_cycle_iff_of_injective {p : G.Walk u u} (hinj : Function.Injectiv
     (p.map f).IsCycle ↔ p.IsCycle := by
   rw [is_cycle_def, is_cycle_def, map_is_trail_iff_of_injective hinj, Ne.def, map_eq_nil_iff,
     support_map, ← List.map_tail, List.nodup_map_iff hinj]
-#align
-  simple_graph.walk.map_is_cycle_iff_of_injective SimpleGraph.Walk.map_is_cycle_iff_of_injective
+#align simple_graph.walk.map_is_cycle_iff_of_injective SimpleGraph.Walk.map_is_cycle_iff_of_injective
 
 alias map_is_cycle_iff_of_injective ↔ _ map_is_cycle_of_injective
 #align simple_graph.walk.map_is_cycle_of_injective SimpleGraph.Walk.map_is_cycle_of_injective
@@ -1940,8 +1932,7 @@ protected theorem ConnectedComponent.forall {p : G.ConnectedComponent → Prop} 
 theorem Preconnected.subsingleton_connected_component (h : G.Preconnected) :
     Subsingleton G.ConnectedComponent :=
   ⟨ConnectedComponent.ind₂ fun v w => ConnectedComponent.sound (h v w)⟩
-#align
-  simple_graph.preconnected.subsingleton_connected_component SimpleGraph.Preconnected.subsingleton_connected_component
+#align simple_graph.preconnected.subsingleton_connected_component SimpleGraph.Preconnected.subsingleton_connected_component
 
 end ConnectedComponent
 
@@ -1978,8 +1969,7 @@ theorem Preconnected.set_univ_walk_nonempty (hconn : G.Preconnected) (u v : V) :
   by
   rw [← Set.nonempty_iff_univ_nonempty]
   exact hconn u v
-#align
-  simple_graph.preconnected.set_univ_walk_nonempty SimpleGraph.Preconnected.set_univ_walk_nonempty
+#align simple_graph.preconnected.set_univ_walk_nonempty SimpleGraph.Preconnected.set_univ_walk_nonempty
 
 theorem Connected.set_univ_walk_nonempty (hconn : G.Connected) (u v : V) :
     (Set.univ : Set (G.Walk u v)).Nonempty :=
@@ -2002,8 +1992,7 @@ protected def toSubgraph : ∀ {u v : V}, G.Walk u v → G.Subgraph
 
 theorem to_subgraph_cons_nil_eq_subgraph_of_adj (h : G.Adj u v) :
     (cons h nil).toSubgraph = G.subgraphOfAdj h := by simp
-#align
-  simple_graph.walk.to_subgraph_cons_nil_eq_subgraph_of_adj SimpleGraph.Walk.to_subgraph_cons_nil_eq_subgraph_of_adj
+#align simple_graph.walk.to_subgraph_cons_nil_eq_subgraph_of_adj SimpleGraph.Walk.to_subgraph_cons_nil_eq_subgraph_of_adj
 
 theorem mem_verts_to_subgraph (p : G.Walk u v) : w ∈ p.toSubgraph.verts ↔ w ∈ p.support :=
   by
@@ -2065,8 +2054,7 @@ theorem finite_neighbor_set_to_subgraph (p : G.Walk u v) : (p.toSubgraph.neighbo
     refine' Set.Finite.union _ p_ih
     refine' Set.Finite.subset _ (neighbor_set_subgraph_of_adj_subset p_h)
     apply Set.to_finite
-#align
-  simple_graph.walk.finite_neighbor_set_to_subgraph SimpleGraph.Walk.finite_neighbor_set_to_subgraph
+#align simple_graph.walk.finite_neighbor_set_to_subgraph SimpleGraph.Walk.finite_neighbor_set_to_subgraph
 
 end Walk
 
@@ -2151,8 +2139,7 @@ variable {G}
 theorem Walk.mem_finset_walk_length_iff_length_eq {n : ℕ} {u v : V} (p : G.Walk u v) :
     p ∈ G.finsetWalkLength n u v ↔ p.length = n :=
   Set.ext_iff.mp (G.coe_finset_walk_length_eq n u v) p
-#align
-  simple_graph.walk.mem_finset_walk_length_iff_length_eq SimpleGraph.Walk.mem_finset_walk_length_iff_length_eq
+#align simple_graph.walk.mem_finset_walk_length_iff_length_eq SimpleGraph.Walk.mem_finset_walk_length_iff_length_eq
 
 variable (G)
 
@@ -2198,8 +2185,7 @@ theorem reachable_iff_exists_finset_walk_length_nonempty (u v : V) :
     simp [walk.mem_finset_walk_length_iff_length_eq]
   · rintro ⟨_, p, _⟩
     use p
-#align
-  simple_graph.reachable_iff_exists_finset_walk_length_nonempty SimpleGraph.reachable_iff_exists_finset_walk_length_nonempty
+#align simple_graph.reachable_iff_exists_finset_walk_length_nonempty SimpleGraph.reachable_iff_exists_finset_walk_length_nonempty
 
 instance : DecidableRel G.Reachable := fun u v =>
   decidable_of_iff' _ (reachable_iff_exists_finset_walk_length_nonempty G u v)
@@ -2251,16 +2237,14 @@ theorem reachable_delete_edges_iff_exists_walk {v w : V} :
     simp only [edge_set_sdiff, edge_set_from_edge_set, edge_set_sdiff_sdiff_is_diag, Set.mem_diff,
       Set.mem_singleton_iff]
     exact ⟨p.edges_subset_edge_set ep, fun h' => h (h' ▸ ep)⟩
-#align
-  simple_graph.reachable_delete_edges_iff_exists_walk SimpleGraph.reachable_delete_edges_iff_exists_walk
+#align simple_graph.reachable_delete_edges_iff_exists_walk SimpleGraph.reachable_delete_edges_iff_exists_walk
 
 theorem is_bridge_iff_adj_and_forall_walk_mem_edges {v w : V} :
     G.IsBridge ⟦(v, w)⟧ ↔ G.Adj v w ∧ ∀ p : G.Walk v w, ⟦(v, w)⟧ ∈ p.edges :=
   by
   rw [is_bridge_iff, and_congr_right']
   rw [reachable_delete_edges_iff_exists_walk, not_exists_not]
-#align
-  simple_graph.is_bridge_iff_adj_and_forall_walk_mem_edges SimpleGraph.is_bridge_iff_adj_and_forall_walk_mem_edges
+#align simple_graph.is_bridge_iff_adj_and_forall_walk_mem_edges SimpleGraph.is_bridge_iff_adj_and_forall_walk_mem_edges
 
 theorem ReachableDeleteEdgesIffExistsCycle.aux [DecidableEq V] {u v w : V}
     (hb : ∀ p : G.Walk v w, ⟦(v, w)⟧ ∈ p.edges) (c : G.Walk u u) (hc : c.IsTrail)
@@ -2288,8 +2272,7 @@ theorem ReachableDeleteEdgesIffExistsCycle.aux [DecidableEq V] {u v w : V}
   rw [walk.is_trail_def, this, walk.edges_append, walk.edges_append, List.nodup_append_comm, ←
     List.append_assoc, ← walk.edges_append] at hc
   exact List.disjoint_of_nodup_append hc hbq hpq'
-#align
-  simple_graph.reachable_delete_edges_iff_exists_cycle.aux SimpleGraph.ReachableDeleteEdgesIffExistsCycle.aux
+#align simple_graph.reachable_delete_edges_iff_exists_cycle.aux SimpleGraph.ReachableDeleteEdgesIffExistsCycle.aux
 
 theorem adj_and_reachable_delete_edges_iff_exists_cycle {v w : V} :
     G.Adj v w ∧ (G \ fromEdgeSet {⟦(v, w)⟧}).Reachable v w ↔
@@ -2326,8 +2309,7 @@ theorem adj_and_reachable_delete_edges_iff_exists_cycle {v w : V} :
             _ (walk.start_mem_support _)
         rwa [walk.edges_append, List.mem_append, or_comm', ← List.mem_append, ← walk.edges_append,
           walk.take_spec, Sym2.eq_swap]
-#align
-  simple_graph.adj_and_reachable_delete_edges_iff_exists_cycle SimpleGraph.adj_and_reachable_delete_edges_iff_exists_cycle
+#align simple_graph.adj_and_reachable_delete_edges_iff_exists_cycle SimpleGraph.adj_and_reachable_delete_edges_iff_exists_cycle
 
 theorem is_bridge_iff_adj_and_forall_cycle_not_mem {v w : V} :
     G.IsBridge ⟦(v, w)⟧ ↔ G.Adj v w ∧ ∀ ⦃u : V⦄ (p : G.Walk u u), p.IsCycle → ⟦(v, w)⟧ ∉ p.edges :=
@@ -2338,14 +2320,12 @@ theorem is_bridge_iff_adj_and_forall_cycle_not_mem {v w : V} :
   push_neg
   rw [← adj_and_reachable_delete_edges_iff_exists_cycle]
   simp only [h, true_and_iff]
-#align
-  simple_graph.is_bridge_iff_adj_and_forall_cycle_not_mem SimpleGraph.is_bridge_iff_adj_and_forall_cycle_not_mem
+#align simple_graph.is_bridge_iff_adj_and_forall_cycle_not_mem SimpleGraph.is_bridge_iff_adj_and_forall_cycle_not_mem
 
 theorem is_bridge_iff_mem_and_forall_cycle_not_mem {e : Sym2 V} :
     G.IsBridge e ↔ e ∈ G.edgeSet ∧ ∀ ⦃u : V⦄ (p : G.Walk u u), p.IsCycle → e ∉ p.edges :=
   Sym2.ind (fun v w => is_bridge_iff_adj_and_forall_cycle_not_mem) e
-#align
-  simple_graph.is_bridge_iff_mem_and_forall_cycle_not_mem SimpleGraph.is_bridge_iff_mem_and_forall_cycle_not_mem
+#align simple_graph.is_bridge_iff_mem_and_forall_cycle_not_mem SimpleGraph.is_bridge_iff_mem_and_forall_cycle_not_mem
 
 end BridgeEdges
 

@@ -186,8 +186,7 @@ theorem UniformEquicontinuous.uniform_continuous {F : ι → β → α} (h : Uni
 protected theorem Set.UniformEquicontinuous.uniform_continuous_of_mem {H : Set <| β → α}
     (h : H.UniformEquicontinuous) {f : β → α} (hf : f ∈ H) : UniformContinuous f :=
   h.UniformContinuous ⟨f, hf⟩
-#align
-  set.uniform_equicontinuous.uniform_continuous_of_mem Set.UniformEquicontinuous.uniform_continuous_of_mem
+#align set.uniform_equicontinuous.uniform_continuous_of_mem Set.UniformEquicontinuous.uniform_continuous_of_mem
 
 /-- Taking sub-families preserves equicontinuity at a point. -/
 theorem EquicontinuousAt.comp {F : ι → X → α} {x₀ : X} (h : EquicontinuousAt F x₀) (u : κ → ι) :
@@ -311,8 +310,7 @@ theorem Filter.HasBasis.uniform_equicontinuous_iff_left {κ : Type _} {p : κ �
     hβ.tendsto_iff (UniformFun.has_basis_uniformity ι α)]
   simp_rw [Prod.forall]
   rfl
-#align
-  filter.has_basis.uniform_equicontinuous_iff_left Filter.HasBasis.uniform_equicontinuous_iff_left
+#align filter.has_basis.uniform_equicontinuous_iff_left Filter.HasBasis.uniform_equicontinuous_iff_left
 
 theorem Filter.HasBasis.uniform_equicontinuous_iff_right {κ : Type _} {p : κ → Prop}
     {s : κ → Set (α × α)} {F : ι → β → α} (hα : (𝓤 α).HasBasis p s) :
@@ -321,8 +319,7 @@ theorem Filter.HasBasis.uniform_equicontinuous_iff_right {κ : Type _} {p : κ �
   rw [uniform_equicontinuous_iff_uniform_continuous, UniformContinuous,
     (UniformFun.has_basis_uniformity_of_basis ι α hα).tendsto_right_iff]
   rfl
-#align
-  filter.has_basis.uniform_equicontinuous_iff_right Filter.HasBasis.uniform_equicontinuous_iff_right
+#align filter.has_basis.uniform_equicontinuous_iff_right Filter.HasBasis.uniform_equicontinuous_iff_right
 
 theorem Filter.HasBasis.uniform_equicontinuous_iff {κ₁ κ₂ : Type _} {p₁ : κ₁ → Prop}
     {s₁ : κ₁ → Set (β × β)} {p₂ : κ₂ → Prop} {s₂ : κ₂ → Set (α × α)} {F : ι → β → α}
@@ -402,8 +399,7 @@ theorem Filter.Tendsto.continuous_at_of_equicontinuous_at {l : Filter ι} [l.ne_
     ContinuousAt f x₀ :=
   (equicontinuous_at_iff_range.mp h₂).closure.ContinuousAt
     ⟨f, mem_closure_of_tendsto h₁ <| eventually_of_forall mem_range_self⟩
-#align
-  filter.tendsto.continuous_at_of_equicontinuous_at Filter.Tendsto.continuous_at_of_equicontinuous_at
+#align filter.tendsto.continuous_at_of_equicontinuous_at Filter.Tendsto.continuous_at_of_equicontinuous_at
 
 /-- A version of `equicontinuous.closure` applicable to subsets of types which embed continuously
 into `X → α` with the product topology. It turns out we don't need any other condition on the
@@ -459,8 +455,7 @@ theorem Filter.Tendsto.uniform_continuous_of_uniform_equicontinuous {l : Filter 
     UniformContinuous f :=
   (uniform_equicontinuous_at_iff_range.mp h₂).closure.UniformContinuous
     ⟨f, mem_closure_of_tendsto h₁ <| eventually_of_forall mem_range_self⟩
-#align
-  filter.tendsto.uniform_continuous_of_uniform_equicontinuous Filter.Tendsto.uniform_continuous_of_uniform_equicontinuous
+#align filter.tendsto.uniform_continuous_of_uniform_equicontinuous Filter.Tendsto.uniform_continuous_of_uniform_equicontinuous
 
 end
 

@@ -280,13 +280,11 @@ def compareEquiv : pkg.Space ≃ᵤ pkg'.Space
 
 theorem uniform_continuous_compare_equiv : UniformContinuous (pkg.compareEquiv pkg') :=
   pkg.uniform_continuous_compare pkg'
-#align
-  abstract_completion.uniform_continuous_compare_equiv AbstractCompletion.uniform_continuous_compare_equiv
+#align abstract_completion.uniform_continuous_compare_equiv AbstractCompletion.uniform_continuous_compare_equiv
 
 theorem uniform_continuous_compare_equiv_symm : UniformContinuous (pkg.compareEquiv pkg').symm :=
   pkg'.uniform_continuous_compare pkg
-#align
-  abstract_completion.uniform_continuous_compare_equiv_symm AbstractCompletion.uniform_continuous_compare_equiv_symm
+#align abstract_completion.uniform_continuous_compare_equiv_symm AbstractCompletion.uniform_continuous_compare_equiv_symm
 
 end Compare
 
@@ -353,8 +351,7 @@ theorem uniform_continuous_extension₂ : UniformContinuous₂ (pkg.extend₂ pk
   by
   rw [uniform_continuous₂_def, AbstractCompletion.extend₂, uncurry_curry]
   apply uniform_continuous_extend
-#align
-  abstract_completion.uniform_continuous_extension₂ AbstractCompletion.uniform_continuous_extension₂
+#align abstract_completion.uniform_continuous_extension₂ AbstractCompletion.uniform_continuous_extension₂
 
 end Extension₂
 

@@ -153,8 +153,7 @@ theorem Measure.withDensityᵥAbsolutelyContinuous (μ : Measure α) (f : α →
     rw [with_densityᵥ_apply hf hi₁, measure.restrict_zero_set hi₂, integral_zero_measure]
   · rw [with_densityᵥ, dif_neg hf]
     exact vector_measure.absolutely_continuous.zero _
-#align
-  measure_theory.measure.with_densityᵥ_absolutely_continuous MeasureTheory.Measure.withDensityᵥAbsolutelyContinuous
+#align measure_theory.measure.with_densityᵥ_absolutely_continuous MeasureTheory.Measure.withDensityᵥAbsolutelyContinuous
 
 /-- Having the same density implies the underlying functions are equal almost everywhere. -/
 theorem Integrable.ae_eq_of_with_densityᵥ_eq {f g : α → E} (hf : Integrable f μ)
@@ -162,8 +161,7 @@ theorem Integrable.ae_eq_of_with_densityᵥ_eq {f g : α → E} (hf : Integrable
   by
   refine' hf.ae_eq_of_forall_set_integral_eq f g hg fun i hi _ => _
   rw [← with_densityᵥ_apply hf hi, hfg, with_densityᵥ_apply hg hi]
-#align
-  measure_theory.integrable.ae_eq_of_with_densityᵥ_eq MeasureTheory.Integrable.ae_eq_of_with_densityᵥ_eq
+#align measure_theory.integrable.ae_eq_of_with_densityᵥ_eq MeasureTheory.Integrable.ae_eq_of_with_densityᵥ_eq
 
 theorem WithDensityᵥEq.congr_ae {f g : α → E} (h : f =ᵐ[μ] g) :
     μ.withDensityᵥ f = μ.withDensityᵥ g :=
@@ -211,15 +209,13 @@ theorem with_densityᵥ_eq_with_density_pos_part_sub_with_density_neg_part {f : 
     integral_eq_lintegral_pos_part_sub_lintegral_neg_part hfi.integrable_on,
     vector_measure.sub_apply, to_signed_measure_apply_measurable hi,
     to_signed_measure_apply_measurable hi, with_density_apply _ hi, with_density_apply _ hi]
-#align
-  measure_theory.with_densityᵥ_eq_with_density_pos_part_sub_with_density_neg_part MeasureTheory.with_densityᵥ_eq_with_density_pos_part_sub_with_density_neg_part
+#align measure_theory.with_densityᵥ_eq_with_density_pos_part_sub_with_density_neg_part MeasureTheory.with_densityᵥ_eq_with_density_pos_part_sub_with_density_neg_part
 
 theorem Integrable.with_densityᵥ_trim_eq_integral {m m0 : MeasurableSpace α} {μ : Measure α}
     (hm : m ≤ m0) {f : α → ℝ} (hf : Integrable f μ) {i : Set α} (hi : measurable_set[m] i) :
     (μ.withDensityᵥ f).trim hm i = ∫ x in i, f x ∂μ := by
   rw [vector_measure.trim_measurable_set_eq hm hi, with_densityᵥ_apply hf (hm _ hi)]
-#align
-  measure_theory.integrable.with_densityᵥ_trim_eq_integral MeasureTheory.Integrable.with_densityᵥ_trim_eq_integral
+#align measure_theory.integrable.with_densityᵥ_trim_eq_integral MeasureTheory.Integrable.with_densityᵥ_trim_eq_integral
 
 theorem Integrable.withDensityᵥTrimAbsolutelyContinuous {m m0 : MeasurableSpace α} {μ : Measure α}
     (hm : m ≤ m0) (hfi : Integrable f μ) :
@@ -229,8 +225,7 @@ theorem Integrable.withDensityᵥTrimAbsolutelyContinuous {m m0 : MeasurableSpac
   rw [measure.to_ennreal_vector_measure_apply_measurable hj₁, trim_measurable_set_eq hm hj₁] at hj₂
   rw [vector_measure.trim_measurable_set_eq hm hj₁, with_densityᵥ_apply hfi (hm _ hj₁)]
   simp only [measure.restrict_eq_zero.mpr hj₂, integral_zero_measure]
-#align
-  measure_theory.integrable.with_densityᵥ_trim_absolutely_continuous MeasureTheory.Integrable.withDensityᵥTrimAbsolutelyContinuous
+#align measure_theory.integrable.with_densityᵥ_trim_absolutely_continuous MeasureTheory.Integrable.withDensityᵥTrimAbsolutelyContinuous
 
 end SignedMeasure
 

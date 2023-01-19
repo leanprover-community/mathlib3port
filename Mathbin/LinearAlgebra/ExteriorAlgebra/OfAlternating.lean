@@ -114,8 +114,7 @@ theorem lift_alternating_apply_ι_multi {n : ℕ} (f : ∀ i, AlternatingMap R M
       AlternatingMap.curry_left_apply_apply]
     congr
     exact Matrix.cons_head_tail _
-#align
-  exterior_algebra.lift_alternating_apply_ι_multi ExteriorAlgebra.lift_alternating_apply_ι_multi
+#align exterior_algebra.lift_alternating_apply_ι_multi ExteriorAlgebra.lift_alternating_apply_ι_multi
 
 @[simp]
 theorem lift_alternating_comp_ι_multi {n : ℕ} (f : ∀ i, AlternatingMap R M N (Fin i)) :

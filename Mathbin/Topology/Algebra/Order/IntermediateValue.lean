@@ -112,8 +112,7 @@ theorem IsPreconnected.intermediate_value₂_eventually₁ {s : Set X} (hs : IsP
     @intermediate_value_univ₂_eventually₁ _ _ _ _ _ _ (Subtype.preconnected_space hs) ⟨a, ha⟩ _
       (comap_coe_ne_bot_of_le_principal hl) _ _ hf hg ha' (he.comap _)
   exact ⟨b, b.prop, h⟩
-#align
-  is_preconnected.intermediate_value₂_eventually₁ IsPreconnected.intermediate_value₂_eventually₁
+#align is_preconnected.intermediate_value₂_eventually₁ IsPreconnected.intermediate_value₂_eventually₁
 
 theorem IsPreconnected.intermediate_value₂_eventually₂ {s : Set X} (hs : IsPreconnected s)
     {l₁ l₂ : Filter X} [NeBot l₁] [NeBot l₂] (hl₁ : l₁ ≤ 𝓟 s) (hl₂ : l₂ ≤ 𝓟 s) {f g : X → α}
@@ -126,8 +125,7 @@ theorem IsPreconnected.intermediate_value₂_eventually₂ {s : Set X} (hs : IsP
       (comap_coe_ne_bot_of_le_principal hl₁) (comap_coe_ne_bot_of_le_principal hl₂) _ _ hf hg
       (he₁.comap _) (he₂.comap _)
   exact ⟨b, b.prop, h⟩
-#align
-  is_preconnected.intermediate_value₂_eventually₂ IsPreconnected.intermediate_value₂_eventually₂
+#align is_preconnected.intermediate_value₂_eventually₂ IsPreconnected.intermediate_value₂_eventually₂
 
 /-- **Intermediate Value Theorem** for continuous functions on connected sets. -/
 theorem IsPreconnected.intermediate_value {s : Set X} (hs : IsPreconnected s) {a b : X} (ha : a ∈ s)

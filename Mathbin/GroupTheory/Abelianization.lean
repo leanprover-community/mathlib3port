@@ -309,16 +309,14 @@ theorem image_commutator_set_closure_commutator_representatives :
         ⟨⟨_, subset_closure (Or.inl ⟨_, ⟨⟨g, hg⟩, rfl⟩, rfl⟩)⟩,
           ⟨_, subset_closure (Or.inr ⟨_, ⟨⟨g, hg⟩, rfl⟩, rfl⟩)⟩, rfl⟩,
         hg.some_spec.some_spec⟩
-#align
-  image_commutator_set_closure_commutator_representatives image_commutator_set_closure_commutator_representatives
+#align image_commutator_set_closure_commutator_representatives image_commutator_set_closure_commutator_representatives
 
 theorem card_commutator_set_closure_commutator_representatives :
     Nat.card (commutatorSet (closureCommutatorRepresentatives G)) = Nat.card (commutatorSet G) :=
   by
   rw [← image_commutator_set_closure_commutator_representatives G]
   exact Nat.card_congr (Equiv.Set.image _ _ (subtype_injective _))
-#align
-  card_commutator_set_closure_commutator_representatives card_commutator_set_closure_commutator_representatives
+#align card_commutator_set_closure_commutator_representatives card_commutator_set_closure_commutator_representatives
 
 theorem card_commutator_closure_commutator_representatives :
     Nat.card (commutator (closureCommutatorRepresentatives G)) = Nat.card (commutator G) :=
@@ -326,8 +324,7 @@ theorem card_commutator_closure_commutator_representatives :
   rw [commutator_eq_closure G, ← image_commutator_set_closure_commutator_representatives, ←
     MonoidHom.map_closure, ← commutator_eq_closure]
   exact Nat.card_congr (Equiv.Set.image _ _ (subtype_injective _))
-#align
-  card_commutator_closure_commutator_representatives card_commutator_closure_commutator_representatives
+#align card_commutator_closure_commutator_representatives card_commutator_closure_commutator_representatives
 
 instance [Finite (commutatorSet G)] : Finite (commutatorSet (closureCommutatorRepresentatives G)) :=
   by

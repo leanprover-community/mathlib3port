@@ -95,8 +95,7 @@ noncomputable def generator (S : Submodule R M) [S.IsPrincipal] : M :=
 
 theorem span_singleton_generator (S : Submodule R M) [S.IsPrincipal] : span R {generator S} = S :=
   Eq.symm (Classical.choose_spec (principal S))
-#align
-  submodule.is_principal.span_singleton_generator Submodule.IsPrincipal.span_singleton_generator
+#align submodule.is_principal.span_singleton_generator Submodule.IsPrincipal.span_singleton_generator
 
 theorem Ideal.span_singleton_generator (I : Ideal R) [I.IsPrincipal] :
     Ideal.span ({generator I} : Set R) = I :=
@@ -113,13 +112,11 @@ theorem generator_mem (S : Submodule R M) [S.IsPrincipal] : generator S ∈ S :=
 theorem mem_iff_eq_smul_generator (S : Submodule R M) [S.IsPrincipal] {x : M} :
     x ∈ S ↔ ∃ s : R, x = s • generator S := by
   simp_rw [@eq_comm _ x, ← mem_span_singleton, span_singleton_generator]
-#align
-  submodule.is_principal.mem_iff_eq_smul_generator Submodule.IsPrincipal.mem_iff_eq_smul_generator
+#align submodule.is_principal.mem_iff_eq_smul_generator Submodule.IsPrincipal.mem_iff_eq_smul_generator
 
 theorem eq_bot_iff_generator_eq_zero (S : Submodule R M) [S.IsPrincipal] :
     S = ⊥ ↔ generator S = 0 := by rw [← @span_singleton_eq_bot R M, span_singleton_generator]
-#align
-  submodule.is_principal.eq_bot_iff_generator_eq_zero Submodule.IsPrincipal.eq_bot_iff_generator_eq_zero
+#align submodule.is_principal.eq_bot_iff_generator_eq_zero Submodule.IsPrincipal.eq_bot_iff_generator_eq_zero
 
 end Ring
 
@@ -136,8 +133,7 @@ theorem prime_generator_of_is_prime (S : Ideal R) [Submodule.IsPrincipal S] [is_
   ⟨fun h => ne_bot ((eq_bot_iff_generator_eq_zero S).2 h), fun h =>
     is_prime.ne_top (S.eq_top_of_is_unit_mem (generator_mem S) h), fun _ _ => by
     simpa only [← mem_iff_generator_dvd S] using is_prime.2⟩
-#align
-  submodule.is_principal.prime_generator_of_is_prime Submodule.IsPrincipal.prime_generator_of_is_prime
+#align submodule.is_principal.prime_generator_of_is_prime Submodule.IsPrincipal.prime_generator_of_is_prime
 
 -- Note that the converse may not hold if `ϕ` is not injective.
 theorem generator_map_dvd_of_mem {N : Submodule R M} (ϕ : M →ₗ[R] R) [(N.map ϕ).IsPrincipal] {x : M}
@@ -145,8 +141,7 @@ theorem generator_map_dvd_of_mem {N : Submodule R M} (ϕ : M →ₗ[R] R) [(N.ma
   by
   rw [← mem_iff_generator_dvd, Submodule.mem_map]
   exact ⟨x, hx, rfl⟩
-#align
-  submodule.is_principal.generator_map_dvd_of_mem Submodule.IsPrincipal.generator_map_dvd_of_mem
+#align submodule.is_principal.generator_map_dvd_of_mem Submodule.IsPrincipal.generator_map_dvd_of_mem
 
 -- Note that the converse may not hold if `ϕ` is not injective.
 theorem generator_submodule_image_dvd_of_mem {N O : Submodule R M} (hNO : N ≤ O) (ϕ : O →ₗ[R] R)
@@ -155,8 +150,7 @@ theorem generator_submodule_image_dvd_of_mem {N O : Submodule R M} (hNO : N ≤ 
   by
   rw [← mem_iff_generator_dvd, LinearMap.mem_submodule_image_of_le hNO]
   exact ⟨x, hx, rfl⟩
-#align
-  submodule.is_principal.generator_submodule_image_dvd_of_mem Submodule.IsPrincipal.generator_submodule_image_dvd_of_mem
+#align submodule.is_principal.generator_submodule_image_dvd_of_mem Submodule.IsPrincipal.generator_submodule_image_dvd_of_mem
 
 end CommRing
 
@@ -280,8 +274,7 @@ theorem irreducible_iff_prime {p : R} : Irreducible p ↔ Prime p :=
 
 theorem associates_irreducible_iff_prime : ∀ {p : Associates R}, Irreducible p ↔ Prime p :=
   Associates.irreducible_iff_prime_iff.1 fun _ => irreducible_iff_prime
-#align
-  principal_ideal_ring.associates_irreducible_iff_prime PrincipalIdealRing.associates_irreducible_iff_prime
+#align principal_ideal_ring.associates_irreducible_iff_prime PrincipalIdealRing.associates_irreducible_iff_prime
 
 section
 
@@ -310,8 +303,7 @@ theorem mem_submonoid_of_factors_subset_of_units_subset (s : Submonoid R) {a : R
   rcases(factors_spec a ha).2 with ⟨c, hc⟩
   rw [← hc]
   exact mul_mem (multiset_prod_mem _ hfac) (hunit _)
-#align
-  principal_ideal_ring.mem_submonoid_of_factors_subset_of_units_subset PrincipalIdealRing.mem_submonoid_of_factors_subset_of_units_subset
+#align principal_ideal_ring.mem_submonoid_of_factors_subset_of_units_subset PrincipalIdealRing.mem_submonoid_of_factors_subset_of_units_subset
 
 /-- If a `ring_hom` maps all units and all factors of an element `a` into a submonoid `s`, then it
 also maps `a` into that submonoid. -/
@@ -319,16 +311,14 @@ theorem ring_hom_mem_submonoid_of_factors_subset_of_units_subset {R S : Type _} 
     [IsDomain R] [IsPrincipalIdealRing R] [Semiring S] (f : R →+* S) (s : Submonoid S) (a : R)
     (ha : a ≠ 0) (h : ∀ b ∈ factors a, f b ∈ s) (hf : ∀ c : Rˣ, f c ∈ s) : f a ∈ s :=
   mem_submonoid_of_factors_subset_of_units_subset (s.comap f.toMonoidHom) ha h hf
-#align
-  principal_ideal_ring.ring_hom_mem_submonoid_of_factors_subset_of_units_subset PrincipalIdealRing.ring_hom_mem_submonoid_of_factors_subset_of_units_subset
+#align principal_ideal_ring.ring_hom_mem_submonoid_of_factors_subset_of_units_subset PrincipalIdealRing.ring_hom_mem_submonoid_of_factors_subset_of_units_subset
 
 -- see Note [lower instance priority]
 /-- A principal ideal domain has unique factorization -/
 instance (priority := 100) to_unique_factorization_monoid : UniqueFactorizationMonoid R :=
   { (IsNoetherianRing.wf_dvd_monoid : WfDvdMonoid R) with
     irreducible_iff_prime := fun _ => PrincipalIdealRing.irreducible_iff_prime }
-#align
-  principal_ideal_ring.to_unique_factorization_monoid PrincipalIdealRing.to_unique_factorization_monoid
+#align principal_ideal_ring.to_unique_factorization_monoid PrincipalIdealRing.to_unique_factorization_monoid
 
 end
 

@@ -94,8 +94,7 @@ theorem ring_quot_mk_alg_hom_free_algebra_ι_eq_ι (m : M) :
   by
   rw [ι]
   rfl
-#align
-  tensor_algebra.ring_quot_mk_alg_hom_free_algebra_ι_eq_ι TensorAlgebra.ring_quot_mk_alg_hom_free_algebra_ι_eq_ι
+#align tensor_algebra.ring_quot_mk_alg_hom_free_algebra_ι_eq_ι TensorAlgebra.ring_quot_mk_alg_hom_free_algebra_ι_eq_ι
 
 /-- Given a linear map `f : M → A` where `A` is an `R`-algebra, `lift R f` is the unique lift
 of `f` to a morphism of `R`-algebras `tensor_algebra R M → A`.

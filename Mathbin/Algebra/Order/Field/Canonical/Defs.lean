@@ -38,8 +38,7 @@ instance (priority := 100) CanonicallyLinearOrderedSemifield.toLinearOrderedComm
     [CanonicallyLinearOrderedSemifield α] : LinearOrderedCommGroupWithZero α :=
   { ‹CanonicallyLinearOrderedSemifield α› with
     mul_le_mul_left := fun a b h c => mul_le_mul_of_nonneg_left h <| zero_le _ }
-#align
-  canonically_linear_ordered_semifield.to_linear_ordered_comm_group_with_zero CanonicallyLinearOrderedSemifield.toLinearOrderedCommGroupWithZero
+#align canonically_linear_ordered_semifield.to_linear_ordered_comm_group_with_zero CanonicallyLinearOrderedSemifield.toLinearOrderedCommGroupWithZero
 -/
 
 #print CanonicallyLinearOrderedSemifield.toCanonicallyLinearOrderedAddMonoid /-
@@ -47,7 +46,6 @@ instance (priority := 100) CanonicallyLinearOrderedSemifield.toLinearOrderedComm
 instance (priority := 100) CanonicallyLinearOrderedSemifield.toCanonicallyLinearOrderedAddMonoid
     [CanonicallyLinearOrderedSemifield α] : CanonicallyLinearOrderedAddMonoid α :=
   { ‹CanonicallyLinearOrderedSemifield α› with }
-#align
-  canonically_linear_ordered_semifield.to_canonically_linear_ordered_add_monoid CanonicallyLinearOrderedSemifield.toCanonicallyLinearOrderedAddMonoid
+#align canonically_linear_ordered_semifield.to_canonically_linear_ordered_add_monoid CanonicallyLinearOrderedSemifield.toCanonicallyLinearOrderedAddMonoid
 -/
 

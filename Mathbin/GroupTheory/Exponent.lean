@@ -181,8 +181,7 @@ theorem exponent_dvd_of_forall_pow_eq_one (G) [Monoid G] (n : ℕ) (hG : ∀ g :
     exact hG
   linarith
 #align monoid.exponent_dvd_of_forall_pow_eq_one Monoid.exponent_dvd_of_forall_pow_eq_one
-#align
-  add_monoid.exponent_dvd_of_forall_nsmul_eq_zero AddMonoid.exponent_dvd_of_forall_nsmul_eq_zero
+#align add_monoid.exponent_dvd_of_forall_nsmul_eq_zero AddMonoid.exponent_dvd_of_forall_nsmul_eq_zero
 
 @[to_additive lcm_add_order_of_dvd_exponent]
 theorem lcm_order_of_dvd_exponent [Fintype G] : (Finset.univ : Finset G).lcm orderOf ∣ exponent G :=
@@ -222,10 +221,8 @@ theorem Nat.Prime.exists_order_of_eq_pow_factorization_exponent {p : ℕ} (hp : 
   · rwa [hk, mul_comm, ht, pow_succ', ← mul_assoc, Nat.mul_div_cancel _ hp.pos, pow_mul] at hg
   · rw [← Nat.succ_eq_add_one, ← ht, ← pow_mul, mul_comm, ← hk]
     exact pow_exponent_eq_one g
-#align
-  nat.prime.exists_order_of_eq_pow_factorization_exponent Nat.Prime.exists_order_of_eq_pow_factorization_exponent
-#align
-  nat.prime.exists_order_of_eq_pow_padic_val_nat_add_exponent Nat.Prime.exists_order_of_eq_pow_padic_val_nat_add_exponent
+#align nat.prime.exists_order_of_eq_pow_factorization_exponent Nat.Prime.exists_order_of_eq_pow_factorization_exponent
+#align nat.prime.exists_order_of_eq_pow_padic_val_nat_add_exponent Nat.Prime.exists_order_of_eq_pow_padic_val_nat_add_exponent
 
 variable {G}
 
@@ -253,10 +250,8 @@ theorem exponent_ne_zero_iff_range_order_of_finite (h : ∀ g : G, 0 < orderOf g
     apply Finset.dvd_prod_of_mem
     rw [← Finset.mem_coe, ht]
     exact Set.mem_range_self g
-#align
-  monoid.exponent_ne_zero_iff_range_order_of_finite Monoid.exponent_ne_zero_iff_range_order_of_finite
-#align
-  add_monoid.exponent_ne_zero_iff_range_order_of_finite AddMonoid.exponent_ne_zero_iff_range_order_of_finite
+#align monoid.exponent_ne_zero_iff_range_order_of_finite Monoid.exponent_ne_zero_iff_range_order_of_finite
+#align add_monoid.exponent_ne_zero_iff_range_order_of_finite AddMonoid.exponent_ne_zero_iff_range_order_of_finite
 
 @[to_additive]
 theorem exponent_eq_zero_iff_range_order_of_infinite (h : ∀ g : G, 0 < orderOf g) :
@@ -264,10 +259,8 @@ theorem exponent_eq_zero_iff_range_order_of_infinite (h : ∀ g : G, 0 < orderOf
   by
   have := exponent_ne_zero_iff_range_order_of_finite h
   rwa [Ne.def, not_iff_comm, Iff.comm] at this
-#align
-  monoid.exponent_eq_zero_iff_range_order_of_infinite Monoid.exponent_eq_zero_iff_range_order_of_infinite
-#align
-  add_monoid.exponent_eq_zero_iff_range_order_of_infinite AddMonoid.exponent_eq_zero_iff_range_order_of_infinite
+#align monoid.exponent_eq_zero_iff_range_order_of_infinite Monoid.exponent_eq_zero_iff_range_order_of_infinite
+#align add_monoid.exponent_eq_zero_iff_range_order_of_infinite AddMonoid.exponent_eq_zero_iff_range_order_of_infinite
 
 @[to_additive lcm_add_order_eq_exponent]
 theorem lcm_order_eq_exponent [Fintype G] : (Finset.univ : Finset G).lcm orderOf = exponent G :=

@@ -127,8 +127,7 @@ theorem mono_of_epi_of_mono_of_mono (hα : Epi α) (hβ : Mono β) (hδ : Mono �
             _ = g (f a) := by rw [this]
             _ = 0 := (pseudo_exact_of_exact hfg).1 _
             
-#align
-  category_theory.abelian.mono_of_epi_of_mono_of_mono CategoryTheory.Abelian.mono_of_epi_of_mono_of_mono
+#align category_theory.abelian.mono_of_epi_of_mono_of_mono CategoryTheory.Abelian.mono_of_epi_of_mono_of_mono
 
 end
 
@@ -189,8 +188,7 @@ theorem epi_of_epi_of_epi_of_mono (hα : Epi α) (hγ : Epi γ) (hδ : Mono δ) 
       _ = 0 ≫ w := hg'h'.w_assoc _
       _ = 0 := HasZeroMorphisms.zero_comp _ _
       
-#align
-  category_theory.abelian.epi_of_epi_of_epi_of_mono CategoryTheory.Abelian.epi_of_epi_of_epi_of_mono
+#align category_theory.abelian.epi_of_epi_of_epi_of_mono CategoryTheory.Abelian.epi_of_epi_of_epi_of_mono
 
 end
 
@@ -223,8 +221,7 @@ theorem is_iso_of_is_iso_of_is_iso_of_is_iso_of_is_iso : IsIso γ :=
   have : Epi γ := by
     apply epi_of_epi_of_epi_of_mono comm₂ comm₃ comm₄ hhi hg'h' hh'i' <;> infer_instance
   is_iso_of_mono_of_epi _
-#align
-  category_theory.abelian.is_iso_of_is_iso_of_is_iso_of_is_iso_of_is_iso CategoryTheory.Abelian.is_iso_of_is_iso_of_is_iso_of_is_iso_of_is_iso
+#align category_theory.abelian.is_iso_of_is_iso_of_is_iso_of_is_iso_of_is_iso CategoryTheory.Abelian.is_iso_of_is_iso_of_is_iso_of_is_iso_of_is_iso
 
 end Five
 

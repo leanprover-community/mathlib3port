@@ -155,8 +155,7 @@ theorem has_deriv_at_interval_left_endpoint_of_tendsto_deriv {s : Set ℝ} {e : 
     rw [has_deriv_within_at_iff_has_fderiv_within_at, ← t_closure]
     exact hasFderivAtBoundaryOfTendstoFderiv t_diff t_conv t_open t_cont t_diff'
   exact this.nhds_within (Icc_mem_nhds_within_Ici <| left_mem_Ico.2 ab)
-#align
-  has_deriv_at_interval_left_endpoint_of_tendsto_deriv has_deriv_at_interval_left_endpoint_of_tendsto_deriv
+#align has_deriv_at_interval_left_endpoint_of_tendsto_deriv has_deriv_at_interval_left_endpoint_of_tendsto_deriv
 
 /-- If a function is differentiable on the left of a point `a : ℝ`, continuous at `a`, and
 its derivative also converges at `a`, then `f` is differentiable on the left at `a`. -/
@@ -197,8 +196,7 @@ theorem has_deriv_at_interval_right_endpoint_of_tendsto_deriv {s : Set ℝ} {e :
     rw [has_deriv_within_at_iff_has_fderiv_within_at, ← t_closure]
     exact hasFderivAtBoundaryOfTendstoFderiv t_diff t_conv t_open t_cont t_diff'
   exact this.nhds_within (Icc_mem_nhds_within_Iic <| right_mem_Ioc.2 ba)
-#align
-  has_deriv_at_interval_right_endpoint_of_tendsto_deriv has_deriv_at_interval_right_endpoint_of_tendsto_deriv
+#align has_deriv_at_interval_right_endpoint_of_tendsto_deriv has_deriv_at_interval_right_endpoint_of_tendsto_deriv
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (y «expr ≠ » x) -/
 /-- If a real function `f` has a derivative `g` everywhere but at a point, and `f` and `g` are

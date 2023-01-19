@@ -569,8 +569,7 @@ theorem Sbtw.affine_combination_of_mem_affine_span_pair [NoZeroDivisors R] [NoZe
   refine' hs.1 _
   have ha' := ha s (w₁ - w₂) hw₁w₂ hz i his
   rwa [Pi.sub_apply, sub_eq_zero] at ha'
-#align
-  sbtw.affine_combination_of_mem_affine_span_pair Sbtw.affine_combination_of_mem_affine_span_pair
+#align sbtw.affine_combination_of_mem_affine_span_pair Sbtw.affine_combination_of_mem_affine_span_pair
 
 end OrderedRing
 

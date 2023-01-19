@@ -174,8 +174,7 @@ theorem extend_apply_of_le_zero (F : Homotopy f₀ f₁) {t : ℝ} (ht : t ≤ 0
     F.extend t x = f₀ x := by
   rw [← F.apply_zero]
   exact ContinuousMap.congr_fun (Set.IccExtend_of_le_left (zero_le_one' ℝ) F.curry ht) x
-#align
-  continuous_map.homotopy.extend_apply_of_le_zero ContinuousMap.Homotopy.extend_apply_of_le_zero
+#align continuous_map.homotopy.extend_apply_of_le_zero ContinuousMap.Homotopy.extend_apply_of_le_zero
 
 theorem extend_apply_of_one_le (F : Homotopy f₀ f₁) {t : ℝ} (ht : 1 ≤ t) (x : X) :
     F.extend t x = f₁ x := by
@@ -405,8 +404,7 @@ theorem apply_one (F : HomotopyWith f₀ f₁ P) (x : X) : F (1, x) = f₁ x :=
 @[simp]
 theorem coe_to_continuous_map (F : HomotopyWith f₀ f₁ P) : ⇑F.toContinuousMap = F :=
   rfl
-#align
-  continuous_map.homotopy_with.coe_to_continuous_map ContinuousMap.HomotopyWith.coe_to_continuous_map
+#align continuous_map.homotopy_with.coe_to_continuous_map ContinuousMap.HomotopyWith.coe_to_continuous_map
 
 @[simp]
 theorem coe_to_homotopy (F : HomotopyWith f₀ f₁ P) : ⇑F.toHomotopy = F :=

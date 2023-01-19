@@ -101,8 +101,7 @@ theorem locally_convex_space_iff_zero :
 theorem locally_convex_space_iff_exists_convex_subset_zero :
     LocallyConvexSpace 𝕜 E ↔ ∀ U ∈ (𝓝 0 : Filter E), ∃ S ∈ (𝓝 0 : Filter E), Convex 𝕜 S ∧ S ⊆ U :=
   (locally_convex_space_iff_zero 𝕜 E).trans has_basis_self
-#align
-  locally_convex_space_iff_exists_convex_subset_zero locally_convex_space_iff_exists_convex_subset_zero
+#align locally_convex_space_iff_exists_convex_subset_zero locally_convex_space_iff_exists_convex_subset_zero
 
 -- see Note [lower instance priority]
 instance (priority := 100) LocallyConvexSpace.to_locally_connected_space [Module ℝ E]

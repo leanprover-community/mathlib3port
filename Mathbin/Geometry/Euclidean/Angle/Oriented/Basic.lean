@@ -130,14 +130,12 @@ theorem ne_of_oangle_eq_pi {x y : V} (h : o.oangle x y = π) : x ≠ y :=
 /-- If the angle between two vectors is `π / 2`, the first vector is nonzero. -/
 theorem left_ne_zero_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y = (π / 2 : ℝ)) : x ≠ 0 :=
   o.left_ne_zero_of_oangle_ne_zero (h.symm ▸ Real.Angle.pi_div_two_ne_zero : o.oangle x y ≠ 0)
-#align
-  orientation.left_ne_zero_of_oangle_eq_pi_div_two Orientation.left_ne_zero_of_oangle_eq_pi_div_two
+#align orientation.left_ne_zero_of_oangle_eq_pi_div_two Orientation.left_ne_zero_of_oangle_eq_pi_div_two
 
 /-- If the angle between two vectors is `π / 2`, the second vector is nonzero. -/
 theorem right_ne_zero_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y = (π / 2 : ℝ)) : y ≠ 0 :=
   o.right_ne_zero_of_oangle_ne_zero (h.symm ▸ Real.Angle.pi_div_two_ne_zero : o.oangle x y ≠ 0)
-#align
-  orientation.right_ne_zero_of_oangle_eq_pi_div_two Orientation.right_ne_zero_of_oangle_eq_pi_div_two
+#align orientation.right_ne_zero_of_oangle_eq_pi_div_two Orientation.right_ne_zero_of_oangle_eq_pi_div_two
 
 /-- If the angle between two vectors is `π / 2`, the vectors are not equal. -/
 theorem ne_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y = (π / 2 : ℝ)) : x ≠ y :=
@@ -148,15 +146,13 @@ theorem ne_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y = (π / 2 : ℝ))
 theorem left_ne_zero_of_oangle_eq_neg_pi_div_two {x y : V} (h : o.oangle x y = (-π / 2 : ℝ)) :
     x ≠ 0 :=
   o.left_ne_zero_of_oangle_ne_zero (h.symm ▸ Real.Angle.neg_pi_div_two_ne_zero : o.oangle x y ≠ 0)
-#align
-  orientation.left_ne_zero_of_oangle_eq_neg_pi_div_two Orientation.left_ne_zero_of_oangle_eq_neg_pi_div_two
+#align orientation.left_ne_zero_of_oangle_eq_neg_pi_div_two Orientation.left_ne_zero_of_oangle_eq_neg_pi_div_two
 
 /-- If the angle between two vectors is `-π / 2`, the second vector is nonzero. -/
 theorem right_ne_zero_of_oangle_eq_neg_pi_div_two {x y : V} (h : o.oangle x y = (-π / 2 : ℝ)) :
     y ≠ 0 :=
   o.right_ne_zero_of_oangle_ne_zero (h.symm ▸ Real.Angle.neg_pi_div_two_ne_zero : o.oangle x y ≠ 0)
-#align
-  orientation.right_ne_zero_of_oangle_eq_neg_pi_div_two Orientation.right_ne_zero_of_oangle_eq_neg_pi_div_two
+#align orientation.right_ne_zero_of_oangle_eq_neg_pi_div_two Orientation.right_ne_zero_of_oangle_eq_neg_pi_div_two
 
 /-- If the angle between two vectors is `-π / 2`, the vectors are not equal. -/
 theorem ne_of_oangle_eq_neg_pi_div_two {x y : V} (h : o.oangle x y = (-π / 2 : ℝ)) : x ≠ y :=
@@ -166,14 +162,12 @@ theorem ne_of_oangle_eq_neg_pi_div_two {x y : V} (h : o.oangle x y = (-π / 2 : 
 /-- If the sign of the angle between two vectors is nonzero, the first vector is nonzero. -/
 theorem left_ne_zero_of_oangle_sign_ne_zero {x y : V} (h : (o.oangle x y).sign ≠ 0) : x ≠ 0 :=
   o.left_ne_zero_of_oangle_ne_zero (Real.Angle.sign_ne_zero_iff.1 h).1
-#align
-  orientation.left_ne_zero_of_oangle_sign_ne_zero Orientation.left_ne_zero_of_oangle_sign_ne_zero
+#align orientation.left_ne_zero_of_oangle_sign_ne_zero Orientation.left_ne_zero_of_oangle_sign_ne_zero
 
 /-- If the sign of the angle between two vectors is nonzero, the second vector is nonzero. -/
 theorem right_ne_zero_of_oangle_sign_ne_zero {x y : V} (h : (o.oangle x y).sign ≠ 0) : y ≠ 0 :=
   o.right_ne_zero_of_oangle_ne_zero (Real.Angle.sign_ne_zero_iff.1 h).1
-#align
-  orientation.right_ne_zero_of_oangle_sign_ne_zero Orientation.right_ne_zero_of_oangle_sign_ne_zero
+#align orientation.right_ne_zero_of_oangle_sign_ne_zero Orientation.right_ne_zero_of_oangle_sign_ne_zero
 
 /-- If the sign of the angle between two vectors is nonzero, the vectors are not equal. -/
 theorem ne_of_oangle_sign_ne_zero {x y : V} (h : (o.oangle x y).sign ≠ 0) : x ≠ y :=
@@ -188,8 +182,7 @@ theorem left_ne_zero_of_oangle_sign_eq_one {x y : V} (h : (o.oangle x y).sign = 
 /-- If the sign of the angle between two vectors is positive, the second vector is nonzero. -/
 theorem right_ne_zero_of_oangle_sign_eq_one {x y : V} (h : (o.oangle x y).sign = 1) : y ≠ 0 :=
   o.right_ne_zero_of_oangle_sign_ne_zero (h.symm ▸ by decide : (o.oangle x y).sign ≠ 0)
-#align
-  orientation.right_ne_zero_of_oangle_sign_eq_one Orientation.right_ne_zero_of_oangle_sign_eq_one
+#align orientation.right_ne_zero_of_oangle_sign_eq_one Orientation.right_ne_zero_of_oangle_sign_eq_one
 
 /-- If the sign of the angle between two vectors is positive, the vectors are not equal. -/
 theorem ne_of_oangle_sign_eq_one {x y : V} (h : (o.oangle x y).sign = 1) : x ≠ y :=
@@ -199,14 +192,12 @@ theorem ne_of_oangle_sign_eq_one {x y : V} (h : (o.oangle x y).sign = 1) : x ≠
 /-- If the sign of the angle between two vectors is negative, the first vector is nonzero. -/
 theorem left_ne_zero_of_oangle_sign_eq_neg_one {x y : V} (h : (o.oangle x y).sign = -1) : x ≠ 0 :=
   o.left_ne_zero_of_oangle_sign_ne_zero (h.symm ▸ by decide : (o.oangle x y).sign ≠ 0)
-#align
-  orientation.left_ne_zero_of_oangle_sign_eq_neg_one Orientation.left_ne_zero_of_oangle_sign_eq_neg_one
+#align orientation.left_ne_zero_of_oangle_sign_eq_neg_one Orientation.left_ne_zero_of_oangle_sign_eq_neg_one
 
 /-- If the sign of the angle between two vectors is negative, the second vector is nonzero. -/
 theorem right_ne_zero_of_oangle_sign_eq_neg_one {x y : V} (h : (o.oangle x y).sign = -1) : y ≠ 0 :=
   o.right_ne_zero_of_oangle_sign_ne_zero (h.symm ▸ by decide : (o.oangle x y).sign ≠ 0)
-#align
-  orientation.right_ne_zero_of_oangle_sign_eq_neg_one Orientation.right_ne_zero_of_oangle_sign_eq_neg_one
+#align orientation.right_ne_zero_of_oangle_sign_eq_neg_one Orientation.right_ne_zero_of_oangle_sign_eq_neg_one
 
 /-- If the sign of the angle between two vectors is negative, the vectors are not equal. -/
 theorem ne_of_oangle_sign_eq_neg_one {x y : V} (h : (o.oangle x y).sign = -1) : x ≠ y :=
@@ -374,8 +365,7 @@ angle. -/
 theorem two_zsmul_oangle_smul_left_of_ne_zero (x y : V) {r : ℝ} (hr : r ≠ 0) :
     (2 : ℤ) • o.oangle (r • x) y = (2 : ℤ) • o.oangle x y := by
   rcases hr.lt_or_lt with (h | h) <;> simp [h]
-#align
-  orientation.two_zsmul_oangle_smul_left_of_ne_zero Orientation.two_zsmul_oangle_smul_left_of_ne_zero
+#align orientation.two_zsmul_oangle_smul_left_of_ne_zero Orientation.two_zsmul_oangle_smul_left_of_ne_zero
 
 /-- Multiplying the second vector passed to `oangle` by a nonzero real does not change twice the
 angle. -/
@@ -383,8 +373,7 @@ angle. -/
 theorem two_zsmul_oangle_smul_right_of_ne_zero (x y : V) {r : ℝ} (hr : r ≠ 0) :
     (2 : ℤ) • o.oangle x (r • y) = (2 : ℤ) • o.oangle x y := by
   rcases hr.lt_or_lt with (h | h) <;> simp [h]
-#align
-  orientation.two_zsmul_oangle_smul_right_of_ne_zero Orientation.two_zsmul_oangle_smul_right_of_ne_zero
+#align orientation.two_zsmul_oangle_smul_right_of_ne_zero Orientation.two_zsmul_oangle_smul_right_of_ne_zero
 
 /-- Twice the angle between a multiple of a vector and that vector is 0. -/
 @[simp]
@@ -429,15 +418,13 @@ equal. -/
 theorem two_zsmul_oangle_of_span_eq_of_span_eq {w x y z : V} (hwx : (ℝ ∙ w) = ℝ ∙ x)
     (hyz : (ℝ ∙ y) = ℝ ∙ z) : (2 : ℤ) • o.oangle w y = (2 : ℤ) • o.oangle x z := by
   rw [o.two_zsmul_oangle_left_of_span_eq y hwx, o.two_zsmul_oangle_right_of_span_eq x hyz]
-#align
-  orientation.two_zsmul_oangle_of_span_eq_of_span_eq Orientation.two_zsmul_oangle_of_span_eq_of_span_eq
+#align orientation.two_zsmul_oangle_of_span_eq_of_span_eq Orientation.two_zsmul_oangle_of_span_eq_of_span_eq
 
 /-- The oriented angle between two vectors is zero if and only if the angle with the vectors
 swapped is zero. -/
 theorem oangle_eq_zero_iff_oangle_rev_eq_zero {x y : V} : o.oangle x y = 0 ↔ o.oangle y x = 0 := by
   rw [oangle_rev, neg_eq_zero]
-#align
-  orientation.oangle_eq_zero_iff_oangle_rev_eq_zero Orientation.oangle_eq_zero_iff_oangle_rev_eq_zero
+#align orientation.oangle_eq_zero_iff_oangle_rev_eq_zero Orientation.oangle_eq_zero_iff_oangle_rev_eq_zero
 
 /-- The oriented angle between two vectors is zero if and only if they are on the same ray. -/
 theorem oangle_eq_zero_iff_same_ray {x y : V} : o.oangle x y = 0 ↔ SameRay ℝ x y :=
@@ -477,8 +464,7 @@ theorem oangle_eq_zero_or_eq_pi_iff_not_linear_independent {x y : V} :
     o.oangle x y = 0 ∨ o.oangle x y = π ↔ ¬LinearIndependent ℝ ![x, y] := by
   rw [oangle_eq_zero_iff_same_ray, oangle_eq_pi_iff_same_ray_neg,
     same_ray_or_ne_zero_and_same_ray_neg_iff_not_linear_independent]
-#align
-  orientation.oangle_eq_zero_or_eq_pi_iff_not_linear_independent Orientation.oangle_eq_zero_or_eq_pi_iff_not_linear_independent
+#align orientation.oangle_eq_zero_or_eq_pi_iff_not_linear_independent Orientation.oangle_eq_zero_or_eq_pi_iff_not_linear_independent
 
 /-- The oriented angle between two vectors is zero or `π` if and only if the first vector is zero
 or the second is a multiple of the first. -/
@@ -506,16 +492,14 @@ theorem oangle_eq_zero_or_eq_pi_iff_right_eq_smul {x y : V} :
       exact Or.inr ⟨hx, smul_ne_zero hr.ne hx, same_ray_pos_smul_right x (Left.neg_pos_iff.2 hr)⟩
     · simp [hr]
     · exact Or.inl (same_ray_pos_smul_right x hr)
-#align
-  orientation.oangle_eq_zero_or_eq_pi_iff_right_eq_smul Orientation.oangle_eq_zero_or_eq_pi_iff_right_eq_smul
+#align orientation.oangle_eq_zero_or_eq_pi_iff_right_eq_smul Orientation.oangle_eq_zero_or_eq_pi_iff_right_eq_smul
 
 /-- The oriented angle between two vectors is not zero or `π` if and only if those two vectors
 are linearly independent. -/
 theorem oangle_ne_zero_and_ne_pi_iff_linear_independent {x y : V} :
     o.oangle x y ≠ 0 ∧ o.oangle x y ≠ π ↔ LinearIndependent ℝ ![x, y] := by
   rw [← not_or, ← not_iff_not, not_not, oangle_eq_zero_or_eq_pi_iff_not_linear_independent]
-#align
-  orientation.oangle_ne_zero_and_ne_pi_iff_linear_independent Orientation.oangle_ne_zero_and_ne_pi_iff_linear_independent
+#align orientation.oangle_ne_zero_and_ne_pi_iff_linear_independent Orientation.oangle_ne_zero_and_ne_pi_iff_linear_independent
 
 /-- Two vectors are equal if and only if they have equal norms and zero angle between them. -/
 theorem eq_iff_norm_eq_and_oangle_eq_zero (x y : V) : x = y ↔ ‖x‖ = ‖y‖ ∧ o.oangle x y = 0 :=
@@ -618,8 +602,7 @@ theorem oangle_add_cyc3_neg_right {x y z : V} (hx : x ≠ 0) (hy : y ≠ 0) (hz 
 /-- Pons asinorum, oriented vector angle form. -/
 theorem oangle_sub_eq_oangle_sub_rev_of_norm_eq {x y : V} (h : ‖x‖ = ‖y‖) :
     o.oangle x (x - y) = o.oangle (y - x) y := by simp [oangle, h]
-#align
-  orientation.oangle_sub_eq_oangle_sub_rev_of_norm_eq Orientation.oangle_sub_eq_oangle_sub_rev_of_norm_eq
+#align orientation.oangle_sub_eq_oangle_sub_rev_of_norm_eq Orientation.oangle_sub_eq_oangle_sub_rev_of_norm_eq
 
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:132:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([1]) } -/
 /-- The angle at the apex of an isosceles triangle is `π` minus twice a base angle, oriented
@@ -636,8 +619,7 @@ theorem oangle_eq_pi_sub_two_zsmul_oangle_sub_of_norm_eq {x y : V} (hn : x ≠ y
     exact hn h
   have hx : x ≠ 0 := norm_ne_zero_iff.1 (h.symm ▸ norm_ne_zero_iff.2 hy)
   convert o.oangle_add_cyc3_neg_right (neg_ne_zero.2 hy) hx (sub_ne_zero_of_ne hn.symm) <;> simp
-#align
-  orientation.oangle_eq_pi_sub_two_zsmul_oangle_sub_of_norm_eq Orientation.oangle_eq_pi_sub_two_zsmul_oangle_sub_of_norm_eq
+#align orientation.oangle_eq_pi_sub_two_zsmul_oangle_sub_of_norm_eq Orientation.oangle_eq_pi_sub_two_zsmul_oangle_sub_of_norm_eq
 
 /-- The angle between two vectors, with respect to an orientation given by `orientation.map`
 with a linear isometric equivalence, equals the angle between those two vectors, transformed by
@@ -682,8 +664,7 @@ theorem inner_eq_norm_mul_norm_mul_cos_oangle (x y : V) :
     field_simp
     ring
   · exact o.kahler_ne_zero hx hy
-#align
-  orientation.inner_eq_norm_mul_norm_mul_cos_oangle Orientation.inner_eq_norm_mul_norm_mul_cos_oangle
+#align orientation.inner_eq_norm_mul_norm_mul_cos_oangle Orientation.inner_eq_norm_mul_norm_mul_cos_oangle
 
 /-- The cosine of the oriented angle between two nonzero vectors is the inner product divided by
 the product of the norms. -/
@@ -693,8 +674,7 @@ theorem cos_oangle_eq_inner_div_norm_mul_norm {x y : V} (hx : x ≠ 0) (hy : y �
   rw [o.inner_eq_norm_mul_norm_mul_cos_oangle]
   field_simp [norm_ne_zero_iff.2 hx, norm_ne_zero_iff.2 hy]
   ring
-#align
-  orientation.cos_oangle_eq_inner_div_norm_mul_norm Orientation.cos_oangle_eq_inner_div_norm_mul_norm
+#align orientation.cos_oangle_eq_inner_div_norm_mul_norm Orientation.cos_oangle_eq_inner_div_norm_mul_norm
 
 /-- The cosine of the oriented angle between two nonzero vectors equals that of the unoriented
 angle. -/
@@ -735,8 +715,7 @@ theorem eq_zero_or_angle_eq_zero_or_pi_of_sign_oangle_eq_zero {x y : V}
   rw [o.angle_eq_abs_oangle_to_real hx hy]
   rw [Real.Angle.sign_eq_zero_iff] at h
   rcases h with (h | h) <;> simp [h, real.pi_pos.le]
-#align
-  orientation.eq_zero_or_angle_eq_zero_or_pi_of_sign_oangle_eq_zero Orientation.eq_zero_or_angle_eq_zero_or_pi_of_sign_oangle_eq_zero
+#align orientation.eq_zero_or_angle_eq_zero_or_pi_of_sign_oangle_eq_zero Orientation.eq_zero_or_angle_eq_zero_or_pi_of_sign_oangle_eq_zero
 
 /-- If two unoriented angles are equal, and the signs of the corresponding oriented angles are
 equal, then the oriented angles are equal (even in degenerate cases). -/
@@ -828,8 +807,7 @@ theorem oangle_eq_neg_angle_of_sign_eq_neg_one {x y : V} (h : (o.oangle x y).sig
     h
       (Real.Angle.sign_coe_nonneg_of_nonneg_of_le_pi (InnerProductGeometry.angle_nonneg _ _)
         (InnerProductGeometry.angle_le_pi _ _))
-#align
-  orientation.oangle_eq_neg_angle_of_sign_eq_neg_one Orientation.oangle_eq_neg_angle_of_sign_eq_neg_one
+#align orientation.oangle_eq_neg_angle_of_sign_eq_neg_one Orientation.oangle_eq_neg_angle_of_sign_eq_neg_one
 
 /-- The oriented angle between two nonzero vectors is zero if and only if the unoriented angle
 is zero. -/
@@ -875,38 +853,33 @@ theorem eq_zero_or_oangle_eq_iff_inner_eq_zero {x y : V} :
   · rwa [o.angle_eq_abs_oangle_to_real hx hy, Real.Angle.abs_to_real_eq_pi_div_two_iff]
   · convert o.oangle_eq_angle_or_eq_neg_angle hx hy <;> rw [h]
     exact neg_div _ _
-#align
-  orientation.eq_zero_or_oangle_eq_iff_inner_eq_zero Orientation.eq_zero_or_oangle_eq_iff_inner_eq_zero
+#align orientation.eq_zero_or_oangle_eq_iff_inner_eq_zero Orientation.eq_zero_or_oangle_eq_iff_inner_eq_zero
 
 /-- If the oriented angle between two vectors is `π / 2`, the inner product of those vectors
 is zero. -/
 theorem inner_eq_zero_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y = (π / 2 : ℝ)) :
     ⟪x, y⟫ = 0 :=
   o.eq_zero_or_oangle_eq_iff_inner_eq_zero.1 <| Or.inr <| Or.inr <| Or.inl h
-#align
-  orientation.inner_eq_zero_of_oangle_eq_pi_div_two Orientation.inner_eq_zero_of_oangle_eq_pi_div_two
+#align orientation.inner_eq_zero_of_oangle_eq_pi_div_two Orientation.inner_eq_zero_of_oangle_eq_pi_div_two
 
 /-- If the oriented angle between two vectors is `π / 2`, the inner product of those vectors
 (reversed) is zero. -/
 theorem inner_rev_eq_zero_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y = (π / 2 : ℝ)) :
     ⟪y, x⟫ = 0 := by rw [real_inner_comm, o.inner_eq_zero_of_oangle_eq_pi_div_two h]
-#align
-  orientation.inner_rev_eq_zero_of_oangle_eq_pi_div_two Orientation.inner_rev_eq_zero_of_oangle_eq_pi_div_two
+#align orientation.inner_rev_eq_zero_of_oangle_eq_pi_div_two Orientation.inner_rev_eq_zero_of_oangle_eq_pi_div_two
 
 /-- If the oriented angle between two vectors is `-π / 2`, the inner product of those vectors
 is zero. -/
 theorem inner_eq_zero_of_oangle_eq_neg_pi_div_two {x y : V} (h : o.oangle x y = (-π / 2 : ℝ)) :
     ⟪x, y⟫ = 0 :=
   o.eq_zero_or_oangle_eq_iff_inner_eq_zero.1 <| Or.inr <| Or.inr <| Or.inr h
-#align
-  orientation.inner_eq_zero_of_oangle_eq_neg_pi_div_two Orientation.inner_eq_zero_of_oangle_eq_neg_pi_div_two
+#align orientation.inner_eq_zero_of_oangle_eq_neg_pi_div_two Orientation.inner_eq_zero_of_oangle_eq_neg_pi_div_two
 
 /-- If the oriented angle between two vectors is `-π / 2`, the inner product of those vectors
 (reversed) is zero. -/
 theorem inner_rev_eq_zero_of_oangle_eq_neg_pi_div_two {x y : V} (h : o.oangle x y = (-π / 2 : ℝ)) :
     ⟪y, x⟫ = 0 := by rw [real_inner_comm, o.inner_eq_zero_of_oangle_eq_neg_pi_div_two h]
-#align
-  orientation.inner_rev_eq_zero_of_oangle_eq_neg_pi_div_two Orientation.inner_rev_eq_zero_of_oangle_eq_neg_pi_div_two
+#align orientation.inner_rev_eq_zero_of_oangle_eq_neg_pi_div_two Orientation.inner_rev_eq_zero_of_oangle_eq_neg_pi_div_two
 
 /-- Negating the first vector passed to `oangle` negates the sign of the angle. -/
 @[simp]
@@ -970,8 +943,7 @@ theorem oangle_smul_add_right_eq_zero_or_eq_pi_iff {x y : V} (r : ℝ) :
     rw [h1] at h0 hm
     rw [zero_mul, sub_zero] at h0
     simpa [h0] using hm
-#align
-  orientation.oangle_smul_add_right_eq_zero_or_eq_pi_iff Orientation.oangle_smul_add_right_eq_zero_or_eq_pi_iff
+#align orientation.oangle_smul_add_right_eq_zero_or_eq_pi_iff Orientation.oangle_smul_add_right_eq_zero_or_eq_pi_iff
 
 /-- Adding a multiple of the first vector passed to `oangle` to the second vector does not change
 the sign of the angle. -/
@@ -1150,8 +1122,7 @@ theorem oangle_sign_smul_add_smul_smul_add_smul (x y : V) (r₁ r₂ r₃ r₄ :
       oangle_sign_smul_add_smul_left, ← mul_assoc, ← sign_mul, add_mul, mul_assoc, mul_comm r₂ r₁, ←
       mul_assoc, div_mul_cancel _ hr₁, add_comm, neg_mul, ← sub_eq_add_neg, mul_comm r₄,
       mul_comm r₃]
-#align
-  orientation.oangle_sign_smul_add_smul_smul_add_smul Orientation.oangle_sign_smul_add_smul_smul_add_smul
+#align orientation.oangle_sign_smul_add_smul_smul_add_smul Orientation.oangle_sign_smul_add_smul_smul_add_smul
 
 /-- A base angle of an isosceles triangle is acute, oriented vector angle form. -/
 theorem abs_oangle_sub_left_to_real_lt_pi_div_two {x y : V} (h : ‖x‖ = ‖y‖) :
@@ -1177,15 +1148,13 @@ theorem abs_oangle_sub_left_to_real_lt_pi_div_two {x y : V} (h : ‖x‖ = ‖y�
     rw [h, zero_add, one_smul] at hr
     exact False.elim (hn hr.symm)
   · exact hs
-#align
-  orientation.abs_oangle_sub_left_to_real_lt_pi_div_two Orientation.abs_oangle_sub_left_to_real_lt_pi_div_two
+#align orientation.abs_oangle_sub_left_to_real_lt_pi_div_two Orientation.abs_oangle_sub_left_to_real_lt_pi_div_two
 
 /-- A base angle of an isosceles triangle is acute, oriented vector angle form. -/
 theorem abs_oangle_sub_right_to_real_lt_pi_div_two {x y : V} (h : ‖x‖ = ‖y‖) :
     |(o.oangle x (x - y)).toReal| < π / 2 :=
   (o.oangle_sub_eq_oangle_sub_rev_of_norm_eq h).symm ▸ o.abs_oangle_sub_left_to_real_lt_pi_div_two h
-#align
-  orientation.abs_oangle_sub_right_to_real_lt_pi_div_two Orientation.abs_oangle_sub_right_to_real_lt_pi_div_two
+#align orientation.abs_oangle_sub_right_to_real_lt_pi_div_two Orientation.abs_oangle_sub_right_to_real_lt_pi_div_two
 
 end Orientation
 

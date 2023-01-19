@@ -198,8 +198,7 @@ theorem exists_locally_constant_finite_nonempty {α : Type _} [Finite α] [Nonem
     split_ifs  at hh with hh1 hh1
     · exact hh1.symm
     · exact False.elim (bot_ne_top hh)
-#align
-  Profinite.exists_locally_constant_finite_nonempty ProfiniteCat.exists_locally_constant_finite_nonempty
+#align Profinite.exists_locally_constant_finite_nonempty ProfiniteCat.exists_locally_constant_finite_nonempty
 
 /-- Any locally constant function from a cofiltered limit of profinite sets factors through
 one of the components. -/

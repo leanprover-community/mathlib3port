@@ -282,8 +282,7 @@ def mapMonFunctor : LaxMonoidalFunctor C D ⥤ Mon_ C ⥤ Mon_ D
     where
   obj := mapMon
   map F G α := { app := fun A => { Hom := α.app A.x } }
-#align
-  category_theory.lax_monoidal_functor.map_Mon_functor CategoryTheory.LaxMonoidalFunctor.mapMonFunctor
+#align category_theory.lax_monoidal_functor.map_Mon_functor CategoryTheory.LaxMonoidalFunctor.mapMonFunctor
 
 end CategoryTheory.LaxMonoidalFunctor
 
@@ -299,8 +298,7 @@ def laxMonoidalToMon : LaxMonoidalFunctor (Discrete PUnit.{u + 1}) C ⥤ Mon_ C
     where
   obj F := (F.mapMon : Mon_ _ ⥤ Mon_ C).obj (trivial (Discrete PUnit))
   map F G α := ((mapMonFunctor (Discrete PUnit) C).map α).app _
-#align
-  Mon_.equiv_lax_monoidal_functor_punit.lax_monoidal_to_Mon Mon_.EquivLaxMonoidalFunctorPunit.laxMonoidalToMon
+#align Mon_.equiv_lax_monoidal_functor_punit.lax_monoidal_to_Mon Mon_.EquivLaxMonoidalFunctorPunit.laxMonoidalToMon
 
 /-- Implementation of `Mon_.equiv_lax_monoidal_functor_punit`. -/
 @[simps]
@@ -320,8 +318,7 @@ def monToLaxMonoidal : Mon_ C ⥤ LaxMonoidalFunctor (Discrete PUnit.{u + 1}) C
         rw [category.id_comp, category.comp_id]
       unit' := f.OneHom
       tensor' := fun _ _ => f.MulHom }
-#align
-  Mon_.equiv_lax_monoidal_functor_punit.Mon_to_lax_monoidal Mon_.EquivLaxMonoidalFunctorPunit.monToLaxMonoidal
+#align Mon_.equiv_lax_monoidal_functor_punit.Mon_to_lax_monoidal Mon_.EquivLaxMonoidalFunctorPunit.monToLaxMonoidal
 
 attribute [local tidy] tactic.discrete_cases
 

@@ -246,8 +246,7 @@ theorem IsCompact.uniform_continuous_at_of_continuous_at {r : Set (β × β)} {s
   apply htr
   refine' ⟨f a, htsymm.mk_mem_comm.1 (hb _ _ _ haU _), hb _ _ _ haU _⟩
   exacts[mem_ball_self _ (hT a a.2), mem_Inter₂.1 h a ha]
-#align
-  is_compact.uniform_continuous_at_of_continuous_at IsCompact.uniform_continuous_at_of_continuous_at
+#align is_compact.uniform_continuous_at_of_continuous_at IsCompact.uniform_continuous_at_of_continuous_at
 
 theorem Continuous.uniform_continuous_of_zero_at_infty {f : α → β} [Zero β] (h_cont : Continuous f)
     (h_zero : Tendsto f (cocompact α) (𝓝 0)) : UniformContinuous f :=
@@ -299,8 +298,7 @@ theorem CompactSpace.uniform_equicontinuous_of_equicontinuous {ι : Type _} {F :
   rw [equicontinuous_iff_continuous] at h
   rw [uniform_equicontinuous_iff_uniform_continuous]
   exact CompactSpace.uniform_continuous_of_continuous h
-#align
-  compact_space.uniform_equicontinuous_of_equicontinuous CompactSpace.uniform_equicontinuous_of_equicontinuous
+#align compact_space.uniform_equicontinuous_of_equicontinuous CompactSpace.uniform_equicontinuous_of_equicontinuous
 
 end UniformConvergence
 

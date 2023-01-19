@@ -168,8 +168,7 @@ theorem log_stirling_seq_sub_log_stirling_seq_succ (n : ℕ) :
   ring_nf
   norm_cast
   linarith
-#align
-  stirling.log_stirling_seq_sub_log_stirling_seq_succ Stirling.log_stirling_seq_sub_log_stirling_seq_succ
+#align stirling.log_stirling_seq_sub_log_stirling_seq_succ Stirling.log_stirling_seq_sub_log_stirling_seq_succ
 
 /-- For any `n`, we have `log_stirling_seq 1 - log_stirling_seq n ≤ 1/4 * ∑' 1/k^2`  -/
 theorem log_stirling_seq_bounded_aux :
@@ -299,8 +298,7 @@ theorem stirling_seq_pow_four_div_stirling_seq_pow_two_eq (n : ℕ) (hn : n ≠ 
   field_simp
   simp only [mul_pow, mul_comm 2 n, mul_comm 4 n, pow_mul]
   ring
-#align
-  stirling.stirling_seq_pow_four_div_stirling_seq_pow_two_eq Stirling.stirling_seq_pow_four_div_stirling_seq_pow_two_eq
+#align stirling.stirling_seq_pow_four_div_stirling_seq_pow_two_eq Stirling.stirling_seq_pow_four_div_stirling_seq_pow_two_eq
 
 /-- Suppose the sequence `stirling_seq` (defined above) has the limit `a ≠ 0`.
 Then the sequence `w` has limit `a^2/2`

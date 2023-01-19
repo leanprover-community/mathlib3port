@@ -236,8 +236,7 @@ theorem differentiable_set_subset_D : { x | DifferentiableAt 𝕜 f x ∧ fderiv
   refine' ⟨n, fun p hp q hq => ⟨fderiv 𝕜 f x, hx.2, ⟨_, _⟩⟩⟩ <;>
     · refine' hR _ ⟨pow_pos (by norm_num) _, lt_of_le_of_lt _ hn⟩
       exact pow_le_pow_of_le_one (by norm_num) (by norm_num) (by assumption)
-#align
-  fderiv_measurable_aux.differentiable_set_subset_D FderivMeasurableAux.differentiable_set_subset_D
+#align fderiv_measurable_aux.differentiable_set_subset_D FderivMeasurableAux.differentiable_set_subset_D
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr add_le_add, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- Harder inclusion: at a point in `D f K`, the function `f` has a derivative, in `K`. -/
@@ -414,8 +413,7 @@ theorem D_subset_differentiable_set {K : Set (E →L[𝕜] F)} (hK : IsComplete 
       
   rw [← this.fderiv] at f'K
   exact ⟨this.differentiable_at, f'K⟩
-#align
-  fderiv_measurable_aux.D_subset_differentiable_set FderivMeasurableAux.D_subset_differentiable_set
+#align fderiv_measurable_aux.D_subset_differentiable_set FderivMeasurableAux.D_subset_differentiable_set
 
 theorem differentiable_set_eq_D (hK : IsComplete K) :
     { x | DifferentiableAt 𝕜 f x ∧ fderiv 𝕜 f x ∈ K } = d f K :=
@@ -436,8 +434,7 @@ theorem measurable_set_of_differentiable_at_of_is_complete {K : Set (E →L[𝕜
     (hK : IsComplete K) : MeasurableSet { x | DifferentiableAt 𝕜 f x ∧ fderiv 𝕜 f x ∈ K } := by
   simp [differentiable_set_eq_D K hK, D, is_open_B.measurable_set, MeasurableSet.Inter,
     MeasurableSet.Union]
-#align
-  measurable_set_of_differentiable_at_of_is_complete measurable_set_of_differentiable_at_of_is_complete
+#align measurable_set_of_differentiable_at_of_is_complete measurable_set_of_differentiable_at_of_is_complete
 
 variable [CompleteSpace F]
 
@@ -547,8 +544,7 @@ theorem A_mem_nhds_within_Ioi {L : F} {r ε x : ℝ} (hx : x ∈ a f L r ε) : a
     linarith [hx'.2]
   intro y hy z hz
   exact hr' y (A hy) z (A hz)
-#align
-  right_deriv_measurable_aux.A_mem_nhds_within_Ioi RightDerivMeasurableAux.A_mem_nhds_within_Ioi
+#align right_deriv_measurable_aux.A_mem_nhds_within_Ioi RightDerivMeasurableAux.A_mem_nhds_within_Ioi
 
 theorem B_mem_nhds_within_Ioi {K : Set F} {r s ε x : ℝ} (hx : x ∈ b f K r s ε) :
     b f K r s ε ∈ 𝓝[>] x :=
@@ -558,8 +554,7 @@ theorem B_mem_nhds_within_Ioi {K : Set F} {r s ε x : ℝ} (hx : x ∈ b f K r s
   filter_upwards [A_mem_nhds_within_Ioi hL₁, A_mem_nhds_within_Ioi hL₂] with y hy₁ hy₂
   simp only [B, mem_Union, mem_inter_iff, exists_prop]
   exact ⟨L, LK, hy₁, hy₂⟩
-#align
-  right_deriv_measurable_aux.B_mem_nhds_within_Ioi RightDerivMeasurableAux.B_mem_nhds_within_Ioi
+#align right_deriv_measurable_aux.B_mem_nhds_within_Ioi RightDerivMeasurableAux.B_mem_nhds_within_Ioi
 
 theorem measurable_set_B {K : Set F} {r s ε : ℝ} : MeasurableSet (b f K r s ε) :=
   measurable_set_of_mem_nhds_within_Ioi fun x hx => B_mem_nhds_within_Ioi hx
@@ -613,8 +608,7 @@ theorem mem_A_of_differentiable {ε : ℝ} (hε : 0 < ε) {x : ℝ}
         rw [Real.norm_of_nonneg] <;> linarith [hy.1, hy.2]
     _ = ε * r := by ring
     
-#align
-  right_deriv_measurable_aux.mem_A_of_differentiable RightDerivMeasurableAux.mem_A_of_differentiable
+#align right_deriv_measurable_aux.mem_A_of_differentiable RightDerivMeasurableAux.mem_A_of_differentiable
 
 theorem norm_sub_le_of_mem_A {r x : ℝ} (hr : 0 < r) (ε : ℝ) {L₁ L₂ : F} (h₁ : x ∈ a f L₁ r ε)
     (h₂ : x ∈ a f L₂ r ε) : ‖L₁ - L₂‖ ≤ 4 * ε :=
@@ -653,8 +647,7 @@ theorem differentiable_set_subset_D :
   refine' ⟨n, fun p hp q hq => ⟨derivWithin f (Ici x) x, hx.2, ⟨_, _⟩⟩⟩ <;>
     · refine' hR _ ⟨pow_pos (by norm_num) _, lt_of_le_of_lt _ hn⟩
       exact pow_le_pow_of_le_one (by norm_num) (by norm_num) (by assumption)
-#align
-  right_deriv_measurable_aux.differentiable_set_subset_D RightDerivMeasurableAux.differentiable_set_subset_D
+#align right_deriv_measurable_aux.differentiable_set_subset_D RightDerivMeasurableAux.differentiable_set_subset_D
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr add_le_add, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- Harder inclusion: at a point in `D f K`, the function `f` has a derivative, in `K`. -/
@@ -823,14 +816,12 @@ theorem D_subset_differentiable_set {K : Set F} (hK : IsComplete K) :
       
   rw [← this.deriv_within (unique_diff_on_Ici x x le_rfl)] at f'K
   exact ⟨this.differentiable_within_at, f'K⟩
-#align
-  right_deriv_measurable_aux.D_subset_differentiable_set RightDerivMeasurableAux.D_subset_differentiable_set
+#align right_deriv_measurable_aux.D_subset_differentiable_set RightDerivMeasurableAux.D_subset_differentiable_set
 
 theorem differentiable_set_eq_D (hK : IsComplete K) :
     { x | DifferentiableWithinAt ℝ f (Ici x) x ∧ derivWithin f (Ici x) x ∈ K } = d f K :=
   Subset.antisymm (differentiable_set_subset_D _) (D_subset_differentiable_set hK)
-#align
-  right_deriv_measurable_aux.differentiable_set_eq_D RightDerivMeasurableAux.differentiable_set_eq_D
+#align right_deriv_measurable_aux.differentiable_set_eq_D RightDerivMeasurableAux.differentiable_set_eq_D
 
 end RightDerivMeasurableAux
 
@@ -844,8 +835,7 @@ theorem measurable_set_of_differentiable_within_at_Ici_of_is_complete {K : Set F
     (hK : IsComplete K) :
     MeasurableSet { x | DifferentiableWithinAt ℝ f (Ici x) x ∧ derivWithin f (Ici x) x ∈ K } := by
   simp [differentiable_set_eq_D K hK, D, measurable_set_B, MeasurableSet.Inter, MeasurableSet.Union]
-#align
-  measurable_set_of_differentiable_within_at_Ici_of_is_complete measurable_set_of_differentiable_within_at_Ici_of_is_complete
+#align measurable_set_of_differentiable_within_at_Ici_of_is_complete measurable_set_of_differentiable_within_at_Ici_of_is_complete
 
 variable [CompleteSpace F]
 

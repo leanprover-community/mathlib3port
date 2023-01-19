@@ -354,8 +354,7 @@ theorem cochain_complex_d_succ_succ_zero (C : CochainComplex V ℕ) (i : ℕ) : 
   rw [C.shape]
   simp only [ComplexShape.up_rel, zero_add]
   exact (Nat.one_lt_succ_succ _).Ne
-#align
-  cochain_complex.cochain_complex_d_succ_succ_zero CochainComplex.cochain_complex_d_succ_succ_zero
+#align cochain_complex.cochain_complex_d_succ_succ_zero CochainComplex.cochain_complex_d_succ_succ_zero
 
 /-- Augmenting a truncated complex with the original object and morphism is isomorphic
 (with components the identity) to the original complex.

@@ -252,10 +252,8 @@ of groups.)
 instance forget₂GroupPreservesLimitsOfSize :
     PreservesLimitsOfSize.{v, v} (forget₂ CommGroupCat GroupCat.{max v u})
     where PreservesLimitsOfShape J 𝒥 := { PreservesLimit := fun F => by infer_instance }
-#align
-  CommGroup.forget₂_Group_preserves_limits_of_size CommGroupCat.forget₂GroupPreservesLimitsOfSize
-#align
-  AddCommGroup.forget₂_AddGroup_preserves_limits AddCommGroupCat.forget₂_AddGroup_preserves_limits
+#align CommGroup.forget₂_Group_preserves_limits_of_size CommGroupCat.forget₂GroupPreservesLimitsOfSize
+#align AddCommGroup.forget₂_AddGroup_preserves_limits AddCommGroupCat.forget₂_AddGroup_preserves_limits
 
 @[to_additive]
 instance forget₂GroupPreservesLimits : PreservesLimits (forget₂ CommGroupCat GroupCat.{u}) :=
@@ -271,8 +269,7 @@ def forget₂CommMonPreservesLimitsAux (F : J ⥤ CommGroupCat.{max v u}) :
     IsLimit ((forget₂ CommGroupCat CommMonCat).mapCone (limitCone F)) :=
   CommMonCat.limitConeIsLimit (F ⋙ forget₂ CommGroupCat CommMonCat)
 #align CommGroup.forget₂_CommMon_preserves_limits_aux CommGroupCat.forget₂CommMonPreservesLimitsAux
-#align
-  AddCommGroup.forget₂_AddCommMon_preserves_limits_aux AddCommGroupCat.forget₂_AddCommMon_preserves_limits_aux
+#align AddCommGroup.forget₂_AddCommMon_preserves_limits_aux AddCommGroupCat.forget₂_AddCommMon_preserves_limits_aux
 
 /-- The forgetful functor from commutative groups to commutative monoids preserves all limits.
 (That is, the underlying commutative monoids could have been computed instead as limits
@@ -287,10 +284,8 @@ instance forget₂CommMonPreservesLimitsOfSize :
       PreservesLimit := fun F =>
         preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F)
           (forget₂_CommMon_preserves_limits_aux F) }
-#align
-  CommGroup.forget₂_CommMon_preserves_limits_of_size CommGroupCat.forget₂CommMonPreservesLimitsOfSize
-#align
-  AddCommGroup.forget₂_AddCommMon_preserves_limits AddCommGroupCat.forget₂_AddCommMon_preserves_limits
+#align CommGroup.forget₂_CommMon_preserves_limits_of_size CommGroupCat.forget₂CommMonPreservesLimitsOfSize
+#align AddCommGroup.forget₂_AddCommMon_preserves_limits AddCommGroupCat.forget₂_AddCommMon_preserves_limits
 
 /-- The forgetful functor from commutative groups to types preserves all limits. (That is, the
 underlying types could have been computed instead as limits in the category of types.)

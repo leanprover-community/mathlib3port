@@ -72,8 +72,7 @@ theorem compl_section_ord_separating_set_mem_nhds_within_Ici (hd : Disjoint s (c
       refine' lt_of_not_le fun hyc => _
       have hya : y < a := not_le.1 fun hay => hsub ⟨hay, hyc.trans hcb⟩ hyt
       exact hxy (Icc_subset_uIcc ⟨hya.le, hx.1⟩) ha
-#align
-  set.compl_section_ord_separating_set_mem_nhds_within_Ici Set.compl_section_ord_separating_set_mem_nhds_within_Ici
+#align set.compl_section_ord_separating_set_mem_nhds_within_Ici Set.compl_section_ord_separating_set_mem_nhds_within_Ici
 
 theorem compl_section_ord_separating_set_mem_nhds_within_Iic (hd : Disjoint s (closure t))
     (ha : a ∈ s) : (ord_connected_section <| ordSeparatingSet s t)ᶜ ∈ 𝓝[≤] a :=
@@ -82,8 +81,7 @@ theorem compl_section_ord_separating_set_mem_nhds_within_Iic (hd : Disjoint s (c
   have ha' : toDual a ∈ of_dual ⁻¹' s := ha
   simpa only [dual_ord_separating_set, dual_ord_connected_section] using
     compl_section_ord_separating_set_mem_nhds_within_Ici hd' ha'
-#align
-  set.compl_section_ord_separating_set_mem_nhds_within_Iic Set.compl_section_ord_separating_set_mem_nhds_within_Iic
+#align set.compl_section_ord_separating_set_mem_nhds_within_Iic Set.compl_section_ord_separating_set_mem_nhds_within_Iic
 
 theorem compl_section_ord_separating_set_mem_nhds (hd : Disjoint s (closure t)) (ha : a ∈ s) :
     (ord_connected_section <| ordSeparatingSet s t)ᶜ ∈ 𝓝 a :=

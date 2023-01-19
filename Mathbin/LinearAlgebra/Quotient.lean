@@ -227,8 +227,7 @@ theorem restrict_scalars_equiv_mk [Ring S] [SMul S R] [Module S M] [IsScalarTowe
 theorem restrict_scalars_equiv_symm_mk [Ring S] [SMul S R] [Module S M] [IsScalarTower S R M]
     (P : Submodule R M) (x : M) : (restrictScalarsEquiv S P).symm (mk x) = mk x :=
   rfl
-#align
-  submodule.quotient.restrict_scalars_equiv_symm_mk Submodule.Quotient.restrict_scalars_equiv_symm_mk
+#align submodule.quotient.restrict_scalars_equiv_symm_mk Submodule.Quotient.restrict_scalars_equiv_symm_mk
 
 end Module
 

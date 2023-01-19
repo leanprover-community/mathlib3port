@@ -82,8 +82,7 @@ theorem IsTrail.even_countp_edges_iff {u v : V} {p : G.Walk u v} (ht : p.IsTrail
           simp only [imp_false, eq_self_iff_true, not_true, not_not] at h'
           cases h'
           simpa using h
-#align
-  simple_graph.walk.is_trail.even_countp_edges_iff SimpleGraph.Walk.IsTrail.even_countp_edges_iff
+#align simple_graph.walk.is_trail.even_countp_edges_iff SimpleGraph.Walk.IsTrail.even_countp_edges_iff
 
 /-- An *Eulerian trail* (also known as an "Eulerian path") is a walk
 `p` that visits every edge exactly once.  The lemma `simple_graph.walk.is_eulerian.is_trail` shows
@@ -117,8 +116,7 @@ def IsEulerian.fintypeEdgeSet {u v : V} {p : G.Walk u v} (h : p.IsEulerian) : Fi
 theorem IsTrail.is_eulerian_of_forall_mem {u v : V} {p : G.Walk u v} (h : p.IsTrail)
     (hc : ∀ e, e ∈ G.edgeSet → e ∈ p.edges) : p.IsEulerian := fun e he =>
   List.count_eq_one_of_mem h.edges_nodup (hc e he)
-#align
-  simple_graph.walk.is_trail.is_eulerian_of_forall_mem SimpleGraph.Walk.IsTrail.is_eulerian_of_forall_mem
+#align simple_graph.walk.is_trail.is_eulerian_of_forall_mem SimpleGraph.Walk.IsTrail.is_eulerian_of_forall_mem
 
 theorem is_eulerian_iff {u v : V} (p : G.Walk u v) :
     p.IsEulerian ↔ p.IsTrail ∧ ∀ e, e ∈ G.edgeSet → e ∈ p.edges :=
@@ -164,14 +162,13 @@ theorem IsEulerian.card_filter_odd_degree [Fintype V] [DecidableRel G.Adj] {u v 
     · congr
       ext x
       simp [hn, imp_iff_not_or]
-#align
-  simple_graph.walk.is_eulerian.card_filter_odd_degree SimpleGraph.Walk.IsEulerian.card_filter_odd_degree
+#align simple_graph.walk.is_eulerian.card_filter_odd_degree SimpleGraph.Walk.IsEulerian.card_filter_odd_degree
 
 theorem IsEulerian.card_odd_degree [Fintype V] [DecidableRel G.Adj] {u v : V} {p : G.Walk u v}
     (ht : p.IsEulerian) :
     Fintype.card { v : V | Odd (G.degree v) } = 0 ∨ Fintype.card { v : V | Odd (G.degree v) } = 2 :=
   by
-  rw [← Set.to_finset_card]
+  rw [← Set.toFinset_card]
   apply is_eulerian.card_filter_odd_degree ht
   ext v
   simp

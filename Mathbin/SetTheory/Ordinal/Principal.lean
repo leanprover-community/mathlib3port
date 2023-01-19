@@ -422,8 +422,7 @@ theorem principal_mul_iff_le_two_or_omega_opow_opow {o : Ordinal} :
   · rintro (ho₂ | ⟨a, rfl⟩)
     · exact principal_mul_of_le_two ho₂
     · exact principal_mul_omega_opow_opow a
-#align
-  ordinal.principal_mul_iff_le_two_or_omega_opow_opow Ordinal.principal_mul_iff_le_two_or_omega_opow_opow
+#align ordinal.principal_mul_iff_le_two_or_omega_opow_opow Ordinal.principal_mul_iff_le_two_or_omega_opow_opow
 
 theorem mul_omega_dvd {a : Ordinal} (a0 : 0 < a) (ha : a < omega) : ∀ {b}, omega ∣ b → a * b = b
   | _, ⟨b, rfl⟩ => by rw [← mul_assoc, mul_omega a0 ha]

@@ -230,8 +230,7 @@ theorem multiplicity_le_multiplicity_choose_add {p : ℕ} (hp : p.Prime) :
     refine' multiplicity_le_multiplicity_of_dvd_right _
     rw [← succ_mul_choose_eq]
     exact dvd_mul_right _ _
-#align
-  nat.prime.multiplicity_le_multiplicity_choose_add Nat.Prime.multiplicity_le_multiplicity_choose_add
+#align nat.prime.multiplicity_le_multiplicity_choose_add Nat.Prime.multiplicity_le_multiplicity_choose_add
 
 theorem multiplicity_choose_prime_pow {p n k : ℕ} (hp : p.Prime) (hkn : k ≤ p ^ n) (hk0 : 0 < k) :
     multiplicity p (choose (p ^ n) k) + multiplicity p k = n :=

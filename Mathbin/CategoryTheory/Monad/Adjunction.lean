@@ -194,8 +194,7 @@ theorem Comonad.left_comparison (h : L ⊣ R) : R ⋙ Comonad.comparison h = h.t
 instance Comonad.comparison_faithful_of_faithful [Faithful L] (h : L ⊣ R) :
     Faithful (Comonad.comparison h)
     where map_injective' X Y f g w := L.map_injective (congr_arg Comonad.Coalgebra.Hom.f w : _)
-#align
-  category_theory.comonad.comparison_faithful_of_faithful CategoryTheory.Comonad.comparison_faithful_of_faithful
+#align category_theory.comonad.comparison_faithful_of_faithful CategoryTheory.Comonad.comparison_faithful_of_faithful
 
 instance (G : Comonad C) : Full (Comonad.comparison G.adj)
     where preimage X Y f := ⟨f.f, by simpa using f.h⟩

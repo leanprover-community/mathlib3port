@@ -410,8 +410,7 @@ theorem pairwise_of_reflexive_on_dupl_of_forall_ne [DecidableEq α] {l : List α
         · exact hx
       · intro x hx y hy
         exact h x (mem_cons_of_mem _ hx) y (mem_cons_of_mem _ hy)
-#align
-  list.pairwise_of_reflexive_on_dupl_of_forall_ne List.pairwise_of_reflexive_on_dupl_of_forall_ne
+#align list.pairwise_of_reflexive_on_dupl_of_forall_ne List.pairwise_of_reflexive_on_dupl_of_forall_ne
 -/
 
 #print List.pairwise_of_forall_mem_list /-

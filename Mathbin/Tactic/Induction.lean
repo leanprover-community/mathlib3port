@@ -120,8 +120,7 @@ recursive.
 -/
 unsafe def is_recursive (c : constructor_argument_info) :=
   c.recursive_leading_pis.isSome
-#align
-  tactic.eliminate.constructor_argument_info.is_recursive tactic.eliminate.constructor_argument_info.is_recursive
+#align tactic.eliminate.constructor_argument_info.is_recursive tactic.eliminate.constructor_argument_info.is_recursive
 
 end ConstructorArgumentInfo
 
@@ -156,8 +155,7 @@ the number of hypotheses we must name.
 -/
 unsafe def constructor_info.num_nameable_hypotheses (c : constructor_info) : ℕ :=
   c.num_non_param_args + c.num_rec_args
-#align
-  tactic.eliminate.constructor_info.num_nameable_hypotheses tactic.eliminate.constructor_info.num_nameable_hypotheses
+#align tactic.eliminate.constructor_info.num_nameable_hypotheses tactic.eliminate.constructor_info.num_nameable_hypotheses
 
 /-- Information about an inductive type. Contains:
 
@@ -246,8 +244,7 @@ unsafe def match_recursive_constructor_arg (I : Name) (T : expr) : tactic (Optio
       match base with
       | const c _ => if c = I then some pis else none
       | _ => none
-#align
-  tactic.eliminate.match_recursive_constructor_arg tactic.eliminate.match_recursive_constructor_arg
+#align tactic.eliminate.match_recursive_constructor_arg tactic.eliminate.match_recursive_constructor_arg
 
 /-- Get information about the arguments of a constructor `C` of an inductive type
 `I`.
@@ -347,8 +344,7 @@ unsafe structure constructor_argument_naming_info where
   iinfo : inductive_info
   cinfo : constructor_info
   ainfo : constructor_argument_info
-#align
-  tactic.eliminate.constructor_argument_naming_info tactic.eliminate.constructor_argument_naming_info
+#align tactic.eliminate.constructor_argument_naming_info tactic.eliminate.constructor_argument_naming_info
 
 /-- A constructor argument naming rule takes a `constructor_argument_naming_info`
 structure and returns a list of suitable names for the argument. If the rule is
@@ -357,15 +353,13 @@ not applicable to the given constructor argument, the returned list is empty.
 @[reducible]
 unsafe def constructor_argument_naming_rule : Type :=
   constructor_argument_naming_info → tactic (List Name)
-#align
-  tactic.eliminate.constructor_argument_naming_rule tactic.eliminate.constructor_argument_naming_rule
+#align tactic.eliminate.constructor_argument_naming_rule tactic.eliminate.constructor_argument_naming_rule
 
 /-- Naming rule for recursive constructor arguments.
 -/
 unsafe def constructor_argument_naming_rule_rec : constructor_argument_naming_rule := fun i =>
   pure <| if i.ainfo.is_recursive then [i.mpinfo.mpname] else []
-#align
-  tactic.eliminate.constructor_argument_naming_rule_rec tactic.eliminate.constructor_argument_naming_rule_rec
+#align tactic.eliminate.constructor_argument_naming_rule_rec tactic.eliminate.constructor_argument_naming_rule_rec
 
 /-- Naming rule for constructor arguments associated with an index.
 -/
@@ -389,8 +383,7 @@ unsafe def constructor_argument_naming_rule_index : constructor_argument_naming_
     | some [] => []
     | some ((uname, ppname) :: is) =>
       if is.all fun ⟨uname', _⟩ => uname' = uname then [ppname] else []
-#align
-  tactic.eliminate.constructor_argument_naming_rule_index tactic.eliminate.constructor_argument_naming_rule_index
+#align tactic.eliminate.constructor_argument_naming_rule_index tactic.eliminate.constructor_argument_naming_rule_index
 
 /-- Naming rule for constructor arguments which are named in the constructor
 declaration.
@@ -399,16 +392,14 @@ unsafe def constructor_argument_naming_rule_named : constructor_argument_naming_
   let arg_name := i.ainfo.aname
   let arg_dep := i.ainfo.dependent
   pure <| if !arg_dep && arg_name.is_likely_generated_binder_name then [] else [arg_name]
-#align
-  tactic.eliminate.constructor_argument_naming_rule_named tactic.eliminate.constructor_argument_naming_rule_named
+#align tactic.eliminate.constructor_argument_naming_rule_named tactic.eliminate.constructor_argument_naming_rule_named
 
 /-- Naming rule for constructor arguments whose type is associated with a list of
 typical variable names. See `tactic.typical_variable_names`.
 -/
 unsafe def constructor_argument_naming_rule_type : constructor_argument_naming_rule := fun i =>
   typical_variable_names i.ainfo.type <|> pure []
-#align
-  tactic.eliminate.constructor_argument_naming_rule_type tactic.eliminate.constructor_argument_naming_rule_type
+#align tactic.eliminate.constructor_argument_naming_rule_type tactic.eliminate.constructor_argument_naming_rule_type
 
 /-- Naming rule for constructor arguments whose type is in `Prop`.
 -/
@@ -416,15 +407,13 @@ unsafe def constructor_argument_naming_rule_prop : constructor_argument_naming_r
   let sort level.zero ← infer_type i.ainfo.type |
     pure []
   pure [`h]
-#align
-  tactic.eliminate.constructor_argument_naming_rule_prop tactic.eliminate.constructor_argument_naming_rule_prop
+#align tactic.eliminate.constructor_argument_naming_rule_prop tactic.eliminate.constructor_argument_naming_rule_prop
 
 /-- Fallback constructor argument naming rule. This rule never fails.
 -/
 unsafe def constructor_argument_naming_rule_fallback : constructor_argument_naming_rule := fun _ =>
   pure [`x]
-#align
-  tactic.eliminate.constructor_argument_naming_rule_fallback tactic.eliminate.constructor_argument_naming_rule_fallback
+#align tactic.eliminate.constructor_argument_naming_rule_fallback tactic.eliminate.constructor_argument_naming_rule_fallback
 
 /-- `apply_constructor_argument_naming_rules info rules` applies the constructor
 argument naming rules in `rules` to the constructor argument given by `info`.
@@ -442,8 +431,7 @@ unsafe def apply_constructor_argument_naming_rules (info : constructor_argument_
   match names with
     | none => fail "apply_constructor_argument_naming_rules: no applicable naming rule"
     | some names => pure names
-#align
-  tactic.eliminate.apply_constructor_argument_naming_rules tactic.eliminate.apply_constructor_argument_naming_rules
+#align tactic.eliminate.apply_constructor_argument_naming_rules tactic.eliminate.apply_constructor_argument_naming_rules
 
 /-- Get possible names for a constructor argument. This tactic applies all the
 previously defined rules in order. It cannot fail and always returns a nonempty
@@ -724,8 +712,7 @@ unsafe def to_generalize (major_premise : expr) : GeneralizationMode → tactic 
               pure <|
               if rev then some h_name else none
     pure <| name_set.of_list to_revert
-#align
-  tactic.eliminate.generalization_mode.to_generalize tactic.eliminate.generalization_mode.to_generalize
+#align tactic.eliminate.generalization_mode.to_generalize tactic.eliminate.generalization_mode.to_generalize
 
 end GeneralizationMode
 
@@ -932,8 +919,7 @@ unsafe def assign_local_to_unassigned_mvar (mv : expr) (pp_name : Name) (binfo :
   let c ← mk_local' pp_name binfo type
   unify mv c
   pure c
-#align
-  tactic.eliminate.assign_local_to_unassigned_mvar tactic.eliminate.assign_local_to_unassigned_mvar
+#align tactic.eliminate.assign_local_to_unassigned_mvar tactic.eliminate.assign_local_to_unassigned_mvar
 
 /-- Apply `assign_local_to_unassigned_mvar` to a list of metavariables. Returns the
 newly created local constants.
@@ -941,8 +927,7 @@ newly created local constants.
 unsafe def assign_locals_to_unassigned_mvars (mvars : List (expr × Name × BinderInfo)) :
     tactic (List expr) :=
   mvars.mmapFilter fun ⟨mv, pp_name, binfo⟩ => assign_local_to_unassigned_mvar mv pp_name binfo
-#align
-  tactic.eliminate.assign_locals_to_unassigned_mvars tactic.eliminate.assign_locals_to_unassigned_mvars
+#align tactic.eliminate.assign_locals_to_unassigned_mvars tactic.eliminate.assign_locals_to_unassigned_mvars
 
 /-
 TODO `simplify_ih` currently uses Lean's builtin unification procedure to

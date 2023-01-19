@@ -149,8 +149,7 @@ theorem exists_forall_eventually_eq_prod {π : X → Sort _} {f : ℕ → ∀ x 
     _ = f (max (N x + 1) (N y + 1)) y := (hN _ _ (le_max_left _ _) _ hy).symm
     _ = f (N y + 1) y := hN _ _ (le_max_right _ _) _ (mem_of_mem_nhds <| hUx y)
     
-#align
-  locally_finite.exists_forall_eventually_eq_prod LocallyFinite.exists_forall_eventually_eq_prod
+#align locally_finite.exists_forall_eventually_eq_prod LocallyFinite.exists_forall_eventually_eq_prod
 
 /-- Let `f : ℕ → Π a, β a` be a sequence of (dependent) functions on a topological space. Suppose
 that the family of sets `s n = {x | f (n + 1) x ≠ f n x}` is locally finite. Then there exists a
@@ -160,8 +159,7 @@ theorem exists_forall_eventually_at_top_eventually_eq' {π : X → Sort _} {f : 
     (hf : LocallyFinite fun n => { x | f (n + 1) x ≠ f n x }) :
     ∃ F : ∀ x : X, π x, ∀ x, ∀ᶠ n : ℕ in at_top, ∀ᶠ y : X in 𝓝 x, f n y = F y :=
   hf.exists_forall_eventually_eq_prod.imp fun F hF x => (hF x).curry
-#align
-  locally_finite.exists_forall_eventually_at_top_eventually_eq' LocallyFinite.exists_forall_eventually_at_top_eventually_eq'
+#align locally_finite.exists_forall_eventually_at_top_eventually_eq' LocallyFinite.exists_forall_eventually_at_top_eventually_eq'
 
 /-- Let `f : ℕ → α → β` be a sequence of functions on a topological space. Suppose
 that the family of sets `s n = {x | f (n + 1) x ≠ f n x}` is locally finite. Then there exists a
@@ -171,8 +169,7 @@ theorem exists_forall_eventually_at_top_eventually_eq {f : ℕ → X → α}
     (hf : LocallyFinite fun n => { x | f (n + 1) x ≠ f n x }) :
     ∃ F : X → α, ∀ x, ∀ᶠ n : ℕ in at_top, f n =ᶠ[𝓝 x] F :=
   hf.exists_forall_eventually_at_top_eventually_eq'
-#align
-  locally_finite.exists_forall_eventually_at_top_eventually_eq LocallyFinite.exists_forall_eventually_at_top_eventually_eq
+#align locally_finite.exists_forall_eventually_at_top_eventually_eq LocallyFinite.exists_forall_eventually_at_top_eventually_eq
 
 theorem preimage_continuous {g : Y → X} (hf : LocallyFinite f) (hg : Continuous g) :
     LocallyFinite fun i => g ⁻¹' f i := fun x =>

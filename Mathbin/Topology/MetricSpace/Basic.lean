@@ -740,8 +740,7 @@ theorem dist_le_add_of_nonempty_closed_ball_inter_closed_ball
     dist x y ≤ dist z x + dist z y := dist_triangle_left _ _ _
     _ ≤ ε₁ + ε₂ := add_le_add hz.1 hz.2
     
-#align
-  metric.dist_le_add_of_nonempty_closed_ball_inter_closed_ball Metric.dist_le_add_of_nonempty_closed_ball_inter_closed_ball
+#align metric.dist_le_add_of_nonempty_closed_ball_inter_closed_ball Metric.dist_le_add_of_nonempty_closed_ball_inter_closed_ball
 
 theorem dist_lt_add_of_nonempty_closed_ball_inter_ball
     (h : (closedBall x ε₁ ∩ ball y ε₂).Nonempty) : dist x y < ε₁ + ε₂ :=
@@ -750,8 +749,7 @@ theorem dist_lt_add_of_nonempty_closed_ball_inter_ball
     dist x y ≤ dist z x + dist z y := dist_triangle_left _ _ _
     _ < ε₁ + ε₂ := add_lt_add_of_le_of_lt hz.1 hz.2
     
-#align
-  metric.dist_lt_add_of_nonempty_closed_ball_inter_ball Metric.dist_lt_add_of_nonempty_closed_ball_inter_ball
+#align metric.dist_lt_add_of_nonempty_closed_ball_inter_ball Metric.dist_lt_add_of_nonempty_closed_ball_inter_ball
 
 theorem dist_lt_add_of_nonempty_ball_inter_closed_ball
     (h : (ball x ε₁ ∩ closedBall y ε₂).Nonempty) : dist x y < ε₁ + ε₂ :=
@@ -759,8 +757,7 @@ theorem dist_lt_add_of_nonempty_ball_inter_closed_ball
   rw [inter_comm] at h
   rw [add_comm, dist_comm]
   exact dist_lt_add_of_nonempty_closed_ball_inter_ball h
-#align
-  metric.dist_lt_add_of_nonempty_ball_inter_closed_ball Metric.dist_lt_add_of_nonempty_ball_inter_closed_ball
+#align metric.dist_lt_add_of_nonempty_ball_inter_closed_ball Metric.dist_lt_add_of_nonempty_ball_inter_closed_ball
 
 theorem dist_lt_add_of_nonempty_ball_inter_ball (h : (ball x ε₁ ∩ ball y ε₂).Nonempty) :
     dist x y < ε₁ + ε₂ :=
@@ -1009,8 +1006,7 @@ theorem totally_bounded_of_finite_discretization {s : Set α}
   have : F x' = F ⟨x, xs⟩ := Function.invFun_eq ⟨⟨x, xs⟩, rfl⟩
   simp only [Set.mem_unionᵢ, Set.mem_range]
   exact ⟨_, ⟨F ⟨x, xs⟩, rfl⟩, hF _ _ this.symm⟩
-#align
-  metric.totally_bounded_of_finite_discretization Metric.totally_bounded_of_finite_discretization
+#align metric.totally_bounded_of_finite_discretization Metric.totally_bounded_of_finite_discretization
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem finite_approx_of_totally_bounded {s : Set α} (hs : TotallyBounded s) :
@@ -1274,16 +1270,14 @@ centered at `x` and intersecting `s` only at `x`. -/
 theorem exists_ball_inter_eq_singleton_of_mem_discrete [DiscreteTopology s] {x : α} (hx : x ∈ s) :
     ∃ ε > 0, Metric.ball x ε ∩ s = {x} :=
   nhds_basis_ball.exists_inter_eq_singleton_of_mem_discrete hx
-#align
-  metric.exists_ball_inter_eq_singleton_of_mem_discrete Metric.exists_ball_inter_eq_singleton_of_mem_discrete
+#align metric.exists_ball_inter_eq_singleton_of_mem_discrete Metric.exists_ball_inter_eq_singleton_of_mem_discrete
 
 /-- Given a point `x` in a discrete subset `s` of a pseudometric space, there is a closed ball
 of positive radius centered at `x` and intersecting `s` only at `x`. -/
 theorem exists_closed_ball_inter_eq_singleton_of_discrete [DiscreteTopology s] {x : α}
     (hx : x ∈ s) : ∃ ε > 0, Metric.closedBall x ε ∩ s = {x} :=
   nhds_basis_closed_ball.exists_inter_eq_singleton_of_mem_discrete hx
-#align
-  metric.exists_closed_ball_inter_eq_singleton_of_discrete Metric.exists_closed_ball_inter_eq_singleton_of_discrete
+#align metric.exists_closed_ball_inter_eq_singleton_of_discrete Metric.exists_closed_ball_inter_eq_singleton_of_discrete
 
 theorem Dense.exists_dist_lt {s : Set α} (hs : Dense s) (x : α) {ε : ℝ} (hε : 0 < ε) :
     ∃ y ∈ s, dist x y < ε :=
@@ -1451,8 +1445,7 @@ def PseudoEmetricSpace.toPseudoMetricSpaceOfDist {α : Type u} [e : PseudoEmetri
     by
     rw [uniformity_pseudoedist, Metric.uniformity_edist]
     rfl
-#align
-  pseudo_emetric_space.to_pseudo_metric_space_of_dist PseudoEmetricSpace.toPseudoMetricSpaceOfDist
+#align pseudo_emetric_space.to_pseudo_metric_space_of_dist PseudoEmetricSpace.toPseudoMetricSpaceOfDist
 
 /-- One gets a pseudometric space from an emetric space if the edistance
 is everywhere finite, by pushing the edistance to reals. We set it up so that the edist and the
@@ -1498,8 +1491,7 @@ theorem Metric.complete_of_convergent_controlled_sequences (B : ℕ → Real) (h
     CompleteSpace α :=
   UniformSpace.complete_of_convergent_controlled_sequences
     (fun n => { p : α × α | dist p.1 p.2 < B n }) (fun n => dist_mem_uniformity <| hB n) H
-#align
-  metric.complete_of_convergent_controlled_sequences Metric.complete_of_convergent_controlled_sequences
+#align metric.complete_of_convergent_controlled_sequences Metric.complete_of_convergent_controlled_sequences
 
 theorem Metric.complete_of_cauchy_seq_tendsto :
     (∀ u : ℕ → α, CauchySeq u → ∃ a, Tendsto u atTop (𝓝 a)) → CompleteSpace α :=
@@ -2743,8 +2735,7 @@ theorem bounded_range_of_tendsto_cofinite_uniformity {f : β → α}
   use (hsf.image f).Bounded, 1
   rintro _ ⟨x, hx, rfl⟩ _ ⟨y, hy, rfl⟩
   exact le_of_lt (hs1 (x, y) ⟨hx, hy⟩)
-#align
-  metric.bounded_range_of_tendsto_cofinite_uniformity Metric.bounded_range_of_tendsto_cofinite_uniformity
+#align metric.bounded_range_of_tendsto_cofinite_uniformity Metric.bounded_range_of_tendsto_cofinite_uniformity
 
 theorem bounded_range_of_cauchy_map_cofinite {f : β → α} (hf : Cauchy (map f cofinite)) :
     Bounded (range f) :=
@@ -2795,8 +2786,7 @@ theorem exists_is_open_bounded_image_inter_of_is_compact_of_forall_continuous_wi
       exact u_open.mem_nhds xu
     · apply bounded.mono (image_subset _ uf)
       exact bounded_ball.mono (image_preimage_subset _ _)
-#align
-  metric.exists_is_open_bounded_image_inter_of_is_compact_of_forall_continuous_within_at Metric.exists_is_open_bounded_image_inter_of_is_compact_of_forall_continuous_within_at
+#align metric.exists_is_open_bounded_image_inter_of_is_compact_of_forall_continuous_within_at Metric.exists_is_open_bounded_image_inter_of_is_compact_of_forall_continuous_within_at
 
 /-- If a function is continuous at every point of a compact set `k`, then it is bounded on
 some open neighborhood of `k`. -/
@@ -2807,8 +2797,7 @@ theorem exists_is_open_bounded_image_of_is_compact_of_forall_continuous_at [Topo
   simp_rw [← continuous_within_at_univ] at hf
   simpa only [inter_univ] using
     exists_is_open_bounded_image_inter_of_is_compact_of_forall_continuous_within_at hk hf
-#align
-  metric.exists_is_open_bounded_image_of_is_compact_of_forall_continuous_at Metric.exists_is_open_bounded_image_of_is_compact_of_forall_continuous_at
+#align metric.exists_is_open_bounded_image_of_is_compact_of_forall_continuous_at Metric.exists_is_open_bounded_image_of_is_compact_of_forall_continuous_at
 
 /-- If a function is continuous on a set `s` containing a compact set `k`, then it is bounded on
 some open neighborhood of `k` in `s`. -/
@@ -2817,8 +2806,7 @@ theorem exists_is_open_bounded_image_inter_of_is_compact_of_continuous_on [Topol
     ∃ t, k ⊆ t ∧ IsOpen t ∧ Bounded (f '' (t ∩ s)) :=
   exists_is_open_bounded_image_inter_of_is_compact_of_forall_continuous_within_at hk fun x hx =>
     hf x (hks hx)
-#align
-  metric.exists_is_open_bounded_image_inter_of_is_compact_of_continuous_on Metric.exists_is_open_bounded_image_inter_of_is_compact_of_continuous_on
+#align metric.exists_is_open_bounded_image_inter_of_is_compact_of_continuous_on Metric.exists_is_open_bounded_image_inter_of_is_compact_of_continuous_on
 
 /-- If a function is continuous on a neighborhood of a compact set `k`, then it is bounded on
 some open neighborhood of `k`. -/
@@ -2827,8 +2815,7 @@ theorem exists_is_open_bounded_image_of_is_compact_of_continuous_on [Topological
     (hf : ContinuousOn f s) : ∃ t, k ⊆ t ∧ IsOpen t ∧ Bounded (f '' t) :=
   exists_is_open_bounded_image_of_is_compact_of_forall_continuous_at hk fun x hx =>
     hf.ContinuousAt (hs.mem_nhds (hks hx))
-#align
-  metric.exists_is_open_bounded_image_of_is_compact_of_continuous_on Metric.exists_is_open_bounded_image_of_is_compact_of_continuous_on
+#align metric.exists_is_open_bounded_image_of_is_compact_of_continuous_on Metric.exists_is_open_bounded_image_of_is_compact_of_continuous_on
 
 /-- The **Heine–Borel theorem**: In a proper space, a closed bounded set is compact. -/
 theorem is_compact_of_is_closed_bounded [ProperSpace α] (hc : IsClosed s) (hb : Bounded s) :
@@ -3321,8 +3308,7 @@ theorem uniform_embedding_bot_of_pairwise_le_dist {β : Type _} {ε : ℝ} (hε 
     (hf : Pairwise fun x y => ε ≤ dist (f x) (f y)) :
     @UniformEmbedding _ _ ⊥ (by infer_instance) f :=
   uniform_embedding_of_spaced_out (dist_mem_uniformity hε) <| by simpa using hf
-#align
-  metric.uniform_embedding_bot_of_pairwise_le_dist Metric.uniform_embedding_bot_of_pairwise_le_dist
+#align metric.uniform_embedding_bot_of_pairwise_le_dist Metric.uniform_embedding_bot_of_pairwise_le_dist
 
 end Metric
 
@@ -3539,8 +3525,7 @@ theorem second_countable_of_countable_discretization {α : Type u} [MetricSpace 
   let x' := Finv (F x)
   have : F x' = F x := Function.invFun_eq ⟨x, rfl⟩
   exact ⟨x', mem_range_self _, hF _ _ this.symm⟩
-#align
-  metric.second_countable_of_countable_discretization Metric.second_countable_of_countable_discretization
+#align metric.second_countable_of_countable_discretization Metric.second_countable_of_countable_discretization
 
 end SecondCountable
 

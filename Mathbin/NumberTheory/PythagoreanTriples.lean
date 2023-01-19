@@ -230,8 +230,7 @@ theorem is_classified_of_is_primitive_classified (hp : h.IsPrimitiveClassified) 
   rcases H with ⟨t, co, pp⟩
   rw [one_mul, one_mul]
   exact ⟨t, co⟩
-#align
-  pythagorean_triple.is_classified_of_is_primitive_classified PythagoreanTriple.is_classified_of_is_primitive_classified
+#align pythagorean_triple.is_classified_of_is_primitive_classified PythagoreanTriple.is_classified_of_is_primitive_classified
 
 theorem is_classified_of_normalize_is_primitive_classified
     (hc : h.normalize.IsPrimitiveClassified) : h.IsClassified :=
@@ -243,8 +242,7 @@ theorem is_classified_of_normalize_is_primitive_classified
   · exact Int.gcd_dvd_left x y
   · exact Int.gcd_dvd_right x y
   · exact h.gcd_dvd
-#align
-  pythagorean_triple.is_classified_of_normalize_is_primitive_classified PythagoreanTriple.is_classified_of_normalize_is_primitive_classified
+#align pythagorean_triple.is_classified_of_normalize_is_primitive_classified PythagoreanTriple.is_classified_of_normalize_is_primitive_classified
 
 theorem ne_zero_of_coprime (hc : Int.gcd x y = 1) : z ≠ 0 :=
   by
@@ -272,8 +270,7 @@ theorem is_primitive_classified_of_coprime_of_zero_left (hc : Int.gcd x y = 1) (
   · use 0, 1
     rw [hy, hc, Int.gcd_zero_left]
     norm_num
-#align
-  pythagorean_triple.is_primitive_classified_of_coprime_of_zero_left PythagoreanTriple.is_primitive_classified_of_coprime_of_zero_left
+#align pythagorean_triple.is_primitive_classified_of_coprime_of_zero_left PythagoreanTriple.is_primitive_classified_of_coprime_of_zero_left
 
 theorem coprime_of_coprime (hc : Int.gcd x y = 1) : Int.gcd y z = 1 :=
   by
@@ -605,8 +602,7 @@ theorem is_primitive_classified_of_coprime_of_odd_of_pos (hc : Int.gcd x y = 1) 
     rw [h2.1, h1.2.2.1] at hyo
     revert hyo
     norm_num
-#align
-  pythagorean_triple.is_primitive_classified_of_coprime_of_odd_of_pos PythagoreanTriple.is_primitive_classified_of_coprime_of_odd_of_pos
+#align pythagorean_triple.is_primitive_classified_of_coprime_of_odd_of_pos PythagoreanTriple.is_primitive_classified_of_coprime_of_odd_of_pos
 
 theorem is_primitive_classified_of_coprime_of_pos (hc : Int.gcd x y = 1) (hzpos : 0 < z) :
     h.IsPrimitiveClassified :=
@@ -616,8 +612,7 @@ theorem is_primitive_classified_of_coprime_of_pos (hc : Int.gcd x y = 1) (hzpos 
   rw [Int.gcd_comm] at hc
   obtain ⟨m, n, H⟩ := h.symm.is_primitive_classified_of_coprime_of_odd_of_pos hc h2.left hzpos
   use m, n; tauto
-#align
-  pythagorean_triple.is_primitive_classified_of_coprime_of_pos PythagoreanTriple.is_primitive_classified_of_coprime_of_pos
+#align pythagorean_triple.is_primitive_classified_of_coprime_of_pos PythagoreanTriple.is_primitive_classified_of_coprime_of_pos
 
 theorem is_primitive_classified_of_coprime (hc : Int.gcd x y = 1) : h.IsPrimitiveClassified :=
   by
@@ -627,8 +622,7 @@ theorem is_primitive_classified_of_coprime (hc : Int.gcd x y = 1) : h.IsPrimitiv
   apply h'.is_primitive_classified_of_coprime_of_pos hc
   apply lt_of_le_of_ne _ (h'.ne_zero_of_coprime hc).symm
   exact le_neg.mp (not_lt.mp hz)
-#align
-  pythagorean_triple.is_primitive_classified_of_coprime PythagoreanTriple.is_primitive_classified_of_coprime
+#align pythagorean_triple.is_primitive_classified_of_coprime PythagoreanTriple.is_primitive_classified_of_coprime
 
 theorem classified : h.IsClassified :=
   by

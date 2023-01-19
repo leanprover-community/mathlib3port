@@ -94,15 +94,13 @@ theorem von_mangoldt_apply_pow {n k : ℕ} (hk : k ≠ 0) : Λ (n ^ k) = Λ n :=
 
 theorem von_mangoldt_apply_prime {p : ℕ} (hp : p.Prime) : Λ p = Real.log p := by
   rw [von_mangoldt_apply, prime.min_fac_eq hp, if_pos hp.prime.is_prime_pow]
-#align
-  nat.arithmetic_function.von_mangoldt_apply_prime Nat.ArithmeticFunction.von_mangoldt_apply_prime
+#align nat.arithmetic_function.von_mangoldt_apply_prime Nat.ArithmeticFunction.von_mangoldt_apply_prime
 
 theorem von_mangoldt_ne_zero_iff {n : ℕ} : Λ n ≠ 0 ↔ IsPrimePow n :=
   by
   rcases eq_or_ne n 1 with (rfl | hn); · simp [not_is_prime_pow_one]
   exact (Real.log_pos (one_lt_cast.2 (min_fac_prime hn).one_lt)).ne'.ite_ne_right_iff
-#align
-  nat.arithmetic_function.von_mangoldt_ne_zero_iff Nat.ArithmeticFunction.von_mangoldt_ne_zero_iff
+#align nat.arithmetic_function.von_mangoldt_ne_zero_iff Nat.ArithmeticFunction.von_mangoldt_ne_zero_iff
 
 theorem von_mangoldt_pos_iff {n : ℕ} : 0 < Λ n ↔ IsPrimePow n :=
   von_mangoldt_nonneg.lt_iff_ne.trans (ne_comm.trans von_mangoldt_ne_zero_iff)
@@ -110,8 +108,7 @@ theorem von_mangoldt_pos_iff {n : ℕ} : 0 < Λ n ↔ IsPrimePow n :=
 
 theorem von_mangoldt_eq_zero_iff {n : ℕ} : Λ n = 0 ↔ ¬IsPrimePow n :=
   von_mangoldt_ne_zero_iff.not_right
-#align
-  nat.arithmetic_function.von_mangoldt_eq_zero_iff Nat.ArithmeticFunction.von_mangoldt_eq_zero_iff
+#align nat.arithmetic_function.von_mangoldt_eq_zero_iff Nat.ArithmeticFunction.von_mangoldt_eq_zero_iff
 
 open BigOperators
 
@@ -147,16 +144,14 @@ theorem zeta_mul_von_mangoldt : (ζ : ArithmeticFunction ℝ) * Λ = log :=
 @[simp]
 theorem log_mul_moebius_eq_von_mangoldt : log * μ = Λ := by
   rw [← von_mangoldt_mul_zeta, mul_assoc, coe_zeta_mul_coe_moebius, mul_one]
-#align
-  nat.arithmetic_function.log_mul_moebius_eq_von_mangoldt Nat.ArithmeticFunction.log_mul_moebius_eq_von_mangoldt
+#align nat.arithmetic_function.log_mul_moebius_eq_von_mangoldt Nat.ArithmeticFunction.log_mul_moebius_eq_von_mangoldt
 
 @[simp]
 theorem moebius_mul_log_eq_von_mangoldt : (μ : ArithmeticFunction ℝ) * log = Λ :=
   by
   rw [mul_comm]
   simp
-#align
-  nat.arithmetic_function.moebius_mul_log_eq_von_mangoldt Nat.ArithmeticFunction.moebius_mul_log_eq_von_mangoldt
+#align nat.arithmetic_function.moebius_mul_log_eq_von_mangoldt Nat.ArithmeticFunction.moebius_mul_log_eq_von_mangoldt
 
 theorem sum_moebius_mul_log_eq {n : ℕ} : (∑ d in n.divisors, (μ d : ℝ) * log d) = -Λ n :=
   by

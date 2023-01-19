@@ -225,8 +225,7 @@ theorem coeff_multiset_prod_of_nat_degree_le (n : ℕ) (hl : ∀ p ∈ t, natDeg
   by
   induction t using Quotient.inductionOn
   simpa using coeff_list_prod_of_nat_degree_le _ _ hl
-#align
-  polynomial.coeff_multiset_prod_of_nat_degree_le Polynomial.coeff_multiset_prod_of_nat_degree_le
+#align polynomial.coeff_multiset_prod_of_nat_degree_le Polynomial.coeff_multiset_prod_of_nat_degree_le
 
 theorem coeff_prod_of_nat_degree_le (f : ι → R[X]) (n : ℕ) (h : ∀ p ∈ s, natDegree (f p) ≤ n) :
     coeff (∏ i in s, f i) (s.card * n) = ∏ i in s, coeff (f i) n :=
@@ -288,8 +287,7 @@ theorem multiset_prod_X_sub_C_coeff_card_pred (t : Multiset R) (ht : 0 < t.card)
     obtain ⟨x, hx⟩ := card_pos_iff_exists_mem.mp ht
     exact ⟨_, ⟨_, ⟨x, hx, rfl⟩, nat_degree_X_sub_C _⟩, one_ne_zero⟩
   congr ; rw [nat_degree_multiset_prod_of_monic] <;> · simp [nat_degree_X_sub_C, monic_X_sub_C]
-#align
-  polynomial.multiset_prod_X_sub_C_coeff_card_pred Polynomial.multiset_prod_X_sub_C_coeff_card_pred
+#align polynomial.multiset_prod_X_sub_C_coeff_card_pred Polynomial.multiset_prod_X_sub_C_coeff_card_pred
 
 theorem prod_X_sub_C_coeff_card_pred (s : Finset ι) (f : ι → R) (hs : 0 < s.card) :
     (∏ i in s, X - c (f i)).coeff (s.card - 1) = -∑ i in s, f i := by

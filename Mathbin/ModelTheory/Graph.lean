@@ -78,8 +78,7 @@ theorem TheoryCat.simple_graph_model_iff [Language.graph.StructureCat V] :
       (Irreflexive fun x y : V => RelMap adj ![x, y]) ∧
         Symmetric fun x y : V => RelMap adj ![x, y] :=
   by simp [Theory.simple_graph]
-#align
-  first_order.language.Theory.simple_graph_model_iff FirstOrder.Language.TheoryCat.simple_graph_model_iff
+#align first_order.language.Theory.simple_graph_model_iff FirstOrder.Language.TheoryCat.simple_graph_model_iff
 
 instance simple_graph_model (G : SimpleGraph V) :
     @TheoryCat.Model _ V G.StructureCat TheoryCat.simpleGraph :=
@@ -134,13 +133,11 @@ theorem Structure_simple_graph_of_structure [S : Language.graph.StructureCat V]
           refine' congr rfl (funext _)
           simp [Fin.forall_fin_two]
         · exact r.elim
-#align
-  first_order.language.Structure_simple_graph_of_structure FirstOrder.Language.Structure_simple_graph_of_structure
+#align first_order.language.Structure_simple_graph_of_structure FirstOrder.Language.Structure_simple_graph_of_structure
 
 theorem TheoryCat.simple_graph_is_satisfiable : TheoryCat.IsSatisfiable TheoryCat.simpleGraph :=
   ⟨@TheoryCat.ModelCat.of _ _ Unit (SimpleGraph.structure ⊥) _ _⟩
-#align
-  first_order.language.Theory.simple_graph_is_satisfiable FirstOrder.Language.TheoryCat.simple_graph_is_satisfiable
+#align first_order.language.Theory.simple_graph_is_satisfiable FirstOrder.Language.TheoryCat.simple_graph_is_satisfiable
 
 end Language
 

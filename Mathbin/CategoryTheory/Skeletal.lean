@@ -191,8 +191,7 @@ def map (F : C ⥤ D) : ThinSkeleton C ⥤ ThinSkeleton D
 
 theorem comp_to_thin_skeleton (F : C ⥤ D) : F ⋙ toThinSkeleton D = toThinSkeleton C ⋙ map F :=
   rfl
-#align
-  category_theory.thin_skeleton.comp_to_thin_skeleton CategoryTheory.ThinSkeleton.comp_to_thin_skeleton
+#align category_theory.thin_skeleton.comp_to_thin_skeleton CategoryTheory.ThinSkeleton.comp_to_thin_skeleton
 
 /-- Given a natural transformation `F₁ ⟶ F₂`, induce a natural transformation `map F₁ ⟶ map F₂`.-/
 def mapNatTrans {F₁ F₂ : C ⥤ D} (k : F₁ ⟶ F₂) : map F₁ ⟶ map F₂
@@ -227,8 +226,7 @@ section
 variable [Quiver.IsThin C]
 
 instance to_thin_skeleton_faithful : Faithful (toThinSkeleton C) where
-#align
-  category_theory.thin_skeleton.to_thin_skeleton_faithful CategoryTheory.ThinSkeleton.to_thin_skeleton_faithful
+#align category_theory.thin_skeleton.to_thin_skeleton_faithful CategoryTheory.ThinSkeleton.to_thin_skeleton_faithful
 
 /-- Use `quotient.out` to create a functor out of the thin skeleton. -/
 @[simps]
@@ -250,8 +248,7 @@ noncomputable instance fromThinSkeletonEquivalence : IsEquivalence (fromThinSkel
         Quotient.recOnSubsingleton x fun X =>
           eqToIso (Quotient.sound ⟨(Nonempty.some (Quotient.mk_out X)).symm⟩))
       (by tidy)
-#align
-  category_theory.thin_skeleton.from_thin_skeleton_equivalence CategoryTheory.ThinSkeleton.fromThinSkeletonEquivalence
+#align category_theory.thin_skeleton.from_thin_skeleton_equivalence CategoryTheory.ThinSkeleton.fromThinSkeletonEquivalence
 
 /-- The equivalence between the thin skeleton and the category itself. -/
 noncomputable def equivalence : ThinSkeleton C ≌ C :=
@@ -262,8 +259,7 @@ variable {C}
 
 theorem equiv_of_both_ways {X Y : C} (f : X ⟶ Y) (g : Y ⟶ X) : X ≈ Y :=
   ⟨iso_of_both_ways f g⟩
-#align
-  category_theory.thin_skeleton.equiv_of_both_ways CategoryTheory.ThinSkeleton.equiv_of_both_ways
+#align category_theory.thin_skeleton.equiv_of_both_ways CategoryTheory.ThinSkeleton.equiv_of_both_ways
 
 instance thinSkeletonPartialOrder : PartialOrder (ThinSkeleton C) :=
   { CategoryTheory.ThinSkeleton.preorder C with
@@ -272,8 +268,7 @@ instance thinSkeletonPartialOrder : PartialOrder (ThinSkeleton C) :=
         (by
           rintro _ _ ⟨f⟩ ⟨g⟩
           apply Quotient.sound (equiv_of_both_ways f g)) }
-#align
-  category_theory.thin_skeleton.thin_skeleton_partial_order CategoryTheory.ThinSkeleton.thinSkeletonPartialOrder
+#align category_theory.thin_skeleton.thin_skeleton_partial_order CategoryTheory.ThinSkeleton.thinSkeletonPartialOrder
 
 theorem skeletal : Skeletal (ThinSkeleton C) := fun X Y =>
   Quotient.induction_on₂ X Y fun x y h => h.elim fun i => i.1.le.antisymm i.2.le
@@ -300,14 +295,12 @@ noncomputable def thinSkeletonIsSkeleton : IsSkeletonOf C (ThinSkeleton C) (from
     where
   skel := skeletal
   eqv := ThinSkeleton.fromThinSkeletonEquivalence C
-#align
-  category_theory.thin_skeleton.thin_skeleton_is_skeleton CategoryTheory.ThinSkeleton.thinSkeletonIsSkeleton
+#align category_theory.thin_skeleton.thin_skeleton_is_skeleton CategoryTheory.ThinSkeleton.thinSkeletonIsSkeleton
 
 noncomputable instance isSkeletonOfInhabited :
     Inhabited (IsSkeletonOf C (ThinSkeleton C) (fromThinSkeleton C)) :=
   ⟨thinSkeletonIsSkeleton⟩
-#align
-  category_theory.thin_skeleton.is_skeleton_of_inhabited CategoryTheory.ThinSkeleton.isSkeletonOfInhabited
+#align category_theory.thin_skeleton.is_skeleton_of_inhabited CategoryTheory.ThinSkeleton.isSkeletonOfInhabited
 
 end
 
@@ -344,8 +337,7 @@ the `thin_skeleton C` is order isomorphic to `α`.
 noncomputable def Equivalence.thinSkeletonOrderIso [Quiver.IsThin C] (e : C ≌ α) :
     ThinSkeleton C ≃o α :=
   ((ThinSkeleton.equivalence C).trans e).toOrderIso
-#align
-  category_theory.equivalence.thin_skeleton_order_iso CategoryTheory.Equivalence.thinSkeletonOrderIso
+#align category_theory.equivalence.thin_skeleton_order_iso CategoryTheory.Equivalence.thinSkeletonOrderIso
 
 end
 

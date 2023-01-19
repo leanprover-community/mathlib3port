@@ -71,8 +71,7 @@ instance setoidPrestructure : L.Prestructure ((u : Filter α).productSetoid M) :
         simp only [Set.mem_interᵢ, Set.mem_setOf_eq] at *
         rw [funext ha2]
         exact ha1 }
-#align
-  first_order.language.ultraproduct.setoid_prestructure FirstOrder.Language.Ultraproduct.setoidPrestructure
+#align first_order.language.ultraproduct.setoid_prestructure FirstOrder.Language.Ultraproduct.setoidPrestructure
 
 variable {M} {u}
 
@@ -96,8 +95,7 @@ theorem term_realize_cast {β : Type _} (x : β → ∀ a, M a) (t : L.term β) 
   · rfl
   · simp only [term.realize, t_ih]
     rfl
-#align
-  first_order.language.ultraproduct.term_realize_cast FirstOrder.Language.Ultraproduct.term_realize_cast
+#align first_order.language.ultraproduct.term_realize_cast FirstOrder.Language.Ultraproduct.term_realize_cast
 
 variable [∀ a : α, Nonempty (M a)]
 
@@ -146,8 +144,7 @@ theorem bounded_formula_realize_cast {β : Type _} {n : ℕ} (φ : L.BoundedForm
       exact Filter.mem_of_superset h fun a ha => Classical.epsilon_spec ha
     · rw [Filter.eventually_iff] at *
       exact Filter.mem_of_superset h fun a ha => ha (m a)
-#align
-  first_order.language.ultraproduct.bounded_formula_realize_cast FirstOrder.Language.Ultraproduct.bounded_formula_realize_cast
+#align first_order.language.ultraproduct.bounded_formula_realize_cast FirstOrder.Language.Ultraproduct.bounded_formula_realize_cast
 
 theorem realize_formula_cast {β : Type _} (φ : L.Formula β) (x : β → ∀ a, M a) :
     (φ.realize fun i => (x i : (u : Filter α).product M)) ↔
@@ -155,8 +152,7 @@ theorem realize_formula_cast {β : Type _} (φ : L.Formula β) (x : β → ∀ a
   by
   simp_rw [formula.realize, ← bounded_formula_realize_cast φ x, iff_eq_eq]
   exact congr rfl (Subsingleton.elim _ _)
-#align
-  first_order.language.ultraproduct.realize_formula_cast FirstOrder.Language.Ultraproduct.realize_formula_cast
+#align first_order.language.ultraproduct.realize_formula_cast FirstOrder.Language.Ultraproduct.realize_formula_cast
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -166,8 +162,7 @@ theorem sentence_realize (φ : L.Sentence) : (u : Filter α).product M ⊨ φ �
   by
   simp_rw [sentence.realize, ← realize_formula_cast φ, iff_eq_eq]
   exact congr rfl (Subsingleton.elim _ _)
-#align
-  first_order.language.ultraproduct.sentence_realize FirstOrder.Language.Ultraproduct.sentence_realize
+#align first_order.language.ultraproduct.sentence_realize FirstOrder.Language.Ultraproduct.sentence_realize
 
 instance : Nonempty ((u : Filter α).product M) :=
   letI : ∀ a, Inhabited (M a) := fun _ => Classical.inhabitedOfNonempty'

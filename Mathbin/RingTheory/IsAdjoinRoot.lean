@@ -181,8 +181,7 @@ theorem repr_zero_mem_span (h : IsAdjoinRoot S f) : h.repr 0 ∈ Ideal.span ({f}
 theorem repr_add_sub_repr_add_repr_mem_span (h : IsAdjoinRoot S f) (x y : S) :
     h.repr (x + y) - (h.repr x + h.repr y) ∈ Ideal.span ({f} : Set R[X]) := by
   rw [← h.ker_map, RingHom.mem_ker, map_sub, h.map_repr, map_add, h.map_repr, h.map_repr, sub_self]
-#align
-  is_adjoin_root.repr_add_sub_repr_add_repr_mem_span IsAdjoinRoot.repr_add_sub_repr_add_repr_mem_span
+#align is_adjoin_root.repr_add_sub_repr_add_repr_mem_span IsAdjoinRoot.repr_add_sub_repr_add_repr_mem_span
 
 /-- Extensionality of the `is_adjoin_root` structure itself. See `is_adjoin_root_monic.ext_elem`
 for extensionality of the ring elements. -/

@@ -142,16 +142,14 @@ theorem Equiv.age_eq_age (MN : M ≃[L] N) : L.age M = L.age N :=
 theorem StructureCat.Fg.mem_age_of_equiv {M N : Bundled L.StructureCat} (h : StructureCat.Fg L M)
     (MN : Nonempty (M ≃[L] N)) : N ∈ L.age M :=
   ⟨MN.some.fg_iff.1 h, ⟨MN.some.symm.toEmbedding⟩⟩
-#align
-  first_order.language.Structure.fg.mem_age_of_equiv FirstOrder.Language.StructureCat.Fg.mem_age_of_equiv
+#align first_order.language.Structure.fg.mem_age_of_equiv FirstOrder.Language.StructureCat.Fg.mem_age_of_equiv
 
 theorem Hereditary.is_equiv_invariant_of_fg (h : Hereditary K)
     (fg : ∀ M : Bundled.{w} L.StructureCat, M ∈ K → StructureCat.Fg L M)
     (M N : Bundled.{w} L.StructureCat) (hn : Nonempty (M ≃[L] N)) : M ∈ K ↔ N ∈ K :=
   ⟨fun MK => h M MK ((fg M MK).mem_age_of_equiv hn), fun NK =>
     h N NK ((fg N NK).mem_age_of_equiv ⟨hn.some.symm⟩)⟩
-#align
-  first_order.language.hereditary.is_equiv_invariant_of_fg FirstOrder.Language.Hereditary.is_equiv_invariant_of_fg
+#align first_order.language.hereditary.is_equiv_invariant_of_fg FirstOrder.Language.Hereditary.is_equiv_invariant_of_fg
 
 variable (M)
 
@@ -261,8 +259,7 @@ theorem exists_countable_is_age_of_iff [Countable (Σl, L.Functions l)] :
   · rintro ⟨Kn, eqinv, cq, hfg, hp, jep⟩
     obtain ⟨M, hM, rfl⟩ := exists_cg_is_age_of Kn eqinv cq hfg hp jep
     exact ⟨M, Structure.cg_iff_countable.1 hM, rfl⟩
-#align
-  first_order.language.exists_countable_is_age_of_iff FirstOrder.Language.exists_countable_is_age_of_iff
+#align first_order.language.exists_countable_is_age_of_iff FirstOrder.Language.exists_countable_is_age_of_iff
 
 variable {K} (L) (M)
 
@@ -304,15 +301,13 @@ theorem IsUltrahomogeneous.amalgamation_age (h : L.IsUltrahomogeneous M) : Amalg
     substructure.coe_subtype, embedding.equiv_range_apply] at hgn
   simp only [embedding.comp_apply, Equiv.coe_toEmbedding, substructure.coe_inclusion,
     Set.coe_inclusion, embedding.equiv_range_apply, hgn]
-#align
-  first_order.language.is_ultrahomogeneous.amalgamation_age FirstOrder.Language.IsUltrahomogeneous.amalgamation_age
+#align first_order.language.is_ultrahomogeneous.amalgamation_age FirstOrder.Language.IsUltrahomogeneous.amalgamation_age
 
 theorem IsUltrahomogeneous.age_is_fraisse [Countable M] (h : L.IsUltrahomogeneous M) :
     IsFraisse (L.age M) :=
   ⟨age.nonempty M, fun _ hN => hN.1, age.is_equiv_invariant L M, age.countable_quotient M,
     age.hereditary M, age.joint_embedding M, h.amalgamation_age⟩
-#align
-  first_order.language.is_ultrahomogeneous.age_is_fraisse FirstOrder.Language.IsUltrahomogeneous.age_is_fraisse
+#align first_order.language.is_ultrahomogeneous.age_is_fraisse FirstOrder.Language.IsUltrahomogeneous.age_is_fraisse
 
 namespace IsFraisseLimit
 
@@ -320,8 +315,7 @@ namespace IsFraisseLimit
 theorem is_fraisse [Countable (Σl, L.Functions l)] [Countable M] (h : IsFraisseLimit K M) :
     IsFraisse K :=
   (congr rfl h.age).mp h.ultrahomogeneous.age_is_fraisse
-#align
-  first_order.language.is_fraisse_limit.is_fraisse FirstOrder.Language.IsFraisseLimit.is_fraisse
+#align first_order.language.is_fraisse_limit.is_fraisse FirstOrder.Language.IsFraisseLimit.is_fraisse
 
 end IsFraisseLimit
 

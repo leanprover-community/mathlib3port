@@ -183,8 +183,7 @@ theorem preimage_symm_proj_inter (s : Set B) :
 theorem target_inter_preimage_symm_source_eq (e f : Pretrivialization F proj) :
     f.target ∩ f.toLocalEquiv.symm ⁻¹' e.source = (e.baseSet ∩ f.baseSet) ×ˢ univ := by
   rw [inter_comm, f.target_eq, e.source_eq, f.preimage_symm_proj_inter]
-#align
-  pretrivialization.target_inter_preimage_symm_source_eq Pretrivialization.target_inter_preimage_symm_source_eq
+#align pretrivialization.target_inter_preimage_symm_source_eq Pretrivialization.target_inter_preimage_symm_source_eq
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem trans_source (e f : Pretrivialization F proj) :
@@ -352,8 +351,7 @@ theorem mk_proj_snd' (ex : proj x ∈ e.baseSet) : (proj x, (e x).2) = e x :=
 theorem source_inter_preimage_target_inter (s : Set (B × F)) :
     e.source ∩ e ⁻¹' (e.target ∩ s) = e.source ∩ e ⁻¹' s :=
   e.toLocalHomeomorph.source_inter_preimage_target_inter s
-#align
-  trivialization.source_inter_preimage_target_inter Trivialization.source_inter_preimage_target_inter
+#align trivialization.source_inter_preimage_target_inter Trivialization.source_inter_preimage_target_inter
 
 @[simp, mfld_simps]
 theorem coe_mk (e : LocalHomeomorph Z (B × F)) (i j k l m) (x : Z) :
@@ -464,16 +462,14 @@ def sourceHomeomorphBaseSetProd : e.source ≃ₜ e.baseSet × F :=
 theorem source_homeomorph_base_set_prod_apply (p : e.source) :
     e.sourceHomeomorphBaseSetProd p = (⟨proj p, e.mem_source.mp p.2⟩, (e p).2) :=
   e.preimage_homeomorph_apply subset_rfl ⟨p, e.mem_source.mp p.2⟩
-#align
-  trivialization.source_homeomorph_base_set_prod_apply Trivialization.source_homeomorph_base_set_prod_apply
+#align trivialization.source_homeomorph_base_set_prod_apply Trivialization.source_homeomorph_base_set_prod_apply
 
 @[simp]
 theorem source_homeomorph_base_set_prod_symm_apply (p : e.baseSet × F) :
     e.sourceHomeomorphBaseSetProd.symm p =
       ⟨e.symm (p.1, p.2), (e.sourceHomeomorphBaseSetProd.symm p).2⟩ :=
   rfl
-#align
-  trivialization.source_homeomorph_base_set_prod_symm_apply Trivialization.source_homeomorph_base_set_prod_symm_apply
+#align trivialization.source_homeomorph_base_set_prod_symm_apply Trivialization.source_homeomorph_base_set_prod_symm_apply
 
 /-- Each fiber of a trivialization is homeomorphic to the specified fiber. -/
 def preimageSingletonHomeomorph {b : B} (hb : b ∈ e.baseSet) : proj ⁻¹' {b} ≃ₜ F :=
@@ -486,16 +482,14 @@ def preimageSingletonHomeomorph {b : B} (hb : b ∈ e.baseSet) : proj ⁻¹' {b}
 theorem preimage_singleton_homeomorph_apply {b : B} (hb : b ∈ e.baseSet) (p : proj ⁻¹' {b}) :
     e.preimageSingletonHomeomorph hb p = (e p).2 :=
   rfl
-#align
-  trivialization.preimage_singleton_homeomorph_apply Trivialization.preimage_singleton_homeomorph_apply
+#align trivialization.preimage_singleton_homeomorph_apply Trivialization.preimage_singleton_homeomorph_apply
 
 @[simp]
 theorem preimage_singleton_homeomorph_symm_apply {b : B} (hb : b ∈ e.baseSet) (p : F) :
     (e.preimageSingletonHomeomorph hb).symm p =
       ⟨e.symm (b, p), by rw [mem_preimage, e.proj_symm_apply' hb, mem_singleton_iff]⟩ :=
   rfl
-#align
-  trivialization.preimage_singleton_homeomorph_symm_apply Trivialization.preimage_singleton_homeomorph_symm_apply
+#align trivialization.preimage_singleton_homeomorph_symm_apply Trivialization.preimage_singleton_homeomorph_symm_apply
 
 /-- In the domain of a bundle trivialization, the projection is continuous-/
 theorem continuous_at_proj (ex : x ∈ e.source) : ContinuousAt proj x :=

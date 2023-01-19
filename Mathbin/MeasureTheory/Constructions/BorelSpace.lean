@@ -103,8 +103,7 @@ theorem TopologicalSpace.IsTopologicalBasis.borel_eq_generate_from [TopologicalS
     [SecondCountableTopology α] {s : Set (Set α)} (hs : IsTopologicalBasis s) :
     borel α = generateFrom s :=
   borel_eq_generate_from_of_subbasis hs.eq_generate_from
-#align
-  topological_space.is_topological_basis.borel_eq_generate_from TopologicalSpace.IsTopologicalBasis.borel_eq_generate_from
+#align topological_space.is_topological_basis.borel_eq_generate_from TopologicalSpace.IsTopologicalBasis.borel_eq_generate_from
 
 theorem is_pi_system_is_open [TopologicalSpace α] : IsPiSystem (IsOpen : Set α → Prop) :=
   fun s hs t ht hst => IsOpen.inter hs ht
@@ -367,15 +366,13 @@ theorem MeasurableSet.nhds_within_is_measurably_generated {s : Set α} (hs : Mea
     (a : α) : (𝓝[s] a).IsMeasurablyGenerated :=
   haveI := hs.principal_is_measurably_generated
   Filter.inf_is_measurably_generated _ _
-#align
-  measurable_set.nhds_within_is_measurably_generated MeasurableSet.nhds_within_is_measurably_generated
+#align measurable_set.nhds_within_is_measurably_generated MeasurableSet.nhds_within_is_measurably_generated
 
 -- see Note [lower instance priority]
 instance (priority := 100) OpensMeasurableSpace.to_measurable_singleton_class [T1Space α] :
     MeasurableSingletonClass α :=
   ⟨fun x => is_closed_singleton.MeasurableSet⟩
-#align
-  opens_measurable_space.to_measurable_singleton_class OpensMeasurableSpace.to_measurable_singleton_class
+#align opens_measurable_space.to_measurable_singleton_class OpensMeasurableSpace.to_measurable_singleton_class
 
 instance Pi.opens_measurable_space {ι : Type _} {π : ι → Type _} [Countable ι]
     [t' : ∀ i, TopologicalSpace (π i)] [∀ i, MeasurableSpace (π i)]
@@ -1570,8 +1567,7 @@ theorem measure_eq_measure_preimage_add_measure_tsum_Ico_zpow [MeasurableSpace �
     · intro n
       exact hs.inter (hf measurable_set_Ico)
   rw [A, B, C, add_assoc]
-#align
-  measure_eq_measure_preimage_add_measure_tsum_Ico_zpow measure_eq_measure_preimage_add_measure_tsum_Ico_zpow
+#align measure_eq_measure_preimage_add_measure_tsum_Ico_zpow measure_eq_measure_preimage_add_measure_tsum_Ico_zpow
 
 section PseudoMetricSpace
 

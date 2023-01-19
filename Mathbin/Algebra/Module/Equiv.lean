@@ -692,8 +692,7 @@ def automorphismGroup.toLinearMapMonoidHom : (M ≃ₗ[R] M) →* M →ₗ[R] M
   toFun := coe
   map_one' := rfl
   map_mul' _ _ := rfl
-#align
-  linear_equiv.automorphism_group.to_linear_map_monoid_hom LinearEquiv.automorphismGroup.toLinearMapMonoidHom
+#align linear_equiv.automorphism_group.to_linear_map_monoid_hom LinearEquiv.automorphismGroup.toLinearMapMonoidHom
 
 /-- The tautological action by `M ≃ₗ[R] M` on `M`.
 

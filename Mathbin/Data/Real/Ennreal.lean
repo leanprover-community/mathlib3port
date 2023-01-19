@@ -2007,8 +2007,7 @@ def orderIsoIicOneBirational : ℝ≥0∞ ≃o Iic (1 : ℝ≥0∞) :=
 theorem order_iso_Iic_one_birational_symm_apply (x : Iic (1 : ℝ≥0∞)) :
     orderIsoIicOneBirational.symm x = (x⁻¹ - 1)⁻¹ :=
   rfl
-#align
-  ennreal.order_iso_Iic_one_birational_symm_apply Ennreal.order_iso_Iic_one_birational_symm_apply
+#align ennreal.order_iso_Iic_one_birational_symm_apply Ennreal.order_iso_Iic_one_birational_symm_apply
 
 /-- Order isomorphism between an initial interval in `ℝ≥0∞` and an initial interval in `ℝ≥0`. -/
 @[simps apply_coe]
@@ -2037,8 +2036,7 @@ def orderIsoUnitIntervalBirational : ℝ≥0∞ ≃o Icc (0 : ℝ) 1 :=
 theorem order_iso_unit_interval_birational_apply_coe (x : ℝ≥0∞) :
     (orderIsoUnitIntervalBirational x : ℝ) = (x⁻¹ + 1)⁻¹.toReal :=
   rfl
-#align
-  ennreal.order_iso_unit_interval_birational_apply_coe Ennreal.order_iso_unit_interval_birational_apply_coe
+#align ennreal.order_iso_unit_interval_birational_apply_coe Ennreal.order_iso_unit_interval_birational_apply_coe
 
 theorem exists_inv_nat_lt {a : ℝ≥0∞} (h : a ≠ 0) : ∃ n : ℕ, (n : ℝ≥0∞)⁻¹ < a :=
   inv_inv a ▸ by simp only [Ennreal.inv_lt_inv, Ennreal.exists_nat_gt (inv_ne_top.2 h)]

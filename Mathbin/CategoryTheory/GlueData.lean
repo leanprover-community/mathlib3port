@@ -134,8 +134,7 @@ theorem t'_comp_eq_pullback_symmetry (i j k : D.J) :
   · exact is_iso.eq_inv_of_hom_inv_id (D.cocycle _ _ _)
   · rw [← cancel_mono (pullback.fst : pullback (D.f i j) (D.f i k) ⟶ _)]
     simp [t_fac, t_fac_assoc]
-#align
-  category_theory.glue_data.t'_comp_eq_pullback_symmetry CategoryTheory.GlueData.t'_comp_eq_pullback_symmetry
+#align category_theory.glue_data.t'_comp_eq_pullback_symmetry CategoryTheory.GlueData.t'_comp_eq_pullback_symmetry
 
 /-- (Implementation) The disjoint union of `U i`. -/
 def sigmaOpens [HasCoproduct D.U] : C :=
@@ -250,8 +249,7 @@ theorem types_ι_jointly_surjective (D : GlueData (Type _)) (x : D.glued) :
         (colimit.iso_colimit_cocone (types.coproduct_colimit_cocone _)).hom_inv_id x']
   rcases(colimit.iso_colimit_cocone (types.coproduct_colimit_cocone _)).Hom x' with ⟨i, y⟩
   exact ⟨i, y, by simpa [← multicoequalizer.ι_sigma_π, -multicoequalizer.ι_sigma_π] ⟩
-#align
-  category_theory.glue_data.types_ι_jointly_surjective CategoryTheory.GlueData.types_ι_jointly_surjective
+#align category_theory.glue_data.types_ι_jointly_surjective CategoryTheory.GlueData.types_ι_jointly_surjective
 
 variable (F : C ⥤ C') [H : ∀ i j k, PreservesLimit (cospan (D.f i j) (D.f i k)) F]
 
@@ -319,29 +317,25 @@ theorem diagram_iso_app_right (i : D.J) :
 theorem diagram_iso_hom_app_left (i : D.J × D.J) :
     (D.diagramIso F).Hom.app (WalkingMultispan.left i) = 𝟙 _ :=
   rfl
-#align
-  category_theory.glue_data.diagram_iso_hom_app_left CategoryTheory.GlueData.diagram_iso_hom_app_left
+#align category_theory.glue_data.diagram_iso_hom_app_left CategoryTheory.GlueData.diagram_iso_hom_app_left
 
 @[simp]
 theorem diagram_iso_hom_app_right (i : D.J) :
     (D.diagramIso F).Hom.app (WalkingMultispan.right i) = 𝟙 _ :=
   rfl
-#align
-  category_theory.glue_data.diagram_iso_hom_app_right CategoryTheory.GlueData.diagram_iso_hom_app_right
+#align category_theory.glue_data.diagram_iso_hom_app_right CategoryTheory.GlueData.diagram_iso_hom_app_right
 
 @[simp]
 theorem diagram_iso_inv_app_left (i : D.J × D.J) :
     (D.diagramIso F).inv.app (WalkingMultispan.left i) = 𝟙 _ :=
   rfl
-#align
-  category_theory.glue_data.diagram_iso_inv_app_left CategoryTheory.GlueData.diagram_iso_inv_app_left
+#align category_theory.glue_data.diagram_iso_inv_app_left CategoryTheory.GlueData.diagram_iso_inv_app_left
 
 @[simp]
 theorem diagram_iso_inv_app_right (i : D.J) :
     (D.diagramIso F).inv.app (WalkingMultispan.right i) = 𝟙 _ :=
   rfl
-#align
-  category_theory.glue_data.diagram_iso_inv_app_right CategoryTheory.GlueData.diagram_iso_inv_app_right
+#align category_theory.glue_data.diagram_iso_inv_app_right CategoryTheory.GlueData.diagram_iso_inv_app_right
 
 variable [HasMulticoequalizer D.diagram] [PreservesColimit D.diagram.multispan F]
 
@@ -349,8 +343,7 @@ omit H
 
 theorem hasColimitMultispanComp : HasColimit (D.diagram.multispan ⋙ F) :=
   ⟨⟨⟨_, PreservesColimit.preserves (colimit.isColimit _)⟩⟩⟩
-#align
-  category_theory.glue_data.has_colimit_multispan_comp CategoryTheory.GlueData.hasColimitMultispanComp
+#align category_theory.glue_data.has_colimit_multispan_comp CategoryTheory.GlueData.hasColimitMultispanComp
 
 include H
 
@@ -358,8 +351,7 @@ attribute [local instance] has_colimit_multispan_comp
 
 theorem has_colimit_map_glue_data_diagram : HasMulticoequalizer (D.mapGlueData F).diagram :=
   hasColimitOfIso (D.diagramIso F).symm
-#align
-  category_theory.glue_data.has_colimit_map_glue_data_diagram CategoryTheory.GlueData.has_colimit_map_glue_data_diagram
+#align category_theory.glue_data.has_colimit_map_glue_data_diagram CategoryTheory.GlueData.has_colimit_map_glue_data_diagram
 
 attribute [local instance] has_colimit_map_glue_data_diagram
 
@@ -404,8 +396,7 @@ def vPullbackConeIsLimitOfMap (i j : D.J) [ReflectsLimit (cospan (D.ι i) (D.ι 
   · rintro (_ | _ | _)
     change _ = _ ≫ (_ ≫ _) ≫ _
     all_goals change _ = 𝟙 _ ≫ _ ≫ _; simpa
-#align
-  category_theory.glue_data.V_pullback_cone_is_limit_of_map CategoryTheory.GlueData.vPullbackConeIsLimitOfMap
+#align category_theory.glue_data.V_pullback_cone_is_limit_of_map CategoryTheory.GlueData.vPullbackConeIsLimitOfMap
 
 omit H
 

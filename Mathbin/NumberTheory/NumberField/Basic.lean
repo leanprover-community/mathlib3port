@@ -86,8 +86,7 @@ theorem is_integral_of_mem_ring_of_integers {K : Type _} [Field K] {x : K} (hx :
   refine' ⟨P, hPm, _⟩
   rw [← Polynomial.aeval_def, ← Subalgebra.coe_eq_zero, Polynomial.aeval_subalgebra_coe,
     Polynomial.aeval_def, Subtype.coe_mk, hP]
-#align
-  number_field.is_integral_of_mem_ring_of_integers NumberField.is_integral_of_mem_ring_of_integers
+#align number_field.is_integral_of_mem_ring_of_integers NumberField.is_integral_of_mem_ring_of_integers
 
 /-- Given an algebra between two fields, create an algebra between their two rings of integers.
 

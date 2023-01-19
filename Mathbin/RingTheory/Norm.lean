@@ -131,8 +131,7 @@ theorem PowerBasis.norm_gen_eq_coeff_zero_minpoly (pb : PowerBasis R S) :
     norm R pb.gen = (-1) ^ pb.dim * coeff (minpoly R pb.gen) 0 := by
   rw [norm_eq_matrix_det pb.basis, det_eq_sign_charpoly_coeff, charpoly_left_mul_matrix,
     Fintype.card_fin]
-#align
-  algebra.power_basis.norm_gen_eq_coeff_zero_minpoly Algebra.PowerBasis.norm_gen_eq_coeff_zero_minpoly
+#align algebra.power_basis.norm_gen_eq_coeff_zero_minpoly Algebra.PowerBasis.norm_gen_eq_coeff_zero_minpoly
 
 /-- Given `pb : power_basis R S`, then the norm of `pb.gen` is
 `((minpoly R pb.gen).map (algebra_map R F)).roots.prod`. -/
@@ -231,8 +230,7 @@ theorem IntermediateField.AdjoinSimple.norm_gen_eq_one {x : L} (hx : ¬IsIntegra
   refine' is_integral_of_mem_of_fg K⟮⟯.toSubalgebra _ x _
   · exact (Submodule.fg_iff_finite_dimensional _).mpr (of_fintype_basis b)
   · exact IntermediateField.subset_adjoin K _ (Set.mem_singleton x)
-#align
-  intermediate_field.adjoin_simple.norm_gen_eq_one IntermediateField.AdjoinSimple.norm_gen_eq_one
+#align intermediate_field.adjoin_simple.norm_gen_eq_one IntermediateField.AdjoinSimple.norm_gen_eq_one
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 theorem IntermediateField.AdjoinSimple.norm_gen_eq_prod_roots (x : L)
@@ -252,8 +250,7 @@ theorem IntermediateField.AdjoinSimple.norm_gen_eq_prod_roots (x : L)
       rw [adjoin.power_basis_gen hx, minpoly.eq_of_algebra_map_eq injKxL hx'] <;>
     try simp only [adjoin_simple.algebra_map_gen _ _]
   exact hf
-#align
-  intermediate_field.adjoin_simple.norm_gen_eq_prod_roots IntermediateField.AdjoinSimple.norm_gen_eq_prod_roots
+#align intermediate_field.adjoin_simple.norm_gen_eq_prod_roots IntermediateField.AdjoinSimple.norm_gen_eq_prod_roots
 
 end IntermediateField
 

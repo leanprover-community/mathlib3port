@@ -116,8 +116,7 @@ The converse of `comp_of_mono`.
 theorem cancel_right_of_mono {f₁ : X ⟶ Y} {f₂ : Y ⟶ Z} [Mono f₂]
     (big_k : IsKernelPair (f₁ ≫ f₂) a b) : IsKernelPair f₁ a b :=
   cancel_right (by rw [← cancel_mono f₂, assoc, assoc, big_k.w]) big_k
-#align
-  category_theory.is_kernel_pair.cancel_right_of_mono CategoryTheory.IsKernelPair.cancel_right_of_mono
+#align category_theory.is_kernel_pair.cancel_right_of_mono CategoryTheory.IsKernelPair.cancel_right_of_mono
 
 /--
 If `(a,b)` is a kernel pair for `f₁` and `f₂` is mono, then `(a,b)` is a kernel pair for `f₁ ≫ f₂`.
@@ -217,8 +216,7 @@ theorem mono_of_is_iso_fst (h : IsKernelPair f a b) [IsIso a] : Mono f :=
   intro Z g₁ g₂ e
   obtain ⟨l', rfl, rfl⟩ := limits.pullback_cone.is_limit.lift' h.is_limit _ _ e
   rw [is_pullback.cone_fst, h₂]
-#align
-  category_theory.is_kernel_pair.mono_of_is_iso_fst CategoryTheory.IsKernelPair.mono_of_is_iso_fst
+#align category_theory.is_kernel_pair.mono_of_is_iso_fst CategoryTheory.IsKernelPair.mono_of_is_iso_fst
 
 theorem is_iso_of_mono (h : IsKernelPair f a b) [Mono f] : IsIso a :=
   by
@@ -236,8 +234,7 @@ theorem of_is_iso_of_mono [IsIso a] [Mono f] : IsKernelPair f a a :=
   convert_to is_pullback a (a ≫ 𝟙 X) (𝟙 X ≫ f) f
   · rw [category.comp_id]; · rw [category.id_comp]
   exact (is_pullback.of_horiz_is_iso ⟨rfl⟩).pasteVert (is_kernel_pair.id_of_mono f)
-#align
-  category_theory.is_kernel_pair.of_is_iso_of_mono CategoryTheory.IsKernelPair.of_is_iso_of_mono
+#align category_theory.is_kernel_pair.of_is_iso_of_mono CategoryTheory.IsKernelPair.of_is_iso_of_mono
 
 end IsKernelPair
 

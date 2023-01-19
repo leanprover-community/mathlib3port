@@ -759,8 +759,7 @@ def polynomialQuotientEquivQuotientPolynomial (I : Ideal R) :
       simp only [← smul_X_eq_monomial, ← C_mul' a (X ^ n), Quotient.lift_mk,
         Submodule.Quotient.quot_mk_eq_mk, quotient.mk_eq_mk, eval₂_X_pow, eval₂_smul,
         coe_eval₂_ring_hom, RingHom.map_pow, eval₂_C, RingHom.coe_comp, RingHom.map_mul, eval₂_X]
-#align
-  ideal.polynomial_quotient_equiv_quotient_polynomial Ideal.polynomialQuotientEquivQuotientPolynomial
+#align ideal.polynomial_quotient_equiv_quotient_polynomial Ideal.polynomialQuotientEquivQuotientPolynomial
 
 @[simp]
 theorem polynomial_quotient_equiv_quotient_polynomial_symm_mk (I : Ideal R) (f : R[X]) :
@@ -768,8 +767,7 @@ theorem polynomial_quotient_equiv_quotient_polynomial_symm_mk (I : Ideal R) (f :
   rw [polynomial_quotient_equiv_quotient_polynomial, RingEquiv.symm_mk, [anonymous],
     Ideal.Quotient.lift_mk, coe_eval₂_ring_hom, eval₂_eq_eval_map, ← Polynomial.map_map, ←
     eval₂_eq_eval_map, Polynomial.eval₂_C_X]
-#align
-  ideal.polynomial_quotient_equiv_quotient_polynomial_symm_mk Ideal.polynomial_quotient_equiv_quotient_polynomial_symm_mk
+#align ideal.polynomial_quotient_equiv_quotient_polynomial_symm_mk Ideal.polynomial_quotient_equiv_quotient_polynomial_symm_mk
 
 @[simp]
 theorem polynomial_quotient_equiv_quotient_polynomial_map_mk (I : Ideal R) (f : R[X]) :
@@ -777,8 +775,7 @@ theorem polynomial_quotient_equiv_quotient_polynomial_map_mk (I : Ideal R) (f : 
   by
   apply (polynomial_quotient_equiv_quotient_polynomial I).symm.Injective
   rw [RingEquiv.symm_apply_apply, polynomial_quotient_equiv_quotient_polynomial_symm_mk]
-#align
-  ideal.polynomial_quotient_equiv_quotient_polynomial_map_mk Ideal.polynomial_quotient_equiv_quotient_polynomial_map_mk
+#align ideal.polynomial_quotient_equiv_quotient_polynomial_map_mk Ideal.polynomial_quotient_equiv_quotient_polynomial_map_mk
 
 /-- If `P` is a prime ideal of `R`, then `R[x]/(P)` is an integral domain. -/
 theorem is_domain_map_C_quotient {P : Ideal R} (H : IsPrime P) :
@@ -1059,14 +1056,12 @@ theorem exists_irreducible_of_nat_degree_pos {R : Type u} [CommRing R] [IsDomain
   exists_irreducible_of_degree_pos <| by
     contrapose! hf
     exact nat_degree_le_of_degree_le hf
-#align
-  polynomial.exists_irreducible_of_nat_degree_pos Polynomial.exists_irreducible_of_nat_degree_pos
+#align polynomial.exists_irreducible_of_nat_degree_pos Polynomial.exists_irreducible_of_nat_degree_pos
 
 theorem exists_irreducible_of_nat_degree_ne_zero {R : Type u} [CommRing R] [IsDomain R]
     [WfDvdMonoid R] {f : R[X]} (hf : f.natDegree ≠ 0) : ∃ g, Irreducible g ∧ g ∣ f :=
   exists_irreducible_of_nat_degree_pos <| Nat.pos_of_ne_zero hf
-#align
-  polynomial.exists_irreducible_of_nat_degree_ne_zero Polynomial.exists_irreducible_of_nat_degree_ne_zero
+#align polynomial.exists_irreducible_of_nat_degree_ne_zero Polynomial.exists_irreducible_of_nat_degree_ne_zero
 
 theorem linear_independent_powers_iff_aeval (f : M →ₗ[R] M) (v : M) :
     (LinearIndependent R fun n : ℕ => (f ^ n) v) ↔ ∀ p : R[X], aeval f p v = 0 → p = 0 :=
@@ -1139,8 +1134,7 @@ theorem sup_ker_aeval_eq_ker_aeval_mul_of_coprime (f : M →ₗ[R] M) {p q : R[X
       LinearMap.mem_ker.1 h_eval₂_qpp', _⟩
   rw [add_comm, mul_comm p p', mul_comm q q']
   simpa using congr_arg (fun p : R[X] => aeval f p v) hpq'
-#align
-  polynomial.sup_ker_aeval_eq_ker_aeval_mul_of_coprime Polynomial.sup_ker_aeval_eq_ker_aeval_mul_of_coprime
+#align polynomial.sup_ker_aeval_eq_ker_aeval_mul_of_coprime Polynomial.sup_ker_aeval_eq_ker_aeval_mul_of_coprime
 
 end Polynomial
 
@@ -1357,8 +1351,7 @@ def quotientEquivQuotientMvPolynomial (I : Ideal R) :
         eval₂_X]
       simp only [hp]
   commutes' r := eval₂_hom_C _ _ (Ideal.Quotient.mk I r)
-#align
-  mv_polynomial.quotient_equiv_quotient_mv_polynomial MvPolynomial.quotientEquivQuotientMvPolynomial
+#align mv_polynomial.quotient_equiv_quotient_mv_polynomial MvPolynomial.quotientEquivQuotientMvPolynomial
 
 end MvPolynomial
 
@@ -1390,8 +1383,7 @@ private theorem unique_factorization_monoid_of_fintype [Fintype σ] :
       infer_instance
     · apply (finSuccEquiv D d).toMulEquiv.symm.UniqueFactorizationMonoid
       exact Polynomial.unique_factorization_monoid
-#align
-  mv_polynomial.unique_factorization_monoid_of_fintype mv_polynomial.unique_factorization_monoid_of_fintype
+#align mv_polynomial.unique_factorization_monoid_of_fintype mv_polynomial.unique_factorization_monoid_of_fintype
 
 instance (priority := 100) : UniqueFactorizationMonoid (MvPolynomial σ D) :=
   by

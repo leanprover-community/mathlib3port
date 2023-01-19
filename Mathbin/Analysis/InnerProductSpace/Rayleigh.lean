@@ -84,24 +84,21 @@ theorem image_rayleigh_eq_image_rayleigh_sphere {r : ℝ} (hr : 0 < r) :
       exact hxT
   · rintro ⟨x, hx, hxT⟩
     exact ⟨x, ne_zero_of_mem_sphere hr.ne' ⟨x, hx⟩, hxT⟩
-#align
-  continuous_linear_map.image_rayleigh_eq_image_rayleigh_sphere ContinuousLinearMap.image_rayleigh_eq_image_rayleigh_sphere
+#align continuous_linear_map.image_rayleigh_eq_image_rayleigh_sphere ContinuousLinearMap.image_rayleigh_eq_image_rayleigh_sphere
 
 theorem supr_rayleigh_eq_supr_rayleigh_sphere {r : ℝ} (hr : 0 < r) :
     (⨆ x : { x : E // x ≠ 0 }, rayleigh_quotient x) = ⨆ x : sphere (0 : E) r, rayleigh_quotient x :=
   show (⨆ x : ({0} : Set E)ᶜ, rayleigh_quotient x) = _ by
     simp only [← @supₛ_image' _ _ _ _ rayleigh_quotient,
       T.image_rayleigh_eq_image_rayleigh_sphere hr]
-#align
-  continuous_linear_map.supr_rayleigh_eq_supr_rayleigh_sphere ContinuousLinearMap.supr_rayleigh_eq_supr_rayleigh_sphere
+#align continuous_linear_map.supr_rayleigh_eq_supr_rayleigh_sphere ContinuousLinearMap.supr_rayleigh_eq_supr_rayleigh_sphere
 
 theorem infi_rayleigh_eq_infi_rayleigh_sphere {r : ℝ} (hr : 0 < r) :
     (⨅ x : { x : E // x ≠ 0 }, rayleigh_quotient x) = ⨅ x : sphere (0 : E) r, rayleigh_quotient x :=
   show (⨅ x : ({0} : Set E)ᶜ, rayleigh_quotient x) = _ by
     simp only [← @infₛ_image' _ _ _ _ rayleigh_quotient,
       T.image_rayleigh_eq_image_rayleigh_sphere hr]
-#align
-  continuous_linear_map.infi_rayleigh_eq_infi_rayleigh_sphere ContinuousLinearMap.infi_rayleigh_eq_infi_rayleigh_sphere
+#align continuous_linear_map.infi_rayleigh_eq_infi_rayleigh_sphere ContinuousLinearMap.infi_rayleigh_eq_infi_rayleigh_sphere
 
 end ContinuousLinearMap
 
@@ -120,8 +117,7 @@ theorem LinearMap.IsSymmetric.hasStrictFderivAtReApplyInnerSelf {T : F →L[ℝ]
   simp_rw [_root_.bit0, ContinuousLinearMap.comp_apply, ContinuousLinearMap.add_apply,
     innerSL_apply, fderiv_inner_clm_apply, id.def, ContinuousLinearMap.prod_apply,
     ContinuousLinearMap.id_apply, hT.apply_clm x₀ y, real_inner_comm _ x₀]
-#align
-  linear_map.is_symmetric.has_strict_fderiv_at_re_apply_inner_self LinearMap.IsSymmetric.hasStrictFderivAtReApplyInnerSelf
+#align linear_map.is_symmetric.has_strict_fderiv_at_re_apply_inner_self LinearMap.IsSymmetric.hasStrictFderivAtReApplyInnerSelf
 
 variable [CompleteSpace F] {T : F →L[ℝ] F}
 
@@ -148,8 +144,7 @@ theorem linearly_dependent_of_is_local_extr_on (hT : IsSelfAdjoint T) {x₀ : F}
   change a • innerSL x₀ + b • innerSL (T x₀) = 0
   apply smul_right_injective (F →L[ℝ] ℝ) (two_ne_zero : (2 : ℝ) ≠ 0)
   simpa only [_root_.bit0, add_smul, smul_add, one_smul, add_zero] using h₂
-#align
-  is_self_adjoint.linearly_dependent_of_is_local_extr_on IsSelfAdjoint.linearly_dependent_of_is_local_extr_on
+#align is_self_adjoint.linearly_dependent_of_is_local_extr_on IsSelfAdjoint.linearly_dependent_of_is_local_extr_on
 
 theorem eq_smul_self_of_is_local_extr_on_real (hT : IsSelfAdjoint T) {x₀ : F}
     (hextr : IsLocalExtrOn T.reApplyInnerSelf (sphere (0 : F) ‖x₀‖) x₀) :
@@ -174,8 +169,7 @@ theorem eq_smul_self_of_is_local_extr_on_real (hT : IsSelfAdjoint T) {x₀ : F}
   field_simp
   simpa [inner_smul_left, real_inner_self_eq_norm_mul_norm, sq] using
     congr_arg (fun x => ⟪x, x₀⟫_ℝ) hc
-#align
-  is_self_adjoint.eq_smul_self_of_is_local_extr_on_real IsSelfAdjoint.eq_smul_self_of_is_local_extr_on_real
+#align is_self_adjoint.eq_smul_self_of_is_local_extr_on_real IsSelfAdjoint.eq_smul_self_of_is_local_extr_on_real
 
 end Real
 
@@ -193,8 +187,7 @@ theorem eq_smul_self_of_is_local_extr_on (hT : IsSelfAdjoint T) {x₀ : E}
   letI := InnerProductSpace.isROrCToReal 𝕜 E
   let hSA := hT.is_symmetric.restrict_scalars.to_self_adjoint.prop
   exact hSA.eq_smul_self_of_is_local_extr_on_real hextr
-#align
-  is_self_adjoint.eq_smul_self_of_is_local_extr_on IsSelfAdjoint.eq_smul_self_of_is_local_extr_on
+#align is_self_adjoint.eq_smul_self_of_is_local_extr_on IsSelfAdjoint.eq_smul_self_of_is_local_extr_on
 
 /-- For a self-adjoint operator `T`, a local extremum of the Rayleigh quotient of `T` on a sphere
 centred at the origin is an eigenvector of `T`. -/
@@ -205,8 +198,7 @@ theorem has_eigenvector_of_is_local_extr_on (hT : IsSelfAdjoint T) {x₀ : E} (h
   refine' ⟨_, hx₀⟩
   rw [Module.EndCat.mem_eigenspace_iff]
   exact hT.eq_smul_self_of_is_local_extr_on hextr
-#align
-  is_self_adjoint.has_eigenvector_of_is_local_extr_on IsSelfAdjoint.has_eigenvector_of_is_local_extr_on
+#align is_self_adjoint.has_eigenvector_of_is_local_extr_on IsSelfAdjoint.has_eigenvector_of_is_local_extr_on
 
 /-- For a self-adjoint operator `T`, a maximum of the Rayleigh quotient of `T` on a sphere centred
 at the origin is an eigenvector of `T`, with eigenvalue the global supremum of the Rayleigh
@@ -280,8 +272,7 @@ theorem has_eigenvalue_supr_of_finite_dimensional (hT : T.IsSymmetric) :
     have : ‖x₀‖ ≠ 0 := by simp only [hx₀, norm_eq_zero, hx, Ne.def, not_false_iff]
     simpa [← norm_eq_zero, Ne.def]
   exact has_eigenvalue_of_has_eigenvector (T'.prop.has_eigenvector_of_is_max_on hx₀_ne this)
-#align
-  linear_map.is_symmetric.has_eigenvalue_supr_of_finite_dimensional LinearMap.IsSymmetric.has_eigenvalue_supr_of_finite_dimensional
+#align linear_map.is_symmetric.has_eigenvalue_supr_of_finite_dimensional LinearMap.IsSymmetric.has_eigenvalue_supr_of_finite_dimensional
 
 /-- The infimum of the Rayleigh quotient of a symmetric operator `T` on a nontrivial
 finite-dimensional vector space is an eigenvalue for that operator. -/
@@ -303,8 +294,7 @@ theorem has_eigenvalue_infi_of_finite_dimensional (hT : T.IsSymmetric) :
     have : ‖x₀‖ ≠ 0 := by simp only [hx₀, norm_eq_zero, hx, Ne.def, not_false_iff]
     simpa [← norm_eq_zero, Ne.def]
   exact has_eigenvalue_of_has_eigenvector (T'.prop.has_eigenvector_of_is_min_on hx₀_ne this)
-#align
-  linear_map.is_symmetric.has_eigenvalue_infi_of_finite_dimensional LinearMap.IsSymmetric.has_eigenvalue_infi_of_finite_dimensional
+#align linear_map.is_symmetric.has_eigenvalue_infi_of_finite_dimensional LinearMap.IsSymmetric.has_eigenvalue_infi_of_finite_dimensional
 
 omit _i
 
@@ -312,8 +302,7 @@ theorem subsingleton_of_no_eigenvalue_finite_dimensional (hT : T.IsSymmetric)
     (hT' : ∀ μ : 𝕜, Module.EndCat.eigenspace (T : E →ₗ[𝕜] E) μ = ⊥) : Subsingleton E :=
   (subsingleton_or_nontrivial E).resolve_right fun h =>
     absurd (hT' _) hT.has_eigenvalue_supr_of_finite_dimensional
-#align
-  linear_map.is_symmetric.subsingleton_of_no_eigenvalue_finite_dimensional LinearMap.IsSymmetric.subsingleton_of_no_eigenvalue_finite_dimensional
+#align linear_map.is_symmetric.subsingleton_of_no_eigenvalue_finite_dimensional LinearMap.IsSymmetric.subsingleton_of_no_eigenvalue_finite_dimensional
 
 end IsSymmetric
 

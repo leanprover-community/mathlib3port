@@ -254,8 +254,7 @@ theorem Function.Involutive.exists_mem_and_apply_eq_iff {f : α → α} (hf : Fu
   ⟨by
     rintro ⟨y, h, rfl⟩
     rwa [hf y], fun h => ⟨f x, h, hf _⟩⟩
-#align
-  function.involutive.exists_mem_and_apply_eq_iff Function.Involutive.exists_mem_and_apply_eq_iff
+#align function.involutive.exists_mem_and_apply_eq_iff Function.Involutive.exists_mem_and_apply_eq_iff
 -/
 
 #print List.mem_map_of_involutive /-
@@ -4218,7 +4217,7 @@ theorem [anonymous] (f : α → β → β) (b : β) :
   | a, x :: l => by
     let t := scanr_aux_cons x l
     simp only [scanr, scanr_aux, t, foldr_cons]
-#align list.scanr_aux_cons[anonymous]
+#align list.scanr_aux_cons [anonymous]
 
 #print List.scanr_cons /-
 @[simp]
@@ -4514,7 +4513,7 @@ where `ys` is an accumulating parameter for the initial segment of elements not 
 def [anonymous] {α : Type u} (P : α → Prop) [DecidablePred P] : List α → List α → List (List α)
   | [], xs => [xs]
   | h :: t, xs => if P h then xs :: split_on_p_aux' t [] else split_on_p_aux' t (xs ++ [h])
-#align list.split_on_p_aux'[anonymous]
+#align list.split_on_p_aux' [anonymous]
 
 /- warning: list.split_on_p_aux_eq clashes with [anonymous] -> [anonymous]
 warning: list.split_on_p_aux_eq -> [anonymous] is a dubious translation:
@@ -4532,7 +4531,7 @@ theorem [anonymous] : [anonymous] p xs ys = splitOnPAux p xs ((· ++ ·) ys) :=
   · congr
     ext
     simp
-#align list.split_on_p_aux_eq[anonymous]
+#align list.split_on_p_aux_eq [anonymous]
 
 /- warning: list.split_on_p_aux_nil clashes with [anonymous] -> [anonymous]
 warning: list.split_on_p_aux_nil -> [anonymous] is a dubious translation:
@@ -4545,7 +4544,7 @@ theorem [anonymous] : splitOnPAux p xs id = [anonymous] p xs [] :=
   by
   rw [split_on_p_aux_eq]
   rfl
-#align list.split_on_p_aux_nil[anonymous]
+#align list.split_on_p_aux_nil [anonymous]
 
 /-- The original list `L` can be recovered by joining the lists produced by `split_on_p p L`,
 interspersed with the elements `L.filter p`. -/
@@ -4576,7 +4575,7 @@ theorem [anonymous] : splitOnPAux p xs f ≠ [] :=
   by
   induction' xs with _ _ ih generalizing f; · trivial
   simp only [split_on_p_aux]; split_ifs; · trivial; exact ih _
-#align list.split_on_p_aux_ne_nil[anonymous]
+#align list.split_on_p_aux_ne_nil [anonymous]
 
 /- warning: list.split_on_p_aux_spec clashes with [anonymous] -> [anonymous]
 warning: list.split_on_p_aux_spec -> [anonymous] is a dubious translation:
@@ -4592,7 +4591,7 @@ theorem [anonymous] : splitOnPAux p xs f = (xs.splitOnP p).modifyHead f :=
   simp only [split_on_p_aux]; split_ifs; · simp
   rw [ih fun l => f (hd :: l), ih fun l => id (hd :: l)]
   simp
-#align list.split_on_p_aux_spec[anonymous]
+#align list.split_on_p_aux_spec [anonymous]
 
 theorem splitOnP_ne_nil : xs.splitOnP p ≠ [] :=
   [anonymous] _ _ id
@@ -6802,7 +6801,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.to_chunks_nil [anonymous]ₓ'. -/
 @[simp]
 theorem [anonymous] (n) : @toChunks α n [] = [] := by cases n <;> rfl
-#align list.to_chunks_nil[anonymous]
+#align list.to_chunks_nil [anonymous]
 
 /- warning: list.to_chunks_aux_eq clashes with [anonymous] -> [anonymous]
 warning: list.to_chunks_aux_eq -> [anonymous] is a dubious translation:
@@ -6815,7 +6814,7 @@ theorem [anonymous] (n) : ∀ xs i, @toChunksAux α n xs i = (xs.take i, (xs.dro
   | [], i => by cases i <;> rfl
   | x :: xs, 0 => by rw [to_chunks_aux, drop, to_chunks] <;> cases to_chunks_aux n xs n <;> rfl
   | x :: xs, i + 1 => by rw [to_chunks_aux, to_chunks_aux_eq] <;> rfl
-#align list.to_chunks_aux_eq[anonymous]
+#align list.to_chunks_aux_eq [anonymous]
 
 /- warning: list.to_chunks_eq_cons' clashes with [anonymous] -> [anonymous]
 warning: list.to_chunks_eq_cons' -> [anonymous] is a dubious translation:
@@ -6829,7 +6828,7 @@ theorem [anonymous] (n) :
       xs.toChunks (n + 1) = xs.take (n + 1) :: (xs.drop (n + 1)).toChunks (n + 1)
   | [], e => (e rfl).elim
   | x :: xs, _ => by rw [to_chunks, to_chunks_aux_eq] <;> rfl
-#align list.to_chunks_eq_cons'[anonymous]
+#align list.to_chunks_eq_cons' [anonymous]
 
 /- warning: list.to_chunks_eq_cons clashes with [anonymous] -> [anonymous]
 warning: list.to_chunks_eq_cons -> [anonymous] is a dubious translation:
@@ -6843,7 +6842,7 @@ theorem [anonymous] :
       xs.toChunks n = xs.take n :: (xs.drop n).toChunks n
   | 0, _, e => (e rfl).elim
   | n + 1, xs, _ => [anonymous] _
-#align list.to_chunks_eq_cons[anonymous]
+#align list.to_chunks_eq_cons [anonymous]
 
 /- warning: list.to_chunks_aux_join clashes with [anonymous] -> [anonymous]
 warning: list.to_chunks_aux_join -> [anonymous] is a dubious translation:
@@ -6860,7 +6859,7 @@ theorem [anonymous] {n} : ∀ {xs i l L}, @toChunksAux α n xs i = (l, L) → l 
       · rw [to_chunks_aux, e', to_chunks_aux] at e
         cases e
         exact (congr_arg (cons x) (to_chunks_aux_join e') : _)
-#align list.to_chunks_aux_join[anonymous]
+#align list.to_chunks_aux_join [anonymous]
 
 /- warning: list.to_chunks_join clashes with [anonymous] -> [anonymous]
 warning: list.to_chunks_join -> [anonymous] is a dubious translation:
@@ -6877,7 +6876,7 @@ theorem [anonymous] : ∀ n xs, (@toChunks α n xs).join = xs
     rw [to_chunks]
     cases' e : to_chunks_aux n xs n with l L
     exact (congr_arg (cons x) (to_chunks_aux_join e) : _)
-#align list.to_chunks_join[anonymous]
+#align list.to_chunks_join [anonymous]
 
 /- warning: list.to_chunks_length_le clashes with [anonymous] -> [anonymous]
 warning: list.to_chunks_length_le -> [anonymous] is a dubious translation:
@@ -6898,7 +6897,7 @@ theorem [anonymous] : ∀ n xs, n ≠ 0 → ∀ l : List α, l ∈ @toChunks α 
     · refine' IH _ _ h
       simp only [Measure, InvImage, length_drop]
       exact tsub_lt_self (length_pos_iff_ne_nil.2 x0) (succ_pos _)
-#align list.to_chunks_length_le[anonymous]
+#align list.to_chunks_length_le [anonymous]
 
 end ToChunks
 

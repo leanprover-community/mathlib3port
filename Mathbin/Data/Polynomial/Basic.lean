@@ -780,8 +780,7 @@ theorem add_submonoid_closure_set_of_eq_monomial :
   refine' AddSubmonoid.closure_mono (Set.image_subset_iff.2 _)
   rintro _ ⟨n, a, rfl⟩
   exact ⟨n, a, Polynomial.of_finsupp_single _ _⟩
-#align
-  polynomial.add_submonoid_closure_set_of_eq_monomial Polynomial.add_submonoid_closure_set_of_eq_monomial
+#align polynomial.add_submonoid_closure_set_of_eq_monomial Polynomial.add_submonoid_closure_set_of_eq_monomial
 
 theorem add_hom_ext {M : Type _} [AddMonoid M] {f g : R[X] →+ M}
     (h : ∀ n a, f (monomial n a) = g (monomial n a)) : f = g :=

@@ -748,8 +748,7 @@ theorem le_nhds_of_seq_tendsto_nhds ⦃a : α⦄ (ha : Tendsto (seq hf U_mem) at
       · have := le_max_left m n
         exact Set.Subset.trans (set_seq_prod_subset hf U_mem this this) hm
       · exact hm (hn _ <| le_max_right m n))
-#align
-  sequentially_complete.le_nhds_of_seq_tendsto_nhds SequentiallyComplete.le_nhds_of_seq_tendsto_nhds
+#align sequentially_complete.le_nhds_of_seq_tendsto_nhds SequentiallyComplete.le_nhds_of_seq_tendsto_nhds
 
 end SequentiallyComplete
 
@@ -773,8 +772,7 @@ theorem complete_of_convergent_controlled_sequences (U : ℕ → Set (α × α))
   · rcases hU'.1 hs with ⟨N, hN⟩
     exact ⟨N, subset.trans (inter_subset_right _ _) hN⟩
   · exact inter_subset_left _ _ (seq_pair_mem hf Hmem hm hn)
-#align
-  uniform_space.complete_of_convergent_controlled_sequences UniformSpace.complete_of_convergent_controlled_sequences
+#align uniform_space.complete_of_convergent_controlled_sequences UniformSpace.complete_of_convergent_controlled_sequences
 
 /-- A sequentially complete uniform space with a countable basis of the uniformity filter is
 complete. -/

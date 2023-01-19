@@ -263,16 +263,14 @@ variable (X Y)
 theorem ofHasBinaryProduct' [HasBinaryProduct X Y] [HasTerminal C] :
     IsPullback Limits.prod.fst Limits.prod.snd (terminal.from X) (terminal.from Y) :=
   ofIsProduct (limit.isLimit _) terminalIsTerminal
-#align
-  category_theory.is_pullback.of_has_binary_product' CategoryTheory.IsPullback.ofHasBinaryProduct'
+#align category_theory.is_pullback.of_has_binary_product' CategoryTheory.IsPullback.ofHasBinaryProduct'
 
 open ZeroObject
 
 theorem ofHasBinaryProduct [HasBinaryProduct X Y] [HasZeroObject C] [HasZeroMorphisms C] :
     IsPullback Limits.prod.fst Limits.prod.snd (0 : X ⟶ 0) (0 : Y ⟶ 0) := by
   convert of_is_product (limit.is_limit _) has_zero_object.zero_is_terminal
-#align
-  category_theory.is_pullback.of_has_binary_product CategoryTheory.IsPullback.ofHasBinaryProduct
+#align category_theory.is_pullback.of_has_binary_product CategoryTheory.IsPullback.ofHasBinaryProduct
 
 variable {X Y}
 
@@ -288,8 +286,7 @@ theorem iso_pullback_hom_fst (h : IsPullback fst snd f g) [HasPullback f g] :
   by
   dsimp [iso_pullback, cone, comm_sq.cone]
   simp
-#align
-  category_theory.is_pullback.iso_pullback_hom_fst CategoryTheory.IsPullback.iso_pullback_hom_fst
+#align category_theory.is_pullback.iso_pullback_hom_fst CategoryTheory.IsPullback.iso_pullback_hom_fst
 
 @[simp]
 theorem iso_pullback_hom_snd (h : IsPullback fst snd f g) [HasPullback f g] :
@@ -297,20 +294,17 @@ theorem iso_pullback_hom_snd (h : IsPullback fst snd f g) [HasPullback f g] :
   by
   dsimp [iso_pullback, cone, comm_sq.cone]
   simp
-#align
-  category_theory.is_pullback.iso_pullback_hom_snd CategoryTheory.IsPullback.iso_pullback_hom_snd
+#align category_theory.is_pullback.iso_pullback_hom_snd CategoryTheory.IsPullback.iso_pullback_hom_snd
 
 @[simp]
 theorem iso_pullback_inv_fst (h : IsPullback fst snd f g) [HasPullback f g] :
     h.isoPullback.inv ≫ fst = pullback.fst := by simp [iso.inv_comp_eq]
-#align
-  category_theory.is_pullback.iso_pullback_inv_fst CategoryTheory.IsPullback.iso_pullback_inv_fst
+#align category_theory.is_pullback.iso_pullback_inv_fst CategoryTheory.IsPullback.iso_pullback_inv_fst
 
 @[simp]
 theorem iso_pullback_inv_snd (h : IsPullback fst snd f g) [HasPullback f g] :
     h.isoPullback.inv ≫ snd = pullback.snd := by simp [iso.inv_comp_eq]
-#align
-  category_theory.is_pullback.iso_pullback_inv_snd CategoryTheory.IsPullback.iso_pullback_inv_snd
+#align category_theory.is_pullback.iso_pullback_inv_snd CategoryTheory.IsPullback.iso_pullback_inv_snd
 
 theorem ofIsoPullback (h : CommSq fst snd f g) [HasPullback f g] (i : P ≅ pullback f g)
     (w₁ : i.Hom ≫ pullback.fst = fst) (w₂ : i.Hom ≫ pullback.snd = snd) : IsPullback fst snd f g :=
@@ -401,16 +395,14 @@ variable (X Y)
 theorem ofHasBinaryCoproduct' [HasBinaryCoproduct X Y] [HasInitial C] :
     IsPushout (initial.to _) (initial.to _) (coprod.inl : X ⟶ _) (coprod.inr : Y ⟶ _) :=
   ofIsCoproduct (colimit.isColimit _) initialIsInitial
-#align
-  category_theory.is_pushout.of_has_binary_coproduct' CategoryTheory.IsPushout.ofHasBinaryCoproduct'
+#align category_theory.is_pushout.of_has_binary_coproduct' CategoryTheory.IsPushout.ofHasBinaryCoproduct'
 
 open ZeroObject
 
 theorem ofHasBinaryCoproduct [HasBinaryCoproduct X Y] [HasZeroObject C] [HasZeroMorphisms C] :
     IsPushout (0 : 0 ⟶ X) (0 : 0 ⟶ Y) coprod.inl coprod.inr := by
   convert of_is_coproduct (colimit.is_colimit _) has_zero_object.zero_is_initial
-#align
-  category_theory.is_pushout.of_has_binary_coproduct CategoryTheory.IsPushout.ofHasBinaryCoproduct
+#align category_theory.is_pushout.of_has_binary_coproduct CategoryTheory.IsPushout.ofHasBinaryCoproduct
 
 variable {X Y}
 
@@ -633,21 +625,18 @@ theorem ofIsBilimit' {b : BinaryBicone X Y} (h : b.IsBilimit) :
 theorem ofHasBinaryBiproduct (X Y : C) [HasBinaryBiproduct X Y] :
     IsPullback (0 : 0 ⟶ X) (0 : 0 ⟶ Y) biprod.inl biprod.inr :=
   ofIsBilimit' (BinaryBiproduct.isBilimit X Y)
-#align
-  category_theory.is_pullback.of_has_binary_biproduct CategoryTheory.IsPullback.ofHasBinaryBiproduct
+#align category_theory.is_pullback.of_has_binary_biproduct CategoryTheory.IsPullback.ofHasBinaryBiproduct
 
 instance has_pullback_biprod_fst_biprod_snd [HasBinaryBiproduct X Y] :
     HasPullback (biprod.inl : X ⟶ _) (biprod.inr : Y ⟶ _) :=
   HasLimit.mk ⟨_, (ofHasBinaryBiproduct X Y).IsLimit⟩
-#align
-  category_theory.is_pullback.has_pullback_biprod_fst_biprod_snd CategoryTheory.IsPullback.has_pullback_biprod_fst_biprod_snd
+#align category_theory.is_pullback.has_pullback_biprod_fst_biprod_snd CategoryTheory.IsPullback.has_pullback_biprod_fst_biprod_snd
 
 /-- The pullback of `biprod.inl` and `biprod.inr` is the zero object. -/
 def pullbackBiprodInlBiprodInr [HasBinaryBiproduct X Y] :
     pullback (biprod.inl : X ⟶ _) (biprod.inr : Y ⟶ _) ≅ 0 :=
   limit.isoLimitCone ⟨_, (ofHasBinaryBiproduct X Y).IsLimit⟩
-#align
-  category_theory.is_pullback.pullback_biprod_inl_biprod_inr CategoryTheory.IsPullback.pullbackBiprodInlBiprodInr
+#align category_theory.is_pullback.pullback_biprod_inl_biprod_inr CategoryTheory.IsPullback.pullbackBiprodInlBiprodInr
 
 end
 
@@ -850,21 +839,18 @@ theorem ofIsBilimit' {b : BinaryBicone X Y} (h : b.IsBilimit) :
 theorem ofHasBinaryBiproduct (X Y : C) [HasBinaryBiproduct X Y] :
     IsPushout biprod.fst biprod.snd (0 : X ⟶ 0) (0 : Y ⟶ 0) :=
   ofIsBilimit' (BinaryBiproduct.isBilimit X Y)
-#align
-  category_theory.is_pushout.of_has_binary_biproduct CategoryTheory.IsPushout.ofHasBinaryBiproduct
+#align category_theory.is_pushout.of_has_binary_biproduct CategoryTheory.IsPushout.ofHasBinaryBiproduct
 
 instance has_pushout_biprod_fst_biprod_snd [HasBinaryBiproduct X Y] :
     HasPushout (biprod.fst : _ ⟶ X) (biprod.snd : _ ⟶ Y) :=
   HasColimit.mk ⟨_, (ofHasBinaryBiproduct X Y).IsColimit⟩
-#align
-  category_theory.is_pushout.has_pushout_biprod_fst_biprod_snd CategoryTheory.IsPushout.has_pushout_biprod_fst_biprod_snd
+#align category_theory.is_pushout.has_pushout_biprod_fst_biprod_snd CategoryTheory.IsPushout.has_pushout_biprod_fst_biprod_snd
 
 /-- The pushout of `biprod.fst` and `biprod.snd` is the zero object. -/
 def pushoutBiprodFstBiprodSnd [HasBinaryBiproduct X Y] :
     pushout (biprod.fst : _ ⟶ X) (biprod.snd : _ ⟶ Y) ≅ 0 :=
   colimit.isoColimitCocone ⟨_, (ofHasBinaryBiproduct X Y).IsColimit⟩
-#align
-  category_theory.is_pushout.pushout_biprod_fst_biprod_snd CategoryTheory.IsPushout.pushoutBiprodFstBiprodSnd
+#align category_theory.is_pushout.pushout_biprod_fst_biprod_snd CategoryTheory.IsPushout.pushoutBiprodFstBiprodSnd
 
 end
 
@@ -934,8 +920,7 @@ variable {W X Y Z : C} {f : W ⟶ X} {g : W ⟶ Y} {h : X ⟶ Z} {i : Y ⟶ Z}
 theorem ofIsPullbackIsPushout (p₁ : IsPullback f g h i) (p₂ : IsPushout f g h i) :
     BicartesianSq f g h i :=
   BicartesianSq.mk p₁.to_comm_sq ⟨p₁.IsLimit⟩ ⟨p₂.IsColimit⟩
-#align
-  category_theory.bicartesian_sq.of_is_pullback_is_pushout CategoryTheory.BicartesianSq.ofIsPullbackIsPushout
+#align category_theory.bicartesian_sq.of_is_pullback_is_pushout CategoryTheory.BicartesianSq.ofIsPullbackIsPushout
 
 theorem flip (p : BicartesianSq f g h i) : BicartesianSq g f i h :=
   ofIsPullbackIsPushout p.toIsPullback.flip p.toIsPushout.flip

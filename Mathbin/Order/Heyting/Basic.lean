@@ -2248,8 +2248,7 @@ protected def Function.Injective.generalizedCoheytingAlgebra [HasSup α] [HasInf
     sdiff_le_iff := fun a b c => by
       change f _ ≤ _ ↔ f _ ≤ _
       erw [map_sdiff, map_sup, sdiff_le_iff] }
-#align
-  function.injective.generalized_coheyting_algebra Function.Injective.generalizedCoheytingAlgebra
+#align function.injective.generalized_coheyting_algebra Function.Injective.generalizedCoheytingAlgebra
 
 /- warning: function.injective.heyting_algebra -> Function.Injective.heytingAlgebra is a dubious translation:
 lean 3 declaration is

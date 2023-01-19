@@ -138,8 +138,7 @@ variable {R}
 theorem mem_resolvent_set_of_left_right_inverse {r : R} {a b c : A} (h₁ : (↑ₐ r - a) * b = 1)
     (h₂ : c * (↑ₐ r - a) = 1) : r ∈ resolventSet R a :=
   Units.isUnit ⟨↑ₐ r - a, b, h₁, by rwa [← left_inv_eq_right_inv h₂ h₁]⟩
-#align
-  spectrum.mem_resolvent_set_of_left_right_inverse spectrum.mem_resolvent_set_of_left_right_inverse
+#align spectrum.mem_resolvent_set_of_left_right_inverse spectrum.mem_resolvent_set_of_left_right_inverse
 
 theorem mem_resolvent_set_iff {r : R} {a : A} : r ∈ resolventSet R a ↔ IsUnit (↑ₐ r - a) :=
   Iff.rfl
@@ -516,8 +515,7 @@ theorem nonempty_of_is_alg_closed_of_finite_dimensional [IsAlgClosed 𝕜] [Nont
   rw [eq_prod_roots_of_monic_of_splits_id h_mon (IsAlgClosed.splits p)] at nu
   obtain ⟨k, hk, _⟩ := exists_mem_of_not_is_unit_aeval_prod (monic.ne_zero h_mon) nu
   exact ⟨k, hk⟩
-#align
-  spectrum.nonempty_of_is_alg_closed_of_finite_dimensional spectrum.nonempty_of_is_alg_closed_of_finite_dimensional
+#align spectrum.nonempty_of_is_alg_closed_of_finite_dimensional spectrum.nonempty_of_is_alg_closed_of_finite_dimensional
 
 end ScalarField
 

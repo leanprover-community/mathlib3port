@@ -172,8 +172,7 @@ theorem boundary_le_boundary_sup_sup_boundary_inf_left : ∂ a ≤ ∂ (a ⊔ b)
   · refine' le_sup_of_le_right _
     rw [hnot_le_iff_codisjoint_right]
     exact codisjoint_hnot_right.mono_right (hnot_anti inf_le_left)
-#align
-  coheyting.boundary_le_boundary_sup_sup_boundary_inf_left Coheyting.boundary_le_boundary_sup_sup_boundary_inf_left
+#align coheyting.boundary_le_boundary_sup_sup_boundary_inf_left Coheyting.boundary_le_boundary_sup_sup_boundary_inf_left
 -/
 
 #print Coheyting.boundary_le_boundary_sup_sup_boundary_inf_right /-
@@ -181,8 +180,7 @@ theorem boundary_le_boundary_sup_sup_boundary_inf_right : ∂ b ≤ ∂ (a ⊔ b
   by
   rw [@sup_comm _ _ a, inf_comm]
   exact boundary_le_boundary_sup_sup_boundary_inf_left
-#align
-  coheyting.boundary_le_boundary_sup_sup_boundary_inf_right Coheyting.boundary_le_boundary_sup_sup_boundary_inf_right
+#align coheyting.boundary_le_boundary_sup_sup_boundary_inf_right Coheyting.boundary_le_boundary_sup_sup_boundary_inf_right
 -/
 
 #print Coheyting.boundary_sup_sup_boundary_inf /-

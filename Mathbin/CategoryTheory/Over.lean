@@ -285,14 +285,12 @@ def iteratedSliceEquiv : Over f ≌ Over f.left
 theorem iterated_slice_forward_forget :
     iteratedSliceForward f ⋙ forget f.left = forget f ⋙ forget X :=
   rfl
-#align
-  category_theory.over.iterated_slice_forward_forget CategoryTheory.Over.iterated_slice_forward_forget
+#align category_theory.over.iterated_slice_forward_forget CategoryTheory.Over.iterated_slice_forward_forget
 
 theorem iterated_slice_backward_forget_forget :
     iteratedSliceBackward f ⋙ forget f ⋙ forget X = forget f.left :=
   rfl
-#align
-  category_theory.over.iterated_slice_backward_forget_forget CategoryTheory.Over.iterated_slice_backward_forget_forget
+#align category_theory.over.iterated_slice_backward_forget_forget CategoryTheory.Over.iterated_slice_backward_forget_forget
 
 end IteratedSlice
 

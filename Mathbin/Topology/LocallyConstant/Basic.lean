@@ -819,8 +819,7 @@ theorem apply_eq_of_is_preconnected {f : X → Y} (hf : IsLocallyConstant f) {s 
 theorem apply_eq_of_preconnected_space [PreconnectedSpace X] {f : X → Y} (hf : IsLocallyConstant f)
     (x y : X) : f x = f y :=
   hf.apply_eq_of_is_preconnected is_preconnected_univ trivial trivial
-#align
-  is_locally_constant.apply_eq_of_preconnected_space IsLocallyConstant.apply_eq_of_preconnected_space
+#align is_locally_constant.apply_eq_of_preconnected_space IsLocallyConstant.apply_eq_of_preconnected_space
 
 theorem eq_const [PreconnectedSpace X] {f : X → Y} (hf : IsLocallyConstant f) (x : X) :
     f = Function.const X (f x) :=
@@ -892,8 +891,7 @@ theorem of_constant_on_connected_components [LocallyConnectedSpace X] {f : X →
   by
   rw [iff_exists_open]
   exact fun x => ⟨connectedComponent x, is_open_connected_component, mem_connected_component, h x⟩
-#align
-  is_locally_constant.of_constant_on_connected_components IsLocallyConstant.of_constant_on_connected_components
+#align is_locally_constant.of_constant_on_connected_components IsLocallyConstant.of_constant_on_connected_components
 
 theorem of_constant_on_preconnected_clopens [LocallyConnectedSpace X] {f : X → Y}
     (h : ∀ U : Set X, IsPreconnected U → IsClopen U → ∀ x ∈ U, ∀ y ∈ U, f y = f x) :
@@ -901,8 +899,7 @@ theorem of_constant_on_preconnected_clopens [LocallyConnectedSpace X] {f : X →
   of_constant_on_connected_components fun x =>
     h (connectedComponent x) is_preconnected_connected_component is_clopen_connected_component x
       mem_connected_component
-#align
-  is_locally_constant.of_constant_on_preconnected_clopens IsLocallyConstant.of_constant_on_preconnected_clopens
+#align is_locally_constant.of_constant_on_preconnected_clopens IsLocallyConstant.of_constant_on_preconnected_clopens
 
 end IsLocallyConstant
 
@@ -1051,8 +1048,7 @@ theorem locally_constant_eq_of_fiber_zero_eq {X : Type _} [TopologicalSpace X]
   simp only [Set.ext_iff, mem_singleton_iff, mem_preimage] at h
   ext1 x
   exact Fin.fin_two_eq_of_eq_zero_iff (h x)
-#align
-  locally_constant.locally_constant_eq_of_fiber_zero_eq LocallyConstant.locally_constant_eq_of_fiber_zero_eq
+#align locally_constant.locally_constant_eq_of_fiber_zero_eq LocallyConstant.locally_constant_eq_of_fiber_zero_eq
 
 theorem range_finite [CompactSpace X] (f : LocallyConstant X Y) : (Set.range f).Finite :=
   f.IsLocallyConstant.range_finite
@@ -1066,8 +1062,7 @@ theorem apply_eq_of_is_preconnected (f : LocallyConstant X Y) {s : Set X} (hs : 
 theorem apply_eq_of_preconnected_space [PreconnectedSpace X] (f : LocallyConstant X Y) (x y : X) :
     f x = f y :=
   f.IsLocallyConstant.apply_eq_of_is_preconnected is_preconnected_univ trivial trivial
-#align
-  locally_constant.apply_eq_of_preconnected_space LocallyConstant.apply_eq_of_preconnected_space
+#align locally_constant.apply_eq_of_preconnected_space LocallyConstant.apply_eq_of_preconnected_space
 
 theorem eq_const [PreconnectedSpace X] (f : LocallyConstant X Y) (x : X) : f = const X (f x) :=
   ext fun y => apply_eq_of_preconnected_space f _ _

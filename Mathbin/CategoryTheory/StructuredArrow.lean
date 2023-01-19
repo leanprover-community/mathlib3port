@@ -121,13 +121,11 @@ instance proj_faithful : Faithful (proj S T) where map_injective' X Y := ext
 /-- The converse of this is true with additional assumptions, see `mono_iff_mono_right`. -/
 theorem mono_of_mono_right {A B : StructuredArrow S T} (f : A ⟶ B) [h : Mono f.right] : Mono f :=
   (proj S T).mono_of_mono_map h
-#align
-  category_theory.structured_arrow.mono_of_mono_right CategoryTheory.StructuredArrow.mono_of_mono_right
+#align category_theory.structured_arrow.mono_of_mono_right CategoryTheory.StructuredArrow.mono_of_mono_right
 
 theorem epi_of_epi_right {A B : StructuredArrow S T} (f : A ⟶ B) [h : Epi f.right] : Epi f :=
   (proj S T).epi_of_epi_map h
-#align
-  category_theory.structured_arrow.epi_of_epi_right CategoryTheory.StructuredArrow.epi_of_epi_right
+#align category_theory.structured_arrow.epi_of_epi_right CategoryTheory.StructuredArrow.epi_of_epi_right
 
 instance mono_hom_mk {A B : StructuredArrow S T} (f : A.right ⟶ B.right) (w) [h : Mono f] :
     Mono (homMk f w) :=
@@ -190,8 +188,7 @@ theorem map_comp {f : S ⟶ S'} {f' : S' ⟶ S''} {h : StructuredArrow S'' T} :
 instance proj_reflects_iso : ReflectsIsomorphisms (proj S T)
     where reflects Y Z f t :=
     ⟨⟨structured_arrow.hom_mk (inv ((proj S T).map f)) (by simp), by tidy⟩⟩
-#align
-  category_theory.structured_arrow.proj_reflects_iso CategoryTheory.StructuredArrow.proj_reflects_iso
+#align category_theory.structured_arrow.proj_reflects_iso CategoryTheory.StructuredArrow.proj_reflects_iso
 
 open CategoryTheory.Limits
 
@@ -239,8 +236,7 @@ instance small_proj_preimage_of_locally_small {𝒢 : Set C} [Small.{v₁} 𝒢]
     rw [this]
     infer_instance
   exact Set.ext fun X => ⟨fun h => ⟨⟨⟨_, h⟩, X.Hom⟩, (eq_mk _).symm⟩, by tidy⟩
-#align
-  category_theory.structured_arrow.small_proj_preimage_of_locally_small CategoryTheory.StructuredArrow.small_proj_preimage_of_locally_small
+#align category_theory.structured_arrow.small_proj_preimage_of_locally_small CategoryTheory.StructuredArrow.small_proj_preimage_of_locally_small
 
 end StructuredArrow
 
@@ -281,8 +277,7 @@ theorem mk_right (f : S.obj Y ⟶ T) : (mk f).right = ⟨⟨⟩⟩ :=
 @[simp]
 theorem mk_hom_eq_self (f : S.obj Y ⟶ T) : (mk f).Hom = f :=
   rfl
-#align
-  category_theory.costructured_arrow.mk_hom_eq_self CategoryTheory.CostructuredArrow.mk_hom_eq_self
+#align category_theory.costructured_arrow.mk_hom_eq_self CategoryTheory.CostructuredArrow.mk_hom_eq_self
 
 @[simp, reassoc.1]
 theorem w {A B : CostructuredArrow S T} (f : A ⟶ B) : S.map f.left ≫ B.Hom = A.Hom := by tidy
@@ -319,19 +314,16 @@ theorem ext_iff {A B : CostructuredArrow S T} (f g : A ⟶ B) : f = g ↔ f.left
 #align category_theory.costructured_arrow.ext_iff CategoryTheory.CostructuredArrow.ext_iff
 
 instance proj_faithful : Faithful (proj S T) where map_injective' X Y := ext
-#align
-  category_theory.costructured_arrow.proj_faithful CategoryTheory.CostructuredArrow.proj_faithful
+#align category_theory.costructured_arrow.proj_faithful CategoryTheory.CostructuredArrow.proj_faithful
 
 theorem mono_of_mono_left {A B : CostructuredArrow S T} (f : A ⟶ B) [h : Mono f.left] : Mono f :=
   (proj S T).mono_of_mono_map h
-#align
-  category_theory.costructured_arrow.mono_of_mono_left CategoryTheory.CostructuredArrow.mono_of_mono_left
+#align category_theory.costructured_arrow.mono_of_mono_left CategoryTheory.CostructuredArrow.mono_of_mono_left
 
 /-- The converse of this is true with additional assumptions, see `epi_iff_epi_left`. -/
 theorem epi_of_epi_left {A B : CostructuredArrow S T} (f : A ⟶ B) [h : Epi f.left] : Epi f :=
   (proj S T).epi_of_epi_map h
-#align
-  category_theory.costructured_arrow.epi_of_epi_left CategoryTheory.CostructuredArrow.epi_of_epi_left
+#align category_theory.costructured_arrow.epi_of_epi_left CategoryTheory.CostructuredArrow.epi_of_epi_left
 
 instance mono_hom_mk {A B : CostructuredArrow S T} (f : A.left ⟶ B.left) (w) [h : Mono f] :
     Mono (homMk f w) :=
@@ -394,8 +386,7 @@ theorem map_comp {f : T ⟶ T'} {f' : T' ⟶ T''} {h : CostructuredArrow S T} :
 instance proj_reflects_iso : ReflectsIsomorphisms (proj S T)
     where reflects Y Z f t :=
     ⟨⟨costructured_arrow.hom_mk (inv ((proj S T).map f)) (by simp), by tidy⟩⟩
-#align
-  category_theory.costructured_arrow.proj_reflects_iso CategoryTheory.CostructuredArrow.proj_reflects_iso
+#align category_theory.costructured_arrow.proj_reflects_iso CategoryTheory.CostructuredArrow.proj_reflects_iso
 
 open CategoryTheory.Limits
 
@@ -414,8 +405,7 @@ def mkIdTerminal [Full S] [Faithful S] : IsTerminal (mk (𝟙 (S.obj Y)))
     ext
     apply S.map_injective
     simpa only [hom_mk_left, S.image_preimage, ← w m] using (category.comp_id _).symm
-#align
-  category_theory.costructured_arrow.mk_id_terminal CategoryTheory.CostructuredArrow.mkIdTerminal
+#align category_theory.costructured_arrow.mk_id_terminal CategoryTheory.CostructuredArrow.mkIdTerminal
 
 variable {A : Type u₃} [Category.{v₃} A] {B : Type u₄} [Category.{v₄} B]
 
@@ -446,8 +436,7 @@ instance small_proj_preimage_of_locally_small {𝒢 : Set C} [Small.{v₁} 𝒢]
     rw [this]
     infer_instance
   exact Set.ext fun X => ⟨fun h => ⟨⟨⟨_, h⟩, X.Hom⟩, (eq_mk _).symm⟩, by tidy⟩
-#align
-  category_theory.costructured_arrow.small_proj_preimage_of_locally_small CategoryTheory.CostructuredArrow.small_proj_preimage_of_locally_small
+#align category_theory.costructured_arrow.small_proj_preimage_of_locally_small CategoryTheory.CostructuredArrow.small_proj_preimage_of_locally_small
 
 end CostructuredArrow
 
@@ -470,8 +459,7 @@ def toCostructuredArrow (F : C ⥤ D) (d : D) :
         dsimp
         rw [← op_comp, ← f.unop.w, functor.const_obj_map]
         erw [category.id_comp])
-#align
-  category_theory.structured_arrow.to_costructured_arrow CategoryTheory.StructuredArrow.toCostructuredArrow
+#align category_theory.structured_arrow.to_costructured_arrow CategoryTheory.StructuredArrow.toCostructuredArrow
 
 /-- For a functor `F : C ⥤ D` and an object `d : D`, we obtain a contravariant functor from the
 category of structured arrows `op d ⟶ F.op.obj c` to the category of costructured arrows
@@ -489,8 +477,7 @@ def toCostructuredArrow' (F : C ⥤ D) (d : D) :
         rw [← Quiver.Hom.unop_op (F.map (Quiver.Hom.unop f.unop.right)), ← unop_comp, ← F.op_map, ←
           f.unop.w, functor.const_obj_map]
         erw [category.id_comp])
-#align
-  category_theory.structured_arrow.to_costructured_arrow' CategoryTheory.StructuredArrow.toCostructuredArrow'
+#align category_theory.structured_arrow.to_costructured_arrow' CategoryTheory.StructuredArrow.toCostructuredArrow'
 
 end StructuredArrow
 
@@ -510,8 +497,7 @@ def toStructuredArrow (F : C ⥤ D) (d : D) : (CostructuredArrow F d)ᵒᵖ ⥤ 
         dsimp
         rw [← op_comp, f.unop.w, functor.const_obj_map]
         erw [category.comp_id])
-#align
-  category_theory.costructured_arrow.to_structured_arrow CategoryTheory.CostructuredArrow.toStructuredArrow
+#align category_theory.costructured_arrow.to_structured_arrow CategoryTheory.CostructuredArrow.toStructuredArrow
 
 /-- For a functor `F : C ⥤ D` and an object `d : D`, we obtain a contravariant functor from the
 category of costructured arrows `F.op.obj c ⟶ op d` to the category of structured arrows
@@ -528,8 +514,7 @@ def toStructuredArrow' (F : C ⥤ D) (d : D) : (CostructuredArrow F.op (op d))�
         rw [← Quiver.Hom.unop_op (F.map f.unop.left.unop), ← unop_comp, ← F.op_map, f.unop.w,
           functor.const_obj_map]
         erw [category.comp_id])
-#align
-  category_theory.costructured_arrow.to_structured_arrow' CategoryTheory.CostructuredArrow.toStructuredArrow'
+#align category_theory.costructured_arrow.to_structured_arrow' CategoryTheory.CostructuredArrow.toStructuredArrow'
 
 end CostructuredArrow
 
@@ -568,8 +553,7 @@ def costructuredArrowOpEquivalence (F : C ⥤ D) (d : D) :
       (fun X =>
         @StructuredArrow.isoMk _ _ _ _ _ _ (StructuredArrow.mk X.Hom) X (Iso.refl _) (by tidy))
       fun X Y f => by ext; dsimp; simp)
-#align
-  category_theory.costructured_arrow_op_equivalence CategoryTheory.costructuredArrowOpEquivalence
+#align category_theory.costructured_arrow_op_equivalence CategoryTheory.costructuredArrowOpEquivalence
 
 end CategoryTheory
 

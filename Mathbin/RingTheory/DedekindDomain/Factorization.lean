@@ -41,8 +41,7 @@ variable {R : Type _} [CommRing R] [IsDomain R] [IsDedekindDomain R] {K : Type _
   power of `v` dividing `I`. -/
 def IsDedekindDomain.HeightOneSpectrum.maxPowDividing (I : Ideal R) : Ideal R :=
   v.asIdeal ^ (Associates.mk v.asIdeal).count (Associates.mk I).factors
-#align
-  is_dedekind_domain.height_one_spectrum.max_pow_dividing IsDedekindDomain.HeightOneSpectrum.maxPowDividing
+#align is_dedekind_domain.height_one_spectrum.max_pow_dividing IsDedekindDomain.HeightOneSpectrum.maxPowDividing
 
 /-- Only finitely many maximal ideals of `R` divide a given nonzero ideal. -/
 theorem Ideal.finite_factors {I : Ideal R} (hI : I ≠ 0) :
@@ -183,8 +182,7 @@ theorem finprod_height_one_spectrum_factorization (I : Ideal R) (hI : I ≠ 0) :
   apply
     Ideal.finprod_count
       ⟨J, Ideal.isPrimeOfPrime (irreducible_iff_prime.mp hv), Irreducible.ne_zero hv⟩ I hI
-#align
-  ideal.finprod_height_one_spectrum_factorization Ideal.finprod_height_one_spectrum_factorization
+#align ideal.finprod_height_one_spectrum_factorization Ideal.finprod_height_one_spectrum_factorization
 
 /-- The ideal `I` equals the finprod `∏_v v^(val_v(I))`, when both sides are regarded as fractional
 ideals of `R`. -/
@@ -198,8 +196,7 @@ theorem finprod_height_one_spectrum_factorization_coe (I : Ideal R) (hI : I ≠ 
   rw [FractionalIdeal.coe_ideal_finprod R⁰ K (le_refl _)]
   simp_rw [IsDedekindDomain.HeightOneSpectrum.maxPowDividing, FractionalIdeal.coe_ideal_pow,
     zpow_ofNat]
-#align
-  ideal.finprod_height_one_spectrum_factorization_coe Ideal.finprod_height_one_spectrum_factorization_coe
+#align ideal.finprod_height_one_spectrum_factorization_coe Ideal.finprod_height_one_spectrum_factorization_coe
 
 end Ideal
 

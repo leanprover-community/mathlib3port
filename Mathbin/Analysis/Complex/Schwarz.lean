@@ -146,8 +146,7 @@ theorem affine_of_maps_to_ball_of_exists_norm_dslope_eq_div [CompleteSpace E]
     eq_on_of_is_preconnected_of_is_max_on_norm (convex_ball c R₁).IsPreconnected is_open_ball g_diff
       h_z₀ g_max hz
   simp [← this]
-#align
-  complex.affine_of_maps_to_ball_of_exists_norm_dslope_eq_div Complex.affine_of_maps_to_ball_of_exists_norm_dslope_eq_div
+#align complex.affine_of_maps_to_ball_of_exists_norm_dslope_eq_div Complex.affine_of_maps_to_ball_of_exists_norm_dslope_eq_div
 
 theorem affine_of_maps_to_ball_of_exists_norm_dslope_eq_div' [CompleteSpace E]
     [StrictConvexSpace ℝ E] (hd : DifferentiableOn ℂ f (ball c R₁))
@@ -156,8 +155,7 @@ theorem affine_of_maps_to_ball_of_exists_norm_dslope_eq_div' [CompleteSpace E]
     ∃ C : E, ‖C‖ = R₂ / R₁ ∧ Set.EqOn f (fun z => f c + (z - c) • C) (ball c R₁) :=
   let ⟨z₀, h_z₀, h_eq⟩ := h_z₀
   ⟨dslope f c z₀, h_eq, affine_of_maps_to_ball_of_exists_norm_dslope_eq_div hd h_maps h_z₀ h_eq⟩
-#align
-  complex.affine_of_maps_to_ball_of_exists_norm_dslope_eq_div' Complex.affine_of_maps_to_ball_of_exists_norm_dslope_eq_div'
+#align complex.affine_of_maps_to_ball_of_exists_norm_dslope_eq_div' Complex.affine_of_maps_to_ball_of_exists_norm_dslope_eq_div'
 
 /-- The **Schwarz Lemma**: if `f : ℂ → E` sends an open disk with center `c` and a positive radius
 `R₁` to an open ball with center `f c` and radius `R₂`, then the absolute value of the derivative of

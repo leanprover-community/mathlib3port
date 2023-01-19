@@ -118,8 +118,7 @@ theorem closed_ball_mem_vitali_family_of_dist_le_mul {K : ℝ} {x y : α} {r : �
     apply (measure_mono this).trans _
     refine' le_mul_of_one_le_left (zero_le _) _
     exact Ennreal.one_le_coe_iff.2 (le_max_right _ _)
-#align
-  is_doubling_measure.closed_ball_mem_vitali_family_of_dist_le_mul IsDoublingMeasure.closed_ball_mem_vitali_family_of_dist_le_mul
+#align is_doubling_measure.closed_ball_mem_vitali_family_of_dist_le_mul IsDoublingMeasure.closed_ball_mem_vitali_family_of_dist_le_mul
 
 theorem tendsto_closed_ball_filter_at {K : ℝ} {x : α} {ι : Type _} {l : Filter ι} (w : ι → α)
     (δ : ι → ℝ) (δlim : Tendsto δ l (𝓝[>] 0)) (xmem : ∀ᶠ j in l, x ∈ closedBall (w j) (K * δ j)) :
@@ -146,8 +145,7 @@ theorem tendsto_closed_ball_filter_at {K : ℝ} {x : α} {ι : Type _} {l : Filt
       simpa [abs_eq_self.mpr hj₀.le] using (lt_div_iff' hK).mp hjε
     simp only [mem_closed_ball] at hx hy⊢
     linarith [dist_triangle_right y x (w j)]
-#align
-  is_doubling_measure.tendsto_closed_ball_filter_at IsDoublingMeasure.tendsto_closed_ball_filter_at
+#align is_doubling_measure.tendsto_closed_ball_filter_at IsDoublingMeasure.tendsto_closed_ball_filter_at
 
 end
 
@@ -168,8 +166,7 @@ theorem ae_tendsto_measure_inter_div (S : Set α) (K : ℝ) :
   by
   filter_upwards [(VitaliFamily μ K).ae_tendsto_measure_inter_div
       S] with x hx ι l w δ δlim xmem using hx.comp (tendsto_closed_ball_filter_at μ _ _ δlim xmem)
-#align
-  is_doubling_measure.ae_tendsto_measure_inter_div IsDoublingMeasure.ae_tendsto_measure_inter_div
+#align is_doubling_measure.ae_tendsto_measure_inter_div IsDoublingMeasure.ae_tendsto_measure_inter_div
 
 /-- A version of *Lebesgue differentiation theorem* for a sequence of closed balls whose
 centers are not required to be fixed. -/

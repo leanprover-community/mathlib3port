@@ -86,14 +86,12 @@ theorem coe_cont_linear_eq_linear (f : P →A[R] Q) :
 theorem coe_mk_const_linear_eq_linear (f : P →ᵃ[R] Q) (h) :
     ((⟨f, h⟩ : P →A[R] Q).contLinear : V → W) = f.linear :=
   rfl
-#align
-  continuous_affine_map.coe_mk_const_linear_eq_linear ContinuousAffineMap.coe_mk_const_linear_eq_linear
+#align continuous_affine_map.coe_mk_const_linear_eq_linear ContinuousAffineMap.coe_mk_const_linear_eq_linear
 
 theorem coe_linear_eq_coe_cont_linear (f : P →A[R] Q) :
     ((f : P →ᵃ[R] Q).linear : V → W) = (⇑f.contLinear : V → W) :=
   rfl
-#align
-  continuous_affine_map.coe_linear_eq_coe_cont_linear ContinuousAffineMap.coe_linear_eq_coe_cont_linear
+#align continuous_affine_map.coe_linear_eq_coe_cont_linear ContinuousAffineMap.coe_linear_eq_coe_cont_linear
 
 include W₂
 
@@ -140,8 +138,7 @@ theorem cont_linear_eq_zero_iff_exists_const (f : P →A[R] Q) :
       rfl
   simp_rw [h₁, h₂]
   exact (f : P →ᵃ[R] Q).linear_eq_zero_iff_exists_const
-#align
-  continuous_affine_map.cont_linear_eq_zero_iff_exists_const ContinuousAffineMap.cont_linear_eq_zero_iff_exists_const
+#align continuous_affine_map.cont_linear_eq_zero_iff_exists_const ContinuousAffineMap.cont_linear_eq_zero_iff_exists_const
 
 @[simp]
 theorem to_affine_map_cont_linear (f : V →L[R] W) : f.toContinuousAffineMap.contLinear = f :=
@@ -289,22 +286,19 @@ def toConstProdContinuousLinearMap : (V →A[𝕜] W) ≃ₗᵢ[𝕜] W × (V �
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
   norm_map' f := rfl
-#align
-  continuous_affine_map.to_const_prod_continuous_linear_map ContinuousAffineMap.toConstProdContinuousLinearMap
+#align continuous_affine_map.to_const_prod_continuous_linear_map ContinuousAffineMap.toConstProdContinuousLinearMap
 
 @[simp]
 theorem to_const_prod_continuous_linear_map_fst (f : V →A[𝕜] W) :
     (toConstProdContinuousLinearMap 𝕜 V W f).fst = f 0 :=
   rfl
-#align
-  continuous_affine_map.to_const_prod_continuous_linear_map_fst ContinuousAffineMap.to_const_prod_continuous_linear_map_fst
+#align continuous_affine_map.to_const_prod_continuous_linear_map_fst ContinuousAffineMap.to_const_prod_continuous_linear_map_fst
 
 @[simp]
 theorem to_const_prod_continuous_linear_map_snd (f : V →A[𝕜] W) :
     (toConstProdContinuousLinearMap 𝕜 V W f).snd = f.contLinear :=
   rfl
-#align
-  continuous_affine_map.to_const_prod_continuous_linear_map_snd ContinuousAffineMap.to_const_prod_continuous_linear_map_snd
+#align continuous_affine_map.to_const_prod_continuous_linear_map_snd ContinuousAffineMap.to_const_prod_continuous_linear_map_snd
 
 end NormedSpaceStructure
 

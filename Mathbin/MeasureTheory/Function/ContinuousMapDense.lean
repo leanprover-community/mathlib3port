@@ -177,8 +177,7 @@ theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
     intro x
     have h₀ : g x * ‖c‖ ≤ ‖c‖ := by nlinarith [(hg_range x).1, (hg_range x).2, norm_nonneg c]
     simp [norm_smul, g_norm x, h₀]
-#align
-  measure_theory.Lp.bounded_continuous_function_dense MeasureTheory.lp.bounded_continuous_function_dense
+#align measure_theory.Lp.bounded_continuous_function_dense MeasureTheory.lp.bounded_continuous_function_dense
 
 end MeasureTheory.lp
 

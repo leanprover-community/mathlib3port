@@ -2422,8 +2422,7 @@ theorem tendsto_const_mul_rpow_nhds_zero_of_pos {c : ℝ≥0∞} (hc : c ≠ ∞
   convert Ennreal.Tendsto.const_mul (ennreal.continuous_rpow_const.tendsto 0) _
   · simp [hy]
   · exact Or.inr hc
-#align
-  ennreal.tendsto_const_mul_rpow_nhds_zero_of_pos Ennreal.tendsto_const_mul_rpow_nhds_zero_of_pos
+#align ennreal.tendsto_const_mul_rpow_nhds_zero_of_pos Ennreal.tendsto_const_mul_rpow_nhds_zero_of_pos
 
 end Ennreal
 

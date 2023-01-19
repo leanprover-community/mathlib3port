@@ -144,8 +144,7 @@ noncomputable def braidedCategoryOfFullyFaithful {C D : Type _} [Category C] [Ca
     (fun X Y =>
       F.toFunctor.preimageIso ((asIso (F.μ _ _)).symm ≪≫ β_ (F.obj X) (F.obj Y) ≪≫ asIso (F.μ _ _)))
     (by tidy)
-#align
-  category_theory.braided_category_of_fully_faithful CategoryTheory.braidedCategoryOfFullyFaithful
+#align category_theory.braided_category_of_fully_faithful CategoryTheory.braidedCategoryOfFullyFaithful
 
 section
 
@@ -373,15 +372,13 @@ def comp (F : LaxBraidedFunctor C D) (G : LaxBraidedFunctor D E) : LaxBraidedFun
 
 instance categoryLaxBraidedFunctor : Category (LaxBraidedFunctor C D) :=
   InducedCategory.category LaxBraidedFunctor.toLaxMonoidalFunctor
-#align
-  category_theory.lax_braided_functor.category_lax_braided_functor CategoryTheory.LaxBraidedFunctor.categoryLaxBraidedFunctor
+#align category_theory.lax_braided_functor.category_lax_braided_functor CategoryTheory.LaxBraidedFunctor.categoryLaxBraidedFunctor
 
 @[simp]
 theorem comp_to_nat_trans {F G H : LaxBraidedFunctor C D} {α : F ⟶ G} {β : G ⟶ H} :
     (α ≫ β).toNatTrans = @CategoryStruct.comp (C ⥤ D) _ _ _ _ α.toNatTrans β.toNatTrans :=
   rfl
-#align
-  category_theory.lax_braided_functor.comp_to_nat_trans CategoryTheory.LaxBraidedFunctor.comp_to_nat_trans
+#align category_theory.lax_braided_functor.comp_to_nat_trans CategoryTheory.LaxBraidedFunctor.comp_to_nat_trans
 
 /-- Interpret a natural isomorphism of the underlyling lax monoidal functors as an
 isomorphism of the lax braided monoidal functors.
@@ -425,8 +422,7 @@ def toLaxBraidedFunctor (F : BraidedFunctor C D) : LaxBraidedFunctor C D :=
     braided' := fun X Y => by
       rw [F.braided]
       simp }
-#align
-  category_theory.braided_functor.to_lax_braided_functor CategoryTheory.BraidedFunctor.toLaxBraidedFunctor
+#align category_theory.braided_functor.to_lax_braided_functor CategoryTheory.BraidedFunctor.toLaxBraidedFunctor
 
 /-- The identity braided monoidal functor. -/
 @[simps]
@@ -447,15 +443,13 @@ def comp (F : BraidedFunctor C D) (G : BraidedFunctor D E) : BraidedFunctor C E 
 
 instance categoryBraidedFunctor : Category (BraidedFunctor C D) :=
   InducedCategory.category BraidedFunctor.toMonoidalFunctor
-#align
-  category_theory.braided_functor.category_braided_functor CategoryTheory.BraidedFunctor.categoryBraidedFunctor
+#align category_theory.braided_functor.category_braided_functor CategoryTheory.BraidedFunctor.categoryBraidedFunctor
 
 @[simp]
 theorem comp_to_nat_trans {F G H : BraidedFunctor C D} {α : F ⟶ G} {β : G ⟶ H} :
     (α ≫ β).toNatTrans = @CategoryStruct.comp (C ⥤ D) _ _ _ _ α.toNatTrans β.toNatTrans :=
   rfl
-#align
-  category_theory.braided_functor.comp_to_nat_trans CategoryTheory.BraidedFunctor.comp_to_nat_trans
+#align category_theory.braided_functor.comp_to_nat_trans CategoryTheory.BraidedFunctor.comp_to_nat_trans
 
 /-- Interpret a natural isomorphism of the underlyling monoidal functors as an
 isomorphism of the braided monoidal functors.

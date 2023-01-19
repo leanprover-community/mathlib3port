@@ -50,8 +50,7 @@ instance (priority := 100) PseudoMetricSpace.to_pseudo_metrizable_space {X : Typ
 noncomputable def pseudoMetrizableSpacePseudoMetric (X : Type _) [TopologicalSpace X]
     [h : PseudoMetrizableSpace X] : PseudoMetricSpace X :=
   h.exists_pseudo_metric.some.replaceTopology h.exists_pseudo_metric.some_spec.symm
-#align
-  topological_space.pseudo_metrizable_space_pseudo_metric TopologicalSpace.pseudoMetrizableSpacePseudoMetric
+#align topological_space.pseudo_metrizable_space_pseudo_metric TopologicalSpace.pseudoMetrizableSpacePseudoMetric
 
 instance pseudo_metrizable_space_prod [PseudoMetrizableSpace X] [PseudoMetrizableSpace Y] :
     PseudoMetrizableSpace (X × Y) :=
@@ -78,14 +77,12 @@ instance (priority := 100) PseudoMetrizableSpace.first_countable_topology
   exact
     @UniformSpace.first_countable_topology X PseudoMetricSpace.toUniformSpace
       Emetric.Uniformity.Filter.is_countably_generated
-#align
-  topological_space.pseudo_metrizable_space.first_countable_topology TopologicalSpace.PseudoMetrizableSpace.first_countable_topology
+#align topological_space.pseudo_metrizable_space.first_countable_topology TopologicalSpace.PseudoMetrizableSpace.first_countable_topology
 
 instance PseudoMetrizableSpace.subtype [PseudoMetrizableSpace X] (s : Set X) :
     PseudoMetrizableSpace s :=
   inducing_coe.PseudoMetrizableSpace
-#align
-  topological_space.pseudo_metrizable_space.subtype TopologicalSpace.PseudoMetrizableSpace.subtype
+#align topological_space.pseudo_metrizable_space.subtype TopologicalSpace.PseudoMetrizableSpace.subtype
 
 instance pseudo_metrizable_space_pi [∀ i, PseudoMetrizableSpace (π i)] :
     PseudoMetrizableSpace (∀ i, π i) :=
@@ -111,8 +108,7 @@ instance (priority := 100) MetrizableSpace.to_pseudo_metrizable_space [h : Metri
     PseudoMetrizableSpace X :=
   ⟨let ⟨m, hm⟩ := h.1
     ⟨m.toPseudoMetricSpace, hm⟩⟩
-#align
-  topological_space.metrizable_space.to_pseudo_metrizable_space TopologicalSpace.MetrizableSpace.to_pseudo_metrizable_space
+#align topological_space.metrizable_space.to_pseudo_metrizable_space TopologicalSpace.MetrizableSpace.to_pseudo_metrizable_space
 
 /-- Construct on a metrizable space a metric compatible with the topology. -/
 noncomputable def metrizableSpaceMetric (X : Type _) [TopologicalSpace X] [h : MetrizableSpace X] :
@@ -259,8 +255,7 @@ same topology. -/
 theorem metrizable_space_of_t3_second_countable : MetrizableSpace X :=
   let ⟨f, hf⟩ := exists_embedding_l_infty X
   hf.MetrizableSpace
-#align
-  topological_space.metrizable_space_of_t3_second_countable TopologicalSpace.metrizable_space_of_t3_second_countable
+#align topological_space.metrizable_space_of_t3_second_countable TopologicalSpace.metrizable_space_of_t3_second_countable
 
 instance : MetrizableSpace Ennreal :=
   metrizable_space_of_t3_second_countable Ennreal

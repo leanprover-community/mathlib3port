@@ -69,8 +69,7 @@ instance : NormedLatticeAddCommGroup ℝ
 instance (priority := 100) normedLatticeAddCommGroupToOrderedAddCommGroup {α : Type _}
     [h : NormedLatticeAddCommGroup α] : OrderedAddCommGroup α :=
   { h with }
-#align
-  normed_lattice_add_comm_group_to_ordered_add_comm_group normedLatticeAddCommGroupToOrderedAddCommGroup
+#align normed_lattice_add_comm_group_to_ordered_add_comm_group normedLatticeAddCommGroupToOrderedAddCommGroup
 
 variable {α : Type _} [NormedLatticeAddCommGroup α]
 
@@ -155,15 +154,13 @@ instance (priority := 100) normed_lattice_add_comm_group_has_continuous_inf : Ha
     ((continuous_fst.tendsto q).sub tendsto_const_nhds).norm.add
       ((continuous_snd.tendsto q).sub tendsto_const_nhds).norm
   simp
-#align
-  normed_lattice_add_comm_group_has_continuous_inf normed_lattice_add_comm_group_has_continuous_inf
+#align normed_lattice_add_comm_group_has_continuous_inf normed_lattice_add_comm_group_has_continuous_inf
 
 -- see Note [lower instance priority]
 instance (priority := 100) normed_lattice_add_comm_group_has_continuous_sup {α : Type _}
     [NormedLatticeAddCommGroup α] : HasContinuousSup α :=
   OrderDual.has_continuous_sup αᵒᵈ
-#align
-  normed_lattice_add_comm_group_has_continuous_sup normed_lattice_add_comm_group_has_continuous_sup
+#align normed_lattice_add_comm_group_has_continuous_sup normed_lattice_add_comm_group_has_continuous_sup
 
 -- see Note [lower instance priority]
 /--
@@ -230,6 +227,5 @@ theorem is_closed_le_of_is_closed_nonneg {G} [OrderedAddCommGroup G] [Topologica
 instance (priority := 100) NormedLatticeAddCommGroup.order_closed_topology {E}
     [NormedLatticeAddCommGroup E] : OrderClosedTopology E :=
   ⟨is_closed_le_of_is_closed_nonneg is_closed_nonneg⟩
-#align
-  normed_lattice_add_comm_group.order_closed_topology NormedLatticeAddCommGroup.order_closed_topology
+#align normed_lattice_add_comm_group.order_closed_topology NormedLatticeAddCommGroup.order_closed_topology
 

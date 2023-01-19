@@ -219,8 +219,7 @@ theorem indefinite_diagonal_transform {i : R} (hi : i * i = -1) :
   ·-- x y : q
       by_cases h : x = y <;>
       simp [Pso, indefinite_diagonal, h, hi]
-#align
-  lie_algebra.orthogonal.indefinite_diagonal_transform LieAlgebra.Orthogonal.indefinite_diagonal_transform
+#align lie_algebra.orthogonal.indefinite_diagonal_transform LieAlgebra.Orthogonal.indefinite_diagonal_transform
 
 /-- An equivalence between the indefinite and definite orthogonal Lie algebras, over a ring
 containing a square root of -1. -/
@@ -238,8 +237,7 @@ theorem so_indefinite_equiv_apply {i : R} (hi : i * i = -1) (A : so' p q R) :
       (pso p q R i)⁻¹ ⬝ (A : Matrix (Sum p q) (Sum p q) R) ⬝ pso p q R i :=
   by
   erw [LieEquiv.trans_apply, LieEquiv.of_eq_apply, skew_adjoint_matrices_lie_subalgebra_equiv_apply]
-#align
-  lie_algebra.orthogonal.so_indefinite_equiv_apply LieAlgebra.Orthogonal.so_indefinite_equiv_apply
+#align lie_algebra.orthogonal.so_indefinite_equiv_apply LieAlgebra.Orthogonal.so_indefinite_equiv_apply
 
 /-- A matrix defining a canonical even-rank symmetric bilinear form.
 
@@ -388,8 +386,7 @@ theorem indefinite_diagonal_assoc :
         Matrix.from_blocks_apply₁₂, Matrix.from_blocks_apply₂₁, Matrix.from_blocks_apply₂₂,
         Equiv.sumAssoc_apply_inr, Sum.elim_inr] <;>
     congr
-#align
-  lie_algebra.orthogonal.indefinite_diagonal_assoc LieAlgebra.Orthogonal.indefinite_diagonal_assoc
+#align lie_algebra.orthogonal.indefinite_diagonal_assoc LieAlgebra.Orthogonal.indefinite_diagonal_assoc
 
 /-- An equivalence between two possible definitions of the classical Lie algebra of type B. -/
 def typeBEquivSo' [Invertible (2 : R)] : typeB l R ≃ₗ⁅R⁆ so' (Sum Unit l) l R :=

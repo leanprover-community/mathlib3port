@@ -243,8 +243,7 @@ def homotopicMapsNatIso : πₘ f ⟶ πₘ g
     where
   app x := ⟦H.evalAt x⟧
   naturality' x y p := by rw [(H.eq_diag_path p).1, (H.eq_diag_path p).2]
-#align
-  fundamental_groupoid_functor.homotopic_maps_nat_iso FundamentalGroupoidFunctor.homotopicMapsNatIso
+#align fundamental_groupoid_functor.homotopic_maps_nat_iso FundamentalGroupoidFunctor.homotopicMapsNatIso
 
 instance : IsIso (homotopicMapsNatIso H) := by apply nat_iso.is_iso_of_is_iso_app
 
@@ -259,8 +258,7 @@ def equivOfHomotopyEquiv (hequiv : X ≃ₕ Y) : πₓ X ≌ πₓ Y :=
     exacts[(π.map_id X).symm, (π.map_comp _ _).symm]
   · convert as_iso (homotopic_maps_nat_iso hequiv.right_inv.some)
     exacts[(π.map_comp _ _).symm, (π.map_id Y).symm]
-#align
-  fundamental_groupoid_functor.equiv_of_homotopy_equiv FundamentalGroupoidFunctor.equivOfHomotopyEquiv
+#align fundamental_groupoid_functor.equiv_of_homotopy_equiv FundamentalGroupoidFunctor.equivOfHomotopyEquiv
 
 end FundamentalGroupoidFunctor
 

@@ -254,8 +254,7 @@ theorem has_sum_one_div_pow_mul_fourier_mul_bernoulli_fun {k : ℕ} (hk : 2 ≤ 
   ·
     rw [ContinuousMap.coe_mk, Function.comp_apply, of_real_inj, periodizedBernoulli,
       AddCircle.lift_Ico_coe_apply (by rwa [zero_add])]
-#align
-  has_sum_one_div_pow_mul_fourier_mul_bernoulli_fun has_sum_one_div_pow_mul_fourier_mul_bernoulli_fun
+#align has_sum_one_div_pow_mul_fourier_mul_bernoulli_fun has_sum_one_div_pow_mul_fourier_mul_bernoulli_fun
 
 end BernoulliPeriodized
 

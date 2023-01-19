@@ -228,8 +228,7 @@ theorem admissible_of_one_lt_sum_inv_aux' {p q r : ℕ+} (hpq : p ≤ q) (hqr : 
   · exact admissible_E6
   · exact admissible_E7
   · exact admissible_E8
-#align
-  ADE_inequality.admissible_of_one_lt_sum_inv_aux' ADEInequality.admissible_of_one_lt_sum_inv_aux'
+#align ADE_inequality.admissible_of_one_lt_sum_inv_aux' ADEInequality.admissible_of_one_lt_sum_inv_aux'
 
 theorem admissible_of_one_lt_sum_inv_aux :
     ∀ {pqr : List ℕ+} (hs : pqr.Sorted (· ≤ ·)) (hl : pqr.length = 3) (H : 1 < sumInv pqr),
@@ -239,8 +238,7 @@ theorem admissible_of_one_lt_sum_inv_aux :
     obtain ⟨⟨hpq, -⟩, hqr⟩ : (p ≤ q ∧ p ≤ r) ∧ q ≤ r
     simpa using hs
     exact admissible_of_one_lt_sum_inv_aux' hpq hqr H
-#align
-  ADE_inequality.admissible_of_one_lt_sum_inv_aux ADEInequality.admissible_of_one_lt_sum_inv_aux
+#align ADE_inequality.admissible_of_one_lt_sum_inv_aux ADEInequality.admissible_of_one_lt_sum_inv_aux
 
 theorem admissible_of_one_lt_sum_inv {p q r : ℕ+} (H : 1 < sumInv {p, q, r}) :
     Admissible {p, q, r} := by

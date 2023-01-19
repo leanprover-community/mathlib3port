@@ -105,8 +105,7 @@ theorem liouville_number_tail_pos {m : ℝ} (hm : 1 < m) (k : ℕ) : 0 < liouvil
 theorem liouville_number_eq_initial_terms_add_tail {m : ℝ} (hm : 1 < m) (k : ℕ) :
     liouvilleNumber m = liouvilleNumberInitialTerms m k + liouvilleNumberTail m k :=
   (sum_add_tsum_nat_add _ (summable_one_div_pow_of_le hm fun i => i.self_le_factorial)).symm
-#align
-  liouville.liouville_number_eq_initial_terms_add_tail Liouville.liouville_number_eq_initial_terms_add_tail
+#align liouville.liouville_number_eq_initial_terms_add_tail Liouville.liouville_number_eq_initial_terms_add_tail
 
 /-! We now prove two useful inequalities, before collecting everything together. -/
 

@@ -704,8 +704,7 @@ theorem exists_subset_or_subset_of_two_mul_lt_card [DecidableEq α] {X Y : Finse
   rcases lt_or_lt_of_add_lt_add hXY with (h | h)
   · exact ⟨X, h, Or.inl (Finset.Subset.refl X)⟩
   · exact ⟨Y \ X, h, Or.inr (Finset.sdiff_subset Y X)⟩
-#align
-  finset.exists_subset_or_subset_of_two_mul_lt_card Finset.exists_subset_or_subset_of_two_mul_lt_card
+#align finset.exists_subset_or_subset_of_two_mul_lt_card Finset.exists_subset_or_subset_of_two_mul_lt_card
 -/
 
 /-! ### Explicit description of a finset from its card -/

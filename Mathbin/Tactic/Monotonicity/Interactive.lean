@@ -55,13 +55,11 @@ unsafe def mono_function.to_tactic_format : mono_function → tactic format
     let fn' ← pp fn
     let xs' ← pp xs
     return f! "{fn' } _ {xs'}"
-#align
-  tactic.interactive.mono_function.to_tactic_format tactic.interactive.mono_function.to_tactic_format
+#align tactic.interactive.mono_function.to_tactic_format tactic.interactive.mono_function.to_tactic_format
 
 unsafe instance has_to_tactic_format_mono_function : has_to_tactic_format mono_function
     where to_tactic_format := mono_function.to_tactic_format
-#align
-  tactic.interactive.has_to_tactic_format_mono_function tactic.interactive.has_to_tactic_format_mono_function
+#align tactic.interactive.has_to_tactic_format_mono_function tactic.interactive.has_to_tactic_format_mono_function
 
 unsafe structure ac_mono_ctx' (rel : Type) where
   to_rel : Rel
@@ -90,13 +88,11 @@ unsafe def ac_mono_ctx.to_tactic_format (ctx : ac_mono_ctx) : tactic format := d
         , left  := {l }
         , right := {r }
         , rel_def := {Rel} }}"
-#align
-  tactic.interactive.ac_mono_ctx.to_tactic_format tactic.interactive.ac_mono_ctx.to_tactic_format
+#align tactic.interactive.ac_mono_ctx.to_tactic_format tactic.interactive.ac_mono_ctx.to_tactic_format
 
 unsafe instance has_to_tactic_format_mono_ctx : has_to_tactic_format ac_mono_ctx
     where to_tactic_format := ac_mono_ctx.to_tactic_format
-#align
-  tactic.interactive.has_to_tactic_format_mono_ctx tactic.interactive.has_to_tactic_format_mono_ctx
+#align tactic.interactive.has_to_tactic_format_mono_ctx tactic.interactive.has_to_tactic_format_mono_ctx
 
 unsafe def as_goal (e : expr) (tac : tactic Unit) : tactic Unit := do
   let gs ← get_goals
@@ -389,8 +385,7 @@ unsafe def mono_law.to_tactic_format : mono_law → tactic format
 
 unsafe instance has_to_tactic_format_mono_law : has_to_tactic_format mono_law
     where to_tactic_format := mono_law.to_tactic_format
-#align
-  tactic.interactive.has_to_tactic_format_mono_law tactic.interactive.has_to_tactic_format_mono_law
+#align tactic.interactive.has_to_tactic_format_mono_law tactic.interactive.has_to_tactic_format_mono_law
 
 unsafe def mk_rel (ctx : ac_mono_ctx_ne) (f : expr → expr) : expr :=
   ctx.to_rel (f ctx.left) (f ctx.right)

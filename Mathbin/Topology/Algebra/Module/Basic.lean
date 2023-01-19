@@ -1398,15 +1398,13 @@ theorem range_prod_eq {f : M →L[R] M₂} {g : M →L[R] M₃} (h : ker f ⊔ k
 theorem ker_prod_ker_le_ker_coprod [HasContinuousAdd M₃] (f : M →L[R] M₃) (g : M₂ →L[R] M₃) :
     (LinearMap.ker f).Prod (LinearMap.ker g) ≤ LinearMap.ker (f.coprod g) :=
   LinearMap.ker_prod_ker_le_ker_coprod f.toLinearMap g.toLinearMap
-#align
-  continuous_linear_map.ker_prod_ker_le_ker_coprod ContinuousLinearMap.ker_prod_ker_le_ker_coprod
+#align continuous_linear_map.ker_prod_ker_le_ker_coprod ContinuousLinearMap.ker_prod_ker_le_ker_coprod
 
 theorem ker_coprod_of_disjoint_range [HasContinuousAdd M₃] (f : M →L[R] M₃) (g : M₂ →L[R] M₃)
     (hd : Disjoint (range f) (range g)) :
     LinearMap.ker (f.coprod g) = (LinearMap.ker f).Prod (LinearMap.ker g) :=
   LinearMap.ker_coprod_of_disjoint_range f.toLinearMap g.toLinearMap hd
-#align
-  continuous_linear_map.ker_coprod_of_disjoint_range ContinuousLinearMap.ker_coprod_of_disjoint_range
+#align continuous_linear_map.ker_coprod_of_disjoint_range ContinuousLinearMap.ker_coprod_of_disjoint_range
 
 end
 
@@ -1540,24 +1538,21 @@ theorem coe_proj_ker_of_right_inverse_apply [TopologicalAddGroup M] (f₁ : M �
     (f₂ : M₂ →SL[σ₂₁] M) (h : Function.RightInverse f₂ f₁) (x : M) :
     (f₁.projKerOfRightInverse f₂ h x : M) = x - f₂ (f₁ x) :=
   rfl
-#align
-  continuous_linear_map.coe_proj_ker_of_right_inverse_apply ContinuousLinearMap.coe_proj_ker_of_right_inverse_apply
+#align continuous_linear_map.coe_proj_ker_of_right_inverse_apply ContinuousLinearMap.coe_proj_ker_of_right_inverse_apply
 
 @[simp]
 theorem proj_ker_of_right_inverse_apply_idem [TopologicalAddGroup M] (f₁ : M →SL[σ₁₂] M₂)
     (f₂ : M₂ →SL[σ₂₁] M) (h : Function.RightInverse f₂ f₁) (x : LinearMap.ker f₁) :
     f₁.projKerOfRightInverse f₂ h x = x :=
   Subtype.ext_iff_val.2 <| by simp
-#align
-  continuous_linear_map.proj_ker_of_right_inverse_apply_idem ContinuousLinearMap.proj_ker_of_right_inverse_apply_idem
+#align continuous_linear_map.proj_ker_of_right_inverse_apply_idem ContinuousLinearMap.proj_ker_of_right_inverse_apply_idem
 
 @[simp]
 theorem proj_ker_of_right_inverse_comp_inv [TopologicalAddGroup M] (f₁ : M →SL[σ₁₂] M₂)
     (f₂ : M₂ →SL[σ₂₁] M) (h : Function.RightInverse f₂ f₁) (y : M₂) :
     f₁.projKerOfRightInverse f₂ h (f₂ y) = 0 :=
   Subtype.ext_iff_val.2 <| by simp [h y]
-#align
-  continuous_linear_map.proj_ker_of_right_inverse_comp_inv ContinuousLinearMap.proj_ker_of_right_inverse_comp_inv
+#align continuous_linear_map.proj_ker_of_right_inverse_comp_inv ContinuousLinearMap.proj_ker_of_right_inverse_comp_inv
 
 end
 
@@ -1903,8 +1898,7 @@ theorem coe_coe (e : M₁ ≃SL[σ₁₂] M₂) : ⇑(e : M₁ →SL[σ₁₂] M
 theorem to_linear_equiv_injective :
     Function.Injective (toLinearEquiv : (M₁ ≃SL[σ₁₂] M₂) → M₁ ≃ₛₗ[σ₁₂] M₂)
   | ⟨e, _, _⟩, ⟨e', _, _⟩, rfl => rfl
-#align
-  continuous_linear_equiv.to_linear_equiv_injective ContinuousLinearEquiv.to_linear_equiv_injective
+#align continuous_linear_equiv.to_linear_equiv_injective ContinuousLinearEquiv.to_linear_equiv_injective
 
 @[ext]
 theorem ext {f g : M₁ ≃SL[σ₁₂] M₂} (h : (f : M₁ → M₂) = g) : f = g :=
@@ -2530,14 +2524,12 @@ theorem units_equiv_aut_apply (u : Rˣ) (x : R) : unitsEquivAut R u x = x * u :=
 @[simp]
 theorem units_equiv_aut_apply_symm (u : Rˣ) (x : R) : (unitsEquivAut R u).symm x = x * ↑u⁻¹ :=
   rfl
-#align
-  continuous_linear_equiv.units_equiv_aut_apply_symm ContinuousLinearEquiv.units_equiv_aut_apply_symm
+#align continuous_linear_equiv.units_equiv_aut_apply_symm ContinuousLinearEquiv.units_equiv_aut_apply_symm
 
 @[simp]
 theorem units_equiv_aut_symm_apply (e : R ≃L[R] R) : ↑((unitsEquivAut R).symm e) = e 1 :=
   rfl
-#align
-  continuous_linear_equiv.units_equiv_aut_symm_apply ContinuousLinearEquiv.units_equiv_aut_symm_apply
+#align continuous_linear_equiv.units_equiv_aut_symm_apply ContinuousLinearEquiv.units_equiv_aut_symm_apply
 
 end
 
@@ -2560,24 +2552,21 @@ def equivOfRightInverse (f₁ : M →L[R] M₂) (f₂ : M₂ →L[R] M) (h : Fun
 theorem fst_equiv_of_right_inverse (f₁ : M →L[R] M₂) (f₂ : M₂ →L[R] M)
     (h : Function.RightInverse f₂ f₁) (x : M) : (equivOfRightInverse f₁ f₂ h x).1 = f₁ x :=
   rfl
-#align
-  continuous_linear_equiv.fst_equiv_of_right_inverse ContinuousLinearEquiv.fst_equiv_of_right_inverse
+#align continuous_linear_equiv.fst_equiv_of_right_inverse ContinuousLinearEquiv.fst_equiv_of_right_inverse
 
 @[simp]
 theorem snd_equiv_of_right_inverse (f₁ : M →L[R] M₂) (f₂ : M₂ →L[R] M)
     (h : Function.RightInverse f₂ f₁) (x : M) :
     ((equivOfRightInverse f₁ f₂ h x).2 : M) = x - f₂ (f₁ x) :=
   rfl
-#align
-  continuous_linear_equiv.snd_equiv_of_right_inverse ContinuousLinearEquiv.snd_equiv_of_right_inverse
+#align continuous_linear_equiv.snd_equiv_of_right_inverse ContinuousLinearEquiv.snd_equiv_of_right_inverse
 
 @[simp]
 theorem equiv_of_right_inverse_symm_apply (f₁ : M →L[R] M₂) (f₂ : M₂ →L[R] M)
     (h : Function.RightInverse f₂ f₁) (y : M₂ × ker f₁) :
     (equivOfRightInverse f₁ f₂ h).symm y = f₂ y.1 + y.2 :=
   rfl
-#align
-  continuous_linear_equiv.equiv_of_right_inverse_symm_apply ContinuousLinearEquiv.equiv_of_right_inverse_symm_apply
+#align continuous_linear_equiv.equiv_of_right_inverse_symm_apply ContinuousLinearEquiv.equiv_of_right_inverse_symm_apply
 
 end Ring
 
@@ -2704,8 +2693,7 @@ theorem ring_inverse_eq_map_inverse : Ring.inverse = @inverse R M M _ _ _ _ _ _ 
   by
   ext
   simp [to_ring_inverse (ContinuousLinearEquiv.refl R M)]
-#align
-  continuous_linear_map.ring_inverse_eq_map_inverse ContinuousLinearMap.ring_inverse_eq_map_inverse
+#align continuous_linear_map.ring_inverse_eq_map_inverse ContinuousLinearMap.ring_inverse_eq_map_inverse
 
 end
 
@@ -2726,8 +2714,7 @@ def ClosedComplemented (p : Submodule R M) : Prop :=
 theorem ClosedComplemented.has_closed_complement {p : Submodule R M} [T1Space p]
     (h : ClosedComplemented p) : ∃ (q : Submodule R M)(hq : IsClosed (q : Set M)), IsCompl p q :=
   Exists.elim h fun f hf => ⟨ker f, f.is_closed_ker, LinearMap.is_compl_of_proj hf⟩
-#align
-  submodule.closed_complemented.has_closed_complement Submodule.ClosedComplemented.has_closed_complement
+#align submodule.closed_complemented.has_closed_complement Submodule.ClosedComplemented.has_closed_complement
 
 protected theorem ClosedComplemented.is_closed [TopologicalAddGroup M] [T1Space M]
     {p : Submodule R M} (h : ClosedComplemented p) : IsClosed (p : Set M) :=
@@ -2754,8 +2741,7 @@ theorem ContinuousLinearMap.closedComplementedKerOfRightInverse {R : Type _} [Ri
     [Module R M] [Module R M₂] [TopologicalAddGroup M] (f₁ : M →L[R] M₂) (f₂ : M₂ →L[R] M)
     (h : Function.RightInverse f₂ f₁) : (ker f₁).ClosedComplemented :=
   ⟨f₁.projKerOfRightInverse f₂ h, f₁.proj_ker_of_right_inverse_apply_idem f₂ h⟩
-#align
-  continuous_linear_map.closed_complemented_ker_of_right_inverse ContinuousLinearMap.closedComplementedKerOfRightInverse
+#align continuous_linear_map.closed_complemented_ker_of_right_inverse ContinuousLinearMap.closedComplementedKerOfRightInverse
 
 section Quotient
 

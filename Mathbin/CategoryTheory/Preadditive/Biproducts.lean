@@ -148,8 +148,7 @@ def biconeIsBilimitOfLimitConeOfIsLimit {f : J → C} {t : Cone (Discrete.functo
         (by
           rintro ⟨j⟩
           tidy)
-#align
-  category_theory.limits.bicone_is_bilimit_of_limit_cone_of_is_limit CategoryTheory.Limits.biconeIsBilimitOfLimitConeOfIsLimit
+#align category_theory.limits.bicone_is_bilimit_of_limit_cone_of_is_limit CategoryTheory.Limits.biconeIsBilimitOfLimitConeOfIsLimit
 
 /-- In a preadditive category, if the product over `f : J → C` exists,
     then the biproduct over `f` exists. -/
@@ -160,8 +159,7 @@ theorem HasBiproduct.ofHasProduct {J : Type} [Finite J] (f : J → C) [HasProduc
       has_biproduct.mk
         { Bicone := _
           IsBilimit := bicone_is_bilimit_of_limit_cone_of_is_limit (limit.is_limit _) }
-#align
-  category_theory.limits.has_biproduct.of_has_product CategoryTheory.Limits.HasBiproduct.ofHasProduct
+#align category_theory.limits.has_biproduct.of_has_product CategoryTheory.Limits.HasBiproduct.ofHasProduct
 
 /-- In a preadditive category, any finite bicone which is a colimit cocone is in fact a bilimit
     bicone. -/
@@ -182,8 +180,7 @@ def biconeIsBilimitOfColimitCoconeOfIsColimit {f : J → C} {t : Cocone (Discret
         (by
           rintro ⟨j⟩
           tidy)
-#align
-  category_theory.limits.bicone_is_bilimit_of_colimit_cocone_of_is_colimit CategoryTheory.Limits.biconeIsBilimitOfColimitCoconeOfIsColimit
+#align category_theory.limits.bicone_is_bilimit_of_colimit_cocone_of_is_colimit CategoryTheory.Limits.biconeIsBilimitOfColimitCoconeOfIsColimit
 
 /-- In a preadditive category, if the coproduct over `f : J → C` exists,
     then the biproduct over `f` exists. -/
@@ -194,20 +191,17 @@ theorem HasBiproduct.ofHasCoproduct {J : Type} [Finite J] (f : J → C) [HasCopr
       has_biproduct.mk
         { Bicone := _
           IsBilimit := bicone_is_bilimit_of_colimit_cocone_of_is_colimit (colimit.is_colimit _) }
-#align
-  category_theory.limits.has_biproduct.of_has_coproduct CategoryTheory.Limits.HasBiproduct.ofHasCoproduct
+#align category_theory.limits.has_biproduct.of_has_coproduct CategoryTheory.Limits.HasBiproduct.ofHasCoproduct
 
 /-- A preadditive category with finite products has finite biproducts. -/
 theorem HasFiniteBiproducts.ofHasFiniteProducts [HasFiniteProducts C] : HasFiniteBiproducts C :=
   ⟨fun n => { HasBiproduct := fun F => HasBiproduct.ofHasProduct _ }⟩
-#align
-  category_theory.limits.has_finite_biproducts.of_has_finite_products CategoryTheory.Limits.HasFiniteBiproducts.ofHasFiniteProducts
+#align category_theory.limits.has_finite_biproducts.of_has_finite_products CategoryTheory.Limits.HasFiniteBiproducts.ofHasFiniteProducts
 
 /-- A preadditive category with finite coproducts has finite biproducts. -/
 theorem HasFiniteBiproducts.ofHasFiniteCoproducts [HasFiniteCoproducts C] : HasFiniteBiproducts C :=
   ⟨fun n => { HasBiproduct := fun F => HasBiproduct.ofHasCoproduct _ }⟩
-#align
-  category_theory.limits.has_finite_biproducts.of_has_finite_coproducts CategoryTheory.Limits.HasFiniteBiproducts.ofHasFiniteCoproducts
+#align category_theory.limits.has_finite_biproducts.of_has_finite_coproducts CategoryTheory.Limits.HasFiniteBiproducts.ofHasFiniteCoproducts
 
 section
 
@@ -329,8 +323,7 @@ def isBinaryBilimitOfTotal {X Y : C} (b : BinaryBicone X Y)
         erw [← category.id_comp m, ← Total, add_comp, category.assoc, category.assoc,
           h ⟨walking_pair.left⟩, h ⟨walking_pair.right⟩]
       fac' := fun s j => by rcases j with ⟨⟨⟩⟩ <;> simp }
-#align
-  category_theory.limits.is_binary_bilimit_of_total CategoryTheory.Limits.isBinaryBilimitOfTotal
+#align category_theory.limits.is_binary_bilimit_of_total CategoryTheory.Limits.isBinaryBilimitOfTotal
 
 theorem IsBilimit.binary_total {X Y : C} {b : BinaryBicone X Y} (i : b.IsBilimit) :
     b.fst ≫ b.inl + b.snd ≫ b.inr = 𝟙 b.x :=
@@ -347,8 +340,7 @@ theorem hasBinaryBiproductOfTotal {X Y : C} (b : BinaryBicone X Y)
   HasBinaryBiproduct.mk
     { Bicone := b
       IsBilimit := isBinaryBilimitOfTotal b Total }
-#align
-  category_theory.limits.has_binary_biproduct_of_total CategoryTheory.Limits.hasBinaryBiproductOfTotal
+#align category_theory.limits.has_binary_biproduct_of_total CategoryTheory.Limits.hasBinaryBiproductOfTotal
 
 /-- We can turn any limit cone over a pair into a bicone. -/
 @[simps]
@@ -359,8 +351,7 @@ def BinaryBicone.ofLimitCone {X Y : C} {t : Cone (pair X Y)} (ht : IsLimit t) : 
   snd := t.π.app ⟨WalkingPair.right⟩
   inl := ht.lift (BinaryFan.mk (𝟙 X) 0)
   inr := ht.lift (BinaryFan.mk 0 (𝟙 Y))
-#align
-  category_theory.limits.binary_bicone.of_limit_cone CategoryTheory.Limits.BinaryBicone.ofLimitCone
+#align category_theory.limits.binary_bicone.of_limit_cone CategoryTheory.Limits.BinaryBicone.ofLimitCone
 
 theorem inl_of_is_limit {X Y : C} {t : BinaryBicone X Y} (ht : IsLimit t.toCone) :
     t.inl = ht.lift (BinaryFan.mk (𝟙 X) 0) := by
@@ -377,15 +368,13 @@ theorem inr_of_is_limit {X Y : C} {t : BinaryBicone X Y} (ht : IsLimit t.toCone)
 def isBinaryBilimitOfIsLimit {X Y : C} (t : BinaryBicone X Y) (ht : IsLimit t.toCone) :
     t.IsBilimit :=
   isBinaryBilimitOfTotal _ (by refine' binary_fan.is_limit.hom_ext ht _ _ <;> simp)
-#align
-  category_theory.limits.is_binary_bilimit_of_is_limit CategoryTheory.Limits.isBinaryBilimitOfIsLimit
+#align category_theory.limits.is_binary_bilimit_of_is_limit CategoryTheory.Limits.isBinaryBilimitOfIsLimit
 
 /-- We can turn any limit cone over a pair into a bilimit bicone. -/
 def binaryBiconeIsBilimitOfLimitConeOfIsLimit {X Y : C} {t : Cone (pair X Y)} (ht : IsLimit t) :
     (BinaryBicone.ofLimitCone ht).IsBilimit :=
   isBinaryBilimitOfTotal _ <| BinaryFan.IsLimit.hom_ext ht (by simp) (by simp)
-#align
-  category_theory.limits.binary_bicone_is_bilimit_of_limit_cone_of_is_limit CategoryTheory.Limits.binaryBiconeIsBilimitOfLimitConeOfIsLimit
+#align category_theory.limits.binary_bicone_is_bilimit_of_limit_cone_of_is_limit CategoryTheory.Limits.binaryBiconeIsBilimitOfLimitConeOfIsLimit
 
 /-- In a preadditive category, if the product of `X` and `Y` exists, then the
     binary biproduct of `X` and `Y` exists. -/
@@ -394,14 +383,12 @@ theorem HasBinaryBiproduct.ofHasBinaryProduct (X Y : C) [HasBinaryProduct X Y] :
   HasBinaryBiproduct.mk
     { Bicone := _
       IsBilimit := binaryBiconeIsBilimitOfLimitConeOfIsLimit (limit.isLimit _) }
-#align
-  category_theory.limits.has_binary_biproduct.of_has_binary_product CategoryTheory.Limits.HasBinaryBiproduct.ofHasBinaryProduct
+#align category_theory.limits.has_binary_biproduct.of_has_binary_product CategoryTheory.Limits.HasBinaryBiproduct.ofHasBinaryProduct
 
 /-- In a preadditive category, if all binary products exist, then all binary biproducts exist. -/
 theorem HasBinaryBiproducts.ofHasBinaryProducts [HasBinaryProducts C] : HasBinaryBiproducts C :=
   { HasBinaryBiproduct := fun X Y => HasBinaryBiproduct.ofHasBinaryProduct X Y }
-#align
-  category_theory.limits.has_binary_biproducts.of_has_binary_products CategoryTheory.Limits.HasBinaryBiproducts.ofHasBinaryProducts
+#align category_theory.limits.has_binary_biproducts.of_has_binary_products CategoryTheory.Limits.HasBinaryBiproducts.ofHasBinaryProducts
 
 /-- We can turn any colimit cocone over a pair into a bicone. -/
 @[simps]
@@ -412,8 +399,7 @@ def BinaryBicone.ofColimitCocone {X Y : C} {t : Cocone (pair X Y)} (ht : IsColim
   snd := ht.desc (BinaryCofan.mk 0 (𝟙 Y))
   inl := t.ι.app ⟨WalkingPair.left⟩
   inr := t.ι.app ⟨WalkingPair.right⟩
-#align
-  category_theory.limits.binary_bicone.of_colimit_cocone CategoryTheory.Limits.BinaryBicone.ofColimitCocone
+#align category_theory.limits.binary_bicone.of_colimit_cocone CategoryTheory.Limits.BinaryBicone.ofColimitCocone
 
 theorem fst_of_is_colimit {X Y : C} {t : BinaryBicone X Y} (ht : IsColimit t.toCocone) :
     t.fst = ht.desc (BinaryCofan.mk (𝟙 X) 0) :=
@@ -438,8 +424,7 @@ def isBinaryBilimitOfIsColimit {X Y : C} (t : BinaryBicone X Y) (ht : IsColimit 
       refine' binary_cofan.is_colimit.hom_ext ht _ _ <;> simp
       · rw [category.comp_id t.inl]
       · rw [category.comp_id t.inr])
-#align
-  category_theory.limits.is_binary_bilimit_of_is_colimit CategoryTheory.Limits.isBinaryBilimitOfIsColimit
+#align category_theory.limits.is_binary_bilimit_of_is_colimit CategoryTheory.Limits.isBinaryBilimitOfIsColimit
 
 /-- We can turn any colimit cocone over a pair into a bilimit bicone. -/
 def binaryBiconeIsBilimitOfColimitCoconeOfIsColimit {X Y : C} {t : Cocone (pair X Y)}
@@ -449,8 +434,7 @@ def binaryBiconeIsBilimitOfColimitCoconeOfIsColimit {X Y : C} {t : Cocone (pair 
       Cocones.ext (Iso.refl _) fun j => by
         rcases j with ⟨⟨⟩⟩
         tidy
-#align
-  category_theory.limits.binary_bicone_is_bilimit_of_colimit_cocone_of_is_colimit CategoryTheory.Limits.binaryBiconeIsBilimitOfColimitCoconeOfIsColimit
+#align category_theory.limits.binary_bicone_is_bilimit_of_colimit_cocone_of_is_colimit CategoryTheory.Limits.binaryBiconeIsBilimitOfColimitCoconeOfIsColimit
 
 /-- In a preadditive category, if the coproduct of `X` and `Y` exists, then the
     binary biproduct of `X` and `Y` exists. -/
@@ -459,14 +443,12 @@ theorem HasBinaryBiproduct.ofHasBinaryCoproduct (X Y : C) [HasBinaryCoproduct X 
   HasBinaryBiproduct.mk
     { Bicone := _
       IsBilimit := binaryBiconeIsBilimitOfColimitCoconeOfIsColimit (colimit.isColimit _) }
-#align
-  category_theory.limits.has_binary_biproduct.of_has_binary_coproduct CategoryTheory.Limits.HasBinaryBiproduct.ofHasBinaryCoproduct
+#align category_theory.limits.has_binary_biproduct.of_has_binary_coproduct CategoryTheory.Limits.HasBinaryBiproduct.ofHasBinaryCoproduct
 
 /-- In a preadditive category, if all binary coproducts exist, then all binary biproducts exist. -/
 theorem HasBinaryBiproducts.ofHasBinaryCoproducts [HasBinaryCoproducts C] : HasBinaryBiproducts C :=
   { HasBinaryBiproduct := fun X Y => HasBinaryBiproduct.ofHasBinaryCoproduct X Y }
-#align
-  category_theory.limits.has_binary_biproducts.of_has_binary_coproducts CategoryTheory.Limits.HasBinaryBiproducts.ofHasBinaryCoproducts
+#align category_theory.limits.has_binary_biproducts.of_has_binary_coproducts CategoryTheory.Limits.HasBinaryBiproducts.ofHasBinaryCoproducts
 
 section
 
@@ -529,8 +511,7 @@ def binaryBiconeOfIsSplitMonoOfCokernel {X Y : C} {f : X ⟶ Y} [IsSplitMono f] 
     apply sub_eq_zero_of_eq
     apply category.id_comp
   inr_snd' := by apply split_epi.id
-#align
-  category_theory.limits.binary_bicone_of_is_split_mono_of_cokernel CategoryTheory.Limits.binaryBiconeOfIsSplitMonoOfCokernel
+#align category_theory.limits.binary_bicone_of_is_split_mono_of_cokernel CategoryTheory.Limits.binaryBiconeOfIsSplitMonoOfCokernel
 
 /-- The bicone constructed in `binary_bicone_of_split_mono_of_cokernel` is a bilimit.
 This is a version of the splitting lemma that holds in all preadditive categories. -/
@@ -546,8 +527,7 @@ def isBilimitBinaryBiconeOfIsSplitMonoOfCokernel {X Y : C} {f : X ⟶ Y} [IsSpli
       rw [is_colimit_cofork_of_cokernel_cofork_desc, is_cokernel_epi_comp_desc]
       simp only [binary_bicone_of_is_split_mono_of_cokernel_inl, cofork.is_colimit.π_desc,
         cokernel_cofork_of_cofork_π, cofork.π_of_π, add_sub_cancel'_right])
-#align
-  category_theory.limits.is_bilimit_binary_bicone_of_is_split_mono_of_cokernel CategoryTheory.Limits.isBilimitBinaryBiconeOfIsSplitMonoOfCokernel
+#align category_theory.limits.is_bilimit_binary_bicone_of_is_split_mono_of_cokernel CategoryTheory.Limits.isBilimitBinaryBiconeOfIsSplitMonoOfCokernel
 
 /-- If `b` is a binary bicone such that `b.inl` is a kernel of `b.snd`, then `b` is a bilimit
     bicone. -/
@@ -563,8 +543,7 @@ def BinaryBicone.isBilimitOfKernelInl {X Y : C} (b : BinaryBicone X Y)
         kernel_fork.is_limit.lift' hb _ h₂'
       rw [← sub_eq_zero, ← hq, ← category.comp_id q, ← b.inl_fst, ← category.assoc, hq, h₁',
         zero_comp]
-#align
-  category_theory.limits.binary_bicone.is_bilimit_of_kernel_inl CategoryTheory.Limits.BinaryBicone.isBilimitOfKernelInl
+#align category_theory.limits.binary_bicone.is_bilimit_of_kernel_inl CategoryTheory.Limits.BinaryBicone.isBilimitOfKernelInl
 
 /-- If `b` is a binary bicone such that `b.inr` is a kernel of `b.fst`, then `b` is a bilimit
     bicone. -/
@@ -580,8 +559,7 @@ def BinaryBicone.isBilimitOfKernelInr {X Y : C} (b : BinaryBicone X Y)
         kernel_fork.is_limit.lift' hb _ h₁'
       rw [← sub_eq_zero, ← hq, ← category.comp_id q, ← b.inr_snd, ← category.assoc, hq, h₂',
         zero_comp]
-#align
-  category_theory.limits.binary_bicone.is_bilimit_of_kernel_inr CategoryTheory.Limits.BinaryBicone.isBilimitOfKernelInr
+#align category_theory.limits.binary_bicone.is_bilimit_of_kernel_inr CategoryTheory.Limits.BinaryBicone.isBilimitOfKernelInr
 
 /-- If `b` is a binary bicone such that `b.fst` is a cokernel of `b.inr`, then `b` is a bilimit
     bicone. -/
@@ -597,8 +575,7 @@ def BinaryBicone.isBilimitOfCokernelFst {X Y : C} (b : BinaryBicone X Y)
         cokernel_cofork.is_colimit.desc' hb _ h₂'
       rw [← sub_eq_zero, ← hq, ← category.id_comp q, ← b.inl_fst, category.assoc, hq, h₁',
         comp_zero]
-#align
-  category_theory.limits.binary_bicone.is_bilimit_of_cokernel_fst CategoryTheory.Limits.BinaryBicone.isBilimitOfCokernelFst
+#align category_theory.limits.binary_bicone.is_bilimit_of_cokernel_fst CategoryTheory.Limits.BinaryBicone.isBilimitOfCokernelFst
 
 /-- If `b` is a binary bicone such that `b.snd` is a cokernel of `b.inl`, then `b` is a bilimit
     bicone. -/
@@ -614,8 +591,7 @@ def BinaryBicone.isBilimitOfCokernelSnd {X Y : C} (b : BinaryBicone X Y)
         cokernel_cofork.is_colimit.desc' hb _ h₁'
       rw [← sub_eq_zero, ← hq, ← category.id_comp q, ← b.inr_snd, category.assoc, hq, h₂',
         comp_zero]
-#align
-  category_theory.limits.binary_bicone.is_bilimit_of_cokernel_snd CategoryTheory.Limits.BinaryBicone.isBilimitOfCokernelSnd
+#align category_theory.limits.binary_bicone.is_bilimit_of_cokernel_snd CategoryTheory.Limits.BinaryBicone.isBilimitOfCokernelSnd
 
 /-- Every split epi `f` with a kernel induces a binary bicone with `f` as its `snd` and
 the kernel map as its `inl`.
@@ -645,16 +621,14 @@ def binaryBiconeOfIsSplitEpiOfKernel {X Y : C} {f : X ⟶ Y} [IsSplitEpi f] {c :
       simp only [comp_sub, category.comp_id, category.assoc, sub_self, fork.is_limit.lift_ι,
         fork.ι_of_ι, is_split_epi.id_assoc]
     inr_snd' := by simp }
-#align
-  category_theory.limits.binary_bicone_of_is_split_epi_of_kernel CategoryTheory.Limits.binaryBiconeOfIsSplitEpiOfKernel
+#align category_theory.limits.binary_bicone_of_is_split_epi_of_kernel CategoryTheory.Limits.binaryBiconeOfIsSplitEpiOfKernel
 
 /-- The bicone constructed in `binary_bicone_of_is_split_epi_of_kernel` is a bilimit.
 This is a version of the splitting lemma that holds in all preadditive categories. -/
 def isBilimitBinaryBiconeOfIsSplitEpiOfKernel {X Y : C} {f : X ⟶ Y} [IsSplitEpi f]
     {c : KernelFork f} (i : IsLimit c) : (binaryBiconeOfIsSplitEpiOfKernel i).IsBilimit :=
   BinaryBicone.isBilimitOfKernelInl _ <| i.ofIsoLimit <| Fork.ext (Iso.refl _) (by simp)
-#align
-  category_theory.limits.is_bilimit_binary_bicone_of_is_split_epi_of_kernel CategoryTheory.Limits.isBilimitBinaryBiconeOfIsSplitEpiOfKernel
+#align category_theory.limits.is_bilimit_binary_bicone_of_is_split_epi_of_kernel CategoryTheory.Limits.isBilimitBinaryBiconeOfIsSplitEpiOfKernel
 
 end
 
@@ -665,14 +639,12 @@ variable {X Y : C} (f g : X ⟶ Y)
 /-- The existence of binary biproducts implies that there is at most one preadditive structure. -/
 theorem biprod.add_eq_lift_id_desc [HasBinaryBiproduct X X] :
     f + g = biprod.lift (𝟙 X) (𝟙 X) ≫ biprod.desc f g := by simp
-#align
-  category_theory.limits.biprod.add_eq_lift_id_desc CategoryTheory.Limits.biprod.add_eq_lift_id_desc
+#align category_theory.limits.biprod.add_eq_lift_id_desc CategoryTheory.Limits.biprod.add_eq_lift_id_desc
 
 /-- The existence of binary biproducts implies that there is at most one preadditive structure. -/
 theorem biprod.add_eq_lift_desc_id [HasBinaryBiproduct Y Y] :
     f + g = biprod.lift f g ≫ biprod.desc (𝟙 Y) (𝟙 Y) := by simp
-#align
-  category_theory.limits.biprod.add_eq_lift_desc_id CategoryTheory.Limits.biprod.add_eq_lift_desc_id
+#align category_theory.limits.biprod.add_eq_lift_desc_id CategoryTheory.Limits.biprod.add_eq_lift_desc_id
 
 end
 
@@ -697,8 +669,7 @@ instance subsingleton_preadditive_of_has_binary_biproducts {C : Type u} [Categor
         (by convert (inferInstance : has_binary_biproduct X X))
     refine' h₁.trans (Eq.trans _ h₂.symm)
     congr 2 <;> exact Subsingleton.elim _ _
-#align
-  category_theory.subsingleton_preadditive_of_has_binary_biproducts CategoryTheory.subsingleton_preadditive_of_has_binary_biproducts
+#align category_theory.subsingleton_preadditive_of_has_binary_biproducts CategoryTheory.subsingleton_preadditive_of_has_binary_biproducts
 
 end
 
@@ -903,8 +874,7 @@ theorem Biproduct.column_nonzero_of_iso' {σ τ : Type} [Finite τ] {S : σ → 
       simp only [reassoc_of z]
     simp
   exact h₁.symm.trans h₀
-#align
-  category_theory.biproduct.column_nonzero_of_iso' CategoryTheory.Biproduct.column_nonzero_of_iso'
+#align category_theory.biproduct.column_nonzero_of_iso' CategoryTheory.Biproduct.column_nonzero_of_iso'
 
 /-- If `f : ⨁ S ⟶ ⨁ T` is an isomorphism, and `s` is a non-trivial summand of the source,
 then there is some `t` in the target so that the `s, t` matrix entry of `f` is nonzero.
@@ -943,8 +913,7 @@ def preservesProductOfPreservesBiproduct {f : J → C} [PreservesBiproduct f F] 
         ((IsLimit.postcomposeInvEquiv (Discrete.compNatIsoDiscrete _ _) _).symm
           (isBilimitOfPreserves F (biconeIsBilimitOfLimitConeOfIsLimit hc)).IsLimit) <|
       Cones.ext (Iso.refl _) (by tidy)
-#align
-  category_theory.limits.preserves_product_of_preserves_biproduct CategoryTheory.Limits.preservesProductOfPreservesBiproduct
+#align category_theory.limits.preserves_product_of_preserves_biproduct CategoryTheory.Limits.preservesProductOfPreservesBiproduct
 
 section
 
@@ -955,8 +924,7 @@ attribute [local instance] preserves_product_of_preserves_biproduct
 def preservesProductsOfShapeOfPreservesBiproductsOfShape [PreservesBiproductsOfShape J F] :
     PreservesLimitsOfShape (Discrete J) F
     where PreservesLimit f := preservesLimitOfIsoDiagram _ Discrete.natIsoFunctor.symm
-#align
-  category_theory.limits.preserves_products_of_shape_of_preserves_biproducts_of_shape CategoryTheory.Limits.preservesProductsOfShapeOfPreservesBiproductsOfShape
+#align category_theory.limits.preserves_products_of_shape_of_preserves_biproducts_of_shape CategoryTheory.Limits.preservesProductsOfShapeOfPreservesBiproductsOfShape
 
 end
 
@@ -970,8 +938,7 @@ def preservesBiproductOfPreservesProduct {f : J → C} [PreservesLimit (Discrete
           ((IsLimit.postcomposeHomEquiv (Discrete.compNatIsoDiscrete _ _) (F.mapCone b.toCone)).symm
             (isLimitOfPreserves F hb.IsLimit)) <|
         Cones.ext (Iso.refl _) (by tidy)
-#align
-  category_theory.limits.preserves_biproduct_of_preserves_product CategoryTheory.Limits.preservesBiproductOfPreservesProduct
+#align category_theory.limits.preserves_biproduct_of_preserves_product CategoryTheory.Limits.preservesBiproductOfPreservesProduct
 
 /-- If the (product-like) biproduct comparison for `F` and `f` is a monomorphism, then `F`
     preserves the biproduct of `f`. For the converse, see `map_biproduct`. -/
@@ -991,8 +958,7 @@ def preservesBiproductOfMonoBiproductComparison {f : J → C} [HasBiproduct f]
     infer_instance
   haveI := preserves_product.of_iso_comparison F f
   apply preserves_biproduct_of_preserves_product
-#align
-  category_theory.limits.preserves_biproduct_of_mono_biproduct_comparison CategoryTheory.Limits.preservesBiproductOfMonoBiproductComparison
+#align category_theory.limits.preserves_biproduct_of_mono_biproduct_comparison CategoryTheory.Limits.preservesBiproductOfMonoBiproductComparison
 
 /-- If the (coproduct-like) biproduct comparison for `F` and `f` is an epimorphism, then `F`
     preserves the biproduct of `F` and `f`. For the converse, see `map_biproduct`. -/
@@ -1003,15 +969,13 @@ def preservesBiproductOfEpiBiproductComparison' {f : J → C} [HasBiproduct f]
   haveI : is_iso (biproduct_comparison F f) :=
     is_iso.of_epi_section' (split_epi_biproduct_comparison F f)
   apply preserves_biproduct_of_mono_biproduct_comparison
-#align
-  category_theory.limits.preserves_biproduct_of_epi_biproduct_comparison' CategoryTheory.Limits.preservesBiproductOfEpiBiproductComparison'
+#align category_theory.limits.preserves_biproduct_of_epi_biproduct_comparison' CategoryTheory.Limits.preservesBiproductOfEpiBiproductComparison'
 
 /-- A functor between preadditive categories that preserves (zero morphisms and) finite products
     preserves finite biproducts. -/
 def preservesBiproductsOfShapeOfPreservesProductsOfShape [PreservesLimitsOfShape (Discrete J) F] :
     PreservesBiproductsOfShape J F where preserves f := preservesBiproductOfPreservesProduct F
-#align
-  category_theory.limits.preserves_biproducts_of_shape_of_preserves_products_of_shape CategoryTheory.Limits.preservesBiproductsOfShapeOfPreservesProductsOfShape
+#align category_theory.limits.preserves_biproducts_of_shape_of_preserves_products_of_shape CategoryTheory.Limits.preservesBiproductsOfShapeOfPreservesProductsOfShape
 
 /-- A functor between preadditive categories that preserves (zero morphisms and) finite biproducts
     preserves finite coproducts. -/
@@ -1022,8 +986,7 @@ def preservesCoproductOfPreservesBiproduct {f : J → C} [PreservesBiproduct f F
         ((IsColimit.precomposeHomEquiv (Discrete.compNatIsoDiscrete _ _) _).symm
           (isBilimitOfPreserves F (biconeIsBilimitOfColimitCoconeOfIsColimit hc)).IsColimit) <|
       Cocones.ext (Iso.refl _) (by tidy)
-#align
-  category_theory.limits.preserves_coproduct_of_preserves_biproduct CategoryTheory.Limits.preservesCoproductOfPreservesBiproduct
+#align category_theory.limits.preserves_coproduct_of_preserves_biproduct CategoryTheory.Limits.preservesCoproductOfPreservesBiproduct
 
 section
 
@@ -1034,8 +997,7 @@ attribute [local instance] preserves_coproduct_of_preserves_biproduct
 def preservesCoproductsOfShapeOfPreservesBiproductsOfShape [PreservesBiproductsOfShape J F] :
     PreservesColimitsOfShape (Discrete J) F
     where PreservesColimit f := preservesColimitOfIsoDiagram _ Discrete.natIsoFunctor.symm
-#align
-  category_theory.limits.preserves_coproducts_of_shape_of_preserves_biproducts_of_shape CategoryTheory.Limits.preservesCoproductsOfShapeOfPreservesBiproductsOfShape
+#align category_theory.limits.preserves_coproducts_of_shape_of_preserves_biproducts_of_shape CategoryTheory.Limits.preservesCoproductsOfShapeOfPreservesBiproductsOfShape
 
 end
 
@@ -1050,16 +1012,14 @@ def preservesBiproductOfPreservesCoproduct {f : J → C} [PreservesColimit (Disc
                 (F.mapCocone b.toCocone)).symm
             (isColimitOfPreserves F hb.IsColimit)) <|
         Cocones.ext (Iso.refl _) (by tidy)
-#align
-  category_theory.limits.preserves_biproduct_of_preserves_coproduct CategoryTheory.Limits.preservesBiproductOfPreservesCoproduct
+#align category_theory.limits.preserves_biproduct_of_preserves_coproduct CategoryTheory.Limits.preservesBiproductOfPreservesCoproduct
 
 /-- A functor between preadditive categories that preserves (zero morphisms and) finite coproducts
     preserves finite biproducts. -/
 def preservesBiproductsOfShapeOfPreservesCoproductsOfShape
     [PreservesColimitsOfShape (Discrete J) F] : PreservesBiproductsOfShape J F
     where preserves f := preservesBiproductOfPreservesCoproduct F
-#align
-  category_theory.limits.preserves_biproducts_of_shape_of_preserves_coproducts_of_shape CategoryTheory.Limits.preservesBiproductsOfShapeOfPreservesCoproductsOfShape
+#align category_theory.limits.preserves_biproducts_of_shape_of_preserves_coproducts_of_shape CategoryTheory.Limits.preservesBiproductsOfShapeOfPreservesCoproductsOfShape
 
 end Fintype
 
@@ -1074,8 +1034,7 @@ def preservesBinaryProductOfPreservesBinaryBiproduct {X Y : C} [PreservesBinaryB
       Cones.ext (Iso.refl _) fun j => by
         rcases j with ⟨⟨⟩⟩
         tidy
-#align
-  category_theory.limits.preserves_binary_product_of_preserves_binary_biproduct CategoryTheory.Limits.preservesBinaryProductOfPreservesBinaryBiproduct
+#align category_theory.limits.preserves_binary_product_of_preserves_binary_biproduct CategoryTheory.Limits.preservesBinaryProductOfPreservesBinaryBiproduct
 
 section
 
@@ -1086,8 +1045,7 @@ attribute [local instance] preserves_binary_product_of_preserves_binary_biproduc
 def preservesBinaryProductsOfPreservesBinaryBiproducts [PreservesBinaryBiproducts F] :
     PreservesLimitsOfShape (Discrete WalkingPair) F
     where PreservesLimit K := preservesLimitOfIsoDiagram _ (diagramIsoPair _).symm
-#align
-  category_theory.limits.preserves_binary_products_of_preserves_binary_biproducts CategoryTheory.Limits.preservesBinaryProductsOfPreservesBinaryBiproducts
+#align category_theory.limits.preserves_binary_products_of_preserves_binary_biproducts CategoryTheory.Limits.preservesBinaryProductsOfPreservesBinaryBiproducts
 
 end
 
@@ -1103,8 +1061,7 @@ def preservesBinaryBiproductOfPreservesBinaryProduct {X Y : C} [PreservesLimit (
         Cones.ext (Iso.refl _) fun j => by
           rcases j with ⟨⟨⟩⟩
           tidy
-#align
-  category_theory.limits.preserves_binary_biproduct_of_preserves_binary_product CategoryTheory.Limits.preservesBinaryBiproductOfPreservesBinaryProduct
+#align category_theory.limits.preserves_binary_biproduct_of_preserves_binary_product CategoryTheory.Limits.preservesBinaryBiproductOfPreservesBinaryProduct
 
 /-- If the (product-like) biproduct comparison for `F`, `X` and `Y` is a monomorphism, then
     `F` preserves the biproduct of `X` and `Y`. For the converse, see `map_biprod`. -/
@@ -1122,8 +1079,7 @@ def preservesBinaryBiproductOfMonoBiprodComparison {X Y : C} [HasBinaryBiproduct
     infer_instance
   haveI := preserves_limit_pair.of_iso_prod_comparison F X Y
   apply preserves_binary_biproduct_of_preserves_binary_product
-#align
-  category_theory.limits.preserves_binary_biproduct_of_mono_biprod_comparison CategoryTheory.Limits.preservesBinaryBiproductOfMonoBiprodComparison
+#align category_theory.limits.preserves_binary_biproduct_of_mono_biprod_comparison CategoryTheory.Limits.preservesBinaryBiproductOfMonoBiprodComparison
 
 /-- If the (coproduct-like) biproduct comparison for `F`, `X` and `Y` is an epimorphism, then
     `F` preserves the biproduct of `X` and `Y`. For the converse, see `map_biprod`. -/
@@ -1135,16 +1091,14 @@ def preservesBinaryBiproductOfEpiBiprodComparison' {X Y : C} [HasBinaryBiproduct
   haveI : is_iso (biprod_comparison F X Y) :=
     is_iso.of_epi_section' (split_epi_biprod_comparison F X Y)
   apply preserves_binary_biproduct_of_mono_biprod_comparison
-#align
-  category_theory.limits.preserves_binary_biproduct_of_epi_biprod_comparison' CategoryTheory.Limits.preservesBinaryBiproductOfEpiBiprodComparison'
+#align category_theory.limits.preserves_binary_biproduct_of_epi_biprod_comparison' CategoryTheory.Limits.preservesBinaryBiproductOfEpiBiprodComparison'
 
 /-- A functor between preadditive categories that preserves (zero morphisms and) binary products
     preserves binary biproducts. -/
 def preservesBinaryBiproductsOfPreservesBinaryProducts
     [PreservesLimitsOfShape (Discrete WalkingPair) F] : PreservesBinaryBiproducts F
     where preserves X Y := preservesBinaryBiproductOfPreservesBinaryProduct F
-#align
-  category_theory.limits.preserves_binary_biproducts_of_preserves_binary_products CategoryTheory.Limits.preservesBinaryBiproductsOfPreservesBinaryProducts
+#align category_theory.limits.preserves_binary_biproducts_of_preserves_binary_products CategoryTheory.Limits.preservesBinaryBiproductsOfPreservesBinaryProducts
 
 /-- A functor between preadditive categories that preserves (zero morphisms and) binary biproducts
     preserves binary coproducts. -/
@@ -1158,8 +1112,7 @@ def preservesBinaryCoproductOfPreservesBinaryBiproduct {X Y : C} [PreservesBinar
       Cocones.ext (Iso.refl _) fun j => by
         rcases j with ⟨⟨⟩⟩
         tidy
-#align
-  category_theory.limits.preserves_binary_coproduct_of_preserves_binary_biproduct CategoryTheory.Limits.preservesBinaryCoproductOfPreservesBinaryBiproduct
+#align category_theory.limits.preserves_binary_coproduct_of_preserves_binary_biproduct CategoryTheory.Limits.preservesBinaryCoproductOfPreservesBinaryBiproduct
 
 section
 
@@ -1170,8 +1123,7 @@ attribute [local instance] preserves_binary_coproduct_of_preserves_binary_biprod
 def preservesBinaryCoproductsOfPreservesBinaryBiproducts [PreservesBinaryBiproducts F] :
     PreservesColimitsOfShape (Discrete WalkingPair) F
     where PreservesColimit K := preservesColimitOfIsoDiagram _ (diagramIsoPair _).symm
-#align
-  category_theory.limits.preserves_binary_coproducts_of_preserves_binary_biproducts CategoryTheory.Limits.preservesBinaryCoproductsOfPreservesBinaryBiproducts
+#align category_theory.limits.preserves_binary_coproducts_of_preserves_binary_biproducts CategoryTheory.Limits.preservesBinaryCoproductsOfPreservesBinaryBiproducts
 
 end
 
@@ -1187,16 +1139,14 @@ def preservesBinaryBiproductOfPreservesBinaryCoproduct {X Y : C} [PreservesColim
         Cocones.ext (Iso.refl _) fun j => by
           rcases j with ⟨⟨⟩⟩
           tidy
-#align
-  category_theory.limits.preserves_binary_biproduct_of_preserves_binary_coproduct CategoryTheory.Limits.preservesBinaryBiproductOfPreservesBinaryCoproduct
+#align category_theory.limits.preserves_binary_biproduct_of_preserves_binary_coproduct CategoryTheory.Limits.preservesBinaryBiproductOfPreservesBinaryCoproduct
 
 /-- A functor between preadditive categories that preserves (zero morphisms and) binary coproducts
     preserves binary biproducts. -/
 def preservesBinaryBiproductsOfPreservesBinaryCoproducts
     [PreservesColimitsOfShape (Discrete WalkingPair) F] : PreservesBinaryBiproducts F
     where preserves X Y := preservesBinaryBiproductOfPreservesBinaryCoproduct F
-#align
-  category_theory.limits.preserves_binary_biproducts_of_preserves_binary_coproducts CategoryTheory.Limits.preservesBinaryBiproductsOfPreservesBinaryCoproducts
+#align category_theory.limits.preserves_binary_biproducts_of_preserves_binary_coproducts CategoryTheory.Limits.preservesBinaryBiproductsOfPreservesBinaryCoproducts
 
 end Limits
 

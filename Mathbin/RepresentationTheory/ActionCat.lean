@@ -296,8 +296,7 @@ evaluation at `punit.star`. -/
 def functorCategoryEquivalenceCompEvaluation :
     (functorCategoryEquivalence V G).Functor ⋙ (evaluation _ _).obj PUnit.unit ≅ forget V G :=
   Iso.refl _
-#align
-  Action.functor_category_equivalence_comp_evaluation ActionCat.functorCategoryEquivalenceCompEvaluation
+#align Action.functor_category_equivalence_comp_evaluation ActionCat.functorCategoryEquivalenceCompEvaluation
 
 noncomputable instance [HasLimits V] : Limits.PreservesLimits (forget V G) :=
   Limits.preservesLimitsOfNatIso (ActionCat.functorCategoryEquivalenceCompEvaluation V G)
@@ -341,8 +340,7 @@ instance forget₂_preserves_zero_morphisms [ConcreteCategory V] :
 
 instance functor_category_equivalence_preserves_zero_morphisms :
     Functor.PreservesZeroMorphisms (functorCategoryEquivalence V G).Functor where
-#align
-  Action.functor_category_equivalence_preserves_zero_morphisms ActionCat.functor_category_equivalence_preserves_zero_morphisms
+#align Action.functor_category_equivalence_preserves_zero_morphisms ActionCat.functor_category_equivalence_preserves_zero_morphisms
 
 end HasZeroMorphisms
 

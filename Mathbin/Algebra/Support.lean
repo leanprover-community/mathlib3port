@@ -254,8 +254,7 @@ theorem mul_support_along_fiber_subset (f : α × β → M) (a : α) :
 theorem mul_support_along_fiber_finite_of_finite (f : α × β → M) (a : α)
     (h : (mulSupport f).Finite) : (mulSupport fun b => f (a, b)).Finite :=
   (h.image Prod.snd).Subset (mul_support_along_fiber_subset f a)
-#align
-  function.mul_support_along_fiber_finite_of_finite Function.mul_support_along_fiber_finite_of_finite
+#align function.mul_support_along_fiber_finite_of_finite Function.mul_support_along_fiber_finite_of_finite
 #align function.support_along_fiber_finite_of_finite Function.support_along_fiber_finite_of_finite
 
 end One

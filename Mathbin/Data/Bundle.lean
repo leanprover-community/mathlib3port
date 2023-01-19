@@ -147,7 +147,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align bundle.to_total_space_coe [anonymous]ₓ'. -/
 theorem [anonymous] {x : B} (v : E x) : (v : TotalSpace E) = totalSpaceMk x v :=
   rfl
-#align bundle.to_total_space_coe[anonymous]
+#align bundle.to_total_space_coe [anonymous]
 
 -- mathport name: «expr ×ᵇ »
 notation:100 -- notation for the direct sum of two bundles over the same base

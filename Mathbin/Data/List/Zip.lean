@@ -930,8 +930,7 @@ theorem prod_mul_prod_eq_prod_zipWith_mul_prod_drop :
     rw [mul_assoc x, mul_comm xs.prod, mul_assoc y, mul_comm ys.prod,
       prod_mul_prod_eq_prod_zip_with_mul_prod_drop xs ys, mul_assoc, mul_assoc, mul_assoc,
       mul_assoc]
-#align
-  list.prod_mul_prod_eq_prod_zip_with_mul_prod_drop List.prod_mul_prod_eq_prod_zipWith_mul_prod_drop
+#align list.prod_mul_prod_eq_prod_zip_with_mul_prod_drop List.prod_mul_prod_eq_prod_zipWith_mul_prod_drop
 
 /- warning: list.prod_mul_prod_eq_prod_zip_with_of_length_eq -> List.prod_mul_prod_eq_prod_zipWith_of_length_eq is a dubious translation:
 lean 3 declaration is
@@ -943,8 +942,7 @@ Case conversion may be inaccurate. Consider using '#align list.prod_mul_prod_eq_
 theorem prod_mul_prod_eq_prod_zipWith_of_length_eq (L L' : List α) (h : L.length = L'.length) :
     L.Prod * L'.Prod = (zipWith (· * ·) L L').Prod :=
   (prod_mul_prod_eq_prod_zipWith_mul_prod_drop L L').trans (by simp [h])
-#align
-  list.prod_mul_prod_eq_prod_zip_with_of_length_eq List.prod_mul_prod_eq_prod_zipWith_of_length_eq
+#align list.prod_mul_prod_eq_prod_zip_with_of_length_eq List.prod_mul_prod_eq_prod_zipWith_of_length_eq
 
 end CommMonoid
 

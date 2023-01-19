@@ -149,24 +149,21 @@ hypothesis `h` directly depends on a hypothesis whose unique name appears in
 unsafe def hyp_directly_depends_on_local_name_set_inclusive (h : expr) (ns : name_set) :
     tactic Bool :=
   List.orM [pure <| ns.contains h.local_uniq_name, hyp_directly_depends_on_local_name_set h ns]
-#align
-  tactic.hyp_directly_depends_on_local_name_set_inclusive tactic.hyp_directly_depends_on_local_name_set_inclusive
+#align tactic.hyp_directly_depends_on_local_name_set_inclusive tactic.hyp_directly_depends_on_local_name_set_inclusive
 
 /-- `hyp_directly_depends_on_local_set_inclusive h ns` is true iff the hypothesis `h`
 directly depends on any of the hypotheses `hs` or `h` appears in `hs`.
 -/
 unsafe def hyp_directly_depends_on_local_set_inclusive (h : expr) (hs : expr_set) : tactic Bool :=
   hyp_directly_depends_on_local_name_set_inclusive h <| local_set_to_name_set hs
-#align
-  tactic.hyp_directly_depends_on_local_set_inclusive tactic.hyp_directly_depends_on_local_set_inclusive
+#align tactic.hyp_directly_depends_on_local_set_inclusive tactic.hyp_directly_depends_on_local_set_inclusive
 
 /-- `hyp_directly_depends_on_locals_inclusive h ns` is true iff the hypothesis `h`
 directly depends on any of the hypotheses `hs` or `h` appears in `hs`.
 -/
 unsafe def hyp_directly_depends_on_locals_inclusive (h : expr) (hs : List expr) : tactic Bool :=
   hyp_directly_depends_on_local_name_set_inclusive h <| local_list_to_name_set hs
-#align
-  tactic.hyp_directly_depends_on_locals_inclusive tactic.hyp_directly_depends_on_locals_inclusive
+#align tactic.hyp_directly_depends_on_locals_inclusive tactic.hyp_directly_depends_on_locals_inclusive
 
 /-! #### Computing the direct dependencies of a hypothesis -/
 
@@ -214,8 +211,7 @@ hypotheses that the hypothesis `h` directly depends on, plus `h` itself.
 -/
 unsafe def direct_dependency_name_set_of_hyp_inclusive (h : expr) : tactic name_set :=
   local_set_to_name_set <$> direct_dependency_set_of_hyp_inclusive h
-#align
-  tactic.direct_dependency_name_set_of_hyp_inclusive tactic.direct_dependency_name_set_of_hyp_inclusive
+#align tactic.direct_dependency_name_set_of_hyp_inclusive tactic.direct_dependency_name_set_of_hyp_inclusive
 
 /-- `direct_dependencies_of_hyp_inclusive h` is the list of hypotheses that the
 hypothesis `h` directly depends on, plus `h` itself. The dependencies are
@@ -327,8 +323,7 @@ unsafe def hyp_depends_on_local_name_set_inclusive' (cache : expr_set) (h : expr
     tactic (Bool × expr_set) :=
   if ns.contains h.local_uniq_name then pure (true, cache)
   else hyp_depends_on_local_name_set' cache h ns
-#align
-  tactic.hyp_depends_on_local_name_set_inclusive' tactic.hyp_depends_on_local_name_set_inclusive'
+#align tactic.hyp_depends_on_local_name_set_inclusive' tactic.hyp_depends_on_local_name_set_inclusive'
 
 /-- `hyp_depends_on_local_name_set_inclusive h ns` is true iff the hypothesis `h`
 inclusively depends on any of the hypotheses whose unique names appear in `ns`.
@@ -566,8 +561,7 @@ private unsafe def reverse_dependencies_of_hyp_name_set_aux (hs : name_set) :
       List.andM [pure <| ¬hs.contains H_uname, hyp_directly_depends_on_local_name_set H ns]
     if H_is_revdep then reverse_dependencies_of_hyp_name_set_aux Hs (H :: revdeps) (ns H_uname)
       else reverse_dependencies_of_hyp_name_set_aux Hs revdeps ns
-#align
-  tactic.reverse_dependencies_of_hyp_name_set_aux tactic.reverse_dependencies_of_hyp_name_set_aux
+#align tactic.reverse_dependencies_of_hyp_name_set_aux tactic.reverse_dependencies_of_hyp_name_set_aux
 
 /-- `reverse_dependencies_of_hyp_name_set hs` is the list of reverse dependencies of
 the hypotheses whose unique names appear in `hs`, excluding the `hs` themselves.
@@ -606,8 +600,7 @@ private unsafe def reverse_dependencies_of_hyp_name_set_inclusive_aux :
     if H_is_revdep then
         reverse_dependencies_of_hyp_name_set_inclusive_aux Hs (H :: revdeps) (ns H_uname)
       else reverse_dependencies_of_hyp_name_set_inclusive_aux Hs revdeps ns
-#align
-  tactic.reverse_dependencies_of_hyp_name_set_inclusive_aux tactic.reverse_dependencies_of_hyp_name_set_inclusive_aux
+#align tactic.reverse_dependencies_of_hyp_name_set_inclusive_aux tactic.reverse_dependencies_of_hyp_name_set_inclusive_aux
 
 /-- `reverse_dependencies_of_hyp_name_set_inclusive hs` is the list of reverse
 dependencies of the hypotheses whose unique names appear in `hs`, including the
@@ -618,8 +611,7 @@ unsafe def reverse_dependencies_of_hyp_name_set_inclusive (hs : name_set) : tact
   let ctx ← local_context
   let ctx := ctx.dropWhile fun h => ¬hs.contains h.local_uniq_name
   reverse_dependencies_of_hyp_name_set_inclusive_aux ctx [] hs
-#align
-  tactic.reverse_dependencies_of_hyp_name_set_inclusive tactic.reverse_dependencies_of_hyp_name_set_inclusive
+#align tactic.reverse_dependencies_of_hyp_name_set_inclusive tactic.reverse_dependencies_of_hyp_name_set_inclusive
 
 /-- `reverse_dependencies_of_hyp_set_inclusive hs` is the list of reverse
 dependencies of the hypotheses `hs`, including the `hs` themselves. The
@@ -628,8 +620,7 @@ the context.
 -/
 unsafe def reverse_dependencies_of_hyp_set_inclusive (hs : expr_set) : tactic (List expr) :=
   reverse_dependencies_of_hyp_name_set_inclusive <| local_set_to_name_set hs
-#align
-  tactic.reverse_dependencies_of_hyp_set_inclusive tactic.reverse_dependencies_of_hyp_set_inclusive
+#align tactic.reverse_dependencies_of_hyp_set_inclusive tactic.reverse_dependencies_of_hyp_set_inclusive
 
 /-- `reverse_dependencies_of_hyps_inclusive hs` is the list of reverse dependencies
 of the hypotheses `hs`, including the `hs` themselves. The reverse dependencies
@@ -696,8 +687,7 @@ reverted hypotheses.
 -/
 unsafe def revert_reverse_dependencies_of_hyp_name_set (hs : name_set) : tactic ℕ :=
   reverse_dependencies_of_hyp_name_set hs >>= revert_lst
-#align
-  tactic.revert_reverse_dependencies_of_hyp_name_set tactic.revert_reverse_dependencies_of_hyp_name_set
+#align tactic.revert_reverse_dependencies_of_hyp_name_set tactic.revert_reverse_dependencies_of_hyp_name_set
 
 /-- `revert_reverse_dependencies_of_hyp_set hs` reverts all the hypotheses that
 depend on a hypothesis in `hs`. The `hs` themselves are not reverted, unless

@@ -204,8 +204,7 @@ instance (priority := 100) CompleteLatticeHomClass.toFrameHomClass [CompleteLatt
 instance (priority := 100) CompleteLatticeHomClass.toBoundedLatticeHomClass [CompleteLattice α]
     [CompleteLattice β] [CompleteLatticeHomClass F α β] : BoundedLatticeHomClass F α β :=
   { SupHomClass.toSupBotHomClass, InfHomClass.toInfTopHomClass with }
-#align
-  complete_lattice_hom_class.to_bounded_lattice_hom_class CompleteLatticeHomClass.toBoundedLatticeHomClass
+#align complete_lattice_hom_class.to_bounded_lattice_hom_class CompleteLatticeHomClass.toBoundedLatticeHomClass
 
 /- warning: order_iso_class.to_Sup_hom_class clashes with order_iso_class.to_sup_hom_class -> OrderIsoClass.toSupHomClass
 warning: order_iso_class.to_Sup_hom_class -> OrderIsoClass.toSupHomClass is a dubious translation:

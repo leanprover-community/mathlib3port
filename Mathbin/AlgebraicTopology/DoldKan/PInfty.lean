@@ -59,14 +59,12 @@ theorem P_is_eventually_constant {q n : ℕ} (hqn : n ≤ q) :
     simp only [add_right_eq_self, comp_add, HomologicalComplex.comp_f,
       HomologicalComplex.add_f_apply, comp_id]
     exact (higher_faces_vanish.of_P q n).comp_Hσ_eq_zero (nat.succ_le_iff.mp hqn)
-#align
-  algebraic_topology.dold_kan.P_is_eventually_constant AlgebraicTopology.DoldKan.P_is_eventually_constant
+#align algebraic_topology.dold_kan.P_is_eventually_constant AlgebraicTopology.DoldKan.P_is_eventually_constant
 
 theorem Q_is_eventually_constant {q n : ℕ} (hqn : n ≤ q) :
     ((q (q + 1)).f n : X _[n] ⟶ _) = (q q).f n := by
   simp only [Q, HomologicalComplex.sub_f_apply, P_is_eventually_constant hqn]
-#align
-  algebraic_topology.dold_kan.Q_is_eventually_constant AlgebraicTopology.DoldKan.Q_is_eventually_constant
+#align algebraic_topology.dold_kan.Q_is_eventually_constant AlgebraicTopology.DoldKan.Q_is_eventually_constant
 
 /-- The endomorphism `P_infty : K[X] ⟶ K[X]` obtained from the `P q` by passing to the limit. -/
 def pInfty : K[X] ⟶ K[X] :=
@@ -104,15 +102,13 @@ theorem Q_infty_f (n : ℕ) : (qInfty.f n : X _[n] ⟶ X _[n]) = (q n).f n :=
 theorem P_infty_f_naturality (n : ℕ) {X Y : SimplicialObject C} (f : X ⟶ Y) :
     f.app (op [n]) ≫ pInfty.f n = pInfty.f n ≫ f.app (op [n]) :=
   P_f_naturality n n f
-#align
-  algebraic_topology.dold_kan.P_infty_f_naturality AlgebraicTopology.DoldKan.P_infty_f_naturality
+#align algebraic_topology.dold_kan.P_infty_f_naturality AlgebraicTopology.DoldKan.P_infty_f_naturality
 
 @[simp, reassoc.1]
 theorem Q_infty_f_naturality (n : ℕ) {X Y : SimplicialObject C} (f : X ⟶ Y) :
     f.app (op [n]) ≫ qInfty.f n = qInfty.f n ≫ f.app (op [n]) :=
   Q_f_naturality n n f
-#align
-  algebraic_topology.dold_kan.Q_infty_f_naturality AlgebraicTopology.DoldKan.Q_infty_f_naturality
+#align algebraic_topology.dold_kan.Q_infty_f_naturality AlgebraicTopology.DoldKan.Q_infty_f_naturality
 
 @[simp, reassoc.1]
 theorem P_infty_f_idem (n : ℕ) : (pInfty.f n : X _[n] ⟶ _) ≫ pInfty.f n = pInfty.f n := by
@@ -144,16 +140,14 @@ theorem P_infty_f_comp_Q_infty_f (n : ℕ) : (pInfty.f n : X _[n] ⟶ _) ≫ qIn
   dsimp only [Q_infty]
   simp only [HomologicalComplex.sub_f_apply, HomologicalComplex.id_f, comp_sub, comp_id,
     P_infty_f_idem, sub_self]
-#align
-  algebraic_topology.dold_kan.P_infty_f_comp_Q_infty_f AlgebraicTopology.DoldKan.P_infty_f_comp_Q_infty_f
+#align algebraic_topology.dold_kan.P_infty_f_comp_Q_infty_f AlgebraicTopology.DoldKan.P_infty_f_comp_Q_infty_f
 
 @[simp, reassoc.1]
 theorem P_infty_comp_Q_infty : (pInfty : K[X] ⟶ _) ≫ Q_infty = 0 :=
   by
   ext n
   apply P_infty_f_comp_Q_infty_f
-#align
-  algebraic_topology.dold_kan.P_infty_comp_Q_infty AlgebraicTopology.DoldKan.P_infty_comp_Q_infty
+#align algebraic_topology.dold_kan.P_infty_comp_Q_infty AlgebraicTopology.DoldKan.P_infty_comp_Q_infty
 
 @[simp, reassoc.1]
 theorem Q_infty_f_comp_P_infty_f (n : ℕ) : (qInfty.f n : X _[n] ⟶ _) ≫ pInfty.f n = 0 :=
@@ -161,16 +155,14 @@ theorem Q_infty_f_comp_P_infty_f (n : ℕ) : (qInfty.f n : X _[n] ⟶ _) ≫ pIn
   dsimp only [Q_infty]
   simp only [HomologicalComplex.sub_f_apply, HomologicalComplex.id_f, sub_comp, id_comp,
     P_infty_f_idem, sub_self]
-#align
-  algebraic_topology.dold_kan.Q_infty_f_comp_P_infty_f AlgebraicTopology.DoldKan.Q_infty_f_comp_P_infty_f
+#align algebraic_topology.dold_kan.Q_infty_f_comp_P_infty_f AlgebraicTopology.DoldKan.Q_infty_f_comp_P_infty_f
 
 @[simp, reassoc.1]
 theorem Q_infty_comp_P_infty : (qInfty : K[X] ⟶ _) ≫ P_infty = 0 :=
   by
   ext n
   apply Q_infty_f_comp_P_infty_f
-#align
-  algebraic_topology.dold_kan.Q_infty_comp_P_infty AlgebraicTopology.DoldKan.Q_infty_comp_P_infty
+#align algebraic_topology.dold_kan.Q_infty_comp_P_infty AlgebraicTopology.DoldKan.Q_infty_comp_P_infty
 
 @[simp]
 theorem P_infty_add_Q_infty : (pInfty : K[X] ⟶ _) + Q_infty = 𝟙 _ :=
@@ -181,8 +173,7 @@ theorem P_infty_add_Q_infty : (pInfty : K[X] ⟶ _) + Q_infty = 𝟙 _ :=
 
 theorem P_infty_f_add_Q_infty_f (n : ℕ) : (pInfty.f n : X _[n] ⟶ _) + qInfty.f n = 𝟙 _ :=
   HomologicalComplex.congr_hom P_infty_add_Q_infty n
-#align
-  algebraic_topology.dold_kan.P_infty_f_add_Q_infty_f AlgebraicTopology.DoldKan.P_infty_f_add_Q_infty_f
+#align algebraic_topology.dold_kan.P_infty_f_add_Q_infty_f AlgebraicTopology.DoldKan.P_infty_f_add_Q_infty_f
 
 variable (C)
 

@@ -327,7 +327,7 @@ instance [anonymous] [Preorder ι] [∀ i, Preorder (α i)] [NoMaxOrder ι] [∀
     obtain ⟨j, h⟩ := exists_gt i
     obtain ⟨b⟩ : Nonempty (α j) := inferInstance
     exact ⟨⟨j, b⟩, left _ _ h⟩⟩
-#align sigma.lex.no_min_order_of_nonempty[anonymous]
+#align sigma.lex.no_min_order_of_nonempty [anonymous]
 
 #print Sigma.Lex.noMaxOrder /-
 instance noMaxOrder [Preorder ι] [∀ i, Preorder (α i)] [∀ i, NoMaxOrder (α i)] :

@@ -177,10 +177,8 @@ theorem Infinite.order_of_eq_zero_of_forall_mem_zpowers [Infinite α] {g : α}
     have : 0 ≤ t := Int.emod_nonneg (-k) (by exact_mod_cast ho.ne')
     refine' ⟨t.to_nat, _⟩
     rwa [← zpow_ofNat, Int.toNat_of_nonneg this]
-#align
-  infinite.order_of_eq_zero_of_forall_mem_zpowers Infinite.order_of_eq_zero_of_forall_mem_zpowers
-#align
-  infinite.add_order_of_eq_zero_of_forall_mem_zmultiples Infinite.add_order_of_eq_zero_of_forall_mem_zmultiples
+#align infinite.order_of_eq_zero_of_forall_mem_zpowers Infinite.order_of_eq_zero_of_forall_mem_zpowers
+#align infinite.add_order_of_eq_zero_of_forall_mem_zmultiples Infinite.add_order_of_eq_zero_of_forall_mem_zmultiples
 
 @[to_additive Bot.is_add_cyclic]
 instance Bot.is_cyclic {α : Type u} [Group α] : IsCyclic (⊥ : Subgroup α) :=
@@ -274,7 +272,7 @@ theorem IsCyclic.card_pow_eq_one_le [DecidableEq α] [Fintype α] [IsCyclic α] 
           by
           rw [hm0, mul_zero, Fintype.card_eq_zero_iff] at hm
           exact hm.elim' 1
-      simp only [Set.to_finset_card, SetLike.coe_sort_coe]
+      simp only [Set.toFinset_card, SetLike.coe_sort_coe]
       rw [← order_eq_card_zpowers, order_of_pow g, order_of_eq_card_of_forall_mem_zpowers hg]
       rw [hm]
       rw [Nat.mul_div_cancel_left _ (gcd_pos_of_pos_left _ hn0), gcd_mul_left_left, hm,
@@ -574,10 +572,8 @@ theorem CommGroup.is_simple_iff_is_cyclic_and_prime_card [Fintype α] [CommGroup
   · rintro ⟨hc, hp⟩
     haveI : Fact (Fintype.card α).Prime := ⟨hp⟩
     exact is_simple_group_of_prime_card rfl
-#align
-  comm_group.is_simple_iff_is_cyclic_and_prime_card CommGroup.is_simple_iff_is_cyclic_and_prime_card
-#align
-  add_comm_group.is_simple_iff_is_add_cyclic_and_prime_card AddCommGroup.is_simple_iff_is_add_cyclic_and_prime_card
+#align comm_group.is_simple_iff_is_cyclic_and_prime_card CommGroup.is_simple_iff_is_cyclic_and_prime_card
+#align add_comm_group.is_simple_iff_is_add_cyclic_and_prime_card AddCommGroup.is_simple_iff_is_add_cyclic_and_prime_card
 
 section Exponent
 

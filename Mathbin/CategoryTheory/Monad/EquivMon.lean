@@ -135,20 +135,17 @@ def counitIso : monToMonad C ⋙ monadToMon C ≅ 𝟭 _
   inv_hom_id' := by
     ext
     simp
-#align
-  category_theory.Monad.Monad_Mon_equiv.counit_iso CategoryTheory.MonadCat.MonadMonEquiv.counitIso
+#align category_theory.Monad.Monad_Mon_equiv.counit_iso CategoryTheory.MonadCat.MonadMonEquiv.counitIso
 
 /-- Auxiliary definition for `Monad_Mon_equiv` -/
 @[simps]
 def unitIsoHom : 𝟭 _ ⟶ monadToMon C ⋙ monToMonad C where app _ := { app := fun _ => 𝟙 _ }
-#align
-  category_theory.Monad.Monad_Mon_equiv.unit_iso_hom CategoryTheory.MonadCat.MonadMonEquiv.unitIsoHom
+#align category_theory.Monad.Monad_Mon_equiv.unit_iso_hom CategoryTheory.MonadCat.MonadMonEquiv.unitIsoHom
 
 /-- Auxiliary definition for `Monad_Mon_equiv` -/
 @[simps]
 def unitIsoInv : monadToMon C ⋙ monToMonad C ⟶ 𝟭 _ where app _ := { app := fun _ => 𝟙 _ }
-#align
-  category_theory.Monad.Monad_Mon_equiv.unit_iso_inv CategoryTheory.MonadCat.MonadMonEquiv.unitIsoInv
+#align category_theory.Monad.Monad_Mon_equiv.unit_iso_inv CategoryTheory.MonadCat.MonadMonEquiv.unitIsoInv
 
 /-- Isomorphism of functors used in `Monad_Mon_equiv` -/
 @[simps]

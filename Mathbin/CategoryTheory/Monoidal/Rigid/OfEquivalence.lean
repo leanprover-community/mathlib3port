@@ -77,14 +77,12 @@ def hasRightDualOfEquivalence [IsEquivalence F.toFunctor] (X : C) [HasRightDual 
 /-- Pull back a left rigid structure along an equivalence. -/
 def leftRigidCategoryOfEquivalence [IsEquivalence F.toFunctor] [LeftRigidCategory D] :
     LeftRigidCategory C where leftDual X := hasLeftDualOfEquivalence F X
-#align
-  category_theory.left_rigid_category_of_equivalence CategoryTheory.leftRigidCategoryOfEquivalence
+#align category_theory.left_rigid_category_of_equivalence CategoryTheory.leftRigidCategoryOfEquivalence
 
 /-- Pull back a right rigid structure along an equivalence. -/
 def rightRigidCategoryOfEquivalence [IsEquivalence F.toFunctor] [RightRigidCategory D] :
     RightRigidCategory C where rightDual X := hasRightDualOfEquivalence F X
-#align
-  category_theory.right_rigid_category_of_equivalence CategoryTheory.rightRigidCategoryOfEquivalence
+#align category_theory.right_rigid_category_of_equivalence CategoryTheory.rightRigidCategoryOfEquivalence
 
 /-- Pull back a rigid structure along an equivalence. -/
 def rigidCategoryOfEquivalence [IsEquivalence F.toFunctor] [RigidCategory D] : RigidCategory C

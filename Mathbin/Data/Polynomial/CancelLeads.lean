@@ -73,8 +73,7 @@ theorem nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree_of_comm
     simp only [coeff_mul_X_pow, coeff_neg, coeff_C_mul, add_tsub_cancel_left, coeff_add]
     rw [add_comm p.nat_degree, tsub_add_cancel_of_le h, ← leading_coeff, ← leading_coeff, comm,
       add_right_neg]
-#align
-  polynomial.nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree_of_comm Polynomial.nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree_of_comm
+#align polynomial.nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree_of_comm Polynomial.nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree_of_comm
 
 end Ring
 
@@ -89,8 +88,7 @@ theorem dvd_cancel_leads_of_dvd_of_dvd {r : R[X]} (pq : p ∣ q) (pr : p ∣ r) 
 theorem nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree (h : p.natDegree ≤ q.natDegree)
     (hq : 0 < q.natDegree) : (p.cancelLeads q).natDegree < q.natDegree :=
   nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree_of_comm (mul_comm _ _) h hq
-#align
-  polynomial.nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree Polynomial.nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree
+#align polynomial.nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree Polynomial.nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree
 
 end CommRing
 

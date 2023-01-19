@@ -55,8 +55,7 @@ variable {C} [CategoryStruct.{v} C]
 
 instance (priority := 900) homSmallCategory (X Y : LocallyDiscrete C) : SmallCategory (X ⟶ Y) :=
   CategoryTheory.discreteCategory (X ⟶ Y)
-#align
-  category_theory.locally_discrete.hom_small_category CategoryTheory.LocallyDiscrete.homSmallCategory
+#align category_theory.locally_discrete.hom_small_category CategoryTheory.LocallyDiscrete.homSmallCategory
 
 /-- Extract the equation from a 2-morphism in a locally discrete 2-category. -/
 theorem eq_of_hom {X Y : LocallyDiscrete C} {f g : X ⟶ Y} (η : f ⟶ g) : f = g :=
@@ -109,8 +108,7 @@ instance locallyDiscreteBicategory.strict : Strict (LocallyDiscrete C)
     ext1
     unfold_projs
     apply category.assoc
-#align
-  category_theory.locally_discrete_bicategory.strict CategoryTheory.locallyDiscreteBicategory.strict
+#align category_theory.locally_discrete_bicategory.strict CategoryTheory.locallyDiscreteBicategory.strict
 
 variable {I : Type u₁} [Category.{v₁} I] {B : Type u₂} [Bicategory.{w₂, v₂} B] [Strict B]
 

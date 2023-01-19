@@ -46,14 +46,12 @@ namespace Complex
 /-- `complex.re` turns `ℂ` into a trivial topological fiber bundle over `ℝ`. -/
 theorem is_homeomorphic_trivial_fiber_bundle_re : IsHomeomorphicTrivialFiberBundle ℝ re :=
   ⟨equivRealProdₗ.toHomeomorph, fun z => rfl⟩
-#align
-  complex.is_homeomorphic_trivial_fiber_bundle_re Complex.is_homeomorphic_trivial_fiber_bundle_re
+#align complex.is_homeomorphic_trivial_fiber_bundle_re Complex.is_homeomorphic_trivial_fiber_bundle_re
 
 /-- `complex.im` turns `ℂ` into a trivial topological fiber bundle over `ℝ`. -/
 theorem is_homeomorphic_trivial_fiber_bundle_im : IsHomeomorphicTrivialFiberBundle ℝ im :=
   ⟨equivRealProdₗ.toHomeomorph.trans (Homeomorph.prodComm ℝ ℝ), fun z => rfl⟩
-#align
-  complex.is_homeomorphic_trivial_fiber_bundle_im Complex.is_homeomorphic_trivial_fiber_bundle_im
+#align complex.is_homeomorphic_trivial_fiber_bundle_im Complex.is_homeomorphic_trivial_fiber_bundle_im
 
 theorem is_open_map_re : IsOpenMap re :=
   is_homeomorphic_trivial_fiber_bundle_re.is_open_map_proj

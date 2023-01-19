@@ -163,8 +163,7 @@ instance (priority := 100) NonarchAddGroupSeminormClass.toAddGroupSeminormClass 
       le_trans (map_add_le_max _ _ _)
         (max_le (le_add_of_nonneg_right (h_nonneg _)) (le_add_of_nonneg_left (h_nonneg _)))
     map_neg_eq_map := NonarchAddGroupSeminormClass.map_neg_eq_map' }
-#align
-  nonarch_add_group_seminorm_class.to_add_group_seminorm_class NonarchAddGroupSeminormClass.toAddGroupSeminormClass
+#align nonarch_add_group_seminorm_class.to_add_group_seminorm_class NonarchAddGroupSeminormClass.toAddGroupSeminormClass
 
 -- See note [lower instance priority]
 instance (priority := 100) NonarchAddGroupNormClass.toAddGroupNormClass [AddGroup E]
@@ -174,8 +173,7 @@ instance (priority := 100) NonarchAddGroupNormClass.toAddGroupNormClass [AddGrou
         E› with
     map_add_le_add := map_add_le_add
     map_neg_eq_map := NonarchAddGroupSeminormClass.map_neg_eq_map' }
-#align
-  nonarch_add_group_norm_class.to_add_group_norm_class NonarchAddGroupNormClass.toAddGroupNormClass
+#align nonarch_add_group_norm_class.to_add_group_norm_class NonarchAddGroupNormClass.toAddGroupNormClass
 
 /-! ### Seminorms -/
 
@@ -512,8 +510,7 @@ instance nonarchAddGroupSeminormClass : NonarchAddGroupSeminormClass (NonarchAdd
   map_add_le_max f := f.add_le_max'
   map_zero f := f.map_zero'
   map_neg_eq_map' f := f.neg'
-#align
-  nonarch_add_group_seminorm.nonarch_add_group_seminorm_class NonarchAddGroupSeminorm.nonarchAddGroupSeminormClass
+#align nonarch_add_group_seminorm.nonarch_add_group_seminorm_class NonarchAddGroupSeminorm.nonarchAddGroupSeminormClass
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`. -/
 instance : CoeFun (NonarchAddGroupSeminorm E) fun _ => E → ℝ :=
@@ -607,8 +604,7 @@ theorem add_bdd_below_range_add {p q : NonarchAddGroupSeminorm E} {x : E} :
     rintro _ ⟨x, rfl⟩
     dsimp
     positivity⟩
-#align
-  nonarch_add_group_seminorm.add_bdd_below_range_add NonarchAddGroupSeminorm.add_bdd_below_range_add
+#align nonarch_add_group_seminorm.add_bdd_below_range_add NonarchAddGroupSeminorm.add_bdd_below_range_add
 
 end AddCommGroup
 
@@ -906,8 +902,7 @@ instance nonarchAddGroupNormClass : NonarchAddGroupNormClass (NonarchAddGroupNor
   map_zero f := f.map_zero'
   map_neg_eq_map' f := f.neg'
   eq_zero_of_map_eq_zero f := f.eq_zero_of_map_eq_zero'
-#align
-  nonarch_add_group_norm.nonarch_add_group_norm_class NonarchAddGroupNorm.nonarchAddGroupNormClass
+#align nonarch_add_group_norm.nonarch_add_group_norm_class NonarchAddGroupNorm.nonarchAddGroupNormClass
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`. -/
 noncomputable instance : CoeFun (NonarchAddGroupNorm E) fun _ => E → ℝ :=

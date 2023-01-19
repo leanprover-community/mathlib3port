@@ -47,8 +47,7 @@ abbrev CategoryTheory.DifferentialObject.xEqToHom
 theorem CategoryTheory.DifferentialObject.X_eq_to_hom_refl
     (X : DifferentialObject (GradedObjectWithShift b V)) (i : β) : X.xEqToHom (refl i) = 𝟙 _ :=
   rfl
-#align
-  category_theory.differential_object.X_eq_to_hom_refl CategoryTheory.DifferentialObject.X_eq_to_hom_refl
+#align category_theory.differential_object.X_eq_to_hom_refl CategoryTheory.DifferentialObject.X_eq_to_hom_refl
 
 @[simp, reassoc.1]
 theorem eq_to_hom_d (X : DifferentialObject (GradedObjectWithShift b V)) {x y : β} (h : x = y) :
@@ -145,8 +144,7 @@ def dgoEquivHomologicalComplexUnitIso :
       { Hom := { f := fun i => 𝟙 (X.x i) }
         inv := { f := fun i => 𝟙 (X.x i) } })
     (by tidy)
-#align
-  homological_complex.dgo_equiv_homological_complex_unit_iso HomologicalComplex.dgoEquivHomologicalComplexUnitIso
+#align homological_complex.dgo_equiv_homological_complex_unit_iso HomologicalComplex.dgoEquivHomologicalComplexUnitIso
 
 /-- The counit isomorphism for `dgo_equiv_homological_complex`.
 -/
@@ -169,8 +167,7 @@ def dgoEquivHomologicalComplexCounitIso :
               delta homological_complex_to_dgo
               simp } })
     (by tidy)
-#align
-  homological_complex.dgo_equiv_homological_complex_counit_iso HomologicalComplex.dgoEquivHomologicalComplexCounitIso
+#align homological_complex.dgo_equiv_homological_complex_counit_iso HomologicalComplex.dgoEquivHomologicalComplexCounitIso
 
 /-- The category of differential graded objects in `V` is equivalent
 to the category of homological complexes in `V`.
@@ -183,8 +180,7 @@ def dgoEquivHomologicalComplex :
   inverse := homologicalComplexToDgo b V
   unitIso := dgoEquivHomologicalComplexUnitIso b V
   counitIso := dgoEquivHomologicalComplexCounitIso b V
-#align
-  homological_complex.dgo_equiv_homological_complex HomologicalComplex.dgoEquivHomologicalComplex
+#align homological_complex.dgo_equiv_homological_complex HomologicalComplex.dgoEquivHomologicalComplex
 
 end HomologicalComplex
 

@@ -200,8 +200,7 @@ theorem refinement_of_locally_compact_sigma_compact_of_nhds_basis_set [LocallyCo
       have := (mem_compl_iff _ _).1 (hr k c hxB)
       contrapose! this with hnk
       exact K.subset hnk (interior_subset hxK)
-#align
-  refinement_of_locally_compact_sigma_compact_of_nhds_basis_set refinement_of_locally_compact_sigma_compact_of_nhds_basis_set
+#align refinement_of_locally_compact_sigma_compact_of_nhds_basis_set refinement_of_locally_compact_sigma_compact_of_nhds_basis_set
 
 /-- Let `X` be a locally compact sigma compact Hausdorff topological space. Suppose that for each
 `x` the sets `B x : ι x → set X` with the predicate `p x : ι x → Prop` form a basis of the filter
@@ -230,8 +229,7 @@ theorem refinement_of_locally_compact_sigma_compact_of_nhds_basis [LocallyCompac
   let ⟨α, c, r, hp, hU, hfin⟩ :=
     refinement_of_locally_compact_sigma_compact_of_nhds_basis_set is_closed_univ fun x _ => hB x
   ⟨α, c, r, fun a => (hp a).2, univ_subset_iff.1 hU, hfin⟩
-#align
-  refinement_of_locally_compact_sigma_compact_of_nhds_basis refinement_of_locally_compact_sigma_compact_of_nhds_basis
+#align refinement_of_locally_compact_sigma_compact_of_nhds_basis refinement_of_locally_compact_sigma_compact_of_nhds_basis
 
 -- See note [lower instance priority]
 /-- A locally compact sigma compact Hausdorff space is paracompact. See also

@@ -192,8 +192,7 @@ theorem to_complex_comp_of_complex : toComplex.comp ofComplex = AlgHom.id ℝ �
   ext1
   dsimp only [AlgHom.comp_apply, Subtype.coe_mk, AlgHom.id_apply]
   rw [of_complex_I, to_complex_ι, one_smul]
-#align
-  clifford_algebra_complex.to_complex_comp_of_complex CliffordAlgebraComplex.to_complex_comp_of_complex
+#align clifford_algebra_complex.to_complex_comp_of_complex CliffordAlgebraComplex.to_complex_comp_of_complex
 
 @[simp]
 theorem to_complex_of_complex (c : ℂ) : toComplex (ofComplex c) = c :=
@@ -207,8 +206,7 @@ theorem of_complex_comp_to_complex : ofComplex.comp toComplex = AlgHom.id ℝ (C
   dsimp only [LinearMap.comp_apply, Subtype.coe_mk, AlgHom.id_apply, AlgHom.to_linear_map_apply,
     AlgHom.comp_apply]
   rw [to_complex_ι, one_smul, of_complex_I]
-#align
-  clifford_algebra_complex.of_complex_comp_to_complex CliffordAlgebraComplex.of_complex_comp_to_complex
+#align clifford_algebra_complex.of_complex_comp_to_complex CliffordAlgebraComplex.of_complex_comp_to_complex
 
 @[simp]
 theorem of_complex_to_complex (c : CliffordAlgebra q) : ofComplex (toComplex c) = c :=
@@ -364,16 +362,14 @@ theorem of_quaternion_comp_to_quaternion :
     rw [to_quaternion_ι]
     dsimp
     simp only [to_quaternion_ι, zero_smul, one_smul, zero_add, add_zero, RingHom.map_zero]
-#align
-  clifford_algebra_quaternion.of_quaternion_comp_to_quaternion CliffordAlgebraQuaternion.of_quaternion_comp_to_quaternion
+#align clifford_algebra_quaternion.of_quaternion_comp_to_quaternion CliffordAlgebraQuaternion.of_quaternion_comp_to_quaternion
 
 @[simp]
 theorem of_quaternion_to_quaternion (c : CliffordAlgebra (q c₁ c₂)) :
     ofQuaternion (toQuaternion c) = c :=
   AlgHom.congr_fun (of_quaternion_comp_to_quaternion : _ = AlgHom.id R (CliffordAlgebra (q c₁ c₂)))
     c
-#align
-  clifford_algebra_quaternion.of_quaternion_to_quaternion CliffordAlgebraQuaternion.of_quaternion_to_quaternion
+#align clifford_algebra_quaternion.of_quaternion_to_quaternion CliffordAlgebraQuaternion.of_quaternion_to_quaternion
 
 @[simp]
 theorem to_quaternion_comp_of_quaternion :
@@ -381,14 +377,12 @@ theorem to_quaternion_comp_of_quaternion :
   by
   apply quaternion_algebra.lift.symm.injective
   ext1 <;> dsimp [QuaternionAlgebra.Basis.lift] <;> simp
-#align
-  clifford_algebra_quaternion.to_quaternion_comp_of_quaternion CliffordAlgebraQuaternion.to_quaternion_comp_of_quaternion
+#align clifford_algebra_quaternion.to_quaternion_comp_of_quaternion CliffordAlgebraQuaternion.to_quaternion_comp_of_quaternion
 
 @[simp]
 theorem to_quaternion_of_quaternion (q : ℍ[R,c₁,c₂]) : toQuaternion (ofQuaternion q) = q :=
   AlgHom.congr_fun (to_quaternion_comp_of_quaternion : _ = AlgHom.id R ℍ[R,c₁,c₂]) q
-#align
-  clifford_algebra_quaternion.to_quaternion_of_quaternion CliffordAlgebraQuaternion.to_quaternion_of_quaternion
+#align clifford_algebra_quaternion.to_quaternion_of_quaternion CliffordAlgebraQuaternion.to_quaternion_of_quaternion
 
 /-- The clifford algebra over `clifford_algebra_quaternion.Q c₁ c₂` is isomorphic as an `R`-algebra
 to `ℍ[R,c₁,c₂]`. -/

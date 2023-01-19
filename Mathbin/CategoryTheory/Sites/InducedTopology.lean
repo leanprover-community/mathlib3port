@@ -71,8 +71,7 @@ theorem pushforward_cover_iff_cover_pullback {X : C} (S : Sieve X) :
     exact ⟨⟨_, hS⟩, (sieve.fully_faithful_functor_galois_coinsertion G X).u_l_eq S⟩
   · rintro ⟨T, rfl⟩
     exact Hld T
-#align
-  category_theory.locally_cover_dense.pushforward_cover_iff_cover_pullback CategoryTheory.LocallyCoverDense.pushforward_cover_iff_cover_pullback
+#align category_theory.locally_cover_dense.pushforward_cover_iff_cover_pullback CategoryTheory.LocallyCoverDense.pushforward_cover_iff_cover_pullback
 
 /-- If a functor `G : C ⥤ (D, K)` is fully faithful and locally dense,
 then the set `{ T ∩ mor(C) | T ∈ K }` is a grothendieck topology of `C`.
@@ -104,20 +103,17 @@ def inducedTopology : GrothendieckTopology C
     refine' K.superset_covering _ (H' hg)
     rintro W _ ⟨Z', g', i', hg, rfl⟩
     use ⟨Z', g' ≫ g, i', hg, by simp⟩
-#align
-  category_theory.locally_cover_dense.induced_topology CategoryTheory.LocallyCoverDense.inducedTopology
+#align category_theory.locally_cover_dense.induced_topology CategoryTheory.LocallyCoverDense.inducedTopology
 
 /-- `G` is cover-lifting wrt the induced topology. -/
 theorem induced_topology_cover_lifting : CoverLifting Hld.inducedTopology K G :=
   ⟨fun _ S hS => Hld ⟨S, hS⟩⟩
-#align
-  category_theory.locally_cover_dense.induced_topology_cover_lifting CategoryTheory.LocallyCoverDense.induced_topology_cover_lifting
+#align category_theory.locally_cover_dense.induced_topology_cover_lifting CategoryTheory.LocallyCoverDense.induced_topology_cover_lifting
 
 /-- `G` is cover-preserving wrt the induced topology. -/
 theorem induced_topology_cover_preserving : CoverPreserving Hld.inducedTopology K G :=
   ⟨fun _ S hS => hS⟩
-#align
-  category_theory.locally_cover_dense.induced_topology_cover_preserving CategoryTheory.LocallyCoverDense.induced_topology_cover_preserving
+#align category_theory.locally_cover_dense.induced_topology_cover_preserving CategoryTheory.LocallyCoverDense.induced_topology_cover_preserving
 
 end LocallyCoverDense
 
@@ -151,8 +147,7 @@ theorem over_forget_locally_cover_dense (X : C) : LocallyCoverDense J (Over.forg
     exact T.val.downward_closed hg g'
   · intro hf
     exact ⟨over.mk (f ≫ Y.hom), over.hom_mk f, 𝟙 _, hf, (category.id_comp _).symm⟩
-#align
-  category_theory.over_forget_locally_cover_dense CategoryTheory.over_forget_locally_cover_dense
+#align category_theory.over_forget_locally_cover_dense CategoryTheory.over_forget_locally_cover_dense
 
 end
 

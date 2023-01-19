@@ -94,8 +94,7 @@ theorem exists_smul_add_of_span_sup_eq_top (y : L) : ∃ t : R, ∃ z ∈ I, y =
   simp only [← hxI, Submodule.mem_sup, Submodule.mem_span_singleton] at hy
   obtain ⟨-, ⟨t, rfl⟩, z, hz, rfl⟩ := hy
   exact ⟨t, z, hz, rfl⟩
-#align
-  lie_submodule.exists_smul_add_of_span_sup_eq_top LieSubmodule.exists_smul_add_of_span_sup_eq_top
+#align lie_submodule.exists_smul_add_of_span_sup_eq_top LieSubmodule.exists_smul_add_of_span_sup_eq_top
 
 theorem lie_top_eq_of_span_sup_eq_top (N : LieSubmodule R L M) :
     (↑⁅(⊤ : LieIdeal R L), N⁆ : Submodule R M) =
@@ -135,8 +134,7 @@ theorem lcs_le_lcs_of_is_nilpotent_span_sup_eq_top {n i j : ℕ}
       exact sup_le_sup_left coe_map_to_endomorphism_le _
     · refine' le_trans (mono_lie_right _ _ I _) (mono_lie_right _ _ I hIM)
       exact antitone_lower_central_series R L M le_self_add
-#align
-  lie_submodule.lcs_le_lcs_of_is_nilpotent_span_sup_eq_top LieSubmodule.lcs_le_lcs_of_is_nilpotent_span_sup_eq_top
+#align lie_submodule.lcs_le_lcs_of_is_nilpotent_span_sup_eq_top LieSubmodule.lcs_le_lcs_of_is_nilpotent_span_sup_eq_top
 
 theorem isNilpotentOfIsNilpotentSpanSupEqTop (hnp : IsNilpotent <| toEndomorphism R L M x)
     (hIM : IsNilpotent R I M) : IsNilpotent R L M :=
@@ -153,8 +151,7 @@ theorem isNilpotentOfIsNilpotentSpanSupEqTop (hnp : IsNilpotent <| toEndomorphis
   induction' l with l ih
   · simp
   · exact (l.succ_mul n).symm ▸ lcs_le_lcs_of_is_nilpotent_span_sup_eq_top hxI hn ih
-#align
-  lie_submodule.is_nilpotent_of_is_nilpotent_span_sup_eq_top LieSubmodule.isNilpotentOfIsNilpotentSpanSupEqTop
+#align lie_submodule.is_nilpotent_of_is_nilpotent_span_sup_eq_top LieSubmodule.isNilpotentOfIsNilpotentSpanSupEqTop
 
 end LieSubmodule
 
@@ -233,8 +230,7 @@ theorem LieAlgebra.exists_engelian_lie_subalgebra_of_lt_normalizer {K : LieSubal
       (LieEquiv.ofEq _ _ ((LieSubalgebra.coe_set_eq _ _).mpr hI₁.symm))
   have hI₃ : LieAlgebra.IsEngelian R I := e.is_engelian_iff.mp hK₁
   exact LieSubmodule.isNilpotentOfIsNilpotentSpanSupEqTop hI₂ (h _) (hI₃ _ fun x => h x)
-#align
-  lie_algebra.exists_engelian_lie_subalgebra_of_lt_normalizer LieAlgebra.exists_engelian_lie_subalgebra_of_lt_normalizer
+#align lie_algebra.exists_engelian_lie_subalgebra_of_lt_normalizer LieAlgebra.exists_engelian_lie_subalgebra_of_lt_normalizer
 
 attribute [local instance] LieSubalgebra.subsingleton_bot
 

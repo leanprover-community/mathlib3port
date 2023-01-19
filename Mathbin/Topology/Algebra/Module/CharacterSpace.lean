@@ -108,8 +108,7 @@ def toNonUnitalAlgHom (φ : characterSpace 𝕜 A) : A →ₙₐ[𝕜] 𝕜
 @[simp]
 theorem coe_to_non_unital_alg_hom (φ : characterSpace 𝕜 A) : ⇑(toNonUnitalAlgHom φ) = φ :=
   rfl
-#align
-  weak_dual.character_space.coe_to_non_unital_alg_hom WeakDual.characterSpace.coe_to_non_unital_alg_hom
+#align weak_dual.character_space.coe_to_non_unital_alg_hom WeakDual.characterSpace.coe_to_non_unital_alg_hom
 
 instance [Subsingleton A] : IsEmpty (characterSpace 𝕜 A) :=
   ⟨fun φ =>
@@ -178,8 +177,7 @@ theorem eq_set_map_one_map_mul [Nontrivial 𝕜] :
   refine' ⟨fun h => ⟨map_one (⟨x, h⟩ : character_space 𝕜 A), h.2⟩, fun h => ⟨_, h.2⟩⟩
   rintro rfl
   simpa using h.1
-#align
-  weak_dual.character_space.eq_set_map_one_map_mul WeakDual.characterSpace.eq_set_map_one_map_mul
+#align weak_dual.character_space.eq_set_map_one_map_mul WeakDual.characterSpace.eq_set_map_one_map_mul
 
 /-- under suitable mild assumptions on `𝕜`, the character space is a closed set in
 `weak_dual 𝕜 A`. -/

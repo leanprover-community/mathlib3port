@@ -156,16 +156,14 @@ noncomputable def ordConnectedProj (s : Set α) : s → α := fun x : s =>
 theorem ordConnectedProj_mem_ordConnectedComponent (s : Set α) (x : s) :
     ordConnectedProj s x ∈ ordConnectedComponent s x :=
   Nonempty.some_mem _
-#align
-  set.ord_connected_proj_mem_ord_connected_component Set.ordConnectedProj_mem_ordConnectedComponent
+#align set.ord_connected_proj_mem_ord_connected_component Set.ordConnectedProj_mem_ordConnectedComponent
 -/
 
 #print Set.mem_ordConnectedComponent_ordConnectedProj /-
 theorem mem_ordConnectedComponent_ordConnectedProj (s : Set α) (x : s) :
     ↑x ∈ ordConnectedComponent s (ordConnectedProj s x) :=
   mem_ordConnectedComponent_comm.2 <| ordConnectedProj_mem_ordConnectedComponent s x
-#align
-  set.mem_ord_connected_component_ord_connected_proj Set.mem_ordConnectedComponent_ordConnectedProj
+#align set.mem_ord_connected_component_ord_connected_proj Set.mem_ordConnectedComponent_ordConnectedProj
 -/
 
 #print Set.ordConnectedComponent_ordConnectedProj /-
@@ -224,8 +222,7 @@ theorem eq_of_mem_ord_connected_section_of_uIcc_subset (hx : x ∈ ordConnectedS
       (mem_ord_connected_component_trans
         (mem_ord_connected_component_trans (ord_connected_proj_mem_ord_connected_component _ _) h)
         (mem_ord_connected_component_ord_connected_proj _ _))
-#align
-  set.eq_of_mem_ord_connected_section_of_uIcc_subset Set.eq_of_mem_ord_connected_section_of_uIcc_subset
+#align set.eq_of_mem_ord_connected_section_of_uIcc_subset Set.eq_of_mem_ord_connected_section_of_uIcc_subset
 
 #print Set.ordSeparatingSet /-
 /-- Given two sets `s t : set α`, the set `set.order_separating_set s t` is the set of points that

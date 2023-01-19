@@ -143,8 +143,7 @@ theorem mem_prehaar_empty {K₀ : Set G} {f : Compacts G → ℝ} :
     f ∈ haarProduct K₀ ↔ ∀ K : Compacts G, f K ∈ Icc (0 : ℝ) (index (K : Set G) K₀) := by
   simp only [haar_product, pi, forall_prop_of_true, mem_univ, mem_set_of_eq]
 #align measure_theory.measure.haar.mem_prehaar_empty MeasureTheory.Measure.Haar.mem_prehaar_empty
-#align
-  measure_theory.measure.haar.mem_add_prehaar_empty MeasureTheory.Measure.Haar.mem_add_prehaar_empty
+#align measure_theory.measure.haar.mem_add_prehaar_empty MeasureTheory.Measure.Haar.mem_add_prehaar_empty
 
 /-- The closure of the collection of elements of the form `prehaar K₀ U`,
   for `U` open neighbourhoods of `1`, contained in `V`. The closure is taken in the space
@@ -308,8 +307,7 @@ theorem mul_left_index_le {K : Set G} (hK : IsCompact K) {V : Set G} (hV : (inte
     refine' ⟨_, hg₂, _⟩
     simp only [mul_assoc, hg₁, inv_mul_cancel_left]
 #align measure_theory.measure.haar.mul_left_index_le MeasureTheory.Measure.Haar.mul_left_index_le
-#align
-  measure_theory.measure.haar.add_left_add_index_le MeasureTheory.Measure.Haar.add_left_add_index_le
+#align measure_theory.measure.haar.add_left_add_index_le MeasureTheory.Measure.Haar.add_left_add_index_le
 
 @[to_additive is_left_invariant_add_index]
 theorem is_left_invariant_index {K : Set G} (hK : IsCompact K) (g : G) {V : Set G}
@@ -318,10 +316,8 @@ theorem is_left_invariant_index {K : Set G} (hK : IsCompact K) (g : G) {V : Set 
   refine' le_antisymm (mul_left_index_le hK hV g) _
   convert mul_left_index_le (hK.image <| continuous_mul_left g) hV g⁻¹
   rw [image_image]; symm; convert image_id' _; ext h; apply inv_mul_cancel_left
-#align
-  measure_theory.measure.haar.is_left_invariant_index MeasureTheory.Measure.Haar.is_left_invariant_index
-#align
-  measure_theory.measure.haar.is_left_invariant_add_index MeasureTheory.Measure.Haar.is_left_invariant_add_index
+#align measure_theory.measure.haar.is_left_invariant_index MeasureTheory.Measure.Haar.is_left_invariant_index
+#align measure_theory.measure.haar.is_left_invariant_add_index MeasureTheory.Measure.Haar.is_left_invariant_add_index
 
 /-!
 ### Lemmas about `prehaar`
@@ -336,8 +332,7 @@ theorem prehaar_le_index (K₀ : PositiveCompacts G) {U : Set G} (K : Compacts G
   · apply le_index_mul K₀ K hU
   · exact index_pos K₀ hU
 #align measure_theory.measure.haar.prehaar_le_index MeasureTheory.Measure.Haar.prehaar_le_index
-#align
-  measure_theory.measure.haar.add_prehaar_le_add_index MeasureTheory.Measure.Haar.add_prehaar_le_add_index
+#align measure_theory.measure.haar.add_prehaar_le_add_index MeasureTheory.Measure.Haar.add_prehaar_le_add_index
 
 @[to_additive]
 theorem prehaar_pos (K₀ : PositiveCompacts G) {U : Set G} (hU : (interior U).Nonempty) {K : Set G}
@@ -393,10 +388,8 @@ theorem is_left_invariant_prehaar {K₀ : PositiveCompacts G} {U : Set G} (hU : 
     (g : G) (K : Compacts G) :
     prehaar (K₀ : Set G) U (K.map _ <| continuous_mul_left g) = prehaar (K₀ : Set G) U K := by
   simp only [prehaar, compacts.coe_map, is_left_invariant_index K.is_compact _ hU]
-#align
-  measure_theory.measure.haar.is_left_invariant_prehaar MeasureTheory.Measure.Haar.is_left_invariant_prehaar
-#align
-  measure_theory.measure.haar.is_left_invariant_add_prehaar MeasureTheory.Measure.Haar.is_left_invariant_add_prehaar
+#align measure_theory.measure.haar.is_left_invariant_prehaar MeasureTheory.Measure.Haar.is_left_invariant_prehaar
+#align measure_theory.measure.haar.is_left_invariant_add_prehaar MeasureTheory.Measure.Haar.is_left_invariant_add_prehaar
 
 /-!
 ### Lemmas about `haar_product`
@@ -410,10 +403,8 @@ theorem prehaar_mem_haar_product (K₀ : PositiveCompacts G) {U : Set G}
   rintro ⟨K, hK⟩ h2K
   rw [mem_Icc]
   exact ⟨prehaar_nonneg K₀ _, prehaar_le_index K₀ _ hU⟩
-#align
-  measure_theory.measure.haar.prehaar_mem_haar_product MeasureTheory.Measure.Haar.prehaar_mem_haar_product
-#align
-  measure_theory.measure.haar.add_prehaar_mem_add_haar_product MeasureTheory.Measure.Haar.add_prehaar_mem_add_haar_product
+#align measure_theory.measure.haar.prehaar_mem_haar_product MeasureTheory.Measure.Haar.prehaar_mem_haar_product
+#align measure_theory.measure.haar.add_prehaar_mem_add_haar_product MeasureTheory.Measure.Haar.add_prehaar_mem_add_haar_product
 
 @[to_additive]
 theorem nonempty_Inter_cl_prehaar (K₀ : PositiveCompacts G) :
@@ -446,10 +437,8 @@ theorem nonempty_Inter_cl_prehaar (K₀ : PositiveCompacts G) :
     apply mem_image_of_mem
     rw [mem_set_of_eq]
     exact ⟨subset.trans (Inter_subset _ ⟨V, hV⟩) (Inter_subset _ h2V), h1V₀, h2V₀⟩
-#align
-  measure_theory.measure.haar.nonempty_Inter_cl_prehaar MeasureTheory.Measure.Haar.nonempty_Inter_cl_prehaar
-#align
-  measure_theory.measure.haar.nonempty_Inter_cl_add_prehaar MeasureTheory.Measure.Haar.nonempty_Inter_cl_add_prehaar
+#align measure_theory.measure.haar.nonempty_Inter_cl_prehaar MeasureTheory.Measure.Haar.nonempty_Inter_cl_prehaar
+#align measure_theory.measure.haar.nonempty_Inter_cl_add_prehaar MeasureTheory.Measure.Haar.nonempty_Inter_cl_add_prehaar
 
 /-!
 ### Lemmas about `chaar`
@@ -471,10 +460,8 @@ def chaar (K₀ : PositiveCompacts G) (K : Compacts G) : ℝ :=
 @[to_additive add_chaar_mem_add_haar_product]
 theorem chaar_mem_haar_product (K₀ : PositiveCompacts G) : chaar K₀ ∈ haarProduct (K₀ : Set G) :=
   (Classical.choose_spec (nonempty_Inter_cl_prehaar K₀)).1
-#align
-  measure_theory.measure.haar.chaar_mem_haar_product MeasureTheory.Measure.Haar.chaar_mem_haar_product
-#align
-  measure_theory.measure.haar.add_chaar_mem_add_haar_product MeasureTheory.Measure.Haar.add_chaar_mem_add_haar_product
+#align measure_theory.measure.haar.chaar_mem_haar_product MeasureTheory.Measure.Haar.chaar_mem_haar_product
+#align measure_theory.measure.haar.add_chaar_mem_add_haar_product MeasureTheory.Measure.Haar.add_chaar_mem_add_haar_product
 
 @[to_additive add_chaar_mem_cl_add_prehaar]
 theorem chaar_mem_cl_prehaar (K₀ : PositiveCompacts G) (V : OpenNhdsOf (1 : G)) :
@@ -483,10 +470,8 @@ theorem chaar_mem_cl_prehaar (K₀ : PositiveCompacts G) (V : OpenNhdsOf (1 : G)
   have := (Classical.choose_spec (nonempty_Inter_cl_prehaar K₀)).2
   rw [mem_Inter] at this
   exact this V
-#align
-  measure_theory.measure.haar.chaar_mem_cl_prehaar MeasureTheory.Measure.Haar.chaar_mem_cl_prehaar
-#align
-  measure_theory.measure.haar.add_chaar_mem_cl_add_prehaar MeasureTheory.Measure.Haar.add_chaar_mem_cl_add_prehaar
+#align measure_theory.measure.haar.chaar_mem_cl_prehaar MeasureTheory.Measure.Haar.chaar_mem_cl_prehaar
+#align measure_theory.measure.haar.add_chaar_mem_cl_add_prehaar MeasureTheory.Measure.Haar.add_chaar_mem_cl_add_prehaar
 
 @[to_additive add_chaar_nonneg]
 theorem chaar_nonneg (K₀ : PositiveCompacts G) (K : Compacts G) : 0 ≤ chaar K₀ K :=
@@ -624,10 +609,8 @@ theorem is_left_invariant_chaar {K₀ : PositiveCompacts G} (g : G) (K : Compact
     exact ⟨1, h3U⟩
   · apply continuous_iff_is_closed.mp this
     exact is_closed_singleton
-#align
-  measure_theory.measure.haar.is_left_invariant_chaar MeasureTheory.Measure.Haar.is_left_invariant_chaar
-#align
-  measure_theory.measure.haar.is_left_invariant_add_chaar MeasureTheory.Measure.Haar.is_left_invariant_add_chaar
+#align measure_theory.measure.haar.is_left_invariant_chaar MeasureTheory.Measure.Haar.is_left_invariant_chaar
+#align measure_theory.measure.haar.is_left_invariant_add_chaar MeasureTheory.Measure.Haar.is_left_invariant_add_chaar
 
 variable [T2Space G]
 
@@ -652,8 +635,7 @@ theorem haar_content_apply (K₀ : PositiveCompacts G) (K : Compacts G) :
     haarContent K₀ K = show Nnreal from ⟨chaar K₀ K, chaar_nonneg _ _⟩ :=
   rfl
 #align measure_theory.measure.haar.haar_content_apply MeasureTheory.Measure.Haar.haar_content_apply
-#align
-  measure_theory.measure.haar.add_haar_content_apply MeasureTheory.Measure.Haar.add_haar_content_apply
+#align measure_theory.measure.haar.add_haar_content_apply MeasureTheory.Measure.Haar.add_haar_content_apply
 
 /-- The variant of `chaar_self` for `haar_content` -/
 @[to_additive "The variant of `add_chaar_self` for `add_haar_content`."]
@@ -662,8 +644,7 @@ theorem haar_content_self {K₀ : PositiveCompacts G} : haarContent K₀ K₀.to
   simp_rw [← Ennreal.coe_one, haar_content_apply, Ennreal.coe_eq_coe, chaar_self]
   rfl
 #align measure_theory.measure.haar.haar_content_self MeasureTheory.Measure.Haar.haar_content_self
-#align
-  measure_theory.measure.haar.add_haar_content_self MeasureTheory.Measure.Haar.add_haar_content_self
+#align measure_theory.measure.haar.add_haar_content_self MeasureTheory.Measure.Haar.add_haar_content_self
 
 /-- The variant of `is_left_invariant_chaar` for `haar_content` -/
 @[to_additive "The variant of `is_left_invariant_add_chaar` for `add_haar_content`"]
@@ -671,10 +652,8 @@ theorem is_left_invariant_haar_content {K₀ : PositiveCompacts G} (g : G) (K : 
     haarContent K₀ (K.map _ <| continuous_mul_left g) = haarContent K₀ K := by
   simpa only [Ennreal.coe_eq_coe, ← Nnreal.coe_eq, haar_content_apply] using
     is_left_invariant_chaar g K
-#align
-  measure_theory.measure.haar.is_left_invariant_haar_content MeasureTheory.Measure.Haar.is_left_invariant_haar_content
-#align
-  measure_theory.measure.haar.is_left_invariant_add_haar_content MeasureTheory.Measure.Haar.is_left_invariant_add_haar_content
+#align measure_theory.measure.haar.is_left_invariant_haar_content MeasureTheory.Measure.Haar.is_left_invariant_haar_content
+#align measure_theory.measure.haar.is_left_invariant_add_haar_content MeasureTheory.Measure.Haar.is_left_invariant_add_haar_content
 
 @[to_additive]
 theorem haar_content_outer_measure_self_pos {K₀ : PositiveCompacts G} :
@@ -684,10 +663,8 @@ theorem haar_content_outer_measure_self_pos {K₀ : PositiveCompacts G} :
   rw [content.outer_measure_eq_infi]
   refine' le_infᵢ₂ fun U hU => le_infᵢ fun hK₀ => le_trans _ <| le_supᵢ₂ K₀.to_compacts hK₀
   exact haar_content_self.ge
-#align
-  measure_theory.measure.haar.haar_content_outer_measure_self_pos MeasureTheory.Measure.Haar.haar_content_outer_measure_self_pos
-#align
-  measure_theory.measure.haar.add_haar_content_outer_measure_self_pos MeasureTheory.Measure.Haar.add_haar_content_outer_measure_self_pos
+#align measure_theory.measure.haar.haar_content_outer_measure_self_pos MeasureTheory.Measure.Haar.haar_content_outer_measure_self_pos
+#align measure_theory.measure.haar.add_haar_content_outer_measure_self_pos MeasureTheory.Measure.Haar.add_haar_content_outer_measure_self_pos
 
 end Haar
 
@@ -727,10 +704,8 @@ instance isMulLeftInvariantHaarMeasure (K₀ : PositiveCompacts G) :
   congr 1
   apply content.is_mul_left_invariant_outer_measure
   apply is_left_invariant_haar_content
-#align
-  measure_theory.measure.is_mul_left_invariant_haar_measure MeasureTheory.Measure.isMulLeftInvariantHaarMeasure
-#align
-  measure_theory.measure.is_add_left_invariant_add_haar_measure MeasureTheory.Measure.is_add_left_invariant_add_haar_measure
+#align measure_theory.measure.is_mul_left_invariant_haar_measure MeasureTheory.Measure.isMulLeftInvariantHaarMeasure
+#align measure_theory.measure.is_add_left_invariant_add_haar_measure MeasureTheory.Measure.is_add_left_invariant_add_haar_measure
 
 @[to_additive]
 theorem haar_measure_self {K₀ : PositiveCompacts G} : haarMeasure K₀ K₀ = 1 :=
@@ -752,8 +727,7 @@ instance regularHaarMeasure {K₀ : PositiveCompacts G} : (haarMeasure K₀).reg
   rw [Ennreal.inv_ne_top]
   exact haar_content_outer_measure_self_pos.ne'
 #align measure_theory.measure.regular_haar_measure MeasureTheory.Measure.regularHaarMeasure
-#align
-  measure_theory.measure.regular_add_haar_measure MeasureTheory.Measure.regular_add_haar_measure
+#align measure_theory.measure.regular_add_haar_measure MeasureTheory.Measure.regular_add_haar_measure
 
 /-- The Haar measure is sigma-finite in a second countable group. -/
 @[to_additive "The additive Haar measure is sigma-finite in a second countable group."]
@@ -763,8 +737,7 @@ instance sigmaFiniteHaarMeasure [SecondCountableTopology G] {K₀ : PositiveComp
   haveI : LocallyCompactSpace G := K₀.locally_compact_space_of_group
   infer_instance
 #align measure_theory.measure.sigma_finite_haar_measure MeasureTheory.Measure.sigmaFiniteHaarMeasure
-#align
-  measure_theory.measure.sigma_finite_add_haar_measure MeasureTheory.Measure.sigma_finite_add_haar_measure
+#align measure_theory.measure.sigma_finite_add_haar_measure MeasureTheory.Measure.sigma_finite_add_haar_measure
 
 /-- The Haar measure is a Haar measure, i.e., it is invariant and gives finite mass to compact
 sets and positive mass to nonempty open sets. -/
@@ -779,10 +752,8 @@ instance isHaarMeasureHaarMeasure (K₀ : PositiveCompacts G) : IsHaarMeasure (h
     exact one_ne_zero
   · simp only [haar_measure_self]
     exact Ennreal.coe_ne_top
-#align
-  measure_theory.measure.is_haar_measure_haar_measure MeasureTheory.Measure.isHaarMeasureHaarMeasure
-#align
-  measure_theory.measure.is_add_haar_measure_add_haar_measure MeasureTheory.Measure.is_add_haar_measure_add_haar_measure
+#align measure_theory.measure.is_haar_measure_haar_measure MeasureTheory.Measure.isHaarMeasureHaarMeasure
+#align measure_theory.measure.is_add_haar_measure_add_haar_measure MeasureTheory.Measure.is_add_haar_measure_add_haar_measure
 
 /-- `haar` is some choice of a Haar measure, on a locally compact group. -/
 @[reducible,
@@ -824,10 +795,8 @@ theorem regularOfIsMulLeftInvariant {μ : Measure G} [SigmaFinite μ] [IsMulLeft
   by
   rw [haar_measure_unique μ ⟨⟨K, hK⟩, h2K⟩]
   exact regular.smul hμK
-#align
-  measure_theory.measure.regular_of_is_mul_left_invariant MeasureTheory.Measure.regularOfIsMulLeftInvariant
-#align
-  measure_theory.measure.regular_of_is_add_left_invariant MeasureTheory.Measure.regular_of_is_add_left_invariant
+#align measure_theory.measure.regular_of_is_mul_left_invariant MeasureTheory.Measure.regularOfIsMulLeftInvariant
+#align measure_theory.measure.regular_of_is_add_left_invariant MeasureTheory.Measure.regular_of_is_add_left_invariant
 
 @[to_additive is_add_haar_measure_eq_smul_is_add_haar_measure]
 theorem is_haar_measure_eq_smul_is_haar_measure [LocallyCompactSpace G] (μ ν : Measure G)
@@ -851,10 +820,8 @@ theorem is_haar_measure_eq_smul_is_haar_measure [LocallyCompactSpace G] (μ ν :
         rw [smul_smul, div_eq_mul_inv, mul_assoc, Ennreal.inv_mul_cancel νpos.ne' νne, mul_one]
       _ = (μ K / ν K) • ν := by rw [← haar_measure_unique ν K]
       
-#align
-  measure_theory.measure.is_haar_measure_eq_smul_is_haar_measure MeasureTheory.Measure.is_haar_measure_eq_smul_is_haar_measure
-#align
-  measure_theory.measure.is_add_haar_measure_eq_smul_is_add_haar_measure MeasureTheory.Measure.is_add_haar_measure_eq_smul_is_add_haar_measure
+#align measure_theory.measure.is_haar_measure_eq_smul_is_haar_measure MeasureTheory.Measure.is_haar_measure_eq_smul_is_haar_measure
+#align measure_theory.measure.is_add_haar_measure_eq_smul_is_add_haar_measure MeasureTheory.Measure.is_add_haar_measure_eq_smul_is_add_haar_measure
 
 -- see Note [lower instance priority]
 @[to_additive]
@@ -866,10 +833,8 @@ instance (priority := 90) regularOfIsHaarMeasure [LocallyCompactSpace G] (μ : M
     is_haar_measure_eq_smul_is_haar_measure μ _
   rw [hμ]
   exact regular.smul ctop
-#align
-  measure_theory.measure.regular_of_is_haar_measure MeasureTheory.Measure.regularOfIsHaarMeasure
-#align
-  measure_theory.measure.regular_of_is_add_haar_measure MeasureTheory.Measure.regular_of_is_add_haar_measure
+#align measure_theory.measure.regular_of_is_haar_measure MeasureTheory.Measure.regularOfIsHaarMeasure
+#align measure_theory.measure.regular_of_is_add_haar_measure MeasureTheory.Measure.regular_of_is_add_haar_measure
 
 /-- **Steinhaus Theorem** In any locally compact group `G` with a haar measure `μ`, for any
   measurable set `E` of positive measure, the set `E / E` is a neighbourhood of `1`. -/
@@ -921,10 +886,8 @@ theorem div_mem_nhds_one_of_haar_pos (μ : Measure G) [IsHaarMeasure μ] [Locall
   · apply hKL.trans hLE
     simpa only [singleton_mul, image_mul_left, mem_preimage] using hxK
   · simp only [div_eq_iff_eq_mul, ← mul_assoc, mul_right_inv, one_mul]
-#align
-  measure_theory.measure.div_mem_nhds_one_of_haar_pos MeasureTheory.Measure.div_mem_nhds_one_of_haar_pos
-#align
-  measure_theory.measure.sub_mem_nhds_zero_of_add_haar_pos MeasureTheory.Measure.sub_mem_nhds_zero_of_add_haar_pos
+#align measure_theory.measure.div_mem_nhds_one_of_haar_pos MeasureTheory.Measure.div_mem_nhds_one_of_haar_pos
+#align measure_theory.measure.sub_mem_nhds_zero_of_add_haar_pos MeasureTheory.Measure.sub_mem_nhds_zero_of_add_haar_pos
 
 end SecondCountable
 
@@ -965,10 +928,8 @@ instance (priority := 100) IsHaarMeasure.isInvInvariant [LocallyCompactSpace G] 
       this
   have : c = 1 := (Ennreal.pow_strict_mono two_ne_zero).Injective this
   rw [measure.inv, hc, this, one_smul]
-#align
-  measure_theory.measure.is_haar_measure.is_inv_invariant MeasureTheory.Measure.IsHaarMeasure.isInvInvariant
-#align
-  measure_theory.measure.is_add_haar_measure.is_neg_invariant MeasureTheory.Measure.IsAddHaarMeasure.is_neg_invariant
+#align measure_theory.measure.is_haar_measure.is_inv_invariant MeasureTheory.Measure.IsHaarMeasure.isInvInvariant
+#align measure_theory.measure.is_add_haar_measure.is_neg_invariant MeasureTheory.Measure.IsAddHaarMeasure.is_neg_invariant
 
 @[to_additive]
 theorem measurePreservingZpow [CompactSpace G] [RootableBy G ℤ] {n : ℤ} (hn : n ≠ 0) :
@@ -989,8 +950,7 @@ theorem measurePreservingZpow [CompactSpace G] [RootableBy G ℤ] {n : ℤ} (hn 
       rwa [hC, smul_apply, Algebra.id.smul_eq_mul, mul_comm, ← Ennreal.eq_div_iff hμ₀ hμ₁,
         Ennreal.div_self hμ₀ hμ₁] at h_univ }
 #align measure_theory.measure.measure_preserving_zpow MeasureTheory.Measure.measurePreservingZpow
-#align
-  measure_theory.measure.measure_preserving_zsmul MeasureTheory.Measure.measure_preserving_zsmul
+#align measure_theory.measure.measure_preserving_zsmul MeasureTheory.Measure.measure_preserving_zsmul
 
 @[to_additive]
 theorem MeasurePreserving.zpow [CompactSpace G] [RootableBy G ℤ] {n : ℤ} (hn : n ≠ 0) {X : Type _}

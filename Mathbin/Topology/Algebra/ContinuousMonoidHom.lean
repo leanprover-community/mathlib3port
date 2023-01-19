@@ -92,10 +92,8 @@ add_decl_doc ContinuousAddMonoidHom.toAddMonoidHom
 instance (priority := 100) ContinuousMonoidHomClass.toContinuousMapClass
     [ContinuousMonoidHomClass F A B] : ContinuousMapClass F A B :=
   { ‹ContinuousMonoidHomClass F A B› with }
-#align
-  continuous_monoid_hom_class.to_continuous_map_class ContinuousMonoidHomClass.toContinuousMapClass
-#align
-  continuous_add_monoid_hom_class.to_continuous_map_class ContinuousAddMonoidHomClass.to_continuous_map_class
+#align continuous_monoid_hom_class.to_continuous_map_class ContinuousMonoidHomClass.toContinuousMapClass
+#align continuous_add_monoid_hom_class.to_continuous_map_class ContinuousAddMonoidHomClass.to_continuous_map_class
 
 namespace ContinuousMonoidHom
 
@@ -136,10 +134,8 @@ def toContinuousMap (f : ContinuousMonoidHom A B) : C(A, B) :=
 @[to_additive]
 theorem to_continuous_map_injective : Injective (toContinuousMap : _ → C(A, B)) := fun f g h =>
   ext <| by convert FunLike.ext_iff.1 h
-#align
-  continuous_monoid_hom.to_continuous_map_injective ContinuousMonoidHom.to_continuous_map_injective
-#align
-  continuous_add_monoid_hom.to_continuous_map_injective ContinuousAddMonoidHom.to_continuous_map_injective
+#align continuous_monoid_hom.to_continuous_map_injective ContinuousMonoidHom.to_continuous_map_injective
+#align continuous_add_monoid_hom.to_continuous_map_injective ContinuousAddMonoidHom.to_continuous_map_injective
 
 /-- Construct a `continuous_monoid_hom` from a `continuous` `monoid_hom`. -/
 @[to_additive "Construct a `continuous_add_monoid_hom` from a `continuous` `add_monoid_hom`.",
@@ -280,19 +276,15 @@ variable (A B C D E)
 theorem inducing_to_continuous_map :
     Inducing (toContinuousMap : ContinuousMonoidHom A B → C(A, B)) :=
   ⟨rfl⟩
-#align
-  continuous_monoid_hom.inducing_to_continuous_map ContinuousMonoidHom.inducing_to_continuous_map
-#align
-  continuous_add_monoid_hom.inducing_to_continuous_map ContinuousAddMonoidHom.inducing_to_continuous_map
+#align continuous_monoid_hom.inducing_to_continuous_map ContinuousMonoidHom.inducing_to_continuous_map
+#align continuous_add_monoid_hom.inducing_to_continuous_map ContinuousAddMonoidHom.inducing_to_continuous_map
 
 @[to_additive]
 theorem embedding_to_continuous_map :
     Embedding (toContinuousMap : ContinuousMonoidHom A B → C(A, B)) :=
   ⟨inducing_to_continuous_map A B, to_continuous_map_injective⟩
-#align
-  continuous_monoid_hom.embedding_to_continuous_map ContinuousMonoidHom.embedding_to_continuous_map
-#align
-  continuous_add_monoid_hom.embedding_to_continuous_map ContinuousAddMonoidHom.embedding_to_continuous_map
+#align continuous_monoid_hom.embedding_to_continuous_map ContinuousMonoidHom.embedding_to_continuous_map
+#align continuous_add_monoid_hom.embedding_to_continuous_map ContinuousAddMonoidHom.embedding_to_continuous_map
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x y) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (U V W) -/
@@ -337,10 +329,8 @@ theorem closed_embedding_to_continuous_map [HasContinuousMul B] [T2Space B] :
         refine' ⟨x, y, U, V, W, hU, hV, hW, h.mono_left _, ⟨hfU, hfV⟩, hfW⟩
         rintro _ ⟨x, y, hx : (x, y).1 ∈ U, hy : (x, y).2 ∈ V, rfl⟩
         exact h' ⟨hx, hy⟩⟩⟩
-#align
-  continuous_monoid_hom.closed_embedding_to_continuous_map ContinuousMonoidHom.closed_embedding_to_continuous_map
-#align
-  continuous_add_monoid_hom.closed_embedding_to_continuous_map ContinuousAddMonoidHom.closed_embedding_to_continuous_map
+#align continuous_monoid_hom.closed_embedding_to_continuous_map ContinuousMonoidHom.closed_embedding_to_continuous_map
+#align continuous_add_monoid_hom.closed_embedding_to_continuous_map ContinuousAddMonoidHom.closed_embedding_to_continuous_map
 
 variable {A B C D E}
 
@@ -361,10 +351,8 @@ theorem continuous_of_continuous_uncurry {A : Type _} [TopologicalSpace A]
     Continuous f :=
   (inducing_to_continuous_map _ _).continuous_iff.mpr
     (ContinuousMap.continuous_of_continuous_uncurry _ h)
-#align
-  continuous_monoid_hom.continuous_of_continuous_uncurry ContinuousMonoidHom.continuous_of_continuous_uncurry
-#align
-  continuous_add_monoid_hom.continuous_of_continuous_uncurry ContinuousAddMonoidHom.continuous_of_continuous_uncurry
+#align continuous_monoid_hom.continuous_of_continuous_uncurry ContinuousMonoidHom.continuous_of_continuous_uncurry
+#align continuous_add_monoid_hom.continuous_of_continuous_uncurry ContinuousAddMonoidHom.continuous_of_continuous_uncurry
 
 @[to_additive]
 theorem continuous_comp [LocallyCompactSpace B] :

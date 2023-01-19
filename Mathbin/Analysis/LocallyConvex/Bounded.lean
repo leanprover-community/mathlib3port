@@ -110,8 +110,7 @@ variable [SemiNormedRing 𝕜] [AddCommGroup E] [Module 𝕜 E]
 theorem IsVonNBounded.of_topological_space_le {t t' : TopologicalSpace E} (h : t ≤ t') {s : Set E}
     (hs : @IsVonNBounded 𝕜 E _ _ _ t s) : @IsVonNBounded 𝕜 E _ _ _ t' s := fun V hV =>
   hs <| (le_iff_nhds t t').mp h 0 hV
-#align
-  bornology.is_vonN_bounded.of_topological_space_le Bornology.IsVonNBounded.of_topological_space_le
+#align bornology.is_vonN_bounded.of_topological_space_le Bornology.IsVonNBounded.of_topological_space_le
 
 end MultipleTopologies
 
@@ -195,8 +194,7 @@ theorem is_vonN_bounded_iff_smul_tendsto_zero {ε : ι → 𝕝} {l : Filter ι}
   ⟨fun hS x hxS =>
     hS.smul_tendsto_zero (eventually_of_forall hxS) (le_trans hε nhds_within_le_nhds),
     is_vonN_bounded_of_smul_tendsto_zero (hε self_mem_nhds_within)⟩
-#align
-  bornology.is_vonN_bounded_iff_smul_tendsto_zero Bornology.is_vonN_bounded_iff_smul_tendsto_zero
+#align bornology.is_vonN_bounded_iff_smul_tendsto_zero Bornology.is_vonN_bounded_iff_smul_tendsto_zero
 
 end sequence
 
@@ -350,8 +348,7 @@ theorem is_bounded_iff_subset_smul_closed_ball {s : Set E} :
   · rw [← is_vonN_bounded_iff 𝕜]
     rintro ⟨a, ha⟩
     exact ((is_vonN_bounded_closed_ball 𝕜 E 1).image (a • 1 : E →L[𝕜] E)).Subset ha
-#align
-  normed_space.is_bounded_iff_subset_smul_closed_ball NormedSpace.is_bounded_iff_subset_smul_closed_ball
+#align normed_space.is_bounded_iff_subset_smul_closed_ball NormedSpace.is_bounded_iff_subset_smul_closed_ball
 
 end NormedSpace
 

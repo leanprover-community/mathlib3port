@@ -108,8 +108,7 @@ theorem cone_discrete_comp_obj_map_cone :
     (coneDiscreteComp X).Functor.obj (π.mapCone (TopCat.piFan.{u} X)) =
       Limits.Fan.mk (πₓ (TopCat.of (∀ i, X i))) (proj X) :=
   rfl
-#align
-  fundamental_groupoid_functor.cone_discrete_comp_obj_map_cone FundamentalGroupoidFunctor.cone_discrete_comp_obj_map_cone
+#align fundamental_groupoid_functor.cone_discrete_comp_obj_map_cone FundamentalGroupoidFunctor.cone_discrete_comp_obj_map_cone
 
 /-- This is `pi_iso.inv` as a cone morphism (in fact, isomorphism) -/
 def piTopToPiCone :
@@ -187,8 +186,7 @@ theorem prod_to_prod_Top_map {x₀ x₁ : πₓ A} {y₀ y₁ : πₓ B} (p₀ :
     @CategoryTheory.Functor.map _ _ _ _ (prodToProdTop A B) (x₀, y₀) (x₁, y₁) (p₀, p₁) =
       Path.Homotopic.prod p₀ p₁ :=
   rfl
-#align
-  fundamental_groupoid_functor.prod_to_prod_Top_map FundamentalGroupoidFunctor.prod_to_prod_Top_map
+#align fundamental_groupoid_functor.prod_to_prod_Top_map FundamentalGroupoidFunctor.prod_to_prod_Top_map
 
 /-- Shows `prod_to_prod_Top` is an isomorphism, whose inverse is precisely the product
 of the induced left and right projections.

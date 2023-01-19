@@ -350,8 +350,7 @@ theorem comp₂_measurable_mk_mk (g : β → γ → δ) (hg : Measurable (uncurr
 theorem comp₂_measurable_eq_pair (g : β → γ → δ) (hg : Measurable (uncurry g)) (f₁ : α →ₘ[μ] β)
     (f₂ : α →ₘ[μ] γ) : comp₂Measurable g hg f₁ f₂ = compMeasurable _ hg (f₁.pair f₂) :=
   rfl
-#align
-  measure_theory.ae_eq_fun.comp₂_measurable_eq_pair MeasureTheory.AeEqFun.comp₂_measurable_eq_pair
+#align measure_theory.ae_eq_fun.comp₂_measurable_eq_pair MeasureTheory.AeEqFun.comp₂_measurable_eq_pair
 
 theorem comp₂_measurable_eq_mk (g : β → γ → δ) (hg : Measurable (uncurry g)) (f₁ : α →ₘ[μ] β)
     (f₂ : α →ₘ[μ] γ) :
@@ -366,8 +365,7 @@ theorem coe_fn_comp₂_measurable (g : β → γ → δ) (hg : Measurable (uncur
   by
   rw [comp₂_measurable_eq_mk]
   apply coe_fn_mk
-#align
-  measure_theory.ae_eq_fun.coe_fn_comp₂_measurable MeasureTheory.AeEqFun.coe_fn_comp₂_measurable
+#align measure_theory.ae_eq_fun.coe_fn_comp₂_measurable MeasureTheory.AeEqFun.coe_fn_comp₂_measurable
 
 end
 
@@ -399,8 +397,7 @@ theorem comp_measurable_to_germ [MeasurableSpace β] [BorelSpace β] [PseudoMetr
     [OpensMeasurableSpace γ] (g : β → γ) (hg : Measurable g) (f : α →ₘ[μ] β) :
     (compMeasurable g hg f).toGerm = f.toGerm.map g :=
   inductionOn f fun f hf => by simp
-#align
-  measure_theory.ae_eq_fun.comp_measurable_to_germ MeasureTheory.AeEqFun.comp_measurable_to_germ
+#align measure_theory.ae_eq_fun.comp_measurable_to_germ MeasureTheory.AeEqFun.comp_measurable_to_germ
 
 theorem comp₂_to_germ (g : β → γ → δ) (hg : Continuous (uncurry g)) (f₁ : α →ₘ[μ] β)
     (f₂ : α →ₘ[μ] γ) : (comp₂ g hg f₁ f₂).toGerm = f₁.toGerm.map₂ g f₂.toGerm :=
@@ -414,8 +411,7 @@ theorem comp₂_measurable_to_germ [PseudoMetrizableSpace β] [SecondCountableTo
     (f₁ : α →ₘ[μ] β) (f₂ : α →ₘ[μ] γ) :
     (comp₂Measurable g hg f₁ f₂).toGerm = f₁.toGerm.map₂ g f₂.toGerm :=
   inductionOn₂ f₁ f₂ fun f₁ hf₁ f₂ hf₂ => by simp
-#align
-  measure_theory.ae_eq_fun.comp₂_measurable_to_germ MeasureTheory.AeEqFun.comp₂_measurable_to_germ
+#align measure_theory.ae_eq_fun.comp₂_measurable_to_germ MeasureTheory.AeEqFun.comp₂_measurable_to_germ
 
 /-- Given a predicate `p` and an equivalence class `[f]`, return true if `p` holds of `f a`
     for almost all `a` -/

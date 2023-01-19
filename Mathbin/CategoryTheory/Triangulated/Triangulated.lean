@@ -72,8 +72,7 @@ variable {comm h₁₂ h₂₃ h₁₃} (h : Octahedron comm h₁₂ h₂₃ h�
 @[simps]
 def triangle : Triangle C :=
   Triangle.mk h.m₁ h.m₃ (w₂₃ ≫ v₁₂⟦1⟧')
-#align
-  category_theory.triangulated.octahedron.triangle CategoryTheory.Triangulated.Octahedron.triangle
+#align category_theory.triangulated.octahedron.triangle CategoryTheory.Triangulated.Octahedron.triangle
 
 /-- The first morphism of triangles given by an octahedron. -/
 @[simps]
@@ -89,8 +88,7 @@ def triangleMorphism₁ : Triangle.mk u₁₂ v₁₂ w₁₂ ⟶ Triangle.mk u�
   comm₃' := by
     dsimp
     simpa only [Functor.map_id, comp_id] using h.comm₂.symm
-#align
-  category_theory.triangulated.octahedron.triangle_morphism₁ CategoryTheory.Triangulated.Octahedron.triangleMorphism₁
+#align category_theory.triangulated.octahedron.triangle_morphism₁ CategoryTheory.Triangulated.Octahedron.triangleMorphism₁
 
 /-- The second morphism of triangles given an octahedron. -/
 @[simps]
@@ -106,8 +104,7 @@ def triangleMorphism₂ : Triangle.mk u₁₃ v₁₃ w₁₃ ⟶ Triangle.mk u�
     dsimp
     rw [id_comp, h.comm₃]
   comm₃' := h.comm₄
-#align
-  category_theory.triangulated.octahedron.triangle_morphism₂ CategoryTheory.Triangulated.Octahedron.triangleMorphism₂
+#align category_theory.triangulated.octahedron.triangle_morphism₂ CategoryTheory.Triangulated.Octahedron.triangleMorphism₂
 
 /- TODO (@joelriou): show that in order to verify the existence of an octahedron, one may
 replace the composable maps `u₁₂` and `u₂₃` by any isomorphic composable maps

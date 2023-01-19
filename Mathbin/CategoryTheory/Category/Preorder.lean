@@ -185,8 +185,7 @@ theorem Equivalence.to_order_iso_apply (e : X ≌ Y) (x : X) : e.toOrderIso x = 
 theorem Equivalence.to_order_iso_symm_apply (e : X ≌ Y) (y : Y) :
     e.toOrderIso.symm y = e.inverse.obj y :=
   rfl
-#align
-  category_theory.equivalence.to_order_iso_symm_apply CategoryTheory.Equivalence.to_order_iso_symm_apply
+#align category_theory.equivalence.to_order_iso_symm_apply CategoryTheory.Equivalence.to_order_iso_symm_apply
 
 end PartialOrder
 

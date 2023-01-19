@@ -97,8 +97,7 @@ instance (priority := 100) OrderRingHomClass.toOrderMonoidWithZeroHomClass [NonA
     [Preorder α] [NonAssocSemiring β] [Preorder β] [OrderRingHomClass F α β] :
     OrderMonoidWithZeroHomClass F α β :=
   { ‹OrderRingHomClass F α β› with }
-#align
-  order_ring_hom_class.to_order_monoid_with_zero_hom_class OrderRingHomClass.toOrderMonoidWithZeroHomClass
+#align order_ring_hom_class.to_order_monoid_with_zero_hom_class OrderRingHomClass.toOrderMonoidWithZeroHomClass
 
 -- See note [lower instance priority]
 instance (priority := 100) OrderRingIsoClass.toOrderIsoClass [Mul α] [Add α] [LE α] [Mul β] [Add β]
@@ -179,8 +178,7 @@ theorem to_order_add_monoid_hom_eq_coe (f : α →+*o β) : f.toOrderAddMonoidHo
 @[simp]
 theorem to_order_monoid_with_zero_hom_eq_coe (f : α →+*o β) : f.toOrderMonoidWithZeroHom = f :=
   rfl
-#align
-  order_ring_hom.to_order_monoid_with_zero_hom_eq_coe OrderRingHom.to_order_monoid_with_zero_hom_eq_coe
+#align order_ring_hom.to_order_monoid_with_zero_hom_eq_coe OrderRingHom.to_order_monoid_with_zero_hom_eq_coe
 
 @[simp]
 theorem coe_coe_ring_hom (f : α →+*o β) : ⇑(f : α →+* β) = f :=
@@ -195,8 +193,7 @@ theorem coe_coe_order_add_monoid_hom (f : α →+*o β) : ⇑(f : α →+o β) =
 @[simp]
 theorem coe_coe_order_monoid_with_zero_hom (f : α →+*o β) : ⇑(f : α →*₀o β) = f :=
   rfl
-#align
-  order_ring_hom.coe_coe_order_monoid_with_zero_hom OrderRingHom.coe_coe_order_monoid_with_zero_hom
+#align order_ring_hom.coe_coe_order_monoid_with_zero_hom OrderRingHom.coe_coe_order_monoid_with_zero_hom
 
 @[norm_cast]
 theorem coe_ring_hom_apply (f : α →+*o β) (a : α) : (f : α →+* β) a = f a :=
@@ -211,8 +208,7 @@ theorem coe_order_add_monoid_hom_apply (f : α →+*o β) (a : α) : (f : α →
 @[norm_cast]
 theorem coe_order_monoid_with_zero_hom_apply (f : α →+*o β) (a : α) : (f : α →*₀o β) a = f a :=
   rfl
-#align
-  order_ring_hom.coe_order_monoid_with_zero_hom_apply OrderRingHom.coe_order_monoid_with_zero_hom_apply
+#align order_ring_hom.coe_order_monoid_with_zero_hom_apply OrderRingHom.coe_order_monoid_with_zero_hom_apply
 
 /-- Copy of a `order_ring_hom` with a new `to_fun` equal to the old one. Useful to fix definitional
 equalities. -/
@@ -265,8 +261,7 @@ theorem coe_order_add_monoid_hom_id : (OrderRingHom.id α : α →+o α) = Order
 theorem coe_order_monoid_with_zero_hom_id :
     (OrderRingHom.id α : α →*₀o α) = OrderMonoidWithZeroHom.id α :=
   rfl
-#align
-  order_ring_hom.coe_order_monoid_with_zero_hom_id OrderRingHom.coe_order_monoid_with_zero_hom_id
+#align order_ring_hom.coe_order_monoid_with_zero_hom_id OrderRingHom.coe_order_monoid_with_zero_hom_id
 
 /-- Composition of two `order_ring_hom`s as an `order_ring_hom`. -/
 protected def comp (f : β →+*o γ) (g : α →+*o β) : α →+*o γ :=

@@ -134,8 +134,7 @@ theorem is_complement'_stabilizer_of_coprime {α : H.QuotientDiff}
 private theorem exists_right_complement'_of_coprime_aux (hH : Nat.Coprime (Nat.card H) H.index) :
     ∃ K : Subgroup G, IsComplement' H K :=
   instNonempty.elim fun α => ⟨stabilizer G α, is_complement'_stabilizer_of_coprime hH⟩
-#align
-  subgroup.exists_right_complement'_of_coprime_aux subgroup.exists_right_complement'_of_coprime_aux
+#align subgroup.exists_right_complement'_of_coprime_aux subgroup.exists_right_complement'_of_coprime_aux
 
 end SchurZassenhausAbelian
 
@@ -311,8 +310,7 @@ private theorem exists_right_complement'_of_coprime_aux' [Fintype G] (hG : Finty
       h3
   rw [← Nat.card_eq_fintype_card] at hN
   exact not_exists_of_forall_not h3 (exists_right_complement'_of_coprime_aux hN)
-#align
-  subgroup.exists_right_complement'_of_coprime_aux' subgroup.exists_right_complement'_of_coprime_aux'
+#align subgroup.exists_right_complement'_of_coprime_aux' subgroup.exists_right_complement'_of_coprime_aux'
 
 /-- **Schur-Zassenhaus** for normal subgroups:
   If `H : subgroup G` is normal, and has order coprime to its index, then there exists a
@@ -320,8 +318,7 @@ private theorem exists_right_complement'_of_coprime_aux' [Fintype G] (hG : Finty
 theorem exists_right_complement'_of_coprime_of_fintype [Fintype G] {N : Subgroup G} [N.Normal]
     (hN : Nat.Coprime (Fintype.card N) N.index) : ∃ H : Subgroup G, IsComplement' N H :=
   exists_right_complement'_of_coprime_aux' rfl hN
-#align
-  subgroup.exists_right_complement'_of_coprime_of_fintype Subgroup.exists_right_complement'_of_coprime_of_fintype
+#align subgroup.exists_right_complement'_of_coprime_of_fintype Subgroup.exists_right_complement'_of_coprime_of_fintype
 
 /-- **Schur-Zassenhaus** for normal subgroups:
   If `H : subgroup G` is normal, and has order coprime to its index, then there exists a
@@ -354,8 +351,7 @@ theorem exists_right_complement'_of_coprime {N : Subgroup G} [N.Normal]
 theorem exists_left_complement'_of_coprime_of_fintype [Fintype G] {N : Subgroup G} [N.Normal]
     (hN : Nat.Coprime (Fintype.card N) N.index) : ∃ H : Subgroup G, IsComplement' H N :=
   Exists.imp (fun _ => IsComplement'.symm) (exists_right_complement'_of_coprime_of_fintype hN)
-#align
-  subgroup.exists_left_complement'_of_coprime_of_fintype Subgroup.exists_left_complement'_of_coprime_of_fintype
+#align subgroup.exists_left_complement'_of_coprime_of_fintype Subgroup.exists_left_complement'_of_coprime_of_fintype
 
 /-- **Schur-Zassenhaus** for normal subgroups:
   If `H : subgroup G` is normal, and has order coprime to its index, then there exists a

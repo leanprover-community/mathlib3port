@@ -175,8 +175,7 @@ theorem iff_quotient_mv_polynomial' :
         Ideal.fg_ker_comp _ f _ hf.2 equiv.symm.surjective⟩
     convert Submodule.fgBot
     exact RingHom.ker_coe_equiv equiv.symm.to_ring_equiv
-#align
-  algebra.finite_presentation.iff_quotient_mv_polynomial' Algebra.FinitePresentation.iff_quotient_mv_polynomial'
+#align algebra.finite_presentation.iff_quotient_mv_polynomial' Algebra.FinitePresentation.iff_quotient_mv_polynomial'
 
 /-- If `A` is a finitely presented `R`-algebra, then `mv_polynomial (fin n) A` is finitely presented
 as `R`-algebra. -/
@@ -197,8 +196,7 @@ theorem mv_polynomial_of_finite_presentation (hfp : FinitePresentation R A) (ι 
       exact RingHom.ker_coe_equiv (MvPolynomial.sumAlgEquiv R ι ι').toRingEquiv
     · rw [AlgHom.to_ring_hom_eq_coe, MvPolynomial.map_alg_hom_coe_ring_hom, MvPolynomial.ker_map]
       exact hf_ker.map MvPolynomial.c
-#align
-  algebra.finite_presentation.mv_polynomial_of_finite_presentation Algebra.FinitePresentation.mv_polynomial_of_finite_presentation
+#align algebra.finite_presentation.mv_polynomial_of_finite_presentation Algebra.FinitePresentation.mv_polynomial_of_finite_presentation
 
 /-- If `A` is an `R`-algebra and `S` is an `A`-algebra, both finitely presented, then `S` is
   finitely presented as `R`-algebra. -/
@@ -302,8 +300,7 @@ theorem of_restrict_scalars_finite_presentation [Algebra A B] [IsScalarTower R A
       apply Ideal.subset_span
       apply Set.mem_union_left
       exact Set.mem_image_of_mem _ hx
-#align
-  algebra.finite_presentation.of_restrict_scalars_finite_presentation Algebra.FinitePresentation.of_restrict_scalars_finite_presentation
+#align algebra.finite_presentation.of_restrict_scalars_finite_presentation Algebra.FinitePresentation.of_restrict_scalars_finite_presentation
 
 -- TODO: extract out helper lemmas and tidy proof.
 /-- This is used to prove the strictly stronger `ker_fg_of_surjective`. Use it instead. -/
@@ -379,8 +376,7 @@ theorem ker_fg_of_mv_polynomial {n : ℕ} (f : MvPolynomial (Fin n) R →ₐ[R] 
     apply Submodule.subset_span
     apply Set.mem_union_right
     exact Set.mem_image_of_mem _ hx
-#align
-  algebra.finite_presentation.ker_fg_of_mv_polynomial Algebra.FinitePresentation.ker_fg_of_mv_polynomial
+#align algebra.finite_presentation.ker_fg_of_mv_polynomial Algebra.FinitePresentation.ker_fg_of_mv_polynomial
 
 /-- If `f : A →ₐ[R] B` is a sujection between finitely-presented `R`-algebras, then the kernel of
 `f` is finitely generated. -/
@@ -391,8 +387,7 @@ theorem ker_fg_of_surjective (f : A →ₐ[R] B) (hf : Function.Surjective f)
   convert (ker_fg_of_mv_polynomial (f.comp g) (hf.comp hg) hRB).map g.to_ring_hom
   simp_rw [RingHom.ker_eq_comap_bot, AlgHom.to_ring_hom_eq_coe, AlgHom.comp_to_ring_hom]
   rw [← Ideal.comap_comap, Ideal.map_comap_of_surjective (g : MvPolynomial (Fin n) R →+* A) hg]
-#align
-  algebra.finite_presentation.ker_fg_of_surjective Algebra.FinitePresentation.ker_fg_of_surjective
+#align algebra.finite_presentation.ker_fg_of_surjective Algebra.FinitePresentation.ker_fg_of_surjective
 
 end FinitePresentation
 
@@ -463,8 +458,7 @@ theorem of_comp_finite_type (f : A →+* B) {g : B →+* C} (hg : (g.comp f).Fin
   @Algebra.FinitePresentation.of_restrict_scalars_finite_presentation _ _ f.toAlgebra _
     (g.comp f).toAlgebra g.toAlgebra
     (@IsScalarTower.of_algebra_map_eq' _ _ _ f.toAlgebra g.toAlgebra (g.comp f).toAlgebra rfl) hg hf
-#align
-  ring_hom.finite_presentation.of_comp_finite_type RingHom.FinitePresentation.of_comp_finite_type
+#align ring_hom.finite_presentation.of_comp_finite_type RingHom.FinitePresentation.of_comp_finite_type
 
 end FinitePresentation
 

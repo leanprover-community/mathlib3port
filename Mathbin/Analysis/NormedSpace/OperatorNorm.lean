@@ -308,8 +308,7 @@ theorem norm_id_of_nontrivial_seminorm (h : ∃ x : E, ‖x‖ ≠ 0) : ‖id �
     let ⟨x, hx⟩ := h
     have := (id 𝕜 E).ratio_le_op_norm x
     rwa [id_apply, div_self hx] at this
-#align
-  continuous_linear_map.norm_id_of_nontrivial_seminorm ContinuousLinearMap.norm_id_of_nontrivial_seminorm
+#align continuous_linear_map.norm_id_of_nontrivial_seminorm ContinuousLinearMap.norm_id_of_nontrivial_seminorm
 
 theorem op_norm_smul_le {𝕜' : Type _} [NormedField 𝕜'] [NormedSpace 𝕜' F] [SMulCommClass 𝕜₂ 𝕜' F]
     (c : 𝕜') (f : E →SL[σ₁₂] F) : ‖c • f‖ ≤ ‖c‖ * ‖f‖ :=
@@ -329,8 +328,7 @@ protected def tmpSeminormedAddCommGroup : SeminormedAddCommGroup (E →SL[σ₁�
       map_zero' := op_norm_zero
       add_le' := op_norm_add_le
       neg' := op_norm_neg }
-#align
-  continuous_linear_map.tmp_seminormed_add_comm_group ContinuousLinearMap.tmpSeminormedAddCommGroup
+#align continuous_linear_map.tmp_seminormed_add_comm_group ContinuousLinearMap.tmpSeminormedAddCommGroup
 
 /-- The `pseudo_metric_space` structure on `E →SL[σ₁₂] F` coming from
 `continuous_linear_map.tmp_seminormed_add_comm_group`.
@@ -376,8 +374,7 @@ protected theorem tmp_closed_ball_div_subset {a b : ℝ} (ha : 0 < a) (hb : 0 < 
     _ ≤ a / b * b := mul_le_mul hf hx (norm_nonneg _) (div_pos ha hb).le
     _ = a := div_mul_cancel a hb.ne.symm
     
-#align
-  continuous_linear_map.tmp_closed_ball_div_subset ContinuousLinearMap.tmp_closed_ball_div_subset
+#align continuous_linear_map.tmp_closed_ball_div_subset ContinuousLinearMap.tmp_closed_ball_div_subset
 
 end Tmp
 
@@ -427,8 +424,7 @@ instance toPseudoMetricSpace : PseudoMetricSpace (E →SL[σ₁₂] F) :=
     the operator norm. -/
 instance toSeminormedAddCommGroup : SeminormedAddCommGroup (E →SL[σ₁₂] F)
     where dist_eq := ContinuousLinearMap.tmpSeminormedAddCommGroup.dist_eq
-#align
-  continuous_linear_map.to_seminormed_add_comm_group ContinuousLinearMap.toSeminormedAddCommGroup
+#align continuous_linear_map.to_seminormed_add_comm_group ContinuousLinearMap.toSeminormedAddCommGroup
 
 theorem nnnorm_def (f : E →SL[σ₁₂] F) : ‖f‖₊ = infₛ { c | ∀ x, ‖f x‖₊ ≤ c * ‖x‖₊ } :=
   by
@@ -454,8 +450,7 @@ one controls the norm of `f`. -/
 theorem op_nnnorm_le_of_unit_nnnorm [NormedSpace ℝ E] [NormedSpace ℝ F] {f : E →L[ℝ] F} {C : ℝ≥0}
     (hf : ∀ x, ‖x‖₊ = 1 → ‖f x‖₊ ≤ C) : ‖f‖₊ ≤ C :=
   op_norm_le_of_unit_norm C.coe_nonneg fun x hx => hf x <| by rwa [← Nnreal.coe_eq_one]
-#align
-  continuous_linear_map.op_nnnorm_le_of_unit_nnnorm ContinuousLinearMap.op_nnnorm_le_of_unit_nnnorm
+#align continuous_linear_map.op_nnnorm_le_of_unit_nnnorm ContinuousLinearMap.op_nnnorm_le_of_unit_nnnorm
 
 theorem op_nnnorm_le_of_lipschitz {f : E →SL[σ₁₂] F} {K : ℝ≥0} (hf : LipschitzWith K f) :
     ‖f‖₊ ≤ K :=
@@ -530,15 +525,13 @@ theorem exists_mul_lt_apply_of_lt_op_nnnorm (f : E →SL[σ₁₂] F) {r : ℝ�
   simpa only [not_forall, not_le, Set.mem_setOf] using
     not_mem_of_lt_cinfₛ (nnnorm_def f ▸ hr : r < Inf { c : ℝ≥0 | ∀ x, ‖f x‖₊ ≤ c * ‖x‖₊ })
       (OrderBot.bddBelow _)
-#align
-  continuous_linear_map.exists_mul_lt_apply_of_lt_op_nnnorm ContinuousLinearMap.exists_mul_lt_apply_of_lt_op_nnnorm
+#align continuous_linear_map.exists_mul_lt_apply_of_lt_op_nnnorm ContinuousLinearMap.exists_mul_lt_apply_of_lt_op_nnnorm
 
 theorem exists_mul_lt_of_lt_op_norm (f : E →SL[σ₁₂] F) {r : ℝ} (hr₀ : 0 ≤ r) (hr : r < ‖f‖) :
     ∃ x, r * ‖x‖ < ‖f x‖ := by
   lift r to ℝ≥0 using hr₀
   exact f.exists_mul_lt_apply_of_lt_op_nnnorm hr
-#align
-  continuous_linear_map.exists_mul_lt_of_lt_op_norm ContinuousLinearMap.exists_mul_lt_of_lt_op_norm
+#align continuous_linear_map.exists_mul_lt_of_lt_op_norm ContinuousLinearMap.exists_mul_lt_of_lt_op_norm
 
 theorem exists_lt_apply_of_lt_op_nnnorm {𝕜 𝕜₂ E F : Type _} [NormedAddCommGroup E]
     [SeminormedAddCommGroup F] [DenselyNormedField 𝕜] [NontriviallyNormedField 𝕜₂] {σ₁₂ : 𝕜 →+* 𝕜₂}
@@ -556,8 +549,7 @@ theorem exists_lt_apply_of_lt_op_nnnorm {𝕜 𝕜₂ E F : Type _} [NormedAddCo
   refine' ⟨k • y, (nnnorm_smul k y).symm ▸ (Nnreal.lt_inv_iff_mul_lt hy').1 hk₂, _⟩
   have : ‖σ₁₂ k‖₊ = ‖k‖₊ := Subtype.ext RingHomIsometric.is_iso
   rwa [map_smulₛₗ f, nnnorm_smul, ← Nnreal.div_lt_iff hfy, div_eq_mul_inv, this]
-#align
-  continuous_linear_map.exists_lt_apply_of_lt_op_nnnorm ContinuousLinearMap.exists_lt_apply_of_lt_op_nnnorm
+#align continuous_linear_map.exists_lt_apply_of_lt_op_nnnorm ContinuousLinearMap.exists_lt_apply_of_lt_op_nnnorm
 
 theorem exists_lt_apply_of_lt_op_norm {𝕜 𝕜₂ E F : Type _} [NormedAddCommGroup E]
     [SeminormedAddCommGroup F] [DenselyNormedField 𝕜] [NontriviallyNormedField 𝕜₂] {σ₁₂ : 𝕜 →+* 𝕜₂}
@@ -568,8 +560,7 @@ theorem exists_lt_apply_of_lt_op_norm {𝕜 𝕜₂ E F : Type _} [NormedAddComm
   · exact ⟨0, by simpa using hr₀⟩
   · lift r to ℝ≥0 using not_lt.1 hr₀
     exact f.exists_lt_apply_of_lt_op_nnnorm hr
-#align
-  continuous_linear_map.exists_lt_apply_of_lt_op_norm ContinuousLinearMap.exists_lt_apply_of_lt_op_norm
+#align continuous_linear_map.exists_lt_apply_of_lt_op_norm ContinuousLinearMap.exists_lt_apply_of_lt_op_norm
 
 theorem Sup_unit_ball_eq_nnnorm {𝕜 𝕜₂ E F : Type _} [NormedAddCommGroup E]
     [SeminormedAddCommGroup F] [DenselyNormedField 𝕜] [NontriviallyNormedField 𝕜₂] {σ₁₂ : 𝕜 →+* 𝕜₂}
@@ -606,8 +597,7 @@ theorem Sup_closed_unit_ball_eq_nnnorm {𝕜 𝕜₂ E F : Type _} [NormedAddCom
   exact
     csupₛ_le_csupₛ ⟨‖f‖₊, hbdd⟩ ((nonempty_ball.2 zero_lt_one).image _)
       (Set.image_subset _ ball_subset_closed_ball)
-#align
-  continuous_linear_map.Sup_closed_unit_ball_eq_nnnorm ContinuousLinearMap.Sup_closed_unit_ball_eq_nnnorm
+#align continuous_linear_map.Sup_closed_unit_ball_eq_nnnorm ContinuousLinearMap.Sup_closed_unit_ball_eq_nnnorm
 
 theorem Sup_closed_unit_ball_eq_norm {𝕜 𝕜₂ E F : Type _} [NormedAddCommGroup E]
     [SeminormedAddCommGroup F] [DenselyNormedField 𝕜] [NontriviallyNormedField 𝕜₂] {σ₁₂ : 𝕜 →+* 𝕜₂}
@@ -615,8 +605,7 @@ theorem Sup_closed_unit_ball_eq_norm {𝕜 𝕜₂ E F : Type _} [NormedAddCommG
     supₛ ((fun x => ‖f x‖) '' closedBall 0 1) = ‖f‖ := by
   simpa only [Nnreal.coe_Sup, Set.image_image] using
     Nnreal.coe_eq.2 f.Sup_closed_unit_ball_eq_nnnorm
-#align
-  continuous_linear_map.Sup_closed_unit_ball_eq_norm ContinuousLinearMap.Sup_closed_unit_ball_eq_norm
+#align continuous_linear_map.Sup_closed_unit_ball_eq_norm ContinuousLinearMap.Sup_closed_unit_ball_eq_norm
 
 end SupCat
 
@@ -728,8 +717,7 @@ namespace LinearIsometry
 
 theorem norm_to_continuous_linear_map_le (f : E →ₛₗᵢ[σ₁₂] F) : ‖f.toContinuousLinearMap‖ ≤ 1 :=
   f.toContinuousLinearMap.op_norm_le_bound zero_le_one fun x => by simp
-#align
-  linear_isometry.norm_to_continuous_linear_map_le LinearIsometry.norm_to_continuous_linear_map_le
+#align linear_isometry.norm_to_continuous_linear_map_le LinearIsometry.norm_to_continuous_linear_map_le
 
 end LinearIsometry
 
@@ -1107,13 +1095,11 @@ theorem op_norm_mul_left_right_apply_apply_le (x y : 𝕜') : ‖mulLeftRight �
       mul_le_mul (op_norm_mul_apply_le _ _ _)
         (op_norm_le_bound _ (norm_nonneg _) fun _ => (norm_mul_le _ _).trans_eq (mul_comm _ _))
         (norm_nonneg _) (norm_nonneg _)
-#align
-  continuous_linear_map.op_norm_mul_left_right_apply_apply_le ContinuousLinearMap.op_norm_mul_left_right_apply_apply_le
+#align continuous_linear_map.op_norm_mul_left_right_apply_apply_le ContinuousLinearMap.op_norm_mul_left_right_apply_apply_le
 
 theorem op_norm_mul_left_right_apply_le (x : 𝕜') : ‖mulLeftRight 𝕜 𝕜' x‖ ≤ ‖x‖ :=
   op_norm_le_bound _ (norm_nonneg x) (op_norm_mul_left_right_apply_apply_le 𝕜 𝕜' x)
-#align
-  continuous_linear_map.op_norm_mul_left_right_apply_le ContinuousLinearMap.op_norm_mul_left_right_apply_le
+#align continuous_linear_map.op_norm_mul_left_right_apply_le ContinuousLinearMap.op_norm_mul_left_right_apply_le
 
 theorem op_norm_mul_left_right_le : ‖mulLeftRight 𝕜 𝕜'‖ ≤ 1 :=
   op_norm_le_bound _ zero_le_one fun x =>
@@ -1223,15 +1209,13 @@ variable {𝕜 E Fₗ 𝕜' 𝕜''}
 theorem coe_restrict_scalars_isometry :
     ⇑(restrictScalarsIsometry 𝕜 E Fₗ 𝕜' 𝕜'') = restrictScalars 𝕜' :=
   rfl
-#align
-  continuous_linear_map.coe_restrict_scalars_isometry ContinuousLinearMap.coe_restrict_scalars_isometry
+#align continuous_linear_map.coe_restrict_scalars_isometry ContinuousLinearMap.coe_restrict_scalars_isometry
 
 @[simp]
 theorem restrict_scalars_isometry_to_linear_map :
     (restrictScalarsIsometry 𝕜 E Fₗ 𝕜' 𝕜'').toLinearMap = restrictScalarsₗ 𝕜 E Fₗ 𝕜' 𝕜'' :=
   rfl
-#align
-  continuous_linear_map.restrict_scalars_isometry_to_linear_map ContinuousLinearMap.restrict_scalars_isometry_to_linear_map
+#align continuous_linear_map.restrict_scalars_isometry_to_linear_map ContinuousLinearMap.restrict_scalars_isometry_to_linear_map
 
 variable (𝕜 E Fₗ 𝕜' 𝕜'')
 
@@ -1489,8 +1473,7 @@ theorem antilipschitz_of_uniform_embedding (f : E →L[𝕜] Fₗ) (hf : Uniform
       _ ≤ ‖d‖⁻¹ * 1 := mul_le_mul_of_nonneg_left this (inv_nonneg.2 (norm_nonneg _))
       _ ≤ δ⁻¹ * ‖c‖ * ‖f x‖ := by rwa [mul_one]
       
-#align
-  continuous_linear_map.antilipschitz_of_uniform_embedding ContinuousLinearMap.antilipschitz_of_uniform_embedding
+#align continuous_linear_map.antilipschitz_of_uniform_embedding ContinuousLinearMap.antilipschitz_of_uniform_embedding
 
 section Completeness
 
@@ -1518,8 +1501,7 @@ def ofMemClosureImageCoeBounded (f : E' → F) {s : Set (E' →SL[σ₁₂] F)} 
       is_closed_Iic.preimage (@continuous_apply E' (fun _ => F) _ x).norm
     refine' ⟨C, fun x => (this x).closure_subset_iff.2 (image_subset_iff.2 fun g hg => _) hf⟩
     exact g.le_of_op_norm_le (hC _ hg) _
-#align
-  continuous_linear_map.of_mem_closure_image_coe_bounded ContinuousLinearMap.ofMemClosureImageCoeBounded
+#align continuous_linear_map.of_mem_closure_image_coe_bounded ContinuousLinearMap.ofMemClosureImageCoeBounded
 
 /-- Let `f : E → F` be a map, let `g : α → E →SL[σ₁₂] F` be a family of continuous (semi)linear maps
 that takes values in a bounded set and converges to `f` pointwise along a nontrivial filter. Then
@@ -1555,8 +1537,7 @@ theorem tendsto_of_tendsto_pointwise_of_cauchy_seq {f : ℕ → E' →SL[σ₁�
   refine' le_of_tendsto this (eventually_at_top.2 ⟨n, fun m hm => _⟩)
   -- This inequality follows from `‖f n - f m‖ ≤ b n`.
   exact (f n - f m).le_of_op_norm_le (hfb _ _ _ le_rfl hm) _
-#align
-  continuous_linear_map.tendsto_of_tendsto_pointwise_of_cauchy_seq ContinuousLinearMap.tendsto_of_tendsto_pointwise_of_cauchy_seq
+#align continuous_linear_map.tendsto_of_tendsto_pointwise_of_cauchy_seq ContinuousLinearMap.tendsto_of_tendsto_pointwise_of_cauchy_seq
 
 /-- If the target space is complete, the space of continuous linear maps with its norm is also
 complete. This works also if the source space is seminormed. -/
@@ -1587,8 +1568,7 @@ theorem is_compact_closure_image_coe_of_bounded [ProperSpace F] {s : Set (E' →
     ((apply' F σ₁₂ x).lipschitz.bounded_image hb).is_compact_closure
   is_compact_closure_of_subset_compact (is_compact_pi_infinite this)
     (image_subset_iff.2 fun g hg x => subset_closure <| mem_image_of_mem _ hg)
-#align
-  continuous_linear_map.is_compact_closure_image_coe_of_bounded ContinuousLinearMap.is_compact_closure_image_coe_of_bounded
+#align continuous_linear_map.is_compact_closure_image_coe_of_bounded ContinuousLinearMap.is_compact_closure_image_coe_of_bounded
 
 /-- Let `s` be a bounded set in the space of continuous (semi)linear maps `E →SL[σ] F` taking values
 in a proper space. If `s` interpreted as a set in the space of maps `E → F` with topology of
@@ -1599,8 +1579,7 @@ theorem is_compact_image_coe_of_bounded_of_closed_image [ProperSpace F] {s : Set
     (hb : Bounded s) (hc : IsClosed ((coeFn : (E' →SL[σ₁₂] F) → E' → F) '' s)) :
     IsCompact ((coeFn : (E' →SL[σ₁₂] F) → E' → F) '' s) :=
   hc.closure_eq ▸ is_compact_closure_image_coe_of_bounded hb
-#align
-  continuous_linear_map.is_compact_image_coe_of_bounded_of_closed_image ContinuousLinearMap.is_compact_image_coe_of_bounded_of_closed_image
+#align continuous_linear_map.is_compact_image_coe_of_bounded_of_closed_image ContinuousLinearMap.is_compact_image_coe_of_bounded_of_closed_image
 
 /-- If a set `s` of semilinear functions is bounded and is closed in the weak-* topology, then its
 image under coercion to functions `E → F` is a closed set. We don't have a name for `E →SL[σ] F`
@@ -1612,8 +1591,7 @@ theorem is_closed_image_coe_of_bounded_of_weak_closed {s : Set (E' →SL[σ₁�
     IsClosed ((coeFn : (E' →SL[σ₁₂] F) → E' → F) '' s) :=
   is_closed_of_closure_subset fun f hf =>
     ⟨ofMemClosureImageCoeBounded f hb hf, hc (ofMemClosureImageCoeBounded f hb hf) hf, rfl⟩
-#align
-  continuous_linear_map.is_closed_image_coe_of_bounded_of_weak_closed ContinuousLinearMap.is_closed_image_coe_of_bounded_of_weak_closed
+#align continuous_linear_map.is_closed_image_coe_of_bounded_of_weak_closed ContinuousLinearMap.is_closed_image_coe_of_bounded_of_weak_closed
 
 /-- If a set `s` of semilinear functions is bounded and is closed in the weak-* topology, then its
 image under coercion to functions `E → F` is a compact set. We don't have a name for `E →SL[σ] F`
@@ -1625,8 +1603,7 @@ theorem is_compact_image_coe_of_bounded_of_weak_closed [ProperSpace F] {s : Set 
     IsCompact ((coeFn : (E' →SL[σ₁₂] F) → E' → F) '' s) :=
   is_compact_image_coe_of_bounded_of_closed_image hb <|
     is_closed_image_coe_of_bounded_of_weak_closed hb hc
-#align
-  continuous_linear_map.is_compact_image_coe_of_bounded_of_weak_closed ContinuousLinearMap.is_compact_image_coe_of_bounded_of_weak_closed
+#align continuous_linear_map.is_compact_image_coe_of_bounded_of_weak_closed ContinuousLinearMap.is_compact_image_coe_of_bounded_of_weak_closed
 
 /-- A closed ball is closed in the weak-* topology. We don't have a name for `E →SL[σ] F` with
 weak-* topology in `mathlib`, so we use an equivalent condition (see `is_closed_induced_iff'`). -/
@@ -1640,8 +1617,7 @@ theorem is_weak_closed_closed_ball (f₀ : E' →SL[σ₁₂] F) (r : ℝ) ⦃f 
     is_closed_Iic.preimage ((@continuous_apply E' (fun _ => F) _ x).sub continuous_const).norm
   refine' this.closure_subset_iff.2 (image_subset_iff.2 fun g hg => _) hf
   exact (g - f₀).le_of_op_norm_le (mem_closed_ball_iff_norm.1 hg) _
-#align
-  continuous_linear_map.is_weak_closed_closed_ball ContinuousLinearMap.is_weak_closed_closed_ball
+#align continuous_linear_map.is_weak_closed_closed_ball ContinuousLinearMap.is_weak_closed_closed_ball
 
 /-- The set of functions `f : E → F` that represent continuous linear maps `f : E →SL[σ₁₂] F`
 at distance `≤ r` from `f₀ : E →SL[σ₁₂] F` is closed in the topology of pointwise convergence.
@@ -1650,8 +1626,7 @@ theorem is_closed_image_coe_closed_ball (f₀ : E →SL[σ₁₂] F) (r : ℝ) :
     IsClosed ((coeFn : (E →SL[σ₁₂] F) → E → F) '' closedBall f₀ r) :=
   is_closed_image_coe_of_bounded_of_weak_closed bounded_closed_ball
     (is_weak_closed_closed_ball f₀ r)
-#align
-  continuous_linear_map.is_closed_image_coe_closed_ball ContinuousLinearMap.is_closed_image_coe_closed_ball
+#align continuous_linear_map.is_closed_image_coe_closed_ball ContinuousLinearMap.is_closed_image_coe_closed_ball
 
 /-- **Banach-Alaoglu** theorem. The set of functions `f : E → F` that represent continuous linear
 maps `f : E →SL[σ₁₂] F` at distance `≤ r` from `f₀ : E →SL[σ₁₂] F` is compact in the topology of
@@ -1661,8 +1636,7 @@ theorem is_compact_image_coe_closed_ball [ProperSpace F] (f₀ : E →SL[σ₁�
     IsCompact ((coeFn : (E →SL[σ₁₂] F) → E → F) '' closedBall f₀ r) :=
   is_compact_image_coe_of_bounded_of_weak_closed bounded_closed_ball <|
     is_weak_closed_closed_ball f₀ r
-#align
-  continuous_linear_map.is_compact_image_coe_closed_ball ContinuousLinearMap.is_compact_image_coe_closed_ball
+#align continuous_linear_map.is_compact_image_coe_closed_ball ContinuousLinearMap.is_compact_image_coe_closed_ball
 
 end Completeness
 
@@ -1787,8 +1761,7 @@ theorem norm_to_continuous_linear_map_comp [RingHomIsometric σ₁₂] (f : F �
     {g : E →SL[σ₁₂] F} : ‖f.toContinuousLinearMap.comp g‖ = ‖g‖ :=
   op_norm_ext (f.toContinuousLinearMap.comp g) g fun x => by
     simp only [norm_map, coe_to_continuous_linear_map, coe_comp']
-#align
-  linear_isometry.norm_to_continuous_linear_map_comp LinearIsometry.norm_to_continuous_linear_map_comp
+#align linear_isometry.norm_to_continuous_linear_map_comp LinearIsometry.norm_to_continuous_linear_map_comp
 
 omit σ₁₃
 
@@ -1827,8 +1800,7 @@ theorem op_norm_comp_linear_isometry_equiv (f : F →SL[σ₂₃] G) (g : F' ≃
       simp
     haveI := g.symm.surjective.nontrivial
     simp [g.symm.to_linear_isometry.norm_to_continuous_linear_map]
-#align
-  continuous_linear_map.op_norm_comp_linear_isometry_equiv ContinuousLinearMap.op_norm_comp_linear_isometry_equiv
+#align continuous_linear_map.op_norm_comp_linear_isometry_equiv ContinuousLinearMap.op_norm_comp_linear_isometry_equiv
 
 omit σ₂'' σ₂₃'
 
@@ -1958,8 +1930,7 @@ theorem one_le_norm_mul_norm_symm [RingHomIsometric σ₁₂] [Nontrivial E] (e 
   rw [mul_comm]
   convert (e.symm : F →SL[σ₂₁] E).op_norm_comp_le (e : E →SL[σ₁₂] F)
   rw [e.coe_symm_comp_coe, ContinuousLinearMap.norm_id]
-#align
-  continuous_linear_equiv.one_le_norm_mul_norm_symm ContinuousLinearEquiv.one_le_norm_mul_norm_symm
+#align continuous_linear_equiv.one_le_norm_mul_norm_symm ContinuousLinearEquiv.one_le_norm_mul_norm_symm
 
 include σ₂₁
 
@@ -1988,14 +1959,12 @@ theorem subsingleton_or_norm_symm_pos [RingHomIsometric σ₁₂] (e : E ≃SL[�
     infer_instance
   · right
     exact e.norm_symm_pos
-#align
-  continuous_linear_equiv.subsingleton_or_norm_symm_pos ContinuousLinearEquiv.subsingleton_or_norm_symm_pos
+#align continuous_linear_equiv.subsingleton_or_norm_symm_pos ContinuousLinearEquiv.subsingleton_or_norm_symm_pos
 
 theorem subsingleton_or_nnnorm_symm_pos [RingHomIsometric σ₁₂] (e : E ≃SL[σ₁₂] F) :
     Subsingleton E ∨ 0 < ‖(e.symm : F →SL[σ₂₁] E)‖₊ :=
   subsingleton_or_norm_symm_pos e
-#align
-  continuous_linear_equiv.subsingleton_or_nnnorm_symm_pos ContinuousLinearEquiv.subsingleton_or_nnnorm_symm_pos
+#align continuous_linear_equiv.subsingleton_or_nnnorm_symm_pos ContinuousLinearEquiv.subsingleton_or_nnnorm_symm_pos
 
 variable (𝕜)
 

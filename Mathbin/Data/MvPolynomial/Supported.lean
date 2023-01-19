@@ -65,15 +65,13 @@ theorem supported_equiv_mv_polynomial_symm_C (s : Set σ) (x : R) :
   by
   ext1
   simp [supported_equiv_mv_polynomial, MvPolynomial.algebra_map_eq]
-#align
-  mv_polynomial.supported_equiv_mv_polynomial_symm_C MvPolynomial.supported_equiv_mv_polynomial_symm_C
+#align mv_polynomial.supported_equiv_mv_polynomial_symm_C MvPolynomial.supported_equiv_mv_polynomial_symm_C
 
 @[simp]
 theorem supported_equiv_mv_polynomial_symm_X (s : Set σ) (i : s) :
     (↑((supportedEquivMvPolynomial s).symm (x i : MvPolynomial s R)) : MvPolynomial σ R) = x i := by
   simp [supported_equiv_mv_polynomial]
-#align
-  mv_polynomial.supported_equiv_mv_polynomial_symm_X MvPolynomial.supported_equiv_mv_polynomial_symm_X
+#align mv_polynomial.supported_equiv_mv_polynomial_symm_X MvPolynomial.supported_equiv_mv_polynomial_symm_X
 
 variable {s t : Set σ}
 

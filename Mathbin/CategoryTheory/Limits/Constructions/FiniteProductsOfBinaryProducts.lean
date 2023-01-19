@@ -116,8 +116,7 @@ theorem hasFiniteProductsOfHasBinaryAndTerminal : HasFiniteProducts C :=
   letI := has_product_fin n fun n => K.obj ⟨n⟩
   let this : (discrete.functor fun n => K.obj ⟨n⟩) ≅ K := discrete.nat_iso fun ⟨i⟩ => iso.refl _
   apply has_limit_of_iso this
-#align
-  category_theory.has_finite_products_of_has_binary_and_terminal CategoryTheory.hasFiniteProductsOfHasBinaryAndTerminal
+#align category_theory.has_finite_products_of_has_binary_and_terminal CategoryTheory.hasFiniteProductsOfHasBinaryAndTerminal
 
 end
 
@@ -163,8 +162,7 @@ noncomputable def preservesFinOfPreservesBinaryAndTerminal :
       change F.map _ ≫ _ = 𝟙 _ ≫ _
       rw [id_comp, ← F.map_comp]
       rfl
-#align
-  category_theory.preserves_fin_of_preserves_binary_and_terminal CategoryTheory.preservesFinOfPreservesBinaryAndTerminal
+#align category_theory.preserves_fin_of_preserves_binary_and_terminal CategoryTheory.preservesFinOfPreservesBinaryAndTerminal
 
 /-- If `F` preserves the terminal object and binary products, then it preserves limits of shape
 `discrete (fin n)`.
@@ -176,8 +174,7 @@ def preservesShapeFinOfPreservesBinaryAndTerminal (n : ℕ) :
     let this : (discrete.functor fun n => K.obj ⟨n⟩) ≅ K := discrete.nat_iso fun ⟨i⟩ => iso.refl _
     haveI := preserves_fin_of_preserves_binary_and_terminal F n fun n => K.obj ⟨n⟩
     apply preserves_limit_of_iso_diagram F this
-#align
-  category_theory.preserves_shape_fin_of_preserves_binary_and_terminal CategoryTheory.preservesShapeFinOfPreservesBinaryAndTerminal
+#align category_theory.preserves_shape_fin_of_preserves_binary_and_terminal CategoryTheory.preservesShapeFinOfPreservesBinaryAndTerminal
 
 /-- If `F` preserves the terminal object and binary products then it preserves finite products. -/
 def preservesFiniteProductsOfPreservesBinaryAndTerminal (J : Type) [Fintype J] :
@@ -186,8 +183,7 @@ def preservesFiniteProductsOfPreservesBinaryAndTerminal (J : Type) [Fintype J] :
     let e := Fintype.equivFin J
     haveI := preserves_shape_fin_of_preserves_binary_and_terminal F (Fintype.card J)
     apply preservesLimitsOfShapeOfEquiv.{0, 0} (discrete.equivalence e).symm
-#align
-  category_theory.preserves_finite_products_of_preserves_binary_and_terminal CategoryTheory.preservesFiniteProductsOfPreservesBinaryAndTerminal
+#align category_theory.preserves_finite_products_of_preserves_binary_and_terminal CategoryTheory.preservesFiniteProductsOfPreservesBinaryAndTerminal
 
 end Preserves
 
@@ -268,8 +264,7 @@ theorem hasFiniteCoproductsOfHasBinaryAndInitial : HasFiniteCoproducts C :=
   letI := has_coproduct_fin n fun n => K.obj ⟨n⟩
   let this : K ≅ discrete.functor fun n => K.obj ⟨n⟩ := discrete.nat_iso fun ⟨i⟩ => iso.refl _
   apply has_colimit_of_iso this
-#align
-  category_theory.has_finite_coproducts_of_has_binary_and_initial CategoryTheory.hasFiniteCoproductsOfHasBinaryAndInitial
+#align category_theory.has_finite_coproducts_of_has_binary_and_initial CategoryTheory.hasFiniteCoproductsOfHasBinaryAndInitial
 
 end
 
@@ -315,8 +310,7 @@ noncomputable def preservesFinOfPreservesBinaryAndInitial :
       rw [Fin.cases_succ, Fin.cases_succ]
       erw [comp_id, ← F.map_comp]
       rfl
-#align
-  category_theory.preserves_fin_of_preserves_binary_and_initial CategoryTheory.preservesFinOfPreservesBinaryAndInitial
+#align category_theory.preserves_fin_of_preserves_binary_and_initial CategoryTheory.preservesFinOfPreservesBinaryAndInitial
 
 /-- If `F` preserves the initial object and binary coproducts, then it preserves colimits of shape
 `discrete (fin n)`.
@@ -328,8 +322,7 @@ def preservesShapeFinOfPreservesBinaryAndInitial (n : ℕ) :
     let this : (discrete.functor fun n => K.obj ⟨n⟩) ≅ K := discrete.nat_iso fun ⟨i⟩ => iso.refl _
     haveI := preserves_fin_of_preserves_binary_and_initial F n fun n => K.obj ⟨n⟩
     apply preserves_colimit_of_iso_diagram F this
-#align
-  category_theory.preserves_shape_fin_of_preserves_binary_and_initial CategoryTheory.preservesShapeFinOfPreservesBinaryAndInitial
+#align category_theory.preserves_shape_fin_of_preserves_binary_and_initial CategoryTheory.preservesShapeFinOfPreservesBinaryAndInitial
 
 /-- If `F` preserves the initial object and binary coproducts then it preserves finite products. -/
 def preservesFiniteCoproductsOfPreservesBinaryAndInitial (J : Type) [Fintype J] :
@@ -338,8 +331,7 @@ def preservesFiniteCoproductsOfPreservesBinaryAndInitial (J : Type) [Fintype J] 
     let e := Fintype.equivFin J
     haveI := preserves_shape_fin_of_preserves_binary_and_initial F (Fintype.card J)
     apply preservesColimitsOfShapeOfEquiv.{0, 0} (discrete.equivalence e).symm
-#align
-  category_theory.preserves_finite_coproducts_of_preserves_binary_and_initial CategoryTheory.preservesFiniteCoproductsOfPreservesBinaryAndInitial
+#align category_theory.preserves_finite_coproducts_of_preserves_binary_and_initial CategoryTheory.preservesFiniteCoproductsOfPreservesBinaryAndInitial
 
 end Preserves
 

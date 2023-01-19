@@ -439,8 +439,7 @@ theorem comp_alternating_map_apply (g : N →ₗ[R] N₂) (f : AlternatingMap R 
 theorem subtype_comp_alternating_map_cod_restrict (f : AlternatingMap R M N ι) (p : Submodule R N)
     (h) : p.Subtype.compAlternatingMap (f.codRestrict p h) = f :=
   AlternatingMap.ext fun v => rfl
-#align
-  linear_map.subtype_comp_alternating_map_cod_restrict LinearMap.subtype_comp_alternating_map_cod_restrict
+#align linear_map.subtype_comp_alternating_map_cod_restrict LinearMap.subtype_comp_alternating_map_cod_restrict
 
 @[simp]
 theorem comp_alternating_map_cod_restrict (g : N →ₗ[R] N₂) (f : AlternatingMap R M N ι)
@@ -774,8 +773,7 @@ private theorem alternization_map_eq_zero_of_eq_aux (m : MultilinearMap R (fun i
       (fun σ _ => by simp [perm.sign_swap i_ne_j, apply_swap_eq_self hv])
       (fun σ _ _ => (not_congr swap_mul_eq_iff).mpr i_ne_j) (fun σ _ => Finset.mem_univ _)
       fun σ _ => swap_mul_involutive i j σ
-#align
-  multilinear_map.alternization_map_eq_zero_of_eq_aux multilinear_map.alternization_map_eq_zero_of_eq_aux
+#align multilinear_map.alternization_map_eq_zero_of_eq_aux multilinear_map.alternization_map_eq_zero_of_eq_aux
 
 /-- Produce an `alternating_map` out of a `multilinear_map`, by summing over all argument
 permutations. -/
@@ -843,8 +841,7 @@ theorem comp_multilinear_map_alternatization (g : N' →ₗ[R] N'₂)
   by
   ext
   simp [MultilinearMap.alternatization_def]
-#align
-  linear_map.comp_multilinear_map_alternatization LinearMap.comp_multilinear_map_alternatization
+#align linear_map.comp_multilinear_map_alternatization LinearMap.comp_multilinear_map_alternatization
 
 end LinearMap
 
@@ -926,8 +923,7 @@ theorem DomCoprod.summand_add_swap_smul_eq_zero (a : AlternatingMap R' Mᵢ N₁
   convert add_right_neg _ <;>
     · ext k
       rw [Equiv.apply_swap_eq_self hv]
-#align
-  alternating_map.dom_coprod.summand_add_swap_smul_eq_zero AlternatingMap.DomCoprod.summand_add_swap_smul_eq_zero
+#align alternating_map.dom_coprod.summand_add_swap_smul_eq_zero AlternatingMap.DomCoprod.summand_add_swap_smul_eq_zero
 
 /-- Swapping elements in `σ` with equal values in `v` result in zero if the swap has no effect
 on the quotient. -/
@@ -962,8 +958,7 @@ theorem DomCoprod.summand_eq_zero_of_smul_invariant (a : AlternatingMap R' Mᵢ 
     on_goal 1 => convert TensorProduct.tmul_zero _ _
     on_goal 2 => convert TensorProduct.zero_tmul _ _
     all_goals exact AlternatingMap.map_eq_zero_of_eq _ _ hv fun hij' => hij (hij' ▸ rfl)
-#align
-  alternating_map.dom_coprod.summand_eq_zero_of_smul_invariant AlternatingMap.DomCoprod.summand_eq_zero_of_smul_invariant
+#align alternating_map.dom_coprod.summand_eq_zero_of_smul_invariant AlternatingMap.DomCoprod.summand_eq_zero_of_smul_invariant
 
 /-- Like `multilinear_map.dom_coprod`, but ensures the result is also alternating.
 
@@ -1213,8 +1208,7 @@ theorem curry_left_comp_alternating_map {n : ℕ} (g : N'' →ₗ[R'] N₂'')
     (f : AlternatingMap R' M'' N'' (Fin n.succ)) (m : M'') :
     (g.compAlternatingMap f).curryLeft m = g.compAlternatingMap (f.curryLeft m) :=
   rfl
-#align
-  alternating_map.curry_left_comp_alternating_map AlternatingMap.curry_left_comp_alternating_map
+#align alternating_map.curry_left_comp_alternating_map AlternatingMap.curry_left_comp_alternating_map
 
 @[simp]
 theorem curry_left_comp_linear_map {n : ℕ} (g : M₂'' →ₗ[R'] M'')

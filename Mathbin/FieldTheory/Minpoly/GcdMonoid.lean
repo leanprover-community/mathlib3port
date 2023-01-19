@@ -102,8 +102,7 @@ theorem is_integrally_closed_eq_field_fractions [IsDomain S] {s : S} (hs : IsInt
       (Polynomial.Monic.irreducible_iff_irreducible_map_fraction_map (monic hs)).1 (Irreducible hs)
   · rw [aeval_map_algebra_map, aeval_algebra_map_apply, aeval, map_zero]
   · exact (monic hs).map _
-#align
-  minpoly.is_integrally_closed_eq_field_fractions minpoly.is_integrally_closed_eq_field_fractions
+#align minpoly.is_integrally_closed_eq_field_fractions minpoly.is_integrally_closed_eq_field_fractions
 
 /-- For integrally closed domains, the minimal polynomial over the ring is the same as the minimal
 polynomial over the fraction field. Compared to `minpoly.is_integrally_closed_eq_field_fractions`,
@@ -116,8 +115,7 @@ theorem is_integrally_closed_eq_field_fractions' [IsDomain S] [Algebra K S] [IsS
   refine'
     minpoly.eq_of_algebra_map_eq (IsFractionRing.injective S L) (is_integral_of_is_scalar_tower hs)
       rfl
-#align
-  minpoly.is_integrally_closed_eq_field_fractions' minpoly.is_integrally_closed_eq_field_fractions'
+#align minpoly.is_integrally_closed_eq_field_fractions' minpoly.is_integrally_closed_eq_field_fractions'
 
 /-- For GCD domains, the minimal polynomial over the ring is the same as the minimal polynomial
 over the fraction field. Compared to `minpoly.is_integrally_closed_eq_field_fractions`, this
@@ -153,8 +151,7 @@ theorem is_integrally_closed_eq_field_fractions'' [NoZeroSMulDivisors S L] {s : 
       (Eq.symm (Polynomial.eq_of_monic_of_dvd_of_nat_degree_le lem3 (minpoly.monic hs) _ _))
   · rwa [← map_dvd_map _ (IsFractionRing.injective R K) lem3, hg]
   · exact nat_degree_le_nat_degree (minpoly.min R s lem3 lem2)
-#align
-  minpoly.is_integrally_closed_eq_field_fractions'' minpoly.is_integrally_closed_eq_field_fractions''
+#align minpoly.is_integrally_closed_eq_field_fractions'' minpoly.is_integrally_closed_eq_field_fractions''
 
 end
 
@@ -230,8 +227,7 @@ theorem IsIntegrallyClosed.degree_le_of_ne_zero {s : S} (hs : IsIntegral R s) {p
   rw [degree_eq_nat_degree (minpoly.ne_zero hs), degree_eq_nat_degree hp0]
   norm_cast
   exact nat_degree_le_of_dvd ((is_integrally_closed_dvd _ hs).mp hp) hp0
-#align
-  minpoly.is_integrally_closed.degree_le_of_ne_zero minpoly.IsIntegrallyClosed.degree_le_of_ne_zero
+#align minpoly.is_integrally_closed.degree_le_of_ne_zero minpoly.IsIntegrallyClosed.degree_le_of_ne_zero
 
 /-- The minimal polynomial of an element `x` is uniquely characterized by its defining property:
 if there is another monic polynomial of minimal degree that has `x` as a root, then this polynomial

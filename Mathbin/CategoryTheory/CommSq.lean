@@ -159,16 +159,14 @@ instance subsingleton_lift_struct_of_epi (sq : CommSq f i p g) [Epi i] :
   ⟨fun l₁ l₂ => by
     ext
     simp only [← cancel_epi i, lift_struct.fac_left]⟩
-#align
-  category_theory.comm_sq.subsingleton_lift_struct_of_epi CategoryTheory.CommSq.subsingleton_lift_struct_of_epi
+#align category_theory.comm_sq.subsingleton_lift_struct_of_epi CategoryTheory.CommSq.subsingleton_lift_struct_of_epi
 
 instance subsingleton_lift_struct_of_mono (sq : CommSq f i p g) [Mono p] :
     Subsingleton (LiftStruct sq) :=
   ⟨fun l₁ l₂ => by
     ext
     simp only [← cancel_mono p, lift_struct.fac_right]⟩
-#align
-  category_theory.comm_sq.subsingleton_lift_struct_of_mono CategoryTheory.CommSq.subsingleton_lift_struct_of_mono
+#align category_theory.comm_sq.subsingleton_lift_struct_of_mono CategoryTheory.CommSq.subsingleton_lift_struct_of_mono
 
 variable (sq : CommSq f i p g)
 

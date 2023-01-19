@@ -127,8 +127,7 @@ theorem IsOpen.exists_between_affine_independent_span_eq_top {s u : Set P} (hu :
         [exact hsu hps, exact hf p]
     · exact (ht₂.units_line_map ⟨q, ht₁ hq⟩ w).range
     · rw [affine_span_eq_affine_span_line_map_units (ht₁ hq) w, ht₃]
-#align
-  is_open.exists_between_affine_independent_span_eq_top IsOpen.exists_between_affine_independent_span_eq_top
+#align is_open.exists_between_affine_independent_span_eq_top IsOpen.exists_between_affine_independent_span_eq_top
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (s «expr ⊆ » u) -/
 theorem IsOpen.exists_subset_affine_independent_span_eq_top {u : Set P} (hu : IsOpen u)
@@ -140,8 +139,7 @@ theorem IsOpen.exists_subset_affine_independent_span_eq_top {u : Set P} (hu : Is
       (singleton_nonempty _) (affine_independent_of_subsingleton _ _) with
     ⟨s, -, hsu, hs⟩
   exact ⟨s, hsu, hs⟩
-#align
-  is_open.exists_subset_affine_independent_span_eq_top IsOpen.exists_subset_affine_independent_span_eq_top
+#align is_open.exists_subset_affine_independent_span_eq_top IsOpen.exists_subset_affine_independent_span_eq_top
 
 /-- The affine span of a nonempty open set is `⊤`. -/
 theorem IsOpen.affine_span_eq_top {u : Set P} (hu : IsOpen u) (hne : u.Nonempty) :
@@ -177,12 +175,10 @@ theorem interior_convex_hull_nonempty_iff_affine_span_eq_top [FiniteDimensional 
     mono*
   lift t to Finset V using b.finite_set
   exact ⟨_, b.centroid_mem_interior_convex_hull⟩
-#align
-  interior_convex_hull_nonempty_iff_affine_span_eq_top interior_convex_hull_nonempty_iff_affine_span_eq_top
+#align interior_convex_hull_nonempty_iff_affine_span_eq_top interior_convex_hull_nonempty_iff_affine_span_eq_top
 
 theorem Convex.interior_nonempty_iff_affine_span_eq_top [FiniteDimensional ℝ V] {s : Set V}
     (hs : Convex ℝ s) : (interior s).Nonempty ↔ affineSpan ℝ s = ⊤ := by
   rw [← interior_convex_hull_nonempty_iff_affine_span_eq_top, hs.convex_hull_eq]
-#align
-  convex.interior_nonempty_iff_affine_span_eq_top Convex.interior_nonempty_iff_affine_span_eq_top
+#align convex.interior_nonempty_iff_affine_span_eq_top Convex.interior_nonempty_iff_affine_span_eq_top
 

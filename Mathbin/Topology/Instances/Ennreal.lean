@@ -844,8 +844,7 @@ theorem exists_upcrossings_of_not_bounded_under {ι : Type _} {l : Filter ι} {x
       filter_upwards [hcon] with x hx using not_lt.1 hx
     · refine' fun hcon => hR _
       filter_upwards [hcon] with x hx using not_lt.2 ((not_lt.1 hx).trans hq.le)
-#align
-  ennreal.exists_upcrossings_of_not_bounded_under Ennreal.exists_upcrossings_of_not_bounded_under
+#align ennreal.exists_upcrossings_of_not_bounded_under Ennreal.exists_upcrossings_of_not_bounded_under
 
 end Liminf
 

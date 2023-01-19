@@ -77,8 +77,7 @@ instance frobenius_morphism_iso_of_preserves_binary_products (h : L ⊣ F) (A : 
   intro B
   dsimp [frobenius_morphism]
   infer_instance
-#align
-  category_theory.frobenius_morphism_iso_of_preserves_binary_products CategoryTheory.frobenius_morphism_iso_of_preserves_binary_products
+#align category_theory.frobenius_morphism_iso_of_preserves_binary_products CategoryTheory.frobenius_morphism_iso_of_preserves_binary_products
 
 variable [CartesianClosed C] [CartesianClosed D]
 
@@ -167,8 +166,7 @@ theorem frobenius_morphism_iso_of_exp_comparison_iso (h : L ⊣ F) (A : C)
   by
   rw [← frobenius_morphism_mate F h] at i
   exact @transfer_nat_trans_self_of_iso _ _ _ _ _ i
-#align
-  category_theory.frobenius_morphism_iso_of_exp_comparison_iso CategoryTheory.frobenius_morphism_iso_of_exp_comparison_iso
+#align category_theory.frobenius_morphism_iso_of_exp_comparison_iso CategoryTheory.frobenius_morphism_iso_of_exp_comparison_iso
 
 /--
 If the Frobenius morphism at `A` is an isomorphism, then the exponential comparison transformation
@@ -179,8 +177,7 @@ theorem exp_comparison_iso_of_frobenius_morphism_iso (h : L ⊣ F) (A : C)
   by
   rw [← frobenius_morphism_mate F h]
   infer_instance
-#align
-  category_theory.exp_comparison_iso_of_frobenius_morphism_iso CategoryTheory.exp_comparison_iso_of_frobenius_morphism_iso
+#align category_theory.exp_comparison_iso_of_frobenius_morphism_iso CategoryTheory.exp_comparison_iso_of_frobenius_morphism_iso
 
 /-- If `F` is full and faithful, and has a left adjoint which preserves binary products, then it is
 cartesian closed.
@@ -191,8 +188,7 @@ products, then it is full and faithful.
 def cartesianClosedFunctorOfLeftAdjointPreservesBinaryProducts (h : L ⊣ F) [Full F] [Faithful F]
     [PreservesLimitsOfShape (Discrete WalkingPair) L] : CartesianClosedFunctor F
     where comparison_iso A := exp_comparison_iso_of_frobenius_morphism_iso F h _
-#align
-  category_theory.cartesian_closed_functor_of_left_adjoint_preserves_binary_products CategoryTheory.cartesianClosedFunctorOfLeftAdjointPreservesBinaryProducts
+#align category_theory.cartesian_closed_functor_of_left_adjoint_preserves_binary_products CategoryTheory.cartesianClosedFunctorOfLeftAdjointPreservesBinaryProducts
 
 end CategoryTheory
 

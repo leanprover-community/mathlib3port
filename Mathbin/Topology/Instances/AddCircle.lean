@@ -449,8 +449,7 @@ theorem exists_gcd_eq_one_of_is_of_fin_add_order {u : AddCircle p} (h : IsOfFinA
     ∃ m : ℕ, m.gcd (addOrderOf u) = 1 ∧ m < addOrderOf u ∧ ↑((m : 𝕜) / addOrderOf u * p) = u :=
   let ⟨m, hl, hg, he⟩ := (add_order_of_eq_pos_iff <| add_order_of_pos' h).1 rfl
   ⟨m, hg, hl, he⟩
-#align
-  add_circle.exists_gcd_eq_one_of_is_of_fin_add_order AddCircle.exists_gcd_eq_one_of_is_of_fin_add_order
+#align add_circle.exists_gcd_eq_one_of_is_of_fin_add_order AddCircle.exists_gcd_eq_one_of_is_of_fin_add_order
 
 variable (p)
 
@@ -603,8 +602,7 @@ theorem equiv_Icc_quot_comp_mk_eq_to_Ico_mod :
     equivIccQuot p a ∘ Quotient.mk' = fun x =>
       Quot.mk _ ⟨toIcoMod a hp.out x, Ico_subset_Icc_self <| to_Ico_mod_mem_Ico a _ x⟩ :=
   rfl
-#align
-  add_circle.equiv_Icc_quot_comp_mk_eq_to_Ico_mod AddCircle.equiv_Icc_quot_comp_mk_eq_to_Ico_mod
+#align add_circle.equiv_Icc_quot_comp_mk_eq_to_Ico_mod AddCircle.equiv_Icc_quot_comp_mk_eq_to_Ico_mod
 
 theorem equiv_Icc_quot_comp_mk_eq_to_Ioc_mod :
     equivIccQuot p a ∘ Quotient.mk' = fun x =>
@@ -616,8 +614,7 @@ theorem equiv_Icc_quot_comp_mk_eq_to_Ioc_mod :
   · simp_rw [not_imp_comm.1 (mem_Ioo_mod_iff_to_Ico_mod_ne_left hp.out).2 h,
       not_imp_comm.1 (mem_Ioo_mod_iff_to_Ioc_mod_ne_right hp.out).2 h]
     exact Quot.sound endpoint_ident.mk
-#align
-  add_circle.equiv_Icc_quot_comp_mk_eq_to_Ioc_mod AddCircle.equiv_Icc_quot_comp_mk_eq_to_Ioc_mod
+#align add_circle.equiv_Icc_quot_comp_mk_eq_to_Ioc_mod AddCircle.equiv_Icc_quot_comp_mk_eq_to_Ioc_mod
 
 /-- The natural map from `[a, a + p] ⊂ 𝕜` with endpoints identified to `𝕜 / ℤ • p`, as a
 homeomorphism of topological spaces. -/

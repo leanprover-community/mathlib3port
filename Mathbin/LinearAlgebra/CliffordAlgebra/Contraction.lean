@@ -75,8 +75,7 @@ theorem contract_left_aux_contract_left_aux (v : M) (x : CliffordAlgebra Q)
   simp only [contract_left_aux_apply_apply]
   rw [mul_sub, ← mul_assoc, ι_sq_scalar, ← Algebra.smul_def, ← sub_add, mul_smul_comm, sub_self,
     zero_add]
-#align
-  clifford_algebra.contract_left_aux_contract_left_aux CliffordAlgebra.contract_left_aux_contract_left_aux
+#align clifford_algebra.contract_left_aux_contract_left_aux CliffordAlgebra.contract_left_aux_contract_left_aux
 
 variable {Q}
 
@@ -155,14 +154,12 @@ theorem contract_left_mul_algebra_map (a : CliffordAlgebra Q) (r : R) :
 theorem contract_right_algebra_map_mul (r : R) (b : CliffordAlgebra Q) :
     algebraMap _ _ r * b⌊d = algebraMap _ _ r * (b⌊d) := by
   rw [← Algebra.smul_def, LinearMap.map_smul₂, Algebra.smul_def]
-#align
-  clifford_algebra.contract_right_algebra_map_mul CliffordAlgebra.contract_right_algebra_map_mul
+#align clifford_algebra.contract_right_algebra_map_mul CliffordAlgebra.contract_right_algebra_map_mul
 
 theorem contract_right_mul_algebra_map (a : CliffordAlgebra Q) (r : R) :
     a * algebraMap _ _ r⌊d = a⌊d * algebraMap _ _ r := by
   rw [← Algebra.commutes, contract_right_algebra_map_mul, Algebra.commutes]
-#align
-  clifford_algebra.contract_right_mul_algebra_map CliffordAlgebra.contract_right_mul_algebra_map
+#align clifford_algebra.contract_right_mul_algebra_map CliffordAlgebra.contract_right_mul_algebra_map
 
 variable (Q)
 
@@ -256,8 +253,7 @@ theorem change_form_aux_change_form_aux (B : BilinForm R M) (v : M) (x : Cliffor
   rw [mul_sub, ← mul_assoc, ι_sq_scalar, map_sub, contract_left_ι_mul, ← sub_add, sub_sub_sub_comm,
     ← Algebra.smul_def, BilinForm.to_lin_apply, sub_self, sub_zero, contract_left_contract_left,
     add_zero, sub_smul]
-#align
-  clifford_algebra.change_form_aux_change_form_aux CliffordAlgebra.change_form_aux_change_form_aux
+#align clifford_algebra.change_form_aux_change_form_aux CliffordAlgebra.change_form_aux_change_form_aux
 
 variable {Q}
 
@@ -296,8 +292,7 @@ theorem changeForm.neg_proof : (-B).toQuadraticForm = Q - Q' :=
 
 theorem changeForm.associated_neg_proof [Invertible (2 : R)] :
     (-Q).Associated.toQuadraticForm = 0 - Q := by simp [QuadraticForm.to_quadratic_form_associated]
-#align
-  clifford_algebra.change_form.associated_neg_proof CliffordAlgebra.changeForm.associated_neg_proof
+#align clifford_algebra.change_form.associated_neg_proof CliffordAlgebra.changeForm.associated_neg_proof
 
 @[simp]
 theorem change_form_algebra_map (r : R) : changeForm h (algebraMap R _ r) = algebraMap R _ r :=

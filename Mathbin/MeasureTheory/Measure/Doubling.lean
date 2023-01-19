@@ -63,8 +63,7 @@ def doublingConstant : ℝ≥0 :=
 theorem exists_measure_closed_ball_le_mul' :
     ∀ᶠ ε in 𝓝[>] 0, ∀ x, μ (closedBall x (2 * ε)) ≤ doublingConstant μ * μ (closedBall x ε) :=
   Classical.choose_spec <| exists_measure_closed_ball_le_mul μ
-#align
-  is_doubling_measure.exists_measure_closed_ball_le_mul' IsDoublingMeasure.exists_measure_closed_ball_le_mul'
+#align is_doubling_measure.exists_measure_closed_ball_le_mul' IsDoublingMeasure.exists_measure_closed_ball_le_mul'
 
 theorem exists_eventually_forall_measure_closed_ball_le_mul (K : ℝ) :
     ∃ C : ℝ≥0,
@@ -100,8 +99,7 @@ theorem exists_eventually_forall_measure_closed_ball_le_mul (K : ℝ) :
     conv_lhs => rw [← Real.rpow_logb two_pos (by norm_num) (by linarith : 0 < K)]
     rw [← Real.rpow_nat_cast]
     exact Real.rpow_le_rpow_of_exponent_le one_le_two (Nat.le_ceil (Real.logb 2 K))
-#align
-  is_doubling_measure.exists_eventually_forall_measure_closed_ball_le_mul IsDoublingMeasure.exists_eventually_forall_measure_closed_ball_le_mul
+#align is_doubling_measure.exists_eventually_forall_measure_closed_ball_le_mul IsDoublingMeasure.exists_eventually_forall_measure_closed_ball_le_mul
 
 /-- A variant of `is_doubling_measure.doubling_constant` which allows for scaling the radius by
 values other than `2`. -/
@@ -131,8 +129,7 @@ theorem eventually_measure_mul_le_scaling_constant_of_mul (K : ℝ) :
     apply Ennreal.one_le_coe_iff.2 (le_max_right _ _)
   · apply (hR ⟨rpos, hr⟩ x t ht.2).trans _
     exact Ennreal.mul_le_mul (Ennreal.coe_le_coe.2 (le_max_left _ _)) le_rfl
-#align
-  is_doubling_measure.eventually_measure_mul_le_scaling_constant_of_mul IsDoublingMeasure.eventually_measure_mul_le_scaling_constant_of_mul
+#align is_doubling_measure.eventually_measure_mul_le_scaling_constant_of_mul IsDoublingMeasure.eventually_measure_mul_le_scaling_constant_of_mul
 
 theorem eventually_measure_le_scaling_constant_mul (K : ℝ) :
     ∀ᶠ r in 𝓝[>] 0, ∀ x, μ (closedBall x (K * r)) ≤ scalingConstantOf μ K * μ (closedBall x r) :=
@@ -140,8 +137,7 @@ theorem eventually_measure_le_scaling_constant_mul (K : ℝ) :
   filter_upwards [Classical.choose_spec
       (exists_eventually_forall_measure_closed_ball_le_mul μ K)] with r hr x
   exact (hr x K le_rfl).trans (Ennreal.mul_le_mul (Ennreal.coe_le_coe.2 (le_max_left _ _)) le_rfl)
-#align
-  is_doubling_measure.eventually_measure_le_scaling_constant_mul IsDoublingMeasure.eventually_measure_le_scaling_constant_mul
+#align is_doubling_measure.eventually_measure_le_scaling_constant_mul IsDoublingMeasure.eventually_measure_le_scaling_constant_mul
 
 theorem eventually_measure_le_scaling_constant_mul' (K : ℝ) (hK : 0 < K) :
     ∀ᶠ r in 𝓝[>] 0, ∀ x, μ (closedBall x r) ≤ scalingConstantOf μ K⁻¹ * μ (closedBall x (K * r)) :=
@@ -149,8 +145,7 @@ theorem eventually_measure_le_scaling_constant_mul' (K : ℝ) (hK : 0 < K) :
   convert eventually_nhds_within_pos_mul_left hK (eventually_measure_le_scaling_constant_mul μ K⁻¹)
   ext
   simp [inv_mul_cancel_left₀ hK.ne']
-#align
-  is_doubling_measure.eventually_measure_le_scaling_constant_mul' IsDoublingMeasure.eventually_measure_le_scaling_constant_mul'
+#align is_doubling_measure.eventually_measure_le_scaling_constant_mul' IsDoublingMeasure.eventually_measure_le_scaling_constant_mul'
 
 /-- A scale below which the doubling measure `μ` satisfies good rescaling properties when one
 multiplies the radius of balls by at most `K`, as stated
@@ -167,8 +162,7 @@ theorem measure_mul_le_scaling_constant_of_mul {K : ℝ} {x : α} {t r : ℝ} (h
     (hr : r ≤ scalingScaleOf μ K) :
     μ (closedBall x (t * r)) ≤ scalingConstantOf μ K * μ (closedBall x r) :=
   (eventually_measure_mul_le_scaling_constant_of_mul μ K).some_spec.2 x t r ht hr
-#align
-  is_doubling_measure.measure_mul_le_scaling_constant_of_mul IsDoublingMeasure.measure_mul_le_scaling_constant_of_mul
+#align is_doubling_measure.measure_mul_le_scaling_constant_of_mul IsDoublingMeasure.measure_mul_le_scaling_constant_of_mul
 
 end IsDoublingMeasure
 

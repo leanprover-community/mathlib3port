@@ -106,8 +106,7 @@ theorem central_moment_two_eq_variance [IsFiniteMeasure μ] (hX : Memℒp X 2 μ
   by
   rw [hX.variance_eq]
   rfl
-#align
-  probability_theory.central_moment_two_eq_variance ProbabilityTheory.central_moment_two_eq_variance
+#align probability_theory.central_moment_two_eq_variance ProbabilityTheory.central_moment_two_eq_variance
 
 section MomentGeneratingFunction
 
@@ -280,8 +279,7 @@ theorem aeStronglyMeasurableExpMulAdd {X Y : Ω → ℝ}
   by
   simp_rw [Pi.add_apply, mul_add, exp_add]
   exact ae_strongly_measurable.mul h_int_X h_int_Y
-#align
-  probability_theory.ae_strongly_measurable_exp_mul_add ProbabilityTheory.aeStronglyMeasurableExpMulAdd
+#align probability_theory.ae_strongly_measurable_exp_mul_add ProbabilityTheory.aeStronglyMeasurableExpMulAdd
 
 theorem aeStronglyMeasurableExpMulSum {X : ι → Ω → ℝ} {s : Finset ι}
     (h_int : ∀ i ∈ s, AeStronglyMeasurable (fun ω => exp (t * X i ω)) μ) :
@@ -295,8 +293,7 @@ theorem aeStronglyMeasurableExpMulSum {X : ι → Ω → ℝ} {s : Finset ι}
       specialize h_rec this
       rw [sum_insert hi_notin_s]
       apply ae_strongly_measurable_exp_mul_add (h_int i (mem_insert_self _ _)) h_rec
-#align
-  probability_theory.ae_strongly_measurable_exp_mul_sum ProbabilityTheory.aeStronglyMeasurableExpMulSum
+#align probability_theory.ae_strongly_measurable_exp_mul_sum ProbabilityTheory.aeStronglyMeasurableExpMulSum
 
 theorem IndepFun.integrableExpMulAdd {X Y : Ω → ℝ} (h_indep : IndepFun X Y μ)
     (h_int_X : Integrable (fun ω => exp (t * X ω)) μ)
@@ -305,8 +302,7 @@ theorem IndepFun.integrableExpMulAdd {X Y : Ω → ℝ} (h_indep : IndepFun X Y 
   by
   simp_rw [Pi.add_apply, mul_add, exp_add]
   exact (h_indep.exp_mul t t).integrableMul h_int_X h_int_Y
-#align
-  probability_theory.indep_fun.integrable_exp_mul_add ProbabilityTheory.IndepFun.integrableExpMulAdd
+#align probability_theory.indep_fun.integrable_exp_mul_add ProbabilityTheory.IndepFun.integrableExpMulAdd
 
 theorem IndepFun.integrableExpMulSum [IsProbabilityMeasure μ] {X : ι → Ω → ℝ}
     (h_indep : IndepFun (fun i => inferInstance) X μ) (h_meas : ∀ i, Measurable (X i))
@@ -322,8 +318,7 @@ theorem IndepFun.integrableExpMulSum [IsProbabilityMeasure μ] {X : ι → Ω �
       rw [sum_insert hi_notin_s]
       refine' indep_fun.integrable_exp_mul_add _ (h_int i (mem_insert_self _ _)) h_rec
       exact (h_indep.indep_fun_finset_sum_of_not_mem h_meas hi_notin_s).symm
-#align
-  probability_theory.Indep_fun.integrable_exp_mul_sum ProbabilityTheory.IndepFun.integrableExpMulSum
+#align probability_theory.Indep_fun.integrable_exp_mul_sum ProbabilityTheory.IndepFun.integrableExpMulSum
 
 theorem IndepFun.mgf_sum [IsProbabilityMeasure μ] {X : ι → Ω → ℝ}
     (h_indep : IndepFun (fun i => inferInstance) X μ) (h_meas : ∀ i, Measurable (X i))

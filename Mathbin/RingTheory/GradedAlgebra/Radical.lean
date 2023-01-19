@@ -151,8 +151,7 @@ theorem Ideal.IsHomogeneous.isPrimeOfHomogeneousMemOrMem {I : Ideal A} (hI : I.I
         · apply neither_mem.1 h
         · apply neither_mem.2 h
       exact not_mem_I mem_I⟩
-#align
-  ideal.is_homogeneous.is_prime_of_homogeneous_mem_or_mem Ideal.IsHomogeneous.isPrimeOfHomogeneousMemOrMem
+#align ideal.is_homogeneous.is_prime_of_homogeneous_mem_or_mem Ideal.IsHomogeneous.isPrimeOfHomogeneousMemOrMem
 
 theorem Ideal.IsHomogeneous.is_prime_iff {I : Ideal A} (h : I.IsHomogeneous 𝒜) :
     I.IsPrime ↔

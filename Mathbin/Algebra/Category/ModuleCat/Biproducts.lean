@@ -68,15 +68,13 @@ def binaryProductLimitCone (M N : ModuleCat.{v} R) : Limits.LimitCone (pair M N)
 theorem binary_product_limit_cone_cone_π_app_left (M N : ModuleCat.{v} R) :
     (binaryProductLimitCone M N).Cone.π.app ⟨WalkingPair.left⟩ = LinearMap.fst R M N :=
   rfl
-#align
-  Module.binary_product_limit_cone_cone_π_app_left ModuleCat.binary_product_limit_cone_cone_π_app_left
+#align Module.binary_product_limit_cone_cone_π_app_left ModuleCat.binary_product_limit_cone_cone_π_app_left
 
 @[simp]
 theorem binary_product_limit_cone_cone_π_app_right (M N : ModuleCat.{v} R) :
     (binaryProductLimitCone M N).Cone.π.app ⟨WalkingPair.right⟩ = LinearMap.snd R M N :=
   rfl
-#align
-  Module.binary_product_limit_cone_cone_π_app_right ModuleCat.binary_product_limit_cone_cone_π_app_right
+#align Module.binary_product_limit_cone_cone_π_app_right ModuleCat.binary_product_limit_cone_cone_π_app_right
 
 /-- We verify that the biproduct in `Module R` is isomorphic to
 the cartesian product of the underlying types:

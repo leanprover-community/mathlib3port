@@ -105,8 +105,7 @@ theorem coe_derivation_injective :
   cases Y
   congr
   exact h
-#align
-  left_invariant_derivation.coe_derivation_injective LeftInvariantDerivation.coe_derivation_injective
+#align left_invariant_derivation.coe_derivation_injective LeftInvariantDerivation.coe_derivation_injective
 
 /-- Premature version of the lemma. Prefer using `left_invariant` instead. -/
 theorem left_invariant' :
@@ -286,8 +285,7 @@ theorem commutator_coe_derivation :
       (⁅(X : Derivation 𝕜 C^∞⟮I, G; 𝕜⟯ C^∞⟮I, G; 𝕜⟯), Y⁆ :
         Derivation 𝕜 C^∞⟮I, G; 𝕜⟯ C^∞⟮I, G; 𝕜⟯) :=
   rfl
-#align
-  left_invariant_derivation.commutator_coe_derivation LeftInvariantDerivation.commutator_coe_derivation
+#align left_invariant_derivation.commutator_coe_derivation LeftInvariantDerivation.commutator_coe_derivation
 
 theorem commutator_apply : ⁅X, Y⁆ f = X (Y f) - Y (X f) :=
   rfl

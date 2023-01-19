@@ -354,8 +354,7 @@ theorem symm_continuous_within_at_comp_right_iff {X} [TopologicalSpace X] {f : H
     rwa [Function.comp.assoc, I.symm_comp_self] at this
   · rw [← I.left_inv x] at h
     exact h.comp I.continuous_within_at_symm (inter_subset_left _ _)
-#align
-  model_with_corners.symm_continuous_within_at_comp_right_iff ModelWithCorners.symm_continuous_within_at_comp_right_iff
+#align model_with_corners.symm_continuous_within_at_comp_right_iff ModelWithCorners.symm_continuous_within_at_comp_right_iff
 
 protected theorem locally_compact [LocallyCompactSpace E] (I : ModelWithCorners 𝕜 E H) :
     LocallyCompactSpace H :=
@@ -734,22 +733,19 @@ variable {M}
 
 theorem subset_maximal_atlas [SmoothManifoldWithCorners I M] : atlas H M ⊆ maximalAtlas I M :=
   StructureGroupoid.subset_maximal_atlas _
-#align
-  smooth_manifold_with_corners.subset_maximal_atlas SmoothManifoldWithCorners.subset_maximal_atlas
+#align smooth_manifold_with_corners.subset_maximal_atlas SmoothManifoldWithCorners.subset_maximal_atlas
 
 theorem chart_mem_maximal_atlas [SmoothManifoldWithCorners I M] (x : M) :
     chartAt H x ∈ maximalAtlas I M :=
   StructureGroupoid.chart_mem_maximal_atlas _ x
-#align
-  smooth_manifold_with_corners.chart_mem_maximal_atlas SmoothManifoldWithCorners.chart_mem_maximal_atlas
+#align smooth_manifold_with_corners.chart_mem_maximal_atlas SmoothManifoldWithCorners.chart_mem_maximal_atlas
 
 variable {I}
 
 theorem compatible_of_mem_maximal_atlas {e e' : LocalHomeomorph M H} (he : e ∈ maximalAtlas I M)
     (he' : e' ∈ maximalAtlas I M) : e.symm.trans e' ∈ contDiffGroupoid ∞ I :=
   StructureGroupoid.compatible_of_mem_maximal_atlas he he'
-#align
-  smooth_manifold_with_corners.compatible_of_mem_maximal_atlas SmoothManifoldWithCorners.compatible_of_mem_maximal_atlas
+#align smooth_manifold_with_corners.compatible_of_mem_maximal_atlas SmoothManifoldWithCorners.compatible_of_mem_maximal_atlas
 
 /-- The product of two smooth manifolds with corners is naturally a smooth manifold with corners. -/
 instance prod {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E]
@@ -776,8 +772,7 @@ theorem LocalHomeomorph.singleton_smooth_manifold_with_corners {𝕜 : Type _}
     @SmoothManifoldWithCorners 𝕜 _ E _ _ H _ I M _ (e.singletonChartedSpace h) :=
   @SmoothManifoldWithCorners.mk' _ _ _ _ _ _ _ _ _ _ (id _) <|
     e.singleton_has_groupoid h (contDiffGroupoid ∞ I)
-#align
-  local_homeomorph.singleton_smooth_manifold_with_corners LocalHomeomorph.singleton_smooth_manifold_with_corners
+#align local_homeomorph.singleton_smooth_manifold_with_corners LocalHomeomorph.singleton_smooth_manifold_with_corners
 
 theorem OpenEmbedding.singleton_smooth_manifold_with_corners {𝕜 : Type _}
     [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E] {H : Type _}
@@ -785,8 +780,7 @@ theorem OpenEmbedding.singleton_smooth_manifold_with_corners {𝕜 : Type _}
     {f : M → H} (h : OpenEmbedding f) :
     @SmoothManifoldWithCorners 𝕜 _ E _ _ H _ I M _ h.singletonChartedSpace :=
   (h.toLocalHomeomorph f).singleton_smooth_manifold_with_corners I (by simp)
-#align
-  open_embedding.singleton_smooth_manifold_with_corners OpenEmbedding.singleton_smooth_manifold_with_corners
+#align open_embedding.singleton_smooth_manifold_with_corners OpenEmbedding.singleton_smooth_manifold_with_corners
 
 namespace TopologicalSpace.Opens
 
@@ -918,8 +912,7 @@ theorem extend_symm_continuous_within_at_comp_right_iff {X} [TopologicalSpace X]
     ContinuousWithinAt (g ∘ (f.extend I).symm) ((f.extend I).symm ⁻¹' s ∩ range I) (f.extend I x) ↔
       ContinuousWithinAt (g ∘ f.symm) (f.symm ⁻¹' s) (f x) :=
   by convert I.symm_continuous_within_at_comp_right_iff <;> rfl
-#align
-  local_homeomorph.extend_symm_continuous_within_at_comp_right_iff LocalHomeomorph.extend_symm_continuous_within_at_comp_right_iff
+#align local_homeomorph.extend_symm_continuous_within_at_comp_right_iff LocalHomeomorph.extend_symm_continuous_within_at_comp_right_iff
 
 theorem is_open_extend_preimage' {s : Set E} (hs : IsOpen s) :
     IsOpen ((f.extend I).source ∩ f.extend I ⁻¹' s) :=
@@ -945,8 +938,7 @@ theorem map_extend_nhds_within_eq_image {y : M} (hy : y ∈ f.source) :
           (continuous_at_extend_symm f I hy).ContinuousWithinAt
           (continuous_at_extend f I hy).ContinuousWithinAt
       
-#align
-  local_homeomorph.map_extend_nhds_within_eq_image LocalHomeomorph.map_extend_nhds_within_eq_image
+#align local_homeomorph.map_extend_nhds_within_eq_image LocalHomeomorph.map_extend_nhds_within_eq_image
 
 theorem map_extend_nhds_within {y : M} (hy : y ∈ f.source) :
     map (f.extend I) (𝓝[s] y) = 𝓝[(f.extend I).symm ⁻¹' s ∩ range I] f.extend I y := by
@@ -965,16 +957,14 @@ theorem map_extend_symm_nhds_within {y : M} (hy : y ∈ f.source) :
 theorem map_extend_symm_nhds_within_range {y : M} (hy : y ∈ f.source) :
     map (f.extend I).symm (𝓝[range I] f.extend I y) = 𝓝 y := by
   rw [← nhds_within_univ, ← map_extend_symm_nhds_within f I hy, preimage_univ, univ_inter]
-#align
-  local_homeomorph.map_extend_symm_nhds_within_range LocalHomeomorph.map_extend_symm_nhds_within_range
+#align local_homeomorph.map_extend_symm_nhds_within_range LocalHomeomorph.map_extend_symm_nhds_within_range
 
 /-- Technical lemma ensuring that the preimage under an extended chart of a neighborhood of a point
 in the source is a neighborhood of the preimage, within a set. -/
 theorem extend_preimage_mem_nhds_within {x : M} (h : x ∈ f.source) (ht : t ∈ 𝓝[s] x) :
     (f.extend I).symm ⁻¹' t ∈ 𝓝[(f.extend I).symm ⁻¹' s ∩ range I] f.extend I x := by
   rwa [← map_extend_symm_nhds_within f I h, mem_map] at ht
-#align
-  local_homeomorph.extend_preimage_mem_nhds_within LocalHomeomorph.extend_preimage_mem_nhds_within
+#align local_homeomorph.extend_preimage_mem_nhds_within LocalHomeomorph.extend_preimage_mem_nhds_within
 
 theorem extend_preimage_mem_nhds {x : M} (h : x ∈ f.source) (ht : t ∈ 𝓝 x) :
     (f.extend I).symm ⁻¹' t ∈ 𝓝 (f.extend I x) :=
@@ -1004,8 +994,7 @@ theorem extend_symm_preimage_inter_range_eventually_eq_aux {s : Set M} {x : M} (
   refine' (eventually_eq_univ.mpr _).symm.inter eventually_eq.rfl
   refine' I.continuous_at_symm.preimage_mem_nhds (f.open_target.mem_nhds _)
   simp_rw [f.extend_coe, Function.comp_apply, I.left_inv, f.maps_to hx]
-#align
-  local_homeomorph.extend_symm_preimage_inter_range_eventually_eq_aux LocalHomeomorph.extend_symm_preimage_inter_range_eventually_eq_aux
+#align local_homeomorph.extend_symm_preimage_inter_range_eventually_eq_aux LocalHomeomorph.extend_symm_preimage_inter_range_eventually_eq_aux
 
 theorem extend_symm_preimage_inter_range_eventually_eq {s : Set M} {x : M} (hs : s ⊆ f.source)
     (hx : x ∈ f.source) :
@@ -1014,8 +1003,7 @@ theorem extend_symm_preimage_inter_range_eventually_eq {s : Set M} {x : M} (hs :
   rw [← f.extend_source I] at hs
   rw [(f.extend I).image_eq_target_inter_inv_preimage hs]
   exact f.extend_symm_preimage_inter_range_eventually_eq_aux I hx
-#align
-  local_homeomorph.extend_symm_preimage_inter_range_eventually_eq LocalHomeomorph.extend_symm_preimage_inter_range_eventually_eq
+#align local_homeomorph.extend_symm_preimage_inter_range_eventually_eq LocalHomeomorph.extend_symm_preimage_inter_range_eventually_eq
 
 /-! We use the name `extend_coord_change` for `(f'.extend I).symm ≫ f.extend I`. -/
 
@@ -1044,8 +1032,7 @@ theorem cont_diff_on_extend_coord_change [ChartedSpace H M] (hf : f ∈ maximalA
   by
   rw [extend_coord_change_source, I.image_eq]
   exact (StructureGroupoid.compatible_of_mem_maximal_atlas hf' hf).1
-#align
-  local_homeomorph.cont_diff_on_extend_coord_change LocalHomeomorph.cont_diff_on_extend_coord_change
+#align local_homeomorph.cont_diff_on_extend_coord_change LocalHomeomorph.cont_diff_on_extend_coord_change
 
 theorem cont_diff_within_at_extend_coord_change [ChartedSpace H M] (hf : f ∈ maximalAtlas I M)
     (hf' : f' ∈ maximalAtlas I M) {x : E} (hx : x ∈ ((f'.extend I).symm ≫ f.extend I).source) :
@@ -1055,8 +1042,7 @@ theorem cont_diff_within_at_extend_coord_change [ChartedSpace H M] (hf : f ∈ m
   rw [extend_coord_change_source] at hx⊢
   obtain ⟨z, hz, rfl⟩ := hx
   exact I.image_mem_nhds_within ((LocalHomeomorph.open_source _).mem_nhds hz)
-#align
-  local_homeomorph.cont_diff_within_at_extend_coord_change LocalHomeomorph.cont_diff_within_at_extend_coord_change
+#align local_homeomorph.cont_diff_within_at_extend_coord_change LocalHomeomorph.cont_diff_within_at_extend_coord_change
 
 end LocalHomeomorph
 

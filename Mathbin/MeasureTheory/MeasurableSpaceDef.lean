@@ -429,8 +429,7 @@ theorem generate_from_mono {s t : Set (Set α)} (h : s ⊆ t) : generateFrom s �
 theorem generate_from_sup_generate_from {s t : Set (Set α)} :
     generateFrom s ⊔ generateFrom t = generateFrom (s ∪ t) :=
   (@giGenerateFrom α).gc.l_sup.symm
-#align
-  measurable_space.generate_from_sup_generate_from MeasurableSpace.generate_from_sup_generate_from
+#align measurable_space.generate_from_sup_generate_from MeasurableSpace.generate_from_sup_generate_from
 
 @[simp]
 theorem generate_from_insert_univ (S : Set (Set α)) :
@@ -546,8 +545,7 @@ theorem measurable_space_supr_eq (m : ι → MeasurableSpace α) :
 theorem generate_from_Union_measurable_set (m : ι → MeasurableSpace α) :
     generateFrom (⋃ n, { t | measurable_set[m n] t }) = ⨆ n, m n :=
   (@giGenerateFrom α).l_supr_u m
-#align
-  measurable_space.generate_from_Union_measurable_set MeasurableSpace.generate_from_Union_measurable_set
+#align measurable_space.generate_from_Union_measurable_set MeasurableSpace.generate_from_Union_measurable_set
 
 end CompleteLattice
 

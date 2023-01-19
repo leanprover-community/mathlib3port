@@ -82,8 +82,7 @@ unsafe def sf.of_eformat : eformat → sf
   | highlight c m => sf.highlight c <| sf.of_eformat m
   | of_format f => sf.of_string <| format.to_string f
   | compose x y => sf.compose (sf.of_eformat x) (sf.of_eformat y)
-#align
-  widget_override.interactive_expression.sf.of_eformat widget_override.interactive_expression.sf.of_eformat
+#align widget_override.interactive_expression.sf.of_eformat widget_override.interactive_expression.sf.of_eformat
 
 /-- Flattens an `sf`, i.e. merges adjacent `of_string` constructors. -/
 unsafe def sf.flatten : sf → sf
@@ -103,8 +102,7 @@ unsafe def sf.flatten : sf → sf
   | sf.block i (sf.block j a) => (sf.block (i + j) a).flatten
   | sf.block i a => sf.block i a.flatten
   | sf.highlight i a => sf.highlight i a.flatten
-#align
-  widget_override.interactive_expression.sf.flatten widget_override.interactive_expression.sf.flatten
+#align widget_override.interactive_expression.sf.flatten widget_override.interactive_expression.sf.flatten
 
 private unsafe def elim_part_apps : sf → Expr.Address → sf
   | sf.tag_expr ea e m, Acc =>
@@ -114,8 +112,7 @@ private unsafe def elim_part_apps : sf → Expr.Address → sf
   | sf.of_string s, _ => sf.of_string s
   | sf.block i a, Acc => sf.block i <| elim_part_apps a Acc
   | sf.highlight c a, Acc => sf.highlight c <| elim_part_apps a Acc
-#align
-  widget_override.interactive_expression.elim_part_apps widget_override.interactive_expression.elim_part_apps
+#align widget_override.interactive_expression.elim_part_apps widget_override.interactive_expression.elim_part_apps
 
 /-- Post-process an `sf` object to eliminate tags for partial applications by
 pushing the `app_fn` as far into the expression as possible. The effect is
@@ -144,8 +141,7 @@ After:
 -/
 unsafe def sf.elim_part_apps (s : sf) : sf :=
   elim_part_apps s []
-#align
-  widget_override.interactive_expression.sf.elim_part_apps widget_override.interactive_expression.sf.elim_part_apps
+#align widget_override.interactive_expression.sf.elim_part_apps widget_override.interactive_expression.sf.elim_part_apps
 
 /-- The actions accepted by an expression widget.
 -/
@@ -175,8 +171,7 @@ unsafe def goto_def_button {γ} : expr → tactic (List (html (action γ)))
                   attr.val "title" "go to definition"]
                 ["↪"]]) <|>
       pure []
-#align
-  widget_override.interactive_expression.goto_def_button widget_override.interactive_expression.goto_def_button
+#align widget_override.interactive_expression.goto_def_button widget_override.interactive_expression.goto_def_button
 
 /-- Due to a bug in the webview browser, we have to reduce the number of spans in the expression.
 To do this, we collect the attributes from `sf.block` and `sf.highlight` after an expression
@@ -193,8 +188,7 @@ unsafe def get_block_attrs {γ} : sf → tactic (sf × List (attr γ))
     let (a, rest) ← get_block_attrs a
     pure (a, cn c :: rest)
   | a => pure (a, [])
-#align
-  widget_override.interactive_expression.get_block_attrs widget_override.interactive_expression.get_block_attrs
+#align widget_override.interactive_expression.get_block_attrs widget_override.interactive_expression.get_block_attrs
 
 /-- Renders a subexpression as a list of html elements.
 -/
@@ -290,8 +284,7 @@ unsafe def implicit_arg_list (tooltip : tc subexpr Empty) (e : expr) : tactic <|
       h "div" [style [("display", "flex"), ("flexWrap", "wrap"), ("alignItems", "baseline")]]
         (h "span" [className "bg-blue br3 ma1 ph2 white"] [fn] ::
           List.map (fun a => h "span" [className "bg-gray br3 ma1 ph2 white"] [a]) args)
-#align
-  widget_override.interactive_expression.implicit_arg_list widget_override.interactive_expression.implicit_arg_list
+#align widget_override.interactive_expression.implicit_arg_list widget_override.interactive_expression.implicit_arg_list
 
 /-- Component for the type tooltip.
 -/
@@ -307,8 +300,7 @@ unsafe def type_tooltip : tc subexpr Empty :=
                   -- be in an expression here where textIndent is set
                   ("textIndent", "0")]]
             [h "div" [cn "pl1"] [y_comp], h "hr" [] [], implicit_args]]
-#align
-  widget_override.interactive_expression.type_tooltip widget_override.interactive_expression.type_tooltip
+#align widget_override.interactive_expression.type_tooltip widget_override.interactive_expression.type_tooltip
 
 end InteractiveExpression
 
@@ -489,8 +481,7 @@ unsafe def show_local_collection_component : tc local_collection Empty :=
         let v ← interactive_expression.mk interactive_expression.type_tooltip v
         pure [c, " := ", v]
       | none => pure [c]
-#align
-  widget_override.show_local_collection_component widget_override.show_local_collection_component
+#align widget_override.show_local_collection_component widget_override.show_local_collection_component
 
 /-- Renders the current tactic state.
 -/

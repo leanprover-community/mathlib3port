@@ -205,16 +205,14 @@ theorem continuous_within_at_Iio_iff_left_lim_eq :
   refine' ⟨fun h => tendsto_nhds_unique (hf.tendsto_left_lim x) h.Tendsto, fun h => _⟩
   have := hf.tendsto_left_lim x
   rwa [h] at this
-#align
-  monotone.continuous_within_at_Iio_iff_left_lim_eq Monotone.continuous_within_at_Iio_iff_left_lim_eq
+#align monotone.continuous_within_at_Iio_iff_left_lim_eq Monotone.continuous_within_at_Iio_iff_left_lim_eq
 
 /-- A monotone function is continuous to the right at a point if and only if its right limit
 coincides with the value of the function. -/
 theorem continuous_within_at_Ioi_iff_right_lim_eq :
     ContinuousWithinAt f (Ioi x) x ↔ rightLim f x = f x :=
   hf.dual.continuous_within_at_Iio_iff_left_lim_eq
-#align
-  monotone.continuous_within_at_Ioi_iff_right_lim_eq Monotone.continuous_within_at_Ioi_iff_right_lim_eq
+#align monotone.continuous_within_at_Ioi_iff_right_lim_eq Monotone.continuous_within_at_Ioi_iff_right_lim_eq
 
 /-- A monotone function is continuous at a point if and only if its left and right limits
 coincide. -/
@@ -235,8 +233,7 @@ theorem continuous_at_iff_left_lim_eq_right_lim : ContinuousAt f x ↔ leftLim f
     · exact hf.continuous_within_at_Iio_iff_left_lim_eq.2 h'
     · rw [h] at h'
       exact hf.continuous_within_at_Ioi_iff_right_lim_eq.2 h'
-#align
-  monotone.continuous_at_iff_left_lim_eq_right_lim Monotone.continuous_at_iff_left_lim_eq_right_lim
+#align monotone.continuous_at_iff_left_lim_eq_right_lim Monotone.continuous_at_iff_left_lim_eq_right_lim
 
 /-- In a second countable space, the set of points where a monotone function is not right-continuous
 is at most countable. Superseded by `countable_not_continuous_at` which gives the two-sided
@@ -288,8 +285,7 @@ theorem countable_not_continuous_within_at_Ioi [TopologicalSpace.SecondCountable
     rintro _ ⟨y, ys, rfl⟩
     simpa only [I.left_inv_on_inv_fun_on ys] using (hz y ys).1
   exact maps_to.countable_of_inj_on (maps_to_image f s) I fs_count
-#align
-  monotone.countable_not_continuous_within_at_Ioi Monotone.countable_not_continuous_within_at_Ioi
+#align monotone.countable_not_continuous_within_at_Ioi Monotone.countable_not_continuous_within_at_Ioi
 
 /-- In a second countable space, the set of points where a monotone function is not left-continuous
 is at most countable. Superseded by `countable_not_continuous_at` which gives the two-sided
@@ -297,8 +293,7 @@ version. -/
 theorem countable_not_continuous_within_at_Iio [TopologicalSpace.SecondCountableTopology β] :
     Set.Countable { x | ¬ContinuousWithinAt f (Iio x) x } :=
   hf.dual.countable_not_continuous_within_at_Ioi
-#align
-  monotone.countable_not_continuous_within_at_Iio Monotone.countable_not_continuous_within_at_Iio
+#align monotone.countable_not_continuous_within_at_Iio Monotone.countable_not_continuous_within_at_Iio
 
 /-- In a second countable space, the set of points where a monotone function is not continuous
 is at most countable. -/
@@ -381,23 +376,20 @@ coincides with the value of the function. -/
 theorem continuous_within_at_Iio_iff_left_lim_eq :
     ContinuousWithinAt f (Iio x) x ↔ leftLim f x = f x :=
   hf.dual_right.continuous_within_at_Iio_iff_left_lim_eq
-#align
-  antitone.continuous_within_at_Iio_iff_left_lim_eq Antitone.continuous_within_at_Iio_iff_left_lim_eq
+#align antitone.continuous_within_at_Iio_iff_left_lim_eq Antitone.continuous_within_at_Iio_iff_left_lim_eq
 
 /-- An antitone function is continuous to the right at a point if and only if its right limit
 coincides with the value of the function. -/
 theorem continuous_within_at_Ioi_iff_right_lim_eq :
     ContinuousWithinAt f (Ioi x) x ↔ rightLim f x = f x :=
   hf.dual_right.continuous_within_at_Ioi_iff_right_lim_eq
-#align
-  antitone.continuous_within_at_Ioi_iff_right_lim_eq Antitone.continuous_within_at_Ioi_iff_right_lim_eq
+#align antitone.continuous_within_at_Ioi_iff_right_lim_eq Antitone.continuous_within_at_Ioi_iff_right_lim_eq
 
 /-- An antitone function is continuous at a point if and only if its left and right limits
 coincide. -/
 theorem continuous_at_iff_left_lim_eq_right_lim : ContinuousAt f x ↔ leftLim f x = rightLim f x :=
   hf.dual_right.continuous_at_iff_left_lim_eq_right_lim
-#align
-  antitone.continuous_at_iff_left_lim_eq_right_lim Antitone.continuous_at_iff_left_lim_eq_right_lim
+#align antitone.continuous_at_iff_left_lim_eq_right_lim Antitone.continuous_at_iff_left_lim_eq_right_lim
 
 /-- In a second countable space, the set of points where an antitone function is not continuous
 is at most countable. -/

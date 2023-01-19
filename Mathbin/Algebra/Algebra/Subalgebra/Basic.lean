@@ -1470,8 +1470,7 @@ theorem mem_of_finset_sum_eq_one_of_pow_smul_mem {S : Type _} [CommRing S] [Alge
     rw [← tsub_add_cancel_of_le (show n i ≤ N from Finset.le_sup hi), pow_add, mul_smul]
     refine' Submodule.smul_mem _ (⟨_, pow_mem (hs i) _⟩ : S') _
     exact ⟨⟨_, hn i⟩, rfl⟩
-#align
-  subalgebra.mem_of_finset_sum_eq_one_of_pow_smul_mem Subalgebra.mem_of_finset_sum_eq_one_of_pow_smul_mem
+#align subalgebra.mem_of_finset_sum_eq_one_of_pow_smul_mem Subalgebra.mem_of_finset_sum_eq_one_of_pow_smul_mem
 
 theorem mem_of_span_eq_top_of_smul_pow_mem {S : Type _} [CommRing S] [Algebra R S]
     (S' : Subalgebra R S) (s : Set S) (l : s →₀ S) (hs : Finsupp.total s S S coe l = 1)

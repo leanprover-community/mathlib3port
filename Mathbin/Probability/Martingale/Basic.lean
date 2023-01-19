@@ -182,8 +182,7 @@ theorem adapted [LE E] (hf : Supermartingale f ℱ μ) : Adapted ℱ f :=
 theorem strongly_measurable [LE E] (hf : Supermartingale f ℱ μ) (i : ι) :
     strongly_measurable[ℱ i] (f i) :=
   hf.Adapted i
-#align
-  measure_theory.supermartingale.strongly_measurable MeasureTheory.Supermartingale.strongly_measurable
+#align measure_theory.supermartingale.strongly_measurable MeasureTheory.Supermartingale.strongly_measurable
 
 @[protected]
 theorem integrable [LE E] (hf : Supermartingale f ℱ μ) (i : ι) : Integrable (f i) μ :=
@@ -241,8 +240,7 @@ theorem adapted [LE E] (hf : Submartingale f ℱ μ) : Adapted ℱ f :=
 theorem strongly_measurable [LE E] (hf : Submartingale f ℱ μ) (i : ι) :
     strongly_measurable[ℱ i] (f i) :=
   hf.Adapted i
-#align
-  measure_theory.submartingale.strongly_measurable MeasureTheory.Submartingale.strongly_measurable
+#align measure_theory.submartingale.strongly_measurable MeasureTheory.Submartingale.strongly_measurable
 
 @[protected]
 theorem integrable [LE E] (hf : Submartingale f ℱ μ) (i : ι) : Integrable (f i) μ :=
@@ -291,8 +289,7 @@ theorem subSupermartingale [Preorder E] [CovariantClass E E (· + ·) (· ≤ ·
   by
   rw [sub_eq_add_neg]
   exact hf.add hg.neg
-#align
-  measure_theory.submartingale.sub_supermartingale MeasureTheory.Submartingale.subSupermartingale
+#align measure_theory.submartingale.sub_supermartingale MeasureTheory.Submartingale.subSupermartingale
 
 theorem subMartingale [Preorder E] [CovariantClass E E (· + ·) (· ≤ ·)] (hf : Submartingale f ℱ μ)
     (hg : Martingale g ℱ μ) : Submartingale (f - g) ℱ μ :=
@@ -355,8 +352,7 @@ theorem submartingaleOfCondexpSubNonneg [IsFiniteMeasure μ] {f : ι → Ω → 
   rw [← condexp_of_strongly_measurable (ℱ.le _) (hadp _) (hint _), ← eventually_sub_nonneg]
   exact eventually_le.trans (hf i j hij) (condexp_sub (hint _) (hint _)).le
   infer_instance
-#align
-  measure_theory.submartingale_of_condexp_sub_nonneg MeasureTheory.submartingaleOfCondexpSubNonneg
+#align measure_theory.submartingale_of_condexp_sub_nonneg MeasureTheory.submartingaleOfCondexpSubNonneg
 
 theorem Submartingale.condexp_sub_nonneg {f : ι → Ω → ℝ} (hf : Submartingale f ℱ μ) {i j : ι}
     (hij : i ≤ j) : 0 ≤ᵐ[μ] μ[f j - f i|ℱ i] :=
@@ -368,16 +364,14 @@ theorem Submartingale.condexp_sub_nonneg {f : ι → Ω → ℝ} (hf : Submartin
     condexp_of_strongly_measurable (ℱ.le _) (hf.adapted _) (hf.integrable _)]
   · exact hf.2.1 i j hij
   · exact h
-#align
-  measure_theory.submartingale.condexp_sub_nonneg MeasureTheory.Submartingale.condexp_sub_nonneg
+#align measure_theory.submartingale.condexp_sub_nonneg MeasureTheory.Submartingale.condexp_sub_nonneg
 
 theorem submartingale_iff_condexp_sub_nonneg [IsFiniteMeasure μ] {f : ι → Ω → ℝ} :
     Submartingale f ℱ μ ↔
       Adapted ℱ f ∧ (∀ i, Integrable (f i) μ) ∧ ∀ i j, i ≤ j → 0 ≤ᵐ[μ] μ[f j - f i|ℱ i] :=
   ⟨fun h => ⟨h.Adapted, h.Integrable, fun i j => h.condexp_sub_nonneg⟩, fun ⟨hadp, hint, h⟩ =>
     submartingaleOfCondexpSubNonneg hadp hint h⟩
-#align
-  measure_theory.submartingale_iff_condexp_sub_nonneg MeasureTheory.submartingale_iff_condexp_sub_nonneg
+#align measure_theory.submartingale_iff_condexp_sub_nonneg MeasureTheory.submartingale_iff_condexp_sub_nonneg
 
 end Submartingale
 
@@ -388,8 +382,7 @@ theorem subSubmartingale [Preorder E] [CovariantClass E E (· + ·) (· ≤ ·)]
   by
   rw [sub_eq_add_neg]
   exact hf.add hg.neg
-#align
-  measure_theory.supermartingale.sub_submartingale MeasureTheory.Supermartingale.subSubmartingale
+#align measure_theory.supermartingale.sub_submartingale MeasureTheory.Supermartingale.subSubmartingale
 
 theorem subMartingale [Preorder E] [CovariantClass E E (· + ·) (· ≤ ·)] (hf : Supermartingale f ℱ μ)
     (hg : Martingale g ℱ μ) : Supermartingale (f - g) ℱ μ :=
@@ -470,8 +463,7 @@ theorem submartingaleOfSetIntegralLeSucc [IsFiniteMeasure μ] {f : ℕ → Ω �
   induction' hij with k hk₁ hk₂
   · exact le_rfl
   · exact le_trans hk₂ (hf k s (𝒢.mono hk₁ _ hs))
-#align
-  measure_theory.submartingale_of_set_integral_le_succ MeasureTheory.submartingaleOfSetIntegralLeSucc
+#align measure_theory.submartingale_of_set_integral_le_succ MeasureTheory.submartingaleOfSetIntegralLeSucc
 
 theorem supermartingaleOfSetIntegralSuccLe [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ} (hadp : Adapted 𝒢 f)
     (hint : ∀ i, Integrable (f i) μ)
@@ -481,8 +473,7 @@ theorem supermartingaleOfSetIntegralSuccLe [IsFiniteMeasure μ] {f : ℕ → Ω 
   rw [← neg_neg f]
   refine' (submartingale_of_set_integral_le_succ hadp.neg (fun i => (hint i).neg) _).neg
   simpa only [integral_neg, Pi.neg_apply, neg_le_neg_iff]
-#align
-  measure_theory.supermartingale_of_set_integral_succ_le MeasureTheory.supermartingaleOfSetIntegralSuccLe
+#align measure_theory.supermartingale_of_set_integral_succ_le MeasureTheory.supermartingaleOfSetIntegralSuccLe
 
 theorem martingaleOfSetIntegralEqSucc [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ} (hadp : Adapted 𝒢 f)
     (hint : ∀ i, Integrable (f i) μ)
@@ -529,8 +520,7 @@ theorem submartingaleOfCondexpSubNonnegNat [IsFiniteMeasure μ] {f : ℕ → Ω 
   rw [← condexp_of_strongly_measurable (𝒢.le _) (hadp _) (hint _), ← eventually_sub_nonneg]
   exact eventually_le.trans (hf i) (condexp_sub (hint _) (hint _)).le
   infer_instance
-#align
-  measure_theory.submartingale_of_condexp_sub_nonneg_nat MeasureTheory.submartingaleOfCondexpSubNonnegNat
+#align measure_theory.submartingale_of_condexp_sub_nonneg_nat MeasureTheory.submartingaleOfCondexpSubNonnegNat
 
 theorem supermartingaleOfCondexpSubNonnegNat [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ}
     (hadp : Adapted 𝒢 f) (hint : ∀ i, Integrable (f i) μ)
@@ -539,8 +529,7 @@ theorem supermartingaleOfCondexpSubNonnegNat [IsFiniteMeasure μ] {f : ℕ → �
   rw [← neg_neg f]
   refine' (submartingale_of_condexp_sub_nonneg_nat hadp.neg (fun i => (hint i).neg) _).neg
   simpa only [Pi.zero_apply, Pi.neg_apply, neg_sub_neg]
-#align
-  measure_theory.supermartingale_of_condexp_sub_nonneg_nat MeasureTheory.supermartingaleOfCondexpSubNonnegNat
+#align measure_theory.supermartingale_of_condexp_sub_nonneg_nat MeasureTheory.supermartingaleOfCondexpSubNonnegNat
 
 theorem martingaleOfCondexpSubEqZeroNat [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ} (hadp : Adapted 𝒢 f)
     (hint : ∀ i, Integrable (f i) μ) (hf : ∀ i, μ[f (i + 1) - f i|𝒢 i] =ᵐ[μ] 0) :
@@ -554,8 +543,7 @@ theorem martingaleOfCondexpSubEqZeroNat [IsFiniteMeasure μ] {f : ℕ → Ω →
   refine' (eventually_eq.trans _ (condexp_neg _).symm).le
   filter_upwards [hf i] with x hx
   simpa only [Pi.zero_apply, Pi.neg_apply, zero_eq_neg]
-#align
-  measure_theory.martingale_of_condexp_sub_eq_zero_nat MeasureTheory.martingaleOfCondexpSubEqZeroNat
+#align measure_theory.martingale_of_condexp_sub_eq_zero_nat MeasureTheory.martingaleOfCondexpSubEqZeroNat
 
 -- Note that one cannot use `submartingale.zero_le_of_predictable` to prove the other two
 -- corresponding lemmas without imposing more restrictions to the ordering of `E`
@@ -572,8 +560,7 @@ theorem Submartingale.zero_le_of_predictable [Preorder E] [SigmaFiniteFiltration
           germ.coe_eq.mp <|
             congr_arg coe <|
               condexp_of_strongly_measurable (𝒢.le _) (hfadp _) <| hfmgle.integrable _)
-#align
-  measure_theory.submartingale.zero_le_of_predictable MeasureTheory.Submartingale.zero_le_of_predictable
+#align measure_theory.submartingale.zero_le_of_predictable MeasureTheory.Submartingale.zero_le_of_predictable
 
 /-- A predictable supermartingale is a.e. less equal than its initial state. -/
 theorem Supermartingale.le_zero_of_predictable [Preorder E] [SigmaFiniteFiltration μ 𝒢]
@@ -589,8 +576,7 @@ theorem Supermartingale.le_zero_of_predictable [Preorder E] [SigmaFiniteFiltrati
                       hfmgle.integrable _).symm.trans_le
             (hfmgle.2.1 k (k + 1) k.le_succ)).trans
         ih
-#align
-  measure_theory.supermartingale.le_zero_of_predictable MeasureTheory.Supermartingale.le_zero_of_predictable
+#align measure_theory.supermartingale.le_zero_of_predictable MeasureTheory.Supermartingale.le_zero_of_predictable
 
 /-- A predictable martingale is a.e. equal to its initial state. -/
 theorem Martingale.eq_zero_of_predictable [SigmaFiniteFiltration μ 𝒢] {f : ℕ → Ω → E}
@@ -606,8 +592,7 @@ theorem Martingale.eq_zero_of_predictable [SigmaFiniteFiltration μ 𝒢] {f : �
                       (hfmgle.integrable _))).symm.trans
             (hfmgle.2 k (k + 1) k.le_succ)).trans
         ih
-#align
-  measure_theory.martingale.eq_zero_of_predictable MeasureTheory.Martingale.eq_zero_of_predictable
+#align measure_theory.martingale.eq_zero_of_predictable MeasureTheory.Martingale.eq_zero_of_predictable
 
 namespace Submartingale
 
@@ -615,8 +600,7 @@ namespace Submartingale
 theorem integrableStoppedValue [LE E] {f : ℕ → Ω → E} (hf : Submartingale f 𝒢 μ) {τ : Ω → ℕ}
     (hτ : IsStoppingTime 𝒢 τ) {N : ℕ} (hbdd : ∀ ω, τ ω ≤ N) : Integrable (stoppedValue f τ) μ :=
   integrableStoppedValue ℕ hτ hf.Integrable hbdd
-#align
-  measure_theory.submartingale.integrable_stopped_value MeasureTheory.Submartingale.integrableStoppedValue
+#align measure_theory.submartingale.integrable_stopped_value MeasureTheory.Submartingale.integrableStoppedValue
 
 end Submartingale
 

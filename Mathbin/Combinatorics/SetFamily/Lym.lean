@@ -109,8 +109,7 @@ theorem card_div_choose_le_card_shadow_div_choose (hr : r ≠ 0) (h𝒜 : (𝒜 
       exact Or.inl (mul_comm _ _)
   · exact Nat.choose_pos hr'
   · exact Nat.choose_pos (r.pred_le.trans hr')
-#align
-  finset.card_div_choose_le_card_shadow_div_choose Finset.card_div_choose_le_card_shadow_div_choose
+#align finset.card_div_choose_le_card_shadow_div_choose Finset.card_div_choose_le_card_shadow_div_choose
 
 end LocalLym
 

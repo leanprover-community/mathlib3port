@@ -52,8 +52,7 @@ theorem op_injective : Function.Injective (mop : C → Cᴹᵒᵖ) := fun _ _ =>
 #align category_theory.monoidal_opposite.op_injective CategoryTheory.MonoidalOpposite.op_injective
 
 theorem unop_injective : Function.Injective (unmop : Cᴹᵒᵖ → C) := fun _ _ => id
-#align
-  category_theory.monoidal_opposite.unop_injective CategoryTheory.MonoidalOpposite.unop_injective
+#align category_theory.monoidal_opposite.unop_injective CategoryTheory.MonoidalOpposite.unop_injective
 
 @[simp]
 theorem op_inj_iff (x y : C) : mop x = mop y ↔ x = y :=
@@ -80,8 +79,7 @@ instance monoidalOppositeCategory [I : Category.{v₁} C] : Category Cᴹᵒᵖ
   Hom X Y := unmop X ⟶ unmop Y
   id X := 𝟙 (unmop X)
   comp X Y Z f g := f ≫ g
-#align
-  category_theory.monoidal_opposite.monoidal_opposite_category CategoryTheory.MonoidalOpposite.monoidalOppositeCategory
+#align category_theory.monoidal_opposite.monoidal_opposite_category CategoryTheory.MonoidalOpposite.monoidalOppositeCategory
 
 end MonoidalOpposite
 

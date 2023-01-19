@@ -63,8 +63,7 @@ theorem quot_ker_equiv_range_apply_mk (x : M) :
 theorem quot_ker_equiv_range_symm_apply_image (x : M) (h : f x ∈ f.range) :
     f.quotKerEquivRange.symm ⟨f x, h⟩ = f.ker.mkq x :=
   f.quotKerEquivRange.symm_apply_apply (f.ker.mkq x)
-#align
-  linear_map.quot_ker_equiv_range_symm_apply_image LinearMap.quot_ker_equiv_range_symm_apply_image
+#align linear_map.quot_ker_equiv_range_symm_apply_image LinearMap.quot_ker_equiv_range_symm_apply_image
 
 /-- Canonical linear map from the quotient `p/(p ∩ p')` to `(p+p')/p'`, mapping `x + (p ∩ p')`
 to `x + p'`, where `p` and `p'` are submodules of an ambient module.
@@ -106,29 +105,25 @@ theorem quotient_inf_equiv_sup_quotient_apply_mk (p p' : Submodule R M) (x : p) 
     quotientInfEquivSupQuotient p p' (Submodule.Quotient.mk x) =
       Submodule.Quotient.mk (ofLe (le_sup_left : p ≤ p ⊔ p') x) :=
   rfl
-#align
-  linear_map.quotient_inf_equiv_sup_quotient_apply_mk LinearMap.quotient_inf_equiv_sup_quotient_apply_mk
+#align linear_map.quotient_inf_equiv_sup_quotient_apply_mk LinearMap.quotient_inf_equiv_sup_quotient_apply_mk
 
 theorem quotient_inf_equiv_sup_quotient_symm_apply_left (p p' : Submodule R M) (x : p ⊔ p')
     (hx : (x : M) ∈ p) :
     (quotientInfEquivSupQuotient p p').symm (Submodule.Quotient.mk x) =
       Submodule.Quotient.mk ⟨x, hx⟩ :=
   (LinearEquiv.symm_apply_eq _).2 <| by simp [of_le_apply]
-#align
-  linear_map.quotient_inf_equiv_sup_quotient_symm_apply_left LinearMap.quotient_inf_equiv_sup_quotient_symm_apply_left
+#align linear_map.quotient_inf_equiv_sup_quotient_symm_apply_left LinearMap.quotient_inf_equiv_sup_quotient_symm_apply_left
 
 @[simp]
 theorem quotient_inf_equiv_sup_quotient_symm_apply_eq_zero_iff {p p' : Submodule R M} {x : p ⊔ p'} :
     (quotientInfEquivSupQuotient p p').symm (Submodule.Quotient.mk x) = 0 ↔ (x : M) ∈ p' :=
   (LinearEquiv.symm_apply_eq _).trans <| by simp [of_le_apply]
-#align
-  linear_map.quotient_inf_equiv_sup_quotient_symm_apply_eq_zero_iff LinearMap.quotient_inf_equiv_sup_quotient_symm_apply_eq_zero_iff
+#align linear_map.quotient_inf_equiv_sup_quotient_symm_apply_eq_zero_iff LinearMap.quotient_inf_equiv_sup_quotient_symm_apply_eq_zero_iff
 
 theorem quotient_inf_equiv_sup_quotient_symm_apply_right (p p' : Submodule R M) {x : p ⊔ p'}
     (hx : (x : M) ∈ p') : (quotientInfEquivSupQuotient p p').symm (Submodule.Quotient.mk x) = 0 :=
   quotient_inf_equiv_sup_quotient_symm_apply_eq_zero_iff.2 hx
-#align
-  linear_map.quotient_inf_equiv_sup_quotient_symm_apply_right LinearMap.quotient_inf_equiv_sup_quotient_symm_apply_right
+#align linear_map.quotient_inf_equiv_sup_quotient_symm_apply_right LinearMap.quotient_inf_equiv_sup_quotient_symm_apply_right
 
 end IsomorphismLaws
 
@@ -154,15 +149,13 @@ def quotientQuotientEquivQuotientAux (h : S ≤ T) : (M ⧸ S) ⧸ T.map S.mkq �
 theorem quotient_quotient_equiv_quotient_aux_mk (x : M ⧸ S) :
     quotientQuotientEquivQuotientAux S T h (Quotient.mk x) = mapq S T LinearMap.id h x :=
   liftq_apply _ _ _
-#align
-  submodule.quotient_quotient_equiv_quotient_aux_mk Submodule.quotient_quotient_equiv_quotient_aux_mk
+#align submodule.quotient_quotient_equiv_quotient_aux_mk Submodule.quotient_quotient_equiv_quotient_aux_mk
 
 @[simp]
 theorem quotient_quotient_equiv_quotient_aux_mk_mk (x : M) :
     quotientQuotientEquivQuotientAux S T h (Quotient.mk (Quotient.mk x)) = Quotient.mk x := by
   rw [quotient_quotient_equiv_quotient_aux_mk, mapq_apply, LinearMap.id_apply]
-#align
-  submodule.quotient_quotient_equiv_quotient_aux_mk_mk Submodule.quotient_quotient_equiv_quotient_aux_mk_mk
+#align submodule.quotient_quotient_equiv_quotient_aux_mk_mk Submodule.quotient_quotient_equiv_quotient_aux_mk_mk
 
 /-- **Noether's third isomorphism theorem** for modules: `(M / S) / (T / S) ≃ M / T`. -/
 def quotientQuotientEquivQuotient : ((M ⧸ S) ⧸ T.map S.mkq) ≃ₗ[R] M ⧸ T :=

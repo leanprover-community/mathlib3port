@@ -252,8 +252,7 @@ theorem algebraic_independent_finset_map_embedding_subtype (s : Set A)
   obtain ⟨a, ha, rfl⟩ := hx
   obtain ⟨b, hb, rfl⟩ := hy
   simp only [imp_self, Subtype.mk_eq_mk]
-#align
-  algebraic_independent_finset_map_embedding_subtype algebraic_independent_finset_map_embedding_subtype
+#align algebraic_independent_finset_map_embedding_subtype algebraic_independent_finset_map_embedding_subtype
 
 /-- If every finite set of algebraically independent element has cardinality at most `n`,
 then the same is true for arbitrary sets of algebraically independent elements.
@@ -268,8 +267,7 @@ theorem algebraic_independent_bounded_of_finset_algebraic_independent_bounded {n
   rw [← Finset.card_map (embedding.subtype s)]
   apply H
   apply algebraic_independent_finset_map_embedding_subtype _ li
-#align
-  algebraic_independent_bounded_of_finset_algebraic_independent_bounded algebraic_independent_bounded_of_finset_algebraic_independent_bounded
+#align algebraic_independent_bounded_of_finset_algebraic_independent_bounded algebraic_independent_bounded_of_finset_algebraic_independent_bounded
 
 section Subtype
 
@@ -453,8 +451,7 @@ def AlgebraicIndependent.mvPolynomialOptionEquivPolynomialAdjoin (hx : Algebraic
     MvPolynomial (Option ι) R ≃+* Polynomial (adjoin R (Set.range x)) :=
   (MvPolynomial.optionEquivLeft _ _).toRingEquiv.trans
     (Polynomial.mapEquiv hx.aevalEquiv.toRingEquiv)
-#align
-  algebraic_independent.mv_polynomial_option_equiv_polynomial_adjoin AlgebraicIndependent.mvPolynomialOptionEquivPolynomialAdjoin
+#align algebraic_independent.mv_polynomial_option_equiv_polynomial_adjoin AlgebraicIndependent.mvPolynomialOptionEquivPolynomialAdjoin
 
 @[simp]
 theorem AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_apply
@@ -463,8 +460,7 @@ theorem AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_apply
       Polynomial.map (hx.aevalEquiv : MvPolynomial ι R →+* adjoin R (range x))
         (aeval (fun o : Option ι => o.elim Polynomial.x fun s : ι => Polynomial.c (x s)) y) :=
   rfl
-#align
-  algebraic_independent.mv_polynomial_option_equiv_polynomial_adjoin_apply AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_apply
+#align algebraic_independent.mv_polynomial_option_equiv_polynomial_adjoin_apply AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_apply
 
 @[simp]
 theorem AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_C
@@ -477,8 +473,7 @@ theorem AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_C
   rw [AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_apply, aeval_C,
     @IsScalarTower.algebra_map_apply _ _ _ _ _ _ _ _ _ h, ← Polynomial.C_eq_algebra_map,
     Polynomial.map_C, RingHom.coe_coe, AlgEquiv.commutes]
-#align
-  algebraic_independent.mv_polynomial_option_equiv_polynomial_adjoin_C AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_C
+#align algebraic_independent.mv_polynomial_option_equiv_polynomial_adjoin_C AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_C
 
 @[simp]
 theorem AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_X_none
@@ -486,8 +481,7 @@ theorem AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_X_none
     hx.mvPolynomialOptionEquivPolynomialAdjoin (x none) = Polynomial.x := by
   rw [AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_apply, aeval_X,
     Option.elim', Polynomial.map_X]
-#align
-  algebraic_independent.mv_polynomial_option_equiv_polynomial_adjoin_X_none AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_X_none
+#align algebraic_independent.mv_polynomial_option_equiv_polynomial_adjoin_X_none AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_X_none
 
 @[simp]
 theorem AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_X_some
@@ -496,8 +490,7 @@ theorem AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_X_some
   by
   rw [AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_apply, aeval_X,
     Option.elim', Polynomial.map_C, RingHom.coe_coe]
-#align
-  algebraic_independent.mv_polynomial_option_equiv_polynomial_adjoin_X_some AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_X_some
+#align algebraic_independent.mv_polynomial_option_equiv_polynomial_adjoin_X_some AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_X_some
 
 theorem AlgebraicIndependent.aeval_comp_mv_polynomial_option_equiv_polynomial_adjoin
     (hx : AlgebraicIndependent R x) (a : A) :
@@ -520,8 +513,7 @@ theorem AlgebraicIndependent.aeval_comp_mv_polynomial_option_equiv_polynomial_ad
     ·
       rw [hx.mv_polynomial_option_equiv_polynomial_adjoin_X_some, Polynomial.aeval_C,
         hx.algebra_map_aeval_equiv, aeval_X, aeval_X, Option.elim']
-#align
-  algebraic_independent.aeval_comp_mv_polynomial_option_equiv_polynomial_adjoin AlgebraicIndependent.aeval_comp_mv_polynomial_option_equiv_polynomial_adjoin
+#align algebraic_independent.aeval_comp_mv_polynomial_option_equiv_polynomial_adjoin AlgebraicIndependent.aeval_comp_mv_polynomial_option_equiv_polynomial_adjoin
 
 theorem AlgebraicIndependent.option_iff (hx : AlgebraicIndependent R x) (a : A) :
     (AlgebraicIndependent R fun o : Option ι => o.elim a x) ↔
@@ -580,8 +572,7 @@ theorem AlgebraicIndependent.is_transcendence_basis_iff {ι : Type w} {R : Type 
     dsimp at q
     rw [← image_univ, image_image] at q
     simpa using q
-#align
-  algebraic_independent.is_transcendence_basis_iff AlgebraicIndependent.is_transcendence_basis_iff
+#align algebraic_independent.is_transcendence_basis_iff AlgebraicIndependent.is_transcendence_basis_iff
 
 theorem IsTranscendenceBasis.is_algebraic [Nontrivial R] (hx : IsTranscendenceBasis R x) :
     IsAlgebraic (adjoin R (range x)) A := by

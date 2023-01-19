@@ -115,8 +115,7 @@ theorem length_sub_one_le_two_mul_count_bool (hl : Chain' (· ≠ ·) l) (b : Bo
   by
   rw [hl.two_mul_count_bool_eq_ite]
   split_ifs <;> simp [le_tsub_add, Nat.le_succ_of_le]
-#align
-  list.chain'.length_sub_one_le_two_mul_count_bool List.Chain'.length_sub_one_le_two_mul_count_bool
+#align list.chain'.length_sub_one_le_two_mul_count_bool List.Chain'.length_sub_one_le_two_mul_count_bool
 
 theorem length_div_two_le_count_bool (hl : Chain' (· ≠ ·) l) (b : Bool) :
     length l / 2 ≤ count b l :=
@@ -130,8 +129,7 @@ theorem two_mul_count_bool_le_length_add_one (hl : Chain' (· ≠ ·) l) (b : Bo
   by
   rw [hl.two_mul_count_bool_eq_ite]
   split_ifs <;> simp [Nat.le_succ_of_le]
-#align
-  list.chain'.two_mul_count_bool_le_length_add_one List.Chain'.two_mul_count_bool_le_length_add_one
+#align list.chain'.two_mul_count_bool_le_length_add_one List.Chain'.two_mul_count_bool_le_length_add_one
 
 end Chain'
 

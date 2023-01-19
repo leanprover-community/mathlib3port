@@ -122,6 +122,5 @@ theorem Metric.closed_ball_inf_dist_compl_subset_closure {x : F} {s : Set F} (hx
     exact closure_mono (singleton_subset_iff.2 hx)
   · rw [← closure_ball x h₀]
     exact closure_mono ball_inf_dist_compl_subset
-#align
-  metric.closed_ball_inf_dist_compl_subset_closure Metric.closed_ball_inf_dist_compl_subset_closure
+#align metric.closed_ball_inf_dist_compl_subset_closure Metric.closed_ball_inf_dist_compl_subset_closure
 

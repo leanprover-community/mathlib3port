@@ -776,8 +776,7 @@ Case conversion may be inaccurate. Consider using '#align function.injective.rig
 @[simp]
 theorem right_inv_of_invOfMemRange (a : α) : hf.invOfMemRange ⟨f a, Set.mem_range_self a⟩ = a :=
   hf (Finset.choose_spec (fun a' => f a' = f a) _ _).right
-#align
-  function.injective.right_inv_of_inv_of_mem_range Function.Injective.right_inv_of_invOfMemRange
+#align function.injective.right_inv_of_inv_of_mem_range Function.Injective.right_inv_of_invOfMemRange
 
 /- warning: function.injective.inv_fun_restrict -> Function.Injective.invFun_restrict is a dubious translation:
 lean 3 declaration is
@@ -834,8 +833,7 @@ Case conversion may be inaccurate. Consider using '#align function.embedding.rig
 @[simp]
 theorem right_inv_of_invOfMemRange (a : α) : f.invOfMemRange ⟨f a, Set.mem_range_self a⟩ = a :=
   f.Injective.right_inv_of_inv_of_mem_range a
-#align
-  function.embedding.right_inv_of_inv_of_mem_range Function.Embedding.right_inv_of_invOfMemRange
+#align function.embedding.right_inv_of_inv_of_mem_range Function.Embedding.right_inv_of_invOfMemRange
 
 /- warning: function.embedding.inv_fun_restrict -> Function.Embedding.invFun_restrict is a dubious translation:
 lean 3 declaration is

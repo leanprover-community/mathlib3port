@@ -69,8 +69,7 @@ def evaluationJointlyReflectsLimits {F : J ⥤ K ⥤ C} (c : Cone F)
         (t x).hom_ext fun j =>
           (congr_app (w j) x).trans
             ((t x).fac ⟨s.x.obj _, whiskerRight s.π ((evaluation K C).obj _)⟩ j).symm
-#align
-  category_theory.limits.evaluation_jointly_reflects_limits CategoryTheory.Limits.evaluationJointlyReflectsLimits
+#align category_theory.limits.evaluation_jointly_reflects_limits CategoryTheory.Limits.evaluationJointlyReflectsLimits
 
 /-- Given a functor `F` and a collection of limit cones for each diagram `X ↦ F X k`, we can stitch
 them together to give a cone for the diagram `F`.
@@ -129,8 +128,7 @@ def evaluationJointlyReflectsColimits {F : J ⥤ K ⥤ C} (c : Cocone F)
         (t x).hom_ext fun j =>
           (congr_app (w j) x).trans
             ((t x).fac ⟨s.x.obj _, whiskerRight s.ι ((evaluation K C).obj _)⟩ j).symm
-#align
-  category_theory.limits.evaluation_jointly_reflects_colimits CategoryTheory.Limits.evaluationJointlyReflectsColimits
+#align category_theory.limits.evaluation_jointly_reflects_colimits CategoryTheory.Limits.evaluationJointlyReflectsColimits
 
 /--
 Given a functor `F` and a collection of colimit cocones for each diagram `X ↦ F X k`, we can stitch
@@ -159,8 +157,7 @@ def combineCocones (F : J ⥤ K ⥤ C) (c : ∀ k : K, ColimitCocone (F.flip.obj
 def evaluateCombinedCocones (F : J ⥤ K ⥤ C) (c : ∀ k : K, ColimitCocone (F.flip.obj k)) (k : K) :
     ((evaluation K C).obj k).mapCocone (combineCocones F c) ≅ (c k).Cocone :=
   Cocones.ext (Iso.refl _) (by tidy)
-#align
-  category_theory.limits.evaluate_combined_cocones CategoryTheory.Limits.evaluateCombinedCocones
+#align category_theory.limits.evaluate_combined_cocones CategoryTheory.Limits.evaluateCombinedCocones
 
 /-- Stitching together colimiting cocones gives a colimiting cocone. -/
 def combinedIsColimit (F : J ⥤ K ⥤ C) (c : ∀ k : K, ColimitCocone (F.flip.obj k)) :
@@ -176,36 +173,31 @@ instance functorCategoryHasLimitsOfShape [HasLimitsOfShape J C] : HasLimitsOfSha
     HasLimit.mk
       { Cone := combineCones F fun k => getLimitCone _
         IsLimit := combinedIsLimit _ _ }
-#align
-  category_theory.limits.functor_category_has_limits_of_shape CategoryTheory.Limits.functorCategoryHasLimitsOfShape
+#align category_theory.limits.functor_category_has_limits_of_shape CategoryTheory.Limits.functorCategoryHasLimitsOfShape
 
 instance functorCategoryHasColimitsOfShape [HasColimitsOfShape J C] : HasColimitsOfShape J (K ⥤ C)
     where HasColimit F :=
     HasColimit.mk
       { Cocone := combineCocones _ fun k => getColimitCocone _
         IsColimit := combinedIsColimit _ _ }
-#align
-  category_theory.limits.functor_category_has_colimits_of_shape CategoryTheory.Limits.functorCategoryHasColimitsOfShape
+#align category_theory.limits.functor_category_has_colimits_of_shape CategoryTheory.Limits.functorCategoryHasColimitsOfShape
 
 instance functorCategoryHasLimitsOfSize [HasLimitsOfSize.{v₁, u₁} C] :
     HasLimitsOfSize.{v₁, u₁} (K ⥤ C) :=
   ⟨inferInstance⟩
-#align
-  category_theory.limits.functor_category_has_limits_of_size CategoryTheory.Limits.functorCategoryHasLimitsOfSize
+#align category_theory.limits.functor_category_has_limits_of_size CategoryTheory.Limits.functorCategoryHasLimitsOfSize
 
 instance functorCategoryHasColimitsOfSize [HasColimitsOfSize.{v₁, u₁} C] :
     HasColimitsOfSize.{v₁, u₁} (K ⥤ C) :=
   ⟨inferInstance⟩
-#align
-  category_theory.limits.functor_category_has_colimits_of_size CategoryTheory.Limits.functorCategoryHasColimitsOfSize
+#align category_theory.limits.functor_category_has_colimits_of_size CategoryTheory.Limits.functorCategoryHasColimitsOfSize
 
 instance evaluationPreservesLimitsOfShape [HasLimitsOfShape J C] (k : K) :
     PreservesLimitsOfShape J ((evaluation K C).obj k)
     where PreservesLimit F :=
     preservesLimitOfPreservesLimitCone (combinedIsLimit _ _) <|
       IsLimit.ofIsoLimit (limit.isLimit _) (evaluateCombinedCones F _ k).symm
-#align
-  category_theory.limits.evaluation_preserves_limits_of_shape CategoryTheory.Limits.evaluationPreservesLimitsOfShape
+#align category_theory.limits.evaluation_preserves_limits_of_shape CategoryTheory.Limits.evaluationPreservesLimitsOfShape
 
 /-- If `F : J ⥤ K ⥤ C` is a functor into a functor category which has a limit,
 then the evaluation of that limit at `k` is the limit of the evaluations of `F.obj j` at `k`.
@@ -213,8 +205,7 @@ then the evaluation of that limit at `k` is the limit of the evaluations of `F.o
 def limitObjIsoLimitCompEvaluation [HasLimitsOfShape J C] (F : J ⥤ K ⥤ C) (k : K) :
     (limit F).obj k ≅ limit (F ⋙ (evaluation K C).obj k) :=
   preservesLimitIso ((evaluation K C).obj k) F
-#align
-  category_theory.limits.limit_obj_iso_limit_comp_evaluation CategoryTheory.Limits.limitObjIsoLimitCompEvaluation
+#align category_theory.limits.limit_obj_iso_limit_comp_evaluation CategoryTheory.Limits.limitObjIsoLimitCompEvaluation
 
 @[simp, reassoc.1]
 theorem limit_obj_iso_limit_comp_evaluation_hom_π [HasLimitsOfShape J C] (F : J ⥤ K ⥤ C) (j : J)
@@ -224,8 +215,7 @@ theorem limit_obj_iso_limit_comp_evaluation_hom_π [HasLimitsOfShape J C] (F : J
   by
   dsimp [limit_obj_iso_limit_comp_evaluation]
   simp
-#align
-  category_theory.limits.limit_obj_iso_limit_comp_evaluation_hom_π CategoryTheory.Limits.limit_obj_iso_limit_comp_evaluation_hom_π
+#align category_theory.limits.limit_obj_iso_limit_comp_evaluation_hom_π CategoryTheory.Limits.limit_obj_iso_limit_comp_evaluation_hom_π
 
 @[simp, reassoc.1]
 theorem limit_obj_iso_limit_comp_evaluation_inv_π_app [HasLimitsOfShape J C] (F : J ⥤ K ⥤ C) (j : J)
@@ -236,8 +226,7 @@ theorem limit_obj_iso_limit_comp_evaluation_inv_π_app [HasLimitsOfShape J C] (F
   dsimp [limit_obj_iso_limit_comp_evaluation]
   rw [iso.inv_comp_eq]
   simp
-#align
-  category_theory.limits.limit_obj_iso_limit_comp_evaluation_inv_π_app CategoryTheory.Limits.limit_obj_iso_limit_comp_evaluation_inv_π_app
+#align category_theory.limits.limit_obj_iso_limit_comp_evaluation_inv_π_app CategoryTheory.Limits.limit_obj_iso_limit_comp_evaluation_inv_π_app
 
 @[simp, reassoc.1]
 theorem limit_map_limit_obj_iso_limit_comp_evaluation_hom [HasLimitsOfShape J C] {i j : K}
@@ -248,8 +237,7 @@ theorem limit_map_limit_obj_iso_limit_comp_evaluation_hom [HasLimitsOfShape J C]
   ext
   dsimp
   simp
-#align
-  category_theory.limits.limit_map_limit_obj_iso_limit_comp_evaluation_hom CategoryTheory.Limits.limit_map_limit_obj_iso_limit_comp_evaluation_hom
+#align category_theory.limits.limit_map_limit_obj_iso_limit_comp_evaluation_hom CategoryTheory.Limits.limit_map_limit_obj_iso_limit_comp_evaluation_hom
 
 @[simp, reassoc.1]
 theorem limit_obj_iso_limit_comp_evaluation_inv_limit_map [HasLimitsOfShape J C] {i j : K}
@@ -259,8 +247,7 @@ theorem limit_obj_iso_limit_comp_evaluation_inv_limit_map [HasLimitsOfShape J C]
   by
   rw [iso.inv_comp_eq, ← category.assoc, iso.eq_comp_inv,
     limit_map_limit_obj_iso_limit_comp_evaluation_hom]
-#align
-  category_theory.limits.limit_obj_iso_limit_comp_evaluation_inv_limit_map CategoryTheory.Limits.limit_obj_iso_limit_comp_evaluation_inv_limit_map
+#align category_theory.limits.limit_obj_iso_limit_comp_evaluation_inv_limit_map CategoryTheory.Limits.limit_obj_iso_limit_comp_evaluation_inv_limit_map
 
 @[ext]
 theorem limit_obj_ext {H : J ⥤ K ⥤ C} [HasLimitsOfShape J C] {k : K} {W : C}
@@ -277,8 +264,7 @@ instance evaluationPreservesColimitsOfShape [HasColimitsOfShape J C] (k : K) :
     where PreservesColimit F :=
     preservesColimitOfPreservesColimitCocone (combinedIsColimit _ _) <|
       IsColimit.ofIsoColimit (colimit.isColimit _) (evaluateCombinedCocones F _ k).symm
-#align
-  category_theory.limits.evaluation_preserves_colimits_of_shape CategoryTheory.Limits.evaluationPreservesColimitsOfShape
+#align category_theory.limits.evaluation_preserves_colimits_of_shape CategoryTheory.Limits.evaluationPreservesColimitsOfShape
 
 /-- If `F : J ⥤ K ⥤ C` is a functor into a functor category which has a colimit,
 then the evaluation of that colimit at `k` is the colimit of the evaluations of `F.obj j` at `k`.
@@ -286,8 +272,7 @@ then the evaluation of that colimit at `k` is the colimit of the evaluations of 
 def colimitObjIsoColimitCompEvaluation [HasColimitsOfShape J C] (F : J ⥤ K ⥤ C) (k : K) :
     (colimit F).obj k ≅ colimit (F ⋙ (evaluation K C).obj k) :=
   preservesColimitIso ((evaluation K C).obj k) F
-#align
-  category_theory.limits.colimit_obj_iso_colimit_comp_evaluation CategoryTheory.Limits.colimitObjIsoColimitCompEvaluation
+#align category_theory.limits.colimit_obj_iso_colimit_comp_evaluation CategoryTheory.Limits.colimitObjIsoColimitCompEvaluation
 
 @[simp, reassoc.1]
 theorem colimit_obj_iso_colimit_comp_evaluation_ι_inv [HasColimitsOfShape J C] (F : J ⥤ K ⥤ C)
@@ -297,8 +282,7 @@ theorem colimit_obj_iso_colimit_comp_evaluation_ι_inv [HasColimitsOfShape J C] 
   by
   dsimp [colimit_obj_iso_colimit_comp_evaluation]
   simp
-#align
-  category_theory.limits.colimit_obj_iso_colimit_comp_evaluation_ι_inv CategoryTheory.Limits.colimit_obj_iso_colimit_comp_evaluation_ι_inv
+#align category_theory.limits.colimit_obj_iso_colimit_comp_evaluation_ι_inv CategoryTheory.Limits.colimit_obj_iso_colimit_comp_evaluation_ι_inv
 
 @[simp, reassoc.1]
 theorem colimit_obj_iso_colimit_comp_evaluation_ι_app_hom [HasColimitsOfShape J C] (F : J ⥤ K ⥤ C)
@@ -309,8 +293,7 @@ theorem colimit_obj_iso_colimit_comp_evaluation_ι_app_hom [HasColimitsOfShape J
   dsimp [colimit_obj_iso_colimit_comp_evaluation]
   rw [← iso.eq_comp_inv]
   simp
-#align
-  category_theory.limits.colimit_obj_iso_colimit_comp_evaluation_ι_app_hom CategoryTheory.Limits.colimit_obj_iso_colimit_comp_evaluation_ι_app_hom
+#align category_theory.limits.colimit_obj_iso_colimit_comp_evaluation_ι_app_hom CategoryTheory.Limits.colimit_obj_iso_colimit_comp_evaluation_ι_app_hom
 
 @[simp, reassoc.1]
 theorem colimit_obj_iso_colimit_comp_evaluation_inv_colimit_map [HasColimitsOfShape J C]
@@ -322,8 +305,7 @@ theorem colimit_obj_iso_colimit_comp_evaluation_inv_colimit_map [HasColimitsOfSh
   ext
   dsimp
   simp
-#align
-  category_theory.limits.colimit_obj_iso_colimit_comp_evaluation_inv_colimit_map CategoryTheory.Limits.colimit_obj_iso_colimit_comp_evaluation_inv_colimit_map
+#align category_theory.limits.colimit_obj_iso_colimit_comp_evaluation_inv_colimit_map CategoryTheory.Limits.colimit_obj_iso_colimit_comp_evaluation_inv_colimit_map
 
 @[simp, reassoc.1]
 theorem colimit_map_colimit_obj_iso_colimit_comp_evaluation_hom [HasColimitsOfShape J C]
@@ -334,8 +316,7 @@ theorem colimit_map_colimit_obj_iso_colimit_comp_evaluation_hom [HasColimitsOfSh
   by
   rw [← iso.inv_comp_eq, ← category.assoc, ← iso.eq_comp_inv,
     colimit_obj_iso_colimit_comp_evaluation_inv_colimit_map]
-#align
-  category_theory.limits.colimit_map_colimit_obj_iso_colimit_comp_evaluation_hom CategoryTheory.Limits.colimit_map_colimit_obj_iso_colimit_comp_evaluation_hom
+#align category_theory.limits.colimit_map_colimit_obj_iso_colimit_comp_evaluation_hom CategoryTheory.Limits.colimit_map_colimit_obj_iso_colimit_comp_evaluation_hom
 
 @[ext]
 theorem colimit_obj_ext {H : J ⥤ K ⥤ C} [HasColimitsOfShape J C] {k : K} {W : C}
@@ -348,8 +329,7 @@ theorem colimit_obj_ext {H : J ⥤ K ⥤ C} [HasColimitsOfShape J C] {k : K} {W 
 
 instance evaluationPreservesLimits [HasLimits C] (k : K) : PreservesLimits ((evaluation K C).obj k)
     where PreservesLimitsOfShape J 𝒥 := by skip <;> infer_instance
-#align
-  category_theory.limits.evaluation_preserves_limits CategoryTheory.Limits.evaluationPreservesLimits
+#align category_theory.limits.evaluation_preserves_limits CategoryTheory.Limits.evaluationPreservesLimits
 
 /-- `F : D ⥤ K ⥤ C` preserves the limit of some `G : J ⥤ D` if it does for each `k : K`. -/
 def preservesLimitOfEvaluation (F : D ⥤ K ⥤ C) (G : J ⥤ D)
@@ -360,16 +340,14 @@ def preservesLimitOfEvaluation (F : D ⥤ K ⥤ C) (G : J ⥤ D)
     haveI := H X
     change is_limit ((F ⋙ (evaluation K C).obj X).mapCone c)
     exact preserves_limit.preserves hc⟩
-#align
-  category_theory.limits.preserves_limit_of_evaluation CategoryTheory.Limits.preservesLimitOfEvaluation
+#align category_theory.limits.preserves_limit_of_evaluation CategoryTheory.Limits.preservesLimitOfEvaluation
 
 /-- `F : D ⥤ K ⥤ C` preserves limits of shape `J` if it does for each `k : K`. -/
 def preservesLimitsOfShapeOfEvaluation (F : D ⥤ K ⥤ C) (J : Type _) [Category J]
     (H : ∀ k : K, PreservesLimitsOfShape J (F ⋙ (evaluation K C).obj k)) :
     PreservesLimitsOfShape J F :=
   ⟨fun G => preservesLimitOfEvaluation F G fun k => PreservesLimitsOfShape.preservesLimit⟩
-#align
-  category_theory.limits.preserves_limits_of_shape_of_evaluation CategoryTheory.Limits.preservesLimitsOfShapeOfEvaluation
+#align category_theory.limits.preserves_limits_of_shape_of_evaluation CategoryTheory.Limits.preservesLimitsOfShapeOfEvaluation
 
 /-- `F : D ⥤ K ⥤ C` preserves all limits if it does for each `k : K`. -/
 def preservesLimitsOfEvaluation (F : D ⥤ K ⥤ C)
@@ -378,8 +356,7 @@ def preservesLimitsOfEvaluation (F : D ⥤ K ⥤ C)
   ⟨fun L hL =>
     preserves_limits_of_shape_of_evaluation F L fun k =>
       preserves_limits_of_size.preserves_limits_of_shape⟩
-#align
-  category_theory.limits.preserves_limits_of_evaluation CategoryTheory.Limits.preservesLimitsOfEvaluation
+#align category_theory.limits.preserves_limits_of_evaluation CategoryTheory.Limits.preservesLimitsOfEvaluation
 
 /-- The constant functor `C ⥤ (D ⥤ C)` preserves limits. -/
 instance preservesLimitsConst : PreservesLimitsOfSize.{w', w} (const D : C ⥤ _) :=
@@ -390,8 +367,7 @@ instance preservesLimitsConst : PreservesLimitsOfSize.{w', w} (const D : C ⥤ _
 instance evaluationPreservesColimits [HasColimits C] (k : K) :
     PreservesColimits ((evaluation K C).obj k)
     where PreservesColimitsOfShape J 𝒥 := by skip <;> infer_instance
-#align
-  category_theory.limits.evaluation_preserves_colimits CategoryTheory.Limits.evaluationPreservesColimits
+#align category_theory.limits.evaluation_preserves_colimits CategoryTheory.Limits.evaluationPreservesColimits
 
 /-- `F : D ⥤ K ⥤ C` preserves the colimit of some `G : J ⥤ D` if it does for each `k : K`. -/
 def preservesColimitOfEvaluation (F : D ⥤ K ⥤ C) (G : J ⥤ D)
@@ -402,16 +378,14 @@ def preservesColimitOfEvaluation (F : D ⥤ K ⥤ C) (G : J ⥤ D)
     haveI := H X
     change is_colimit ((F ⋙ (evaluation K C).obj X).mapCocone c)
     exact preserves_colimit.preserves hc⟩
-#align
-  category_theory.limits.preserves_colimit_of_evaluation CategoryTheory.Limits.preservesColimitOfEvaluation
+#align category_theory.limits.preserves_colimit_of_evaluation CategoryTheory.Limits.preservesColimitOfEvaluation
 
 /-- `F : D ⥤ K ⥤ C` preserves all colimits of shape `J` if it does for each `k : K`. -/
 def preservesColimitsOfShapeOfEvaluation (F : D ⥤ K ⥤ C) (J : Type _) [Category J]
     (H : ∀ k : K, PreservesColimitsOfShape J (F ⋙ (evaluation K C).obj k)) :
     PreservesColimitsOfShape J F :=
   ⟨fun G => preservesColimitOfEvaluation F G fun k => PreservesColimitsOfShape.preservesColimit⟩
-#align
-  category_theory.limits.preserves_colimits_of_shape_of_evaluation CategoryTheory.Limits.preservesColimitsOfShapeOfEvaluation
+#align category_theory.limits.preserves_colimits_of_shape_of_evaluation CategoryTheory.Limits.preservesColimitsOfShapeOfEvaluation
 
 /-- `F : D ⥤ K ⥤ C` preserves all colimits if it does for each `k : K`. -/
 def preservesColimitsOfEvaluation (F : D ⥤ K ⥤ C)
@@ -420,8 +394,7 @@ def preservesColimitsOfEvaluation (F : D ⥤ K ⥤ C)
   ⟨fun L hL =>
     preserves_colimits_of_shape_of_evaluation F L fun k =>
       preserves_colimits_of_size.preserves_colimits_of_shape⟩
-#align
-  category_theory.limits.preserves_colimits_of_evaluation CategoryTheory.Limits.preservesColimitsOfEvaluation
+#align category_theory.limits.preserves_colimits_of_evaluation CategoryTheory.Limits.preservesColimitsOfEvaluation
 
 /-- The constant functor `C ⥤ (D ⥤ C)` preserves colimits. -/
 instance preservesColimitsConst : PreservesColimitsOfSize.{w', w} (const D : C ⥤ _) :=
@@ -460,8 +433,7 @@ the individual colimits on objects. -/
 @[simps]
 def colimitIsoFlipCompColim [HasColimitsOfShape J C] (F : J ⥤ K ⥤ C) : colimit F ≅ F.flip ⋙ colim :=
   NatIso.ofComponents (colimitObjIsoColimitCompEvaluation F) <| by tidy
-#align
-  category_theory.limits.colimit_iso_flip_comp_colim CategoryTheory.Limits.colimitIsoFlipCompColim
+#align category_theory.limits.colimit_iso_flip_comp_colim CategoryTheory.Limits.colimitIsoFlipCompColim
 
 /-- A variant of `colimit_iso_flip_comp_colim` where the arguemnts of `F` are flipped. -/
 @[simps]
@@ -469,8 +441,7 @@ def colimitFlipIsoCompColim [HasColimitsOfShape J C] (F : K ⥤ J ⥤ C) : colim
   (NatIso.ofComponents fun k =>
       colimitObjIsoColimitCompEvaluation _ _ ≪≫ HasColimit.isoOfNatIso (flipCompEvaluation _ _)) <|
     by tidy
-#align
-  category_theory.limits.colimit_flip_iso_comp_colim CategoryTheory.Limits.colimitFlipIsoCompColim
+#align category_theory.limits.colimit_flip_iso_comp_colim CategoryTheory.Limits.colimitFlipIsoCompColim
 
 /-- For a functor `G : J ⥤ K ⥤ C`, its colimit `K ⥤ C` is given by `(G' : K ⥤ J ⥤ C) ⋙ colim`.
 Note that this does not require `K` to be small.
@@ -479,8 +450,7 @@ Note that this does not require `K` to be small.
 def colimitIsoSwapCompColim [HasColimitsOfShape J C] (G : J ⥤ K ⥤ C) :
     colimit G ≅ curry.obj (swap K J ⋙ uncurry.obj G) ⋙ colim :=
   colimitIsoFlipCompColim G ≪≫ isoWhiskerRight (flipIsoCurrySwapUncurry _) _
-#align
-  category_theory.limits.colimit_iso_swap_comp_colim CategoryTheory.Limits.colimitIsoSwapCompColim
+#align category_theory.limits.colimit_iso_swap_comp_colim CategoryTheory.Limits.colimitIsoSwapCompColim
 
 end CategoryTheory.Limits
 

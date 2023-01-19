@@ -165,8 +165,7 @@ theorem mem_omega_limit_singleton_iff_map_cluster_point (x : α) (y : β) :
     y ∈ ω f ϕ {x} ↔ MapClusterPt y f fun t => ϕ t x := by
   simp_rw [mem_omega_limit_iff_frequently, map_cluster_pt_iff, singleton_inter_nonempty,
     mem_preimage]
-#align
-  mem_omega_limit_singleton_iff_map_cluster_point mem_omega_limit_singleton_iff_map_cluster_point
+#align mem_omega_limit_singleton_iff_map_cluster_point mem_omega_limit_singleton_iff_map_cluster_point
 
 /-!
 ### Set operations and omega limits
@@ -287,8 +286,7 @@ theorem eventually_closure_subset_of_is_compact_absorbing_of_is_open_of_omega_li
   have hw : closure (image2 ϕ w s) ⊆ n :=
     compl_subset_compl.mp (subset.trans hnc (union_subset hw₃ hw₄))
   exact ⟨_, hw₂, hw⟩
-#align
-  eventually_closure_subset_of_is_compact_absorbing_of_is_open_of_omega_limit_subset' eventually_closure_subset_of_is_compact_absorbing_of_is_open_of_omega_limit_subset'
+#align eventually_closure_subset_of_is_compact_absorbing_of_is_open_of_omega_limit_subset' eventually_closure_subset_of_is_compact_absorbing_of_is_open_of_omega_limit_subset'
 
 /-- A set is eventually carried into any open neighbourhood of its ω-limit:
 if `c` is a compact set such that `closure {ϕ t x | t ∈ v, x ∈ s} ⊆ c` for some `v ∈ f`
@@ -299,8 +297,7 @@ theorem eventually_closure_subset_of_is_compact_absorbing_of_is_open_of_omega_li
     (hn₁ : IsOpen n) (hn₂ : ω f ϕ s ⊆ n) : ∃ u ∈ f, closure (image2 ϕ u s) ⊆ n :=
   eventually_closure_subset_of_is_compact_absorbing_of_is_open_of_omega_limit_subset' f ϕ _ hc₁
     ⟨_, hc₂, closure_minimal (image2_subset_iff.2 fun t => id) hc₁.IsClosed⟩ hn₁ hn₂
-#align
-  eventually_closure_subset_of_is_compact_absorbing_of_is_open_of_omega_limit_subset eventually_closure_subset_of_is_compact_absorbing_of_is_open_of_omega_limit_subset
+#align eventually_closure_subset_of_is_compact_absorbing_of_is_open_of_omega_limit_subset eventually_closure_subset_of_is_compact_absorbing_of_is_open_of_omega_limit_subset
 
 theorem eventually_maps_to_of_is_compact_absorbing_of_is_open_of_omega_limit_subset [T2Space β]
     {c : Set β} (hc₁ : IsCompact c) (hc₂ : ∀ᶠ t in f, MapsTo (ϕ t) s c) {n : Set β} (hn₁ : IsOpen n)
@@ -311,15 +308,13 @@ theorem eventually_maps_to_of_is_compact_absorbing_of_is_open_of_omega_limit_sub
     ⟨u, hu_mem, hu⟩
   refine' mem_of_superset hu_mem fun t ht x hx => _
   exact hu (subset_closure <| mem_image2_of_mem ht hx)
-#align
-  eventually_maps_to_of_is_compact_absorbing_of_is_open_of_omega_limit_subset eventually_maps_to_of_is_compact_absorbing_of_is_open_of_omega_limit_subset
+#align eventually_maps_to_of_is_compact_absorbing_of_is_open_of_omega_limit_subset eventually_maps_to_of_is_compact_absorbing_of_is_open_of_omega_limit_subset
 
 theorem eventually_closure_subset_of_is_open_of_omega_limit_subset [CompactSpace β] {v : Set β}
     (hv₁ : IsOpen v) (hv₂ : ω f ϕ s ⊆ v) : ∃ u ∈ f, closure (image2 ϕ u s) ⊆ v :=
   eventually_closure_subset_of_is_compact_absorbing_of_is_open_of_omega_limit_subset' _ _ _
     is_compact_univ ⟨univ, univ_mem, subset_univ _⟩ hv₁ hv₂
-#align
-  eventually_closure_subset_of_is_open_of_omega_limit_subset eventually_closure_subset_of_is_open_of_omega_limit_subset
+#align eventually_closure_subset_of_is_open_of_omega_limit_subset eventually_closure_subset_of_is_open_of_omega_limit_subset
 
 theorem eventually_maps_to_of_is_open_of_omega_limit_subset [CompactSpace β] {v : Set β}
     (hv₁ : IsOpen v) (hv₂ : ω f ϕ s ⊆ v) : ∀ᶠ t in f, MapsTo (ϕ t) s v :=
@@ -328,8 +323,7 @@ theorem eventually_maps_to_of_is_open_of_omega_limit_subset [CompactSpace β] {v
     ⟨u, hu_mem, hu⟩
   refine' mem_of_superset hu_mem fun t ht x hx => _
   exact hu (subset_closure <| mem_image2_of_mem ht hx)
-#align
-  eventually_maps_to_of_is_open_of_omega_limit_subset eventually_maps_to_of_is_open_of_omega_limit_subset
+#align eventually_maps_to_of_is_open_of_omega_limit_subset eventually_maps_to_of_is_open_of_omega_limit_subset
 
 /-- The ω-limit of a nonempty set w.r.t. a nontrivial filter is nonempty. -/
 theorem nonempty_omega_limit_of_is_compact_absorbing [NeBot f] {c : Set β} (hc₁ : IsCompact c)

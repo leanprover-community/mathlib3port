@@ -818,10 +818,8 @@ theorem le_prod_nonempty_of_submultiplicative_on_pred [CommMonoid α] [OrderedCo
   have hp_sup : p s.prod := prod_induction_nonempty p hp_mul hs_empty hsa_restrict
   have hp_a : p a := hsa_prop a (mem_cons_self a s)
   exact (h_mul a _ hp_a hp_sup).trans (mul_le_mul_left' (hs hs_empty hsa_restrict) _)
-#align
-  multiset.le_prod_nonempty_of_submultiplicative_on_pred Multiset.le_prod_nonempty_of_submultiplicative_on_pred
-#align
-  multiset.le_sum_nonempty_of_subadditive_on_pred Multiset.le_sum_nonempty_of_subadditive_on_pred
+#align multiset.le_prod_nonempty_of_submultiplicative_on_pred Multiset.le_prod_nonempty_of_submultiplicative_on_pred
+#align multiset.le_sum_nonempty_of_subadditive_on_pred Multiset.le_sum_nonempty_of_subadditive_on_pred
 
 /- warning: multiset.le_prod_nonempty_of_submultiplicative -> Multiset.le_prod_nonempty_of_submultiplicative is a dubious translation:
 lean 3 declaration is

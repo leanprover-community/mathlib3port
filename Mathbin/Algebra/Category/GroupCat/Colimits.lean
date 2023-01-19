@@ -232,8 +232,7 @@ theorem cocone_naturality_components (j j' : J) (f : j ⟶ j') (x : F.obj j) :
   by
   rw [← cocone_naturality F f]
   rfl
-#align
-  AddCommGroup.colimits.cocone_naturality_components AddCommGroupCat.Colimits.cocone_naturality_components
+#align AddCommGroup.colimits.cocone_naturality_components AddCommGroupCat.Colimits.cocone_naturality_components
 
 /-- The cocone over the proposed colimit abelian group. -/
 def colimitCocone : Cocone F where
@@ -314,8 +313,7 @@ def colimitCoconeIsColimit : IsColimit (colimitCocone F)
     · simp [*]
     · simp [*]
     rfl
-#align
-  AddCommGroup.colimits.colimit_cocone_is_colimit AddCommGroupCat.Colimits.colimitCoconeIsColimit
+#align AddCommGroup.colimits.colimit_cocone_is_colimit AddCommGroupCat.Colimits.colimitCoconeIsColimit
 
 instance has_colimits_AddCommGroup : HasColimits AddCommGroupCat
     where HasColimitsOfShape J 𝒥 :=
@@ -324,8 +322,7 @@ instance has_colimits_AddCommGroup : HasColimits AddCommGroupCat
         has_colimit.mk
           { Cocone := colimit_cocone F
             IsColimit := colimit_cocone_is_colimit F } }
-#align
-  AddCommGroup.colimits.has_colimits_AddCommGroup AddCommGroupCat.Colimits.has_colimits_AddCommGroup
+#align AddCommGroup.colimits.has_colimits_AddCommGroup AddCommGroupCat.Colimits.has_colimits_AddCommGroup
 
 end AddCommGroupCat.Colimits
 

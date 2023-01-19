@@ -82,8 +82,7 @@ theorem Submodule.is_internal_prime_power_torsion_of_pid [Module.Finite R M]
     ext p : 1
     rw [← torsion_by_span_singleton_eq, Ideal.submodule_span_eq, ← Ideal.span_singleton_pow,
       Ideal.span_singleton_generator]
-#align
-  submodule.is_internal_prime_power_torsion_of_pid Submodule.is_internal_prime_power_torsion_of_pid
+#align submodule.is_internal_prime_power_torsion_of_pid Submodule.is_internal_prime_power_torsion_of_pid
 
 namespace Module
 

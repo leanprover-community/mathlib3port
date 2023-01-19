@@ -426,8 +426,7 @@ theorem IsNoetherian.exists_endomorphism_iterate_ker_inf_range_eq_bot [I : IsNoe
   rw [← pow_add] at h
   convert h using 3
   ring
-#align
-  is_noetherian.exists_endomorphism_iterate_ker_inf_range_eq_bot IsNoetherian.exists_endomorphism_iterate_ker_inf_range_eq_bot
+#align is_noetherian.exists_endomorphism_iterate_ker_inf_range_eq_bot IsNoetherian.exists_endomorphism_iterate_ker_inf_range_eq_bot
 
 /-- Any surjective endomorphism of a Noetherian module is injective. -/
 theorem IsNoetherian.injective_of_surjective_endomorphism [IsNoetherian R M] (f : M →ₗ[R] M)
@@ -437,15 +436,13 @@ theorem IsNoetherian.injective_of_surjective_endomorphism [IsNoetherian R M] (f 
   rw [linear_map.range_eq_top.mpr (LinearMap.iterate_surjective s n), inf_top_eq,
     LinearMap.ker_eq_bot] at w
   exact LinearMap.injective_of_iterate_injective Ne w
-#align
-  is_noetherian.injective_of_surjective_endomorphism IsNoetherian.injective_of_surjective_endomorphism
+#align is_noetherian.injective_of_surjective_endomorphism IsNoetherian.injective_of_surjective_endomorphism
 
 /-- Any surjective endomorphism of a Noetherian module is bijective. -/
 theorem IsNoetherian.bijective_of_surjective_endomorphism [IsNoetherian R M] (f : M →ₗ[R] M)
     (s : Surjective f) : Bijective f :=
   ⟨IsNoetherian.injective_of_surjective_endomorphism f s, s⟩
-#align
-  is_noetherian.bijective_of_surjective_endomorphism IsNoetherian.bijective_of_surjective_endomorphism
+#align is_noetherian.bijective_of_surjective_endomorphism IsNoetherian.bijective_of_surjective_endomorphism
 
 /-- A sequence `f` of submodules of a noetherian module,
 with `f (n+1)` disjoint from the supremum of `f 0`, ..., `f n`,
@@ -467,8 +464,7 @@ theorem IsNoetherian.disjoint_partial_sups_eventually_bot [I : IsNoetherian R M]
   exact
     ⟨n, fun m p =>
       (h m).eq_bot_of_ge <| sup_eq_left.1 <| (w (m + 1) <| le_add_right p).symm.trans <| w m p⟩
-#align
-  is_noetherian.disjoint_partial_sups_eventually_bot IsNoetherian.disjoint_partial_sups_eventually_bot
+#align is_noetherian.disjoint_partial_sups_eventually_bot IsNoetherian.disjoint_partial_sups_eventually_bot
 
 /-- If `M ⊕ N` embeds into `M`, for `M` noetherian over `R`, then `N` is trivial.
 -/

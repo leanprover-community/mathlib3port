@@ -2837,8 +2837,7 @@ theorem surjective_iff_surjective_of_unionᵢ_eq_univ :
         rw [hU]
         triv)
   exact ⟨_, congr_arg Subtype.val (H i ⟨x, hi⟩).some_spec⟩
-#align
-  set.surjective_iff_surjective_of_Union_eq_univ Set.surjective_iff_surjective_of_unionᵢ_eq_univ
+#align set.surjective_iff_surjective_of_Union_eq_univ Set.surjective_iff_surjective_of_unionᵢ_eq_univ
 
 /- warning: set.bijective_iff_bijective_of_Union_eq_univ -> Set.bijective_iff_bijective_of_unionᵢ_eq_univ is a dubious translation:
 lean 3 declaration is

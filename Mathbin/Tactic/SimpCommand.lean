@@ -28,8 +28,7 @@ private unsafe def strip_annotations_from_all_non_local_consts {elab : Bool} (e 
       | some (_, expr.local_const _ _ _ _) => none
       | some (_, _) => e.erase_annotations
       | _ => none
-#align
-  tactic.strip_annotations_from_all_non_local_consts tactic.strip_annotations_from_all_non_local_consts
+#align tactic.strip_annotations_from_all_non_local_consts tactic.strip_annotations_from_all_non_local_consts
 
 /-- `simp_arg_type.to_pexpr` retrieves the `pexpr` underlying the given `simp_arg_type`, if there is
 one. -/

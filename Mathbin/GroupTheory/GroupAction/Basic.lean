@@ -193,10 +193,8 @@ theorem mem_fixed_points_iff_card_orbit_eq_one {a : β} [Fintype (orbit α a)] :
       x • a = z := Subtype.mk.inj (hz₁ ⟨x • a, mem_orbit _ _⟩)
       _ = a := (Subtype.mk.inj (hz₁ ⟨a, mem_orbit_self _⟩)).symm
       
-#align
-  mul_action.mem_fixed_points_iff_card_orbit_eq_one MulAction.mem_fixed_points_iff_card_orbit_eq_one
-#align
-  add_action.mem_fixed_points_iff_card_orbit_eq_zero AddAction.mem_fixed_points_iff_card_orbit_eq_zero
+#align mul_action.mem_fixed_points_iff_card_orbit_eq_one MulAction.mem_fixed_points_iff_card_orbit_eq_one
+#align add_action.mem_fixed_points_iff_card_orbit_eq_zero AddAction.mem_fixed_points_iff_card_orbit_eq_zero
 
 end MulAction
 
@@ -311,10 +309,8 @@ theorem quotient_preimage_image_eq_union_mul (U : Set β) :
     rw [← hu₂]
     convert hu₁
     simp only [inv_smul_smul]
-#align
-  mul_action.quotient_preimage_image_eq_union_mul MulAction.quotient_preimage_image_eq_union_mul
-#align
-  add_action.quotient_preimage_image_eq_union_add AddAction.quotient_preimage_image_eq_union_add
+#align mul_action.quotient_preimage_image_eq_union_mul MulAction.quotient_preimage_image_eq_union_mul
+#align add_action.quotient_preimage_image_eq_union_add AddAction.quotient_preimage_image_eq_union_add
 
 @[to_additive]
 theorem disjoint_image_image_iff {U V : Set β} :
@@ -385,10 +381,8 @@ theorem orbitRel.Quotient.orbit_eq_orbit_out (x : orbitRel.Quotient α β)
   conv_lhs => rw [← hφ x]
   induction x using Quotient.inductionOn'
   rfl
-#align
-  mul_action.orbit_rel.quotient.orbit_eq_orbit_out MulAction.orbitRel.Quotient.orbit_eq_orbit_out
-#align
-  add_action.orbit_rel.quotient.orbit_eq_orbit_out AddAction.orbitRel.Quotient.orbit_eq_orbit_out
+#align mul_action.orbit_rel.quotient.orbit_eq_orbit_out MulAction.orbitRel.Quotient.orbit_eq_orbit_out
+#align add_action.orbit_rel.quotient.orbit_eq_orbit_out AddAction.orbitRel.Quotient.orbit_eq_orbit_out
 
 variable (α) (β)
 
@@ -430,8 +424,7 @@ theorem stabilizer_smul_eq_stabilizer_map_conj (g : α) (x : β) :
   ext h
   rw [mem_stabilizer_iff, ← smul_left_cancel_iff g⁻¹, smul_smul, smul_smul, smul_smul, mul_left_inv,
     one_smul, ← mem_stabilizer_iff, Subgroup.mem_map_equiv, MulAut.conj_symm_apply]
-#align
-  mul_action.stabilizer_smul_eq_stabilizer_map_conj MulAction.stabilizer_smul_eq_stabilizer_map_conj
+#align mul_action.stabilizer_smul_eq_stabilizer_map_conj MulAction.stabilizer_smul_eq_stabilizer_map_conj
 
 /-- A bijection between the stabilizers of two elements in the same orbit. -/
 noncomputable def stabilizerEquivStabilizerOfOrbitRel {x y : β} (h : (orbitRel α β).Rel x y) :
@@ -441,8 +434,7 @@ noncomputable def stabilizerEquivStabilizerOfOrbitRel {x y : β} (h : (orbitRel 
   have this : stabilizer α x = (stabilizer α y).map (MulAut.conj g).toMonoidHom := by
     rw [← hg, stabilizer_smul_eq_stabilizer_map_conj]
   (MulEquiv.subgroupCongr this).trans ((MulAut.conj g).subgroupMap <| stabilizer α y).symm
-#align
-  mul_action.stabilizer_equiv_stabilizer_of_orbit_rel MulAction.stabilizerEquivStabilizerOfOrbitRel
+#align mul_action.stabilizer_equiv_stabilizer_of_orbit_rel MulAction.stabilizerEquivStabilizerOfOrbitRel
 
 end MulAction
 
@@ -458,8 +450,7 @@ theorem stabilizer_vadd_eq_stabilizer_map_conj (g : α) (x : β) :
   rw [mem_stabilizer_iff, ← vadd_left_cancel_iff (-g), vadd_vadd, vadd_vadd, vadd_vadd,
     add_left_neg, zero_vadd, ← mem_stabilizer_iff, AddSubgroup.mem_map_equiv,
     AddAut.conj_symm_apply]
-#align
-  add_action.stabilizer_vadd_eq_stabilizer_map_conj AddAction.stabilizer_vadd_eq_stabilizer_map_conj
+#align add_action.stabilizer_vadd_eq_stabilizer_map_conj AddAction.stabilizer_vadd_eq_stabilizer_map_conj
 
 /-- A bijection between the stabilizers of two elements in the same orbit. -/
 noncomputable def stabilizerEquivStabilizerOfOrbitRel {x y : β} (h : (orbitRel α β).Rel x y) :
@@ -469,8 +460,7 @@ noncomputable def stabilizerEquivStabilizerOfOrbitRel {x y : β} (h : (orbitRel 
   have this : stabilizer α x = (stabilizer α y).map (AddAut.conj g).toAddMonoidHom := by
     rw [← hg, stabilizer_vadd_eq_stabilizer_map_conj]
   (AddEquiv.addSubgroupCongr this).trans ((AddAut.conj g).addSubgroupMap <| stabilizer α y).symm
-#align
-  add_action.stabilizer_equiv_stabilizer_of_orbit_rel AddAction.stabilizerEquivStabilizerOfOrbitRel
+#align add_action.stabilizer_equiv_stabilizer_of_orbit_rel AddAction.stabilizerEquivStabilizerOfOrbitRel
 
 end AddAction
 

@@ -632,8 +632,7 @@ theorem continuous_on_prod_of_continuous_on_lipschitz_on [PseudoEmetricSpace α]
     _ < ε / 2 + ε / 2 := Ennreal.add_lt_add ((hb _ hbt).edist_lt_of_edist_lt_div has hx hax) hby
     _ = ε := Ennreal.add_halves ε
     
-#align
-  continuous_on_prod_of_continuous_on_lipschitz_on continuous_on_prod_of_continuous_on_lipschitz_on
+#align continuous_on_prod_of_continuous_on_lipschitz_on continuous_on_prod_of_continuous_on_lipschitz_on
 
 /-- Consider a function `f : α × β → γ`. Suppose that it is continuous on each “vertical section”
 `{a} × univ`, `a : α`, and is Lipschitz continuous on each “horizontal section”

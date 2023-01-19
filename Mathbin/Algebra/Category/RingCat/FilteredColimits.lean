@@ -153,8 +153,7 @@ def colimitCoconeIsColimit : IsColimit colimit_cocone
     RingHom.coe_inj <|
       (Types.colimitCoconeIsColimit (F ⋙ forget SemiRingCat)).uniq
         ((forget SemiRingCat).mapCocone t) m fun j => funext fun x => RingHom.congr_fun (h j) x
-#align
-  SemiRing.filtered_colimits.colimit_cocone_is_colimit SemiRingCat.FilteredColimits.colimitCoconeIsColimit
+#align SemiRing.filtered_colimits.colimit_cocone_is_colimit SemiRingCat.FilteredColimits.colimitCoconeIsColimit
 
 instance forget₂MonPreservesFilteredColimits :
     PreservesFilteredColimits (forget₂ SemiRingCat MonCat.{u})
@@ -163,13 +162,11 @@ instance forget₂MonPreservesFilteredColimits :
       PreservesColimit := fun F =>
         preserves_colimit_of_preserves_colimit_cocone (colimitCoconeIsColimit.{u, u} F)
           (MonCat.FilteredColimits.colimitCoconeIsColimit (F ⋙ forget₂ SemiRingCat MonCat.{u})) }
-#align
-  SemiRing.filtered_colimits.forget₂_Mon_preserves_filtered_colimits SemiRingCat.FilteredColimits.forget₂MonPreservesFilteredColimits
+#align SemiRing.filtered_colimits.forget₂_Mon_preserves_filtered_colimits SemiRingCat.FilteredColimits.forget₂MonPreservesFilteredColimits
 
 instance forgetPreservesFilteredColimits : PreservesFilteredColimits (forget SemiRingCat.{u}) :=
   Limits.compPreservesFilteredColimits (forget₂ SemiRingCat MonCat) (forget MonCat.{u})
-#align
-  SemiRing.filtered_colimits.forget_preserves_filtered_colimits SemiRingCat.FilteredColimits.forgetPreservesFilteredColimits
+#align SemiRing.filtered_colimits.forget_preserves_filtered_colimits SemiRingCat.FilteredColimits.forgetPreservesFilteredColimits
 
 end
 
@@ -194,8 +191,7 @@ instance colimitCommSemiring : CommSemiring R :=
   { R.Semiring,
     CommMonCat.FilteredColimits.colimitCommMonoid
       (F ⋙ forget₂ CommSemiRingCat CommMonCat.{max v u}) with }
-#align
-  CommSemiRing.filtered_colimits.colimit_comm_semiring CommSemiRingCat.FilteredColimits.colimitCommSemiring
+#align CommSemiRing.filtered_colimits.colimit_comm_semiring CommSemiRingCat.FilteredColimits.colimitCommSemiring
 
 /-- The bundled commutative semiring giving the filtered colimit of a diagram. -/
 def colimit : CommSemiRingCat :=
@@ -226,8 +222,7 @@ def colimitCoconeIsColimit : IsColimit colimit_cocone
     RingHom.coe_inj <|
       (Types.colimitCoconeIsColimit (F ⋙ forget CommSemiRingCat)).uniq
         ((forget CommSemiRingCat).mapCocone t) m fun j => funext fun x => RingHom.congr_fun (h j) x
-#align
-  CommSemiRing.filtered_colimits.colimit_cocone_is_colimit CommSemiRingCat.FilteredColimits.colimitCoconeIsColimit
+#align CommSemiRing.filtered_colimits.colimit_cocone_is_colimit CommSemiRingCat.FilteredColimits.colimitCoconeIsColimit
 
 instance forget₂SemiRingPreservesFilteredColimits :
     PreservesFilteredColimits (forget₂ CommSemiRingCat SemiRingCat.{u})
@@ -237,14 +232,12 @@ instance forget₂SemiRingPreservesFilteredColimits :
         preserves_colimit_of_preserves_colimit_cocone (colimitCoconeIsColimit.{u, u} F)
           (SemiRingCat.FilteredColimits.colimitCoconeIsColimit
             (F ⋙ forget₂ CommSemiRingCat SemiRingCat.{u})) }
-#align
-  CommSemiRing.filtered_colimits.forget₂_SemiRing_preserves_filtered_colimits CommSemiRingCat.FilteredColimits.forget₂SemiRingPreservesFilteredColimits
+#align CommSemiRing.filtered_colimits.forget₂_SemiRing_preserves_filtered_colimits CommSemiRingCat.FilteredColimits.forget₂SemiRingPreservesFilteredColimits
 
 instance forgetPreservesFilteredColimits : PreservesFilteredColimits (forget CommSemiRingCat.{u}) :=
   Limits.compPreservesFilteredColimits (forget₂ CommSemiRingCat SemiRingCat)
     (forget SemiRingCat.{u})
-#align
-  CommSemiRing.filtered_colimits.forget_preserves_filtered_colimits CommSemiRingCat.FilteredColimits.forgetPreservesFilteredColimits
+#align CommSemiRing.filtered_colimits.forget_preserves_filtered_colimits CommSemiRingCat.FilteredColimits.forgetPreservesFilteredColimits
 
 end
 
@@ -299,8 +292,7 @@ def colimitCoconeIsColimit : IsColimit colimit_cocone
     RingHom.coe_inj <|
       (Types.colimitCoconeIsColimit (F ⋙ forget RingCat)).uniq ((forget RingCat).mapCocone t) m
         fun j => funext fun x => RingHom.congr_fun (h j) x
-#align
-  Ring.filtered_colimits.colimit_cocone_is_colimit RingCat.FilteredColimits.colimitCoconeIsColimit
+#align Ring.filtered_colimits.colimit_cocone_is_colimit RingCat.FilteredColimits.colimitCoconeIsColimit
 
 instance forget₂SemiRingPreservesFilteredColimits :
     PreservesFilteredColimits (forget₂ RingCat SemiRingCat.{u})
@@ -310,13 +302,11 @@ instance forget₂SemiRingPreservesFilteredColimits :
         preserves_colimit_of_preserves_colimit_cocone (colimitCoconeIsColimit.{u, u} F)
           (SemiRingCat.FilteredColimits.colimitCoconeIsColimit
             (F ⋙ forget₂ RingCat SemiRingCat.{u})) }
-#align
-  Ring.filtered_colimits.forget₂_SemiRing_preserves_filtered_colimits RingCat.FilteredColimits.forget₂SemiRingPreservesFilteredColimits
+#align Ring.filtered_colimits.forget₂_SemiRing_preserves_filtered_colimits RingCat.FilteredColimits.forget₂SemiRingPreservesFilteredColimits
 
 instance forgetPreservesFilteredColimits : PreservesFilteredColimits (forget RingCat.{u}) :=
   Limits.compPreservesFilteredColimits (forget₂ RingCat SemiRingCat) (forget SemiRingCat.{u})
-#align
-  Ring.filtered_colimits.forget_preserves_filtered_colimits RingCat.FilteredColimits.forgetPreservesFilteredColimits
+#align Ring.filtered_colimits.forget_preserves_filtered_colimits RingCat.FilteredColimits.forgetPreservesFilteredColimits
 
 end
 
@@ -370,8 +360,7 @@ def colimitCoconeIsColimit : IsColimit colimit_cocone
     RingHom.coe_inj <|
       (Types.colimitCoconeIsColimit (F ⋙ forget CommRingCat)).uniq
         ((forget CommRingCat).mapCocone t) m fun j => funext fun x => RingHom.congr_fun (h j) x
-#align
-  CommRing.filtered_colimits.colimit_cocone_is_colimit CommRingCat.FilteredColimits.colimitCoconeIsColimit
+#align CommRing.filtered_colimits.colimit_cocone_is_colimit CommRingCat.FilteredColimits.colimitCoconeIsColimit
 
 instance forget₂RingPreservesFilteredColimits :
     PreservesFilteredColimits (forget₂ CommRingCat RingCat.{u})
@@ -380,13 +369,11 @@ instance forget₂RingPreservesFilteredColimits :
       PreservesColimit := fun F =>
         preserves_colimit_of_preserves_colimit_cocone (colimitCoconeIsColimit.{u, u} F)
           (RingCat.FilteredColimits.colimitCoconeIsColimit (F ⋙ forget₂ CommRingCat RingCat.{u})) }
-#align
-  CommRing.filtered_colimits.forget₂_Ring_preserves_filtered_colimits CommRingCat.FilteredColimits.forget₂RingPreservesFilteredColimits
+#align CommRing.filtered_colimits.forget₂_Ring_preserves_filtered_colimits CommRingCat.FilteredColimits.forget₂RingPreservesFilteredColimits
 
 instance forgetPreservesFilteredColimits : PreservesFilteredColimits (forget CommRingCat.{u}) :=
   Limits.compPreservesFilteredColimits (forget₂ CommRingCat RingCat) (forget RingCat.{u})
-#align
-  CommRing.filtered_colimits.forget_preserves_filtered_colimits CommRingCat.FilteredColimits.forgetPreservesFilteredColimits
+#align CommRing.filtered_colimits.forget_preserves_filtered_colimits CommRingCat.FilteredColimits.forgetPreservesFilteredColimits
 
 end
 

@@ -658,16 +658,14 @@ See `adjoin_root.quot_map_of_equiv` for the isomorphism with `(R/I)[X] / (f mod 
 def quotMapOfEquivQuotMapCMapSpanMk :
     AdjoinRoot f ⧸ I.map (of f) ≃+* AdjoinRoot f ⧸ (I.map (c : R →+* R[X])).map (span {f}) :=
   Ideal.quotEquivOfEq (by rw [of, AdjoinRoot.mk, Ideal.map_map])
-#align
-  adjoin_root.quot_map_of_equiv_quot_map_C_map_span_mk AdjoinRoot.quotMapOfEquivQuotMapCMapSpanMk
+#align adjoin_root.quot_map_of_equiv_quot_map_C_map_span_mk AdjoinRoot.quotMapOfEquivQuotMapCMapSpanMk
 
 @[simp]
 theorem quot_map_of_equiv_quot_map_C_map_span_mk_mk (x : AdjoinRoot f) :
     quotMapOfEquivQuotMapCMapSpanMk I f (Ideal.Quotient.mk (I.map (of f)) x) =
       Ideal.Quotient.mk _ x :=
   rfl
-#align
-  adjoin_root.quot_map_of_equiv_quot_map_C_map_span_mk_mk AdjoinRoot.quot_map_of_equiv_quot_map_C_map_span_mk_mk
+#align adjoin_root.quot_map_of_equiv_quot_map_C_map_span_mk_mk AdjoinRoot.quot_map_of_equiv_quot_map_C_map_span_mk_mk
 
 --this lemma should have the simp tag but this causes a lint issue
 theorem quot_map_of_equiv_quot_map_C_map_span_mk_symm_mk (x : AdjoinRoot f) :
@@ -675,8 +673,7 @@ theorem quot_map_of_equiv_quot_map_C_map_span_mk_symm_mk (x : AdjoinRoot f) :
         (Ideal.Quotient.mk ((I.map (c : R →+* R[X])).map (span {f})) x) =
       Ideal.Quotient.mk (I.map (of f)) x :=
   by rw [quot_map_of_equiv_quot_map_C_map_span_mk, Ideal.quot_equiv_of_eq_symm, quot_equiv_of_eq_mk]
-#align
-  adjoin_root.quot_map_of_equiv_quot_map_C_map_span_mk_symm_mk AdjoinRoot.quot_map_of_equiv_quot_map_C_map_span_mk_symm_mk
+#align adjoin_root.quot_map_of_equiv_quot_map_C_map_span_mk_symm_mk AdjoinRoot.quot_map_of_equiv_quot_map_C_map_span_mk_symm_mk
 
 /-- The natural isomorphism `R[α]/((I[x] ⊔ (f)) / (f)) ≅ (R[x]/I[x])/((f) ⊔ I[x] / I[x])`
   for `α` a root of `f : R[X]` and `I : ideal R`-/
@@ -684,24 +681,21 @@ def quotMapCMapSpanMkEquivQuotMapCQuotMapSpanMk :
     AdjoinRoot f ⧸ (I.map (c : R →+* R[X])).map (span ({f} : Set R[X])) ≃+*
       (R[X] ⧸ I.map (c : R →+* R[X])) ⧸ (span ({f} : Set R[X])).map (I.map (c : R →+* R[X])) :=
   quotQuotEquivComm (Ideal.span ({f} : Set R[X])) (I.map (c : R →+* R[X]))
-#align
-  adjoin_root.quot_map_C_map_span_mk_equiv_quot_map_C_quot_map_span_mk AdjoinRoot.quotMapCMapSpanMkEquivQuotMapCQuotMapSpanMk
+#align adjoin_root.quot_map_C_map_span_mk_equiv_quot_map_C_quot_map_span_mk AdjoinRoot.quotMapCMapSpanMkEquivQuotMapCQuotMapSpanMk
 
 @[simp]
 theorem quot_map_C_map_span_mk_equiv_quot_map_C_quot_map_span_mk_mk (p : R[X]) :
     quotMapCMapSpanMkEquivQuotMapCQuotMapSpanMk I f (Ideal.Quotient.mk _ (mk f p)) =
       quotQuotMk (I.map c) (span {f}) p :=
   rfl
-#align
-  adjoin_root.quot_map_C_map_span_mk_equiv_quot_map_C_quot_map_span_mk_mk AdjoinRoot.quot_map_C_map_span_mk_equiv_quot_map_C_quot_map_span_mk_mk
+#align adjoin_root.quot_map_C_map_span_mk_equiv_quot_map_C_quot_map_span_mk_mk AdjoinRoot.quot_map_C_map_span_mk_equiv_quot_map_C_quot_map_span_mk_mk
 
 @[simp]
 theorem quot_map_C_map_span_mk_equiv_quot_map_C_quot_map_span_mk_symm_quot_quot_mk (p : R[X]) :
     (quotMapCMapSpanMkEquivQuotMapCQuotMapSpanMk I f).symm (quotQuotMk (I.map c) (span {f}) p) =
       Ideal.Quotient.mk _ (mk f p) :=
   rfl
-#align
-  adjoin_root.quot_map_C_map_span_mk_equiv_quot_map_C_quot_map_span_mk_symm_quot_quot_mk AdjoinRoot.quot_map_C_map_span_mk_equiv_quot_map_C_quot_map_span_mk_symm_quot_quot_mk
+#align adjoin_root.quot_map_C_map_span_mk_equiv_quot_map_C_quot_map_span_mk_symm_quot_quot_mk AdjoinRoot.quot_map_C_map_span_mk_equiv_quot_map_C_quot_map_span_mk_symm_quot_quot_mk
 
 /-- The natural isomorphism `(R/I)[x]/(f mod I) ≅ (R[x]/I*R[x])/(f mod I[x])` where
   `f : R[X]` and `I : ideal R`-/
@@ -731,8 +725,7 @@ theorem Polynomial.quot_quot_equiv_comm_symm_mk_mk (p : R[X]) :
   by
   simp only [polynomial.quot_quot_equiv_comm, quotient_equiv_symm_mk,
     polynomial_quotient_equiv_quotient_polynomial_symm_mk]
-#align
-  adjoin_root.polynomial.quot_quot_equiv_comm_symm_mk_mk AdjoinRoot.Polynomial.quot_quot_equiv_comm_symm_mk_mk
+#align adjoin_root.polynomial.quot_quot_equiv_comm_symm_mk_mk AdjoinRoot.Polynomial.quot_quot_equiv_comm_symm_mk_mk
 
 /-- The natural isomorphism `R[α]/I[α] ≅ (R/I)[X]/(f mod I)` for `α` a root of `f : R[X]`
   and `I : ideal R`.-/
@@ -746,8 +739,7 @@ def quotAdjoinRootEquivQuotPolynomialQuot :
                 span ({(Ideal.Quotient.mk (I Polynomial.c)) f} : Set (R[X] ⧸ map c I))
               by rw [map_span, Set.image_singleton])).trans
         (Polynomial.quotQuotEquivComm I f).symm))
-#align
-  adjoin_root.quot_adjoin_root_equiv_quot_polynomial_quot AdjoinRoot.quotAdjoinRootEquivQuotPolynomialQuot
+#align adjoin_root.quot_adjoin_root_equiv_quot_polynomial_quot AdjoinRoot.quotAdjoinRootEquivQuotPolynomialQuot
 
 @[simp]
 theorem quot_adjoin_root_equiv_quot_polynomial_quot_mk_of (p : R[X]) :
@@ -758,8 +750,7 @@ theorem quot_adjoin_root_equiv_quot_polynomial_quot_mk_of (p : R[X]) :
     RingEquiv.trans_apply, quot_map_of_equiv_quot_map_C_map_span_mk_mk,
     quot_map_C_map_span_mk_equiv_quot_map_C_quot_map_span_mk_mk, quot_quot_mk, RingHom.comp_apply,
     quot_equiv_of_eq_mk, polynomial.quot_quot_equiv_comm_symm_mk_mk]
-#align
-  adjoin_root.quot_adjoin_root_equiv_quot_polynomial_quot_mk_of AdjoinRoot.quot_adjoin_root_equiv_quot_polynomial_quot_mk_of
+#align adjoin_root.quot_adjoin_root_equiv_quot_polynomial_quot_mk_of AdjoinRoot.quot_adjoin_root_equiv_quot_polynomial_quot_mk_of
 
 @[simp]
 theorem quot_adjoin_root_equiv_quot_polynomial_quot_symm_mk_mk (p : R[X]) :
@@ -773,8 +764,7 @@ theorem quot_adjoin_root_equiv_quot_polynomial_quot_symm_mk_mk (p : R[X]) :
     RingHom.comp_apply, ← DoubleQuot.quotQuotMk,
     quot_map_C_map_span_mk_equiv_quot_map_C_quot_map_span_mk_symm_quot_quot_mk,
     quot_map_of_equiv_quot_map_C_map_span_mk_symm_mk]
-#align
-  adjoin_root.quot_adjoin_root_equiv_quot_polynomial_quot_symm_mk_mk AdjoinRoot.quot_adjoin_root_equiv_quot_polynomial_quot_symm_mk_mk
+#align adjoin_root.quot_adjoin_root_equiv_quot_polynomial_quot_symm_mk_mk AdjoinRoot.quot_adjoin_root_equiv_quot_polynomial_quot_symm_mk_mk
 
 /-- Promote `adjoin_root.quot_adjoin_root_equiv_quot_polynomial_quot` to an alg_equiv.  -/
 @[simps apply symmApply]
@@ -856,8 +846,7 @@ theorem quotient_equiv_quotient_minpoly_map_apply_mk (pb : PowerBasis R S) (I : 
     AlgEquiv.of_ring_equiv_apply, quotient_equiv_mk, AlgEquiv.coe_ring_equiv',
     AdjoinRoot.equiv'_symm_apply, PowerBasis.lift_aeval, AdjoinRoot.aeval_eq,
     AdjoinRoot.quot_equiv_quot_map_apply_mk]
-#align
-  power_basis.quotient_equiv_quotient_minpoly_map_apply_mk PowerBasis.quotient_equiv_quotient_minpoly_map_apply_mk
+#align power_basis.quotient_equiv_quotient_minpoly_map_apply_mk PowerBasis.quotient_equiv_quotient_minpoly_map_apply_mk
 
 @[simp]
 theorem quotient_equiv_quotient_minpoly_map_symm_apply_mk (pb : PowerBasis R S) (I : Ideal R)
@@ -869,8 +858,7 @@ theorem quotient_equiv_quotient_minpoly_map_symm_apply_mk (pb : PowerBasis R S) 
     quot_equiv_quot_map_symm_apply_mk, of_ring_equiv_symm_apply, quotient_equiv_symm_mk,
     to_ring_equiv_symm, RingEquiv.symm_symm, AdjoinRoot.equiv'_apply, coe_ring_equiv, lift_hom_mk,
     symm_to_ring_equiv]
-#align
-  power_basis.quotient_equiv_quotient_minpoly_map_symm_apply_mk PowerBasis.quotient_equiv_quotient_minpoly_map_symm_apply_mk
+#align power_basis.quotient_equiv_quotient_minpoly_map_symm_apply_mk PowerBasis.quotient_equiv_quotient_minpoly_map_symm_apply_mk
 
 end PowerBasis
 

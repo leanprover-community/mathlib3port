@@ -88,8 +88,7 @@ theorem is_glb_Ioc_of_is_glb_Ioi {i j k : ι} (hij_lt : i < j) (h : IsGLB (Set.I
   cases' le_or_lt y j with h_le h_lt
   · exact hx y ⟨hy, h_le⟩
   · exact le_trans (hx j ⟨hij_lt, le_rfl⟩) h_lt.le
-#align
-  linear_locally_finite_order.is_glb_Ioc_of_is_glb_Ioi LinearLocallyFiniteOrder.is_glb_Ioc_of_is_glb_Ioi
+#align linear_locally_finite_order.is_glb_Ioc_of_is_glb_Ioi LinearLocallyFiniteOrder.is_glb_Ioc_of_is_glb_Ioi
 
 theorem is_max_of_succ_fn_le [LocallyFiniteOrder ι] (i : ι) (hi : succFn i ≤ i) : IsMax i :=
   by
@@ -107,8 +106,7 @@ theorem is_max_of_succ_fn_le [LocallyFiniteOrder ι] (i : ι) (hi : succFn i ≤
     exact ⟨_, finset.mem_Ioc.mpr ⟨hij_lt, le_rfl⟩⟩
   rw [Finset.mem_Ioc] at hi_mem
   exact lt_irrefl i hi_mem.1
-#align
-  linear_locally_finite_order.is_max_of_succ_fn_le LinearLocallyFiniteOrder.is_max_of_succ_fn_le
+#align linear_locally_finite_order.is_max_of_succ_fn_le LinearLocallyFiniteOrder.is_max_of_succ_fn_le
 
 theorem succ_fn_le_of_lt (i j : ι) (hij : i < j) : succFn i ≤ j :=
   by
@@ -191,8 +189,7 @@ instance (priority := 100) LinearOrder.pred_archimedean_of_succ_archimedean [Suc
         exact le_succ _
       · rw [hn_eq]
         exact hn_lt_ne _ (Nat.lt_succ_self n)
-#align
-  linear_order.pred_archimedean_of_succ_archimedean LinearOrder.pred_archimedean_of_succ_archimedean
+#align linear_order.pred_archimedean_of_succ_archimedean LinearOrder.pred_archimedean_of_succ_archimedean
 
 section toZ
 

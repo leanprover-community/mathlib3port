@@ -48,8 +48,7 @@ def coimageObjIso : (Abelian.coimage α).obj X ≅ Abelian.coimage (α.app X) :=
         dsimp
         simp only [category.comp_id]
         exact (kernel_comparison_comp_ι _ ((evaluation C D).obj X)).symm)
-#align
-  category_theory.abelian.functor_category.coimage_obj_iso CategoryTheory.Abelian.FunctorCategory.coimageObjIso
+#align category_theory.abelian.functor_category.coimage_obj_iso CategoryTheory.Abelian.FunctorCategory.coimageObjIso
 
 /-- The abelian image in a functor category can be calculated componentwise. -/
 @[simps]
@@ -62,8 +61,7 @@ def imageObjIso : (Abelian.image α).obj X ≅ Abelian.image (α.app X) :=
         dsimp
         simp only [category.id_comp, category.comp_id]
         exact (π_comp_cokernel_comparison _ ((evaluation C D).obj X)).symm)
-#align
-  category_theory.abelian.functor_category.image_obj_iso CategoryTheory.Abelian.FunctorCategory.imageObjIso
+#align category_theory.abelian.functor_category.image_obj_iso CategoryTheory.Abelian.FunctorCategory.imageObjIso
 
 theorem coimage_image_comparison_app :
     coimageImageComparison (α.app X) =
@@ -78,8 +76,7 @@ theorem coimage_image_comparison_app :
   erw [π_comp_cokernel_comparison_assoc _ ((evaluation C D).obj X)]
   simp only [← functor.map_comp]
   simp only [coimage_image_factorisation, evaluation_obj_map]
-#align
-  category_theory.abelian.functor_category.coimage_image_comparison_app CategoryTheory.Abelian.FunctorCategory.coimage_image_comparison_app
+#align category_theory.abelian.functor_category.coimage_image_comparison_app CategoryTheory.Abelian.FunctorCategory.coimage_image_comparison_app
 
 theorem coimage_image_comparison_app' :
     (coimageImageComparison α).app X =
@@ -87,8 +84,7 @@ theorem coimage_image_comparison_app' :
   by
   simp only [coimage_image_comparison_app, iso.hom_inv_id_assoc, iso.hom_inv_id, category.assoc,
     category.comp_id]
-#align
-  category_theory.abelian.functor_category.coimage_image_comparison_app' CategoryTheory.Abelian.FunctorCategory.coimage_image_comparison_app'
+#align category_theory.abelian.functor_category.coimage_image_comparison_app' CategoryTheory.Abelian.FunctorCategory.coimage_image_comparison_app'
 
 instance functor_category_is_iso_coimage_image_comparison :
     IsIso (Abelian.coimageImageComparison α) :=
@@ -99,15 +95,13 @@ instance functor_category_is_iso_coimage_image_comparison :
     rw [coimage_image_comparison_app']
     infer_instance
   apply nat_iso.is_iso_of_is_iso_app
-#align
-  category_theory.abelian.functor_category.functor_category_is_iso_coimage_image_comparison CategoryTheory.Abelian.FunctorCategory.functor_category_is_iso_coimage_image_comparison
+#align category_theory.abelian.functor_category.functor_category_is_iso_coimage_image_comparison CategoryTheory.Abelian.FunctorCategory.functor_category_is_iso_coimage_image_comparison
 
 end FunctorCategory
 
 noncomputable instance functorCategoryAbelian : Abelian (C ⥤ D) :=
   abelian.of_coimage_image_comparison_is_iso
-#align
-  category_theory.abelian.functor_category_abelian CategoryTheory.Abelian.functorCategoryAbelian
+#align category_theory.abelian.functor_category_abelian CategoryTheory.Abelian.functorCategoryAbelian
 
 end
 
@@ -122,8 +116,7 @@ variable {D : Type (u + 1)} [LargeCategory D] [Abelian D]
 /-- A variant with specialized universes for a common case. -/
 noncomputable instance functorCategoryAbelian' : Abelian (C ⥤ D) :=
   abelian.functor_category_abelian.{u, u + 1, u, u}
-#align
-  category_theory.abelian.functor_category_abelian' CategoryTheory.Abelian.functorCategoryAbelian'
+#align category_theory.abelian.functor_category_abelian' CategoryTheory.Abelian.functorCategoryAbelian'
 
 end
 

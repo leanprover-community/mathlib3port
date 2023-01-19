@@ -483,8 +483,7 @@ theorem map_linear_map_volume_pi_eq_smul_volume_pi {f : (ι → ℝ) →ₗ[ℝ]
     rw [A, B]
     apply map_matrix_volume_pi_eq_smul_volume_pi
     rwa [A] at hf
-#align
-  real.map_linear_map_volume_pi_eq_smul_volume_pi Real.map_linear_map_volume_pi_eq_smul_volume_pi
+#align real.map_linear_map_volume_pi_eq_smul_volume_pi Real.map_linear_map_volume_pi_eq_smul_volume_pi
 
 end Real
 

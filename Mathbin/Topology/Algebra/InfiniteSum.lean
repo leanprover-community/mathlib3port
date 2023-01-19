@@ -301,8 +301,7 @@ theorem Function.Surjective.summable_iff_of_has_sum_iff {α' : Type _} [AddCommM
     [TopologicalSpace α'] {e : α' → α} (hes : Function.Surjective e) {f : β → α} {g : γ → α'}
     (he : ∀ {a}, HasSum f (e a) ↔ HasSum g a) : Summable f ↔ Summable g :=
   hes.exists.trans <| exists_congr <| @he
-#align
-  function.surjective.summable_iff_of_has_sum_iff Function.Surjective.summable_iff_of_has_sum_iff
+#align function.surjective.summable_iff_of_has_sum_iff Function.Surjective.summable_iff_of_has_sum_iff
 
 section MulOpposite
 
@@ -590,8 +589,7 @@ theorem Function.Surjective.tsum_eq_tsum_of_has_sum_iff_has_sum {α' : Type _} [
     by
     have hf : ¬Summable f := mt (hes.summable_iff_of_has_sum_iff @h).1 hg
     simp [tsum, hf, hg, h0]
-#align
-  function.surjective.tsum_eq_tsum_of_has_sum_iff_has_sum Function.Surjective.tsum_eq_tsum_of_has_sum_iff_has_sum
+#align function.surjective.tsum_eq_tsum_of_has_sum_iff_has_sum Function.Surjective.tsum_eq_tsum_of_has_sum_iff_has_sum
 
 theorem tsum_eq_tsum_of_has_sum_iff_has_sum {f : β → α} {g : γ → α}
     (h : ∀ {a}, HasSum f a ↔ HasSum g a) : (∑' b, f b) = ∑' c, g c :=
@@ -1961,8 +1959,7 @@ theorem summable_mul_prod_iff_summable_mul_sigma_antidiagonal {f g : ℕ → α}
     (Summable fun x : ℕ × ℕ => f x.1 * g x.2) ↔
       Summable fun x : Σn : ℕ, Nat.antidiagonal n => f (x.2 : ℕ × ℕ).1 * g (x.2 : ℕ × ℕ).2 :=
   Nat.sigmaAntidiagonalEquivProd.summable_iff.symm
-#align
-  summable_mul_prod_iff_summable_mul_sigma_antidiagonal summable_mul_prod_iff_summable_mul_sigma_antidiagonal
+#align summable_mul_prod_iff_summable_mul_sigma_antidiagonal summable_mul_prod_iff_summable_mul_sigma_antidiagonal
 
 variable [T3Space α] [TopologicalSemiring α]
 

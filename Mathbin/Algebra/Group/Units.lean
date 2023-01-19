@@ -109,7 +109,7 @@ Case conversion may be inaccurate. Consider using '#align units.simps.coe [anony
 @[to_additive " See Note [custom simps projection] "]
 def [anonymous] (u : αˣ) : α :=
   u
-#align units.simps.coe[anonymous]
+#align units.simps.coe [anonymous]
 
 /- warning: units.simps.coe_inv clashes with [anonymous] -> [anonymous]
 warning: units.simps.coe_inv -> [anonymous] is a dubious translation:
@@ -122,7 +122,7 @@ Case conversion may be inaccurate. Consider using '#align units.simps.coe_inv [a
 @[to_additive " See Note [custom simps projection] "]
 def [anonymous] (u : αˣ) : α :=
   ↑u⁻¹
-#align units.simps.coe_inv[anonymous]
+#align units.simps.coe_inv [anonymous]
 
 initialize_simps_projections Units (val → coe as_prefix, inv → CoeInv as_prefix)
 
@@ -292,7 +292,7 @@ Case conversion may be inaccurate. Consider using '#align units.val_eq_coe [anon
 @[simp, to_additive]
 theorem [anonymous] : a.val = (↑a : α) :=
   rfl
-#align units.val_eq_coe[anonymous]
+#align units.val_eq_coe [anonymous]
 
 #print Units.inv_eq_val_inv /-
 @[simp, to_additive]

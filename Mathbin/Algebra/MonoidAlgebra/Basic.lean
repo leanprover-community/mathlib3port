@@ -694,8 +694,7 @@ theorem single_eq_algebra_map_mul_of [CommSemiring k] [Monoid G] (a : G) (b : k)
 theorem single_algebra_map_eq_algebra_map_mul_of {A : Type _} [CommSemiring k] [Semiring A]
     [Algebra k A] [Monoid G] (a : G) (b : k) :
     single a (algebraMap k A b) = algebraMap k (MonoidAlgebra A G) b * of A G a := by simp
-#align
-  monoid_algebra.single_algebra_map_eq_algebra_map_mul_of MonoidAlgebra.single_algebra_map_eq_algebra_map_mul_of
+#align monoid_algebra.single_algebra_map_eq_algebra_map_mul_of MonoidAlgebra.single_algebra_map_eq_algebra_map_mul_of
 
 theorem induction_on [Semiring k] [Monoid G] {p : MonoidAlgebra k G → Prop} (f : MonoidAlgebra k G)
     (hM : ∀ g, p (of k G g)) (hadd : ∀ f g : MonoidAlgebra k G, p f → p g → p (f + g))
@@ -884,8 +883,7 @@ def equivariantOfLinearOfComm : V →ₗ[MonoidAlgebra k G] W
 @[simp]
 theorem equivariant_of_linear_of_comm_apply (v : V) : (equivariantOfLinearOfComm f h) v = f v :=
   rfl
-#align
-  monoid_algebra.equivariant_of_linear_of_comm_apply MonoidAlgebra.equivariant_of_linear_of_comm_apply
+#align monoid_algebra.equivariant_of_linear_of_comm_apply MonoidAlgebra.equivariant_of_linear_of_comm_apply
 
 end
 

@@ -414,8 +414,7 @@ protected theorem has_compact_support [FiniteDimensional ℝ E] : HasCompactSupp
 theorem eventually_eq_one_of_mem_ball (h : x ∈ ball c f.R) : f =ᶠ[𝓝 x] 1 :=
   ((is_open_lt (continuous_id.dist continuous_const) continuous_const).eventually_mem h).mono
     fun z hz => f.one_of_mem_closed_ball (le_of_lt hz)
-#align
-  cont_diff_bump_of_inner.eventually_eq_one_of_mem_ball ContDiffBumpOfInner.eventually_eq_one_of_mem_ball
+#align cont_diff_bump_of_inner.eventually_eq_one_of_mem_ball ContDiffBumpOfInner.eventually_eq_one_of_mem_ball
 
 theorem eventually_eq_one : f =ᶠ[𝓝 c] 1 :=
   f.eventually_eq_one_of_mem_ball (mem_ball_self f.r_pos)
@@ -531,8 +530,7 @@ theorem tsupport_normed_eq : tsupport (f.normed μ) = Metric.closedBall c f.r :=
 
 theorem has_compact_support_normed : HasCompactSupport (f.normed μ) := by
   simp_rw [HasCompactSupport, f.tsupport_normed_eq, is_compact_closed_ball]
-#align
-  cont_diff_bump_of_inner.has_compact_support_normed ContDiffBumpOfInner.has_compact_support_normed
+#align cont_diff_bump_of_inner.has_compact_support_normed ContDiffBumpOfInner.has_compact_support_normed
 
 theorem tendsto_support_normed_small_sets {ι} {φ : ι → ContDiffBumpOfInner c} {l : Filter ι}
     (hφ : Tendsto (fun i => (φ i).r) l (𝓝 0)) :
@@ -546,8 +544,7 @@ theorem tendsto_support_normed_small_sets {ι} {φ : ι → ContDiffBumpOfInner 
   refine' (hφ ε hε).mono fun i hi => subset_trans _ ht
   simp_rw [(φ i).support_normed_eq]
   exact ball_subset_ball hi.le
-#align
-  cont_diff_bump_of_inner.tendsto_support_normed_small_sets ContDiffBumpOfInner.tendsto_support_normed_small_sets
+#align cont_diff_bump_of_inner.tendsto_support_normed_small_sets ContDiffBumpOfInner.tendsto_support_normed_small_sets
 
 variable (μ)
 

@@ -50,16 +50,14 @@ theorem IndepFun.indepComapNaturalOfLt (hf : ∀ i, StronglyMeasurable (f i))
       (⨆ k ∈ { k | k ≤ i }, MeasurableSpace.comap (f k) mβ) μ
     by rwa [supᵢ_singleton] at this
   exact indep_supr_of_disjoint (fun k => (hf k).Measurable.comap_le) hfi (by simpa)
-#align
-  probability_theory.Indep_fun.indep_comap_natural_of_lt ProbabilityTheory.IndepFun.indepComapNaturalOfLt
+#align probability_theory.Indep_fun.indep_comap_natural_of_lt ProbabilityTheory.IndepFun.indepComapNaturalOfLt
 
 theorem IndepFun.condexp_natrual_ae_eq_of_lt [SecondCountableTopology β] [CompleteSpace β]
     [NormedSpace ℝ β] (hf : ∀ i, StronglyMeasurable (f i)) (hfi : IndepFun (fun i => mβ) f μ)
     (hij : i < j) : μ[f j|Filtration.natural f hf i] =ᵐ[μ] fun ω => μ[f j] :=
   condexp_indep_eq (hf j).Measurable.comap_le (Filtration.le _ _)
     (comap_measurable <| f j).StronglyMeasurable (hfi.indepComapNaturalOfLt hf hij)
-#align
-  probability_theory.Indep_fun.condexp_natrual_ae_eq_of_lt ProbabilityTheory.IndepFun.condexp_natrual_ae_eq_of_lt
+#align probability_theory.Indep_fun.condexp_natrual_ae_eq_of_lt ProbabilityTheory.IndepFun.condexp_natrual_ae_eq_of_lt
 
 theorem IndepSet.condexp_indicator_filtration_of_set_ae_eq (hsm : ∀ n, MeasurableSet (s n))
     (hs : IndepSet s μ) (hij : i < j) :
@@ -69,8 +67,7 @@ theorem IndepSet.condexp_indicator_filtration_of_set_ae_eq (hsm : ∀ n, Measura
   refine' (Indep_fun.condexp_natrual_ae_eq_of_lt _ hs.Indep_fun_indicator hij).trans _
   · simp only [integral_indicator_const _ (hsm _), Algebra.id.smul_eq_mul, mul_one]
   · infer_instance
-#align
-  probability_theory.Indep_set.condexp_indicator_filtration_of_set_ae_eq ProbabilityTheory.IndepSet.condexp_indicator_filtration_of_set_ae_eq
+#align probability_theory.Indep_set.condexp_indicator_filtration_of_set_ae_eq ProbabilityTheory.IndepSet.condexp_indicator_filtration_of_set_ae_eq
 
 open Filter
 

@@ -243,8 +243,7 @@ theorem UniformOnFun.has_continuous_smul_induced_of_image_bounded (h𝔖₁ : �
         rw [norm_inv, le_inv hrpos ha0]
         exact ha.le
       rwa [Set.mem_inv_smul_set_iff₀ ha0] at this
-#align
-  uniform_on_fun.has_continuous_smul_induced_of_image_bounded UniformOnFun.has_continuous_smul_induced_of_image_bounded
+#align uniform_on_fun.has_continuous_smul_induced_of_image_bounded UniformOnFun.has_continuous_smul_induced_of_image_bounded
 
 /-- Let `E` be a TVS, `𝔖 : set (set α)` and `H` a submodule of `α →ᵤ[𝔖] E`. If the image of any
 `S ∈ 𝔖` by any `u ∈ H` is bounded (in the sense of `bornology.is_vonN_bounded`), then `H`,
@@ -260,8 +259,7 @@ theorem UniformOnFun.has_continuous_smul_submodule_of_image_bounded (h𝔖₁ : 
     topological_add_group_induced (linear_map.id.dom_restrict H : H →ₗ[𝕜] α → E)
   UniformOnFun.has_continuous_smul_induced_of_image_bounded 𝕜 α E H h𝔖₁ h𝔖₂
     (linear_map.id.dom_restrict H : H →ₗ[𝕜] α → E) inducing_coe fun ⟨u, hu⟩ => h u hu
-#align
-  uniform_on_fun.has_continuous_smul_submodule_of_image_bounded UniformOnFun.has_continuous_smul_submodule_of_image_bounded
+#align uniform_on_fun.has_continuous_smul_submodule_of_image_bounded UniformOnFun.has_continuous_smul_submodule_of_image_bounded
 
 end Module
 

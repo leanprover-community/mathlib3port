@@ -239,8 +239,7 @@ theorem nonempty_fixed_point_of_prime_not_dvd_card (hpα : ¬p ∣ card α) [Fin
       contrapose! hpα
       rw [← Nat.modEq_zero_iff_dvd, ← hpα]
       exact hG.card_modeq_card_fixed_points α)
-#align
-  is_p_group.nonempty_fixed_point_of_prime_not_dvd_card IsPGroup.nonempty_fixed_point_of_prime_not_dvd_card
+#align is_p_group.nonempty_fixed_point_of_prime_not_dvd_card IsPGroup.nonempty_fixed_point_of_prime_not_dvd_card
 
 /-- If a p-group acts on `α` and the cardinality of `α` is a multiple
   of `p`, and the action has one fixed point, then it has another fixed point. -/
@@ -255,8 +254,7 @@ theorem exists_fixed_point_of_prime_dvd_card_of_fixed_point (hpα : p ∣ card �
   exact
     let ⟨⟨b, hb⟩, hba⟩ := exists_ne_of_one_lt_card hα ⟨a, ha⟩
     ⟨b, hb, fun hab => hba (by simp_rw [hab])⟩
-#align
-  is_p_group.exists_fixed_point_of_prime_dvd_card_of_fixed_point IsPGroup.exists_fixed_point_of_prime_dvd_card_of_fixed_point
+#align is_p_group.exists_fixed_point_of_prime_dvd_card_of_fixed_point IsPGroup.exists_fixed_point_of_prime_dvd_card_of_fixed_point
 
 theorem center_nontrivial [Nontrivial G] [Finite G] : Nontrivial (Subgroup.center G) := by
   classical
@@ -415,8 +413,7 @@ theorem cyclic_center_quotient_of_card_eq_prime_sq (hG : card G = p ^ 2) :
           ⟨Fintype.card_le_one_iff.1
               (mul_right_injective₀ (pow_ne_zero 2 (NeZero.ne p))
                   (hG.trans (mul_one (p ^ 2)).symm)).le⟩
-#align
-  is_p_group.cyclic_center_quotient_of_card_eq_prime_sq IsPGroup.cyclic_center_quotient_of_card_eq_prime_sq
+#align is_p_group.cyclic_center_quotient_of_card_eq_prime_sq IsPGroup.cyclic_center_quotient_of_card_eq_prime_sq
 
 /-- A group of order `p ^ 2` is commutative. See also `is_p_group.commutative_of_card_eq_prime_sq`
 for just the proof that `∀ a b, a * b = b * a` -/

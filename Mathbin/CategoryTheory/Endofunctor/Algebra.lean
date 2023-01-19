@@ -108,8 +108,7 @@ variable {A₀ A₁ A₂} (f : A₀ ⟶ A₁) (g : A₁ ⟶ A₂)
 @[simp]
 theorem comp_eq_comp : Algebra.Hom.comp f g = f ≫ g :=
   rfl
-#align
-  category_theory.endofunctor.algebra.comp_eq_comp CategoryTheory.Endofunctor.Algebra.comp_eq_comp
+#align category_theory.endofunctor.algebra.comp_eq_comp CategoryTheory.Endofunctor.Algebra.comp_eq_comp
 
 @[simp]
 theorem comp_f : (f ≫ g).1 = f.1 ≫ g.1 :=
@@ -150,12 +149,10 @@ theorem iso_of_iso (f : A₀ ⟶ A₁) [IsIso f.1] : IsIso f :=
 #align category_theory.endofunctor.algebra.iso_of_iso CategoryTheory.Endofunctor.Algebra.iso_of_iso
 
 instance forget_reflects_iso : ReflectsIsomorphisms (forget F) where reflects A B := iso_of_iso
-#align
-  category_theory.endofunctor.algebra.forget_reflects_iso CategoryTheory.Endofunctor.Algebra.forget_reflects_iso
+#align category_theory.endofunctor.algebra.forget_reflects_iso CategoryTheory.Endofunctor.Algebra.forget_reflects_iso
 
 instance forget_faithful : Faithful (forget F) where
-#align
-  category_theory.endofunctor.algebra.forget_faithful CategoryTheory.Endofunctor.Algebra.forget_faithful
+#align category_theory.endofunctor.algebra.forget_faithful CategoryTheory.Endofunctor.Algebra.forget_faithful
 
 /-- An algebra morphism with an underlying epimorphism hom in `C` is an algebra epimorphism. -/
 theorem epi_of_epi {X Y : Algebra F} (f : X ⟶ Y) [h : Epi f.1] : Epi f :=
@@ -165,8 +162,7 @@ theorem epi_of_epi {X Y : Algebra F} (f : X ⟶ Y) [h : Epi f.1] : Epi f :=
 /-- An algebra morphism with an underlying monomorphism hom in `C` is an algebra monomorphism. -/
 theorem mono_of_mono {X Y : Algebra F} (f : X ⟶ Y) [h : Mono f.1] : Mono f :=
   (forget F).mono_of_mono_map h
-#align
-  category_theory.endofunctor.algebra.mono_of_mono CategoryTheory.Endofunctor.Algebra.mono_of_mono
+#align category_theory.endofunctor.algebra.mono_of_mono CategoryTheory.Endofunctor.Algebra.mono_of_mono
 
 /-- From a natural transformation `α : G → F` we get a functor from
 algebras of `F` to algebras of `G`.
@@ -178,8 +174,7 @@ def functorOfNatTrans {F G : C ⥤ C} (α : G ⟶ F) : Algebra F ⥤ Algebra G
     { a := A.1
       str := α.app A.1 ≫ A.str }
   map A₀ A₁ f := { f := f.1 }
-#align
-  category_theory.endofunctor.algebra.functor_of_nat_trans CategoryTheory.Endofunctor.Algebra.functorOfNatTrans
+#align category_theory.endofunctor.algebra.functor_of_nat_trans CategoryTheory.Endofunctor.Algebra.functorOfNatTrans
 
 /-- The identity transformation induces the identity endofunctor on the category of algebras. -/
 @[simps (config := { rhsMd := semireducible })]
@@ -194,8 +189,7 @@ def functorOfNatTransId : functorOfNatTrans (𝟙 F) ≅ 𝟭 _ :=
     ext
     dsimp
     simp
-#align
-  category_theory.endofunctor.algebra.functor_of_nat_trans_id CategoryTheory.Endofunctor.Algebra.functorOfNatTransId
+#align category_theory.endofunctor.algebra.functor_of_nat_trans_id CategoryTheory.Endofunctor.Algebra.functorOfNatTransId
 
 /-- A composition of natural transformations gives the composition of corresponding functors. -/
 @[simps (config := { rhsMd := semireducible })]
@@ -211,8 +205,7 @@ def functorOfNatTransComp {F₀ F₁ F₂ : C ⥤ C} (α : F₀ ⟶ F₁) (β : 
     ext
     dsimp
     simp
-#align
-  category_theory.endofunctor.algebra.functor_of_nat_trans_comp CategoryTheory.Endofunctor.Algebra.functorOfNatTransComp
+#align category_theory.endofunctor.algebra.functor_of_nat_trans_comp CategoryTheory.Endofunctor.Algebra.functorOfNatTransComp
 
 /--
 If `α` and `β` are two equal natural transformations, then the functors of algebras induced by them
@@ -233,8 +226,7 @@ def functorOfNatTransEq {F G : C ⥤ C} {α β : F ⟶ G} (h : α = β) :
     ext
     dsimp
     simp
-#align
-  category_theory.endofunctor.algebra.functor_of_nat_trans_eq CategoryTheory.Endofunctor.Algebra.functorOfNatTransEq
+#align category_theory.endofunctor.algebra.functor_of_nat_trans_eq CategoryTheory.Endofunctor.Algebra.functorOfNatTransEq
 
 /-- Naturally isomorphic endofunctors give equivalent categories of algebras.
 Furthermore, they are equivalent as categories over `C`, that is,
@@ -248,8 +240,7 @@ def equivOfNatIso {F G : C ⥤ C} (α : F ≅ G) : Algebra F ≌ Algebra G
   unitIso := functorOfNatTransId.symm ≪≫ functorOfNatTransEq (by simp) ≪≫ functorOfNatTransComp _ _
   counitIso :=
     (functorOfNatTransComp _ _).symm ≪≫ functorOfNatTransEq (by simp) ≪≫ functor_of_nat_trans_id
-#align
-  category_theory.endofunctor.algebra.equiv_of_nat_iso CategoryTheory.Endofunctor.Algebra.equivOfNatIso
+#align category_theory.endofunctor.algebra.equiv_of_nat_iso CategoryTheory.Endofunctor.Algebra.equivOfNatIso
 
 namespace Initial
 
@@ -259,34 +250,29 @@ variable {A} (h : Limits.IsInitial A)
 @[simp]
 def strInv : A.1 ⟶ F.obj A.1 :=
   (h.to ⟨F.obj A.1, F.map A.str⟩).1
-#align
-  category_theory.endofunctor.algebra.initial.str_inv CategoryTheory.Endofunctor.Algebra.Initial.strInv
+#align category_theory.endofunctor.algebra.initial.str_inv CategoryTheory.Endofunctor.Algebra.Initial.strInv
 
 theorem left_inv' : (⟨strInv h ≫ A.str⟩ : A ⟶ A) = 𝟙 A :=
   Limits.IsInitial.hom_ext h _ (𝟙 A)
-#align
-  category_theory.endofunctor.algebra.initial.left_inv' CategoryTheory.Endofunctor.Algebra.Initial.left_inv'
+#align category_theory.endofunctor.algebra.initial.left_inv' CategoryTheory.Endofunctor.Algebra.Initial.left_inv'
 
 theorem left_inv : strInv h ≫ A.str = 𝟙 _ :=
   congr_arg Hom.f (left_inv' h)
-#align
-  category_theory.endofunctor.algebra.initial.left_inv CategoryTheory.Endofunctor.Algebra.Initial.left_inv
+#align category_theory.endofunctor.algebra.initial.left_inv CategoryTheory.Endofunctor.Algebra.Initial.left_inv
 
 theorem right_inv : A.str ≫ strInv h = 𝟙 _ :=
   by
   rw [str_inv, ← (h.to ⟨F.obj A.1, F.map A.str⟩).h, ← F.map_id, ← F.map_comp]
   congr
   exact left_inv h
-#align
-  category_theory.endofunctor.algebra.initial.right_inv CategoryTheory.Endofunctor.Algebra.Initial.right_inv
+#align category_theory.endofunctor.algebra.initial.right_inv CategoryTheory.Endofunctor.Algebra.Initial.right_inv
 
 /-- The structure map of the inital algebra is an isomorphism,
 hence endofunctors preserve their initial algebras
 -/
 theorem str_is_iso (h : Limits.IsInitial A) : IsIso A.str :=
   { out := ⟨strInv h, right_inv _, left_inv _⟩ }
-#align
-  category_theory.endofunctor.algebra.initial.str_is_iso CategoryTheory.Endofunctor.Algebra.Initial.str_is_iso
+#align category_theory.endofunctor.algebra.initial.str_is_iso CategoryTheory.Endofunctor.Algebra.Initial.str_is_iso
 
 end Initial
 
@@ -363,8 +349,7 @@ variable {V₀ V₁ V₂} (f : V₀ ⟶ V₁) (g : V₁ ⟶ V₂)
 @[simp]
 theorem comp_eq_comp : Coalgebra.Hom.comp f g = f ≫ g :=
   rfl
-#align
-  category_theory.endofunctor.coalgebra.comp_eq_comp CategoryTheory.Endofunctor.Coalgebra.comp_eq_comp
+#align category_theory.endofunctor.coalgebra.comp_eq_comp CategoryTheory.Endofunctor.Coalgebra.comp_eq_comp
 
 @[simp]
 theorem comp_f : (f ≫ g).1 = f.1 ≫ g.1 :=
@@ -403,28 +388,23 @@ theorem iso_of_iso (f : V₀ ⟶ V₁) [IsIso f.1] : IsIso f :=
           rw [is_iso.eq_inv_comp f.1, ← category.assoc, ← f.h, category.assoc]
           simp },
       by tidy⟩⟩
-#align
-  category_theory.endofunctor.coalgebra.iso_of_iso CategoryTheory.Endofunctor.Coalgebra.iso_of_iso
+#align category_theory.endofunctor.coalgebra.iso_of_iso CategoryTheory.Endofunctor.Coalgebra.iso_of_iso
 
 instance forget_reflects_iso : ReflectsIsomorphisms (forget F) where reflects A B := iso_of_iso
-#align
-  category_theory.endofunctor.coalgebra.forget_reflects_iso CategoryTheory.Endofunctor.Coalgebra.forget_reflects_iso
+#align category_theory.endofunctor.coalgebra.forget_reflects_iso CategoryTheory.Endofunctor.Coalgebra.forget_reflects_iso
 
 instance forget_faithful : Faithful (forget F) where
-#align
-  category_theory.endofunctor.coalgebra.forget_faithful CategoryTheory.Endofunctor.Coalgebra.forget_faithful
+#align category_theory.endofunctor.coalgebra.forget_faithful CategoryTheory.Endofunctor.Coalgebra.forget_faithful
 
 /-- An algebra morphism with an underlying epimorphism hom in `C` is an algebra epimorphism. -/
 theorem epi_of_epi {X Y : Coalgebra F} (f : X ⟶ Y) [h : Epi f.1] : Epi f :=
   (forget F).epi_of_epi_map h
-#align
-  category_theory.endofunctor.coalgebra.epi_of_epi CategoryTheory.Endofunctor.Coalgebra.epi_of_epi
+#align category_theory.endofunctor.coalgebra.epi_of_epi CategoryTheory.Endofunctor.Coalgebra.epi_of_epi
 
 /-- An algebra morphism with an underlying monomorphism hom in `C` is an algebra monomorphism. -/
 theorem mono_of_mono {X Y : Coalgebra F} (f : X ⟶ Y) [h : Mono f.1] : Mono f :=
   (forget F).mono_of_mono_map h
-#align
-  category_theory.endofunctor.coalgebra.mono_of_mono CategoryTheory.Endofunctor.Coalgebra.mono_of_mono
+#align category_theory.endofunctor.coalgebra.mono_of_mono CategoryTheory.Endofunctor.Coalgebra.mono_of_mono
 
 /-- From a natural transformation `α : F → G` we get a functor from
 coalgebras of `F` to coalgebras of `G`.
@@ -438,8 +418,7 @@ def functorOfNatTrans {F G : C ⥤ C} (α : F ⟶ G) : Coalgebra F ⥤ Coalgebra
   map V₀ V₁ f :=
     { f := f.1
       h' := by rw [category.assoc, ← α.naturality, ← category.assoc, f.h, category.assoc] }
-#align
-  category_theory.endofunctor.coalgebra.functor_of_nat_trans CategoryTheory.Endofunctor.Coalgebra.functorOfNatTrans
+#align category_theory.endofunctor.coalgebra.functor_of_nat_trans CategoryTheory.Endofunctor.Coalgebra.functorOfNatTrans
 
 /-- The identity transformation induces the identity endofunctor on the category of coalgebras. -/
 @[simps (config := { rhsMd := semireducible })]
@@ -454,8 +433,7 @@ def functorOfNatTransId : functorOfNatTrans (𝟙 F) ≅ 𝟭 _ :=
     ext
     dsimp
     simp
-#align
-  category_theory.endofunctor.coalgebra.functor_of_nat_trans_id CategoryTheory.Endofunctor.Coalgebra.functorOfNatTransId
+#align category_theory.endofunctor.coalgebra.functor_of_nat_trans_id CategoryTheory.Endofunctor.Coalgebra.functorOfNatTransId
 
 /-- A composition of natural transformations gives the composition of corresponding functors. -/
 @[simps (config := { rhsMd := semireducible })]
@@ -471,8 +449,7 @@ def functorOfNatTransComp {F₀ F₁ F₂ : C ⥤ C} (α : F₀ ⟶ F₁) (β : 
     ext
     dsimp
     simp
-#align
-  category_theory.endofunctor.coalgebra.functor_of_nat_trans_comp CategoryTheory.Endofunctor.Coalgebra.functorOfNatTransComp
+#align category_theory.endofunctor.coalgebra.functor_of_nat_trans_comp CategoryTheory.Endofunctor.Coalgebra.functorOfNatTransComp
 
 /-- If `α` and `β` are two equal natural transformations, then the functors of coalgebras induced by
 them are isomorphic.
@@ -492,8 +469,7 @@ def functorOfNatTransEq {F G : C ⥤ C} {α β : F ⟶ G} (h : α = β) :
     ext
     dsimp
     simp
-#align
-  category_theory.endofunctor.coalgebra.functor_of_nat_trans_eq CategoryTheory.Endofunctor.Coalgebra.functorOfNatTransEq
+#align category_theory.endofunctor.coalgebra.functor_of_nat_trans_eq CategoryTheory.Endofunctor.Coalgebra.functorOfNatTransEq
 
 /-- Naturally isomorphic endofunctors give equivalent categories of coalgebras.
 Furthermore, they are equivalent as categories over `C`, that is,
@@ -507,8 +483,7 @@ def equivOfNatIso {F G : C ⥤ C} (α : F ≅ G) : Coalgebra F ≌ Coalgebra G
   unitIso := functorOfNatTransId.symm ≪≫ functorOfNatTransEq (by simp) ≪≫ functorOfNatTransComp _ _
   counitIso :=
     (functorOfNatTransComp _ _).symm ≪≫ functorOfNatTransEq (by simp) ≪≫ functor_of_nat_trans_id
-#align
-  category_theory.endofunctor.coalgebra.equiv_of_nat_iso CategoryTheory.Endofunctor.Coalgebra.equivOfNatIso
+#align category_theory.endofunctor.coalgebra.equiv_of_nat_iso CategoryTheory.Endofunctor.Coalgebra.equivOfNatIso
 
 end Coalgebra
 
@@ -519,16 +494,14 @@ variable {F : C ⥤ C} {G : C ⥤ C}
 theorem Algebra.hom_equiv_naturality_str (adj : F ⊣ G) (A₁ A₂ : Algebra F) (f : A₁ ⟶ A₂) :
     (adj.homEquiv A₁.a A₁.a) A₁.str ≫ G.map f.f = f.f ≫ (adj.homEquiv A₂.a A₂.a) A₂.str := by
   rw [← adjunction.hom_equiv_naturality_right, ← adjunction.hom_equiv_naturality_left, f.h]
-#align
-  category_theory.endofunctor.adjunction.algebra.hom_equiv_naturality_str CategoryTheory.Endofunctor.Adjunction.Algebra.hom_equiv_naturality_str
+#align category_theory.endofunctor.adjunction.algebra.hom_equiv_naturality_str CategoryTheory.Endofunctor.Adjunction.Algebra.hom_equiv_naturality_str
 
 theorem Coalgebra.hom_equiv_naturality_str_symm (adj : F ⊣ G) (V₁ V₂ : Coalgebra G) (f : V₁ ⟶ V₂) :
     F.map f.f ≫ (adj.homEquiv V₂.V V₂.V).symm V₂.str = (adj.homEquiv V₁.V V₁.V).symm V₁.str ≫ f.f :=
   by
   rw [← adjunction.hom_equiv_naturality_left_symm, ← adjunction.hom_equiv_naturality_right_symm,
     f.h]
-#align
-  category_theory.endofunctor.adjunction.coalgebra.hom_equiv_naturality_str_symm CategoryTheory.Endofunctor.Adjunction.Coalgebra.hom_equiv_naturality_str_symm
+#align category_theory.endofunctor.adjunction.coalgebra.hom_equiv_naturality_str_symm CategoryTheory.Endofunctor.Adjunction.Coalgebra.hom_equiv_naturality_str_symm
 
 /-- Given an adjunction `F ⊣ G`, the functor that associates to an algebra over `F` a
 coalgebra over `G` defined via adjunction applied to the structure map. -/
@@ -540,8 +513,7 @@ def Algebra.toCoalgebraOf (adj : F ⊣ G) : Algebra F ⥤ Coalgebra G
   map A₁ A₂ f :=
     { f := f.1
       h' := Algebra.hom_equiv_naturality_str adj A₁ A₂ f }
-#align
-  category_theory.endofunctor.adjunction.algebra.to_coalgebra_of CategoryTheory.Endofunctor.Adjunction.Algebra.toCoalgebraOf
+#align category_theory.endofunctor.adjunction.algebra.to_coalgebra_of CategoryTheory.Endofunctor.Adjunction.Algebra.toCoalgebraOf
 
 /-- Given an adjunction `F ⊣ G`, the functor that associates to a coalgebra over `G` an algebra over
 `F` defined via adjunction applied to the structure map. -/
@@ -553,8 +525,7 @@ def Coalgebra.toAlgebraOf (adj : F ⊣ G) : Coalgebra G ⥤ Algebra F
   map V₁ V₂ f :=
     { f := f.1
       h' := Coalgebra.hom_equiv_naturality_str_symm adj V₁ V₂ f }
-#align
-  category_theory.endofunctor.adjunction.coalgebra.to_algebra_of CategoryTheory.Endofunctor.Adjunction.Coalgebra.toAlgebraOf
+#align category_theory.endofunctor.adjunction.coalgebra.to_algebra_of CategoryTheory.Endofunctor.Adjunction.Coalgebra.toAlgebraOf
 
 /-- Given an adjunction, assigning to an algebra over the left adjoint a coalgebra over its right
 adjoint and going back is isomorphic to the identity functor. -/
@@ -589,8 +560,7 @@ def AlgCoalgEquiv.unitIso (adj : F ⊣ G) :
   inv_hom_id' := by
     ext
     exact category.comp_id _
-#align
-  category_theory.endofunctor.adjunction.alg_coalg_equiv.unit_iso CategoryTheory.Endofunctor.Adjunction.AlgCoalgEquiv.unitIso
+#align category_theory.endofunctor.adjunction.alg_coalg_equiv.unit_iso CategoryTheory.Endofunctor.Adjunction.AlgCoalgEquiv.unitIso
 
 /-- Given an adjunction, assigning to a coalgebra over the right adjoint an algebra over the left
 adjoint and going back is isomorphic to the identity functor. -/
@@ -627,8 +597,7 @@ def AlgCoalgEquiv.counitIso (adj : F ⊣ G) :
   inv_hom_id' := by
     ext
     exact category.comp_id _
-#align
-  category_theory.endofunctor.adjunction.alg_coalg_equiv.counit_iso CategoryTheory.Endofunctor.Adjunction.AlgCoalgEquiv.counitIso
+#align category_theory.endofunctor.adjunction.alg_coalg_equiv.counit_iso CategoryTheory.Endofunctor.Adjunction.AlgCoalgEquiv.counitIso
 
 /-- If `F` is left adjoint to `G`, then the category of algebras over `F` is equivalent to the
 category of coalgebras over `G`. -/
@@ -641,8 +610,7 @@ def algebraCoalgebraEquiv (adj : F ⊣ G) : Algebra F ≌ Coalgebra G
   functor_unit_iso_comp' A := by
     ext
     exact category.comp_id _
-#align
-  category_theory.endofunctor.adjunction.algebra_coalgebra_equiv CategoryTheory.Endofunctor.Adjunction.algebraCoalgebraEquiv
+#align category_theory.endofunctor.adjunction.algebra_coalgebra_equiv CategoryTheory.Endofunctor.Adjunction.algebraCoalgebraEquiv
 
 end Adjunction
 

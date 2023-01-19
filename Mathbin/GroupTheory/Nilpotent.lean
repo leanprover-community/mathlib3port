@@ -211,8 +211,7 @@ variable (G)
 theorem upper_central_series_is_ascending_central_series :
     IsAscendingCentralSeries (upperCentralSeries G) :=
   ⟨rfl, fun x n h => h⟩
-#align
-  upper_central_series_is_ascending_central_series upper_central_series_is_ascending_central_series
+#align upper_central_series_is_ascending_central_series upper_central_series_is_ascending_central_series
 
 theorem upper_central_series_mono : Monotone (upperCentralSeries G) :=
   by
@@ -343,8 +342,7 @@ theorem lower_central_series_is_descending_central_series :
   constructor; rfl
   intro x n hxn g
   exact commutator_mem_commutator hxn (mem_top g)
-#align
-  lower_central_series_is_descending_central_series lower_central_series_is_descending_central_series
+#align lower_central_series_is_descending_central_series lower_central_series_is_descending_central_series
 
 /-- Any descending central series for a group is bounded below by the lower central series. -/
 theorem descending_central_series_ge_lower (H : ℕ → Subgroup G) (hH : IsDescendingCentralSeries H) :
@@ -401,8 +399,7 @@ theorem upper_central_series_eq_top_iff_nilpotency_class_le {n : ℕ} :
     apply eq_top_iff.mpr
     rw [← upper_central_series_nilpotency_class]
     exact upper_central_series_mono _ h
-#align
-  upper_central_series_eq_top_iff_nilpotency_class_le upper_central_series_eq_top_iff_nilpotency_class_le
+#align upper_central_series_eq_top_iff_nilpotency_class_le upper_central_series_eq_top_iff_nilpotency_class_le
 
 /-- The nilpotency class of a nilpotent `G` is equal to the smallest `n` for which an ascending
 central series reaches `G` in its `n`'th term. -/
@@ -415,8 +412,7 @@ theorem least_ascending_central_series_length_eq_nilpotency_class :
   · rintro n ⟨H, ⟨hH, hn⟩⟩
     rw [← top_le_iff, ← hn]
     exact ascending_central_series_le_upper H hH n
-#align
-  least_ascending_central_series_length_eq_nilpotency_class least_ascending_central_series_length_eq_nilpotency_class
+#align least_ascending_central_series_length_eq_nilpotency_class least_ascending_central_series_length_eq_nilpotency_class
 
 /-- The nilpotency class of a nilpotent `G` is equal to the smallest `n` for which the descending
 central series reaches `⊥` in its `n`'th term. -/
@@ -433,8 +429,7 @@ theorem least_descending_central_series_length_eq_nilpotency_class :
     refine' ⟨fun m => H (n - m), is_ascending_rev_series_of_is_descending G hn hH, _⟩
     rw [tsub_self]
     exact hH.1
-#align
-  least_descending_central_series_length_eq_nilpotency_class least_descending_central_series_length_eq_nilpotency_class
+#align least_descending_central_series_length_eq_nilpotency_class least_descending_central_series_length_eq_nilpotency_class
 
 /-- The nilpotency class of a nilpotent `G` is equal to the length of the lower central series. -/
 theorem lower_central_series_length_eq_nilpotency_class :
@@ -447,8 +442,7 @@ theorem lower_central_series_length_eq_nilpotency_class :
     exact descending_central_series_ge_lower H hH n
   · rintro n h
     exact ⟨lowerCentralSeries G, ⟨lower_central_series_is_descending_central_series, h⟩⟩
-#align
-  lower_central_series_length_eq_nilpotency_class lower_central_series_length_eq_nilpotency_class
+#align lower_central_series_length_eq_nilpotency_class lower_central_series_length_eq_nilpotency_class
 
 @[simp]
 theorem lower_central_series_nilpotency_class :
@@ -469,8 +463,7 @@ theorem lower_central_series_eq_bot_iff_nilpotency_class_le {n : ℕ} :
     apply eq_bot_iff.mpr
     rw [← lower_central_series_nilpotency_class]
     exact lower_central_series_antitone h
-#align
-  lower_central_series_eq_bot_iff_nilpotency_class_le lower_central_series_eq_bot_iff_nilpotency_class_le
+#align lower_central_series_eq_bot_iff_nilpotency_class_le lower_central_series_eq_bot_iff_nilpotency_class_le
 
 end Classical
 

@@ -64,8 +64,7 @@ theorem injective_of_injective_as_module [Injective (⟨A⟩ : ModuleCat ℤ)] :
       refine' ⟨(injective.factor_thru G F).toAddMonoidHom, _⟩
       ext
       convert FunLike.congr_fun (injective.comp_factor_thru G F) x }
-#align
-  AddCommGroup.injective_of_injective_as_module AddCommGroupCat.injective_of_injective_as_module
+#align AddCommGroup.injective_of_injective_as_module AddCommGroupCat.injective_of_injective_as_module
 
 theorem injective_as_module_of_injective_as_Ab [Injective (⟨A⟩ : AddCommGroupCat)] :
     Injective (⟨A⟩ : ModuleCat ℤ) :=
@@ -89,8 +88,7 @@ theorem injective_as_module_of_injective_as_Ab [Injective (⟨A⟩ : AddCommGrou
         · simp only [sub_smul, map_sub, hn, one_smul]
       ext
       convert FunLike.congr_fun (injective.comp_factor_thru G F) x }
-#align
-  AddCommGroup.injective_as_module_of_injective_as_Ab AddCommGroupCat.injective_as_module_of_injective_as_Ab
+#align AddCommGroup.injective_as_module_of_injective_as_Ab AddCommGroupCat.injective_as_module_of_injective_as_Ab
 
 instance injective_of_divisible [DivisibleBy A ℤ] :
     CategoryTheory.Injective (⟨A⟩ : AddCommGroupCat) :=

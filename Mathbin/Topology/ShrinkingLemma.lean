@@ -79,8 +79,7 @@ theorem subset_Union (v : PartialRefinement u s) : s ⊆ ⋃ i, v i :=
 theorem closure_subset (v : PartialRefinement u s) {i : ι} (hi : i ∈ v.carrier) :
     closure (v i) ⊆ u i :=
   v.closure_subset' i hi
-#align
-  shrinking_lemma.partial_refinement.closure_subset ShrinkingLemma.PartialRefinement.closure_subset
+#align shrinking_lemma.partial_refinement.closure_subset ShrinkingLemma.PartialRefinement.closure_subset
 
 theorem apply_eq (v : PartialRefinement u s) {i : ι} (hi : i ∉ v.carrier) : v i = u i :=
   v.apply_eq' i hi
@@ -117,15 +116,13 @@ theorem apply_eq_of_chain {c : Set (PartialRefinement u s)} (hc : IsChain (· �
   by
   wlog hle : v₁ ≤ v₂ := hc.total h₁ h₂ using v₁ v₂, v₂ v₁
   exact hle.2 _ hi₁
-#align
-  shrinking_lemma.partial_refinement.apply_eq_of_chain ShrinkingLemma.PartialRefinement.apply_eq_of_chain
+#align shrinking_lemma.partial_refinement.apply_eq_of_chain ShrinkingLemma.PartialRefinement.apply_eq_of_chain
 
 /-- The carrier of the least upper bound of a non-empty chain of partial refinements
 is the union of their carriers. -/
 def chainSupCarrier (c : Set (PartialRefinement u s)) : Set ι :=
   ⋃ v ∈ c, carrier v
-#align
-  shrinking_lemma.partial_refinement.chain_Sup_carrier ShrinkingLemma.PartialRefinement.chainSupCarrier
+#align shrinking_lemma.partial_refinement.chain_Sup_carrier ShrinkingLemma.PartialRefinement.chainSupCarrier
 
 /-- Choice of an element of a nonempty chain of partial refinements. If `i` belongs to one of
 `carrier v`, `v ∈ c`, then `find c ne i` is one of these partial refinements. -/
@@ -150,15 +147,13 @@ theorem mem_find_carrier_iff {c : Set (PartialRefinement u s)} {i : ι} (ne : c.
   · have : i ∉ ne.some.carrier ∧ i ∉ chain_Sup_carrier c :=
       ⟨fun hi => h ⟨_, ne.some_spec, hi⟩, mt mem_Union₂.1 h⟩
     simp only [this]
-#align
-  shrinking_lemma.partial_refinement.mem_find_carrier_iff ShrinkingLemma.PartialRefinement.mem_find_carrier_iff
+#align shrinking_lemma.partial_refinement.mem_find_carrier_iff ShrinkingLemma.PartialRefinement.mem_find_carrier_iff
 
 theorem find_apply_of_mem {c : Set (PartialRefinement u s)} (hc : IsChain (· ≤ ·) c)
     (ne : c.Nonempty) {i v} (hv : v ∈ c) (hi : i ∈ carrier v) : find c Ne i i = v i :=
   apply_eq_of_chain hc (find_mem _ _) hv ((mem_find_carrier_iff _).2 <| mem_unionᵢ₂.2 ⟨v, hv, hi⟩)
     hi
-#align
-  shrinking_lemma.partial_refinement.find_apply_of_mem ShrinkingLemma.PartialRefinement.find_apply_of_mem
+#align shrinking_lemma.partial_refinement.find_apply_of_mem ShrinkingLemma.PartialRefinement.find_apply_of_mem
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (i «expr ∉ » chain_Sup_carrier c) -/
 /-- Least upper bound of a nonempty chain of partial refinements. -/

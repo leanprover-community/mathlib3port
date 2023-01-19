@@ -93,8 +93,7 @@ instance forgetToCatFull : Full forgetToCat where preimage C D := id
 #align category_theory.Groupoid.forget_to_Cat_full CategoryTheory.GroupoidCat.forgetToCatFull
 
 instance forget_to_Cat_faithful : Faithful forgetToCat where
-#align
-  category_theory.Groupoid.forget_to_Cat_faithful CategoryTheory.GroupoidCat.forget_to_Cat_faithful
+#align category_theory.Groupoid.forget_to_Cat_faithful CategoryTheory.GroupoidCat.forget_to_Cat_faithful
 
 /-- Convert arrows in the category of groupoids to functors,
 which sometimes helps in applying simp lemmas -/

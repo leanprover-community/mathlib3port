@@ -77,8 +77,7 @@ theorem FormallyEtale.iff_unramified_and_smooth :
   rw [formally_unramified_iff, formally_smooth_iff, formally_etale_iff]
   simp_rw [← forall_and]
   rfl
-#align
-  algebra.formally_etale.iff_unramified_and_smooth Algebra.FormallyEtale.iff_unramified_and_smooth
+#align algebra.formally_etale.iff_unramified_and_smooth Algebra.FormallyEtale.iff_unramified_and_smooth
 
 instance (priority := 100) FormallyEtale.toUnramified [h : FormallyEtale R A] :
     FormallyUnramified R A :=
@@ -129,8 +128,7 @@ theorem FormallyUnramified.lift_unique_of_ring_hom [FormallyUnramified R A] {C :
       have := RingHom.congr_fun h x
       simpa only [Ideal.Quotient.eq, Function.comp_apply, AlgHom.coe_comp, Ideal.Quotient.mkₐ_eq_mk,
         RingHom.mem_ker, map_sub, sub_eq_zero] )
-#align
-  algebra.formally_unramified.lift_unique_of_ring_hom Algebra.FormallyUnramified.lift_unique_of_ring_hom
+#align algebra.formally_unramified.lift_unique_of_ring_hom Algebra.FormallyUnramified.lift_unique_of_ring_hom
 
 theorem FormallyUnramified.ext' [FormallyUnramified R A] {C : Type u} [CommRing C] (f : B →+* C)
     (hf : IsNilpotent f.ker) (g₁ g₂ : A →ₐ[R] B) (h : ∀ x, f (g₁ x) = f (g₂ x)) : g₁ = g₂ :=
@@ -210,16 +208,14 @@ theorem FormallySmooth.lift_of_surjective_apply [FormallySmooth R A] (f : A →�
   rw [AlgEquiv.apply_symm_apply, Ideal.quotientKerAlgEquivOfSurjective,
     Ideal.quotientKerAlgEquivOfRightInverse.apply]
   exact (Ideal.ker_lift_alg_mk _ _).symm
-#align
-  algebra.formally_smooth.lift_of_surjective_apply Algebra.FormallySmooth.lift_of_surjective_apply
+#align algebra.formally_smooth.lift_of_surjective_apply Algebra.FormallySmooth.lift_of_surjective_apply
 
 @[simp]
 theorem FormallySmooth.comp_lift_of_surjective [FormallySmooth R A] (f : A →ₐ[R] C) (g : B →ₐ[R] C)
     (hg : Function.Surjective g) (hg' : IsNilpotent (g : B →+* C).ker) :
     g.comp (FormallySmooth.liftOfSurjective f g hg hg') = f :=
   AlgHom.ext (FormallySmooth.lift_of_surjective_apply f g hg hg')
-#align
-  algebra.formally_smooth.comp_lift_of_surjective Algebra.FormallySmooth.comp_lift_of_surjective
+#align algebra.formally_smooth.comp_lift_of_surjective Algebra.FormallySmooth.comp_lift_of_surjective
 
 end
 
@@ -425,8 +421,7 @@ instance FormallyUnramified.subsingleton_kaehler_differential [FormallyUnramifie
   apply formally_unramified.lift_unique' _ _ _ _ (f₁.2.trans f₂.2.symm)
   rw [← AlgHom.to_ring_hom_eq_coe, AlgHom.ker_ker_sqare_lift]
   exact ⟨_, Ideal.cotangent_ideal_square _⟩
-#align
-  algebra.formally_unramified.subsingleton_kaehler_differential Algebra.FormallyUnramified.subsingleton_kaehler_differential
+#align algebra.formally_unramified.subsingleton_kaehler_differential Algebra.FormallyUnramified.subsingleton_kaehler_differential
 
 theorem FormallyUnramified.iff_subsingleton_kaehler_differential :
     FormallyUnramified R S ↔ Subsingleton (Ω[S⁄R]) :=
@@ -443,8 +438,7 @@ theorem FormallyUnramified.iff_subsingleton_kaehler_differential :
       ((KaehlerDifferential.linearMapEquivDerivation R S).toEquiv.trans
             (derivationToSquareZeroEquivLift I hI)).Surjective.Subsingleton
     exact subtype.ext_iff.mp (@Subsingleton.elim this ⟨f₁, rfl⟩ ⟨f₂, e.symm⟩)
-#align
-  algebra.formally_unramified.iff_subsingleton_kaehler_differential Algebra.FormallyUnramified.iff_subsingleton_kaehler_differential
+#align algebra.formally_unramified.iff_subsingleton_kaehler_differential Algebra.FormallyUnramified.iff_subsingleton_kaehler_differential
 
 end UnramifiedDerivation
 

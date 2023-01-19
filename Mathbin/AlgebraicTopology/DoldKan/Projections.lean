@@ -110,8 +110,7 @@ theorem of_P : ∀ q n : ℕ, HigherFacesVanish q ((p q).f (n + 1) : X _[n + 1] 
   | q + 1 => fun n => by
     unfold P
     exact (of_P q n).induction
-#align
-  algebraic_topology.dold_kan.higher_faces_vanish.of_P AlgebraicTopology.DoldKan.HigherFacesVanish.of_P
+#align algebraic_topology.dold_kan.higher_faces_vanish.of_P AlgebraicTopology.DoldKan.HigherFacesVanish.of_P
 
 @[reassoc.1]
 theorem comp_P_eq_self {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFacesVanish q φ) :
@@ -131,8 +130,7 @@ theorem comp_P_eq_self {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFa
         v ⟨a, by linarith⟩ (by simp only [hnaq, Fin.val_mk, Nat.succ_eq_add_one, add_assoc])
       simp only [Fin.succ_mk] at eq
       simp only [Eq, zero_comp]
-#align
-  algebraic_topology.dold_kan.higher_faces_vanish.comp_P_eq_self AlgebraicTopology.DoldKan.HigherFacesVanish.comp_P_eq_self
+#align algebraic_topology.dold_kan.higher_faces_vanish.comp_P_eq_self AlgebraicTopology.DoldKan.HigherFacesVanish.comp_P_eq_self
 
 end HigherFacesVanish
 

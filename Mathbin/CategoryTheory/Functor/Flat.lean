@@ -80,8 +80,7 @@ def toDiagram : J ⥤ StructuredArrow c.x K
 def diagramToCone {X : D} (G : J ⥤ StructuredArrow X F) : Cone (G ⋙ proj X F ⋙ F) :=
   { x
     π := { app := fun j => (G.obj j).Hom } }
-#align
-  category_theory.structured_arrow_cone.diagram_to_cone CategoryTheory.StructuredArrowCone.diagramToCone
+#align category_theory.structured_arrow_cone.diagram_to_cone CategoryTheory.StructuredArrowCone.diagramToCone
 
 /-- Given a cone `c : cone K` and a map `f : X ⟶ F.obj c.X`, we can construct a cone of structured
 arrows over `X` with `f` as the cone point.
@@ -194,8 +193,7 @@ theorem cofiltered_of_has_finite_limits [HasFiniteLimits C] : IsCofiltered C :=
   { cone_objs := fun A B => ⟨Limits.prod A B, Limits.prod.fst, Limits.prod.snd, trivial⟩
     cone_maps := fun A B f g => ⟨equalizer f g, equalizer.ι f g, equalizer.condition f g⟩
     Nonempty := ⟨⊤_ C⟩ }
-#align
-  category_theory.cofiltered_of_has_finite_limits CategoryTheory.cofiltered_of_has_finite_limits
+#align category_theory.cofiltered_of_has_finite_limits CategoryTheory.cofiltered_of_has_finite_limits
 
 theorem flat_of_preserves_finite_limits [HasFiniteLimits C] (F : C ⥤ D) [PreservesFiniteLimits F] :
     RepresentablyFlat F :=
@@ -205,8 +203,7 @@ theorem flat_of_preserves_finite_limits [HasFiniteLimits C] (F : C ⥤ D) [Prese
       apply hasFiniteLimitsOfHasFiniteLimitsOfSize.{v₁} (structured_arrow X F)
       intro J sJ fJ; skip; constructor
     cofiltered_of_has_finite_limits⟩
-#align
-  category_theory.flat_of_preserves_finite_limits CategoryTheory.flat_of_preserves_finite_limits
+#align category_theory.flat_of_preserves_finite_limits CategoryTheory.flat_of_preserves_finite_limits
 
 namespace PreservesFiniteLimitsOfFlat
 
@@ -233,13 +230,11 @@ noncomputable def lift : s.x ⟶ F.obj c.x :=
               ({  app := fun X => 𝟙 _
                   naturality' := by simp } : (toDiagram s ⋙ pre s.x K F) ⋙ proj s.x F ⟶ K)).obj <|
           (StructuredArrow.proj s.x F).mapCone s')
-#align
-  category_theory.preserves_finite_limits_of_flat.lift CategoryTheory.PreservesFiniteLimitsOfFlat.lift
+#align category_theory.preserves_finite_limits_of_flat.lift CategoryTheory.PreservesFiniteLimitsOfFlat.lift
 
 theorem fac (x : J) : lift F hc s ≫ (F.mapCone c).π.app x = s.π.app x := by
   simpa [lift, ← functor.map_comp]
-#align
-  category_theory.preserves_finite_limits_of_flat.fac CategoryTheory.PreservesFiniteLimitsOfFlat.fac
+#align category_theory.preserves_finite_limits_of_flat.fac CategoryTheory.PreservesFiniteLimitsOfFlat.fac
 
 attribute [local simp] eq_to_hom_map
 
@@ -1848,8 +1843,7 @@ theorem
             _ = c₀.X.hom ≫ F.map g₂.right := by rw [ this ]
             _ = 𝟙 _ ≫ f₂ := g₂.w.symm
             _ = f₂ := by simp
-#align
-  category_theory.preserves_finite_limits_of_flat.uniq CategoryTheory.PreservesFiniteLimitsOfFlat.uniq
+#align category_theory.preserves_finite_limits_of_flat.uniq CategoryTheory.PreservesFiniteLimitsOfFlat.uniq
 
 end PreservesFiniteLimitsOfFlat
 
@@ -1931,8 +1925,7 @@ noncomputable instance lanPreservesFiniteLimitsOfFlat (F : C ⥤ D) [Representab
   haveI : is_filtered (costructured_arrow F.op K) :=
     is_filtered.of_equivalence (structured_arrow_op_equivalence F (unop K))
   exact preserves_limits_of_shape_of_nat_iso (Lan_evaluation_iso_colim _ _ _).symm
-#align
-  category_theory.Lan_preserves_finite_limits_of_flat CategoryTheory.lanPreservesFiniteLimitsOfFlat
+#align category_theory.Lan_preserves_finite_limits_of_flat CategoryTheory.lanPreservesFiniteLimitsOfFlat
 
 instance Lan_flat_of_flat (F : C ⥤ D) [RepresentablyFlat F] :
     RepresentablyFlat (lan F.op : _ ⥤ Dᵒᵖ ⥤ E) :=
@@ -1946,8 +1939,7 @@ noncomputable instance lanPreservesFiniteLimitsOfPreservesFiniteLimits (F : C �
   by
   haveI := flat_of_preserves_finite_limits F
   infer_instance
-#align
-  category_theory.Lan_preserves_finite_limits_of_preserves_finite_limits CategoryTheory.lanPreservesFiniteLimitsOfPreservesFiniteLimits
+#align category_theory.Lan_preserves_finite_limits_of_preserves_finite_limits CategoryTheory.lanPreservesFiniteLimitsOfPreservesFiniteLimits
 
 theorem flat_iff_Lan_flat (F : C ⥤ D) :
     RepresentablyFlat F ↔ RepresentablyFlat (lan F.op : _ ⥤ Dᵒᵖ ⥤ Type u₁) :=
@@ -1981,8 +1973,7 @@ noncomputable def preservesFiniteLimitsIffLanPreservesFiniteLimits (F : C ⥤ D)
     unfold
       CategoryTheory.lanPreservesFiniteLimitsOfPreservesFiniteLimits CategoryTheory.lanPreservesFiniteLimitsOfFlat
     dsimp only [preserves_finite_limits_of_preserves_finite_limits_of_size]; congr
-#align
-  category_theory.preserves_finite_limits_iff_Lan_preserves_finite_limits CategoryTheory.preservesFiniteLimitsIffLanPreservesFiniteLimits
+#align category_theory.preserves_finite_limits_iff_Lan_preserves_finite_limits CategoryTheory.preservesFiniteLimitsIffLanPreservesFiniteLimits
 
 end SmallCategory
 

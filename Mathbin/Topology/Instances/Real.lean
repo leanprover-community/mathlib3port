@@ -292,8 +292,7 @@ theorem tendsto_zmultiples_subtype_cofinite (a : ℝ) :
     (zmultiplesHom ℝ a).range_restrict_surjective.image_preimage ((zmultiples a).Subtype ⁻¹' Kᶜ), ←
     preimage_comp, ← AddMonoidHom.coe_comp_range_restrict]
   exact finite.image _ H
-#align
-  add_subgroup.tendsto_zmultiples_subtype_cofinite AddSubgroup.tendsto_zmultiples_subtype_cofinite
+#align add_subgroup.tendsto_zmultiples_subtype_cofinite AddSubgroup.tendsto_zmultiples_subtype_cofinite
 
 end AddSubgroup
 

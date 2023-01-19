@@ -124,8 +124,7 @@ theorem hall_hard_inductive_step_A {n : ℕ} (hn : Fintype.card ι = n + 1)
     · specialize hfr ⟨z, hz⟩
       rw [mem_erase] at hfr
       exact hfr.2
-#align
-  hall_marriage_theorem.hall_hard_inductive_step_A HallMarriageTheorem.hall_hard_inductive_step_A
+#align hall_marriage_theorem.hall_hard_inductive_step_A HallMarriageTheorem.hall_hard_inductive_step_A
 
 theorem hall_cond_of_restrict {ι : Type u} {t : ι → Finset α} {s : Finset ι}
     (ht : ∀ s : Finset ι, s.card ≤ (s.bUnion t).card) (s' : Finset (s : Set ι)) :
@@ -225,8 +224,7 @@ theorem hall_hard_inductive_step_B {n : ℕ} (hn : Fintype.card ι = n + 1)
     split_ifs with h
     · exact hsf' ⟨x, h⟩
     · exact sdiff_subset _ _ (hsf'' ⟨x, h⟩)
-#align
-  hall_marriage_theorem.hall_hard_inductive_step_B HallMarriageTheorem.hall_hard_inductive_step_B
+#align hall_marriage_theorem.hall_hard_inductive_step_B HallMarriageTheorem.hall_hard_inductive_step_B
 
 end Fintype
 
@@ -282,6 +280,5 @@ theorem Finset.all_card_le_bUnion_card_iff_exists_injective' {ι α : Type _} [F
     rw [mem_image, mem_bUnion]
     rintro ⟨x, hx, rfl⟩
     exact ⟨x, hx, hf₂ x⟩
-#align
-  finset.all_card_le_bUnion_card_iff_exists_injective' Finset.all_card_le_bUnion_card_iff_exists_injective'
+#align finset.all_card_le_bUnion_card_iff_exists_injective' Finset.all_card_le_bUnion_card_iff_exists_injective'
 

@@ -129,8 +129,7 @@ theorem Presieve.FamilyOfElements.Compatible.functor_pushforward :
   simpa using this
   apply hG.compatible ℱ h _ _ hf₁ hf₂
   simpa using Eq
-#align
-  category_theory.presieve.family_of_elements.compatible.functor_pushforward CategoryTheory.Presieve.FamilyOfElements.Compatible.functor_pushforward
+#align category_theory.presieve.family_of_elements.compatible.functor_pushforward CategoryTheory.Presieve.FamilyOfElements.Compatible.functor_pushforward
 
 @[simp]
 theorem CompatiblePreserving.apply_map {Y : C} {f : Y ⟶ Z} (hf : T f) :
@@ -739,8 +738,7 @@ theorem compatiblePreservingOfDownwardsClosed (F : C ⥤ D) [Full F] [Faithful F
   simpa using
     hx (F.preimage <| e.hom ≫ f₁) (F.preimage <| e.hom ≫ f₂) hg₁ hg₂
       (F.map_injective <| by simpa using he)
-#align
-  category_theory.compatible_preserving_of_downwards_closed CategoryTheory.compatiblePreservingOfDownwardsClosed
+#align category_theory.compatible_preserving_of_downwards_closed CategoryTheory.compatiblePreservingOfDownwardsClosed
 
 /-- If `G` is cover-preserving and compatible-preserving,
 then `G.op ⋙ _` pulls sheaves back to sheaves.
@@ -769,8 +767,7 @@ theorem pullback_is_sheaf_of_cover_preserving {G : C ⥤ D} (hG₁ : CompatibleP
         (image_mem_functor_pushforward G S h) g']
     dsimp
     simp [hG₁.apply_map (sheaf_over ℱ X) hx h, ← hy f' h]
-#align
-  category_theory.pullback_is_sheaf_of_cover_preserving CategoryTheory.pullback_is_sheaf_of_cover_preserving
+#align category_theory.pullback_is_sheaf_of_cover_preserving CategoryTheory.pullback_is_sheaf_of_cover_preserving
 
 /-- The pullback of a sheaf along a cover-preserving and compatible-preserving functor. -/
 def pullbackSheaf {G : C ⥤ D} (hG₁ : CompatiblePreserving K G) (hG₂ : CoverPreserving J K G)
@@ -845,8 +842,7 @@ def Sites.pullbackPushforwardAdjunction {G : C ⥤ D} (hG₁ : CompatiblePreserv
       (Category.comp_id _).trans (Category.id_comp _).symm)
     (NatIso.ofComponents (fun _ => Iso.refl _) fun _ _ _ =>
       (Category.comp_id _).trans (Category.id_comp _).symm)
-#align
-  category_theory.sites.pullback_pushforward_adjunction CategoryTheory.Sites.pullbackPushforwardAdjunction
+#align category_theory.sites.pullback_pushforward_adjunction CategoryTheory.Sites.pullbackPushforwardAdjunction
 
 end CategoryTheory
 

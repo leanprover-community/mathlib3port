@@ -164,8 +164,7 @@ theorem blimsup_cthickening_ae_le_of_eventually_mul_le_aux (p : ℕ → Prop) {s
     exact measure_mono (union_subset (h₁ j) (h₂ j))
   replace hj₃ := tsub_le_tsub_right hj₃ (↑C⁻¹ * μ (B j))
   rwa [Ennreal.add_sub_cancel_left hB] at hj₃
-#align
-  blimsup_cthickening_ae_le_of_eventually_mul_le_aux blimsup_cthickening_ae_le_of_eventually_mul_le_aux
+#align blimsup_cthickening_ae_le_of_eventually_mul_le_aux blimsup_cthickening_ae_le_of_eventually_mul_le_aux
 
 /-- This is really an auxiliary result en route to `blimsup_cthickening_mul_ae_eq`.
 

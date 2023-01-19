@@ -55,8 +55,7 @@ def FreeCoequalizer.bottomMap : (Monad.free T).obj (T.obj X.A) ⟶ (Monad.free T
     where
   f := T.μ.app X.A
   h' := T.assoc X.A
-#align
-  category_theory.monad.free_coequalizer.bottom_map CategoryTheory.Monad.FreeCoequalizer.bottomMap
+#align category_theory.monad.free_coequalizer.bottom_map CategoryTheory.Monad.FreeCoequalizer.bottomMap
 
 /-- The cofork map in the coequalizer diagram we will construct. -/
 @[simps]
@@ -70,8 +69,7 @@ theorem FreeCoequalizer.condition :
     FreeCoequalizer.topMap X ≫ FreeCoequalizer.π X =
       FreeCoequalizer.bottomMap X ≫ FreeCoequalizer.π X :=
   Algebra.Hom.ext _ _ X.assoc.symm
-#align
-  category_theory.monad.free_coequalizer.condition CategoryTheory.Monad.FreeCoequalizer.condition
+#align category_theory.monad.free_coequalizer.condition CategoryTheory.Monad.FreeCoequalizer.condition
 
 instance : IsReflexivePair (FreeCoequalizer.topMap X) (FreeCoequalizer.bottomMap X) :=
   by

@@ -129,8 +129,7 @@ theorem Subalgebra.is_simple_order_of_finrank_prime (A) [Ring A] [IsDomain A] [A
       ·
         exact
           Algebra.to_submodule_eq_top.1 (eq_top_of_finrank_eq <| K.finrank_to_submodule.trans h) }
-#align
-  finite_dimensional.subalgebra.is_simple_order_of_finrank_prime FiniteDimensional.Subalgebra.is_simple_order_of_finrank_prime
+#align finite_dimensional.subalgebra.is_simple_order_of_finrank_prime FiniteDimensional.Subalgebra.is_simple_order_of_finrank_prime
 
 -- TODO: `intermediate_field` version
 instance linear_map (F : Type u) (V : Type v) (W : Type w) [Field F] [AddCommGroup V] [Module F V]

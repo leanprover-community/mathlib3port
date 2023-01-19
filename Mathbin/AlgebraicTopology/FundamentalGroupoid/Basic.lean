@@ -136,8 +136,7 @@ theorem continuous_trans_refl_reparam_aux : Continuous transReflReparamAux :=
     [continuity, continuity, continuity, continuity, skip]
   intro x hx
   norm_num [hx]
-#align
-  path.homotopy.continuous_trans_refl_reparam_aux Path.Homotopy.continuous_trans_refl_reparam_aux
+#align path.homotopy.continuous_trans_refl_reparam_aux Path.Homotopy.continuous_trans_refl_reparam_aux
 
 theorem trans_refl_reparam_aux_mem_I (t : I) : transReflReparamAux t ∈ I :=
   by
@@ -201,8 +200,7 @@ theorem continuous_trans_assoc_reparam_aux : Continuous transAssocReparamAux := 
       skip] <;>
     · intro x hx
       norm_num [hx]
-#align
-  path.homotopy.continuous_trans_assoc_reparam_aux Path.Homotopy.continuous_trans_assoc_reparam_aux
+#align path.homotopy.continuous_trans_assoc_reparam_aux Path.Homotopy.continuous_trans_assoc_reparam_aux
 
 theorem trans_assoc_reparam_aux_mem_I (t : I) : transAssocReparamAux t ∈ I :=
   by
@@ -349,8 +347,7 @@ def fundamentalGroupoidFunctor : TopCat ⥤ CategoryTheory.GroupoidCat
     refine' Quotient.inductionOn p fun q => _
     simp only [Quotient.map_mk, Path.map_map, Quotient.eq]
     rfl
-#align
-  fundamental_groupoid.fundamental_groupoid_functor FundamentalGroupoid.fundamentalGroupoidFunctor
+#align fundamental_groupoid.fundamental_groupoid_functor FundamentalGroupoid.fundamentalGroupoidFunctor
 
 -- mathport name: fundamental_groupoid_functor
 scoped notation "π" => FundamentalGroupoid.fundamentalGroupoidFunctor

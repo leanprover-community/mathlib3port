@@ -389,8 +389,7 @@ theorem AddSubmonoid.coe_to_nat_submodule (S : AddSubmonoid M) : (S.toNatSubmodu
 theorem AddSubmonoid.to_nat_submodule_to_add_submonoid (S : AddSubmonoid M) :
     S.toNatSubmodule.toAddSubmonoid = S :=
   AddSubmonoid.toNatSubmodule.symm_apply_apply S
-#align
-  add_submonoid.to_nat_submodule_to_add_submonoid AddSubmonoid.to_nat_submodule_to_add_submonoid
+#align add_submonoid.to_nat_submodule_to_add_submonoid AddSubmonoid.to_nat_submodule_to_add_submonoid
 
 @[simp]
 theorem Submodule.to_add_submonoid_to_nat_submodule (S : Submodule ℕ M) :

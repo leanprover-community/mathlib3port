@@ -59,14 +59,12 @@ variable {C}
 theorem essentially_small_mono_over_iff_small_subobject (X : C) :
     EssentiallySmall.{v} (MonoOver X) ↔ Small.{v} (Subobject X) :=
   essentially_small_iff_of_thin
-#align
-  category_theory.essentially_small_mono_over_iff_small_subobject CategoryTheory.essentially_small_mono_over_iff_small_subobject
+#align category_theory.essentially_small_mono_over_iff_small_subobject CategoryTheory.essentially_small_mono_over_iff_small_subobject
 
 theorem well_powered_of_essentially_small_mono_over
     (h : ∀ X : C, EssentiallySmall.{v} (MonoOver X)) : WellPowered C :=
   { subobject_small := fun X => (essentially_small_mono_over_iff_small_subobject X).mp (h X) }
-#align
-  category_theory.well_powered_of_essentially_small_mono_over CategoryTheory.well_powered_of_essentially_small_mono_over
+#align category_theory.well_powered_of_essentially_small_mono_over CategoryTheory.well_powered_of_essentially_small_mono_over
 
 section
 

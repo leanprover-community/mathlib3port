@@ -48,22 +48,19 @@ instance (priority := 100) hasLimitsOfShapeOfHasFiniteLimits (J : Type w) [Small
   by
   apply has_limits_of_shape_of_equivalence (fin_category.equiv_as_type J)
   apply has_finite_limits.out
-#align
-  category_theory.limits.has_limits_of_shape_of_has_finite_limits CategoryTheory.Limits.hasLimitsOfShapeOfHasFiniteLimits
+#align category_theory.limits.has_limits_of_shape_of_has_finite_limits CategoryTheory.Limits.hasLimitsOfShapeOfHasFiniteLimits
 
 instance (priority := 100) hasFiniteLimitsOfHasLimitsOfSize [HasLimitsOfSize.{v', u'} C] :
     HasFiniteLimits C :=
   ⟨fun J hJ hJ' =>
     haveI := hasLimitsOfSizeShrink.{0, 0} C
     has_limits_of_shape_of_equivalence (fin_category.equiv_as_type J)⟩
-#align
-  category_theory.limits.has_finite_limits_of_has_limits_of_size CategoryTheory.Limits.hasFiniteLimitsOfHasLimitsOfSize
+#align category_theory.limits.has_finite_limits_of_has_limits_of_size CategoryTheory.Limits.hasFiniteLimitsOfHasLimitsOfSize
 
 /-- If `C` has all limits, it has finite limits. -/
 instance (priority := 100) hasFiniteLimitsOfHasLimits [HasLimits C] : HasFiniteLimits C :=
   inferInstance
-#align
-  category_theory.limits.has_finite_limits_of_has_limits CategoryTheory.Limits.hasFiniteLimitsOfHasLimits
+#align category_theory.limits.has_finite_limits_of_has_limits CategoryTheory.Limits.hasFiniteLimitsOfHasLimits
 
 /-- We can always derive `has_finite_limits C` by providing limits at an
 arbitrary universe. -/
@@ -82,8 +79,7 @@ theorem hasFiniteLimitsOfHasFiniteLimitsOfSize
       exact CategoryTheory.uliftCategory J
     haveI := h (UliftHom.{w} (ULift.{w} J)) CategoryTheory.finCategoryUlift
     exact has_limits_of_shape_of_equivalence (UliftHomUliftCategory.equiv.{w, w} J).symm⟩
-#align
-  category_theory.limits.has_finite_limits_of_has_finite_limits_of_size CategoryTheory.Limits.hasFiniteLimitsOfHasFiniteLimitsOfSize
+#align category_theory.limits.has_finite_limits_of_has_finite_limits_of_size CategoryTheory.Limits.hasFiniteLimitsOfHasFiniteLimitsOfSize
 
 /-- A category has all finite colimits if every functor `J ⥤ C` with a `fin_category J`
 instance and `J : Type` has a colimit.
@@ -99,16 +95,14 @@ instance (priority := 100) hasColimitsOfShapeOfHasFiniteColimits (J : Type w) [S
   by
   apply has_colimits_of_shape_of_equivalence (fin_category.equiv_as_type J)
   apply has_finite_colimits.out
-#align
-  category_theory.limits.has_colimits_of_shape_of_has_finite_colimits CategoryTheory.Limits.hasColimitsOfShapeOfHasFiniteColimits
+#align category_theory.limits.has_colimits_of_shape_of_has_finite_colimits CategoryTheory.Limits.hasColimitsOfShapeOfHasFiniteColimits
 
 instance (priority := 100) hasFiniteColimitsOfHasColimitsOfSize [HasColimitsOfSize.{v', u'} C] :
     HasFiniteColimits C :=
   ⟨fun J hJ hJ' =>
     haveI := hasColimitsOfSizeShrink.{0, 0} C
     has_colimits_of_shape_of_equivalence (fin_category.equiv_as_type J)⟩
-#align
-  category_theory.limits.has_finite_colimits_of_has_colimits_of_size CategoryTheory.Limits.hasFiniteColimitsOfHasColimitsOfSize
+#align category_theory.limits.has_finite_colimits_of_has_colimits_of_size CategoryTheory.Limits.hasFiniteColimitsOfHasColimitsOfSize
 
 /-- We can always derive `has_finite_colimits C` by providing colimits at an
 arbitrary universe. -/
@@ -127,8 +121,7 @@ theorem hasFiniteColimitsOfHasFiniteColimitsOfSize
       exact CategoryTheory.uliftCategory J
     haveI := h (UliftHom.{w} (ULift.{w} J)) CategoryTheory.finCategoryUlift
     exact has_colimits_of_shape_of_equivalence (UliftHomUliftCategory.equiv.{w, w} J).symm⟩
-#align
-  category_theory.limits.has_finite_colimits_of_has_finite_colimits_of_size CategoryTheory.Limits.hasFiniteColimitsOfHasFiniteColimitsOfSize
+#align category_theory.limits.has_finite_colimits_of_has_finite_colimits_of_size CategoryTheory.Limits.hasFiniteColimitsOfHasFiniteColimitsOfSize
 
 section
 
@@ -138,8 +131,7 @@ instance fintypeWalkingParallelPair : Fintype WalkingParallelPair
     where
   elems := [WalkingParallelPair.zero, WalkingParallelPair.one].toFinset
   complete x := by cases x <;> simp
-#align
-  category_theory.limits.fintype_walking_parallel_pair CategoryTheory.Limits.fintypeWalkingParallelPair
+#align category_theory.limits.fintype_walking_parallel_pair CategoryTheory.Limits.fintypeWalkingParallelPair
 
 attribute [local tidy] tactic.case_bash
 
@@ -173,8 +165,7 @@ instance fintypeObj [Fintype J] : Fintype (WidePullbackShape J) :=
   by
   rw [wide_pullback_shape]
   infer_instance
-#align
-  category_theory.limits.wide_pullback_shape.fintype_obj CategoryTheory.Limits.WidePullbackShape.fintypeObj
+#align category_theory.limits.wide_pullback_shape.fintype_obj CategoryTheory.Limits.WidePullbackShape.fintypeObj
 
 instance fintypeHom (j j' : WidePullbackShape J) : Fintype (j ⟶ j')
     where
@@ -188,8 +179,7 @@ instance fintypeHom (j j' : WidePullbackShape J) : Fintype (j ⟶ j')
         exact {hom.id j}
       · exact ∅
   complete := by tidy
-#align
-  category_theory.limits.wide_pullback_shape.fintype_hom CategoryTheory.Limits.WidePullbackShape.fintypeHom
+#align category_theory.limits.wide_pullback_shape.fintype_hom CategoryTheory.Limits.WidePullbackShape.fintypeHom
 
 end WidePullbackShape
 
@@ -199,8 +189,7 @@ instance fintypeObj [Fintype J] : Fintype (WidePushoutShape J) :=
   by
   rw [wide_pushout_shape]
   infer_instance
-#align
-  category_theory.limits.wide_pushout_shape.fintype_obj CategoryTheory.Limits.WidePushoutShape.fintypeObj
+#align category_theory.limits.wide_pushout_shape.fintype_obj CategoryTheory.Limits.WidePushoutShape.fintypeObj
 
 instance fintypeHom (j j' : WidePushoutShape J) : Fintype (j ⟶ j')
     where
@@ -214,15 +203,13 @@ instance fintypeHom (j j' : WidePushoutShape J) : Fintype (j ⟶ j')
         exact {hom.id j'}
       · exact ∅
   complete := by tidy
-#align
-  category_theory.limits.wide_pushout_shape.fintype_hom CategoryTheory.Limits.WidePushoutShape.fintypeHom
+#align category_theory.limits.wide_pushout_shape.fintype_hom CategoryTheory.Limits.WidePushoutShape.fintypeHom
 
 end WidePushoutShape
 
 instance finCategoryWidePullback [Fintype J] : FinCategory (WidePullbackShape J)
     where fintypeHom := WidePullbackShape.fintypeHom
-#align
-  category_theory.limits.fin_category_wide_pullback CategoryTheory.Limits.finCategoryWidePullback
+#align category_theory.limits.fin_category_wide_pullback CategoryTheory.Limits.finCategoryWidePullback
 
 instance finCategoryWidePushout [Fintype J] : FinCategory (WidePushoutShape J)
     where fintypeHom := WidePushoutShape.fintypeHom
@@ -243,8 +230,7 @@ instance hasLimitsOfShapeWidePullbackShape (J : Type) [Finite J] [HasFiniteWideP
   cases nonempty_fintype J
   haveI := @has_finite_wide_pullbacks.out C _ _ J
   infer_instance
-#align
-  category_theory.limits.has_limits_of_shape_wide_pullback_shape CategoryTheory.Limits.hasLimitsOfShapeWidePullbackShape
+#align category_theory.limits.has_limits_of_shape_wide_pullback_shape CategoryTheory.Limits.hasLimitsOfShapeWidePullbackShape
 
 /-- `has_finite_wide_pushouts` represents a choice of wide pushout
 for every finite collection of morphisms
@@ -259,24 +245,21 @@ instance hasColimitsOfShapeWidePushoutShape (J : Type) [Finite J] [HasFiniteWide
   cases nonempty_fintype J
   haveI := @has_finite_wide_pushouts.out C _ _ J
   infer_instance
-#align
-  category_theory.limits.has_colimits_of_shape_wide_pushout_shape CategoryTheory.Limits.hasColimitsOfShapeWidePushoutShape
+#align category_theory.limits.has_colimits_of_shape_wide_pushout_shape CategoryTheory.Limits.hasColimitsOfShapeWidePushoutShape
 
 /-- Finite wide pullbacks are finite limits, so if `C` has all finite limits,
 it also has finite wide pullbacks
 -/
 theorem hasFiniteWidePullbacksOfHasFiniteLimits [HasFiniteLimits C] : HasFiniteWidePullbacks C :=
   ⟨fun J _ => has_finite_limits.out _⟩
-#align
-  category_theory.limits.has_finite_wide_pullbacks_of_has_finite_limits CategoryTheory.Limits.hasFiniteWidePullbacksOfHasFiniteLimits
+#align category_theory.limits.has_finite_wide_pullbacks_of_has_finite_limits CategoryTheory.Limits.hasFiniteWidePullbacksOfHasFiniteLimits
 
 /-- Finite wide pushouts are finite colimits, so if `C` has all finite colimits,
 it also has finite wide pushouts
 -/
 theorem hasFiniteWidePushoutsOfHasFiniteLimits [HasFiniteColimits C] : HasFiniteWidePushouts C :=
   ⟨fun J _ => has_finite_colimits.out _⟩
-#align
-  category_theory.limits.has_finite_wide_pushouts_of_has_finite_limits CategoryTheory.Limits.hasFiniteWidePushoutsOfHasFiniteLimits
+#align category_theory.limits.has_finite_wide_pushouts_of_has_finite_limits CategoryTheory.Limits.hasFiniteWidePushoutsOfHasFiniteLimits
 
 instance fintypeWalkingPair : Fintype WalkingPair
     where

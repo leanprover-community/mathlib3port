@@ -116,8 +116,7 @@ variable (R L M)
 theorem centralizer_bot_eq_max_triv_submodule :
     (⊥ : LieSubmodule R L M).centralizer = LieModule.maxTrivSubmodule R L M :=
   rfl
-#align
-  lie_submodule.centralizer_bot_eq_max_triv_submodule LieSubmodule.centralizer_bot_eq_max_triv_submodule
+#align lie_submodule.centralizer_bot_eq_max_triv_submodule LieSubmodule.centralizer_bot_eq_max_triv_submodule
 
 end LieSubmodule
 
@@ -188,8 +187,7 @@ theorem exists_nested_lie_ideal_of_le_normalizer {K : LieSubalgebra R L} (h₁ :
   by
   rw [exists_nested_lie_ideal_coe_eq_iff]
   exact fun x y hx hy => ideal_in_normalizer (h₂ hx) hy
-#align
-  lie_subalgebra.exists_nested_lie_ideal_of_le_normalizer LieSubalgebra.exists_nested_lie_ideal_of_le_normalizer
+#align lie_subalgebra.exists_nested_lie_ideal_of_le_normalizer LieSubalgebra.exists_nested_lie_ideal_of_le_normalizer
 
 variable (H)
 

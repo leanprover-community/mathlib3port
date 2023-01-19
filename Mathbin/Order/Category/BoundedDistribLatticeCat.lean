@@ -74,20 +74,17 @@ instance hasForgetToDistribLattice : HasForget₂ BoundedDistribLatticeCat Distr
     where forget₂ :=
     { obj := fun X => ⟨X⟩
       map := fun X Y => BoundedLatticeHom.toLatticeHom }
-#align
-  BoundedDistribLattice.has_forget_to_DistribLattice BoundedDistribLatticeCat.hasForgetToDistribLattice
+#align BoundedDistribLattice.has_forget_to_DistribLattice BoundedDistribLatticeCat.hasForgetToDistribLattice
 
 instance hasForgetToBoundedLattice : HasForget₂ BoundedDistribLatticeCat BoundedLatticeCat :=
   InducedCategory.hasForget₂ toBoundedLattice
-#align
-  BoundedDistribLattice.has_forget_to_BoundedLattice BoundedDistribLatticeCat.hasForgetToBoundedLattice
+#align BoundedDistribLattice.has_forget_to_BoundedLattice BoundedDistribLatticeCat.hasForgetToBoundedLattice
 
 theorem forget_BoundedLattice_Lattice_eq_forget_DistribLattice_Lattice :
     forget₂ BoundedDistribLatticeCat BoundedLatticeCat ⋙ forget₂ BoundedLatticeCat LatticeCat =
       forget₂ BoundedDistribLatticeCat DistribLatticeCat ⋙ forget₂ DistribLatticeCat LatticeCat :=
   rfl
-#align
-  BoundedDistribLattice.forget_BoundedLattice_Lattice_eq_forget_DistribLattice_Lattice BoundedDistribLatticeCat.forget_BoundedLattice_Lattice_eq_forget_DistribLattice_Lattice
+#align BoundedDistribLattice.forget_BoundedLattice_Lattice_eq_forget_DistribLattice_Lattice BoundedDistribLatticeCat.forget_BoundedLattice_Lattice_eq_forget_DistribLattice_Lattice
 
 /-- Constructs an equivalence between bounded distributive lattices from an order isomorphism
 between them. -/
@@ -126,6 +123,5 @@ theorem BoundedDistribLattice_dual_comp_forget_to_DistribLattice :
     BoundedDistribLatticeCat.dual ⋙ forget₂ BoundedDistribLatticeCat DistribLatticeCat =
       forget₂ BoundedDistribLatticeCat DistribLatticeCat ⋙ DistribLatticeCat.dual :=
   rfl
-#align
-  BoundedDistribLattice_dual_comp_forget_to_DistribLattice BoundedDistribLattice_dual_comp_forget_to_DistribLattice
+#align BoundedDistribLattice_dual_comp_forget_to_DistribLattice BoundedDistribLattice_dual_comp_forget_to_DistribLattice
 

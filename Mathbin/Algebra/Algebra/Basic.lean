@@ -679,8 +679,7 @@ theorem End_algebra_map_is_unit_inv_apply_eq_iff {x : R}
         apply_fun h.unit using ((Module.End_is_unit_iff _).mp h).Injective
         erw [End_is_unit_apply_inv_apply_of_is_unit]
         rfl }
-#align
-  module.End_algebra_map_is_unit_inv_apply_eq_iff Module.End_algebra_map_is_unit_inv_apply_eq_iff
+#align module.End_algebra_map_is_unit_inv_apply_eq_iff Module.End_algebra_map_is_unit_inv_apply_eq_iff
 
 theorem End_algebra_map_is_unit_inv_apply_eq_iff' {x : R}
     (h : IsUnit (algebraMap R (Module.EndCat R M) x)) (m m' : M) : m' = h.Unit⁻¹ m ↔ m = x • m' :=
@@ -690,8 +689,7 @@ theorem End_algebra_map_is_unit_inv_apply_eq_iff' {x : R}
         apply_fun h.unit using ((Module.End_is_unit_iff _).mp h).Injective
         erw [End_is_unit_apply_inv_apply_of_is_unit]
         rfl }
-#align
-  module.End_algebra_map_is_unit_inv_apply_eq_iff' Module.End_algebra_map_is_unit_inv_apply_eq_iff'
+#align module.End_algebra_map_is_unit_inv_apply_eq_iff' Module.End_algebra_map_is_unit_inv_apply_eq_iff'
 
 end
 
@@ -861,15 +859,13 @@ theorem iff_algebra_map_injective [CommRing R] [Ring A] [IsDomain A] [Algebra R 
 instance (priority := 100) CharZero.no_zero_smul_divisors_nat [Semiring R] [NoZeroDivisors R]
     [CharZero R] : NoZeroSMulDivisors ℕ R :=
   NoZeroSMulDivisors.of_algebra_map_injective <| (algebraMap ℕ R).injective_nat
-#align
-  no_zero_smul_divisors.char_zero.no_zero_smul_divisors_nat NoZeroSMulDivisors.CharZero.no_zero_smul_divisors_nat
+#align no_zero_smul_divisors.char_zero.no_zero_smul_divisors_nat NoZeroSMulDivisors.CharZero.no_zero_smul_divisors_nat
 
 -- see note [lower instance priority]
 instance (priority := 100) CharZero.no_zero_smul_divisors_int [Ring R] [NoZeroDivisors R]
     [CharZero R] : NoZeroSMulDivisors ℤ R :=
   NoZeroSMulDivisors.of_algebra_map_injective <| (algebraMap ℤ R).injective_int
-#align
-  no_zero_smul_divisors.char_zero.no_zero_smul_divisors_int NoZeroSMulDivisors.CharZero.no_zero_smul_divisors_int
+#align no_zero_smul_divisors.char_zero.no_zero_smul_divisors_int NoZeroSMulDivisors.CharZero.no_zero_smul_divisors_int
 
 section Field
 
@@ -879,8 +875,7 @@ variable [Field R] [Semiring A] [Algebra R A]
 instance (priority := 100) Algebra.no_zero_smul_divisors [Nontrivial A] [NoZeroDivisors A] :
     NoZeroSMulDivisors R A :=
   NoZeroSMulDivisors.of_algebra_map_injective (algebraMap R A).Injective
-#align
-  no_zero_smul_divisors.algebra.no_zero_smul_divisors NoZeroSMulDivisors.Algebra.no_zero_smul_divisors
+#align no_zero_smul_divisors.algebra.no_zero_smul_divisors NoZeroSMulDivisors.Algebra.no_zero_smul_divisors
 
 end Field
 

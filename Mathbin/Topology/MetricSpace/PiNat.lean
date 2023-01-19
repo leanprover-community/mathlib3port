@@ -316,8 +316,7 @@ theorem lipschitz_with_one_iff_forall_dist_image_le_of_mem_cylinder {α : Type _
     apply H x y (first_diff x y)
     rw [first_diff_comm]
     exact mem_cylinder_first_diff _ _
-#align
-  pi_nat.lipschitz_with_one_iff_forall_dist_image_le_of_mem_cylinder PiNat.lipschitz_with_one_iff_forall_dist_image_le_of_mem_cylinder
+#align pi_nat.lipschitz_with_one_iff_forall_dist_image_le_of_mem_cylinder PiNat.lipschitz_with_one_iff_forall_dist_image_le_of_mem_cylinder
 
 variable (E) [∀ n, TopologicalSpace (E n)] [∀ n, DiscreteTopology (E n)]
 
@@ -571,8 +570,7 @@ theorem cylinder_longest_prefix_eq_of_longest_prefix_lt_first_diff {x y : ∀ n,
       exact (A'y.not_disjoint Z).elim
   rw [l_eq, ← mem_cylinder_iff_eq]
   exact cylinder_anti y H.le (mem_cylinder_first_diff x y)
-#align
-  pi_nat.cylinder_longest_prefix_eq_of_longest_prefix_lt_first_diff PiNat.cylinder_longest_prefix_eq_of_longest_prefix_lt_first_diff
+#align pi_nat.cylinder_longest_prefix_eq_of_longest_prefix_lt_first_diff PiNat.cylinder_longest_prefix_eq_of_longest_prefix_lt_first_diff
 
 /-- Given a closed nonempty subset `s` of `Π (n : ℕ), E n`, there exists a Lipschitz retraction
 onto this set, i.e., a Lipschitz map with range equal to `s`, equal to the identity on `s`. -/
@@ -684,8 +682,7 @@ theorem exists_lipschitz_retraction_of_is_closed {s : Set (∀ n, E n)} (hs : Is
             rw [I1, I2, I3]
           rw [← fx, ← fy, ← mem_cylinder_iff_eq, mem_cylinder_iff_le_first_diff hfxfy] at this
           exact this
-#align
-  pi_nat.exists_lipschitz_retraction_of_is_closed PiNat.exists_lipschitz_retraction_of_is_closed
+#align pi_nat.exists_lipschitz_retraction_of_is_closed PiNat.exists_lipschitz_retraction_of_is_closed
 
 /-- Given a closed nonempty subset `s` of `Π (n : ℕ), E n`, there exists a retraction onto this
 set, i.e., a continuous map with range equal to `s`, equal to the identity on `s`. -/
@@ -819,8 +816,7 @@ theorem exists_nat_nat_continuous_surjective_of_complete_space (α : Type _) [Me
     apply exists_retraction_subtype_of_is_closed s_closed
     simpa only [nonempty_coe_sort] using g_surj.nonempty
   exact ⟨g ∘ f, g_cont.comp f_cont, g_surj.comp f_surj⟩
-#align
-  exists_nat_nat_continuous_surjective_of_complete_space exists_nat_nat_continuous_surjective_of_complete_space
+#align exists_nat_nat_continuous_surjective_of_complete_space exists_nat_nat_continuous_surjective_of_complete_space
 
 namespace PiCountable
 

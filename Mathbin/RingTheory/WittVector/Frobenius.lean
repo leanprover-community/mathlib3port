@@ -82,8 +82,7 @@ theorem bind₁_frobenius_poly_rat_witt_polynomial (n : ℕ) :
   by
   delta frobenius_poly_rat
   rw [← bind₁_bind₁, bind₁_X_in_terms_of_W_witt_polynomial, bind₁_X_right]
-#align
-  witt_vector.bind₁_frobenius_poly_rat_witt_polynomial WittVector.bind₁_frobenius_poly_rat_witt_polynomial
+#align witt_vector.bind₁_frobenius_poly_rat_witt_polynomial WittVector.bind₁_frobenius_poly_rat_witt_polynomial
 
 /-- An auxiliary definition, to avoid an excessive amount of finiteness proofs
 for `multiplicity p n`. -/
@@ -253,8 +252,7 @@ theorem bind₁_frobenius_poly_witt_polynomial (n : ℕ) :
   apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective
   simp only [map_bind₁, map_frobenius_poly, bind₁_frobenius_poly_rat_witt_polynomial,
     map_witt_polynomial]
-#align
-  witt_vector.bind₁_frobenius_poly_witt_polynomial WittVector.bind₁_frobenius_poly_witt_polynomial
+#align witt_vector.bind₁_frobenius_poly_witt_polynomial WittVector.bind₁_frobenius_poly_witt_polynomial
 
 variable {p}
 

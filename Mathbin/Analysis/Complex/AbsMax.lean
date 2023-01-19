@@ -220,8 +220,7 @@ theorem norm_eq_norm_of_is_max_on_of_ball_subset {f : E → F} {s : Set E} {z w 
     (hd : DiffContOnCl ℂ f s) (hz : IsMaxOn (norm ∘ f) s z) (hsub : ball z (dist w z) ⊆ s) :
     ‖f w‖ = ‖f z‖ :=
   norm_eq_on_closed_ball_of_is_max_on (hd.mono hsub) (hz.on_subset hsub) (mem_closed_ball.2 le_rfl)
-#align
-  complex.norm_eq_norm_of_is_max_on_of_ball_subset Complex.norm_eq_norm_of_is_max_on_of_ball_subset
+#align complex.norm_eq_norm_of_is_max_on_of_ball_subset Complex.norm_eq_norm_of_is_max_on_of_ball_subset
 
 /-- **Maximum modulus principle**: if `f : E → F` is complex differentiable in a neighborhood of `c`
 and the norm `‖f z‖` has a local maximum at `c`, then `‖f z‖` is locally constant in a neighborhood
@@ -248,8 +247,7 @@ theorem is_open_set_of_mem_nhds_and_is_max_on_norm {f : E → F} {s : Set E}
   exact
     (norm_eventually_eq_of_is_local_max hd <| hz.2.IsLocalMax hz.1).mono fun x hx y hy =>
       le_trans (hz.2 hy) hx.ge
-#align
-  complex.is_open_set_of_mem_nhds_and_is_max_on_norm Complex.is_open_set_of_mem_nhds_and_is_max_on_norm
+#align complex.is_open_set_of_mem_nhds_and_is_max_on_norm Complex.is_open_set_of_mem_nhds_and_is_max_on_norm
 
 /-- **Maximum modulus principle** on a connected set. Let `U` be a (pre)connected open set in a
 complex normed space. Let `f : E → F` be a function that is complex differentiable on `U`. Suppose
@@ -273,8 +271,7 @@ theorem norm_eq_on_of_is_preconnected_of_is_max_on {f : E → F} {U : Set E} {c 
     (eq_or_ne ‖f x‖ ‖f c‖).imp (fun h => ⟨hx, fun y hy => (hm hy).out.trans_eq h.symm⟩)
       (And.intro hx)
   exact hc.subset_left_of_subset_union hVo hWo hdVW hUVW hVne
-#align
-  complex.norm_eq_on_of_is_preconnected_of_is_max_on Complex.norm_eq_on_of_is_preconnected_of_is_max_on
+#align complex.norm_eq_on_of_is_preconnected_of_is_max_on Complex.norm_eq_on_of_is_preconnected_of_is_max_on
 
 /-- **Maximum modulus principle** on a connected set. Let `U` be a (pre)connected open set in a
 complex normed space.  Let `f : E → F` be a function that is complex differentiable on `U` and is
@@ -285,8 +282,7 @@ theorem norm_eq_on_closure_of_is_preconnected_of_is_max_on {f : E → F} {U : Se
     (hm : IsMaxOn (norm ∘ f) U c) : EqOn (norm ∘ f) (const E ‖f c‖) (closure U) :=
   (norm_eq_on_of_is_preconnected_of_is_max_on hc ho hd.DifferentiableOn hcU hm).of_subset_closure
     hd.ContinuousOn.norm continuous_on_const subset_closure Subset.rfl
-#align
-  complex.norm_eq_on_closure_of_is_preconnected_of_is_max_on Complex.norm_eq_on_closure_of_is_preconnected_of_is_max_on
+#align complex.norm_eq_on_closure_of_is_preconnected_of_is_max_on Complex.norm_eq_on_closure_of_is_preconnected_of_is_max_on
 
 section StrictConvex
 
@@ -317,8 +313,7 @@ theorem eq_on_of_is_preconnected_of_is_max_on_norm {f : E → F} {U : Set E} {c 
   have H₂ : ‖f x + f c‖ = ‖f c + f c‖ :=
     norm_eq_on_of_is_preconnected_of_is_max_on hc ho (hd.AddConst _) hcU hm.norm_add_self hx
   eq_of_norm_eq_of_norm_add_eq H₁ <| by simp only [H₂, same_ray.rfl.norm_add, H₁]
-#align
-  complex.eq_on_of_is_preconnected_of_is_max_on_norm Complex.eq_on_of_is_preconnected_of_is_max_on_norm
+#align complex.eq_on_of_is_preconnected_of_is_max_on_norm Complex.eq_on_of_is_preconnected_of_is_max_on_norm
 
 /-- **Maximum modulus principle** on a connected set. Let `U` be a (pre)connected open set in a
 complex normed space.  Let `f : E → F` be a function that is complex differentiable on `U` and is
@@ -329,8 +324,7 @@ theorem eq_on_closure_of_is_preconnected_of_is_max_on_norm {f : E → F} {U : Se
     (hm : IsMaxOn (norm ∘ f) U c) : EqOn f (const E (f c)) (closure U) :=
   (eq_on_of_is_preconnected_of_is_max_on_norm hc ho hd.DifferentiableOn hcU hm).of_subset_closure
     hd.ContinuousOn continuous_on_const subset_closure Subset.rfl
-#align
-  complex.eq_on_closure_of_is_preconnected_of_is_max_on_norm Complex.eq_on_closure_of_is_preconnected_of_is_max_on_norm
+#align complex.eq_on_closure_of_is_preconnected_of_is_max_on_norm Complex.eq_on_closure_of_is_preconnected_of_is_max_on_norm
 
 /-- **Maximum modulus principle**. Let `f : E → F` be a function between complex normed spaces.
 Suppose that the codomain `F` is a strictly convex space, `f` is complex differentiable on a set
@@ -386,8 +380,7 @@ theorem eventually_eq_or_eq_zero_of_is_local_min_norm {f : E → ℂ} {c : E}
   have h3 : IsLocalMax (norm ∘ f⁻¹) c := by refine' h2.congr (eventually_of_forall _) <;> simp
   have h4 : ∀ᶠ z in 𝓝 c, DifferentiableAt ℂ f⁻¹ z := by filter_upwards [hf, h1] with z h using h.inv
   filter_upwards [eventually_eq_of_is_local_max_norm h4 h3] with z using inv_inj.mp
-#align
-  complex.eventually_eq_or_eq_zero_of_is_local_min_norm Complex.eventually_eq_or_eq_zero_of_is_local_min_norm
+#align complex.eventually_eq_or_eq_zero_of_is_local_min_norm Complex.eventually_eq_or_eq_zero_of_is_local_min_norm
 
 end StrictConvex
 

@@ -104,8 +104,7 @@ theorem is_integral_iff {x : K} : IsIntegral R x ↔ ∃ y : R, algebraMap R K y
 theorem exists_algebra_map_eq_of_is_integral_pow {x : K} {n : ℕ} (hn : 0 < n)
     (hx : IsIntegral R <| x ^ n) : ∃ y : R, algebraMap R K y = x :=
   is_integral_iff.mp <| is_integral_of_pow hn hx
-#align
-  is_integrally_closed.exists_algebra_map_eq_of_is_integral_pow IsIntegrallyClosed.exists_algebra_map_eq_of_is_integral_pow
+#align is_integrally_closed.exists_algebra_map_eq_of_is_integral_pow IsIntegrallyClosed.exists_algebra_map_eq_of_is_integral_pow
 
 omit iic ifr
 
@@ -113,8 +112,7 @@ theorem exists_algebra_map_eq_of_pow_mem_subalgebra {K : Type _} [Field K] [Alge
     {S : Subalgebra R K} [IsIntegrallyClosed S] [IsFractionRing S K] {x : K} {n : ℕ} (hn : 0 < n)
     (hx : x ^ n ∈ S) : ∃ y : S, algebraMap S K y = x :=
   exists_algebra_map_eq_of_is_integral_pow hn <| is_integral_iff.mpr ⟨⟨x ^ n, hx⟩, rfl⟩
-#align
-  is_integrally_closed.exists_algebra_map_eq_of_pow_mem_subalgebra IsIntegrallyClosed.exists_algebra_map_eq_of_pow_mem_subalgebra
+#align is_integrally_closed.exists_algebra_map_eq_of_pow_mem_subalgebra IsIntegrallyClosed.exists_algebra_map_eq_of_pow_mem_subalgebra
 
 include id ifr
 
@@ -131,8 +129,7 @@ theorem integral_closure_eq_bot_iff : integralClosure R K = ⊥ ↔ IsIntegrally
   · intro h x hx
     rw [Algebra.mem_bot, Set.mem_range]
     exact is_integral_iff.mp hx
-#align
-  is_integrally_closed.integral_closure_eq_bot_iff IsIntegrallyClosed.integral_closure_eq_bot_iff
+#align is_integrally_closed.integral_closure_eq_bot_iff IsIntegrallyClosed.integral_closure_eq_bot_iff
 
 include iic
 
@@ -187,8 +184,7 @@ theorem isIntegrallyClosedOfFiniteExtension [FiniteDimensional K L] :
     IsIntegrallyClosed (integralClosure R L) :=
   letI : IsFractionRing (integralClosure R L) L := is_fraction_ring_of_finite_extension K L
   (integral_closure_eq_bot_iff L).mp integral_closure_idem
-#align
-  integral_closure.is_integrally_closed_of_finite_extension integralClosure.isIntegrallyClosedOfFiniteExtension
+#align integral_closure.is_integrally_closed_of_finite_extension integralClosure.isIntegrallyClosedOfFiniteExtension
 
 end integralClosure
 

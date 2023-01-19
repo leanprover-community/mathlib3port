@@ -205,8 +205,7 @@ end
 instance (priority := 100) OrderMonoidWithZeroHomClass.toOrderMonoidHomClass
     [OrderMonoidWithZeroHomClass F α β] : OrderMonoidHomClass F α β :=
   { ‹OrderMonoidWithZeroHomClass F α β› with }
-#align
-  order_monoid_with_zero_hom_class.to_order_monoid_hom_class OrderMonoidWithZeroHomClass.toOrderMonoidHomClass
+#align order_monoid_with_zero_hom_class.to_order_monoid_hom_class OrderMonoidWithZeroHomClass.toOrderMonoidHomClass
 -/
 
 instance [OrderMonoidWithZeroHomClass F α β] : CoeTC F (α →*₀o β) :=
@@ -938,8 +937,7 @@ Case conversion may be inaccurate. Consider using '#align order_monoid_with_zero
 @[simp]
 theorem coe_monoidWithZeroHom (f : α →*₀o β) : ⇑(f : α →*₀ β) = f :=
   rfl
-#align
-  order_monoid_with_zero_hom.coe_monoid_with_zero_hom OrderMonoidWithZeroHom.coe_monoidWithZeroHom
+#align order_monoid_with_zero_hom.coe_monoid_with_zero_hom OrderMonoidWithZeroHom.coe_monoidWithZeroHom
 
 /- warning: order_monoid_with_zero_hom.coe_order_monoid_hom -> OrderMonoidWithZeroHom.coe_orderMonoidHom is a dubious translation:
 lean 3 declaration is
@@ -960,8 +958,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align order_monoid_with_zero_hom.to_order_monoid_hom_injective OrderMonoidWithZeroHom.toOrderMonoidHom_injectiveₓ'. -/
 theorem toOrderMonoidHom_injective : Injective (toOrderMonoidHom : _ → α →*o β) := fun f g h =>
   ext <| by convert FunLike.ext_iff.1 h
-#align
-  order_monoid_with_zero_hom.to_order_monoid_hom_injective OrderMonoidWithZeroHom.toOrderMonoidHom_injective
+#align order_monoid_with_zero_hom.to_order_monoid_hom_injective OrderMonoidWithZeroHom.toOrderMonoidHom_injective
 
 /- warning: order_monoid_with_zero_hom.to_monoid_with_zero_hom_injective -> OrderMonoidWithZeroHom.toMonoidWithZeroHom_injective is a dubious translation:
 lean 3 declaration is
@@ -971,8 +968,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align order_monoid_with_zero_hom.to_monoid_with_zero_hom_injective OrderMonoidWithZeroHom.toMonoidWithZeroHom_injectiveₓ'. -/
 theorem toMonoidWithZeroHom_injective : Injective (toMonoidWithZeroHom : _ → α →*₀ β) :=
   fun f g h => ext <| by convert FunLike.ext_iff.1 h
-#align
-  order_monoid_with_zero_hom.to_monoid_with_zero_hom_injective OrderMonoidWithZeroHom.toMonoidWithZeroHom_injective
+#align order_monoid_with_zero_hom.to_monoid_with_zero_hom_injective OrderMonoidWithZeroHom.toMonoidWithZeroHom_injective
 
 /- warning: order_monoid_with_zero_hom.copy -> OrderMonoidWithZeroHom.copy is a dubious translation:
 lean 3 declaration is
@@ -1071,8 +1067,7 @@ Case conversion may be inaccurate. Consider using '#align order_monoid_with_zero
 theorem coe_comp_monoidWithZeroHom (f : β →*₀o γ) (g : α →*₀o β) :
     (f.comp g : α →*₀ γ) = (f : β →*₀ γ).comp g :=
   rfl
-#align
-  order_monoid_with_zero_hom.coe_comp_monoid_with_zero_hom OrderMonoidWithZeroHom.coe_comp_monoidWithZeroHom
+#align order_monoid_with_zero_hom.coe_comp_monoid_with_zero_hom OrderMonoidWithZeroHom.coe_comp_monoidWithZeroHom
 
 /- warning: order_monoid_with_zero_hom.coe_comp_order_monoid_hom -> OrderMonoidWithZeroHom.coe_comp_orderMonoidHom is a dubious translation:
 lean 3 declaration is
@@ -1084,8 +1079,7 @@ Case conversion may be inaccurate. Consider using '#align order_monoid_with_zero
 theorem coe_comp_orderMonoidHom (f : β →*₀o γ) (g : α →*₀o β) :
     (f.comp g : α →*o γ) = (f : β →*o γ).comp g :=
   rfl
-#align
-  order_monoid_with_zero_hom.coe_comp_order_monoid_hom OrderMonoidWithZeroHom.coe_comp_orderMonoidHom
+#align order_monoid_with_zero_hom.coe_comp_order_monoid_hom OrderMonoidWithZeroHom.coe_comp_orderMonoidHom
 
 /- warning: order_monoid_with_zero_hom.comp_assoc -> OrderMonoidWithZeroHom.comp_assoc is a dubious translation:
 lean 3 declaration is
@@ -1216,8 +1210,7 @@ theorem toMonoidWithZeroHom_eq_coe (f : α →*₀o β) : f.toMonoidWithZeroHom 
   by
   ext
   rfl
-#align
-  order_monoid_with_zero_hom.to_monoid_with_zero_hom_eq_coe OrderMonoidWithZeroHom.toMonoidWithZeroHom_eq_coe
+#align order_monoid_with_zero_hom.to_monoid_with_zero_hom_eq_coe OrderMonoidWithZeroHom.toMonoidWithZeroHom_eq_coe
 
 /- warning: order_monoid_with_zero_hom.to_order_monoid_hom_eq_coe -> OrderMonoidWithZeroHom.toOrderMonoidHom_eq_coe is a dubious translation:
 lean 3 declaration is
@@ -1228,8 +1221,7 @@ Case conversion may be inaccurate. Consider using '#align order_monoid_with_zero
 @[simp]
 theorem toOrderMonoidHom_eq_coe (f : α →*₀o β) : f.toOrderMonoidHom = f :=
   rfl
-#align
-  order_monoid_with_zero_hom.to_order_monoid_hom_eq_coe OrderMonoidWithZeroHom.toOrderMonoidHom_eq_coe
+#align order_monoid_with_zero_hom.to_order_monoid_hom_eq_coe OrderMonoidWithZeroHom.toOrderMonoidHom_eq_coe
 
 end LinearOrderedCommMonoidWithZero
 

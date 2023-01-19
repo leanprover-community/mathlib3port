@@ -280,8 +280,7 @@ theorem BlockTriangular.to_block_inverse_mul_to_block_eq_one [LinearOrder α] [I
     ext (i j)
     simpa using hM (lt_of_lt_of_le j.2 (le_of_not_lt i.2))
   simpa [h_zero] using h_sum
-#align
-  matrix.block_triangular.to_block_inverse_mul_to_block_eq_one Matrix.BlockTriangular.to_block_inverse_mul_to_block_eq_one
+#align matrix.block_triangular.to_block_inverse_mul_to_block_eq_one Matrix.BlockTriangular.to_block_inverse_mul_to_block_eq_one
 
 /-- The inverse of an upper-left subblock of a block-triangular matrix `M` is the upper-left
 subblock of `M⁻¹`. -/
@@ -346,8 +345,7 @@ theorem block_triangular_inv_of_block_triangular [LinearOrder α] [Invertible M]
     convert max'_mem _ _
   have hij' : b' ⟨j, hij.trans hi⟩ < b' ⟨i, hi⟩ := by simp_rw [b', Subtype.coe_mk, hij]
   simp [hM.inv_to_block k, (ih (image b' univ) hb' hA rfl hij').symm]
-#align
-  matrix.block_triangular_inv_of_block_triangular Matrix.block_triangular_inv_of_block_triangular
+#align matrix.block_triangular_inv_of_block_triangular Matrix.block_triangular_inv_of_block_triangular
 
 end Matrix
 

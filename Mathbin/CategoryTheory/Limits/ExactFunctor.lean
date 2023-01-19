@@ -99,8 +99,7 @@ theorem LeftExactFunctorCat.of_exact_obj (F : C ⥤ₑ D) :
 theorem RightExactFunctorCat.of_exact_obj (F : C ⥤ₑ D) :
     (RightExactFunctorCat.ofExact C D).obj F = ⟨F.1, F.2.2⟩ :=
   rfl
-#align
-  category_theory.RightExactFunctor.of_exact_obj CategoryTheory.RightExactFunctorCat.of_exact_obj
+#align category_theory.RightExactFunctor.of_exact_obj CategoryTheory.RightExactFunctorCat.of_exact_obj
 
 @[simp]
 theorem LeftExactFunctorCat.of_exact_map {F G : C ⥤ₑ D} (α : F ⟶ G) :
@@ -112,8 +111,7 @@ theorem LeftExactFunctorCat.of_exact_map {F G : C ⥤ₑ D} (α : F ⟶ G) :
 theorem RightExactFunctorCat.of_exact_map {F G : C ⥤ₑ D} (α : F ⟶ G) :
     (RightExactFunctorCat.ofExact C D).map α = α :=
   rfl
-#align
-  category_theory.RightExactFunctor.of_exact_map CategoryTheory.RightExactFunctorCat.of_exact_map
+#align category_theory.RightExactFunctor.of_exact_map CategoryTheory.RightExactFunctorCat.of_exact_map
 
 @[simp]
 theorem LeftExactFunctorCat.forget_obj (F : C ⥤ₗ D) :
@@ -186,14 +184,12 @@ theorem ExactFunctorCat.of_fst (F : C ⥤ D) [PreservesFiniteLimits F] [Preserve
 theorem LeftExactFunctorCat.forget_obj_of (F : C ⥤ D) [PreservesFiniteLimits F] :
     (LeftExactFunctorCat.forget C D).obj (LeftExactFunctorCat.of F) = F :=
   rfl
-#align
-  category_theory.LeftExactFunctor.forget_obj_of CategoryTheory.LeftExactFunctorCat.forget_obj_of
+#align category_theory.LeftExactFunctor.forget_obj_of CategoryTheory.LeftExactFunctorCat.forget_obj_of
 
 theorem RightExactFunctorCat.forget_obj_of (F : C ⥤ D) [PreservesFiniteColimits F] :
     (RightExactFunctorCat.forget C D).obj (RightExactFunctorCat.of F) = F :=
   rfl
-#align
-  category_theory.RightExactFunctor.forget_obj_of CategoryTheory.RightExactFunctorCat.forget_obj_of
+#align category_theory.RightExactFunctor.forget_obj_of CategoryTheory.RightExactFunctorCat.forget_obj_of
 
 theorem ExactFunctorCat.forget_obj_of (F : C ⥤ D) [PreservesFiniteLimits F]
     [PreservesFiniteColimits F] : (ExactFunctorCat.forget C D).obj (ExactFunctorCat.of F) = F :=

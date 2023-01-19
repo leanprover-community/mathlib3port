@@ -50,8 +50,7 @@ theorem mem_ℒp_two_iff_integrable_sq_norm {f : α → F} (hf : AeStronglyMeasu
   convert (mem_ℒp_norm_rpow_iff hf Ennreal.two_ne_zero Ennreal.two_ne_top).symm
   · simp
   · rw [div_eq_mul_inv, Ennreal.mul_inv_cancel Ennreal.two_ne_zero Ennreal.two_ne_top]
-#align
-  measure_theory.mem_ℒp_two_iff_integrable_sq_norm MeasureTheory.mem_ℒp_two_iff_integrable_sq_norm
+#align measure_theory.mem_ℒp_two_iff_integrable_sq_norm MeasureTheory.mem_ℒp_two_iff_integrable_sq_norm
 
 theorem mem_ℒp_two_iff_integrable_sq {f : α → ℝ} (hf : AeStronglyMeasurable f μ) :
     Memℒp f 2 μ ↔ Integrable (fun x => f x ^ 2) μ :=
@@ -219,8 +218,7 @@ theorem inner_indicator_const_Lp_eq_set_integral_inner (f : lp E 2 μ) (hs : Mea
     rw [hx hxs]
     exact inner_zero_left
   rw [h_left, h_right, add_zero]
-#align
-  measure_theory.L2.inner_indicator_const_Lp_eq_set_integral_inner MeasureTheory.L2Cat.inner_indicator_const_Lp_eq_set_integral_inner
+#align measure_theory.L2.inner_indicator_const_Lp_eq_set_integral_inner MeasureTheory.L2Cat.inner_indicator_const_Lp_eq_set_integral_inner
 
 /-- The inner product in `L2` of the indicator of a set `indicator_const_Lp 2 hs hμs c` and `f` is
 equal to the inner product of the constant `c` and the integral of `f` over `s`. -/
@@ -229,8 +227,7 @@ theorem inner_indicator_const_Lp_eq_inner_set_integral [CompleteSpace E] [Normed
     (⟪indicatorConstLp 2 hs hμs c, f⟫ : 𝕜) = ⟪c, ∫ x in s, f x ∂μ⟫ := by
   rw [← integral_inner (integrable_on_Lp_of_measure_ne_top f fact_one_le_two_ennreal.elim hμs),
     L2.inner_indicator_const_Lp_eq_set_integral_inner]
-#align
-  measure_theory.L2.inner_indicator_const_Lp_eq_inner_set_integral MeasureTheory.L2Cat.inner_indicator_const_Lp_eq_inner_set_integral
+#align measure_theory.L2.inner_indicator_const_Lp_eq_inner_set_integral MeasureTheory.L2Cat.inner_indicator_const_Lp_eq_inner_set_integral
 
 variable {𝕜}
 
@@ -241,8 +238,7 @@ theorem inner_indicator_const_Lp_one (hs : MeasurableSet s) (hμs : μ s ≠ ∞
   by
   rw [L2.inner_indicator_const_Lp_eq_inner_set_integral 𝕜 hs hμs (1 : 𝕜) f]
   simp
-#align
-  measure_theory.L2.inner_indicator_const_Lp_one MeasureTheory.L2Cat.inner_indicator_const_Lp_one
+#align measure_theory.L2.inner_indicator_const_Lp_one MeasureTheory.L2Cat.inner_indicator_const_Lp_one
 
 end IndicatorConstLp
 
@@ -271,8 +267,7 @@ theorem BoundedContinuousFunction.inner_to_Lp (f g : α →ᵇ 𝕜) :
   filter_upwards [hf_ae, hg_ae] with _ hf hg
   rw [hf, hg]
   simp
-#align
-  measure_theory.bounded_continuous_function.inner_to_Lp MeasureTheory.BoundedContinuousFunction.inner_to_Lp
+#align measure_theory.bounded_continuous_function.inner_to_Lp MeasureTheory.BoundedContinuousFunction.inner_to_Lp
 
 variable [CompactSpace α]
 

@@ -858,8 +858,7 @@ theorem right_half_plane_of_tendsto_zero_on_real (hd : DiffContOnCl ℂ f { z | 
     -- Thus we have `C < ‖f x₀‖ = ‖f 0‖ ≤ C`. Contradiction completes the proof.
     refine' (h.not_le <| this ▸ _).elim
     simpa using him 0
-#align
-  phragmen_lindelof.right_half_plane_of_tendsto_zero_on_real PhragmenLindelof.right_half_plane_of_tendsto_zero_on_real
+#align phragmen_lindelof.right_half_plane_of_tendsto_zero_on_real PhragmenLindelof.right_half_plane_of_tendsto_zero_on_real
 
 /-- **Phragmen-Lindelöf principle** in the right half-plane. Let `f : ℂ → E` be a function such that
 
@@ -909,8 +908,7 @@ theorem right_half_plane_of_bounded_on_real (hd : DiffContOnCl ℂ f { z | 0 < z
     exact h₀.zero_smul_is_bounded_under_le hre
   · rw [hgn, of_real_mul_re, I_re, mul_zero, mul_zero, Real.exp_zero, one_mul]
     exact him y
-#align
-  phragmen_lindelof.right_half_plane_of_bounded_on_real PhragmenLindelof.right_half_plane_of_bounded_on_real
+#align phragmen_lindelof.right_half_plane_of_bounded_on_real PhragmenLindelof.right_half_plane_of_bounded_on_real
 
 /-- **Phragmen-Lindelöf principle** in the right half-plane. Let `f : ℂ → E` be a function such that
 
@@ -978,8 +976,7 @@ theorem eq_zero_on_right_half_plane_of_superexponential_decay
     exact hre n
   · rw [hg, of_real_mul_re, I_re, mul_zero, Real.exp_zero, one_pow, one_mul]
     exact hC y
-#align
-  phragmen_lindelof.eq_zero_on_right_half_plane_of_superexponential_decay PhragmenLindelof.eq_zero_on_right_half_plane_of_superexponential_decay
+#align phragmen_lindelof.eq_zero_on_right_half_plane_of_superexponential_decay PhragmenLindelof.eq_zero_on_right_half_plane_of_superexponential_decay
 
 /-- **Phragmen-Lindelöf principle** in the right half-plane. Let `f g : ℂ → E` be functions such
 that
@@ -1027,8 +1024,7 @@ theorem eq_on_right_half_plane_of_superexponential_decay {g : ℂ → E}
   · rcases hfim with ⟨Cf, hCf⟩
     rcases hgim with ⟨Cg, hCg⟩
     exact ⟨Cf + Cg, fun x => norm_sub_le_of_le (hCf x) (hCg x)⟩
-#align
-  phragmen_lindelof.eq_on_right_half_plane_of_superexponential_decay PhragmenLindelof.eq_on_right_half_plane_of_superexponential_decay
+#align phragmen_lindelof.eq_on_right_half_plane_of_superexponential_decay PhragmenLindelof.eq_on_right_half_plane_of_superexponential_decay
 
 end PhragmenLindelof
 

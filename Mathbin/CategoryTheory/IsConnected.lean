@@ -110,8 +110,7 @@ theorem IsConnected.of_any_functor_const_on_obj [Nonempty J]
   {
     iso_constant := fun α F j' =>
       ⟨NatIso.ofComponents (fun j => eqToIso (h F j j')) fun _ _ _ => Subsingleton.elim _ _⟩ }
-#align
-  category_theory.is_connected.of_any_functor_const_on_obj CategoryTheory.IsConnected.of_any_functor_const_on_obj
+#align category_theory.is_connected.of_any_functor_const_on_obj CategoryTheory.IsConnected.of_any_functor_const_on_obj
 
 /-- If `J` is connected, then given any function `F` such that the presence of a
 morphism `j₁ ⟶ j₂` implies `F j₁ = F j₂`, we have that `F` is constant.
@@ -130,8 +129,7 @@ theorem constant_of_preserves_morphisms [IsPreconnected J] {α : Type u₁} (F :
               ext
               exact h _ _ f) }
       j j'
-#align
-  category_theory.constant_of_preserves_morphisms CategoryTheory.constant_of_preserves_morphisms
+#align category_theory.constant_of_preserves_morphisms CategoryTheory.constant_of_preserves_morphisms
 
 /-- `J` is connected if: given any function `F : J → α` which is constant for any
 `j₁, j₂` for which there is a morphism `j₁ ⟶ j₂`, then `F` is constant.
@@ -148,8 +146,7 @@ theorem IsConnected.of_constant_of_preserves_morphisms [Nonempty J]
     h F.obj fun _ _ f => by
       ext
       exact discrete.eq_of_hom (F.map f)
-#align
-  category_theory.is_connected.of_constant_of_preserves_morphisms CategoryTheory.IsConnected.of_constant_of_preserves_morphisms
+#align category_theory.is_connected.of_constant_of_preserves_morphisms CategoryTheory.IsConnected.of_constant_of_preserves_morphisms
 
 /-- An inductive-like property for the objects of a connected category.
 If the set `p` is nonempty, and `p` is closed under morphisms of `J`,
@@ -261,13 +258,11 @@ instance is_connected_op [IsConnected J] : IsConnected Jᵒᵖ
 
 theorem is_preconnected_of_is_preconnected_op [IsPreconnected Jᵒᵖ] : IsPreconnected J :=
   is_preconnected_of_equivalent (opOpEquivalence J)
-#align
-  category_theory.is_preconnected_of_is_preconnected_op CategoryTheory.is_preconnected_of_is_preconnected_op
+#align category_theory.is_preconnected_of_is_preconnected_op CategoryTheory.is_preconnected_of_is_preconnected_op
 
 theorem is_connected_of_is_connected_op [IsConnected Jᵒᵖ] : IsConnected J :=
   is_connected_of_equivalent (opOpEquivalence J)
-#align
-  category_theory.is_connected_of_is_connected_op CategoryTheory.is_connected_of_is_connected_op
+#align category_theory.is_connected_of_is_connected_op CategoryTheory.is_connected_of_is_connected_op
 
 /-- j₁ and j₂ are related by `zag` if there is a morphism between them. -/
 @[reducible]
@@ -378,8 +373,7 @@ def discreteIsConnectedEquivPunit {α : Type u₁} [IsConnected (Discrete α)] :
       inverse := Discrete.functor fun _ => Classical.arbitrary _
       unitIso := iso_constant _ (Classical.arbitrary _)
       counitIso := Functor.punitExt _ _ }
-#align
-  category_theory.discrete_is_connected_equiv_punit CategoryTheory.discreteIsConnectedEquivPunit
+#align category_theory.discrete_is_connected_equiv_punit CategoryTheory.discreteIsConnectedEquivPunit
 
 variable {C : Type u₂} [Category.{u₁} C]
 
@@ -410,8 +404,7 @@ instance nonempty_hom_of_connected_groupoid {G} [Groupoid G] [IsConnected G] :
   refine' equiv_relation _ _ fun j₁ j₂ => Nonempty.intro
   exact
     ⟨fun j => ⟨𝟙 _⟩, fun j₁ j₂ => Nonempty.map fun f => inv f, fun _ _ _ => Nonempty.map2 (· ≫ ·)⟩
-#align
-  category_theory.nonempty_hom_of_connected_groupoid CategoryTheory.nonempty_hom_of_connected_groupoid
+#align category_theory.nonempty_hom_of_connected_groupoid CategoryTheory.nonempty_hom_of_connected_groupoid
 
 end CategoryTheory
 

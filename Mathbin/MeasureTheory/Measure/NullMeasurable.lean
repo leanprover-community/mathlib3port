@@ -135,8 +135,7 @@ theorem compl_iff : NullMeasurableSet (sᶜ) μ ↔ NullMeasurableSet s μ :=
 @[nontriviality]
 theorem ofSubsingleton [Subsingleton α] : NullMeasurableSet s μ :=
   Subsingleton.measurable_set
-#align
-  measure_theory.null_measurable_set.of_subsingleton MeasureTheory.NullMeasurableSet.ofSubsingleton
+#align measure_theory.null_measurable_set.of_subsingleton MeasureTheory.NullMeasurableSet.ofSubsingleton
 
 protected theorem congr (hs : NullMeasurableSet s μ) (h : s =ᵐ[μ] t) : NullMeasurableSet t μ :=
   let ⟨s', hm, hs'⟩ := hs
@@ -151,8 +150,7 @@ protected theorem union {ι : Sort _} [Countable ι] {s : ι → Set α}
 protected theorem bUnionDecode₂ [Encodable ι] ⦃f : ι → Set α⦄ (h : ∀ i, NullMeasurableSet (f i) μ)
     (n : ℕ) : NullMeasurableSet (⋃ b ∈ Encodable.decode₂ ι n, f b) μ :=
   MeasurableSet.bUnion_decode₂ h n
-#align
-  measure_theory.null_measurable_set.bUnion_decode₂ MeasureTheory.NullMeasurableSet.bUnionDecode₂
+#align measure_theory.null_measurable_set.bUnion_decode₂ MeasureTheory.NullMeasurableSet.bUnionDecode₂
 
 protected theorem bUnion {f : ι → Set α} {s : Set ι} (hs : s.Countable)
     (h : ∀ b ∈ s, NullMeasurableSet (f b) μ) : NullMeasurableSet (⋃ b ∈ s, f b) μ :=
@@ -245,29 +243,25 @@ theorem exists_measurable_superset_ae_eq (h : NullMeasurableSet s μ) :
   · exact diff_subset_iff.1 (subset_to_measurable _ _)
   · have : to_measurable μ (s \ t) =ᵐ[μ] (∅ : Set α) := by simp [ae_le_set.1 hst.le]
     simpa only [union_empty] using hst.symm.union this
-#align
-  measure_theory.null_measurable_set.exists_measurable_superset_ae_eq MeasureTheory.NullMeasurableSet.exists_measurable_superset_ae_eq
+#align measure_theory.null_measurable_set.exists_measurable_superset_ae_eq MeasureTheory.NullMeasurableSet.exists_measurable_superset_ae_eq
 
 theorem to_measurable_ae_eq (h : NullMeasurableSet s μ) : toMeasurable μ s =ᵐ[μ] s :=
   by
   rw [to_measurable, dif_pos]
   exact h.exists_measurable_superset_ae_eq.some_spec.snd.2
-#align
-  measure_theory.null_measurable_set.to_measurable_ae_eq MeasureTheory.NullMeasurableSet.to_measurable_ae_eq
+#align measure_theory.null_measurable_set.to_measurable_ae_eq MeasureTheory.NullMeasurableSet.to_measurable_ae_eq
 
 theorem compl_to_measurable_compl_ae_eq (h : NullMeasurableSet s μ) :
     toMeasurable μ (sᶜ)ᶜ =ᵐ[μ] s := by
   simpa only [compl_compl] using h.compl.to_measurable_ae_eq.compl
-#align
-  measure_theory.null_measurable_set.compl_to_measurable_compl_ae_eq MeasureTheory.NullMeasurableSet.compl_to_measurable_compl_ae_eq
+#align measure_theory.null_measurable_set.compl_to_measurable_compl_ae_eq MeasureTheory.NullMeasurableSet.compl_to_measurable_compl_ae_eq
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem exists_measurable_subset_ae_eq (h : NullMeasurableSet s μ) :
     ∃ (t : _)(_ : t ⊆ s), MeasurableSet t ∧ t =ᵐ[μ] s :=
   ⟨toMeasurable μ (sᶜ)ᶜ, compl_subset_comm.2 <| subset_to_measurable _ _,
     (measurable_set_to_measurable _ _).compl, h.compl_to_measurable_compl_ae_eq⟩
-#align
-  measure_theory.null_measurable_set.exists_measurable_subset_ae_eq MeasureTheory.NullMeasurableSet.exists_measurable_subset_ae_eq
+#align measure_theory.null_measurable_set.exists_measurable_subset_ae_eq MeasureTheory.NullMeasurableSet.exists_measurable_subset_ae_eq
 
 end NullMeasurableSet
 
@@ -287,8 +281,7 @@ theorem exists_subordinate_pairwise_disjoint [Countable ι] {s : ι → Set α}
       (ht_eq _).symm.trans (diff_null_ae_eq_self (hu₀ i)).symm, fun i => (htm i).diff (hum i),
       hud.mono fun i j h =>
         h.mono (diff_subset_diff_left (ht_sub i)) (diff_subset_diff_left (ht_sub j))⟩
-#align
-  measure_theory.exists_subordinate_pairwise_disjoint MeasureTheory.exists_subordinate_pairwise_disjoint
+#align measure_theory.exists_subordinate_pairwise_disjoint MeasureTheory.exists_subordinate_pairwise_disjoint
 
 theorem measure_Union {m0 : MeasurableSpace α} {μ : Measure α} [Countable ι] {f : ι → Set α}
     (hn : Pairwise (Disjoint on f)) (h : ∀ i, MeasurableSet (f i)) : μ (⋃ i, f i) = ∑' i, μ (f i) :=
@@ -490,13 +483,11 @@ theorem NullMeasurableSet.measurable_of_complete (hs : NullMeasurableSet s μ) [
   diff_diff_cancel_left (subset_to_measurable μ s) ▸
     (measurable_set_to_measurable _ _).diff
       (measurable_set_of_null (ae_le_set.1 hs.to_measurable_ae_eq.le))
-#align
-  measure_theory.null_measurable_set.measurable_of_complete MeasureTheory.NullMeasurableSet.measurable_of_complete
+#align measure_theory.null_measurable_set.measurable_of_complete MeasureTheory.NullMeasurableSet.measurable_of_complete
 
 theorem NullMeasurable.measurable_of_complete [μ.IsComplete] {m1 : MeasurableSpace β} {f : α → β}
     (hf : NullMeasurable f μ) : Measurable f := fun s hs => (hf hs).measurable_of_complete
-#align
-  measure_theory.null_measurable.measurable_of_complete MeasureTheory.NullMeasurable.measurable_of_complete
+#align measure_theory.null_measurable.measurable_of_complete MeasureTheory.NullMeasurable.measurable_of_complete
 
 theorem Measurable.congr_ae {α β} [MeasurableSpace α] [MeasurableSpace β] {μ : Measure α}
     [hμ : μ.IsComplete] {f g : α → β} (hf : Measurable f) (hfg : f =ᵐ[μ] g) : Measurable g :=

@@ -750,8 +750,7 @@ theorem mapDomain.add_monoid_hom_comp_map_range [AddCommMonoid N] (f : α → β
   by
   ext
   simp
-#align
-  finsupp.map_domain.add_monoid_hom_comp_map_range Finsupp.mapDomain.add_monoid_hom_comp_map_range
+#align finsupp.map_domain.add_monoid_hom_comp_map_range Finsupp.mapDomain.add_monoid_hom_comp_map_range
 
 /-- When `g` preserves addition, `map_range` and `map_domain` commute. -/
 theorem map_domain_map_range [AddCommMonoid N] (f : α → β) (v : α →₀ M) (g : M → N) (h0 : g 0 = 0)
@@ -1445,14 +1444,12 @@ theorem snd_sum_finsupp_equiv_prod_finsupp {α β γ : Type _} [Zero γ] (f : Su
 theorem sum_finsupp_equiv_prod_finsupp_symm_inl {α β γ : Type _} [Zero γ] (fg : (α →₀ γ) × (β →₀ γ))
     (x : α) : (sumFinsuppEquivProdFinsupp.symm fg) (Sum.inl x) = fg.1 x :=
   rfl
-#align
-  finsupp.sum_finsupp_equiv_prod_finsupp_symm_inl Finsupp.sum_finsupp_equiv_prod_finsupp_symm_inl
+#align finsupp.sum_finsupp_equiv_prod_finsupp_symm_inl Finsupp.sum_finsupp_equiv_prod_finsupp_symm_inl
 
 theorem sum_finsupp_equiv_prod_finsupp_symm_inr {α β γ : Type _} [Zero γ] (fg : (α →₀ γ) × (β →₀ γ))
     (y : β) : (sumFinsuppEquivProdFinsupp.symm fg) (Sum.inr y) = fg.2 y :=
   rfl
-#align
-  finsupp.sum_finsupp_equiv_prod_finsupp_symm_inr Finsupp.sum_finsupp_equiv_prod_finsupp_symm_inr
+#align finsupp.sum_finsupp_equiv_prod_finsupp_symm_inr Finsupp.sum_finsupp_equiv_prod_finsupp_symm_inr
 
 variable [AddMonoid M]
 
@@ -1482,14 +1479,12 @@ theorem snd_sum_finsupp_add_equiv_prod_finsupp {α β : Type _} (f : Sum α β �
 theorem sum_finsupp_add_equiv_prod_finsupp_symm_inl {α β : Type _} (fg : (α →₀ M) × (β →₀ M))
     (x : α) : (sumFinsuppAddEquivProdFinsupp.symm fg) (Sum.inl x) = fg.1 x :=
   rfl
-#align
-  finsupp.sum_finsupp_add_equiv_prod_finsupp_symm_inl Finsupp.sum_finsupp_add_equiv_prod_finsupp_symm_inl
+#align finsupp.sum_finsupp_add_equiv_prod_finsupp_symm_inl Finsupp.sum_finsupp_add_equiv_prod_finsupp_symm_inl
 
 theorem sum_finsupp_add_equiv_prod_finsupp_symm_inr {α β : Type _} (fg : (α →₀ M) × (β →₀ M))
     (y : β) : (sumFinsuppAddEquivProdFinsupp.symm fg) (Sum.inr y) = fg.2 y :=
   rfl
-#align
-  finsupp.sum_finsupp_add_equiv_prod_finsupp_symm_inr Finsupp.sum_finsupp_add_equiv_prod_finsupp_symm_inr
+#align finsupp.sum_finsupp_add_equiv_prod_finsupp_symm_inr Finsupp.sum_finsupp_add_equiv_prod_finsupp_symm_inr
 
 end Sum
 
@@ -1957,8 +1952,7 @@ noncomputable def sigmaFinsuppAddEquivPiFinsupp {α : Type _} {ιs : η → Type
 theorem sigma_finsupp_add_equiv_pi_finsupp_apply {α : Type _} {ιs : η → Type _} [AddMonoid α]
     (f : (Σj, ιs j) →₀ α) (j i) : sigmaFinsuppAddEquivPiFinsupp f j i = f ⟨j, i⟩ :=
   rfl
-#align
-  finsupp.sigma_finsupp_add_equiv_pi_finsupp_apply Finsupp.sigma_finsupp_add_equiv_pi_finsupp_apply
+#align finsupp.sigma_finsupp_add_equiv_pi_finsupp_apply Finsupp.sigma_finsupp_add_equiv_pi_finsupp_apply
 
 end Sigma
 

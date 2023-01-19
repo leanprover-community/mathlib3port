@@ -42,8 +42,7 @@ theorem Nondegenerate.eq_zero_of_ortho {M : Matrix m m R} (hM : Nondegenerate M)
 theorem Nondegenerate.exists_not_ortho_of_ne_zero {M : Matrix m m R} (hM : Nondegenerate M)
     {v : m → R} (hv : v ≠ 0) : ∃ w, Matrix.dotProduct v (mulVec M w) ≠ 0 :=
   not_forall.mp (mt hM.eq_zero_of_ortho hv)
-#align
-  matrix.nondegenerate.exists_not_ortho_of_ne_zero Matrix.Nondegenerate.exists_not_ortho_of_ne_zero
+#align matrix.nondegenerate.exists_not_ortho_of_ne_zero Matrix.Nondegenerate.exists_not_ortho_of_ne_zero
 
 variable [CommRing A] [IsDomain A]
 

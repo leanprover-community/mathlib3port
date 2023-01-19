@@ -257,8 +257,7 @@ theorem closed_ball_inv_subset_polar_closed_ball {r : ℝ} :
     _ = r / r := inv_mul_eq_div _ _
     _ ≤ 1 := div_self_le_one r
     
-#align
-  normed_space.closed_ball_inv_subset_polar_closed_ball NormedSpace.closed_ball_inv_subset_polar_closed_ball
+#align normed_space.closed_ball_inv_subset_polar_closed_ball NormedSpace.closed_ball_inv_subset_polar_closed_ball
 
 /-- The `polar` of closed ball in a normed space `E` is the closed ball of the dual with
 inverse radius. -/

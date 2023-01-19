@@ -41,8 +41,7 @@ Case conversion may be inaccurate. Consider using '#align linear_ordered_comm_mo
 instance (priority := 100) LinearOrderedCommMonoidWithZero.toZeroLeOneClass
     [LinearOrderedCommMonoidWithZero α] : ZeroLEOneClass α :=
   { ‹LinearOrderedCommMonoidWithZero α› with }
-#align
-  linear_ordered_comm_monoid_with_zero.to_zero_le_one_class LinearOrderedCommMonoidWithZero.toZeroLeOneClass
+#align linear_ordered_comm_monoid_with_zero.to_zero_le_one_class LinearOrderedCommMonoidWithZero.toZeroLeOneClass
 
 /- warning: canonically_ordered_add_monoid.to_zero_le_one_class -> CanonicallyOrderedAddMonoid.toZeroLeOneClass is a dubious translation:
 lean 3 declaration is
@@ -53,8 +52,7 @@ Case conversion may be inaccurate. Consider using '#align canonically_ordered_ad
 instance (priority := 100) CanonicallyOrderedAddMonoid.toZeroLeOneClass
     [CanonicallyOrderedAddMonoid α] [One α] : ZeroLEOneClass α :=
   ⟨zero_le 1⟩
-#align
-  canonically_ordered_add_monoid.to_zero_le_one_class CanonicallyOrderedAddMonoid.toZeroLeOneClass
+#align canonically_ordered_add_monoid.to_zero_le_one_class CanonicallyOrderedAddMonoid.toZeroLeOneClass
 
 namespace WithZero
 
@@ -139,7 +137,7 @@ Case conversion may be inaccurate. Consider using '#align with_zero.le_max_iff [
 @[simp]
 theorem [anonymous] [LinearOrder α] {a b c : α} : (a : WithZero α) ≤ max b c ↔ a ≤ max b c := by
   simp only [WithZero.coe_le_coe, le_max_iff]
-#align with_zero.le_max_iff[anonymous]
+#align with_zero.le_max_iff [anonymous]
 
 /- warning: with_zero.min_le_iff clashes with [anonymous] -> [anonymous]
 warning: with_zero.min_le_iff -> [anonymous] is a dubious translation:
@@ -151,7 +149,7 @@ Case conversion may be inaccurate. Consider using '#align with_zero.min_le_iff [
 @[simp]
 theorem [anonymous] [LinearOrder α] {a b c : α} : min (a : WithZero α) b ≤ c ↔ min a b ≤ c := by
   simp only [WithZero.coe_le_coe, min_le_iff]
-#align with_zero.min_le_iff[anonymous]
+#align with_zero.min_le_iff [anonymous]
 
 instance [OrderedCommMonoid α] : OrderedCommMonoid (WithZero α) :=
   { WithZero.commMonoidWithZero, WithZero.partialOrder with

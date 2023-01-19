@@ -341,8 +341,7 @@ theorem oangle_eq_iff_eq_norm_div_norm_smul_rotation_of_ne_zero {x y : V} (hx : 
       div_mul_cancel _ (norm_ne_zero_iff.2 hx)]
   · intro hye
     rw [hye, o.oangle_smul_right_of_pos _ _ hp, o.oangle_rotation_self_right hx]
-#align
-  orientation.oangle_eq_iff_eq_norm_div_norm_smul_rotation_of_ne_zero Orientation.oangle_eq_iff_eq_norm_div_norm_smul_rotation_of_ne_zero
+#align orientation.oangle_eq_iff_eq_norm_div_norm_smul_rotation_of_ne_zero Orientation.oangle_eq_iff_eq_norm_div_norm_smul_rotation_of_ne_zero
 
 /-- The angle between two nonzero vectors is `θ` if and only if the second vector is the first
 rotated by `θ` and scaled by a positive real. -/
@@ -355,8 +354,7 @@ theorem oangle_eq_iff_eq_pos_smul_rotation_of_ne_zero {x y : V} (hx : x ≠ 0) (
     exact ⟨‖y‖ / ‖x‖, div_pos (norm_pos_iff.2 hy) (norm_pos_iff.2 hx), h⟩
   · rintro ⟨r, hr, rfl⟩
     rw [o.oangle_smul_right_of_pos _ _ hr, o.oangle_rotation_self_right hx]
-#align
-  orientation.oangle_eq_iff_eq_pos_smul_rotation_of_ne_zero Orientation.oangle_eq_iff_eq_pos_smul_rotation_of_ne_zero
+#align orientation.oangle_eq_iff_eq_pos_smul_rotation_of_ne_zero Orientation.oangle_eq_iff_eq_pos_smul_rotation_of_ne_zero
 
 /-- The angle between two vectors is `θ` if and only if they are nonzero and the second vector
 is the first rotated by `θ` and scaled by the ratio of the norms, or `θ` and at least one of the
@@ -370,8 +368,7 @@ theorem oangle_eq_iff_eq_norm_div_norm_smul_rotation_or_eq_zero {x y : V} (θ : 
     · simp [hy, eq_comm]
     · rw [o.oangle_eq_iff_eq_norm_div_norm_smul_rotation_of_ne_zero hx hy]
       simp [hx, hy]
-#align
-  orientation.oangle_eq_iff_eq_norm_div_norm_smul_rotation_or_eq_zero Orientation.oangle_eq_iff_eq_norm_div_norm_smul_rotation_or_eq_zero
+#align orientation.oangle_eq_iff_eq_norm_div_norm_smul_rotation_or_eq_zero Orientation.oangle_eq_iff_eq_norm_div_norm_smul_rotation_or_eq_zero
 
 /-- The angle between two vectors is `θ` if and only if they are nonzero and the second vector
 is the first rotated by `θ` and scaled by a positive real, or `θ` and at least one of the
@@ -386,8 +383,7 @@ theorem oangle_eq_iff_eq_pos_smul_rotation_or_eq_zero {x y : V} (θ : Real.Angle
     · simp [hy, eq_comm]
     · rw [o.oangle_eq_iff_eq_pos_smul_rotation_of_ne_zero hx hy]
       simp [hx, hy]
-#align
-  orientation.oangle_eq_iff_eq_pos_smul_rotation_or_eq_zero Orientation.oangle_eq_iff_eq_pos_smul_rotation_or_eq_zero
+#align orientation.oangle_eq_iff_eq_pos_smul_rotation_or_eq_zero Orientation.oangle_eq_iff_eq_pos_smul_rotation_or_eq_zero
 
 /-- Any linear isometric equivalence in `V` with positive determinant is `rotation`. -/
 theorem exists_linear_isometry_equiv_eq_of_det_pos {f : V ≃ₗᵢ[ℝ] V}
@@ -408,8 +404,7 @@ theorem exists_linear_isometry_equiv_eq_of_det_pos {f : V ≃ₗᵢ[ℝ] V}
     simp only [oangle, o.linear_isometry_equiv_comp_right_angle_rotation f hd,
       o.kahler_comp_right_angle_rotation]
   simp [← this]
-#align
-  orientation.exists_linear_isometry_equiv_eq_of_det_pos Orientation.exists_linear_isometry_equiv_eq_of_det_pos
+#align orientation.exists_linear_isometry_equiv_eq_of_det_pos Orientation.exists_linear_isometry_equiv_eq_of_det_pos
 
 theorem rotation_map (θ : Real.Angle) (f : V ≃ₗᵢ[ℝ] V') (x : V') :
     (Orientation.map (Fin 2) f.toLinearEquiv o).rotation θ x = f (o.rotation θ (f.symm x)) := by
@@ -457,8 +452,7 @@ zero. -/
 theorem inner_smul_rotation_pi_div_two_left (x : V) (r : ℝ) :
     ⟪r • o.rotation (π / 2 : ℝ) x, x⟫ = 0 := by
   rw [inner_smul_left, inner_rotation_pi_div_two_left, mul_zero]
-#align
-  orientation.inner_smul_rotation_pi_div_two_left Orientation.inner_smul_rotation_pi_div_two_left
+#align orientation.inner_smul_rotation_pi_div_two_left Orientation.inner_smul_rotation_pi_div_two_left
 
 /-- The inner product between a vector and a multiple of a `π / 2` rotation of that vector is
 zero. -/
@@ -466,8 +460,7 @@ zero. -/
 theorem inner_smul_rotation_pi_div_two_right (x : V) (r : ℝ) :
     ⟪x, r • o.rotation (π / 2 : ℝ) x⟫ = 0 := by
   rw [real_inner_comm, inner_smul_rotation_pi_div_two_left]
-#align
-  orientation.inner_smul_rotation_pi_div_two_right Orientation.inner_smul_rotation_pi_div_two_right
+#align orientation.inner_smul_rotation_pi_div_two_right Orientation.inner_smul_rotation_pi_div_two_right
 
 /-- The inner product between a `π / 2` rotation of a vector and a multiple of that vector is
 zero. -/
@@ -475,8 +468,7 @@ zero. -/
 theorem inner_rotation_pi_div_two_left_smul (x : V) (r : ℝ) :
     ⟪o.rotation (π / 2 : ℝ) x, r • x⟫ = 0 := by
   rw [inner_smul_right, inner_rotation_pi_div_two_left, mul_zero]
-#align
-  orientation.inner_rotation_pi_div_two_left_smul Orientation.inner_rotation_pi_div_two_left_smul
+#align orientation.inner_rotation_pi_div_two_left_smul Orientation.inner_rotation_pi_div_two_left_smul
 
 /-- The inner product between a multiple of a vector and a `π / 2` rotation of that vector is
 zero. -/
@@ -484,8 +476,7 @@ zero. -/
 theorem inner_rotation_pi_div_two_right_smul (x : V) (r : ℝ) :
     ⟪r • x, o.rotation (π / 2 : ℝ) x⟫ = 0 := by
   rw [real_inner_comm, inner_rotation_pi_div_two_left_smul]
-#align
-  orientation.inner_rotation_pi_div_two_right_smul Orientation.inner_rotation_pi_div_two_right_smul
+#align orientation.inner_rotation_pi_div_two_right_smul Orientation.inner_rotation_pi_div_two_right_smul
 
 /-- The inner product between a multiple of a `π / 2` rotation of a vector and a multiple of
 that vector is zero. -/
@@ -493,8 +484,7 @@ that vector is zero. -/
 theorem inner_smul_rotation_pi_div_two_smul_left (x : V) (r₁ r₂ : ℝ) :
     ⟪r₁ • o.rotation (π / 2 : ℝ) x, r₂ • x⟫ = 0 := by
   rw [inner_smul_right, inner_smul_rotation_pi_div_two_left, mul_zero]
-#align
-  orientation.inner_smul_rotation_pi_div_two_smul_left Orientation.inner_smul_rotation_pi_div_two_smul_left
+#align orientation.inner_smul_rotation_pi_div_two_smul_left Orientation.inner_smul_rotation_pi_div_two_smul_left
 
 /-- The inner product between a multiple of a vector and a multiple of a `π / 2` rotation of
 that vector is zero. -/
@@ -502,8 +492,7 @@ that vector is zero. -/
 theorem inner_smul_rotation_pi_div_two_smul_right (x : V) (r₁ r₂ : ℝ) :
     ⟪r₂ • x, r₁ • o.rotation (π / 2 : ℝ) x⟫ = 0 := by
   rw [real_inner_comm, inner_smul_rotation_pi_div_two_smul_left]
-#align
-  orientation.inner_smul_rotation_pi_div_two_smul_right Orientation.inner_smul_rotation_pi_div_two_smul_right
+#align orientation.inner_smul_rotation_pi_div_two_smul_right Orientation.inner_smul_rotation_pi_div_two_smul_right
 
 /-- The inner product between two vectors is zero if and only if the first vector is zero or
 the second is a multiple of a `π / 2` rotation of that vector. -/
@@ -538,8 +527,7 @@ theorem inner_eq_zero_iff_eq_zero_or_eq_smul_rotation_pi_div_two {x y : V} :
       · exact Or.inr (Or.inl (zero_smul _ _))
       · refine' Or.inr (Or.inr (Or.inl _))
         rw [o.oangle_smul_right_of_pos _ _ hr, o.oangle_rotation_self_right hx]
-#align
-  orientation.inner_eq_zero_iff_eq_zero_or_eq_smul_rotation_pi_div_two Orientation.inner_eq_zero_iff_eq_zero_or_eq_smul_rotation_pi_div_two
+#align orientation.inner_eq_zero_iff_eq_zero_or_eq_smul_rotation_pi_div_two Orientation.inner_eq_zero_iff_eq_zero_or_eq_smul_rotation_pi_div_two
 
 end Orientation
 

@@ -100,14 +100,12 @@ theorem inverse_associator_obj_inl (X) : (inverseAssociator C D E).obj (inl X) =
 theorem inverse_associator_obj_inr_inl (X) :
     (inverseAssociator C D E).obj (inr (inl X)) = inl (inr X) :=
   rfl
-#align
-  category_theory.sum.inverse_associator_obj_inr_inl CategoryTheory.sum.inverse_associator_obj_inr_inl
+#align category_theory.sum.inverse_associator_obj_inr_inl CategoryTheory.sum.inverse_associator_obj_inr_inl
 
 @[simp]
 theorem inverse_associator_obj_inr_inr (X) : (inverseAssociator C D E).obj (inr (inr X)) = inr X :=
   rfl
-#align
-  category_theory.sum.inverse_associator_obj_inr_inr CategoryTheory.sum.inverse_associator_obj_inr_inr
+#align category_theory.sum.inverse_associator_obj_inr_inr CategoryTheory.sum.inverse_associator_obj_inr_inr
 
 @[simp]
 theorem inverse_associator_map_inl {X Y : C} (f : inl X ⟶ inl Y) :
@@ -119,15 +117,13 @@ theorem inverse_associator_map_inl {X Y : C} (f : inl X ⟶ inl Y) :
 theorem inverse_associator_map_inr_inl {X Y : D} (f : inr (inl X) ⟶ inr (inl Y)) :
     (inverseAssociator C D E).map f = f :=
   rfl
-#align
-  category_theory.sum.inverse_associator_map_inr_inl CategoryTheory.sum.inverse_associator_map_inr_inl
+#align category_theory.sum.inverse_associator_map_inr_inl CategoryTheory.sum.inverse_associator_map_inr_inl
 
 @[simp]
 theorem inverse_associator_map_inr_inr {X Y : E} (f : inr (inr X) ⟶ inr (inr Y)) :
     (inverseAssociator C D E).map f = f :=
   rfl
-#align
-  category_theory.sum.inverse_associator_map_inr_inr CategoryTheory.sum.inverse_associator_map_inr_inr
+#align category_theory.sum.inverse_associator_map_inr_inr CategoryTheory.sum.inverse_associator_map_inr_inr
 
 /-- The equivalence of categories expressing associativity of sums of categories.
 -/
@@ -143,8 +139,7 @@ instance associatorIsEquivalence : IsEquivalence (associator C D E) :=
 
 instance inverseAssociatorIsEquivalence : IsEquivalence (inverseAssociator C D E) :=
   (by infer_instance : IsEquivalence (associativity C D E).inverse)
-#align
-  category_theory.sum.inverse_associator_is_equivalence CategoryTheory.sum.inverseAssociatorIsEquivalence
+#align category_theory.sum.inverse_associator_is_equivalence CategoryTheory.sum.inverseAssociatorIsEquivalence
 
 -- TODO unitors?
 -- TODO pentagon natural transformation? ...satisfying?

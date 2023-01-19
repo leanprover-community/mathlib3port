@@ -264,15 +264,13 @@ theorem restrict_eq_cod_restrict_dom_restrict {f : M →ₗ[R] M₁} {p : Submod
     {q : Submodule R M₁} (hf : ∀ x ∈ p, f x ∈ q) :
     f.restrict hf = (f.domRestrict p).codRestrict q fun x => hf x.1 x.2 :=
   rfl
-#align
-  linear_map.restrict_eq_cod_restrict_dom_restrict LinearMap.restrict_eq_cod_restrict_dom_restrict
+#align linear_map.restrict_eq_cod_restrict_dom_restrict LinearMap.restrict_eq_cod_restrict_dom_restrict
 
 theorem restrict_eq_dom_restrict_cod_restrict {f : M →ₗ[R] M₁} {p : Submodule R M}
     {q : Submodule R M₁} (hf : ∀ x, f x ∈ q) :
     (f.restrict fun x _ => hf x) = (f.codRestrict q hf).domRestrict p :=
   rfl
-#align
-  linear_map.restrict_eq_dom_restrict_cod_restrict LinearMap.restrict_eq_dom_restrict_cod_restrict
+#align linear_map.restrict_eq_dom_restrict_cod_restrict LinearMap.restrict_eq_dom_restrict_cod_restrict
 
 instance uniqueOfLeft [Subsingleton M] : Unique (M →ₛₗ[σ₁₂] M₂) :=
   { LinearMap.inhabited with
@@ -371,8 +369,7 @@ theorem submodule_pow_eq_zero_of_pow_eq_zero {N : Submodule R M} {g : Module.End
     rw [← commute_pow_left_of_commute h, hG, zero_comp, zero_apply]
   simp only [Submodule.subtype_apply, comp_app, Submodule.coe_eq_zero, coe_comp] at hg
   rw [hg, LinearMap.zero_apply]
-#align
-  linear_map.submodule_pow_eq_zero_of_pow_eq_zero LinearMap.submodule_pow_eq_zero_of_pow_eq_zero
+#align linear_map.submodule_pow_eq_zero_of_pow_eq_zero LinearMap.submodule_pow_eq_zero_of_pow_eq_zero
 
 theorem coe_pow (f : M →ₗ[R] M) (n : ℕ) : ⇑(f ^ n) = f^[n] :=
   by
@@ -2949,8 +2946,7 @@ def generalLinearEquiv : GeneralLinearGroup R M ≃* M ≃ₗ[R] M
   map_mul' x y := by
     ext
     rfl
-#align
-  linear_map.general_linear_group.general_linear_equiv LinearMap.GeneralLinearGroup.generalLinearEquiv
+#align linear_map.general_linear_group.general_linear_equiv LinearMap.GeneralLinearGroup.generalLinearEquiv
 
 @[simp]
 theorem general_linear_equiv_to_linear_map (f : GeneralLinearGroup R M) :
@@ -2958,15 +2954,13 @@ theorem general_linear_equiv_to_linear_map (f : GeneralLinearGroup R M) :
   by
   ext
   rfl
-#align
-  linear_map.general_linear_group.general_linear_equiv_to_linear_map LinearMap.GeneralLinearGroup.general_linear_equiv_to_linear_map
+#align linear_map.general_linear_group.general_linear_equiv_to_linear_map LinearMap.GeneralLinearGroup.general_linear_equiv_to_linear_map
 
 @[simp]
 theorem coe_fn_general_linear_equiv (f : GeneralLinearGroup R M) :
     ⇑(generalLinearEquiv R M f) = (f : M → M) :=
   rfl
-#align
-  linear_map.general_linear_group.coe_fn_general_linear_equiv LinearMap.GeneralLinearGroup.coe_fn_general_linear_equiv
+#align linear_map.general_linear_group.coe_fn_general_linear_equiv LinearMap.GeneralLinearGroup.coe_fn_general_linear_equiv
 
 end GeneralLinearGroup
 

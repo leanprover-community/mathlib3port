@@ -68,8 +68,7 @@ theorem finite_of_cond_count_ne_zero {s t : Set Ω} (h : condCount s t ≠ 0) : 
   by
   by_contra hs'
   simpa [cond_count, cond, measure.count_apply_infinite hs'] using h
-#align
-  probability_theory.finite_of_cond_count_ne_zero ProbabilityTheory.finite_of_cond_count_ne_zero
+#align probability_theory.finite_of_cond_count_ne_zero ProbabilityTheory.finite_of_cond_count_ne_zero
 
 theorem cond_count_univ [Fintype Ω] {s : Set Ω} :
     condCount Set.univ s = Measure.count s / Fintype.card Ω :=
@@ -91,8 +90,7 @@ theorem condCountIsProbabilityMeasure {s : Set Ω} (hs : s.Finite) (hs' : s.None
       rw [cond_count, cond_apply _ hs.measurable_set, Set.inter_univ, Ennreal.inv_mul_cancel]
       · exact fun h => hs'.ne_empty <| measure.empty_of_count_eq_zero h
       · exact (measure.count_apply_lt_top.2 hs).Ne }
-#align
-  probability_theory.cond_count_is_probability_measure ProbabilityTheory.condCountIsProbabilityMeasure
+#align probability_theory.cond_count_is_probability_measure ProbabilityTheory.condCountIsProbabilityMeasure
 
 theorem cond_count_singleton (ω : Ω) (t : Set Ω) [Decidable (ω ∈ t)] :
     condCount {ω} t = if ω ∈ t then 1 else 0 :=
@@ -139,8 +137,7 @@ theorem pred_true_of_cond_count_eq_one (h : condCount s t = 1) : s ⊆ t :=
   suffices s ∩ t = s by exact this ▸ fun x hx => hx.2
   rw [← @Set.Finite.to_finset_inj _ _ _ (hsf.inter_of_left _) hsf]
   exact Finset.eq_of_subset_of_card_le (Set.Finite.to_finset_mono <| s.inter_subset_left t) h.ge
-#align
-  probability_theory.pred_true_of_cond_count_eq_one ProbabilityTheory.pred_true_of_cond_count_eq_one
+#align probability_theory.pred_true_of_cond_count_eq_one ProbabilityTheory.pred_true_of_cond_count_eq_one
 
 theorem cond_count_eq_zero_iff (hs : s.Finite) : condCount s t = 0 ↔ s ∩ t = ∅ := by
   simp [cond_count, cond_apply _ hs.measurable_set, measure.count_apply_eq_top,

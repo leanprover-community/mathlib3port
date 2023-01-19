@@ -207,8 +207,7 @@ theorem inner_self_nonneg {x : F} : 0 ≤ re ⟪x, x⟫ :=
 
 theorem inner_self_nonneg_im {x : F} : im ⟪x, x⟫ = 0 := by
   rw [← @of_real_inj 𝕜, im_eq_conj_sub] <;> simp [inner_conj_sym]
-#align
-  inner_product_space.of_core.inner_self_nonneg_im InnerProductSpace.OfCore.inner_self_nonneg_im
+#align inner_product_space.of_core.inner_self_nonneg_im InnerProductSpace.OfCore.inner_self_nonneg_im
 
 theorem inner_self_im_zero {x : F} : im ⟪x, x⟫ = 0 :=
   inner_self_nonneg_im
@@ -226,8 +225,7 @@ theorem inner_norm_sq_eq_inner_self (x : F) : (norm_sqF x : 𝕜) = ⟪x, x⟫ :
   by
   rw [ext_iff]
   exact ⟨by simp only [of_real_re] <;> rfl, by simp only [inner_self_nonneg_im, of_real_im]⟩
-#align
-  inner_product_space.of_core.inner_norm_sq_eq_inner_self InnerProductSpace.OfCore.inner_norm_sq_eq_inner_self
+#align inner_product_space.of_core.inner_norm_sq_eq_inner_self InnerProductSpace.OfCore.inner_norm_sq_eq_inner_self
 
 theorem inner_re_symm {x y : F} : re ⟪x, y⟫ = re ⟪y, x⟫ := by rw [← inner_conj_sym, conj_re]
 #align inner_product_space.of_core.inner_re_symm InnerProductSpace.OfCore.inner_re_symm
@@ -287,8 +285,7 @@ theorem inner_mul_conj_re_abs {x y : F} : re (⟪x, y⟫ * ⟪y, x⟫) = abs (�
   by
   rw [← inner_conj_sym, mul_comm]
   exact re_eq_abs_of_mul_conj (inner y x)
-#align
-  inner_product_space.of_core.inner_mul_conj_re_abs InnerProductSpace.OfCore.inner_mul_conj_re_abs
+#align inner_product_space.of_core.inner_mul_conj_re_abs InnerProductSpace.OfCore.inner_mul_conj_re_abs
 
 /-- Expand `inner (x + y) (x + y)` -/
 theorem inner_add_add_self {x y : F} : ⟪x + y, x + y⟫ = ⟪x, x⟫ + ⟪x, y⟫ + ⟪y, x⟫ + ⟪y, y⟫ := by
@@ -348,8 +345,7 @@ theorem inner_mul_inner_self_le (x y : F) : abs ⟪x, y⟫ * abs ⟪y, x⟫ ≤ 
     have hmain' : abs ⟪x, y⟫ * abs ⟪y, x⟫ / re ⟪y, y⟫ ≤ re ⟪x, x⟫ := by linarith
     have := (mul_le_mul_right h₅).mpr hmain'
     rwa [div_mul_cancel (abs ⟪x, y⟫ * abs ⟪y, x⟫) h₆] at this
-#align
-  inner_product_space.of_core.inner_mul_inner_self_le InnerProductSpace.OfCore.inner_mul_inner_self_le
+#align inner_product_space.of_core.inner_mul_inner_self_le InnerProductSpace.OfCore.inner_mul_inner_self_le
 
 /-- Norm constructed from a `inner_product_space.core` structure, defined to be the square root
 of the scalar product. -/
@@ -364,13 +360,11 @@ theorem norm_eq_sqrt_inner (x : F) : ‖x‖ = sqrt (re ⟪x, x⟫) :=
 
 theorem inner_self_eq_norm_mul_norm (x : F) : re ⟪x, x⟫ = ‖x‖ * ‖x‖ := by
   rw [norm_eq_sqrt_inner, ← sqrt_mul inner_self_nonneg (re ⟪x, x⟫), sqrt_mul_self inner_self_nonneg]
-#align
-  inner_product_space.of_core.inner_self_eq_norm_mul_norm InnerProductSpace.OfCore.inner_self_eq_norm_mul_norm
+#align inner_product_space.of_core.inner_self_eq_norm_mul_norm InnerProductSpace.OfCore.inner_self_eq_norm_mul_norm
 
 theorem sqrt_norm_sq_eq_norm {x : F} : sqrt (norm_sqF x) = ‖x‖ :=
   rfl
-#align
-  inner_product_space.of_core.sqrt_norm_sq_eq_norm InnerProductSpace.OfCore.sqrt_norm_sq_eq_norm
+#align inner_product_space.of_core.sqrt_norm_sq_eq_norm InnerProductSpace.OfCore.sqrt_norm_sq_eq_norm
 
 /-- Cauchy–Schwarz inequality with norm -/
 theorem abs_inner_le_norm (x y : F) : abs ⟪x, y⟫ ≤ ‖x‖ * ‖y‖ :=
@@ -411,8 +405,7 @@ def toNormedAddCommGroup : NormedAddCommGroup F :=
           change sqrt (re ⟪x, x⟫) = 0 at hx
           rw [sqrt_eq_zero inner_self_nonneg] at hx
           exact ext (by simp [hx]) (by simp [inner_self_im_zero]) }
-#align
-  inner_product_space.of_core.to_normed_add_comm_group InnerProductSpace.OfCore.toNormedAddCommGroup
+#align inner_product_space.of_core.to_normed_add_comm_group InnerProductSpace.OfCore.toNormedAddCommGroup
 
 attribute [local instance] to_normed_add_comm_group
 
@@ -1289,8 +1282,7 @@ theorem re_inner_eq_norm_add_mul_self_sub_norm_mul_self_sub_norm_mul_self_div_tw
   by
   rw [norm_add_mul_self]
   ring
-#align
-  re_inner_eq_norm_add_mul_self_sub_norm_mul_self_sub_norm_mul_self_div_two re_inner_eq_norm_add_mul_self_sub_norm_mul_self_sub_norm_mul_self_div_two
+#align re_inner_eq_norm_add_mul_self_sub_norm_mul_self_sub_norm_mul_self_div_two re_inner_eq_norm_add_mul_self_sub_norm_mul_self_sub_norm_mul_self_div_two
 
 /-- Polarization identity: The real part of the  inner product, in terms of the norm. -/
 theorem re_inner_eq_norm_mul_self_add_norm_mul_self_sub_norm_sub_mul_self_div_two (x y : E) :
@@ -1298,8 +1290,7 @@ theorem re_inner_eq_norm_mul_self_add_norm_mul_self_sub_norm_sub_mul_self_div_tw
   by
   rw [norm_sub_mul_self]
   ring
-#align
-  re_inner_eq_norm_mul_self_add_norm_mul_self_sub_norm_sub_mul_self_div_two re_inner_eq_norm_mul_self_add_norm_mul_self_sub_norm_sub_mul_self_div_two
+#align re_inner_eq_norm_mul_self_add_norm_mul_self_sub_norm_sub_mul_self_div_two re_inner_eq_norm_mul_self_add_norm_mul_self_sub_norm_sub_mul_self_div_two
 
 /-- Polarization identity: The real part of the  inner product, in terms of the norm. -/
 theorem re_inner_eq_norm_add_mul_self_sub_norm_sub_mul_self_div_four (x y : E) :
@@ -1307,8 +1298,7 @@ theorem re_inner_eq_norm_add_mul_self_sub_norm_sub_mul_self_div_four (x y : E) :
   by
   rw [norm_add_mul_self, norm_sub_mul_self]
   ring
-#align
-  re_inner_eq_norm_add_mul_self_sub_norm_sub_mul_self_div_four re_inner_eq_norm_add_mul_self_sub_norm_sub_mul_self_div_four
+#align re_inner_eq_norm_add_mul_self_sub_norm_sub_mul_self_div_four re_inner_eq_norm_add_mul_self_sub_norm_sub_mul_self_div_four
 
 /-- Polarization identity: The imaginary part of the inner product, in terms of the norm. -/
 theorem im_inner_eq_norm_sub_I_smul_mul_self_sub_norm_add_I_smul_mul_self_div_four (x y : E) :
@@ -1316,8 +1306,7 @@ theorem im_inner_eq_norm_sub_I_smul_mul_self_sub_norm_add_I_smul_mul_self_div_fo
   by
   simp only [norm_add_mul_self, norm_sub_mul_self, inner_smul_right, I_mul_re]
   ring
-#align
-  im_inner_eq_norm_sub_I_smul_mul_self_sub_norm_add_I_smul_mul_self_div_four im_inner_eq_norm_sub_I_smul_mul_self_sub_norm_add_I_smul_mul_self_div_four
+#align im_inner_eq_norm_sub_I_smul_mul_self_sub_norm_add_I_smul_mul_self_div_four im_inner_eq_norm_sub_I_smul_mul_self_sub_norm_add_I_smul_mul_self_div_four
 
 /-- Polarization identity: The inner product, in terms of the norm. -/
 theorem inner_eq_sum_norm_sq_div_four (x y : E) :
@@ -1521,8 +1510,7 @@ theorem LinearMap.isometry_of_orthonormal_to_linear_map (f : E →ₗ[𝕜] E') 
     (hv : Orthonormal 𝕜 v) (hf : Orthonormal 𝕜 (f ∘ v)) :
     (f.isometryOfOrthonormal hv hf).toLinearMap = f :=
   rfl
-#align
-  linear_map.isometry_of_orthonormal_to_linear_map LinearMap.isometry_of_orthonormal_to_linear_map
+#align linear_map.isometry_of_orthonormal_to_linear_map LinearMap.isometry_of_orthonormal_to_linear_map
 
 /-- A linear equivalence that sends an orthonormal basis to orthonormal vectors is a linear
 isometric equivalence. -/
@@ -1545,8 +1533,7 @@ theorem LinearEquiv.isometry_of_orthonormal_to_linear_equiv (f : E ≃ₗ[𝕜] 
     (hv : Orthonormal 𝕜 v) (hf : Orthonormal 𝕜 (f ∘ v)) :
     (f.isometryOfOrthonormal hv hf).toLinearEquiv = f :=
   rfl
-#align
-  linear_equiv.isometry_of_orthonormal_to_linear_equiv LinearEquiv.isometry_of_orthonormal_to_linear_equiv
+#align linear_equiv.isometry_of_orthonormal_to_linear_equiv LinearEquiv.isometry_of_orthonormal_to_linear_equiv
 
 /-- A linear isometric equivalence that sends an orthonormal basis to a given orthonormal basis. -/
 def Orthonormal.equiv {v : Basis ι 𝕜 E} (hv : Orthonormal 𝕜 v) {v' : Basis ι' 𝕜 E'}
@@ -1610,16 +1597,14 @@ theorem real_inner_eq_norm_add_mul_self_sub_norm_mul_self_sub_norm_mul_self_div_
     ⟪x, y⟫_ℝ = (‖x + y‖ * ‖x + y‖ - ‖x‖ * ‖x‖ - ‖y‖ * ‖y‖) / 2 :=
   re_to_real.symm.trans <|
     re_inner_eq_norm_add_mul_self_sub_norm_mul_self_sub_norm_mul_self_div_two x y
-#align
-  real_inner_eq_norm_add_mul_self_sub_norm_mul_self_sub_norm_mul_self_div_two real_inner_eq_norm_add_mul_self_sub_norm_mul_self_sub_norm_mul_self_div_two
+#align real_inner_eq_norm_add_mul_self_sub_norm_mul_self_sub_norm_mul_self_div_two real_inner_eq_norm_add_mul_self_sub_norm_mul_self_sub_norm_mul_self_div_two
 
 /-- Polarization identity: The real inner product, in terms of the norm. -/
 theorem real_inner_eq_norm_mul_self_add_norm_mul_self_sub_norm_sub_mul_self_div_two (x y : F) :
     ⟪x, y⟫_ℝ = (‖x‖ * ‖x‖ + ‖y‖ * ‖y‖ - ‖x - y‖ * ‖x - y‖) / 2 :=
   re_to_real.symm.trans <|
     re_inner_eq_norm_mul_self_add_norm_mul_self_sub_norm_sub_mul_self_div_two x y
-#align
-  real_inner_eq_norm_mul_self_add_norm_mul_self_sub_norm_sub_mul_self_div_two real_inner_eq_norm_mul_self_add_norm_mul_self_sub_norm_sub_mul_self_div_two
+#align real_inner_eq_norm_mul_self_add_norm_mul_self_sub_norm_sub_mul_self_div_two real_inner_eq_norm_mul_self_add_norm_mul_self_sub_norm_sub_mul_self_div_two
 
 /-- Pythagorean theorem, if-and-only-if vector inner product form. -/
 theorem norm_add_sq_eq_norm_sq_add_norm_sq_iff_real_inner_eq_zero (x y : F) :
@@ -1627,8 +1612,7 @@ theorem norm_add_sq_eq_norm_sq_add_norm_sq_iff_real_inner_eq_zero (x y : F) :
   by
   rw [norm_add_mul_self, add_right_cancel_iff, add_right_eq_self, mul_eq_zero]
   norm_num
-#align
-  norm_add_sq_eq_norm_sq_add_norm_sq_iff_real_inner_eq_zero norm_add_sq_eq_norm_sq_add_norm_sq_iff_real_inner_eq_zero
+#align norm_add_sq_eq_norm_sq_add_norm_sq_iff_real_inner_eq_zero norm_add_sq_eq_norm_sq_add_norm_sq_iff_real_inner_eq_zero
 
 /-- Pythagorean theorem, if-and-if vector inner product form using square roots. -/
 theorem norm_add_eq_sqrt_iff_real_inner_eq_zero {x y : F} :
@@ -1644,8 +1628,7 @@ theorem norm_add_sq_eq_norm_sq_add_norm_sq_of_inner_eq_zero (x y : E) (h : ⟪x,
   rw [norm_add_mul_self, add_right_cancel_iff, add_right_eq_self, mul_eq_zero]
   apply Or.inr
   simp only [h, zero_re']
-#align
-  norm_add_sq_eq_norm_sq_add_norm_sq_of_inner_eq_zero norm_add_sq_eq_norm_sq_add_norm_sq_of_inner_eq_zero
+#align norm_add_sq_eq_norm_sq_add_norm_sq_of_inner_eq_zero norm_add_sq_eq_norm_sq_add_norm_sq_of_inner_eq_zero
 
 /-- Pythagorean theorem, vector inner product form. -/
 theorem norm_add_sq_eq_norm_sq_add_norm_sq_real {x y : F} (h : ⟪x, y⟫_ℝ = 0) :
@@ -1661,8 +1644,7 @@ theorem norm_sub_sq_eq_norm_sq_add_norm_sq_iff_real_inner_eq_zero (x y : F) :
   rw [norm_sub_mul_self, add_right_cancel_iff, sub_eq_add_neg, add_right_eq_self, neg_eq_zero,
     mul_eq_zero]
   norm_num
-#align
-  norm_sub_sq_eq_norm_sq_add_norm_sq_iff_real_inner_eq_zero norm_sub_sq_eq_norm_sq_add_norm_sq_iff_real_inner_eq_zero
+#align norm_sub_sq_eq_norm_sq_add_norm_sq_iff_real_inner_eq_zero norm_sub_sq_eq_norm_sq_add_norm_sq_iff_real_inner_eq_zero
 
 /-- Pythagorean theorem, subtracting vectors, if-and-if vector inner product form using square
 roots. -/
@@ -1739,8 +1721,7 @@ theorem abs_inner_div_norm_mul_norm_eq_one_of_ne_zero_of_ne_zero_mul {x : E} {r 
   rw [inner_smul_right, IsROrC.abs_mul, ← inner_self_re_abs, inner_self_eq_norm_mul_norm, norm_smul]
   rw [IsROrC.norm_eq_abs, ← mul_assoc, ← div_div, mul_div_cancel _ hx', ← div_div, mul_comm,
     mul_div_cancel _ hr', div_self hx']
-#align
-  abs_inner_div_norm_mul_norm_eq_one_of_ne_zero_of_ne_zero_mul abs_inner_div_norm_mul_norm_eq_one_of_ne_zero_of_ne_zero_mul
+#align abs_inner_div_norm_mul_norm_eq_one_of_ne_zero_of_ne_zero_mul abs_inner_div_norm_mul_norm_eq_one_of_ne_zero_of_ne_zero_mul
 
 /-- The inner product of a nonzero vector with a nonzero multiple of
 itself, divided by the product of their norms, has absolute value
@@ -1750,8 +1731,7 @@ theorem abs_real_inner_div_norm_mul_norm_eq_one_of_ne_zero_of_ne_zero_mul {x : F
   by
   rw [← abs_to_real]
   exact abs_inner_div_norm_mul_norm_eq_one_of_ne_zero_of_ne_zero_mul hx hr
-#align
-  abs_real_inner_div_norm_mul_norm_eq_one_of_ne_zero_of_ne_zero_mul abs_real_inner_div_norm_mul_norm_eq_one_of_ne_zero_of_ne_zero_mul
+#align abs_real_inner_div_norm_mul_norm_eq_one_of_ne_zero_of_ne_zero_mul abs_real_inner_div_norm_mul_norm_eq_one_of_ne_zero_of_ne_zero_mul
 
 /-- The inner product of a nonzero vector with a positive multiple of
 itself, divided by the product of their norms, has value 1. -/
@@ -1761,8 +1741,7 @@ theorem real_inner_div_norm_mul_norm_eq_one_of_ne_zero_of_pos_mul {x : F} {r : �
   rw [real_inner_smul_self_right, norm_smul, Real.norm_eq_abs, ← mul_assoc ‖x‖, mul_comm _ (absR r),
     mul_assoc, _root_.abs_of_nonneg (le_of_lt hr), div_self]
   exact mul_ne_zero (ne_of_gt hr) fun h => hx (norm_eq_zero.1 (eq_zero_of_mul_self_eq_zero h))
-#align
-  real_inner_div_norm_mul_norm_eq_one_of_ne_zero_of_pos_mul real_inner_div_norm_mul_norm_eq_one_of_ne_zero_of_pos_mul
+#align real_inner_div_norm_mul_norm_eq_one_of_ne_zero_of_pos_mul real_inner_div_norm_mul_norm_eq_one_of_ne_zero_of_pos_mul
 
 /-- The inner product of a nonzero vector with a negative multiple of
 itself, divided by the product of their norms, has value -1. -/
@@ -1772,8 +1751,7 @@ theorem real_inner_div_norm_mul_norm_eq_neg_one_of_ne_zero_of_neg_mul {x : F} {r
   rw [real_inner_smul_self_right, norm_smul, Real.norm_eq_abs, ← mul_assoc ‖x‖, mul_comm _ (absR r),
     mul_assoc, abs_of_neg hr, neg_mul, div_neg_eq_neg_div, div_self]
   exact mul_ne_zero (ne_of_lt hr) fun h => hx (norm_eq_zero.1 (eq_zero_of_mul_self_eq_zero h))
-#align
-  real_inner_div_norm_mul_norm_eq_neg_one_of_ne_zero_of_neg_mul real_inner_div_norm_mul_norm_eq_neg_one_of_ne_zero_of_neg_mul
+#align real_inner_div_norm_mul_norm_eq_neg_one_of_ne_zero_of_neg_mul real_inner_div_norm_mul_norm_eq_neg_one_of_ne_zero_of_neg_mul
 
 /-- The inner product of two vectors, divided by the product of their
 norms, has absolute value 1 if and only if they are nonzero and one is
@@ -2081,8 +2059,7 @@ theorem to_sesq_form_apply_norm_le {f : E →L[𝕜] E'} {v : E'} : ‖toSesqFor
     _ ≤ ‖v‖ * (‖f‖ * ‖x‖) := mul_le_mul_of_nonneg_left h₁ (norm_nonneg v)
     _ = ‖f‖ * ‖v‖ * ‖x‖ := by ring
     
-#align
-  continuous_linear_map.to_sesq_form_apply_norm_le ContinuousLinearMap.to_sesq_form_apply_norm_le
+#align continuous_linear_map.to_sesq_form_apply_norm_le ContinuousLinearMap.to_sesq_form_apply_norm_le
 
 end ContinuousLinearMap
 
@@ -2412,8 +2389,7 @@ theorem OrthogonalFamily.summable_iff_norm_sq_summable [CompleteSpace E] (f : �
         · simp
         · exact fun i => sq_nonneg _
       linarith
-#align
-  orthogonal_family.summable_iff_norm_sq_summable OrthogonalFamily.summable_iff_norm_sq_summable
+#align orthogonal_family.summable_iff_norm_sq_summable OrthogonalFamily.summable_iff_norm_sq_summable
 
 omit hV
 
@@ -2447,8 +2423,7 @@ theorem DirectSum.IsInternal.collectedBasisOrthonormal {V : ι → Submodule �
     {v_family : ∀ i, Basis (α i) 𝕜 (V i)} (hv_family : ∀ i, Orthonormal 𝕜 (v_family i)) :
     Orthonormal 𝕜 (hV_sum.collectedBasis v_family) := by
   simpa only [hV_sum.collected_basis_coe] using hV.orthonormal_sigma_orthonormal hv_family
-#align
-  direct_sum.is_internal.collected_basis_orthonormal DirectSum.IsInternal.collectedBasisOrthonormal
+#align direct_sum.is_internal.collected_basis_orthonormal DirectSum.IsInternal.collectedBasisOrthonormal
 
 end OrthogonalFamily
 
@@ -2575,8 +2550,7 @@ theorem ContinuousLinearMap.re_apply_inner_self_apply (T : E →L[𝕜] E) (x : 
 theorem ContinuousLinearMap.re_apply_inner_self_continuous (T : E →L[𝕜] E) :
     Continuous T.reApplyInnerSelf :=
   reClm.Continuous.comp <| T.Continuous.inner continuous_id
-#align
-  continuous_linear_map.re_apply_inner_self_continuous ContinuousLinearMap.re_apply_inner_self_continuous
+#align continuous_linear_map.re_apply_inner_self_continuous ContinuousLinearMap.re_apply_inner_self_continuous
 
 theorem ContinuousLinearMap.re_apply_inner_self_smul (T : E →L[𝕜] E) (x : E) {c : 𝕜} :
     T.reApplyInnerSelf (c • x) = ‖c‖ ^ 2 * T.reApplyInnerSelf x := by
@@ -2637,14 +2611,12 @@ theorem Submodule.mem_orthogonal_singleton_iff_inner_right {u v : E} : v ∈ (�
   rw [Submodule.mem_span_singleton] at hw
   obtain ⟨c, rfl⟩ := hw
   simp [inner_smul_left, hv]
-#align
-  submodule.mem_orthogonal_singleton_iff_inner_right Submodule.mem_orthogonal_singleton_iff_inner_right
+#align submodule.mem_orthogonal_singleton_iff_inner_right Submodule.mem_orthogonal_singleton_iff_inner_right
 
 /-- A vector in `(𝕜 ∙ u)ᗮ` is orthogonal to `u`. -/
 theorem Submodule.mem_orthogonal_singleton_iff_inner_left {u v : E} : v ∈ (𝕜 ∙ u)ᗮ ↔ ⟪v, u⟫ = 0 :=
   by rw [Submodule.mem_orthogonal_singleton_iff_inner_right, inner_eq_zero_sym]
-#align
-  submodule.mem_orthogonal_singleton_iff_inner_left Submodule.mem_orthogonal_singleton_iff_inner_left
+#align submodule.mem_orthogonal_singleton_iff_inner_left Submodule.mem_orthogonal_singleton_iff_inner_left
 
 theorem Submodule.sub_mem_orthogonal_of_inner_left {x y : E} (h : ∀ v : K, ⟪x, v⟫ = ⟪y, v⟫) :
     x - y ∈ Kᗮ := by

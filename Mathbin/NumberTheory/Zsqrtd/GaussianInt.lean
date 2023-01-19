@@ -207,8 +207,7 @@ theorem norm_sq_le_norm_sq_of_re_le_of_im_le {x y : ℂ} (hre : |x.re| ≤ |y.re
       _root_.abs_mul x.im, ← _root_.abs_mul_self y.im, _root_.abs_mul y.im] <;>
     exact
       add_le_add (mul_self_le_mul_self (abs_nonneg _) hre) (mul_self_le_mul_self (abs_nonneg _) him)
-#align
-  gaussian_int.norm_sq_le_norm_sq_of_re_le_of_im_le GaussianInt.norm_sq_le_norm_sq_of_re_le_of_im_le
+#align gaussian_int.norm_sq_le_norm_sq_of_re_le_of_im_le GaussianInt.norm_sq_le_norm_sq_of_re_le_of_im_le
 
 theorem norm_sq_div_sub_div_lt_one (x y : ℤ[i]) : ((x / y : ℂ) - ((x / y : ℤ[i]) : ℂ)).normSq < 1 :=
   calc
@@ -343,8 +342,7 @@ theorem mod_four_eq_three_of_nat_prime_of_prime (p : ℕ) [hp : Fact p.Prime]
       have := hpi.2.2 ⟨k, 1⟩ ⟨k, -1⟩ ⟨y, by rw [← hkmul, ← Nat.cast_mul p, ← hy] <;> simp⟩
       clear_aux_decl
       tauto
-#align
-  gaussian_int.mod_four_eq_three_of_nat_prime_of_prime GaussianInt.mod_four_eq_three_of_nat_prime_of_prime
+#align gaussian_int.mod_four_eq_three_of_nat_prime_of_prime GaussianInt.mod_four_eq_three_of_nat_prime_of_prime
 
 theorem sq_add_sq_of_nat_prime_of_not_irreducible (p : ℕ) [hp : Fact p.Prime]
     (hpi : ¬Irreducible (p : ℤ[i])) : ∃ a b, a ^ 2 + b ^ 2 = p :=
@@ -359,8 +357,7 @@ theorem sq_add_sq_of_nat_prime_of_not_irreducible (p : ℕ) [hp : Fact p.Prime]
     ((hp.1.mul_eq_prime_sq_iff (mt norm_eq_one_iff.1 hau) (mt norm_eq_one_iff.1 hbu)).1 <| by
         rw [← Int.coe_nat_inj', Int.coe_nat_pow, sq, ← @norm_nat_cast (-1), hpab] <;> simp).1
   ⟨a.re.natAbs, a.im.natAbs, by simpa [nat_abs_norm_eq, sq] using hnap⟩
-#align
-  gaussian_int.sq_add_sq_of_nat_prime_of_not_irreducible GaussianInt.sq_add_sq_of_nat_prime_of_not_irreducible
+#align gaussian_int.sq_add_sq_of_nat_prime_of_not_irreducible GaussianInt.sq_add_sq_of_nat_prime_of_not_irreducible
 
 theorem prime_of_nat_prime_of_mod_four_eq_three (p : ℕ) [hp : Fact p.Prime] (hp3 : p % 4 = 3) :
     Prime (p : ℤ[i]) :=
@@ -370,15 +367,13 @@ theorem prime_of_nat_prime_of_mod_four_eq_three (p : ℕ) [hp : Fact p.Prime] (h
       have : ∀ a b : Zmod 4, a ^ 2 + b ^ 2 ≠ p := by
         erw [← Zmod.nat_cast_mod p 4, hp3] <;> exact by decide
       this a b (hab ▸ by simp)
-#align
-  gaussian_int.prime_of_nat_prime_of_mod_four_eq_three GaussianInt.prime_of_nat_prime_of_mod_four_eq_three
+#align gaussian_int.prime_of_nat_prime_of_mod_four_eq_three GaussianInt.prime_of_nat_prime_of_mod_four_eq_three
 
 /-- A prime natural number is prime in `ℤ[i]` if and only if it is `3` mod `4` -/
 theorem prime_iff_mod_four_eq_three_of_nat_prime (p : ℕ) [hp : Fact p.Prime] :
     Prime (p : ℤ[i]) ↔ p % 4 = 3 :=
   ⟨mod_four_eq_three_of_nat_prime_of_prime p, prime_of_nat_prime_of_mod_four_eq_three p⟩
-#align
-  gaussian_int.prime_iff_mod_four_eq_three_of_nat_prime GaussianInt.prime_iff_mod_four_eq_three_of_nat_prime
+#align gaussian_int.prime_iff_mod_four_eq_three_of_nat_prime GaussianInt.prime_iff_mod_four_eq_three_of_nat_prime
 
 end GaussianInt
 

@@ -45,8 +45,7 @@ theorem is_iso_of_short_exact_of_is_iso_of_is_iso (h : ShortExact f g) (h' : Sho
         try apply exact_zero_left_of_mono <;>
       try assumption <;>
     rwa [← epi_iff_exact_zero_right]
-#align
-  category_theory.is_iso_of_short_exact_of_is_iso_of_is_iso CategoryTheory.is_iso_of_short_exact_of_is_iso_of_is_iso
+#align category_theory.is_iso_of_short_exact_of_is_iso_of_is_iso CategoryTheory.is_iso_of_short_exact_of_is_iso_of_is_iso
 
 /-- To construct a splitting of `A -f⟶ B -g⟶ C` it suffices to supply
 a *morphism* `i : B ⟶ A ⊞ C` such that `f ≫ i` is the canonical map `biprod.inl : A ⟶ A ⊞ C` and

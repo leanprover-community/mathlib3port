@@ -75,8 +75,7 @@ theorem prod_list_swap_mem_alternating_group_iff_even_length {l : List (Perm α)
   rw [mem_alternating_group, sign_prod_list_swap hl, ← Units.val_eq_one, Units.val_pow_eq_pow_val,
     Units.coe_neg_one, neg_one_pow_eq_one_iff_even]
   decide
-#align
-  equiv.perm.prod_list_swap_mem_alternating_group_iff_even_length Equiv.Perm.prod_list_swap_mem_alternating_group_iff_even_length
+#align equiv.perm.prod_list_swap_mem_alternating_group_iff_even_length Equiv.Perm.prod_list_swap_mem_alternating_group_iff_even_length
 
 theorem IsThreeCycle.mem_alternating_group {f : Perm α} (h : IsThreeCycle f) :
     f ∈ alternatingGroup α :=
@@ -86,8 +85,7 @@ theorem IsThreeCycle.mem_alternating_group {f : Perm α} (h : IsThreeCycle f) :
 theorem fin_rotate_bit1_mem_alternating_group {n : ℕ} :
     finRotate (bit1 n) ∈ alternatingGroup (Fin (bit1 n)) := by
   rw [mem_alternating_group, bit1, sign_fin_rotate, pow_bit0', Int.units_mul_self, one_pow]
-#align
-  equiv.perm.fin_rotate_bit1_mem_alternating_group Equiv.Perm.fin_rotate_bit1_mem_alternating_group
+#align equiv.perm.fin_rotate_bit1_mem_alternating_group Equiv.Perm.fin_rotate_bit1_mem_alternating_group
 
 end Equiv.Perm
 
@@ -191,8 +189,7 @@ theorem IsThreeCycle.alternating_normal_closure (h5 : 5 ≤ Fintype.card α) {f 
       refine' ⟨⟨c * f * c⁻¹, h.mem_alternating_group⟩, _, rfl⟩
       rw [Group.mem_conjugates_of_set_iff]
       exact ⟨⟨f, hf.mem_alternating_group⟩, Set.mem_singleton _, is_three_cycle_is_conj h5 hf h⟩)
-#align
-  equiv.perm.is_three_cycle.alternating_normal_closure Equiv.Perm.IsThreeCycle.alternating_normal_closure
+#align equiv.perm.is_three_cycle.alternating_normal_closure Equiv.Perm.IsThreeCycle.alternating_normal_closure
 
 /-- Part of proving $A_5$ is simple. Shows that the square of any element of $A_5$ with a 3-cycle in
   its cycle decomposition is a 3-cycle, so the normal closure of the original element must be
@@ -212,8 +209,7 @@ theorem is_three_cycle_sq_of_three_mem_cycle_type_five {g : Perm (Fin 5)} (h : 3
   apply le_of_add_le_add_left
   rw [← hd.card_support_mul, h3]
   exact (c * g').Support.card_le_univ
-#align
-  equiv.perm.is_three_cycle_sq_of_three_mem_cycle_type_five Equiv.Perm.is_three_cycle_sq_of_three_mem_cycle_type_five
+#align equiv.perm.is_three_cycle_sq_of_three_mem_cycle_type_five Equiv.Perm.is_three_cycle_sq_of_three_mem_cycle_type_five
 
 end Equiv.Perm
 
@@ -259,8 +255,7 @@ theorem normal_closure_fin_rotate_five :
           (subgroup.normal_closure_normal.conj_mem _ h
             ⟨Fin.cycleRange 2, fin.is_three_cycle_cycle_range_two.mem_alternating_group⟩)
           (inv_mem h))
-#align
-  alternating_group.normal_closure_fin_rotate_five alternatingGroup.normal_closure_fin_rotate_five
+#align alternating_group.normal_closure_fin_rotate_five alternatingGroup.normal_closure_fin_rotate_five
 
 /-- The normal closure of $(04)(13)$ within $A_5$ is the whole group. This will be
   used to show that the normal closure of any permutation of cycle type $(2,2)$ is the whole group.
@@ -284,8 +279,7 @@ theorem normal_closure_swap_mul_swap_five :
   have h : g2 ∈ normal_closure {g2} :=
     SetLike.mem_coe.1 (subset_normal_closure (Set.mem_singleton _))
   exact mul_mem (subgroup.normal_closure_normal.conj_mem _ h g1) (inv_mem h)
-#align
-  alternating_group.normal_closure_swap_mul_swap_five alternatingGroup.normal_closure_swap_mul_swap_five
+#align alternating_group.normal_closure_swap_mul_swap_five alternatingGroup.normal_closure_swap_mul_swap_five
 
 /-- Shows that any non-identity element of $A_5$ whose cycle decomposition consists only of swaps
   is conjugate to $(04)(13)$. This is used to show that the normal closure of such a permutation
@@ -317,8 +311,7 @@ theorem is_conj_swap_mul_swap_of_cycle_type_two {g : Perm (Fin 5)}
       decide
   · contrapose! ha
     simp [h_1]
-#align
-  alternating_group.is_conj_swap_mul_swap_of_cycle_type_two alternatingGroup.is_conj_swap_mul_swap_of_cycle_type_two
+#align alternating_group.is_conj_swap_mul_swap_of_cycle_type_two alternatingGroup.is_conj_swap_mul_swap_of_cycle_type_two
 
 /-- Shows that $A_5$ is simple by taking an arbitrary non-identity element and showing by casework
   on its cycle type that its normal closure is all of $A_5$.   -/

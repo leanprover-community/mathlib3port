@@ -266,8 +266,7 @@ def candidatesBOfCandidates (f : ProdSpaceFun X Y) (fA : f ∈ candidates X Y) :
 theorem candidates_b_of_candidates_mem (f : ProdSpaceFun X Y) (fA : f ∈ candidates X Y) :
     candidatesBOfCandidates f fA ∈ candidatesB X Y :=
   fA
-#align
-  Gromov_Hausdorff.candidates_b_of_candidates_mem GromovHausdorff.candidates_b_of_candidates_mem
+#align Gromov_Hausdorff.candidates_b_of_candidates_mem GromovHausdorff.candidates_b_of_candidates_mem
 
 /-- The distance on `X ⊕ Y` is a candidate -/
 private theorem dist_mem_candidates :
@@ -289,8 +288,7 @@ def candidatesBDist (X : Type u) (Y : Type v) [MetricSpace X] [CompactSpace X] [
 
 theorem candidates_b_dist_mem_candidates_b : candidatesBDist X Y ∈ candidatesB X Y :=
   candidates_b_of_candidates_mem _ _
-#align
-  Gromov_Hausdorff.candidates_b_dist_mem_candidates_b GromovHausdorff.candidates_b_dist_mem_candidates_b
+#align Gromov_Hausdorff.candidates_b_dist_mem_candidates_b GromovHausdorff.candidates_b_dist_mem_candidates_b
 
 private theorem candidates_b_nonempty : (candidatesB X Y).Nonempty :=
   ⟨_, candidates_b_dist_mem_candidates_b⟩
@@ -535,8 +533,7 @@ private def optimal_GH_dist : CbCat X Y :=
 
 private theorem optimal_GH_dist_mem_candidates_b : optimalGHDist X Y ∈ candidatesB X Y := by
   cases Classical.choose_spec (exists_minimizer X Y) <;> assumption
-#align
-  Gromov_Hausdorff.optimal_GH_dist_mem_candidates_b Gromov_Hausdorff.optimal_GH_dist_mem_candidates_b
+#align Gromov_Hausdorff.optimal_GH_dist_mem_candidates_b Gromov_Hausdorff.optimal_GH_dist_mem_candidates_b
 
 private theorem HD_optimal_GH_dist_le (g : CbCat X Y) (hg : g ∈ candidatesB X Y) :
     hD (optimalGHDist X Y) ≤ hD g :=
@@ -609,8 +606,7 @@ instance compact_space_optimal_GH_coupling : CompactSpace (OptimalGHCoupling X Y
     exact
       (is_compact_univ.image (isometry_optimal_GH_injl X Y).Continuous).union
         (is_compact_univ.image (isometry_optimal_GH_injr X Y).Continuous)⟩
-#align
-  Gromov_Hausdorff.compact_space_optimal_GH_coupling GromovHausdorff.compact_space_optimal_GH_coupling
+#align Gromov_Hausdorff.compact_space_optimal_GH_coupling GromovHausdorff.compact_space_optimal_GH_coupling
 
 /-- For any candidate `f`, `HD(f)` is larger than or equal to the Hausdorff distance in the
 optimal coupling. This follows from the fact that HD of the optimal candidate is exactly

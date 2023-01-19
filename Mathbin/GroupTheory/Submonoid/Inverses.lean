@@ -188,16 +188,14 @@ theorem from_left_inv_left_inv_equiv_symm (x : S) :
     S.fromLeftInv ((S.leftInvEquiv hS).symm x) = x :=
   (S.leftInvEquiv hS).right_inv x
 #align submonoid.from_left_inv_left_inv_equiv_symm Submonoid.from_left_inv_left_inv_equiv_symm
-#align
-  add_submonoid.from_left_neg_left_neg_equiv_symm AddSubmonoid.from_left_neg_left_neg_equiv_symm
+#align add_submonoid.from_left_neg_left_neg_equiv_symm AddSubmonoid.from_left_neg_left_neg_equiv_symm
 
 @[simp, to_additive]
 theorem left_inv_equiv_symm_from_left_inv (x : S.left_inv) :
     (S.leftInvEquiv hS).symm (S.fromLeftInv x) = x :=
   (S.leftInvEquiv hS).left_inv x
 #align submonoid.left_inv_equiv_symm_from_left_inv Submonoid.left_inv_equiv_symm_from_left_inv
-#align
-  add_submonoid.left_neg_equiv_symm_from_left_neg AddSubmonoid.left_neg_equiv_symm_from_left_neg
+#align add_submonoid.left_neg_equiv_symm_from_left_neg AddSubmonoid.left_neg_equiv_symm_from_left_neg
 
 @[to_additive]
 theorem left_inv_equiv_mul (x : S.left_inv) : (S.leftInvEquiv hS x : M) * x = 1 := by simp

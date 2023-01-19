@@ -562,8 +562,7 @@ theorem map_const_principal_coprod_map_id_principal {α β ι : Type _} (a : α)
   by
   simp only [map_principal, Filter.coprod, comap_principal, sup_principal, image_singleton,
     image_id, prod_univ, univ_prod]
-#align
-  filter.map_const_principal_coprod_map_id_principal Filter.map_const_principal_coprod_map_id_principal
+#align filter.map_const_principal_coprod_map_id_principal Filter.map_const_principal_coprod_map_id_principal
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Characterization of the `filter.map` of the coproduct of two principal filters `𝓟 {a}` and
@@ -584,8 +583,7 @@ theorem map_prod_map_const_id_principal_coprod_principal {α β ι : Type _} (a 
   · rintro ⟨h₁, h₂⟩
     use (a, i')
     simpa using h₁.symm
-#align
-  filter.map_prod_map_const_id_principal_coprod_principal Filter.map_prod_map_const_id_principal_coprod_principal
+#align filter.map_prod_map_const_id_principal_coprod_principal Filter.map_prod_map_const_id_principal_coprod_principal
 
 theorem Tendsto.prod_map_coprod {δ : Type _} {f : α → γ} {g : β → δ} {a : Filter α} {b : Filter β}
     {c : Filter γ} {d : Filter δ} (hf : Tendsto f a c) (hg : Tendsto g b d) :

@@ -354,8 +354,7 @@ unsafe instance preprocessor_to_gb_preprocessor : Coe preprocessor global_branch
 unsafe instance global_preprocessor_to_gb_preprocessor :
     Coe global_preprocessor global_branching_preprocessor :=
   ⟨global_preprocessor.branching⟩
-#align
-  linarith.global_preprocessor_to_gb_preprocessor linarith.global_preprocessor_to_gb_preprocessor
+#align linarith.global_preprocessor_to_gb_preprocessor linarith.global_preprocessor_to_gb_preprocessor
 
 /--
 A `certificate_oracle` is a function `produce_certificate : list comp → ℕ → tactic (rb_map ℕ ℕ)`.

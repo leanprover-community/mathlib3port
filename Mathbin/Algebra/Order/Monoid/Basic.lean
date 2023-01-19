@@ -70,8 +70,7 @@ def Function.Injective.linearOrderedCommMonoid [LinearOrderedCommMonoid α] {β 
     LinearOrderedCommMonoid β :=
   { hf.OrderedCommMonoid f one mul npow, LinearOrder.lift f hf hsup hinf with }
 #align function.injective.linear_ordered_comm_monoid Function.Injective.linearOrderedCommMonoid
-#align
-  function.injective.linear_ordered_add_comm_monoid Function.Injective.linearOrderedAddCommMonoid
+#align function.injective.linear_ordered_add_comm_monoid Function.Injective.linearOrderedAddCommMonoid
 
 #print OrderEmbedding.mulLeft /-
 -- TODO find a better home for the next two constructions.

@@ -523,8 +523,7 @@ instance : EssSurj skeletalFunctor.{v}
 
 noncomputable instance isEquivalence : IsEquivalence skeletalFunctor.{v} :=
   Equivalence.ofFullyFaithfullyEssSurj skeletalFunctor
-#align
-  simplex_category.skeletal_functor.is_equivalence SimplexCategory.skeletalFunctor.isEquivalence
+#align simplex_category.skeletal_functor.is_equivalence SimplexCategory.skeletalFunctor.isEquivalence
 
 end SkeletalFunctor
 
@@ -695,9 +694,9 @@ def orderIsoOfIso {x y : SimplexCategory} (e : x ≅ y) : Fin (x.len + 1) ≃o F
 theorem iso_eq_iso_refl {x : SimplexCategory} (e : x ≅ x) : e = Iso.refl x :=
   by
   have h : (Finset.univ : Finset (Fin (x.len + 1))).card = x.len + 1 := Finset.card_fin (x.len + 1)
-  have eq₁ := Finset.order_emb_of_fin_unique' h fun i => Finset.mem_univ ((order_iso_of_iso e) i)
+  have eq₁ := Finset.orderEmbOfFin_unique' h fun i => Finset.mem_univ ((order_iso_of_iso e) i)
   have eq₂ :=
-    Finset.order_emb_of_fin_unique' h fun i => Finset.mem_univ ((order_iso_of_iso (iso.refl x)) i)
+    Finset.orderEmbOfFin_unique' h fun i => Finset.mem_univ ((order_iso_of_iso (iso.refl x)) i)
   ext1; ext1
   convert congr_arg (fun φ => OrderEmbedding.toOrderHom φ) (eq₁.trans eq₂.symm)
   ext1; ext1 i

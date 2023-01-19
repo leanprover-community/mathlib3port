@@ -258,8 +258,7 @@ noncomputable def normalizedFactorsMapEquivNormalizedFactorsMinPolyMk (hI : IsMa
     (normalizedFactorsEquivSpanNormalizedFactors
         (show map I (minpoly R pb.gen) ≠ 0 from
           Polynomial.map_monic_ne_zero (minpoly.monic pb.is_integral_gen))).symm
-#align
-  kummer_dedekind.normalized_factors_map_equiv_normalized_factors_min_poly_mk KummerDedekind.normalizedFactorsMapEquivNormalizedFactorsMinPolyMk
+#align kummer_dedekind.normalized_factors_map_equiv_normalized_factors_min_poly_mk KummerDedekind.normalizedFactorsMapEquivNormalizedFactorsMinPolyMk
 
 /-- The second half of the **Kummer-Dedekind Theorem** in the monogenic case, stating that the
     bijection `factors_equiv'` defined in the first half preserves multiplicities. -/
@@ -273,8 +272,7 @@ theorem multiplicity_factors_map_eq_multiplicity (hI : IsMaximal I) (hI' : I ≠
     Function.comp_apply,
     multiplicity_normalized_factors_equiv_span_normalized_factors_symm_eq_multiplicity,
     normalized_factors_equiv_of_quot_equiv_multiplicity_eq_multiplicity]
-#align
-  kummer_dedekind.multiplicity_factors_map_eq_multiplicity KummerDedekind.multiplicity_factors_map_eq_multiplicity
+#align kummer_dedekind.multiplicity_factors_map_eq_multiplicity KummerDedekind.multiplicity_factors_map_eq_multiplicity
 
 /-- The **Kummer-Dedekind Theorem**. -/
 theorem normalized_factors_ideal_map_eq_normalized_factors_min_poly_mk_map (hI : IsMaximal I)
@@ -320,8 +318,7 @@ theorem normalized_factors_ideal_map_eq_normalized_factors_min_poly_mk_map (hI :
   · exact Polynomial.map_monic_ne_zero (minpoly.monic pb.is_integral_gen)
   · exact irreducible_of_normalized_factor _ hJ
   · rwa [← bot_eq_zero, Ne.def, map_eq_bot_iff_of_injective pb.basis.algebra_map_injective]
-#align
-  kummer_dedekind.normalized_factors_ideal_map_eq_normalized_factors_min_poly_mk_map KummerDedekind.normalized_factors_ideal_map_eq_normalized_factors_min_poly_mk_map
+#align kummer_dedekind.normalized_factors_ideal_map_eq_normalized_factors_min_poly_mk_map KummerDedekind.normalized_factors_ideal_map_eq_normalized_factors_min_poly_mk_map
 
 theorem Ideal.irreducible_map_of_irreducible_minpoly (hI : IsMaximal I) (hI' : I ≠ ⊥)
     (hf : Irreducible (map I (minpoly R pb.gen))) : Irreducible (I.map (algebraMap R S)) :=
@@ -352,8 +349,7 @@ theorem Ideal.irreducible_map_of_irreducible_minpoly (hI : IsMaximal I) (hI' : I
   apply Multiset.map_injective Subtype.coe_injective
   rw [Multiset.attach_map_val, Multiset.map_singleton, Subtype.coe_mk]
   exact normalized_factors_irreducible hf
-#align
-  kummer_dedekind.ideal.irreducible_map_of_irreducible_minpoly KummerDedekind.Ideal.irreducible_map_of_irreducible_minpoly
+#align kummer_dedekind.ideal.irreducible_map_of_irreducible_minpoly KummerDedekind.Ideal.irreducible_map_of_irreducible_minpoly
 
 end KummerDedekind
 

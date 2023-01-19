@@ -459,27 +459,23 @@ unsafe def traversable_derive_handler : derive_handler :=
 unsafe def lawful_functor_derive_handler' (nspace : Option Name := none) : derive_handler :=
   higher_order_derive_handler `` LawfulFunctor (derive_lawful_functor nspace)
     [traversable_derive_handler' nspace] nspace fun n arg => mk_mapp n [arg, none]
-#align
-  tactic.interactive.lawful_functor_derive_handler' tactic.interactive.lawful_functor_derive_handler'
+#align tactic.interactive.lawful_functor_derive_handler' tactic.interactive.lawful_functor_derive_handler'
 
 @[derive_handler]
 unsafe def lawful_functor_derive_handler : derive_handler :=
   guard_class `` LawfulFunctor lawful_functor_derive_handler'
-#align
-  tactic.interactive.lawful_functor_derive_handler tactic.interactive.lawful_functor_derive_handler
+#align tactic.interactive.lawful_functor_derive_handler tactic.interactive.lawful_functor_derive_handler
 
 unsafe def lawful_traversable_derive_handler' (nspace : Option Name := none) : derive_handler :=
   higher_order_derive_handler `` IsLawfulTraversable (derive_lawful_traversable nspace)
     [traversable_derive_handler' nspace, lawful_functor_derive_handler' nspace] nspace fun n arg =>
     mk_mapp n [arg, none]
-#align
-  tactic.interactive.lawful_traversable_derive_handler' tactic.interactive.lawful_traversable_derive_handler'
+#align tactic.interactive.lawful_traversable_derive_handler' tactic.interactive.lawful_traversable_derive_handler'
 
 @[derive_handler]
 unsafe def lawful_traversable_derive_handler : derive_handler :=
   guard_class `` IsLawfulTraversable lawful_traversable_derive_handler'
-#align
-  tactic.interactive.lawful_traversable_derive_handler tactic.interactive.lawful_traversable_derive_handler
+#align tactic.interactive.lawful_traversable_derive_handler tactic.interactive.lawful_traversable_derive_handler
 
 end Tactic.Interactive
 

@@ -93,8 +93,7 @@ theorem Prepartition.measure_Union_to_real [Finite ι] {I : Box ι} (π : Prepar
   by
   erw [← Ennreal.to_real_sum, π.Union_def, measure_bUnion_finset π.pairwise_disjoint]
   exacts[fun J hJ => J.measurable_set_coe, fun J hJ => (J.measure_coe_lt_top μ).Ne]
-#align
-  box_integral.prepartition.measure_Union_to_real BoxIntegral.Prepartition.measure_Union_to_real
+#align box_integral.prepartition.measure_Union_to_real BoxIntegral.Prepartition.measure_Union_to_real
 
 end BoxIntegral
 

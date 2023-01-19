@@ -172,8 +172,7 @@ def quaternionGroupZeroEquivDihedralGroupZero : QuaternionGroup 0 ≃* DihedralG
     rintro (k | k) (l | l) <;>
       · dsimp
         simp
-#align
-  quaternion_group.quaternion_group_zero_equiv_dihedral_group_zero QuaternionGroup.quaternionGroupZeroEquivDihedralGroupZero
+#align quaternion_group.quaternion_group_zero_equiv_dihedral_group_zero QuaternionGroup.quaternionGroupZeroEquivDihedralGroupZero
 
 /-- If `0 < n`, then `quaternion_group n` is a finite group.
 -/
@@ -250,8 +249,7 @@ theorem quaternion_group_one_is_cyclic : IsCyclic (QuaternionGroup 1) :=
   apply is_cyclic_of_order_of_eq_card
   rw [card, mul_one]
   exact order_of_xa 0
-#align
-  quaternion_group.quaternion_group_one_is_cyclic QuaternionGroup.quaternion_group_one_is_cyclic
+#align quaternion_group.quaternion_group_one_is_cyclic QuaternionGroup.quaternion_group_one_is_cyclic
 
 /-- If `0 < n`, then `a 1` has order `2 * n`.
 -/

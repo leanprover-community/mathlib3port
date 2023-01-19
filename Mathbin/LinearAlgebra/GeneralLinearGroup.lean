@@ -145,8 +145,7 @@ variable {n : Type u} [DecidableEq n] [Fintype n] {R : Type v} [CommRing R]
 
 instance hasCoeToGeneralLinearGroup : Coe (SpecialLinearGroup n R) (GL n R) :=
   ⟨fun A => ⟨↑A, ↑A⁻¹, congr_arg coe (mul_right_inv A), congr_arg coe (mul_left_inv A)⟩⟩
-#align
-  matrix.special_linear_group.has_coe_to_general_linear_group Matrix.SpecialLinearGroup.hasCoeToGeneralLinearGroup
+#align matrix.special_linear_group.has_coe_to_general_linear_group Matrix.SpecialLinearGroup.hasCoeToGeneralLinearGroup
 
 @[simp]
 theorem coe_to_GL_det (g : SpecialLinearGroup n R) : (g : GL n R).det = 1 :=
@@ -248,14 +247,12 @@ matrix. -/
 theorem coe_GL_pos_coe_GL_coe_matrix (g : SpecialLinearGroup n R) :
     (↑(↑(↑g : gLPos n R) : GL n R) : Matrix n n R) = ↑g :=
   rfl
-#align
-  matrix.special_linear_group.coe_GL_pos_coe_GL_coe_matrix Matrix.SpecialLinearGroup.coe_GL_pos_coe_GL_coe_matrix
+#align matrix.special_linear_group.coe_GL_pos_coe_GL_coe_matrix Matrix.SpecialLinearGroup.coe_GL_pos_coe_GL_coe_matrix
 
 @[simp]
 theorem coe_to_GL_pos_to_GL_det (g : SpecialLinearGroup n R) : ((g : gLPos n R) : GL n R).det = 1 :=
   Units.ext g.Prop
-#align
-  matrix.special_linear_group.coe_to_GL_pos_to_GL_det Matrix.SpecialLinearGroup.coe_to_GL_pos_to_GL_det
+#align matrix.special_linear_group.coe_to_GL_pos_to_GL_det Matrix.SpecialLinearGroup.coe_to_GL_pos_to_GL_det
 
 variable [Fact (Even (Fintype.card n))]
 

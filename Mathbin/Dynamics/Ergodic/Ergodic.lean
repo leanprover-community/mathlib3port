@@ -94,8 +94,7 @@ theorem preErgodicOfPreErgodicConjugate (hg : MeasurePreserving g μ μ') (hf : 
     cases' hf.ae_empty_or_univ (hg.measurable hs₀) hs₁ with hs₂ hs₂ <;> [left, right]
     · simpa only [ae_eq_empty, hg.measure_preimage hs₀] using hs₂
     · simpa only [ae_eq_univ, ← preimage_compl, hg.measure_preimage hs₀.compl] using hs₂⟩
-#align
-  measure_theory.measure_preserving.pre_ergodic_of_pre_ergodic_conjugate MeasureTheory.MeasurePreserving.preErgodicOfPreErgodicConjugate
+#align measure_theory.measure_preserving.pre_ergodic_of_pre_ergodic_conjugate MeasureTheory.MeasurePreserving.preErgodicOfPreErgodicConjugate
 
 theorem pre_ergodic_conjugate_iff {e : α ≃ᵐ β} (h : MeasurePreserving e μ μ') :
     PreErgodic (e ∘ f ∘ e.symm) μ' ↔ PreErgodic f μ :=
@@ -107,8 +106,7 @@ theorem pre_ergodic_conjugate_iff {e : α ≃ᵐ β} (h : MeasurePreserving e μ
     rw [MeasurableEquiv.symm_comp_self, comp.left_id]
   · change e ∘ f = e ∘ f ∘ e.symm ∘ e
     rw [MeasurableEquiv.symm_comp_self, comp.right_id]
-#align
-  measure_theory.measure_preserving.pre_ergodic_conjugate_iff MeasureTheory.MeasurePreserving.pre_ergodic_conjugate_iff
+#align measure_theory.measure_preserving.pre_ergodic_conjugate_iff MeasureTheory.MeasurePreserving.pre_ergodic_conjugate_iff
 
 theorem ergodic_conjugate_iff {e : α ≃ᵐ β} (h : MeasurePreserving e μ μ') :
     Ergodic (e ∘ f ∘ e.symm) μ' ↔ Ergodic f μ :=
@@ -119,8 +117,7 @@ theorem ergodic_conjugate_iff {e : α ≃ᵐ β} (h : MeasurePreserving e μ μ'
   exact
     ⟨fun hf => { this.mp hf.toMeasurePreserving, h.mp hf.toPreErgodic with }, fun hf =>
       { this.mpr hf.toMeasurePreserving, h.mpr hf.toPreErgodic with }⟩
-#align
-  measure_theory.measure_preserving.ergodic_conjugate_iff MeasureTheory.MeasurePreserving.ergodic_conjugate_iff
+#align measure_theory.measure_preserving.ergodic_conjugate_iff MeasureTheory.MeasurePreserving.ergodic_conjugate_iff
 
 end MeasureTheory.MeasurePreserving
 

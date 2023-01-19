@@ -81,14 +81,12 @@ theorem embedding_pi_tangent_inj_on : InjOn f.embeddingPiTangent s :=
   rw [← h₂, f.apply_ind x hx, one_smul, one_smul] at h₁
   have := f.mem_ext_chart_at_source_of_eq_one h₂.symm
   exact (extChartAt I (f.c _)).InjOn (f.mem_ext_chart_at_ind_source x hx) this h₁
-#align
-  smooth_bump_covering.embedding_pi_tangent_inj_on SmoothBumpCovering.embedding_pi_tangent_inj_on
+#align smooth_bump_covering.embedding_pi_tangent_inj_on SmoothBumpCovering.embedding_pi_tangent_inj_on
 
 theorem embedding_pi_tangent_injective (f : SmoothBumpCovering ι I M) :
     Injective f.embeddingPiTangent :=
   injective_iff_injOn_univ.2 f.embedding_pi_tangent_inj_on
-#align
-  smooth_bump_covering.embedding_pi_tangent_injective SmoothBumpCovering.embedding_pi_tangent_injective
+#align smooth_bump_covering.embedding_pi_tangent_injective SmoothBumpCovering.embedding_pi_tangent_injective
 
 theorem comp_embedding_pi_tangent_mfderiv (x : M) (hx : x ∈ s) :
     ((ContinuousLinearMap.fst ℝ E ℝ).comp
@@ -107,8 +105,7 @@ theorem comp_embedding_pi_tangent_mfderiv (x : M) (hx : x ∈ s) :
   simp only [embedding_pi_tangent_coe, ContinuousLinearMap.coe_comp', (· ∘ ·),
     ContinuousLinearMap.coe_fst', ContinuousLinearMap.proj_apply]
   rw [hy, Pi.one_apply, one_smul]
-#align
-  smooth_bump_covering.comp_embedding_pi_tangent_mfderiv SmoothBumpCovering.comp_embedding_pi_tangent_mfderiv
+#align smooth_bump_covering.comp_embedding_pi_tangent_mfderiv SmoothBumpCovering.comp_embedding_pi_tangent_mfderiv
 
 theorem embedding_pi_tangent_ker_mfderiv (x : M) (hx : x ∈ s) :
     LinearMap.ker (mfderiv I 𝓘(ℝ, ι → E × ℝ) f.embeddingPiTangent x) = ⊥ :=
@@ -119,14 +116,12 @@ theorem embedding_pi_tangent_ker_mfderiv (x : M) (hx : x ∈ s) :
       (f.mem_chart_at_ind_source x hx),
     ← comp_embedding_pi_tangent_mfderiv]
   exact LinearMap.ker_le_ker_comp _ _
-#align
-  smooth_bump_covering.embedding_pi_tangent_ker_mfderiv SmoothBumpCovering.embedding_pi_tangent_ker_mfderiv
+#align smooth_bump_covering.embedding_pi_tangent_ker_mfderiv SmoothBumpCovering.embedding_pi_tangent_ker_mfderiv
 
 theorem embedding_pi_tangent_injective_mfderiv (x : M) (hx : x ∈ s) :
     Injective (mfderiv I 𝓘(ℝ, ι → E × ℝ) f.embeddingPiTangent x) :=
   LinearMap.ker_eq_bot.1 (f.embedding_pi_tangent_ker_mfderiv x hx)
-#align
-  smooth_bump_covering.embedding_pi_tangent_injective_mfderiv SmoothBumpCovering.embedding_pi_tangent_injective_mfderiv
+#align smooth_bump_covering.embedding_pi_tangent_injective_mfderiv SmoothBumpCovering.embedding_pi_tangent_injective_mfderiv
 
 omit hi
 

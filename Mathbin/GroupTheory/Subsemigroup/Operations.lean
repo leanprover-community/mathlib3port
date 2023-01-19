@@ -796,8 +796,7 @@ Case conversion may be inaccurate. Consider using '#align subsemigroup.comap_le_
 theorem comap_le_comap_iff_of_surjective {S T : Subsemigroup N} : S.comap f ≤ T.comap f ↔ S ≤ T :=
   (giMapComap hf).u_le_u_iff
 #align subsemigroup.comap_le_comap_iff_of_surjective Subsemigroup.comap_le_comap_iff_of_surjective
-#align
-  add_subsemigroup.comap_le_comap_iff_of_surjective AddSubsemigroup.comap_le_comap_iff_of_surjective
+#align add_subsemigroup.comap_le_comap_iff_of_surjective AddSubsemigroup.comap_le_comap_iff_of_surjective
 
 /- warning: subsemigroup.comap_strict_mono_of_surjective -> Subsemigroup.comap_strictMono_of_surjective is a dubious translation:
 lean 3 declaration is
@@ -809,8 +808,7 @@ Case conversion may be inaccurate. Consider using '#align subsemigroup.comap_str
 theorem comap_strictMono_of_surjective : StrictMono (comap f) :=
   (giMapComap hf).strict_mono_u
 #align subsemigroup.comap_strict_mono_of_surjective Subsemigroup.comap_strictMono_of_surjective
-#align
-  add_subsemigroup.comap_strict_mono_of_surjective AddSubsemigroup.comap_strictMono_of_surjective
+#align add_subsemigroup.comap_strict_mono_of_surjective AddSubsemigroup.comap_strictMono_of_surjective
 
 end GaloisInsertion
 
@@ -973,8 +971,7 @@ theorem coe_equivMapOfInjective_apply (f : M →ₙ* N) (hf : Function.Injective
     (equivMapOfInjective S f hf x : N) = f x :=
   rfl
 #align subsemigroup.coe_equiv_map_of_injective_apply Subsemigroup.coe_equivMapOfInjective_apply
-#align
-  add_subsemigroup.coe_equiv_map_of_injective_apply AddSubsemigroup.coe_equivMapOfInjective_apply
+#align add_subsemigroup.coe_equiv_map_of_injective_apply AddSubsemigroup.coe_equivMapOfInjective_apply
 
 #print Subsemigroup.closure_closure_coe_preimage /-
 @[simp, to_additive]

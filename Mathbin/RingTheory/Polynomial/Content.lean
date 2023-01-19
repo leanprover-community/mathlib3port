@@ -212,8 +212,7 @@ theorem content_eq_gcd_leading_coeff_content_erase_lead (p : R[X]) :
   refine' congr rfl (Finset.gcd_congr rfl fun i hi => _)
   rw [Finset.mem_erase] at hi
   rw [erase_lead_coeff, if_neg hi.1]
-#align
-  polynomial.content_eq_gcd_leading_coeff_content_erase_lead Polynomial.content_eq_gcd_leading_coeff_content_erase_lead
+#align polynomial.content_eq_gcd_leading_coeff_content_erase_lead Polynomial.content_eq_gcd_leading_coeff_content_erase_lead
 
 theorem dvd_content_iff_C_dvd {p : R[X]} {r : R} : r ∣ p.content ↔ c r ∣ p :=
   by
@@ -476,8 +475,7 @@ theorem exists_primitive_lcm_of_is_primitive {p q : R[X]} (hp : p.IsPrimitive)
     rcases is_unit_prim_part_C r.leading_coeff with ⟨u, hu⟩
     apply h.trans (Associated.symm ⟨u, _⟩).Dvd
     rw [prim_part_mul (mul_ne_zero hC0 s0), hu, mul_comm]
-#align
-  polynomial.exists_primitive_lcm_of_is_primitive Polynomial.exists_primitive_lcm_of_is_primitive
+#align polynomial.exists_primitive_lcm_of_is_primitive Polynomial.exists_primitive_lcm_of_is_primitive
 
 theorem dvd_iff_content_dvd_content_and_prim_part_dvd_prim_part {p q : R[X]} (hq : q ≠ 0) :
     p ∣ q ↔ p.content ∣ q.content ∧ p.primPart ∣ q.primPart :=
@@ -488,8 +486,7 @@ theorem dvd_iff_content_dvd_content_and_prim_part_dvd_prim_part {p q : R[X]} (hq
     exact ⟨Dvd.intro _ rfl, p.prim_part_dvd.trans (Dvd.intro _ rfl)⟩
   · rw [p.eq_C_content_mul_prim_part, q.eq_C_content_mul_prim_part]
     exact mul_dvd_mul (RingHom.map_dvd C h.1) h.2
-#align
-  polynomial.dvd_iff_content_dvd_content_and_prim_part_dvd_prim_part Polynomial.dvd_iff_content_dvd_content_and_prim_part_dvd_prim_part
+#align polynomial.dvd_iff_content_dvd_content_and_prim_part_dvd_prim_part Polynomial.dvd_iff_content_dvd_content_and_prim_part_dvd_prim_part
 
 instance (priority := 100) normalizedGcdMonoid : NormalizedGCDMonoid R[X] :=
   normalizedGCDMonoidOfExistsLCM fun p q =>

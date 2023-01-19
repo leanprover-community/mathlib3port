@@ -95,8 +95,7 @@ instance hasForgetToCommRing : HasForget₂ TopCommRingCat CommRingCat :=
 instance forgetToCommRingTopologicalSpace (R : TopCommRingCat) :
     TopologicalSpace ((forget₂ TopCommRingCat CommRingCat).obj R) :=
   R.isTopologicalSpace
-#align
-  TopCommRing.forget_to_CommRing_topological_space TopCommRingCat.forgetToCommRingTopologicalSpace
+#align TopCommRing.forget_to_CommRing_topological_space TopCommRingCat.forgetToCommRingTopologicalSpace
 
 /-- The forgetful functor to Top. -/
 instance hasForgetToTop : HasForget₂ TopCommRingCat TopCat :=

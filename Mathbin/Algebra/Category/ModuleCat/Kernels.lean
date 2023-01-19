@@ -119,15 +119,13 @@ noncomputable def cokernelIsoRangeQuotient {G H : ModuleCat.{v} R} (f : G ⟶ H)
 theorem cokernel_π_cokernel_iso_range_quotient_hom :
     cokernel.π f ≫ (cokernelIsoRangeQuotient f).hom = f.range.mkq := by
   convert colimit.iso_colimit_cocone_ι_hom _ _ <;> rfl
-#align
-  Module.cokernel_π_cokernel_iso_range_quotient_hom ModuleCat.cokernel_π_cokernel_iso_range_quotient_hom
+#align Module.cokernel_π_cokernel_iso_range_quotient_hom ModuleCat.cokernel_π_cokernel_iso_range_quotient_hom
 
 @[simp, elementwise]
 theorem range_mkq_cokernel_iso_range_quotient_inv :
     ↿f.range.mkq ≫ (cokernelIsoRangeQuotient f).inv = cokernel.π f := by
   convert colimit.iso_colimit_cocone_ι_inv ⟨_, cokernel_is_colimit f⟩ _ <;> rfl
-#align
-  Module.range_mkq_cokernel_iso_range_quotient_inv ModuleCat.range_mkq_cokernel_iso_range_quotient_inv
+#align Module.range_mkq_cokernel_iso_range_quotient_inv ModuleCat.range_mkq_cokernel_iso_range_quotient_inv
 
 theorem cokernel_π_ext {M N : ModuleCat.{u} R} (f : M ⟶ N) {x y : N} (m : M) (w : x = y + f m) :
     cokernel.π f x = cokernel.π f y := by

@@ -104,8 +104,7 @@ theorem finrank_eq_card_basis {ι : Type w} [Fintype ι] (h : Basis ι K V) :
 basis. This lemma uses a `finset` instead of indexed types. -/
 theorem finrank_eq_card_finset_basis {ι : Type w} {b : Finset ι} (h : Basis.{w} b K V) :
     finrank K V = Finset.card b := by rw [finrank_eq_card_basis h, Fintype.card_coe]
-#align
-  finite_dimensional.finrank_eq_card_finset_basis FiniteDimensional.finrank_eq_card_finset_basis
+#align finite_dimensional.finrank_eq_card_finset_basis FiniteDimensional.finrank_eq_card_finset_basis
 
 /-- A finite dimensional space is nontrivial if it has positive `finrank`. -/
 theorem nontrivial_of_finrank_pos (h : 0 < finrank K V) : Nontrivial V :=
@@ -116,8 +115,7 @@ theorem nontrivial_of_finrank_pos (h : 0 < finrank K V) : Nontrivial V :=
 natural number. -/
 theorem nontrivial_of_finrank_eq_succ {n : ℕ} (hn : finrank K V = n.succ) : Nontrivial V :=
   nontrivial_of_finrank_pos (by rw [hn] <;> exact n.succ_pos)
-#align
-  finite_dimensional.nontrivial_of_finrank_eq_succ FiniteDimensional.nontrivial_of_finrank_eq_succ
+#align finite_dimensional.nontrivial_of_finrank_eq_succ FiniteDimensional.nontrivial_of_finrank_eq_succ
 
 /-- A (finite dimensional) space that is a subsingleton has zero `finrank`. -/
 theorem finrank_zero_of_subsingleton [h : Subsingleton V] : finrank K V = 0 :=
@@ -125,8 +123,7 @@ theorem finrank_zero_of_subsingleton [h : Subsingleton V] : finrank K V = 0 :=
   by_contra h0
   obtain ⟨x, y, hxy⟩ := nontrivial_of_finrank_pos (Nat.pos_of_ne_zero h0)
   exact hxy (Subsingleton.elim _ _)
-#align
-  finite_dimensional.finrank_zero_of_subsingleton FiniteDimensional.finrank_zero_of_subsingleton
+#align finite_dimensional.finrank_zero_of_subsingleton FiniteDimensional.finrank_zero_of_subsingleton
 
 theorem Basis.subset_extend {s : Set V} (hs : LinearIndependent K (coe : s → V)) :
     s ⊆ hs.extend (Set.subset_univ _) :=
@@ -333,7 +330,7 @@ theorem finrank_span_set_eq_card (s : Set V) [Fintype s] (hs : LinearIndependent
   finrank_eq_of_dim_eq
     (by
       have : Module.rank K (span K s) = (#s) := dim_span_set hs
-      rwa [Cardinal.mk_fintype, ← Set.to_finset_card] at this)
+      rwa [Cardinal.mk_fintype, ← Set.toFinset_card] at this)
 #align finrank_span_set_eq_card finrank_span_set_eq_card
 
 theorem finrank_span_finset_eq_card (s : Finset V) (hs : LinearIndependent K (coe : s → V)) :
@@ -381,7 +378,7 @@ theorem linear_independent_of_top_le_span_of_card_eq_finrank {ι : Type _} [Fint
     ·
       calc
         (b '' (Set.univ \ {i})).toFinset.card = ((Set.univ \ {i}).toFinset.image b).card := by
-          rw [Set.to_finset_card, Fintype.card_of_finset]
+          rw [Set.toFinset_card, Fintype.card_of_finset]
         _ ≤ (Set.univ \ {i}).toFinset.card := Finset.card_image_le
         _ = (finset.univ.erase i).card := congr_arg Finset.card (Finset.ext (by simp [and_comm']))
         _ < finset.univ.card := Finset.card_erase_lt_of_mem (Finset.mem_univ i)
@@ -415,8 +412,7 @@ theorem linear_independent_of_top_le_span_of_card_eq_finrank {ι : Type _} [Fint
       
     -- And then it's just a bit of manipulation with finite sums.
     rwa [← Finset.insert_erase i_mem_s, Finset.sum_insert (Finset.not_mem_erase _ _)] at dependent
-#align
-  linear_independent_of_top_le_span_of_card_eq_finrank linear_independent_of_top_le_span_of_card_eq_finrank
+#align linear_independent_of_top_le_span_of_card_eq_finrank linear_independent_of_top_le_span_of_card_eq_finrank
 
 /-- A finite family of vectors is linearly independent if and only if
 its cardinality equals the dimension of its span. -/
@@ -560,8 +556,7 @@ theorem subalgebra_top_finrank_eq_submodule_top_finrank :
   by
   rw [← Algebra.top_to_submodule]
   rfl
-#align
-  subalgebra_top_finrank_eq_submodule_top_finrank subalgebra_top_finrank_eq_submodule_top_finrank
+#align subalgebra_top_finrank_eq_submodule_top_finrank subalgebra_top_finrank_eq_submodule_top_finrank
 
 theorem Subalgebra.dim_top : Module.rank F (⊤ : Subalgebra F E) = Module.rank F E :=
   by

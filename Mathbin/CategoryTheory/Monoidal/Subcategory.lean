@@ -45,8 +45,7 @@ variable {C : Type u} [Category.{v} C] [MonoidalCategory C] (P : C → Prop)
 class MonoidalPredicate : Prop where
   prop_id' : P (𝟙_ C) := by obviously
   prop_tensor' : ∀ {X Y}, P X → P Y → P (X ⊗ Y) := by obviously
-#align
-  category_theory.monoidal_category.monoidal_predicate CategoryTheory.MonoidalCategory.MonoidalPredicate
+#align category_theory.monoidal_category.monoidal_predicate CategoryTheory.MonoidalCategory.MonoidalPredicate
 
 restate_axiom monoidal_predicate.prop_id'
 
@@ -85,8 +84,7 @@ instance fullMonoidalSubcategory : MonoidalCategory (FullSubcategory P)
   right_unitor_naturality' X Y f := right_unitor_naturality f
   pentagon' W X Y Z := pentagon W.1 X.1 Y.1 Z.1
   triangle' X Y := triangle X.1 Y.1
-#align
-  category_theory.monoidal_category.full_monoidal_subcategory CategoryTheory.MonoidalCategory.fullMonoidalSubcategory
+#align category_theory.monoidal_category.full_monoidal_subcategory CategoryTheory.MonoidalCategory.fullMonoidalSubcategory
 
 /-- The forgetful monoidal functor from a full monoidal subcategory into the original category
 ("forgetting" the condition).
@@ -97,19 +95,16 @@ def fullMonoidalSubcategoryInclusion : MonoidalFunctor (FullSubcategory P) C
   toFunctor := fullSubcategoryInclusion P
   ε := 𝟙 _
   μ X Y := 𝟙 _
-#align
-  category_theory.monoidal_category.full_monoidal_subcategory_inclusion CategoryTheory.MonoidalCategory.fullMonoidalSubcategoryInclusion
+#align category_theory.monoidal_category.full_monoidal_subcategory_inclusion CategoryTheory.MonoidalCategory.fullMonoidalSubcategoryInclusion
 
 instance fullMonoidalSubcategory.full : Full (fullMonoidalSubcategoryInclusion P).toFunctor :=
   FullSubcategory.full P
-#align
-  category_theory.monoidal_category.full_monoidal_subcategory.full CategoryTheory.MonoidalCategory.fullMonoidalSubcategory.full
+#align category_theory.monoidal_category.full_monoidal_subcategory.full CategoryTheory.MonoidalCategory.fullMonoidalSubcategory.full
 
 instance fullMonoidalSubcategory.faithful :
     Faithful (fullMonoidalSubcategoryInclusion P).toFunctor :=
   FullSubcategory.faithful P
-#align
-  category_theory.monoidal_category.full_monoidal_subcategory.faithful CategoryTheory.MonoidalCategory.fullMonoidalSubcategory.faithful
+#align category_theory.monoidal_category.full_monoidal_subcategory.faithful CategoryTheory.MonoidalCategory.fullMonoidalSubcategory.faithful
 
 section
 
@@ -118,8 +113,7 @@ variable [Preadditive C]
 instance full_monoidal_subcategory_inclusion_additive :
     (fullMonoidalSubcategoryInclusion P).toFunctor.Additive :=
   Functor.full_subcategory_inclusion_additive _
-#align
-  category_theory.monoidal_category.full_monoidal_subcategory_inclusion_additive CategoryTheory.MonoidalCategory.full_monoidal_subcategory_inclusion_additive
+#align category_theory.monoidal_category.full_monoidal_subcategory_inclusion_additive CategoryTheory.MonoidalCategory.full_monoidal_subcategory_inclusion_additive
 
 instance [MonoidalPreadditive C] : MonoidalPreadditive (FullSubcategory P) :=
   monoidal_preadditive_of_faithful (fullMonoidalSubcategoryInclusion P)
@@ -129,8 +123,7 @@ variable (R : Type _) [Ring R] [Linear R C]
 instance fullMonoidalSubcategoryInclusionLinear :
     (fullMonoidalSubcategoryInclusion P).toFunctor.Linear R :=
   Functor.fullSubcategoryInclusionLinear R _
-#align
-  category_theory.monoidal_category.full_monoidal_subcategory_inclusion_linear CategoryTheory.MonoidalCategory.fullMonoidalSubcategoryInclusionLinear
+#align category_theory.monoidal_category.full_monoidal_subcategory_inclusion_linear CategoryTheory.MonoidalCategory.fullMonoidalSubcategoryInclusionLinear
 
 instance [MonoidalPreadditive C] [MonoidalLinear R C] : MonoidalLinear R (FullSubcategory P) :=
   monoidalLinearOfFaithful R (fullMonoidalSubcategoryInclusion P)
@@ -148,18 +141,15 @@ def fullMonoidalSubcategory.map (h : ∀ ⦃X⦄, P X → P' X) :
   toFunctor := FullSubcategory.map h
   ε := 𝟙 _
   μ X Y := 𝟙 _
-#align
-  category_theory.monoidal_category.full_monoidal_subcategory.map CategoryTheory.MonoidalCategory.fullMonoidalSubcategory.map
+#align category_theory.monoidal_category.full_monoidal_subcategory.map CategoryTheory.MonoidalCategory.fullMonoidalSubcategory.map
 
 instance fullMonoidalSubcategory.mapFull (h : ∀ ⦃X⦄, P X → P' X) :
     Full (fullMonoidalSubcategory.map h).toFunctor where preimage X Y f := f
-#align
-  category_theory.monoidal_category.full_monoidal_subcategory.map_full CategoryTheory.MonoidalCategory.fullMonoidalSubcategory.mapFull
+#align category_theory.monoidal_category.full_monoidal_subcategory.map_full CategoryTheory.MonoidalCategory.fullMonoidalSubcategory.mapFull
 
 instance fullMonoidalSubcategory.map_faithful (h : ∀ ⦃X⦄, P X → P' X) :
     Faithful (fullMonoidalSubcategory.map h).toFunctor where
-#align
-  category_theory.monoidal_category.full_monoidal_subcategory.map_faithful CategoryTheory.MonoidalCategory.fullMonoidalSubcategory.map_faithful
+#align category_theory.monoidal_category.full_monoidal_subcategory.map_faithful CategoryTheory.MonoidalCategory.fullMonoidalSubcategory.map_faithful
 
 section Braided
 
@@ -172,8 +162,7 @@ instance fullBraidedSubcategory : BraidedCategory (FullSubcategory P) :=
     (fun X Y =>
       ⟨(β_ X.1 Y.1).Hom, (β_ X.1 Y.1).inv, (β_ X.1 Y.1).hom_inv_id, (β_ X.1 Y.1).inv_hom_id⟩)
     fun X Y => by tidy
-#align
-  category_theory.monoidal_category.full_braided_subcategory CategoryTheory.MonoidalCategory.fullBraidedSubcategory
+#align category_theory.monoidal_category.full_braided_subcategory CategoryTheory.MonoidalCategory.fullBraidedSubcategory
 
 /-- The forgetful braided functor from a full braided subcategory into the original category
 ("forgetting" the condition).
@@ -185,18 +174,15 @@ def fullBraidedSubcategoryInclusion : BraidedFunctor (FullSubcategory P) C
   braided' X Y := by
     rw [is_iso.eq_inv_comp]
     tidy
-#align
-  category_theory.monoidal_category.full_braided_subcategory_inclusion CategoryTheory.MonoidalCategory.fullBraidedSubcategoryInclusion
+#align category_theory.monoidal_category.full_braided_subcategory_inclusion CategoryTheory.MonoidalCategory.fullBraidedSubcategoryInclusion
 
 instance fullBraidedSubcategory.full : Full (fullBraidedSubcategoryInclusion P).toFunctor :=
   fullMonoidalSubcategory.full P
-#align
-  category_theory.monoidal_category.full_braided_subcategory.full CategoryTheory.MonoidalCategory.fullBraidedSubcategory.full
+#align category_theory.monoidal_category.full_braided_subcategory.full CategoryTheory.MonoidalCategory.fullBraidedSubcategory.full
 
 instance fullBraidedSubcategory.faithful : Faithful (fullBraidedSubcategoryInclusion P).toFunctor :=
   fullMonoidalSubcategory.faithful P
-#align
-  category_theory.monoidal_category.full_braided_subcategory.faithful CategoryTheory.MonoidalCategory.fullBraidedSubcategory.faithful
+#align category_theory.monoidal_category.full_braided_subcategory.faithful CategoryTheory.MonoidalCategory.fullBraidedSubcategory.faithful
 
 variable {P}
 
@@ -210,20 +196,17 @@ def fullBraidedSubcategory.map (h : ∀ ⦃X⦄, P X → P' X) :
   braided' X Y := by
     rw [is_iso.eq_inv_comp]
     tidy
-#align
-  category_theory.monoidal_category.full_braided_subcategory.map CategoryTheory.MonoidalCategory.fullBraidedSubcategory.map
+#align category_theory.monoidal_category.full_braided_subcategory.map CategoryTheory.MonoidalCategory.fullBraidedSubcategory.map
 
 instance fullBraidedSubcategory.mapFull (h : ∀ ⦃X⦄, P X → P' X) :
     Full (fullBraidedSubcategory.map h).toFunctor :=
   fullMonoidalSubcategory.mapFull h
-#align
-  category_theory.monoidal_category.full_braided_subcategory.map_full CategoryTheory.MonoidalCategory.fullBraidedSubcategory.mapFull
+#align category_theory.monoidal_category.full_braided_subcategory.map_full CategoryTheory.MonoidalCategory.fullBraidedSubcategory.mapFull
 
 instance fullBraidedSubcategory.map_faithful (h : ∀ ⦃X⦄, P X → P' X) :
     Faithful (fullBraidedSubcategory.map h).toFunctor :=
   fullMonoidalSubcategory.map_faithful h
-#align
-  category_theory.monoidal_category.full_braided_subcategory.map_faithful CategoryTheory.MonoidalCategory.fullBraidedSubcategory.map_faithful
+#align category_theory.monoidal_category.full_braided_subcategory.map_faithful CategoryTheory.MonoidalCategory.fullBraidedSubcategory.map_faithful
 
 end Braided
 
@@ -233,8 +216,7 @@ variable (P) [SymmetricCategory C]
 
 instance fullSymmetricSubcategory : SymmetricCategory (FullSubcategory P) :=
   symmetricCategoryOfFaithful (fullBraidedSubcategoryInclusion P)
-#align
-  category_theory.monoidal_category.full_symmetric_subcategory CategoryTheory.MonoidalCategory.fullSymmetricSubcategory
+#align category_theory.monoidal_category.full_symmetric_subcategory CategoryTheory.MonoidalCategory.fullSymmetricSubcategory
 
 end Symmetric
 
@@ -246,8 +228,7 @@ variable (P) [MonoidalClosed C]
 -/
 class ClosedPredicate : Prop where
   prop_ihom' : ∀ {X Y}, P X → P Y → P ((ihom X).obj Y) := by obviously
-#align
-  category_theory.monoidal_category.closed_predicate CategoryTheory.MonoidalCategory.ClosedPredicate
+#align category_theory.monoidal_category.closed_predicate CategoryTheory.MonoidalCategory.ClosedPredicate
 
 restate_axiom closed_predicate.prop_ihom'
 
@@ -277,22 +258,19 @@ instance fullMonoidalClosedSubcategory : MonoidalClosed (FullSubcategory P)
                   ext Y
                   simp
                   exact ihom.coev_ev X.1 Y.1 } } }
-#align
-  category_theory.monoidal_category.full_monoidal_closed_subcategory CategoryTheory.MonoidalCategory.fullMonoidalClosedSubcategory
+#align category_theory.monoidal_category.full_monoidal_closed_subcategory CategoryTheory.MonoidalCategory.fullMonoidalClosedSubcategory
 
 @[simp]
 theorem full_monoidal_closed_subcategory_ihom_obj (X Y : FullSubcategory P) :
     ((ihom X).obj Y).obj = (ihom X.obj).obj Y.obj :=
   rfl
-#align
-  category_theory.monoidal_category.full_monoidal_closed_subcategory_ihom_obj CategoryTheory.MonoidalCategory.full_monoidal_closed_subcategory_ihom_obj
+#align category_theory.monoidal_category.full_monoidal_closed_subcategory_ihom_obj CategoryTheory.MonoidalCategory.full_monoidal_closed_subcategory_ihom_obj
 
 @[simp]
 theorem full_monoidal_closed_subcategory_ihom_map (X : FullSubcategory P) {Y Z : FullSubcategory P}
     (f : Y ⟶ Z) : (ihom X).map f = (ihom X.obj).map f :=
   rfl
-#align
-  category_theory.monoidal_category.full_monoidal_closed_subcategory_ihom_map CategoryTheory.MonoidalCategory.full_monoidal_closed_subcategory_ihom_map
+#align category_theory.monoidal_category.full_monoidal_closed_subcategory_ihom_map CategoryTheory.MonoidalCategory.full_monoidal_closed_subcategory_ihom_map
 
 end Closed
 

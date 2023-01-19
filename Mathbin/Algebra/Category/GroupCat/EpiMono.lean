@@ -152,8 +152,7 @@ theorem from_coset_eq_of_mem_range {b : B} (hb : b ∈ f.range) :
   nth_rw 2 [show (f.range : Set B) = 1 *l f.range from (one_left_coset _).symm]
   rw [left_coset_eq_iff, mul_one]
   exact Subgroup.inv_mem _ hb
-#align
-  Group.surjective_of_epi_auxs.from_coset_eq_of_mem_range GroupCat.SurjectiveOfEpiAuxs.from_coset_eq_of_mem_range
+#align Group.surjective_of_epi_auxs.from_coset_eq_of_mem_range GroupCat.SurjectiveOfEpiAuxs.from_coset_eq_of_mem_range
 
 theorem from_coset_ne_of_nin_range {b : B} (hb : b ∉ f.range) :
     from_coset ⟨b *l f.range.carrier, ⟨b, rfl⟩⟩ ≠
@@ -165,8 +164,7 @@ theorem from_coset_ne_of_nin_range {b : B} (hb : b ∉ f.range) :
   nth_rw 2 [show (f.range : Set B) = 1 *l f.range from (one_left_coset _).symm] at r
   rw [left_coset_eq_iff, mul_one] at r
   exact hb (inv_inv b ▸ Subgroup.inv_mem _ r)
-#align
-  Group.surjective_of_epi_auxs.from_coset_ne_of_nin_range GroupCat.SurjectiveOfEpiAuxs.from_coset_ne_of_nin_range
+#align Group.surjective_of_epi_auxs.from_coset_ne_of_nin_range GroupCat.SurjectiveOfEpiAuxs.from_coset_ne_of_nin_range
 
 instance : DecidableEq X' :=
   Classical.decEq _
@@ -186,26 +184,22 @@ theorem τ_apply_infinity : τ ∞ = from_coset ⟨f.range.carrier, ⟨1, one_le
 
 theorem τ_apply_from_coset : τ (from_coset ⟨f.range.carrier, ⟨1, one_left_coset _⟩⟩) = ∞ :=
   Equiv.swap_apply_left _ _
-#align
-  Group.surjective_of_epi_auxs.τ_apply_from_coset GroupCat.SurjectiveOfEpiAuxs.τ_apply_from_coset
+#align Group.surjective_of_epi_auxs.τ_apply_from_coset GroupCat.SurjectiveOfEpiAuxs.τ_apply_from_coset
 
 theorem τ_apply_from_coset' (x : B) (hx : x ∈ f.range) :
     τ (from_coset ⟨x *l f.range.carrier, ⟨x, rfl⟩⟩) = ∞ :=
   (from_coset_eq_of_mem_range _ hx).symm ▸ τ_apply_from_coset _
-#align
-  Group.surjective_of_epi_auxs.τ_apply_from_coset' GroupCat.SurjectiveOfEpiAuxs.τ_apply_from_coset'
+#align Group.surjective_of_epi_auxs.τ_apply_from_coset' GroupCat.SurjectiveOfEpiAuxs.τ_apply_from_coset'
 
 theorem τ_symm_apply_from_coset :
     (Equiv.symm τ) (from_coset ⟨f.range.carrier, ⟨1, one_left_coset _⟩⟩) = ∞ := by
   rw [tau, Equiv.symm_swap, Equiv.swap_apply_left]
-#align
-  Group.surjective_of_epi_auxs.τ_symm_apply_from_coset GroupCat.SurjectiveOfEpiAuxs.τ_symm_apply_from_coset
+#align Group.surjective_of_epi_auxs.τ_symm_apply_from_coset GroupCat.SurjectiveOfEpiAuxs.τ_symm_apply_from_coset
 
 theorem τ_symm_apply_infinity :
     (Equiv.symm τ) ∞ = from_coset ⟨f.range.carrier, ⟨1, one_left_coset _⟩⟩ := by
   rw [tau, Equiv.symm_swap, Equiv.swap_apply_right]
-#align
-  Group.surjective_of_epi_auxs.τ_symm_apply_infinity GroupCat.SurjectiveOfEpiAuxs.τ_symm_apply_infinity
+#align Group.surjective_of_epi_auxs.τ_symm_apply_infinity GroupCat.SurjectiveOfEpiAuxs.τ_symm_apply_infinity
 
 /-- Let `g : B ⟶ S(X')` be defined as such that, for any `β : B`, `g(β)` is the function sending
 point at infinity to point at infinity and sending coset `y` to `β *l y`.
@@ -257,8 +251,7 @@ The strategy is the following: assuming `epi f`
 
 theorem g_apply_from_coset (x : B) (y : X) : (g x) (from_coset y) = from_coset ⟨x *l y, by tidy⟩ :=
   rfl
-#align
-  Group.surjective_of_epi_auxs.g_apply_from_coset GroupCat.SurjectiveOfEpiAuxs.g_apply_from_coset
+#align Group.surjective_of_epi_auxs.g_apply_from_coset GroupCat.SurjectiveOfEpiAuxs.g_apply_from_coset
 
 theorem g_apply_infinity (x : B) : (g x) ∞ = ∞ :=
   rfl
@@ -275,15 +268,13 @@ theorem h_apply_from_coset (x : B) :
     (h x) (from_coset ⟨f.range.carrier, ⟨1, one_left_coset _⟩⟩) =
       from_coset ⟨f.range.carrier, ⟨1, one_left_coset _⟩⟩ :=
   by simp [H, τ_symm_apply_from_coset, g_apply_infinity, τ_apply_infinity]
-#align
-  Group.surjective_of_epi_auxs.h_apply_from_coset GroupCat.SurjectiveOfEpiAuxs.h_apply_from_coset
+#align Group.surjective_of_epi_auxs.h_apply_from_coset GroupCat.SurjectiveOfEpiAuxs.h_apply_from_coset
 
 theorem h_apply_from_coset' (x : B) (b : B) (hb : b ∈ f.range) :
     (h x) (from_coset ⟨b *l f.range.carrier, ⟨b, rfl⟩⟩) =
       from_coset ⟨b *l f.range.carrier, ⟨b, rfl⟩⟩ :=
   (from_coset_eq_of_mem_range _ hb).symm ▸ h_apply_from_coset f x
-#align
-  Group.surjective_of_epi_auxs.h_apply_from_coset' GroupCat.SurjectiveOfEpiAuxs.h_apply_from_coset'
+#align Group.surjective_of_epi_auxs.h_apply_from_coset' GroupCat.SurjectiveOfEpiAuxs.h_apply_from_coset'
 
 theorem h_apply_from_coset_nin_range (x : B) (hx : x ∈ f.range) (b : B) (hb : b ∉ f.range) :
     (h x) (from_coset ⟨b *l f.range.carrier, ⟨b, rfl⟩⟩) =
@@ -297,8 +288,7 @@ theorem h_apply_from_coset_nin_range (x : B) (hx : x ∈ f.range) (b : B) (hb : 
   refine' Equiv.swap_apply_of_ne_of_ne (from_coset_ne_of_nin_range _ fun r => hb _) (by simp)
   convert Subgroup.mul_mem _ (Subgroup.inv_mem _ hx) r
   rw [← mul_assoc, mul_left_inv, one_mul]
-#align
-  Group.surjective_of_epi_auxs.h_apply_from_coset_nin_range GroupCat.SurjectiveOfEpiAuxs.h_apply_from_coset_nin_range
+#align Group.surjective_of_epi_auxs.h_apply_from_coset_nin_range GroupCat.SurjectiveOfEpiAuxs.h_apply_from_coset_nin_range
 
 theorem agree : f.range.carrier = { x | h x = g x } :=
   by

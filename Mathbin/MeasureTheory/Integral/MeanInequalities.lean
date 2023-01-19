@@ -74,8 +74,7 @@ theorem lintegral_mul_le_one_of_lintegral_rpow_eq_one {p q : ℝ} (hpq : p.IsCon
         simp [hpq.symm.pos]
       · exact (hf.pow_const _).mul_const _
     
-#align
-  ennreal.lintegral_mul_le_one_of_lintegral_rpow_eq_one Ennreal.lintegral_mul_le_one_of_lintegral_rpow_eq_one
+#align ennreal.lintegral_mul_le_one_of_lintegral_rpow_eq_one Ennreal.lintegral_mul_le_one_of_lintegral_rpow_eq_one
 
 /-- Function multiplied by the inverse of its p-seminorm `(∫⁻ f^p ∂μ) ^ 1/p`-/
 def funMulInvSnorm (f : α → ℝ≥0∞) (p : ℝ) (μ : Measure α) : α → ℝ≥0∞ := fun a =>
@@ -104,8 +103,7 @@ theorem lintegral_rpow_fun_mul_inv_snorm_eq_one {p : ℝ} (hp0_lt : 0 < p) {f : 
   simp_rw [fun_mul_inv_snorm_rpow hp0_lt]
   rw [lintegral_mul_const', Ennreal.mul_inv_cancel hf_nonzero hf_top]
   rwa [inv_ne_top]
-#align
-  ennreal.lintegral_rpow_fun_mul_inv_snorm_eq_one Ennreal.lintegral_rpow_fun_mul_inv_snorm_eq_one
+#align ennreal.lintegral_rpow_fun_mul_inv_snorm_eq_one Ennreal.lintegral_rpow_fun_mul_inv_snorm_eq_one
 
 /-- Hölder's inequality in case of finite non-zero integrals -/
 theorem lintegral_mul_le_Lp_mul_Lq_of_ne_zero_of_ne_top {p q : ℝ} (hpq : p.IsConjugateExponent q)
@@ -134,8 +132,7 @@ theorem lintegral_mul_le_Lp_mul_Lq_of_ne_zero_of_ne_top {p q : ℝ} (hpq : p.IsC
       have hg1 := lintegral_rpow_fun_mul_inv_snorm_eq_one hpq.symm.pos hg_nonzero hg_nontop
       exact lintegral_mul_le_one_of_lintegral_rpow_eq_one hpq (hf.mul_const _) hf1 hg1
     
-#align
-  ennreal.lintegral_mul_le_Lp_mul_Lq_of_ne_zero_of_ne_top Ennreal.lintegral_mul_le_Lp_mul_Lq_of_ne_zero_of_ne_top
+#align ennreal.lintegral_mul_le_Lp_mul_Lq_of_ne_zero_of_ne_top Ennreal.lintegral_mul_le_Lp_mul_Lq_of_ne_zero_of_ne_top
 
 theorem ae_eq_zero_of_lintegral_rpow_eq_zero {p : ℝ} (hp0 : 0 ≤ p) {f : α → ℝ≥0∞}
     (hf : AeMeasurable f μ) (hf_zero : (∫⁻ a, f a ^ p ∂μ) = 0) : f =ᵐ[μ] 0 :=
@@ -156,8 +153,7 @@ theorem lintegral_mul_eq_zero_of_lintegral_rpow_eq_zero {p : ℝ} (hp0 : 0 ≤ p
   · rwa [zero_mul] at h_mul_zero
   have hf_eq_zero : f =ᵐ[μ] 0 := ae_eq_zero_of_lintegral_rpow_eq_zero hp0 hf hf_zero
   exact hf_eq_zero.mul (ae_eq_refl g)
-#align
-  ennreal.lintegral_mul_eq_zero_of_lintegral_rpow_eq_zero Ennreal.lintegral_mul_eq_zero_of_lintegral_rpow_eq_zero
+#align ennreal.lintegral_mul_eq_zero_of_lintegral_rpow_eq_zero Ennreal.lintegral_mul_eq_zero_of_lintegral_rpow_eq_zero
 
 theorem lintegral_mul_le_Lp_mul_Lq_of_ne_zero_of_eq_top {p q : ℝ} (hp0_lt : 0 < p) (hq0 : 0 ≤ q)
     {f g : α → ℝ≥0∞} (hf_top : (∫⁻ a, f a ^ p ∂μ) = ⊤) (hg_nonzero : (∫⁻ a, g a ^ q ∂μ) ≠ 0) :
@@ -167,8 +163,7 @@ theorem lintegral_mul_le_Lp_mul_Lq_of_ne_zero_of_eq_top {p q : ℝ} (hp0_lt : 0 
   have hp0_inv_lt : 0 < 1 / p := by simp [hp0_lt]
   rw [hf_top, Ennreal.top_rpow_of_pos hp0_inv_lt]
   simp [hq0, hg_nonzero]
-#align
-  ennreal.lintegral_mul_le_Lp_mul_Lq_of_ne_zero_of_eq_top Ennreal.lintegral_mul_le_Lp_mul_Lq_of_ne_zero_of_eq_top
+#align ennreal.lintegral_mul_le_Lp_mul_Lq_of_ne_zero_of_eq_top Ennreal.lintegral_mul_le_Lp_mul_Lq_of_ne_zero_of_eq_top
 
 /-- Hölder's inequality for functions `α → ℝ≥0∞`. The integral of the product of two functions
 is bounded by the product of their `ℒp` and `ℒq` seminorms when `p` and `q` are conjugate
@@ -234,8 +229,7 @@ theorem lintegral_rpow_add_lt_top_of_lintegral_rpow_lt_top {p : ℝ} {f g : α �
       · exact ⟨Ennreal.mul_lt_top h_two hf_top.ne, Ennreal.mul_lt_top h_two hg_top.ne⟩
       · exact (hf.pow_const p).const_mul _
     
-#align
-  ennreal.lintegral_rpow_add_lt_top_of_lintegral_rpow_lt_top Ennreal.lintegral_rpow_add_lt_top_of_lintegral_rpow_lt_top
+#align ennreal.lintegral_rpow_add_lt_top_of_lintegral_rpow_lt_top Ennreal.lintegral_rpow_add_lt_top_of_lintegral_rpow_lt_top
 
 theorem lintegral_Lp_mul_le_Lq_mul_Lr {α} [MeasurableSpace α] {p q r : ℝ} (hp0_lt : 0 < p)
     (hpq : p < q) (hpqr : 1 / p = 1 / q + 1 / r) (μ : Measure α) {f g : α → ℝ≥0∞}
@@ -299,8 +293,7 @@ theorem lintegral_mul_rpow_le_lintegral_rpow_mul_lintegral_rpow {p q : ℝ}
   congr
   ext1 a
   rw [← Ennreal.rpow_mul, hpq.sub_one_mul_conj]
-#align
-  ennreal.lintegral_mul_rpow_le_lintegral_rpow_mul_lintegral_rpow Ennreal.lintegral_mul_rpow_le_lintegral_rpow_mul_lintegral_rpow
+#align ennreal.lintegral_mul_rpow_le_lintegral_rpow_mul_lintegral_rpow Ennreal.lintegral_mul_rpow_le_lintegral_rpow_mul_lintegral_rpow
 
 theorem lintegral_rpow_add_le_add_snorm_mul_lintegral_rpow_add {p q : ℝ}
     (hpq : p.IsConjugateExponent q) {f g : α → ℝ≥0∞} (hf : AeMeasurable f μ)
@@ -342,8 +335,7 @@ theorem lintegral_rpow_add_le_add_snorm_mul_lintegral_rpow_add {p q : ℝ}
           (lintegral_mul_rpow_le_lintegral_rpow_mul_lintegral_rpow hpq hf (hf.add hg) hf_top)
           (lintegral_mul_rpow_le_lintegral_rpow_mul_lintegral_rpow hpq hg (hf.add hg) hg_top)
     
-#align
-  ennreal.lintegral_rpow_add_le_add_snorm_mul_lintegral_rpow_add Ennreal.lintegral_rpow_add_le_add_snorm_mul_lintegral_rpow_add
+#align ennreal.lintegral_rpow_add_le_add_snorm_mul_lintegral_rpow_add Ennreal.lintegral_rpow_add_le_add_snorm_mul_lintegral_rpow_add
 
 private theorem lintegral_Lp_add_le_aux {p q : ℝ} (hpq : p.IsConjugateExponent q) {f g : α → ℝ≥0∞}
     (hf : AeMeasurable f μ) (hf_top : (∫⁻ a, f a ^ p ∂μ) ≠ ⊤) (hg : AeMeasurable g μ)

@@ -196,8 +196,7 @@ theorem transfer_nat_trans_self_symm_id : (transferNatTransSelf adj₁ adj₁).s
   by
   rw [Equiv.symm_apply_eq]
   simp
-#align
-  category_theory.transfer_nat_trans_self_symm_id CategoryTheory.transfer_nat_trans_self_symm_id
+#align category_theory.transfer_nat_trans_self_symm_id CategoryTheory.transfer_nat_trans_self_symm_id
 
 theorem transfer_nat_trans_self_comp (f g) :
     transferNatTransSelf adj₁ adj₂ f ≫ transferNatTransSelf adj₂ adj₃ g =
@@ -215,8 +214,7 @@ theorem transfer_nat_trans_self_adjunction_id {L R : C ⥤ C} (adj : L ⊣ R) (f
   by
   dsimp [transfer_nat_trans_self, transfer_nat_trans, adjunction.id]
   simp only [comp_id, id_comp]
-#align
-  category_theory.transfer_nat_trans_self_adjunction_id CategoryTheory.transfer_nat_trans_self_adjunction_id
+#align category_theory.transfer_nat_trans_self_adjunction_id CategoryTheory.transfer_nat_trans_self_adjunction_id
 
 theorem transfer_nat_trans_self_adjunction_id_symm {L R : C ⥤ C} (adj : L ⊣ R) (g : R ⟶ 𝟭 C)
     (X : C) :
@@ -224,8 +222,7 @@ theorem transfer_nat_trans_self_adjunction_id_symm {L R : C ⥤ C} (adj : L ⊣ 
   by
   dsimp [transfer_nat_trans_self, transfer_nat_trans, adjunction.id]
   simp only [comp_id, id_comp]
-#align
-  category_theory.transfer_nat_trans_self_adjunction_id_symm CategoryTheory.transfer_nat_trans_self_adjunction_id_symm
+#align category_theory.transfer_nat_trans_self_adjunction_id_symm CategoryTheory.transfer_nat_trans_self_adjunction_id_symm
 
 theorem transfer_nat_trans_self_symm_comp (f g) :
     (transferNatTransSelf adj₂ adj₁).symm f ≫ (transferNatTransSelf adj₃ adj₂).symm g =
@@ -233,8 +230,7 @@ theorem transfer_nat_trans_self_symm_comp (f g) :
   by
   rw [Equiv.eq_symm_apply, ← transfer_nat_trans_self_comp _ adj₂]
   simp
-#align
-  category_theory.transfer_nat_trans_self_symm_comp CategoryTheory.transfer_nat_trans_self_symm_comp
+#align category_theory.transfer_nat_trans_self_symm_comp CategoryTheory.transfer_nat_trans_self_symm_comp
 
 theorem transfer_nat_trans_self_comm {f g} (gf : g ≫ f = 𝟙 _) :
     transferNatTransSelf adj₁ adj₂ f ≫ transferNatTransSelf adj₂ adj₁ g = 𝟙 _ := by
@@ -244,8 +240,7 @@ theorem transfer_nat_trans_self_comm {f g} (gf : g ≫ f = 𝟙 _) :
 theorem transfer_nat_trans_self_symm_comm {f g} (gf : g ≫ f = 𝟙 _) :
     (transferNatTransSelf adj₁ adj₂).symm f ≫ (transferNatTransSelf adj₂ adj₁).symm g = 𝟙 _ := by
   rw [transfer_nat_trans_self_symm_comp, gf, transfer_nat_trans_self_symm_id]
-#align
-  category_theory.transfer_nat_trans_self_symm_comm CategoryTheory.transfer_nat_trans_self_symm_comm
+#align category_theory.transfer_nat_trans_self_symm_comm CategoryTheory.transfer_nat_trans_self_symm_comm
 
 /-- If `f` is an isomorphism, then the transferred natural transformation is an isomorphism.
 The converse is given in `transfer_nat_trans_self_of_iso`.
@@ -264,8 +259,7 @@ instance transfer_nat_trans_self_symm_iso (f : R₁ ⟶ R₂) [IsIso f] :
   ⟨⟨(transferNatTransSelf adj₂ adj₁).symm (inv f),
       ⟨transfer_nat_trans_self_symm_comm _ _ (by simp),
         transfer_nat_trans_self_symm_comm _ _ (by simp)⟩⟩⟩
-#align
-  category_theory.transfer_nat_trans_self_symm_iso CategoryTheory.transfer_nat_trans_self_symm_iso
+#align category_theory.transfer_nat_trans_self_symm_iso CategoryTheory.transfer_nat_trans_self_symm_iso
 
 /-- If `f` is a natural transformation whose transferred natural transformation is an isomorphism,
 then `f` is an isomorphism.
@@ -290,8 +284,7 @@ theorem transfer_nat_trans_self_symm_of_iso (f : R₁ ⟶ R₂)
   suffices is_iso ((transfer_nat_trans_self adj₁ adj₂) ((transfer_nat_trans_self adj₁ adj₂).symm f))
     by simpa using this
   infer_instance
-#align
-  category_theory.transfer_nat_trans_self_symm_of_iso CategoryTheory.transfer_nat_trans_self_symm_of_iso
+#align category_theory.transfer_nat_trans_self_symm_of_iso CategoryTheory.transfer_nat_trans_self_symm_of_iso
 
 end Self
 

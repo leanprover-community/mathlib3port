@@ -97,8 +97,7 @@ theorem hasse_deriv_eq_zero_of_lt_nat_degree (p : R[X]) (n : ℕ) (h : p.natDegr
   rw [hasse_deriv_apply, sum_def]
   refine' Finset.sum_eq_zero fun x hx => _
   simp [Nat.choose_eq_zero_of_lt ((le_nat_degree_of_mem_supp _ hx).trans_lt h)]
-#align
-  polynomial.hasse_deriv_eq_zero_of_lt_nat_degree Polynomial.hasse_deriv_eq_zero_of_lt_nat_degree
+#align polynomial.hasse_deriv_eq_zero_of_lt_nat_degree Polynomial.hasse_deriv_eq_zero_of_lt_nat_degree
 
 theorem hasse_deriv_one' : hasseDeriv 1 f = derivative f := by
   simp only [hasse_deriv_apply, derivative_apply, ← C_mul_X_pow_eq_monomial, Nat.choose_one_right,

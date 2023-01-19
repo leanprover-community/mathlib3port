@@ -128,8 +128,7 @@ theorem is_equivalent_zero_iff_eventually_zero : u ~[l] 0 ↔ u =ᶠ[l] 0 :=
   by
   rw [is_equivalent, sub_zero]
   exact is_o_zero_right_iff
-#align
-  asymptotics.is_equivalent_zero_iff_eventually_zero Asymptotics.is_equivalent_zero_iff_eventually_zero
+#align asymptotics.is_equivalent_zero_iff_eventually_zero Asymptotics.is_equivalent_zero_iff_eventually_zero
 
 theorem is_equivalent_zero_iff_is_O_zero : u ~[l] 0 ↔ u =O[l] (0 : α → β) :=
   by

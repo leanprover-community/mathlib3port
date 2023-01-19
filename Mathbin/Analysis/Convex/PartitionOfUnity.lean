@@ -77,6 +77,5 @@ theorem exists_continuous_forall_mem_convex_of_local_const (ht : ∀ x, Convex �
   exists_continuous_forall_mem_convex_of_local ht fun x =>
     let ⟨c, hc⟩ := H x
     ⟨_, hc, fun _ => c, continuous_on_const, fun y => id⟩
-#align
-  exists_continuous_forall_mem_convex_of_local_const exists_continuous_forall_mem_convex_of_local_const
+#align exists_continuous_forall_mem_convex_of_local_const exists_continuous_forall_mem_convex_of_local_const
 

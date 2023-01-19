@@ -909,8 +909,7 @@ theorem is_connected_set_of_w_same_side {s : AffineSubspace ℝ P} (x : P)
       (is_connected_Ici.prod (is_connected_iff_connected_space.2 _)).image _
         ((continuous_fst.smul continuous_const).vadd continuous_snd).ContinuousOn
     convert AddTorsor.connected_space s.direction s
-#align
-  affine_subspace.is_connected_set_of_w_same_side AffineSubspace.is_connected_set_of_w_same_side
+#align affine_subspace.is_connected_set_of_w_same_side AffineSubspace.is_connected_set_of_w_same_side
 
 theorem is_preconnected_set_of_w_same_side (s : AffineSubspace ℝ P) (x : P) :
     IsPreconnected { y | s.WSameSide x y } :=
@@ -921,8 +920,7 @@ theorem is_preconnected_set_of_w_same_side (s : AffineSubspace ℝ P) (x : P) :
     simp only [h, not_w_same_side_bot]
     rfl
   · exact (is_connected_set_of_w_same_side x h).IsPreconnected
-#align
-  affine_subspace.is_preconnected_set_of_w_same_side AffineSubspace.is_preconnected_set_of_w_same_side
+#align affine_subspace.is_preconnected_set_of_w_same_side AffineSubspace.is_preconnected_set_of_w_same_side
 
 theorem is_connected_set_of_s_same_side {s : AffineSubspace ℝ P} {x : P} (hx : x ∉ s)
     (h : (s : Set P).Nonempty) : IsConnected { y | s.SSameSide x y } :=
@@ -934,8 +932,7 @@ theorem is_connected_set_of_s_same_side {s : AffineSubspace ℝ P} {x : P} (hx :
     (is_connected_Ioi.prod (is_connected_iff_connected_space.2 _)).image _
       ((continuous_fst.smul continuous_const).vadd continuous_snd).ContinuousOn
   convert AddTorsor.connected_space s.direction s
-#align
-  affine_subspace.is_connected_set_of_s_same_side AffineSubspace.is_connected_set_of_s_same_side
+#align affine_subspace.is_connected_set_of_s_same_side AffineSubspace.is_connected_set_of_s_same_side
 
 theorem is_preconnected_set_of_s_same_side (s : AffineSubspace ℝ P) (x : P) :
     IsPreconnected { y | s.SSameSide x y } :=
@@ -950,8 +947,7 @@ theorem is_preconnected_set_of_s_same_side (s : AffineSubspace ℝ P) (x : P) :
       simp only [hx, s_same_side, not_true, false_and_iff, and_false_iff]
       rfl
     · exact (is_connected_set_of_s_same_side hx h).IsPreconnected
-#align
-  affine_subspace.is_preconnected_set_of_s_same_side AffineSubspace.is_preconnected_set_of_s_same_side
+#align affine_subspace.is_preconnected_set_of_s_same_side AffineSubspace.is_preconnected_set_of_s_same_side
 
 theorem is_connected_set_of_w_opp_side {s : AffineSubspace ℝ P} (x : P) (h : (s : Set P).Nonempty) :
     IsConnected { y | s.WOppSide x y } :=
@@ -978,8 +974,7 @@ theorem is_preconnected_set_of_w_opp_side (s : AffineSubspace ℝ P) (x : P) :
     simp only [h, not_w_opp_side_bot]
     rfl
   · exact (is_connected_set_of_w_opp_side x h).IsPreconnected
-#align
-  affine_subspace.is_preconnected_set_of_w_opp_side AffineSubspace.is_preconnected_set_of_w_opp_side
+#align affine_subspace.is_preconnected_set_of_w_opp_side AffineSubspace.is_preconnected_set_of_w_opp_side
 
 theorem is_connected_set_of_s_opp_side {s : AffineSubspace ℝ P} {x : P} (hx : x ∉ s)
     (h : (s : Set P).Nonempty) : IsConnected { y | s.SOppSide x y } :=
@@ -1006,8 +1001,7 @@ theorem is_preconnected_set_of_s_opp_side (s : AffineSubspace ℝ P) (x : P) :
       simp only [hx, s_opp_side, not_true, false_and_iff, and_false_iff]
       rfl
     · exact (is_connected_set_of_s_opp_side hx h).IsPreconnected
-#align
-  affine_subspace.is_preconnected_set_of_s_opp_side AffineSubspace.is_preconnected_set_of_s_opp_side
+#align affine_subspace.is_preconnected_set_of_s_opp_side AffineSubspace.is_preconnected_set_of_s_opp_side
 
 end Normed
 

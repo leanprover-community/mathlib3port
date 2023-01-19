@@ -75,8 +75,7 @@ noncomputable def martingalePart {m0 : MeasurableSpace Ω} (f : ℕ → Ω → E
 theorem martingale_part_add_predictable_part (ℱ : Filtration ℕ m0) (μ : Measure Ω) (f : ℕ → Ω → E) :
     martingalePart f ℱ μ + predictablePart f ℱ μ = f :=
   sub_add_cancel _ _
-#align
-  measure_theory.martingale_part_add_predictable_part MeasureTheory.martingale_part_add_predictable_part
+#align measure_theory.martingale_part_add_predictable_part MeasureTheory.martingale_part_add_predictable_part
 
 theorem martingale_part_eq_sum :
     martingalePart f ℱ μ = fun n =>

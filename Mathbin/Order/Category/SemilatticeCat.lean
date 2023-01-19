@@ -213,13 +213,11 @@ theorem SemilatticeSup_dual_comp_forget_to_PartialOrder :
     SemilatticeSupCat.dual ⋙ forget₂ SemilatticeInfCat PartialOrderCat =
       forget₂ SemilatticeSupCat PartialOrderCat ⋙ PartialOrderCat.dual :=
   rfl
-#align
-  SemilatticeSup_dual_comp_forget_to_PartialOrder SemilatticeSup_dual_comp_forget_to_PartialOrder
+#align SemilatticeSup_dual_comp_forget_to_PartialOrder SemilatticeSup_dual_comp_forget_to_PartialOrder
 
 theorem SemilatticeInf_dual_comp_forget_to_PartialOrder :
     SemilatticeInfCat.dual ⋙ forget₂ SemilatticeSupCat PartialOrderCat =
       forget₂ SemilatticeInfCat PartialOrderCat ⋙ PartialOrderCat.dual :=
   rfl
-#align
-  SemilatticeInf_dual_comp_forget_to_PartialOrder SemilatticeInf_dual_comp_forget_to_PartialOrder
+#align SemilatticeInf_dual_comp_forget_to_PartialOrder SemilatticeInf_dual_comp_forget_to_PartialOrder
 

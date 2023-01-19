@@ -443,8 +443,7 @@ theorem tensor_left_hom_equiv_naturality {X Y Y' Z Z' : C} [ExactPairing Y Y'] (
   by
   dsimp [tensor_left_hom_equiv]
   simp only [id_tensor_comp, category.assoc]
-#align
-  category_theory.tensor_left_hom_equiv_naturality CategoryTheory.tensor_left_hom_equiv_naturality
+#align category_theory.tensor_left_hom_equiv_naturality CategoryTheory.tensor_left_hom_equiv_naturality
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -455,8 +454,7 @@ theorem tensor_left_hom_equiv_symm_naturality {X X' Y Y' Z : C} [ExactPairing Y 
   by
   dsimp [tensor_left_hom_equiv]
   simp only [id_tensor_comp, category.assoc]
-#align
-  category_theory.tensor_left_hom_equiv_symm_naturality CategoryTheory.tensor_left_hom_equiv_symm_naturality
+#align category_theory.tensor_left_hom_equiv_symm_naturality CategoryTheory.tensor_left_hom_equiv_symm_naturality
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -466,8 +464,7 @@ theorem tensor_right_hom_equiv_naturality {X Y Y' Z Z' : C} [ExactPairing Y Y'] 
   by
   dsimp [tensor_right_hom_equiv]
   simp only [comp_tensor_id, category.assoc]
-#align
-  category_theory.tensor_right_hom_equiv_naturality CategoryTheory.tensor_right_hom_equiv_naturality
+#align category_theory.tensor_right_hom_equiv_naturality CategoryTheory.tensor_right_hom_equiv_naturality
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -478,8 +475,7 @@ theorem tensor_right_hom_equiv_symm_naturality {X X' Y Y' Z : C} [ExactPairing Y
   by
   dsimp [tensor_right_hom_equiv]
   simp only [comp_tensor_id, category.assoc]
-#align
-  category_theory.tensor_right_hom_equiv_symm_naturality CategoryTheory.tensor_right_hom_equiv_symm_naturality
+#align category_theory.tensor_right_hom_equiv_symm_naturality CategoryTheory.tensor_right_hom_equiv_symm_naturality
 
 /-- If `Y Y'` have an exact pairing,
 then the functor `tensor_left Y'` is left adjoint to `tensor_left Y`.
@@ -568,8 +564,7 @@ theorem tensor_left_hom_equiv_symm_coevaluation_comp_id_tensor {Y Y' Z : C} [Exa
   slice_lhs 3 4 => rw [tensor_id, id_tensor_comp_tensor_id, ← tensor_id_comp_id_tensor]
   slice_lhs 1 3 => rw [coevaluation_evaluation]
   simp
-#align
-  category_theory.tensor_left_hom_equiv_symm_coevaluation_comp_id_tensor CategoryTheory.tensor_left_hom_equiv_symm_coevaluation_comp_id_tensor
+#align category_theory.tensor_left_hom_equiv_symm_coevaluation_comp_id_tensor CategoryTheory.tensor_left_hom_equiv_symm_coevaluation_comp_id_tensor
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -581,8 +576,7 @@ theorem tensor_left_hom_equiv_symm_coevaluation_comp_tensor_id {X Y : C} [HasRig
   by
   dsimp [tensor_left_hom_equiv, right_adjoint_mate]
   simp
-#align
-  category_theory.tensor_left_hom_equiv_symm_coevaluation_comp_tensor_id CategoryTheory.tensor_left_hom_equiv_symm_coevaluation_comp_tensor_id
+#align category_theory.tensor_left_hom_equiv_symm_coevaluation_comp_tensor_id CategoryTheory.tensor_left_hom_equiv_symm_coevaluation_comp_tensor_id
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -596,8 +590,7 @@ theorem tensor_right_hom_equiv_symm_coevaluation_comp_id_tensor {X Y : C} [HasLe
   by
   dsimp [tensor_right_hom_equiv, left_adjoint_mate]
   simp
-#align
-  category_theory.tensor_right_hom_equiv_symm_coevaluation_comp_id_tensor CategoryTheory.tensor_right_hom_equiv_symm_coevaluation_comp_id_tensor
+#align category_theory.tensor_right_hom_equiv_symm_coevaluation_comp_id_tensor CategoryTheory.tensor_right_hom_equiv_symm_coevaluation_comp_id_tensor
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
@@ -610,8 +603,7 @@ theorem tensor_right_hom_equiv_symm_coevaluation_comp_tensor_id {Y Y' Z : C} [Ex
   slice_lhs 3 4 => rw [tensor_id, tensor_id_comp_id_tensor, ← id_tensor_comp_tensor_id]
   slice_lhs 1 3 => rw [evaluation_coevaluation]
   simp
-#align
-  category_theory.tensor_right_hom_equiv_symm_coevaluation_comp_tensor_id CategoryTheory.tensor_right_hom_equiv_symm_coevaluation_comp_tensor_id
+#align category_theory.tensor_right_hom_equiv_symm_coevaluation_comp_tensor_id CategoryTheory.tensor_right_hom_equiv_symm_coevaluation_comp_tensor_id
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -625,8 +617,7 @@ theorem tensor_left_hom_equiv_id_tensor_comp_evaluation {Y Z : C} [HasLeftDual Z
   slice_lhs 2 3 => rw [tensor_id, tensor_id_comp_id_tensor, ← id_tensor_comp_tensor_id]
   slice_lhs 3 5 => rw [evaluation_coevaluation]
   simp
-#align
-  category_theory.tensor_left_hom_equiv_id_tensor_comp_evaluation CategoryTheory.tensor_left_hom_equiv_id_tensor_comp_evaluation
+#align category_theory.tensor_left_hom_equiv_id_tensor_comp_evaluation CategoryTheory.tensor_left_hom_equiv_id_tensor_comp_evaluation
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -636,8 +627,7 @@ theorem tensor_left_hom_equiv_tensor_id_comp_evaluation {X Y : C} [HasLeftDual X
   by
   dsimp [tensor_left_hom_equiv, left_adjoint_mate]
   simp
-#align
-  category_theory.tensor_left_hom_equiv_tensor_id_comp_evaluation CategoryTheory.tensor_left_hom_equiv_tensor_id_comp_evaluation
+#align category_theory.tensor_left_hom_equiv_tensor_id_comp_evaluation CategoryTheory.tensor_left_hom_equiv_tensor_id_comp_evaluation
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -648,8 +638,7 @@ theorem tensor_right_hom_equiv_id_tensor_comp_evaluation {X Y : C} [HasRightDual
   by
   dsimp [tensor_right_hom_equiv, right_adjoint_mate]
   simp
-#align
-  category_theory.tensor_right_hom_equiv_id_tensor_comp_evaluation CategoryTheory.tensor_right_hom_equiv_id_tensor_comp_evaluation
+#align category_theory.tensor_right_hom_equiv_id_tensor_comp_evaluation CategoryTheory.tensor_right_hom_equiv_id_tensor_comp_evaluation
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -664,8 +653,7 @@ theorem tensor_right_hom_equiv_tensor_id_comp_evaluation {X Y : C} [HasRightDual
   slice_lhs 2 3 => rw [tensor_id, id_tensor_comp_tensor_id, ← tensor_id_comp_id_tensor]
   slice_lhs 3 5 => rw [coevaluation_evaluation]
   simp
-#align
-  category_theory.tensor_right_hom_equiv_tensor_id_comp_evaluation CategoryTheory.tensor_right_hom_equiv_tensor_id_comp_evaluation
+#align category_theory.tensor_right_hom_equiv_tensor_id_comp_evaluation CategoryTheory.tensor_right_hom_equiv_tensor_id_comp_evaluation
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -678,8 +666,7 @@ theorem coevaluation_comp_right_adjoint_mate {X Y : C} [HasRightDual X] [HasRigh
   by
   apply_fun (tensor_left_hom_equiv _ Y (Yᘁ) _).symm
   simp
-#align
-  category_theory.coevaluation_comp_right_adjoint_mate CategoryTheory.coevaluation_comp_right_adjoint_mate
+#align category_theory.coevaluation_comp_right_adjoint_mate CategoryTheory.coevaluation_comp_right_adjoint_mate
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -690,8 +677,7 @@ theorem left_adjoint_mate_comp_evaluation {X Y : C} [HasLeftDual X] [HasLeftDual
   by
   apply_fun tensor_left_hom_equiv _ (ᘁX) X _
   simp
-#align
-  category_theory.left_adjoint_mate_comp_evaluation CategoryTheory.left_adjoint_mate_comp_evaluation
+#align category_theory.left_adjoint_mate_comp_evaluation CategoryTheory.left_adjoint_mate_comp_evaluation
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -705,8 +691,7 @@ theorem coevaluation_comp_left_adjoint_mate {X Y : C} [HasLeftDual X] [HasLeftDu
   by
   apply_fun (tensor_right_hom_equiv _ (ᘁY) Y _).symm
   simp
-#align
-  category_theory.coevaluation_comp_left_adjoint_mate CategoryTheory.coevaluation_comp_left_adjoint_mate
+#align category_theory.coevaluation_comp_left_adjoint_mate CategoryTheory.coevaluation_comp_left_adjoint_mate
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -720,8 +705,7 @@ theorem right_adjoint_mate_comp_evaluation {X Y : C} [HasRightDual X] [HasRightD
   by
   apply_fun tensor_right_hom_equiv _ X (Xᘁ) _
   simp
-#align
-  category_theory.right_adjoint_mate_comp_evaluation CategoryTheory.right_adjoint_mate_comp_evaluation
+#align category_theory.right_adjoint_mate_comp_evaluation CategoryTheory.right_adjoint_mate_comp_evaluation
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -840,8 +824,7 @@ convenient to define the internal hom as `Y →ₗ[k] X` rather than `ᘁY ⊗ X
 naturally isomorphic). -/
 def monoidalClosedOfLeftRigidCategory (C : Type u) [Category.{v} C] [MonoidalCategory.{v} C]
     [LeftRigidCategory C] : MonoidalClosed C where closed' X := closedOfHasLeftDual X
-#align
-  category_theory.monoidal_closed_of_left_rigid_category CategoryTheory.monoidalClosedOfLeftRigidCategory
+#align category_theory.monoidal_closed_of_left_rigid_category CategoryTheory.monoidalClosedOfLeftRigidCategory
 
 /-- A rigid monoidal category is a monoidal category which is left rigid and right rigid. -/
 class RigidCategory (C : Type u) [Category.{v} C] [MonoidalCategory.{v} C] extends

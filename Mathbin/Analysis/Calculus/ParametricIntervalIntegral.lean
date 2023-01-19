@@ -49,8 +49,7 @@ theorem has_fderiv_at_integral_of_dominated_loc_of_lip {F : H → ℝ → E} {F'
     has_fderiv_at_integral_of_dominated_loc_of_lip ε_pos hF_meas hF_int hF'_meas h_lip
       bound_integrable h_diff
   exact ⟨this.1, this.2.const_smul _⟩
-#align
-  interval_integral.has_fderiv_at_integral_of_dominated_loc_of_lip intervalIntegral.has_fderiv_at_integral_of_dominated_loc_of_lip
+#align interval_integral.has_fderiv_at_integral_of_dominated_loc_of_lip intervalIntegral.has_fderiv_at_integral_of_dominated_loc_of_lip
 
 /-- Differentiation under integral of `x ↦ ∫ F x a` at a given point `x₀`, assuming
 `F x₀` is integrable, `x ↦ F x a` is differentiable on a ball around `x₀` for ae `a` with
@@ -71,8 +70,7 @@ theorem hasFderivAtIntegralOfDominatedOfFderivLe {F : H → ℝ → E} {F' : H �
     (hasFderivAtIntegralOfDominatedOfFderivLe ε_pos hF_meas hF_int hF'_meas h_bound bound_integrable
           h_diff).const_smul
       _
-#align
-  interval_integral.has_fderiv_at_integral_of_dominated_of_fderiv_le intervalIntegral.hasFderivAtIntegralOfDominatedOfFderivLe
+#align interval_integral.has_fderiv_at_integral_of_dominated_of_fderiv_le intervalIntegral.hasFderivAtIntegralOfDominatedOfFderivLe
 
 /-- Derivative under integral of `x ↦ ∫ F x a` at a given point `x₀ : 𝕜`, `𝕜 = ℝ` or `𝕜 = ℂ`,
 assuming `F x₀` is integrable, `x ↦ F x a` is locally Lipschitz on a ball around `x₀` for ae `a`
@@ -95,8 +93,7 @@ theorem has_deriv_at_integral_of_dominated_loc_of_lip {F : 𝕜 → ℝ → E} {
     has_deriv_at_integral_of_dominated_loc_of_lip ε_pos hF_meas hF_int hF'_meas h_lipsch
       bound_integrable h_diff
   exact ⟨this.1, this.2.const_smul _⟩
-#align
-  interval_integral.has_deriv_at_integral_of_dominated_loc_of_lip intervalIntegral.has_deriv_at_integral_of_dominated_loc_of_lip
+#align interval_integral.has_deriv_at_integral_of_dominated_loc_of_lip intervalIntegral.has_deriv_at_integral_of_dominated_loc_of_lip
 
 /-- Derivative under integral of `x ↦ ∫ F x a` at a given point `x₀ : 𝕜`, `𝕜 = ℝ` or `𝕜 = ℂ`,
 assuming `F x₀` is integrable, `x ↦ F x a` is differentiable on an interval around `x₀` for ae `a`
@@ -118,8 +115,7 @@ theorem has_deriv_at_integral_of_dominated_loc_of_deriv_le {F : 𝕜 → ℝ →
     has_deriv_at_integral_of_dominated_loc_of_deriv_le ε_pos hF_meas hF_int hF'_meas h_bound
       bound_integrable h_diff
   exact ⟨this.1, this.2.const_smul _⟩
-#align
-  interval_integral.has_deriv_at_integral_of_dominated_loc_of_deriv_le intervalIntegral.has_deriv_at_integral_of_dominated_loc_of_deriv_le
+#align interval_integral.has_deriv_at_integral_of_dominated_loc_of_deriv_le intervalIntegral.has_deriv_at_integral_of_dominated_loc_of_deriv_le
 
 end intervalIntegral
 

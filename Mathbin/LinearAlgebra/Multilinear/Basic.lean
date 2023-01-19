@@ -787,8 +787,7 @@ theorem comp_multilinear_map_apply (g : M₂ →ₗ[R] M₃) (f : MultilinearMap
 theorem subtype_comp_multilinear_map_cod_restrict (f : MultilinearMap R M₁ M₂) (p : Submodule R M₂)
     (h) : p.Subtype.compMultilinearMap (f.codRestrict p h) = f :=
   MultilinearMap.ext fun v => rfl
-#align
-  linear_map.subtype_comp_multilinear_map_cod_restrict LinearMap.subtype_comp_multilinear_map_cod_restrict
+#align linear_map.subtype_comp_multilinear_map_cod_restrict LinearMap.subtype_comp_multilinear_map_cod_restrict
 
 /-- The multilinear version of `linear_map.comp_cod_restrict` -/
 @[simp]
@@ -1540,12 +1539,11 @@ theorem curry_fin_finset_symm_apply_piecewise_const {k l n : ℕ} {s : Finset (F
   rw [curry_fin_finset_symm_apply]; congr
   · ext i
     rw [fin_sum_equiv_of_finset_inl, Finset.piecewise_eq_of_mem]
-    apply Finset.order_emb_of_fin_mem
+    apply Finset.orderEmbOfFin_mem
   · ext i
     rw [fin_sum_equiv_of_finset_inr, Finset.piecewise_eq_of_not_mem]
-    exact Finset.mem_compl.1 (Finset.order_emb_of_fin_mem _ _ _)
-#align
-  multilinear_map.curry_fin_finset_symm_apply_piecewise_const MultilinearMap.curry_fin_finset_symm_apply_piecewise_const
+    exact Finset.mem_compl.1 (Finset.orderEmbOfFin_mem _ _ _)
+#align multilinear_map.curry_fin_finset_symm_apply_piecewise_const MultilinearMap.curry_fin_finset_symm_apply_piecewise_const
 
 @[simp]
 theorem curry_fin_finset_symm_apply_const {k l n : ℕ} {s : Finset (Fin n)} (hk : s.card = k)
@@ -1553,8 +1551,7 @@ theorem curry_fin_finset_symm_apply_const {k l n : ℕ} {s : Finset (Fin n)} (hk
     (f : MultilinearMap R (fun x : Fin k => M') (MultilinearMap R (fun x : Fin l => M') M₂))
     (x : M') : ((curryFinFinset R M₂ M' hk hl).symm f fun _ => x) = f (fun _ => x) fun _ => x :=
   rfl
-#align
-  multilinear_map.curry_fin_finset_symm_apply_const MultilinearMap.curry_fin_finset_symm_apply_const
+#align multilinear_map.curry_fin_finset_symm_apply_const MultilinearMap.curry_fin_finset_symm_apply_const
 
 @[simp]
 theorem curry_fin_finset_apply_const {k l n : ℕ} {s : Finset (Fin n)} (hk : s.card = k)

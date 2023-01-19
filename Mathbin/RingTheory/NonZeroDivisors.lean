@@ -150,8 +150,7 @@ theorem le_non_zero_divisors_of_no_zero_divisors [NoZeroDivisors M] {S : Submono
 theorem powers_le_non_zero_divisors_of_no_zero_divisors [NoZeroDivisors M] {a : M} (ha : a ≠ 0) :
     Submonoid.powers a ≤ M⁰ :=
   le_non_zero_divisors_of_no_zero_divisors fun h => absurd (h.recOn fun _ hn => pow_eq_zero hn) ha
-#align
-  powers_le_non_zero_divisors_of_no_zero_divisors powers_le_non_zero_divisors_of_no_zero_divisors
+#align powers_le_non_zero_divisors_of_no_zero_divisors powers_le_non_zero_divisors_of_no_zero_divisors
 
 theorem map_le_non_zero_divisors_of_injective [NoZeroDivisors M'] [MonoidWithZeroHomClass F M M']
     (f : F) (hf : Function.Injective f) {S : Submonoid M} (hS : S ≤ M⁰) : S.map f ≤ M'⁰ :=
@@ -168,8 +167,7 @@ theorem map_le_non_zero_divisors_of_injective [NoZeroDivisors M'] [MonoidWithZer
 theorem non_zero_divisors_le_comap_non_zero_divisors_of_injective [NoZeroDivisors M']
     [MonoidWithZeroHomClass F M M'] (f : F) (hf : Function.Injective f) : M⁰ ≤ M'⁰.comap f :=
   Submonoid.le_comap_of_map_le _ (map_le_non_zero_divisors_of_injective _ hf le_rfl)
-#align
-  non_zero_divisors_le_comap_non_zero_divisors_of_injective non_zero_divisors_le_comap_non_zero_divisors_of_injective
+#align non_zero_divisors_le_comap_non_zero_divisors_of_injective non_zero_divisors_le_comap_non_zero_divisors_of_injective
 
 theorem prod_zero_iff_exists_zero [NoZeroDivisors M₁] [Nontrivial M₁] {s : Multiset M₁} :
     s.Prod = 0 ↔ ∃ (r : M₁)(hr : r ∈ s), r = 0 :=

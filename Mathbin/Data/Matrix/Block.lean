@@ -617,8 +617,7 @@ theorem block_diagonal'_submatrix_eq_block_diagonal (M : o → Matrix m n α) :
     (blockDiagonal' M).submatrix (Prod.toSigma ∘ Prod.swap) (Prod.toSigma ∘ Prod.swap) =
       blockDiagonal M :=
   Matrix.ext fun ⟨k, i⟩ ⟨k', j⟩ => rfl
-#align
-  matrix.block_diagonal'_submatrix_eq_block_diagonal Matrix.block_diagonal'_submatrix_eq_block_diagonal
+#align matrix.block_diagonal'_submatrix_eq_block_diagonal Matrix.block_diagonal'_submatrix_eq_block_diagonal
 
 theorem block_diagonal'_apply (M : ∀ i, Matrix (m' i) (n' i) α) (ik jk) :
     blockDiagonal' M ik jk =

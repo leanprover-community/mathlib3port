@@ -204,7 +204,7 @@ Case conversion may be inaccurate. Consider using '#align local_equiv.coe_mk [an
 theorem [anonymous] (f : α → β) (g s t ml mr il ir) :
     (LocalEquiv.mk f g s t ml mr il ir : α → β) = f :=
   rfl
-#align local_equiv.coe_mk[anonymous]
+#align local_equiv.coe_mk [anonymous]
 
 /- warning: local_equiv.coe_symm_mk -> LocalEquiv.coe_symm_mk is a dubious translation:
 lean 3 declaration is
@@ -228,7 +228,7 @@ Case conversion may be inaccurate. Consider using '#align local_equiv.to_fun_as_
 @[simp, mfld_simps]
 theorem [anonymous] : e.toFun = e :=
   rfl
-#align local_equiv.to_fun_as_coe[anonymous]
+#align local_equiv.to_fun_as_coe [anonymous]
 
 /- warning: local_equiv.inv_fun_as_coe -> LocalEquiv.invFun_as_coe is a dubious translation:
 lean 3 declaration is
@@ -725,8 +725,7 @@ Case conversion may be inaccurate. Consider using '#align local_equiv.is_image.i
 theorem inter_eq_of_inter_eq_of_eqOn {e' : LocalEquiv α β} (h : e.IsImage s t) (h' : e'.IsImage s t)
     (hs : e.source ∩ s = e'.source ∩ s) (Heq : EqOn e e' (e.source ∩ s)) :
     e.target ∩ t = e'.target ∩ t := by rw [← h.image_eq, ← h'.image_eq, ← hs, Heq.image_eq]
-#align
-  local_equiv.is_image.inter_eq_of_inter_eq_of_eq_on LocalEquiv.IsImage.inter_eq_of_inter_eq_of_eqOn
+#align local_equiv.is_image.inter_eq_of_inter_eq_of_eq_on LocalEquiv.IsImage.inter_eq_of_inter_eq_of_eqOn
 
 /- warning: local_equiv.is_image.symm_eq_on_of_inter_eq_of_eq_on -> LocalEquiv.IsImage.symm_eq_on_of_inter_eq_of_eqOn is a dubious translation:
 lean 3 declaration is
@@ -742,8 +741,7 @@ theorem symm_eq_on_of_inter_eq_of_eqOn {e' : LocalEquiv α β} (h : e.IsImage s 
   rintro y ⟨x, hx, rfl⟩
   have hx' := hx; rw [hs] at hx'
   rw [e.left_inv hx.1, Heq hx, e'.left_inv hx'.1]
-#align
-  local_equiv.is_image.symm_eq_on_of_inter_eq_of_eq_on LocalEquiv.IsImage.symm_eq_on_of_inter_eq_of_eqOn
+#align local_equiv.is_image.symm_eq_on_of_inter_eq_of_eq_on LocalEquiv.IsImage.symm_eq_on_of_inter_eq_of_eqOn
 
 end IsImage
 
@@ -808,8 +806,7 @@ Case conversion may be inaccurate. Consider using '#align local_equiv.symm_image
 theorem symm_image_eq_source_inter_preimage {s : Set β} (h : s ⊆ e.target) :
     e.symm '' s = e.source ∩ e ⁻¹' s :=
   e.symm.image_eq_target_inter_inv_preimage h
-#align
-  local_equiv.symm_image_eq_source_inter_preimage LocalEquiv.symm_image_eq_source_inter_preimage
+#align local_equiv.symm_image_eq_source_inter_preimage LocalEquiv.symm_image_eq_source_inter_preimage
 
 /- warning: local_equiv.symm_image_target_inter_eq -> LocalEquiv.symm_image_target_inter_eq is a dubious translation:
 lean 3 declaration is
@@ -1498,8 +1495,7 @@ Case conversion may be inaccurate. Consider using '#align local_equiv.eq_on_sour
 /-- Preimages are respected by equivalence -/
 theorem EqOnSource.source_inter_preimage_eq {e e' : LocalEquiv α β} (he : e ≈ e') (s : Set β) :
     e.source ∩ e ⁻¹' s = e'.source ∩ e' ⁻¹' s := by rw [he.eq_on.inter_preimage_eq, he.source_eq]
-#align
-  local_equiv.eq_on_source.source_inter_preimage_eq LocalEquiv.EqOnSource.source_inter_preimage_eq
+#align local_equiv.eq_on_source.source_inter_preimage_eq LocalEquiv.EqOnSource.source_inter_preimage_eq
 
 /- warning: local_equiv.trans_self_symm -> LocalEquiv.trans_self_symm is a dubious translation:
 lean 3 declaration is

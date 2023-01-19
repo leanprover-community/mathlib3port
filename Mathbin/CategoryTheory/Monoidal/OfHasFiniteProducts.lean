@@ -104,39 +104,33 @@ attribute [local instance] monoidal_of_has_finite_products
 @[simp]
 theorem tensor_obj (X Y : C) : X ⊗ Y = (X ⨯ Y) :=
   rfl
-#align
-  category_theory.monoidal_of_has_finite_products.tensor_obj CategoryTheory.monoidalOfHasFiniteProducts.tensor_obj
+#align category_theory.monoidal_of_has_finite_products.tensor_obj CategoryTheory.monoidalOfHasFiniteProducts.tensor_obj
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem tensor_hom {W X Y Z : C} (f : W ⟶ X) (g : Y ⟶ Z) : f ⊗ g = Limits.prod.map f g :=
   rfl
-#align
-  category_theory.monoidal_of_has_finite_products.tensor_hom CategoryTheory.monoidalOfHasFiniteProducts.tensor_hom
+#align category_theory.monoidal_of_has_finite_products.tensor_hom CategoryTheory.monoidalOfHasFiniteProducts.tensor_hom
 
 @[simp]
 theorem left_unitor_hom (X : C) : (λ_ X).Hom = limits.prod.snd :=
   rfl
-#align
-  category_theory.monoidal_of_has_finite_products.left_unitor_hom CategoryTheory.monoidalOfHasFiniteProducts.left_unitor_hom
+#align category_theory.monoidal_of_has_finite_products.left_unitor_hom CategoryTheory.monoidalOfHasFiniteProducts.left_unitor_hom
 
 @[simp]
 theorem left_unitor_inv (X : C) : (λ_ X).inv = prod.lift (terminal.from X) (𝟙 _) :=
   rfl
-#align
-  category_theory.monoidal_of_has_finite_products.left_unitor_inv CategoryTheory.monoidalOfHasFiniteProducts.left_unitor_inv
+#align category_theory.monoidal_of_has_finite_products.left_unitor_inv CategoryTheory.monoidalOfHasFiniteProducts.left_unitor_inv
 
 @[simp]
 theorem right_unitor_hom (X : C) : (ρ_ X).Hom = limits.prod.fst :=
   rfl
-#align
-  category_theory.monoidal_of_has_finite_products.right_unitor_hom CategoryTheory.monoidalOfHasFiniteProducts.right_unitor_hom
+#align category_theory.monoidal_of_has_finite_products.right_unitor_hom CategoryTheory.monoidalOfHasFiniteProducts.right_unitor_hom
 
 @[simp]
 theorem right_unitor_inv (X : C) : (ρ_ X).inv = prod.lift (𝟙 _) (terminal.from X) :=
   rfl
-#align
-  category_theory.monoidal_of_has_finite_products.right_unitor_inv CategoryTheory.monoidalOfHasFiniteProducts.right_unitor_inv
+#align category_theory.monoidal_of_has_finite_products.right_unitor_inv CategoryTheory.monoidalOfHasFiniteProducts.right_unitor_inv
 
 -- We don't mark this as a simp lemma, even though in many particular
 -- categories the right hand side will simplify significantly further.
@@ -146,8 +140,7 @@ theorem associator_hom (X Y Z : C) :
       prod.lift (limits.prod.fst ≫ limits.prod.fst)
         (prod.lift (limits.prod.fst ≫ limits.prod.snd) Limits.prod.snd) :=
   rfl
-#align
-  category_theory.monoidal_of_has_finite_products.associator_hom CategoryTheory.monoidalOfHasFiniteProducts.associator_hom
+#align category_theory.monoidal_of_has_finite_products.associator_hom CategoryTheory.monoidalOfHasFiniteProducts.associator_hom
 
 end MonoidalOfHasFiniteProducts
 
@@ -167,8 +160,7 @@ def monoidalOfHasFiniteCoproducts [HasInitial C] [HasBinaryCoproducts C] : Monoi
   pentagon' := coprod.pentagon
   triangle' := coprod.triangle
   associator_naturality' := @coprod.associator_naturality _ _ _
-#align
-  category_theory.monoidal_of_has_finite_coproducts CategoryTheory.monoidalOfHasFiniteCoproducts
+#align category_theory.monoidal_of_has_finite_coproducts CategoryTheory.monoidalOfHasFiniteCoproducts
 
 end
 
@@ -197,8 +189,7 @@ def symmetricOfHasFiniteCoproducts [HasInitial C] [HasBinaryCoproducts C] : Symm
     dsimp
     simp
     rfl
-#align
-  category_theory.symmetric_of_has_finite_coproducts CategoryTheory.symmetricOfHasFiniteCoproducts
+#align category_theory.symmetric_of_has_finite_coproducts CategoryTheory.symmetricOfHasFiniteCoproducts
 
 end
 
@@ -212,39 +203,33 @@ attribute [local instance] monoidal_of_has_finite_coproducts
 @[simp]
 theorem tensor_obj (X Y : C) : X ⊗ Y = (X ⨿ Y) :=
   rfl
-#align
-  category_theory.monoidal_of_has_finite_coproducts.tensor_obj CategoryTheory.monoidalOfHasFiniteCoproducts.tensor_obj
+#align category_theory.monoidal_of_has_finite_coproducts.tensor_obj CategoryTheory.monoidalOfHasFiniteCoproducts.tensor_obj
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem tensor_hom {W X Y Z : C} (f : W ⟶ X) (g : Y ⟶ Z) : f ⊗ g = Limits.coprod.map f g :=
   rfl
-#align
-  category_theory.monoidal_of_has_finite_coproducts.tensor_hom CategoryTheory.monoidalOfHasFiniteCoproducts.tensor_hom
+#align category_theory.monoidal_of_has_finite_coproducts.tensor_hom CategoryTheory.monoidalOfHasFiniteCoproducts.tensor_hom
 
 @[simp]
 theorem left_unitor_hom (X : C) : (λ_ X).Hom = coprod.desc (initial.to X) (𝟙 _) :=
   rfl
-#align
-  category_theory.monoidal_of_has_finite_coproducts.left_unitor_hom CategoryTheory.monoidalOfHasFiniteCoproducts.left_unitor_hom
+#align category_theory.monoidal_of_has_finite_coproducts.left_unitor_hom CategoryTheory.monoidalOfHasFiniteCoproducts.left_unitor_hom
 
 @[simp]
 theorem right_unitor_hom (X : C) : (ρ_ X).Hom = coprod.desc (𝟙 _) (initial.to X) :=
   rfl
-#align
-  category_theory.monoidal_of_has_finite_coproducts.right_unitor_hom CategoryTheory.monoidalOfHasFiniteCoproducts.right_unitor_hom
+#align category_theory.monoidal_of_has_finite_coproducts.right_unitor_hom CategoryTheory.monoidalOfHasFiniteCoproducts.right_unitor_hom
 
 @[simp]
 theorem left_unitor_inv (X : C) : (λ_ X).inv = limits.coprod.inr :=
   rfl
-#align
-  category_theory.monoidal_of_has_finite_coproducts.left_unitor_inv CategoryTheory.monoidalOfHasFiniteCoproducts.left_unitor_inv
+#align category_theory.monoidal_of_has_finite_coproducts.left_unitor_inv CategoryTheory.monoidalOfHasFiniteCoproducts.left_unitor_inv
 
 @[simp]
 theorem right_unitor_inv (X : C) : (ρ_ X).inv = limits.coprod.inl :=
   rfl
-#align
-  category_theory.monoidal_of_has_finite_coproducts.right_unitor_inv CategoryTheory.monoidalOfHasFiniteCoproducts.right_unitor_inv
+#align category_theory.monoidal_of_has_finite_coproducts.right_unitor_inv CategoryTheory.monoidalOfHasFiniteCoproducts.right_unitor_inv
 
 -- We don't mark this as a simp lemma, even though in many particular
 -- categories the right hand side will simplify significantly further.
@@ -253,8 +238,7 @@ theorem associator_hom (X Y Z : C) :
     (α_ X Y Z).Hom =
       coprod.desc (coprod.desc coprod.inl (coprod.inl ≫ coprod.inr)) (coprod.inr ≫ coprod.inr) :=
   rfl
-#align
-  category_theory.monoidal_of_has_finite_coproducts.associator_hom CategoryTheory.monoidalOfHasFiniteCoproducts.associator_hom
+#align category_theory.monoidal_of_has_finite_coproducts.associator_hom CategoryTheory.monoidalOfHasFiniteCoproducts.associator_hom
 
 end MonoidalOfHasFiniteCoproducts
 

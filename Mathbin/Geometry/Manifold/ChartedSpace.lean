@@ -590,8 +590,7 @@ theorem ChartedSpace.second_countable_of_countable_cover [SecondCountableTopolog
   rw [bUnion_eq_Union] at hs
   exact
     second_countable_topology_of_countable_cover (fun x : s => (chart_at H (x : M)).open_source) hs
-#align
-  charted_space.second_countable_of_countable_cover ChartedSpace.second_countable_of_countable_cover
+#align charted_space.second_countable_of_countable_cover ChartedSpace.second_countable_of_countable_cover
 
 variable (M)
 
@@ -602,8 +601,7 @@ theorem ChartedSpace.second_countable_of_sigma_compact [SecondCountableTopology 
     ∃ s, Set.Countable s ∧ (⋃ (x) (hx : x ∈ s), (chart_at H x).source) = univ :=
     countable_cover_nhds_of_sigma_compact fun x : M => chart_source_mem_nhds H x
   exact ChartedSpace.second_countable_of_countable_cover H hsU hsc
-#align
-  charted_space.second_countable_of_sigma_compact ChartedSpace.second_countable_of_sigma_compact
+#align charted_space.second_countable_of_sigma_compact ChartedSpace.second_countable_of_sigma_compact
 
 /-- If a topological space admits an atlas with locally compact charts, then the space itself
 is locally compact. -/
@@ -983,8 +981,7 @@ theorem StructureGroupoid.compatible_of_mem_maximal_atlas {e e' : LocalHomeomorp
       _ ≈ (e.symm ≫ₕ e').restr s := by simp [restr_trans]
       
   exact G.eq_on_source C (Setoid.symm D)
-#align
-  structure_groupoid.compatible_of_mem_maximal_atlas StructureGroupoid.compatible_of_mem_maximal_atlas
+#align structure_groupoid.compatible_of_mem_maximal_atlas StructureGroupoid.compatible_of_mem_maximal_atlas
 
 variable (G)
 
@@ -998,8 +995,7 @@ theorem StructureGroupoid.mem_maximal_atlas_of_mem_groupoid {f : LocalHomeomorph
     f ∈ G.maximalAtlas H := by
   rintro e (rfl : e = LocalHomeomorph.refl H)
   exact ⟨G.trans (G.symm hf) G.id_mem, G.trans (G.symm G.id_mem) hf⟩
-#align
-  structure_groupoid.mem_maximal_atlas_of_mem_groupoid StructureGroupoid.mem_maximal_atlas_of_mem_groupoid
+#align structure_groupoid.mem_maximal_atlas_of_mem_groupoid StructureGroupoid.mem_maximal_atlas_of_mem_groupoid
 
 end MaximalAtlas
 
@@ -1027,20 +1023,17 @@ def singletonChartedSpace (h : e.source = Set.univ) : ChartedSpace H α
 theorem singleton_charted_space_chart_at_eq (h : e.source = Set.univ) {x : α} :
     @chartAt H _ α _ (e.singletonChartedSpace h) x = e :=
   rfl
-#align
-  local_homeomorph.singleton_charted_space_chart_at_eq LocalHomeomorph.singleton_charted_space_chart_at_eq
+#align local_homeomorph.singleton_charted_space_chart_at_eq LocalHomeomorph.singleton_charted_space_chart_at_eq
 
 theorem singleton_charted_space_chart_at_source (h : e.source = Set.univ) {x : α} :
     (@chartAt H _ α _ (e.singletonChartedSpace h) x).source = Set.univ :=
   h
-#align
-  local_homeomorph.singleton_charted_space_chart_at_source LocalHomeomorph.singleton_charted_space_chart_at_source
+#align local_homeomorph.singleton_charted_space_chart_at_source LocalHomeomorph.singleton_charted_space_chart_at_source
 
 theorem singleton_charted_space_mem_atlas_eq (h : e.source = Set.univ) (e' : LocalHomeomorph α H)
     (h' : e' ∈ (e.singletonChartedSpace h).atlas) : e' = e :=
   h'
-#align
-  local_homeomorph.singleton_charted_space_mem_atlas_eq LocalHomeomorph.singleton_charted_space_mem_atlas_eq
+#align local_homeomorph.singleton_charted_space_mem_atlas_eq LocalHomeomorph.singleton_charted_space_mem_atlas_eq
 
 /-- Given a local homeomorphism `e` from a space `α` into `H`, if its source covers the whole
 space `α`, then the induced charted space structure on `α` is `has_groupoid G` for any structure
@@ -1072,8 +1065,7 @@ def singletonChartedSpace {f : α → H} (h : OpenEmbedding f) : ChartedSpace H 
 theorem singleton_charted_space_chart_at_eq {f : α → H} (h : OpenEmbedding f) {x : α} :
     ⇑(@chartAt H _ α _ h.singletonChartedSpace x) = f :=
   rfl
-#align
-  open_embedding.singleton_charted_space_chart_at_eq OpenEmbedding.singleton_charted_space_chart_at_eq
+#align open_embedding.singleton_charted_space_chart_at_eq OpenEmbedding.singleton_charted_space_chart_at_eq
 
 theorem singleton_has_groupoid {f : α → H} (h : OpenEmbedding f) (G : StructureGroupoid H)
     [ClosedUnderRestriction G] : @HasGroupoid _ _ _ _ h.singletonChartedSpace G :=

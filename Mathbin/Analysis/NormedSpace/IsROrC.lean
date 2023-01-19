@@ -97,8 +97,7 @@ theorem ContinuousLinearMap.op_norm_bound_of_ball_bound {r : ℝ} (r_pos : 0 < r
         (h 0 (by simp only [norm_zero, mem_closed_ball, dist_zero_left, r_pos.le]))
   apply LinearMap.bound_of_ball_bound' r_pos
   exact fun z hz => h z hz
-#align
-  continuous_linear_map.op_norm_bound_of_ball_bound ContinuousLinearMap.op_norm_bound_of_ball_bound
+#align continuous_linear_map.op_norm_bound_of_ball_bound ContinuousLinearMap.op_norm_bound_of_ball_bound
 
 variable (𝕜)
 

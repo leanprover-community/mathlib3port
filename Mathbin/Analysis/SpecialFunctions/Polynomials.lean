@@ -63,8 +63,7 @@ theorem tendsto_at_top_of_leading_coeff_nonneg (hdeg : 0 < P.degree) (hnng : 0 �
   P.is_equivalent_at_top_lead.symm.tendsto_at_top <|
     tendsto_const_mul_pow_at_top (nat_degree_pos_iff_degree_pos.2 hdeg).ne' <|
       hnng.lt_of_ne' <| leading_coeff_ne_zero.mpr <| ne_zero_of_degree_gt hdeg
-#align
-  polynomial.tendsto_at_top_of_leading_coeff_nonneg Polynomial.tendsto_at_top_of_leading_coeff_nonneg
+#align polynomial.tendsto_at_top_of_leading_coeff_nonneg Polynomial.tendsto_at_top_of_leading_coeff_nonneg
 
 theorem tendsto_at_top_iff_leading_coeff_nonneg :
     Tendsto (fun x => eval x P) atTop atTop ↔ 0 < P.degree ∧ 0 ≤ P.leadingCoeff :=
@@ -74,21 +73,18 @@ theorem tendsto_at_top_iff_leading_coeff_nonneg :
     (is_equivalent_at_top_lead P).tendsto_at_top h
   rw [tendsto_const_mul_pow_at_top_iff, ← pos_iff_ne_zero, nat_degree_pos_iff_degree_pos] at this
   exact ⟨this.1, this.2.le⟩
-#align
-  polynomial.tendsto_at_top_iff_leading_coeff_nonneg Polynomial.tendsto_at_top_iff_leading_coeff_nonneg
+#align polynomial.tendsto_at_top_iff_leading_coeff_nonneg Polynomial.tendsto_at_top_iff_leading_coeff_nonneg
 
 theorem tendsto_at_bot_iff_leading_coeff_nonpos :
     Tendsto (fun x => eval x P) atTop atBot ↔ 0 < P.degree ∧ P.leadingCoeff ≤ 0 := by
   simp only [← tendsto_neg_at_top_iff, ← eval_neg, tendsto_at_top_iff_leading_coeff_nonneg,
     degree_neg, leading_coeff_neg, neg_nonneg]
-#align
-  polynomial.tendsto_at_bot_iff_leading_coeff_nonpos Polynomial.tendsto_at_bot_iff_leading_coeff_nonpos
+#align polynomial.tendsto_at_bot_iff_leading_coeff_nonpos Polynomial.tendsto_at_bot_iff_leading_coeff_nonpos
 
 theorem tendsto_at_bot_of_leading_coeff_nonpos (hdeg : 0 < P.degree) (hnps : P.leadingCoeff ≤ 0) :
     Tendsto (fun x => eval x P) atTop atBot :=
   P.tendsto_at_bot_iff_leading_coeff_nonpos.2 ⟨hdeg, hnps⟩
-#align
-  polynomial.tendsto_at_bot_of_leading_coeff_nonpos Polynomial.tendsto_at_bot_of_leading_coeff_nonpos
+#align polynomial.tendsto_at_bot_of_leading_coeff_nonpos Polynomial.tendsto_at_bot_of_leading_coeff_nonpos
 
 theorem abs_tendsto_at_top (hdeg : 0 < P.degree) : Tendsto (fun x => abs <| eval x P) atTop atTop :=
   by
@@ -187,8 +183,7 @@ theorem div_tendsto_leading_coeff_div_of_degree_eq (hdeg : P.degree = Q.degree) 
   refine' (is_equivalent_at_top_div P Q).symm.tendsto_nhds _
   rw [show (P.nat_degree : ℤ) = Q.nat_degree by simp [hdeg, nat_degree]]
   simp [tendsto_const_nhds]
-#align
-  polynomial.div_tendsto_leading_coeff_div_of_degree_eq Polynomial.div_tendsto_leading_coeff_div_of_degree_eq
+#align polynomial.div_tendsto_leading_coeff_div_of_degree_eq Polynomial.div_tendsto_leading_coeff_div_of_degree_eq
 
 theorem div_tendsto_at_top_of_degree_gt' (hdeg : Q.degree < P.degree)
     (hpos : 0 < P.leadingCoeff / Q.leadingCoeff) :

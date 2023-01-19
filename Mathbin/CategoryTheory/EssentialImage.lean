@@ -136,8 +136,7 @@ surjective and the second is fully faithful.
 @[simps]
 def toEssImageCompEssentialImageInclusion (F : C ⥤ D) : F.toEssImage ⋙ F.essImageInclusion ≅ F :=
   FullSubcategory.lift_comp_inclusion _ _ _
-#align
-  category_theory.functor.to_ess_image_comp_essential_image_inclusion CategoryTheory.Functor.toEssImageCompEssentialImageInclusion
+#align category_theory.functor.to_ess_image_comp_essential_image_inclusion CategoryTheory.Functor.toEssImageCompEssentialImageInclusion
 -/
 
 end Functor

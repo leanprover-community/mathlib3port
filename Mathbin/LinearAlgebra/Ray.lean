@@ -638,8 +638,7 @@ theorem same_ray_or_same_ray_neg_iff_not_linear_independent {x y : M} :
       simpa [hm1, hx, hm0.ne.symm] using hm
     · refine' Or.inr (Or.inr (Or.inr ⟨m 0, m 1, hm0, hm1, _⟩))
       simp [hm]
-#align
-  same_ray_or_same_ray_neg_iff_not_linear_independent same_ray_or_same_ray_neg_iff_not_linear_independent
+#align same_ray_or_same_ray_neg_iff_not_linear_independent same_ray_or_same_ray_neg_iff_not_linear_independent
 
 /-- Two vectors are in the same ray, or they are nonzero and the first is in the same ray as the
 negation of the second, if and only if they are not linearly independent. -/
@@ -649,8 +648,7 @@ theorem same_ray_or_ne_zero_and_same_ray_neg_iff_not_linear_independent {x y : M
   rw [← same_ray_or_same_ray_neg_iff_not_linear_independent]
   by_cases hx : x = 0; · simp [hx]
   by_cases hy : y = 0 <;> simp [hx, hy]
-#align
-  same_ray_or_ne_zero_and_same_ray_neg_iff_not_linear_independent same_ray_or_ne_zero_and_same_ray_neg_iff_not_linear_independent
+#align same_ray_or_ne_zero_and_same_ray_neg_iff_not_linear_independent same_ray_or_ne_zero_and_same_ray_neg_iff_not_linear_independent
 
 end
 

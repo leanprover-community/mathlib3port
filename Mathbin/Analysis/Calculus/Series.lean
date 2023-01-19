@@ -121,8 +121,7 @@ theorem summable_of_summable_has_fderiv_at_of_is_preconnected (hu : Summable u) 
     (tendsto_uniformly_on_tsum hu hf').UniformCauchySeqOn
   apply cauchy_map_of_uniform_cauchy_seq_on_fderiv hs h's A (fun t y hy => _) hx₀ hx hf0
   exact HasFderivAt.sum fun i hi => hf i y hy
-#align
-  summable_of_summable_has_fderiv_at_of_is_preconnected summable_of_summable_has_fderiv_at_of_is_preconnected
+#align summable_of_summable_has_fderiv_at_of_is_preconnected summable_of_summable_has_fderiv_at_of_is_preconnected
 
 /-- Consider a series of functions `∑' n, f n x` on a preconnected open set. If the series converges
 at a point, and all functions in the series are differentiable with a summable bound on the

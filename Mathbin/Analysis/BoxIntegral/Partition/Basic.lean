@@ -205,8 +205,7 @@ theorem inj_on_set_of_mem_Icc_set_of_lower_eq (x : ι → ℝ) :
     exact lt_min H₁ H₂
   · have hi₂ : J₂.lower i < x i := (hx₂.1 i).lt_of_ne (mt (H _).2 hi₁.ne)
     exact ⟨x i, ⟨hi₁, hx₁.2 i⟩, ⟨hi₂, hx₂.2 i⟩⟩
-#align
-  box_integral.prepartition.inj_on_set_of_mem_Icc_set_of_lower_eq BoxIntegral.Prepartition.inj_on_set_of_mem_Icc_set_of_lower_eq
+#align box_integral.prepartition.inj_on_set_of_mem_Icc_set_of_lower_eq BoxIntegral.Prepartition.inj_on_set_of_mem_Icc_set_of_lower_eq
 
 /-- The set of boxes of a prepartition that contain `x` in their closures has cardinality
 at most `2 ^ fintype.card ι`. -/
@@ -218,8 +217,7 @@ theorem card_filter_mem_Icc_le [Fintype ι] (x : ι → ℝ) :
     Finset.card_le_card_of_inj_on (fun J : box ι => { i | J.lower i = x i })
       (fun _ _ => Finset.mem_univ _) _
   simpa only [Finset.mem_filter] using π.inj_on_set_of_mem_Icc_set_of_lower_eq x
-#align
-  box_integral.prepartition.card_filter_mem_Icc_le BoxIntegral.Prepartition.card_filter_mem_Icc_le
+#align box_integral.prepartition.card_filter_mem_Icc_le BoxIntegral.Prepartition.card_filter_mem_Icc_le
 
 /-- Given a prepartition `π : box_integral.prepartition I`, `π.Union` is the part of `I` covered by
 the boxes of `π`. -/
@@ -277,8 +275,7 @@ theorem disjoint_boxes_of_disjoint_Union (h : Disjoint π₁.union π₂.union) 
     Disjoint π₁.boxes π₂.boxes :=
   Finset.disjoint_left.2 fun J h₁ h₂ =>
     Disjoint.le_bot (h.mono (π₁.subset_Union h₁) (π₂.subset_Union h₂)) ⟨J.upper_mem, J.upper_mem⟩
-#align
-  box_integral.prepartition.disjoint_boxes_of_disjoint_Union BoxIntegral.Prepartition.disjoint_boxes_of_disjoint_Union
+#align box_integral.prepartition.disjoint_boxes_of_disjoint_Union BoxIntegral.Prepartition.disjoint_boxes_of_disjoint_Union
 
 theorem le_iff_nonempty_imp_le_and_Union_subset :
     π₁ ≤ π₂ ↔
@@ -293,8 +290,7 @@ theorem le_iff_nonempty_imp_le_and_Union_subset :
     simp only [Set.subset_def, mem_Union] at HU
     rcases HU J.upper ⟨J, hJ, J.upper_mem⟩ with ⟨J₂, hJ₂, hx⟩
     exact ⟨J₂, hJ₂, H _ hJ _ hJ₂ ⟨_, J.upper_mem, hx⟩⟩
-#align
-  box_integral.prepartition.le_iff_nonempty_imp_le_and_Union_subset BoxIntegral.Prepartition.le_iff_nonempty_imp_le_and_Union_subset
+#align box_integral.prepartition.le_iff_nonempty_imp_le_and_Union_subset BoxIntegral.Prepartition.le_iff_nonempty_imp_le_and_Union_subset
 
 theorem eq_of_boxes_subset_Union_superset (h₁ : π₁.boxes ⊆ π₂.boxes) (h₂ : π₂.union ⊆ π₁.union) :
     π₁ = π₂ :=
@@ -302,8 +298,7 @@ theorem eq_of_boxes_subset_Union_superset (h₁ : π₁.boxes ⊆ π₂.boxes) (
     le_iff_nonempty_imp_le_and_Union_subset.2
       ⟨fun J₁ hJ₁ J₂ hJ₂ Hne =>
         (π₂.eq_of_mem_of_mem hJ₁ (h₁ hJ₂) Hne.some_spec.1 Hne.some_spec.2).le, h₂⟩
-#align
-  box_integral.prepartition.eq_of_boxes_subset_Union_superset BoxIntegral.Prepartition.eq_of_boxes_subset_Union_superset
+#align box_integral.prepartition.eq_of_boxes_subset_Union_superset BoxIntegral.Prepartition.eq_of_boxes_subset_Union_superset
 
 /-- Given a prepartition `π` of a box `I` and a collection of prepartitions `πi J` of all boxes
 `J ∈ π`, returns the prepartition of `I` into the union of the boxes of all `πi J`.
@@ -728,8 +723,7 @@ theorem distortion_bUnion (π : Prepartition I) (πi : ∀ J, Prepartition J) :
 theorem distortion_disj_union (h : Disjoint π₁.union π₂.union) :
     (π₁.disjUnion π₂ h).distortion = max π₁.distortion π₂.distortion :=
   sup_union
-#align
-  box_integral.prepartition.distortion_disj_union BoxIntegral.Prepartition.distortion_disj_union
+#align box_integral.prepartition.distortion_disj_union BoxIntegral.Prepartition.distortion_disj_union
 
 theorem distortion_of_const {c} (h₁ : π.boxes.Nonempty) (h₂ : ∀ J ∈ π, Box.distortion J = c) :
     π.distortion = c :=
@@ -756,14 +750,12 @@ def IsPartition (π : Prepartition I) :=
 theorem is_partition_iff_Union_eq {π : Prepartition I} : π.IsPartition ↔ π.union = I := by
   simp_rw [is_partition, Set.Subset.antisymm_iff, π.Union_subset, true_and_iff, Set.subset_def,
     mem_Union, box.mem_coe]
-#align
-  box_integral.prepartition.is_partition_iff_Union_eq BoxIntegral.Prepartition.is_partition_iff_Union_eq
+#align box_integral.prepartition.is_partition_iff_Union_eq BoxIntegral.Prepartition.is_partition_iff_Union_eq
 
 @[simp]
 theorem is_partition_single_iff (h : J ≤ I) : IsPartition (single I J h) ↔ J = I := by
   simp [is_partition_iff_Union_eq]
-#align
-  box_integral.prepartition.is_partition_single_iff BoxIntegral.Prepartition.is_partition_single_iff
+#align box_integral.prepartition.is_partition_single_iff BoxIntegral.Prepartition.is_partition_single_iff
 
 theorem isPartitionTop (I : Box ι) : IsPartition (⊤ : Prepartition I) := fun x hx =>
   ⟨I, mem_top.2 rfl, hx⟩
@@ -779,27 +771,23 @@ theorem Union_eq (h : π.IsPartition) : π.union = I :=
 
 theorem Union_subset (h : π.IsPartition) (π₁ : Prepartition I) : π₁.union ⊆ π.union :=
   h.Union_eq.symm ▸ π₁.Union_subset
-#align
-  box_integral.prepartition.is_partition.Union_subset BoxIntegral.Prepartition.IsPartition.Union_subset
+#align box_integral.prepartition.is_partition.Union_subset BoxIntegral.Prepartition.IsPartition.Union_subset
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (J «expr ∈ » π) -/
 protected theorem exists_unique (h : π.IsPartition) (hx : x ∈ I) : ∃! (J : _)(_ : J ∈ π), x ∈ J :=
   by
   rcases h x hx with ⟨J, h, hx⟩
   exact ExistsUnique.intro₂ J h hx fun J' h' hx' => π.eq_of_mem_of_mem h' h hx' hx
-#align
-  box_integral.prepartition.is_partition.exists_unique BoxIntegral.Prepartition.IsPartition.exists_unique
+#align box_integral.prepartition.is_partition.exists_unique BoxIntegral.Prepartition.IsPartition.exists_unique
 
 theorem nonempty_boxes (h : π.IsPartition) : π.boxes.Nonempty :=
   let ⟨J, hJ, _⟩ := h _ I.upper_mem
   ⟨J, hJ⟩
-#align
-  box_integral.prepartition.is_partition.nonempty_boxes BoxIntegral.Prepartition.IsPartition.nonempty_boxes
+#align box_integral.prepartition.is_partition.nonempty_boxes BoxIntegral.Prepartition.IsPartition.nonempty_boxes
 
 theorem eq_of_boxes_subset (h₁ : π₁.IsPartition) (h₂ : π₁.boxes ⊆ π₂.boxes) : π₁ = π₂ :=
   eq_of_boxes_subset_Union_superset h₂ <| h₁.Union_subset _
-#align
-  box_integral.prepartition.is_partition.eq_of_boxes_subset BoxIntegral.Prepartition.IsPartition.eq_of_boxes_subset
+#align box_integral.prepartition.is_partition.eq_of_boxes_subset BoxIntegral.Prepartition.IsPartition.eq_of_boxes_subset
 
 theorem le_iff (h : π₂.IsPartition) :
     π₁ ≤ π₂ ↔ ∀ J ∈ π₁, ∀ J' ∈ π₂, (J ∩ J' : Set (ι → ℝ)).Nonempty → J ≤ J' :=
@@ -827,14 +815,12 @@ theorem Union_bUnion_partition (h : ∀ J ∈ π, (πi J).IsPartition) : (π.bUn
   (Union_bUnion _ _).trans <|
     unionᵢ_congr_of_surjective id surjective_id fun J =>
       unionᵢ_congr_of_surjective id surjective_id fun hJ => (h J hJ).Union_eq
-#align
-  box_integral.prepartition.Union_bUnion_partition BoxIntegral.Prepartition.Union_bUnion_partition
+#align box_integral.prepartition.Union_bUnion_partition BoxIntegral.Prepartition.Union_bUnion_partition
 
 theorem isPartitionDisjUnionOfEqDiff (h : π₂.union = I \ π₁.union) :
     IsPartition (π₁.disjUnion π₂ <| h.symm ▸ disjoint_sdiff_self_right) :=
   is_partition_iff_Union_eq.2 <| (Union_disj_union _).trans <| by simp [h, π₁.Union_subset]
-#align
-  box_integral.prepartition.is_partition_disj_union_of_eq_diff BoxIntegral.Prepartition.isPartitionDisjUnionOfEqDiff
+#align box_integral.prepartition.is_partition_disj_union_of_eq_diff BoxIntegral.Prepartition.isPartitionDisjUnionOfEqDiff
 
 end Prepartition
 

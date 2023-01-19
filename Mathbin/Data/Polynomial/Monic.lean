@@ -83,15 +83,13 @@ theorem monic_C_mul_of_mul_leading_coeff_eq_one {b : R} (hp : b * p.leadingCoeff
     Monic (c b * p) := by
   nontriviality
   rw [monic, leading_coeff_mul' _] <;> simp [leading_coeff_C b, hp]
-#align
-  polynomial.monic_C_mul_of_mul_leading_coeff_eq_one Polynomial.monic_C_mul_of_mul_leading_coeff_eq_one
+#align polynomial.monic_C_mul_of_mul_leading_coeff_eq_one Polynomial.monic_C_mul_of_mul_leading_coeff_eq_one
 
 theorem monic_mul_C_of_leading_coeff_mul_eq_one {b : R} (hp : p.leadingCoeff * b = 1) :
     Monic (p * c b) := by
   nontriviality
   rw [monic, leading_coeff_mul' _] <;> simp [leading_coeff_C b, hp]
-#align
-  polynomial.monic_mul_C_of_leading_coeff_mul_eq_one Polynomial.monic_mul_C_of_leading_coeff_mul_eq_one
+#align polynomial.monic_mul_C_of_leading_coeff_mul_eq_one Polynomial.monic_mul_C_of_leading_coeff_mul_eq_one
 
 theorem monic_of_degree_le (n : ℕ) (H1 : degree p ≤ n) (H2 : coeff p n = 1) : Monic p :=
   Decidable.byCases
@@ -540,8 +538,7 @@ theorem monic_of_is_unit_leading_coeff_inv_smul (h : IsUnit p.leadingCoeff) :
   obtain ⟨k, hk⟩ := h
   simp only [← hk, smul_eq_mul, ← Units.val_mul, Units.val_eq_one, inv_mul_eq_iff_eq_mul]
   simp [Units.ext_iff, IsUnit.unit_spec]
-#align
-  polynomial.monic_of_is_unit_leading_coeff_inv_smul Polynomial.monic_of_is_unit_leading_coeff_inv_smul
+#align polynomial.monic_of_is_unit_leading_coeff_inv_smul Polynomial.monic_of_is_unit_leading_coeff_inv_smul
 
 theorem is_unit_leading_coeff_mul_right_eq_zero_iff (h : IsUnit p.leadingCoeff) {q : R[X]} :
     p * q = 0 ↔ q = 0 := by
@@ -558,8 +555,7 @@ theorem is_unit_leading_coeff_mul_right_eq_zero_iff (h : IsUnit p.leadingCoeff) 
     exact monic_of_is_unit_leading_coeff_inv_smul _
   · rintro rfl
     simp
-#align
-  polynomial.is_unit_leading_coeff_mul_right_eq_zero_iff Polynomial.is_unit_leading_coeff_mul_right_eq_zero_iff
+#align polynomial.is_unit_leading_coeff_mul_right_eq_zero_iff Polynomial.is_unit_leading_coeff_mul_right_eq_zero_iff
 
 theorem is_unit_leading_coeff_mul_left_eq_zero_iff (h : IsUnit p.leadingCoeff) {q : R[X]} :
     q * p = 0 ↔ q = 0 := by
@@ -572,8 +568,7 @@ theorem is_unit_leading_coeff_mul_left_eq_zero_iff (h : IsUnit p.leadingCoeff) {
     simp [Units.mul_inv_eq_iff_eq_mul, IsUnit.unit_spec]
   · rintro rfl
     rw [zero_mul]
-#align
-  polynomial.is_unit_leading_coeff_mul_left_eq_zero_iff Polynomial.is_unit_leading_coeff_mul_left_eq_zero_iff
+#align polynomial.is_unit_leading_coeff_mul_left_eq_zero_iff Polynomial.is_unit_leading_coeff_mul_left_eq_zero_iff
 
 end NotZeroDivisor
 

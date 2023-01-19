@@ -175,7 +175,7 @@ theorem [anonymous] {a : α} : ∀ {as : List α}, a ∈ as → ∃ n : Nat, ∀
     · cases' eq_get_of_mem h with n h2
       exists n + 1
       apply h2
-#align list.func.eq_get_of_mem[anonymous]
+#align list.func.eq_get_of_mem [anonymous]
 
 #print List.Func.mem_get_of_le /-
 theorem mem_get_of_le : ∀ {n : ℕ} {as : List α}, n < as.length → get n as ∈ as

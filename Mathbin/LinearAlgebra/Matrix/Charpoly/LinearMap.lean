@@ -196,8 +196,7 @@ theorem Matrix.isRepresentation.eq_to_End_of_represents (A : Matrix.isRepresenta
     {f : Module.EndCat R M} (h : (A : Matrix ι ι R).Represents b f) :
     Matrix.isRepresentation.toEnd R b hb A = f :=
   A.2.some_spec.Eq hb h
-#align
-  matrix.is_representation.eq_to_End_of_represents Matrix.isRepresentation.eq_to_End_of_represents
+#align matrix.is_representation.eq_to_End_of_represents Matrix.isRepresentation.eq_to_End_of_represents
 
 theorem Matrix.isRepresentation.to_End_exists_mem_ideal (f : Module.EndCat R M) (I : Ideal R)
     (hI : f.range ≤ I • ⊤) : ∃ M, Matrix.isRepresentation.toEnd R b hb M = f ∧ ∀ i j, M.1 i j ∈ I :=
@@ -217,8 +216,7 @@ theorem Matrix.isRepresentation.to_End_exists_mem_ideal (f : Module.EndCat R M) 
   exact
     ⟨⟨A, f, this⟩, Matrix.isRepresentation.eq_to_End_of_represents R b hb ⟨A, f, this⟩ this,
       fun i j => (bM' (b j) i).Prop⟩
-#align
-  matrix.is_representation.to_End_exists_mem_ideal Matrix.isRepresentation.to_End_exists_mem_ideal
+#align matrix.is_representation.to_End_exists_mem_ideal Matrix.isRepresentation.to_End_exists_mem_ideal
 
 theorem Matrix.isRepresentation.to_End_surjective :
     Function.Surjective (Matrix.isRepresentation.toEnd R b hb) :=
@@ -257,8 +255,7 @@ theorem LinearMap.exists_monic_and_coeff_mem_pow_and_aeval_eq_zero_of_range_le_s
       rw [Polynomial.aeval_subalgebra_coe, Subtype.val_eq_coe, Matrix.aeval_self_charpoly,
         Subalgebra.coe_zero]
     · infer_instance
-#align
-  linear_map.exists_monic_and_coeff_mem_pow_and_aeval_eq_zero_of_range_le_smul LinearMap.exists_monic_and_coeff_mem_pow_and_aeval_eq_zero_of_range_le_smul
+#align linear_map.exists_monic_and_coeff_mem_pow_and_aeval_eq_zero_of_range_le_smul LinearMap.exists_monic_and_coeff_mem_pow_and_aeval_eq_zero_of_range_le_smul
 
 theorem LinearMap.exists_monic_and_aeval_eq_zero [Module.Finite R M] (f : Module.EndCat R M) :
     ∃ p : R[X], p.Monic ∧ Polynomial.aeval f p = 0 :=

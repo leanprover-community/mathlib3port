@@ -1108,8 +1108,7 @@ theorem measurable_range_splitting (hf : MeasurableEmbedding f) : Measurable (ra
   rwa [preimage_range_splitting hf.injective, ←
     (subtype_coe hf.measurable_set_range).measurable_set_image, ← image_comp,
     coe_comp_range_factorization, hf.measurable_set_image]
-#align
-  measurable_embedding.measurable_range_splitting MeasurableEmbedding.measurable_range_splitting
+#align measurable_embedding.measurable_range_splitting MeasurableEmbedding.measurable_range_splitting
 
 theorem measurable_extend (hf : MeasurableEmbedding f) {g : α → γ} {g' : β → γ} (hg : Measurable g)
     (hg' : Measurable g') : Measurable (extend f g g') :=
@@ -1623,8 +1622,7 @@ theorem of_measurable_inverse_on_range {g : range f → α} (hf₁ : Measurable 
     ⟨⟨range_factorization f, g, H, H.right_inverse_of_surjective surjective_onto_range⟩,
       hf₁.subtype_mk, hg⟩
   exact (MeasurableEmbedding.subtype_coe hf₂).comp e.measurable_embedding
-#align
-  measurable_embedding.of_measurable_inverse_on_range MeasurableEmbedding.of_measurable_inverse_on_range
+#align measurable_embedding.of_measurable_inverse_on_range MeasurableEmbedding.of_measurable_inverse_on_range
 
 theorem of_measurable_inverse (hf₁ : Measurable f) (hf₂ : MeasurableSet (range f))
     (hg : Measurable g) (H : LeftInverse g f) : MeasurableEmbedding f :=
@@ -1719,8 +1717,7 @@ theorem Eventually.exists_measurable_mem_of_small_sets {f : Filter α} [IsMeasur
   let ⟨s, hsf, hs⟩ := eventually_small_sets.1 h
   let ⟨t, htf, htm, hts⟩ := IsMeasurablyGenerated.exists_measurable_subset hsf
   ⟨t, htf, htm, hs t hts⟩
-#align
-  filter.eventually.exists_measurable_mem_of_small_sets Filter.Eventually.exists_measurable_mem_of_small_sets
+#align filter.eventually.exists_measurable_mem_of_small_sets Filter.Eventually.exists_measurable_mem_of_small_sets
 
 instance inf_is_measurably_generated (f g : Filter α) [IsMeasurablyGenerated f]
     [IsMeasurablyGenerated g] : IsMeasurablyGenerated (f ⊓ g) :=
@@ -1745,8 +1742,7 @@ theorem principal_is_measurably_generated_iff {s : Set α} :
 
 alias principal_is_measurably_generated_iff ↔
   _ _root_.measurable_set.principal_is_measurably_generated
-#align
-  measurable_set.principal_is_measurably_generated MeasurableSet.principal_is_measurably_generated
+#align measurable_set.principal_is_measurably_generated MeasurableSet.principal_is_measurably_generated
 
 instance infi_is_measurably_generated {f : ι → Filter α} [∀ i, IsMeasurablyGenerated (f i)] :
     IsMeasurablyGenerated (⨅ i, f i) :=

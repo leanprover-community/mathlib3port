@@ -884,15 +884,13 @@ theorem map_bilinear_apply (f : M →ₗ[R] P) (g : N →ₗ[R] Q) : mapBilinear
 theorem ltensor_hom_to_hom_ltensor_apply (p : P) (f : M →ₗ[R] Q) (m : M) :
     ltensorHomToHomLtensor R M P Q (p ⊗ₜ f) m = p ⊗ₜ f m :=
   rfl
-#align
-  tensor_product.ltensor_hom_to_hom_ltensor_apply TensorProduct.ltensor_hom_to_hom_ltensor_apply
+#align tensor_product.ltensor_hom_to_hom_ltensor_apply TensorProduct.ltensor_hom_to_hom_ltensor_apply
 
 @[simp]
 theorem rtensor_hom_to_hom_rtensor_apply (f : M →ₗ[R] P) (q : Q) (m : M) :
     rtensorHomToHomRtensor R M P Q (f ⊗ₜ q) m = f m ⊗ₜ q :=
   rfl
-#align
-  tensor_product.rtensor_hom_to_hom_rtensor_apply TensorProduct.rtensor_hom_to_hom_rtensor_apply
+#align tensor_product.rtensor_hom_to_hom_rtensor_apply TensorProduct.rtensor_hom_to_hom_rtensor_apply
 
 @[simp]
 theorem hom_tensor_hom_map_apply (f : M →ₗ[R] P) (g : N →ₗ[R] Q) :
@@ -1005,8 +1003,7 @@ theorem tensor_tensor_tensor_assoc_tmul (m : M) (n : N) (p : P) (q : Q) :
 theorem tensor_tensor_tensor_assoc_symm_tmul (m : M) (n : N) (p : P) (q : Q) :
     (tensorTensorTensorAssoc R M N P Q).symm (m ⊗ₜ (n ⊗ₜ p) ⊗ₜ q) = m ⊗ₜ n ⊗ₜ (p ⊗ₜ q) :=
   rfl
-#align
-  tensor_product.tensor_tensor_tensor_assoc_symm_tmul TensorProduct.tensor_tensor_tensor_assoc_symm_tmul
+#align tensor_product.tensor_tensor_tensor_assoc_symm_tmul TensorProduct.tensor_tensor_tensor_assoc_symm_tmul
 
 end TensorProduct
 

@@ -87,8 +87,7 @@ instance (priority := 100) NonUnitalAlgHomClass.toNonUnitalRingHomClass {F R A B
     [Monoid R] [NonUnitalNonAssocSemiring A] [DistribMulAction R A] [NonUnitalNonAssocSemiring B]
     [DistribMulAction R B] [NonUnitalAlgHomClass F R A B] : NonUnitalRingHomClass F A B :=
   { ‹NonUnitalAlgHomClass F R A B› with coe := coeFn }
-#align
-  non_unital_alg_hom_class.non_unital_alg_hom_class.to_non_unital_ring_hom_class NonUnitalAlgHomClass.NonUnitalAlgHomClass.toNonUnitalRingHomClass
+#align non_unital_alg_hom_class.non_unital_alg_hom_class.to_non_unital_ring_hom_class NonUnitalAlgHomClass.NonUnitalAlgHomClass.toNonUnitalRingHomClass
 
 variable [Semiring R] [NonUnitalNonAssocSemiring A] [Module R A] [NonUnitalNonAssocSemiring B]
   [Module R B]
@@ -182,8 +181,7 @@ instance : Coe (A →ₙₐ[R] B) (A →ₙ* B) :=
 @[simp]
 theorem to_distrib_mul_action_hom_eq_coe (f : A →ₙₐ[R] B) : f.toDistribMulActionHom = ↑f :=
   rfl
-#align
-  non_unital_alg_hom.to_distrib_mul_action_hom_eq_coe NonUnitalAlgHom.to_distrib_mul_action_hom_eq_coe
+#align non_unital_alg_hom.to_distrib_mul_action_hom_eq_coe NonUnitalAlgHom.to_distrib_mul_action_hom_eq_coe
 
 @[simp]
 theorem to_mul_hom_eq_coe (f : A →ₙₐ[R] B) : f.toMulHom = ↑f :=
@@ -193,8 +191,7 @@ theorem to_mul_hom_eq_coe (f : A →ₙₐ[R] B) : f.toMulHom = ↑f :=
 @[simp, norm_cast]
 theorem coe_to_distrib_mul_action_hom (f : A →ₙₐ[R] B) : ((f : A →+[R] B) : A → B) = f :=
   rfl
-#align
-  non_unital_alg_hom.coe_to_distrib_mul_action_hom NonUnitalAlgHom.coe_to_distrib_mul_action_hom
+#align non_unital_alg_hom.coe_to_distrib_mul_action_hom NonUnitalAlgHom.coe_to_distrib_mul_action_hom
 
 @[simp, norm_cast]
 theorem coe_to_mul_hom (f : A →ₙₐ[R] B) : ((f : A →ₙ* B) : A → B) = f :=
@@ -206,8 +203,7 @@ theorem to_distrib_mul_action_hom_injective {f g : A →ₙₐ[R] B}
   by
   ext a
   exact DistribMulActionHom.congr_fun h a
-#align
-  non_unital_alg_hom.to_distrib_mul_action_hom_injective NonUnitalAlgHom.to_distrib_mul_action_hom_injective
+#align non_unital_alg_hom.to_distrib_mul_action_hom_injective NonUnitalAlgHom.to_distrib_mul_action_hom_injective
 
 theorem to_mul_hom_injective {f g : A →ₙₐ[R] B} (h : (f : A →ₙ* B) = (g : A →ₙ* B)) : f = g :=
   by
@@ -221,8 +217,7 @@ theorem coe_distrib_mul_action_hom_mk (f : A →ₙₐ[R] B) (h₁ h₂ h₃ h�
   by
   ext
   rfl
-#align
-  non_unital_alg_hom.coe_distrib_mul_action_hom_mk NonUnitalAlgHom.coe_distrib_mul_action_hom_mk
+#align non_unital_alg_hom.coe_distrib_mul_action_hom_mk NonUnitalAlgHom.coe_distrib_mul_action_hom_mk
 
 @[norm_cast]
 theorem coe_mul_hom_mk (f : A →ₙₐ[R] B) (h₁ h₂ h₃ h₄) :

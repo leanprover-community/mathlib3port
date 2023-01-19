@@ -94,14 +94,12 @@ theorem congr_set {s t : Set H} {x : H} {f : H → H'} (hu : s =ᶠ[𝓝 x] t) :
   obtain ⟨o, host, ho, hxo⟩ := mem_nhds_iff.mp hu.mem_iff
   simp_rw [subset_def, mem_set_of, ← and_congr_left_iff, ← mem_inter_iff, ← Set.ext_iff] at host
   rw [hG.is_local ho hxo, host, ← hG.is_local ho hxo]
-#align
-  structure_groupoid.local_invariant_prop.congr_set StructureGroupoid.LocalInvariantProp.congr_set
+#align structure_groupoid.local_invariant_prop.congr_set StructureGroupoid.LocalInvariantProp.congr_set
 
 theorem is_local_nhds {s u : Set H} {x : H} {f : H → H'} (hu : u ∈ 𝓝[s] x) :
     P f s x ↔ P f (s ∩ u) x :=
   hG.congr_set <| mem_nhds_within_iff_eventually_eq.mp hu
-#align
-  structure_groupoid.local_invariant_prop.is_local_nhds StructureGroupoid.LocalInvariantProp.is_local_nhds
+#align structure_groupoid.local_invariant_prop.is_local_nhds StructureGroupoid.LocalInvariantProp.is_local_nhds
 
 theorem congr_iff_nhds_within {s : Set H} {x : H} {f g : H → H'} (h1 : f =ᶠ[𝓝[s] x] g)
     (h2 : f x = g x) : P f s x ↔ P g s x :=
@@ -109,25 +107,21 @@ theorem congr_iff_nhds_within {s : Set H} {x : H} {f g : H → H'} (h1 : f =ᶠ[
   simp_rw [hG.is_local_nhds h1]
   exact
     ⟨hG.congr_of_forall (fun y hy => hy.2) h2, hG.congr_of_forall (fun y hy => hy.2.symm) h2.symm⟩
-#align
-  structure_groupoid.local_invariant_prop.congr_iff_nhds_within StructureGroupoid.LocalInvariantProp.congr_iff_nhds_within
+#align structure_groupoid.local_invariant_prop.congr_iff_nhds_within StructureGroupoid.LocalInvariantProp.congr_iff_nhds_within
 
 theorem congr_nhds_within {s : Set H} {x : H} {f g : H → H'} (h1 : f =ᶠ[𝓝[s] x] g) (h2 : f x = g x)
     (hP : P f s x) : P g s x :=
   (hG.congr_iff_nhds_within h1 h2).mp hP
-#align
-  structure_groupoid.local_invariant_prop.congr_nhds_within StructureGroupoid.LocalInvariantProp.congr_nhds_within
+#align structure_groupoid.local_invariant_prop.congr_nhds_within StructureGroupoid.LocalInvariantProp.congr_nhds_within
 
 theorem congr_nhds_within' {s : Set H} {x : H} {f g : H → H'} (h1 : f =ᶠ[𝓝[s] x] g) (h2 : f x = g x)
     (hP : P g s x) : P f s x :=
   (hG.congr_iff_nhds_within h1 h2).mpr hP
-#align
-  structure_groupoid.local_invariant_prop.congr_nhds_within' StructureGroupoid.LocalInvariantProp.congr_nhds_within'
+#align structure_groupoid.local_invariant_prop.congr_nhds_within' StructureGroupoid.LocalInvariantProp.congr_nhds_within'
 
 theorem congr_iff {s : Set H} {x : H} {f g : H → H'} (h : f =ᶠ[𝓝 x] g) : P f s x ↔ P g s x :=
   hG.congr_iff_nhds_within (mem_nhds_within_of_mem_nhds h) (mem_of_mem_nhds h : _)
-#align
-  structure_groupoid.local_invariant_prop.congr_iff StructureGroupoid.LocalInvariantProp.congr_iff
+#align structure_groupoid.local_invariant_prop.congr_iff StructureGroupoid.LocalInvariantProp.congr_iff
 
 theorem congr {s : Set H} {x : H} {f g : H → H'} (h : f =ᶠ[𝓝 x] g) (hP : P f s x) : P g s x :=
   (hG.congr_iff h).mp hP
@@ -154,8 +148,7 @@ theorem left_invariance {s : Set H} {x : H} {f : H → H'} {e' : LocalHomeomorph
     exact eventually_of_mem h2f fun x' => e'.left_inv
   · simp_rw [hG.is_local_nhds h2f]
     exact hG.left_invariance' he' (inter_subset_right _ _) hxe'
-#align
-  structure_groupoid.local_invariant_prop.left_invariance StructureGroupoid.LocalInvariantProp.left_invariance
+#align structure_groupoid.local_invariant_prop.left_invariance StructureGroupoid.LocalInvariantProp.left_invariance
 
 theorem right_invariance {s : Set H} {x : H} {f : H → H'} {e : LocalHomeomorph H H} (he : e ∈ G)
     (hxe : x ∈ e.source) : P (f ∘ e.symm) (e.symm ⁻¹' s) (e x) ↔ P f s x :=
@@ -169,8 +162,7 @@ theorem right_invariance {s : Set H} {x : H} {f : H → H'} {e : LocalHomeomorph
   · rw [eventually_eq_set]
     refine' eventually_of_mem (e.open_source.mem_nhds hxe) fun x' hx' => _
     simp_rw [mem_preimage, e.left_inv hx']
-#align
-  structure_groupoid.local_invariant_prop.right_invariance StructureGroupoid.LocalInvariantProp.right_invariance
+#align structure_groupoid.local_invariant_prop.right_invariance StructureGroupoid.LocalInvariantProp.right_invariance
 
 end LocalInvariantProp
 
@@ -248,16 +240,14 @@ theorem lift_prop_within_at_self {f : H → H'} {s : Set H} {x : H} :
 theorem lift_prop_within_at_self_source {f : H → M'} {s : Set H} {x : H} :
     LiftPropWithinAt P f s x ↔ ContinuousWithinAt f s x ∧ P (chartAt H' (f x) ∘ f) s x :=
   Iff.rfl
-#align
-  structure_groupoid.lift_prop_within_at_self_source StructureGroupoid.lift_prop_within_at_self_source
+#align structure_groupoid.lift_prop_within_at_self_source StructureGroupoid.lift_prop_within_at_self_source
 
 theorem lift_prop_within_at_self_target {f : M → H'} :
     LiftPropWithinAt P f s x ↔
       ContinuousWithinAt f s x ∧
         P (f ∘ (chartAt H x).symm) ((chartAt H x).symm ⁻¹' s) (chartAt H x x) :=
   Iff.rfl
-#align
-  structure_groupoid.lift_prop_within_at_self_target StructureGroupoid.lift_prop_within_at_self_target
+#align structure_groupoid.lift_prop_within_at_self_target StructureGroupoid.lift_prop_within_at_self_target
 
 namespace LocalInvariantProp
 
@@ -278,8 +268,7 @@ theorem lift_prop_within_at_iff {f : M → M'} :
   exact
     LocalHomeomorph.preimage_eventually_eq_target_inter_preimage_inter hf (mem_chart_source H x)
       (chart_source_mem_nhds H' (f x))
-#align
-  structure_groupoid.local_invariant_prop.lift_prop_within_at_iff StructureGroupoid.LocalInvariantProp.lift_prop_within_at_iff
+#align structure_groupoid.local_invariant_prop.lift_prop_within_at_iff StructureGroupoid.LocalInvariantProp.lift_prop_within_at_iff
 
 theorem lift_prop_within_at_indep_chart_source_aux (g : M → H') (he : e ∈ G.maximalAtlas M)
     (xe : x ∈ e.source) (he' : e' ∈ G.maximalAtlas M) (xe' : x ∈ e'.source) :
@@ -298,8 +287,7 @@ theorem lift_prop_within_at_indep_chart_source_aux (g : M → H') (he : e ∈ G.
   · refine' ((e'.eventually_nhds' _ xe').mpr <| e.eventually_left_inverse xe).mono fun y hy => _
     simp only [mfld_simps]
     rw [hy]
-#align
-  structure_groupoid.local_invariant_prop.lift_prop_within_at_indep_chart_source_aux StructureGroupoid.LocalInvariantProp.lift_prop_within_at_indep_chart_source_aux
+#align structure_groupoid.local_invariant_prop.lift_prop_within_at_indep_chart_source_aux StructureGroupoid.LocalInvariantProp.lift_prop_within_at_indep_chart_source_aux
 
 theorem lift_prop_within_at_indep_chart_target_aux2 (g : H → M') {x : H} {s : Set H}
     (hf : f ∈ G'.maximalAtlas M') (xf : g x ∈ f.source) (hf' : f' ∈ G'.maximalAtlas M')
@@ -311,8 +299,7 @@ theorem lift_prop_within_at_indep_chart_target_aux2 (g : H → M') {x : H} {s : 
       (by simp only [xf, xf', mfld_simps])]
   refine' hG.congr_iff_nhds_within _ (by simp only [xf, mfld_simps])
   exact (hgs.eventually <| f.eventually_left_inverse xf).mono fun y => congr_arg f'
-#align
-  structure_groupoid.local_invariant_prop.lift_prop_within_at_indep_chart_target_aux2 StructureGroupoid.LocalInvariantProp.lift_prop_within_at_indep_chart_target_aux2
+#align structure_groupoid.local_invariant_prop.lift_prop_within_at_indep_chart_target_aux2 StructureGroupoid.LocalInvariantProp.lift_prop_within_at_indep_chart_target_aux2
 
 theorem lift_prop_within_at_indep_chart_target_aux {g : X → M'} {e : LocalHomeomorph X H} {x : X}
     {s : Set X} (xe : x ∈ e.source) (hf : f ∈ G'.maximalAtlas M') (xf : g x ∈ f.source)
@@ -322,8 +309,7 @@ theorem lift_prop_within_at_indep_chart_target_aux {g : X → M'} {e : LocalHome
   rw [← e.left_inv xe] at xf xf' hgs
   refine' hG.lift_prop_within_at_indep_chart_target_aux2 (g ∘ e.symm) hf xf hf' xf' _
   exact hgs.comp (e.symm.continuous_at <| e.maps_to xe).ContinuousWithinAt subset.rfl
-#align
-  structure_groupoid.local_invariant_prop.lift_prop_within_at_indep_chart_target_aux StructureGroupoid.LocalInvariantProp.lift_prop_within_at_indep_chart_target_aux
+#align structure_groupoid.local_invariant_prop.lift_prop_within_at_indep_chart_target_aux StructureGroupoid.LocalInvariantProp.lift_prop_within_at_indep_chart_target_aux
 
 /-- If a property of a germ of function `g` on a pointed set `(s, x)` is invariant under the
 structure groupoid (by composition in the source space and in the target space), then
@@ -338,8 +324,7 @@ theorem lift_prop_within_at_indep_chart_aux (he : e ∈ G.maximalAtlas M) (xe : 
     P (f ∘ g ∘ e.symm) (e.symm ⁻¹' s) (e x) ↔ P (f' ∘ g ∘ e'.symm) (e'.symm ⁻¹' s) (e' x) := by
   rw [hG.lift_prop_within_at_indep_chart_source_aux (f ∘ g) he xe he' xe',
     hG.lift_prop_within_at_indep_chart_target_aux xe' hf xf hf' xf' hgs]
-#align
-  structure_groupoid.local_invariant_prop.lift_prop_within_at_indep_chart_aux StructureGroupoid.LocalInvariantProp.lift_prop_within_at_indep_chart_aux
+#align structure_groupoid.local_invariant_prop.lift_prop_within_at_indep_chart_aux StructureGroupoid.LocalInvariantProp.lift_prop_within_at_indep_chart_aux
 
 theorem lift_prop_within_at_indep_chart [HasGroupoid M G] [HasGroupoid M' G']
     (he : e ∈ G.maximalAtlas M) (xe : x ∈ e.source) (hf : f ∈ G'.maximalAtlas M')
@@ -348,8 +333,7 @@ theorem lift_prop_within_at_indep_chart [HasGroupoid M G] [HasGroupoid M' G']
   and_congr_right <|
     hG.lift_prop_within_at_indep_chart_aux (chart_mem_maximal_atlas _ _) (mem_chart_source _ _) he
       xe (chart_mem_maximal_atlas _ _) (mem_chart_source _ _) hf xf
-#align
-  structure_groupoid.local_invariant_prop.lift_prop_within_at_indep_chart StructureGroupoid.LocalInvariantProp.lift_prop_within_at_indep_chart
+#align structure_groupoid.local_invariant_prop.lift_prop_within_at_indep_chart StructureGroupoid.LocalInvariantProp.lift_prop_within_at_indep_chart
 
 /-- A version of `lift_prop_within_at_indep_chart`, only for the source. -/
 theorem lift_prop_within_at_indep_chart_source [HasGroupoid M G] (he : e ∈ G.maximalAtlas M)
@@ -363,8 +347,7 @@ theorem lift_prop_within_at_indep_chart_source [HasGroupoid M G] (he : e ∈ G.m
   refine' and_congr Iff.rfl _
   rw [hG.lift_prop_within_at_indep_chart_source_aux (chart_at H' (g x) ∘ g)
       (chart_mem_maximal_atlas G x) (mem_chart_source H x) he xe]
-#align
-  structure_groupoid.local_invariant_prop.lift_prop_within_at_indep_chart_source StructureGroupoid.LocalInvariantProp.lift_prop_within_at_indep_chart_source
+#align structure_groupoid.local_invariant_prop.lift_prop_within_at_indep_chart_source StructureGroupoid.LocalInvariantProp.lift_prop_within_at_indep_chart_source
 
 /-- A version of `lift_prop_within_at_indep_chart`, only for the target. -/
 theorem lift_prop_within_at_indep_chart_target [HasGroupoid M' G'] (hf : f ∈ G'.maximalAtlas M')
@@ -377,8 +360,7 @@ theorem lift_prop_within_at_indep_chart_target [HasGroupoid M' G'] (hf : f ∈ G
   exact
     hG.lift_prop_within_at_indep_chart_target_aux (mem_chart_source _ _)
       (chart_mem_maximal_atlas _ _) (mem_chart_source _ _) hf xf hg
-#align
-  structure_groupoid.local_invariant_prop.lift_prop_within_at_indep_chart_target StructureGroupoid.LocalInvariantProp.lift_prop_within_at_indep_chart_target
+#align structure_groupoid.local_invariant_prop.lift_prop_within_at_indep_chart_target StructureGroupoid.LocalInvariantProp.lift_prop_within_at_indep_chart_target
 
 /-- A version of `lift_prop_within_at_indep_chart`, that uses `lift_prop_within_at` on both sides.
 -/
@@ -395,8 +377,7 @@ theorem lift_prop_within_at_indep_chart' [HasGroupoid M G] [HasGroupoid M' G']
   have : ContinuousAt f ((g ∘ e.symm) (e x)) := by
     simp_rw [Function.comp, e.left_inv xe, f.continuous_at xf]
   exact this.comp_continuous_within_at h1
-#align
-  structure_groupoid.local_invariant_prop.lift_prop_within_at_indep_chart' StructureGroupoid.LocalInvariantProp.lift_prop_within_at_indep_chart'
+#align structure_groupoid.local_invariant_prop.lift_prop_within_at_indep_chart' StructureGroupoid.LocalInvariantProp.lift_prop_within_at_indep_chart'
 
 theorem lift_prop_on_indep_chart [HasGroupoid M G] [HasGroupoid M' G'] (he : e ∈ G.maximalAtlas M)
     (hf : f ∈ G'.maximalAtlas M') (h : LiftPropOn P g s) {y : H}
@@ -404,8 +385,7 @@ theorem lift_prop_on_indep_chart [HasGroupoid M G] [HasGroupoid M' G'] (he : e �
   by
   convert ((hG.lift_prop_within_at_indep_chart he (e.symm_maps_to hy.1) hf hy.2.2).1 (h _ hy.2.1)).2
   rw [e.right_inv hy.1]
-#align
-  structure_groupoid.local_invariant_prop.lift_prop_on_indep_chart StructureGroupoid.LocalInvariantProp.lift_prop_on_indep_chart
+#align structure_groupoid.local_invariant_prop.lift_prop_on_indep_chart StructureGroupoid.LocalInvariantProp.lift_prop_on_indep_chart
 
 theorem lift_prop_within_at_inter' (ht : t ∈ 𝓝[s] x) :
     LiftPropWithinAt P g (s ∩ t) x ↔ LiftPropWithinAt P g s x :=
@@ -414,24 +394,20 @@ theorem lift_prop_within_at_inter' (ht : t ∈ 𝓝[s] x) :
   simp_rw [eventually_eq_set, mem_preimage,
     (chart_at H x).eventually_nhds' (fun x => x ∈ s ∩ t ↔ x ∈ s) (mem_chart_source H x)]
   exact (mem_nhds_within_iff_eventually_eq.mp ht).symm.mem_iff
-#align
-  structure_groupoid.local_invariant_prop.lift_prop_within_at_inter' StructureGroupoid.LocalInvariantProp.lift_prop_within_at_inter'
+#align structure_groupoid.local_invariant_prop.lift_prop_within_at_inter' StructureGroupoid.LocalInvariantProp.lift_prop_within_at_inter'
 
 theorem lift_prop_within_at_inter (ht : t ∈ 𝓝 x) :
     LiftPropWithinAt P g (s ∩ t) x ↔ LiftPropWithinAt P g s x :=
   hG.lift_prop_within_at_inter' (mem_nhds_within_of_mem_nhds ht)
-#align
-  structure_groupoid.local_invariant_prop.lift_prop_within_at_inter StructureGroupoid.LocalInvariantProp.lift_prop_within_at_inter
+#align structure_groupoid.local_invariant_prop.lift_prop_within_at_inter StructureGroupoid.LocalInvariantProp.lift_prop_within_at_inter
 
 theorem lift_prop_at_of_lift_prop_within_at (h : LiftPropWithinAt P g s x) (hs : s ∈ 𝓝 x) :
     LiftPropAt P g x := by rwa [← univ_inter s, hG.lift_prop_within_at_inter hs] at h
-#align
-  structure_groupoid.local_invariant_prop.lift_prop_at_of_lift_prop_within_at StructureGroupoid.LocalInvariantProp.lift_prop_at_of_lift_prop_within_at
+#align structure_groupoid.local_invariant_prop.lift_prop_at_of_lift_prop_within_at StructureGroupoid.LocalInvariantProp.lift_prop_at_of_lift_prop_within_at
 
 theorem lift_prop_within_at_of_lift_prop_at_of_mem_nhds (h : LiftPropAt P g x) (hs : s ∈ 𝓝 x) :
     LiftPropWithinAt P g s x := by rwa [← univ_inter s, hG.lift_prop_within_at_inter hs]
-#align
-  structure_groupoid.local_invariant_prop.lift_prop_within_at_of_lift_prop_at_of_mem_nhds StructureGroupoid.LocalInvariantProp.lift_prop_within_at_of_lift_prop_at_of_mem_nhds
+#align structure_groupoid.local_invariant_prop.lift_prop_within_at_of_lift_prop_at_of_mem_nhds StructureGroupoid.LocalInvariantProp.lift_prop_within_at_of_lift_prop_at_of_mem_nhds
 
 theorem lift_prop_on_of_locally_lift_prop_on
     (h : ∀ x ∈ s, ∃ u, IsOpen u ∧ x ∈ u ∧ LiftPropOn P g (s ∩ u)) : LiftPropOn P g s :=
@@ -441,16 +417,14 @@ theorem lift_prop_on_of_locally_lift_prop_on
   have := hu x ⟨hx, xu⟩
   rwa [hG.lift_prop_within_at_inter] at this
   exact IsOpen.mem_nhds u_open xu
-#align
-  structure_groupoid.local_invariant_prop.lift_prop_on_of_locally_lift_prop_on StructureGroupoid.LocalInvariantProp.lift_prop_on_of_locally_lift_prop_on
+#align structure_groupoid.local_invariant_prop.lift_prop_on_of_locally_lift_prop_on StructureGroupoid.LocalInvariantProp.lift_prop_on_of_locally_lift_prop_on
 
 theorem lift_prop_of_locally_lift_prop_on (h : ∀ x, ∃ u, IsOpen u ∧ x ∈ u ∧ LiftPropOn P g u) :
     LiftProp P g := by
   rw [← lift_prop_on_univ]
   apply hG.lift_prop_on_of_locally_lift_prop_on fun x hx => _
   simp [h x]
-#align
-  structure_groupoid.local_invariant_prop.lift_prop_of_locally_lift_prop_on StructureGroupoid.LocalInvariantProp.lift_prop_of_locally_lift_prop_on
+#align structure_groupoid.local_invariant_prop.lift_prop_of_locally_lift_prop_on StructureGroupoid.LocalInvariantProp.lift_prop_of_locally_lift_prop_on
 
 theorem lift_prop_within_at_congr_of_eventually_eq (h : LiftPropWithinAt P g s x)
     (h₁ : g' =ᶠ[𝓝[s] x] g) (hx : g' x = g x) : LiftPropWithinAt P g' s x :=
@@ -463,50 +437,42 @@ theorem lift_prop_within_at_congr_of_eventually_eq (h : LiftPropWithinAt P g s x
     (chart_at H x).eventually_nhds_within'
       (fun y => chart_at H' (g' x) (g' y) = chart_at H' (g x) (g y)) (mem_chart_source H x)]
   exact h₁.mono fun y hy => by rw [hx, hy]
-#align
-  structure_groupoid.local_invariant_prop.lift_prop_within_at_congr_of_eventually_eq StructureGroupoid.LocalInvariantProp.lift_prop_within_at_congr_of_eventually_eq
+#align structure_groupoid.local_invariant_prop.lift_prop_within_at_congr_of_eventually_eq StructureGroupoid.LocalInvariantProp.lift_prop_within_at_congr_of_eventually_eq
 
 theorem lift_prop_within_at_congr_iff_of_eventually_eq (h₁ : g' =ᶠ[𝓝[s] x] g) (hx : g' x = g x) :
     LiftPropWithinAt P g' s x ↔ LiftPropWithinAt P g s x :=
   ⟨fun h => hG.lift_prop_within_at_congr_of_eventually_eq h h₁.symm hx.symm, fun h =>
     hG.lift_prop_within_at_congr_of_eventually_eq h h₁ hx⟩
-#align
-  structure_groupoid.local_invariant_prop.lift_prop_within_at_congr_iff_of_eventually_eq StructureGroupoid.LocalInvariantProp.lift_prop_within_at_congr_iff_of_eventually_eq
+#align structure_groupoid.local_invariant_prop.lift_prop_within_at_congr_iff_of_eventually_eq StructureGroupoid.LocalInvariantProp.lift_prop_within_at_congr_iff_of_eventually_eq
 
 theorem lift_prop_within_at_congr_iff (h₁ : ∀ y ∈ s, g' y = g y) (hx : g' x = g x) :
     LiftPropWithinAt P g' s x ↔ LiftPropWithinAt P g s x :=
   hG.lift_prop_within_at_congr_iff_of_eventually_eq (eventually_nhds_within_of_forall h₁) hx
-#align
-  structure_groupoid.local_invariant_prop.lift_prop_within_at_congr_iff StructureGroupoid.LocalInvariantProp.lift_prop_within_at_congr_iff
+#align structure_groupoid.local_invariant_prop.lift_prop_within_at_congr_iff StructureGroupoid.LocalInvariantProp.lift_prop_within_at_congr_iff
 
 theorem lift_prop_within_at_congr (h : LiftPropWithinAt P g s x) (h₁ : ∀ y ∈ s, g' y = g y)
     (hx : g' x = g x) : LiftPropWithinAt P g' s x :=
   (hG.lift_prop_within_at_congr_iff h₁ hx).mpr h
-#align
-  structure_groupoid.local_invariant_prop.lift_prop_within_at_congr StructureGroupoid.LocalInvariantProp.lift_prop_within_at_congr
+#align structure_groupoid.local_invariant_prop.lift_prop_within_at_congr StructureGroupoid.LocalInvariantProp.lift_prop_within_at_congr
 
 theorem lift_prop_at_congr_iff_of_eventually_eq (h₁ : g' =ᶠ[𝓝 x] g) :
     LiftPropAt P g' x ↔ LiftPropAt P g x :=
   hG.lift_prop_within_at_congr_iff_of_eventually_eq (by simp_rw [nhds_within_univ, h₁])
     h₁.eq_of_nhds
-#align
-  structure_groupoid.local_invariant_prop.lift_prop_at_congr_iff_of_eventually_eq StructureGroupoid.LocalInvariantProp.lift_prop_at_congr_iff_of_eventually_eq
+#align structure_groupoid.local_invariant_prop.lift_prop_at_congr_iff_of_eventually_eq StructureGroupoid.LocalInvariantProp.lift_prop_at_congr_iff_of_eventually_eq
 
 theorem lift_prop_at_congr_of_eventually_eq (h : LiftPropAt P g x) (h₁ : g' =ᶠ[𝓝 x] g) :
     LiftPropAt P g' x :=
   (hG.lift_prop_at_congr_iff_of_eventually_eq h₁).mpr h
-#align
-  structure_groupoid.local_invariant_prop.lift_prop_at_congr_of_eventually_eq StructureGroupoid.LocalInvariantProp.lift_prop_at_congr_of_eventually_eq
+#align structure_groupoid.local_invariant_prop.lift_prop_at_congr_of_eventually_eq StructureGroupoid.LocalInvariantProp.lift_prop_at_congr_of_eventually_eq
 
 theorem lift_prop_on_congr (h : LiftPropOn P g s) (h₁ : ∀ y ∈ s, g' y = g y) : LiftPropOn P g' s :=
   fun x hx => hG.lift_prop_within_at_congr (h x hx) h₁ (h₁ x hx)
-#align
-  structure_groupoid.local_invariant_prop.lift_prop_on_congr StructureGroupoid.LocalInvariantProp.lift_prop_on_congr
+#align structure_groupoid.local_invariant_prop.lift_prop_on_congr StructureGroupoid.LocalInvariantProp.lift_prop_on_congr
 
 theorem lift_prop_on_congr_iff (h₁ : ∀ y ∈ s, g' y = g y) : LiftPropOn P g' s ↔ LiftPropOn P g s :=
   ⟨fun h => hG.lift_prop_on_congr h fun y hy => (h₁ y hy).symm, fun h => hG.lift_prop_on_congr h h₁⟩
-#align
-  structure_groupoid.local_invariant_prop.lift_prop_on_congr_iff StructureGroupoid.LocalInvariantProp.lift_prop_on_congr_iff
+#align structure_groupoid.local_invariant_prop.lift_prop_on_congr_iff StructureGroupoid.LocalInvariantProp.lift_prop_on_congr_iff
 
 omit hG
 
@@ -517,8 +483,7 @@ theorem lift_prop_within_at_mono_of_mem
   refine' ⟨h.1.mono_of_mem hst, mono_of_mem _ h.2⟩
   simp_rw [← mem_map, (chart_at H x).symm.map_nhds_within_preimage_eq (mem_chart_target H x),
     (chart_at H x).left_inv (mem_chart_source H x), hst]
-#align
-  structure_groupoid.local_invariant_prop.lift_prop_within_at_mono_of_mem StructureGroupoid.LocalInvariantProp.lift_prop_within_at_mono_of_mem
+#align structure_groupoid.local_invariant_prop.lift_prop_within_at_mono_of_mem StructureGroupoid.LocalInvariantProp.lift_prop_within_at_mono_of_mem
 
 theorem lift_prop_within_at_mono (mono : ∀ ⦃s x t⦄ ⦃f : H → H'⦄, t ⊆ s → P f s x → P f t x)
     (h : LiftPropWithinAt P g s x) (hts : t ⊆ s) : LiftPropWithinAt P g t x :=
@@ -527,8 +492,7 @@ theorem lift_prop_within_at_mono (mono : ∀ ⦃s x t⦄ ⦃f : H → H'⦄, t �
   apply mono (fun y hy => _) h.2
   simp only [mfld_simps] at hy
   simp only [hy, hts _, mfld_simps]
-#align
-  structure_groupoid.local_invariant_prop.lift_prop_within_at_mono StructureGroupoid.LocalInvariantProp.lift_prop_within_at_mono
+#align structure_groupoid.local_invariant_prop.lift_prop_within_at_mono StructureGroupoid.LocalInvariantProp.lift_prop_within_at_mono
 
 theorem lift_prop_within_at_of_lift_prop_at
     (mono : ∀ ⦃s x t⦄ ⦃f : H → H'⦄, t ⊆ s → P f s x → P f t x) (h : LiftPropAt P g x) :
@@ -536,22 +500,19 @@ theorem lift_prop_within_at_of_lift_prop_at
   by
   rw [← lift_prop_within_at_univ] at h
   exact lift_prop_within_at_mono mono h (subset_univ _)
-#align
-  structure_groupoid.local_invariant_prop.lift_prop_within_at_of_lift_prop_at StructureGroupoid.LocalInvariantProp.lift_prop_within_at_of_lift_prop_at
+#align structure_groupoid.local_invariant_prop.lift_prop_within_at_of_lift_prop_at StructureGroupoid.LocalInvariantProp.lift_prop_within_at_of_lift_prop_at
 
 theorem lift_prop_on_mono (mono : ∀ ⦃s x t⦄ ⦃f : H → H'⦄, t ⊆ s → P f s x → P f t x)
     (h : LiftPropOn P g t) (hst : s ⊆ t) : LiftPropOn P g s := fun x hx =>
   lift_prop_within_at_mono mono (h x (hst hx)) hst
-#align
-  structure_groupoid.local_invariant_prop.lift_prop_on_mono StructureGroupoid.LocalInvariantProp.lift_prop_on_mono
+#align structure_groupoid.local_invariant_prop.lift_prop_on_mono StructureGroupoid.LocalInvariantProp.lift_prop_on_mono
 
 theorem lift_prop_on_of_lift_prop (mono : ∀ ⦃s x t⦄ ⦃f : H → H'⦄, t ⊆ s → P f s x → P f t x)
     (h : LiftProp P g) : LiftPropOn P g s :=
   by
   rw [← lift_prop_on_univ] at h
   exact lift_prop_on_mono mono h (subset_univ _)
-#align
-  structure_groupoid.local_invariant_prop.lift_prop_on_of_lift_prop StructureGroupoid.LocalInvariantProp.lift_prop_on_of_lift_prop
+#align structure_groupoid.local_invariant_prop.lift_prop_on_of_lift_prop StructureGroupoid.LocalInvariantProp.lift_prop_on_of_lift_prop
 
 theorem lift_prop_at_of_mem_maximal_atlas [HasGroupoid M G] (hG : G.LocalInvariantProp G Q)
     (hQ : ∀ y, Q id univ y) (he : e ∈ maximalAtlas M G) (hx : x ∈ e.source) : LiftPropAt Q e x :=
@@ -560,8 +521,7 @@ theorem lift_prop_at_of_mem_maximal_atlas [HasGroupoid M G] (hG : G.LocalInvaria
     hG.lift_prop_within_at_indep_chart he hx G.id_mem_maximal_atlas (mem_univ _),
     (e.continuous_at hx).ContinuousWithinAt, true_and_iff]
   exact hG.congr' (e.eventually_right_inverse' hx) (hQ _)
-#align
-  structure_groupoid.local_invariant_prop.lift_prop_at_of_mem_maximal_atlas StructureGroupoid.LocalInvariantProp.lift_prop_at_of_mem_maximal_atlas
+#align structure_groupoid.local_invariant_prop.lift_prop_at_of_mem_maximal_atlas StructureGroupoid.LocalInvariantProp.lift_prop_at_of_mem_maximal_atlas
 
 theorem lift_prop_on_of_mem_maximal_atlas [HasGroupoid M G] (hG : G.LocalInvariantProp G Q)
     (hQ : ∀ y, Q id univ y) (he : e ∈ maximalAtlas M G) : LiftPropOn Q e e.source :=
@@ -571,8 +531,7 @@ theorem lift_prop_on_of_mem_maximal_atlas [HasGroupoid M G] (hG : G.LocalInvaria
     hG.lift_prop_within_at_of_lift_prop_at_of_mem_nhds
       (hG.lift_prop_at_of_mem_maximal_atlas hQ he hx)
   exact IsOpen.mem_nhds e.open_source hx
-#align
-  structure_groupoid.local_invariant_prop.lift_prop_on_of_mem_maximal_atlas StructureGroupoid.LocalInvariantProp.lift_prop_on_of_mem_maximal_atlas
+#align structure_groupoid.local_invariant_prop.lift_prop_on_of_mem_maximal_atlas StructureGroupoid.LocalInvariantProp.lift_prop_on_of_mem_maximal_atlas
 
 theorem lift_prop_at_symm_of_mem_maximal_atlas [HasGroupoid M G] {x : H}
     (hG : G.LocalInvariantProp G Q) (hQ : ∀ y, Q id univ y) (he : e ∈ maximalAtlas M G)
@@ -586,8 +545,7 @@ theorem lift_prop_at_symm_of_mem_maximal_atlas [HasGroupoid M G] {x : H}
     refine' ⟨(e.symm.continuous_at hx).ContinuousWithinAt, _⟩
     simp only [h, mfld_simps]
   exact hG.congr' (e.eventually_right_inverse hx) (hQ x)
-#align
-  structure_groupoid.local_invariant_prop.lift_prop_at_symm_of_mem_maximal_atlas StructureGroupoid.LocalInvariantProp.lift_prop_at_symm_of_mem_maximal_atlas
+#align structure_groupoid.local_invariant_prop.lift_prop_at_symm_of_mem_maximal_atlas StructureGroupoid.LocalInvariantProp.lift_prop_at_symm_of_mem_maximal_atlas
 
 theorem lift_prop_on_symm_of_mem_maximal_atlas [HasGroupoid M G] (hG : G.LocalInvariantProp G Q)
     (hQ : ∀ y, Q id univ y) (he : e ∈ maximalAtlas M G) : LiftPropOn Q e.symm e.target :=
@@ -597,40 +555,34 @@ theorem lift_prop_on_symm_of_mem_maximal_atlas [HasGroupoid M G] (hG : G.LocalIn
     hG.lift_prop_within_at_of_lift_prop_at_of_mem_nhds
       (hG.lift_prop_at_symm_of_mem_maximal_atlas hQ he hx)
   exact IsOpen.mem_nhds e.open_target hx
-#align
-  structure_groupoid.local_invariant_prop.lift_prop_on_symm_of_mem_maximal_atlas StructureGroupoid.LocalInvariantProp.lift_prop_on_symm_of_mem_maximal_atlas
+#align structure_groupoid.local_invariant_prop.lift_prop_on_symm_of_mem_maximal_atlas StructureGroupoid.LocalInvariantProp.lift_prop_on_symm_of_mem_maximal_atlas
 
 theorem lift_prop_at_chart [HasGroupoid M G] (hG : G.LocalInvariantProp G Q)
     (hQ : ∀ y, Q id univ y) : LiftPropAt Q (chartAt H x) x :=
   hG.lift_prop_at_of_mem_maximal_atlas hQ (chart_mem_maximal_atlas G x) (mem_chart_source H x)
-#align
-  structure_groupoid.local_invariant_prop.lift_prop_at_chart StructureGroupoid.LocalInvariantProp.lift_prop_at_chart
+#align structure_groupoid.local_invariant_prop.lift_prop_at_chart StructureGroupoid.LocalInvariantProp.lift_prop_at_chart
 
 theorem lift_prop_on_chart [HasGroupoid M G] (hG : G.LocalInvariantProp G Q)
     (hQ : ∀ y, Q id univ y) : LiftPropOn Q (chartAt H x) (chartAt H x).source :=
   hG.lift_prop_on_of_mem_maximal_atlas hQ (chart_mem_maximal_atlas G x)
-#align
-  structure_groupoid.local_invariant_prop.lift_prop_on_chart StructureGroupoid.LocalInvariantProp.lift_prop_on_chart
+#align structure_groupoid.local_invariant_prop.lift_prop_on_chart StructureGroupoid.LocalInvariantProp.lift_prop_on_chart
 
 theorem lift_prop_at_chart_symm [HasGroupoid M G] (hG : G.LocalInvariantProp G Q)
     (hQ : ∀ y, Q id univ y) : LiftPropAt Q (chartAt H x).symm ((chartAt H x) x) :=
   hG.lift_prop_at_symm_of_mem_maximal_atlas hQ (chart_mem_maximal_atlas G x) (by simp)
-#align
-  structure_groupoid.local_invariant_prop.lift_prop_at_chart_symm StructureGroupoid.LocalInvariantProp.lift_prop_at_chart_symm
+#align structure_groupoid.local_invariant_prop.lift_prop_at_chart_symm StructureGroupoid.LocalInvariantProp.lift_prop_at_chart_symm
 
 theorem lift_prop_on_chart_symm [HasGroupoid M G] (hG : G.LocalInvariantProp G Q)
     (hQ : ∀ y, Q id univ y) : LiftPropOn Q (chartAt H x).symm (chartAt H x).target :=
   hG.lift_prop_on_symm_of_mem_maximal_atlas hQ (chart_mem_maximal_atlas G x)
-#align
-  structure_groupoid.local_invariant_prop.lift_prop_on_chart_symm StructureGroupoid.LocalInvariantProp.lift_prop_on_chart_symm
+#align structure_groupoid.local_invariant_prop.lift_prop_on_chart_symm StructureGroupoid.LocalInvariantProp.lift_prop_on_chart_symm
 
 theorem lift_prop_id (hG : G.LocalInvariantProp G Q) (hQ : ∀ y, Q id univ y) :
     LiftProp Q (id : M → M) :=
   by
   simp_rw [lift_prop_iff, continuous_id, true_and_iff]
   exact fun x => hG.congr' ((chart_at H x).eventually_right_inverse <| mem_chart_target H x) (hQ _)
-#align
-  structure_groupoid.local_invariant_prop.lift_prop_id StructureGroupoid.LocalInvariantProp.lift_prop_id
+#align structure_groupoid.local_invariant_prop.lift_prop_id StructureGroupoid.LocalInvariantProp.lift_prop_id
 
 end LocalInvariantProp
 
@@ -645,8 +597,7 @@ structure groupoid `G` for `H`, relative to a set `s` in `H`, if for all points 
 function agrees with a `G`-structomorphism on `s` in a neighbourhood of `x`. -/
 def IsLocalStructomorphWithinAt (f : H → H) (s : Set H) (x : H) : Prop :=
   x ∈ s → ∃ e : LocalHomeomorph H H, e ∈ G ∧ EqOn f e.toFun (s ∩ e.source) ∧ x ∈ e.source
-#align
-  structure_groupoid.is_local_structomorph_within_at StructureGroupoid.IsLocalStructomorphWithinAt
+#align structure_groupoid.is_local_structomorph_within_at StructureGroupoid.IsLocalStructomorphWithinAt
 
 /-- For a groupoid `G` which is `closed_under_restriction`, being a local structomorphism is a local
 invariant property. -/
@@ -689,8 +640,7 @@ theorem is_local_structomorph_within_at_local_invariant_prop [ClosedUnderRestric
         simp only [mfld_simps] at hy
         simp only [hef ⟨hy.1, hy.2.1⟩, mfld_simps]
       · simpa only [hex, hef ⟨hx, hex⟩, mfld_simps] using hfx }
-#align
-  structure_groupoid.is_local_structomorph_within_at_local_invariant_prop StructureGroupoid.is_local_structomorph_within_at_local_invariant_prop
+#align structure_groupoid.is_local_structomorph_within_at_local_invariant_prop StructureGroupoid.is_local_structomorph_within_at_local_invariant_prop
 
 variable {H₁ : Type _} [TopologicalSpace H₁] {H₂ : Type _} [TopologicalSpace H₂] {H₃ : Type _}
   [TopologicalSpace H₃] [ChartedSpace H₁ H₂] [ChartedSpace H₂ H₃] {G₁ : StructureGroupoid H₁}

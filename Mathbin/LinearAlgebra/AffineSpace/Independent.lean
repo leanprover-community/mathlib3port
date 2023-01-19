@@ -169,8 +169,7 @@ theorem affine_independent_set_iff_linear_independent_vsub {s : Set P} {p₁ : P
       ⟨((x : s) : P) -ᵥ p₁, ⟨x, ⟨⟨(x : s).property, fun hx => x.property (Subtype.ext hx)⟩, rfl⟩⟩⟩
     convert
       h.comp f fun x1 x2 hx => Subtype.ext (Subtype.ext (vsub_left_cancel (Subtype.ext_iff.1 hx)))
-#align
-  affine_independent_set_iff_linear_independent_vsub affine_independent_set_iff_linear_independent_vsub
+#align affine_independent_set_iff_linear_independent_vsub affine_independent_set_iff_linear_independent_vsub
 
 /-- A set of nonzero vectors is linearly independent if and only if,
 given a point `p₁`, the vectors added to `p₁` and `p₁` itself are
@@ -188,8 +187,7 @@ theorem linear_independent_set_iff_affine_independent_vadd_union_singleton {s : 
       Set.image_singleton, vsub_self, vadd_vsub, Set.image_id']
     exact Set.diff_singleton_eq_self fun h => hs 0 h rfl
   rw [h]
-#align
-  linear_independent_set_iff_affine_independent_vadd_union_singleton linear_independent_set_iff_affine_independent_vadd_union_singleton
+#align linear_independent_set_iff_affine_independent_vadd_union_singleton linear_independent_set_iff_affine_independent_vadd_union_singleton
 
 /-- A family is affinely independent if and only if any affine
 combinations (with sum of weights 1) that evaluate to the same point
@@ -234,8 +232,7 @@ theorem affine_independent_iff_indicator_eq_of_affine_combination_eq (p : ι →
         rw [← Finset.mem_coe] at hi0
         rw [← Set.indicator_of_mem hi0 w2, ← Set.indicator_of_mem hi0 w1, ha, sub_self]
       simpa [w2] using hws
-#align
-  affine_independent_iff_indicator_eq_of_affine_combination_eq affine_independent_iff_indicator_eq_of_affine_combination_eq
+#align affine_independent_iff_indicator_eq_of_affine_combination_eq affine_independent_iff_indicator_eq_of_affine_combination_eq
 
 /-- A finite family is affinely independent if and only if any affine
 combinations (with sum of weights 1) that evaluate to the same point are equal. -/
@@ -258,8 +255,7 @@ theorem affine_independent_iff_eq_of_fintype_affine_combination_eq [Fintype ι] 
     rw [Finset.affine_combination_indicator_subset w1 p (Finset.subset_univ s1),
       Finset.affine_combination_indicator_subset w2 p (Finset.subset_univ s2)] at hweq
     exact h _ _ hw1' hw2' hweq
-#align
-  affine_independent_iff_eq_of_fintype_affine_combination_eq affine_independent_iff_eq_of_fintype_affine_combination_eq
+#align affine_independent_iff_eq_of_fintype_affine_combination_eq affine_independent_iff_eq_of_fintype_affine_combination_eq
 
 variable {k}
 
@@ -281,8 +277,7 @@ theorem AffineIndependent.indicator_eq_of_affine_combination_eq {p : ι → P}
     (hw₂ : (∑ i in s₂, w₂ i) = 1) (h : s₁.affineCombination p w₁ = s₂.affineCombination p w₂) :
     Set.indicator (↑s₁) w₁ = Set.indicator (↑s₂) w₂ :=
   (affine_independent_iff_indicator_eq_of_affine_combination_eq k p).1 ha s₁ s₂ w₁ w₂ hw₁ hw₂ h
-#align
-  affine_independent.indicator_eq_of_affine_combination_eq AffineIndependent.indicator_eq_of_affine_combination_eq
+#align affine_independent.indicator_eq_of_affine_combination_eq AffineIndependent.indicator_eq_of_affine_combination_eq
 
 /-- An affinely independent family is injective, if the underlying
 ring is nontrivial. -/
@@ -447,8 +442,7 @@ theorem AffineIndependent.exists_mem_inter_of_exists_mem_inter_affine_span [Nont
   rcases Finset.exists_ne_zero_of_sum_ne_zero hnz with ⟨i, hifs1, hinz⟩
   simp_rw [← Set.indicator_of_mem (Finset.mem_coe.2 hifs1) w1, ha] at hinz
   use i, hfs1 hifs1, hfs2 (Set.mem_of_indicator_ne_zero hinz)
-#align
-  affine_independent.exists_mem_inter_of_exists_mem_inter_affine_span AffineIndependent.exists_mem_inter_of_exists_mem_inter_affine_span
+#align affine_independent.exists_mem_inter_of_exists_mem_inter_affine_span AffineIndependent.exists_mem_inter_of_exists_mem_inter_affine_span
 
 /-- If a family is affinely independent, the spans of points indexed
 by disjoint subsets of the index type are disjoint, if the underlying
@@ -460,8 +454,7 @@ theorem AffineIndependent.affine_span_disjoint_of_disjoint [Nontrivial k] {p : �
   refine' Set.disjoint_left.2 fun p0 hp0s1 hp0s2 => _
   cases' ha.exists_mem_inter_of_exists_mem_inter_affine_span hp0s1 hp0s2 with i hi
   exact Set.disjoint_iff.1 hd hi
-#align
-  affine_independent.affine_span_disjoint_of_disjoint AffineIndependent.affine_span_disjoint_of_disjoint
+#align affine_independent.affine_span_disjoint_of_disjoint AffineIndependent.affine_span_disjoint_of_disjoint
 
 /-- If a family is affinely independent, a point in the family is in
 the span of some of the points given by a subset of the index type if
@@ -511,8 +504,7 @@ theorem exists_nontrivial_relation_sum_zero_of_not_affine_ind {t : Finset V}
     all_goals
       simp only [Finset.sum_dite_of_true fun x h => h, Subtype.val_eq_coe, Finset.mk_coe, f, hwt,
         hw]
-#align
-  exists_nontrivial_relation_sum_zero_of_not_affine_ind exists_nontrivial_relation_sum_zero_of_not_affine_ind
+#align exists_nontrivial_relation_sum_zero_of_not_affine_ind exists_nontrivial_relation_sum_zero_of_not_affine_ind
 
 /-- Viewing a module as an affine space modelled on itself, we can characterise affine independence
 in terms of linear combinations. -/
@@ -615,8 +607,7 @@ theorem exists_subset_affine_independent_affine_span_eq_top {s : Set P}
     · refine' Set.Subset.trans _ (Set.union_subset_union_right _ (Set.image_subset _ hsv))
       simp [Set.image_image]
     · use hsvi, affine_span_singleton_union_vadd_eq_top_of_span_eq_top p₁ hsvt
-#align
-  exists_subset_affine_independent_affine_span_eq_top exists_subset_affine_independent_affine_span_eq_top
+#align exists_subset_affine_independent_affine_span_eq_top exists_subset_affine_independent_affine_span_eq_top
 
 variable (k V)
 
@@ -714,8 +705,7 @@ theorem AffineIndependent.affine_independent_of_not_mem_span {p : ι → P} {i :
       · rw [hji] at hj
         exact hji.symm ▸ his.neg_resolve_left hj
       · exact ha s' w' hw' hs' ⟨j, hji⟩ (Finset.mem_subtype.2 hj)
-#align
-  affine_independent.affine_independent_of_not_mem_span AffineIndependent.affine_independent_of_not_mem_span
+#align affine_independent.affine_independent_of_not_mem_span AffineIndependent.affine_independent_of_not_mem_span
 
 /-- If distinct points `p₁` and `p₂` lie in `s` but `p₃` does not, the three points are affinely
 independent. -/
@@ -735,8 +725,7 @@ theorem affine_independent_of_ne_of_mem_of_mem_of_not_mem {s : AffineSubspace k 
   simp_rw [affine_span_le, Set.image_subset_iff, Set.subset_def, Set.mem_preimage]
   intro x
   fin_cases x <;> simp [hp₁, hp₂]
-#align
-  affine_independent_of_ne_of_mem_of_mem_of_not_mem affine_independent_of_ne_of_mem_of_mem_of_not_mem
+#align affine_independent_of_ne_of_mem_of_mem_of_not_mem affine_independent_of_ne_of_mem_of_mem_of_not_mem
 
 /-- If distinct points `p₁` and `p₃` lie in `s` but `p₂` does not, the three points are affinely
 independent. -/
@@ -748,8 +737,7 @@ theorem affine_independent_of_ne_of_mem_of_not_mem_of_mem {s : AffineSubspace k 
   convert affine_independent_of_ne_of_mem_of_mem_of_not_mem hp₁p₃ hp₁ hp₃ hp₂ using 1
   ext x
   fin_cases x <;> rfl
-#align
-  affine_independent_of_ne_of_mem_of_not_mem_of_mem affine_independent_of_ne_of_mem_of_not_mem_of_mem
+#align affine_independent_of_ne_of_mem_of_not_mem_of_mem affine_independent_of_ne_of_mem_of_not_mem_of_mem
 
 /-- If distinct points `p₂` and `p₃` lie in `s` but `p₁` does not, the three points are affinely
 independent. -/
@@ -761,8 +749,7 @@ theorem affine_independent_of_ne_of_not_mem_of_mem_of_mem {s : AffineSubspace k 
   convert affine_independent_of_ne_of_mem_of_mem_of_not_mem hp₂p₃.symm hp₃ hp₂ hp₁ using 1
   ext x
   fin_cases x <;> rfl
-#align
-  affine_independent_of_ne_of_not_mem_of_mem_of_mem affine_independent_of_ne_of_not_mem_of_mem_of_mem
+#align affine_independent_of_ne_of_not_mem_of_mem_of_mem affine_independent_of_ne_of_not_mem_of_mem_of_mem
 
 end DivisionRing
 
@@ -792,8 +779,7 @@ theorem sign_eq_of_affine_combination_mem_affine_span_pair {p : ι → P} (h : A
   rcases hs with ⟨r, hr⟩
   dsimp only at hr
   rw [hr i hi, hr j hj, hi0, hj0, add_zero, add_zero, sub_zero, sub_zero, sign_mul, sign_mul, hij]
-#align
-  sign_eq_of_affine_combination_mem_affine_span_pair sign_eq_of_affine_combination_mem_affine_span_pair
+#align sign_eq_of_affine_combination_mem_affine_span_pair sign_eq_of_affine_combination_mem_affine_span_pair
 
 /-- Given an affinely independent family of points, suppose that an affine combination lies in
 the span of one point of that family and a combination of another two points of that family given
@@ -817,8 +803,7 @@ theorem sign_eq_of_affine_combination_mem_affine_span_single_line_map {p : ι �
     rw [Finset.affine_combination_line_map_weights_apply_left h₂₃,
       Finset.affine_combination_line_map_weights_apply_right h₂₃]
     simp [hc0, sub_pos.2 hc1]
-#align
-  sign_eq_of_affine_combination_mem_affine_span_single_line_map sign_eq_of_affine_combination_mem_affine_span_single_line_map
+#align sign_eq_of_affine_combination_mem_affine_span_single_line_map sign_eq_of_affine_combination_mem_affine_span_single_line_map
 
 end Ordered
 
@@ -915,7 +900,7 @@ theorem face_eq_mk_of_point {n : ℕ} (s : Simplex k P n) (i : Fin (n + 1)) :
 @[simp]
 theorem range_face_points {n : ℕ} (s : Simplex k P n) {fs : Finset (Fin (n + 1))} {m : ℕ}
     (h : fs.card = m + 1) : Set.range (s.face h).points = s.points '' ↑fs := by
-  rw [face_points', Set.range_comp, Finset.range_order_emb_of_fin]
+  rw [face_points', Set.range_comp, Finset.range_orderEmbOfFin]
 #align affine.simplex.range_face_points Affine.Simplex.range_face_points
 
 /-- Remap a simplex along an `equiv` of index types. -/

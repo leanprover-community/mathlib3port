@@ -42,8 +42,7 @@ theorem is_open_image_of_Df : IsOpen (imageOfDf f) :=
   by
   rw [image_of_Df, set_of_exists fun i (x : PrimeSpectrum R) => coeff f i ∉ x.asIdeal]
   exact is_open_Union fun i => is_open_basic_open
-#align
-  algebraic_geometry.polynomial.is_open_image_of_Df AlgebraicGeometry.Polynomial.is_open_image_of_Df
+#align algebraic_geometry.polynomial.is_open_image_of_Df AlgebraicGeometry.Polynomial.is_open_image_of_Df
 
 /-- If a point of `Spec R[x]` is not contained in the vanishing set of `f`, then its image in
 `Spec R` is contained in the open set where at least one of the coefficients of `f` is non-zero.
@@ -52,8 +51,7 @@ theorem comap_C_mem_image_of_Df {I : PrimeSpectrum R[X]}
     (H : I ∈ (zeroLocus {f} : Set (PrimeSpectrum R[X]))ᶜ) :
     PrimeSpectrum.comap (Polynomial.c : R →+* R[X]) I ∈ imageOfDf f :=
   exists_C_coeff_not_mem (mem_compl_zero_locus_iff_not_mem.mp H)
-#align
-  algebraic_geometry.polynomial.comap_C_mem_image_of_Df AlgebraicGeometry.Polynomial.comap_C_mem_image_of_Df
+#align algebraic_geometry.polynomial.comap_C_mem_image_of_Df AlgebraicGeometry.Polynomial.comap_C_mem_image_of_Df
 
 /-- The open set `image_of_Df f` coincides with the image of `basic_open f` under the
 morphism `C⁺ : Spec R[x] → Spec R`. -/
@@ -71,8 +69,7 @@ theorem image_of_Df_eq_comap_C_compl_zero_locus :
     exact mem_map_C_iff.mp h 0
   · rintro ⟨xli, complement, rfl⟩
     exact comap_C_mem_image_of_Df complement
-#align
-  algebraic_geometry.polynomial.image_of_Df_eq_comap_C_compl_zero_locus AlgebraicGeometry.Polynomial.image_of_Df_eq_comap_C_compl_zero_locus
+#align algebraic_geometry.polynomial.image_of_Df_eq_comap_C_compl_zero_locus AlgebraicGeometry.Polynomial.image_of_Df_eq_comap_C_compl_zero_locus
 
 /-- The morphism `C⁺ : Spec R[x] → Spec R` is open.
 Stacks Project "Lemma 00FB", first part.
@@ -85,8 +82,7 @@ theorem is_open_map_comap_C : IsOpenMap (PrimeSpectrum.comap (c : R →+* R[X]))
   rw [← compl_compl U, ← z, ← Union_of_singleton_coe s, zero_locus_Union, compl_Inter, image_Union]
   simp_rw [← image_of_Df_eq_comap_C_compl_zero_locus]
   exact is_open_Union fun f => is_open_image_of_Df
-#align
-  algebraic_geometry.polynomial.is_open_map_comap_C AlgebraicGeometry.Polynomial.is_open_map_comap_C
+#align algebraic_geometry.polynomial.is_open_map_comap_C AlgebraicGeometry.Polynomial.is_open_map_comap_C
 
 end Polynomial
 

@@ -323,8 +323,7 @@ theorem UniformGroup.uniformity_countably_generated [(𝓝 (1 : α)).IsCountably
   rw [uniformity_eq_comap_nhds_one]
   exact Filter.comap.is_countably_generated _ _
 #align uniform_group.uniformity_countably_generated UniformGroup.uniformity_countably_generated
-#align
-  uniform_add_group.uniformity_countably_generated UniformAddGroup.uniformity_countably_generated
+#align uniform_add_group.uniformity_countably_generated UniformAddGroup.uniformity_countably_generated
 
 open MulOpposite
 
@@ -364,10 +363,8 @@ theorem Filter.HasBasis.uniformity_of_nhds_one_inv_mul {ι} {p : ι → Prop} {U
   by
   rw [uniformity_eq_comap_inv_mul_nhds_one]
   exact h.comap _
-#align
-  filter.has_basis.uniformity_of_nhds_one_inv_mul Filter.HasBasis.uniformity_of_nhds_one_inv_mul
-#align
-  filter.has_basis.uniformity_of_nhds_zero_neg_add Filter.HasBasis.uniformity_of_nhds_zero_neg_add
+#align filter.has_basis.uniformity_of_nhds_one_inv_mul Filter.HasBasis.uniformity_of_nhds_one_inv_mul
+#align filter.has_basis.uniformity_of_nhds_zero_neg_add Filter.HasBasis.uniformity_of_nhds_zero_neg_add
 
 @[to_additive]
 theorem Filter.HasBasis.uniformity_of_nhds_one_swapped {ι} {p : ι → Prop} {U : ι → Set α}
@@ -375,10 +372,8 @@ theorem Filter.HasBasis.uniformity_of_nhds_one_swapped {ι} {p : ι → Prop} {U
   by
   rw [uniformity_eq_comap_nhds_one_swapped]
   exact h.comap _
-#align
-  filter.has_basis.uniformity_of_nhds_one_swapped Filter.HasBasis.uniformity_of_nhds_one_swapped
-#align
-  filter.has_basis.uniformity_of_nhds_zero_swapped Filter.HasBasis.uniformity_of_nhds_zero_swapped
+#align filter.has_basis.uniformity_of_nhds_one_swapped Filter.HasBasis.uniformity_of_nhds_one_swapped
+#align filter.has_basis.uniformity_of_nhds_zero_swapped Filter.HasBasis.uniformity_of_nhds_zero_swapped
 
 @[to_additive]
 theorem Filter.HasBasis.uniformity_of_nhds_one_inv_mul_swapped {ι} {p : ι → Prop} {U : ι → Set α}
@@ -386,10 +381,8 @@ theorem Filter.HasBasis.uniformity_of_nhds_one_inv_mul_swapped {ι} {p : ι → 
   by
   rw [uniformity_eq_comap_inv_mul_nhds_one_swapped]
   exact h.comap _
-#align
-  filter.has_basis.uniformity_of_nhds_one_inv_mul_swapped Filter.HasBasis.uniformity_of_nhds_one_inv_mul_swapped
-#align
-  filter.has_basis.uniformity_of_nhds_zero_neg_add_swapped Filter.HasBasis.uniformity_of_nhds_zero_neg_add_swapped
+#align filter.has_basis.uniformity_of_nhds_one_inv_mul_swapped Filter.HasBasis.uniformity_of_nhds_one_inv_mul_swapped
+#align filter.has_basis.uniformity_of_nhds_zero_neg_add_swapped Filter.HasBasis.uniformity_of_nhds_zero_neg_add_swapped
 
 @[to_additive]
 theorem group_separation_rel (x y : α) : (x, y) ∈ separationRel α ↔ x / y ∈ closure ({1} : Set α) :=
@@ -431,10 +424,8 @@ theorem uniform_continuous_of_continuous_at_one {hom : Type _} [UniformSpace β]
 theorem MonoidHom.uniform_continuous_of_continuous_at_one [UniformSpace β] [Group β]
     [UniformGroup β] (f : α →* β) (hf : ContinuousAt f 1) : UniformContinuous f :=
   uniform_continuous_of_continuous_at_one f hf
-#align
-  monoid_hom.uniform_continuous_of_continuous_at_one MonoidHom.uniform_continuous_of_continuous_at_one
-#align
-  add_monoid_hom.uniform_continuous_of_continuous_at_zero AddMonoidHom.uniform_continuous_of_continuous_at_zero
+#align monoid_hom.uniform_continuous_of_continuous_at_one MonoidHom.uniform_continuous_of_continuous_at_one
+#align add_monoid_hom.uniform_continuous_of_continuous_at_zero AddMonoidHom.uniform_continuous_of_continuous_at_zero
 
 /-- A homomorphism from a uniform group to a discrete uniform group is continuous if and only if
 its kernel is open. -/
@@ -450,8 +441,7 @@ theorem UniformGroup.uniform_continuous_iff_open_ker {hom : Type _} [UniformSpac
     rw [ContinuousAt, nhds_discrete β, map_one, tendsto_pure]
     exact hf.mem_nhds (map_one f)
 #align uniform_group.uniform_continuous_iff_open_ker UniformGroup.uniform_continuous_iff_open_ker
-#align
-  uniform_add_group.uniform_continuous_iff_open_ker UniformAddGroup.uniform_continuous_iff_open_ker
+#align uniform_add_group.uniform_continuous_iff_open_ker UniformAddGroup.uniform_continuous_iff_open_ker
 
 @[to_additive]
 theorem uniform_continuous_monoid_hom_of_continuous {hom : Type _} [UniformSpace β] [Group β]
@@ -460,8 +450,7 @@ theorem uniform_continuous_monoid_hom_of_continuous {hom : Type _} [UniformSpace
     suffices Tendsto f (𝓝 1) (𝓝 (f 1)) by rwa [map_one] at this
     h.Tendsto 1
 #align uniform_continuous_monoid_hom_of_continuous uniform_continuous_monoid_hom_of_continuous
-#align
-  uniform_continuous_add_monoid_hom_of_continuous uniform_continuous_add_monoid_hom_of_continuous
+#align uniform_continuous_add_monoid_hom_of_continuous uniform_continuous_add_monoid_hom_of_continuous
 
 @[to_additive]
 theorem CauchySeq.mul {ι : Type _} [SemilatticeSup ι] {u v : ι → α} (hu : CauchySeq u)
@@ -496,10 +485,8 @@ theorem totally_bounded_iff_subset_finite_Union_nhds_one {s : Set α} :
     TotallyBounded s ↔ ∀ U ∈ 𝓝 (1 : α), ∃ t : Set α, t.Finite ∧ s ⊆ ⋃ y ∈ t, y • U :=
   (𝓝 (1 : α)).basis_sets.uniformity_of_nhds_one_inv_mul_swapped.totally_bounded_iff.trans <| by
     simp [← preimage_smul_inv, preimage]
-#align
-  totally_bounded_iff_subset_finite_Union_nhds_one totally_bounded_iff_subset_finite_Union_nhds_one
-#align
-  totally_bounded_iff_subset_finite_Union_nhds_zero totally_bounded_iff_subset_finite_Union_nhds_zero
+#align totally_bounded_iff_subset_finite_Union_nhds_one totally_bounded_iff_subset_finite_Union_nhds_one
+#align totally_bounded_iff_subset_finite_Union_nhds_zero totally_bounded_iff_subset_finite_Union_nhds_zero
 
 section UniformConvergence
 
@@ -643,8 +630,7 @@ theorem topological_group_is_uniform_of_compact_space [CompactSpace G] : Uniform
     apply CompactSpace.uniform_continuous_of_continuous
     exact continuous_div'⟩
 #align topological_group_is_uniform_of_compact_space topological_group_is_uniform_of_compact_space
-#align
-  topological_add_group_is_uniform_of_compact_space topological_add_group_is_uniform_of_compact_space
+#align topological_add_group_is_uniform_of_compact_space topological_add_group_is_uniform_of_compact_space
 
 variable {G}
 
@@ -693,10 +679,8 @@ theorem TopologicalGroup.tendsto_locally_uniformly_iff {ι α : Type _} [Topolog
   ⟨fun h u hu => h _ ⟨u, hu, fun _ => id⟩, fun h v ⟨u, hu, hv⟩ x =>
     Exists.imp (fun a => Exists.imp fun ha hp => mem_of_superset hp fun i hi a ha => hv (hi a ha))
       (h u hu x)⟩
-#align
-  topological_group.tendsto_locally_uniformly_iff TopologicalGroup.tendsto_locally_uniformly_iff
-#align
-  topological_add_group.tendsto_locally_uniformly_iff TopologicalAddGroup.tendsto_locally_uniformly_iff
+#align topological_group.tendsto_locally_uniformly_iff TopologicalGroup.tendsto_locally_uniformly_iff
+#align topological_add_group.tendsto_locally_uniformly_iff TopologicalAddGroup.tendsto_locally_uniformly_iff
 
 @[to_additive]
 theorem TopologicalGroup.tendsto_locally_uniformly_on_iff {ι α : Type _} [TopologicalSpace α]
@@ -706,10 +690,8 @@ theorem TopologicalGroup.tendsto_locally_uniformly_on_iff {ι α : Type _} [Topo
   ⟨fun h u hu => h _ ⟨u, hu, fun _ => id⟩, fun h v ⟨u, hu, hv⟩ x =>
     (Exists.imp fun a => Exists.imp fun ha hp => mem_of_superset hp fun i hi a ha => hv (hi a ha)) ∘
       h u hu x⟩
-#align
-  topological_group.tendsto_locally_uniformly_on_iff TopologicalGroup.tendsto_locally_uniformly_on_iff
-#align
-  topological_add_group.tendsto_locally_uniformly_on_iff TopologicalAddGroup.tendsto_locally_uniformly_on_iff
+#align topological_group.tendsto_locally_uniformly_on_iff TopologicalGroup.tendsto_locally_uniformly_on_iff
+#align topological_add_group.tendsto_locally_uniformly_on_iff TopologicalAddGroup.tendsto_locally_uniformly_on_iff
 
 end TopologicalGroup
 

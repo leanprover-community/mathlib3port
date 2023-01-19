@@ -62,8 +62,7 @@ initial objects exist.
 -/
 class HasStrictInitialObjects : Prop where
   out : ∀ {I A : C} (f : A ⟶ I), IsInitial I → IsIso f
-#align
-  category_theory.limits.has_strict_initial_objects CategoryTheory.Limits.HasStrictInitialObjects
+#align category_theory.limits.has_strict_initial_objects CategoryTheory.Limits.HasStrictInitialObjects
 
 variable {C}
 
@@ -80,19 +79,16 @@ theorem IsInitial.strict_hom_ext (hI : IsInitial I) {A : C} (f g : A ⟶ I) : f 
   haveI := hI.is_iso_to f
   haveI := hI.is_iso_to g
   exact eq_of_inv_eq_inv (hI.hom_ext (inv f) (inv g))
-#align
-  category_theory.limits.is_initial.strict_hom_ext CategoryTheory.Limits.IsInitial.strict_hom_ext
+#align category_theory.limits.is_initial.strict_hom_ext CategoryTheory.Limits.IsInitial.strict_hom_ext
 
 theorem IsInitial.subsingleton_to (hI : IsInitial I) {A : C} : Subsingleton (A ⟶ I) :=
   ⟨hI.strict_hom_ext⟩
-#align
-  category_theory.limits.is_initial.subsingleton_to CategoryTheory.Limits.IsInitial.subsingleton_to
+#align category_theory.limits.is_initial.subsingleton_to CategoryTheory.Limits.IsInitial.subsingleton_to
 
 instance (priority := 100) initial_mono_of_strict_initial_objects : InitialMonoClass C
     where is_initial_mono_from I A hI :=
     { right_cancellation := fun B g h i => hI.strict_hom_ext _ _ }
-#align
-  category_theory.limits.initial_mono_of_strict_initial_objects CategoryTheory.Limits.initial_mono_of_strict_initial_objects
+#align category_theory.limits.initial_mono_of_strict_initial_objects CategoryTheory.Limits.initial_mono_of_strict_initial_objects
 
 /-- If `I` is initial, then `X ⨯ I` is isomorphic to it. -/
 @[simps Hom]
@@ -171,8 +167,7 @@ theorem has_strict_initial_objects_of_initial_is_strict [HasInitial C]
     out := fun I A f hI =>
       haveI := h A (f ≫ hI.to _)
       ⟨⟨hI.to _ ≫ inv (f ≫ hI.to (⊥_ C)), by rw [← assoc, is_iso.hom_inv_id], hI.hom_ext _ _⟩⟩ }
-#align
-  category_theory.limits.has_strict_initial_objects_of_initial_is_strict CategoryTheory.Limits.has_strict_initial_objects_of_initial_is_strict
+#align category_theory.limits.has_strict_initial_objects_of_initial_is_strict CategoryTheory.Limits.has_strict_initial_objects_of_initial_is_strict
 
 end StrictInitial
 
@@ -186,8 +181,7 @@ terminal objects exist.
 -/
 class HasStrictTerminalObjects : Prop where
   out : ∀ {I A : C} (f : I ⟶ A), IsTerminal I → IsIso f
-#align
-  category_theory.limits.has_strict_terminal_objects CategoryTheory.Limits.HasStrictTerminalObjects
+#align category_theory.limits.has_strict_terminal_objects CategoryTheory.Limits.HasStrictTerminalObjects
 
 variable {C}
 
@@ -204,13 +198,11 @@ theorem IsTerminal.strict_hom_ext (hI : IsTerminal I) {A : C} (f g : I ⟶ A) : 
   haveI := hI.is_iso_from f
   haveI := hI.is_iso_from g
   exact eq_of_inv_eq_inv (hI.hom_ext (inv f) (inv g))
-#align
-  category_theory.limits.is_terminal.strict_hom_ext CategoryTheory.Limits.IsTerminal.strict_hom_ext
+#align category_theory.limits.is_terminal.strict_hom_ext CategoryTheory.Limits.IsTerminal.strict_hom_ext
 
 theorem IsTerminal.subsingleton_to (hI : IsTerminal I) {A : C} : Subsingleton (I ⟶ A) :=
   ⟨hI.strict_hom_ext⟩
-#align
-  category_theory.limits.is_terminal.subsingleton_to CategoryTheory.Limits.IsTerminal.subsingleton_to
+#align category_theory.limits.is_terminal.subsingleton_to CategoryTheory.Limits.IsTerminal.subsingleton_to
 
 variable {J : Type v} [SmallCategory J]
 
@@ -254,8 +246,7 @@ theorem limit_π_is_iso_of_is_strict_terminal (F : J ⥤ C) [HasLimit F] (i : J)
       · apply (H _ h).hom_ext
     · rw [limit.lift_π]
       simpa
-#align
-  category_theory.limits.limit_π_is_iso_of_is_strict_terminal CategoryTheory.Limits.limit_π_is_iso_of_is_strict_terminal
+#align category_theory.limits.limit_π_is_iso_of_is_strict_terminal CategoryTheory.Limits.limit_π_is_iso_of_is_strict_terminal
 
 variable [HasTerminal C]
 
@@ -270,8 +261,7 @@ theorem terminal.hom_ext {A : C} (f g : ⊤_ C ⟶ A) : f = g :=
 
 theorem terminal.subsingleton_to {A : C} : Subsingleton (⊤_ C ⟶ A) :=
   terminalIsTerminal.subsingleton_to
-#align
-  category_theory.limits.terminal.subsingleton_to CategoryTheory.Limits.terminal.subsingleton_to
+#align category_theory.limits.terminal.subsingleton_to CategoryTheory.Limits.terminal.subsingleton_to
 
 end
 
@@ -283,8 +273,7 @@ theorem has_strict_terminal_objects_of_terminal_is_strict (I : C) (h : ∀ (A) (
     out := fun I' A f hI' =>
       haveI := h A (hI'.from _ ≫ f)
       ⟨⟨inv (hI'.from I ≫ f) ≫ hI'.from I, hI'.hom_ext _ _, by rw [assoc, is_iso.inv_hom_id]⟩⟩ }
-#align
-  category_theory.limits.has_strict_terminal_objects_of_terminal_is_strict CategoryTheory.Limits.has_strict_terminal_objects_of_terminal_is_strict
+#align category_theory.limits.has_strict_terminal_objects_of_terminal_is_strict CategoryTheory.Limits.has_strict_terminal_objects_of_terminal_is_strict
 
 end StrictTerminal
 

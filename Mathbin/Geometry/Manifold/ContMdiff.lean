@@ -506,8 +506,7 @@ theorem cont_mdiff_within_at_iff_source_of_mem_maximal_atlas (he : e ∈ maximal
     e.extend_symm_continuous_within_at_comp_right_iff, cont_diff_within_at_prop_self_source,
     ContDiffWithinAtProp, Function.comp, e.left_inv hx, (e.extend I).left_inv h2x]
   rfl
-#align
-  cont_mdiff_within_at_iff_source_of_mem_maximal_atlas cont_mdiff_within_at_iff_source_of_mem_maximal_atlas
+#align cont_mdiff_within_at_iff_source_of_mem_maximal_atlas cont_mdiff_within_at_iff_source_of_mem_maximal_atlas
 
 theorem cont_mdiff_within_at_iff_source_of_mem_source {x' : M} (hx' : x' ∈ (chartAt H x).source) :
     ContMdiffWithinAt I I' n f s x' ↔

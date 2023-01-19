@@ -274,8 +274,7 @@ theorem span_restrict_scalars_eq_span_of_surjective (h : Function.Surjective (al
     obtain ⟨c', rfl⟩ := h c
     rw [IsScalarTower.algebra_map_smul]
     exact Submodule.smul_mem _ _ hx
-#align
-  algebra.span_restrict_scalars_eq_span_of_surjective Algebra.span_restrict_scalars_eq_span_of_surjective
+#align algebra.span_restrict_scalars_eq_span_of_surjective Algebra.span_restrict_scalars_eq_span_of_surjective
 
 theorem coe_span_eq_span_of_surjective (h : Function.Surjective (algebraMap R A)) (s : Set M) :
     (Submodule.span A s : Set M) = Submodule.span R s :=

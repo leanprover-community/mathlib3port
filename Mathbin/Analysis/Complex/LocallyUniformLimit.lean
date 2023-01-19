@@ -137,8 +137,7 @@ theorem tendsto_uniformly_on_deriv_of_cthickening_subset (hf : TendstoLocallyUni
   apply (h3.cderiv hδ h1).congr
   filter_upwards [hF] with n h z hz
   exact cderiv_eq_deriv hU h hδ ((closed_ball_subset_cthickening hz δ).trans hKU)
-#align
-  complex.tendsto_uniformly_on_deriv_of_cthickening_subset Complex.tendsto_uniformly_on_deriv_of_cthickening_subset
+#align complex.tendsto_uniformly_on_deriv_of_cthickening_subset Complex.tendsto_uniformly_on_deriv_of_cthickening_subset
 
 theorem exists_cthickening_tendsto_uniformly_on (hf : TendstoLocallyUniformlyOn F f φ U)
     (hF : ∀ᶠ n in φ, DifferentiableOn ℂ (F n) U) (hK : IsCompact K) (hU : IsOpen U) (hKU : K ⊆ U) :
@@ -146,8 +145,7 @@ theorem exists_cthickening_tendsto_uniformly_on (hf : TendstoLocallyUniformlyOn 
   by
   obtain ⟨δ, hδ, hKδ⟩ := hK.exists_cthickening_subset_open hU hKU
   exact ⟨δ, hδ, hKδ, tendsto_uniformly_on_deriv_of_cthickening_subset hf hF hδ hK hU hKδ⟩
-#align
-  complex.exists_cthickening_tendsto_uniformly_on Complex.exists_cthickening_tendsto_uniformly_on
+#align complex.exists_cthickening_tendsto_uniformly_on Complex.exists_cthickening_tendsto_uniformly_on
 
 /-- A locally uniform limit of holomorphic functions on an open domain of the complex plane is
 holomorphic (the derivatives converge locally uniformly to that of the limit, which is proved

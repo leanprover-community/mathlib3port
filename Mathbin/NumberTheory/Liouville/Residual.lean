@@ -56,8 +56,7 @@ theorem set_of_liouville_eq_irrational_inter_Inter_Union :
     rw [inter_comm]
     refine' diff_subset_diff subset.rfl (singleton_subset_iff.2 ⟨a / b, _⟩)
     norm_cast
-#align
-  set_of_liouville_eq_irrational_inter_Inter_Union set_of_liouville_eq_irrational_inter_Inter_Union
+#align set_of_liouville_eq_irrational_inter_Inter_Union set_of_liouville_eq_irrational_inter_Inter_Union
 
 /-- The set of Liouville numbers is a residual set. -/
 theorem eventually_residual_liouville : ∀ᶠ x in residual ℝ, Liouville x :=

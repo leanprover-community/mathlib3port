@@ -208,8 +208,7 @@ theorem exists_finset_nhd_support_subset {U : ι → Set X} (hso : f.IsSubordina
     ∃ (is : Finset ι)(n : Set X)(hn₁ : n ∈ 𝓝 x)(hn₂ : n ⊆ ⋂ i ∈ is, U i),
       ∀ z ∈ n, (support fun i => f i z) ⊆ is :=
   f.LocallyFinite.exists_finset_nhd_support_subset hso ho x
-#align
-  partition_of_unity.exists_finset_nhd_support_subset PartitionOfUnity.exists_finset_nhd_support_subset
+#align partition_of_unity.exists_finset_nhd_support_subset PartitionOfUnity.exists_finset_nhd_support_subset
 
 /-- If `f` is a partition of unity that is subordinate to a family of open sets `U i` and
 `g : ι → X → E` is a family of functions such that each `g i` is continuous on `U i`, then the sum
@@ -218,8 +217,7 @@ theorem IsSubordinate.continuous_finsum_smul [HasContinuousAdd E] {U : ι → Se
     (ho : ∀ i, IsOpen (U i)) (hf : f.IsSubordinate U) {g : ι → X → E}
     (hg : ∀ i, ContinuousOn (g i) (U i)) : Continuous fun x => ∑ᶠ i, f i x • g i x :=
   f.continuous_finsum_smul fun i x hx => (hg i).ContinuousAt <| (ho i).mem_nhds <| hf i hx
-#align
-  partition_of_unity.is_subordinate.continuous_finsum_smul PartitionOfUnity.IsSubordinate.continuous_finsum_smul
+#align partition_of_unity.is_subordinate.continuous_finsum_smul PartitionOfUnity.IsSubordinate.continuous_finsum_smul
 
 end PartitionOfUnity
 
@@ -315,8 +313,7 @@ theorem exists_is_subordinate_of_locally_finite_of_prop [NormalSpace X] (p : (X 
       hfp, fun i => subset.trans (closure_mono (hsupp i)) (hVU i)⟩
   rcases mem_Union.1 (hsW hx) with ⟨i, hi⟩
   exact ⟨i, ((hf1 i).mono subset_closure).eventually_eq_of_mem ((hWo i).mem_nhds hi)⟩
-#align
-  bump_covering.exists_is_subordinate_of_locally_finite_of_prop BumpCovering.exists_is_subordinate_of_locally_finite_of_prop
+#align bump_covering.exists_is_subordinate_of_locally_finite_of_prop BumpCovering.exists_is_subordinate_of_locally_finite_of_prop
 
 /-- If `X` is a normal topological space and `U i`, `i : ι`, is a locally finite open covering of a
 closed set `s`, then there exists a `bump_covering ι X s` that is subordinate to `U`. If `X` is a
@@ -331,8 +328,7 @@ theorem exists_is_subordinate_of_locally_finite [NormalSpace X] (hs : IsClosed s
         (exists_continuous_zero_one_of_closed hs ht hd).imp fun f hf => ⟨trivial, hf⟩)
       hs U ho hf hU
   ⟨f, hfU⟩
-#align
-  bump_covering.exists_is_subordinate_of_locally_finite BumpCovering.exists_is_subordinate_of_locally_finite
+#align bump_covering.exists_is_subordinate_of_locally_finite BumpCovering.exists_is_subordinate_of_locally_finite
 
 /-- If `X` is a paracompact normal topological space and `U` is an open covering of a closed set
 `s`, then there exists a `bump_covering ι X s` that is subordinate to `U`. This version assumes that
@@ -438,8 +434,7 @@ theorem exists_finset_to_pou_fun_eventually_eq (i : ι) (x : X) :
   apply to_pou_fun_eq_mul_prod
   intro j hji hj
   exact hf.mem_to_finset.2 ⟨y, ⟨hj, hyU⟩⟩
-#align
-  bump_covering.exists_finset_to_pou_fun_eventually_eq BumpCovering.exists_finset_to_pou_fun_eventually_eq
+#align bump_covering.exists_finset_to_pou_fun_eventually_eq BumpCovering.exists_finset_to_pou_fun_eventually_eq
 
 theorem continuous_to_pou_fun (i : ι) : Continuous (f.toPouFun i) :=
   by
@@ -486,27 +481,23 @@ theorem to_partition_of_unity_eq_mul_prod (i : ι) (x : X) (t : Finset ι)
     (ht : ∀ j, WellOrderingRel j i → f j x ≠ 0 → j ∈ t) :
     f.toPartitionOfUnity i x = f i x * ∏ j in t.filter fun j => WellOrderingRel j i, 1 - f j x :=
   f.to_pou_fun_eq_mul_prod i x t ht
-#align
-  bump_covering.to_partition_of_unity_eq_mul_prod BumpCovering.to_partition_of_unity_eq_mul_prod
+#align bump_covering.to_partition_of_unity_eq_mul_prod BumpCovering.to_partition_of_unity_eq_mul_prod
 
 theorem exists_finset_to_partition_of_unity_eventually_eq (i : ι) (x : X) :
     ∃ t : Finset ι,
       f.toPartitionOfUnity i =ᶠ[𝓝 x] f i * ∏ j in t.filter fun j => WellOrderingRel j i, 1 - f j :=
   f.exists_finset_to_pou_fun_eventually_eq i x
-#align
-  bump_covering.exists_finset_to_partition_of_unity_eventually_eq BumpCovering.exists_finset_to_partition_of_unity_eventually_eq
+#align bump_covering.exists_finset_to_partition_of_unity_eventually_eq BumpCovering.exists_finset_to_partition_of_unity_eventually_eq
 
 theorem to_partition_of_unity_zero_of_zero {i : ι} {x : X} (h : f i x = 0) :
     f.toPartitionOfUnity i x = 0 :=
   f.to_pou_fun_zero_of_zero h
-#align
-  bump_covering.to_partition_of_unity_zero_of_zero BumpCovering.to_partition_of_unity_zero_of_zero
+#align bump_covering.to_partition_of_unity_zero_of_zero BumpCovering.to_partition_of_unity_zero_of_zero
 
 theorem support_to_partition_of_unity_subset (i : ι) :
     support (f.toPartitionOfUnity i) ⊆ support (f i) :=
   f.support_to_pou_fun_subset i
-#align
-  bump_covering.support_to_partition_of_unity_subset BumpCovering.support_to_partition_of_unity_subset
+#align bump_covering.support_to_partition_of_unity_subset BumpCovering.support_to_partition_of_unity_subset
 
 theorem sum_to_partition_of_unity_eq (x : X) :
     (∑ᶠ i, f.toPartitionOfUnity i x) = 1 - ∏ᶠ i, 1 - f i x :=
@@ -516,8 +507,7 @@ theorem sum_to_partition_of_unity_eq (x : X) :
 theorem IsSubordinate.to_partition_of_unity {f : BumpCovering ι X s} {U : ι → Set X}
     (h : f.IsSubordinate U) : f.toPartitionOfUnity.IsSubordinate U := fun i =>
   Subset.trans (closure_mono <| f.support_to_partition_of_unity_subset i) (h i)
-#align
-  bump_covering.is_subordinate.to_partition_of_unity BumpCovering.IsSubordinate.to_partition_of_unity
+#align bump_covering.is_subordinate.to_partition_of_unity BumpCovering.IsSubordinate.to_partition_of_unity
 
 end BumpCovering
 
@@ -537,8 +527,7 @@ theorem exists_is_subordinate_of_locally_finite [NormalSpace X] (hs : IsClosed s
     ∃ f : PartitionOfUnity ι X s, f.IsSubordinate U :=
   let ⟨f, hf⟩ := BumpCovering.exists_is_subordinate_of_locally_finite hs U ho hf hU
   ⟨f.toPartitionOfUnity, hf.toPartitionOfUnity⟩
-#align
-  partition_of_unity.exists_is_subordinate_of_locally_finite PartitionOfUnity.exists_is_subordinate_of_locally_finite
+#align partition_of_unity.exists_is_subordinate_of_locally_finite PartitionOfUnity.exists_is_subordinate_of_locally_finite
 
 /-- If `X` is a paracompact normal topological space and `U` is an open covering of a closed set
 `s`, then there exists a `partition_of_unity ι X s` that is subordinate to `U`. -/

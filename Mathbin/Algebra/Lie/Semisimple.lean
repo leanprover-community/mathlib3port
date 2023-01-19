@@ -66,8 +66,7 @@ class IsSemisimple : Prop where
 theorem is_semisimple_iff_no_solvable_ideals :
     IsSemisimple R L ↔ ∀ I : LieIdeal R L, IsSolvable R I → I = ⊥ :=
   ⟨fun h => supₛ_eq_bot.mp h.semisimple, fun h => ⟨supₛ_eq_bot.mpr h⟩⟩
-#align
-  lie_algebra.is_semisimple_iff_no_solvable_ideals LieAlgebra.is_semisimple_iff_no_solvable_ideals
+#align lie_algebra.is_semisimple_iff_no_solvable_ideals LieAlgebra.is_semisimple_iff_no_solvable_ideals
 
 theorem is_semisimple_iff_no_abelian_ideals :
     IsSemisimple R L ↔ ∀ I : LieIdeal R L, IsLieAbelian I → I = ⊥ :=
@@ -81,8 +80,7 @@ theorem is_semisimple_iff_no_abelian_ideals :
     rw [← abelian_of_solvable_ideal_eq_bot_iff]
     apply h₁
     exact abelian_derived_abelian_of_ideal I
-#align
-  lie_algebra.is_semisimple_iff_no_abelian_ideals LieAlgebra.is_semisimple_iff_no_abelian_ideals
+#align lie_algebra.is_semisimple_iff_no_abelian_ideals LieAlgebra.is_semisimple_iff_no_abelian_ideals
 
 @[simp]
 theorem center_eq_bot_of_semisimple [h : IsSemisimple R L] : center R L = ⊥ :=
@@ -109,8 +107,7 @@ theorem subsingleton_of_semisimple_lie_abelian [IsSemisimple R L] [h : IsLieAbel
   by
   rw [is_lie_abelian_iff_center_eq_top R L, center_eq_bot_of_semisimple] at h
   exact (LieSubmodule.subsingleton_iff R L L).mp (subsingleton_of_bot_eq_top h)
-#align
-  lie_algebra.subsingleton_of_semisimple_lie_abelian LieAlgebra.subsingleton_of_semisimple_lie_abelian
+#align lie_algebra.subsingleton_of_semisimple_lie_abelian LieAlgebra.subsingleton_of_semisimple_lie_abelian
 
 theorem abelian_radical_of_semisimple [IsSemisimple R L] : IsLieAbelian (radical R L) :=
   by
@@ -133,8 +130,7 @@ theorem abelian_radical_iff_solvable_is_abelian [IsNoetherian R L] :
   · intro h
     apply h
     infer_instance
-#align
-  lie_algebra.abelian_radical_iff_solvable_is_abelian LieAlgebra.abelian_radical_iff_solvable_is_abelian
+#align lie_algebra.abelian_radical_iff_solvable_is_abelian LieAlgebra.abelian_radical_iff_solvable_is_abelian
 
 theorem ad_ker_eq_bot_of_semisimple [IsSemisimple R L] : (ad R L).ker = ⊥ := by simp
 #align lie_algebra.ad_ker_eq_bot_of_semisimple LieAlgebra.ad_ker_eq_bot_of_semisimple

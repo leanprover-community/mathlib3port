@@ -162,8 +162,7 @@ theorem coord_apply_combination_of_not_mem {s : Finset ι} {i : ι} (hi : i ∉ 
   classical simp only [coord_apply, hi, Finset.affine_combination_eq_linear_combination, if_false,
       mul_boole, hw, Function.comp_apply, smul_eq_mul, s.sum_ite_eq,
       s.map_affine_combination b.points w hw]
-#align
-  affine_basis.coord_apply_combination_of_not_mem AffineBasis.coord_apply_combination_of_not_mem
+#align affine_basis.coord_apply_combination_of_not_mem AffineBasis.coord_apply_combination_of_not_mem
 
 @[simp]
 theorem sum_coord_apply_eq_one [Fintype ι] (q : P) : (∑ i, b.Coord i q) = 1 :=

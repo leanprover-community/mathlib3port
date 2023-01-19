@@ -104,8 +104,7 @@ theorem HasEigenvector.apply_eq_smul {f : EndCat R M} {μ : R} {x : M} (hx : f.H
 theorem HasEigenvalue.exists_has_eigenvector {f : EndCat R M} {μ : R} (hμ : f.HasEigenvalue μ) :
     ∃ v, f.HasEigenvector μ v :=
   Submodule.exists_mem_ne_zero_of_ne_bot hμ
-#align
-  module.End.has_eigenvalue.exists_has_eigenvector Module.EndCat.HasEigenvalue.exists_has_eigenvector
+#align module.End.has_eigenvalue.exists_has_eigenvector Module.EndCat.HasEigenvalue.exists_has_eigenvector
 
 theorem mem_spectrum_of_has_eigenvalue {f : EndCat R M} {μ : R} (hμ : HasEigenvalue f μ) :
     μ ∈ spectrum R f := by
@@ -150,8 +149,7 @@ theorem eigenspace_aeval_polynomial_degree_1 (f : EndCat K V) (q : K[X]) (hq : d
       simp [algebraMap, Algebra.toRingHom]
     _ = (aeval f q).ker := by rwa [← eq_X_add_C_of_degree_eq_one]
     
-#align
-  module.End.eigenspace_aeval_polynomial_degree_1 Module.EndCat.eigenspace_aeval_polynomial_degree_1
+#align module.End.eigenspace_aeval_polynomial_degree_1 Module.EndCat.eigenspace_aeval_polynomial_degree_1
 
 theorem ker_aeval_ring_hom'_unit_polynomial (f : EndCat K V) (c : K[X]ˣ) :
     (aeval f (c : K[X])).ker = ⊥ :=
@@ -160,8 +158,7 @@ theorem ker_aeval_ring_hom'_unit_polynomial (f : EndCat K V) (c : K[X]ˣ) :
   simp only [aeval_def, eval₂_C]
   apply ker_algebra_map_End
   apply coeff_coe_units_zero_ne_zero c
-#align
-  module.End.ker_aeval_ring_hom'_unit_polynomial Module.EndCat.ker_aeval_ring_hom'_unit_polynomial
+#align module.End.ker_aeval_ring_hom'_unit_polynomial Module.EndCat.ker_aeval_ring_hom'_unit_polynomial
 
 theorem aeval_apply_of_has_eigenvector {f : EndCat K V} {p : K[X]} {μ : K} {x : V}
     (h : f.HasEigenvector μ x) : aeval f p x = p.eval μ • x :=
@@ -420,8 +417,7 @@ theorem exp_ne_zero_of_has_generalized_eigenvalue {f : EndCat R M} {μ : R} {k :
   by
   rintro rfl
   exact h LinearMap.ker_id
-#align
-  module.End.exp_ne_zero_of_has_generalized_eigenvalue Module.EndCat.exp_ne_zero_of_has_generalized_eigenvalue
+#align module.End.exp_ne_zero_of_has_generalized_eigenvalue Module.EndCat.exp_ne_zero_of_has_generalized_eigenvalue
 
 /-- The union of the kernels of `(f - μ • id) ^ k` over all `k`. -/
 def maximalGeneralizedEigenspace (f : EndCat R M) (μ : R) : Submodule R M :=
@@ -438,16 +434,14 @@ theorem mem_maximal_generalized_eigenspace (f : EndCat R M) (μ : R) (m : M) :
     m ∈ f.maximalGeneralizedEigenspace μ ↔ ∃ k : ℕ, ((f - μ • 1) ^ k) m = 0 := by
   simp only [maximal_generalized_eigenspace, ← mem_generalized_eigenspace,
     Submodule.mem_supr_of_chain]
-#align
-  module.End.mem_maximal_generalized_eigenspace Module.EndCat.mem_maximal_generalized_eigenspace
+#align module.End.mem_maximal_generalized_eigenspace Module.EndCat.mem_maximal_generalized_eigenspace
 
 /-- If there exists a natural number `k` such that the kernel of `(f - μ • id) ^ k` is the
 maximal generalized eigenspace, then this value is the least such `k`. If not, this value is not
 meaningful. -/
 noncomputable def maximalGeneralizedEigenspaceIndex (f : EndCat R M) (μ : R) :=
   monotonicSequenceLimitIndex (f.generalizedEigenspace μ)
-#align
-  module.End.maximal_generalized_eigenspace_index Module.EndCat.maximalGeneralizedEigenspaceIndex
+#align module.End.maximal_generalized_eigenspace_index Module.EndCat.maximalGeneralizedEigenspaceIndex
 
 /-- For an endomorphism of a Noetherian module, the maximal eigenspace is always of the form kernel
 `(f - μ • id) ^ k` for some `k`. -/
@@ -469,15 +463,13 @@ theorem has_generalized_eigenvalue_of_has_generalized_eigenvalue_of_le {f : EndC
   contrapose! hk
   rw [← le_bot_iff, ← hk]
   exact (f.generalized_eigenspace μ).Monotone hm
-#align
-  module.End.has_generalized_eigenvalue_of_has_generalized_eigenvalue_of_le Module.EndCat.has_generalized_eigenvalue_of_has_generalized_eigenvalue_of_le
+#align module.End.has_generalized_eigenvalue_of_has_generalized_eigenvalue_of_le Module.EndCat.has_generalized_eigenvalue_of_has_generalized_eigenvalue_of_le
 
 /-- The eigenspace is a subspace of the generalized eigenspace. -/
 theorem eigenspace_le_generalized_eigenspace {f : EndCat R M} {μ : R} {k : ℕ} (hk : 0 < k) :
     f.eigenspace μ ≤ f.generalizedEigenspace μ k :=
   (f.generalizedEigenspace μ).Monotone (Nat.succ_le_of_lt hk)
-#align
-  module.End.eigenspace_le_generalized_eigenspace Module.EndCat.eigenspace_le_generalized_eigenspace
+#align module.End.eigenspace_le_generalized_eigenspace Module.EndCat.eigenspace_le_generalized_eigenspace
 
 /-- All eigenvalues are generalized eigenvalues. -/
 theorem has_generalized_eigenvalue_of_has_eigenvalue {f : EndCat R M} {μ : R} {k : ℕ} (hk : 0 < k)
@@ -486,8 +478,7 @@ theorem has_generalized_eigenvalue_of_has_eigenvalue {f : EndCat R M} {μ : R} {
   apply has_generalized_eigenvalue_of_has_generalized_eigenvalue_of_le hk
   rw [has_generalized_eigenvalue, generalized_eigenspace, OrderHom.coe_fun_mk, pow_one]
   exact hμ
-#align
-  module.End.has_generalized_eigenvalue_of_has_eigenvalue Module.EndCat.has_generalized_eigenvalue_of_has_eigenvalue
+#align module.End.has_generalized_eigenvalue_of_has_eigenvalue Module.EndCat.has_generalized_eigenvalue_of_has_eigenvalue
 
 /-- All generalized eigenvalues are eigenvalues. -/
 theorem has_eigenvalue_of_has_generalized_eigenvalue {f : EndCat R M} {μ : R} {k : ℕ}
@@ -496,16 +487,14 @@ theorem has_eigenvalue_of_has_generalized_eigenvalue {f : EndCat R M} {μ : R} {
   intro contra; apply hμ
   erw [LinearMap.ker_eq_bot] at contra⊢; rw [LinearMap.coe_pow]
   exact Function.Injective.iterate contra k
-#align
-  module.End.has_eigenvalue_of_has_generalized_eigenvalue Module.EndCat.has_eigenvalue_of_has_generalized_eigenvalue
+#align module.End.has_eigenvalue_of_has_generalized_eigenvalue Module.EndCat.has_eigenvalue_of_has_generalized_eigenvalue
 
 /-- Generalized eigenvalues are actually just eigenvalues. -/
 @[simp]
 theorem has_generalized_eigenvalue_iff_has_eigenvalue {f : EndCat R M} {μ : R} {k : ℕ}
     (hk : 0 < k) : f.HasGeneralizedEigenvalue μ k ↔ f.HasEigenvalue μ :=
   ⟨has_eigenvalue_of_has_generalized_eigenvalue, has_generalized_eigenvalue_of_has_eigenvalue hk⟩
-#align
-  module.End.has_generalized_eigenvalue_iff_has_eigenvalue Module.EndCat.has_generalized_eigenvalue_iff_has_eigenvalue
+#align module.End.has_generalized_eigenvalue_iff_has_eigenvalue Module.EndCat.has_generalized_eigenvalue_iff_has_eigenvalue
 
 /-- Every generalized eigenvector is a generalized eigenvector for exponent `finrank K V`.
     (Lemma 8.11 of [axler2015]) -/
@@ -513,16 +502,14 @@ theorem generalized_eigenspace_le_generalized_eigenspace_finrank [FiniteDimensio
     (f : EndCat K V) (μ : K) (k : ℕ) :
     f.generalizedEigenspace μ k ≤ f.generalizedEigenspace μ (finrank K V) :=
   ker_pow_le_ker_pow_finrank _ _
-#align
-  module.End.generalized_eigenspace_le_generalized_eigenspace_finrank Module.EndCat.generalized_eigenspace_le_generalized_eigenspace_finrank
+#align module.End.generalized_eigenspace_le_generalized_eigenspace_finrank Module.EndCat.generalized_eigenspace_le_generalized_eigenspace_finrank
 
 /-- Generalized eigenspaces for exponents at least `finrank K V` are equal to each other. -/
 theorem generalized_eigenspace_eq_generalized_eigenspace_finrank_of_le [FiniteDimensional K V]
     (f : EndCat K V) (μ : K) {k : ℕ} (hk : finrank K V ≤ k) :
     f.generalizedEigenspace μ k = f.generalizedEigenspace μ (finrank K V) :=
   ker_pow_eq_ker_pow_finrank_of_le hk
-#align
-  module.End.generalized_eigenspace_eq_generalized_eigenspace_finrank_of_le Module.EndCat.generalized_eigenspace_eq_generalized_eigenspace_finrank_of_le
+#align module.End.generalized_eigenspace_eq_generalized_eigenspace_finrank_of_le Module.EndCat.generalized_eigenspace_eq_generalized_eigenspace_finrank_of_le
 
 /-- If `f` maps a subspace `p` into itself, then the generalized eigenspace of the restriction
     of `f` to `p` is the part of the generalized eigenspace of `f` that lies in `p`. -/
@@ -574,8 +561,7 @@ theorem generalized_eigenvec_disjoint_range_ker [FiniteDimensional K V] (f : End
   rw [disjoint_iff_inf_le, generalized_eigenrange, LinearMap.range_eq_map,
     Submodule.map_inf_eq_map_inf_comap, top_inf_eq, h]
   apply Submodule.map_comap_le
-#align
-  module.End.generalized_eigenvec_disjoint_range_ker Module.EndCat.generalized_eigenvec_disjoint_range_ker
+#align module.End.generalized_eigenvec_disjoint_range_ker Module.EndCat.generalized_eigenvec_disjoint_range_ker
 
 /-- If an invariant subspace `p` of an endomorphism `f` is disjoint from the `μ`-eigenspace of `f`,
 then the restriction of `f` to `p` has trivial `μ`-eigenspace. -/
@@ -597,8 +583,7 @@ theorem pos_finrank_generalized_eigenspace_of_has_eigenvalue [FiniteDimensional 
     _ ≤ finrank K (f.generalizedEigenspace μ k) :=
       Submodule.finrank_mono ((f.generalizedEigenspace μ).Monotone (Nat.succ_le_of_lt hk))
     
-#align
-  module.End.pos_finrank_generalized_eigenspace_of_has_eigenvalue Module.EndCat.pos_finrank_generalized_eigenspace_of_has_eigenvalue
+#align module.End.pos_finrank_generalized_eigenspace_of_has_eigenvalue Module.EndCat.pos_finrank_generalized_eigenspace_of_has_eigenvalue
 
 /-- A linear map maps a generalized eigenrange into itself. -/
 theorem map_generalized_eigenrange_le {f : EndCat K V} {μ : K} {n : ℕ} :
@@ -680,8 +665,7 @@ theorem supr_generalized_eigenspace_eq_top [IsAlgClosed K] [FiniteDimensional K 
     show (⨆ (μ : K) (k : ℕ), f.generalized_eigenspace μ k) = ⊤
     · rw [← top_le_iff, ← Submodule.eq_top_of_disjoint ER ES h_dim_add h_disjoint]
       apply sup_le hER hES
-#align
-  module.End.supr_generalized_eigenspace_eq_top Module.EndCat.supr_generalized_eigenspace_eq_top
+#align module.End.supr_generalized_eigenspace_eq_top Module.EndCat.supr_generalized_eigenspace_eq_top
 
 end EndCat
 

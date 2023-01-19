@@ -4464,8 +4464,7 @@ theorem exists_eq_singleton_iff_nonempty_subsingleton :
   · rintro ⟨a, rfl⟩
     exact ⟨singleton_nonempty a, subsingleton_singleton⟩
   · exact h.2.eq_empty_or_singleton.resolve_left h.1.ne_empty
-#align
-  set.exists_eq_singleton_iff_nonempty_subsingleton Set.exists_eq_singleton_iff_nonempty_subsingleton
+#align set.exists_eq_singleton_iff_nonempty_subsingleton Set.exists_eq_singleton_iff_nonempty_subsingleton
 -/
 
 #print Set.subsingleton_coe /-
@@ -4901,8 +4900,7 @@ theorem not_monotoneOn_not_antitoneOn_iff_exists_le_le :
   by
   simp [monotone_on_iff_monotone, antitone_on_iff_antitone, and_assoc', exists_and_left,
     not_monotone_not_antitone_iff_exists_le_le, @and_left_comm (_ ∈ s)]
-#align
-  set.not_monotone_on_not_antitone_on_iff_exists_le_le Set.not_monotoneOn_not_antitoneOn_iff_exists_le_le
+#align set.not_monotone_on_not_antitone_on_iff_exists_le_le Set.not_monotoneOn_not_antitoneOn_iff_exists_le_le
 -/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (a b c «expr ∈ » s) -/
@@ -4916,8 +4914,7 @@ theorem not_monotoneOn_not_antitoneOn_iff_exists_lt_lt :
   by
   simp [monotone_on_iff_monotone, antitone_on_iff_antitone, and_assoc', exists_and_left,
     not_monotone_not_antitone_iff_exists_lt_lt, @and_left_comm (_ ∈ s)]
-#align
-  set.not_monotone_on_not_antitone_on_iff_exists_lt_lt Set.not_monotoneOn_not_antitoneOn_iff_exists_lt_lt
+#align set.not_monotone_on_not_antitone_on_iff_exists_lt_lt Set.not_monotoneOn_not_antitoneOn_iff_exists_lt_lt
 -/
 
 end LinearOrder

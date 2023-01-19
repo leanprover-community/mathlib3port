@@ -183,8 +183,7 @@ theorem continuous (hf : IsBoundedLinearMap 𝕜 f) : Continuous f :=
 
 theorem lim_zero_bounded_linear_map (hf : IsBoundedLinearMap 𝕜 f) : Tendsto f (𝓝 0) (𝓝 0) :=
   (hf.1.mk' _).map_zero ▸ continuous_iff_continuous_at.1 hf.Continuous 0
-#align
-  is_bounded_linear_map.lim_zero_bounded_linear_map IsBoundedLinearMap.lim_zero_bounded_linear_map
+#align is_bounded_linear_map.lim_zero_bounded_linear_map IsBoundedLinearMap.lim_zero_bounded_linear_map
 
 section
 
@@ -273,8 +272,7 @@ theorem isBoundedLinearMapContinuousMultilinearMapCompLinear (g : G →L[𝕜] E
       simp [Finset.prod_mul_distrib, Finset.card_univ]
       ring
     
-#align
-  is_bounded_linear_map_continuous_multilinear_map_comp_linear isBoundedLinearMapContinuousMultilinearMapCompLinear
+#align is_bounded_linear_map_continuous_multilinear_map_comp_linear isBoundedLinearMapContinuousMultilinearMapCompLinear
 
 end
 
@@ -475,8 +473,7 @@ theorem IsBoundedBilinearMap.isBoundedLinearMapLeft (h : IsBoundedBilinearMap �
             "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr norm_nonneg, \",\", expr mul_le_mul_of_nonneg_left, \",\", expr le_of_lt C_pos, \",\", expr mul_nonneg, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
         _ = C * (‖y‖ + 1) * ‖x‖ := by ring
          }
-#align
-  is_bounded_bilinear_map.is_bounded_linear_map_left IsBoundedBilinearMap.isBoundedLinearMapLeft
+#align is_bounded_bilinear_map.is_bounded_linear_map_left IsBoundedBilinearMap.isBoundedLinearMapLeft
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr mul_le_mul_of_nonneg_right, ",", expr norm_nonneg, ",", expr mul_le_mul_of_nonneg_left, ",", expr le_of_lt
    C_pos, "]"],
@@ -495,8 +492,7 @@ theorem IsBoundedBilinearMap.isBoundedLinearMapRight (h : IsBoundedBilinearMap �
           trace
             "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr mul_le_mul_of_nonneg_right, \",\", expr norm_nonneg, \",\", expr mul_le_mul_of_nonneg_left, \",\", expr le_of_lt\n   C_pos, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
          }
-#align
-  is_bounded_bilinear_map.is_bounded_linear_map_right IsBoundedBilinearMap.isBoundedLinearMapRight
+#align is_bounded_bilinear_map.is_bounded_linear_map_right IsBoundedBilinearMap.isBoundedLinearMapRight
 
 theorem isBoundedBilinearMapSmul {𝕜' : Type _} [NormedField 𝕜'] [NormedAlgebra 𝕜 𝕜'] {E : Type _}
     [NormedAddCommGroup E] [NormedSpace 𝕜 E] [NormedSpace 𝕜' E] [IsScalarTower 𝕜 𝕜' E] :
@@ -516,14 +512,12 @@ theorem isBoundedBilinearMapComp :
 theorem ContinuousLinearMap.isBoundedLinearMapCompLeft (g : F →L[𝕜] G) :
     IsBoundedLinearMap 𝕜 fun f : E →L[𝕜] F => ContinuousLinearMap.comp g f :=
   isBoundedBilinearMapComp.isBoundedLinearMapRight _
-#align
-  continuous_linear_map.is_bounded_linear_map_comp_left ContinuousLinearMap.isBoundedLinearMapCompLeft
+#align continuous_linear_map.is_bounded_linear_map_comp_left ContinuousLinearMap.isBoundedLinearMapCompLeft
 
 theorem ContinuousLinearMap.isBoundedLinearMapCompRight (f : E →L[𝕜] F) :
     IsBoundedLinearMap 𝕜 fun g : F →L[𝕜] G => ContinuousLinearMap.comp g f :=
   isBoundedBilinearMapComp.isBoundedLinearMapLeft _
-#align
-  continuous_linear_map.is_bounded_linear_map_comp_right ContinuousLinearMap.isBoundedLinearMapCompRight
+#align continuous_linear_map.is_bounded_linear_map_comp_right ContinuousLinearMap.isBoundedLinearMapCompRight
 
 theorem isBoundedBilinearMapApply : IsBoundedBilinearMap 𝕜 fun p : (E →L[𝕜] F) × E => p.1 p.2 :=
   (ContinuousLinearMap.flip (apply 𝕜 F : E →L[𝕜] (E →L[𝕜] F) →L[𝕜] F)).IsBoundedBilinearMap
@@ -603,8 +597,7 @@ theorem ContinuousLinearMap.mulLeftRightIsBoundedBilinear (𝕜' : Type _) [Norm
     [NormedAlgebra 𝕜 𝕜'] :
     IsBoundedBilinearMap 𝕜 fun p : 𝕜' × 𝕜' => ContinuousLinearMap.mulLeftRight 𝕜 𝕜' p.1 p.2 :=
   (ContinuousLinearMap.mulLeftRight 𝕜 𝕜').IsBoundedBilinearMap
-#align
-  continuous_linear_map.mul_left_right_is_bounded_bilinear ContinuousLinearMap.mulLeftRightIsBoundedBilinear
+#align continuous_linear_map.mul_left_right_is_bounded_bilinear ContinuousLinearMap.mulLeftRightIsBoundedBilinear
 
 variable {𝕜}
 
@@ -637,8 +630,7 @@ theorem IsBoundedBilinearMap.isBoundedLinearMapDeriv (h : IsBoundedBilinearMap �
           "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr add_le_add, \",\", expr mul_le_mul, \",\", expr norm_nonneg, \",\", expr Cpos.le, \",\", expr le_refl, \",\", expr le_max_left, \",\", expr le_max_right, \",\", expr mul_nonneg, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
       _ = (C + C) * ‖p‖ * ‖q‖ := by ring
       
-#align
-  is_bounded_bilinear_map.is_bounded_linear_map_deriv IsBoundedBilinearMap.isBoundedLinearMapDeriv
+#align is_bounded_bilinear_map.is_bounded_linear_map_deriv IsBoundedBilinearMap.isBoundedLinearMapDeriv
 
 end BilinearMap
 

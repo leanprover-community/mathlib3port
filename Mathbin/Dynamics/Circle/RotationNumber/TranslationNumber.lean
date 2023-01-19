@@ -566,8 +566,7 @@ theorem dist_map_zero_lt_of_semiconj {f g₁ g₂ : CircleDeg1Lift} (h : Functio
 theorem dist_map_zero_lt_of_semiconj_by {f g₁ g₂ : CircleDeg1Lift} (h : SemiconjBy f g₁ g₂) :
     dist (g₁ 0) (g₂ 0) < 2 :=
   dist_map_zero_lt_of_semiconj <| semiconj_by_iff_semiconj.1 h
-#align
-  circle_deg1_lift.dist_map_zero_lt_of_semiconj_by CircleDeg1Lift.dist_map_zero_lt_of_semiconj_by
+#align circle_deg1_lift.dist_map_zero_lt_of_semiconj_by CircleDeg1Lift.dist_map_zero_lt_of_semiconj_by
 
 /-!
 ### Limits at infinities and continuity
@@ -653,8 +652,7 @@ theorem mul_floor_map_zero_le_floor_iterate_zero (n : ℕ) : ↑n * ⌊f 0⌋ �
   rw [le_floor, Int.cast_mul, Int.cast_ofNat, ← zero_add ((n : ℝ) * _)]
   apply le_iterate_of_add_int_le_map
   simp [floor_le]
-#align
-  circle_deg1_lift.mul_floor_map_zero_le_floor_iterate_zero CircleDeg1Lift.mul_floor_map_zero_le_floor_iterate_zero
+#align circle_deg1_lift.mul_floor_map_zero_le_floor_iterate_zero CircleDeg1Lift.mul_floor_map_zero_le_floor_iterate_zero
 
 /-!
 ### Definition of translation number
@@ -687,22 +685,19 @@ theorem transnum_aux_seq_def : f.transnumAuxSeq = fun n : ℕ => (f ^ 2 ^ n) 0 /
 theorem translation_number_eq_of_tendsto_aux {τ' : ℝ} (h : Tendsto f.transnumAuxSeq atTop (𝓝 τ')) :
     τ f = τ' :=
   h.lim_eq
-#align
-  circle_deg1_lift.translation_number_eq_of_tendsto_aux CircleDeg1Lift.translation_number_eq_of_tendsto_aux
+#align circle_deg1_lift.translation_number_eq_of_tendsto_aux CircleDeg1Lift.translation_number_eq_of_tendsto_aux
 
 theorem translation_number_eq_of_tendsto₀ {τ' : ℝ}
     (h : Tendsto (fun n : ℕ => (f^[n]) 0 / n) atTop (𝓝 τ')) : τ f = τ' :=
   f.translation_number_eq_of_tendsto_aux <| by
     simpa [(· ∘ ·), transnum_aux_seq_def, coe_pow] using
       h.comp (Nat.tendsto_pow_at_top_at_top_of_one_lt one_lt_two)
-#align
-  circle_deg1_lift.translation_number_eq_of_tendsto₀ CircleDeg1Lift.translation_number_eq_of_tendsto₀
+#align circle_deg1_lift.translation_number_eq_of_tendsto₀ CircleDeg1Lift.translation_number_eq_of_tendsto₀
 
 theorem translation_number_eq_of_tendsto₀' {τ' : ℝ}
     (h : Tendsto (fun n : ℕ => (f^[n + 1]) 0 / (n + 1)) atTop (𝓝 τ')) : τ f = τ' :=
   f.translation_number_eq_of_tendsto₀ <| (tendsto_add_at_top_iff_nat 1).1 (by exact_mod_cast h)
-#align
-  circle_deg1_lift.translation_number_eq_of_tendsto₀' CircleDeg1Lift.translation_number_eq_of_tendsto₀'
+#align circle_deg1_lift.translation_number_eq_of_tendsto₀' CircleDeg1Lift.translation_number_eq_of_tendsto₀'
 
 theorem transnum_aux_seq_zero : f.transnumAuxSeq 0 = f 0 := by simp [transnum_aux_seq]
 #align circle_deg1_lift.transnum_aux_seq_zero CircleDeg1Lift.transnum_aux_seq_zero
@@ -727,8 +722,7 @@ theorem dist_map_zero_translation_number_le : dist (f 0) (τ f) ≤ 1 :=
   f.transnum_aux_seq_zero ▸
     dist_le_of_le_geometric_two_of_tendsto₀ 1 (fun n => le_of_lt <| f.transnum_aux_seq_dist_lt n)
       f.tendsto_translation_number_aux
-#align
-  circle_deg1_lift.dist_map_zero_translation_number_le CircleDeg1Lift.dist_map_zero_translation_number_le
+#align circle_deg1_lift.dist_map_zero_translation_number_le CircleDeg1Lift.dist_map_zero_translation_number_le
 
 theorem tendsto_translation_number_of_dist_bounded_aux (x : ℕ → ℝ) (C : ℝ)
     (H : ∀ n : ℕ, dist ((f ^ n) 0) (x n) ≤ C) :
@@ -745,15 +739,13 @@ theorem tendsto_translation_number_of_dist_bounded_aux (x : ℕ → ℝ) (C : �
       mul_zero C ▸
         tendsto_const_nhds.mul
           (tendsto_inv_at_top_zero.comp <| tendsto_pow_at_top_at_top_of_one_lt one_lt_two)
-#align
-  circle_deg1_lift.tendsto_translation_number_of_dist_bounded_aux CircleDeg1Lift.tendsto_translation_number_of_dist_bounded_aux
+#align circle_deg1_lift.tendsto_translation_number_of_dist_bounded_aux CircleDeg1Lift.tendsto_translation_number_of_dist_bounded_aux
 
 theorem translation_number_eq_of_dist_bounded {f g : CircleDeg1Lift} (C : ℝ)
     (H : ∀ n : ℕ, dist ((f ^ n) 0) ((g ^ n) 0) ≤ C) : τ f = τ g :=
   Eq.symm <|
     g.translation_number_eq_of_tendsto_aux <| f.tendsto_translation_number_of_dist_bounded_aux _ C H
-#align
-  circle_deg1_lift.translation_number_eq_of_dist_bounded CircleDeg1Lift.translation_number_eq_of_dist_bounded
+#align circle_deg1_lift.translation_number_eq_of_dist_bounded CircleDeg1Lift.translation_number_eq_of_dist_bounded
 
 @[simp]
 theorem translation_number_one : τ 1 = 0 :=
@@ -764,14 +756,12 @@ theorem translation_number_eq_of_semiconj_by {f g₁ g₂ : CircleDeg1Lift} (H :
     τ g₁ = τ g₂ :=
   translation_number_eq_of_dist_bounded 2 fun n =>
     le_of_lt <| dist_map_zero_lt_of_semiconj_by <| H.pow_right n
-#align
-  circle_deg1_lift.translation_number_eq_of_semiconj_by CircleDeg1Lift.translation_number_eq_of_semiconj_by
+#align circle_deg1_lift.translation_number_eq_of_semiconj_by CircleDeg1Lift.translation_number_eq_of_semiconj_by
 
 theorem translation_number_eq_of_semiconj {f g₁ g₂ : CircleDeg1Lift}
     (H : Function.Semiconj f g₁ g₂) : τ g₁ = τ g₂ :=
   translation_number_eq_of_semiconj_by <| semiconj_by_iff_semiconj.2 H
-#align
-  circle_deg1_lift.translation_number_eq_of_semiconj CircleDeg1Lift.translation_number_eq_of_semiconj
+#align circle_deg1_lift.translation_number_eq_of_semiconj CircleDeg1Lift.translation_number_eq_of_semiconj
 
 theorem translation_number_mul_of_commute {f g : CircleDeg1Lift} (h : Commute f g) :
     τ (f * g) = τ f + τ g :=
@@ -785,8 +775,7 @@ theorem translation_number_mul_of_commute {f g : CircleDeg1Lift} (h : Commute f 
     tendsto_nhds_unique ((f * g).tendsto_translation_number_of_dist_bounded_aux _ 1 fun n => _) this
   rw [h.mul_pow, dist_comm]
   exact le_of_lt ((f ^ n).dist_map_map_zero_lt (g ^ n))
-#align
-  circle_deg1_lift.translation_number_mul_of_commute CircleDeg1Lift.translation_number_mul_of_commute
+#align circle_deg1_lift.translation_number_mul_of_commute CircleDeg1Lift.translation_number_mul_of_commute
 
 @[simp]
 theorem translation_number_units_inv (f : CircleDeg1Liftˣ) : τ ↑f⁻¹ = -τ f :=
@@ -825,8 +814,7 @@ theorem translation_number_conj_eq' (f : CircleDeg1Liftˣ) (g : CircleDeg1Lift) 
 theorem dist_pow_map_zero_mul_translation_number_le (n : ℕ) :
     dist ((f ^ n) 0) (n * f.translationNumber) ≤ 1 :=
   f.translation_number_pow n ▸ (f ^ n).dist_map_zero_translation_number_le
-#align
-  circle_deg1_lift.dist_pow_map_zero_mul_translation_number_le CircleDeg1Lift.dist_pow_map_zero_mul_translation_number_le
+#align circle_deg1_lift.dist_pow_map_zero_mul_translation_number_le CircleDeg1Lift.dist_pow_map_zero_mul_translation_number_le
 
 theorem tendsto_translation_number₀' :
     Tendsto (fun n : ℕ => (f ^ (n + 1)) 0 / (n + 1)) atTop (𝓝 <| τ f) :=
@@ -875,14 +863,12 @@ theorem translation_number_translate (x : ℝ) : τ (translate <| Multiplicative
 theorem translation_number_le_of_le_add {z : ℝ} (hz : ∀ x, f x ≤ x + z) : τ f ≤ z :=
   translation_number_translate z ▸
     translation_number_mono fun x => trans_rel_left _ (hz x) (add_comm _ _)
-#align
-  circle_deg1_lift.translation_number_le_of_le_add CircleDeg1Lift.translation_number_le_of_le_add
+#align circle_deg1_lift.translation_number_le_of_le_add CircleDeg1Lift.translation_number_le_of_le_add
 
 theorem le_translation_number_of_add_le {z : ℝ} (hz : ∀ x, x + z ≤ f x) : z ≤ τ f :=
   translation_number_translate z ▸
     translation_number_mono fun x => trans_rel_right _ (add_comm _ _) (hz x)
-#align
-  circle_deg1_lift.le_translation_number_of_add_le CircleDeg1Lift.le_translation_number_of_add_le
+#align circle_deg1_lift.le_translation_number_of_add_le CircleDeg1Lift.le_translation_number_of_add_le
 
 theorem translation_number_le_of_le_add_int {x : ℝ} {m : ℤ} (h : f x ≤ x + m) : τ f ≤ m :=
   le_of_tendsto' (f.tendsto_translation_number' x) fun n =>
@@ -890,39 +876,33 @@ theorem translation_number_le_of_le_add_int {x : ℝ} {m : ℤ} (h : f x ≤ x +
       sub_le_iff_le_add'.2 <|
         (coe_pow f (n + 1)).symm ▸
           @Nat.cast_add_one ℝ _ n ▸ f.iterate_le_of_map_le_add_int h (n + 1)
-#align
-  circle_deg1_lift.translation_number_le_of_le_add_int CircleDeg1Lift.translation_number_le_of_le_add_int
+#align circle_deg1_lift.translation_number_le_of_le_add_int CircleDeg1Lift.translation_number_le_of_le_add_int
 
 theorem translation_number_le_of_le_add_nat {x : ℝ} {m : ℕ} (h : f x ≤ x + m) : τ f ≤ m :=
   @translation_number_le_of_le_add_int f x m h
-#align
-  circle_deg1_lift.translation_number_le_of_le_add_nat CircleDeg1Lift.translation_number_le_of_le_add_nat
+#align circle_deg1_lift.translation_number_le_of_le_add_nat CircleDeg1Lift.translation_number_le_of_le_add_nat
 
 theorem le_translation_number_of_add_int_le {x : ℝ} {m : ℤ} (h : x + m ≤ f x) : ↑m ≤ τ f :=
   ge_of_tendsto' (f.tendsto_translation_number' x) fun n =>
     (le_div_iff (n.cast_add_one_pos : (0 : ℝ) < _)).mpr <|
       le_sub_iff_add_le'.2 <| by
         simp only [coe_pow, mul_comm (m : ℝ), ← Nat.cast_add_one, f.le_iterate_of_add_int_le_map h]
-#align
-  circle_deg1_lift.le_translation_number_of_add_int_le CircleDeg1Lift.le_translation_number_of_add_int_le
+#align circle_deg1_lift.le_translation_number_of_add_int_le CircleDeg1Lift.le_translation_number_of_add_int_le
 
 theorem le_translation_number_of_add_nat_le {x : ℝ} {m : ℕ} (h : x + m ≤ f x) : ↑m ≤ τ f :=
   @le_translation_number_of_add_int_le f x m h
-#align
-  circle_deg1_lift.le_translation_number_of_add_nat_le CircleDeg1Lift.le_translation_number_of_add_nat_le
+#align circle_deg1_lift.le_translation_number_of_add_nat_le CircleDeg1Lift.le_translation_number_of_add_nat_le
 
 /-- If `f x - x` is an integer number `m` for some point `x`, then `τ f = m`.
 On the circle this means that a map with a fixed point has rotation number zero. -/
 theorem translation_number_of_eq_add_int {x : ℝ} {m : ℤ} (h : f x = x + m) : τ f = m :=
   le_antisymm (translation_number_le_of_le_add_int f <| le_of_eq h)
     (le_translation_number_of_add_int_le f <| le_of_eq h.symm)
-#align
-  circle_deg1_lift.translation_number_of_eq_add_int CircleDeg1Lift.translation_number_of_eq_add_int
+#align circle_deg1_lift.translation_number_of_eq_add_int CircleDeg1Lift.translation_number_of_eq_add_int
 
 theorem floor_sub_le_translation_number (x : ℝ) : ↑⌊f x - x⌋ ≤ τ f :=
   le_translation_number_of_add_int_le f <| le_sub_iff_add_le'.1 (floor_le <| f x - x)
-#align
-  circle_deg1_lift.floor_sub_le_translation_number CircleDeg1Lift.floor_sub_le_translation_number
+#align circle_deg1_lift.floor_sub_le_translation_number CircleDeg1Lift.floor_sub_le_translation_number
 
 theorem translation_number_le_ceil_sub (x : ℝ) : τ f ≤ ⌈f x - x⌉ :=
   translation_number_le_of_le_add_int f <| sub_le_iff_le_add'.1 (le_ceil <| f x - x)
@@ -930,13 +910,11 @@ theorem translation_number_le_ceil_sub (x : ℝ) : τ f ≤ ⌈f x - x⌉ :=
 
 theorem map_lt_of_translation_number_lt_int {n : ℤ} (h : τ f < n) (x : ℝ) : f x < x + n :=
   not_le.1 <| mt f.le_translation_number_of_add_int_le <| not_le.2 h
-#align
-  circle_deg1_lift.map_lt_of_translation_number_lt_int CircleDeg1Lift.map_lt_of_translation_number_lt_int
+#align circle_deg1_lift.map_lt_of_translation_number_lt_int CircleDeg1Lift.map_lt_of_translation_number_lt_int
 
 theorem map_lt_of_translation_number_lt_nat {n : ℕ} (h : τ f < n) (x : ℝ) : f x < x + n :=
   @map_lt_of_translation_number_lt_int f n h x
-#align
-  circle_deg1_lift.map_lt_of_translation_number_lt_nat CircleDeg1Lift.map_lt_of_translation_number_lt_nat
+#align circle_deg1_lift.map_lt_of_translation_number_lt_nat CircleDeg1Lift.map_lt_of_translation_number_lt_nat
 
 theorem map_lt_add_floor_translation_number_add_one (x : ℝ) : f x < x + ⌊τ f⌋ + 1 :=
   by
@@ -945,8 +923,7 @@ theorem map_lt_add_floor_translation_number_add_one (x : ℝ) : f x < x + ⌊τ 
   refine' map_lt_of_translation_number_lt_int _ _ _
   push_cast
   exact lt_floor_add_one _
-#align
-  circle_deg1_lift.map_lt_add_floor_translation_number_add_one CircleDeg1Lift.map_lt_add_floor_translation_number_add_one
+#align circle_deg1_lift.map_lt_add_floor_translation_number_add_one CircleDeg1Lift.map_lt_add_floor_translation_number_add_one
 
 theorem map_lt_add_translation_number_add_one (x : ℝ) : f x < x + τ f + 1 :=
   calc
@@ -955,18 +932,15 @@ theorem map_lt_add_translation_number_add_one (x : ℝ) : f x < x + τ f + 1 :=
       mono*
       exact floor_le (τ f)
     
-#align
-  circle_deg1_lift.map_lt_add_translation_number_add_one CircleDeg1Lift.map_lt_add_translation_number_add_one
+#align circle_deg1_lift.map_lt_add_translation_number_add_one CircleDeg1Lift.map_lt_add_translation_number_add_one
 
 theorem lt_map_of_int_lt_translation_number {n : ℤ} (h : ↑n < τ f) (x : ℝ) : x + n < f x :=
   not_le.1 <| mt f.translation_number_le_of_le_add_int <| not_le.2 h
-#align
-  circle_deg1_lift.lt_map_of_int_lt_translation_number CircleDeg1Lift.lt_map_of_int_lt_translation_number
+#align circle_deg1_lift.lt_map_of_int_lt_translation_number CircleDeg1Lift.lt_map_of_int_lt_translation_number
 
 theorem lt_map_of_nat_lt_translation_number {n : ℕ} (h : ↑n < τ f) (x : ℝ) : x + n < f x :=
   @lt_map_of_int_lt_translation_number f n h x
-#align
-  circle_deg1_lift.lt_map_of_nat_lt_translation_number CircleDeg1Lift.lt_map_of_nat_lt_translation_number
+#align circle_deg1_lift.lt_map_of_nat_lt_translation_number CircleDeg1Lift.lt_map_of_nat_lt_translation_number
 
 /-- If `f^n x - x`, `n > 0`, is an integer number `m` for some point `x`, then
 `τ f = m / n`. On the circle this means that a map with a periodic orbit has
@@ -977,8 +951,7 @@ theorem translation_number_of_map_pow_eq_add_int {x : ℝ} {n : ℕ} {m : ℤ} (
   have := (f ^ n).translation_number_of_eq_add_int h
   rwa [translation_number_pow, mul_comm, ← eq_div_iff] at this
   exact Nat.cast_ne_zero.2 (ne_of_gt hn)
-#align
-  circle_deg1_lift.translation_number_of_map_pow_eq_add_int CircleDeg1Lift.translation_number_of_map_pow_eq_add_int
+#align circle_deg1_lift.translation_number_of_map_pow_eq_add_int CircleDeg1Lift.translation_number_of_map_pow_eq_add_int
 
 /-- If a predicate depends only on `f x - x` and holds for all `0 ≤ x ≤ 1`,
 then it holds for all `x`. -/
@@ -997,8 +970,7 @@ theorem translation_number_lt_of_forall_lt_add (hf : Continuous f) {z : ℝ} (hz
   apply translation_number_le_of_le_add
   simp only [← sub_le_iff_le_add']
   exact f.forall_map_sub_of_Icc (fun a => a ≤ f x - x) hx
-#align
-  circle_deg1_lift.translation_number_lt_of_forall_lt_add CircleDeg1Lift.translation_number_lt_of_forall_lt_add
+#align circle_deg1_lift.translation_number_lt_of_forall_lt_add CircleDeg1Lift.translation_number_lt_of_forall_lt_add
 
 theorem lt_translation_number_of_forall_add_lt (hf : Continuous f) {z : ℝ} (hz : ∀ x, x + z < f x) :
     z < τ f :=
@@ -1010,8 +982,7 @@ theorem lt_translation_number_of_forall_add_lt (hf : Continuous f) {z : ℝ} (hz
   apply le_translation_number_of_add_le
   simp only [← le_sub_iff_add_le']
   exact f.forall_map_sub_of_Icc _ hx
-#align
-  circle_deg1_lift.lt_translation_number_of_forall_add_lt CircleDeg1Lift.lt_translation_number_of_forall_add_lt
+#align circle_deg1_lift.lt_translation_number_of_forall_add_lt CircleDeg1Lift.lt_translation_number_of_forall_add_lt
 
 /-- If `f` is a continuous monotone map `ℝ → ℝ`, `f (x + 1) = f x + 1`, then there exists `x`
 such that `f x = x + τ f`. -/
@@ -1025,8 +996,7 @@ theorem exists_eq_add_translation_number (hf : Continuous f) : ∃ x, f x = x + 
     by_contra' H
     exact lt_irrefl _ (f.translation_number_lt_of_forall_lt_add hf H)
   exact intermediate_value_univ₂ hf (continuous_id.add continuous_const) ha hb
-#align
-  circle_deg1_lift.exists_eq_add_translation_number CircleDeg1Lift.exists_eq_add_translation_number
+#align circle_deg1_lift.exists_eq_add_translation_number CircleDeg1Lift.exists_eq_add_translation_number
 
 theorem translation_number_eq_int_iff (hf : Continuous f) {m : ℤ} : τ f = m ↔ ∃ x, f x = x + m :=
   by
@@ -1094,8 +1064,7 @@ theorem semiconj_of_group_action_of_forall_translation_number_eq {G : Type _} [G
       (Monotone.map_csupr_of_continuous_at (continuous_at_id.add continuous_at_const)
           (monotone_id.add_const (1 : ℝ)) (this x)).symm
   · exact this x
-#align
-  circle_deg1_lift.semiconj_of_group_action_of_forall_translation_number_eq CircleDeg1Lift.semiconj_of_group_action_of_forall_translation_number_eq
+#align circle_deg1_lift.semiconj_of_group_action_of_forall_translation_number_eq CircleDeg1Lift.semiconj_of_group_action_of_forall_translation_number_eq
 
 /-- If two lifts of circle homeomorphisms have the same translation number, then they are
 semiconjugate by a `circle_deg1_lift`. This version uses arguments `f₁ f₂ : circle_deg1_liftˣ`
@@ -1111,8 +1080,7 @@ theorem units_semiconj_of_translation_number_eq {f₁ f₂ : CircleDeg1Liftˣ} (
     simp [h]
   (semiconj_of_group_action_of_forall_translation_number_eq _ _ this).imp fun F hF =>
     hF (Multiplicative.ofAdd 1)
-#align
-  circle_deg1_lift.units_semiconj_of_translation_number_eq CircleDeg1Lift.units_semiconj_of_translation_number_eq
+#align circle_deg1_lift.units_semiconj_of_translation_number_eq CircleDeg1Lift.units_semiconj_of_translation_number_eq
 
 /-- If two lifts of circle homeomorphisms have the same translation number, then they are
 semiconjugate by a `circle_deg1_lift`. This version uses assumptions `is_unit f₁` and `is_unit f₂`
@@ -1122,8 +1090,7 @@ theorem semiconj_of_is_unit_of_translation_number_eq {f₁ f₂ : CircleDeg1Lift
   by
   rcases h₁, h₂ with ⟨⟨f₁, rfl⟩, ⟨f₂, rfl⟩⟩
   exact units_semiconj_of_translation_number_eq h
-#align
-  circle_deg1_lift.semiconj_of_is_unit_of_translation_number_eq CircleDeg1Lift.semiconj_of_is_unit_of_translation_number_eq
+#align circle_deg1_lift.semiconj_of_is_unit_of_translation_number_eq CircleDeg1Lift.semiconj_of_is_unit_of_translation_number_eq
 
 /-- If two lifts of circle homeomorphisms have the same translation number, then they are
 semiconjugate by a `circle_deg1_lift`. This version uses assumptions `bijective f₁` and
@@ -1132,8 +1099,7 @@ theorem semiconj_of_bijective_of_translation_number_eq {f₁ f₂ : CircleDeg1Li
     (h₂ : Bijective f₂) (h : τ f₁ = τ f₂) : ∃ F : CircleDeg1Lift, Semiconj F f₁ f₂ :=
   semiconj_of_is_unit_of_translation_number_eq (is_unit_iff_bijective.2 h₁)
     (is_unit_iff_bijective.2 h₂) h
-#align
-  circle_deg1_lift.semiconj_of_bijective_of_translation_number_eq CircleDeg1Lift.semiconj_of_bijective_of_translation_number_eq
+#align circle_deg1_lift.semiconj_of_bijective_of_translation_number_eq CircleDeg1Lift.semiconj_of_bijective_of_translation_number_eq
 
 end CircleDeg1Lift
 

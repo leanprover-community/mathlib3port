@@ -187,8 +187,7 @@ theorem RingHom.of_localization_span_target_iff_finite :
   · intro h s hs hs'
     obtain ⟨s', h₁, h₂⟩ := (Ideal.span_eq_top_iff_finite s).mp hs
     exact h s' h₂ fun x => hs' ⟨_, h₁ x.Prop⟩
-#align
-  ring_hom.of_localization_span_target_iff_finite RingHom.of_localization_span_target_iff_finite
+#align ring_hom.of_localization_span_target_iff_finite RingHom.of_localization_span_target_iff_finite
 
 variable {P f R' S'}
 
@@ -488,8 +487,7 @@ theorem IsLocalization.smul_mem_finset_integer_multiple_span [Algebra R S] [Alge
     exact Algebra.smul_def _ _
   · rw [mul_comm]
     exact Algebra.smul_def _ _
-#align
-  is_localization.smul_mem_finset_integer_multiple_span IsLocalization.smul_mem_finset_integer_multiple_span
+#align is_localization.smul_mem_finset_integer_multiple_span IsLocalization.smul_mem_finset_integer_multiple_span
 
 /-- If `S` is an `R' = M⁻¹R` algebra, and `x ∈ span R' s`,
 then `t • x ∈ span R s` for some `t : M`.-/
@@ -683,8 +681,7 @@ theorem IsLocalization.lift_mem_adjoin_finset_integer_multiple [Algebra R S] [Al
   · exact ⟨⟨a, ha⟩, by simpa [Submonoid.smul_def] using e⟩
   · rintro _ ⟨a, ha, rfl⟩
     exact Subalgebra.algebra_map_mem _ a
-#align
-  is_localization.lift_mem_adjoin_finset_integer_multiple IsLocalization.lift_mem_adjoin_finset_integer_multiple
+#align is_localization.lift_mem_adjoin_finset_integer_multiple IsLocalization.lift_mem_adjoin_finset_integer_multiple
 
 theorem finite_type_of_localization_span : RingHom.OfLocalizationSpan @RingHom.FiniteType :=
   by

@@ -48,8 +48,7 @@ theorem hasLimitCospanOfHasLimitPairOfHasLimitParallelPair {C : Type u} [𝒞 : 
           ext
           · simpa using h₁
           · simpa using h₂ }
-#align
-  category_theory.limits.has_limit_cospan_of_has_limit_pair_of_has_limit_parallel_pair CategoryTheory.Limits.hasLimitCospanOfHasLimitPairOfHasLimitParallelPair
+#align category_theory.limits.has_limit_cospan_of_has_limit_pair_of_has_limit_parallel_pair CategoryTheory.Limits.hasLimitCospanOfHasLimitPairOfHasLimitParallelPair
 
 section
 
@@ -61,8 +60,7 @@ attribute [local instance] has_limit_cospan_of_has_limit_pair_of_has_limit_paral
 theorem has_pullbacks_of_has_binary_products_of_has_equalizers (C : Type u) [𝒞 : Category.{v} C]
     [HasBinaryProducts C] [HasEqualizers C] : HasPullbacks C :=
   { HasLimit := fun F => hasLimitOfIso (diagramIsoCospan F).symm }
-#align
-  category_theory.limits.has_pullbacks_of_has_binary_products_of_has_equalizers CategoryTheory.Limits.has_pullbacks_of_has_binary_products_of_has_equalizers
+#align category_theory.limits.has_pullbacks_of_has_binary_products_of_has_equalizers CategoryTheory.Limits.has_pullbacks_of_has_binary_products_of_has_equalizers
 
 end
 
@@ -89,8 +87,7 @@ theorem hasColimitSpanOfHasColimitPairOfHasColimitParallelPair {C : Type u} [�
           ext
           · simpa using h₁
           · simpa using h₂ }
-#align
-  category_theory.limits.has_colimit_span_of_has_colimit_pair_of_has_colimit_parallel_pair CategoryTheory.Limits.hasColimitSpanOfHasColimitPairOfHasColimitParallelPair
+#align category_theory.limits.has_colimit_span_of_has_colimit_pair_of_has_colimit_parallel_pair CategoryTheory.Limits.hasColimitSpanOfHasColimitPairOfHasColimitParallelPair
 
 section
 
@@ -102,8 +99,7 @@ attribute [local instance] has_colimit_span_of_has_colimit_pair_of_has_colimit_p
 theorem has_pushouts_of_has_binary_coproducts_of_has_coequalizers (C : Type u) [𝒞 : Category.{v} C]
     [HasBinaryCoproducts C] [HasCoequalizers C] : HasPushouts C :=
   has_pushouts_of_has_colimit_span C
-#align
-  category_theory.limits.has_pushouts_of_has_binary_coproducts_of_has_coequalizers CategoryTheory.Limits.has_pushouts_of_has_binary_coproducts_of_has_coequalizers
+#align category_theory.limits.has_pushouts_of_has_binary_coproducts_of_has_coequalizers CategoryTheory.Limits.has_pushouts_of_has_binary_coproducts_of_has_coequalizers
 
 end
 

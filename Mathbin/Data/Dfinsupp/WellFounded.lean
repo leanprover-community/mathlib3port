@@ -198,7 +198,7 @@ theorem Pi.Lex.well_founded [IsStrictTotalOrder ι r] [Finite ι] (hs : ∀ i, W
   letI : ∀ i, Zero (α i) := fun i => ⟨(hs i).min ⊤ ⟨x i, trivial⟩⟩
   haveI := IsTrans.swap r; haveI := IsIrrefl.swap r; haveI := Fintype.ofFinite ι
   refine' InvImage.wf equiv_fun_on_fintype.symm (lex.well_founded' (fun i a => _) hs _)
-  exacts[(hs i).not_lt_min ⊤ _ trivial, Finite.well_founded_of_trans_of_irrefl r.swap]
+  exacts[(hs i).not_lt_min ⊤ _ trivial, Finite.wellFounded_of_trans_of_irrefl r.swap]
 #align pi.lex.well_founded Pi.Lex.well_founded
 
 instance Pi.Lex.well_founded_lt [LinearOrder ι] [Finite ι] [∀ i, LT (α i)]

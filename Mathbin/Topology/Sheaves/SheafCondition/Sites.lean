@@ -68,8 +68,7 @@ theorem supr_eq_of_mem_grothendieck (hR : Sieve.generate R ∈ Opens.grothendiec
   rw [opens.mem_coe, opens.mem_supr]
   obtain ⟨V, iVU, ⟨W, iVW, iWU, hiWU, -⟩, hxV⟩ := hR x hxU
   exact ⟨⟨W, ⟨iWU, hiWU⟩⟩, iVW.le hxV⟩
-#align
-  Top.presheaf.covering_of_presieve.supr_eq_of_mem_grothendieck TopCat.Presheaf.coveringOfPresieve.supr_eq_of_mem_grothendieck
+#align Top.presheaf.covering_of_presieve.supr_eq_of_mem_grothendieck TopCat.Presheaf.coveringOfPresieve.supr_eq_of_mem_grothendieck
 
 end CoveringOfPresieve
 
@@ -110,8 +109,7 @@ theorem mem_grothendieck_topology :
   intro x hx
   obtain ⟨i, hxi⟩ := opens.mem_supr.mp hx
   exact ⟨U i, opens.le_supr U i, ⟨U i, 𝟙 _, opens.le_supr U i, ⟨i, rfl⟩, category.id_comp _⟩, hxi⟩
-#align
-  Top.presheaf.presieve_of_covering.mem_grothendieck_topology TopCat.Presheaf.presieveOfCovering.mem_grothendieck_topology
+#align Top.presheaf.presieve_of_covering.mem_grothendieck_topology TopCat.Presheaf.presieveOfCovering.mem_grothendieck_topology
 
 /-- An index `i : ι` can be turned into a dependent pair `(V, f)`, where `V` is an open set and
 `f : V ⟶ supr U` is a member of `presieve_of_covering U f`.
@@ -130,8 +128,7 @@ def indexOfHom (f : ΣV, { f : V ⟶ supᵢ U // presieveOfCovering U f }) : ι 
 theorem index_of_hom_spec (f : ΣV, { f : V ⟶ supᵢ U // presieveOfCovering U f }) :
     f.1 = U (indexOfHom U f) :=
   f.2.2.some_spec
-#align
-  Top.presheaf.presieve_of_covering.index_of_hom_spec TopCat.Presheaf.presieveOfCovering.index_of_hom_spec
+#align Top.presheaf.presieve_of_covering.index_of_hom_spec TopCat.Presheaf.presieveOfCovering.index_of_hom_spec
 
 end PresieveOfCovering
 

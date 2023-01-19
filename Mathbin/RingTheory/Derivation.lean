@@ -708,8 +708,7 @@ variable {S}
 
 theorem KaehlerDifferential.one_smul_sub_smul_one_mem_ideal (a : S) :
     (1 : S) ⊗ₜ[R] a - a ⊗ₜ[R] (1 : S) ∈ KaehlerDifferential.ideal R S := by simp [RingHom.mem_ker]
-#align
-  kaehler_differential.one_smul_sub_smul_one_mem_ideal KaehlerDifferential.one_smul_sub_smul_one_mem_ideal
+#align kaehler_differential.one_smul_sub_smul_one_mem_ideal KaehlerDifferential.one_smul_sub_smul_one_mem_ideal
 
 variable {R}
 
@@ -782,8 +781,7 @@ theorem KaehlerDifferential.submodule_span_range_eq_ideal :
     · intro x y hx hy
       rw [map_add, TensorProduct.add_tmul, ← sub_add_sub_comm]
       exact add_mem hx hy
-#align
-  kaehler_differential.submodule_span_range_eq_ideal KaehlerDifferential.submodule_span_range_eq_ideal
+#align kaehler_differential.submodule_span_range_eq_ideal KaehlerDifferential.submodule_span_range_eq_ideal
 
 theorem KaehlerDifferential.span_range_eq_ideal :
     Ideal.span (Set.range fun s : S => (1 : S) ⊗ₜ[R] s - s ⊗ₜ[R] (1 : S)) =
@@ -1011,8 +1009,7 @@ theorem KaehlerDifferential.tensor_product_to_surjective :
   by
   intro x; obtain ⟨x, rfl⟩ := (KaehlerDifferential.ideal R S).to_cotangent_surjective x
   exact ⟨x, KaehlerDifferential.D_tensor_product_to x⟩
-#align
-  kaehler_differential.tensor_product_to_surjective KaehlerDifferential.tensor_product_to_surjective
+#align kaehler_differential.tensor_product_to_surjective KaehlerDifferential.tensor_product_to_surjective
 
 /-- The `S`-linear maps from `Ω[S⁄R]` to `M` are (`S`-linearly) equivalent to `R`-derivations
 from `S` to `M`.  -/
@@ -1043,8 +1040,7 @@ def KaehlerDifferential.quotientCotangentIdealRingEquiv :
   refine' (Ideal.quotEquivOfEq _).trans (RingHom.quotientKerEquivOfRightInverse this)
   ext
   rfl
-#align
-  kaehler_differential.quotient_cotangent_ideal_ring_equiv KaehlerDifferential.quotientCotangentIdealRingEquiv
+#align kaehler_differential.quotient_cotangent_ideal_ring_equiv KaehlerDifferential.quotientCotangentIdealRingEquiv
 
 /-- The quotient ring of `S ⊗ S ⧸ J ^ 2` by `Ω[S⁄R]` is isomorphic to `S` as an `S`-algebra. -/
 def KaehlerDifferential.quotientCotangentIdeal :
@@ -1168,13 +1164,11 @@ theorem KaehlerDifferential.ker_total_mkq_single_algebra_map (x y) : (y𝖣algeb
   by
   rw [Submodule.mkq_apply, Submodule.Quotient.mk_eq_zero, ← Finsupp.smul_single_one _ y]
   exact Submodule.smul_mem _ _ (Submodule.subset_span (Or.inr <| ⟨_, rfl⟩))
-#align
-  kaehler_differential.ker_total_mkq_single_algebra_map KaehlerDifferential.ker_total_mkq_single_algebra_map
+#align kaehler_differential.ker_total_mkq_single_algebra_map KaehlerDifferential.ker_total_mkq_single_algebra_map
 
 theorem KaehlerDifferential.ker_total_mkq_single_algebra_map_one (x) : (x𝖣1) = 0 := by
   rw [← (algebraMap R S).map_one, KaehlerDifferential.ker_total_mkq_single_algebra_map]
-#align
-  kaehler_differential.ker_total_mkq_single_algebra_map_one KaehlerDifferential.ker_total_mkq_single_algebra_map_one
+#align kaehler_differential.ker_total_mkq_single_algebra_map_one KaehlerDifferential.ker_total_mkq_single_algebra_map_one
 
 theorem KaehlerDifferential.ker_total_mkq_single_smul (r : R) (x y) : (y𝖣r • x) = r • y𝖣x := by
   rw [Algebra.smul_def, KaehlerDifferential.ker_total_mkq_single_mul,
@@ -1201,8 +1195,7 @@ noncomputable def KaehlerDifferential.derivationQuotKerTotal :
 theorem KaehlerDifferential.derivation_quot_ker_total_apply (x) :
     KaehlerDifferential.derivationQuotKerTotal R S x = 1𝖣x :=
   rfl
-#align
-  kaehler_differential.derivation_quot_ker_total_apply KaehlerDifferential.derivation_quot_ker_total_apply
+#align kaehler_differential.derivation_quot_ker_total_apply KaehlerDifferential.derivation_quot_ker_total_apply
 
 theorem KaehlerDifferential.derivation_quot_ker_total_lift_comp_total :
     (KaehlerDifferential.derivationQuotKerTotal R S).liftKaehlerDifferential.comp
@@ -1213,8 +1206,7 @@ theorem KaehlerDifferential.derivation_quot_ker_total_lift_comp_total :
   intro a b
   conv_rhs => rw [← Finsupp.smul_single_one a b, LinearMap.map_smul]
   simp [KaehlerDifferential.derivation_quot_ker_total_apply]
-#align
-  kaehler_differential.derivation_quot_ker_total_lift_comp_total KaehlerDifferential.derivation_quot_ker_total_lift_comp_total
+#align kaehler_differential.derivation_quot_ker_total_lift_comp_total KaehlerDifferential.derivation_quot_ker_total_lift_comp_total
 
 theorem KaehlerDifferential.ker_total_eq :
     (Finsupp.total S (Ω[S⁄R]) S (KaehlerDifferential.d R S)).ker =
@@ -1262,8 +1254,7 @@ theorem KaehlerDifferential.quot_ker_total_equiv_symm_comp_D :
         (KaehlerDifferential.d R S) =
       KaehlerDifferential.derivationQuotKerTotal R S :=
   by convert (KaehlerDifferential.derivationQuotKerTotal R S).lift_kaehler_differential_comp using 0
-#align
-  kaehler_differential.quot_ker_total_equiv_symm_comp_D KaehlerDifferential.quot_ker_total_equiv_symm_comp_D
+#align kaehler_differential.quot_ker_total_equiv_symm_comp_D KaehlerDifferential.quot_ker_total_equiv_symm_comp_D
 
 variable (A B : Type _) [CommRing A] [CommRing B] [Algebra R A] [Algebra S B] [Algebra R B]
 
@@ -1357,8 +1348,7 @@ theorem KaehlerDifferential.map_surjective_of_surjective
   obtain ⟨y, rfl⟩ := h x
   rw [← KaehlerDifferential.map_D R S A B]
   exact ⟨_, rfl⟩
-#align
-  kaehler_differential.map_surjective_of_surjective KaehlerDifferential.map_surjective_of_surjective
+#align kaehler_differential.map_surjective_of_surjective KaehlerDifferential.map_surjective_of_surjective
 
 /-- The lift of the map `Ω[A⁄R] →ₗ[A] Ω[B⁄R]` to the base change along `A → B`.
 This is the first map in the exact sequence `B ⊗[A] Ω[A⁄R] → Ω[B⁄R] → Ω[B⁄A] → 0`. -/

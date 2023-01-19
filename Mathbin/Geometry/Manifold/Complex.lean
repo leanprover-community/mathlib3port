@@ -122,8 +122,7 @@ for some value `v`. -/
 theorem exists_eq_const_of_compact_space [PreconnectedSpace M] {f : M → F}
     (hf : Mdifferentiable 𝓘(ℂ, E) 𝓘(ℂ, F) f) : ∃ v : F, f = Function.const M v :=
   hf.IsLocallyConstant.exists_eq_const
-#align
-  mdifferentiable.exists_eq_const_of_compact_space Mdifferentiable.exists_eq_const_of_compact_space
+#align mdifferentiable.exists_eq_const_of_compact_space Mdifferentiable.exists_eq_const_of_compact_space
 
 end Mdifferentiable
 

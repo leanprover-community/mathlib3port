@@ -496,22 +496,19 @@ variable (i : ι)
 theorem mem_local_triv_as_local_equiv_source (p : Z.TotalSpace) :
     p ∈ (Z.localTrivAsLocalEquiv i).source ↔ p.1 ∈ Z.baseSet i :=
   Iff.rfl
-#align
-  fiber_bundle_core.mem_local_triv_as_local_equiv_source FiberBundleCore.mem_local_triv_as_local_equiv_source
+#align fiber_bundle_core.mem_local_triv_as_local_equiv_source FiberBundleCore.mem_local_triv_as_local_equiv_source
 
 theorem mem_local_triv_as_local_equiv_target (p : B × F) :
     p ∈ (Z.localTrivAsLocalEquiv i).target ↔ p.1 ∈ Z.baseSet i :=
   by
   erw [mem_prod]
   simp only [and_true_iff, mem_univ]
-#align
-  fiber_bundle_core.mem_local_triv_as_local_equiv_target FiberBundleCore.mem_local_triv_as_local_equiv_target
+#align fiber_bundle_core.mem_local_triv_as_local_equiv_target FiberBundleCore.mem_local_triv_as_local_equiv_target
 
 theorem local_triv_as_local_equiv_apply (p : Z.TotalSpace) :
     (Z.localTrivAsLocalEquiv i) p = ⟨p.1, Z.coordChange (Z.indexAt p.1) i p.1 p.2⟩ :=
   rfl
-#align
-  fiber_bundle_core.local_triv_as_local_equiv_apply FiberBundleCore.local_triv_as_local_equiv_apply
+#align fiber_bundle_core.local_triv_as_local_equiv_apply FiberBundleCore.local_triv_as_local_equiv_apply
 
 /-- The composition of two local trivializations is the trivialization change Z.triv_change i j. -/
 theorem local_triv_as_local_equiv_trans (i j : ι) :
@@ -528,8 +525,7 @@ theorem local_triv_as_local_equiv_trans (i j : ι) :
       and_true_iff, mem_preimage, proj, mem_univ, [anonymous], eq_self_iff_true,
       LocalEquiv.coe_trans, total_space.proj] at hx⊢
     simp only [Z.coord_change_comp, hx, mem_inter_iff, and_self_iff, mem_base_set_at]
-#align
-  fiber_bundle_core.local_triv_as_local_equiv_trans FiberBundleCore.local_triv_as_local_equiv_trans
+#align fiber_bundle_core.local_triv_as_local_equiv_trans FiberBundleCore.local_triv_as_local_equiv_trans
 
 /-- Topological structure on the total space of a fiber bundle created from core, designed so
 that all the local trivialization are continuous. -/
@@ -639,22 +635,19 @@ theorem local_triv_as_local_equiv_coe : ⇑(Z.localTrivAsLocalEquiv i) = Z.local
 theorem local_triv_as_local_equiv_source :
     (Z.localTrivAsLocalEquiv i).source = (Z.localTriv i).source :=
   rfl
-#align
-  fiber_bundle_core.local_triv_as_local_equiv_source FiberBundleCore.local_triv_as_local_equiv_source
+#align fiber_bundle_core.local_triv_as_local_equiv_source FiberBundleCore.local_triv_as_local_equiv_source
 
 @[simp, mfld_simps]
 theorem local_triv_as_local_equiv_target :
     (Z.localTrivAsLocalEquiv i).target = (Z.localTriv i).target :=
   rfl
-#align
-  fiber_bundle_core.local_triv_as_local_equiv_target FiberBundleCore.local_triv_as_local_equiv_target
+#align fiber_bundle_core.local_triv_as_local_equiv_target FiberBundleCore.local_triv_as_local_equiv_target
 
 @[simp, mfld_simps]
 theorem local_triv_as_local_equiv_symm :
     (Z.localTrivAsLocalEquiv i).symm = (Z.localTriv i).toLocalEquiv.symm :=
   rfl
-#align
-  fiber_bundle_core.local_triv_as_local_equiv_symm FiberBundleCore.local_triv_as_local_equiv_symm
+#align fiber_bundle_core.local_triv_as_local_equiv_symm FiberBundleCore.local_triv_as_local_equiv_symm
 
 @[simp, mfld_simps]
 theorem base_set_at : Z.baseSet i = (Z.localTriv i).baseSet :=
@@ -832,8 +825,7 @@ theorem continuous_symm_of_mem_pretrivialization_atlas (he : e ∈ a.pretriviali
     id fun z H =>
       id fun U h => preimage_nhds_within_coinduced' H e.open_target (le_def.1 (nhds_mono _) U h)
   exact le_supᵢ₂ e he
-#align
-  fiber_prebundle.continuous_symm_of_mem_pretrivialization_atlas FiberPrebundle.continuous_symm_of_mem_pretrivialization_atlas
+#align fiber_prebundle.continuous_symm_of_mem_pretrivialization_atlas FiberPrebundle.continuous_symm_of_mem_pretrivialization_atlas
 
 theorem is_open_source (e : Pretrivialization F (π E)) : @IsOpen _ a.totalSpaceTopology e.source :=
   by
@@ -856,8 +848,7 @@ theorem is_open_target_of_mem_pretrivialization_atlas_inter (e e' : Pretrivializ
       (a.is_open_source e)
   rw [inter_comm, hu2]
   exact hu1.inter e'.open_target
-#align
-  fiber_prebundle.is_open_target_of_mem_pretrivialization_atlas_inter FiberPrebundle.is_open_target_of_mem_pretrivialization_atlas_inter
+#align fiber_prebundle.is_open_target_of_mem_pretrivialization_atlas_inter FiberPrebundle.is_open_target_of_mem_pretrivialization_atlas_inter
 
 /-- Promotion from a `pretrivialization` to a `trivialization`. -/
 def trivializationOfMemPretrivializationAtlas (he : e ∈ a.pretrivializationAtlas) :
@@ -885,8 +876,7 @@ def trivializationOfMemPretrivializationAtlas (he : e ∈ a.pretrivializationAtl
       rw [inter_assoc]
       exact hu1.inter (a.is_open_target_of_mem_pretrivialization_atlas_inter e e' he')
     continuous_inv_fun := a.continuous_symm_of_mem_pretrivialization_atlas he }
-#align
-  fiber_prebundle.trivialization_of_mem_pretrivialization_atlas FiberPrebundle.trivializationOfMemPretrivializationAtlas
+#align fiber_prebundle.trivialization_of_mem_pretrivialization_atlas FiberPrebundle.trivializationOfMemPretrivializationAtlas
 
 theorem mem_trivialization_at_source (b : B) (x : E b) :
     totalSpaceMk b x ∈ (a.pretrivializationAt b).source :=

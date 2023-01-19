@@ -56,8 +56,7 @@ def Γ₀NondegComplexIso (K : ChainComplex C ℕ) : (Γ₀.splitting K).nondegC
           change n + 1 = n at h
           linarith
         · simpa only [is_δ₀.iff] using hi)
-#align
-  algebraic_topology.dold_kan.Γ₀_nondeg_complex_iso AlgebraicTopology.DoldKan.Γ₀NondegComplexIso
+#align algebraic_topology.dold_kan.Γ₀_nondeg_complex_iso AlgebraicTopology.DoldKan.Γ₀NondegComplexIso
 
 /-- The natural isomorphism `(Γ₀.splitting K).nondeg_complex ≅ K` for `K : chain_complex C ℕ`. -/
 def Γ₀'CompNondegComplexFunctor : Γ₀' ⋙ split.nondeg_complex_functor ≅ 𝟭 (ChainComplex C ℕ) :=
@@ -66,8 +65,7 @@ def Γ₀'CompNondegComplexFunctor : Γ₀' ⋙ split.nondeg_complex_functor ≅
     ext n
     dsimp
     simp only [comp_id, id_comp]
-#align
-  algebraic_topology.dold_kan.Γ₀'_comp_nondeg_complex_functor AlgebraicTopology.DoldKan.Γ₀'CompNondegComplexFunctor
+#align algebraic_topology.dold_kan.Γ₀'_comp_nondeg_complex_functor AlgebraicTopology.DoldKan.Γ₀'CompNondegComplexFunctor
 
 /-- The natural isomorphism `Γ₀ ⋙ N₁ ≅ to_karoubi (chain_complex C ℕ)`. -/
 def n₁Γ₀ : Γ₀ ⋙ N₁ ≅ toKaroubi (ChainComplex C ℕ) :=
@@ -160,8 +158,7 @@ theorem N₂Γ₂_compatible_with_N₁Γ₀ (K : ChainComplex C ℕ) :
           (toKaroubi (ChainComplex C ℕ))).image_preimage
       (n₂Γ₂ToKaroubiIso.Hom ≫ n₁Γ₀.Hom : _ ⟶ toKaroubi _ ⋙ 𝟭 _))
     K
-#align
-  algebraic_topology.dold_kan.N₂Γ₂_compatible_with_N₁Γ₀ AlgebraicTopology.DoldKan.N₂Γ₂_compatible_with_N₁Γ₀
+#align algebraic_topology.dold_kan.N₂Γ₂_compatible_with_N₁Γ₀ AlgebraicTopology.DoldKan.N₂Γ₂_compatible_with_N₁Γ₀
 
 @[simp]
 theorem N₂Γ₂_inv_app_f_f (X : Karoubi (ChainComplex C ℕ)) (n : ℕ) :

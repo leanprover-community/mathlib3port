@@ -95,8 +95,7 @@ theorem spectral_radius_zero : spectralRadius 𝕜 (0 : A) = 0 :=
 theorem mem_resolvent_set_of_spectral_radius_lt {a : A} {k : 𝕜} (h : spectralRadius 𝕜 a < ‖k‖₊) :
     k ∈ ρ a :=
   not_not.mp fun hn => h.not_le <| le_supᵢ₂ k hn
-#align
-  spectrum.mem_resolvent_set_of_spectral_radius_lt spectrum.mem_resolvent_set_of_spectral_radius_lt
+#align spectrum.mem_resolvent_set_of_spectral_radius_lt spectrum.mem_resolvent_set_of_spectral_radius_lt
 
 variable [CompleteSpace A]
 
@@ -160,8 +159,7 @@ theorem exists_nnnorm_eq_spectral_radius_of_nonempty [ProperSpace 𝕜] {a : A} 
   by
   obtain ⟨k, hk, h⟩ := (spectrum.is_compact a).exists_forall_ge ha continuous_nnnorm.continuous_on
   exact ⟨k, hk, le_antisymm (le_supᵢ₂ k hk) (supᵢ₂_le <| by exact_mod_cast h)⟩
-#align
-  spectrum.exists_nnnorm_eq_spectral_radius_of_nonempty spectrum.exists_nnnorm_eq_spectral_radius_of_nonempty
+#align spectrum.exists_nnnorm_eq_spectral_radius_of_nonempty spectrum.exists_nnnorm_eq_spectral_radius_of_nonempty
 
 theorem spectral_radius_lt_of_forall_lt_of_nonempty [ProperSpace 𝕜] {a : A} (ha : (σ a).Nonempty)
     {r : ℝ≥0} (hr : ∀ k ∈ σ a, ‖k‖₊ < r) : spectralRadius 𝕜 a < r :=
@@ -169,8 +167,7 @@ theorem spectral_radius_lt_of_forall_lt_of_nonempty [ProperSpace 𝕜] {a : A} (
     ((spectrum.is_compact a).Sup_lt_iff_of_continuous ha
           (Ennreal.continuous_coe.comp continuous_nnnorm).ContinuousOn (r : ℝ≥0∞)).mpr
       (by exact_mod_cast hr)
-#align
-  spectrum.spectral_radius_lt_of_forall_lt_of_nonempty spectrum.spectral_radius_lt_of_forall_lt_of_nonempty
+#align spectrum.spectral_radius_lt_of_forall_lt_of_nonempty spectrum.spectral_radius_lt_of_forall_lt_of_nonempty
 
 open Ennreal Polynomial
 
@@ -193,8 +190,7 @@ theorem spectral_radius_le_pow_nnnorm_pow_one_div (a : A) (n : ℕ) :
   convert monotone_rpow_of_nonneg (one_div_pos.mpr hn).le nnnorm_pow_le
   erw [coe_pow, ← rpow_nat_cast, ← rpow_mul, mul_one_div_cancel hn.ne', rpow_one]
   rw [Nat.cast_succ, Ennreal.coe_mul_rpow]
-#align
-  spectrum.spectral_radius_le_pow_nnnorm_pow_one_div spectrum.spectral_radius_le_pow_nnnorm_pow_one_div
+#align spectrum.spectral_radius_le_pow_nnnorm_pow_one_div spectrum.spectral_radius_le_pow_nnnorm_pow_one_div
 
 theorem spectral_radius_le_liminf_pow_nnnorm_pow_one_div (a : A) :
     spectralRadius 𝕜 a ≤ atTop.liminf fun n : ℕ => (‖a ^ n‖₊ : ℝ≥0∞) ^ (1 / n : ℝ) :=
@@ -216,8 +212,7 @@ theorem spectral_radius_le_liminf_pow_nnnorm_pow_one_div (a : A) :
   refine' (spectral_radius_le_pow_nnnorm_pow_one_div 𝕜 a (n + N)).trans _
   norm_cast
   exact mul_le_mul_left' (hN (n + N + 1) (by linarith)) _
-#align
-  spectrum.spectral_radius_le_liminf_pow_nnnorm_pow_one_div spectrum.spectral_radius_le_liminf_pow_nnnorm_pow_one_div
+#align spectrum.spectral_radius_le_liminf_pow_nnnorm_pow_one_div spectrum.spectral_radius_le_liminf_pow_nnnorm_pow_one_div
 
 end SpectrumCompact
 
@@ -331,8 +326,7 @@ theorem hasFpowerSeriesOnBallInverseOneSubSmul [CompleteSpace A] (a : A) :
             Nnreal.lt_inv_iff_mul_lt h]
       simpa [← smul_pow, (NormedRing.summable_geometric_of_norm_lt_1 _ norm_lt).has_sum_iff] using
         (NormedRing.inverse_one_sub _ norm_lt).symm }
-#align
-  spectrum.has_fpower_series_on_ball_inverse_one_sub_smul spectrum.hasFpowerSeriesOnBallInverseOneSubSmul
+#align spectrum.has_fpower_series_on_ball_inverse_one_sub_smul spectrum.hasFpowerSeriesOnBallInverseOneSubSmul
 
 variable {𝕜}
 
@@ -364,8 +358,7 @@ theorem differentiable_on_inverse_one_sub_smul [CompleteSpace A] {a : A} {r : �
       Real.to_nnreal_mono (mem_closed_ball_zero_iff.mp z_mem)
   have H₁ : Differentiable 𝕜 fun w : 𝕜 => 1 - w • a := (differentiable_id.smul_const a).const_sub 1
   exact DifferentiableAt.comp z (differentiable_at_inverse hu.unit) H₁.differentiable_at
-#align
-  spectrum.differentiable_on_inverse_one_sub_smul spectrum.differentiable_on_inverse_one_sub_smul
+#align spectrum.differentiable_on_inverse_one_sub_smul spectrum.differentiable_on_inverse_one_sub_smul
 
 end OneSubSmul
 
@@ -394,8 +387,7 @@ theorem limsup_pow_nnnorm_pow_one_div_le_spectral_radius (a : A) :
     exact fun ha => by linarith [ha.2, (one_div_nonneg.mpr n.cast_nonneg : 0 ≤ (1 / n : ℝ))]
   · have H₁ := (differentiable_on_inverse_one_sub_smul r_lt).HasFpowerSeriesOnBall r_pos
     exact ((has_fpower_series_on_ball_inverse_one_sub_smul ℂ a).exchangeRadius H₁).r_le
-#align
-  spectrum.limsup_pow_nnnorm_pow_one_div_le_spectral_radius spectrum.limsup_pow_nnnorm_pow_one_div_le_spectral_radius
+#align spectrum.limsup_pow_nnnorm_pow_one_div_le_spectral_radius spectrum.limsup_pow_nnnorm_pow_one_div_le_spectral_radius
 
 /-- **Gelfand's formula**: Given an element `a : A` of a complex Banach algebra, the
 `spectral_radius` of `a` is the limit of the sequence `‖a ^ n‖₊ ^ (1 / n)` -/
@@ -403,8 +395,7 @@ theorem pow_nnnorm_pow_one_div_tendsto_nhds_spectral_radius (a : A) :
     Tendsto (fun n : ℕ => (‖a ^ n‖₊ ^ (1 / n : ℝ) : ℝ≥0∞)) atTop (𝓝 (spectralRadius ℂ a)) :=
   tendsto_of_le_liminf_of_limsup_le (spectral_radius_le_liminf_pow_nnnorm_pow_one_div ℂ a)
     (limsup_pow_nnnorm_pow_one_div_le_spectral_radius a)
-#align
-  spectrum.pow_nnnorm_pow_one_div_tendsto_nhds_spectral_radius spectrum.pow_nnnorm_pow_one_div_tendsto_nhds_spectral_radius
+#align spectrum.pow_nnnorm_pow_one_div_tendsto_nhds_spectral_radius spectrum.pow_nnnorm_pow_one_div_tendsto_nhds_spectral_radius
 
 /- This is the same as `pow_nnnorm_pow_one_div_tendsto_nhds_spectral_radius` but for `norm`
 instead of `nnnorm`. -/
@@ -417,8 +408,7 @@ theorem pow_norm_pow_one_div_tendsto_nhds_spectral_radius (a : A) :
   ext1
   rw [← of_real_rpow_of_nonneg (norm_nonneg _) _, ← coe_nnnorm, coe_nnreal_eq]
   exact one_div_nonneg.mpr (by exact_mod_cast zero_le _)
-#align
-  spectrum.pow_norm_pow_one_div_tendsto_nhds_spectral_radius spectrum.pow_norm_pow_one_div_tendsto_nhds_spectral_radius
+#align spectrum.pow_norm_pow_one_div_tendsto_nhds_spectral_radius spectrum.pow_norm_pow_one_div_tendsto_nhds_spectral_radius
 
 end GelfandFormula
 
@@ -661,8 +651,7 @@ theorem equiv_alg_hom_coe (f : characterSpace 𝕜 A) : ⇑(equivAlgHom f) = f :
 @[simp]
 theorem equiv_alg_hom_symm_coe (f : A →ₐ[𝕜] 𝕜) : ⇑(equivAlgHom.symm f) = f :=
   rfl
-#align
-  weak_dual.character_space.equiv_alg_hom_symm_coe WeakDual.characterSpace.equiv_alg_hom_symm_coe
+#align weak_dual.character_space.equiv_alg_hom_symm_coe WeakDual.characterSpace.equiv_alg_hom_symm_coe
 
 end CharacterSpace
 

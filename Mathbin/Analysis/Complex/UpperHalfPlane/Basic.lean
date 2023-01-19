@@ -378,8 +378,7 @@ theorem SpecialLinearGroup.im_smul_eq_div_norm_sq :
   convert im_smul_eq_div_norm_sq g z
   simp only [coe_coe, general_linear_group.coe_det_apply, coe_GL_pos_coe_GL_coe_matrix,
     Int.coe_castRingHom, (g : SL(2, ℝ)).Prop, one_mul]
-#align
-  upper_half_plane.special_linear_group.im_smul_eq_div_norm_sq UpperHalfPlane.SpecialLinearGroup.im_smul_eq_div_norm_sq
+#align upper_half_plane.special_linear_group.im_smul_eq_div_norm_sq UpperHalfPlane.SpecialLinearGroup.im_smul_eq_div_norm_sq
 
 theorem denom_apply (g : SL(2, ℤ)) (z : ℍ) :
     denom g z = (↑g : Matrix (Fin 2) (Fin 2) ℤ) 1 0 * z + (↑g : Matrix (Fin 2) (Fin 2) ℤ) 1 1 := by

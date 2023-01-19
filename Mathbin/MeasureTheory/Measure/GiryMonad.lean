@@ -60,8 +60,7 @@ theorem measurable_of_measurable_coe (f : β → Measure α)
   Measurable.of_le_map <|
     supᵢ₂_le fun s hs =>
       MeasurableSpace.comap_le_iff_le_map.2 <| by rw [MeasurableSpace.map_comp] <;> exact h s hs
-#align
-  measure_theory.measure.measurable_of_measurable_coe MeasureTheory.Measure.measurable_of_measurable_coe
+#align measure_theory.measure.measurable_of_measurable_coe MeasureTheory.Measure.measurable_of_measurable_coe
 
 instance {α : Type _} {m : MeasurableSpace α} : HasMeasurableAdd₂ (Measure α) :=
   by

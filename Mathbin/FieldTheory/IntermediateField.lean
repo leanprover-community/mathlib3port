@@ -447,15 +447,13 @@ def intermediateFieldMap (e : L ≃ₐ[K] L') (E : IntermediateField K L) : E �
 theorem intermediate_field_map_apply_coe (e : L ≃ₐ[K] L') (E : IntermediateField K L) (a : E) :
     ↑(intermediateFieldMap e E a) = e a :=
   rfl
-#align
-  intermediate_field.intermediate_field_map_apply_coe IntermediateField.intermediate_field_map_apply_coe
+#align intermediate_field.intermediate_field_map_apply_coe IntermediateField.intermediate_field_map_apply_coe
 
 @[simp]
 theorem intermediate_field_map_symm_apply_coe (e : L ≃ₐ[K] L') (E : IntermediateField K L)
     (a : E.map e.toAlgHom) : ↑((intermediateFieldMap e E).symm a) = e.symm a :=
   rfl
-#align
-  intermediate_field.intermediate_field_map_symm_apply_coe IntermediateField.intermediate_field_map_symm_apply_coe
+#align intermediate_field.intermediate_field_map_symm_apply_coe IntermediateField.intermediate_field_map_symm_apply_coe
 
 end IntermediateField
 
@@ -585,15 +583,13 @@ theorem field_range_le : (algebraMap K L).fieldRange ≤ S.toSubfield := fun x h
 theorem to_subalgebra_le_to_subalgebra {S S' : IntermediateField K L} :
     S.toSubalgebra ≤ S'.toSubalgebra ↔ S ≤ S' :=
   Iff.rfl
-#align
-  intermediate_field.to_subalgebra_le_to_subalgebra IntermediateField.to_subalgebra_le_to_subalgebra
+#align intermediate_field.to_subalgebra_le_to_subalgebra IntermediateField.to_subalgebra_le_to_subalgebra
 
 @[simp]
 theorem to_subalgebra_lt_to_subalgebra {S S' : IntermediateField K L} :
     S.toSubalgebra < S'.toSubalgebra ↔ S < S' :=
   Iff.rfl
-#align
-  intermediate_field.to_subalgebra_lt_to_subalgebra IntermediateField.to_subalgebra_lt_to_subalgebra
+#align intermediate_field.to_subalgebra_lt_to_subalgebra IntermediateField.to_subalgebra_lt_to_subalgebra
 
 variable {S}
 
@@ -629,15 +625,13 @@ theorem coe_restrict_scalars {E : IntermediateField L' L} :
 theorem restrict_scalars_to_subalgebra {E : IntermediateField L' L} :
     (E.restrictScalars K).toSubalgebra = E.toSubalgebra.restrictScalars K :=
   SetLike.coe_injective rfl
-#align
-  intermediate_field.restrict_scalars_to_subalgebra IntermediateField.restrict_scalars_to_subalgebra
+#align intermediate_field.restrict_scalars_to_subalgebra IntermediateField.restrict_scalars_to_subalgebra
 
 @[simp]
 theorem restrict_scalars_to_subfield {E : IntermediateField L' L} :
     (E.restrictScalars K).toSubfield = E.toSubfield :=
   SetLike.coe_injective rfl
-#align
-  intermediate_field.restrict_scalars_to_subfield IntermediateField.restrict_scalars_to_subfield
+#align intermediate_field.restrict_scalars_to_subfield IntermediateField.restrict_scalars_to_subfield
 
 @[simp]
 theorem mem_restrict_scalars {E : IntermediateField L' L} {x : L} :
@@ -677,8 +671,7 @@ theorem dim_eq_dim_subalgebra : Module.rank K F.toSubalgebra = Module.rank K F :
 @[simp]
 theorem finrank_eq_finrank_subalgebra : finrank K F.toSubalgebra = finrank K F :=
   rfl
-#align
-  intermediate_field.finrank_eq_finrank_subalgebra IntermediateField.finrank_eq_finrank_subalgebra
+#align intermediate_field.finrank_eq_finrank_subalgebra IntermediateField.finrank_eq_finrank_subalgebra
 
 variable {F} {E}
 

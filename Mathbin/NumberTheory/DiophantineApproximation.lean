@@ -192,8 +192,7 @@ theorem exists_rat_abs_sub_lt_and_lt_of_irrational {ξ : ℝ} (hξ : Irrational 
                 exact_mod_cast (q'.pos : 1 ≤ q'.denom)⟩
   rw [sq, one_div_lt_one_div md_pos (mul_pos den_pos den_pos), mul_lt_mul_right den_pos]
   exact lt_add_of_le_of_pos (nat.cast_le.mpr hden) zero_lt_one
-#align
-  real.exists_rat_abs_sub_lt_and_lt_of_irrational Real.exists_rat_abs_sub_lt_and_lt_of_irrational
+#align real.exists_rat_abs_sub_lt_and_lt_of_irrational Real.exists_rat_abs_sub_lt_and_lt_of_irrational
 
 /-- If `ξ` is an irrational real number, then there are infinitely many good
 rational approximations to `ξ`. -/
@@ -206,8 +205,7 @@ theorem infinite_rat_abs_sub_lt_one_div_denom_sq_of_irrational {ξ : ℝ} (hξ :
       ⟨⌊ξ⌋, by simp [abs_of_nonneg, Int.fract_lt_one]⟩
   obtain ⟨q', hmem, hbetter⟩ := exists_rat_abs_sub_lt_and_lt_of_irrational hξ q
   exact lt_irrefl _ (lt_of_le_of_lt (hq q' hmem) hbetter)
-#align
-  real.infinite_rat_abs_sub_lt_one_div_denom_sq_of_irrational Real.infinite_rat_abs_sub_lt_one_div_denom_sq_of_irrational
+#align real.infinite_rat_abs_sub_lt_one_div_denom_sq_of_irrational Real.infinite_rat_abs_sub_lt_one_div_denom_sq_of_irrational
 
 end RatApprox
 
@@ -255,8 +253,7 @@ theorem denom_le_and_le_num_le_of_sub_lt_one_div_denom_sq {ξ q : ℚ}
     norm_cast  at h₁ h₂
     exact
       ⟨sub_le_iff_le_add.mpr (int.ceil_le.mpr h₁.le), sub_le_iff_le_add.mp (int.le_floor.mpr h₂.le)⟩
-#align
-  rat.denom_le_and_le_num_le_of_sub_lt_one_div_denom_sq Rat.denom_le_and_le_num_le_of_sub_lt_one_div_denom_sq
+#align rat.denom_le_and_le_num_le_of_sub_lt_one_div_denom_sq Rat.denom_le_and_le_num_le_of_sub_lt_one_div_denom_sq
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- A rational number has only finitely many good rational approximations. -/
@@ -297,6 +294,5 @@ theorem Real.infinite_rat_abs_sub_lt_one_div_denom_sq_iff_irrational (ξ : ℝ) 
   ext q
   rw [H, (by push_cast : (1 : ℝ) / q.denom ^ 2 = (1 / q.denom ^ 2 : ℚ))]
   norm_cast
-#align
-  real.infinite_rat_abs_sub_lt_one_div_denom_sq_iff_irrational Real.infinite_rat_abs_sub_lt_one_div_denom_sq_iff_irrational
+#align real.infinite_rat_abs_sub_lt_one_div_denom_sq_iff_irrational Real.infinite_rat_abs_sub_lt_one_div_denom_sq_iff_irrational
 

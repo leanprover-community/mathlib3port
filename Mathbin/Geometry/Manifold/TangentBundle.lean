@@ -141,15 +141,13 @@ theorem coord_change_comp' {i j k : atlas H M} {x : M} (hi : x ∈ i.1.source) (
   rw [show j x = _ by rw [← i.1.left_inv hi]]
   apply Z.coord_change_comp
   simp only [hi, hj, hk, mfld_simps]
-#align
-  basic_smooth_vector_bundle_core.coord_change_comp' BasicSmoothVectorBundleCore.coord_change_comp'
+#align basic_smooth_vector_bundle_core.coord_change_comp' BasicSmoothVectorBundleCore.coord_change_comp'
 
 /-- A reformulation of `coord_change_self`, formulated in terms of a point in `M`. -/
 theorem coord_change_self' {i : atlas H M} {x : M} (hi : x ∈ i.1.source) (v : F) :
     Z.coordChange i i (i x) v = v :=
   Z.coord_change_self i (i x) (i.1.MapsTo hi) v
-#align
-  basic_smooth_vector_bundle_core.coord_change_self' BasicSmoothVectorBundleCore.coord_change_self'
+#align basic_smooth_vector_bundle_core.coord_change_self' BasicSmoothVectorBundleCore.coord_change_self'
 
 /-- `Z.coord_change j i` is a partial inverse of `Z.coord_change i j`. -/
 theorem coord_change_comp_eq_self (i j : atlas H M) {x : H} (hx : x ∈ (i.1.symm.trans j.1).source)
@@ -158,16 +156,14 @@ theorem coord_change_comp_eq_self (i j : atlas H M) {x : H} (hx : x ∈ (i.1.sym
   rw [Z.coord_change_comp i j i x _ v, Z.coord_change_self _ _ hx.1]
   simp only [mfld_simps] at hx
   simp only [hx.1, hx.2, mfld_simps]
-#align
-  basic_smooth_vector_bundle_core.coord_change_comp_eq_self BasicSmoothVectorBundleCore.coord_change_comp_eq_self
+#align basic_smooth_vector_bundle_core.coord_change_comp_eq_self BasicSmoothVectorBundleCore.coord_change_comp_eq_self
 
 /-- `Z.coord_change j i` is a partial inverse of `Z.coord_change i j`,
 formulated in terms of a point in `M`. -/
 theorem coord_change_comp_eq_self' {i j : atlas H M} {x : M} (hi : x ∈ i.1.source)
     (hj : x ∈ j.1.source) (v : F) : Z.coordChange j i (j x) (Z.coordChange i j (i x) v) = v := by
   rw [Z.coord_change_comp' hi hj hi v, Z.coord_change_self' hi]
-#align
-  basic_smooth_vector_bundle_core.coord_change_comp_eq_self' BasicSmoothVectorBundleCore.coord_change_comp_eq_self'
+#align basic_smooth_vector_bundle_core.coord_change_comp_eq_self' BasicSmoothVectorBundleCore.coord_change_comp_eq_self'
 
 theorem coord_change_continuous (i j : atlas H M) :
     ContinuousOn (Z.coordChange i j) (i.1.symm.trans j.1).source :=
@@ -180,8 +176,7 @@ theorem coord_change_continuous (i j : atlas H M) :
     simp only [mfld_simps]
   · simp only [mfld_simps]
   · exact maps_to_image I _
-#align
-  basic_smooth_vector_bundle_core.coord_change_continuous BasicSmoothVectorBundleCore.coord_change_continuous
+#align basic_smooth_vector_bundle_core.coord_change_continuous BasicSmoothVectorBundleCore.coord_change_continuous
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -204,8 +199,7 @@ theorem coord_change_smooth (i j : atlas H M) :
           (prod_subset_preimage_fst _ _)
     · exact is_bounded_linear_map.snd.cont_diff.cont_diff_on
   exact A.comp_cont_diff_on B
-#align
-  basic_smooth_vector_bundle_core.coord_change_smooth BasicSmoothVectorBundleCore.coord_change_smooth
+#align basic_smooth_vector_bundle_core.coord_change_smooth BasicSmoothVectorBundleCore.coord_change_smooth
 
 /-- Vector bundle core associated to a basic smooth bundle core -/
 @[simps coordChange indexAt]
@@ -229,8 +223,7 @@ def toVectorBundleCore : VectorBundleCore 𝕜 M F (atlas H M)
     rintro p ⟨hp₁, hp₂⟩
     refine' ⟨hp₁, i.1.MapsTo hp₁, _⟩
     simp only [i.1.left_inv hp₁, hp₂, mfld_simps]
-#align
-  basic_smooth_vector_bundle_core.to_vector_bundle_core BasicSmoothVectorBundleCore.toVectorBundleCore
+#align basic_smooth_vector_bundle_core.to_vector_bundle_core BasicSmoothVectorBundleCore.toVectorBundleCore
 
 @[simp, mfld_simps]
 theorem base_set (i : atlas H M) : (Z.toVectorBundleCore.localTriv i).baseSet = i.1.source :=
@@ -298,15 +291,13 @@ theorem mem_atlas_iff (f : LocalHomeomorph Z.toVectorBundleCore.TotalSpace (Mode
 theorem mem_chart_source_iff (p q : Z.toVectorBundleCore.TotalSpace) :
     p ∈ (chartAt (ModelProd H F) q).source ↔ p.1 ∈ (chartAt H q.1).source := by
   simp only [chart_at, mfld_simps]
-#align
-  basic_smooth_vector_bundle_core.mem_chart_source_iff BasicSmoothVectorBundleCore.mem_chart_source_iff
+#align basic_smooth_vector_bundle_core.mem_chart_source_iff BasicSmoothVectorBundleCore.mem_chart_source_iff
 
 @[simp, mfld_simps]
 theorem mem_chart_target_iff (p : H × F) (q : Z.toVectorBundleCore.TotalSpace) :
     p ∈ (chartAt (ModelProd H F) q).target ↔ p.1 ∈ (chartAt H q.1).target := by
   simp only [chart_at, mfld_simps]
-#align
-  basic_smooth_vector_bundle_core.mem_chart_target_iff BasicSmoothVectorBundleCore.mem_chart_target_iff
+#align basic_smooth_vector_bundle_core.mem_chart_target_iff BasicSmoothVectorBundleCore.mem_chart_target_iff
 
 @[simp, mfld_simps]
 theorem coe_chart_at_fst (p q : Z.toVectorBundleCore.TotalSpace) :
@@ -318,8 +309,7 @@ theorem coe_chart_at_fst (p q : Z.toVectorBundleCore.TotalSpace) :
 theorem coe_chart_at_symm_fst (p : H × F) (q : Z.toVectorBundleCore.TotalSpace) :
     ((chartAt (ModelProd H F) q).symm p).1 = ((chartAt H q.1).symm : H → M) p.1 :=
   rfl
-#align
-  basic_smooth_vector_bundle_core.coe_chart_at_symm_fst BasicSmoothVectorBundleCore.coe_chart_at_symm_fst
+#align basic_smooth_vector_bundle_core.coe_chart_at_symm_fst BasicSmoothVectorBundleCore.coe_chart_at_symm_fst
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -391,8 +381,7 @@ instance to_smooth_manifold :
   rcases(Z.mem_atlas_iff _).1 he₀' with ⟨e', he', rfl⟩
   rw [contDiffGroupoid, mem_groupoid_of_pregroupoid]
   exact ⟨A e e' he he', A e' e he' he⟩
-#align
-  basic_smooth_vector_bundle_core.to_smooth_manifold BasicSmoothVectorBundleCore.to_smooth_manifold
+#align basic_smooth_vector_bundle_core.to_smooth_manifold BasicSmoothVectorBundleCore.to_smooth_manifold
 
 end BasicSmoothVectorBundleCore
 

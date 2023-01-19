@@ -116,8 +116,7 @@ theorem commutator_commutator_eq_bot_of_rotate (h1 : ⁅⁅H₂, H₃⁆, H₁�
   · group
   · rw [h1 _ (H₂.inv_mem hy) _ hz _ (H₁.inv_mem hx), h2 _ (H₃.inv_mem hz) _ (H₁.inv_mem hx) _ hy]
     group
-#align
-  subgroup.commutator_commutator_eq_bot_of_rotate Subgroup.commutator_commutator_eq_bot_of_rotate
+#align subgroup.commutator_commutator_eq_bot_of_rotate Subgroup.commutator_commutator_eq_bot_of_rotate
 
 variable (H₁ H₂)
 

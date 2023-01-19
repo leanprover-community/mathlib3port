@@ -325,8 +325,7 @@ theorem zmod_char_primitive_of_eq_one_only_at_zero (n : ℕ) (ψ : AddChar (Zmod
     congr_fun (congr_arg coeFn hf) 1
   rw [mul_shift_apply, mul_one, MonoidHom.one_apply] at h
   exact ha (hψ a h)
-#align
-  add_char.zmod_char_primitive_of_eq_one_only_at_zero AddChar.zmod_char_primitive_of_eq_one_only_at_zero
+#align add_char.zmod_char_primitive_of_eq_one_only_at_zero AddChar.zmod_char_primitive_of_eq_one_only_at_zero
 
 /-- The additive character on `zmod n` associated to a primitive `n`th root of unity
 is primitive -/

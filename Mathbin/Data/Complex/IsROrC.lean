@@ -1025,8 +1025,7 @@ variable {E}
 instance IsROrC.proper_space_submodule (S : Submodule K E) [FiniteDimensional K ↥S] :
     ProperSpace S :=
   proper_is_R_or_C K S
-#align
-  finite_dimensional.is_R_or_C.proper_space_submodule FiniteDimensional.IsROrC.proper_space_submodule
+#align finite_dimensional.is_R_or_C.proper_space_submodule FiniteDimensional.IsROrC.proper_space_submodule
 
 end FiniteDimensional
 

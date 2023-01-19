@@ -174,15 +174,13 @@ theorem extreme_points_singleton : ({x} : Set E).extremePoints 𝕜 = {x} :=
 theorem inter_extreme_points_subset_extreme_points_of_subset (hBA : B ⊆ A) :
     B ∩ A.extremePoints 𝕜 ⊆ B.extremePoints 𝕜 := fun x ⟨hxB, hxA⟩ =>
   ⟨hxB, fun x₁ hx₁ x₂ hx₂ hx => hxA.2 (hBA hx₁) (hBA hx₂) hx⟩
-#align
-  inter_extreme_points_subset_extreme_points_of_subset inter_extreme_points_subset_extreme_points_of_subset
+#align inter_extreme_points_subset_extreme_points_of_subset inter_extreme_points_subset_extreme_points_of_subset
 
 theorem IsExtreme.extreme_points_subset_extreme_points (hAB : IsExtreme 𝕜 A B) :
     B.extremePoints 𝕜 ⊆ A.extremePoints 𝕜 := fun x hx =>
   mem_extreme_points_iff_extreme_singleton.2
     (hAB.trans (mem_extreme_points_iff_extreme_singleton.1 hx))
-#align
-  is_extreme.extreme_points_subset_extreme_points IsExtreme.extreme_points_subset_extreme_points
+#align is_extreme.extreme_points_subset_extreme_points IsExtreme.extreme_points_subset_extreme_points
 
 theorem IsExtreme.extreme_points_eq (hAB : IsExtreme 𝕜 A B) :
     B.extremePoints 𝕜 = B ∩ A.extremePoints 𝕜 :=
@@ -244,8 +242,7 @@ theorem Convex.mem_extreme_points_iff_mem_diff_convex_hull_diff (hA : Convex �
     x ∈ A.extremePoints 𝕜 ↔ x ∈ A \ convexHull 𝕜 (A \ {x}) := by
   rw [hA.mem_extreme_points_iff_convex_diff, hA.convex_remove_iff_not_mem_convex_hull_remove,
     mem_diff]
-#align
-  convex.mem_extreme_points_iff_mem_diff_convex_hull_diff Convex.mem_extreme_points_iff_mem_diff_convex_hull_diff
+#align convex.mem_extreme_points_iff_mem_diff_convex_hull_diff Convex.mem_extreme_points_iff_mem_diff_convex_hull_diff
 
 theorem extreme_points_convex_hull_subset : (convexHull 𝕜 A).extremePoints 𝕜 ⊆ A :=
   by

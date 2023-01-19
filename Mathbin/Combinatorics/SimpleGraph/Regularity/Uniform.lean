@@ -293,8 +293,7 @@ variable {P G ε s} {t : Finset α}
 theorem nonuniform_witness_mem_nonuniform_witnesses (h : ¬G.IsUniform ε s t) (ht : t ∈ P.parts)
     (hst : s ≠ t) : G.nonuniformWitness ε s t ∈ P.nonuniformWitnesses G ε s :=
   mem_image_of_mem _ <| mem_filter.2 ⟨ht, hst, h⟩
-#align
-  finpartition.nonuniform_witness_mem_nonuniform_witnesses Finpartition.nonuniform_witness_mem_nonuniform_witnesses
+#align finpartition.nonuniform_witness_mem_nonuniform_witnesses Finpartition.nonuniform_witness_mem_nonuniform_witnesses
 
 end Finpartition
 

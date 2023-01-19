@@ -194,8 +194,7 @@ theorem poly_eq_of_witt_polynomial_bind_eq' (f g : ℕ → MvPolynomial (idx × 
     congr_arg (fun fam => bind₁ (MvPolynomial.map (Int.castRingHom ℚ) ∘ fam) (xInTermsOfW p ℚ n)) h
   simpa only [Function.comp, map_bind₁, map_witt_polynomial, ← bind₁_bind₁,
     bind₁_witt_polynomial_X_in_terms_of_W, bind₁_X_right] using h
-#align
-  witt_vector.poly_eq_of_witt_polynomial_bind_eq' WittVector.poly_eq_of_witt_polynomial_bind_eq'
+#align witt_vector.poly_eq_of_witt_polynomial_bind_eq' WittVector.poly_eq_of_witt_polynomial_bind_eq'
 
 theorem poly_eq_of_witt_polynomial_bind_eq (f g : ℕ → MvPolynomial ℕ ℤ)
     (h : ∀ n, bind₁ f (wittPolynomial p _ n) = bind₁ g (wittPolynomial p _ n)) : f = g :=

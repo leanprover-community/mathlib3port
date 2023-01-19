@@ -135,8 +135,7 @@ def coeRingHom : α →+* Completion α :=
 
 theorem continuous_coe_ring_hom : Continuous (coeRingHom : α → Completion α) :=
   continuous_coe α
-#align
-  uniform_space.completion.continuous_coe_ring_hom UniformSpace.Completion.continuous_coe_ring_hom
+#align uniform_space.completion.continuous_coe_ring_hom UniformSpace.Completion.continuous_coe_ring_hom
 
 variable {β : Type u} [UniformSpace β] [Ring β] [UniformAddGroup β] [TopologicalRing β]
   (f : α →+* β) (hf : Continuous f)

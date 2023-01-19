@@ -784,8 +784,7 @@ theorem not_is_field_iff_exists_ideal_bot_lt_and_lt_top [Nontrivial R] :
     obtain ⟨y, hy⟩ := hf.mul_inv_cancel NeZero
     rw [lt_top_iff_ne_top, Ne.def, Ideal.eq_top_iff_one, ← hy] at lt_top
     exact lt_top (I.mul_mem_right _ mem)
-#align
-  ring.not_is_field_iff_exists_ideal_bot_lt_and_lt_top Ring.not_is_field_iff_exists_ideal_bot_lt_and_lt_top
+#align ring.not_is_field_iff_exists_ideal_bot_lt_and_lt_top Ring.not_is_field_iff_exists_ideal_bot_lt_and_lt_top
 
 theorem not_is_field_iff_exists_prime [Nontrivial R] :
     ¬IsField R ↔ ∃ p : Ideal R, p ≠ ⊥ ∧ p.IsPrime :=

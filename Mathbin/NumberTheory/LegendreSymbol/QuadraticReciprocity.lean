@@ -398,8 +398,7 @@ theorem quadratic_reciprocity_one_mod_four (hp : p % 4 = 1) (hq : q ≠ 2) :
     legendreSym q p = legendreSym p q := by
   rw [quadratic_reciprocity' (prime.mod_two_eq_one_iff_ne_two.mp (odd_of_mod_four_eq_one hp)) hq,
     pow_mul, neg_one_pow_div_two_of_one_mod_four hp, one_pow, one_mul]
-#align
-  legendre_sym.quadratic_reciprocity_one_mod_four legendreSym.quadratic_reciprocity_one_mod_four
+#align legendre_sym.quadratic_reciprocity_one_mod_four legendreSym.quadratic_reciprocity_one_mod_four
 
 /-- The Law of Quadratic Reciprocity: if `p` and `q` are primes that are both congruent
 to `3` mod `4`, then `(q / p) = -(p / q)`. -/
@@ -409,8 +408,7 @@ theorem quadratic_reciprocity_three_mod_four (hp : p % 4 = 3) (hq : q % 4 = 3) :
   let nop := @neg_one_pow_div_two_of_three_mod_four
   rw [quadratic_reciprocity', pow_mul, nop hp, nop hq, neg_one_mul] <;>
     rwa [← prime.mod_two_eq_one_iff_ne_two, odd_of_mod_four_eq_three]
-#align
-  legendre_sym.quadratic_reciprocity_three_mod_four legendreSym.quadratic_reciprocity_three_mod_four
+#align legendre_sym.quadratic_reciprocity_three_mod_four legendreSym.quadratic_reciprocity_three_mod_four
 
 end legendreSym
 
@@ -436,8 +434,7 @@ theorem exists_sq_eq_prime_iff_of_mod_four_eq_three (hp3 : p % 4 = 3) (hq3 : q %
     (hpq : p ≠ q) : IsSquare (q : Zmod p) ↔ ¬IsSquare (p : Zmod q) := by
   rw [← eq_one_iff' p (prime_ne_zero p q hpq), ← eq_neg_one_iff' q,
     quadratic_reciprocity_three_mod_four hp3 hq3, neg_inj]
-#align
-  zmod.exists_sq_eq_prime_iff_of_mod_four_eq_three Zmod.exists_sq_eq_prime_iff_of_mod_four_eq_three
+#align zmod.exists_sq_eq_prime_iff_of_mod_four_eq_three Zmod.exists_sq_eq_prime_iff_of_mod_four_eq_three
 
 end Zmod
 

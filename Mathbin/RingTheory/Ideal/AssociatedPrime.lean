@@ -111,8 +111,7 @@ theorem exists_le_is_associated_prime_of_is_noetherian_ring [H : IsNoetherianRin
     rwa [Ne.def, Submodule.annihilator_eq_top_iff, Submodule.span_singleton_eq_bot]
   rwa [← h₃ (R ∙ a • y).annihilator ⟨l.trans H₁, H₂, _, rfl⟩ H₁,
     Submodule.mem_annihilator_span_singleton, smul_comm, smul_smul]
-#align
-  exists_le_is_associated_prime_of_is_noetherian_ring exists_le_is_associated_prime_of_is_noetherian_ring
+#align exists_le_is_associated_prime_of_is_noetherian_ring exists_le_is_associated_prime_of_is_noetherian_ring
 
 variable {R}
 

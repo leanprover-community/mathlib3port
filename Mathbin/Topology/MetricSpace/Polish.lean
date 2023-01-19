@@ -154,8 +154,7 @@ theorem exists_nat_nat_continuous_surjective (α : Type _) [TopologicalSpace α]
     [Nonempty α] : ∃ f : (ℕ → ℕ) → α, Continuous f ∧ Surjective f :=
   letI := upgradePolishSpace α
   exists_nat_nat_continuous_surjective_of_complete_space α
-#align
-  polish_space.exists_nat_nat_continuous_surjective PolishSpace.exists_nat_nat_continuous_surjective
+#align polish_space.exists_nat_nat_continuous_surjective PolishSpace.exists_nat_nat_continuous_surjective
 
 /-- Given a closed embedding into a Polish space, the source space is also Polish. -/
 theorem ClosedEmbedding.polish_space [TopologicalSpace α] [TopologicalSpace β] [PolishSpace β]

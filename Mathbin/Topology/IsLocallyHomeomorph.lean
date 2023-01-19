@@ -94,8 +94,7 @@ variable {f}
 theorem is_locally_homeomorph_iff_is_locally_homeomorph_on_univ :
     IsLocallyHomeomorph f ↔ IsLocallyHomeomorphOn f Set.univ := by
   simp only [IsLocallyHomeomorph, IsLocallyHomeomorphOn, Set.mem_univ, forall_true_left]
-#align
-  is_locally_homeomorph_iff_is_locally_homeomorph_on_univ is_locally_homeomorph_iff_is_locally_homeomorph_on_univ
+#align is_locally_homeomorph_iff_is_locally_homeomorph_on_univ is_locally_homeomorph_iff_is_locally_homeomorph_on_univ
 
 protected theorem IsLocallyHomeomorph.is_locally_homeomorph_on (hf : IsLocallyHomeomorph f) :
     IsLocallyHomeomorphOn f Set.univ :=

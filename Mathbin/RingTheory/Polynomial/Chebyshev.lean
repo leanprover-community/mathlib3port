@@ -172,8 +172,7 @@ theorem T_eq_X_mul_T_sub_pol_U : ∀ n : ℕ, t R (n + 2) = X * t R (n + 1) - (1
 theorem one_sub_X_sq_mul_U_eq_pol_in_T (n : ℕ) :
     (1 - X ^ 2) * u R n = X * t R (n + 1) - t R (n + 2) := by
   rw [T_eq_X_mul_T_sub_pol_U, ← sub_add, sub_self, zero_add]
-#align
-  polynomial.chebyshev.one_sub_X_sq_mul_U_eq_pol_in_T Polynomial.Chebyshev.one_sub_X_sq_mul_U_eq_pol_in_T
+#align polynomial.chebyshev.one_sub_X_sq_mul_U_eq_pol_in_T Polynomial.Chebyshev.one_sub_X_sq_mul_U_eq_pol_in_T
 
 variable {R S}
 
@@ -238,8 +237,7 @@ theorem one_sub_X_sq_mul_derivative_T_eq_poly_in_T (n : ℕ) :
       rw [one_sub_X_sq_mul_U_eq_pol_in_T, T_add_two]
     _ = (n + 1) * (t R n - X * t R (n + 1)) := by ring
     
-#align
-  polynomial.chebyshev.one_sub_X_sq_mul_derivative_T_eq_poly_in_T Polynomial.Chebyshev.one_sub_X_sq_mul_derivative_T_eq_poly_in_T
+#align polynomial.chebyshev.one_sub_X_sq_mul_derivative_T_eq_poly_in_T Polynomial.Chebyshev.one_sub_X_sq_mul_derivative_T_eq_poly_in_T
 
 theorem add_one_mul_T_eq_poly_in_U (n : ℕ) :
     ((n : R[X]) + 1) * t R (n + 1) = X * u R n - (1 - X ^ 2) * derivative (u R n) :=
@@ -270,8 +268,7 @@ theorem add_one_mul_T_eq_poly_in_U (n : ℕ) :
       by rw [h]
     _ = X * U R n - (1 - X ^ 2) * derivative (U R n) := by ring
     
-#align
-  polynomial.chebyshev.add_one_mul_T_eq_poly_in_U Polynomial.Chebyshev.add_one_mul_T_eq_poly_in_U
+#align polynomial.chebyshev.add_one_mul_T_eq_poly_in_U Polynomial.Chebyshev.add_one_mul_T_eq_poly_in_U
 
 variable (R)
 

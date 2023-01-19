@@ -72,8 +72,7 @@ theorem is_reduced_of_stalk_is_reduced [∀ x : X.carrier, IsReduced (X.Presheaf
   rw [RingHom.map_zero]
   change X.presheaf.germ x s = 0
   exact (hs.map _).eq_zero
-#align
-  algebraic_geometry.is_reduced_of_stalk_is_reduced AlgebraicGeometry.is_reduced_of_stalk_is_reduced
+#align algebraic_geometry.is_reduced_of_stalk_is_reduced AlgebraicGeometry.is_reduced_of_stalk_is_reduced
 
 instance stalk_is_reduced_of_reduced [IsReduced X] (x : X.carrier) :
     IsReduced (X.Presheaf.stalk x) := by
@@ -101,8 +100,7 @@ theorem is_reduced_of_open_immersion {X Y : SchemeCat} (f : X ⟶ Y) [H : IsOpen
     is_reduced_of_injective (inv <| f.1.c.app (op <| H.base_open.is_open_map.functor.obj U))
       (as_iso <| f.1.c.app (op <| H.base_open.is_open_map.functor.obj U) :
               Y.presheaf.obj _ ≅ _).symm.commRingIsoToRingEquiv.Injective
-#align
-  algebraic_geometry.is_reduced_of_open_immersion AlgebraicGeometry.is_reduced_of_open_immersion
+#align algebraic_geometry.is_reduced_of_open_immersion AlgebraicGeometry.is_reduced_of_open_immersion
 
 instance {R : CommRingCat} [H : IsReduced R] : IsReduced (SchemeCat.spec.obj <| op R) :=
   by
@@ -139,8 +137,7 @@ theorem is_reduced_of_is_affine_is_reduced [IsAffine X] [h : IsReduced (X.Preshe
     rw [affine_is_reduced_iff]
     exact h
   is_reduced_of_open_immersion X.iso_Spec.hom
-#align
-  algebraic_geometry.is_reduced_of_is_affine_is_reduced AlgebraicGeometry.is_reduced_of_is_affine_is_reduced
+#align algebraic_geometry.is_reduced_of_is_affine_is_reduced AlgebraicGeometry.is_reduced_of_is_affine_is_reduced
 
 /-- To show that a statement `P` holds for all open subsets of all schemes, it suffices to show that
 1. In any scheme `X`, if `P` holds for an open cover of `U`, then `P` holds for `U`.
@@ -225,8 +222,7 @@ theorem eq_zero_of_basic_open_eq_bot {X : SchemeCat} [hX : IsReduced X] {U : Ope
     rw [iso.hom_inv_id_apply] at hs
     rw [hs, map_zero]
     exact @is_reduced.component_reduced hX ⊤
-#align
-  algebraic_geometry.eq_zero_of_basic_open_eq_bot AlgebraicGeometry.eq_zero_of_basic_open_eq_bot
+#align algebraic_geometry.eq_zero_of_basic_open_eq_bot AlgebraicGeometry.eq_zero_of_basic_open_eq_bot
 
 @[simp]
 theorem basic_open_eq_bot_iff {X : SchemeCat} [IsReduced X] {U : Opens X.carrier}
@@ -291,8 +287,7 @@ instance is_irreducible_of_is_integral [IsIntegral X] : IrreducibleSpace X.carri
       exacts[hS h, hT h]
     · intro x
       exact x.rec _
-#align
-  algebraic_geometry.is_irreducible_of_is_integral AlgebraicGeometry.is_irreducible_of_is_integral
+#align algebraic_geometry.is_irreducible_of_is_integral AlgebraicGeometry.is_irreducible_of_is_integral
 
 theorem is_integral_of_is_irreducible_is_reduced [IsReduced X] [H : IrreducibleSpace X.carrier] :
     IsIntegral X := by
@@ -316,15 +311,13 @@ theorem is_integral_of_is_irreducible_is_reduced [IsReduced X] [H : IrreducibleS
     convert hx₁.mul hx₂
     exact e.symm
   exact NoZeroDivisors.to_isDomain _
-#align
-  algebraic_geometry.is_integral_of_is_irreducible_is_reduced AlgebraicGeometry.is_integral_of_is_irreducible_is_reduced
+#align algebraic_geometry.is_integral_of_is_irreducible_is_reduced AlgebraicGeometry.is_integral_of_is_irreducible_is_reduced
 
 theorem is_integral_iff_is_irreducible_and_is_reduced :
     IsIntegral X ↔ IrreducibleSpace X.carrier ∧ IsReduced X :=
   ⟨fun _ => ⟨inferInstance, inferInstance⟩, fun ⟨_, _⟩ =>
     is_integral_of_is_irreducible_is_reduced X⟩
-#align
-  algebraic_geometry.is_integral_iff_is_irreducible_and_is_reduced AlgebraicGeometry.is_integral_iff_is_irreducible_and_is_reduced
+#align algebraic_geometry.is_integral_iff_is_irreducible_and_is_reduced AlgebraicGeometry.is_integral_iff_is_irreducible_and_is_reduced
 
 theorem is_integral_of_open_immersion {X Y : SchemeCat} (f : X ⟶ Y) [H : IsOpenImmersion f]
     [IsIntegral Y] [Nonempty X.carrier] : IsIntegral X :=
@@ -345,8 +338,7 @@ theorem is_integral_of_open_immersion {X Y : SchemeCat} (f : X ⟶ Y) [H : IsOpe
     (as_iso <| f.1.c.app (op <| H.base_open.is_open_map.functor.obj U) :
               Y.presheaf.obj _ ≅ _).symm.commRingIsoToRingEquiv.IsDomain
       _
-#align
-  algebraic_geometry.is_integral_of_open_immersion AlgebraicGeometry.is_integral_of_open_immersion
+#align algebraic_geometry.is_integral_of_open_immersion AlgebraicGeometry.is_integral_of_open_immersion
 
 instance {R : CommRingCat} [H : IsDomain R] : IsIntegral (SchemeCat.spec.obj <| op R) :=
   by
@@ -370,8 +362,7 @@ theorem is_integral_of_is_affine_is_domain [IsAffine X] [Nonempty X.carrier]
     rw [affine_is_integral_iff]
     exact h
   is_integral_of_open_immersion X.iso_Spec.hom
-#align
-  algebraic_geometry.is_integral_of_is_affine_is_domain AlgebraicGeometry.is_integral_of_is_affine_is_domain
+#align algebraic_geometry.is_integral_of_is_affine_is_domain AlgebraicGeometry.is_integral_of_is_affine_is_domain
 
 theorem map_injective_of_is_integral [IsIntegral X] {U V : Opens X.carrier} (i : U ⟶ V)
     [H : Nonempty U] : Function.Injective (X.Presheaf.map i.op) :=
@@ -385,8 +376,7 @@ theorem map_injective_of_is_integral [IsIntegral X] {U V : Opens X.carrier} (i :
   simp_rw [← opens.not_nonempty_iff_eq_bot, not_not]
   apply nonempty_preirreducible_inter U.prop (RingedSpace.basic_open _ _).Prop
   simpa using H
-#align
-  algebraic_geometry.map_injective_of_is_integral AlgebraicGeometry.map_injective_of_is_integral
+#align algebraic_geometry.map_injective_of_is_integral AlgebraicGeometry.map_injective_of_is_integral
 
 end AlgebraicGeometry
 

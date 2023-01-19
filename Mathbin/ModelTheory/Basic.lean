@@ -177,8 +177,7 @@ theorem card_eq_card_functions_add_card_relations :
       (Cardinal.sum fun l => Cardinal.lift.{v} (#L.Functions l)) +
         Cardinal.sum fun l => Cardinal.lift.{u} (#L.Relations l) :=
   by simp [card, symbols]
-#align
-  first_order.language.card_eq_card_functions_add_card_relations FirstOrder.Language.card_eq_card_functions_add_card_relations
+#align first_order.language.card_eq_card_functions_add_card_relations FirstOrder.Language.card_eq_card_functions_add_card_relations
 
 instance [L.IsRelational] {n : ℕ} : IsEmpty (L.Functions n) :=
   IsRelational.empty_functions n
@@ -189,13 +188,11 @@ instance [L.IsAlgebraic] {n : ℕ} : IsEmpty (L.Relations n) :=
 instance is_relational_of_empty_functions {symb : ℕ → Type _} :
     IsRelational ⟨fun _ => Empty, symb⟩ :=
   ⟨fun _ => Empty.is_empty⟩
-#align
-  first_order.language.is_relational_of_empty_functions FirstOrder.Language.is_relational_of_empty_functions
+#align first_order.language.is_relational_of_empty_functions FirstOrder.Language.is_relational_of_empty_functions
 
 instance is_algebraic_of_empty_relations {symb : ℕ → Type _} : IsAlgebraic ⟨symb, fun _ => Empty⟩ :=
   ⟨fun _ => Empty.is_empty⟩
-#align
-  first_order.language.is_algebraic_of_empty_relations FirstOrder.Language.is_algebraic_of_empty_relations
+#align first_order.language.is_algebraic_of_empty_relations FirstOrder.Language.is_algebraic_of_empty_relations
 
 instance is_relational_empty : IsRelational Language.empty :=
   language.is_relational_of_empty_functions
@@ -231,15 +228,13 @@ instance subsingleton_mk₂_functions {c f₁ f₂ : Type u} {r₁ r₂ : Type v
     Subsingleton ((Language.mk₂ c f₁ f₂ r₁ r₂).Functions n) :=
   Nat.casesOn n h0 fun n =>
     Nat.casesOn n h1 fun n => Nat.casesOn n h2 fun n => ⟨fun x => PEmpty.elim x⟩
-#align
-  first_order.language.subsingleton_mk₂_functions FirstOrder.Language.subsingleton_mk₂_functions
+#align first_order.language.subsingleton_mk₂_functions FirstOrder.Language.subsingleton_mk₂_functions
 
 instance subsingleton_mk₂_relations {c f₁ f₂ : Type u} {r₁ r₂ : Type v} [h1 : Subsingleton r₁]
     [h2 : Subsingleton r₂] {n : ℕ} : Subsingleton ((Language.mk₂ c f₁ f₂ r₁ r₂).Relations n) :=
   Nat.casesOn n ⟨fun x => PEmpty.elim x⟩ fun n =>
     Nat.casesOn n h1 fun n => Nat.casesOn n h2 fun n => ⟨fun x => PEmpty.elim x⟩
-#align
-  first_order.language.subsingleton_mk₂_relations FirstOrder.Language.subsingleton_mk₂_relations
+#align first_order.language.subsingleton_mk₂_relations FirstOrder.Language.subsingleton_mk₂_relations
 
 @[simp]
 theorem empty_card : Language.empty.card = 0 := by simp [card_eq_card_functions_add_card_relations]
@@ -253,8 +248,7 @@ instance is_empty_empty : IsEmpty Language.empty.Symbols :=
 
 instance Countable.countable_functions [h : Countable L.Symbols] : Countable (Σl, L.Functions l) :=
   @Function.Injective.countable _ _ h _ Sum.inl_injective
-#align
-  first_order.language.countable.countable_functions FirstOrder.Language.Countable.countable_functions
+#align first_order.language.countable.countable_functions FirstOrder.Language.Countable.countable_functions
 
 @[simp]
 theorem card_functions_sum (i : ℕ) :
@@ -306,8 +300,7 @@ open StructureCat
 /-- Used for defining `first_order.language.Theory.Model.inhabited`. -/
 def inhabited.trivialStructure {α : Type _} [Inhabited α] : L.StructureCat α :=
   ⟨default, default⟩
-#align
-  first_order.language.inhabited.trivial_structure FirstOrder.Language.inhabited.trivialStructure
+#align first_order.language.inhabited.trivial_structure FirstOrder.Language.inhabited.trivialStructure
 
 /-! ### Maps -/
 
@@ -360,8 +353,7 @@ theorem fun_map_eq_coe_constants {c : L.Constants} {x : Fin 0 → M} : funMap c 
   be a global instance, because `L` becomes a metavariable. -/
 theorem nonempty_of_nonempty_constants [h : Nonempty L.Constants] : Nonempty M :=
   h.map coe
-#align
-  first_order.language.nonempty_of_nonempty_constants FirstOrder.Language.nonempty_of_nonempty_constants
+#align first_order.language.nonempty_of_nonempty_constants FirstOrder.Language.nonempty_of_nonempty_constants
 
 /-- The function map for `first_order.language.Structure₂`. -/
 def funMap₂ {c f₁ f₂ : Type u} {r₁ r₂ : Type v} (c' : c → M) (f₁' : f₁ → M → M)
@@ -457,8 +449,7 @@ def HomClass.strongHomClassOfIsAlgebraic [L.IsAlgebraic] {F M N} [L.StructureCat
     where
   map_fun := HomClass.map_fun
   map_rel φ n R x := (IsAlgebraic.empty_relations n).elim R
-#align
-  first_order.language.hom_class.strong_hom_class_of_is_algebraic FirstOrder.Language.HomClass.strongHomClassOfIsAlgebraic
+#align first_order.language.hom_class.strong_hom_class_of_is_algebraic FirstOrder.Language.HomClass.strongHomClassOfIsAlgebraic
 
 theorem HomClass.map_constants {F M N} [L.StructureCat M] [L.StructureCat N]
     [FunLike F M fun _ => N] [HomClass L F M N] (φ : F) (c : L.Constants) : φ c = c :=
@@ -650,16 +641,14 @@ def ofInjective [L.IsAlgebraic] {f : M →[L] N} (hf : Function.Injective f) : M
 theorem coe_fn_of_injective [L.IsAlgebraic] {f : M →[L] N} (hf : Function.Injective f) :
     (ofInjective hf : M → N) = f :=
   rfl
-#align
-  first_order.language.embedding.coe_fn_of_injective FirstOrder.Language.Embedding.coe_fn_of_injective
+#align first_order.language.embedding.coe_fn_of_injective FirstOrder.Language.Embedding.coe_fn_of_injective
 
 @[simp]
 theorem of_injective_to_hom [L.IsAlgebraic] {f : M →[L] N} (hf : Function.Injective f) :
     (ofInjective hf).toHom = f := by
   ext
   simp
-#align
-  first_order.language.embedding.of_injective_to_hom FirstOrder.Language.Embedding.of_injective_to_hom
+#align first_order.language.embedding.of_injective_to_hom FirstOrder.Language.Embedding.of_injective_to_hom
 
 variable (L) (M)
 
@@ -712,8 +701,7 @@ def StrongHomClass.toEmbedding {F M N} [L.StructureCat M] [L.StructureCat N] [Em
     [StrongHomClass L F M N] : F → M ↪[L] N := fun φ =>
   ⟨⟨φ, EmbeddingLike.injective φ⟩, fun _ => StrongHomClass.map_fun φ, fun _ =>
     StrongHomClass.map_rel φ⟩
-#align
-  first_order.language.strong_hom_class.to_embedding FirstOrder.Language.StrongHomClass.toEmbedding
+#align first_order.language.strong_hom_class.to_embedding FirstOrder.Language.StrongHomClass.toEmbedding
 
 namespace Equiv
 
@@ -923,8 +911,7 @@ theorem empty.nonempty_embedding_iff :
     Nonempty (M ↪[language.empty] N) ↔ Cardinal.lift.{w'} (#M) ≤ Cardinal.lift.{w} (#N) :=
   trans ⟨Nonempty.map fun f => f.toEmbedding, Nonempty.map fun f => { toEmbedding := f }⟩
     Cardinal.lift_mk_le'.symm
-#align
-  first_order.language.empty.nonempty_embedding_iff FirstOrder.Language.empty.nonempty_embedding_iff
+#align first_order.language.empty.nonempty_embedding_iff FirstOrder.Language.empty.nonempty_embedding_iff
 
 @[simp]
 theorem empty.nonempty_equiv_iff :

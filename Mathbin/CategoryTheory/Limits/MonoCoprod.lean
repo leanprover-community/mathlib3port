@@ -54,8 +54,7 @@ instance (priority := 100) monoCoprodOfHasZeroMorphisms [HasZeroMorphisms C] : M
     haveI : is_split_mono c.inl :=
       is_split_mono.mk' (split_mono.mk (hc.desc (binary_cofan.mk (𝟙 A) 0)) (is_colimit.fac _ _ _))
     infer_instance⟩
-#align
-  category_theory.limits.mono_coprod_of_has_zero_morphisms CategoryTheory.Limits.monoCoprodOfHasZeroMorphisms
+#align category_theory.limits.mono_coprod_of_has_zero_morphisms CategoryTheory.Limits.monoCoprodOfHasZeroMorphisms
 
 namespace MonoCoprod
 
@@ -68,8 +67,7 @@ theorem binary_cofan_inr {A B : C} [MonoCoprod C] (c : BinaryCofan A B) (hc : Is
         (by simp only [h₂, is_colimit.fac, binary_cofan.ι_app_left, binary_cofan.mk_inl])
         (by simp only [h₁, is_colimit.fac, binary_cofan.ι_app_right, binary_cofan.mk_inr])
   binary_cofan_inl _ hc'
-#align
-  category_theory.limits.mono_coprod.binary_cofan_inr CategoryTheory.Limits.MonoCoprod.binary_cofan_inr
+#align category_theory.limits.mono_coprod.binary_cofan_inr CategoryTheory.Limits.MonoCoprod.binary_cofan_inr
 
 instance {A B : C} [MonoCoprod C] [HasBinaryCoproduct A B] : Mono (coprod.inl : A ⟶ A ⨿ B) :=
   binary_cofan_inl _ (colimit.isColimit _)
@@ -118,8 +116,7 @@ instance monoCoprodType : MonoCoprod (Type u) :=
       simp only [binary_cofan.mk_inl] at h
       dsimp at h
       simpa only using h
-#align
-  category_theory.limits.mono_coprod.mono_coprod_type CategoryTheory.Limits.MonoCoprod.monoCoprodType
+#align category_theory.limits.mono_coprod.mono_coprod_type CategoryTheory.Limits.MonoCoprod.monoCoprodType
 
 end MonoCoprod
 

@@ -76,52 +76,44 @@ instance preserves_monomorphisms_comp (F : C ⥤ D) (G : D ⥤ E) [PreservesMono
     where preserves X Y f h := by
     rw [comp_map]
     exact inferInstance
-#align
-  category_theory.functor.preserves_monomorphisms_comp CategoryTheory.Functor.preserves_monomorphisms_comp
+#align category_theory.functor.preserves_monomorphisms_comp CategoryTheory.Functor.preserves_monomorphisms_comp
 
 instance preserves_epimorphisms_comp (F : C ⥤ D) (G : D ⥤ E) [PreservesEpimorphisms F]
     [PreservesEpimorphisms G] : PreservesEpimorphisms (F ⋙ G)
     where preserves X Y f h := by
     rw [comp_map]
     exact inferInstance
-#align
-  category_theory.functor.preserves_epimorphisms_comp CategoryTheory.Functor.preserves_epimorphisms_comp
+#align category_theory.functor.preserves_epimorphisms_comp CategoryTheory.Functor.preserves_epimorphisms_comp
 
 instance reflects_monomorphisms_comp (F : C ⥤ D) (G : D ⥤ E) [ReflectsMonomorphisms F]
     [ReflectsMonomorphisms G] : ReflectsMonomorphisms (F ⋙ G)
     where reflects X Y f h := F.mono_of_mono_map (G.mono_of_mono_map h)
-#align
-  category_theory.functor.reflects_monomorphisms_comp CategoryTheory.Functor.reflects_monomorphisms_comp
+#align category_theory.functor.reflects_monomorphisms_comp CategoryTheory.Functor.reflects_monomorphisms_comp
 
 instance reflects_epimorphisms_comp (F : C ⥤ D) (G : D ⥤ E) [ReflectsEpimorphisms F]
     [ReflectsEpimorphisms G] : ReflectsEpimorphisms (F ⋙ G)
     where reflects X Y f h := F.epi_of_epi_map (G.epi_of_epi_map h)
-#align
-  category_theory.functor.reflects_epimorphisms_comp CategoryTheory.Functor.reflects_epimorphisms_comp
+#align category_theory.functor.reflects_epimorphisms_comp CategoryTheory.Functor.reflects_epimorphisms_comp
 
 theorem preserves_epimorphisms_of_preserves_of_reflects (F : C ⥤ D) (G : D ⥤ E)
     [PreservesEpimorphisms (F ⋙ G)] [ReflectsEpimorphisms G] : PreservesEpimorphisms F :=
   ⟨fun X Y f hf => G.epi_of_epi_map <| show Epi ((F ⋙ G).map f) from inferInstance⟩
-#align
-  category_theory.functor.preserves_epimorphisms_of_preserves_of_reflects CategoryTheory.Functor.preserves_epimorphisms_of_preserves_of_reflects
+#align category_theory.functor.preserves_epimorphisms_of_preserves_of_reflects CategoryTheory.Functor.preserves_epimorphisms_of_preserves_of_reflects
 
 theorem preserves_monomorphisms_of_preserves_of_reflects (F : C ⥤ D) (G : D ⥤ E)
     [PreservesMonomorphisms (F ⋙ G)] [ReflectsMonomorphisms G] : PreservesMonomorphisms F :=
   ⟨fun X Y f hf => G.mono_of_mono_map <| show Mono ((F ⋙ G).map f) from inferInstance⟩
-#align
-  category_theory.functor.preserves_monomorphisms_of_preserves_of_reflects CategoryTheory.Functor.preserves_monomorphisms_of_preserves_of_reflects
+#align category_theory.functor.preserves_monomorphisms_of_preserves_of_reflects CategoryTheory.Functor.preserves_monomorphisms_of_preserves_of_reflects
 
 theorem reflects_epimorphisms_of_preserves_of_reflects (F : C ⥤ D) (G : D ⥤ E)
     [PreservesEpimorphisms G] [ReflectsEpimorphisms (F ⋙ G)] : ReflectsEpimorphisms F :=
   ⟨fun X Y f hf => (F ⋙ G).epi_of_epi_map <| show Epi (G.map (F.map f)) from inferInstance⟩
-#align
-  category_theory.functor.reflects_epimorphisms_of_preserves_of_reflects CategoryTheory.Functor.reflects_epimorphisms_of_preserves_of_reflects
+#align category_theory.functor.reflects_epimorphisms_of_preserves_of_reflects CategoryTheory.Functor.reflects_epimorphisms_of_preserves_of_reflects
 
 theorem reflects_monomorphisms_of_preserves_of_reflects (F : C ⥤ D) (G : D ⥤ E)
     [PreservesMonomorphisms G] [ReflectsMonomorphisms (F ⋙ G)] : ReflectsMonomorphisms F :=
   ⟨fun X Y f hf => (F ⋙ G).mono_of_mono_map <| show Mono (G.map (F.map f)) from inferInstance⟩
-#align
-  category_theory.functor.reflects_monomorphisms_of_preserves_of_reflects CategoryTheory.Functor.reflects_monomorphisms_of_preserves_of_reflects
+#align category_theory.functor.reflects_monomorphisms_of_preserves_of_reflects CategoryTheory.Functor.reflects_monomorphisms_of_preserves_of_reflects
 
 theorem PreservesMonomorphisms.of_iso {F G : C ⥤ D} [PreservesMonomorphisms F] (α : F ≅ G) :
     PreservesMonomorphisms G :=
@@ -131,14 +123,12 @@ theorem PreservesMonomorphisms.of_iso {F G : C ⥤ D} [PreservesMonomorphisms F]
       haveI : mono (F.map f ≫ (α.app Y).Hom) := mono_comp _ _
       convert (mono_comp _ _ : mono ((α.app X).inv ≫ F.map f ≫ (α.app Y).Hom))
       rw [iso.eq_inv_comp, iso.app_hom, iso.app_hom, nat_trans.naturality] }
-#align
-  category_theory.functor.preserves_monomorphisms.of_iso CategoryTheory.Functor.PreservesMonomorphisms.of_iso
+#align category_theory.functor.preserves_monomorphisms.of_iso CategoryTheory.Functor.PreservesMonomorphisms.of_iso
 
 theorem PreservesMonomorphisms.iso_iff {F G : C ⥤ D} (α : F ≅ G) :
     PreservesMonomorphisms F ↔ PreservesMonomorphisms G :=
   ⟨fun h => preserves_monomorphisms.of_iso α, fun h => preserves_monomorphisms.of_iso α.symm⟩
-#align
-  category_theory.functor.preserves_monomorphisms.iso_iff CategoryTheory.Functor.PreservesMonomorphisms.iso_iff
+#align category_theory.functor.preserves_monomorphisms.iso_iff CategoryTheory.Functor.PreservesMonomorphisms.iso_iff
 
 theorem PreservesEpimorphisms.of_iso {F G : C ⥤ D} [PreservesEpimorphisms F] (α : F ≅ G) :
     PreservesEpimorphisms G :=
@@ -148,14 +138,12 @@ theorem PreservesEpimorphisms.of_iso {F G : C ⥤ D} [PreservesEpimorphisms F] (
       haveI : epi (F.map f ≫ (α.app Y).Hom) := epi_comp _ _
       convert (epi_comp _ _ : epi ((α.app X).inv ≫ F.map f ≫ (α.app Y).Hom))
       rw [iso.eq_inv_comp, iso.app_hom, iso.app_hom, nat_trans.naturality] }
-#align
-  category_theory.functor.preserves_epimorphisms.of_iso CategoryTheory.Functor.PreservesEpimorphisms.of_iso
+#align category_theory.functor.preserves_epimorphisms.of_iso CategoryTheory.Functor.PreservesEpimorphisms.of_iso
 
 theorem PreservesEpimorphisms.iso_iff {F G : C ⥤ D} (α : F ≅ G) :
     PreservesEpimorphisms F ↔ PreservesEpimorphisms G :=
   ⟨fun h => preserves_epimorphisms.of_iso α, fun h => preserves_epimorphisms.of_iso α.symm⟩
-#align
-  category_theory.functor.preserves_epimorphisms.iso_iff CategoryTheory.Functor.PreservesEpimorphisms.iso_iff
+#align category_theory.functor.preserves_epimorphisms.iso_iff CategoryTheory.Functor.PreservesEpimorphisms.iso_iff
 
 theorem ReflectsMonomorphisms.of_iso {F G : C ⥤ D} [ReflectsMonomorphisms F] (α : F ≅ G) :
     ReflectsMonomorphisms G :=
@@ -165,14 +153,12 @@ theorem ReflectsMonomorphisms.of_iso {F G : C ⥤ D} [ReflectsMonomorphisms F] (
       haveI : mono (G.map f ≫ (α.app Y).inv) := mono_comp _ _
       convert (mono_comp _ _ : mono ((α.app X).Hom ≫ G.map f ≫ (α.app Y).inv))
       rw [← category.assoc, iso.eq_comp_inv, iso.app_hom, iso.app_hom, nat_trans.naturality] }
-#align
-  category_theory.functor.reflects_monomorphisms.of_iso CategoryTheory.Functor.ReflectsMonomorphisms.of_iso
+#align category_theory.functor.reflects_monomorphisms.of_iso CategoryTheory.Functor.ReflectsMonomorphisms.of_iso
 
 theorem ReflectsMonomorphisms.iso_iff {F G : C ⥤ D} (α : F ≅ G) :
     ReflectsMonomorphisms F ↔ ReflectsMonomorphisms G :=
   ⟨fun h => reflects_monomorphisms.of_iso α, fun h => reflects_monomorphisms.of_iso α.symm⟩
-#align
-  category_theory.functor.reflects_monomorphisms.iso_iff CategoryTheory.Functor.ReflectsMonomorphisms.iso_iff
+#align category_theory.functor.reflects_monomorphisms.iso_iff CategoryTheory.Functor.ReflectsMonomorphisms.iso_iff
 
 theorem ReflectsEpimorphisms.of_iso {F G : C ⥤ D} [ReflectsEpimorphisms F] (α : F ≅ G) :
     ReflectsEpimorphisms G :=
@@ -182,14 +168,12 @@ theorem ReflectsEpimorphisms.of_iso {F G : C ⥤ D} [ReflectsEpimorphisms F] (α
       haveI : epi (G.map f ≫ (α.app Y).inv) := epi_comp _ _
       convert (epi_comp _ _ : epi ((α.app X).Hom ≫ G.map f ≫ (α.app Y).inv))
       rw [← category.assoc, iso.eq_comp_inv, iso.app_hom, iso.app_hom, nat_trans.naturality] }
-#align
-  category_theory.functor.reflects_epimorphisms.of_iso CategoryTheory.Functor.ReflectsEpimorphisms.of_iso
+#align category_theory.functor.reflects_epimorphisms.of_iso CategoryTheory.Functor.ReflectsEpimorphisms.of_iso
 
 theorem ReflectsEpimorphisms.iso_iff {F G : C ⥤ D} (α : F ≅ G) :
     ReflectsEpimorphisms F ↔ ReflectsEpimorphisms G :=
   ⟨fun h => reflects_epimorphisms.of_iso α, fun h => reflects_epimorphisms.of_iso α.symm⟩
-#align
-  category_theory.functor.reflects_epimorphisms.iso_iff CategoryTheory.Functor.ReflectsEpimorphisms.iso_iff
+#align category_theory.functor.reflects_epimorphisms.iso_iff CategoryTheory.Functor.ReflectsEpimorphisms.iso_iff
 
 theorem preserves_epimorphsisms_of_adjunction {F : C ⥤ D} {G : D ⥤ C} (adj : F ⊣ G) :
     PreservesEpimorphisms F :=
@@ -200,14 +184,12 @@ theorem preserves_epimorphsisms_of_adjunction {F : C ⥤ D} {G : D ⥤ C} (adj :
         replace H := congr_arg (adj.hom_equiv X Z) H
         rwa [adj.hom_equiv_naturality_left, adj.hom_equiv_naturality_left, cancel_epi,
           Equiv.apply_eq_iff_eq] at H⟩ }
-#align
-  category_theory.functor.preserves_epimorphsisms_of_adjunction CategoryTheory.Functor.preserves_epimorphsisms_of_adjunction
+#align category_theory.functor.preserves_epimorphsisms_of_adjunction CategoryTheory.Functor.preserves_epimorphsisms_of_adjunction
 
 instance (priority := 100) preserves_epimorphisms_of_is_left_adjoint (F : C ⥤ D) [IsLeftAdjoint F] :
     PreservesEpimorphisms F :=
   preserves_epimorphsisms_of_adjunction (Adjunction.ofLeftAdjoint F)
-#align
-  category_theory.functor.preserves_epimorphisms_of_is_left_adjoint CategoryTheory.Functor.preserves_epimorphisms_of_is_left_adjoint
+#align category_theory.functor.preserves_epimorphisms_of_is_left_adjoint CategoryTheory.Functor.preserves_epimorphisms_of_is_left_adjoint
 
 theorem preserves_monomorphisms_of_adjunction {F : C ⥤ D} {G : D ⥤ C} (adj : F ⊣ G) :
     PreservesMonomorphisms G :=
@@ -218,30 +200,26 @@ theorem preserves_monomorphisms_of_adjunction {F : C ⥤ D} {G : D ⥤ C} (adj :
         replace H := congr_arg (adj.hom_equiv Z Y).symm H
         rwa [adj.hom_equiv_naturality_right_symm, adj.hom_equiv_naturality_right_symm, cancel_mono,
           Equiv.apply_eq_iff_eq] at H⟩ }
-#align
-  category_theory.functor.preserves_monomorphisms_of_adjunction CategoryTheory.Functor.preserves_monomorphisms_of_adjunction
+#align category_theory.functor.preserves_monomorphisms_of_adjunction CategoryTheory.Functor.preserves_monomorphisms_of_adjunction
 
 instance (priority := 100) preserves_monomorphisms_of_is_right_adjoint (F : C ⥤ D)
     [IsRightAdjoint F] : PreservesMonomorphisms F :=
   preserves_monomorphisms_of_adjunction (Adjunction.ofRightAdjoint F)
-#align
-  category_theory.functor.preserves_monomorphisms_of_is_right_adjoint CategoryTheory.Functor.preserves_monomorphisms_of_is_right_adjoint
+#align category_theory.functor.preserves_monomorphisms_of_is_right_adjoint CategoryTheory.Functor.preserves_monomorphisms_of_is_right_adjoint
 
 instance (priority := 100) reflects_monomorphisms_of_faithful (F : C ⥤ D) [Faithful F] :
     ReflectsMonomorphisms F
     where reflects X Y f hf :=
     ⟨fun Z g h hgh =>
       F.map_injective ((cancel_mono (F.map f)).1 (by rw [← F.map_comp, hgh, F.map_comp]))⟩
-#align
-  category_theory.functor.reflects_monomorphisms_of_faithful CategoryTheory.Functor.reflects_monomorphisms_of_faithful
+#align category_theory.functor.reflects_monomorphisms_of_faithful CategoryTheory.Functor.reflects_monomorphisms_of_faithful
 
 instance (priority := 100) reflects_epimorphisms_of_faithful (F : C ⥤ D) [Faithful F] :
     ReflectsEpimorphisms F
     where reflects X Y f hf :=
     ⟨fun Z g h hgh =>
       F.map_injective ((cancel_epi (F.map f)).1 (by rw [← F.map_comp, hgh, F.map_comp]))⟩
-#align
-  category_theory.functor.reflects_epimorphisms_of_faithful CategoryTheory.Functor.reflects_epimorphisms_of_faithful
+#align category_theory.functor.reflects_epimorphisms_of_faithful CategoryTheory.Functor.reflects_epimorphisms_of_faithful
 
 section
 
@@ -319,8 +297,7 @@ def splitEpiCategoryImpOfIsEquivalence [IsEquivalence F] [SplitEpiCategory C] :
     intro
     rw [← F.inv.is_split_epi_iff f]
     apply is_split_epi_of_epi⟩
-#align
-  category_theory.functor.split_epi_category_imp_of_is_equivalence CategoryTheory.Functor.splitEpiCategoryImpOfIsEquivalence
+#align category_theory.functor.split_epi_category_imp_of_is_equivalence CategoryTheory.Functor.splitEpiCategoryImpOfIsEquivalence
 
 end
 
@@ -336,14 +313,12 @@ theorem strong_epi_map_of_strong_epi (adj : F ⊣ F') (f : A ⟶ B) [h₁ : F'.P
     intro
     rw [adj.has_lifting_property_iff]
     infer_instance⟩
-#align
-  category_theory.adjunction.strong_epi_map_of_strong_epi CategoryTheory.Adjunction.strong_epi_map_of_strong_epi
+#align category_theory.adjunction.strong_epi_map_of_strong_epi CategoryTheory.Adjunction.strong_epi_map_of_strong_epi
 
 instance strong_epi_map_of_is_equivalence [IsEquivalence F] (f : A ⟶ B) [h : StrongEpi f] :
     StrongEpi (F.map f) :=
   F.asEquivalence.toAdjunction.strong_epi_map_of_strong_epi f
-#align
-  category_theory.adjunction.strong_epi_map_of_is_equivalence CategoryTheory.Adjunction.strong_epi_map_of_is_equivalence
+#align category_theory.adjunction.strong_epi_map_of_is_equivalence CategoryTheory.Adjunction.strong_epi_map_of_is_equivalence
 
 end CategoryTheory.Adjunction
 
@@ -362,8 +337,7 @@ theorem strong_epi_map_iff_strong_epi_of_is_equivalence [IsEquivalence F] :
     infer_instance
   · intro
     infer_instance
-#align
-  category_theory.functor.strong_epi_map_iff_strong_epi_of_is_equivalence CategoryTheory.Functor.strong_epi_map_iff_strong_epi_of_is_equivalence
+#align category_theory.functor.strong_epi_map_iff_strong_epi_of_is_equivalence CategoryTheory.Functor.strong_epi_map_iff_strong_epi_of_is_equivalence
 
 end CategoryTheory.Functor
 

@@ -435,8 +435,7 @@ theorem union_support_maximal_linear_independent_eq_range_basis {ι : Type w} (b
   dsimp [LinearIndependent.Maximal] at m
   specialize m (range v') i' r
   exact r'' m
-#align
-  union_support_maximal_linear_independent_eq_range_basis union_support_maximal_linear_independent_eq_range_basis
+#align union_support_maximal_linear_independent_eq_range_basis union_support_maximal_linear_independent_eq_range_basis
 
 /-- Over any ring `R`, if `b` is an infinite basis for a module `M`,
 and `s` is a maximal linearly independent set,
@@ -478,8 +477,7 @@ theorem CompleteLattice.Independent.subtype_ne_bot_le_rank [NoZeroSMulDivisors R
   choose v hvV hv using hI
   have : LinearIndependent R v := (hV.comp Subtype.coe_injective).LinearIndependent _ hvV hv
   exact cardinal_lift_le_dim_of_linear_independent' this
-#align
-  complete_lattice.independent.subtype_ne_bot_le_rank CompleteLattice.Independent.subtype_ne_bot_le_rank
+#align complete_lattice.independent.subtype_ne_bot_le_rank CompleteLattice.Independent.subtype_ne_bot_le_rank
 
 end
 
@@ -940,8 +938,7 @@ variable {K V}
 theorem Basis.finite_of_vector_space_index_of_dim_lt_aleph_0 (h : Module.rank K V < ℵ₀) :
     (Basis.ofVectorSpaceIndex K V).Finite :=
   finite_def.2 <| (Basis.ofVectorSpace K V).nonempty_fintype_index_of_dim_lt_aleph_0 h
-#align
-  basis.finite_of_vector_space_index_of_dim_lt_aleph_0 Basis.finite_of_vector_space_index_of_dim_lt_aleph_0
+#align basis.finite_of_vector_space_index_of_dim_lt_aleph_0 Basis.finite_of_vector_space_index_of_dim_lt_aleph_0
 
 variable [AddCommGroup V'] [Module K V']
 

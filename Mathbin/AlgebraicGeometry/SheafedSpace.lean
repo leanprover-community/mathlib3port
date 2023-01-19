@@ -90,14 +90,12 @@ instance : Category (SheafedSpaceCat C) :=
 /-- Forgetting the sheaf condition is a functor from `SheafedSpace C` to `PresheafedSpace C`. -/
 def forgetToPresheafedSpace : SheafedSpaceCat.{v} C ⥤ PresheafedSpaceCat.{v} C :=
   inducedFunctor _ deriving Full, Faithful
-#align
-  algebraic_geometry.SheafedSpace.forget_to_PresheafedSpace AlgebraicGeometry.SheafedSpaceCat.forgetToPresheafedSpace
+#align algebraic_geometry.SheafedSpace.forget_to_PresheafedSpace AlgebraicGeometry.SheafedSpaceCat.forgetToPresheafedSpace
 
 instance is_PresheafedSpace_iso {X Y : SheafedSpaceCat.{v} C} (f : X ⟶ Y) [IsIso f] :
     @IsIso (PresheafedSpaceCat C) _ _ _ f :=
   SheafedSpaceCat.forgetToPresheafedSpace.map_is_iso f
-#align
-  algebraic_geometry.SheafedSpace.is_PresheafedSpace_iso AlgebraicGeometry.SheafedSpaceCat.is_PresheafedSpace_iso
+#align algebraic_geometry.SheafedSpace.is_PresheafedSpace_iso AlgebraicGeometry.SheafedSpaceCat.is_PresheafedSpace_iso
 
 variable {C}
 
@@ -177,8 +175,7 @@ def restrict {U : TopCat} (X : SheafedSpaceCat C) {f : U ⟶ (X : TopCat.{v})} (
 -/
 def restrictTopIso (X : SheafedSpaceCat C) : X.restrict (Opens.open_embedding ⊤) ≅ X :=
   forgetToPresheafedSpace.preimageIso X.toPresheafedSpace.restrictTopIso
-#align
-  algebraic_geometry.SheafedSpace.restrict_top_iso AlgebraicGeometry.SheafedSpaceCat.restrictTopIso
+#align algebraic_geometry.SheafedSpace.restrict_top_iso AlgebraicGeometry.SheafedSpaceCat.restrictTopIso
 
 /-- The global sections, notated Gamma.
 -/

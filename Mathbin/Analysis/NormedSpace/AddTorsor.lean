@@ -178,8 +178,7 @@ theorem eventually_homothety_image_subset_of_finite_subset_interior (x : Q) {s :
     exact (Filter.eventually_all_finite ht).mpr this
   intro y hy
   exact eventually_homothety_mem_of_mem_interior 𝕜 x (h hy)
-#align
-  eventually_homothety_image_subset_of_finite_subset_interior eventually_homothety_image_subset_of_finite_subset_interior
+#align eventually_homothety_image_subset_of_finite_subset_interior eventually_homothety_image_subset_of_finite_subset_interior
 
 end NormedSpace
 

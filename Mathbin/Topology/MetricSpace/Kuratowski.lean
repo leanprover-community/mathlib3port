@@ -62,8 +62,7 @@ theorem embedding_of_subset_dist_le (a b : α) :
   simp only [lp.coe_fn_sub, Pi.sub_apply, embedding_of_subset_coe, Real.dist_eq]
   convert abs_dist_sub_le a b (x n) using 2
   ring
-#align
-  Kuratowski_embedding.embedding_of_subset_dist_le KuratowskiEmbedding.embedding_of_subset_dist_le
+#align Kuratowski_embedding.embedding_of_subset_dist_le KuratowskiEmbedding.embedding_of_subset_dist_le
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr add_le_add_left, ",", expr le_abs_self, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr add_le_add, ",", expr mul_le_mul_of_nonneg_left, ",", expr hn.le, ",", expr le_refl, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
@@ -104,8 +103,7 @@ theorem embedding_of_subset_isometry (H : DenseRange x) : Isometry (embeddingOfS
       _ = dist (embedding_of_subset x b) (embedding_of_subset x a) + e := by ring
       
   simpa [dist_comm] using this
-#align
-  Kuratowski_embedding.embedding_of_subset_isometry KuratowskiEmbedding.embedding_of_subset_isometry
+#align Kuratowski_embedding.embedding_of_subset_isometry KuratowskiEmbedding.embedding_of_subset_isometry
 
 /-- Every separable metric space embeds isometrically in `ℓ_infty_ℝ`. -/
 theorem exists_isometric_embedding (α : Type u) [MetricSpace α] [SeparableSpace α] :
@@ -123,8 +121,7 @@ theorem exists_isometric_embedding (α : Type u) [MetricSpace α] [SeparableSpac
     rcases Set.countable_iff_exists_subset_range.1 S_countable with ⟨x, x_range⟩
     -- Use embedding_of_subset to construct the desired isometry
     exact ⟨embedding_of_subset x, embedding_of_subset_isometry x (S_dense.mono x_range)⟩
-#align
-  Kuratowski_embedding.exists_isometric_embedding KuratowskiEmbedding.exists_isometric_embedding
+#align Kuratowski_embedding.exists_isometric_embedding KuratowskiEmbedding.exists_isometric_embedding
 
 end kuratowskiEmbedding
 

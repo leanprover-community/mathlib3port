@@ -264,8 +264,7 @@ theorem adj_matrix_mul_vec_const_apply [Semiring α] {a : α} {v : V} :
 theorem adj_matrix_mul_vec_const_apply_of_regular [Semiring α] {d : ℕ} {a : α}
     (hd : G.IsRegularOfDegree d) {v : V} : (G.adjMatrix α).mulVec (Function.const _ a) v = d * a :=
   by simp [hd v]
-#align
-  simple_graph.adj_matrix_mul_vec_const_apply_of_regular SimpleGraph.adj_matrix_mul_vec_const_apply_of_regular
+#align simple_graph.adj_matrix_mul_vec_const_apply_of_regular SimpleGraph.adj_matrix_mul_vec_const_apply_of_regular
 
 theorem adj_matrix_pow_apply_eq_card_walk [DecidableEq V] [Semiring α] (n : ℕ) (u v : V) :
     (G.adjMatrix α ^ n) u v = Fintype.card { p : G.Walk u v | p.length = n } :=

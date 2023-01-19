@@ -261,8 +261,7 @@ theorem sublist_iff_exists_fin_orderEmbedding_get_eq {l l' : List α} :
       · rw [nth_len_le, nth_len_le]
         · simp
         · simpa using hi
-#align
-  list.sublist_iff_exists_fin_order_embedding_nth_le_eq List.sublist_iff_exists_fin_orderEmbedding_get_eq
+#align list.sublist_iff_exists_fin_order_embedding_nth_le_eq List.sublist_iff_exists_fin_orderEmbedding_get_eq
 
 #print List.duplicate_iff_exists_distinct_nthLe /-
 /-- An element `x : α` of `l : list α` is a duplicate iff it can be found

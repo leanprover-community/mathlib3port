@@ -107,8 +107,7 @@ noncomputable def matrixDecomposition (o : HomOrthogonal s) {α β : Type} [Fint
     ext (i⟨j, w⟩⟨k, ⟨⟩⟩)
     simp only [Set.mem_preimage, Set.mem_singleton_iff]
     simp [w.symm]; rfl
-#align
-  category_theory.hom_orthogonal.matrix_decomposition CategoryTheory.HomOrthogonal.matrixDecomposition
+#align category_theory.hom_orthogonal.matrix_decomposition CategoryTheory.HomOrthogonal.matrixDecomposition
 
 end
 
@@ -127,8 +126,7 @@ noncomputable def matrixDecompositionAddEquiv (o : HomOrthogonal s) {α β : Typ
       ext
       dsimp [biproduct.components]
       simp }
-#align
-  category_theory.hom_orthogonal.matrix_decomposition_add_equiv CategoryTheory.HomOrthogonal.matrixDecompositionAddEquiv
+#align category_theory.hom_orthogonal.matrix_decomposition_add_equiv CategoryTheory.HomOrthogonal.matrixDecompositionAddEquiv
 
 @[simp]
 theorem matrix_decomposition_id (o : HomOrthogonal s) {α : Type} [Fintype α] {f : α → ι} (i : ι) :
@@ -143,8 +141,7 @@ theorem matrix_decomposition_id (o : HomOrthogonal s) {α : Type} [Fintype α] {
     simp
   · convert comp_zero
     simpa using biproduct.ι_π_ne _ (Ne.symm h)
-#align
-  category_theory.hom_orthogonal.matrix_decomposition_id CategoryTheory.HomOrthogonal.matrix_decomposition_id
+#align category_theory.hom_orthogonal.matrix_decomposition_id CategoryTheory.HomOrthogonal.matrix_decomposition_id
 
 theorem matrix_decomposition_comp (o : HomOrthogonal s) {α β γ : Type} [Fintype α] [Fintype β]
     [Fintype γ] {f : α → ι} {g : β → ι} {h : γ → ι} (z : (⨁ fun a => s (f a)) ⟶ ⨁ fun b => s (g b))
@@ -170,8 +167,7 @@ theorem matrix_decomposition_comp (o : HomOrthogonal s) {α β γ : Type} [Finty
     convert comp_zero
     convert comp_zero
     apply o.eq_zero nm
-#align
-  category_theory.hom_orthogonal.matrix_decomposition_comp CategoryTheory.HomOrthogonal.matrix_decomposition_comp
+#align category_theory.hom_orthogonal.matrix_decomposition_comp CategoryTheory.HomOrthogonal.matrix_decomposition_comp
 
 section
 
@@ -188,8 +184,7 @@ noncomputable def matrixDecompositionLinearEquiv (o : HomOrthogonal s) {α β : 
       ext
       dsimp [biproduct.components]
       simp }
-#align
-  category_theory.hom_orthogonal.matrix_decomposition_linear_equiv CategoryTheory.HomOrthogonal.matrixDecompositionLinearEquiv
+#align category_theory.hom_orthogonal.matrix_decomposition_linear_equiv CategoryTheory.HomOrthogonal.matrixDecompositionLinearEquiv
 
 end
 

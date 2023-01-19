@@ -97,8 +97,7 @@ theorem zmultiples_quotient_stabilizer_equiv_symm_apply (n : Zmod (minimalPeriod
     (zmultiplesQuotientStabilizerEquiv a b).symm n =
       (n : ℤ) • (⟨a, mem_zmultiples a⟩ : zmultiples a) :=
   rfl
-#align
-  add_action.zmultiples_quotient_stabilizer_equiv_symm_apply AddAction.zmultiples_quotient_stabilizer_equiv_symm_apply
+#align add_action.zmultiples_quotient_stabilizer_equiv_symm_apply AddAction.zmultiples_quotient_stabilizer_equiv_symm_apply
 
 end AddAction
 
@@ -120,8 +119,7 @@ noncomputable def zpowersQuotientStabilizerEquiv :
 theorem zpowers_quotient_stabilizer_equiv_symm_apply (n : Zmod (minimalPeriod ((· • ·) a) b)) :
     (zpowersQuotientStabilizerEquiv a b).symm n = (⟨a, mem_zpowers a⟩ : zpowers a) ^ (n : ℤ) :=
   rfl
-#align
-  mul_action.zpowers_quotient_stabilizer_equiv_symm_apply MulAction.zpowers_quotient_stabilizer_equiv_symm_apply
+#align mul_action.zpowers_quotient_stabilizer_equiv_symm_apply MulAction.zpowers_quotient_stabilizer_equiv_symm_apply
 
 /-- The orbit `(a ^ ℤ) • b` is a cycle of order `minimal_period ((•) a) b`. -/
 noncomputable def orbitZpowersEquiv : orbit (zpowers a) b ≃ Zmod (minimalPeriod ((· • ·) a) b) :=
@@ -166,7 +164,7 @@ attribute [to_additive orbit_zmultiples_equiv_symm_apply'] orbit_zpowers_equiv_s
 @[to_additive]
 theorem minimal_period_eq_card [Fintype (orbit (zpowers a) b)] :
     minimalPeriod ((· • ·) a) b = Fintype.card (orbit (zpowers a) b) := by
-  rw [← Fintype.of_equiv_card (orbit_zpowers_equiv a b), Zmod.card]
+  rw [← Fintype.ofEquiv_card (orbit_zpowers_equiv a b), Zmod.card]
 #align mul_action.minimal_period_eq_card MulAction.minimal_period_eq_card
 #align add_action.minimal_period_eq_card AddAction.minimal_period_eq_card
 

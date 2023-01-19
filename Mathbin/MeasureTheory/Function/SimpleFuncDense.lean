@@ -195,8 +195,7 @@ theorem edist_approx_on_y0_le {f : β → α} (hf : Measurable f) {s : Set α} {
       edist_triangle_right _ _ _
     _ ≤ edist y₀ (f x) + edist y₀ (f x) := add_le_add_left (edist_approx_on_le hf h₀ x n) _
     
-#align
-  measure_theory.simple_func.edist_approx_on_y0_le MeasureTheory.SimpleFunc.edist_approx_on_y0_le
+#align measure_theory.simple_func.edist_approx_on_y0_le MeasureTheory.SimpleFunc.edist_approx_on_y0_le
 
 end SimpleFunc
 

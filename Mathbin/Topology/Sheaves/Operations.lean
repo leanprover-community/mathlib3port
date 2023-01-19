@@ -68,16 +68,14 @@ protected noncomputable def SubmonoidPresheaf.localizationPresheaf : X.Presheaf 
     congr
     rw [F.map_comp]
     rfl
-#align
-  Top.presheaf.submonoid_presheaf.localization_presheaf TopCat.Presheaf.SubmonoidPresheaf.localizationPresheaf
+#align Top.presheaf.submonoid_presheaf.localization_presheaf TopCat.Presheaf.SubmonoidPresheaf.localizationPresheaf
 
 /-- The map into the localization presheaf. -/
 def SubmonoidPresheaf.toLocalizationPresheaf : F ⟶ G.localizationPresheaf
     where
   app U := CommRingCat.ofHom <| algebraMap (F.obj U) (Localization <| G.obj U)
   naturality' U V i := (IsLocalization.map_comp (G.map i)).symm
-#align
-  Top.presheaf.submonoid_presheaf.to_localization_presheaf TopCat.Presheaf.SubmonoidPresheaf.toLocalizationPresheaf
+#align Top.presheaf.submonoid_presheaf.to_localization_presheaf TopCat.Presheaf.SubmonoidPresheaf.toLocalizationPresheaf
 
 instance : Epi G.toLocalizationPresheaf :=
   @NatTrans.epi_of_epi_app _ _ G.toLocalizationPresheaf fun U => Localization.epi' (G.obj U)

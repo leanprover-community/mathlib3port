@@ -293,8 +293,7 @@ theorem StrictConvex.ae_eq_const_or_average_mem_interior [IsFiniteMeasure μ] (h
   exact
     hs.open_segment_subset (this h₀) (this h₀') hne
       (average_mem_open_segment_compl_self hm.null_measurable_set h₀ h₀' hfi)
-#align
-  strict_convex.ae_eq_const_or_average_mem_interior StrictConvex.ae_eq_const_or_average_mem_interior
+#align strict_convex.ae_eq_const_or_average_mem_interior StrictConvex.ae_eq_const_or_average_mem_interior
 
 /-- **Jensen's inequality**, strict version: if an integrable function `f : α → E` takes values in a
 convex closed set `s`, and `g : E → ℝ` is continuous and strictly convex on `s`, then
@@ -354,8 +353,7 @@ theorem ae_eq_const_or_norm_average_lt_of_norm_le_const [StrictConvexSpace ℝ E
   simpa only [interior_closed_ball _ hC0.ne', mem_ball_zero_iff] using
     (strict_convex_closed_ball ℝ (0 : E) C).ae_eq_const_or_average_mem_interior is_closed_ball h_le
       hfi
-#align
-  ae_eq_const_or_norm_average_lt_of_norm_le_const ae_eq_const_or_norm_average_lt_of_norm_le_const
+#align ae_eq_const_or_norm_average_lt_of_norm_le_const ae_eq_const_or_norm_average_lt_of_norm_le_const
 
 /-- If `E` is a strictly convex normed space and `f : α → E` is a function such that `‖f x‖ ≤ C`
 a.e., then either this function is a.e. equal to its average value, or the norm of its integral is
@@ -372,8 +370,7 @@ theorem ae_eq_const_or_norm_integral_lt_of_norm_le_const [StrictConvexSpace ℝ 
   refine' (ae_eq_const_or_norm_average_lt_of_norm_le_const h_le).imp_right fun H => _
   rwa [average_eq, norm_smul, norm_inv, Real.norm_eq_abs, abs_of_pos hμ, ← div_eq_inv_mul,
     div_lt_iff' hμ] at H
-#align
-  ae_eq_const_or_norm_integral_lt_of_norm_le_const ae_eq_const_or_norm_integral_lt_of_norm_le_const
+#align ae_eq_const_or_norm_integral_lt_of_norm_le_const ae_eq_const_or_norm_integral_lt_of_norm_le_const
 
 /-- If `E` is a strictly convex normed space and `f : α → E` is a function such that `‖f x‖ ≤ C`
 a.e. on a set `t` of finite measure, then either this function is a.e. equal to its average value on
@@ -385,6 +382,5 @@ theorem ae_eq_const_or_norm_set_integral_lt_of_norm_le_const [StrictConvexSpace 
   haveI := Fact.mk ht.lt_top
   rw [← restrict_apply_univ]
   exact ae_eq_const_or_norm_integral_lt_of_norm_le_const h_le
-#align
-  ae_eq_const_or_norm_set_integral_lt_of_norm_le_const ae_eq_const_or_norm_set_integral_lt_of_norm_le_const
+#align ae_eq_const_or_norm_set_integral_lt_of_norm_le_const ae_eq_const_or_norm_set_integral_lt_of_norm_le_const
 

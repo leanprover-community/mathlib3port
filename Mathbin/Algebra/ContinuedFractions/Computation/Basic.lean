@@ -92,15 +92,13 @@ instance [Repr K] : Repr (IntFractPair K) :=
 
 instance inhabited [Inhabited K] : Inhabited (IntFractPair K) :=
   ⟨⟨0, default⟩⟩
-#align
-  generalized_continued_fraction.int_fract_pair.inhabited GeneralizedContinuedFraction.IntFractPair.inhabited
+#align generalized_continued_fraction.int_fract_pair.inhabited GeneralizedContinuedFraction.IntFractPair.inhabited
 
 /-- Maps a function `f` on the fractional components of a given pair.
 -/
 def mapFr {β : Type _} (f : K → β) (gp : IntFractPair K) : IntFractPair β :=
   ⟨gp.b, f gp.fr⟩
-#align
-  generalized_continued_fraction.int_fract_pair.mapFr GeneralizedContinuedFraction.IntFractPair.mapFr
+#align generalized_continued_fraction.int_fract_pair.mapFr GeneralizedContinuedFraction.IntFractPair.mapFr
 
 section coe
 
@@ -113,15 +111,13 @@ variable {β : Type _} [Coe K β]
 /-- Coerce a pair by coercing the fractional component. -/
 instance hasCoeToIntFractPair : Coe (IntFractPair K) (IntFractPair β) :=
   ⟨mapFr coe⟩
-#align
-  generalized_continued_fraction.int_fract_pair.has_coe_to_int_fract_pair GeneralizedContinuedFraction.IntFractPair.hasCoeToIntFractPair
+#align generalized_continued_fraction.int_fract_pair.has_coe_to_int_fract_pair GeneralizedContinuedFraction.IntFractPair.hasCoeToIntFractPair
 
 @[simp, norm_cast]
 theorem coe_to_int_fract_pair {b : ℤ} {fr : K} :
     (↑(IntFractPair.mk b fr) : IntFractPair β) = IntFractPair.mk b (↑fr : β) :=
   rfl
-#align
-  generalized_continued_fraction.int_fract_pair.coe_to_int_fract_pair GeneralizedContinuedFraction.IntFractPair.coe_to_int_fract_pair
+#align generalized_continued_fraction.int_fract_pair.coe_to_int_fract_pair GeneralizedContinuedFraction.IntFractPair.coe_to_int_fract_pair
 
 end coe
 
@@ -153,8 +149,7 @@ protected def stream (v : K) : Stream' <| Option (IntFractPair K)
   | 0 => some (IntFractPair.of v)
   | n + 1 =>
     (Stream' n).bind fun ap_n => if ap_n.fr = 0 then none else some (IntFractPair.of ap_n.fr⁻¹)
-#align
-  generalized_continued_fraction.int_fract_pair.stream GeneralizedContinuedFraction.IntFractPair.stream
+#align generalized_continued_fraction.int_fract_pair.stream GeneralizedContinuedFraction.IntFractPair.stream
 
 /-- Shows that `int_fract_pair.stream` has the sequence property, that is once we return `none` at
 position `n`, we also return `none` at `n + 1`.
@@ -163,8 +158,7 @@ theorem stream_is_seq (v : K) : (IntFractPair.stream v).IsSeq :=
   by
   intro _ hyp
   simp [int_fract_pair.stream, hyp]
-#align
-  generalized_continued_fraction.int_fract_pair.stream_is_seq GeneralizedContinuedFraction.IntFractPair.stream_is_seq
+#align generalized_continued_fraction.int_fract_pair.stream_is_seq GeneralizedContinuedFraction.IntFractPair.stream_is_seq
 
 /--
 Uses `int_fract_pair.stream` to create a sequence with head (i.e. `seq1`) of integer and fractional
@@ -182,8 +176,7 @@ protected def seq1 (v : K) : Seq1 <| IntFractPair K :=
       ⟨IntFractPair.stream v,-- the underlying stream
           @stream_is_seq
           _ _ _ v⟩⟩
-#align
-  generalized_continued_fraction.int_fract_pair.seq1 GeneralizedContinuedFraction.IntFractPair.seq1
+#align generalized_continued_fraction.int_fract_pair.seq1 GeneralizedContinuedFraction.IntFractPair.seq1
 
 -- the proof that the stream is a sequence
 end IntFractPair

@@ -187,8 +187,7 @@ unsafe def unify_constructor_headed : unification_step := fun equ _ _ _ _ _ _ _ 
           | none => goal_solved
           | some next => simplified <| next expr.local_pp_name) <|>
     pure not_simplified
-#align
-  tactic.unify_equations.unify_constructor_headed tactic.unify_equations.unify_constructor_headed
+#align tactic.unify_equations.unify_constructor_headed tactic.unify_equations.unify_constructor_headed
 
 /-- For `type = I x₁ ... xₙ`, where `I` is an inductive type, `get_sizeof type`
 returns the constant `I.sizeof`. Fails if `type` is not of this form or if no
@@ -261,8 +260,7 @@ unsafe def match_n_plus_m (md) : ℕ → expr → tactic (ℕ × expr) := fun n 
           let n ← to_expr ` `( $ ( common ) + $ ( rhs_n_expr ) )
           let m := reflect ( diff - 1 )
           pure q( add_add_one_ne $ ( n ) $ ( m ) $ ( equ ) )
-#align
-  tactic.unify_equations.contradict_n_eq_n_plus_m tactic.unify_equations.contradict_n_eq_n_plus_m
+#align tactic.unify_equations.contradict_n_eq_n_plus_m tactic.unify_equations.contradict_n_eq_n_plus_m
 
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--

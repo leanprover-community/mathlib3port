@@ -148,14 +148,12 @@ theorem IsBoundedUnder.bdd_above_range_of_cofinite [SemilatticeSup β] {f : α �
   haveI : Nonempty β := ⟨b⟩
   rw [← image_univ, ← union_compl_self { x | f x ≤ b }, image_union, bddAbove_union]
   exact ⟨⟨b, ball_image_iff.2 fun x => id⟩, (hb.image f).BddAbove⟩
-#align
-  filter.is_bounded_under.bdd_above_range_of_cofinite Filter.IsBoundedUnder.bdd_above_range_of_cofinite
+#align filter.is_bounded_under.bdd_above_range_of_cofinite Filter.IsBoundedUnder.bdd_above_range_of_cofinite
 
 theorem IsBoundedUnder.bdd_below_range_of_cofinite [SemilatticeInf β] {f : α → β}
     (hf : IsBoundedUnder (· ≥ ·) cofinite f) : BddBelow (range f) :=
   @IsBoundedUnder.bdd_above_range_of_cofinite α βᵒᵈ _ _ hf
-#align
-  filter.is_bounded_under.bdd_below_range_of_cofinite Filter.IsBoundedUnder.bdd_below_range_of_cofinite
+#align filter.is_bounded_under.bdd_below_range_of_cofinite Filter.IsBoundedUnder.bdd_below_range_of_cofinite
 
 theorem IsBoundedUnder.bdd_above_range [SemilatticeSup β] {f : ℕ → β}
     (hf : IsBoundedUnder (· ≤ ·) atTop f) : BddAbove (range f) :=
@@ -926,16 +924,14 @@ theorem CompleteLatticeHom.apply_limsup_iterate (f : CompleteLatticeHom α α) (
   refine' (infᵢ_le (fun i => ⨆ j, (f^[j + (i + 1)]) a) 0).trans _
   simp only [zero_add, Function.comp_apply, supᵢ_le_iff]
   exact fun i => le_supᵢ (fun i => (f^[i]) a) (i + 1)
-#align
-  filter.complete_lattice_hom.apply_limsup_iterate Filter.CompleteLatticeHom.apply_limsup_iterate
+#align filter.complete_lattice_hom.apply_limsup_iterate Filter.CompleteLatticeHom.apply_limsup_iterate
 
 /-- If `f : α → α` is a morphism of complete lattices, then the liminf of its iterates of any
 `a : α` is a fixed point. -/
 theorem CompleteLatticeHom.apply_liminf_iterate (f : CompleteLatticeHom α α) (a : α) :
     f (liminf (fun n => (f^[n]) a) atTop) = liminf (fun n => (f^[n]) a) atTop :=
   (CompleteLatticeHom.dual f).apply_limsup_iterate _
-#align
-  filter.complete_lattice_hom.apply_liminf_iterate Filter.CompleteLatticeHom.apply_liminf_iterate
+#align filter.complete_lattice_hom.apply_liminf_iterate Filter.CompleteLatticeHom.apply_liminf_iterate
 
 variable {f g : Filter β} {p q : β → Prop} {u v : β → α}
 
@@ -1145,8 +1141,7 @@ theorem exists_forall_mem_of_has_basis_mem_blimsup {l : Filter β} {b : ι → S
   refine' ⟨fun i : { i | q i } => g (b i) (hl.mem_of_mem i.2), fun i => ⟨_, _⟩⟩
   · exact hg' (b i) (hl.mem_of_mem i.2)
   · exact hg (b i) (hl.mem_of_mem i.2)
-#align
-  filter.exists_forall_mem_of_has_basis_mem_blimsup Filter.exists_forall_mem_of_has_basis_mem_blimsup
+#align filter.exists_forall_mem_of_has_basis_mem_blimsup Filter.exists_forall_mem_of_has_basis_mem_blimsup
 
 theorem exists_forall_mem_of_has_basis_mem_blimsup' {l : Filter β} {b : ι → Set β}
     (hl : l.HasBasis (fun _ => True) b) {u : β → Set α} {p : β → Prop} {x : α}
@@ -1154,8 +1149,7 @@ theorem exists_forall_mem_of_has_basis_mem_blimsup' {l : Filter β} {b : ι → 
   by
   obtain ⟨f, hf⟩ := exists_forall_mem_of_has_basis_mem_blimsup hl hx
   exact ⟨fun i => f ⟨i, trivial⟩, fun i => hf ⟨i, trivial⟩⟩
-#align
-  filter.exists_forall_mem_of_has_basis_mem_blimsup' Filter.exists_forall_mem_of_has_basis_mem_blimsup'
+#align filter.exists_forall_mem_of_has_basis_mem_blimsup' Filter.exists_forall_mem_of_has_basis_mem_blimsup'
 
 end SetLattice
 

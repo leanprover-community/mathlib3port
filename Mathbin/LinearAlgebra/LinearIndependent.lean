@@ -339,8 +339,7 @@ theorem linear_independent_finset_map_embedding_subtype (s : Set M)
   obtain ⟨a, ha, rfl⟩ := hx
   obtain ⟨b, hb, rfl⟩ := hy
   simp only [imp_self, Subtype.mk_eq_mk]
-#align
-  linear_independent_finset_map_embedding_subtype linear_independent_finset_map_embedding_subtype
+#align linear_independent_finset_map_embedding_subtype linear_independent_finset_map_embedding_subtype
 
 /-- If every finite set of linearly independent vectors has cardinality at most `n`,
 then the same is true for arbitrary sets of linearly independent vectors.
@@ -355,8 +354,7 @@ theorem linear_independent_bounded_of_finset_linear_independent_bounded {n : ℕ
   rw [← Finset.card_map (embedding.subtype s)]
   apply H
   apply linear_independent_finset_map_embedding_subtype _ li
-#align
-  linear_independent_bounded_of_finset_linear_independent_bounded linear_independent_bounded_of_finset_linear_independent_bounded
+#align linear_independent_bounded_of_finset_linear_independent_bounded linear_independent_bounded_of_finset_linear_independent_bounded
 
 section Subtype
 
@@ -634,8 +632,7 @@ theorem LinearIndependent.eq_of_smul_apply_eq_smul_apply {M : Type _} [AddCommGr
   rcases(Finsupp.single_eq_single_iff _ _ _ _).mp h_single_eq with (⟨this, _⟩ | ⟨hc, _⟩)
   · exact this
   · contradiction
-#align
-  linear_independent.eq_of_smul_apply_eq_smul_apply LinearIndependent.eq_of_smul_apply_eq_smul_apply
+#align linear_independent.eq_of_smul_apply_eq_smul_apply LinearIndependent.eq_of_smul_apply_eq_smul_apply
 
 section Subtype
 
@@ -1454,8 +1451,7 @@ theorem exists_finite_card_le_of_finite_of_linear_independent_of_span (ht : t.Fi
   let ⟨u, hust, hsu, Eq⟩ := exists_of_linear_independent_of_finite_span hs this
   have : s.Finite := u.finite_to_set.Subset hsu
   ⟨this, by rw [← Eq] <;> exact Finset.card_le_of_subset <| finset.coe_subset.mp <| by simp [hsu]⟩
-#align
-  exists_finite_card_le_of_finite_of_linear_independent_of_span exists_finite_card_le_of_finite_of_linear_independent_of_span
+#align exists_finite_card_le_of_finite_of_linear_independent_of_span exists_finite_card_le_of_finite_of_linear_independent_of_span
 
 end Module
 

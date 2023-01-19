@@ -536,8 +536,7 @@ theorem smul_mem_pointwise_smul_iff {a : α} {S : AddSubgroup A} {x : A} : a •
 theorem mem_pointwise_smul_iff_inv_smul_mem {a : α} {S : AddSubgroup A} {x : A} :
     x ∈ a • S ↔ a⁻¹ • x ∈ S :=
   mem_smul_set_iff_inv_smul_mem
-#align
-  add_subgroup.mem_pointwise_smul_iff_inv_smul_mem AddSubgroup.mem_pointwise_smul_iff_inv_smul_mem
+#align add_subgroup.mem_pointwise_smul_iff_inv_smul_mem AddSubgroup.mem_pointwise_smul_iff_inv_smul_mem
 
 theorem mem_inv_pointwise_smul_iff {a : α} {S : AddSubgroup A} {x : A} : x ∈ a⁻¹ • S ↔ a • x ∈ S :=
   mem_inv_smul_set_iff
@@ -547,8 +546,7 @@ theorem mem_inv_pointwise_smul_iff {a : α} {S : AddSubgroup A} {x : A} : x ∈ 
 theorem pointwise_smul_le_pointwise_smul_iff {a : α} {S T : AddSubgroup A} :
     a • S ≤ a • T ↔ S ≤ T :=
   set_smul_subset_set_smul_iff
-#align
-  add_subgroup.pointwise_smul_le_pointwise_smul_iff AddSubgroup.pointwise_smul_le_pointwise_smul_iff
+#align add_subgroup.pointwise_smul_le_pointwise_smul_iff AddSubgroup.pointwise_smul_le_pointwise_smul_iff
 
 theorem pointwise_smul_le_iff {a : α} {S T : AddSubgroup A} : a • S ≤ T ↔ S ≤ a⁻¹ • T :=
   set_smul_subset_iff
@@ -575,8 +573,7 @@ theorem smul_mem_pointwise_smul_iff₀ {a : α} (ha : a ≠ 0) (S : AddSubgroup 
 theorem mem_pointwise_smul_iff_inv_smul_mem₀ {a : α} (ha : a ≠ 0) (S : AddSubgroup A) (x : A) :
     x ∈ a • S ↔ a⁻¹ • x ∈ S :=
   mem_smul_set_iff_inv_smul_mem₀ ha (S : Set A) x
-#align
-  add_subgroup.mem_pointwise_smul_iff_inv_smul_mem₀ AddSubgroup.mem_pointwise_smul_iff_inv_smul_mem₀
+#align add_subgroup.mem_pointwise_smul_iff_inv_smul_mem₀ AddSubgroup.mem_pointwise_smul_iff_inv_smul_mem₀
 
 theorem mem_inv_pointwise_smul_iff₀ {a : α} (ha : a ≠ 0) (S : AddSubgroup A) (x : A) :
     x ∈ a⁻¹ • S ↔ a • x ∈ S :=
@@ -587,8 +584,7 @@ theorem mem_inv_pointwise_smul_iff₀ {a : α} (ha : a ≠ 0) (S : AddSubgroup A
 theorem pointwise_smul_le_pointwise_smul_iff₀ {a : α} (ha : a ≠ 0) {S T : AddSubgroup A} :
     a • S ≤ a • T ↔ S ≤ T :=
   set_smul_subset_set_smul_iff₀ ha
-#align
-  add_subgroup.pointwise_smul_le_pointwise_smul_iff₀ AddSubgroup.pointwise_smul_le_pointwise_smul_iff₀
+#align add_subgroup.pointwise_smul_le_pointwise_smul_iff₀ AddSubgroup.pointwise_smul_le_pointwise_smul_iff₀
 
 theorem pointwise_smul_le_iff₀ {a : α} (ha : a ≠ 0) {S T : AddSubgroup A} :
     a • S ≤ T ↔ S ≤ a⁻¹ • T :=

@@ -250,8 +250,7 @@ theorem cycle_type_le_of_mem_cycle_factors_finset {f g : Perm α} (hf : f ∈ g.
   rw [cycle_type_def, cycle_type_def, hf.left.cycle_factors_finset_eq_singleton]
   refine' map_le_map _
   simpa [← Finset.mem_def, mem_cycle_factors_finset_iff] using hf
-#align
-  equiv.perm.cycle_type_le_of_mem_cycle_factors_finset Equiv.Perm.cycle_type_le_of_mem_cycle_factors_finset
+#align equiv.perm.cycle_type_le_of_mem_cycle_factors_finset Equiv.Perm.cycle_type_le_of_mem_cycle_factors_finset
 
 theorem cycle_type_mul_mem_cycle_factors_finset_eq_sub {f g : Perm α}
     (hf : f ∈ g.cycleFactorsFinset) : (g * f⁻¹).cycleType = g.cycleType - f.cycleType :=
@@ -262,8 +261,7 @@ theorem cycle_type_mul_mem_cycle_factors_finset_eq_sub {f g : Perm α}
     simp [← this]
   simp [← (disjoint_mul_inv_of_mem_cycle_factors_finset hf).cycleType,
     tsub_add_cancel_of_le (cycle_type_le_of_mem_cycle_factors_finset hf)]
-#align
-  equiv.perm.cycle_type_mul_mem_cycle_factors_finset_eq_sub Equiv.Perm.cycle_type_mul_mem_cycle_factors_finset_eq_sub
+#align equiv.perm.cycle_type_mul_mem_cycle_factors_finset_eq_sub Equiv.Perm.cycle_type_mul_mem_cycle_factors_finset_eq_sub
 
 theorem is_conj_of_cycle_type_eq {σ τ : Perm α} (h : cycleType σ = cycleType τ) : IsConj σ τ :=
   by
@@ -360,8 +358,7 @@ theorem cycle_type_of_card_le_mem_cycle_type_add_two {n : ℕ} {g : Perm α}
   apply le_trans _ (c * g').Support.card_le_univ
   rw [hd.card_support_mul]
   exact add_le_add_left (two_le_card_support_of_ne_one g'1) _
-#align
-  equiv.perm.cycle_type_of_card_le_mem_cycle_type_add_two Equiv.Perm.cycle_type_of_card_le_mem_cycle_type_add_two
+#align equiv.perm.cycle_type_of_card_le_mem_cycle_type_add_two Equiv.Perm.cycle_type_of_card_le_mem_cycle_type_add_two
 
 end CycleType
 
@@ -605,8 +602,7 @@ theorem filter_parts_partition_eq_cycle_type {σ : Perm α} :
     Multiset.filter_eq_nil.2 fun a h => _, add_zero]
   rw [Multiset.eq_of_mem_replicate h]
   decide
-#align
-  equiv.perm.filter_parts_partition_eq_cycle_type Equiv.Perm.filter_parts_partition_eq_cycle_type
+#align equiv.perm.filter_parts_partition_eq_cycle_type Equiv.Perm.filter_parts_partition_eq_cycle_type
 
 theorem partition_eq_of_is_conj {σ τ : Perm α} : IsConj σ τ ↔ σ.partition = τ.partition :=
   by
@@ -729,8 +725,7 @@ theorem swap_mul_swap_same_mem_closure_three_cycles {a b c : α} (ab : a ≠ b) 
   · subst bc
     simp [one_mem]
   exact subset_closure (is_three_cycle_swap_mul_swap_same ab ac bc)
-#align
-  equiv.perm.swap_mul_swap_same_mem_closure_three_cycles Equiv.Perm.swap_mul_swap_same_mem_closure_three_cycles
+#align equiv.perm.swap_mul_swap_same_mem_closure_three_cycles Equiv.Perm.swap_mul_swap_same_mem_closure_three_cycles
 
 theorem IsSwap.mul_mem_closure_three_cycles {σ τ : Perm α} (hσ : IsSwap σ) (hτ : IsSwap τ) :
     σ * τ ∈ closure { σ : Perm α | IsThreeCycle σ } :=
@@ -746,8 +741,7 @@ theorem IsSwap.mul_mem_closure_three_cycles {σ τ : Perm α} (hσ : IsSwap σ) 
   exact
     mul_mem (swap_mul_swap_same_mem_closure_three_cycles ab ac)
       (swap_mul_swap_same_mem_closure_three_cycles (Ne.symm ac) cd)
-#align
-  equiv.perm.is_swap.mul_mem_closure_three_cycles Equiv.Perm.IsSwap.mul_mem_closure_three_cycles
+#align equiv.perm.is_swap.mul_mem_closure_three_cycles Equiv.Perm.IsSwap.mul_mem_closure_three_cycles
 
 end
 

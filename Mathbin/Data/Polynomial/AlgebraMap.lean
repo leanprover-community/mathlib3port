@@ -282,8 +282,7 @@ theorem aeval_alg_equiv (f : A ≃ₐ[R] B) (x : A) : aeval (f x) = (f : A →�
 theorem aeval_algebra_map_apply_eq_algebra_map_eval (x : R) (p : R[X]) :
     aeval (algebraMap R A x) p = algebraMap R A (p.eval x) :=
   aeval_alg_hom_apply (Algebra.ofId R A) x p
-#align
-  polynomial.aeval_algebra_map_apply_eq_algebra_map_eval Polynomial.aeval_algebra_map_apply_eq_algebra_map_eval
+#align polynomial.aeval_algebra_map_apply_eq_algebra_map_eval Polynomial.aeval_algebra_map_apply_eq_algebra_map_eval
 
 @[simp]
 theorem coe_aeval_eq_eval (r : R) : (aeval r : R[X] → R) = eval r :=
@@ -364,8 +363,7 @@ theorem is_root_of_aeval_algebra_map_eq_zero [Algebra R S] {p : R[X]}
     (inj : Function.Injective (algebraMap R S)) {r : R} (hr : aeval (algebraMap R S r) p = 0) :
     p.IsRoot r :=
   is_root_of_eval₂_map_eq_zero inj hr
-#align
-  polynomial.is_root_of_aeval_algebra_map_eq_zero Polynomial.is_root_of_aeval_algebra_map_eq_zero
+#align polynomial.is_root_of_aeval_algebra_map_eq_zero Polynomial.is_root_of_aeval_algebra_map_eq_zero
 
 end Semiring
 

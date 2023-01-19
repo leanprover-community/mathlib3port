@@ -301,8 +301,7 @@ theorem eval₂_dvd : p ∣ q → eval₂ f x p ∣ eval₂ f x q :=
 theorem eval₂_eq_zero_of_dvd_of_eval₂_eq_zero (h : p ∣ q) (h0 : eval₂ f x p = 0) :
     eval₂ f x q = 0 :=
   zero_dvd_iff.mp (h0 ▸ eval₂_dvd f x h)
-#align
-  polynomial.eval₂_eq_zero_of_dvd_of_eval₂_eq_zero Polynomial.eval₂_eq_zero_of_dvd_of_eval₂_eq_zero
+#align polynomial.eval₂_eq_zero_of_dvd_of_eval₂_eq_zero Polynomial.eval₂_eq_zero_of_dvd_of_eval₂_eq_zero
 
 theorem eval₂_list_prod (l : List R[X]) (x : S) : eval₂ f x l.Prod = (l.map (eval₂ f x)).Prod :=
   map_list_prod (eval₂RingHom f x) l
@@ -868,22 +867,19 @@ theorem degree_map_eq_of_leading_coeff_ne_zero (f : R →+* S) (hf : f (leadingC
     refine' le_degree_of_ne_zero _
     rw [coeff_map]
     exact hf
-#align
-  polynomial.degree_map_eq_of_leading_coeff_ne_zero Polynomial.degree_map_eq_of_leading_coeff_ne_zero
+#align polynomial.degree_map_eq_of_leading_coeff_ne_zero Polynomial.degree_map_eq_of_leading_coeff_ne_zero
 
 theorem nat_degree_map_of_leading_coeff_ne_zero (f : R →+* S) (hf : f (leadingCoeff p) ≠ 0) :
     natDegree (p.map f) = natDegree p :=
   nat_degree_eq_of_degree_eq (degree_map_eq_of_leading_coeff_ne_zero f hf)
-#align
-  polynomial.nat_degree_map_of_leading_coeff_ne_zero Polynomial.nat_degree_map_of_leading_coeff_ne_zero
+#align polynomial.nat_degree_map_of_leading_coeff_ne_zero Polynomial.nat_degree_map_of_leading_coeff_ne_zero
 
 theorem leading_coeff_map_of_leading_coeff_ne_zero (f : R →+* S) (hf : f (leadingCoeff p) ≠ 0) :
     leadingCoeff (p.map f) = f (leadingCoeff p) :=
   by
   unfold leading_coeff
   rw [coeff_map, nat_degree_map_of_leading_coeff_ne_zero f hf]
-#align
-  polynomial.leading_coeff_map_of_leading_coeff_ne_zero Polynomial.leading_coeff_map_of_leading_coeff_ne_zero
+#align polynomial.leading_coeff_map_of_leading_coeff_ne_zero Polynomial.leading_coeff_map_of_leading_coeff_ne_zero
 
 variable (f)
 

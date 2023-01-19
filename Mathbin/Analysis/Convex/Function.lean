@@ -625,8 +625,7 @@ theorem ConcaveOn.open_segment_subset_strict_hypograph (hf : ConcaveOn 𝕜 s f)
     (hp : p.1 ∈ s ∧ p.2 < f p.1) (hq : q.1 ∈ s ∧ q.2 ≤ f q.1) :
     openSegment 𝕜 p q ⊆ { p : E × β | p.1 ∈ s ∧ p.2 < f p.1 } :=
   hf.dual.open_segment_subset_strict_epigraph p q hp hq
-#align
-  concave_on.open_segment_subset_strict_hypograph ConcaveOn.open_segment_subset_strict_hypograph
+#align concave_on.open_segment_subset_strict_hypograph ConcaveOn.open_segment_subset_strict_hypograph
 
 theorem ConvexOn.convex_strict_epigraph (hf : ConvexOn 𝕜 s f) :
     Convex 𝕜 { p : E × β | p.1 ∈ s ∧ f p.1 < p.2 } :=

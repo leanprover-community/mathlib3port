@@ -105,8 +105,7 @@ theorem of_restrict_scalars_finite_type [Algebra A B] [IsScalarTower R A B] [hB 
     simp only [Subalgebra.coe_restrict_scalars]
     exact Algebra.subset_adjoin
   exact le (eq_top_iff.1 hS b)
-#align
-  algebra.finite_type.of_restrict_scalars_finite_type Algebra.FiniteType.of_restrict_scalars_finite_type
+#align algebra.finite_type.of_restrict_scalars_finite_type Algebra.FiniteType.of_restrict_scalars_finite_type
 
 variable {R A B}
 
@@ -153,8 +152,7 @@ theorem iff_quotient_mv_polynomial' :
   · rintro ⟨ι, ⟨hfintype, ⟨f, hsur⟩⟩⟩
     letI : Fintype ι := hfintype
     exact finite_type.of_surjective (finite_type.mv_polynomial R ι) f hsur
-#align
-  algebra.finite_type.iff_quotient_mv_polynomial' Algebra.FiniteType.iff_quotient_mv_polynomial'
+#align algebra.finite_type.iff_quotient_mv_polynomial' Algebra.FiniteType.iff_quotient_mv_polynomial'
 
 /-- An algebra is finitely generated if and only if it is a quotient of a polynomial ring in `n`
 variables. -/
@@ -171,8 +169,7 @@ theorem iff_quotient_mv_polynomial'' :
         Function.Surjective.comp hsur (AlgEquiv.symm Equiv).Surjective⟩
   · rintro ⟨n, ⟨f, hsur⟩⟩
     exact finite_type.of_surjective (finite_type.mv_polynomial R (Fin n)) f hsur
-#align
-  algebra.finite_type.iff_quotient_mv_polynomial'' Algebra.FiniteType.iff_quotient_mv_polynomial''
+#align algebra.finite_type.iff_quotient_mv_polynomial'' Algebra.FiniteType.iff_quotient_mv_polynomial''
 
 instance prod [hA : FiniteType R A] [hB : FiniteType R B] : FiniteType R (A × B) :=
   ⟨by
@@ -432,8 +429,7 @@ theorem mem_closure_of_mem_span_closure [Nontrivial R] {m : M} {S : Set M}
     MonoidHom.map_mclosure _ _
   rw [Set.image_congr' (show ∀ x, of' R M x = of R M x from fun x => of'_eq_of x), ← h'] at h
   simpa using of'_mem_span.1 h
-#align
-  add_monoid_algebra.mem_closure_of_mem_span_closure AddMonoidAlgebra.mem_closure_of_mem_span_closure
+#align add_monoid_algebra.mem_closure_of_mem_span_closure AddMonoidAlgebra.mem_closure_of_mem_span_closure
 
 end Ring
 
@@ -463,8 +459,7 @@ theorem mv_polynomial_aeval_of_surjective_of_closure [CommSemiring R] {S : Set M
     exact ⟨P + Q, AlgHom.map_add _ _ _⟩
   · rintro r f ⟨P, rfl⟩
     exact ⟨r • P, AlgHom.map_smul _ _ _⟩
-#align
-  add_monoid_algebra.mv_polynomial_aeval_of_surjective_of_closure AddMonoidAlgebra.mv_polynomial_aeval_of_surjective_of_closure
+#align add_monoid_algebra.mv_polynomial_aeval_of_surjective_of_closure AddMonoidAlgebra.mv_polynomial_aeval_of_surjective_of_closure
 
 variable (R M)
 
@@ -624,8 +619,7 @@ theorem mv_polynomial_aeval_of_surjective_of_closure [CommSemiring R] {S : Set M
     exact ⟨P + Q, AlgHom.map_add _ _ _⟩
   · rintro r f ⟨P, rfl⟩
     exact ⟨r • P, AlgHom.map_smul _ _ _⟩
-#align
-  monoid_algebra.mv_polynomial_aeval_of_surjective_of_closure MonoidAlgebra.mv_polynomial_aeval_of_surjective_of_closure
+#align monoid_algebra.mv_polynomial_aeval_of_surjective_of_closure MonoidAlgebra.mv_polynomial_aeval_of_surjective_of_closure
 
 /-- If a monoid `M` is finitely generated then `monoid_algebra R M` is of finite type. -/
 instance finite_type_of_fg [CommRing R] [Monoid.Fg M] : FiniteType R (MonoidAlgebra R M) :=
@@ -725,8 +719,7 @@ theorem Module.Finite.injective_of_surjective_endomorphism [hfg : Finite R M]
     have Fmzero := hFb m (by simp)
     rwa [← sub_add_cancel F 1, add_smul, one_smul, this, zero_add] at Fmzero
   rw [← hG, mul_smul, X_mul m, hm, smul_zero]
-#align
-  module.finite.injective_of_surjective_endomorphism Module.Finite.injective_of_surjective_endomorphism
+#align module.finite.injective_of_surjective_endomorphism Module.Finite.injective_of_surjective_endomorphism
 
 end Vasconcelos
 

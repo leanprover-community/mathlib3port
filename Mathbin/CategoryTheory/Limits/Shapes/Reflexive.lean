@@ -103,8 +103,7 @@ theorem right_comp_retraction (f g : A ⟶ B) [IsCoreflexivePair f g] :
 theorem IsKernelPair.is_reflexive_pair {R : C} {f g : R ⟶ A} {q : A ⟶ B} (h : IsKernelPair q f g) :
     IsReflexivePair f g :=
   IsReflexivePair.mk' _ (h.lift' _ _ rfl).2.1 (h.lift' _ _ _).2.2
-#align
-  category_theory.is_kernel_pair.is_reflexive_pair CategoryTheory.IsKernelPair.is_reflexive_pair
+#align category_theory.is_kernel_pair.is_reflexive_pair CategoryTheory.IsKernelPair.is_reflexive_pair
 
 -- This shouldn't be an instance as it would instantly loop.
 /-- If `f,g` is reflexive, then `g,f` is reflexive. -/
@@ -136,14 +135,12 @@ variable (C)
 /-- `C` has reflexive coequalizers if it has coequalizers for every reflexive pair. -/
 class HasReflexiveCoequalizers : Prop where
   has_coeq : ∀ ⦃A B : C⦄ (f g : A ⟶ B) [IsReflexivePair f g], HasCoequalizer f g
-#align
-  category_theory.limits.has_reflexive_coequalizers CategoryTheory.Limits.HasReflexiveCoequalizers
+#align category_theory.limits.has_reflexive_coequalizers CategoryTheory.Limits.HasReflexiveCoequalizers
 
 /-- `C` has coreflexive equalizers if it has equalizers for every coreflexive pair. -/
 class HasCoreflexiveEqualizers : Prop where
   has_eq : ∀ ⦃A B : C⦄ (f g : A ⟶ B) [IsCoreflexivePair f g], HasEqualizer f g
-#align
-  category_theory.limits.has_coreflexive_equalizers CategoryTheory.Limits.HasCoreflexiveEqualizers
+#align category_theory.limits.has_coreflexive_equalizers CategoryTheory.Limits.HasCoreflexiveEqualizers
 
 attribute [instance] has_reflexive_coequalizers.has_coeq
 
@@ -154,28 +151,24 @@ theorem has_coequalizer_of_common_section [HasReflexiveCoequalizers C] {A B : C}
   by
   letI := is_reflexive_pair.mk' r rf rg
   infer_instance
-#align
-  category_theory.limits.has_coequalizer_of_common_section CategoryTheory.Limits.has_coequalizer_of_common_section
+#align category_theory.limits.has_coequalizer_of_common_section CategoryTheory.Limits.has_coequalizer_of_common_section
 
 theorem has_equalizer_of_common_retraction [HasCoreflexiveEqualizers C] {A B : C} {f g : A ⟶ B}
     (r : B ⟶ A) (fr : f ≫ r = 𝟙 _) (gr : g ≫ r = 𝟙 _) : HasEqualizer f g :=
   by
   letI := is_coreflexive_pair.mk' r fr gr
   infer_instance
-#align
-  category_theory.limits.has_equalizer_of_common_retraction CategoryTheory.Limits.has_equalizer_of_common_retraction
+#align category_theory.limits.has_equalizer_of_common_retraction CategoryTheory.Limits.has_equalizer_of_common_retraction
 
 /-- If `C` has coequalizers, then it has reflexive coequalizers. -/
 instance (priority := 100) has_reflexive_coequalizers_of_has_coequalizers [HasCoequalizers C] :
     HasReflexiveCoequalizers C where has_coeq A B f g i := by infer_instance
-#align
-  category_theory.limits.has_reflexive_coequalizers_of_has_coequalizers CategoryTheory.Limits.has_reflexive_coequalizers_of_has_coequalizers
+#align category_theory.limits.has_reflexive_coequalizers_of_has_coequalizers CategoryTheory.Limits.has_reflexive_coequalizers_of_has_coequalizers
 
 /-- If `C` has equalizers, then it has coreflexive equalizers. -/
 instance (priority := 100) has_coreflexive_equalizers_of_has_equalizers [HasEqualizers C] :
     HasCoreflexiveEqualizers C where has_eq A B f g i := by infer_instance
-#align
-  category_theory.limits.has_coreflexive_equalizers_of_has_equalizers CategoryTheory.Limits.has_coreflexive_equalizers_of_has_equalizers
+#align category_theory.limits.has_coreflexive_equalizers_of_has_equalizers CategoryTheory.Limits.has_coreflexive_equalizers_of_has_equalizers
 
 end Limits
 

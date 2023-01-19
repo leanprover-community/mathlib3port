@@ -93,8 +93,7 @@ theorem sum_card_bipartite_above_eq_sum_card_bipartite_below [∀ a b, Decidable
   by
   simp_rw [card_eq_sum_ones, bipartite_above, bipartite_below, sum_filter]
   exact sum_comm
-#align
-  finset.sum_card_bipartite_above_eq_sum_card_bipartite_below Finset.sum_card_bipartite_above_eq_sum_card_bipartite_below
+#align finset.sum_card_bipartite_above_eq_sum_card_bipartite_below Finset.sum_card_bipartite_above_eq_sum_card_bipartite_below
 
 /-- Double counting argument. Considering `r` as a bipartite graph, the LHS is a lower bound on the
 number of edges while the RHS is an upper bound. -/

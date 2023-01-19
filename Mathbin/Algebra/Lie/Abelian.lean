@@ -147,8 +147,7 @@ theorem ideal_oper_max_triv_submodule_eq_bot (I : LieIdeal R L) : ⁅I, maxTrivS
     LieSubmodule.bot_coe_submodule, Submodule.span_eq_bot]
   rintro m ⟨⟨x, hx⟩, ⟨⟨m, hm⟩, rfl⟩⟩
   exact hm x
-#align
-  lie_module.ideal_oper_max_triv_submodule_eq_bot LieModule.ideal_oper_max_triv_submodule_eq_bot
+#align lie_module.ideal_oper_max_triv_submodule_eq_bot LieModule.ideal_oper_max_triv_submodule_eq_bot
 
 theorem le_max_triv_iff_bracket_eq_bot {N : LieSubmodule R L M} :
     N ≤ maxTrivSubmodule R L M ↔ ⁅(⊤ : LieIdeal R L), N⁆ = ⊥ :=
@@ -234,8 +233,7 @@ theorem max_triv_equiv_of_refl_eq_refl :
 theorem max_triv_equiv_of_equiv_symm_eq_symm (e : M ≃ₗ⁅R,L⁆ N) :
     (maxTrivEquiv e).symm = maxTrivEquiv e.symm :=
   rfl
-#align
-  lie_module.max_triv_equiv_of_equiv_symm_eq_symm LieModule.max_triv_equiv_of_equiv_symm_eq_symm
+#align lie_module.max_triv_equiv_of_equiv_symm_eq_symm LieModule.max_triv_equiv_of_equiv_symm_eq_symm
 
 /-- A linear map between two Lie modules is a morphism of Lie modules iff the Lie algebra action
 on it is trivial. -/
@@ -260,8 +258,7 @@ def maxTrivLinearMapEquivLieModuleHom : maxTrivSubmodule R L (M →ₗ[R] N) ≃
       simp⟩
   left_inv f := by simp
   right_inv F := by simp
-#align
-  lie_module.max_triv_linear_map_equiv_lie_module_hom LieModule.maxTrivLinearMapEquivLieModuleHom
+#align lie_module.max_triv_linear_map_equiv_lie_module_hom LieModule.maxTrivLinearMapEquivLieModuleHom
 
 @[simp]
 theorem coe_max_triv_linear_map_equiv_lie_module_hom (f : maxTrivSubmodule R L (M →ₗ[R] N)) :
@@ -269,15 +266,13 @@ theorem coe_max_triv_linear_map_equiv_lie_module_hom (f : maxTrivSubmodule R L (
   by
   ext
   rfl
-#align
-  lie_module.coe_max_triv_linear_map_equiv_lie_module_hom LieModule.coe_max_triv_linear_map_equiv_lie_module_hom
+#align lie_module.coe_max_triv_linear_map_equiv_lie_module_hom LieModule.coe_max_triv_linear_map_equiv_lie_module_hom
 
 @[simp]
 theorem coe_max_triv_linear_map_equiv_lie_module_hom_symm (f : M →ₗ⁅R,L⁆ N) :
     (maxTrivLinearMapEquivLieModuleHom.symm f : M → N) = f :=
   rfl
-#align
-  lie_module.coe_max_triv_linear_map_equiv_lie_module_hom_symm LieModule.coe_max_triv_linear_map_equiv_lie_module_hom_symm
+#align lie_module.coe_max_triv_linear_map_equiv_lie_module_hom_symm LieModule.coe_max_triv_linear_map_equiv_lie_module_hom_symm
 
 @[simp]
 theorem coe_linear_map_max_triv_linear_map_equiv_lie_module_hom
@@ -286,15 +281,13 @@ theorem coe_linear_map_max_triv_linear_map_equiv_lie_module_hom
   by
   ext
   rfl
-#align
-  lie_module.coe_linear_map_max_triv_linear_map_equiv_lie_module_hom LieModule.coe_linear_map_max_triv_linear_map_equiv_lie_module_hom
+#align lie_module.coe_linear_map_max_triv_linear_map_equiv_lie_module_hom LieModule.coe_linear_map_max_triv_linear_map_equiv_lie_module_hom
 
 @[simp]
 theorem coe_linear_map_max_triv_linear_map_equiv_lie_module_hom_symm (f : M →ₗ⁅R,L⁆ N) :
     (maxTrivLinearMapEquivLieModuleHom.symm f : M →ₗ[R] N) = (f : M →ₗ[R] N) :=
   rfl
-#align
-  lie_module.coe_linear_map_max_triv_linear_map_equiv_lie_module_hom_symm LieModule.coe_linear_map_max_triv_linear_map_equiv_lie_module_hom_symm
+#align lie_module.coe_linear_map_max_triv_linear_map_equiv_lie_module_hom_symm LieModule.coe_linear_map_max_triv_linear_map_equiv_lie_module_hom_symm
 
 end LieModule
 

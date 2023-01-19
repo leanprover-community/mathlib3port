@@ -317,8 +317,7 @@ private theorem exists_mono_in_high_dimension' :
         exact ⟨fun ⟨q, hq, he⟩ => h ⟨q, hq, he⟩, s.distinct_colors⟩
       -- Finally, we really do have `r+1` lines!
       · rw [Multiset.card_cons, Multiset.card_map, sr])
-#align
-  combinatorics.line.exists_mono_in_high_dimension' combinatorics.line.exists_mono_in_high_dimension'
+#align combinatorics.line.exists_mono_in_high_dimension' combinatorics.line.exists_mono_in_high_dimension'
 
 /-- The Hales-Jewett theorem: for any finite types `α` and `κ`, there exists a finite type `ι` such
 that whenever the hypercube `ι → α` is `κ`-colored, there is a monochromatic combinatorial line. -/
@@ -328,8 +327,7 @@ theorem exists_mono_in_high_dimension (α : Type u) [Finite α] (κ : Type v) [F
   ⟨ι, ιfin, fun C =>
     let ⟨l, c, hc⟩ := hι (ULift.up ∘ C)
     ⟨l, c.down, fun x => by rw [← hc]⟩⟩
-#align
-  combinatorics.line.exists_mono_in_high_dimension Combinatorics.Line.exists_mono_in_high_dimension
+#align combinatorics.line.exists_mono_in_high_dimension Combinatorics.Line.exists_mono_in_high_dimension
 
 end Line
 

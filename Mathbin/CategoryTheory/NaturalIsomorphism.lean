@@ -203,8 +203,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.nat_is
 @[simp]
 theorem cancel_natIso_hom_right {X : D} {Y : C} (f f' : X ⟶ F.obj Y) :
     f ≫ α.Hom.app Y = f' ≫ α.Hom.app Y ↔ f = f' := by simp only [cancel_mono]
-#align
-  category_theory.nat_iso.cancel_nat_iso_hom_right CategoryTheory.NatIso.cancel_natIso_hom_right
+#align category_theory.nat_iso.cancel_nat_iso_hom_right CategoryTheory.NatIso.cancel_natIso_hom_right
 
 /- warning: category_theory.nat_iso.cancel_nat_iso_inv_right -> CategoryTheory.NatIso.cancel_natIso_inv_right is a dubious translation:
 lean 3 declaration is
@@ -215,8 +214,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.nat_is
 @[simp]
 theorem cancel_natIso_inv_right {X : D} {Y : C} (f f' : X ⟶ G.obj Y) :
     f ≫ α.inv.app Y = f' ≫ α.inv.app Y ↔ f = f' := by simp only [cancel_mono]
-#align
-  category_theory.nat_iso.cancel_nat_iso_inv_right CategoryTheory.NatIso.cancel_natIso_inv_right
+#align category_theory.nat_iso.cancel_nat_iso_inv_right CategoryTheory.NatIso.cancel_natIso_inv_right
 
 /- warning: category_theory.nat_iso.cancel_nat_iso_hom_right_assoc -> CategoryTheory.NatIso.cancel_natIso_hom_right_assoc is a dubious translation:
 lean 3 declaration is
@@ -229,8 +227,7 @@ theorem cancel_natIso_hom_right_assoc {W X X' : D} {Y : C} (f : W ⟶ X) (g : X 
     (f' : W ⟶ X') (g' : X' ⟶ F.obj Y) :
     f ≫ g ≫ α.Hom.app Y = f' ≫ g' ≫ α.Hom.app Y ↔ f ≫ g = f' ≫ g' := by
   simp only [← category.assoc, cancel_mono]
-#align
-  category_theory.nat_iso.cancel_nat_iso_hom_right_assoc CategoryTheory.NatIso.cancel_natIso_hom_right_assoc
+#align category_theory.nat_iso.cancel_nat_iso_hom_right_assoc CategoryTheory.NatIso.cancel_natIso_hom_right_assoc
 
 /- warning: category_theory.nat_iso.cancel_nat_iso_inv_right_assoc -> CategoryTheory.NatIso.cancel_natIso_inv_right_assoc is a dubious translation:
 lean 3 declaration is
@@ -243,8 +240,7 @@ theorem cancel_natIso_inv_right_assoc {W X X' : D} {Y : C} (f : W ⟶ X) (g : X 
     (f' : W ⟶ X') (g' : X' ⟶ G.obj Y) :
     f ≫ g ≫ α.inv.app Y = f' ≫ g' ≫ α.inv.app Y ↔ f ≫ g = f' ≫ g' := by
   simp only [← category.assoc, cancel_mono]
-#align
-  category_theory.nat_iso.cancel_nat_iso_inv_right_assoc CategoryTheory.NatIso.cancel_natIso_inv_right_assoc
+#align category_theory.nat_iso.cancel_nat_iso_inv_right_assoc CategoryTheory.NatIso.cancel_natIso_inv_right_assoc
 
 /- warning: category_theory.nat_iso.inv_inv_app -> CategoryTheory.NatIso.inv_inv_app is a dubious translation:
 lean 3 declaration is

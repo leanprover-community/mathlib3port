@@ -306,8 +306,7 @@ theorem mul_splits_in_splitting_field_of_mul {p₁ q₁ p₂ q₂ : F[X]} (hq₁
           (splits_of_splits_of_dvd _ (mul_ne_zero hq₁ hq₂) (splitting_field.splits _)
             (dvd_mul_left q₂ q₁))).comp_algebra_map]
     exact splits_comp_of_splits _ _ h₂
-#align
-  polynomial.gal.mul_splits_in_splitting_field_of_mul Polynomial.Gal.mul_splits_in_splitting_field_of_mul
+#align polynomial.gal.mul_splits_in_splitting_field_of_mul Polynomial.Gal.mul_splits_in_splitting_field_of_mul
 
 /-- `p` splits in the splitting field of `p ∘ q`, for `q` non-constant. -/
 theorem splits_in_splitting_field_of_comp (hq : q.natDegree ≠ 0) :
@@ -349,8 +348,7 @@ theorem splits_in_splitting_field_of_comp (hq : q.natDegree ≠ 0) :
   exact
     WfDvdMonoid.induction_on_irreducible p (splits_zero _) (fun _ => splits_of_is_unit _)
       fun _ _ _ h => key2 (key1 h)
-#align
-  polynomial.gal.splits_in_splitting_field_of_comp Polynomial.Gal.splits_in_splitting_field_of_comp
+#align polynomial.gal.splits_in_splitting_field_of_comp Polynomial.Gal.splits_in_splitting_field_of_comp
 
 /-- `polynomial.gal.restrict` for the composition of polynomials. -/
 def restrictComp (hq : q.natDegree ≠ 0) : (p.comp q).Gal →* p.Gal :=
@@ -467,8 +465,7 @@ theorem card_complex_roots_eq_card_real_add_card_not_gal_inv (p : ℚ[X]) :
     rw [hb, hc]
     tauto
   · infer_instance
-#align
-  polynomial.gal.card_complex_roots_eq_card_real_add_card_not_gal_inv Polynomial.Gal.card_complex_roots_eq_card_real_add_card_not_gal_inv
+#align polynomial.gal.card_complex_roots_eq_card_real_add_card_not_gal_inv Polynomial.Gal.card_complex_roots_eq_card_real_add_card_not_gal_inv
 
 /-- An irreducible polynomial of prime degree with two non-real roots has full Galois group. -/
 theorem gal_action_hom_bijective_of_prime_degree {p : ℚ[X]} (p_irr : Irreducible p)
@@ -497,10 +494,9 @@ theorem gal_action_hom_bijective_of_prime_degree {p : ℚ[X]} (p_irr : Irreducib
   · exact ⟨conj, rfl⟩
   · rw [← Equiv.Perm.card_support_eq_two]
     apply Nat.add_left_cancel
-    rw [← p_roots, ← Set.to_finset_card (root_set p ℝ), ← Set.to_finset_card (root_set p ℂ)]
+    rw [← p_roots, ← Set.toFinset_card (root_set p ℝ), ← Set.toFinset_card (root_set p ℂ)]
     exact (card_complex_roots_eq_card_real_add_card_not_gal_inv p).symm
-#align
-  polynomial.gal.gal_action_hom_bijective_of_prime_degree Polynomial.Gal.gal_action_hom_bijective_of_prime_degree
+#align polynomial.gal.gal_action_hom_bijective_of_prime_degree Polynomial.Gal.gal_action_hom_bijective_of_prime_degree
 
 /-- An irreducible polynomial of prime degree with 1-3 non-real roots has full Galois group. -/
 theorem gal_action_hom_bijective_of_prime_degree' {p : ℚ[X]} (p_irr : Irreducible p)
@@ -519,7 +515,7 @@ theorem gal_action_hom_bijective_of_prime_degree' {p : ℚ[X]} (p_irr : Irreduci
             AlgEquiv.ext Complex.conj_conj,
           MonoidHom.map_one, MonoidHom.map_one])
   have key := card_complex_roots_eq_card_real_add_card_not_gal_inv p
-  simp_rw [Set.to_finset_card] at key
+  simp_rw [Set.toFinset_card] at key
   rw [key, add_le_add_iff_left] at p_roots1 p_roots2
   rw [key, add_right_inj]
   suffices ∀ m : ℕ, 2 ∣ m → 1 ≤ m → m ≤ 3 → m = 2 by exact this n hn p_roots1 p_roots2
@@ -530,8 +526,7 @@ theorem gal_action_hom_bijective_of_prime_degree' {p : ℚ[X]} (p_irr : Irreduci
         (lt_of_le_of_ne h3 (show 2 * k ≠ 2 * 1 + 1 from Nat.two_mul_ne_two_mul_add_one)))
       (nat.succ_le_iff.mpr
         (lt_of_le_of_ne h2 (show 2 * 0 + 1 ≠ 2 * k from nat.two_mul_ne_two_mul_add_one.symm)))
-#align
-  polynomial.gal.gal_action_hom_bijective_of_prime_degree' Polynomial.Gal.gal_action_hom_bijective_of_prime_degree'
+#align polynomial.gal.gal_action_hom_bijective_of_prime_degree' Polynomial.Gal.gal_action_hom_bijective_of_prime_degree'
 
 end Rationals
 

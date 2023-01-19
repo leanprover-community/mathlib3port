@@ -114,8 +114,7 @@ def regularOfIsPullbackSndOfRegular {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h
     apply (pullback_cone.mk f g comm).equalizer_ext
     · erw [← cancel_mono h, category.assoc, category.assoc, comm, reassoc_of z]
     · exact z
-#align
-  category_theory.regular_of_is_pullback_snd_of_regular CategoryTheory.regularOfIsPullbackSndOfRegular
+#align category_theory.regular_of_is_pullback_snd_of_regular CategoryTheory.regularOfIsPullbackSndOfRegular
 
 /-- The first leg of a pullback cone is a regular monomorphism if the left component is too.
 
@@ -126,8 +125,7 @@ def regularOfIsPullbackFstOfRegular {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h
     [hr : RegularMono k] (comm : f ≫ h = g ≫ k) (t : IsLimit (PullbackCone.mk _ _ comm)) :
     RegularMono f :=
   regularOfIsPullbackSndOfRegular comm.symm (PullbackCone.flipIsLimit t)
-#align
-  category_theory.regular_of_is_pullback_fst_of_regular CategoryTheory.regularOfIsPullbackFstOfRegular
+#align category_theory.regular_of_is_pullback_fst_of_regular CategoryTheory.regularOfIsPullbackFstOfRegular
 
 instance (priority := 100) strong_mono_of_regular_mono (f : X ⟶ Y) [RegularMono f] : StrongMono f :=
   StrongMono.mk'
@@ -170,8 +168,7 @@ instance (priority := 100) regularMonoCategoryOfSplitMonoCategory [SplitMonoCate
     by
     haveI := is_split_mono_of_mono f
     infer_instance
-#align
-  category_theory.regular_mono_category_of_split_mono_category CategoryTheory.regularMonoCategoryOfSplitMonoCategory
+#align category_theory.regular_mono_category_of_split_mono_category CategoryTheory.regularMonoCategoryOfSplitMonoCategory
 
 instance (priority := 100) strong_mono_category_of_regular_mono_category [RegularMonoCategory C] :
     StrongMonoCategory C
@@ -179,8 +176,7 @@ instance (priority := 100) strong_mono_category_of_regular_mono_category [Regula
     by
     haveI := regular_mono_of_mono f
     infer_instance
-#align
-  category_theory.strong_mono_category_of_regular_mono_category CategoryTheory.strong_mono_category_of_regular_mono_category
+#align category_theory.strong_mono_category_of_regular_mono_category CategoryTheory.strong_mono_category_of_regular_mono_category
 
 /-- A regular epimorphism is a morphism which is the coequalizer of some parallel pair. -/
 class RegularEpi (f : X ⟶ Y) where
@@ -255,8 +251,7 @@ def regularOfIsPushoutSndOfRegular {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h 
     · exact z
     · erw [← cancel_epi g, ← reassoc_of comm, ← reassoc_of comm, z]
       rfl
-#align
-  category_theory.regular_of_is_pushout_snd_of_regular CategoryTheory.regularOfIsPushoutSndOfRegular
+#align category_theory.regular_of_is_pushout_snd_of_regular CategoryTheory.regularOfIsPushoutSndOfRegular
 
 /-- The first leg of a pushout cocone is a regular epimorphism if the left component is too.
 
@@ -267,8 +262,7 @@ def regularOfIsPushoutFstOfRegular {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h 
     [fr : RegularEpi f] (comm : f ≫ h = g ≫ k) (t : IsColimit (PushoutCocone.mk _ _ comm)) :
     RegularEpi k :=
   regularOfIsPushoutSndOfRegular comm.symm (PushoutCocone.flipIsColimit t)
-#align
-  category_theory.regular_of_is_pushout_fst_of_regular CategoryTheory.regularOfIsPushoutFstOfRegular
+#align category_theory.regular_of_is_pushout_fst_of_regular CategoryTheory.regularOfIsPushoutFstOfRegular
 
 instance (priority := 100) strong_epi_of_regular_epi (f : X ⟶ Y) [RegularEpi f] : StrongEpi f :=
   StrongEpi.mk'
@@ -314,8 +308,7 @@ instance (priority := 100) regularEpiCategoryOfSplitEpiCategory [SplitEpiCategor
     by
     haveI := is_split_epi_of_epi f
     infer_instance
-#align
-  category_theory.regular_epi_category_of_split_epi_category CategoryTheory.regularEpiCategoryOfSplitEpiCategory
+#align category_theory.regular_epi_category_of_split_epi_category CategoryTheory.regularEpiCategoryOfSplitEpiCategory
 
 instance (priority := 100) strong_epi_category_of_regular_epi_category [RegularEpiCategory C] :
     StrongEpiCategory C
@@ -323,8 +316,7 @@ instance (priority := 100) strong_epi_category_of_regular_epi_category [RegularE
     by
     haveI := regular_epi_of_epi f
     infer_instance
-#align
-  category_theory.strong_epi_category_of_regular_epi_category CategoryTheory.strong_epi_category_of_regular_epi_category
+#align category_theory.strong_epi_category_of_regular_epi_category CategoryTheory.strong_epi_category_of_regular_epi_category
 
 end CategoryTheory
 

@@ -1091,8 +1091,7 @@ theorem mk_univ_quaternion_algebra : (#(Set.univ : Set ℍ[R,c₁,c₂])) = (#R)
 @[simp]
 theorem mk_univ_quaternion_algebra_of_infinite [Infinite R] :
     (#(Set.univ : Set ℍ[R,c₁,c₂])) = (#R) := by rw [mk_univ_quaternion_algebra, pow_four]
-#align
-  cardinal.mk_univ_quaternion_algebra_of_infinite Cardinal.mk_univ_quaternion_algebra_of_infinite
+#align cardinal.mk_univ_quaternion_algebra_of_infinite Cardinal.mk_univ_quaternion_algebra_of_infinite
 
 end QuaternionAlgebra
 

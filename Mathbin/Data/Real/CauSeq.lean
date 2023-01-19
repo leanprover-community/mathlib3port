@@ -205,7 +205,7 @@ Case conversion may be inaccurate. Consider using '#align cau_seq.mk_to_fun [ano
 @[simp]
 theorem [anonymous] (f) (hf : IsCauSeq abv f) : @coeFn (CauSeq β abv) _ _ ⟨f, hf⟩ = f :=
   rfl
-#align cau_seq.mk_to_fun[anonymous]
+#align cau_seq.mk_to_fun [anonymous]
 
 /- warning: cau_seq.ext -> CauSeq.ext is a dubious translation:
 lean 3 declaration is

@@ -144,14 +144,12 @@ theorem lower_semicontinuous_within_at_univ_iff :
 theorem LowerSemicontinuousAt.lower_semicontinuous_within_at (s : Set α)
     (h : LowerSemicontinuousAt f x) : LowerSemicontinuousWithinAt f s x := fun y hy =>
   Filter.Eventually.filter_mono nhds_within_le_nhds (h y hy)
-#align
-  lower_semicontinuous_at.lower_semicontinuous_within_at LowerSemicontinuousAt.lower_semicontinuous_within_at
+#align lower_semicontinuous_at.lower_semicontinuous_within_at LowerSemicontinuousAt.lower_semicontinuous_within_at
 
 theorem LowerSemicontinuousOn.lower_semicontinuous_within_at (h : LowerSemicontinuousOn f s)
     (hx : x ∈ s) : LowerSemicontinuousWithinAt f s x :=
   h x hx
-#align
-  lower_semicontinuous_on.lower_semicontinuous_within_at LowerSemicontinuousOn.lower_semicontinuous_within_at
+#align lower_semicontinuous_on.lower_semicontinuous_within_at LowerSemicontinuousOn.lower_semicontinuous_within_at
 
 theorem LowerSemicontinuousOn.mono (h : LowerSemicontinuousOn f s) (hst : t ⊆ s) :
     LowerSemicontinuousOn f t := fun x hx => (h x (hst hx)).mono hst
@@ -169,8 +167,7 @@ theorem LowerSemicontinuous.lower_semicontinuous_at (h : LowerSemicontinuous f) 
 theorem LowerSemicontinuous.lower_semicontinuous_within_at (h : LowerSemicontinuous f) (s : Set α)
     (x : α) : LowerSemicontinuousWithinAt f s x :=
   (h x).LowerSemicontinuousWithinAt s
-#align
-  lower_semicontinuous.lower_semicontinuous_within_at LowerSemicontinuous.lower_semicontinuous_within_at
+#align lower_semicontinuous.lower_semicontinuous_within_at LowerSemicontinuous.lower_semicontinuous_within_at
 
 theorem LowerSemicontinuous.lower_semicontinuous_on (h : LowerSemicontinuous f) (s : Set α) :
     LowerSemicontinuousOn f s := fun x hx => h.LowerSemicontinuousWithinAt s x
@@ -226,8 +223,7 @@ theorem IsOpen.lower_semicontinuous_at_indicator (hs : IsOpen s) (hy : 0 ≤ y) 
 theorem IsOpen.lower_semicontinuous_within_at_indicator (hs : IsOpen s) (hy : 0 ≤ y) :
     LowerSemicontinuousWithinAt (indicator s fun x => y) t x :=
   (hs.lower_semicontinuous_indicator hy).LowerSemicontinuousWithinAt t x
-#align
-  is_open.lower_semicontinuous_within_at_indicator IsOpen.lower_semicontinuous_within_at_indicator
+#align is_open.lower_semicontinuous_within_at_indicator IsOpen.lower_semicontinuous_within_at_indicator
 
 theorem IsClosed.lower_semicontinuous_indicator (hs : IsClosed s) (hy : y ≤ 0) :
     LowerSemicontinuous (indicator s fun x => y) :=
@@ -253,8 +249,7 @@ theorem IsClosed.lower_semicontinuous_at_indicator (hs : IsClosed s) (hy : y ≤
 theorem IsClosed.lower_semicontinuous_within_at_indicator (hs : IsClosed s) (hy : y ≤ 0) :
     LowerSemicontinuousWithinAt (indicator s fun x => y) t x :=
   (hs.lower_semicontinuous_indicator hy).LowerSemicontinuousWithinAt t x
-#align
-  is_closed.lower_semicontinuous_within_at_indicator IsClosed.lower_semicontinuous_within_at_indicator
+#align is_closed.lower_semicontinuous_within_at_indicator IsClosed.lower_semicontinuous_within_at_indicator
 
 end
 
@@ -296,8 +291,7 @@ variable [TopologicalSpace γ] [OrderTopology γ]
 theorem ContinuousWithinAt.lower_semicontinuous_within_at {f : α → γ}
     (h : ContinuousWithinAt f s x) : LowerSemicontinuousWithinAt f s x := fun y hy =>
   h (Ioi_mem_nhds hy)
-#align
-  continuous_within_at.lower_semicontinuous_within_at ContinuousWithinAt.lower_semicontinuous_within_at
+#align continuous_within_at.lower_semicontinuous_within_at ContinuousWithinAt.lower_semicontinuous_within_at
 
 theorem ContinuousAt.lower_semicontinuous_at {f : α → γ} (h : ContinuousAt f x) :
     LowerSemicontinuousAt f x := fun y hy => h (Ioi_mem_nhds hy)
@@ -337,8 +331,7 @@ theorem ContinuousAt.comp_lower_semicontinuous_within_at {g : γ → δ} {f : α
       
   · simp only [not_exists, not_lt] at h
     exact Filter.eventually_of_forall fun a => hy.trans_le (gmon (h (f a)))
-#align
-  continuous_at.comp_lower_semicontinuous_within_at ContinuousAt.comp_lower_semicontinuous_within_at
+#align continuous_at.comp_lower_semicontinuous_within_at ContinuousAt.comp_lower_semicontinuous_within_at
 
 theorem ContinuousAt.comp_lower_semicontinuous_at {g : γ → δ} {f : α → γ}
     (hg : ContinuousAt g (f x)) (hf : LowerSemicontinuousAt f x) (gmon : Monotone g) :
@@ -362,21 +355,18 @@ theorem ContinuousAt.comp_lower_semicontinuous_within_at_antitone {g : γ → δ
     (hg : ContinuousAt g (f x)) (hf : LowerSemicontinuousWithinAt f s x) (gmon : Antitone g) :
     UpperSemicontinuousWithinAt (g ∘ f) s x :=
   @ContinuousAt.comp_lower_semicontinuous_within_at α _ x s γ _ _ _ δᵒᵈ _ _ _ g f hg hf gmon
-#align
-  continuous_at.comp_lower_semicontinuous_within_at_antitone ContinuousAt.comp_lower_semicontinuous_within_at_antitone
+#align continuous_at.comp_lower_semicontinuous_within_at_antitone ContinuousAt.comp_lower_semicontinuous_within_at_antitone
 
 theorem ContinuousAt.comp_lower_semicontinuous_at_antitone {g : γ → δ} {f : α → γ}
     (hg : ContinuousAt g (f x)) (hf : LowerSemicontinuousAt f x) (gmon : Antitone g) :
     UpperSemicontinuousAt (g ∘ f) x :=
   @ContinuousAt.comp_lower_semicontinuous_at α _ x γ _ _ _ δᵒᵈ _ _ _ g f hg hf gmon
-#align
-  continuous_at.comp_lower_semicontinuous_at_antitone ContinuousAt.comp_lower_semicontinuous_at_antitone
+#align continuous_at.comp_lower_semicontinuous_at_antitone ContinuousAt.comp_lower_semicontinuous_at_antitone
 
 theorem Continuous.comp_lower_semicontinuous_on_antitone {g : γ → δ} {f : α → γ} (hg : Continuous g)
     (hf : LowerSemicontinuousOn f s) (gmon : Antitone g) : UpperSemicontinuousOn (g ∘ f) s :=
   fun x hx => hg.ContinuousAt.comp_lower_semicontinuous_within_at_antitone (hf x hx) gmon
-#align
-  continuous.comp_lower_semicontinuous_on_antitone Continuous.comp_lower_semicontinuous_on_antitone
+#align continuous.comp_lower_semicontinuous_on_antitone Continuous.comp_lower_semicontinuous_on_antitone
 
 theorem Continuous.comp_lower_semicontinuous_antitone {g : γ → δ} {f : α → γ} (hg : Continuous g)
     (hf : LowerSemicontinuous f) (gmon : Antitone g) : UpperSemicontinuous (g ∘ f) := fun x =>
@@ -719,14 +709,12 @@ theorem upper_semicontinuous_within_at_univ_iff :
 theorem UpperSemicontinuousAt.upper_semicontinuous_within_at (s : Set α)
     (h : UpperSemicontinuousAt f x) : UpperSemicontinuousWithinAt f s x := fun y hy =>
   Filter.Eventually.filter_mono nhds_within_le_nhds (h y hy)
-#align
-  upper_semicontinuous_at.upper_semicontinuous_within_at UpperSemicontinuousAt.upper_semicontinuous_within_at
+#align upper_semicontinuous_at.upper_semicontinuous_within_at UpperSemicontinuousAt.upper_semicontinuous_within_at
 
 theorem UpperSemicontinuousOn.upper_semicontinuous_within_at (h : UpperSemicontinuousOn f s)
     (hx : x ∈ s) : UpperSemicontinuousWithinAt f s x :=
   h x hx
-#align
-  upper_semicontinuous_on.upper_semicontinuous_within_at UpperSemicontinuousOn.upper_semicontinuous_within_at
+#align upper_semicontinuous_on.upper_semicontinuous_within_at UpperSemicontinuousOn.upper_semicontinuous_within_at
 
 theorem UpperSemicontinuousOn.mono (h : UpperSemicontinuousOn f s) (hst : t ⊆ s) :
     UpperSemicontinuousOn f t := fun x hx => (h x (hst hx)).mono hst
@@ -744,8 +732,7 @@ theorem UpperSemicontinuous.upper_semicontinuous_at (h : UpperSemicontinuous f) 
 theorem UpperSemicontinuous.upper_semicontinuous_within_at (h : UpperSemicontinuous f) (s : Set α)
     (x : α) : UpperSemicontinuousWithinAt f s x :=
   (h x).UpperSemicontinuousWithinAt s
-#align
-  upper_semicontinuous.upper_semicontinuous_within_at UpperSemicontinuous.upper_semicontinuous_within_at
+#align upper_semicontinuous.upper_semicontinuous_within_at UpperSemicontinuous.upper_semicontinuous_within_at
 
 theorem UpperSemicontinuous.upper_semicontinuous_on (h : UpperSemicontinuous f) (s : Set α) :
     UpperSemicontinuousOn f s := fun x hx => h.UpperSemicontinuousWithinAt s x
@@ -795,8 +782,7 @@ theorem IsOpen.upper_semicontinuous_at_indicator (hs : IsOpen s) (hy : y ≤ 0) 
 theorem IsOpen.upper_semicontinuous_within_at_indicator (hs : IsOpen s) (hy : y ≤ 0) :
     UpperSemicontinuousWithinAt (indicator s fun x => y) t x :=
   (hs.upper_semicontinuous_indicator hy).UpperSemicontinuousWithinAt t x
-#align
-  is_open.upper_semicontinuous_within_at_indicator IsOpen.upper_semicontinuous_within_at_indicator
+#align is_open.upper_semicontinuous_within_at_indicator IsOpen.upper_semicontinuous_within_at_indicator
 
 theorem IsClosed.upper_semicontinuous_indicator (hs : IsClosed s) (hy : 0 ≤ y) :
     UpperSemicontinuous (indicator s fun x => y) :=
@@ -816,8 +802,7 @@ theorem IsClosed.upper_semicontinuous_at_indicator (hs : IsClosed s) (hy : 0 ≤
 theorem IsClosed.upper_semicontinuous_within_at_indicator (hs : IsClosed s) (hy : 0 ≤ y) :
     UpperSemicontinuousWithinAt (indicator s fun x => y) t x :=
   (hs.upper_semicontinuous_indicator hy).UpperSemicontinuousWithinAt t x
-#align
-  is_closed.upper_semicontinuous_within_at_indicator IsClosed.upper_semicontinuous_within_at_indicator
+#align is_closed.upper_semicontinuous_within_at_indicator IsClosed.upper_semicontinuous_within_at_indicator
 
 end
 
@@ -859,8 +844,7 @@ variable [TopologicalSpace γ] [OrderTopology γ]
 theorem ContinuousWithinAt.upper_semicontinuous_within_at {f : α → γ}
     (h : ContinuousWithinAt f s x) : UpperSemicontinuousWithinAt f s x := fun y hy =>
   h (Iio_mem_nhds hy)
-#align
-  continuous_within_at.upper_semicontinuous_within_at ContinuousWithinAt.upper_semicontinuous_within_at
+#align continuous_within_at.upper_semicontinuous_within_at ContinuousWithinAt.upper_semicontinuous_within_at
 
 theorem ContinuousAt.upper_semicontinuous_at {f : α → γ} (h : ContinuousAt f x) :
     UpperSemicontinuousAt f x := fun y hy => h (Iio_mem_nhds hy)
@@ -889,8 +873,7 @@ theorem ContinuousAt.comp_upper_semicontinuous_within_at {g : γ → δ} {f : α
     (hg : ContinuousAt g (f x)) (hf : UpperSemicontinuousWithinAt f s x) (gmon : Monotone g) :
     UpperSemicontinuousWithinAt (g ∘ f) s x :=
   @ContinuousAt.comp_lower_semicontinuous_within_at α _ x s γᵒᵈ _ _ _ δᵒᵈ _ _ _ g f hg hf gmon.dual
-#align
-  continuous_at.comp_upper_semicontinuous_within_at ContinuousAt.comp_upper_semicontinuous_within_at
+#align continuous_at.comp_upper_semicontinuous_within_at ContinuousAt.comp_upper_semicontinuous_within_at
 
 theorem ContinuousAt.comp_upper_semicontinuous_at {g : γ → δ} {f : α → γ}
     (hg : ContinuousAt g (f x)) (hf : UpperSemicontinuousAt f x) (gmon : Monotone g) :
@@ -912,21 +895,18 @@ theorem ContinuousAt.comp_upper_semicontinuous_within_at_antitone {g : γ → δ
     (hg : ContinuousAt g (f x)) (hf : UpperSemicontinuousWithinAt f s x) (gmon : Antitone g) :
     LowerSemicontinuousWithinAt (g ∘ f) s x :=
   @ContinuousAt.comp_upper_semicontinuous_within_at α _ x s γ _ _ _ δᵒᵈ _ _ _ g f hg hf gmon
-#align
-  continuous_at.comp_upper_semicontinuous_within_at_antitone ContinuousAt.comp_upper_semicontinuous_within_at_antitone
+#align continuous_at.comp_upper_semicontinuous_within_at_antitone ContinuousAt.comp_upper_semicontinuous_within_at_antitone
 
 theorem ContinuousAt.comp_upper_semicontinuous_at_antitone {g : γ → δ} {f : α → γ}
     (hg : ContinuousAt g (f x)) (hf : UpperSemicontinuousAt f x) (gmon : Antitone g) :
     LowerSemicontinuousAt (g ∘ f) x :=
   @ContinuousAt.comp_upper_semicontinuous_at α _ x γ _ _ _ δᵒᵈ _ _ _ g f hg hf gmon
-#align
-  continuous_at.comp_upper_semicontinuous_at_antitone ContinuousAt.comp_upper_semicontinuous_at_antitone
+#align continuous_at.comp_upper_semicontinuous_at_antitone ContinuousAt.comp_upper_semicontinuous_at_antitone
 
 theorem Continuous.comp_upper_semicontinuous_on_antitone {g : γ → δ} {f : α → γ} (hg : Continuous g)
     (hf : UpperSemicontinuousOn f s) (gmon : Antitone g) : LowerSemicontinuousOn (g ∘ f) s :=
   fun x hx => hg.ContinuousAt.comp_upper_semicontinuous_within_at_antitone (hf x hx) gmon
-#align
-  continuous.comp_upper_semicontinuous_on_antitone Continuous.comp_upper_semicontinuous_on_antitone
+#align continuous.comp_upper_semicontinuous_on_antitone Continuous.comp_upper_semicontinuous_on_antitone
 
 theorem Continuous.comp_upper_semicontinuous_antitone {g : γ → δ} {f : α → γ} (hg : Continuous g)
     (hf : UpperSemicontinuous f) (gmon : Antitone g) : LowerSemicontinuous (g ∘ f) := fun x =>
@@ -1162,16 +1142,14 @@ theorem continuous_within_at_iff_lower_upper_semicontinuous_within_at {f : α �
       have : f a = f x := le_antisymm (Hu _) (Hl _)
       rw [this]
       exact mem_of_mem_nhds hv
-#align
-  continuous_within_at_iff_lower_upper_semicontinuous_within_at continuous_within_at_iff_lower_upper_semicontinuous_within_at
+#align continuous_within_at_iff_lower_upper_semicontinuous_within_at continuous_within_at_iff_lower_upper_semicontinuous_within_at
 
 theorem continuous_at_iff_lower_upper_semicontinuous_at {f : α → γ} :
     ContinuousAt f x ↔ LowerSemicontinuousAt f x ∧ UpperSemicontinuousAt f x := by
   simp_rw [← continuous_within_at_univ, ← lower_semicontinuous_within_at_univ_iff, ←
     upper_semicontinuous_within_at_univ_iff,
     continuous_within_at_iff_lower_upper_semicontinuous_within_at]
-#align
-  continuous_at_iff_lower_upper_semicontinuous_at continuous_at_iff_lower_upper_semicontinuous_at
+#align continuous_at_iff_lower_upper_semicontinuous_at continuous_at_iff_lower_upper_semicontinuous_at
 
 theorem continuous_on_iff_lower_upper_semicontinuous_on {f : α → γ} :
     ContinuousOn f s ↔ LowerSemicontinuousOn f s ∧ UpperSemicontinuousOn f s :=
@@ -1179,8 +1157,7 @@ theorem continuous_on_iff_lower_upper_semicontinuous_on {f : α → γ} :
   simp only [ContinuousOn, continuous_within_at_iff_lower_upper_semicontinuous_within_at]
   exact
     ⟨fun H => ⟨fun x hx => (H x hx).1, fun x hx => (H x hx).2⟩, fun H x hx => ⟨H.1 x hx, H.2 x hx⟩⟩
-#align
-  continuous_on_iff_lower_upper_semicontinuous_on continuous_on_iff_lower_upper_semicontinuous_on
+#align continuous_on_iff_lower_upper_semicontinuous_on continuous_on_iff_lower_upper_semicontinuous_on
 
 theorem continuous_iff_lower_upper_semicontinuous {f : α → γ} :
     Continuous f ↔ LowerSemicontinuous f ∧ UpperSemicontinuous f := by

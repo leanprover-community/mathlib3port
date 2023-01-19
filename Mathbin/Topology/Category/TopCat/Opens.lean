@@ -380,8 +380,7 @@ theorem inclusion_map_eq_top {X : TopCat} (U : Opens X) : (Opens.map U.inclusion
 @[simp]
 theorem adjunction_counit_app_self {X : TopCat} (U : Opens X) :
     U.OpenEmbedding.IsOpenMap.Adjunction.counit.app U = eqToHom (by simp) := by ext
-#align
-  topological_space.opens.adjunction_counit_app_self TopologicalSpace.Opens.adjunction_counit_app_self
+#align topological_space.opens.adjunction_counit_app_self TopologicalSpace.Opens.adjunction_counit_app_self
 
 theorem inclusion_top_functor (X : TopCat) :
     (@Opens.open_embedding X ⊤).IsOpenMap.Functor = map (inclusionTopIso X).inv :=
@@ -432,8 +431,7 @@ theorem adjunction_counit_map_functor {X : TopCat} {U : Opens X} (V : Opens U) :
           conv_rhs => rw [← V.map_functor_eq]
           rfl) :=
   by ext
-#align
-  topological_space.opens.adjunction_counit_map_functor TopologicalSpace.Opens.adjunction_counit_map_functor
+#align topological_space.opens.adjunction_counit_map_functor TopologicalSpace.Opens.adjunction_counit_map_functor
 
 end TopologicalSpace.Opens
 

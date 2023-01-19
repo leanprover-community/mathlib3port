@@ -125,8 +125,7 @@ theorem list_decode_encode_list (l : List (L.term α)) :
       · simp [h']
       · rw [h, drop_left']
         rw [length_map, length_fin_range]
-#align
-  first_order.language.term.list_decode_encode_list FirstOrder.Language.Term.list_decode_encode_list
+#align first_order.language.term.list_decode_encode_list FirstOrder.Language.Term.list_decode_encode_list
 
 /-- An encoding of terms as lists. -/
 @[simps]
@@ -144,8 +143,7 @@ protected def encoding : Encoding (L.term α)
 theorem list_encode_injective :
     Function.Injective (listEncode : L.term α → List (Sum α (Σi, L.Functions i))) :=
   Term.encoding.encode_injective
-#align
-  first_order.language.term.list_encode_injective FirstOrder.Language.Term.list_encode_injective
+#align first_order.language.term.list_encode_injective FirstOrder.Language.Term.list_encode_injective
 
 theorem card_le : (#L.term α) ≤ max ℵ₀ (#Sum α (Σi, L.Functions i)) :=
   lift_le.1 (trans Term.encoding.card_le_card_list (lift_le.2 (mk_list_le_max _)))
@@ -225,8 +223,7 @@ def listEncode :
       (List.finRange _).map fun i => Sum.inl ⟨n, ts i⟩
   | n, imp φ₁ φ₂ => (Sum.inr (Sum.inr 0)::φ₁.listEncode) ++ φ₂.listEncode
   | n, all φ => Sum.inr (Sum.inr 1)::φ.listEncode
-#align
-  first_order.language.bounded_formula.list_encode FirstOrder.Language.BoundedFormula.listEncode
+#align first_order.language.bounded_formula.list_encode FirstOrder.Language.BoundedFormula.listEncode
 
 /- warning: first_order.language.bounded_formula.sigma_all -> FirstOrder.Language.BoundedFormula.sigmaAll is a dubious translation:
 lean 3 declaration is
@@ -305,8 +302,7 @@ def listDecode :
     ⟨sigmaAll (list_decode l).1, (list_decode l).2,
       (list_decode l).2.2.trans (max_le_max le_rfl le_add_self)⟩
   | _ => ⟨default, [], le_max_left _ _⟩
-#align
-  first_order.language.bounded_formula.list_decode FirstOrder.Language.BoundedFormula.listDecode
+#align first_order.language.bounded_formula.list_decode FirstOrder.Language.BoundedFormula.listDecode
 
 @[simp]
 theorem list_decode_encode_list (l : List (Σn, L.BoundedFormula α n)) :
@@ -376,8 +372,7 @@ theorem list_decode_encode_list (l : List (Σn, L.BoundedFormula α n)) :
       simp only [Subtype.val_eq_coe] at *
       rw [(ih _).1, (ih _).2, sigma_all]
       exact ⟨rfl, rfl⟩
-#align
-  first_order.language.bounded_formula.list_decode_encode_list FirstOrder.Language.BoundedFormula.list_decode_encode_list
+#align first_order.language.bounded_formula.list_decode_encode_list FirstOrder.Language.BoundedFormula.list_decode_encode_list
 
 /-- An encoding of bounded formulas as lists. -/
 @[simps]
@@ -396,8 +391,7 @@ protected def encoding : Encoding (Σn, L.BoundedFormula α n)
 theorem list_encode_sigma_injective :
     Function.Injective fun φ : Σn, L.BoundedFormula α n => φ.2.listEncode :=
   BoundedFormula.encoding.encode_injective
-#align
-  first_order.language.bounded_formula.list_encode_sigma_injective FirstOrder.Language.BoundedFormula.list_encode_sigma_injective
+#align first_order.language.bounded_formula.list_encode_sigma_injective FirstOrder.Language.BoundedFormula.list_encode_sigma_injective
 
 theorem card_le :
     (#Σn, L.BoundedFormula α n) ≤

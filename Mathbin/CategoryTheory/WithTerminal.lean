@@ -189,8 +189,7 @@ theorem lift_map_lift_star {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : 
   by
   erw [category.id_comp, category.comp_id]
   rfl
-#align
-  category_theory.with_terminal.lift_map_lift_star CategoryTheory.WithTerminal.lift_map_lift_star
+#align category_theory.with_terminal.lift_map_lift_star CategoryTheory.WithTerminal.lift_map_lift_star
 
 /-- The uniqueness of `lift`. -/
 @[simp]
@@ -227,16 +226,14 @@ def liftToTerminal {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (hZ : Limits.
 def inclLiftToTerminal {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (hZ : Limits.IsTerminal Z) :
     incl ⋙ liftToTerminal F hZ ≅ F :=
   inclLift _ _ _
-#align
-  category_theory.with_terminal.incl_lift_to_terminal CategoryTheory.WithTerminal.inclLiftToTerminal
+#align category_theory.with_terminal.incl_lift_to_terminal CategoryTheory.WithTerminal.inclLiftToTerminal
 
 /-- A variant of `lift_unique` with `Z` a terminal object. -/
 @[simps]
 def liftToTerminalUnique {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (hZ : Limits.IsTerminal Z)
     (G : WithTerminal C ⥤ D) (h : incl ⋙ G ≅ F) (hG : G.obj star ≅ Z) : G ≅ liftToTerminal F hZ :=
   liftUnique F (fun z => hZ.from _) (fun x y f => hZ.hom_ext _ _) G h hG fun x => hZ.hom_ext _ _
-#align
-  category_theory.with_terminal.lift_to_terminal_unique CategoryTheory.WithTerminal.liftToTerminalUnique
+#align category_theory.with_terminal.lift_to_terminal_unique CategoryTheory.WithTerminal.liftToTerminalUnique
 
 /-- Constructs a morphism to `star` from `of X`. -/
 @[simp]
@@ -245,8 +242,7 @@ def homFrom (X : C) : incl.obj X ⟶ star :=
 #align category_theory.with_terminal.hom_from CategoryTheory.WithTerminal.homFrom
 
 instance is_iso_of_from_star {X : WithTerminal C} (f : star ⟶ X) : IsIso f := by tidy
-#align
-  category_theory.with_terminal.is_iso_of_from_star CategoryTheory.WithTerminal.is_iso_of_from_star
+#align category_theory.with_terminal.is_iso_of_from_star CategoryTheory.WithTerminal.is_iso_of_from_star
 
 end WithTerminal
 
@@ -421,16 +417,14 @@ def liftToInitial {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (hZ : Limits.I
 def inclLiftToInitial {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (hZ : Limits.IsInitial Z) :
     incl ⋙ liftToInitial F hZ ≅ F :=
   inclLift _ _ _
-#align
-  category_theory.with_initial.incl_lift_to_initial CategoryTheory.WithInitial.inclLiftToInitial
+#align category_theory.with_initial.incl_lift_to_initial CategoryTheory.WithInitial.inclLiftToInitial
 
 /-- A variant of `lift_unique` with `Z` an initial object. -/
 @[simps]
 def liftToInitialUnique {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (hZ : Limits.IsInitial Z)
     (G : WithInitial C ⥤ D) (h : incl ⋙ G ≅ F) (hG : G.obj star ≅ Z) : G ≅ liftToInitial F hZ :=
   liftUnique F (fun z => hZ.to _) (fun x y f => hZ.hom_ext _ _) G h hG fun x => hZ.hom_ext _ _
-#align
-  category_theory.with_initial.lift_to_initial_unique CategoryTheory.WithInitial.liftToInitialUnique
+#align category_theory.with_initial.lift_to_initial_unique CategoryTheory.WithInitial.liftToInitialUnique
 
 /-- Constructs a morphism from `star` to `of X`. -/
 @[simp]

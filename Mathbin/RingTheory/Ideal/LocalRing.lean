@@ -53,8 +53,7 @@ namespace LocalRing
 theorem of_is_unit_or_is_unit_of_is_unit_add [Nontrivial R]
     (h : ∀ a b : R, IsUnit (a + b) → IsUnit a ∨ IsUnit b) : LocalRing R :=
   ⟨fun a b hab => h a b <| hab.symm ▸ isUnit_one⟩
-#align
-  local_ring.of_is_unit_or_is_unit_of_is_unit_add LocalRing.of_is_unit_or_is_unit_of_is_unit_add
+#align local_ring.of_is_unit_or_is_unit_of_is_unit_add LocalRing.of_is_unit_or_is_unit_of_is_unit_add
 
 /-- A semiring is local if it is nontrivial and the set of nonunits is closed under the addition. -/
 theorem of_nonunits_add [Nontrivial R]
@@ -169,13 +168,11 @@ theorem is_unit_or_is_unit_one_sub_self (a : R) : IsUnit a ∨ IsUnit (1 - a) :=
 
 theorem is_unit_of_mem_nonunits_one_sub_self (a : R) (h : 1 - a ∈ nonunits R) : IsUnit a :=
   or_iff_not_imp_right.1 (is_unit_or_is_unit_one_sub_self a) h
-#align
-  local_ring.is_unit_of_mem_nonunits_one_sub_self LocalRing.is_unit_of_mem_nonunits_one_sub_self
+#align local_ring.is_unit_of_mem_nonunits_one_sub_self LocalRing.is_unit_of_mem_nonunits_one_sub_self
 
 theorem is_unit_one_sub_self_of_mem_nonunits (a : R) (h : a ∈ nonunits R) : IsUnit (1 - a) :=
   or_iff_not_imp_left.1 (is_unit_or_is_unit_one_sub_self a) h
-#align
-  local_ring.is_unit_one_sub_self_of_mem_nonunits LocalRing.is_unit_one_sub_self_of_mem_nonunits
+#align local_ring.is_unit_one_sub_self_of_mem_nonunits LocalRing.is_unit_one_sub_self_of_mem_nonunits
 
 theorem of_surjective' [CommRing S] [Nontrivial S] (f : R →+* S) (hf : Function.Surjective f) :
     LocalRing S :=
@@ -639,8 +636,7 @@ theorem surjective_units_map_of_local_ring_hom [CommRing R] [CommRing S] (f : R 
           rw [hb]
           exact Units.isUnit _)).Unit;
   ext; exact hb
-#align
-  local_ring.surjective_units_map_of_local_ring_hom LocalRing.surjective_units_map_of_local_ring_hom
+#align local_ring.surjective_units_map_of_local_ring_hom LocalRing.surjective_units_map_of_local_ring_hom
 
 section
 

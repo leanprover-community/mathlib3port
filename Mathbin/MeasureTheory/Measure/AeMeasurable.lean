@@ -389,12 +389,10 @@ theorem MeasureTheory.Measure.restrict_map_of_ae_measurable {f : α → δ} (hf 
       apply measure_congr
       apply (eventually_eq.refl _ _).inter (hf.ae_eq_mk.symm.preimage s)
     
-#align
-  measure_theory.measure.restrict_map_of_ae_measurable MeasureTheory.Measure.restrict_map_of_ae_measurable
+#align measure_theory.measure.restrict_map_of_ae_measurable MeasureTheory.Measure.restrict_map_of_ae_measurable
 
 theorem MeasureTheory.Measure.map_mono_of_ae_measurable {f : α → δ} (h : μ ≤ ν)
     (hf : AeMeasurable f ν) : μ.map f ≤ ν.map f := fun s hs => by
   simpa [hf, hs, hf.mono_measure h] using measure.le_iff'.1 h (f ⁻¹' s)
-#align
-  measure_theory.measure.map_mono_of_ae_measurable MeasureTheory.Measure.map_mono_of_ae_measurable
+#align measure_theory.measure.map_mono_of_ae_measurable MeasureTheory.Measure.map_mono_of_ae_measurable
 

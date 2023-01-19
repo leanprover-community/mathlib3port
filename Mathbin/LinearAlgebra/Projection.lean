@@ -87,15 +87,13 @@ def quotientEquivOfIsCompl (h : IsCompl p q) : (E ⧸ p) ≃ₗ[R] q :=
 theorem quotient_equiv_of_is_compl_symm_apply (h : IsCompl p q) (x : q) :
     (quotientEquivOfIsCompl p q h).symm x = Quotient.mk x :=
   rfl
-#align
-  submodule.quotient_equiv_of_is_compl_symm_apply Submodule.quotient_equiv_of_is_compl_symm_apply
+#align submodule.quotient_equiv_of_is_compl_symm_apply Submodule.quotient_equiv_of_is_compl_symm_apply
 
 @[simp]
 theorem quotient_equiv_of_is_compl_apply_mk_coe (h : IsCompl p q) (x : q) :
     quotientEquivOfIsCompl p q h (Quotient.mk x) = x :=
   (quotientEquivOfIsCompl p q h).apply_symm_apply x
-#align
-  submodule.quotient_equiv_of_is_compl_apply_mk_coe Submodule.quotient_equiv_of_is_compl_apply_mk_coe
+#align submodule.quotient_equiv_of_is_compl_apply_mk_coe Submodule.quotient_equiv_of_is_compl_apply_mk_coe
 
 @[simp]
 theorem mk_quotient_equiv_of_is_compl_apply (h : IsCompl p q) (x : E ⧸ p) :
@@ -131,15 +129,13 @@ theorem coe_prod_equiv_of_is_compl' (h : IsCompl p q) (x : p × q) :
 theorem prod_equiv_of_is_compl_symm_apply_left (h : IsCompl p q) (x : p) :
     (prodEquivOfIsCompl p q h).symm x = (x, 0) :=
   (prodEquivOfIsCompl p q h).symm_apply_eq.2 <| by simp
-#align
-  submodule.prod_equiv_of_is_compl_symm_apply_left Submodule.prod_equiv_of_is_compl_symm_apply_left
+#align submodule.prod_equiv_of_is_compl_symm_apply_left Submodule.prod_equiv_of_is_compl_symm_apply_left
 
 @[simp]
 theorem prod_equiv_of_is_compl_symm_apply_right (h : IsCompl p q) (x : q) :
     (prodEquivOfIsCompl p q h).symm x = (0, x) :=
   (prodEquivOfIsCompl p q h).symm_apply_eq.2 <| by simp
-#align
-  submodule.prod_equiv_of_is_compl_symm_apply_right Submodule.prod_equiv_of_is_compl_symm_apply_right
+#align submodule.prod_equiv_of_is_compl_symm_apply_right Submodule.prod_equiv_of_is_compl_symm_apply_right
 
 @[simp]
 theorem prod_equiv_of_is_compl_symm_apply_fst_eq_zero (h : IsCompl p q) {x : E} :
@@ -148,8 +144,7 @@ theorem prod_equiv_of_is_compl_symm_apply_fst_eq_zero (h : IsCompl p q) {x : E} 
   conv_rhs => rw [← (prod_equiv_of_is_compl p q h).apply_symm_apply x]
   rw [coe_prod_equiv_of_is_compl', Submodule.add_mem_iff_left _ (Submodule.coe_mem _),
     mem_right_iff_eq_zero_of_disjoint h.disjoint]
-#align
-  submodule.prod_equiv_of_is_compl_symm_apply_fst_eq_zero Submodule.prod_equiv_of_is_compl_symm_apply_fst_eq_zero
+#align submodule.prod_equiv_of_is_compl_symm_apply_fst_eq_zero Submodule.prod_equiv_of_is_compl_symm_apply_fst_eq_zero
 
 @[simp]
 theorem prod_equiv_of_is_compl_symm_apply_snd_eq_zero (h : IsCompl p q) {x : E} :
@@ -158,15 +153,13 @@ theorem prod_equiv_of_is_compl_symm_apply_snd_eq_zero (h : IsCompl p q) {x : E} 
   conv_rhs => rw [← (prod_equiv_of_is_compl p q h).apply_symm_apply x]
   rw [coe_prod_equiv_of_is_compl', Submodule.add_mem_iff_right _ (Submodule.coe_mem _),
     mem_left_iff_eq_zero_of_disjoint h.disjoint]
-#align
-  submodule.prod_equiv_of_is_compl_symm_apply_snd_eq_zero Submodule.prod_equiv_of_is_compl_symm_apply_snd_eq_zero
+#align submodule.prod_equiv_of_is_compl_symm_apply_snd_eq_zero Submodule.prod_equiv_of_is_compl_symm_apply_snd_eq_zero
 
 @[simp]
 theorem prod_comm_trans_prod_equiv_of_is_compl (h : IsCompl p q) :
     LinearEquiv.prodComm R q p ≪≫ₗ prodEquivOfIsCompl p q h = prodEquivOfIsCompl q p h.symm :=
   LinearEquiv.ext fun _ => add_comm _ _
-#align
-  submodule.prod_comm_trans_prod_equiv_of_is_compl Submodule.prod_comm_trans_prod_equiv_of_is_compl
+#align submodule.prod_comm_trans_prod_equiv_of_is_compl Submodule.prod_comm_trans_prod_equiv_of_is_compl
 
 /-- Projection to a submodule along its complement. -/
 def linearProjOfIsCompl (h : IsCompl p q) : E →ₗ[R] p :=
@@ -188,8 +181,7 @@ theorem linear_proj_of_is_compl_range (h : IsCompl p q) : (linearProjOfIsCompl p
 @[simp]
 theorem linear_proj_of_is_compl_apply_eq_zero_iff (h : IsCompl p q) {x : E} :
     linearProjOfIsCompl p q h x = 0 ↔ x ∈ q := by simp [linear_proj_of_is_compl]
-#align
-  submodule.linear_proj_of_is_compl_apply_eq_zero_iff Submodule.linear_proj_of_is_compl_apply_eq_zero_iff
+#align submodule.linear_proj_of_is_compl_apply_eq_zero_iff Submodule.linear_proj_of_is_compl_apply_eq_zero_iff
 
 theorem linear_proj_of_is_compl_apply_right' (h : IsCompl p q) (x : E) (hx : x ∈ q) :
     linearProjOfIsCompl p q h x = 0 :=
@@ -234,8 +226,7 @@ theorem linear_proj_add_linear_proj_of_is_compl_eq_self (hpq : IsCompl p q) (x :
   dsimp only [linear_proj_of_is_compl]
   rw [← prod_comm_trans_prod_equiv_of_is_compl _ _ hpq]
   exact (prod_equiv_of_is_compl _ _ hpq).apply_symm_apply x
-#align
-  submodule.linear_proj_add_linear_proj_of_is_compl_eq_self Submodule.linear_proj_add_linear_proj_of_is_compl_eq_self
+#align submodule.linear_proj_add_linear_proj_of_is_compl_eq_self Submodule.linear_proj_add_linear_proj_of_is_compl_eq_self
 
 end Submodule
 
@@ -359,16 +350,14 @@ theorem coe_equiv_prod_of_surjective_of_is_compl {f : E →ₗ[R] F} {g : E →�
     (hg : g.range = ⊤) (hfg : IsCompl f.ker g.ker) :
     (equivProdOfSurjectiveOfIsCompl f g hf hg hfg : E →ₗ[R] F × G) = f.Prod g :=
   rfl
-#align
-  linear_map.coe_equiv_prod_of_surjective_of_is_compl LinearMap.coe_equiv_prod_of_surjective_of_is_compl
+#align linear_map.coe_equiv_prod_of_surjective_of_is_compl LinearMap.coe_equiv_prod_of_surjective_of_is_compl
 
 @[simp]
 theorem equiv_prod_of_surjective_of_is_compl_apply {f : E →ₗ[R] F} {g : E →ₗ[R] G}
     (hf : f.range = ⊤) (hg : g.range = ⊤) (hfg : IsCompl f.ker g.ker) (x : E) :
     equivProdOfSurjectiveOfIsCompl f g hf hg hfg x = (f x, g x) :=
   rfl
-#align
-  linear_map.equiv_prod_of_surjective_of_is_compl_apply LinearMap.equiv_prod_of_surjective_of_is_compl_apply
+#align linear_map.equiv_prod_of_surjective_of_is_compl_apply LinearMap.equiv_prod_of_surjective_of_is_compl_apply
 
 end LinearMap
 

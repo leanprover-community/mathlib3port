@@ -74,8 +74,7 @@ theorem invariant_orthogonal_eigenspace (μ : 𝕜) (v : E) (hv : v ∈ (eigensp
   intro w hw
   have : T w = (μ : 𝕜) • w := by rwa [mem_eigenspace_iff] at hw
   simp [← hT w, this, inner_smul_left, hv w hw]
-#align
-  linear_map.is_symmetric.invariant_orthogonal_eigenspace LinearMap.IsSymmetric.invariant_orthogonal_eigenspace
+#align linear_map.is_symmetric.invariant_orthogonal_eigenspace LinearMap.IsSymmetric.invariant_orthogonal_eigenspace
 
 /-- The eigenvalues of a self-adjoint operator are real. -/
 theorem conj_eigenvalue_eq_self {μ : 𝕜} (hμ : HasEigenvalue T μ) : conj μ = μ :=
@@ -96,15 +95,13 @@ theorem orthogonalFamilyEigenspaces :
   rw [mem_eigenspace_iff] at hv hw
   refine' Or.resolve_left _ hμν.symm
   simpa [inner_smul_left, inner_smul_right, hv, hw, H] using (hT v w).symm
-#align
-  linear_map.is_symmetric.orthogonal_family_eigenspaces LinearMap.IsSymmetric.orthogonalFamilyEigenspaces
+#align linear_map.is_symmetric.orthogonal_family_eigenspaces LinearMap.IsSymmetric.orthogonalFamilyEigenspaces
 
 theorem orthogonalFamilyEigenspaces' :
     @OrthogonalFamily 𝕜 _ _ _ _ (fun μ : Eigenvalues T => eigenspace T μ) _ fun μ =>
       (eigenspace T μ).subtypeₗᵢ :=
   hT.orthogonalFamilyEigenspaces.comp Subtype.coe_injective
-#align
-  linear_map.is_symmetric.orthogonal_family_eigenspaces' LinearMap.IsSymmetric.orthogonalFamilyEigenspaces'
+#align linear_map.is_symmetric.orthogonal_family_eigenspaces' LinearMap.IsSymmetric.orthogonalFamilyEigenspaces'
 
 /-- The mutual orthogonal complement of the eigenspaces of a self-adjoint operator on an inner
 product space is an invariant subspace of the operator. -/
@@ -113,8 +110,7 @@ theorem orthogonal_supr_eigenspaces_invariant ⦃v : E⦄ (hv : v ∈ (⨆ μ, e
   by
   rw [← Submodule.infi_orthogonal] at hv⊢
   exact T.infi_invariant hT.invariant_orthogonal_eigenspace v hv
-#align
-  linear_map.is_symmetric.orthogonal_supr_eigenspaces_invariant LinearMap.IsSymmetric.orthogonal_supr_eigenspaces_invariant
+#align linear_map.is_symmetric.orthogonal_supr_eigenspaces_invariant LinearMap.IsSymmetric.orthogonal_supr_eigenspaces_invariant
 
 /-- The mutual orthogonal complement of the eigenspaces of a self-adjoint operator on an inner
 product space has no eigenvalues. -/
@@ -125,8 +121,7 @@ theorem orthogonal_supr_eigenspaces (μ : 𝕜) :
   refine' eigenspace_restrict_eq_bot hT.orthogonal_supr_eigenspaces_invariant _
   have H₂ : p ≤ (eigenspace T μ)ᗮ := Submodule.orthogonal_le (le_supᵢ _ _)
   exact (eigenspace T μ).orthogonal_disjoint.mono_right H₂
-#align
-  linear_map.is_symmetric.orthogonal_supr_eigenspaces LinearMap.IsSymmetric.orthogonal_supr_eigenspaces
+#align linear_map.is_symmetric.orthogonal_supr_eigenspaces LinearMap.IsSymmetric.orthogonal_supr_eigenspaces
 
 /-! ### Finite-dimensional theory -/
 
@@ -141,14 +136,12 @@ theorem orthogonal_supr_eigenspaces_eq_bot : (⨆ μ, eigenspace T μ)ᗮ = ⊥ 
   -- a self-adjoint operator on a nontrivial inner product space has an eigenvalue
   haveI := hT'.subsingleton_of_no_eigenvalue_finite_dimensional hT.orthogonal_supr_eigenspaces
   exact Submodule.eq_bot_of_subsingleton _
-#align
-  linear_map.is_symmetric.orthogonal_supr_eigenspaces_eq_bot LinearMap.IsSymmetric.orthogonal_supr_eigenspaces_eq_bot
+#align linear_map.is_symmetric.orthogonal_supr_eigenspaces_eq_bot LinearMap.IsSymmetric.orthogonal_supr_eigenspaces_eq_bot
 
 theorem orthogonal_supr_eigenspaces_eq_bot' : (⨆ μ : Eigenvalues T, eigenspace T μ)ᗮ = ⊥ :=
   show (⨆ μ : { μ // eigenspace T μ ≠ ⊥ }, eigenspace T μ)ᗮ = ⊥ by
     rw [supᵢ_ne_bot_subtype, hT.orthogonal_supr_eigenspaces_eq_bot]
-#align
-  linear_map.is_symmetric.orthogonal_supr_eigenspaces_eq_bot' LinearMap.IsSymmetric.orthogonal_supr_eigenspaces_eq_bot'
+#align linear_map.is_symmetric.orthogonal_supr_eigenspaces_eq_bot' LinearMap.IsSymmetric.orthogonal_supr_eigenspaces_eq_bot'
 
 include dec_𝕜
 
@@ -171,8 +164,7 @@ theorem diagonalization_symm_apply (w : PiLp 2 fun μ : Eigenvalues T => eigensp
     hT.diagonalization.symm w = ∑ μ, w μ :=
   hT.direct_sum_is_internal.isometry_L2_of_orthogonal_family_symm_apply
     hT.orthogonalFamilyEigenspaces' w
-#align
-  linear_map.is_symmetric.diagonalization_symm_apply LinearMap.IsSymmetric.diagonalization_symm_apply
+#align linear_map.is_symmetric.diagonalization_symm_apply LinearMap.IsSymmetric.diagonalization_symm_apply
 
 /-- *Diagonalization theorem*, *spectral theorem*; version 1: A self-adjoint operator `T` on a
 finite-dimensional inner product space `E` acts diagonally on the decomposition of `E` into the
@@ -192,8 +184,7 @@ theorem diagonalization_apply_self_apply (v : E) (μ : Eigenvalues T) :
     intro μ
     simpa [mem_eigenspace_iff] using (w μ).Prop
   simp [hwT]
-#align
-  linear_map.is_symmetric.diagonalization_apply_self_apply LinearMap.IsSymmetric.diagonalization_apply_self_apply
+#align linear_map.is_symmetric.diagonalization_apply_self_apply LinearMap.IsSymmetric.diagonalization_apply_self_apply
 
 end Version1
 
@@ -241,13 +232,11 @@ theorem has_eigenvector_eigenvector_basis (i : Fin n) :
     rw [← IsROrC.eq_conj_iff_re]
     exact hT.conj_eigenvalue_eq_self (has_eigenvalue_of_has_eigenvector key)
   simpa [re_μ] using key
-#align
-  linear_map.is_symmetric.has_eigenvector_eigenvector_basis LinearMap.IsSymmetric.has_eigenvector_eigenvector_basis
+#align linear_map.is_symmetric.has_eigenvector_eigenvector_basis LinearMap.IsSymmetric.has_eigenvector_eigenvector_basis
 
 theorem has_eigenvalue_eigenvalues (i : Fin n) : HasEigenvalue T (hT.Eigenvalues hn i) :=
   Module.EndCat.has_eigenvalue_of_has_eigenvector (hT.has_eigenvector_eigenvector_basis hn i)
-#align
-  linear_map.is_symmetric.has_eigenvalue_eigenvalues LinearMap.IsSymmetric.has_eigenvalue_eigenvalues
+#align linear_map.is_symmetric.has_eigenvalue_eigenvalues LinearMap.IsSymmetric.has_eigenvalue_eigenvalues
 
 @[simp]
 theorem apply_eigenvector_basis (i : Fin n) :
@@ -276,8 +265,7 @@ theorem diagonalization_basis_apply_self_apply (v : E) (i : Fin n) :
   apply Fintype.sum_congr
   intro a
   rw [smul_smul, mul_comm]
-#align
-  linear_map.is_symmetric.diagonalization_basis_apply_self_apply LinearMap.IsSymmetric.diagonalization_basis_apply_self_apply
+#align linear_map.is_symmetric.diagonalization_basis_apply_self_apply LinearMap.IsSymmetric.diagonalization_basis_apply_self_apply
 
 end Version2
 

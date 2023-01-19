@@ -42,8 +42,7 @@ diagram legs to the specific object.
 -/
 def natTransInOver {B : C} (F : J ⥤ Over B) : F ⋙ forget B ⟶ (CategoryTheory.Functor.const J).obj B
     where app j := (F.obj j).Hom
-#align
-  category_theory.over.creates_connected.nat_trans_in_over CategoryTheory.Over.CreatesConnected.natTransInOver
+#align category_theory.over.creates_connected.nat_trans_in_over CategoryTheory.Over.CreatesConnected.natTransInOver
 
 attribute [local tidy] tactic.case_bash
 
@@ -58,13 +57,11 @@ def raiseCone [IsConnected J] {B : C} {F : J ⥤ Over B} (c : Cone (F ⋙ forget
     {
       app := fun j =>
         Over.homMk (c.π.app j) (nat_trans_from_is_connected (c.π ≫ natTransInOver F) j _) }
-#align
-  category_theory.over.creates_connected.raise_cone CategoryTheory.Over.CreatesConnected.raiseCone
+#align category_theory.over.creates_connected.raise_cone CategoryTheory.Over.CreatesConnected.raiseCone
 
 theorem raised_cone_lowers_to_original [IsConnected J] {B : C} {F : J ⥤ Over B}
     (c : Cone (F ⋙ forget B)) (t : IsLimit c) : (forget B).mapCone (raiseCone c) = c := by tidy
-#align
-  category_theory.over.creates_connected.raised_cone_lowers_to_original CategoryTheory.Over.CreatesConnected.raised_cone_lowers_to_original
+#align category_theory.over.creates_connected.raised_cone_lowers_to_original CategoryTheory.Over.CreatesConnected.raised_cone_lowers_to_original
 
 /-- (Impl) Show that the raised cone is a limit. -/
 def raisedConeIsLimit [IsConnected J] {B : C} {F : J ⥤ Over B} {c : Cone (F ⋙ forget B)}
@@ -80,8 +77,7 @@ def raisedConeIsLimit [IsConnected J] {B : C} {F : J ⥤ Over B} {c : Cone (F �
     apply t.hom_ext
     intro j
     simp [← K j]
-#align
-  category_theory.over.creates_connected.raised_cone_is_limit CategoryTheory.Over.CreatesConnected.raisedConeIsLimit
+#align category_theory.over.creates_connected.raised_cone_is_limit CategoryTheory.Over.CreatesConnected.raisedConeIsLimit
 
 end CreatesConnected
 
@@ -92,8 +88,7 @@ instance forgetCreatesConnectedLimits [IsConnected J] {B : C} : CreatesLimitsOfS
       { liftedCone := CreatesConnected.raiseCone c
         validLift := eqToIso (CreatesConnected.raised_cone_lowers_to_original c t)
         makesLimit := CreatesConnected.raisedConeIsLimit t }
-#align
-  category_theory.over.forget_creates_connected_limits CategoryTheory.Over.forgetCreatesConnectedLimits
+#align category_theory.over.forget_creates_connected_limits CategoryTheory.Over.forgetCreatesConnectedLimits
 
 /-- The over category has any connected limit which the original category has. -/
 instance hasConnectedLimits {B : C} [IsConnected J] [HasLimitsOfShape J C] :

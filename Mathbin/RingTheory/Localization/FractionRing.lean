@@ -105,8 +105,7 @@ variable {R K}
 protected theorem to_map_ne_zero_of_mem_non_zero_divisors [Nontrivial R] {x : R}
     (hx : x ∈ nonZeroDivisors R) : algebraMap R K x ≠ 0 :=
   IsLocalization.to_map_ne_zero_of_mem_non_zero_divisors _ le_rfl hx
-#align
-  is_fraction_ring.to_map_ne_zero_of_mem_non_zero_divisors IsFractionRing.to_map_ne_zero_of_mem_non_zero_divisors
+#align is_fraction_ring.to_map_ne_zero_of_mem_non_zero_divisors IsFractionRing.to_map_ne_zero_of_mem_non_zero_divisors
 
 variable (A)
 
@@ -276,8 +275,7 @@ theorem is_fraction_ring_iff_of_base_ring_equiv (h : R ≃+* P) :
     rw [← h.symm.map_eq_zero_iff]
     apply hx
     rw [← h.symm.map_mul, hz, h.symm.map_zero]
-#align
-  is_fraction_ring.is_fraction_ring_iff_of_base_ring_equiv IsFractionRing.is_fraction_ring_iff_of_base_ring_equiv
+#align is_fraction_ring.is_fraction_ring_iff_of_base_ring_equiv IsFractionRing.is_fraction_ring_iff_of_base_ring_equiv
 
 protected theorem nontrivial (R S : Type _) [CommRing R] [Nontrivial R] [CommRing S] [Algebra R S]
     [IsFractionRing R S] : Nontrivial S :=

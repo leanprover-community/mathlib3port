@@ -83,8 +83,7 @@ theorem MeasureTheory.AeStronglyMeasurable.truncation (hf : AeStronglyMeasurable
   by
   apply ae_strongly_measurable.comp_ae_measurable _ hf.ae_measurable
   exact (strongly_measurable_id.indicator measurable_set_Ioc).AeStronglyMeasurable
-#align
-  measure_theory.ae_strongly_measurable.truncation MeasureTheory.AeStronglyMeasurable.truncation
+#align measure_theory.ae_strongly_measurable.truncation MeasureTheory.AeStronglyMeasurable.truncation
 
 theorem abs_truncation_le_bound (f : α → ℝ) (A : ℝ) (x : α) : |truncation f A x| ≤ |A| :=
   by
@@ -134,16 +133,14 @@ theorem truncation_nonneg {f : α → ℝ} (A : ℝ) {x : α} (h : 0 ≤ f x) : 
 theorem MeasureTheory.AeStronglyMeasurable.memℒpTruncation [IsFiniteMeasure μ]
     (hf : AeStronglyMeasurable f μ) {A : ℝ} {p : ℝ≥0∞} : Memℒp (truncation f A) p μ :=
   Memℒp.ofBound hf.truncation (|A|) (eventually_of_forall fun x => abs_truncation_le_bound _ _ _)
-#align
-  measure_theory.ae_strongly_measurable.mem_ℒp_truncation MeasureTheory.AeStronglyMeasurable.memℒpTruncation
+#align measure_theory.ae_strongly_measurable.mem_ℒp_truncation MeasureTheory.AeStronglyMeasurable.memℒpTruncation
 
 theorem MeasureTheory.AeStronglyMeasurable.integrableTruncation [IsFiniteMeasure μ]
     (hf : AeStronglyMeasurable f μ) {A : ℝ} : Integrable (truncation f A) μ :=
   by
   rw [← mem_ℒp_one_iff_integrable]
   exact hf.mem_ℒp_truncation
-#align
-  measure_theory.ae_strongly_measurable.integrable_truncation MeasureTheory.AeStronglyMeasurable.integrableTruncation
+#align measure_theory.ae_strongly_measurable.integrable_truncation MeasureTheory.AeStronglyMeasurable.integrableTruncation
 
 theorem moment_truncation_eq_interval_integral (hf : AeStronglyMeasurable f μ) {A : ℝ} (hA : 0 ≤ A)
     {n : ℕ} (hn : n ≠ 0) : (∫ x, truncation f A x ^ n ∂μ) = ∫ y in -A..A, y ^ n ∂Measure.map f μ :=
@@ -154,8 +151,7 @@ theorem moment_truncation_eq_interval_integral (hf : AeStronglyMeasurable f μ) 
   · simp only [indicator, zero_pow' _ hn, id.def, ite_pow]
   · linarith
   · exact ((measurable_id.indicator M).pow_const n).AeStronglyMeasurable
-#align
-  probability_theory.moment_truncation_eq_interval_integral ProbabilityTheory.moment_truncation_eq_interval_integral
+#align probability_theory.moment_truncation_eq_interval_integral ProbabilityTheory.moment_truncation_eq_interval_integral
 
 theorem moment_truncation_eq_interval_integral_of_nonneg (hf : AeStronglyMeasurable f μ) {A : ℝ}
     {n : ℕ} (hn : n ≠ 0) (h'f : 0 ≤ f) :
@@ -182,20 +178,17 @@ theorem moment_truncation_eq_interval_integral_of_nonneg (hf : AeStronglyMeasura
       have : x = 0 := by linarith
       simp [this, zero_pow' _ hn]
     · exact ((measurable_id.indicator M).pow_const n).AeStronglyMeasurable
-#align
-  probability_theory.moment_truncation_eq_interval_integral_of_nonneg ProbabilityTheory.moment_truncation_eq_interval_integral_of_nonneg
+#align probability_theory.moment_truncation_eq_interval_integral_of_nonneg ProbabilityTheory.moment_truncation_eq_interval_integral_of_nonneg
 
 theorem integral_truncation_eq_interval_integral (hf : AeStronglyMeasurable f μ) {A : ℝ}
     (hA : 0 ≤ A) : (∫ x, truncation f A x ∂μ) = ∫ y in -A..A, y ∂Measure.map f μ := by
   simpa using moment_truncation_eq_interval_integral hf hA one_ne_zero
-#align
-  probability_theory.integral_truncation_eq_interval_integral ProbabilityTheory.integral_truncation_eq_interval_integral
+#align probability_theory.integral_truncation_eq_interval_integral ProbabilityTheory.integral_truncation_eq_interval_integral
 
 theorem integral_truncation_eq_interval_integral_of_nonneg (hf : AeStronglyMeasurable f μ) {A : ℝ}
     (h'f : 0 ≤ f) : (∫ x, truncation f A x ∂μ) = ∫ y in 0 ..A, y ∂Measure.map f μ := by
   simpa using moment_truncation_eq_interval_integral_of_nonneg hf one_ne_zero h'f
-#align
-  probability_theory.integral_truncation_eq_interval_integral_of_nonneg ProbabilityTheory.integral_truncation_eq_interval_integral_of_nonneg
+#align probability_theory.integral_truncation_eq_interval_integral_of_nonneg ProbabilityTheory.integral_truncation_eq_interval_integral_of_nonneg
 
 theorem integral_truncation_le_integral_of_nonneg (hf : Integrable f μ) (h'f : 0 ≤ f) {A : ℝ} :
     (∫ x, truncation f A x ∂μ) ≤ ∫ x, f x ∂μ :=
@@ -209,8 +202,7 @@ theorem integral_truncation_le_integral_of_nonneg (hf : Integrable f μ) (h'f : 
       _ ≤ |f x| := abs_truncation_le_abs_self _ _ _
       _ = f x := abs_of_nonneg (h'f x)
       
-#align
-  probability_theory.integral_truncation_le_integral_of_nonneg ProbabilityTheory.integral_truncation_le_integral_of_nonneg
+#align probability_theory.integral_truncation_le_integral_of_nonneg ProbabilityTheory.integral_truncation_le_integral_of_nonneg
 
 /-- If a function is integrable, then the integral of its truncated versions converges to the
 integral of the whole function. -/

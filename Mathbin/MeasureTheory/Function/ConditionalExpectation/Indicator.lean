@@ -212,8 +212,7 @@ theorem condexp_ae_eq_restrict_of_measurable_space_eq_on {m m₂ m0 : Measurable
   simp_rw [this, set_integral_condexp hm₂ (hf_int.indicator (hm _ hs_m)) ht,
     set_integral_condexp hm (hf_int.indicator (hm _ hs_m)) hst_m, integral_indicator (hm _ hs_m),
     measure.restrict_restrict (hm _ hs_m), ← Set.inter_assoc, Set.inter_self]
-#align
-  measure_theory.condexp_ae_eq_restrict_of_measurable_space_eq_on MeasureTheory.condexp_ae_eq_restrict_of_measurable_space_eq_on
+#align measure_theory.condexp_ae_eq_restrict_of_measurable_space_eq_on MeasureTheory.condexp_ae_eq_restrict_of_measurable_space_eq_on
 
 end MeasureTheory
 

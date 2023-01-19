@@ -142,7 +142,7 @@ Case conversion may be inaccurate. Consider using '#align non_unital_ring_hom.to
 @[simp]
 theorem [anonymous] (f : α →ₙ+* β) : f.toFun = f :=
   rfl
-#align non_unital_ring_hom.to_fun_eq_coe[anonymous]
+#align non_unital_ring_hom.to_fun_eq_coe [anonymous]
 
 /- warning: non_unital_ring_hom.coe_mk clashes with [anonymous] -> [anonymous]
 warning: non_unital_ring_hom.coe_mk -> [anonymous] is a dubious translation:
@@ -154,7 +154,7 @@ Case conversion may be inaccurate. Consider using '#align non_unital_ring_hom.co
 @[simp]
 theorem [anonymous] (f : α → β) (h₁ h₂ h₃) : ⇑(⟨f, h₁, h₂, h₃⟩ : α →ₙ+* β) = f :=
   rfl
-#align non_unital_ring_hom.coe_mk[anonymous]
+#align non_unital_ring_hom.coe_mk [anonymous]
 
 /- warning: non_unital_ring_hom.coe_coe clashes with [anonymous] -> [anonymous]
 warning: non_unital_ring_hom.coe_coe -> [anonymous] is a dubious translation:
@@ -166,7 +166,7 @@ Case conversion may be inaccurate. Consider using '#align non_unital_ring_hom.co
 @[simp]
 theorem [anonymous] [NonUnitalRingHomClass F α β] (f : F) : ((f : α →ₙ+* β) : α → β) = f :=
   rfl
-#align non_unital_ring_hom.coe_coe[anonymous]
+#align non_unital_ring_hom.coe_coe [anonymous]
 
 /- warning: non_unital_ring_hom.coe_to_mul_hom -> NonUnitalRingHom.coe_toMulHom is a dubious translation:
 lean 3 declaration is
@@ -734,7 +734,7 @@ Case conversion may be inaccurate. Consider using '#align ring_hom.coe_monoid_ho
 @[simp, norm_cast]
 theorem [anonymous] (f : α →+* β) : ⇑(f : α →* β) = f :=
   rfl
-#align ring_hom.coe_monoid_hom[anonymous]
+#align ring_hom.coe_monoid_hom [anonymous]
 
 /- warning: ring_hom.to_monoid_hom_eq_coe -> RingHom.toMonoidHom_eq_coe is a dubious translation:
 lean 3 declaration is
@@ -780,7 +780,7 @@ Case conversion may be inaccurate. Consider using '#align ring_hom.coe_add_monoi
 @[simp, norm_cast]
 theorem [anonymous] (f : α →+* β) : ⇑(f : α →+ β) = f :=
   rfl
-#align ring_hom.coe_add_monoid_hom[anonymous]
+#align ring_hom.coe_add_monoid_hom [anonymous]
 
 /- warning: ring_hom.to_add_monoid_hom_eq_coe -> RingHom.toAddMonoidHom_eq_coe is a dubious translation:
 lean 3 declaration is
@@ -1040,8 +1040,7 @@ theorem codomain_trivial_iff_range_eq_singleton_zero : (0 : β) = 1 ↔ Set.rang
     ⟨fun h =>
       Set.ext fun y => ⟨fun ⟨x, hx⟩ => by simp [← hx, h x], fun hy => ⟨0, by simpa using hy.symm⟩⟩,
       fun h x => Set.mem_singleton_iff.mp (h ▸ Set.mem_range_self x)⟩
-#align
-  ring_hom.codomain_trivial_iff_range_eq_singleton_zero RingHom.codomain_trivial_iff_range_eq_singleton_zero
+#align ring_hom.codomain_trivial_iff_range_eq_singleton_zero RingHom.codomain_trivial_iff_range_eq_singleton_zero
 
 /- warning: ring_hom.map_one_ne_zero -> RingHom.map_one_ne_zero is a dubious translation:
 lean 3 declaration is
@@ -1371,8 +1370,7 @@ def mkRingHomOfMulSelfOfTwoNeZero (h : ∀ x, f (x * x) = f x * f x) (h_two : (2
       rw [sub_sub, ← two_mul, ← add_sub_assoc, ← two_mul, ← mul_sub, mul_eq_zero, sub_eq_zero,
         or_iff_not_imp_left] at hxy
       exact hxy h_two }
-#align
-  add_monoid_hom.mk_ring_hom_of_mul_self_of_two_ne_zero AddMonoidHom.mkRingHomOfMulSelfOfTwoNeZero
+#align add_monoid_hom.mk_ring_hom_of_mul_self_of_two_ne_zero AddMonoidHom.mkRingHomOfMulSelfOfTwoNeZero
 
 /- warning: add_monoid_hom.coe_fn_mk_ring_hom_of_mul_self_of_two_ne_zero -> AddMonoidHom.coe_fn_mkRingHomOfMulSelfOfTwoNeZero is a dubious translation:
 lean 3 declaration is
@@ -1384,8 +1382,7 @@ Case conversion may be inaccurate. Consider using '#align add_monoid_hom.coe_fn_
 theorem coe_fn_mkRingHomOfMulSelfOfTwoNeZero (h h_two h_one) :
     (f.mkRingHomOfMulSelfOfTwoNeZero h h_two h_one : β → α) = f :=
   rfl
-#align
-  add_monoid_hom.coe_fn_mk_ring_hom_of_mul_self_of_two_ne_zero AddMonoidHom.coe_fn_mkRingHomOfMulSelfOfTwoNeZero
+#align add_monoid_hom.coe_fn_mk_ring_hom_of_mul_self_of_two_ne_zero AddMonoidHom.coe_fn_mkRingHomOfMulSelfOfTwoNeZero
 
 /- warning: add_monoid_hom.coe_add_monoid_hom_mk_ring_hom_of_mul_self_of_two_ne_zero -> AddMonoidHom.coe_addMonoidHom_mkRingHomOfMulSelfOfTwoNeZero is a dubious translation:
 lean 3 declaration is
@@ -1399,8 +1396,7 @@ theorem coe_addMonoidHom_mkRingHomOfMulSelfOfTwoNeZero (h h_two h_one) :
   by
   ext
   rfl
-#align
-  add_monoid_hom.coe_add_monoid_hom_mk_ring_hom_of_mul_self_of_two_ne_zero AddMonoidHom.coe_addMonoidHom_mkRingHomOfMulSelfOfTwoNeZero
+#align add_monoid_hom.coe_add_monoid_hom_mk_ring_hom_of_mul_self_of_two_ne_zero AddMonoidHom.coe_addMonoidHom_mkRingHomOfMulSelfOfTwoNeZero
 
 end AddMonoidHom
 

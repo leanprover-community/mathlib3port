@@ -481,8 +481,7 @@ theorem eventually_nhds_within_of_forall {s : Set α} {a : α} {p : α → Prop}
 theorem tendsto_nhds_within_of_tendsto_nhds_of_eventually_within {a : α} {l : Filter β} {s : Set α}
     (f : β → α) (h1 : Tendsto f l (𝓝 a)) (h2 : ∀ᶠ x in l, f x ∈ s) : Tendsto f l (𝓝[s] a) :=
   tendsto_inf.2 ⟨h1, tendsto_principal.2 h2⟩
-#align
-  tendsto_nhds_within_of_tendsto_nhds_of_eventually_within tendsto_nhds_within_of_tendsto_nhds_of_eventually_within
+#align tendsto_nhds_within_of_tendsto_nhds_of_eventually_within tendsto_nhds_within_of_tendsto_nhds_of_eventually_within
 
 theorem tendsto_nhds_within_iff {a : α} {l : Filter β} {s : Set α} {f : β → α} :
     Tendsto f l (𝓝[s] a) ↔ Tendsto f l (𝓝 a) ∧ ∀ᶠ n in l, f n ∈ s :=
@@ -578,8 +577,7 @@ theorem continuous_within_at_univ (f : α → β) (x : α) :
 theorem continuous_within_at_iff_continuous_at_restrict (f : α → β) {x : α} {s : Set α}
     (h : x ∈ s) : ContinuousWithinAt f s x ↔ ContinuousAt (s.restrict f) ⟨x, h⟩ :=
   tendsto_nhds_within_iff_subtype h f _
-#align
-  continuous_within_at_iff_continuous_at_restrict continuous_within_at_iff_continuous_at_restrict
+#align continuous_within_at_iff_continuous_at_restrict continuous_within_at_iff_continuous_at_restrict
 
 theorem ContinuousWithinAt.tendsto_nhds_within {f : α → β} {x : α} {s : Set α} {t : Set β}
     (h : ContinuousWithinAt f s x) (ht : MapsTo f s t) : Tendsto f (𝓝[s] x) (𝓝[t] f x) :=
@@ -999,8 +997,7 @@ theorem ContinuousWithinAt.preimage_mem_nhds_within' {f : α → β} {x : α} {s
 theorem Filter.EventuallyEq.congr_continuous_within_at {f g : α → β} {s : Set α} {x : α}
     (h : f =ᶠ[𝓝[s] x] g) (hx : f x = g x) : ContinuousWithinAt f s x ↔ ContinuousWithinAt g s x :=
   by rw [ContinuousWithinAt, hx, tendsto_congr' h, ContinuousWithinAt]
-#align
-  filter.eventually_eq.congr_continuous_within_at Filter.EventuallyEq.congr_continuous_within_at
+#align filter.eventually_eq.congr_continuous_within_at Filter.EventuallyEq.congr_continuous_within_at
 
 theorem ContinuousWithinAt.congr_of_eventually_eq {f f₁ : α → β} {s : Set α} {x : α}
     (h : ContinuousWithinAt f s x) (h₁ : f₁ =ᶠ[𝓝[s] x] f) (hx : f₁ x = f x) :
@@ -1078,8 +1075,7 @@ theorem ContinuousOn.preimage_interior_subset_interior_preimage {f : α → β} 
         (hf.preimage_open_of_open hs is_open_interior)
     _ = s ∩ interior (f ⁻¹' t) := by rw [interior_inter, hs.interior_eq]
     
-#align
-  continuous_on.preimage_interior_subset_interior_preimage ContinuousOn.preimage_interior_subset_interior_preimage
+#align continuous_on.preimage_interior_subset_interior_preimage ContinuousOn.preimage_interior_subset_interior_preimage
 
 theorem continuous_on_of_locally_continuous_on {f : α → β} {s : Set α}
     (h : ∀ x ∈ s, ∃ t, IsOpen t ∧ x ∈ t ∧ ContinuousOn f (s ∩ t)) : ContinuousOn f s :=
@@ -1303,8 +1299,7 @@ theorem ite_inter_closure_compl_eq_of_inter_frontier_eq {s s' t : Set α}
   by
   rw [← ite_compl, ite_inter_closure_eq_of_inter_frontier_eq]
   rwa [frontier_compl, eq_comm]
-#align
-  ite_inter_closure_compl_eq_of_inter_frontier_eq ite_inter_closure_compl_eq_of_inter_frontier_eq
+#align ite_inter_closure_compl_eq_of_inter_frontier_eq ite_inter_closure_compl_eq_of_inter_frontier_eq
 
 theorem continuous_on_piecewise_ite' {s s' t : Set α} {f f' : α → β} [∀ x, Decidable (x ∈ t)]
     (h : ContinuousOn f (s ∩ closure t)) (h' : ContinuousOn f' (s' ∩ closure (tᶜ)))

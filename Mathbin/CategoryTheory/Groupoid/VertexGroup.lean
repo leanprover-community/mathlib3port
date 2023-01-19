@@ -57,8 +57,7 @@ instance vertexGroup (c : C) : Group (c ⟶ c)
 /-- The inverse in the group is equal to the inverse given by `category_theory.inv`. -/
 theorem vertexGroup.inv_eq_inv (c : C) (γ : c ⟶ c) : γ⁻¹ = CategoryTheory.inv γ :=
   Groupoid.inv_eq_inv γ
-#align
-  category_theory.groupoid.vertex_group.inv_eq_inv CategoryTheory.Groupoid.vertexGroup.inv_eq_inv
+#align category_theory.groupoid.vertex_group.inv_eq_inv CategoryTheory.Groupoid.vertexGroup.inv_eq_inv
 
 /-- An arrow in the groupoid defines, by conjugation, an isomorphism of groups between
 its endpoints.
@@ -76,15 +75,13 @@ def vertexGroupIsomOfMap {c d : C} (f : c ⟶ d) : (c ⟶ c) ≃* (d ⟶ d)
       category.comp_id]
   map_mul' γ₁ γ₂ := by
     simp only [vertex_group_mul, inv_eq_inv, category.assoc, is_iso.hom_inv_id_assoc]
-#align
-  category_theory.groupoid.vertex_group_isom_of_map CategoryTheory.Groupoid.vertexGroupIsomOfMap
+#align category_theory.groupoid.vertex_group_isom_of_map CategoryTheory.Groupoid.vertexGroupIsomOfMap
 
 /-- A path in the groupoid defines an isomorphism between its endpoints.
 -/
 def vertexGroupIsomOfPath {c d : C} (p : Quiver.Path c d) : (c ⟶ c) ≃* (d ⟶ d) :=
   vertexGroupIsomOfMap (composePath p)
-#align
-  category_theory.groupoid.vertex_group_isom_of_path CategoryTheory.Groupoid.vertexGroupIsomOfPath
+#align category_theory.groupoid.vertex_group_isom_of_path CategoryTheory.Groupoid.vertexGroupIsomOfPath
 
 /-- A functor defines a morphism of vertex group. -/
 @[simps]

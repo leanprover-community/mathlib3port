@@ -990,8 +990,7 @@ theorem inner_dual_cone_sUnion (S : Set (Set H)) :
 theorem inner_dual_cone_eq_Inter_inner_dual_cone_singleton :
     (s.innerDualCone : Set H) = ⋂ i : s, (({i} : Set H).innerDualCone : Set H) := by
   rw [← ConvexCone.coe_infi, ← inner_dual_cone_Union, Union_of_singleton_coe]
-#align
-  inner_dual_cone_eq_Inter_inner_dual_cone_singleton inner_dual_cone_eq_Inter_inner_dual_cone_singleton
+#align inner_dual_cone_eq_Inter_inner_dual_cone_singleton inner_dual_cone_eq_Inter_inner_dual_cone_singleton
 
 theorem is_closed_inner_dual_cone : IsClosed (s.innerDualCone : Set H) :=
   by
@@ -1068,8 +1067,7 @@ theorem ConvexCone.hyperplane_separation_of_nonempty_of_is_closed_of_nmem (K : C
       _ = ⟪b - z, b - z + z⟫_ℝ := inner_add_right.symm
       _ = ⟪b - z, b⟫_ℝ := by rw [sub_add_cancel]
       
-#align
-  convex_cone.hyperplane_separation_of_nonempty_of_is_closed_of_nmem ConvexCone.hyperplane_separation_of_nonempty_of_is_closed_of_nmem
+#align convex_cone.hyperplane_separation_of_nonempty_of_is_closed_of_nmem ConvexCone.hyperplane_separation_of_nonempty_of_is_closed_of_nmem
 
 /-- The inner dual of inner dual of a non-empty, closed convex cone is itself.  -/
 theorem ConvexCone.inner_dual_cone_of_inner_dual_cone_eq_self (K : ConvexCone ℝ H)
@@ -1084,8 +1082,7 @@ theorem ConvexCone.inner_dual_cone_of_inner_dual_cone_eq_self (K : ConvexCone �
   · rintro hxK y h
     specialize h x hxK
     rwa [real_inner_comm]
-#align
-  convex_cone.inner_dual_cone_of_inner_dual_cone_eq_self ConvexCone.inner_dual_cone_of_inner_dual_cone_eq_self
+#align convex_cone.inner_dual_cone_of_inner_dual_cone_eq_self ConvexCone.inner_dual_cone_of_inner_dual_cone_eq_self
 
 end CompleteSpace
 

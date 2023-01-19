@@ -54,8 +54,7 @@ def coneCompEvaluationOfConeCompDiagramFunctorCompEvaluation {X : C} {K : Type m
         rw [category.id_comp, category.assoc, ← E.w f]
         dsimp [diagram_nat_trans]
         simp only [multiequalizer.lift_ι, category.assoc] }
-#align
-  category_theory.grothendieck_topology.cone_comp_evaluation_of_cone_comp_diagram_functor_comp_evaluation CategoryTheory.GrothendieckTopology.coneCompEvaluationOfConeCompDiagramFunctorCompEvaluation
+#align category_theory.grothendieck_topology.cone_comp_evaluation_of_cone_comp_diagram_functor_comp_evaluation CategoryTheory.GrothendieckTopology.coneCompEvaluationOfConeCompDiagramFunctorCompEvaluation
 
 /-- An auxiliary definition to be used in the proof of the fact that
 `J.diagram_functor D X` preserves limits. -/
@@ -78,8 +77,7 @@ abbrev liftToDiagramLimitObj {X : C} {K : Type max v u} [SmallCategory K] [HasLi
       erw [category.assoc, category.assoc, limit.lift_π, limit.lift_π, limit.lift_π_assoc,
         limit.lift_π_assoc, category.assoc, category.assoc, multiequalizer.condition]
       rfl)
-#align
-  category_theory.grothendieck_topology.lift_to_diagram_limit_obj CategoryTheory.GrothendieckTopology.liftToDiagramLimitObj
+#align category_theory.grothendieck_topology.lift_to_diagram_limit_obj CategoryTheory.GrothendieckTopology.liftToDiagramLimitObj
 
 instance (X : C) (K : Type max v u) [SmallCategory K] [HasLimitsOfShape K D] (F : K ⥤ Cᵒᵖ ⥤ D) :
     PreservesLimit F (J.diagramFunctor D X) :=
@@ -148,8 +146,7 @@ def liftToPlusObjLimitObj {K : Type max v u} [SmallCategory K] [FinCategory K]
         rw [← (colimit.ι (F ⋙ J.diagram_functor D X).flip w).naturality]
         rfl)
   limit.lift _ S ≫ (HasLimit.isoOfNatIso s.symm).Hom ≫ e.inv ≫ p.inv
-#align
-  category_theory.grothendieck_topology.lift_to_plus_obj_limit_obj CategoryTheory.GrothendieckTopology.liftToPlusObjLimitObj
+#align category_theory.grothendieck_topology.lift_to_plus_obj_limit_obj CategoryTheory.GrothendieckTopology.liftToPlusObjLimitObj
 
 -- This lemma should not be used directly. Instead, one should use the fact that
 -- `J.plus_functor D` preserves finite limits, along with the fact that
@@ -180,8 +177,7 @@ theorem lift_to_plus_obj_limit_obj_fac {K : Type max v u} [SmallCategory K] [Fin
   rw [← iso.comp_inv_eq]
   erw [colimit.ι_desc]
   rfl
-#align
-  category_theory.grothendieck_topology.lift_to_plus_obj_limit_obj_fac CategoryTheory.GrothendieckTopology.lift_to_plus_obj_limit_obj_fac
+#align category_theory.grothendieck_topology.lift_to_plus_obj_limit_obj_fac CategoryTheory.GrothendieckTopology.lift_to_plus_obj_limit_obj_fac
 
 instance (K : Type max v u) [SmallCategory K] [FinCategory K] [HasLimitsOfShape K D]
     [PreservesLimitsOfShape K (forget D)] [ReflectsLimitsOfShape K (forget D)] :

@@ -182,15 +182,13 @@ theorem dual_tensor_hom_equiv_of_basis_to_linear_map :
 theorem dual_tensor_hom_equiv_of_basis_symm_cancel_left (x : Module.Dual R M ⊗[R] N) :
     (dualTensorHomEquivOfBasis b).symm (dualTensorHom R M N x) = x := by
   rw [← dual_tensor_hom_equiv_of_basis_apply b, LinearEquiv.symm_apply_apply]
-#align
-  dual_tensor_hom_equiv_of_basis_symm_cancel_left dual_tensor_hom_equiv_of_basis_symm_cancel_left
+#align dual_tensor_hom_equiv_of_basis_symm_cancel_left dual_tensor_hom_equiv_of_basis_symm_cancel_left
 
 @[simp]
 theorem dual_tensor_hom_equiv_of_basis_symm_cancel_right (x : M →ₗ[R] N) :
     dualTensorHom R M N ((dualTensorHomEquivOfBasis b).symm x) = x := by
   rw [← dual_tensor_hom_equiv_of_basis_apply b, LinearEquiv.apply_symm_apply]
-#align
-  dual_tensor_hom_equiv_of_basis_symm_cancel_right dual_tensor_hom_equiv_of_basis_symm_cancel_right
+#align dual_tensor_hom_equiv_of_basis_symm_cancel_right dual_tensor_hom_equiv_of_basis_symm_cancel_right
 
 variable (R M N P Q)
 

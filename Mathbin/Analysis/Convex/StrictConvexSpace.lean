@@ -94,8 +94,7 @@ variable [NormedSpace ℝ E]
 theorem StrictConvexSpace.ofStrictConvexClosedUnitBall [LinearMap.CompatibleSmul E E 𝕜 ℝ]
     (h : StrictConvex 𝕜 (closedBall (0 : E) 1)) : StrictConvexSpace 𝕜 E :=
   ⟨fun r hr => by simpa only [smul_closed_unit_ball_of_nonneg hr.le] using h.smul r⟩
-#align
-  strict_convex_space.of_strict_convex_closed_unit_ball StrictConvexSpace.ofStrictConvexClosedUnitBall
+#align strict_convex_space.of_strict_convex_closed_unit_ball StrictConvexSpace.ofStrictConvexClosedUnitBall
 
 /-- Strict convexity is equivalent to `‖a • x + b • y‖ < 1` for all `x` and `y` of norm at most `1`
 and all strictly positive `a` and `b` such that `a + b = 1`. This lemma shows that it suffices to
@@ -144,8 +143,7 @@ theorem StrictConvexSpace.ofPairwiseSphereNormNeTwo
     (h : (sphere (0 : E) 1).Pairwise fun x y => ‖x + y‖ ≠ 2) : StrictConvexSpace ℝ E :=
   StrictConvexSpace.ofNormAddNeTwo fun x y hx hy =>
     h (mem_sphere_zero_iff_norm.2 hx) (mem_sphere_zero_iff_norm.2 hy)
-#align
-  strict_convex_space.of_pairwise_sphere_norm_ne_two StrictConvexSpace.ofPairwiseSphereNormNeTwo
+#align strict_convex_space.of_pairwise_sphere_norm_ne_two StrictConvexSpace.ofPairwiseSphereNormNeTwo
 
 /-- If `‖x + y‖ = ‖x‖ + ‖y‖` implies that `x y : E` are in the same ray, then `E` is a strictly
 convex space. See also a more -/
@@ -317,15 +315,13 @@ noncomputable def affineIsometryOfStrictConvexSpace {f : PF → PE} (hi : Isomet
 theorem coe_affine_isometry_of_strict_convex_space {f : PF → PE} (hi : Isometry f) :
     ⇑hi.affineIsometryOfStrictConvexSpace = f :=
   rfl
-#align
-  isometry.coe_affine_isometry_of_strict_convex_space Isometry.coe_affine_isometry_of_strict_convex_space
+#align isometry.coe_affine_isometry_of_strict_convex_space Isometry.coe_affine_isometry_of_strict_convex_space
 
 @[simp]
 theorem affine_isometry_of_strict_convex_space_apply {f : PF → PE} (hi : Isometry f) (p : PF) :
     hi.affineIsometryOfStrictConvexSpace p = f p :=
   rfl
-#align
-  isometry.affine_isometry_of_strict_convex_space_apply Isometry.affine_isometry_of_strict_convex_space_apply
+#align isometry.affine_isometry_of_strict_convex_space_apply Isometry.affine_isometry_of_strict_convex_space_apply
 
 end Isometry
 

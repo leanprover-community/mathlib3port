@@ -138,14 +138,12 @@ theorem computable_of_many_one_reducible {p : α → Prop} {q : β → Prop} (h�
   rw [show p = fun a => q (f a) from Set.ext hf]
   rcases computable_iff.1 h₂ with ⟨g, hg, rfl⟩
   exact ⟨by infer_instance, by simpa using hg.comp c⟩
-#align
-  computable_pred.computable_of_many_one_reducible ComputablePred.computable_of_many_one_reducible
+#align computable_pred.computable_of_many_one_reducible ComputablePred.computable_of_many_one_reducible
 
 theorem computable_of_one_one_reducible {p : α → Prop} {q : β → Prop} (h : p ≤₁ q) :
     ComputablePred q → ComputablePred p :=
   computable_of_many_one_reducible h.to_many_one
-#align
-  computable_pred.computable_of_one_one_reducible ComputablePred.computable_of_one_one_reducible
+#align computable_pred.computable_of_one_one_reducible ComputablePred.computable_of_one_one_reducible
 
 end ComputablePred
 

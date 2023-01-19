@@ -434,8 +434,7 @@ alias RingHom.IsIntegral.to_finite ← RingHom.Finite.of_is_integral_of_finite_t
 /-- finite = integral + finite type -/
 theorem RingHom.finite_iff_is_integral_and_finite_type : f.Finite ↔ f.IsIntegral ∧ f.FiniteType :=
   ⟨fun h => ⟨h.to_is_integral, h.to_finite_type⟩, fun ⟨h, h'⟩ => h.to_finite h'⟩
-#align
-  ring_hom.finite_iff_is_integral_and_finite_type RingHom.finite_iff_is_integral_and_finite_type
+#align ring_hom.finite_iff_is_integral_and_finite_type RingHom.finite_iff_is_integral_and_finite_type
 
 theorem Algebra.IsIntegral.finite (h : Algebra.IsIntegral R A) [h' : Algebra.FiniteType R A] :
     Module.Finite R A :=
@@ -729,8 +728,7 @@ theorem normalize_scale_roots_coeff_mul_leading_coeff_pow (i : ℕ) (hp : 1 ≤ 
     apply Nat.le_pred_of_lt
     rw [lt_iff_le_and_ne]
     exact ⟨le_nat_degree_of_ne_zero h₁, h₂⟩
-#align
-  normalize_scale_roots_coeff_mul_leading_coeff_pow normalize_scale_roots_coeff_mul_leading_coeff_pow
+#align normalize_scale_roots_coeff_mul_leading_coeff_pow normalize_scale_roots_coeff_mul_leading_coeff_pow
 
 theorem leading_coeff_smul_normalize_scale_roots (p : R[X]) :
     p.leadingCoeff • normalizeScaleRoots p = scaleRoots p p.leadingCoeff :=
@@ -1067,8 +1065,7 @@ theorem RingHom.is_integral_elem_of_is_integral_elem_comp {x : T}
     (h : (g.comp f).IsIntegralElem x) : g.IsIntegralElem x :=
   let ⟨p, ⟨hp, hp'⟩⟩ := h
   ⟨p.map f, hp.map f, by rwa [← eval₂_map] at hp'⟩
-#align
-  ring_hom.is_integral_elem_of_is_integral_elem_comp RingHom.is_integral_elem_of_is_integral_elem_comp
+#align ring_hom.is_integral_elem_of_is_integral_elem_comp RingHom.is_integral_elem_of_is_integral_elem_comp
 
 theorem RingHom.is_integral_tower_top_of_is_integral (h : (g.comp f).IsIntegral) : g.IsIntegral :=
   fun x => RingHom.is_integral_elem_of_is_integral_elem_comp f g (h x)

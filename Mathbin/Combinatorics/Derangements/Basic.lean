@@ -108,8 +108,7 @@ def atMostOneFixedPointEquivSumDerangements [DecidableEq α] (a : α) :
       rw [eq_comm, Set.ext_iff]
       simp_rw [Set.mem_compl_iff, not_not]
     
-#align
-  derangements.at_most_one_fixed_point_equiv_sum_derangements derangements.atMostOneFixedPointEquivSumDerangements
+#align derangements.at_most_one_fixed_point_equiv_sum_derangements derangements.atMostOneFixedPointEquivSumDerangements
 
 namespace Equiv
 
@@ -195,8 +194,7 @@ def derangementsOptionEquivSigmaAtMostOneFixedPoint :
       sigma_option_equiv_of_some _ fiber_none_is_false
     _ ≃ Σa : α, { f : perm α | fixed_points f ⊆ {a} } := by simp_rw [equiv.remove_none.fiber_some]
     
-#align
-  derangements.derangements_option_equiv_sigma_at_most_one_fixed_point derangements.derangementsOptionEquivSigmaAtMostOneFixedPoint
+#align derangements.derangements_option_equiv_sigma_at_most_one_fixed_point derangements.derangementsOptionEquivSigmaAtMostOneFixedPoint
 
 /-- The set of derangements on `option α` is equivalent to the union over all `a : α` of
     "derangements on `α` ⊕ derangements on `{a}ᶜ`". -/

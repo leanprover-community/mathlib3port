@@ -425,8 +425,7 @@ theorem quadratic_reciprocity_three_mod_four {a b : ℕ} (ha : a % 4 = 3) (hb : 
   let nop := @neg_one_pow_div_two_of_three_mod_four
   rw [quadratic_reciprocity, pow_mul, nop ha, nop hb, neg_one_mul] <;>
     rwa [odd_iff, odd_of_mod_four_eq_three]
-#align
-  jacobi_sym.quadratic_reciprocity_three_mod_four jacobiSym.quadratic_reciprocity_three_mod_four
+#align jacobi_sym.quadratic_reciprocity_three_mod_four jacobiSym.quadratic_reciprocity_three_mod_four
 
 /-- The Jacobi symbol `J(a | b)` depends only on `b` mod `4*a` (version for `a : ℕ`). -/
 theorem mod_right' (a : ℕ) {b : ℕ} (hb : Odd b) : J(a | b) = J(a | b % (4 * a)) :=

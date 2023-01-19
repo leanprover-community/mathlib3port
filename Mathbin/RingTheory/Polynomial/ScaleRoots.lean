@@ -141,16 +141,14 @@ theorem scale_roots_eval₂_eq_zero_of_eval₂_div_eq_zero {p : A[X]} {f : A →
   convert scale_roots_eval₂_eq_zero f hr
   rw [← mul_div_assoc, mul_comm, mul_div_cancel]
   exact map_ne_zero_of_mem_non_zero_divisors _ hf hs
-#align
-  polynomial.scale_roots_eval₂_eq_zero_of_eval₂_div_eq_zero Polynomial.scale_roots_eval₂_eq_zero_of_eval₂_div_eq_zero
+#align polynomial.scale_roots_eval₂_eq_zero_of_eval₂_div_eq_zero Polynomial.scale_roots_eval₂_eq_zero_of_eval₂_div_eq_zero
 
 theorem scale_roots_aeval_eq_zero_of_aeval_div_eq_zero [Algebra A K]
     (inj : Function.Injective (algebraMap A K)) {p : A[X]} {r s : A}
     (hr : aeval (algebraMap A K r / algebraMap A K s) p = 0) (hs : s ∈ nonZeroDivisors A) :
     aeval (algebraMap A K r) (scaleRoots p s) = 0 :=
   scale_roots_eval₂_eq_zero_of_eval₂_div_eq_zero inj hr hs
-#align
-  polynomial.scale_roots_aeval_eq_zero_of_aeval_div_eq_zero Polynomial.scale_roots_aeval_eq_zero_of_aeval_div_eq_zero
+#align polynomial.scale_roots_aeval_eq_zero_of_aeval_div_eq_zero Polynomial.scale_roots_aeval_eq_zero_of_aeval_div_eq_zero
 
 theorem map_scale_roots (p : R[X]) (x : R) (f : R →+* S) (h : f p.leadingCoeff ≠ 0) :
     (p.scaleRoots x).map f = (p.map f).scaleRoots (f x) :=

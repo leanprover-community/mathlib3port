@@ -92,8 +92,7 @@ theorem analytic_set_range_of_polish_space {β : Type _} [TopologicalSpace β] [
       exists_nat_nat_continuous_surjective β
     refine' Or.inr ⟨f ∘ g, f_cont.comp g_cont, _⟩
     rwa [hg.range_comp]
-#align
-  measure_theory.analytic_set_range_of_polish_space MeasureTheory.analytic_set_range_of_polish_space
+#align measure_theory.analytic_set_range_of_polish_space MeasureTheory.analytic_set_range_of_polish_space
 
 /-- The image of an open set under a continuous map is analytic. -/
 theorem IsOpen.analytic_set_image {β : Type _} [TopologicalSpace β] [PolishSpace β] {s : Set β}
@@ -122,8 +121,7 @@ theorem analytic_set_iff_exists_polish_space_range {s : Set α} :
     skip
     rw [← f_range]
     exact analytic_set_range_of_polish_space f_cont
-#align
-  measure_theory.analytic_set_iff_exists_polish_space_range MeasureTheory.analytic_set_iff_exists_polish_space_range
+#align measure_theory.analytic_set_iff_exists_polish_space_range MeasureTheory.analytic_set_iff_exists_polish_space_range
 
 /-- The continuous image of an analytic set is analytic -/
 theorem AnalyticSet.image_of_continuous_on {β : Type _} [TopologicalSpace β] {s : Set α}
@@ -137,8 +135,7 @@ theorem AnalyticSet.image_of_continuous_on {β : Type _} [TopologicalSpace β] {
   apply hf.comp_continuous g_cont fun x => _
   rw [← gs]
   exact mem_range_self _
-#align
-  measure_theory.analytic_set.image_of_continuous_on MeasureTheory.AnalyticSet.image_of_continuous_on
+#align measure_theory.analytic_set.image_of_continuous_on MeasureTheory.AnalyticSet.image_of_continuous_on
 
 theorem AnalyticSet.image_of_continuous {β : Type _} [TopologicalSpace β] {s : Set α}
     (hs : AnalyticSet s) {f : α → β} (hf : Continuous f) : AnalyticSet (f '' s) :=
@@ -428,8 +425,7 @@ theorem measurably_separable_range_of_disjoint [T2Space α] [MeasurableSpace α]
       exact hz.trans_lt (hn.trans_le (min_le_right _ _))
   -- this is a contradiction.
   exact M n B
-#align
-  measure_theory.measurably_separable_range_of_disjoint MeasureTheory.measurably_separable_range_of_disjoint
+#align measure_theory.measurably_separable_range_of_disjoint MeasureTheory.measurably_separable_range_of_disjoint
 
 /-- The Lusin separation theorem: if two analytic sets are disjoint, then they are contained in
 disjoint Borel sets. -/
@@ -442,8 +438,7 @@ theorem AnalyticSet.measurably_separable [T2Space α] [MeasurableSpace α] [Bore
   rcases ht with (rfl | ⟨g, g_cont, rfl⟩)
   · exact ⟨univ, subset_univ _, by simp, MeasurableSet.univ⟩
   exact measurably_separable_range_of_disjoint f_cont g_cont h
-#align
-  measure_theory.analytic_set.measurably_separable MeasureTheory.AnalyticSet.measurably_separable
+#align measure_theory.analytic_set.measurably_separable MeasureTheory.AnalyticSet.measurably_separable
 
 /-! ### Injective images of Borel sets -/
 
@@ -614,8 +609,7 @@ theorem measurable_set_range_of_continuous_injective {β : Type _} [TopologicalS
     -- this is a contradiction, as `x` is supposed to belong to `w`, which is disjoint from
     -- the closure of `v`.
     exact disjoint_left.1 (hvw.closure_left w_open) this xw
-#align
-  measure_theory.measurable_set_range_of_continuous_injective MeasureTheory.measurable_set_range_of_continuous_injective
+#align measure_theory.measurable_set_range_of_continuous_injective MeasureTheory.measurable_set_range_of_continuous_injective
 
 theorem IsClosed.measurable_set_image_of_continuous_on_inj_on {β : Type _} [TopologicalSpace β]
     [T2Space β] [MeasurableSpace β] [BorelSpace β] {s : Set γ} (hs : IsClosed s) {f : γ → β}
@@ -626,8 +620,7 @@ theorem IsClosed.measurable_set_image_of_continuous_on_inj_on {β : Type _} [Top
   apply measurable_set_range_of_continuous_injective
   · rwa [continuous_on_iff_continuous_restrict] at f_cont
   · rwa [inj_on_iff_injective] at f_inj
-#align
-  is_closed.measurable_set_image_of_continuous_on_inj_on IsClosed.measurable_set_image_of_continuous_on_inj_on
+#align is_closed.measurable_set_image_of_continuous_on_inj_on IsClosed.measurable_set_image_of_continuous_on_inj_on
 
 variable [MeasurableSpace γ] [hγb : BorelSpace γ] {β : Type _} [tβ : TopologicalSpace β] [T2Space β]
   [MeasurableSpace β] [BorelSpace β] {s : Set γ} {f : γ → β}
@@ -737,8 +730,7 @@ theorem is_clopenable_iff_measurable_set : IsClopenable s ↔ MeasurableSet s :=
   -- therefore, its image under the measurable embedding `id` is also measurable for `tγ`.
   convert E.measurable_set_image.2 M
   simp only [id.def, image_id']
-#align
-  measure_theory.is_clopenable_iff_measurable_set MeasureTheory.is_clopenable_iff_measurable_set
+#align measure_theory.is_clopenable_iff_measurable_set MeasureTheory.is_clopenable_iff_measurable_set
 
 omit hγb
 

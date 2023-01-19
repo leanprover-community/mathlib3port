@@ -66,8 +66,7 @@ theorem ghost_component_zero_verschiebung_fun (x : 𝕎 R) :
     ghostComponent 0 (verschiebungFun x) = 0 := by
   rw [ghost_component_apply, aeval_witt_polynomial, Finset.range_one, Finset.sum_singleton,
     verschiebung_fun_coeff_zero, pow_zero, pow_zero, pow_one, one_mul]
-#align
-  witt_vector.ghost_component_zero_verschiebung_fun WittVector.ghost_component_zero_verschiebung_fun
+#align witt_vector.ghost_component_zero_verschiebung_fun WittVector.ghost_component_zero_verschiebung_fun
 
 @[ghost_simps]
 theorem ghost_component_verschiebung_fun (x : 𝕎 R) (n : ℕ) :
@@ -209,8 +208,7 @@ theorem bind₁_verschiebung_poly_witt_polynomial (n : ℕ) :
       exact eval₂_hom_congr (RingHom.ext_int _ _) rfl rfl
     · rw [ghost_component_verschiebung]
       rfl
-#align
-  witt_vector.bind₁_verschiebung_poly_witt_polynomial WittVector.bind₁_verschiebung_poly_witt_polynomial
+#align witt_vector.bind₁_verschiebung_poly_witt_polynomial WittVector.bind₁_verschiebung_poly_witt_polynomial
 
 end WittVector
 

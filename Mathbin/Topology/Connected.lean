@@ -790,8 +790,7 @@ theorem irreducible_component_subset_connected_component {x : α} :
     irreducibleComponent x ⊆ connectedComponent x :=
   is_irreducible_irreducible_component.IsConnected.subset_connected_component
     mem_irreducible_component
-#align
-  irreducible_component_subset_connected_component irreducible_component_subset_connected_component
+#align irreducible_component_subset_connected_component irreducible_component_subset_connected_component
 
 @[mono]
 theorem connected_component_in_mono (x : α) {F G : Set α} (h : F ⊆ G) :
@@ -1127,8 +1126,7 @@ theorem is_preconnected_iff_subset_of_fully_disjoint_closed {s : Set α} (hs : I
   · rw [← inter_distrib_right]
     exact subset_inter hss subset.rfl
   · rwa [disjoint_iff_inter_eq_empty, ← inter_inter_distrib_right, inter_comm]
-#align
-  is_preconnected_iff_subset_of_fully_disjoint_closed is_preconnected_iff_subset_of_fully_disjoint_closed
+#align is_preconnected_iff_subset_of_fully_disjoint_closed is_preconnected_iff_subset_of_fully_disjoint_closed
 
 theorem IsClopen.connected_component_subset {x} (hs : IsClopen s) (hx : x ∈ s) :
     connectedComponent x ⊆ s :=
@@ -1275,8 +1273,7 @@ theorem locally_connected_space_iff_open_connected_basis :
     LocallyConnectedSpace α ↔
       ∀ x, (𝓝 x).HasBasis (fun s : Set α => IsOpen s ∧ x ∈ s ∧ IsConnected s) id :=
   ⟨@LocallyConnectedSpace.open_connected_basis _ _, LocallyConnectedSpace.mk⟩
-#align
-  locally_connected_space_iff_open_connected_basis locally_connected_space_iff_open_connected_basis
+#align locally_connected_space_iff_open_connected_basis locally_connected_space_iff_open_connected_basis
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr ∀ x, (_ : exprProp())]] -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (V «expr ⊆ » U) -/
@@ -1298,8 +1295,7 @@ theorem locally_connected_space_iff_open_connected_subsets :
           let ⟨V, hVU, hV⟩ := h U hU
           ⟨V, hV, hVU⟩,
           fun ⟨V, ⟨hV, hxV, _⟩, hVU⟩ => mem_nhds_iff.mpr ⟨V, hVU, hV, hxV⟩⟩⟩
-#align
-  locally_connected_space_iff_open_connected_subsets locally_connected_space_iff_open_connected_subsets
+#align locally_connected_space_iff_open_connected_subsets locally_connected_space_iff_open_connected_subsets
 
 theorem connected_component_in_mem_nhds [LocallyConnectedSpace α] {F : Set α} {x : α}
     (h : F ∈ 𝓝 x) : connectedComponentIn F x ∈ 𝓝 x :=
@@ -1345,8 +1341,7 @@ theorem locally_connected_space_iff_connected_component_in_open :
           (connected_component_in_subset _ _).trans interior_subset, h _ is_open_interior x _,
           mem_connected_component_in _, is_connected_connected_component_in_iff.mpr _⟩ <;>
       exact mem_interior_iff_mem_nhds.mpr hU
-#align
-  locally_connected_space_iff_connected_component_in_open locally_connected_space_iff_connected_component_in_open
+#align locally_connected_space_iff_connected_component_in_open locally_connected_space_iff_connected_component_in_open
 
 theorem locally_connected_space_iff_connected_subsets :
     LocallyConnectedSpace α ↔ ∀ (x : α), ∀ U ∈ 𝓝 x, ∃ V ∈ 𝓝 x, IsPreconnected V ∧ V ⊆ U :=
@@ -1480,8 +1475,7 @@ theorem totally_disconnected_space_iff_connected_component_subsingleton :
   rcases eq_empty_or_nonempty s with (rfl | ⟨x, x_in⟩)
   · exact subsingleton_empty
   · exact (h x).anti (hs.subset_connected_component x_in)
-#align
-  totally_disconnected_space_iff_connected_component_subsingleton totally_disconnected_space_iff_connected_component_subsingleton
+#align totally_disconnected_space_iff_connected_component_subsingleton totally_disconnected_space_iff_connected_component_subsingleton
 
 /-- A space is totally disconnected iff its connected components are singletons. -/
 theorem totally_disconnected_space_iff_connected_component_singleton :
@@ -1491,8 +1485,7 @@ theorem totally_disconnected_space_iff_connected_component_singleton :
   apply forall_congr' fun x => _
   rw [subsingleton_iff_singleton]
   exact mem_connected_component
-#align
-  totally_disconnected_space_iff_connected_component_singleton totally_disconnected_space_iff_connected_component_singleton
+#align totally_disconnected_space_iff_connected_component_singleton totally_disconnected_space_iff_connected_component_singleton
 
 /-- The image of a connected component in a totally disconnected space is a singleton. -/
 @[simp]
@@ -1501,14 +1494,12 @@ theorem Continuous.image_connected_component_eq_singleton {β : Type _} [Topolog
     f '' connectedComponent a = {f a} :=
   (Set.subsingleton_iff_singleton <| mem_image_of_mem f mem_connected_component).mp
     (is_preconnected_connected_component.image f h.ContinuousOn).Subsingleton
-#align
-  continuous.image_connected_component_eq_singleton Continuous.image_connected_component_eq_singleton
+#align continuous.image_connected_component_eq_singleton Continuous.image_connected_component_eq_singleton
 
 theorem is_totally_disconnected_of_totally_disconnected_space [TotallyDisconnectedSpace α]
     (s : Set α) : IsTotallyDisconnected s := fun t hts ht =>
   TotallyDisconnectedSpace.is_totally_disconnected_univ _ t.subset_univ ht
-#align
-  is_totally_disconnected_of_totally_disconnected_space is_totally_disconnected_of_totally_disconnected_space
+#align is_totally_disconnected_of_totally_disconnected_space is_totally_disconnected_of_totally_disconnected_space
 
 theorem is_totally_disconnected_of_image [TopologicalSpace β] {f : α → β} (hf : ContinuousOn f s)
     (hf' : Injective f) (h : IsTotallyDisconnected (f '' s)) : IsTotallyDisconnected s :=
@@ -1557,8 +1548,7 @@ theorem is_totally_disconnected_of_is_totally_separated {s : Set α} (H : IsTota
     H x (hts x_in) y (hts y_in) h
   refine' (ht _ _ hu hv (hts.trans hs) ⟨x, x_in, hxu⟩ ⟨y, y_in, hyv⟩).ne_empty _
   rw [huv.inter_eq, inter_empty]
-#align
-  is_totally_disconnected_of_is_totally_separated is_totally_disconnected_of_is_totally_separated
+#align is_totally_disconnected_of_is_totally_separated is_totally_disconnected_of_is_totally_separated
 
 alias is_totally_disconnected_of_is_totally_separated ← IsTotallySeparated.is_totally_disconnected
 #align is_totally_separated.is_totally_disconnected IsTotallySeparated.is_totally_disconnected
@@ -1575,8 +1565,7 @@ instance (priority := 100) TotallySeparatedSpace.totally_disconnected_space (α 
     [TopologicalSpace α] [TotallySeparatedSpace α] : TotallyDisconnectedSpace α :=
   ⟨is_totally_disconnected_of_is_totally_separated <|
       TotallySeparatedSpace.is_totally_separated_univ α⟩
-#align
-  totally_separated_space.totally_disconnected_space TotallySeparatedSpace.totally_disconnected_space
+#align totally_separated_space.totally_disconnected_space TotallySeparatedSpace.totally_disconnected_space
 
 -- see Note [lower instance priority]
 instance (priority := 100) TotallySeparatedSpace.of_discrete (α : Type _) [TopologicalSpace α]
@@ -1677,8 +1666,7 @@ def Continuous.connectedComponentsLift (h : Continuous f) : ConnectedComponents 
 theorem Continuous.connected_components_lift_continuous (h : Continuous f) :
     Continuous h.connectedComponentsLift :=
   h.quotient_lift_on' h.image_eq_of_connected_component_eq
-#align
-  continuous.connected_components_lift_continuous Continuous.connected_components_lift_continuous
+#align continuous.connected_components_lift_continuous Continuous.connected_components_lift_continuous
 
 @[simp]
 theorem Continuous.connected_components_lift_apply_coe (h : Continuous f) (x : α) :
@@ -1728,8 +1716,7 @@ instance ConnectedComponents.totally_disconnected_space :
   refine' connected_components.surjective_coe.forall.2 fun y => _
   rw [connected_components_preimage_singleton]
   exact is_connected_connected_component
-#align
-  connected_components.totally_disconnected_space ConnectedComponents.totally_disconnected_space
+#align connected_components.totally_disconnected_space ConnectedComponents.totally_disconnected_space
 
 /-- Functoriality of `connected_components` -/
 def Continuous.connectedComponentsMap {β : Type _} [TopologicalSpace β] {f : α → β}

@@ -259,8 +259,7 @@ protected theorem linear_isometry_apply_dfinsupp_sum_single (W₀ : Π₀ i : ι
       ∑ i in W₀.support, hV.linear_isometry (lp.single 2 i (W₀ i)) :=
     hV.linear_isometry.to_linear_map.map_sum
   simp (config := { contextual := true }) [Dfinsupp.sum, this]
-#align
-  orthogonal_family.linear_isometry_apply_dfinsupp_sum_single OrthogonalFamily.linear_isometry_apply_dfinsupp_sum_single
+#align orthogonal_family.linear_isometry_apply_dfinsupp_sum_single OrthogonalFamily.linear_isometry_apply_dfinsupp_sum_single
 
 /-- The canonical linear isometry from the `lp 2` of a mutually orthogonal family of subspaces of
 `E` into E, has range the closure of the span of the subspaces. -/
@@ -348,8 +347,7 @@ sum indeed converges. -/
 protected theorem IsHilbertSum.has_sum_linear_isometry_equiv_symm (hV : IsHilbertSum 𝕜 E V)
     (w : lp G 2) : HasSum (fun i => V i (w i)) (hV.LinearIsometryEquiv.symm w) := by
   simp [IsHilbertSum.linearIsometryEquiv, OrthogonalFamily.has_sum_linear_isometry]
-#align
-  is_hilbert_sum.has_sum_linear_isometry_equiv_symm IsHilbertSum.has_sum_linear_isometry_equiv_symm
+#align is_hilbert_sum.has_sum_linear_isometry_equiv_symm IsHilbertSum.has_sum_linear_isometry_equiv_symm
 
 /-- In the canonical isometric isomorphism between a Hilbert sum `E` of `G : ι → Type*` and
 `lp G 2`, an "elementary basis vector" in `lp G 2` supported at `i : ι` is the image of the
@@ -358,8 +356,7 @@ associated element in `E`. -/
 protected theorem IsHilbertSum.linear_isometry_equiv_symm_apply_single (hV : IsHilbertSum 𝕜 E V)
     {i : ι} (x : G i) : hV.LinearIsometryEquiv.symm (lp.single 2 i x) = V i x := by
   simp [IsHilbertSum.linearIsometryEquiv, OrthogonalFamily.linear_isometry_apply_single]
-#align
-  is_hilbert_sum.linear_isometry_equiv_symm_apply_single IsHilbertSum.linear_isometry_equiv_symm_apply_single
+#align is_hilbert_sum.linear_isometry_equiv_symm_apply_single IsHilbertSum.linear_isometry_equiv_symm_apply_single
 
 /-- In the canonical isometric isomorphism between a Hilbert sum `E` of `G : ι → Type*` and
 `lp G 2`, a finitely-supported vector in `lp G 2` is the image of the associated finite sum of
@@ -370,8 +367,7 @@ protected theorem IsHilbertSum.linear_isometry_equiv_symm_apply_dfinsupp_sum_sin
     hV.LinearIsometryEquiv.symm (W₀.Sum (lp.single 2)) = W₀.Sum fun i => V i := by
   simp [IsHilbertSum.linearIsometryEquiv,
     OrthogonalFamily.linear_isometry_apply_dfinsupp_sum_single]
-#align
-  is_hilbert_sum.linear_isometry_equiv_symm_apply_dfinsupp_sum_single IsHilbertSum.linear_isometry_equiv_symm_apply_dfinsupp_sum_single
+#align is_hilbert_sum.linear_isometry_equiv_symm_apply_dfinsupp_sum_single IsHilbertSum.linear_isometry_equiv_symm_apply_dfinsupp_sum_single
 
 /-- In the canonical isometric isomorphism between a Hilbert sum `E` of `G : ι → Type*` and
 `lp G 2`, a finitely-supported vector in `lp G 2` is the image of the associated finite sum of
@@ -385,8 +381,7 @@ protected theorem IsHilbertSum.linear_isometry_equiv_apply_dfinsupp_sum_single
   rw [LinearIsometryEquiv.apply_symm_apply]
   ext i
   simp (config := { contextual := true }) [Dfinsupp.sum, lp.single_apply]
-#align
-  is_hilbert_sum.linear_isometry_equiv_apply_dfinsupp_sum_single IsHilbertSum.linear_isometry_equiv_apply_dfinsupp_sum_single
+#align is_hilbert_sum.linear_isometry_equiv_apply_dfinsupp_sum_single IsHilbertSum.linear_isometry_equiv_apply_dfinsupp_sum_single
 
 /-- Given a total orthonormal family `v : ι → E`, `E` is a Hilbert sum of `λ i : ι, 𝕜` relative to
 the family of linear isometries `λ i, λ k, k • v i`. -/
@@ -577,8 +572,7 @@ theorem Orthonormal.linear_isometry_equiv_symm_apply_single_one (h i) :
     (hv.IsHilbertSum h).LinearIsometryEquiv.symm (lp.single 2 i 1) = v i := by
   rw [IsHilbertSum.linear_isometry_equiv_symm_apply_single, LinearIsometry.to_span_singleton_apply,
     one_smul]
-#align
-  orthonormal.linear_isometry_equiv_symm_apply_single_one Orthonormal.linear_isometry_equiv_symm_apply_single_one
+#align orthonormal.linear_isometry_equiv_symm_apply_single_one Orthonormal.linear_isometry_equiv_symm_apply_single_one
 
 @[simp]
 protected theorem coe_mk (hsp : ⊤ ≤ (span 𝕜 (Set.range v)).topologicalClosure) :

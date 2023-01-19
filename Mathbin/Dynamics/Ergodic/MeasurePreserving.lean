@@ -74,33 +74,28 @@ theorem symm (e : α ≃ᵐ β) {μa : Measure α} {μb : Measure β} (h : Measu
 theorem restrictPreimage {f : α → β} (hf : MeasurePreserving f μa μb) {s : Set β}
     (hs : MeasurableSet s) : MeasurePreserving f (μa.restrict (f ⁻¹' s)) (μb.restrict s) :=
   ⟨hf.Measurable, by rw [← hf.map_eq, restrict_map hf.measurable hs]⟩
-#align
-  measure_theory.measure_preserving.restrict_preimage MeasureTheory.MeasurePreserving.restrictPreimage
+#align measure_theory.measure_preserving.restrict_preimage MeasureTheory.MeasurePreserving.restrictPreimage
 
 theorem restrictPreimageEmb {f : α → β} (hf : MeasurePreserving f μa μb)
     (h₂ : MeasurableEmbedding f) (s : Set β) :
     MeasurePreserving f (μa.restrict (f ⁻¹' s)) (μb.restrict s) :=
   ⟨hf.Measurable, by rw [← hf.map_eq, h₂.restrict_map]⟩
-#align
-  measure_theory.measure_preserving.restrict_preimage_emb MeasureTheory.MeasurePreserving.restrictPreimageEmb
+#align measure_theory.measure_preserving.restrict_preimage_emb MeasureTheory.MeasurePreserving.restrictPreimageEmb
 
 theorem restrictImageEmb {f : α → β} (hf : MeasurePreserving f μa μb) (h₂ : MeasurableEmbedding f)
     (s : Set α) : MeasurePreserving f (μa.restrict s) (μb.restrict (f '' s)) := by
   simpa only [preimage_image_eq _ h₂.injective] using hf.restrict_preimage_emb h₂ (f '' s)
-#align
-  measure_theory.measure_preserving.restrict_image_emb MeasureTheory.MeasurePreserving.restrictImageEmb
+#align measure_theory.measure_preserving.restrict_image_emb MeasureTheory.MeasurePreserving.restrictImageEmb
 
 theorem ae_measurable_comp_iff {f : α → β} (hf : MeasurePreserving f μa μb)
     (h₂ : MeasurableEmbedding f) {g : β → γ} : AeMeasurable (g ∘ f) μa ↔ AeMeasurable g μb := by
   rw [← hf.map_eq, h₂.ae_measurable_map_iff]
-#align
-  measure_theory.measure_preserving.ae_measurable_comp_iff MeasureTheory.MeasurePreserving.ae_measurable_comp_iff
+#align measure_theory.measure_preserving.ae_measurable_comp_iff MeasureTheory.MeasurePreserving.ae_measurable_comp_iff
 
 protected theorem quasiMeasurePreserving {f : α → β} (hf : MeasurePreserving f μa μb) :
     QuasiMeasurePreserving f μa μb :=
   ⟨hf.1, hf.2.AbsolutelyContinuous⟩
-#align
-  measure_theory.measure_preserving.quasi_measure_preserving MeasureTheory.MeasurePreserving.quasiMeasurePreserving
+#align measure_theory.measure_preserving.quasi_measure_preserving MeasureTheory.MeasurePreserving.quasiMeasurePreserving
 
 protected theorem comp {g : β → γ} {f : α → β} (hg : MeasurePreserving g μb μc)
     (hf : MeasurePreserving f μa μb) : MeasurePreserving (g ∘ f) μa μc :=
@@ -121,8 +116,7 @@ protected theorem comp_right_iff {g : α → β} {e : γ ≃ᵐ α} (h : Measure
   refine' ⟨fun hg => _, fun hg => hg.comp h⟩
   convert hg.comp (measure_preserving.symm e h)
   simp [Function.comp.assoc g e e.symm]
-#align
-  measure_theory.measure_preserving.comp_right_iff MeasureTheory.MeasurePreserving.comp_right_iff
+#align measure_theory.measure_preserving.comp_right_iff MeasureTheory.MeasurePreserving.comp_right_iff
 
 protected theorem sigmaFinite {f : α → β} (hf : MeasurePreserving f μa μb) [SigmaFinite μb] :
     SigmaFinite μa :=
@@ -131,14 +125,12 @@ protected theorem sigmaFinite {f : α → β} (hf : MeasurePreserving f μa μb)
 
 theorem measure_preimage {f : α → β} (hf : MeasurePreserving f μa μb) {s : Set β}
     (hs : MeasurableSet s) : μa (f ⁻¹' s) = μb s := by rw [← hf.map_eq, map_apply hf.1 hs]
-#align
-  measure_theory.measure_preserving.measure_preimage MeasureTheory.MeasurePreserving.measure_preimage
+#align measure_theory.measure_preserving.measure_preimage MeasureTheory.MeasurePreserving.measure_preimage
 
 theorem measure_preimage_emb {f : α → β} (hf : MeasurePreserving f μa μb)
     (hfe : MeasurableEmbedding f) (s : Set β) : μa (f ⁻¹' s) = μb s := by
   rw [← hf.map_eq, hfe.map_apply]
-#align
-  measure_theory.measure_preserving.measure_preimage_emb MeasureTheory.MeasurePreserving.measure_preimage_emb
+#align measure_theory.measure_preserving.measure_preimage_emb MeasureTheory.MeasurePreserving.measure_preimage_emb
 
 protected theorem iterate {f : α → α} (hf : MeasurePreserving f μa μa) :
     ∀ n, MeasurePreserving (f^[n]) μa μa
@@ -166,8 +158,7 @@ theorem exists_mem_image_mem_of_volume_lt_mul_volume (hf : MeasurePreserving f �
     refine' ⟨(f^[i]) x, hxi, j - i, ⟨tsub_pos_of_lt hlt, lt_of_le_of_lt (j.sub_le i) hj⟩, _⟩
     rwa [← iterate_add_apply, tsub_add_cancel_of_le hlt.le]
   · exact fun hi hj hij hxi hxj => this hj hi hij.symm hxj hxi
-#align
-  measure_theory.measure_preserving.exists_mem_image_mem_of_volume_lt_mul_volume MeasureTheory.MeasurePreserving.exists_mem_image_mem_of_volume_lt_mul_volume
+#align measure_theory.measure_preserving.exists_mem_image_mem_of_volume_lt_mul_volume MeasureTheory.MeasurePreserving.exists_mem_image_mem_of_volume_lt_mul_volume
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (m «expr ≠ » 0) -/
 /-- A self-map preserving a finite measure is conservative: if `μ s ≠ 0`, then at least one point
@@ -180,8 +171,7 @@ theorem exists_mem_image_mem [IsFiniteMeasure μ] (hf : MeasurePreserving f μ �
   rcases Ennreal.exists_nat_mul_gt hs' (measure_ne_top μ (univ : Set α)) with ⟨N, hN⟩
   rcases hf.exists_mem_image_mem_of_volume_lt_mul_volume hs hN with ⟨x, hx, m, hm, hmx⟩
   exact ⟨x, hx, m, hm.1.ne', hmx⟩
-#align
-  measure_theory.measure_preserving.exists_mem_image_mem MeasureTheory.MeasurePreserving.exists_mem_image_mem
+#align measure_theory.measure_preserving.exists_mem_image_mem MeasureTheory.MeasurePreserving.exists_mem_image_mem
 
 end MeasurePreserving
 
@@ -189,8 +179,7 @@ namespace MeasurableEquiv
 
 theorem measurePreservingSymm (μ : Measure α) (e : α ≃ᵐ β) : MeasurePreserving e.symm (map e μ) μ :=
   (e.Measurable.MeasurePreserving μ).symm _
-#align
-  measure_theory.measurable_equiv.measure_preserving_symm MeasureTheory.MeasurableEquiv.measurePreservingSymm
+#align measure_theory.measurable_equiv.measure_preserving_symm MeasureTheory.MeasurableEquiv.measurePreservingSymm
 
 end MeasurableEquiv
 

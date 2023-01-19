@@ -79,10 +79,8 @@ instance (priority := 100) NormedOrderedGroup.toNormedCommGroup [NormedOrderedGr
 instance (priority := 100) NormedLinearOrderedGroup.toNormedOrderedGroup
     [NormedLinearOrderedGroup α] : NormedOrderedGroup α :=
   ⟨NormedLinearOrderedGroup.dist_eq⟩
-#align
-  normed_linear_ordered_group.to_normed_ordered_group NormedLinearOrderedGroup.toNormedOrderedGroup
-#align
-  normed_linear_ordered_add_group.to_normed_ordered_add_group NormedLinearOrderedAddGroup.toNormedOrderedAddGroup
+#align normed_linear_ordered_group.to_normed_ordered_group NormedLinearOrderedGroup.toNormedOrderedGroup
+#align normed_linear_ordered_add_group.to_normed_ordered_add_group NormedLinearOrderedAddGroup.toNormedOrderedAddGroup
 
 instance (priority := 100) NormedLinearOrderedField.toNormedField (α : Type _)
     [NormedLinearOrderedField α] : NormedField α

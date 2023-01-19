@@ -177,16 +177,14 @@ theorem FrechetUrysohnSpace.of_seq_tendsto_imp_tendsto
   rcases h hcx with ⟨u, hux, hus⟩
   rcases extraction_of_frequently_at_top hus with ⟨φ, φ_mono, hφ⟩
   exact ⟨u ∘ φ, hφ, hux.comp φ_mono.tendsto_at_top⟩
-#align
-  frechet_urysohn_space.of_seq_tendsto_imp_tendsto FrechetUrysohnSpace.of_seq_tendsto_imp_tendsto
+#align frechet_urysohn_space.of_seq_tendsto_imp_tendsto FrechetUrysohnSpace.of_seq_tendsto_imp_tendsto
 
 -- see Note [lower instance priority]
 /-- Every first-countable space is a Fréchet-Urysohn space. -/
 instance (priority := 100) TopologicalSpace.FirstCountableTopology.frechet_urysohn_space
     [FirstCountableTopology X] : FrechetUrysohnSpace X :=
   FrechetUrysohnSpace.of_seq_tendsto_imp_tendsto fun f a => tendsto_iff_seq_tendsto.2
-#align
-  topological_space.first_countable_topology.frechet_urysohn_space TopologicalSpace.FirstCountableTopology.frechet_urysohn_space
+#align topological_space.first_countable_topology.frechet_urysohn_space TopologicalSpace.FirstCountableTopology.frechet_urysohn_space
 
 /-- A topological space is said to be a *sequential space* if any sequentially closed set in this
 space is closed. This condition is weaker than being a Fréchet-Urysohn space. -/
@@ -418,8 +416,7 @@ protected theorem UniformSpace.is_compact_iff_is_seq_compact : IsCompact s ↔ I
 theorem UniformSpace.compact_space_iff_seq_compact_space : CompactSpace X ↔ SeqCompactSpace X := by
   simp only [← is_compact_univ_iff, seq_compact_space_iff,
     UniformSpace.is_compact_iff_is_seq_compact]
-#align
-  uniform_space.compact_space_iff_seq_compact_space UniformSpace.compact_space_iff_seq_compact_space
+#align uniform_space.compact_space_iff_seq_compact_space UniformSpace.compact_space_iff_seq_compact_space
 
 end UniformSpaceSeqCompact
 

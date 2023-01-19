@@ -163,8 +163,7 @@ theorem Nondegenerate.exists_injective_of_card_le [Nondegenerate P L] [Fintype P
         Exists.elim (exists_line p)-- If `s = univ`, then show `s.bUnion t = univ`
         fun l hl => finset.mem_bUnion.mpr ⟨l, Finset.mem_univ l, set.mem_to_finset.mpr hl⟩
     · exact hs₂.trans (nat.one_le_iff_ne_zero.mpr hs₃)
-#align
-  configuration.nondegenerate.exists_injective_of_card_le Configuration.Nondegenerate.exists_injective_of_card_le
+#align configuration.nondegenerate.exists_injective_of_card_le Configuration.Nondegenerate.exists_injective_of_card_le
 
 -- If `s < univ`, then consequence of `hs₂`
 variable {P} (L)
@@ -194,8 +193,7 @@ theorem sum_line_count_eq_sum_point_count [Fintype P] [Fintype L] :
       _ ≃ { x : L × P // x.2 ∈ x.1 } := (Equiv.prodComm P L).subtypeEquiv fun x => Iff.rfl
       _ ≃ Σl, { p // p ∈ l } := Equiv.subtypeProdEquivSigmaSubtype fun (l : L) (p : P) => p ∈ l
       
-#align
-  configuration.sum_line_count_eq_sum_point_count Configuration.sum_line_count_eq_sum_point_count
+#align configuration.sum_line_count_eq_sum_point_count Configuration.sum_line_count_eq_sum_point_count
 
 variable {P L}
 
@@ -215,14 +213,12 @@ theorem HasLines.point_count_le_line_count [HasLines P L] {p : P} {l : L} (h : p
         ((eq_or_eq p₁.2 p₂.2 (mk_line_ax (this p₁)).2
               ((congr_arg _ (subtype.ext_iff.mp hp)).mpr (mk_line_ax (this p₂)).2)).resolve_right
           fun h' => (congr_arg _ h').mp h (mk_line_ax (this p₁)).1)
-#align
-  configuration.has_lines.point_count_le_line_count Configuration.HasLines.point_count_le_line_count
+#align configuration.has_lines.point_count_le_line_count Configuration.HasLines.point_count_le_line_count
 
 theorem HasPoints.line_count_le_point_count [HasPoints P L] {p : P} {l : L} (h : p ∉ l)
     [hf : Finite { p : P // p ∈ l }] : lineCount L p ≤ pointCount P l :=
   @HasLines.point_count_le_line_count (Dual L) (Dual P) _ _ l p h hf
-#align
-  configuration.has_points.line_count_le_point_count Configuration.HasPoints.line_count_le_point_count
+#align configuration.has_points.line_count_le_point_count Configuration.HasPoints.line_count_le_point_count
 
 variable (P L)
 
@@ -280,8 +276,7 @@ theorem HasLines.exists_bijective_of_card_eq [HasLines P L] [Fintype P] [Fintype
           l (Finset.mem_univ l)⟩
     obtain ⟨l, rfl⟩ := hf3.2 p
     exact ⟨l, Finset.mem_univ l, rfl⟩
-#align
-  configuration.has_lines.exists_bijective_of_card_eq Configuration.HasLines.exists_bijective_of_card_eq
+#align configuration.has_lines.exists_bijective_of_card_eq Configuration.HasLines.exists_bijective_of_card_eq
 
 theorem HasLines.line_count_eq_point_count [HasLines P L] [Fintype P] [Fintype L]
     (hPL : Fintype.card P = Fintype.card L) {p : P} {l : L} (hpl : p ∉ l) :
@@ -300,7 +295,7 @@ theorem HasLines.line_count_eq_point_count [HasLines P L] [Fintype P] [Fintype L
       refine'
         (Finset.sum_bij (fun l hl => f l) (fun l hl => Finset.mem_univ (f l)) (fun l hl => _)
             (fun _ _ _ _ h => hf1.1 h) fun p hp => _).symm
-      · simp_rw [Finset.sum_const, Set.to_finset_card, ← Nat.card_eq_fintype_card]
+      · simp_rw [Finset.sum_const, Set.toFinset_card, ← Nat.card_eq_fintype_card]
         change point_count P l • point_count P l = line_count L (f l) • line_count L (f l)
         rw [hf2]
       · obtain ⟨l, hl⟩ := hf1.2 p
@@ -313,15 +308,13 @@ theorem HasLines.line_count_eq_point_count [HasLines P L] [Fintype P] [Fintype L
       ((Finset.sum_eq_sum_iff_of_le fun i hi =>
               has_lines.point_count_le_line_count (set.mem_to_finset.mp hi)).mp
           step3.symm (p, l) (set.mem_to_finset.mpr hpl)).symm
-#align
-  configuration.has_lines.line_count_eq_point_count Configuration.HasLines.line_count_eq_point_count
+#align configuration.has_lines.line_count_eq_point_count Configuration.HasLines.line_count_eq_point_count
 
 theorem HasPoints.line_count_eq_point_count [HasPoints P L] [Fintype P] [Fintype L]
     (hPL : Fintype.card P = Fintype.card L) {p : P} {l : L} (hpl : p ∉ l) :
     lineCount L p = pointCount P l :=
   (@HasLines.line_count_eq_point_count (Dual L) (Dual P) _ _ _ _ hPL.symm l p hpl).symm
-#align
-  configuration.has_points.line_count_eq_point_count Configuration.HasPoints.line_count_eq_point_count
+#align configuration.has_points.line_count_eq_point_count Configuration.HasPoints.line_count_eq_point_count
 
 /-- If a nondegenerate configuration has a unique line through any two points, and if `|P| = |L|`,
   then there is a unique point on any two lines. -/
@@ -416,8 +409,7 @@ noncomputable def order : ℕ :=
 
 theorem card_points_eq_card_lines [Fintype P] [Fintype L] : Fintype.card P = Fintype.card L :=
   le_antisymm (HasLines.card_le P L) (HasPoints.card_le P L)
-#align
-  configuration.projective_plane.card_points_eq_card_lines Configuration.ProjectivePlane.card_points_eq_card_lines
+#align configuration.projective_plane.card_points_eq_card_lines Configuration.ProjectivePlane.card_points_eq_card_lines
 
 variable {P} (L)
 
@@ -440,16 +432,14 @@ theorem line_count_eq_line_count [Finite P] [Finite L] (p q : P) : lineCount L p
   refine' or_not.elim (fun h₃ => _) fun h₃ => (has_lines.line_count_eq_point_count h h₃).trans hl₃
   rwa [(eq_or_eq h₂ h₂₂ h₃ h₂₃).resolve_right fun h =>
       h₃₃ ((congr_arg (Membership.Mem p₃) h).mp h₃₂)]
-#align
-  configuration.projective_plane.line_count_eq_line_count Configuration.ProjectivePlane.line_count_eq_line_count
+#align configuration.projective_plane.line_count_eq_line_count Configuration.ProjectivePlane.line_count_eq_line_count
 
 variable (P) {L}
 
 theorem point_count_eq_point_count [Finite P] [Finite L] (l m : L) :
     pointCount P l = pointCount P m :=
   line_count_eq_line_count (Dual P) l m
-#align
-  configuration.projective_plane.point_count_eq_point_count Configuration.ProjectivePlane.point_count_eq_point_count
+#align configuration.projective_plane.point_count_eq_point_count Configuration.ProjectivePlane.point_count_eq_point_count
 
 variable {P L}
 
@@ -461,8 +451,7 @@ theorem line_count_eq_point_count [Finite P] [Finite L] (p : P) (l : L) :
       cases nonempty_fintype P
       cases nonempty_fintype L
       exact has_lines.line_count_eq_point_count (card_points_eq_card_lines P L) hq
-#align
-  configuration.projective_plane.line_count_eq_point_count Configuration.ProjectivePlane.line_count_eq_point_count
+#align configuration.projective_plane.line_count_eq_point_count Configuration.ProjectivePlane.line_count_eq_point_count
 
 variable (P L)
 
@@ -506,15 +495,13 @@ variable {P} (L)
 
 theorem two_lt_line_count [Finite P] [Finite L] (p : P) : 2 < lineCount L p := by
   simpa only [line_count_eq L p, Nat.succ_lt_succ_iff] using one_lt_order P L
-#align
-  configuration.projective_plane.two_lt_line_count Configuration.ProjectivePlane.two_lt_line_count
+#align configuration.projective_plane.two_lt_line_count Configuration.ProjectivePlane.two_lt_line_count
 
 variable (P) {L}
 
 theorem two_lt_point_count [Finite P] [Finite L] (l : L) : 2 < pointCount P l := by
   simpa only [point_count_eq P l, Nat.succ_lt_succ_iff] using one_lt_order P L
-#align
-  configuration.projective_plane.two_lt_point_count Configuration.ProjectivePlane.two_lt_point_count
+#align configuration.projective_plane.two_lt_point_count Configuration.ProjectivePlane.two_lt_point_count
 
 variable (P) (L)
 

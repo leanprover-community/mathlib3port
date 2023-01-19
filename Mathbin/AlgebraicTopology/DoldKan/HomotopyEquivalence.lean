@@ -62,8 +62,7 @@ theorem homotopy_P_to_id_eventually_constant {q n : ℕ} (hqn : n < q) :
     Pi.add_apply, Homotopy.of_eq_hom, Pi.zero_apply, Homotopy.add_hom, Homotopy.comp_left_hom,
     Homotopy.null_homotopy'_hom, ComplexShape.down_rel, eq_self_iff_true, dite_eq_ite, if_true,
     comp_zero, add_zero, zero_add]
-#align
-  algebraic_topology.dold_kan.homotopy_P_to_id_eventually_constant AlgebraicTopology.DoldKan.homotopy_P_to_id_eventually_constant
+#align algebraic_topology.dold_kan.homotopy_P_to_id_eventually_constant AlgebraicTopology.DoldKan.homotopy_P_to_id_eventually_constant
 
 variable (X)
 
@@ -84,8 +83,7 @@ def homotopyPInftyToId : Homotopy (pInfty : K[X] ⟶ _) (𝟙 _)
         HomologicalComplex.id_f, P_infty_f, ← P_is_eventually_constant (rfl.le : n + 1 ≤ n + 1),
         homotopy_P_to_id_eventually_constant X (lt_add_one (n + 1))] using
         (homotopy_P_to_id X (n + 2)).comm (n + 1)
-#align
-  algebraic_topology.dold_kan.homotopy_P_infty_to_id AlgebraicTopology.DoldKan.homotopyPInftyToId
+#align algebraic_topology.dold_kan.homotopy_P_infty_to_id AlgebraicTopology.DoldKan.homotopyPInftyToId
 
 /-- The inclusion of the Moore complex in the alternating face map complex
 is an homotopy equivalence -/
@@ -101,8 +99,7 @@ def homotopyEquivNormalizedMooreComplexAlternatingFaceMapComplex {A : Type _} [C
     Homotopy.trans
       (Homotopy.ofEq (P_infty_to_normalized_Moore_complex_comp_inclusion_of_Moore_complex_map Y))
       (homotopyPInftyToId Y)
-#align
-  algebraic_topology.dold_kan.homotopy_equiv_normalized_Moore_complex_alternating_face_map_complex AlgebraicTopology.DoldKan.homotopyEquivNormalizedMooreComplexAlternatingFaceMapComplex
+#align algebraic_topology.dold_kan.homotopy_equiv_normalized_Moore_complex_alternating_face_map_complex AlgebraicTopology.DoldKan.homotopyEquivNormalizedMooreComplexAlternatingFaceMapComplex
 
 end DoldKan
 

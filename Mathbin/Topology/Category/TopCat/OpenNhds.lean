@@ -83,8 +83,7 @@ instance openNhdsCategory (x : X) : Category.{u} (OpenNhds x) :=
 
 instance opensNhdsHomHasCoeToFun {x : X} {U V : OpenNhds x} : CoeFun (U ⟶ V) fun _ => U.1 → V.1 :=
   ⟨fun f x => ⟨x, f.le x.2⟩⟩
-#align
-  topological_space.open_nhds.opens_nhds_hom_has_coe_to_fun TopologicalSpace.OpenNhds.opensNhdsHomHasCoeToFun
+#align topological_space.open_nhds.opens_nhds_hom_has_coe_to_fun TopologicalSpace.OpenNhds.opensNhdsHomHasCoeToFun
 
 /-- The inclusion `U ⊓ V ⟶ U` as a morphism in the category of open sets.
 -/
@@ -152,14 +151,12 @@ def inclusionMapIso (x : X) : inclusion (f x) ⋙ Opens.map f ≅ map f x ⋙ in
 @[simp]
 theorem inclusion_map_iso_hom (x : X) : (inclusionMapIso f x).Hom = 𝟙 _ :=
   rfl
-#align
-  topological_space.open_nhds.inclusion_map_iso_hom TopologicalSpace.OpenNhds.inclusion_map_iso_hom
+#align topological_space.open_nhds.inclusion_map_iso_hom TopologicalSpace.OpenNhds.inclusion_map_iso_hom
 
 @[simp]
 theorem inclusion_map_iso_inv (x : X) : (inclusionMapIso f x).inv = 𝟙 _ :=
   rfl
-#align
-  topological_space.open_nhds.inclusion_map_iso_inv TopologicalSpace.OpenNhds.inclusion_map_iso_inv
+#align topological_space.open_nhds.inclusion_map_iso_inv TopologicalSpace.OpenNhds.inclusion_map_iso_inv
 
 end OpenNhds
 

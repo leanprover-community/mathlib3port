@@ -98,8 +98,7 @@ instance : CoeTC F C₀(α, β) :=
 @[simp]
 theorem coe_to_continuous_fun (f : C₀(α, β)) : (f.toContinuousMap : α → β) = f :=
   rfl
-#align
-  zero_at_infty_continuous_map.coe_to_continuous_fun ZeroAtInftyContinuousMap.coe_to_continuous_fun
+#align zero_at_infty_continuous_map.coe_to_continuous_fun ZeroAtInftyContinuousMap.coe_to_continuous_fun
 
 @[ext]
 theorem ext {f g : C₀(α, β)} (h : ∀ x, f x = g x) : f = g :=
@@ -148,8 +147,7 @@ def ContinuousMap.liftZeroAtInfty [CompactSpace α] : C(α, β) ≃ C₀(α, β)
   right_inv f := by
     ext
     rfl
-#align
-  zero_at_infty_continuous_map.continuous_map.lift_zero_at_infty ZeroAtInftyContinuousMap.ContinuousMap.liftZeroAtInfty
+#align zero_at_infty_continuous_map.continuous_map.lift_zero_at_infty ZeroAtInftyContinuousMap.ContinuousMap.liftZeroAtInfty
 
 /-- A continuous function on a compact space is automatically a continuous function vanishing at
 infinity. This is not an instance to avoid type class loops. -/
@@ -161,8 +159,7 @@ def zeroAtInftyContinuousMapClass.ofCompact {G : Type _} [ContinuousMapClass G �
   coe_injective' f g h := FunLike.coe_fn_eq.mp h
   map_continuous := map_continuous
   zero_at_infty := by simp
-#align
-  zero_at_infty_continuous_map.zero_at_infty_continuous_map_class.of_compact ZeroAtInftyContinuousMap.zeroAtInftyContinuousMapClass.ofCompact
+#align zero_at_infty_continuous_map.zero_at_infty_continuous_map_class.of_compact ZeroAtInftyContinuousMap.zeroAtInftyContinuousMapClass.ofCompact
 
 end Basics
 
@@ -459,8 +456,7 @@ theorem tendsto_iff_tendsto_uniformly {ι : Type _} {F : ι → C₀(α, β)} {f
   simpa only [Metric.tendsto_nhds] using
     @BoundedContinuousFunction.tendsto_iff_tendsto_uniformly _ _ _ _ _ (fun i => (F i).toBcf)
       f.to_bcf l
-#align
-  zero_at_infty_continuous_map.tendsto_iff_tendsto_uniformly ZeroAtInftyContinuousMap.tendsto_iff_tendsto_uniformly
+#align zero_at_infty_continuous_map.tendsto_iff_tendsto_uniformly ZeroAtInftyContinuousMap.tendsto_iff_tendsto_uniformly
 
 theorem isometry_to_bcf : Isometry (toBcf : C₀(α, β) → α →ᵇ β) := by tauto
 #align zero_at_infty_continuous_map.isometry_to_bcf ZeroAtInftyContinuousMap.isometry_to_bcf
@@ -635,8 +631,7 @@ def comp (f : C₀(γ, δ)) (g : β →co γ) : C₀(β, δ)
 theorem coe_comp_to_continuous_fun (f : C₀(γ, δ)) (g : β →co γ) :
     ((f.comp g).toContinuousMap : β → δ) = f ∘ g :=
   rfl
-#align
-  zero_at_infty_continuous_map.coe_comp_to_continuous_fun ZeroAtInftyContinuousMap.coe_comp_to_continuous_fun
+#align zero_at_infty_continuous_map.coe_comp_to_continuous_fun ZeroAtInftyContinuousMap.coe_comp_to_continuous_fun
 
 @[simp]
 theorem comp_id (f : C₀(γ, δ)) : f.comp (CocompactMap.id γ) = f :=
@@ -689,8 +684,7 @@ def compNonUnitalAlgHom {R : Type _} [Semiring R] [NonUnitalNonAssocSemiring δ]
   map_zero' := rfl
   map_add' f₁ f₂ := rfl
   map_mul' f₁ f₂ := rfl
-#align
-  zero_at_infty_continuous_map.comp_non_unital_alg_hom ZeroAtInftyContinuousMap.compNonUnitalAlgHom
+#align zero_at_infty_continuous_map.comp_non_unital_alg_hom ZeroAtInftyContinuousMap.compNonUnitalAlgHom
 
 end ZeroAtInftyContinuousMap
 

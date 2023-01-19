@@ -61,8 +61,7 @@ class NonUnitalNormedRing (α : Type _) extends HasNorm α, NonUnitalRing α, Me
 instance (priority := 100) NonUnitalNormedRing.toNonUnitalSemiNormedRing
     [β : NonUnitalNormedRing α] : NonUnitalSemiNormedRing α :=
   { β with }
-#align
-  non_unital_normed_ring.to_non_unital_semi_normed_ring NonUnitalNormedRing.toNonUnitalSemiNormedRing
+#align non_unital_normed_ring.to_non_unital_semi_normed_ring NonUnitalNormedRing.toNonUnitalSemiNormedRing
 
 /-- A normed ring is a ring endowed with a norm which satisfies the inequality `‖x y‖ ≤ ‖x‖ ‖y‖`. -/
 class NormedRing (α : Type _) extends HasNorm α, Ring α, MetricSpace α where
@@ -154,8 +153,7 @@ instance (priority := 100) NonUnitalNormedRing.toNormedAddCommGroup [β : NonUni
 instance (priority := 100) NonUnitalSemiNormedRing.toSeminormedAddCommGroup
     [NonUnitalSemiNormedRing α] : SeminormedAddCommGroup α :=
   { ‹NonUnitalSemiNormedRing α› with }
-#align
-  non_unital_semi_normed_ring.to_seminormed_add_comm_group NonUnitalSemiNormedRing.toSeminormedAddCommGroup
+#align non_unital_semi_normed_ring.to_seminormed_add_comm_group NonUnitalSemiNormedRing.toSeminormedAddCommGroup
 
 instance [SeminormedAddCommGroup α] [One α] [NormOneClass α] : NormOneClass (ULift α) :=
   ⟨by simp [ULift.norm_def]⟩
@@ -630,8 +628,7 @@ instance (priority := 100) DenselyNormedField.toNontriviallyNormedField [Densely
     where non_trivial :=
     let ⟨a, h, _⟩ := DenselyNormedField.lt_norm_lt 1 2 zero_le_one one_lt_two
     ⟨a, h⟩
-#align
-  densely_normed_field.to_nontrivially_normed_field DenselyNormedField.toNontriviallyNormedField
+#align densely_normed_field.to_nontrivially_normed_field DenselyNormedField.toNontriviallyNormedField
 
 variable [NormedField α]
 

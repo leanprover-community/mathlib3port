@@ -461,8 +461,7 @@ theorem point_reflection_fixed_iff_of_injective_bit0 {x y : P} (h : Injective (b
     pointReflection x y = y ↔ y = x := by
   rw [point_reflection_apply, eq_comm, eq_vadd_iff_vsub_eq, ← neg_vsub_eq_vsub_rev,
     neg_eq_iff_add_eq_zero, ← bit0, ← bit0_zero, h.eq_iff, vsub_eq_zero_iff_eq, eq_comm]
-#align
-  equiv.point_reflection_fixed_iff_of_injective_bit0 Equiv.point_reflection_fixed_iff_of_injective_bit0
+#align equiv.point_reflection_fixed_iff_of_injective_bit0 Equiv.point_reflection_fixed_iff_of_injective_bit0
 
 omit G
 
@@ -473,8 +472,7 @@ theorem injective_point_reflection_left_of_injective_bit0 {G P : Type _} [AddCom
   rwa [point_reflection_apply, point_reflection_apply, vadd_eq_vadd_iff_sub_eq_vsub,
     vsub_sub_vsub_cancel_right, ← neg_vsub_eq_vsub_rev, neg_eq_iff_add_eq_zero, ← bit0, ← bit0_zero,
     h.eq_iff, vsub_eq_zero_iff_eq] at hy
-#align
-  equiv.injective_point_reflection_left_of_injective_bit0 Equiv.injective_point_reflection_left_of_injective_bit0
+#align equiv.injective_point_reflection_left_of_injective_bit0 Equiv.injective_point_reflection_left_of_injective_bit0
 
 end Equiv
 

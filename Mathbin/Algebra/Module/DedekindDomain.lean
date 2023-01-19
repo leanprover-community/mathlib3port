@@ -67,8 +67,7 @@ theorem is_internal_prime_power_torsion_of_is_torsion_by_ideal {I : Ideal R} (hI
         apply pow_ne_zero
         exact (prime_of_mem q hq).NeZero
       · exact (prime_of_mem p hp).Irreducible
-#align
-  submodule.is_internal_prime_power_torsion_of_is_torsion_by_ideal Submodule.is_internal_prime_power_torsion_of_is_torsion_by_ideal
+#align submodule.is_internal_prime_power_torsion_of_is_torsion_by_ideal Submodule.is_internal_prime_power_torsion_of_is_torsion_by_ideal
 
 /-- A finitely generated torsion module over a Dedekind domain is an internal direct sum of its
 `p i ^ e i`-torsion submodules for some prime ideals `p i` and numbers `e i`.-/

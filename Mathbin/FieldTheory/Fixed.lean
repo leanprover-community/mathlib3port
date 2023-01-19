@@ -175,8 +175,7 @@ theorem linear_independent_smul_of_linear_independent {s : Finset F} :
     sum_apply _ _ fun y => l y • to_fun G F y]
   dsimp only
   rw [hla, to_fun_apply, to_fun_apply, smul_smul, mul_inv_cancel_left]
-#align
-  fixed_points.linear_independent_smul_of_linear_independent FixedPoints.linear_independent_smul_of_linear_independent
+#align fixed_points.linear_independent_smul_of_linear_independent FixedPoints.linear_independent_smul_of_linear_independent
 
 section Fintype
 

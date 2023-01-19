@@ -144,8 +144,7 @@ theorem transfer_eq_prod_quotient_orbit_rel_zpowers_quot [FiniteIndex H] (g : G)
     · simp only [if_pos, Zmod.cast_zero, zpow_zero, one_mul, mul_assoc]
     · simp only [if_neg hk, inv_mul_self]
       exact map_one ϕ
-#align
-  monoid_hom.transfer_eq_prod_quotient_orbit_rel_zpowers_quot MonoidHom.transfer_eq_prod_quotient_orbit_rel_zpowers_quot
+#align monoid_hom.transfer_eq_prod_quotient_orbit_rel_zpowers_quot MonoidHom.transfer_eq_prod_quotient_orbit_rel_zpowers_quot
 
 /-- Auxillary lemma in order to state `transfer_eq_pow`. -/
 theorem transfer_eq_pow_aux (g : G)

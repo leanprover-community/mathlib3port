@@ -56,8 +56,7 @@ theorem Finsupp.to_free_abelian_group_comp_single_add_hom (x : X) :
   ext
   simp only [AddMonoidHom.coe_comp, Finsupp.single_add_hom_apply, Function.comp_apply, one_smul,
     to_free_abelian_group, Finsupp.lift_add_hom_apply_single]
-#align
-  finsupp.to_free_abelian_group_comp_single_add_hom Finsupp.to_free_abelian_group_comp_single_add_hom
+#align finsupp.to_free_abelian_group_comp_single_add_hom Finsupp.to_free_abelian_group_comp_single_add_hom
 
 @[simp]
 theorem FreeAbelianGroup.to_finsupp_comp_to_free_abelian_group :
@@ -67,8 +66,7 @@ theorem FreeAbelianGroup.to_finsupp_comp_to_free_abelian_group :
   rw [AddMonoidHom.comp_assoc, Finsupp.to_free_abelian_group_comp_single_add_hom]
   simp only [to_finsupp, AddMonoidHom.coe_comp, Finsupp.single_add_hom_apply, Function.comp_apply,
     one_smul, lift.of, AddMonoidHom.flip_apply, smul_add_hom_apply, AddMonoidHom.id_apply]
-#align
-  free_abelian_group.to_finsupp_comp_to_free_abelian_group FreeAbelianGroup.to_finsupp_comp_to_free_abelian_group
+#align free_abelian_group.to_finsupp_comp_to_free_abelian_group FreeAbelianGroup.to_finsupp_comp_to_free_abelian_group
 
 @[simp]
 theorem Finsupp.to_free_abelian_group_comp_to_finsupp :
@@ -101,8 +99,7 @@ theorem to_finsupp_of (x : X) : toFinsupp (of x) = Finsupp.single x 1 := by
 @[simp]
 theorem to_finsupp_to_free_abelian_group (f : X →₀ ℤ) : f.toFreeAbelianGroup.toFinsupp = f := by
   rw [← AddMonoidHom.comp_apply, to_finsupp_comp_to_free_abelian_group, AddMonoidHom.id_apply]
-#align
-  free_abelian_group.to_finsupp_to_free_abelian_group FreeAbelianGroup.to_finsupp_to_free_abelian_group
+#align free_abelian_group.to_finsupp_to_free_abelian_group FreeAbelianGroup.to_finsupp_to_free_abelian_group
 
 variable (X)
 
@@ -127,15 +124,13 @@ def Equiv.ofFreeAbelianGroupLinearEquiv {α β : Type _}
     (e : FreeAbelianGroup α ≃ₗ[ℤ] FreeAbelianGroup β) : α ≃ β :=
   let t : Basis α ℤ (FreeAbelianGroup β) := (FreeAbelianGroup.basis α).map e
   t.indexEquiv <| FreeAbelianGroup.basis _
-#align
-  free_abelian_group.equiv.of_free_abelian_group_linear_equiv FreeAbelianGroup.Equiv.ofFreeAbelianGroupLinearEquiv
+#align free_abelian_group.equiv.of_free_abelian_group_linear_equiv FreeAbelianGroup.Equiv.ofFreeAbelianGroupLinearEquiv
 
 /-- Isomorphic free abelian groups (as additive groups) have equivalent bases. -/
 def Equiv.ofFreeAbelianGroupEquiv {α β : Type _} (e : FreeAbelianGroup α ≃+ FreeAbelianGroup β) :
     α ≃ β :=
   Equiv.ofFreeAbelianGroupLinearEquiv e.toIntLinearEquiv
-#align
-  free_abelian_group.equiv.of_free_abelian_group_equiv FreeAbelianGroup.Equiv.ofFreeAbelianGroupEquiv
+#align free_abelian_group.equiv.of_free_abelian_group_equiv FreeAbelianGroup.Equiv.ofFreeAbelianGroupEquiv
 
 /-- Isomorphic free groups have equivalent bases. -/
 def Equiv.ofFreeGroupEquiv {α β : Type _} (e : FreeGroup α ≃* FreeGroup β) : α ≃ β :=

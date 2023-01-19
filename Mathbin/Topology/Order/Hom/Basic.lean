@@ -62,8 +62,7 @@ instance (priority := 100) ContinuousOrderHomClass.toContinuousMapClass [Preorde
     [TopologicalSpace α] [TopologicalSpace β] [ContinuousOrderHomClass F α β] :
     ContinuousMapClass F α β :=
   { ‹ContinuousOrderHomClass F α β› with }
-#align
-  continuous_order_hom_class.to_continuous_map_class ContinuousOrderHomClass.toContinuousMapClass
+#align continuous_order_hom_class.to_continuous_map_class ContinuousOrderHomClass.toContinuousMapClass
 
 instance [Preorder α] [Preorder β] [TopologicalSpace α] [TopologicalSpace β]
     [ContinuousOrderHomClass F α β] : CoeTC F (α →Co β) :=

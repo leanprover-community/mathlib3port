@@ -133,6 +133,5 @@ def preorderToPartialOrderCompToDualIsoToDualCompPreorderToPartialOrder :
     preorderToPartialOrder.{u} ⋙ PartialOrderCat.dual ≅ PreorderCat.dual ⋙ preorderToPartialOrder :=
   NatIso.ofComponents (fun X => PartialOrderCat.Iso.mk <| OrderIso.dualAntisymmetrization _)
     fun X Y f => OrderHom.ext _ _ <| funext fun x => Quotient.inductionOn' x fun x => rfl
-#align
-  Preorder_to_PartialOrder_comp_to_dual_iso_to_dual_comp_Preorder_to_PartialOrder preorderToPartialOrderCompToDualIsoToDualCompPreorderToPartialOrder
+#align Preorder_to_PartialOrder_comp_to_dual_iso_to_dual_comp_Preorder_to_PartialOrder preorderToPartialOrderCompToDualIsoToDualCompPreorderToPartialOrder
 

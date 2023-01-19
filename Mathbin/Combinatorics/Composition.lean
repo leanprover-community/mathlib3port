@@ -291,7 +291,7 @@ exactly `c.boundary`. -/
 theorem order_emb_of_fin_boundaries :
     c.boundaries.orderEmbOfFin c.card_boundaries_eq_succ_length = c.boundary :=
   by
-  refine' (Finset.order_emb_of_fin_unique' _ _).symm
+  refine' (Finset.orderEmbOfFin_unique' _ _).symm
   exact fun i => (Finset.mem_map' _).2 (Finset.mem_univ _)
 #align composition.order_emb_of_fin_boundaries Composition.order_emb_of_fin_boundaries
 
@@ -874,8 +874,7 @@ def length : ℕ :=
 
 theorem card_boundaries_eq_succ_length : c.boundaries.card = c.length + 1 :=
   (tsub_eq_iff_eq_add_of_le (Nat.succ_le_of_lt c.card_boundaries_pos)).mp rfl
-#align
-  composition_as_set.card_boundaries_eq_succ_length CompositionAsSet.card_boundaries_eq_succ_length
+#align composition_as_set.card_boundaries_eq_succ_length CompositionAsSet.card_boundaries_eq_succ_length
 
 theorem length_lt_card_boundaries : c.length < c.boundaries.card :=
   by
@@ -899,14 +898,14 @@ def boundary : Fin c.boundaries.card ↪o Fin (n + 1) :=
 @[simp]
 theorem boundary_zero : (c.boundary ⟨0, c.card_boundaries_pos⟩ : Fin (n + 1)) = 0 :=
   by
-  rw [boundary, Finset.order_emb_of_fin_zero rfl c.card_boundaries_pos]
+  rw [boundary, Finset.orderEmbOfFin_zero rfl c.card_boundaries_pos]
   exact le_antisymm (Finset.min'_le _ _ c.zero_mem) (Fin.zero_le _)
 #align composition_as_set.boundary_zero CompositionAsSet.boundary_zero
 
 @[simp]
 theorem boundary_length : c.boundary ⟨c.length, c.length_lt_card_boundaries⟩ = Fin.last n :=
   by
-  convert Finset.order_emb_of_fin_last rfl c.card_boundaries_pos
+  convert Finset.orderEmbOfFin_last rfl c.card_boundaries_pos
   exact le_antisymm (Finset.le_max' _ _ c.last_mem) (Fin.le_last _)
 #align composition_as_set.boundary_length CompositionAsSet.boundary_length
 
@@ -961,8 +960,7 @@ theorem mem_boundaries_iff_exists_blocks_sum_take_eq {j : Fin (n + 1)} :
     convert (c.boundaries.order_iso_of_fin rfl ⟨i, hi⟩).2
     have : c.boundary ⟨i, hi⟩ = j := by rwa [Fin.ext_iff, ← c.blocks_partial_sum hi]
     exact this.symm
-#align
-  composition_as_set.mem_boundaries_iff_exists_blocks_sum_take_eq CompositionAsSet.mem_boundaries_iff_exists_blocks_sum_take_eq
+#align composition_as_set.mem_boundaries_iff_exists_blocks_sum_take_eq CompositionAsSet.mem_boundaries_iff_exists_blocks_sum_take_eq
 
 theorem blocks_sum : c.blocks.Sum = n :=
   by

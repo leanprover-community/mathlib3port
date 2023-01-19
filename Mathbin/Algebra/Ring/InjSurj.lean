@@ -158,8 +158,7 @@ protected def Function.Surjective.nonUnitalNonAssocSemiring {α : Type u}
     (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y)
     (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x) : NonUnitalNonAssocSemiring β :=
   { hf.MulZeroClass f zero mul, hf.AddCommMonoid f zero add nsmul, hf.Distrib f add mul with }
-#align
-  function.surjective.non_unital_non_assoc_semiring Function.Surjective.nonUnitalNonAssocSemiring
+#align function.surjective.non_unital_non_assoc_semiring Function.Surjective.nonUnitalNonAssocSemiring
 
 /- warning: function.surjective.non_unital_semiring -> Function.Surjective.nonUnitalSemiring is a dubious translation:
 lean 3 declaration is

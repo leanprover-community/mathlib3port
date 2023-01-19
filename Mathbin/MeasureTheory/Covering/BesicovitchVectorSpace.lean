@@ -116,14 +116,12 @@ def centerAndRescale : SatelliteConfig E N τ
 
 theorem center_and_rescale_center : a.centerAndRescale.c (last N) = 0 := by
   simp [satellite_config.center_and_rescale]
-#align
-  besicovitch.satellite_config.center_and_rescale_center Besicovitch.SatelliteConfig.center_and_rescale_center
+#align besicovitch.satellite_config.center_and_rescale_center Besicovitch.SatelliteConfig.center_and_rescale_center
 
 theorem center_and_rescale_radius {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ) :
     a.centerAndRescale.R (last N) = 1 := by
   simp [satellite_config.center_and_rescale, inv_mul_cancel (a.rpos _).ne']
-#align
-  besicovitch.satellite_config.center_and_rescale_radius Besicovitch.SatelliteConfig.center_and_rescale_radius
+#align besicovitch.satellite_config.center_and_rescale_radius Besicovitch.SatelliteConfig.center_and_rescale_radius
 
 end SatelliteConfig
 
@@ -428,8 +426,7 @@ theorem exists_normalized_aux1 {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ)
   · rw [norm_sub_rev]
     apply le_trans _ H.1
     exact hτ' j
-#align
-  besicovitch.satellite_config.exists_normalized_aux1 Besicovitch.SatelliteConfig.exists_normalized_aux1
+#align besicovitch.satellite_config.exists_normalized_aux1 Besicovitch.SatelliteConfig.exists_normalized_aux1
 
 variable [NormedSpace ℝ E]
 
@@ -501,8 +498,7 @@ theorem exists_normalized_aux2 {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ)
         linarith only [hcrj]
       
   linarith only [this]
-#align
-  besicovitch.satellite_config.exists_normalized_aux2 Besicovitch.SatelliteConfig.exists_normalized_aux2
+#align besicovitch.satellite_config.exists_normalized_aux2 Besicovitch.SatelliteConfig.exists_normalized_aux2
 
 theorem exists_normalized_aux3 {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ)
     (lastc : a.c (last N) = 0) (lastr : a.R (last N) = 1) (hτ : 1 ≤ τ) (δ : ℝ) (hδ1 : τ ≤ 1 + δ / 4)
@@ -575,8 +571,7 @@ theorem exists_normalized_aux3 {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ)
       congr 3
       field_simp [spos.ne']
     
-#align
-  besicovitch.satellite_config.exists_normalized_aux3 Besicovitch.SatelliteConfig.exists_normalized_aux3
+#align besicovitch.satellite_config.exists_normalized_aux3 Besicovitch.SatelliteConfig.exists_normalized_aux3
 
 theorem exists_normalized {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ) (lastc : a.c (last N) = 0)
     (lastr : a.R (last N) = 1) (hτ : 1 ≤ τ) (δ : ℝ) (hδ1 : τ ≤ 1 + δ / 4) (hδ2 : δ ≤ 1) :
@@ -631,8 +626,7 @@ theorem is_empty_satellite_config_multiplicity :
       ⟨c', c'_le_two, hc'⟩
     exact
       lt_irrefl _ ((Nat.lt_succ_self _).trans_le (le_multiplicity_of_δ_of_fin c' c'_le_two hc'))⟩
-#align
-  besicovitch.is_empty_satellite_config_multiplicity Besicovitch.is_empty_satellite_config_multiplicity
+#align besicovitch.is_empty_satellite_config_multiplicity Besicovitch.is_empty_satellite_config_multiplicity
 
 instance (priority := 100) : HasBesicovitchCovering E :=
   ⟨⟨multiplicity E, goodτ E, one_lt_good_τ E, is_empty_satellite_config_multiplicity E⟩⟩

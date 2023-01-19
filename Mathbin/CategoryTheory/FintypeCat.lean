@@ -182,7 +182,7 @@ noncomputable def equivalence : skeleton ≌ FintypeCat :=
 theorem incl_mk_nat_card (n : ℕ) : Fintype.card (incl.obj (mk n)) = n :=
   by
   convert Finset.card_fin n
-  apply Fintype.of_equiv_card
+  apply Fintype.ofEquiv_card
 #align Fintype.skeleton.incl_mk_nat_card FintypeCat.Skeleton.incl_mk_nat_card
 
 end Skeleton

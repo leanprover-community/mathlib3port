@@ -65,8 +65,7 @@ theorem with_density_rn_deriv_eq (μ ν : Measure α) [HaveLebesgueDecomposition
     exact (add_eq_zero_iff.1 this).1
   rw [this, zero_add] at hadd
   exact hadd.symm
-#align
-  measure_theory.measure.with_density_rn_deriv_eq MeasureTheory.Measure.with_density_rn_deriv_eq
+#align measure_theory.measure.with_density_rn_deriv_eq MeasureTheory.Measure.with_density_rn_deriv_eq
 
 /-- **The Radon-Nikodym theorem**: Given two measures `μ` and `ν`, if
 `have_lebesgue_decomposition μ ν`, then `μ` is absolutely continuous to `ν` if and only if
@@ -74,8 +73,7 @@ theorem with_density_rn_deriv_eq (μ ν : Measure α) [HaveLebesgueDecomposition
 theorem absolutely_continuous_iff_with_density_rn_deriv_eq {μ ν : Measure α}
     [HaveLebesgueDecomposition μ ν] : μ ≪ ν ↔ ν.withDensity (rnDeriv μ ν) = μ :=
   ⟨with_density_rn_deriv_eq μ ν, fun h => h ▸ withDensityAbsolutelyContinuous _ _⟩
-#align
-  measure_theory.measure.absolutely_continuous_iff_with_density_rn_deriv_eq MeasureTheory.Measure.absolutely_continuous_iff_with_density_rn_deriv_eq
+#align measure_theory.measure.absolutely_continuous_iff_with_density_rn_deriv_eq MeasureTheory.Measure.absolutely_continuous_iff_with_density_rn_deriv_eq
 
 theorem with_density_rn_deriv_to_real_eq {μ ν : Measure α} [IsFiniteMeasure μ]
     [HaveLebesgueDecomposition μ ν] (h : μ ≪ ν) {i : Set α} (hi : MeasurableSet i) :
@@ -87,8 +85,7 @@ theorem with_density_rn_deriv_to_real_eq {μ ν : Measure α} [IsFiniteMeasure �
       ae_lt_top (μ.measurable_rn_deriv ν) (lt_of_le_of_lt (lintegral_mono_set i.subset_univ) _).Ne
     rw [← with_density_apply _ MeasurableSet.univ, with_density_rn_deriv_eq μ ν h]
     exact measure_lt_top _ _
-#align
-  measure_theory.measure.with_density_rn_deriv_to_real_eq MeasureTheory.Measure.with_density_rn_deriv_to_real_eq
+#align measure_theory.measure.with_density_rn_deriv_to_real_eq MeasureTheory.Measure.with_density_rn_deriv_to_real_eq
 
 end Measure
 
@@ -118,15 +115,13 @@ theorem with_densityᵥ_rn_deriv_eq (s : SignedMeasure α) (μ : Measure α) [Si
       · rw [set_lintegral_univ]
         exact (lintegral_rn_deriv_lt_top _ _).Ne
   · exact equiv_measure.right_inv μ
-#align
-  measure_theory.signed_measure.with_densityᵥ_rn_deriv_eq MeasureTheory.SignedMeasure.with_densityᵥ_rn_deriv_eq
+#align measure_theory.signed_measure.with_densityᵥ_rn_deriv_eq MeasureTheory.SignedMeasure.with_densityᵥ_rn_deriv_eq
 
 /-- The Radon-Nikodym theorem for signed measures. -/
 theorem absolutely_continuous_iff_with_densityᵥ_rn_deriv_eq (s : SignedMeasure α) (μ : Measure α)
     [SigmaFinite μ] : s ≪ᵥ μ.toEnnrealVectorMeasure ↔ μ.withDensityᵥ (s.rnDeriv μ) = s :=
   ⟨with_densityᵥ_rn_deriv_eq s μ, fun h => h ▸ withDensityᵥAbsolutelyContinuous _ _⟩
-#align
-  measure_theory.signed_measure.absolutely_continuous_iff_with_densityᵥ_rn_deriv_eq MeasureTheory.SignedMeasure.absolutely_continuous_iff_with_densityᵥ_rn_deriv_eq
+#align measure_theory.signed_measure.absolutely_continuous_iff_with_densityᵥ_rn_deriv_eq MeasureTheory.SignedMeasure.absolutely_continuous_iff_with_densityᵥ_rn_deriv_eq
 
 end SignedMeasure
 

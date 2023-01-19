@@ -112,8 +112,7 @@ theorem foldr_with_index_aux_eq_foldr_with_index_aux_spec (f : ℕ → α → β
   induction as generalizing start
   · rfl
   · simp only [foldr_with_index_aux, foldr_with_index_aux_spec_cons, *]
-#align
-  list.foldr_with_index_aux_eq_foldr_with_index_aux_spec List.foldr_with_index_aux_eq_foldr_with_index_aux_spec
+#align list.foldr_with_index_aux_eq_foldr_with_index_aux_spec List.foldr_with_index_aux_eq_foldr_with_index_aux_spec
 
 theorem foldr_with_index_eq_foldr_enum (f : ℕ → α → β → β) (b : β) (as : List α) :
     foldrIdx f b as = foldr (uncurry f) b (enum as) := by
@@ -153,8 +152,7 @@ theorem foldl_with_index_aux_eq_foldl_with_index_aux_spec (f : ℕ → α → β
   induction bs generalizing start a
   · rfl
   · simp [foldl_with_index_aux, foldl_with_index_aux_spec_cons, *]
-#align
-  list.foldl_with_index_aux_eq_foldl_with_index_aux_spec List.foldl_with_index_aux_eq_foldl_with_index_aux_spec
+#align list.foldl_with_index_aux_eq_foldl_with_index_aux_spec List.foldl_with_index_aux_eq_foldl_with_index_aux_spec
 
 theorem foldl_with_index_eq_foldl_enum (f : ℕ → α → β → α) (a : α) (bs : List β) :
     foldlIdx f a bs = foldl (fun a (p : ℕ × β) => f p.fst a p.snd) a (enum bs) := by
@@ -203,8 +201,7 @@ theorem mmap_with_index_aux_eq_mmap_with_index_aux_spec {α β} (f : ℕ → α 
   induction as generalizing start
   · rfl
   · simp [mmap_with_index_aux, mmap_with_index_aux_spec_cons, *]
-#align
-  list.mmap_with_index_aux_eq_mmap_with_index_aux_spec List.mmap_with_index_aux_eq_mmap_with_index_aux_spec
+#align list.mmap_with_index_aux_eq_mmap_with_index_aux_spec List.mmap_with_index_aux_eq_mmap_with_index_aux_spec
 
 theorem mmap_with_index_eq_mmap_enum {α β} (f : ℕ → α → m β) (as : List α) :
     mapIdxM f as = List.traverse (uncurry f) (enum as) := by
@@ -223,8 +220,7 @@ theorem mmap_with_index'_aux_eq_mmap_with_index_aux {α} (f : ℕ → α → m P
   induction as generalizing start <;>
     simp [mmap_with_index'_aux, mmap_with_index_aux, *, seq_right_eq, const, -comp_const,
       functor_norm]
-#align
-  list.mmap_with_index'_aux_eq_mmap_with_index_aux List.mmap_with_index'_aux_eq_mmap_with_index_aux
+#align list.mmap_with_index'_aux_eq_mmap_with_index_aux List.mmap_with_index'_aux_eq_mmap_with_index_aux
 
 theorem mmap_with_index'_eq_mmap_with_index {α} (f : ℕ → α → m PUnit) (as : List α) :
     mapIdxM' f as = mapIdxM f as *> pure PUnit.unit := by

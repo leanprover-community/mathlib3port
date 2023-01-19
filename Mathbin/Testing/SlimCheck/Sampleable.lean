@@ -493,8 +493,7 @@ theorem List.sizeof_drop_lt_sizeof_of_lt_length {xs : List α} {k} (hk : 0 < k)
     trans
     · solve_by_elim [xs_ih, lt_of_succ_lt_succ hk', zero_lt_succ]
     · assumption
-#align
-  slim_check.list.sizeof_drop_lt_sizeof_of_lt_length SlimCheck.List.sizeof_drop_lt_sizeof_of_lt_length
+#align slim_check.list.sizeof_drop_lt_sizeof_of_lt_length SlimCheck.List.sizeof_drop_lt_sizeof_of_lt_length
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

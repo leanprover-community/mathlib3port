@@ -130,8 +130,7 @@ theorem Ideal.exists_comap_eq_of_mem_minimal_primes_of_injective {f : R →+* S}
   apply IsUnit.map
   apply IsLocalization.map_units _ (show p.prime_compl from ⟨x, h⟩)
   infer_instance
-#align
-  ideal.exists_comap_eq_of_mem_minimal_primes_of_injective Ideal.exists_comap_eq_of_mem_minimal_primes_of_injective
+#align ideal.exists_comap_eq_of_mem_minimal_primes_of_injective Ideal.exists_comap_eq_of_mem_minimal_primes_of_injective
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (p «expr ∈ » (I.comap f).minimal_primes) -/
 theorem Ideal.exists_comap_eq_of_mem_minimal_primes {I : Ideal S} (f : R →+* S) (p)

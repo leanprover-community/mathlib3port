@@ -78,8 +78,7 @@ instance (priority := 100) ConditionallyCompleteLinearOrderedField.to_archimedea
           (forall_range_iff.2 fun n =>
             le_sub_iff_add_le.2 <| le_csupₛ ⟨x, forall_range_iff.2 h⟩ ⟨n + 1, Nat.cast_succ n⟩)
       linarith)
-#align
-  conditionally_complete_linear_ordered_field.to_archimedean ConditionallyCompleteLinearOrderedField.to_archimedean
+#align conditionally_complete_linear_ordered_field.to_archimedean ConditionallyCompleteLinearOrderedField.to_archimedean
 
 /-- The reals are a conditionally complete linearly ordered field. -/
 instance : ConditionallyCompleteLinearOrderedField ℝ :=
@@ -279,8 +278,7 @@ theorem le_induced_map_mul_self_of_mem_cut_map (ha : 0 < a) (b : β) (hb : b ∈
     mul_self_le_mul_self (by exact_mod_cast hq'.le)
       (le_csupₛ (cut_map_bdd_above β a) <|
         coe_mem_cut_map_iff.2 <| lt_of_mul_self_lt_mul_self ha.le hqa)
-#align
-  linear_ordered_field.le_induced_map_mul_self_of_mem_cut_map LinearOrderedField.le_induced_map_mul_self_of_mem_cut_map
+#align linear_ordered_field.le_induced_map_mul_self_of_mem_cut_map LinearOrderedField.le_induced_map_mul_self_of_mem_cut_map
 
 /-- Preparatory lemma for `induced_ring_hom`. -/
 theorem exists_mem_cut_map_mul_self_of_lt_induced_map_mul_self (ha : 0 < a) (b : β)
@@ -298,8 +296,7 @@ theorem exists_mem_cut_map_mul_self_of_lt_induced_map_mul_self (ha : 0 < a) (b :
   obtain ⟨q', hq', hqa'⟩ := lt_induced_map_iff.1 (lt_of_mul_self_lt_mul_self _ hqa)
   exact mul_self_lt_mul_self (by exact_mod_cast hq.le) (hqa'.trans' <| by assumption_mod_cast)
   exact induced_map_nonneg ha.le
-#align
-  linear_ordered_field.exists_mem_cut_map_mul_self_of_lt_induced_map_mul_self LinearOrderedField.exists_mem_cut_map_mul_self_of_lt_induced_map_mul_self
+#align linear_ordered_field.exists_mem_cut_map_mul_self_of_lt_induced_map_mul_self LinearOrderedField.exists_mem_cut_map_mul_self_of_lt_induced_map_mul_self
 
 variable (α β)
 
@@ -356,14 +353,12 @@ theorem coe_induced_order_ring_iso : ⇑(inducedOrderRingIso β γ) = inducedMap
 @[simp]
 theorem induced_order_ring_iso_symm : (inducedOrderRingIso β γ).symm = inducedOrderRingIso γ β :=
   rfl
-#align
-  linear_ordered_field.induced_order_ring_iso_symm LinearOrderedField.induced_order_ring_iso_symm
+#align linear_ordered_field.induced_order_ring_iso_symm LinearOrderedField.induced_order_ring_iso_symm
 
 @[simp]
 theorem induced_order_ring_iso_self : inducedOrderRingIso β β = OrderRingIso.refl β :=
   OrderRingIso.ext induced_map_self
-#align
-  linear_ordered_field.induced_order_ring_iso_self LinearOrderedField.induced_order_ring_iso_self
+#align linear_ordered_field.induced_order_ring_iso_self LinearOrderedField.induced_order_ring_iso_self
 
 open OrderRingIso
 

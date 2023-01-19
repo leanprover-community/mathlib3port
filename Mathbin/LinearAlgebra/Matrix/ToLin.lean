@@ -381,8 +381,7 @@ theorem Matrix.to_lin_alg_equiv'_symm :
 theorem LinearMap.to_matrix_alg_equiv'_to_lin_alg_equiv' (M : Matrix n n R) :
     LinearMap.toMatrixAlgEquiv' (Matrix.toLinAlgEquiv' M) = M :=
   LinearMap.toMatrixAlgEquiv'.apply_symm_apply M
-#align
-  linear_map.to_matrix_alg_equiv'_to_lin_alg_equiv' LinearMap.to_matrix_alg_equiv'_to_lin_alg_equiv'
+#align linear_map.to_matrix_alg_equiv'_to_lin_alg_equiv' LinearMap.to_matrix_alg_equiv'_to_lin_alg_equiv'
 
 @[simp]
 theorem Matrix.to_lin_alg_equiv'_to_matrix_alg_equiv' (f : (n → R) →ₗ[R] n → R) :
@@ -671,8 +670,7 @@ theorem Matrix.to_lin_alg_equiv_to_matrix_alg_equiv (f : M₁ →ₗ[R] M₁) :
 theorem LinearMap.to_matrix_alg_equiv_to_lin_alg_equiv (M : Matrix n n R) :
     LinearMap.toMatrixAlgEquiv v₁ (Matrix.toLinAlgEquiv v₁ M) = M := by
   rw [← Matrix.to_lin_alg_equiv_symm, AlgEquiv.symm_apply_apply]
-#align
-  linear_map.to_matrix_alg_equiv_to_lin_alg_equiv LinearMap.to_matrix_alg_equiv_to_lin_alg_equiv
+#align linear_map.to_matrix_alg_equiv_to_lin_alg_equiv LinearMap.to_matrix_alg_equiv_to_lin_alg_equiv
 
 theorem LinearMap.to_matrix_alg_equiv_apply (f : M₁ →ₗ[R] M₁) (i j : n) :
     LinearMap.toMatrixAlgEquiv v₁ f i j = v₁.repr (f (v₁ j)) i := by
@@ -692,8 +690,7 @@ theorem LinearMap.to_matrix_alg_equiv_apply' (f : M₁ →ₗ[R] M₁) (i j : n)
 theorem LinearMap.to_matrix_alg_equiv_transpose_apply' (f : M₁ →ₗ[R] M₁) (j : n) :
     (LinearMap.toMatrixAlgEquiv v₁ f)ᵀ j = v₁.repr (f (v₁ j)) :=
   LinearMap.to_matrix_alg_equiv_transpose_apply v₁ f j
-#align
-  linear_map.to_matrix_alg_equiv_transpose_apply' LinearMap.to_matrix_alg_equiv_transpose_apply'
+#align linear_map.to_matrix_alg_equiv_transpose_apply' LinearMap.to_matrix_alg_equiv_transpose_apply'
 
 theorem Matrix.to_lin_alg_equiv_apply (M : Matrix n n R) (v : M₁) :
     Matrix.toLinAlgEquiv v₁ M v = ∑ j, M.mulVec (v₁.repr v) j • v₁ j :=

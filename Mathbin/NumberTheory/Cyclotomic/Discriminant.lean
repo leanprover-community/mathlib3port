@@ -54,8 +54,7 @@ theorem discr_zeta_eq_discr_zeta_sub_one (hζ : IsPrimitiveRoot ζ n) :
   · exact is_integral_sub (hζ.is_integral n.pos) is_integral_one
   · refine' minpoly.gcd_domain_eq_field_fractions' _ _
     exact is_integral_sub (hζ.is_integral n.pos) is_integral_one
-#align
-  is_primitive_root.discr_zeta_eq_discr_zeta_sub_one IsPrimitiveRoot.discr_zeta_eq_discr_zeta_sub_one
+#align is_primitive_root.discr_zeta_eq_discr_zeta_sub_one IsPrimitiveRoot.discr_zeta_eq_discr_zeta_sub_one
 
 end IsPrimitiveRoot
 
@@ -211,8 +210,7 @@ theorem discr_prime_pow_eq_unit_mul_pow [IsCyclotomicExtension {p ^ k} K L]
   ·
     exact
       ⟨-1, (p : ℕ) ^ (k - 1) * ((p - 1) * k - 1), by simp [(odd_iff_not_even.2 heven).neg_one_pow]⟩
-#align
-  is_cyclotomic_extension.discr_prime_pow_eq_unit_mul_pow IsCyclotomicExtension.discr_prime_pow_eq_unit_mul_pow
+#align is_cyclotomic_extension.discr_prime_pow_eq_unit_mul_pow IsCyclotomicExtension.discr_prime_pow_eq_unit_mul_pow
 
 /-- If `p` is an odd prime and `is_cyclotomic_extension {p} K L`, then
 `discr K (hζ.power_basis K).basis = (-1) ^ ((p - 1) / 2) * p ^ (p - 2)` if

@@ -239,14 +239,12 @@ theorem deriv_within_zero_of_not_differentiable_within_at (h : ¬DifferentiableW
   rw [fderiv_within_zero_of_not_differentiable_within_at]
   simp
   assumption
-#align
-  deriv_within_zero_of_not_differentiable_within_at deriv_within_zero_of_not_differentiable_within_at
+#align deriv_within_zero_of_not_differentiable_within_at deriv_within_zero_of_not_differentiable_within_at
 
 theorem differentiable_within_at_of_deriv_within_ne_zero (h : derivWithin f s x ≠ 0) :
     DifferentiableWithinAt 𝕜 f s x :=
   not_imp_comm.1 deriv_within_zero_of_not_differentiable_within_at h
-#align
-  differentiable_within_at_of_deriv_within_ne_zero differentiable_within_at_of_deriv_within_ne_zero
+#align differentiable_within_at_of_deriv_within_ne_zero differentiable_within_at_of_deriv_within_ne_zero
 
 theorem deriv_zero_of_not_differentiable_at (h : ¬DifferentiableAt 𝕜 f x) : deriv f x = 0 :=
   by
@@ -612,8 +610,7 @@ theorem HasDerivWithinAt.congr_of_eventually_eq (h : HasDerivWithinAt f f' s x)
 theorem HasDerivWithinAt.congr_of_eventually_eq_of_mem (h : HasDerivWithinAt f f' s x)
     (h₁ : f₁ =ᶠ[𝓝[s] x] f) (hx : x ∈ s) : HasDerivWithinAt f₁ f' s x :=
   h.congr_of_eventually_eq h₁ (h₁.eq_of_nhds_within hx)
-#align
-  has_deriv_within_at.congr_of_eventually_eq_of_mem HasDerivWithinAt.congr_of_eventually_eq_of_mem
+#align has_deriv_within_at.congr_of_eventually_eq_of_mem HasDerivWithinAt.congr_of_eventually_eq_of_mem
 
 theorem HasDerivAt.congr_of_eventually_eq (h : HasDerivAt f f' x) (h₁ : f₁ =ᶠ[𝓝 x] f) :
     HasDerivAt f₁ f' x :=
@@ -2126,8 +2123,7 @@ theorem not_differentiable_within_at_of_local_left_inverse_has_deriv_within_at_z
   intro hg
   have := (hf.comp a hg.has_deriv_within_at hst).congr_of_eventually_eq_of_mem hfg.symm ha
   simpa using hsu.eq_deriv _ this (has_deriv_within_at_id _ _)
-#align
-  not_differentiable_within_at_of_local_left_inverse_has_deriv_within_at_zero not_differentiable_within_at_of_local_left_inverse_has_deriv_within_at_zero
+#align not_differentiable_within_at_of_local_left_inverse_has_deriv_within_at_zero not_differentiable_within_at_of_local_left_inverse_has_deriv_within_at_zero
 
 theorem not_differentiable_at_of_local_left_inverse_has_deriv_at_zero {f g : 𝕜 → 𝕜} {a : 𝕜}
     (hf : HasDerivAt f 0 (g a)) (hfg : f ∘ g =ᶠ[𝓝 a] id) : ¬DifferentiableAt 𝕜 g a :=
@@ -2135,8 +2131,7 @@ theorem not_differentiable_at_of_local_left_inverse_has_deriv_at_zero {f g : �
   intro hg
   have := (hf.comp a hg.has_deriv_at).congr_of_eventually_eq hfg.symm
   simpa using this.unique (has_deriv_at_id a)
-#align
-  not_differentiable_at_of_local_left_inverse_has_deriv_at_zero not_differentiable_at_of_local_left_inverse_has_deriv_at_zero
+#align not_differentiable_at_of_local_left_inverse_has_deriv_at_zero not_differentiable_at_of_local_left_inverse_has_deriv_at_zero
 
 end
 

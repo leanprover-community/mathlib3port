@@ -56,8 +56,7 @@ namespace NormedField
 theorem tendsto_norm_inverse_nhds_within_0_at_top {𝕜 : Type _} [NormedField 𝕜] :
     Tendsto (fun x : 𝕜 => ‖x⁻¹‖) (𝓝[≠] 0) atTop :=
   (tendsto_inv_zero_at_top.comp tendsto_norm_zero').congr fun x => (norm_inv x).symm
-#align
-  normed_field.tendsto_norm_inverse_nhds_within_0_at_top NormedField.tendsto_norm_inverse_nhds_within_0_at_top
+#align normed_field.tendsto_norm_inverse_nhds_within_0_at_top NormedField.tendsto_norm_inverse_nhds_within_0_at_top
 
 theorem tendsto_norm_zpow_nhds_within_0_at_top {𝕜 : Type _} [NormedField 𝕜] {m : ℤ} (hm : m < 0) :
     Tendsto (fun x : 𝕜 => ‖x ^ m‖) (𝓝[≠] 0) atTop :=
@@ -66,8 +65,7 @@ theorem tendsto_norm_zpow_nhds_within_0_at_top {𝕜 : Type _} [NormedField 𝕜
   rw [neg_lt_zero] at hm; lift m to ℕ using hm.le; rw [Int.coe_nat_pos] at hm
   simp only [norm_pow, zpow_neg, zpow_ofNat, ← inv_pow]
   exact (tendsto_pow_at_top hm.ne').comp NormedField.tendsto_norm_inverse_nhds_within_0_at_top
-#align
-  normed_field.tendsto_norm_zpow_nhds_within_0_at_top NormedField.tendsto_norm_zpow_nhds_within_0_at_top
+#align normed_field.tendsto_norm_zpow_nhds_within_0_at_top NormedField.tendsto_norm_zpow_nhds_within_0_at_top
 
 /-- The (scalar) product of a sequence that tends to zero with a bounded one also tends to zero. -/
 theorem tendsto_zero_smul_of_tendsto_zero_of_bounded {ι 𝕜 𝔸 : Type _} [NormedField 𝕜]
@@ -76,8 +74,7 @@ theorem tendsto_zero_smul_of_tendsto_zero_of_bounded {ι 𝕜 𝔸 : Type _} [No
     Tendsto (ε • f) l (𝓝 0) := by
   rw [← is_o_one_iff 𝕜] at hε⊢
   simpa using is_o.smul_is_O hε (hf.is_O_const (one_ne_zero : (1 : 𝕜) ≠ 0))
-#align
-  normed_field.tendsto_zero_smul_of_tendsto_zero_of_bounded NormedField.tendsto_zero_smul_of_tendsto_zero_of_bounded
+#align normed_field.tendsto_zero_smul_of_tendsto_zero_of_bounded NormedField.tendsto_zero_smul_of_tendsto_zero_of_bounded
 
 @[simp]
 theorem continuous_at_zpow {𝕜 : Type _} [NontriviallyNormedField 𝕜] {m : ℤ} {x : 𝕜} :
@@ -1891,8 +1888,7 @@ theorem is_o_pow_const_mul_const_pow_const_pow_of_norm_lt {R : Type _} [NormedRi
   suffices (fun n => r₁ ^ n) =O[at_top] fun n => ‖r₁‖ ^ n by
     simpa [div_mul_cancel _ (pow_pos h0 _).ne'] using A.mul_is_O this
   exact is_O.of_bound 1 (by simpa using eventually_norm_pow_le r₁)
-#align
-  is_o_pow_const_mul_const_pow_const_pow_of_norm_lt is_o_pow_const_mul_const_pow_const_pow_of_norm_lt
+#align is_o_pow_const_mul_const_pow_const_pow_of_norm_lt is_o_pow_const_mul_const_pow_const_pow_of_norm_lt
 
 theorem tendsto_pow_const_div_const_pow_of_one_lt (k : ℕ) {r : ℝ} (hr : 1 < r) :
     Tendsto (fun n => n ^ k / r ^ n : ℕ → ℝ) atTop (𝓝 0) :=
@@ -2057,8 +2053,7 @@ variable [SeminormedAddCommGroup α] {r C : ℝ} {f : ℕ → α}
 theorem SeminormedAddCommGroup.cauchy_seq_of_le_geometric {C : ℝ} {r : ℝ} (hr : r < 1) {u : ℕ → α}
     (h : ∀ n, ‖u n - u (n + 1)‖ ≤ C * r ^ n) : CauchySeq u :=
   cauchy_seq_of_le_geometric r C hr (by simpa [dist_eq_norm] using h)
-#align
-  seminormed_add_comm_group.cauchy_seq_of_le_geometric SeminormedAddCommGroup.cauchy_seq_of_le_geometric
+#align seminormed_add_comm_group.cauchy_seq_of_le_geometric SeminormedAddCommGroup.cauchy_seq_of_le_geometric
 
 theorem dist_partial_sum_le_of_le_geometric (hf : ∀ n, ‖f n‖ ≤ C * r ^ n) (n : ℕ) :
     dist (∑ i in range n, f i) (∑ i in range (n + 1), f i) ≤ C * r ^ n :=
@@ -2106,8 +2101,7 @@ theorem cauchy_series_of_le_geometric {C : ℝ} {u : ℕ → α} {r : ℝ} (hr :
 theorem NormedAddCommGroup.cauchy_series_of_le_geometric' {C : ℝ} {u : ℕ → α} {r : ℝ} (hr : r < 1)
     (h : ∀ n, ‖u n‖ ≤ C * r ^ n) : CauchySeq fun n => ∑ k in range (n + 1), u k :=
   (cauchy_series_of_le_geometric hr h).comp_tendsto <| tendsto_add_at_top_nat 1
-#align
-  normed_add_comm_group.cauchy_series_of_le_geometric' NormedAddCommGroup.cauchy_series_of_le_geometric'
+#align normed_add_comm_group.cauchy_series_of_le_geometric' NormedAddCommGroup.cauchy_series_of_le_geometric'
 
 theorem NormedAddCommGroup.cauchy_series_of_le_geometric'' {C : ℝ} {u : ℕ → α} {N : ℕ} {r : ℝ}
     (hr₀ : 0 < r) (hr₁ : r < 1) (h : ∀ n ≥ N, ‖u n‖ ≤ C * r ^ n) :
@@ -2129,8 +2123,7 @@ theorem NormedAddCommGroup.cauchy_series_of_le_geometric'' {C : ℝ} {u : ℕ �
     exact mul_nonneg hC (pow_nonneg hr₀.le _)
   · push_neg  at H
     exact h _ H
-#align
-  normed_add_comm_group.cauchy_series_of_le_geometric'' NormedAddCommGroup.cauchy_series_of_le_geometric''
+#align normed_add_comm_group.cauchy_series_of_le_geometric'' NormedAddCommGroup.cauchy_series_of_le_geometric''
 
 end SummableLeGeometric
 
@@ -2292,8 +2285,7 @@ theorem Monotone.cauchy_seq_series_mul_of_tendsto_zero_of_bounded (hfa : Monoton
     exact (tendsto.cauchy_seq hf0).AddConst
   · rw [norm_smul, mul_comm]
     exact mul_le_mul_of_nonneg_right (hgb _) (abs_nonneg _)
-#align
-  monotone.cauchy_seq_series_mul_of_tendsto_zero_of_bounded Monotone.cauchy_seq_series_mul_of_tendsto_zero_of_bounded
+#align monotone.cauchy_seq_series_mul_of_tendsto_zero_of_bounded Monotone.cauchy_seq_series_mul_of_tendsto_zero_of_bounded
 
 /-- **Dirichlet's test** for antitone sequences. -/
 theorem Antitone.cauchy_seq_series_mul_of_tendsto_zero_of_bounded (hfa : Antitone f)
@@ -2308,8 +2300,7 @@ theorem Antitone.cauchy_seq_series_mul_of_tendsto_zero_of_bounded (hfa : Antiton
   convert (hfa'.cauchy_seq_series_mul_of_tendsto_zero_of_bounded hf0' hzb).neg
   funext
   simp
-#align
-  antitone.cauchy_seq_series_mul_of_tendsto_zero_of_bounded Antitone.cauchy_seq_series_mul_of_tendsto_zero_of_bounded
+#align antitone.cauchy_seq_series_mul_of_tendsto_zero_of_bounded Antitone.cauchy_seq_series_mul_of_tendsto_zero_of_bounded
 
 theorem norm_sum_neg_one_pow_le (n : ℕ) : ‖∑ i in range n, (-1 : ℝ) ^ i‖ ≤ 1 :=
   by
@@ -2324,16 +2315,14 @@ theorem Monotone.cauchy_seq_alternating_series_of_tendsto_zero (hfa : Monotone f
   by
   simp_rw [mul_comm]
   exact hfa.cauchy_seq_series_mul_of_tendsto_zero_of_bounded hf0 norm_sum_neg_one_pow_le
-#align
-  monotone.cauchy_seq_alternating_series_of_tendsto_zero Monotone.cauchy_seq_alternating_series_of_tendsto_zero
+#align monotone.cauchy_seq_alternating_series_of_tendsto_zero Monotone.cauchy_seq_alternating_series_of_tendsto_zero
 
 /-- The **alternating series test** for monotone sequences. -/
 theorem Monotone.tendsto_alternating_series_of_tendsto_zero (hfa : Monotone f)
     (hf0 : Tendsto f atTop (𝓝 0)) :
     ∃ l, Tendsto (fun n => ∑ i in range (n + 1), (-1) ^ i * f i) atTop (𝓝 l) :=
   cauchy_seq_tendsto_of_complete <| hfa.cauchy_seq_alternating_series_of_tendsto_zero hf0
-#align
-  monotone.tendsto_alternating_series_of_tendsto_zero Monotone.tendsto_alternating_series_of_tendsto_zero
+#align monotone.tendsto_alternating_series_of_tendsto_zero Monotone.tendsto_alternating_series_of_tendsto_zero
 
 /-- The **alternating series test** for antitone sequences.
 See also `tendsto_alternating_series_of_antitone_tendsto_zero`. -/
@@ -2342,16 +2331,14 @@ theorem Antitone.cauchy_seq_alternating_series_of_tendsto_zero (hfa : Antitone f
   by
   simp_rw [mul_comm]
   exact hfa.cauchy_seq_series_mul_of_tendsto_zero_of_bounded hf0 norm_sum_neg_one_pow_le
-#align
-  antitone.cauchy_seq_alternating_series_of_tendsto_zero Antitone.cauchy_seq_alternating_series_of_tendsto_zero
+#align antitone.cauchy_seq_alternating_series_of_tendsto_zero Antitone.cauchy_seq_alternating_series_of_tendsto_zero
 
 /-- The **alternating series test** for antitone sequences. -/
 theorem Antitone.tendsto_alternating_series_of_tendsto_zero (hfa : Antitone f)
     (hf0 : Tendsto f atTop (𝓝 0)) :
     ∃ l, Tendsto (fun n => ∑ i in range (n + 1), (-1) ^ i * f i) atTop (𝓝 l) :=
   cauchy_seq_tendsto_of_complete <| hfa.cauchy_seq_alternating_series_of_tendsto_zero hf0
-#align
-  antitone.tendsto_alternating_series_of_tendsto_zero Antitone.tendsto_alternating_series_of_tendsto_zero
+#align antitone.tendsto_alternating_series_of_tendsto_zero Antitone.tendsto_alternating_series_of_tendsto_zero
 
 end
 

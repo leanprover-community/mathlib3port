@@ -106,8 +106,7 @@ variable (C)
 theorem has_binary_products_of_has_terminal_and_pullbacks [HasTerminal C] [HasPullbacks C] :
     HasBinaryProducts C :=
   { HasLimit := fun F => HasLimit.mk (limitConeOfTerminalAndPullbacks F) }
-#align
-  has_binary_products_of_has_terminal_and_pullbacks has_binary_products_of_has_terminal_and_pullbacks
+#align has_binary_products_of_has_terminal_and_pullbacks has_binary_products_of_has_terminal_and_pullbacks
 
 variable {C}
 
@@ -121,8 +120,7 @@ noncomputable def preservesBinaryProductsOfPreservesTerminalAndPullbacks [HasTer
         apply
           isBinaryProductOfIsTerminalIsPullback _ _ (is_limit_of_has_terminal_of_preserves_limit F)
         apply is_limit_of_has_pullback_of_preserves_limit)⟩
-#align
-  preserves_binary_products_of_preserves_terminal_and_pullbacks preservesBinaryProductsOfPreservesTerminalAndPullbacks
+#align preserves_binary_products_of_preserves_terminal_and_pullbacks preservesBinaryProductsOfPreservesTerminalAndPullbacks
 
 /-- In a category with a terminal object and pullbacks,
 a product of objects `X` and `Y` is isomorphic to a pullback. -/
@@ -206,8 +204,7 @@ variable (C)
 theorem has_binary_coproducts_of_has_initial_and_pushouts [HasInitial C] [HasPushouts C] :
     HasBinaryCoproducts C :=
   { HasColimit := fun F => HasColimit.mk (colimitCoconeOfInitialAndPushouts F) }
-#align
-  has_binary_coproducts_of_has_initial_and_pushouts has_binary_coproducts_of_has_initial_and_pushouts
+#align has_binary_coproducts_of_has_initial_and_pushouts has_binary_coproducts_of_has_initial_and_pushouts
 
 variable {C}
 
@@ -222,8 +219,7 @@ noncomputable def preservesBinaryCoproductsOfPreservesInitialAndPushouts [HasIni
           isBinaryCoproductOfIsInitialIsPushout _ _
             (is_colimit_of_has_initial_of_preserves_colimit F)
         apply is_colimit_of_has_pushout_of_preserves_colimit)⟩
-#align
-  preserves_binary_coproducts_of_preserves_initial_and_pushouts preservesBinaryCoproductsOfPreservesInitialAndPushouts
+#align preserves_binary_coproducts_of_preserves_initial_and_pushouts preservesBinaryCoproductsOfPreservesInitialAndPushouts
 
 /-- In a category with an initial object and pushouts,
 a coproduct of objects `X` and `Y` is isomorphic to a pushout. -/

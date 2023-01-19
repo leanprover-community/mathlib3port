@@ -138,8 +138,7 @@ theorem StarModule.self_adjoint_part_add_skew_adjoint_part (x : A) :
     (selfAdjointPart R x : A) + skewAdjointPart R x = x := by
   simp only [smul_sub, self_adjoint_part_apply_coe, smul_add, skew_adjoint_part_apply_coe,
     add_add_sub_cancel, inv_of_two_smul_add_inv_of_two_smul]
-#align
-  star_module.self_adjoint_part_add_skew_adjoint_part StarModule.self_adjoint_part_add_skew_adjoint_part
+#align star_module.self_adjoint_part_add_skew_adjoint_part StarModule.self_adjoint_part_add_skew_adjoint_part
 
 variable (A)
 

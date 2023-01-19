@@ -67,19 +67,16 @@ instance : SetLike (T.CompleteType α) L[[α]].Sentence :=
 
 theorem is_maximal (p : T.CompleteType α) : IsMaximal (p : L[[α]].TheoryCat) :=
   p.is_maximal'
-#align
-  first_order.language.Theory.complete_type.is_maximal FirstOrder.Language.TheoryCat.CompleteType.is_maximal
+#align first_order.language.Theory.complete_type.is_maximal FirstOrder.Language.TheoryCat.CompleteType.is_maximal
 
 theorem subset (p : T.CompleteType α) :
     (L.lhomWithConstants α).onTheory T ⊆ (p : L[[α]].TheoryCat) :=
   p.subset'
-#align
-  first_order.language.Theory.complete_type.subset FirstOrder.Language.TheoryCat.CompleteType.subset
+#align first_order.language.Theory.complete_type.subset FirstOrder.Language.TheoryCat.CompleteType.subset
 
 theorem mem_or_not_mem (p : T.CompleteType α) (φ : L[[α]].Sentence) : φ ∈ p ∨ φ.Not ∈ p :=
   p.IsMaximal.mem_or_not_mem φ
-#align
-  first_order.language.Theory.complete_type.mem_or_not_mem FirstOrder.Language.TheoryCat.CompleteType.mem_or_not_mem
+#align first_order.language.Theory.complete_type.mem_or_not_mem FirstOrder.Language.TheoryCat.CompleteType.mem_or_not_mem
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem mem_of_models (p : T.CompleteType α) {φ : L[[α]].Sentence}
@@ -87,8 +84,7 @@ theorem mem_of_models (p : T.CompleteType α) {φ : L[[α]].Sentence}
   (p.mem_or_not_mem φ).resolve_right fun con =>
     ((models_iff_not_satisfiable _).1 h)
       (p.IsMaximal.1.mono (union_subset p.Subset (singleton_subset_iff.2 Con)))
-#align
-  first_order.language.Theory.complete_type.mem_of_models FirstOrder.Language.TheoryCat.CompleteType.mem_of_models
+#align first_order.language.Theory.complete_type.mem_of_models FirstOrder.Language.TheoryCat.CompleteType.mem_of_models
 
 theorem not_mem_iff (p : T.CompleteType α) (φ : L[[α]].Sentence) : φ.Not ∈ p ↔ ¬φ ∈ p :=
   ⟨fun hf ht =>
@@ -101,15 +97,13 @@ theorem not_mem_iff (p : T.CompleteType α) (φ : L[[α]].Sentence) : φ.Not ∈
     refine' h (p.is_maximal.1.mono _)
     rw [insert_subset, singleton_subset_iff]
     exact ⟨ht, hf⟩, (p.mem_or_not_mem φ).resolve_left⟩
-#align
-  first_order.language.Theory.complete_type.not_mem_iff FirstOrder.Language.TheoryCat.CompleteType.not_mem_iff
+#align first_order.language.Theory.complete_type.not_mem_iff FirstOrder.Language.TheoryCat.CompleteType.not_mem_iff
 
 @[simp]
 theorem compl_set_of_mem {φ : L[[α]].Sentence} :
     { p : T.CompleteType α | φ ∈ p }ᶜ = { p : T.CompleteType α | φ.Not ∈ p } :=
   ext fun _ => (not_mem_iff _ _).symm
-#align
-  first_order.language.Theory.complete_type.compl_set_of_mem FirstOrder.Language.TheoryCat.CompleteType.compl_set_of_mem
+#align first_order.language.Theory.complete_type.compl_set_of_mem FirstOrder.Language.TheoryCat.CompleteType.compl_set_of_mem
 
 theorem set_of_subset_eq_empty_iff (S : L[[α]].TheoryCat) :
     { p : T.CompleteType α | S ⊆ ↑p } = ∅ ↔
@@ -124,8 +118,7 @@ theorem set_of_subset_eq_empty_iff (S : L[[α]].TheoryCat) :
       _⟩
   rintro ⟨p, hp⟩
   exact p.is_maximal.1.mono (union_subset p.subset hp)
-#align
-  first_order.language.Theory.complete_type.set_of_subset_eq_empty_iff FirstOrder.Language.TheoryCat.CompleteType.set_of_subset_eq_empty_iff
+#align first_order.language.Theory.complete_type.set_of_subset_eq_empty_iff FirstOrder.Language.TheoryCat.CompleteType.set_of_subset_eq_empty_iff
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem set_of_mem_eq_univ_iff (φ : L[[α]].Sentence) :
@@ -133,8 +126,7 @@ theorem set_of_mem_eq_univ_iff (φ : L[[α]].Sentence) :
   by
   rw [models_iff_not_satisfiable, ← compl_empty_iff, compl_set_of_mem, ← set_of_subset_eq_empty_iff]
   simp
-#align
-  first_order.language.Theory.complete_type.set_of_mem_eq_univ_iff FirstOrder.Language.TheoryCat.CompleteType.set_of_mem_eq_univ_iff
+#align first_order.language.Theory.complete_type.set_of_mem_eq_univ_iff FirstOrder.Language.TheoryCat.CompleteType.set_of_mem_eq_univ_iff
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem set_of_subset_eq_univ_iff (S : L[[α]].TheoryCat) :
@@ -149,8 +141,7 @@ theorem set_of_subset_eq_univ_iff (S : L[[α]].TheoryCat) :
   refine' ⟨fun h φ φS => h _ ⟨_, φS, rfl⟩, _⟩
   rintro h _ ⟨φ, h1, rfl⟩
   exact h _ h1
-#align
-  first_order.language.Theory.complete_type.set_of_subset_eq_univ_iff FirstOrder.Language.TheoryCat.CompleteType.set_of_subset_eq_univ_iff
+#align first_order.language.Theory.complete_type.set_of_subset_eq_univ_iff FirstOrder.Language.TheoryCat.CompleteType.set_of_subset_eq_univ_iff
 
 theorem nonempty_iff : Nonempty (T.CompleteType α) ↔ T.IsSatisfiable :=
   by
@@ -158,8 +149,7 @@ theorem nonempty_iff : Nonempty (T.CompleteType α) ↔ T.IsSatisfiable :=
   rw [nonempty_iff_univ_nonempty, nonempty_iff_ne_empty, Ne.def, not_iff_comm, ←
     union_empty ((L.Lhom_with_constants α).onTheory T), ← set_of_subset_eq_empty_iff]
   simp
-#align
-  first_order.language.Theory.complete_type.nonempty_iff FirstOrder.Language.TheoryCat.CompleteType.nonempty_iff
+#align first_order.language.Theory.complete_type.nonempty_iff FirstOrder.Language.TheoryCat.CompleteType.nonempty_iff
 
 instance : Nonempty (CompleteType ∅ α) :=
   nonempty_iff.2 (is_satisfiable_empty L)
@@ -169,8 +159,7 @@ theorem Inter_set_of_subset {ι : Type _} (S : ι → L[[α]].TheoryCat) :
   by
   ext
   simp only [mem_Inter, mem_set_of_eq, Union_subset_iff]
-#align
-  first_order.language.Theory.complete_type.Inter_set_of_subset FirstOrder.Language.TheoryCat.CompleteType.Inter_set_of_subset
+#align first_order.language.Theory.complete_type.Inter_set_of_subset FirstOrder.Language.TheoryCat.CompleteType.Inter_set_of_subset
 
 theorem to_list_foldr_inf_mem {p : T.CompleteType α} {t : Finset L[[α]].Sentence} :
     t.toList.foldr (· ⊓ ·) ⊤ ∈ p ↔ (t : L[[α]].TheoryCat) ⊆ ↑p :=
@@ -178,8 +167,7 @@ theorem to_list_foldr_inf_mem {p : T.CompleteType α} {t : Finset L[[α]].Senten
   simp_rw [subset_def, ← SetLike.mem_coe, p.is_maximal.mem_iff_models, models_sentence_iff,
     sentence.realize, formula.realize, bounded_formula.realize_foldr_inf, Finset.mem_toList]
   exact ⟨fun h φ hφ M => h _ _ hφ, fun h M φ hφ => h _ hφ _⟩
-#align
-  first_order.language.Theory.complete_type.to_list_foldr_inf_mem FirstOrder.Language.TheoryCat.CompleteType.to_list_foldr_inf_mem
+#align first_order.language.Theory.complete_type.to_list_foldr_inf_mem FirstOrder.Language.TheoryCat.CompleteType.to_list_foldr_inf_mem
 
 end CompleteType
 

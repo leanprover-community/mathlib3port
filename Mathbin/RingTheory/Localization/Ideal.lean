@@ -212,8 +212,7 @@ theorem surjective_quotient_map_of_maximal_of_localization {I : Ideal S} [I.IsPr
               (Ideal.Quotient.eq_zero_iff_mem.2
                 (Ideal.mem_comap.2 (Ideal.Quotient.eq_zero_iff_mem.1 hn))))
           (trans hn (by rw [← RingHom.map_mul, ← mk'_eq_mul_mk'_one, mk'_self, RingHom.map_one])))
-#align
-  is_localization.surjective_quotient_map_of_maximal_of_localization IsLocalization.surjective_quotient_map_of_maximal_of_localization
+#align is_localization.surjective_quotient_map_of_maximal_of_localization IsLocalization.surjective_quotient_map_of_maximal_of_localization
 
 end CommRing
 

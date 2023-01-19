@@ -39,8 +39,7 @@ theorem zsmul_mem_zmultiples_iff_exists_sub_div {r : R} {z : ℤ} (hz : z ≠ 0)
     rw [Fin.val_mk, Int.toNat_of_nonneg (Int.emod_nonneg _ hz), Int.div_add_mod]
   · rintro ⟨k, n, h⟩
     exact ⟨_, h⟩
-#align
-  add_subgroup.zsmul_mem_zmultiples_iff_exists_sub_div AddSubgroup.zsmul_mem_zmultiples_iff_exists_sub_div
+#align add_subgroup.zsmul_mem_zmultiples_iff_exists_sub_div AddSubgroup.zsmul_mem_zmultiples_iff_exists_sub_div
 
 theorem nsmul_mem_zmultiples_iff_exists_sub_div {r : R} {n : ℕ} (hn : n ≠ 0) :
     n • r ∈ AddSubgroup.zmultiples p ↔
@@ -49,8 +48,7 @@ theorem nsmul_mem_zmultiples_iff_exists_sub_div {r : R} {n : ℕ} (hn : n ≠ 0)
   simp_rw [← coe_nat_zsmul r, zsmul_mem_zmultiples_iff_exists_sub_div (int.coe_nat_ne_zero.mpr hn),
     Int.cast_ofNat]
   rfl
-#align
-  add_subgroup.nsmul_mem_zmultiples_iff_exists_sub_div AddSubgroup.nsmul_mem_zmultiples_iff_exists_sub_div
+#align add_subgroup.nsmul_mem_zmultiples_iff_exists_sub_div AddSubgroup.nsmul_mem_zmultiples_iff_exists_sub_div
 
 end AddSubgroup
 
@@ -65,8 +63,7 @@ theorem zmultiples_zsmul_eq_zsmul_iff {ψ θ : R ⧸ AddSubgroup.zmultiples p} {
   simp only [this]
   simp_rw [← coe_zsmul, ← coe_nsmul, ← coe_add, quotientAddGroup.eq_iff_sub_mem, ← smul_sub, ←
     sub_sub, AddSubgroup.zsmul_mem_zmultiples_iff_exists_sub_div hz]
-#align
-  quotient_add_group.zmultiples_zsmul_eq_zsmul_iff quotientAddGroup.zmultiples_zsmul_eq_zsmul_iff
+#align quotient_add_group.zmultiples_zsmul_eq_zsmul_iff quotientAddGroup.zmultiples_zsmul_eq_zsmul_iff
 
 theorem zmultiples_nsmul_eq_nsmul_iff {ψ θ : R ⧸ AddSubgroup.zmultiples p} {n : ℕ} (hz : n ≠ 0) :
     n • ψ = n • θ ↔ ∃ k : Fin n, ψ = θ + (k : ℕ) • (p / n : R) :=
@@ -74,8 +71,7 @@ theorem zmultiples_nsmul_eq_nsmul_iff {ψ θ : R ⧸ AddSubgroup.zmultiples p} {
   simp_rw [← coe_nat_zsmul ψ, ← coe_nat_zsmul θ,
     zmultiples_zsmul_eq_zsmul_iff (int.coe_nat_ne_zero.mpr hz), Int.cast_ofNat]
   rfl
-#align
-  quotient_add_group.zmultiples_nsmul_eq_nsmul_iff quotientAddGroup.zmultiples_nsmul_eq_nsmul_iff
+#align quotient_add_group.zmultiples_nsmul_eq_nsmul_iff quotientAddGroup.zmultiples_nsmul_eq_nsmul_iff
 
 end quotientAddGroup
 

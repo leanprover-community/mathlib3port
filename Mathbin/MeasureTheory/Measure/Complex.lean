@@ -75,27 +75,23 @@ def MeasureTheory.SignedMeasure.toComplexMeasure (s t : SignedMeasure α) : Comp
 theorem MeasureTheory.SignedMeasure.to_complex_measure_apply {s t : SignedMeasure α} {i : Set α} :
     s.toComplexMeasure t i = ⟨s i, t i⟩ :=
   rfl
-#align
-  measure_theory.signed_measure.to_complex_measure_apply MeasureTheory.SignedMeasure.to_complex_measure_apply
+#align measure_theory.signed_measure.to_complex_measure_apply MeasureTheory.SignedMeasure.to_complex_measure_apply
 
 theorem to_complex_measure_to_signed_measure (c : ComplexMeasure α) :
     c.re.toComplexMeasure c.im = c := by ext (i hi) <;> rfl
-#align
-  measure_theory.complex_measure.to_complex_measure_to_signed_measure MeasureTheory.ComplexMeasure.to_complex_measure_to_signed_measure
+#align measure_theory.complex_measure.to_complex_measure_to_signed_measure MeasureTheory.ComplexMeasure.to_complex_measure_to_signed_measure
 
 theorem MeasureTheory.SignedMeasure.re_to_complex_measure (s t : SignedMeasure α) :
     (s.toComplexMeasure t).re = s := by
   ext (i hi)
   rfl
-#align
-  measure_theory.signed_measure.re_to_complex_measure MeasureTheory.SignedMeasure.re_to_complex_measure
+#align measure_theory.signed_measure.re_to_complex_measure MeasureTheory.SignedMeasure.re_to_complex_measure
 
 theorem MeasureTheory.SignedMeasure.im_to_complex_measure (s t : SignedMeasure α) :
     (s.toComplexMeasure t).im = t := by
   ext (i hi)
   rfl
-#align
-  measure_theory.signed_measure.im_to_complex_measure MeasureTheory.SignedMeasure.im_to_complex_measure
+#align measure_theory.signed_measure.im_to_complex_measure MeasureTheory.SignedMeasure.im_to_complex_measure
 
 /-- The complex measures form an equivalence to the type of pairs of signed measures. -/
 @[simps]
@@ -106,8 +102,7 @@ def equivSignedMeasure : ComplexMeasure α ≃ SignedMeasure α × SignedMeasure
   left_inv c := c.to_complex_measure_to_signed_measure
   right_inv := fun ⟨s, t⟩ =>
     Prod.mk.inj_iff.2 ⟨s.re_to_complex_measure t, s.im_to_complex_measure t⟩
-#align
-  measure_theory.complex_measure.equiv_signed_measure MeasureTheory.ComplexMeasure.equivSignedMeasure
+#align measure_theory.complex_measure.equiv_signed_measure MeasureTheory.ComplexMeasure.equivSignedMeasure
 
 section
 
@@ -127,8 +122,7 @@ def equivSignedMeasureₗ : ComplexMeasure α ≃ₗ[R] SignedMeasure α × Sign
       · ext (i hi)
         change (r • c i).im = r • (c i).im
         simp [Complex.smul_im] }
-#align
-  measure_theory.complex_measure.equiv_signed_measureₗ MeasureTheory.ComplexMeasure.equivSignedMeasureₗ
+#align measure_theory.complex_measure.equiv_signed_measureₗ MeasureTheory.ComplexMeasure.equivSignedMeasureₗ
 
 end
 
@@ -142,8 +136,7 @@ theorem absolutely_continuous_ennreal_iff (c : ComplexMeasure α) (μ : VectorMe
   · intro i hi
     rw [← Complex.re_add_im (c i), (_ : (c i).re = 0), (_ : (c i).im = 0)]
     exacts[by simp, h.2 hi, h.1 hi]
-#align
-  measure_theory.complex_measure.absolutely_continuous_ennreal_iff MeasureTheory.ComplexMeasure.absolutely_continuous_ennreal_iff
+#align measure_theory.complex_measure.absolutely_continuous_ennreal_iff MeasureTheory.ComplexMeasure.absolutely_continuous_ennreal_iff
 
 end ComplexMeasure
 

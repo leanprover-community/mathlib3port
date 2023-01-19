@@ -918,8 +918,7 @@ theorem nontrivial_of_non_zero_divisors [Nontrivial R] (hS : S ≤ R⁰) : Nontr
   ⟨⟨0, 1, fun h => by
       rw [OreLocalization.one_def, OreLocalization.zero_def] at h
       apply nonZeroDivisors.coe_ne_zero 1 (numerator_hom_inj hS h).symm⟩⟩
-#align
-  ore_localization.nontrivial_of_non_zero_divisors OreLocalization.nontrivial_of_non_zero_divisors
+#align ore_localization.nontrivial_of_non_zero_divisors OreLocalization.nontrivial_of_non_zero_divisors
 
 end Ring
 

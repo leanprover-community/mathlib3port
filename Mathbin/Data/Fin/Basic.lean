@@ -263,7 +263,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align fin.coe_eq_val [anonymous]ₓ'. -/
 theorem [anonymous] (a : Fin n) : (a : ℕ) = a.val :=
   rfl
-#align fin.coe_eq_val[anonymous]
+#align fin.coe_eq_val [anonymous]
 
 /- warning: fin.val_eq_coe clashes with [anonymous] -> [anonymous]
 warning: fin.val_eq_coe -> [anonymous] is a dubious translation:
@@ -275,7 +275,7 @@ Case conversion may be inaccurate. Consider using '#align fin.val_eq_coe [anonym
 @[simp]
 theorem [anonymous] (a : Fin n) : a.val = a :=
   rfl
-#align fin.val_eq_coe[anonymous]
+#align fin.val_eq_coe [anonymous]
 
 #print Fin.heq_fun_iff /-
 /-- Assume `k = l`. If two functions defined on `fin k` and `fin l` are equal on each element,

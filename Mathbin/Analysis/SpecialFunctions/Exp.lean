@@ -448,8 +448,7 @@ theorem tendsto_exp_comap_re_at_bot : Tendsto exp (comap re atBot) (𝓝 0) :=
 
 theorem tendsto_exp_comap_re_at_bot_nhds_within : Tendsto exp (comap re atBot) (𝓝[≠] 0) :=
   comap_exp_nhds_within_zero ▸ tendsto_comap
-#align
-  complex.tendsto_exp_comap_re_at_bot_nhds_within Complex.tendsto_exp_comap_re_at_bot_nhds_within
+#align complex.tendsto_exp_comap_re_at_bot_nhds_within Complex.tendsto_exp_comap_re_at_bot_nhds_within
 
 end Complex
 

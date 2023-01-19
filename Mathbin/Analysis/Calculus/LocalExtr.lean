@@ -404,8 +404,7 @@ theorem card_roots_to_finset_le_card_roots_derivative_diff_roots_succ (p : ℝ[X
     exists_deriv_eq_zero (fun x : ℝ => eval x p) hxy p.continuous_on (hx.trans hy.symm)
   refine' ⟨z, _, hz1⟩
   rwa [Multiset.mem_toFinset, mem_roots hp', is_root, ← p.deriv]
-#align
-  polynomial.card_roots_to_finset_le_card_roots_derivative_diff_roots_succ Polynomial.card_roots_to_finset_le_card_roots_derivative_diff_roots_succ
+#align polynomial.card_roots_to_finset_le_card_roots_derivative_diff_roots_succ Polynomial.card_roots_to_finset_le_card_roots_derivative_diff_roots_succ
 
 /-- The number of roots of a real polynomial is at most the number of roots of its derivative plus
 one. -/

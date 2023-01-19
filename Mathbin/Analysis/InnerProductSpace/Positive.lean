@@ -59,19 +59,16 @@ def IsPositive (T : E →L[𝕜] E) : Prop :=
 
 theorem IsPositive.is_self_adjoint {T : E →L[𝕜] E} (hT : IsPositive T) : IsSelfAdjoint T :=
   hT.1
-#align
-  continuous_linear_map.is_positive.is_self_adjoint ContinuousLinearMap.IsPositive.is_self_adjoint
+#align continuous_linear_map.is_positive.is_self_adjoint ContinuousLinearMap.IsPositive.is_self_adjoint
 
 theorem IsPositive.inner_nonneg_left {T : E →L[𝕜] E} (hT : IsPositive T) (x : E) :
     0 ≤ re ⟪T x, x⟫ :=
   hT.2 x
-#align
-  continuous_linear_map.is_positive.inner_nonneg_left ContinuousLinearMap.IsPositive.inner_nonneg_left
+#align continuous_linear_map.is_positive.inner_nonneg_left ContinuousLinearMap.IsPositive.inner_nonneg_left
 
 theorem IsPositive.inner_nonneg_right {T : E →L[𝕜] E} (hT : IsPositive T) (x : E) :
     0 ≤ re ⟪x, T x⟫ := by rw [inner_re_symm] <;> exact hT.inner_nonneg_left x
-#align
-  continuous_linear_map.is_positive.inner_nonneg_right ContinuousLinearMap.IsPositive.inner_nonneg_right
+#align continuous_linear_map.is_positive.inner_nonneg_right ContinuousLinearMap.IsPositive.inner_nonneg_right
 
 theorem isPositiveZero : IsPositive (0 : E →L[𝕜] E) :=
   by
@@ -113,16 +110,14 @@ theorem IsPositive.conjOrthogonalProjection (U : Submodule 𝕜 E) {T : E →L[�
   by
   have := hT.conj_adjoint (U.subtypeL ∘L orthogonalProjection U)
   rwa [(orthogonal_projection_is_self_adjoint U).adjoint_eq] at this
-#align
-  continuous_linear_map.is_positive.conj_orthogonal_projection ContinuousLinearMap.IsPositive.conjOrthogonalProjection
+#align continuous_linear_map.is_positive.conj_orthogonal_projection ContinuousLinearMap.IsPositive.conjOrthogonalProjection
 
 theorem IsPositive.orthogonalProjectionComp {T : E →L[𝕜] E} (hT : T.IsPositive) (U : Submodule 𝕜 E)
     [CompleteSpace U] : (orthogonalProjection U ∘L T ∘L U.subtypeL).IsPositive :=
   by
   have := hT.conj_adjoint (orthogonalProjection U : E →L[𝕜] U)
   rwa [U.adjoint_orthogonal_projection] at this
-#align
-  continuous_linear_map.is_positive.orthogonal_projection_comp ContinuousLinearMap.IsPositive.orthogonalProjectionComp
+#align continuous_linear_map.is_positive.orthogonal_projection_comp ContinuousLinearMap.IsPositive.orthogonalProjectionComp
 
 section Complex
 

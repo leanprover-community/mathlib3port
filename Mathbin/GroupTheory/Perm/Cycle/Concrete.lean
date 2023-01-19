@@ -247,8 +247,7 @@ theorem to_list_ne_singleton (y : α) : toList p x ≠ [y] :=
 
 theorem two_le_length_to_list_iff_mem_support {p : Perm α} {x : α} :
     2 ≤ length (toList p x) ↔ x ∈ p.Support := by simp
-#align
-  equiv.perm.two_le_length_to_list_iff_mem_support Equiv.Perm.two_le_length_to_list_iff_mem_support
+#align equiv.perm.two_le_length_to_list_iff_mem_support Equiv.Perm.two_le_length_to_list_iff_mem_support
 
 theorem length_to_list_pos_of_mem_support (h : x ∈ p.Support) : 0 < length (toList p x) :=
   zero_lt_two.trans_le (two_le_length_to_list_iff_mem_support.mpr h)
@@ -350,8 +349,7 @@ theorem pow_apply_mem_to_list_iff_mem_support {n : ℕ} : (p ^ n) x ∈ p.toList
   rw [mem_to_list_iff, and_iff_right_iff_imp]
   refine' fun _ => same_cycle.symm _
   rw [same_cycle_pow_left]
-#align
-  equiv.perm.pow_apply_mem_to_list_iff_mem_support Equiv.Perm.pow_apply_mem_to_list_iff_mem_support
+#align equiv.perm.pow_apply_mem_to_list_iff_mem_support Equiv.Perm.pow_apply_mem_to_list_iff_mem_support
 
 theorem to_list_form_perm_nil (x : α) : toList (formPerm ([] : List α)) x = [] := by simp
 #align equiv.perm.to_list_form_perm_nil Equiv.Perm.to_list_form_perm_nil
@@ -500,8 +498,7 @@ theorem IsCycle.exists_unique_cycle_subtype {f : Perm α} (hf : IsCycle f) :
   refine' ⟨⟨s, hs⟩, rfl, _⟩
   rintro ⟨t, ht⟩ ht'
   simpa using hs' _ ⟨ht, ht'⟩
-#align
-  equiv.perm.is_cycle.exists_unique_cycle_subtype Equiv.Perm.IsCycle.exists_unique_cycle_subtype
+#align equiv.perm.is_cycle.exists_unique_cycle_subtype Equiv.Perm.IsCycle.exists_unique_cycle_subtype
 
 theorem IsCycle.exists_unique_cycle_nontrivial_subtype {f : Perm α} (hf : IsCycle f) :
     ∃! s : { s : Cycle α // s.Nodup ∧ s.Nontrivial }, (s : Cycle α).formPerm s.Prop.left = f :=
@@ -516,8 +513,7 @@ theorem IsCycle.exists_unique_cycle_nontrivial_subtype {f : Perm α} (hf : IsCyc
   · simpa using hs
   · rintro ⟨t, ht, ht'⟩ ht''
     simpa using hs' ⟨t, ht⟩ ht''
-#align
-  equiv.perm.is_cycle.exists_unique_cycle_nontrivial_subtype Equiv.Perm.IsCycle.exists_unique_cycle_nontrivial_subtype
+#align equiv.perm.is_cycle.exists_unique_cycle_nontrivial_subtype Equiv.Perm.IsCycle.exists_unique_cycle_nontrivial_subtype
 
 end Finite
 

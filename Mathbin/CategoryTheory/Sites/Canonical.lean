@@ -193,8 +193,7 @@ def finestTopology (Ps : Set (Cᵒᵖ ⥤ Type v)) : GrothendieckTopology C :=
 theorem sheaf_for_finest_topology (Ps : Set (Cᵒᵖ ⥤ Type v)) (h : P ∈ Ps) :
     Presieve.IsSheaf (finestTopology Ps) P := fun X S hS => by
   simpa using hS _ ⟨⟨_, _, ⟨_, h, rfl⟩, rfl⟩, rfl⟩ _ (𝟙 _)
-#align
-  category_theory.sheaf.sheaf_for_finest_topology CategoryTheory.Sheaf.sheaf_for_finest_topology
+#align category_theory.sheaf.sheaf_for_finest_topology CategoryTheory.Sheaf.sheaf_for_finest_topology
 
 /--
 Check that if each `P ∈ Ps` is a sheaf for `J`, then `J` is a subtopology of `finest_topology Ps`.
@@ -226,8 +225,7 @@ theorem is_sheaf_yoneda_obj (X : C) : Presieve.IsSheaf (canonicalTopology C) (yo
 theorem is_sheaf_of_representable (P : Cᵒᵖ ⥤ Type v) [P.Representable] :
     Presieve.IsSheaf (canonicalTopology C) P :=
   Presieve.is_sheaf_iso (canonicalTopology C) P.reprW (is_sheaf_yoneda_obj _)
-#align
-  category_theory.sheaf.is_sheaf_of_representable CategoryTheory.Sheaf.is_sheaf_of_representable
+#align category_theory.sheaf.is_sheaf_of_representable CategoryTheory.Sheaf.is_sheaf_of_representable
 
 /-- A subcanonical topology is a topology which is smaller than the canonical topology.
 Equivalently, a topology is subcanonical iff every representable is a sheaf.
@@ -245,15 +243,13 @@ theorem of_yoneda_is_sheaf (J : GrothendieckTopology C)
     (by
       rintro P ⟨X, rfl⟩
       apply h)
-#align
-  category_theory.sheaf.subcanonical.of_yoneda_is_sheaf CategoryTheory.Sheaf.Subcanonical.of_yoneda_is_sheaf
+#align category_theory.sheaf.subcanonical.of_yoneda_is_sheaf CategoryTheory.Sheaf.Subcanonical.of_yoneda_is_sheaf
 
 /-- If `J` is subcanonical, then any representable is a `J`-sheaf. -/
 theorem is_sheaf_of_representable {J : GrothendieckTopology C} (hJ : Subcanonical J)
     (P : Cᵒᵖ ⥤ Type v) [P.Representable] : Presieve.IsSheaf J P :=
   Presieve.is_sheaf_of_le _ hJ (is_sheaf_of_representable P)
-#align
-  category_theory.sheaf.subcanonical.is_sheaf_of_representable CategoryTheory.Sheaf.Subcanonical.is_sheaf_of_representable
+#align category_theory.sheaf.subcanonical.is_sheaf_of_representable CategoryTheory.Sheaf.Subcanonical.is_sheaf_of_representable
 
 end Subcanonical
 

@@ -255,7 +255,7 @@ Case conversion may be inaccurate. Consider using '#align subsemigroup.coe_cente
 @[to_additive]
 theorem [anonymous] : ↑(center M) = Set.center M :=
   rfl
-#align subsemigroup.coe_center[anonymous]
+#align subsemigroup.coe_center [anonymous]
 
 variable {M}
 

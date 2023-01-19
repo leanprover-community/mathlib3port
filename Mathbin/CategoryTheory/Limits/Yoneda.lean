@@ -58,8 +58,7 @@ def colimitCoconeIsColimit (X : Cᵒᵖ) : IsColimit (colimitCocone X)
     ext ⟨⟩
     rw [← w]
     simp
-#align
-  category_theory.coyoneda.colimit_cocone_is_colimit CategoryTheory.coyoneda.colimitCoconeIsColimit
+#align category_theory.coyoneda.colimit_cocone_is_colimit CategoryTheory.coyoneda.colimitCoconeIsColimit
 
 instance (X : Cᵒᵖ) : HasColimit (coyoneda.obj X) :=
   HasColimit.mk
@@ -169,8 +168,7 @@ instance coyonedaFunctorPreservesLimits : PreservesLimits (@coyoneda D _) :=
   intro K
   change preserves_limits (yoneda.obj K)
   infer_instance
-#align
-  category_theory.coyoneda_functor_preserves_limits CategoryTheory.coyonedaFunctorPreservesLimits
+#align category_theory.coyoneda_functor_preserves_limits CategoryTheory.coyonedaFunctorPreservesLimits
 
 instance yonedaFunctorReflectsLimits : ReflectsLimits (@yoneda D _) :=
   Limits.fullyFaithfulReflectsLimits _

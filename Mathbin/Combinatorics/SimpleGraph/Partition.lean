@@ -104,8 +104,7 @@ theorem part_of_vertex_ne_of_adj {v w : V} (h : G.Adj v w) : P.partOfVertex v ‚â
   have hw := P.mem_part_of_vertex w
   rw [‚Üê hn] at hw
   exact P.independent _ (P.part_of_vertex_mem v) (P.mem_part_of_vertex v) hw (G.ne_of_adj h) h
-#align
-  simple_graph.partition.part_of_vertex_ne_of_adj SimpleGraph.Partition.part_of_vertex_ne_of_adj
+#align simple_graph.partition.part_of_vertex_ne_of_adj SimpleGraph.Partition.part_of_vertex_ne_of_adj
 
 /-- Create a coloring using the parts themselves as the colors.
 Each vertex is colored by the part it's contained in. -/

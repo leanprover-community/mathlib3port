@@ -267,7 +267,7 @@ theorem quadratic_char_card_sqrts (hF : ringChar F ≠ 2) (a : F) :
   by_cases h₀ : a = 0
   ·
     simp only [h₀, pow_eq_zero_iff, Nat.succ_pos', Int.ofNat_succ, Int.ofNat_zero, MulChar.map_zero,
-      Set.setOf_eq_eq_singleton, Set.to_finset_card, Set.card_singleton]
+      Set.setOf_eq_eq_singleton, Set.toFinset_card, Set.card_singleton]
   · set s := { x : F | x ^ 2 = a }.toFinset with hs
     by_cases h : IsSquare a
     · rw [(quadratic_char_one_iff_is_square h₀).mpr h]
@@ -287,7 +287,7 @@ theorem quadratic_char_card_sqrts (hF : ringChar F ≠ 2) (a : F) :
       rw [h₁, List.toFinset_cons, List.toFinset_cons, List.toFinset_nil]
       exact Finset.card_doubleton (Ne.symm (mt (Ring.eq_self_iff_eq_zero_of_char_ne_two hF).mp h₀))
     · rw [quadratic_char_neg_one_iff_not_is_square.mpr h]
-      simp only [Int.coe_nat_eq_zero, Finset.card_eq_zero, Set.to_finset_card,
+      simp only [Int.coe_nat_eq_zero, Finset.card_eq_zero, Set.toFinset_card,
         Fintype.card_of_finset, Set.mem_setOf_eq, add_left_neg]
       ext x
       simp only [iff_false_iff, Finset.mem_filter, Finset.mem_univ, true_and_iff,

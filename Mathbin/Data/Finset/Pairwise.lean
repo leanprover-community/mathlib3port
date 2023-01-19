@@ -118,8 +118,7 @@ theorem pairwise_disjoint_of_coe_toFinset_pairwiseDisjoint {α ι} [SemilatticeI
     [DecidableEq ι] {l : List ι} {f : ι → α} (hl : (l.toFinset : Set ι).PairwiseDisjoint f)
     (hn : l.Nodup) : l.Pairwise (_root_.disjoint on f) :=
   pairwise_of_coe_toFinset_pairwise hl hn
-#align
-  list.pairwise_disjoint_of_coe_to_finset_pairwise_disjoint List.pairwise_disjoint_of_coe_toFinset_pairwiseDisjoint
+#align list.pairwise_disjoint_of_coe_to_finset_pairwise_disjoint List.pairwise_disjoint_of_coe_toFinset_pairwiseDisjoint
 
 /- warning: list.pairwise_disjoint_iff_coe_to_finset_pairwise_disjoint -> List.pairwiseDisjoint_iff_coe_toFinset_pairwise_disjoint is a dubious translation:
 lean 3 declaration is
@@ -131,8 +130,7 @@ theorem pairwiseDisjoint_iff_coe_toFinset_pairwise_disjoint {α ι} [Semilattice
     [DecidableEq ι] {l : List ι} {f : ι → α} (hn : l.Nodup) :
     (l.toFinset : Set ι).PairwiseDisjoint f ↔ l.Pairwise (_root_.disjoint on f) :=
   pairwise_iff_coe_toFinset_pairwise hn (symmetric_disjoint.comap f)
-#align
-  list.pairwise_disjoint_iff_coe_to_finset_pairwise_disjoint List.pairwiseDisjoint_iff_coe_toFinset_pairwise_disjoint
+#align list.pairwise_disjoint_iff_coe_to_finset_pairwise_disjoint List.pairwiseDisjoint_iff_coe_toFinset_pairwise_disjoint
 
 end List
 

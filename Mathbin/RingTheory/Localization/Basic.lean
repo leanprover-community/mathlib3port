@@ -161,8 +161,7 @@ theorem to_localization_map_to_map : (toLocalizationMap M S).toMap = (algebraMap
 
 theorem to_localization_map_to_map_apply (x) : (toLocalizationMap M S).toMap x = algebraMap R S x :=
   rfl
-#align
-  is_localization.to_localization_map_to_map_apply IsLocalization.to_localization_map_to_map_apply
+#align is_localization.to_localization_map_to_map_apply IsLocalization.to_localization_map_to_map_apply
 
 end
 
@@ -674,8 +673,7 @@ theorem ring_equiv_of_ring_equiv_eq_map {j : R ≃+* P} (H : M.map j.toMonoidHom
     (ringEquivOfRingEquiv S Q j H : S →+* Q) =
       map Q (j : R →+* P) (M.le_comap_of_map_le (le_of_eq H)) :=
   rfl
-#align
-  is_localization.ring_equiv_of_ring_equiv_eq_map IsLocalization.ring_equiv_of_ring_equiv_eq_map
+#align is_localization.ring_equiv_of_ring_equiv_eq_map IsLocalization.ring_equiv_of_ring_equiv_eq_map
 
 @[simp]
 theorem ring_equiv_of_ring_equiv_eq {j : R ≃+* P} (H : M.map j.toMonoidHom = T) (x) :
@@ -747,15 +745,13 @@ theorem is_localization_of_alg_equiv [Algebra R P] [IsLocalization M S] (h : S �
 theorem is_localization_iff_of_alg_equiv [Algebra R P] (h : S ≃ₐ[R] P) :
     IsLocalization M S ↔ IsLocalization M P :=
   ⟨fun _ => is_localization_of_alg_equiv M h, fun _ => is_localization_of_alg_equiv M h.symm⟩
-#align
-  is_localization.is_localization_iff_of_alg_equiv IsLocalization.is_localization_iff_of_alg_equiv
+#align is_localization.is_localization_iff_of_alg_equiv IsLocalization.is_localization_iff_of_alg_equiv
 
 theorem is_localization_iff_of_ring_equiv (h : S ≃+* P) :
     IsLocalization M S ↔ @IsLocalization _ M P _ (h.toRingHom.comp <| algebraMap R S).toAlgebra :=
   letI := (h.to_ring_hom.comp <| algebraMap R S).toAlgebra
   is_localization_iff_of_alg_equiv M { h with commutes' := fun _ => rfl }
-#align
-  is_localization.is_localization_iff_of_ring_equiv IsLocalization.is_localization_iff_of_ring_equiv
+#align is_localization.is_localization_iff_of_ring_equiv IsLocalization.is_localization_iff_of_ring_equiv
 
 variable (S)
 
@@ -781,8 +777,7 @@ theorem is_localization_of_base_ring_equiv [IsLocalization M S] (h : R ≃+* P) 
     simp only [RingEquiv.apply_symm_apply, RingEquiv.map_mul]
     exact
       ⟨fun ⟨c, e⟩ => ⟨⟨_, _, c.Prop, rfl⟩, e⟩, fun ⟨⟨_, c, h, e₁⟩, e₂⟩ => ⟨⟨_, h⟩, e₁.symm ▸ e₂⟩⟩
-#align
-  is_localization.is_localization_of_base_ring_equiv IsLocalization.is_localization_of_base_ring_equiv
+#align is_localization.is_localization_of_base_ring_equiv IsLocalization.is_localization_of_base_ring_equiv
 
 theorem is_localization_iff_of_base_ring_equiv (h : R ≃+* P) :
     IsLocalization M S ↔
@@ -800,8 +795,7 @@ theorem is_localization_iff_of_base_ring_equiv (h : R ≃+* P) :
   apply Algebra.algebra_ext
   intro r
   rw [RingHom.algebra_map_to_algebra]
-#align
-  is_localization.is_localization_iff_of_base_ring_equiv IsLocalization.is_localization_iff_of_base_ring_equiv
+#align is_localization.is_localization_iff_of_base_ring_equiv IsLocalization.is_localization_iff_of_base_ring_equiv
 
 end
 
@@ -1189,8 +1183,7 @@ protected theorem to_map_ne_zero_of_mem_non_zero_divisors [Nontrivial R]
     (hM : M ≤ nonZeroDivisors R) {x : R} (hx : x ∈ nonZeroDivisors R) : algebraMap R S x ≠ 0 :=
   show (algebraMap R S).toMonoidWithZeroHom x ≠ 0 from
     map_ne_zero_of_mem_non_zero_divisors (algebraMap R S) (IsLocalization.injective S hM) hx
-#align
-  is_localization.to_map_ne_zero_of_mem_non_zero_divisors IsLocalization.to_map_ne_zero_of_mem_non_zero_divisors
+#align is_localization.to_map_ne_zero_of_mem_non_zero_divisors IsLocalization.to_map_ne_zero_of_mem_non_zero_divisors
 
 variable {S}
 
@@ -1250,8 +1243,7 @@ theorem no_zero_divisors_of_le_non_zero_divisors [Algebra A S] {M : Submonoid A}
       cases' eq_zero_or_eq_zero_of_mul_eq_zero ((to_map_eq_zero_iff S hM).mp this.symm) with H H
       · exact Or.inl (eq_zero_of_fst_eq_zero hx H)
       · exact Or.inr (eq_zero_of_fst_eq_zero hy H) }
-#align
-  is_localization.no_zero_divisors_of_le_non_zero_divisors IsLocalization.no_zero_divisors_of_le_non_zero_divisors
+#align is_localization.no_zero_divisors_of_le_non_zero_divisors IsLocalization.no_zero_divisors_of_le_non_zero_divisors
 
 /-- A `comm_ring` `S` which is the localization of an integral domain `R` at a subset of
 non-zero elements is an integral domain.
@@ -1266,8 +1258,7 @@ theorem is_domain_of_le_non_zero_divisors [Algebra A S] {M : Submonoid A} [IsLoc
       ⟨⟨(algebraMap A S) 0, (algebraMap A S) 1, fun h =>
           zero_ne_one (IsLocalization.injective S hM h)⟩⟩
   · exact no_zero_divisors_of_le_non_zero_divisors _ hM
-#align
-  is_localization.is_domain_of_le_non_zero_divisors IsLocalization.is_domain_of_le_non_zero_divisors
+#align is_localization.is_domain_of_le_non_zero_divisors IsLocalization.is_domain_of_le_non_zero_divisors
 
 variable {A}
 

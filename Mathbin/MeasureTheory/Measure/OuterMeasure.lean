@@ -105,8 +105,7 @@ theorem mono_null (m : OuterMeasure α) {s t} (h : s ⊆ t) (ht : m t = 0) : m s
 theorem pos_of_subset_ne_zero (m : OuterMeasure α) {a b : Set α} (hs : a ⊆ b) (hnz : m a ≠ 0) :
     0 < m b :=
   lt_of_lt_of_le (pos_iff_ne_zero.mpr hnz) (m.mono hs)
-#align
-  measure_theory.outer_measure.pos_of_subset_ne_zero MeasureTheory.OuterMeasure.pos_of_subset_ne_zero
+#align measure_theory.outer_measure.pos_of_subset_ne_zero MeasureTheory.OuterMeasure.pos_of_subset_ne_zero
 
 protected theorem Union (m : OuterMeasure α) {β} [Countable β] (s : β → Set α) :
     m (⋃ i, s i) ≤ ∑' i, m (s i) :=
@@ -162,8 +161,7 @@ theorem null_of_locally_null [TopologicalSpace α] [SecondCountableTopology α] 
     TopologicalSpace.countable_cover_nhds_within hxu
   apply m.mono_null ht
   exact (m.bUnion_null_iff t_count).2 fun x hx => hu₀ x (ts hx)
-#align
-  measure_theory.outer_measure.null_of_locally_null MeasureTheory.OuterMeasure.null_of_locally_null
+#align measure_theory.outer_measure.null_of_locally_null MeasureTheory.OuterMeasure.null_of_locally_null
 
 /-- If `m s ≠ 0`, then for some point `x ∈ s` and any `t ∈ 𝓝[s] x` we have `0 < m t`. -/
 theorem exists_mem_forall_mem_nhds_within_pos [TopologicalSpace α] [SecondCountableTopology α]
@@ -172,8 +170,7 @@ theorem exists_mem_forall_mem_nhds_within_pos [TopologicalSpace α] [SecondCount
   contrapose! hs
   simp only [nonpos_iff_eq_zero, ← exists_prop] at hs
   exact m.null_of_locally_null s hs
-#align
-  measure_theory.outer_measure.exists_mem_forall_mem_nhds_within_pos MeasureTheory.OuterMeasure.exists_mem_forall_mem_nhds_within_pos
+#align measure_theory.outer_measure.exists_mem_forall_mem_nhds_within_pos MeasureTheory.OuterMeasure.exists_mem_forall_mem_nhds_within_pos
 
 /-- If `s : ι → set α` is a sequence of sets, `S = ⋃ n, s n`, and `m (S \ s n)` tends to zero along
 some nontrivial filter (usually `at_top` on `ι = ℕ`), then `m S = ⨆ n, m (s n)`. -/
@@ -193,8 +190,7 @@ theorem Union_of_tendsto_zero {ι} (m : OuterMeasure α) {s : ι → Set α} (l 
   have B : tendsto (fun k => M + m (S \ s k)) l (𝓝 (M + 0)) := tendsto_const_nhds.add h0
   rw [add_zero] at B
   exact ge_of_tendsto' B A
-#align
-  measure_theory.outer_measure.Union_of_tendsto_zero MeasureTheory.OuterMeasure.Union_of_tendsto_zero
+#align measure_theory.outer_measure.Union_of_tendsto_zero MeasureTheory.OuterMeasure.Union_of_tendsto_zero
 
 /-- If `s : ℕ → set α` is a monotone sequence of sets such that `∑' k, m (s (k + 1) \ s k) ≠ ∞`,
 then `m (⋃ n, s n) = ⨆ n, m (s n)`. -/
@@ -217,8 +213,7 @@ theorem Union_nat_of_monotone_of_tsum_ne_top (m : OuterMeasure α) {s : ℕ → 
   refine' Or.inr (mem_Union.2 ⟨j - (n + 1), _, hlt _ _⟩)
   · rwa [this]
   · rw [← Nat.succ_le_iff, Nat.succ_eq_add_one, this]
-#align
-  measure_theory.outer_measure.Union_nat_of_monotone_of_tsum_ne_top MeasureTheory.OuterMeasure.Union_nat_of_monotone_of_tsum_ne_top
+#align measure_theory.outer_measure.Union_nat_of_monotone_of_tsum_ne_top MeasureTheory.OuterMeasure.Union_nat_of_monotone_of_tsum_ne_top
 
 theorem le_inter_add_diff {m : OuterMeasure α} {t : Set α} (s : Set α) :
     m t ≤ m (t ∩ s) + m (t \ s) := by
@@ -345,8 +340,7 @@ instance addCommMonoid : AddCommMonoid (OuterMeasure α) :=
 @[simps]
 def coeFnAddMonoidHom : OuterMeasure α →+ Set α → ℝ≥0∞ :=
   ⟨coeFn, coe_zero, coe_add⟩
-#align
-  measure_theory.outer_measure.coe_fn_add_monoid_hom MeasureTheory.OuterMeasure.coeFnAddMonoidHom
+#align measure_theory.outer_measure.coe_fn_add_monoid_hom MeasureTheory.OuterMeasure.coeFnAddMonoidHom
 
 instance [Monoid R] [DistribMulAction R ℝ≥0∞] [IsScalarTower R ℝ≥0∞ ℝ≥0∞] :
     DistribMulAction R (OuterMeasure α) :=
@@ -369,14 +363,12 @@ instance OuterMeasure.partialOrder : PartialOrder (OuterMeasure α)
   le_refl a s := le_rfl
   le_trans a b c hab hbc s := le_trans (hab s) (hbc s)
   le_antisymm a b hab hba := ext fun s => le_antisymm (hab s) (hba s)
-#align
-  measure_theory.outer_measure.outer_measure.partial_order MeasureTheory.OuterMeasure.OuterMeasure.partialOrder
+#align measure_theory.outer_measure.outer_measure.partial_order MeasureTheory.OuterMeasure.OuterMeasure.partialOrder
 
 instance OuterMeasure.orderBot : OrderBot (OuterMeasure α) :=
   { OuterMeasure.hasBot with
     bot_le := fun a s => by simp only [coe_zero, Pi.zero_apply, coe_bot, zero_le] }
-#align
-  measure_theory.outer_measure.outer_measure.order_bot MeasureTheory.OuterMeasure.OuterMeasure.orderBot
+#align measure_theory.outer_measure.outer_measure.order_bot MeasureTheory.OuterMeasure.OuterMeasure.orderBot
 
 theorem univ_eq_zero_iff (m : OuterMeasure α) : m univ = 0 ↔ m = 0 :=
   ⟨fun h => bot_unique fun s => (m.mono' <| subset_univ s).trans_eq h, fun h => h.symm ▸ rfl⟩
@@ -606,14 +598,12 @@ theorem restrict_le_self (m : OuterMeasure α) (s : Set α) : restrict s m ≤ m
 theorem map_le_restrict_range {β} {ma : OuterMeasure α} {mb : OuterMeasure β} {f : α → β} :
     map f ma ≤ restrict (range f) mb ↔ map f ma ≤ mb :=
   ⟨fun h => h.trans (restrict_le_self _ _), fun h s => by simpa using h (s ∩ range f)⟩
-#align
-  measure_theory.outer_measure.map_le_restrict_range MeasureTheory.OuterMeasure.map_le_restrict_range
+#align measure_theory.outer_measure.map_le_restrict_range MeasureTheory.OuterMeasure.map_le_restrict_range
 
 theorem map_comap_of_surjective {β} {f : α → β} (hf : Surjective f) (m : OuterMeasure β) :
     map f (comap f m) = m :=
   ext fun s => by rw [map_apply, comap_apply, hf.image_preimage]
-#align
-  measure_theory.outer_measure.map_comap_of_surjective MeasureTheory.OuterMeasure.map_comap_of_surjective
+#align measure_theory.outer_measure.map_comap_of_surjective MeasureTheory.OuterMeasure.map_comap_of_surjective
 
 theorem le_comap_map {β} (f : α → β) (m : OuterMeasure α) : m ≤ comap f (map f m) := fun s =>
   m.mono <| subset_preimage_image _ _
@@ -646,8 +636,7 @@ theorem map_top (f : α → β) : map f ⊤ = restrict (range f) ⊤ :=
 
 theorem map_top_of_surjective (f : α → β) (hf : Surjective f) : map f ⊤ = ⊤ := by
   rw [map_top, hf.range_eq, restrict_univ]
-#align
-  measure_theory.outer_measure.map_top_of_surjective MeasureTheory.OuterMeasure.map_top_of_surjective
+#align measure_theory.outer_measure.map_top_of_surjective MeasureTheory.OuterMeasure.map_top_of_surjective
 
 end Basic
 
@@ -728,8 +717,7 @@ theorem le_of_function {μ : OuterMeasure α} :
 theorem is_greatest_of_function :
     IsGreatest { μ : OuterMeasure α | ∀ s, μ s ≤ m s } (OuterMeasure.ofFunction m m_empty) :=
   ⟨fun s => of_function_le _, fun μ => le_of_function.2⟩
-#align
-  measure_theory.outer_measure.is_greatest_of_function MeasureTheory.OuterMeasure.is_greatest_of_function
+#align measure_theory.outer_measure.is_greatest_of_function MeasureTheory.OuterMeasure.is_greatest_of_function
 
 theorem of_function_eq_Sup : OuterMeasure.ofFunction m m_empty = supₛ { μ | ∀ s, μ s ≤ m s } :=
   (@is_greatest_of_function α m m_empty).IsLub.Sup_eq.symm
@@ -777,8 +765,7 @@ theorem of_function_union_of_top_of_nonempty_inter {s t : Set α}
         Ennreal.summable Ennreal.summable
     _ ≤ ∑' i, m (f i) := Ennreal.tsum_le_tsum fun i => of_function_le _
     
-#align
-  measure_theory.outer_measure.of_function_union_of_top_of_nonempty_inter MeasureTheory.OuterMeasure.of_function_union_of_top_of_nonempty_inter
+#align measure_theory.outer_measure.of_function_union_of_top_of_nonempty_inter MeasureTheory.OuterMeasure.of_function_union_of_top_of_nonempty_inter
 
 theorem comap_of_function {β} (f : β → α) (h : Monotone m ∨ Surjective f) :
     comap f (OuterMeasure.ofFunction m m_empty) =
@@ -824,8 +811,7 @@ theorem restrict_of_function (s : Set α) (hm : Monotone m) :
   by
   simp only [restrict, LinearMap.comp_apply, comap_of_function _ (Or.inl hm),
     map_of_function Subtype.coe_injective, Subtype.image_preimage_coe]
-#align
-  measure_theory.outer_measure.restrict_of_function MeasureTheory.OuterMeasure.restrict_of_function
+#align measure_theory.outer_measure.restrict_of_function MeasureTheory.OuterMeasure.restrict_of_function
 
 theorem smul_of_function {c : ℝ≥0∞} (hc : c ≠ ∞) :
     c • OuterMeasure.ofFunction m m_empty = OuterMeasure.ofFunction (c • m) (by simp [m_empty]) :=
@@ -863,8 +849,7 @@ theorem bounded_by_eq_of_function (m_empty : m ∅ = 0) (s : Set α) :
     ext1 t
     cases' t.eq_empty_or_nonempty with h h <;> simp [h, not_nonempty_empty, m_empty]
   simp [bounded_by, this]
-#align
-  measure_theory.outer_measure.bounded_by_eq_of_function MeasureTheory.OuterMeasure.bounded_by_eq_of_function
+#align measure_theory.outer_measure.bounded_by_eq_of_function MeasureTheory.OuterMeasure.bounded_by_eq_of_function
 
 theorem bounded_by_apply (s : Set α) :
     boundedBy m s = ⨅ (t : ℕ → Set α) (h : s ⊆ unionᵢ t), ∑' n, ⨆ h : (t n).Nonempty, m (t n) := by
@@ -926,8 +911,7 @@ theorem bounded_by_union_of_top_of_nonempty_inter {s t : Set α}
     boundedBy m (s ∪ t) = boundedBy m s + boundedBy m t :=
   of_function_union_of_top_of_nonempty_inter fun u hs ht =>
     top_unique <| (h u hs ht).ge.trans <| le_supᵢ (fun h => m u) (hs.mono <| inter_subset_right s u)
-#align
-  measure_theory.outer_measure.bounded_by_union_of_top_of_nonempty_inter MeasureTheory.OuterMeasure.bounded_by_union_of_top_of_nonempty_inter
+#align measure_theory.outer_measure.bounded_by_union_of_top_of_nonempty_inter MeasureTheory.OuterMeasure.bounded_by_union_of_top_of_nonempty_inter
 
 end BoundedBy
 
@@ -952,24 +936,20 @@ def IsCaratheodory (s : Set α) : Prop :=
 theorem is_caratheodory_iff_le' {s : Set α} :
     is_caratheodory s ↔ ∀ t, m (t ∩ s) + m (t \ s) ≤ m t :=
   forall_congr' fun t => le_antisymm_iff.trans <| and_iff_right <| le_inter_add_diff _
-#align
-  measure_theory.outer_measure.is_caratheodory_iff_le' MeasureTheory.OuterMeasure.is_caratheodory_iff_le'
+#align measure_theory.outer_measure.is_caratheodory_iff_le' MeasureTheory.OuterMeasure.is_caratheodory_iff_le'
 
 @[simp]
 theorem is_caratheodory_empty : is_caratheodory ∅ := by simp [is_caratheodory, m.empty, diff_empty]
-#align
-  measure_theory.outer_measure.is_caratheodory_empty MeasureTheory.OuterMeasure.is_caratheodory_empty
+#align measure_theory.outer_measure.is_caratheodory_empty MeasureTheory.OuterMeasure.is_caratheodory_empty
 
 theorem is_caratheodory_compl : is_caratheodory s₁ → is_caratheodory (s₁ᶜ) := by
   simp [is_caratheodory, diff_eq, add_comm]
-#align
-  measure_theory.outer_measure.is_caratheodory_compl MeasureTheory.OuterMeasure.is_caratheodory_compl
+#align measure_theory.outer_measure.is_caratheodory_compl MeasureTheory.OuterMeasure.is_caratheodory_compl
 
 @[simp]
 theorem is_caratheodory_compl_iff : is_caratheodory (sᶜ) ↔ is_caratheodory s :=
   ⟨fun h => by simpa using is_caratheodory_compl m h, is_caratheodory_compl⟩
-#align
-  measure_theory.outer_measure.is_caratheodory_compl_iff MeasureTheory.OuterMeasure.is_caratheodory_compl_iff
+#align measure_theory.outer_measure.is_caratheodory_compl_iff MeasureTheory.OuterMeasure.is_caratheodory_compl_iff
 
 theorem is_caratheodory_union (h₁ : is_caratheodory s₁) (h₂ : is_caratheodory s₂) :
     is_caratheodory (s₁ ∪ s₂) := fun t =>
@@ -978,14 +958,12 @@ theorem is_caratheodory_union (h₁ : is_caratheodory s₁) (h₂ : is_caratheod
     Set.inter_assoc _ _ s₁, inter_eq_self_of_subset_right (Set.subset_union_left _ _),
     union_diff_left, h₂ (t ∩ s₁)]
   simp [diff_eq, add_assoc]
-#align
-  measure_theory.outer_measure.is_caratheodory_union MeasureTheory.OuterMeasure.is_caratheodory_union
+#align measure_theory.outer_measure.is_caratheodory_union MeasureTheory.OuterMeasure.is_caratheodory_union
 
 theorem measure_inter_union (h : s₁ ∩ s₂ ⊆ ∅) (h₁ : is_caratheodory s₁) {t : Set α} :
     m (t ∩ (s₁ ∪ s₂)) = m (t ∩ s₁) + m (t ∩ s₂) := by
   rw [h₁, Set.inter_assoc, Set.union_inter_cancel_left, inter_diff_assoc, union_diff_cancel_left h]
-#align
-  measure_theory.outer_measure.measure_inter_union MeasureTheory.OuterMeasure.measure_inter_union
+#align measure_theory.outer_measure.measure_inter_union MeasureTheory.OuterMeasure.measure_inter_union
 
 theorem is_caratheodory_Union_lt {s : ℕ → Set α} :
     ∀ {n : ℕ}, (∀ i < n, is_caratheodory (s i)) → is_caratheodory (⋃ i < n, s i)
@@ -996,16 +974,14 @@ theorem is_caratheodory_Union_lt {s : ℕ → Set α} :
         is_caratheodory_union m
           (is_caratheodory_Union_lt fun i hi => h i <| lt_of_lt_of_le hi <| Nat.le_succ _)
           (h n (le_refl (n + 1)))
-#align
-  measure_theory.outer_measure.is_caratheodory_Union_lt MeasureTheory.OuterMeasure.is_caratheodory_Union_lt
+#align measure_theory.outer_measure.is_caratheodory_Union_lt MeasureTheory.OuterMeasure.is_caratheodory_Union_lt
 
 theorem is_caratheodory_inter (h₁ : is_caratheodory s₁) (h₂ : is_caratheodory s₂) :
     is_caratheodory (s₁ ∩ s₂) :=
   by
   rw [← is_caratheodory_compl_iff, Set.compl_inter]
   exact is_caratheodory_union _ (is_caratheodory_compl _ h₁) (is_caratheodory_compl _ h₂)
-#align
-  measure_theory.outer_measure.is_caratheodory_inter MeasureTheory.OuterMeasure.is_caratheodory_inter
+#align measure_theory.outer_measure.is_caratheodory_inter MeasureTheory.OuterMeasure.is_caratheodory_inter
 
 theorem is_caratheodory_sum {s : ℕ → Set α} (h : ∀ i, is_caratheodory (s i))
     (hd : Pairwise (Disjoint on s)) {t : Set α} :
@@ -1017,8 +993,7 @@ theorem is_caratheodory_sum {s : ℕ → Set α} (h : ∀ i, is_caratheodory (s 
       m.measure_inter_union _ (h n), add_comm]
     intro a
     simpa using fun (h₁ : a ∈ s n) i (hi : i < n) h₂ => (hd (ne_of_gt hi)).le_bot ⟨h₁, h₂⟩
-#align
-  measure_theory.outer_measure.is_caratheodory_sum MeasureTheory.OuterMeasure.is_caratheodory_sum
+#align measure_theory.outer_measure.is_caratheodory_sum MeasureTheory.OuterMeasure.is_caratheodory_sum
 
 theorem is_caratheodory_Union_nat {s : ℕ → Set α} (h : ∀ i, is_caratheodory (s i))
     (hd : Pairwise (Disjoint on s)) : is_caratheodory (⋃ i, s i) :=
@@ -1036,8 +1011,7 @@ theorem is_caratheodory_Union_nat {s : ℕ → Set α} (h : ∀ i, is_caratheodo
         le_trans (add_le_add_left _ _) (ge_of_eq (is_caratheodory_Union_lt m (fun i _ => h i) _))
     refine' m.mono (diff_subset_diff_right _)
     exact Union₂_subset fun i _ => subset_Union _ i
-#align
-  measure_theory.outer_measure.is_caratheodory_Union_nat MeasureTheory.OuterMeasure.is_caratheodory_Union_nat
+#align measure_theory.outer_measure.is_caratheodory_Union_nat MeasureTheory.OuterMeasure.is_caratheodory_Union_nat
 
 theorem f_Union {s : ℕ → Set α} (h : ∀ i, is_caratheodory (s i)) (hd : Pairwise (Disjoint on s)) :
     m (⋃ i, s i) = ∑' i, m (s i) :=
@@ -1057,8 +1031,7 @@ def caratheodoryDynkin : MeasurableSpace.DynkinSystem α
   hasEmpty := is_caratheodory_empty
   HasCompl s := is_caratheodory_compl
   hasUnionNat f hf hn := is_caratheodory_Union_nat hn hf
-#align
-  measure_theory.outer_measure.caratheodory_dynkin MeasureTheory.OuterMeasure.caratheodoryDynkin
+#align measure_theory.outer_measure.caratheodory_dynkin MeasureTheory.OuterMeasure.caratheodoryDynkin
 
 /-- Given an outer measure `μ`, the Carathéodory-measurable space is
   defined such that `s` is measurable if `∀t, μ t = μ (t ∩ s) + μ (t \ s)`. -/
@@ -1069,21 +1042,18 @@ protected def caratheodory : MeasurableSpace α :=
 theorem is_caratheodory_iff {s : Set α} :
     measurable_set[caratheodory] s ↔ ∀ t, m t = m (t ∩ s) + m (t \ s) :=
   Iff.rfl
-#align
-  measure_theory.outer_measure.is_caratheodory_iff MeasureTheory.OuterMeasure.is_caratheodory_iff
+#align measure_theory.outer_measure.is_caratheodory_iff MeasureTheory.OuterMeasure.is_caratheodory_iff
 
 theorem is_caratheodory_iff_le {s : Set α} :
     measurable_set[caratheodory] s ↔ ∀ t, m (t ∩ s) + m (t \ s) ≤ m t :=
   is_caratheodory_iff_le'
-#align
-  measure_theory.outer_measure.is_caratheodory_iff_le MeasureTheory.OuterMeasure.is_caratheodory_iff_le
+#align measure_theory.outer_measure.is_caratheodory_iff_le MeasureTheory.OuterMeasure.is_caratheodory_iff_le
 
 protected theorem Union_eq_of_caratheodory {s : ℕ → Set α}
     (h : ∀ i, measurable_set[caratheodory] (s i)) (hd : Pairwise (Disjoint on s)) :
     m (⋃ i, s i) = ∑' i, m (s i) :=
   f_Union h hd
-#align
-  measure_theory.outer_measure.Union_eq_of_caratheodory MeasureTheory.OuterMeasure.Union_eq_of_caratheodory
+#align measure_theory.outer_measure.Union_eq_of_caratheodory MeasureTheory.OuterMeasure.Union_eq_of_caratheodory
 
 end CaratheodoryMeasurable
 
@@ -1106,8 +1076,7 @@ theorem of_function_caratheodory {m : Set α → ℝ≥0∞} {s : Set α} {h₀ 
     exact diff_subset_diff_left hf
   · rw [← Ennreal.tsum_add]
     exact Ennreal.tsum_le_tsum fun i => hs _
-#align
-  measure_theory.outer_measure.of_function_caratheodory MeasureTheory.OuterMeasure.of_function_caratheodory
+#align measure_theory.outer_measure.of_function_caratheodory MeasureTheory.OuterMeasure.of_function_caratheodory
 
 theorem bounded_by_caratheodory {m : Set α → ℝ≥0∞} {s : Set α}
     (hs : ∀ t, m (t ∩ s) + m (t \ s) ≤ m t) : measurable_set[(boundedBy m).caratheodory] s :=
@@ -1118,8 +1087,7 @@ theorem bounded_by_caratheodory {m : Set α → ℝ≥0∞} {s : Set α}
   · convert le_trans _ (hs t)
     · simp [h]
     exact add_le_add supᵢ_const_le supᵢ_const_le
-#align
-  measure_theory.outer_measure.bounded_by_caratheodory MeasureTheory.OuterMeasure.bounded_by_caratheodory
+#align measure_theory.outer_measure.bounded_by_caratheodory MeasureTheory.OuterMeasure.bounded_by_caratheodory
 
 @[simp]
 theorem zero_caratheodory : (0 : OuterMeasure α).caratheodory = ⊤ :=
@@ -1136,19 +1104,16 @@ theorem top_caratheodory : (⊤ : OuterMeasure α).caratheodory = ⊤ :=
 theorem le_add_caratheodory (m₁ m₂ : OuterMeasure α) :
     m₁.caratheodory ⊓ m₂.caratheodory ≤ (m₁ + m₂ : OuterMeasure α).caratheodory :=
   fun s ⟨hs₁, hs₂⟩ t => by simp [hs₁ t, hs₂ t, add_left_comm, add_assoc]
-#align
-  measure_theory.outer_measure.le_add_caratheodory MeasureTheory.OuterMeasure.le_add_caratheodory
+#align measure_theory.outer_measure.le_add_caratheodory MeasureTheory.OuterMeasure.le_add_caratheodory
 
 theorem le_sum_caratheodory {ι} (m : ι → OuterMeasure α) :
     (⨅ i, (m i).caratheodory) ≤ (sum m).caratheodory := fun s h t => by
   simp [fun i => MeasurableSpace.measurable_set_infi.1 h i t, Ennreal.tsum_add]
-#align
-  measure_theory.outer_measure.le_sum_caratheodory MeasureTheory.OuterMeasure.le_sum_caratheodory
+#align measure_theory.outer_measure.le_sum_caratheodory MeasureTheory.OuterMeasure.le_sum_caratheodory
 
 theorem le_smul_caratheodory (a : ℝ≥0∞) (m : OuterMeasure α) :
     m.caratheodory ≤ (a • m).caratheodory := fun s h t => by simp [h t, mul_add]
-#align
-  measure_theory.outer_measure.le_smul_caratheodory MeasureTheory.OuterMeasure.le_smul_caratheodory
+#align measure_theory.outer_measure.le_smul_caratheodory MeasureTheory.OuterMeasure.le_smul_caratheodory
 
 @[simp]
 theorem dirac_caratheodory (a : α) : (dirac a).caratheodory = ⊤ :=
@@ -1181,8 +1146,7 @@ theorem Inf_eq_bounded_by_Inf_gen (m : Set (OuterMeasure α)) :
   · refine' le_infₛ _
     intro μ hμ t
     refine' le_trans (bounded_by_le t) (infᵢ₂_le μ hμ)
-#align
-  measure_theory.outer_measure.Inf_eq_bounded_by_Inf_gen MeasureTheory.OuterMeasure.Inf_eq_bounded_by_Inf_gen
+#align measure_theory.outer_measure.Inf_eq_bounded_by_Inf_gen MeasureTheory.OuterMeasure.Inf_eq_bounded_by_Inf_gen
 
 theorem supr_Inf_gen_nonempty {m : Set (OuterMeasure α)} (h : m.Nonempty) (t : Set α) :
     (⨆ h : t.Nonempty, infGen m t) = ⨅ (μ : OuterMeasure α) (h : μ ∈ m), μ t :=
@@ -1194,8 +1158,7 @@ theorem supr_Inf_gen_nonempty {m : Set (OuterMeasure α)} (h : m.Nonempty) (t : 
     apply bot_unique
     refine' infᵢ_le_of_le μ (infᵢ_le _ hμ)
   · simp [ht, Inf_gen_def]
-#align
-  measure_theory.outer_measure.supr_Inf_gen_nonempty MeasureTheory.OuterMeasure.supr_Inf_gen_nonempty
+#align measure_theory.outer_measure.supr_Inf_gen_nonempty MeasureTheory.OuterMeasure.supr_Inf_gen_nonempty
 
 /-- The value of the Infimum of a nonempty set of outer measures on a set is not simply
 the minimum value of a measure on that set: it is the infimum sum of measures of countable set of
@@ -1305,8 +1268,7 @@ theorem restrict_infi_restrict {ι} (s : Set α) (m : ι → OuterMeasure α) :
     _ = map (coe : s → α) (⨅ i, comap coe (m i)) := (map_infi Subtype.coe_injective _).symm
     _ = restrict s (⨅ i, m i) := congr_arg (map coe) (comap_infi _ _).symm
     
-#align
-  measure_theory.outer_measure.restrict_infi_restrict MeasureTheory.OuterMeasure.restrict_infi_restrict
+#align measure_theory.outer_measure.restrict_infi_restrict MeasureTheory.OuterMeasure.restrict_infi_restrict
 
 theorem restrict_infi {ι} [Nonempty ι] (s : Set α) (m : ι → OuterMeasure α) :
     restrict s (⨅ i, m i) = ⨅ i, restrict s (m i) :=
@@ -1326,8 +1288,7 @@ outer measures is nonempty. -/
 theorem restrict_Inf_eq_Inf_restrict (m : Set (OuterMeasure α)) {s : Set α} (hm : m.Nonempty) :
     restrict s (infₛ m) = infₛ (restrict s '' m) := by
   simp only [infₛ_eq_infᵢ, restrict_binfi, hm, infᵢ_image]
-#align
-  measure_theory.outer_measure.restrict_Inf_eq_Inf_restrict MeasureTheory.OuterMeasure.restrict_Inf_eq_Inf_restrict
+#align measure_theory.outer_measure.restrict_Inf_eq_Inf_restrict MeasureTheory.OuterMeasure.restrict_Inf_eq_Inf_restrict
 
 end InfGen
 
@@ -1496,16 +1457,14 @@ theorem induced_outer_measure_union_of_false_of_nonempty_inter {s t : Set α}
     inducedOuterMeasure m P0 m0 (s ∪ t) =
       inducedOuterMeasure m P0 m0 s + inducedOuterMeasure m P0 m0 t :=
   of_function_union_of_top_of_nonempty_inter fun u hsu htu => @infᵢ_of_empty _ _ _ ⟨h u hsu htu⟩ _
-#align
-  measure_theory.induced_outer_measure_union_of_false_of_nonempty_inter MeasureTheory.induced_outer_measure_union_of_false_of_nonempty_inter
+#align measure_theory.induced_outer_measure_union_of_false_of_nonempty_inter MeasureTheory.induced_outer_measure_union_of_false_of_nonempty_inter
 
 include msU m_mono
 
 theorem induced_outer_measure_eq_extend' {s : Set α} (hs : P s) :
     inducedOuterMeasure m P0 m0 s = extend m s :=
   of_function_eq s (fun t => extend_mono' m_mono hs) (extend_Union_le_tsum_nat' PU msU)
-#align
-  measure_theory.induced_outer_measure_eq_extend' MeasureTheory.induced_outer_measure_eq_extend'
+#align measure_theory.induced_outer_measure_eq_extend' MeasureTheory.induced_outer_measure_eq_extend'
 
 theorem induced_outer_measure_eq' {s : Set α} (hs : P s) : inducedOuterMeasure m P0 m0 s = m s hs :=
   (induced_outer_measure_eq_extend' PU msU m_mono hs).trans <| extend_eq _ _
@@ -1553,8 +1512,7 @@ theorem induced_outer_measure_exists_set {s : Set α} (hs : inducedOuterMeasure 
   rcases this with ⟨t, h1t, h2t, h3t⟩
   exact
     ⟨t, h1t, h2t, le_trans (le_of_eq <| induced_outer_measure_eq' _ msU m_mono h1t) (le_of_lt h3t)⟩
-#align
-  measure_theory.induced_outer_measure_exists_set MeasureTheory.induced_outer_measure_exists_set
+#align measure_theory.induced_outer_measure_exists_set MeasureTheory.induced_outer_measure_exists_set
 
 /-- To test whether `s` is Carathéodory-measurable we only need to check the sets `t` for which
   `P t` holds. See `of_function_caratheodory` for another way to show the Carathéodory-measurability
@@ -1583,8 +1541,7 @@ theorem induced_outer_measure_caratheodory (s : Set α) :
     refine'
       add_le_add (mono' _ <| Set.inter_subset_inter_left _ h2t)
         (mono' _ <| diff_subset_diff_left h2t)
-#align
-  measure_theory.induced_outer_measure_caratheodory MeasureTheory.induced_outer_measure_caratheodory
+#align measure_theory.induced_outer_measure_caratheodory MeasureTheory.induced_outer_measure_caratheodory
 
 end ExtendSet
 
@@ -1744,16 +1701,14 @@ theorem exists_measurable_superset_eq_trim (m : OuterMeasure α) (s : Set α) :
     · refine' infᵢ_le_of_le (⋂ n, t n) _
       refine' infᵢ_le_of_le (subset_Inter hsub) _
       refine' infᵢ_le _ (MeasurableSet.Inter hm)
-#align
-  measure_theory.outer_measure.exists_measurable_superset_eq_trim MeasureTheory.OuterMeasure.exists_measurable_superset_eq_trim
+#align measure_theory.outer_measure.exists_measurable_superset_eq_trim MeasureTheory.OuterMeasure.exists_measurable_superset_eq_trim
 
 theorem exists_measurable_superset_of_trim_eq_zero {m : OuterMeasure α} {s : Set α}
     (h : m.trim s = 0) : ∃ t, s ⊆ t ∧ MeasurableSet t ∧ m t = 0 :=
   by
   rcases exists_measurable_superset_eq_trim m s with ⟨t, hst, ht, hm⟩
   exact ⟨t, hst, ht, h ▸ hm⟩
-#align
-  measure_theory.outer_measure.exists_measurable_superset_of_trim_eq_zero MeasureTheory.OuterMeasure.exists_measurable_superset_of_trim_eq_zero
+#align measure_theory.outer_measure.exists_measurable_superset_of_trim_eq_zero MeasureTheory.OuterMeasure.exists_measurable_superset_of_trim_eq_zero
 
 /-- If `μ i` is a countable family of outer measures, then for every set `s` there exists
 a measurable set `t ⊇ s` such that `μ i t = (μ i).trim s` for all `i`. -/
@@ -1765,8 +1720,7 @@ theorem exists_measurable_superset_forall_eq_trim {ι} [Countable ι] (μ : ι �
   replace ht := MeasurableSet.Inter ht
   refine' ⟨⋂ i, t i, hst, ht, fun i => le_antisymm _ _⟩
   exacts[hμt i ▸ (μ i).mono (Inter_subset _ _), (mono' _ hst).trans_eq ((μ i).trim_eq ht)]
-#align
-  measure_theory.outer_measure.exists_measurable_superset_forall_eq_trim MeasureTheory.OuterMeasure.exists_measurable_superset_forall_eq_trim
+#align measure_theory.outer_measure.exists_measurable_superset_forall_eq_trim MeasureTheory.OuterMeasure.exists_measurable_superset_forall_eq_trim
 
 /-- If `m₁ s = op (m₂ s) (m₃ s)` for all `s`, then the same is true for `m₁.trim`, `m₂.trim`,
 and `m₃ s`. -/

@@ -323,8 +323,7 @@ theorem monad_to_functor_map_iso_monad_iso_mk {M N : Monad C} (f : (M : C ⥤ C)
   by
   ext
   rfl
-#align
-  category_theory.monad_to_functor_map_iso_monad_iso_mk CategoryTheory.monad_to_functor_map_iso_monad_iso_mk
+#align category_theory.monad_to_functor_map_iso_monad_iso_mk CategoryTheory.monad_to_functor_map_iso_monad_iso_mk
 
 instance : ReflectsIsomorphisms (monadToFunctor C)
     where reflects M N f i := by
@@ -348,8 +347,7 @@ theorem comonad_to_functor_map_iso_comonad_iso_mk {M N : Comonad C} (f : (M : C 
   by
   ext
   rfl
-#align
-  category_theory.comonad_to_functor_map_iso_comonad_iso_mk CategoryTheory.comonad_to_functor_map_iso_comonad_iso_mk
+#align category_theory.comonad_to_functor_map_iso_comonad_iso_mk CategoryTheory.comonad_to_functor_map_iso_comonad_iso_mk
 
 instance : ReflectsIsomorphisms (comonadToFunctor C)
     where reflects M N f i := by

@@ -145,8 +145,7 @@ theorem convex_independent_iff_not_mem_convex_hull_diff {p : ι → E} :
     refine' h i s _
     rw [Set.diff_singleton_eq_self H]
     exact hi
-#align
-  convex_independent_iff_not_mem_convex_hull_diff convex_independent_iff_not_mem_convex_hull_diff
+#align convex_independent_iff_not_mem_convex_hull_diff convex_independent_iff_not_mem_convex_hull_diff
 
 theorem convex_independent_set_iff_inter_convex_hull_subset {s : Set E} :
     ConvexIndependent 𝕜 (fun x => x : s → E) ↔ ∀ t, t ⊆ s → s ∩ convexHull 𝕜 t ⊆ t :=
@@ -159,8 +158,7 @@ theorem convex_independent_set_iff_inter_convex_hull_subset {s : Set E} :
   · intro hc t x h
     rw [← subtype.coe_injective.mem_set_image]
     exact hc (t.image coe) (Subtype.coe_image_subset s t) ⟨x.prop, h⟩
-#align
-  convex_independent_set_iff_inter_convex_hull_subset convex_independent_set_iff_inter_convex_hull_subset
+#align convex_independent_set_iff_inter_convex_hull_subset convex_independent_set_iff_inter_convex_hull_subset
 
 /-- If a set is convex independent, a point in the set is not in the convex hull of the other
 points. See `convex_independent_iff_not_mem_convex_hull_diff` for the indexed family version.  -/
@@ -174,8 +172,7 @@ theorem convex_independent_set_iff_not_mem_convex_hull_diff {s : Set E} :
   · rintro hs t ht x ⟨hxs, hxt⟩
     by_contra h
     exact hs _ hxs (convex_hull_mono (Set.subset_diff_singleton ht h) hxt)
-#align
-  convex_independent_set_iff_not_mem_convex_hull_diff convex_independent_set_iff_not_mem_convex_hull_diff
+#align convex_independent_set_iff_not_mem_convex_hull_diff convex_independent_set_iff_not_mem_convex_hull_diff
 
 end OrderedSemiring
 

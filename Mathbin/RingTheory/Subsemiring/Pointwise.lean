@@ -111,8 +111,7 @@ theorem smul_mem_pointwise_smul_iff {a : M} {S : Subsemiring R} {x : R} : a • 
 theorem mem_pointwise_smul_iff_inv_smul_mem {a : M} {S : Subsemiring R} {x : R} :
     x ∈ a • S ↔ a⁻¹ • x ∈ S :=
   mem_smul_set_iff_inv_smul_mem
-#align
-  subsemiring.mem_pointwise_smul_iff_inv_smul_mem Subsemiring.mem_pointwise_smul_iff_inv_smul_mem
+#align subsemiring.mem_pointwise_smul_iff_inv_smul_mem Subsemiring.mem_pointwise_smul_iff_inv_smul_mem
 
 theorem mem_inv_pointwise_smul_iff {a : M} {S : Subsemiring R} {x : R} : x ∈ a⁻¹ • S ↔ a • x ∈ S :=
   mem_inv_smul_set_iff
@@ -122,8 +121,7 @@ theorem mem_inv_pointwise_smul_iff {a : M} {S : Subsemiring R} {x : R} : x ∈ a
 theorem pointwise_smul_le_pointwise_smul_iff {a : M} {S T : Subsemiring R} :
     a • S ≤ a • T ↔ S ≤ T :=
   set_smul_subset_set_smul_iff
-#align
-  subsemiring.pointwise_smul_le_pointwise_smul_iff Subsemiring.pointwise_smul_le_pointwise_smul_iff
+#align subsemiring.pointwise_smul_le_pointwise_smul_iff Subsemiring.pointwise_smul_le_pointwise_smul_iff
 
 theorem pointwise_smul_subset_iff {a : M} {S T : Subsemiring R} : a • S ≤ T ↔ S ≤ a⁻¹ • T :=
   set_smul_subset_iff
@@ -153,8 +151,7 @@ theorem smul_mem_pointwise_smul_iff₀ {a : M} (ha : a ≠ 0) (S : Subsemiring R
 theorem mem_pointwise_smul_iff_inv_smul_mem₀ {a : M} (ha : a ≠ 0) (S : Subsemiring R) (x : R) :
     x ∈ a • S ↔ a⁻¹ • x ∈ S :=
   mem_smul_set_iff_inv_smul_mem₀ ha (S : Set R) x
-#align
-  subsemiring.mem_pointwise_smul_iff_inv_smul_mem₀ Subsemiring.mem_pointwise_smul_iff_inv_smul_mem₀
+#align subsemiring.mem_pointwise_smul_iff_inv_smul_mem₀ Subsemiring.mem_pointwise_smul_iff_inv_smul_mem₀
 
 theorem mem_inv_pointwise_smul_iff₀ {a : M} (ha : a ≠ 0) (S : Subsemiring R) (x : R) :
     x ∈ a⁻¹ • S ↔ a • x ∈ S :=
@@ -165,8 +162,7 @@ theorem mem_inv_pointwise_smul_iff₀ {a : M} (ha : a ≠ 0) (S : Subsemiring R)
 theorem pointwise_smul_le_pointwise_smul_iff₀ {a : M} (ha : a ≠ 0) {S T : Subsemiring R} :
     a • S ≤ a • T ↔ S ≤ T :=
   set_smul_subset_set_smul_iff₀ ha
-#align
-  subsemiring.pointwise_smul_le_pointwise_smul_iff₀ Subsemiring.pointwise_smul_le_pointwise_smul_iff₀
+#align subsemiring.pointwise_smul_le_pointwise_smul_iff₀ Subsemiring.pointwise_smul_le_pointwise_smul_iff₀
 
 theorem pointwise_smul_le_iff₀ {a : M} (ha : a ≠ 0) {S T : Subsemiring R} :
     a • S ≤ T ↔ S ≤ a⁻¹ • T :=

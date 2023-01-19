@@ -254,8 +254,7 @@ the field of fractions yourself.
 instance integralClosure.isDedekindDomainFractionRing [IsDedekindDomain A] :
     IsDedekindDomain (integralClosure A L) :=
   integralClosure.isDedekindDomain A (FractionRing A) L
-#align
-  integral_closure.is_dedekind_domain_fraction_ring integralClosure.isDedekindDomainFractionRing
+#align integral_closure.is_dedekind_domain_fraction_ring integralClosure.isDedekindDomainFractionRing
 
 end IsIntegralClosure
 

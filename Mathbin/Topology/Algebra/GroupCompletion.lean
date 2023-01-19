@@ -195,8 +195,7 @@ variable (α)
 
 theorem dense_inducing_to_compl : DenseInducing (toCompl : α → Completion α) :=
   dense_inducing_coe
-#align
-  uniform_space.completion.dense_inducing_to_compl UniformSpace.Completion.dense_inducing_to_compl
+#align uniform_space.completion.dense_inducing_to_compl UniformSpace.Completion.dense_inducing_to_compl
 
 variable {α}
 

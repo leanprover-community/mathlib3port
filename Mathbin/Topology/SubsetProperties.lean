@@ -309,8 +309,7 @@ theorem IsCompact.nonempty_Inter_of_directed_nonempty_compact_closed {ι : Type 
     rw [nonempty_iff_ne_empty] at this
     contradiction
   exact (hZn i₁).mono (subset_inter hi₁.left <| subset_Inter₂ hi₁.right)
-#align
-  is_compact.nonempty_Inter_of_directed_nonempty_compact_closed IsCompact.nonempty_Inter_of_directed_nonempty_compact_closed
+#align is_compact.nonempty_Inter_of_directed_nonempty_compact_closed IsCompact.nonempty_Inter_of_directed_nonempty_compact_closed
 
 /-- Cantor's intersection theorem for sequences indexed by `ℕ`:
 the intersection of a decreasing sequence of nonempty compact closed sets is nonempty. -/
@@ -322,8 +321,7 @@ theorem IsCompact.nonempty_Inter_of_sequence_nonempty_compact_closed (Z : ℕ �
   have : ∀ i, Z i ⊆ Z 0 := fun i => Zmono <| zero_le i
   have hZc : ∀ i, IsCompact (Z i) := fun i => is_compact_of_is_closed_subset hZ0 (hZcl i) (this i)
   IsCompact.nonempty_Inter_of_directed_nonempty_compact_closed Z hZd hZn hZc hZcl
-#align
-  is_compact.nonempty_Inter_of_sequence_nonempty_compact_closed IsCompact.nonempty_Inter_of_sequence_nonempty_compact_closed
+#align is_compact.nonempty_Inter_of_sequence_nonempty_compact_closed IsCompact.nonempty_Inter_of_sequence_nonempty_compact_closed
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (b' «expr ⊆ » b) -/
 /-- For every open cover of a compact set, there exists a finite subcover. -/
@@ -434,8 +432,7 @@ theorem IsCompact.eventually_forall_of_forall_eventually {x₀ : α} {K : Set β
     rw [nhds_prod_eq, eventually_prod_iff] at hP
     rcases hP with ⟨p, hp, q, hq, hpq⟩
     exact ⟨{ y | q y }, mem_nhds_within_of_mem_nhds hq, eventually_of_mem hp @hpq⟩
-#align
-  is_compact.eventually_forall_of_forall_eventually IsCompact.eventually_forall_of_forall_eventually
+#align is_compact.eventually_forall_of_forall_eventually IsCompact.eventually_forall_of_forall_eventually
 
 @[simp]
 theorem is_compact_empty : IsCompact (∅ : Set α) := fun f hnf hsf =>
@@ -570,8 +567,7 @@ theorem is_compact_open_iff_eq_finite_Union_of_is_topological_basis (b : ι → 
       · apply is_open_bUnion
         intro i hi
         exact hb.is_open (Set.mem_range_self _)
-#align
-  is_compact_open_iff_eq_finite_Union_of_is_topological_basis is_compact_open_iff_eq_finite_Union_of_is_topological_basis
+#align is_compact_open_iff_eq_finite_Union_of_is_topological_basis is_compact_open_iff_eq_finite_Union_of_is_topological_basis
 
 namespace Filter
 
@@ -635,8 +631,7 @@ theorem Tendsto.is_compact_insert_range_of_cocompact {f : α → β} {b}
       mem_image_of_mem _ (not_not.1 fun hxK => hd.le_bot ⟨hKs hxK, hyt⟩)]
   rcases hKc.image hfc (le_principal_iff.2 this) with ⟨y, hy, hyl⟩
   exact ⟨y, Or.inr <| image_subset_range _ _ hy, hyl⟩
-#align
-  filter.tendsto.is_compact_insert_range_of_cocompact Filter.Tendsto.is_compact_insert_range_of_cocompact
+#align filter.tendsto.is_compact_insert_range_of_cocompact Filter.Tendsto.is_compact_insert_range_of_cocompact
 
 theorem Tendsto.is_compact_insert_range_of_cofinite {f : ι → α} {a}
     (hf : Tendsto f cofinite (𝓝 a)) : IsCompact (insert a (range f)) :=
@@ -644,8 +639,7 @@ theorem Tendsto.is_compact_insert_range_of_cofinite {f : ι → α} {a}
   letI : TopologicalSpace ι := ⊥; haveI : DiscreteTopology ι := ⟨rfl⟩
   rw [← cocompact_eq_cofinite] at hf
   exact hf.is_compact_insert_range_of_cocompact continuous_of_discrete_topology
-#align
-  filter.tendsto.is_compact_insert_range_of_cofinite Filter.Tendsto.is_compact_insert_range_of_cofinite
+#align filter.tendsto.is_compact_insert_range_of_cofinite Filter.Tendsto.is_compact_insert_range_of_cofinite
 
 theorem Tendsto.is_compact_insert_range {f : ℕ → α} {a} (hf : Tendsto f atTop (𝓝 a)) :
     IsCompact (insert a (range f)) :=
@@ -685,8 +679,7 @@ theorem cocompact_le_coclosed_compact : cocompact α ≤ coclosedCompact α :=
 theorem IsCompact.compl_mem_coclosed_compact_of_is_closed (hs : IsCompact s) (hs' : IsClosed s) :
     sᶜ ∈ Filter.coclosedCompact α :=
   has_basis_coclosed_compact.mem_of_mem ⟨hs', hs⟩
-#align
-  is_compact.compl_mem_coclosed_compact_of_is_closed IsCompact.compl_mem_coclosed_compact_of_is_closed
+#align is_compact.compl_mem_coclosed_compact_of_is_closed IsCompact.compl_mem_coclosed_compact_of_is_closed
 
 end Filter
 
@@ -1396,8 +1389,7 @@ theorem IsClosed.exists_minimal_nonempty_closed_subset [CompactSpace α] {S : Se
     exact Set.Subset.trans Uc (set.subset_compl_comm.mp V'sub)
     simp only [compl_compl, V'ne]
   rw [← this, compl_compl]
-#align
-  is_closed.exists_minimal_nonempty_closed_subset IsClosed.exists_minimal_nonempty_closed_subset
+#align is_closed.exists_minimal_nonempty_closed_subset IsClosed.exists_minimal_nonempty_closed_subset
 
 /-- A σ-compact space is a space that is the union of a countable collection of compact subspaces.
   Note that a locally compact separable T₂ space need not be σ-compact.
@@ -1424,8 +1416,7 @@ instance (priority := 100) sigma_compact_space_of_locally_compact_second_countab
   rcases countable_cover_nhds hxK with ⟨s, hsc, hsU⟩
   refine' SigmaCompactSpace.of_countable _ (hsc.image K) (ball_image_iff.2 fun x _ => hKc x) _
   rwa [sUnion_image]
-#align
-  sigma_compact_space_of_locally_compact_second_countable sigma_compact_space_of_locally_compact_second_countable
+#align sigma_compact_space_of_locally_compact_second_countable sigma_compact_space_of_locally_compact_second_countable
 
 variable (α) [SigmaCompactSpace α]
 
@@ -1897,8 +1888,7 @@ theorem eq_irreducible_component {x : α} :
 theorem irreducible_component_mem_irreducible_components (x : α) :
     irreducibleComponent x ∈ irreducibleComponents α :=
   ⟨is_irreducible_irreducible_component, fun s h₁ h₂ => (eq_irreducible_component h₁.2 h₂).le⟩
-#align
-  irreducible_component_mem_irreducible_components irreducible_component_mem_irreducible_components
+#align irreducible_component_mem_irreducible_components irreducible_component_mem_irreducible_components
 
 theorem is_closed_irreducible_component {x : α} : IsClosed (irreducibleComponent x) :=
   is_closed_of_mem_irreducible_components _ (irreducible_component_mem_irreducible_components x)
@@ -2115,8 +2105,7 @@ theorem subset_closure_inter_of_is_preirreducible_of_is_open {S U : Set α} (hS 
     hS _ (closure (S ∩ U)ᶜ) hU (is_open_compl_iff.mpr is_closed_closure) h
       (set.inter_compl_nonempty_iff.mpr h')
   exact h₃ (subset_closure ⟨h₁, h₂⟩)
-#align
-  subset_closure_inter_of_is_preirreducible_of_is_open subset_closure_inter_of_is_preirreducible_of_is_open
+#align subset_closure_inter_of_is_preirreducible_of_is_open subset_closure_inter_of_is_preirreducible_of_is_open
 
 /-- If `∅ ≠ U ⊆ S ⊆ Z` such that `U` is open and `Z` is preirreducible, then `S` is irreducible. -/
 theorem IsPreirreducible.subset_irreducible {S U Z : Set α} (hZ : IsPreirreducible Z)

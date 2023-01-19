@@ -89,8 +89,7 @@ theorem polynomial_comp_attach_bound_mem (A : Subalgebra ℝ C(X, ℝ)) (f : A) 
   by
   rw [polynomial_comp_attach_bound]
   apply SetLike.coe_mem
-#align
-  continuous_map.polynomial_comp_attach_bound_mem ContinuousMap.polynomial_comp_attach_bound_mem
+#align continuous_map.polynomial_comp_attach_bound_mem ContinuousMap.polynomial_comp_attach_bound_mem
 
 theorem comp_attach_bound_mem_closure (A : Subalgebra ℝ C(X, ℝ)) (f : A)
     (p : C(Set.Icc (-‖f‖) ‖f‖, ℝ)) : p.comp (attachBound f) ∈ A.topologicalClosure :=
@@ -304,8 +303,7 @@ theorem subalgebra_topological_closure_eq_top_of_separates_points (A : Subalgebr
       (Subalgebra.SeparatesPoints.strongly
         (Subalgebra.separates_points_monotone A.le_topological_closure w))
   · simp
-#align
-  continuous_map.subalgebra_topological_closure_eq_top_of_separates_points ContinuousMap.subalgebra_topological_closure_eq_top_of_separates_points
+#align continuous_map.subalgebra_topological_closure_eq_top_of_separates_points ContinuousMap.subalgebra_topological_closure_eq_top_of_separates_points
 
 /-- An alternative statement of the Stone-Weierstrass theorem.
 
@@ -317,8 +315,7 @@ theorem continuous_map_mem_subalgebra_closure_of_separates_points (A : Subalgebr
   by
   rw [subalgebra_topological_closure_eq_top_of_separates_points A w]
   simp
-#align
-  continuous_map.continuous_map_mem_subalgebra_closure_of_separates_points ContinuousMap.continuous_map_mem_subalgebra_closure_of_separates_points
+#align continuous_map.continuous_map_mem_subalgebra_closure_of_separates_points ContinuousMap.continuous_map_mem_subalgebra_closure_of_separates_points
 
 /-- An alternative statement of the Stone-Weierstrass theorem,
 for those who like their epsilons.
@@ -336,8 +333,7 @@ theorem exists_mem_subalgebra_near_continuous_map_of_separates_points (A : Subal
   obtain ⟨g, H, m⟩ := w ε Pos
   rw [Metric.mem_ball, dist_eq_norm] at H
   exact ⟨⟨g, m⟩, H⟩
-#align
-  continuous_map.exists_mem_subalgebra_near_continuous_map_of_separates_points ContinuousMap.exists_mem_subalgebra_near_continuous_map_of_separates_points
+#align continuous_map.exists_mem_subalgebra_near_continuous_map_of_separates_points ContinuousMap.exists_mem_subalgebra_near_continuous_map_of_separates_points
 
 /-- An alternative statement of the Stone-Weierstrass theorem,
 for those who like their epsilons and don't like bundled continuous functions.
@@ -352,8 +348,7 @@ theorem exists_mem_subalgebra_near_continuous_of_separates_points (A : Subalgebr
   obtain ⟨g, b⟩ := exists_mem_subalgebra_near_continuous_map_of_separates_points A w ⟨f, c⟩ ε Pos
   use g
   rwa [norm_lt_iff _ Pos] at b
-#align
-  continuous_map.exists_mem_subalgebra_near_continuous_of_separates_points ContinuousMap.exists_mem_subalgebra_near_continuous_of_separates_points
+#align continuous_map.exists_mem_subalgebra_near_continuous_of_separates_points ContinuousMap.exists_mem_subalgebra_near_continuous_of_separates_points
 
 end ContinuousMap
 
@@ -477,8 +472,7 @@ theorem ContinuousMap.subalgebra_is_R_or_C_topological_closure_eq_top_of_separat
   ext
   apply Eq.symm
   simp [I, mul_comm IsROrC.i _]
-#align
-  continuous_map.subalgebra_is_R_or_C_topological_closure_eq_top_of_separates_points ContinuousMap.subalgebra_is_R_or_C_topological_closure_eq_top_of_separates_points
+#align continuous_map.subalgebra_is_R_or_C_topological_closure_eq_top_of_separates_points ContinuousMap.subalgebra_is_R_or_C_topological_closure_eq_top_of_separates_points
 
 end IsROrC
 

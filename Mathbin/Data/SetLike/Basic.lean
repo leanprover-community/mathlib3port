@@ -211,7 +211,7 @@ Case conversion may be inaccurate. Consider using '#align set_like.coe_mk [anony
 @[simp, norm_cast]
 theorem [anonymous] (x : B) (hx : x ∈ p) : ((⟨x, hx⟩ : p) : B) = x :=
   rfl
-#align set_like.coe_mk[anonymous]
+#align set_like.coe_mk [anonymous]
 
 #print SetLike.coe_mem /-
 @[simp]

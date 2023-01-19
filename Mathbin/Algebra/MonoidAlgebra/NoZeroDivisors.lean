@@ -66,8 +66,7 @@ theorem mul_apply_add_eq_mul_of_forall_ne [Add A] {f g : AddMonoidAlgebra R A} {
         · exact if_neg (h af bg (Or.inr b0))
         · simp only [not_mem_support_iff.mp af, zero_mul, if_t_t]
       · exact fun bf0 => by simp [not_mem_support_iff.mp bf0]
-#align
-  add_monoid_algebra.mul_apply_add_eq_mul_of_forall_ne AddMonoidAlgebra.mul_apply_add_eq_mul_of_forall_ne
+#align add_monoid_algebra.mul_apply_add_eq_mul_of_forall_ne AddMonoidAlgebra.mul_apply_add_eq_mul_of_forall_ne
 
 section LeftOrRightOrderability
 
@@ -76,16 +75,14 @@ theorem Left.exists_add_of_mem_support_single_mul [AddLeftCancelSemigroup A]
     (hx : x ∈ (single a 1 * g : AddMonoidAlgebra R A).support) : ∃ b ∈ g.support, a + b = x := by
   rwa [support_single_mul _ _ (fun y => by rw [one_mul] : ∀ y : R, 1 * y = 0 ↔ _),
     Finset.mem_map] at hx
-#align
-  add_monoid_algebra.left.exists_add_of_mem_support_single_mul AddMonoidAlgebra.Left.exists_add_of_mem_support_single_mul
+#align add_monoid_algebra.left.exists_add_of_mem_support_single_mul AddMonoidAlgebra.Left.exists_add_of_mem_support_single_mul
 
 theorem Right.exists_add_of_mem_support_single_mul [AddRightCancelSemigroup A]
     {f : AddMonoidAlgebra R A} (b x : A)
     (hx : x ∈ (f * single b 1 : AddMonoidAlgebra R A).support) : ∃ a ∈ f.support, a + b = x := by
   rwa [support_mul_single _ _ (fun y => by rw [mul_one] : ∀ y : R, y * 1 = 0 ↔ _),
     Finset.mem_map] at hx
-#align
-  add_monoid_algebra.right.exists_add_of_mem_support_single_mul AddMonoidAlgebra.Right.exists_add_of_mem_support_single_mul
+#align add_monoid_algebra.right.exists_add_of_mem_support_single_mul AddMonoidAlgebra.Right.exists_add_of_mem_support_single_mul
 
 /-- If `R` is a semiring with no non-trivial zero-divisors and `A` is a left-ordered add right
 cancel semigroup, then `add_monoid_algebra R A` also contains no non-zero zero-divisors. -/
@@ -123,8 +120,7 @@ theorem NoZeroDivisors.of_left_ordered [NoZeroDivisors R] [AddRightCancelSemigro
             exists_eq_right]
         · refine' add_lt_add_left _ _
           exact Finset.min'_lt_of_mem_erase_min' _ _ (finset.mem_erase.mpr ⟨hc, cg⟩)⟩
-#align
-  add_monoid_algebra.no_zero_divisors.of_left_ordered AddMonoidAlgebra.NoZeroDivisors.of_left_ordered
+#align add_monoid_algebra.no_zero_divisors.of_left_ordered AddMonoidAlgebra.NoZeroDivisors.of_left_ordered
 
 /-- If `R` is a semiring with no non-trivial zero-divisors and `A` is a right-ordered add left
 cancel semigroup, then `add_monoid_algebra R A` also contains no non-zero zero-divisors. -/
@@ -164,8 +160,7 @@ theorem NoZeroDivisors.of_right_ordered [NoZeroDivisors R] [AddLeftCancelSemigro
         · haveI : CovariantClass A A (Function.swap (· + ·)) (· ≤ ·) :=
             Add.to_covariantClass_right A
           exact add_le_add_right (Finset.min'_le _ _ bf) _⟩
-#align
-  add_monoid_algebra.no_zero_divisors.of_right_ordered AddMonoidAlgebra.NoZeroDivisors.of_right_ordered
+#align add_monoid_algebra.no_zero_divisors.of_right_ordered AddMonoidAlgebra.NoZeroDivisors.of_right_ordered
 
 end LeftOrRightOrderability
 

@@ -81,8 +81,7 @@ theorem essentially_small_congr {C : Type u} [Category.{v} C] {D : Type u'} [Cat
 theorem Discrete.essentiallySmallOfSmall {α : Type u} [Small.{w} α] :
     EssentiallySmall.{w} (Discrete α) :=
   ⟨⟨Discrete (Shrink α), ⟨inferInstance, ⟨Discrete.equivalence (equivShrink _)⟩⟩⟩⟩
-#align
-  category_theory.discrete.essentially_small_of_small CategoryTheory.Discrete.essentiallySmallOfSmall
+#align category_theory.discrete.essentially_small_of_small CategoryTheory.Discrete.essentiallySmallOfSmall
 
 theorem essentiallySmallSelf : EssentiallySmall.{max w v u} C :=
   EssentiallySmall.mk' (AsSmall.equiv : C ≌ AsSmall.{w} C)
@@ -124,8 +123,7 @@ instance (priority := 100) locally_small_self (C : Type u) [Category.{v} C] : Lo
 instance (priority := 100) locally_small_of_essentially_small (C : Type u) [Category.{v} C]
     [EssentiallySmall.{w} C] : LocallySmall.{w} C :=
   (locally_small_congr (equivSmallModel C)).mpr (CategoryTheory.locally_small_self _)
-#align
-  category_theory.locally_small_of_essentially_small CategoryTheory.locally_small_of_essentially_small
+#align category_theory.locally_small_of_essentially_small CategoryTheory.locally_small_of_essentially_small
 
 /-- We define a type alias `shrink_homs C` for `C`. When we have `locally_small.{w} C`,
 we'll put a `category.{w}` instance on `shrink_homs C`.

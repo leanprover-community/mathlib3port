@@ -49,7 +49,7 @@ variable [IsAlgClosed A]
 
 /-- The number of embeddings of a number field is equal to its finrank. -/
 theorem card : Fintype.card (K →+* A) = finrank ℚ K := by
-  rw [Fintype.of_equiv_card ring_hom.equiv_rat_alg_hom.symm, AlgHom.card]
+  rw [Fintype.ofEquiv_card ring_hom.equiv_rat_alg_hom.symm, AlgHom.card]
 #align number_field.embeddings.card NumberField.Embeddings.card
 
 instance : Nonempty (K →+* A) :=
@@ -73,8 +73,7 @@ theorem range_eval_eq_root_set_minpoly : (range fun φ : K →+* A => φ x) = (m
   convert (NumberField.is_algebraic K).range_eval_eq_root_set_minpoly A x using 1
   ext a
   exact ⟨fun ⟨φ, hφ⟩ => ⟨φ.toRatAlgHom, hφ⟩, fun ⟨φ, hφ⟩ => ⟨φ.toRingHom, hφ⟩⟩
-#align
-  number_field.embeddings.range_eval_eq_root_set_minpoly NumberField.Embeddings.range_eval_eq_root_set_minpoly
+#align number_field.embeddings.range_eval_eq_root_set_minpoly NumberField.Embeddings.range_eval_eq_root_set_minpoly
 
 end Roots
 
@@ -140,8 +139,7 @@ theorem pow_eq_one_of_norm_eq_one {x : K} (hxi : IsIntegral ℤ x) (hx : ∀ φ 
     rw [pow_eq_zero hp, map_zero, norm_zero] at hx
     norm_num at hx
   · exact fun a _ => ⟨hxi.pow a, fun φ => by simp only [hx φ, norm_pow, one_pow, map_pow]⟩
-#align
-  number_field.embeddings.pow_eq_one_of_norm_eq_one NumberField.Embeddings.pow_eq_one_of_norm_eq_one
+#align number_field.embeddings.pow_eq_one_of_norm_eq_one NumberField.Embeddings.pow_eq_one_of_norm_eq_one
 
 end Bounded
 
@@ -208,8 +206,7 @@ def IsReal.embedding {φ : K →+* ℂ} (hφ : IsReal φ) : K →+* ℝ
       tsub_zero, eq_self_iff_true, forall_const]
   map_zero' := by simp only [map_zero, zero_re]
   map_add' := by simp only [map_add, add_re, eq_self_iff_true, forall_const]
-#align
-  number_field.complex_embedding.is_real.embedding NumberField.ComplexEmbedding.IsReal.embedding
+#align number_field.complex_embedding.is_real.embedding NumberField.ComplexEmbedding.IsReal.embedding
 
 @[simp]
 theorem IsReal.coe_embedding_apply {φ : K →+* ℂ} (hφ : IsReal φ) (x : K) :
@@ -218,20 +215,17 @@ theorem IsReal.coe_embedding_apply {φ : K →+* ℂ} (hφ : IsReal φ) (x : K) 
   · rw [of_real_im, eq_comm, ← Complex.eq_conj_iff_im]
     rw [is_real] at hφ
     exact RingHom.congr_fun hφ x
-#align
-  number_field.complex_embedding.is_real.coe_embedding_apply NumberField.ComplexEmbedding.IsReal.coe_embedding_apply
+#align number_field.complex_embedding.is_real.coe_embedding_apply NumberField.ComplexEmbedding.IsReal.coe_embedding_apply
 
 theorem IsReal.place_embedding {φ : K →+* ℂ} (hφ : IsReal φ) : place hφ.Embedding = place φ :=
   by
   ext x
   simp only [place_apply, Real.norm_eq_abs, ← abs_of_real, norm_eq_abs, hφ.coe_embedding_apply x]
-#align
-  number_field.complex_embedding.is_real.place_embedding NumberField.ComplexEmbedding.IsReal.place_embedding
+#align number_field.complex_embedding.is_real.place_embedding NumberField.ComplexEmbedding.IsReal.place_embedding
 
 theorem is_real_conjugate_iff {φ : K →+* ℂ} : IsReal (conjugate φ) ↔ IsReal φ :=
   IsSelfAdjoint.star_iff
-#align
-  number_field.complex_embedding.is_real_conjugate_iff NumberField.ComplexEmbedding.is_real_conjugate_iff
+#align number_field.complex_embedding.is_real_conjugate_iff NumberField.ComplexEmbedding.is_real_conjugate_iff
 
 end NumberField.ComplexEmbedding
 

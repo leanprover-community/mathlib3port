@@ -197,8 +197,7 @@ noncomputable def typeEquiv : Type u ≌ SheafOfTypesCat typesGrothendieckTopolo
 theorem subcanonical_types_grothendieck_topology :
     Sheaf.Subcanonical typesGrothendieckTopology.{u} :=
   Sheaf.Subcanonical.of_yoneda_is_sheaf _ fun X => is_sheaf_yoneda'
-#align
-  category_theory.subcanonical_types_grothendieck_topology CategoryTheory.subcanonical_types_grothendieck_topology
+#align category_theory.subcanonical_types_grothendieck_topology CategoryTheory.subcanonical_types_grothendieck_topology
 
 theorem types_grothendieck_topology_eq_canonical :
     types_grothendieck_topology.{u} = Sheaf.canonicalTopology (Type u) :=
@@ -217,8 +216,7 @@ theorem types_grothendieck_topology_eq_canonical :
                       funext fun y => hsx.elim <| S.2 hf fun _ => y
                   Bool.noConfusion <| ULift.up.inj <| (congr_fun this PUnit.unit : _),
                 fun hs β f => is_sheaf_yoneda' _ fun y => hs _⟩⟩
-#align
-  category_theory.types_grothendieck_topology_eq_canonical CategoryTheory.types_grothendieck_topology_eq_canonical
+#align category_theory.types_grothendieck_topology_eq_canonical CategoryTheory.types_grothendieck_topology_eq_canonical
 
 end CategoryTheory
 

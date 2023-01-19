@@ -811,20 +811,16 @@ theorem IsCompact.bdd_above_image {f : β → α} {K : Set β} (hK : IsCompact K
 theorem Continuous.bdd_below_range_of_has_compact_mul_support [One α] {f : β → α}
     (hf : Continuous f) (h : HasCompactMulSupport f) : BddBelow (range f) :=
   (h.is_compact_range hf).BddBelow
-#align
-  continuous.bdd_below_range_of_has_compact_mul_support Continuous.bdd_below_range_of_has_compact_mul_support
-#align
-  continuous.bdd_below_range_of_has_compact_support Continuous.bdd_below_range_of_has_compact_support
+#align continuous.bdd_below_range_of_has_compact_mul_support Continuous.bdd_below_range_of_has_compact_mul_support
+#align continuous.bdd_below_range_of_has_compact_support Continuous.bdd_below_range_of_has_compact_support
 
 /-- A continuous function with compact support is bounded above. -/
 @[to_additive " A continuous function with compact support is bounded above. "]
 theorem Continuous.bdd_above_range_of_has_compact_mul_support [One α] {f : β → α}
     (hf : Continuous f) (h : HasCompactMulSupport f) : BddAbove (range f) :=
   @Continuous.bdd_below_range_of_has_compact_mul_support αᵒᵈ _ _ _ _ _ _ _ _ hf h
-#align
-  continuous.bdd_above_range_of_has_compact_mul_support Continuous.bdd_above_range_of_has_compact_mul_support
-#align
-  continuous.bdd_above_range_of_has_compact_support Continuous.bdd_above_range_of_has_compact_support
+#align continuous.bdd_above_range_of_has_compact_mul_support Continuous.bdd_above_range_of_has_compact_mul_support
+#align continuous.bdd_above_range_of_has_compact_support Continuous.bdd_above_range_of_has_compact_support
 
 end LinearOrder
 
@@ -2399,8 +2395,7 @@ intervals to the right or to the left of `a`. We give now these characterization
 theorem mem_nhds_within_Ioi_iff_exists_mem_Ioc_Ioo_subset {a u' : α} {s : Set α} (hu' : a < u') :
     s ∈ 𝓝[>] a ↔ ∃ u ∈ Ioc a u', Ioo a u ⊆ s :=
   (tfae_mem_nhds_within_Ioi hu' s).out 0 3
-#align
-  mem_nhds_within_Ioi_iff_exists_mem_Ioc_Ioo_subset mem_nhds_within_Ioi_iff_exists_mem_Ioc_Ioo_subset
+#align mem_nhds_within_Ioi_iff_exists_mem_Ioc_Ioo_subset mem_nhds_within_Ioi_iff_exists_mem_Ioc_Ioo_subset
 
 /-- A set is a neighborhood of `a` within `(a, +∞)` if and only if it contains an interval `(a, u)`
 with `a < u < u'`, provided `a` is not a top element. -/
@@ -2455,8 +2450,7 @@ theorem tfae_mem_nhds_within_Iio {a b : α} (h : a < b) (s : Set α) :
 theorem mem_nhds_within_Iio_iff_exists_mem_Ico_Ioo_subset {a l' : α} {s : Set α} (hl' : l' < a) :
     s ∈ 𝓝[<] a ↔ ∃ l ∈ Ico l' a, Ioo l a ⊆ s :=
   (tfae_mem_nhds_within_Iio hl' s).out 0 3
-#align
-  mem_nhds_within_Iio_iff_exists_mem_Ico_Ioo_subset mem_nhds_within_Iio_iff_exists_mem_Ico_Ioo_subset
+#align mem_nhds_within_Iio_iff_exists_mem_Ico_Ioo_subset mem_nhds_within_Iio_iff_exists_mem_Ico_Ioo_subset
 
 /-- A set is a neighborhood of `a` within `(-∞, a)` if and only if it contains an interval `(l, a)`
 with `l < a`, provided `a` is not a bottom element. -/
@@ -3055,8 +3049,7 @@ theorem mem_nhds_within_Iio_iff_exists_Ico_subset [NoMinOrder α] [DenselyOrdere
 theorem mem_nhds_within_Ici_iff_exists_mem_Ioc_Ico_subset {a u' : α} {s : Set α} (hu' : a < u') :
     s ∈ 𝓝[≥] a ↔ ∃ u ∈ Ioc a u', Ico a u ⊆ s :=
   (tfae_mem_nhds_within_Ici hu' s).out 0 3 (by norm_num) (by norm_num)
-#align
-  mem_nhds_within_Ici_iff_exists_mem_Ioc_Ico_subset mem_nhds_within_Ici_iff_exists_mem_Ioc_Ico_subset
+#align mem_nhds_within_Ici_iff_exists_mem_Ioc_Ico_subset mem_nhds_within_Ici_iff_exists_mem_Ioc_Ico_subset
 
 /-- A set is a neighborhood of `a` within `[a, +∞)` if and only if it contains an interval `[a, u)`
 with `a < u < u'`, provided `a` is not a top element. -/
@@ -3116,8 +3109,7 @@ theorem tfae_mem_nhds_within_Iic {a b : α} (h : a < b) (s : Set α) :
 theorem mem_nhds_within_Iic_iff_exists_mem_Ico_Ioc_subset {a l' : α} {s : Set α} (hl' : l' < a) :
     s ∈ 𝓝[≤] a ↔ ∃ l ∈ Ico l' a, Ioc l a ⊆ s :=
   (tfae_mem_nhds_within_Iic hl' s).out 0 3 (by norm_num) (by norm_num)
-#align
-  mem_nhds_within_Iic_iff_exists_mem_Ico_Ioc_subset mem_nhds_within_Iic_iff_exists_mem_Ico_Ioc_subset
+#align mem_nhds_within_Iic_iff_exists_mem_Ico_Ioc_subset mem_nhds_within_Iic_iff_exists_mem_Ico_Ioc_subset
 
 /-- A set is a neighborhood of `a` within `(-∞, a]` if and only if it contains an interval `(l, a]`
 with `l < a`, provided `a` is not a bottom element. -/
@@ -3219,8 +3211,7 @@ instance (priority := 100) LinearOrderedAddCommGroup.topological_add_group : Top
     continuous_iff_continuous_at.2 fun a =>
       LinearOrderedAddCommGroup.tendsto_nhds.2 fun ε ε0 =>
         (eventually_abs_sub_lt a ε0).mono fun x hx => by rwa [neg_sub_neg, abs_sub_comm]
-#align
-  linear_ordered_add_comm_group.topological_add_group LinearOrderedAddCommGroup.topological_add_group
+#align linear_ordered_add_comm_group.topological_add_group LinearOrderedAddCommGroup.topological_add_group
 
 @[continuity]
 theorem continuous_abs : Continuous (abs : α → α) :=
@@ -3563,8 +3554,7 @@ theorem IsLUB.exists_seq_strict_mono_tendsto_of_not_mem {t : Set α} {x : α}
   · cases n
     · exact (hf 0 l hl).2.2.2
     · exact (hf n.succ _ (I n)).2.2.2
-#align
-  is_lub.exists_seq_strict_mono_tendsto_of_not_mem IsLUB.exists_seq_strict_mono_tendsto_of_not_mem
+#align is_lub.exists_seq_strict_mono_tendsto_of_not_mem IsLUB.exists_seq_strict_mono_tendsto_of_not_mem
 
 theorem IsLUB.exists_seq_monotone_tendsto {t : Set α} {x : α} [IsCountablyGenerated (𝓝 x)]
     (htx : IsLUB t x) (ht : t.Nonempty) :
@@ -3614,8 +3604,7 @@ theorem IsGLB.exists_seq_strict_anti_tendsto_of_not_mem {t : Set α} {x : α}
     [IsCountablyGenerated (𝓝 x)] (htx : IsGLB t x) (not_mem : x ∉ t) (ht : t.Nonempty) :
     ∃ u : ℕ → α, StrictAnti u ∧ (∀ n, x < u n) ∧ Tendsto u atTop (𝓝 x) ∧ ∀ n, u n ∈ t :=
   @IsLUB.exists_seq_strict_mono_tendsto_of_not_mem αᵒᵈ _ _ _ t x _ htx not_mem ht
-#align
-  is_glb.exists_seq_strict_anti_tendsto_of_not_mem IsGLB.exists_seq_strict_anti_tendsto_of_not_mem
+#align is_glb.exists_seq_strict_anti_tendsto_of_not_mem IsGLB.exists_seq_strict_anti_tendsto_of_not_mem
 
 theorem IsGLB.exists_seq_antitone_tendsto {t : Set α} {x : α} [IsCountablyGenerated (𝓝 x)]
     (htx : IsGLB t x) (ht : t.Nonempty) :

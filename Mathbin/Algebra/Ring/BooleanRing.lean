@@ -472,8 +472,7 @@ def GeneralizedBooleanAlgebra.toNonUnitalCommRing [GeneralizedBooleanAlgebra α]
   mul_comm _ _ := inf_comm
   left_distrib := inf_symmDiff_distrib_left
   right_distrib := inf_symmDiff_distrib_right
-#align
-  generalized_boolean_algebra.to_non_unital_comm_ring GeneralizedBooleanAlgebra.toNonUnitalCommRing
+#align generalized_boolean_algebra.to_non_unital_comm_ring GeneralizedBooleanAlgebra.toNonUnitalCommRing
 
 instance [GeneralizedBooleanAlgebra α] : NonUnitalCommRing (AsBoolring α) :=
   @GeneralizedBooleanAlgebra.toNonUnitalCommRing α _

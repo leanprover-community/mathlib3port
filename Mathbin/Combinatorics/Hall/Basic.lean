@@ -167,8 +167,7 @@ theorem Finset.all_card_le_bUnion_card_iff_exists_injective {ι : Type u} {α : 
     rw [Finset.mem_image, Finset.mem_bunionᵢ]
     rintro ⟨x, hx, rfl⟩
     exact ⟨x, hx, hf₂ x⟩
-#align
-  finset.all_card_le_bUnion_card_iff_exists_injective Finset.all_card_le_bUnion_card_iff_exists_injective
+#align finset.all_card_le_bUnion_card_iff_exists_injective Finset.all_card_le_bUnion_card_iff_exists_injective
 
 /-- Given a relation such that the image of every singleton set is finite, then the image of every
 finite set is finite. -/
@@ -201,15 +200,14 @@ theorem Fintype.all_card_le_rel_image_card_iff_exists_injective {α : Type u} {�
   have h : ∀ A : Finset α, Fintype.card (Rel.image r A) = (A.bUnion r').card :=
     by
     intro A
-    rw [← Set.to_finset_card]
+    rw [← Set.toFinset_card]
     apply congr_arg
     ext b
     simp [Rel.image]
   have h' : ∀ (f : α → β) (x), r x (f x) ↔ f x ∈ r' x := by simp [Rel.image]
   simp only [h, h']
   apply Finset.all_card_le_bUnion_card_iff_exists_injective
-#align
-  fintype.all_card_le_rel_image_card_iff_exists_injective Fintype.all_card_le_rel_image_card_iff_exists_injective
+#align fintype.all_card_le_rel_image_card_iff_exists_injective Fintype.all_card_le_rel_image_card_iff_exists_injective
 
 -- TODO: decidable_pred makes Yael sad. When an appropriate decidable_rel-like exists, fix it.
 /-- This is a version of **Hall's Marriage Theorem** in terms of a relation to a finite type.
@@ -234,6 +232,5 @@ theorem Fintype.all_card_le_filter_rel_iff_exists_injective {α : Type u} {β : 
   have h' : ∀ (f : α → β) (x), r x (f x) ↔ f x ∈ r' x := by simp
   simp_rw [h, h']
   apply Finset.all_card_le_bUnion_card_iff_exists_injective
-#align
-  fintype.all_card_le_filter_rel_iff_exists_injective Fintype.all_card_le_filter_rel_iff_exists_injective
+#align fintype.all_card_le_filter_rel_iff_exists_injective Fintype.all_card_le_filter_rel_iff_exists_injective
 

@@ -204,8 +204,7 @@ theorem box_integral_eq_integral (f : SimpleFunc (ι → ℝ) E) (μ : Measure (
     [IsLocallyFiniteMeasure μ] (I : Box ι) (l : IntegrationParams) (hl : l.bRiemann = ff) :
     BoxIntegral.integral.{u, v, v} I l f μ.toBoxAdditive.toSmul = f.integral (μ.restrict I) :=
   (f.hasBoxIntegral μ I l hl).integral_eq
-#align
-  measure_theory.simple_func.box_integral_eq_integral MeasureTheory.SimpleFunc.box_integral_eq_integral
+#align measure_theory.simple_func.box_integral_eq_integral MeasureTheory.SimpleFunc.box_integral_eq_integral
 
 end SimpleFunc
 

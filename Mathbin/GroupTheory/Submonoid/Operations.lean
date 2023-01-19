@@ -987,8 +987,7 @@ instance (priority := 75) toLinearOrderedCommMonoid {M} [LinearOrderedCommMonoid
   Subtype.coe_injective.LinearOrderedCommMonoid coe rfl (fun _ _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) fun _ _ => rfl
 #align submonoid_class.to_linear_ordered_comm_monoid SubmonoidClass.toLinearOrderedCommMonoid
-#align
-  add_submonoid_class.to_linear_ordered_add_comm_monoid AddSubmonoidClass.toLinearOrderedAddCommMonoid
+#align add_submonoid_class.to_linear_ordered_add_comm_monoid AddSubmonoidClass.toLinearOrderedAddCommMonoid
 -/
 
 #print SubmonoidClass.toOrderedCancelCommMonoid /-
@@ -1000,8 +999,7 @@ instance (priority := 75) toOrderedCancelCommMonoid {M} [OrderedCancelCommMonoid
     [SetLike A M] [SubmonoidClass A M] (S : A) : OrderedCancelCommMonoid S :=
   Subtype.coe_injective.OrderedCancelCommMonoid coe rfl (fun _ _ => rfl) fun _ _ => rfl
 #align submonoid_class.to_ordered_cancel_comm_monoid SubmonoidClass.toOrderedCancelCommMonoid
-#align
-  add_submonoid_class.to_ordered_cancel_add_comm_monoid AddSubmonoidClass.toOrderedCancelAddCommMonoid
+#align add_submonoid_class.to_ordered_cancel_add_comm_monoid AddSubmonoidClass.toOrderedCancelAddCommMonoid
 -/
 
 #print SubmonoidClass.toLinearOrderedCancelCommMonoid /-
@@ -1014,10 +1012,8 @@ instance (priority := 75) toLinearOrderedCancelCommMonoid {M} [LinearOrderedCanc
     {A : Type _} [SetLike A M] [SubmonoidClass A M] (S : A) : LinearOrderedCancelCommMonoid S :=
   Subtype.coe_injective.LinearOrderedCancelCommMonoid coe rfl (fun _ _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) fun _ _ => rfl
-#align
-  submonoid_class.to_linear_ordered_cancel_comm_monoid SubmonoidClass.toLinearOrderedCancelCommMonoid
-#align
-  add_submonoid_class.to_linear_ordered_cancel_add_comm_monoid AddSubmonoidClass.toLinearOrderedCancelAddCommMonoid
+#align submonoid_class.to_linear_ordered_cancel_comm_monoid SubmonoidClass.toLinearOrderedCancelCommMonoid
+#align add_submonoid_class.to_linear_ordered_cancel_add_comm_monoid AddSubmonoidClass.toLinearOrderedCancelAddCommMonoid
 -/
 
 include hA
@@ -1172,7 +1168,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.coe_pow [ano
 theorem [anonymous] {M : Type _} [Monoid M] {S : Submonoid M} (x : S) (n : ℕ) :
     ↑(x ^ n) = (x ^ n : M) :=
   rfl
-#align submonoid.coe_pow[anonymous]
+#align submonoid.coe_pow [anonymous]
 
 /- warning: submonoid.to_monoid -> Submonoid.toMonoid is a dubious translation:
 lean 3 declaration is
@@ -1260,8 +1256,7 @@ instance toLinearOrderedCancelCommMonoid {M} [LinearOrderedCancelCommMonoid M] (
   Subtype.coe_injective.LinearOrderedCancelCommMonoid coe rfl (fun _ _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) fun _ _ => rfl
 #align submonoid.to_linear_ordered_cancel_comm_monoid Submonoid.toLinearOrderedCancelCommMonoid
-#align
-  add_submonoid.to_linear_ordered_cancel_add_comm_monoid AddSubmonoid.toLinearOrderedCancelAddCommMonoid
+#align add_submonoid.to_linear_ordered_cancel_add_comm_monoid AddSubmonoid.toLinearOrderedCancelAddCommMonoid
 
 /- warning: submonoid.subtype -> Submonoid.subtype is a dubious translation:
 lean 3 declaration is
@@ -2397,8 +2392,7 @@ theorem Submonoid.equiv_map_of_injective_coe_mul_equiv (e : M ≃* N) :
   ext
   rfl
 #align submonoid.equiv_map_of_injective_coe_mul_equiv Submonoid.equiv_map_of_injective_coe_mul_equiv
-#align
-  add_submonoid.equiv_map_of_injective_coe_add_equiv AddSubmonoid.equiv_map_of_injective_coe_add_equiv
+#align add_submonoid.equiv_map_of_injective_coe_add_equiv AddSubmonoid.equiv_map_of_injective_coe_add_equiv
 
 section Actions
 

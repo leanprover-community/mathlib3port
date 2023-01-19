@@ -135,8 +135,7 @@ theorem coe_lift_lie_eq_lift_coe (f : M →ₗ⁅R,L⁆ N →ₗ[R] P) :
   simp only [lift_lie, LinearEquiv.trans_apply, LieModuleEquiv.coe_to_linear_equiv,
     coe_linear_map_max_triv_linear_map_equiv_lie_module_hom, coe_max_triv_equiv_apply,
     coe_linear_map_max_triv_linear_map_equiv_lie_module_hom_symm]
-#align
-  tensor_product.lie_module.coe_lift_lie_eq_lift_coe TensorProduct.LieModule.coe_lift_lie_eq_lift_coe
+#align tensor_product.lie_module.coe_lift_lie_eq_lift_coe TensorProduct.LieModule.coe_lift_lie_eq_lift_coe
 
 theorem lift_lie_apply (f : M →ₗ⁅R,L⁆ N →ₗ[R] P) (m : M) (n : N) :
     liftLie R L M N P f (m ⊗ₜ n) = f m n := by
@@ -253,8 +252,7 @@ theorem lie_ideal_oper_eq_tensor_map_range :
     rw [← h]
     use ⟨x, hx⟩, ⟨n, hn⟩
     simp
-#align
-  lie_submodule.lie_ideal_oper_eq_tensor_map_range LieSubmodule.lie_ideal_oper_eq_tensor_map_range
+#align lie_submodule.lie_ideal_oper_eq_tensor_map_range LieSubmodule.lie_ideal_oper_eq_tensor_map_range
 
 end LieSubmodule
 

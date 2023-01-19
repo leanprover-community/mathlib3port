@@ -396,8 +396,7 @@ theorem comap_coe_eq_uniformity :
   rw [this, ← Filter.comap_comap]
   change Filter.comap _ (Filter.comap _ (𝓤 <| Quotient <| separation_setoid <| CauchyCat α)) = 𝓤 α
   rw [comap_quotient_eq_uniformity, uniform_embedding_pure_cauchy.comap_uniformity]
-#align
-  uniform_space.completion.comap_coe_eq_uniformity UniformSpace.Completion.comap_coe_eq_uniformity
+#align uniform_space.completion.comap_coe_eq_uniformity UniformSpace.Completion.comap_coe_eq_uniformity
 
 theorem uniform_inducing_coe : UniformInducing (coe : α → Completion α) :=
   ⟨comap_coe_eq_uniformity α⟩
@@ -425,21 +424,18 @@ def cpkg {α : Type _} [UniformSpace α] : AbstractCompletion α
 
 instance AbstractCompletion.inhabited : Inhabited (AbstractCompletion α) :=
   ⟨cpkg⟩
-#align
-  uniform_space.completion.abstract_completion.inhabited UniformSpace.Completion.AbstractCompletion.inhabited
+#align uniform_space.completion.abstract_completion.inhabited UniformSpace.Completion.AbstractCompletion.inhabited
 
 attribute [local instance]
   AbstractCompletion.uniformStruct AbstractCompletion.complete AbstractCompletion.separation
 
 theorem nonempty_completion_iff : Nonempty (Completion α) ↔ Nonempty α :=
   cpkg.dense.nonempty_iff.symm
-#align
-  uniform_space.completion.nonempty_completion_iff UniformSpace.Completion.nonempty_completion_iff
+#align uniform_space.completion.nonempty_completion_iff UniformSpace.Completion.nonempty_completion_iff
 
 theorem uniform_continuous_coe : UniformContinuous (coe : α → Completion α) :=
   cpkg.uniform_continuous_coe
-#align
-  uniform_space.completion.uniform_continuous_coe UniformSpace.Completion.uniform_continuous_coe
+#align uniform_space.completion.uniform_continuous_coe UniformSpace.Completion.uniform_continuous_coe
 
 theorem continuous_coe : Continuous (coe : α → Completion α) :=
   cpkg.continuous_coe
@@ -463,15 +459,13 @@ theorem dense_inducing_coe : DenseInducing (coe : α → Completion α) :=
 /-- The uniform bijection between a complete space and its uniform completion. -/
 def UniformCompletion.completeEquivSelf [CompleteSpace α] [SeparatedSpace α] : Completion α ≃ᵤ α :=
   AbstractCompletion.compareEquiv Completion.cpkg AbstractCompletion.ofComplete
-#align
-  uniform_space.completion.uniform_completion.complete_equiv_self UniformSpace.Completion.UniformCompletion.completeEquivSelf
+#align uniform_space.completion.uniform_completion.complete_equiv_self UniformSpace.Completion.UniformCompletion.completeEquivSelf
 
 open TopologicalSpace
 
 instance separable_space_completion [SeparableSpace α] : SeparableSpace (Completion α) :=
   Completion.dense_inducing_coe.SeparableSpace
-#align
-  uniform_space.completion.separable_space_completion UniformSpace.Completion.separable_space_completion
+#align uniform_space.completion.separable_space_completion UniformSpace.Completion.separable_space_completion
 
 theorem dense_embedding_coe [SeparatedSpace α] : DenseEmbedding (coe : α → Completion α) :=
   { dense_inducing_coe with inj := separated_pure_cauchy_injective }
@@ -540,8 +534,7 @@ variable [CompleteSpace β]
 
 theorem uniform_continuous_extension : UniformContinuous (Completion.extension f) :=
   cpkg.uniform_continuous_extend
-#align
-  uniform_space.completion.uniform_continuous_extension UniformSpace.Completion.uniform_continuous_extension
+#align uniform_space.completion.uniform_continuous_extension UniformSpace.Completion.uniform_continuous_extension
 
 theorem continuous_extension : Continuous (Completion.extension f) :=
   cpkg.continuous_extend
@@ -582,8 +575,7 @@ protected def map (f : α → β) : Completion α → Completion β :=
 
 theorem uniform_continuous_map : UniformContinuous (Completion.map f) :=
   cpkg.uniform_continuous_map cpkg f
-#align
-  uniform_space.completion.uniform_continuous_map UniformSpace.Completion.uniform_continuous_map
+#align uniform_space.completion.uniform_continuous_map UniformSpace.Completion.uniform_continuous_map
 
 theorem continuous_map : Continuous (Completion.map f) :=
   cpkg.continuous_map cpkg f
@@ -648,20 +640,17 @@ def completionSeparationQuotientEquiv (α : Type u) [UniformSpace α] :
         extension_coe (separation_quotient.uniform_continuous_lift _),
         SeparationQuotient.lift_mk (uniform_continuous_coe α) _] <;>
       infer_instance
-#align
-  uniform_space.completion.completion_separation_quotient_equiv UniformSpace.Completion.completionSeparationQuotientEquiv
+#align uniform_space.completion.completion_separation_quotient_equiv UniformSpace.Completion.completionSeparationQuotientEquiv
 
 theorem uniform_continuous_completion_separation_quotient_equiv :
     UniformContinuous ⇑(completionSeparationQuotientEquiv α) :=
   uniform_continuous_extension
-#align
-  uniform_space.completion.uniform_continuous_completion_separation_quotient_equiv UniformSpace.Completion.uniform_continuous_completion_separation_quotient_equiv
+#align uniform_space.completion.uniform_continuous_completion_separation_quotient_equiv UniformSpace.Completion.uniform_continuous_completion_separation_quotient_equiv
 
 theorem uniform_continuous_completion_separation_quotient_equiv_symm :
     UniformContinuous ⇑(completionSeparationQuotientEquiv α).symm :=
   uniform_continuous_map
-#align
-  uniform_space.completion.uniform_continuous_completion_separation_quotient_equiv_symm UniformSpace.Completion.uniform_continuous_completion_separation_quotient_equiv_symm
+#align uniform_space.completion.uniform_continuous_completion_separation_quotient_equiv_symm UniformSpace.Completion.uniform_continuous_completion_separation_quotient_equiv_symm
 
 end SeparationQuotientCompletion
 
@@ -692,8 +681,7 @@ variable [CompleteSpace γ] (f)
 
 theorem uniform_continuous_extension₂ : UniformContinuous₂ (Completion.extension₂ f) :=
   cpkg.uniform_continuous_extension₂ cpkg f
-#align
-  uniform_space.completion.uniform_continuous_extension₂ UniformSpace.Completion.uniform_continuous_extension₂
+#align uniform_space.completion.uniform_continuous_extension₂ UniformSpace.Completion.uniform_continuous_extension₂
 
 end Extension₂
 
@@ -708,8 +696,7 @@ protected def map₂ (f : α → β → γ) : Completion α → Completion β �
 
 theorem uniform_continuous_map₂ (f : α → β → γ) : UniformContinuous₂ (Completion.map₂ f) :=
   cpkg.uniform_continuous_map₂ cpkg cpkg f
-#align
-  uniform_space.completion.uniform_continuous_map₂ UniformSpace.Completion.uniform_continuous_map₂
+#align uniform_space.completion.uniform_continuous_map₂ UniformSpace.Completion.uniform_continuous_map₂
 
 theorem continuous_map₂ {δ} [TopologicalSpace δ] {f : α → β → γ} {a : δ → Completion α}
     {b : δ → Completion β} (ha : Continuous a) (hb : Continuous b) :

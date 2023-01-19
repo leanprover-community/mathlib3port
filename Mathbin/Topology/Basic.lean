@@ -1935,8 +1935,7 @@ theorem DenseRange.subset_closure_image_preimage_of_is_open (hf : DenseRange f) 
   by
   rw [image_preimage_eq_inter_range]
   exact hf.open_subset_closure_inter hs
-#align
-  dense_range.subset_closure_image_preimage_of_is_open DenseRange.subset_closure_image_preimage_of_is_open
+#align dense_range.subset_closure_image_preimage_of_is_open DenseRange.subset_closure_image_preimage_of_is_open
 
 /-- If a continuous map with dense range maps a dense set to a subset of `t`, then `t` is a dense
 set. -/

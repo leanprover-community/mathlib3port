@@ -117,6 +117,5 @@ theorem BoolAlg_dual_comp_forget_to_BoundedDistribLattice :
     BoolAlgCat.dual ⋙ forget₂ BoolAlgCat BoundedDistribLatticeCat =
       forget₂ BoolAlgCat BoundedDistribLatticeCat ⋙ BoundedDistribLatticeCat.dual :=
   rfl
-#align
-  BoolAlg_dual_comp_forget_to_BoundedDistribLattice BoolAlg_dual_comp_forget_to_BoundedDistribLattice
+#align BoolAlg_dual_comp_forget_to_BoundedDistribLattice BoolAlg_dual_comp_forget_to_BoundedDistribLattice
 

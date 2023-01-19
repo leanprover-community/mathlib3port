@@ -217,8 +217,7 @@ theorem Finset.insert_eq_coe_list_of_mem {α : Type _} [DecidableEq α] (x : α)
   by
   have h : x ∈ xs := by simpa [hxs'] using h
   rw [Finset.insert_eq_of_mem h, hxs']
-#align
-  tactic.norm_num.finset.insert_eq_coe_list_of_mem Tactic.NormNum.Finset.insert_eq_coe_list_of_mem
+#align tactic.norm_num.finset.insert_eq_coe_list_of_mem Tactic.NormNum.Finset.insert_eq_coe_list_of_mem
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

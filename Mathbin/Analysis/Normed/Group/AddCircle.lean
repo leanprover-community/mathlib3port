@@ -193,15 +193,13 @@ theorem closed_ball_eq_univ_of_half_period_le (hp : p ≠ 0) (x : AddCircle p) {
     (hε : |p| / 2 ≤ ε) : closedBall x ε = univ :=
   eq_univ_iff_forall.mpr fun x => by
     simpa only [mem_closed_ball, dist_eq_norm] using (norm_le_half_period p hp).trans hε
-#align
-  add_circle.closed_ball_eq_univ_of_half_period_le AddCircle.closed_ball_eq_univ_of_half_period_le
+#align add_circle.closed_ball_eq_univ_of_half_period_le AddCircle.closed_ball_eq_univ_of_half_period_le
 
 @[simp]
 theorem coe_real_preimage_closed_ball_period_zero (x ε : ℝ) :
     coe ⁻¹' closedBall (x : AddCircle (0 : ℝ)) ε = closedBall x ε := by
   ext y <;> simp [dist_eq_norm, ← quotientAddGroup.coe_sub]
-#align
-  add_circle.coe_real_preimage_closed_ball_period_zero AddCircle.coe_real_preimage_closed_ball_period_zero
+#align add_circle.coe_real_preimage_closed_ball_period_zero AddCircle.coe_real_preimage_closed_ball_period_zero
 
 theorem coe_real_preimage_closed_ball_eq_Union (x ε : ℝ) :
     coe ⁻¹' closedBall (x : AddCircle p) ε = ⋃ z : ℤ, closedBall (x + z • p) ε :=
@@ -215,8 +213,7 @@ theorem coe_real_preimage_closed_ball_eq_Union (x ε : ℝ) :
   rw [← mul_le_mul_left (abs_pos.mpr <| inv_ne_zero hp), ← abs_mul, mul_sub, mul_comm _ p,
     inv_mul_cancel_left₀ hp] at hn⊢
   exact (round_le (p⁻¹ * (y - x)) n).trans hn
-#align
-  add_circle.coe_real_preimage_closed_ball_eq_Union AddCircle.coe_real_preimage_closed_ball_eq_Union
+#align add_circle.coe_real_preimage_closed_ball_eq_Union AddCircle.coe_real_preimage_closed_ball_eq_Union
 
 theorem coe_real_preimage_closed_ball_inter_eq {x ε : ℝ} (s : Set ℝ)
     (hs : s ⊆ closedBall x (|p| / 2)) :
@@ -256,8 +253,7 @@ theorem coe_real_preimage_closed_ball_inter_eq {x ε : ℝ} (s : Set ℝ)
       · have : ↑z * p ≤ p
         nlinarith
         linarith [abs_eq_neg_self.mpr hp.le]
-#align
-  add_circle.coe_real_preimage_closed_ball_inter_eq AddCircle.coe_real_preimage_closed_ball_inter_eq
+#align add_circle.coe_real_preimage_closed_ball_inter_eq AddCircle.coe_real_preimage_closed_ball_inter_eq
 
 section FiniteOrderPoints
 
@@ -294,8 +290,7 @@ theorem le_add_order_smul_norm_of_is_of_fin_add_order {u : AddCircle p} (hu : Is
     mul_le_mul_left hp.out, Nat.one_le_cast, Nat.one_le_iff_ne_zero]
   contrapose! hu'
   simpa only [hu', algebraMap.coe_zero, zero_div, mul_zero, norm_eq_zero] using hn
-#align
-  add_circle.le_add_order_smul_norm_of_is_of_fin_add_order AddCircle.le_add_order_smul_norm_of_is_of_fin_add_order
+#align add_circle.le_add_order_smul_norm_of_is_of_fin_add_order AddCircle.le_add_order_smul_norm_of_is_of_fin_add_order
 
 end FiniteOrderPoints
 

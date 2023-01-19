@@ -522,10 +522,8 @@ instance (priority := 100) t2SpaceOfProperlyDiscontinuousSmulOfT2Space [T2Space 
   · rintro ⟨-, h'⟩
     simp only [image_smul, not_not, mem_set_of_eq, Ne.def] at H
     exact eq_empty_iff_forall_not_mem.mp H (γ • x) ⟨mem_image_of_mem _ x_in_K₀, h'⟩
-#align
-  t2_space_of_properly_discontinuous_smul_of_t2_space t2SpaceOfProperlyDiscontinuousSmulOfT2Space
-#align
-  t2_space_of_properly_discontinuous_vadd_of_t2_space t2_space_of_properly_discontinuous_vadd_of_t2_space
+#align t2_space_of_properly_discontinuous_smul_of_t2_space t2SpaceOfProperlyDiscontinuousSmulOfT2Space
+#align t2_space_of_properly_discontinuous_vadd_of_t2_space t2_space_of_properly_discontinuous_vadd_of_t2_space
 
 /-- The quotient of a second countable space by a group action is second countable. -/
 @[to_additive
@@ -533,10 +531,8 @@ instance (priority := 100) t2SpaceOfProperlyDiscontinuousSmulOfT2Space [T2Space 
 theorem HasContinuousConstSmul.second_countable_topology [SecondCountableTopology T]
     [HasContinuousConstSmul Γ T] : SecondCountableTopology (Quotient (MulAction.orbitRel Γ T)) :=
   TopologicalSpace.Quotient.second_countable_topology is_open_map_quotient_mk_mul
-#align
-  has_continuous_const_smul.second_countable_topology HasContinuousConstSmul.second_countable_topology
-#align
-  has_continuous_const_vadd.second_countable_topology HasContinuousConstVadd.second_countable_topology
+#align has_continuous_const_smul.second_countable_topology HasContinuousConstSmul.second_countable_topology
+#align has_continuous_const_vadd.second_countable_topology HasContinuousConstVadd.second_countable_topology
 
 section nhds
 

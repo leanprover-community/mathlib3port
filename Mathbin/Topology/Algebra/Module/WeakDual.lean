@@ -322,8 +322,7 @@ theorem tendsto_iff_forall_eval_tendsto_top_dual_pairing {l : Filter α} {f : α
     Tendsto f l (𝓝 x) ↔
       ∀ y, Tendsto (fun i => topDualPairing 𝕜 E (f i) y) l (𝓝 (topDualPairing 𝕜 E x y)) :=
   WeakBilin.tendsto_iff_forall_eval_tendsto _ ContinuousLinearMap.coe_injective
-#align
-  tendsto_iff_forall_eval_tendsto_top_dual_pairing tendsto_iff_forall_eval_tendsto_top_dual_pairing
+#align tendsto_iff_forall_eval_tendsto_top_dual_pairing tendsto_iff_forall_eval_tendsto_top_dual_pairing
 
 end WeakStarTopology
 

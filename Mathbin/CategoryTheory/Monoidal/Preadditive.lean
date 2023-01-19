@@ -102,8 +102,7 @@ theorem monoidal_preadditive_of_faithful {D} [Category D] [Preadditive D] [Monoi
       apply F.to_functor.map_injective
       simp only [F.map_tensor, F.to_functor.map_add, preadditive.comp_add, preadditive.add_comp,
         monoidal_preadditive.add_tensor] }
-#align
-  category_theory.monoidal_preadditive_of_faithful CategoryTheory.monoidal_preadditive_of_faithful
+#align category_theory.monoidal_preadditive_of_faithful CategoryTheory.monoidal_preadditive_of_faithful
 
 open BigOperators
 
@@ -272,8 +271,7 @@ theorem left_distributor_right_distributor_assoc {J : Type _} [Fintype J] (X Y :
     eq_to_hom_refl, tensor_id, if_true, dif_ctx_congr, Finset.sum_congr, Finset.mem_univ,
     Finset.sum_dite_eq']
   simp only [associator_inv_naturality, iso.hom_inv_id_assoc]
-#align
-  category_theory.left_distributor_right_distributor_assoc CategoryTheory.left_distributor_right_distributor_assoc
+#align category_theory.left_distributor_right_distributor_assoc CategoryTheory.left_distributor_right_distributor_assoc
 
 end CategoryTheory
 

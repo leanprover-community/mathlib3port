@@ -50,8 +50,7 @@ def preservesFiniteColimitsPreadditiveCoyonedaObjOfProjective (P : C) [hP : Proj
   by
   letI := (projective_iff_preserves_epimorphisms_preadditive_coyoneda_obj' P).mp hP
   apply functor.preserves_finite_colimits_of_preserves_epis_and_kernels
-#align
-  category_theory.preserves_finite_colimits_preadditive_coyoneda_obj_of_projective CategoryTheory.preservesFiniteColimitsPreadditiveCoyonedaObjOfProjective
+#align category_theory.preserves_finite_colimits_preadditive_coyoneda_obj_of_projective CategoryTheory.preservesFiniteColimitsPreadditiveCoyonedaObjOfProjective
 
 /-- An object is projective if its preadditive Co-Yoneda functor preserves finite colimits. -/
 theorem projective_of_preserves_finite_colimits_preadditive_coyoneda_obj (P : C)
@@ -59,8 +58,7 @@ theorem projective_of_preserves_finite_colimits_preadditive_coyoneda_obj (P : C)
   by
   rw [projective_iff_preserves_epimorphisms_preadditive_coyoneda_obj']
   infer_instance
-#align
-  category_theory.projective_of_preserves_finite_colimits_preadditive_coyoneda_obj CategoryTheory.projective_of_preserves_finite_colimits_preadditive_coyoneda_obj
+#align category_theory.projective_of_preserves_finite_colimits_preadditive_coyoneda_obj CategoryTheory.projective_of_preserves_finite_colimits_preadditive_coyoneda_obj
 
 namespace ProjectiveResolutionCat
 
@@ -82,8 +80,7 @@ def ofComplex (Z : C) : ChainComplex C ℕ :=
   ChainComplex.mk' (Projective.over Z) (Projective.syzygies (Projective.π Z))
     (Projective.d (Projective.π Z)) fun ⟨X, Y, f⟩ =>
     ⟨Projective.syzygies f, Projective.d f, (exact_d_f f).w⟩
-#align
-  category_theory.ProjectiveResolution.of_complex CategoryTheory.ProjectiveResolutionCat.ofComplex
+#align category_theory.ProjectiveResolution.of_complex CategoryTheory.ProjectiveResolutionCat.ofComplex
 
 /-- In any abelian category with enough projectives,
 `ProjectiveResolution.of Z` constructs a projective resolution of the object `Z`.
@@ -128,8 +125,7 @@ def toSingle₀ProjectiveResolution {X : ChainComplex C ℕ} {Y : C}
   exact₀ := f.to_single₀_exact_d_f_at_zero
   exact := f.to_single₀_exact_at_succ
   Epi := f.to_single₀_epi_at_zero
-#align
-  homological_complex.hom.to_single₀_ProjectiveResolution HomologicalComplex.Hom.toSingle₀ProjectiveResolution
+#align homological_complex.hom.to_single₀_ProjectiveResolution HomologicalComplex.Hom.toSingle₀ProjectiveResolution
 
 end HomologicalComplex.Hom
 

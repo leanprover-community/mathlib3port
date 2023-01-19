@@ -209,8 +209,7 @@ theorem to_outer_measure_apply_eq_of_inter_support_eq {s t : Set α}
     (h : s ∩ p.support = t ∩ p.support) : p.toOuterMeasure s = p.toOuterMeasure t :=
   le_antisymm (p.to_outer_measure_mono (h.symm ▸ Set.inter_subset_left t p.support))
     (p.to_outer_measure_mono (h ▸ Set.inter_subset_left s p.support))
-#align
-  pmf.to_outer_measure_apply_eq_of_inter_support_eq Pmf.to_outer_measure_apply_eq_of_inter_support_eq
+#align pmf.to_outer_measure_apply_eq_of_inter_support_eq Pmf.to_outer_measure_apply_eq_of_inter_support_eq
 
 @[simp]
 theorem to_outer_measure_apply_fintype [Fintype α] : p.toOuterMeasure s = ∑ x, s.indicator p x :=

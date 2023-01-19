@@ -177,8 +177,7 @@ def pointedToTwopFstForgetCompBipointedToPointedFstAdjunction :
         by
         ext
         cases x <;> rfl }
-#align
-  Pointed_to_Twop_fst_forget_comp_Bipointed_to_Pointed_fst_adjunction pointedToTwopFstForgetCompBipointedToPointedFstAdjunction
+#align Pointed_to_Twop_fst_forget_comp_Bipointed_to_Pointed_fst_adjunction pointedToTwopFstForgetCompBipointedToPointedFstAdjunction
 
 /-- Adding a first point is left adjoint to forgetting the first point. -/
 def pointedToTwopSndForgetCompBipointedToPointedSndAdjunction :
@@ -197,6 +196,5 @@ def pointedToTwopSndForgetCompBipointedToPointedSndAdjunction :
         by
         ext
         cases x <;> rfl }
-#align
-  Pointed_to_Twop_snd_forget_comp_Bipointed_to_Pointed_snd_adjunction pointedToTwopSndForgetCompBipointedToPointedSndAdjunction
+#align Pointed_to_Twop_snd_forget_comp_Bipointed_to_Pointed_snd_adjunction pointedToTwopSndForgetCompBipointedToPointedSndAdjunction
 

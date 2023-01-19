@@ -77,8 +77,7 @@ def complexOfFunctorsToFunctorToComplex {T : Type _} [Category T] :
       naturality' := fun t t' g => by
         ext i
         exact (f.f i).naturality g }
-#align
-  homological_complex.complex_of_functors_to_functor_to_complex HomologicalComplex.complexOfFunctorsToFunctorToComplex
+#align homological_complex.complex_of_functors_to_functor_to_complex HomologicalComplex.complexOfFunctorsToFunctorToComplex
 
 end HomologicalComplex
 

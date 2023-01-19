@@ -155,14 +155,12 @@ theorem apply_norm_sq_eq_inner_adjoint_left (A : E →L[𝕜] E) (x : E) :
     rw [← adjoint_inner_left]
     rfl
   rw [h, ← inner_self_eq_norm_sq _]
-#align
-  continuous_linear_map.apply_norm_sq_eq_inner_adjoint_left ContinuousLinearMap.apply_norm_sq_eq_inner_adjoint_left
+#align continuous_linear_map.apply_norm_sq_eq_inner_adjoint_left ContinuousLinearMap.apply_norm_sq_eq_inner_adjoint_left
 
 theorem apply_norm_eq_sqrt_inner_adjoint_left (A : E →L[𝕜] E) (x : E) :
     ‖A x‖ = Real.sqrt (re ⟪(A† * A) x, x⟫) := by
   rw [← apply_norm_sq_eq_inner_adjoint_left, Real.sqrt_sq (norm_nonneg _)]
-#align
-  continuous_linear_map.apply_norm_eq_sqrt_inner_adjoint_left ContinuousLinearMap.apply_norm_eq_sqrt_inner_adjoint_left
+#align continuous_linear_map.apply_norm_eq_sqrt_inner_adjoint_left ContinuousLinearMap.apply_norm_eq_sqrt_inner_adjoint_left
 
 theorem apply_norm_sq_eq_inner_adjoint_right (A : E →L[𝕜] E) (x : E) :
     ‖A x‖ ^ 2 = re ⟪x, (A† * A) x⟫ :=
@@ -172,14 +170,12 @@ theorem apply_norm_sq_eq_inner_adjoint_right (A : E →L[𝕜] E) (x : E) :
     rw [← adjoint_inner_right]
     rfl
   rw [h, ← inner_self_eq_norm_sq _]
-#align
-  continuous_linear_map.apply_norm_sq_eq_inner_adjoint_right ContinuousLinearMap.apply_norm_sq_eq_inner_adjoint_right
+#align continuous_linear_map.apply_norm_sq_eq_inner_adjoint_right ContinuousLinearMap.apply_norm_sq_eq_inner_adjoint_right
 
 theorem apply_norm_eq_sqrt_inner_adjoint_right (A : E →L[𝕜] E) (x : E) :
     ‖A x‖ = Real.sqrt (re ⟪x, (A† * A) x⟫) := by
   rw [← apply_norm_sq_eq_inner_adjoint_right, Real.sqrt_sq (norm_nonneg _)]
-#align
-  continuous_linear_map.apply_norm_eq_sqrt_inner_adjoint_right ContinuousLinearMap.apply_norm_eq_sqrt_inner_adjoint_right
+#align continuous_linear_map.apply_norm_eq_sqrt_inner_adjoint_right ContinuousLinearMap.apply_norm_eq_sqrt_inner_adjoint_right
 
 /-- The adjoint is unique: a map `A` is the adjoint of `B` iff it satisfies `⟪A x, y⟫ = ⟪x, B y⟫`
 for all `x` and `y`. -/
@@ -320,8 +316,7 @@ theorem ContinuousLinearMap.is_self_adjoint_iff_is_symmetric {A : E →L[𝕜] E
     IsSelfAdjoint A ↔ (A : E →ₗ[𝕜] E).IsSymmetric :=
   ⟨fun hA => hA.IsSymmetric, fun hA =>
     ext fun x => ext_inner_right 𝕜 fun y => (A.adjoint_inner_left y x).symm ▸ (hA x y).symm⟩
-#align
-  continuous_linear_map.is_self_adjoint_iff_is_symmetric ContinuousLinearMap.is_self_adjoint_iff_is_symmetric
+#align continuous_linear_map.is_self_adjoint_iff_is_symmetric ContinuousLinearMap.is_self_adjoint_iff_is_symmetric
 
 theorem LinearMap.IsSymmetric.is_self_adjoint {A : E →L[𝕜] E} (hA : (A : E →ₗ[𝕜] E).IsSymmetric) :
     IsSelfAdjoint A := by rwa [← ContinuousLinearMap.is_self_adjoint_iff_is_symmetric] at hA

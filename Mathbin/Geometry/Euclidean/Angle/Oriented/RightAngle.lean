@@ -47,8 +47,7 @@ theorem oangle_add_right_eq_arccos_of_oangle_eq_pi_div_two {x y : V} (h : o.oang
   rw [o.oangle_eq_angle_of_sign_eq_one hs,
     InnerProductGeometry.angle_add_eq_arccos_of_inner_eq_zero
       (o.inner_eq_zero_of_oangle_eq_pi_div_two h)]
-#align
-  orientation.oangle_add_right_eq_arccos_of_oangle_eq_pi_div_two Orientation.oangle_add_right_eq_arccos_of_oangle_eq_pi_div_two
+#align orientation.oangle_add_right_eq_arccos_of_oangle_eq_pi_div_two Orientation.oangle_add_right_eq_arccos_of_oangle_eq_pi_div_two
 
 /-- An angle in a right-angled triangle expressed using `arccos`. -/
 theorem oangle_add_left_eq_arccos_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y = ↑(π / 2)) :
@@ -57,8 +56,7 @@ theorem oangle_add_left_eq_arccos_of_oangle_eq_pi_div_two {x y : V} (h : o.oangl
   rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
   rw [add_comm]
   exact (-o).oangle_add_right_eq_arccos_of_oangle_eq_pi_div_two h
-#align
-  orientation.oangle_add_left_eq_arccos_of_oangle_eq_pi_div_two Orientation.oangle_add_left_eq_arccos_of_oangle_eq_pi_div_two
+#align orientation.oangle_add_left_eq_arccos_of_oangle_eq_pi_div_two Orientation.oangle_add_left_eq_arccos_of_oangle_eq_pi_div_two
 
 /-- An angle in a right-angled triangle expressed using `arcsin`. -/
 theorem oangle_add_right_eq_arcsin_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y = ↑(π / 2)) :
@@ -70,8 +68,7 @@ theorem oangle_add_right_eq_arcsin_of_oangle_eq_pi_div_two {x y : V} (h : o.oang
     InnerProductGeometry.angle_add_eq_arcsin_of_inner_eq_zero
       (o.inner_eq_zero_of_oangle_eq_pi_div_two h)
       (Or.inl (o.left_ne_zero_of_oangle_eq_pi_div_two h))]
-#align
-  orientation.oangle_add_right_eq_arcsin_of_oangle_eq_pi_div_two Orientation.oangle_add_right_eq_arcsin_of_oangle_eq_pi_div_two
+#align orientation.oangle_add_right_eq_arcsin_of_oangle_eq_pi_div_two Orientation.oangle_add_right_eq_arcsin_of_oangle_eq_pi_div_two
 
 /-- An angle in a right-angled triangle expressed using `arcsin`. -/
 theorem oangle_add_left_eq_arcsin_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y = ↑(π / 2)) :
@@ -80,8 +77,7 @@ theorem oangle_add_left_eq_arcsin_of_oangle_eq_pi_div_two {x y : V} (h : o.oangl
   rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
   rw [add_comm]
   exact (-o).oangle_add_right_eq_arcsin_of_oangle_eq_pi_div_two h
-#align
-  orientation.oangle_add_left_eq_arcsin_of_oangle_eq_pi_div_two Orientation.oangle_add_left_eq_arcsin_of_oangle_eq_pi_div_two
+#align orientation.oangle_add_left_eq_arcsin_of_oangle_eq_pi_div_two Orientation.oangle_add_left_eq_arcsin_of_oangle_eq_pi_div_two
 
 /-- An angle in a right-angled triangle expressed using `arctan`. -/
 theorem oangle_add_right_eq_arctan_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y = ↑(π / 2)) :
@@ -92,8 +88,7 @@ theorem oangle_add_right_eq_arctan_of_oangle_eq_pi_div_two {x y : V} (h : o.oang
   rw [o.oangle_eq_angle_of_sign_eq_one hs,
     InnerProductGeometry.angle_add_eq_arctan_of_inner_eq_zero
       (o.inner_eq_zero_of_oangle_eq_pi_div_two h) (o.left_ne_zero_of_oangle_eq_pi_div_two h)]
-#align
-  orientation.oangle_add_right_eq_arctan_of_oangle_eq_pi_div_two Orientation.oangle_add_right_eq_arctan_of_oangle_eq_pi_div_two
+#align orientation.oangle_add_right_eq_arctan_of_oangle_eq_pi_div_two Orientation.oangle_add_right_eq_arctan_of_oangle_eq_pi_div_two
 
 /-- An angle in a right-angled triangle expressed using `arctan`. -/
 theorem oangle_add_left_eq_arctan_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y = ↑(π / 2)) :
@@ -102,8 +97,7 @@ theorem oangle_add_left_eq_arctan_of_oangle_eq_pi_div_two {x y : V} (h : o.oangl
   rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
   rw [add_comm]
   exact (-o).oangle_add_right_eq_arctan_of_oangle_eq_pi_div_two h
-#align
-  orientation.oangle_add_left_eq_arctan_of_oangle_eq_pi_div_two Orientation.oangle_add_left_eq_arctan_of_oangle_eq_pi_div_two
+#align orientation.oangle_add_left_eq_arctan_of_oangle_eq_pi_div_two Orientation.oangle_add_left_eq_arctan_of_oangle_eq_pi_div_two
 
 /-- The cosine of an angle in a right-angled triangle as a ratio of sides. -/
 theorem cos_oangle_add_right_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y = ↑(π / 2)) :
@@ -113,8 +107,7 @@ theorem cos_oangle_add_right_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y
     rw [oangle_sign_add_right, h, Real.Angle.sign_coe_pi_div_two]
   rw [o.oangle_eq_angle_of_sign_eq_one hs, Real.Angle.cos_coe,
     InnerProductGeometry.cos_angle_add_of_inner_eq_zero (o.inner_eq_zero_of_oangle_eq_pi_div_two h)]
-#align
-  orientation.cos_oangle_add_right_of_oangle_eq_pi_div_two Orientation.cos_oangle_add_right_of_oangle_eq_pi_div_two
+#align orientation.cos_oangle_add_right_of_oangle_eq_pi_div_two Orientation.cos_oangle_add_right_of_oangle_eq_pi_div_two
 
 /-- The cosine of an angle in a right-angled triangle as a ratio of sides. -/
 theorem cos_oangle_add_left_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y = ↑(π / 2)) :
@@ -123,8 +116,7 @@ theorem cos_oangle_add_left_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y 
   rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
   rw [add_comm]
   exact (-o).cos_oangle_add_right_of_oangle_eq_pi_div_two h
-#align
-  orientation.cos_oangle_add_left_of_oangle_eq_pi_div_two Orientation.cos_oangle_add_left_of_oangle_eq_pi_div_two
+#align orientation.cos_oangle_add_left_of_oangle_eq_pi_div_two Orientation.cos_oangle_add_left_of_oangle_eq_pi_div_two
 
 /-- The sine of an angle in a right-angled triangle as a ratio of sides. -/
 theorem sin_oangle_add_right_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y = ↑(π / 2)) :
@@ -135,8 +127,7 @@ theorem sin_oangle_add_right_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y
   rw [o.oangle_eq_angle_of_sign_eq_one hs, Real.Angle.sin_coe,
     InnerProductGeometry.sin_angle_add_of_inner_eq_zero (o.inner_eq_zero_of_oangle_eq_pi_div_two h)
       (Or.inl (o.left_ne_zero_of_oangle_eq_pi_div_two h))]
-#align
-  orientation.sin_oangle_add_right_of_oangle_eq_pi_div_two Orientation.sin_oangle_add_right_of_oangle_eq_pi_div_two
+#align orientation.sin_oangle_add_right_of_oangle_eq_pi_div_two Orientation.sin_oangle_add_right_of_oangle_eq_pi_div_two
 
 /-- The sine of an angle in a right-angled triangle as a ratio of sides. -/
 theorem sin_oangle_add_left_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y = ↑(π / 2)) :
@@ -145,8 +136,7 @@ theorem sin_oangle_add_left_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y 
   rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
   rw [add_comm]
   exact (-o).sin_oangle_add_right_of_oangle_eq_pi_div_two h
-#align
-  orientation.sin_oangle_add_left_of_oangle_eq_pi_div_two Orientation.sin_oangle_add_left_of_oangle_eq_pi_div_two
+#align orientation.sin_oangle_add_left_of_oangle_eq_pi_div_two Orientation.sin_oangle_add_left_of_oangle_eq_pi_div_two
 
 /-- The tangent of an angle in a right-angled triangle as a ratio of sides. -/
 theorem tan_oangle_add_right_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y = ↑(π / 2)) :
@@ -156,8 +146,7 @@ theorem tan_oangle_add_right_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y
     rw [oangle_sign_add_right, h, Real.Angle.sign_coe_pi_div_two]
   rw [o.oangle_eq_angle_of_sign_eq_one hs, Real.Angle.tan_coe,
     InnerProductGeometry.tan_angle_add_of_inner_eq_zero (o.inner_eq_zero_of_oangle_eq_pi_div_two h)]
-#align
-  orientation.tan_oangle_add_right_of_oangle_eq_pi_div_two Orientation.tan_oangle_add_right_of_oangle_eq_pi_div_two
+#align orientation.tan_oangle_add_right_of_oangle_eq_pi_div_two Orientation.tan_oangle_add_right_of_oangle_eq_pi_div_two
 
 /-- The tangent of an angle in a right-angled triangle as a ratio of sides. -/
 theorem tan_oangle_add_left_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y = ↑(π / 2)) :
@@ -166,8 +155,7 @@ theorem tan_oangle_add_left_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y 
   rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
   rw [add_comm]
   exact (-o).tan_oangle_add_right_of_oangle_eq_pi_div_two h
-#align
-  orientation.tan_oangle_add_left_of_oangle_eq_pi_div_two Orientation.tan_oangle_add_left_of_oangle_eq_pi_div_two
+#align orientation.tan_oangle_add_left_of_oangle_eq_pi_div_two Orientation.tan_oangle_add_left_of_oangle_eq_pi_div_two
 
 /-- The cosine of an angle in a right-angled triangle multiplied by the hypotenuse equals the
 adjacent side. -/
@@ -179,8 +167,7 @@ theorem cos_oangle_add_right_mul_norm_of_oangle_eq_pi_div_two {x y : V}
   rw [o.oangle_eq_angle_of_sign_eq_one hs, Real.Angle.cos_coe,
     InnerProductGeometry.cos_angle_add_mul_norm_of_inner_eq_zero
       (o.inner_eq_zero_of_oangle_eq_pi_div_two h)]
-#align
-  orientation.cos_oangle_add_right_mul_norm_of_oangle_eq_pi_div_two Orientation.cos_oangle_add_right_mul_norm_of_oangle_eq_pi_div_two
+#align orientation.cos_oangle_add_right_mul_norm_of_oangle_eq_pi_div_two Orientation.cos_oangle_add_right_mul_norm_of_oangle_eq_pi_div_two
 
 /-- The cosine of an angle in a right-angled triangle multiplied by the hypotenuse equals the
 adjacent side. -/
@@ -190,8 +177,7 @@ theorem cos_oangle_add_left_mul_norm_of_oangle_eq_pi_div_two {x y : V}
   rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
   rw [add_comm]
   exact (-o).cos_oangle_add_right_mul_norm_of_oangle_eq_pi_div_two h
-#align
-  orientation.cos_oangle_add_left_mul_norm_of_oangle_eq_pi_div_two Orientation.cos_oangle_add_left_mul_norm_of_oangle_eq_pi_div_two
+#align orientation.cos_oangle_add_left_mul_norm_of_oangle_eq_pi_div_two Orientation.cos_oangle_add_left_mul_norm_of_oangle_eq_pi_div_two
 
 /-- The sine of an angle in a right-angled triangle multiplied by the hypotenuse equals the
 opposite side. -/
@@ -203,8 +189,7 @@ theorem sin_oangle_add_right_mul_norm_of_oangle_eq_pi_div_two {x y : V}
   rw [o.oangle_eq_angle_of_sign_eq_one hs, Real.Angle.sin_coe,
     InnerProductGeometry.sin_angle_add_mul_norm_of_inner_eq_zero
       (o.inner_eq_zero_of_oangle_eq_pi_div_two h)]
-#align
-  orientation.sin_oangle_add_right_mul_norm_of_oangle_eq_pi_div_two Orientation.sin_oangle_add_right_mul_norm_of_oangle_eq_pi_div_two
+#align orientation.sin_oangle_add_right_mul_norm_of_oangle_eq_pi_div_two Orientation.sin_oangle_add_right_mul_norm_of_oangle_eq_pi_div_two
 
 /-- The sine of an angle in a right-angled triangle multiplied by the hypotenuse equals the
 opposite side. -/
@@ -214,8 +199,7 @@ theorem sin_oangle_add_left_mul_norm_of_oangle_eq_pi_div_two {x y : V}
   rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
   rw [add_comm]
   exact (-o).sin_oangle_add_right_mul_norm_of_oangle_eq_pi_div_two h
-#align
-  orientation.sin_oangle_add_left_mul_norm_of_oangle_eq_pi_div_two Orientation.sin_oangle_add_left_mul_norm_of_oangle_eq_pi_div_two
+#align orientation.sin_oangle_add_left_mul_norm_of_oangle_eq_pi_div_two Orientation.sin_oangle_add_left_mul_norm_of_oangle_eq_pi_div_two
 
 /-- The tangent of an angle in a right-angled triangle multiplied by the adjacent side equals
 the opposite side. -/
@@ -228,8 +212,7 @@ theorem tan_oangle_add_right_mul_norm_of_oangle_eq_pi_div_two {x y : V}
     InnerProductGeometry.tan_angle_add_mul_norm_of_inner_eq_zero
       (o.inner_eq_zero_of_oangle_eq_pi_div_two h)
       (Or.inl (o.left_ne_zero_of_oangle_eq_pi_div_two h))]
-#align
-  orientation.tan_oangle_add_right_mul_norm_of_oangle_eq_pi_div_two Orientation.tan_oangle_add_right_mul_norm_of_oangle_eq_pi_div_two
+#align orientation.tan_oangle_add_right_mul_norm_of_oangle_eq_pi_div_two Orientation.tan_oangle_add_right_mul_norm_of_oangle_eq_pi_div_two
 
 /-- The tangent of an angle in a right-angled triangle multiplied by the adjacent side equals
 the opposite side. -/
@@ -239,8 +222,7 @@ theorem tan_oangle_add_left_mul_norm_of_oangle_eq_pi_div_two {x y : V}
   rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
   rw [add_comm]
   exact (-o).tan_oangle_add_right_mul_norm_of_oangle_eq_pi_div_two h
-#align
-  orientation.tan_oangle_add_left_mul_norm_of_oangle_eq_pi_div_two Orientation.tan_oangle_add_left_mul_norm_of_oangle_eq_pi_div_two
+#align orientation.tan_oangle_add_left_mul_norm_of_oangle_eq_pi_div_two Orientation.tan_oangle_add_left_mul_norm_of_oangle_eq_pi_div_two
 
 /-- A side of a right-angled triangle divided by the cosine of the adjacent angle equals the
 hypotenuse. -/
@@ -253,8 +235,7 @@ theorem norm_div_cos_oangle_add_right_of_oangle_eq_pi_div_two {x y : V}
     InnerProductGeometry.norm_div_cos_angle_add_of_inner_eq_zero
       (o.inner_eq_zero_of_oangle_eq_pi_div_two h)
       (Or.inl (o.left_ne_zero_of_oangle_eq_pi_div_two h))]
-#align
-  orientation.norm_div_cos_oangle_add_right_of_oangle_eq_pi_div_two Orientation.norm_div_cos_oangle_add_right_of_oangle_eq_pi_div_two
+#align orientation.norm_div_cos_oangle_add_right_of_oangle_eq_pi_div_two Orientation.norm_div_cos_oangle_add_right_of_oangle_eq_pi_div_two
 
 /-- A side of a right-angled triangle divided by the cosine of the adjacent angle equals the
 hypotenuse. -/
@@ -264,8 +245,7 @@ theorem norm_div_cos_oangle_add_left_of_oangle_eq_pi_div_two {x y : V}
   rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
   rw [add_comm]
   exact (-o).norm_div_cos_oangle_add_right_of_oangle_eq_pi_div_two h
-#align
-  orientation.norm_div_cos_oangle_add_left_of_oangle_eq_pi_div_two Orientation.norm_div_cos_oangle_add_left_of_oangle_eq_pi_div_two
+#align orientation.norm_div_cos_oangle_add_left_of_oangle_eq_pi_div_two Orientation.norm_div_cos_oangle_add_left_of_oangle_eq_pi_div_two
 
 /-- A side of a right-angled triangle divided by the sine of the opposite angle equals the
 hypotenuse. -/
@@ -278,8 +258,7 @@ theorem norm_div_sin_oangle_add_right_of_oangle_eq_pi_div_two {x y : V}
     InnerProductGeometry.norm_div_sin_angle_add_of_inner_eq_zero
       (o.inner_eq_zero_of_oangle_eq_pi_div_two h)
       (Or.inr (o.right_ne_zero_of_oangle_eq_pi_div_two h))]
-#align
-  orientation.norm_div_sin_oangle_add_right_of_oangle_eq_pi_div_two Orientation.norm_div_sin_oangle_add_right_of_oangle_eq_pi_div_two
+#align orientation.norm_div_sin_oangle_add_right_of_oangle_eq_pi_div_two Orientation.norm_div_sin_oangle_add_right_of_oangle_eq_pi_div_two
 
 /-- A side of a right-angled triangle divided by the sine of the opposite angle equals the
 hypotenuse. -/
@@ -289,8 +268,7 @@ theorem norm_div_sin_oangle_add_left_of_oangle_eq_pi_div_two {x y : V}
   rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
   rw [add_comm]
   exact (-o).norm_div_sin_oangle_add_right_of_oangle_eq_pi_div_two h
-#align
-  orientation.norm_div_sin_oangle_add_left_of_oangle_eq_pi_div_two Orientation.norm_div_sin_oangle_add_left_of_oangle_eq_pi_div_two
+#align orientation.norm_div_sin_oangle_add_left_of_oangle_eq_pi_div_two Orientation.norm_div_sin_oangle_add_left_of_oangle_eq_pi_div_two
 
 /-- A side of a right-angled triangle divided by the tangent of the opposite angle equals the
 adjacent side. -/
@@ -303,8 +281,7 @@ theorem norm_div_tan_oangle_add_right_of_oangle_eq_pi_div_two {x y : V}
     InnerProductGeometry.norm_div_tan_angle_add_of_inner_eq_zero
       (o.inner_eq_zero_of_oangle_eq_pi_div_two h)
       (Or.inr (o.right_ne_zero_of_oangle_eq_pi_div_two h))]
-#align
-  orientation.norm_div_tan_oangle_add_right_of_oangle_eq_pi_div_two Orientation.norm_div_tan_oangle_add_right_of_oangle_eq_pi_div_two
+#align orientation.norm_div_tan_oangle_add_right_of_oangle_eq_pi_div_two Orientation.norm_div_tan_oangle_add_right_of_oangle_eq_pi_div_two
 
 /-- A side of a right-angled triangle divided by the tangent of the opposite angle equals the
 adjacent side. -/
@@ -314,8 +291,7 @@ theorem norm_div_tan_oangle_add_left_of_oangle_eq_pi_div_two {x y : V}
   rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
   rw [add_comm]
   exact (-o).norm_div_tan_oangle_add_right_of_oangle_eq_pi_div_two h
-#align
-  orientation.norm_div_tan_oangle_add_left_of_oangle_eq_pi_div_two Orientation.norm_div_tan_oangle_add_left_of_oangle_eq_pi_div_two
+#align orientation.norm_div_tan_oangle_add_left_of_oangle_eq_pi_div_two Orientation.norm_div_tan_oangle_add_left_of_oangle_eq_pi_div_two
 
 /-- An angle in a right-angled triangle expressed using `arccos`, version subtracting vectors. -/
 theorem oangle_sub_right_eq_arccos_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y = ↑(π / 2)) :
@@ -326,8 +302,7 @@ theorem oangle_sub_right_eq_arccos_of_oangle_eq_pi_div_two {x y : V} (h : o.oang
   rw [o.oangle_eq_angle_of_sign_eq_one hs,
     InnerProductGeometry.angle_sub_eq_arccos_of_inner_eq_zero
       (o.inner_rev_eq_zero_of_oangle_eq_pi_div_two h)]
-#align
-  orientation.oangle_sub_right_eq_arccos_of_oangle_eq_pi_div_two Orientation.oangle_sub_right_eq_arccos_of_oangle_eq_pi_div_two
+#align orientation.oangle_sub_right_eq_arccos_of_oangle_eq_pi_div_two Orientation.oangle_sub_right_eq_arccos_of_oangle_eq_pi_div_two
 
 /-- An angle in a right-angled triangle expressed using `arccos`, version subtracting vectors. -/
 theorem oangle_sub_left_eq_arccos_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y = ↑(π / 2)) :
@@ -335,8 +310,7 @@ theorem oangle_sub_left_eq_arccos_of_oangle_eq_pi_div_two {x y : V} (h : o.oangl
   by
   rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
   exact (-o).oangle_sub_right_eq_arccos_of_oangle_eq_pi_div_two h
-#align
-  orientation.oangle_sub_left_eq_arccos_of_oangle_eq_pi_div_two Orientation.oangle_sub_left_eq_arccos_of_oangle_eq_pi_div_two
+#align orientation.oangle_sub_left_eq_arccos_of_oangle_eq_pi_div_two Orientation.oangle_sub_left_eq_arccos_of_oangle_eq_pi_div_two
 
 /-- An angle in a right-angled triangle expressed using `arcsin`, version subtracting vectors. -/
 theorem oangle_sub_right_eq_arcsin_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y = ↑(π / 2)) :
@@ -348,8 +322,7 @@ theorem oangle_sub_right_eq_arcsin_of_oangle_eq_pi_div_two {x y : V} (h : o.oang
     InnerProductGeometry.angle_sub_eq_arcsin_of_inner_eq_zero
       (o.inner_rev_eq_zero_of_oangle_eq_pi_div_two h)
       (Or.inl (o.right_ne_zero_of_oangle_eq_pi_div_two h))]
-#align
-  orientation.oangle_sub_right_eq_arcsin_of_oangle_eq_pi_div_two Orientation.oangle_sub_right_eq_arcsin_of_oangle_eq_pi_div_two
+#align orientation.oangle_sub_right_eq_arcsin_of_oangle_eq_pi_div_two Orientation.oangle_sub_right_eq_arcsin_of_oangle_eq_pi_div_two
 
 /-- An angle in a right-angled triangle expressed using `arcsin`, version subtracting vectors. -/
 theorem oangle_sub_left_eq_arcsin_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y = ↑(π / 2)) :
@@ -357,8 +330,7 @@ theorem oangle_sub_left_eq_arcsin_of_oangle_eq_pi_div_two {x y : V} (h : o.oangl
   by
   rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
   exact (-o).oangle_sub_right_eq_arcsin_of_oangle_eq_pi_div_two h
-#align
-  orientation.oangle_sub_left_eq_arcsin_of_oangle_eq_pi_div_two Orientation.oangle_sub_left_eq_arcsin_of_oangle_eq_pi_div_two
+#align orientation.oangle_sub_left_eq_arcsin_of_oangle_eq_pi_div_two Orientation.oangle_sub_left_eq_arcsin_of_oangle_eq_pi_div_two
 
 /-- An angle in a right-angled triangle expressed using `arctan`, version subtracting vectors. -/
 theorem oangle_sub_right_eq_arctan_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y = ↑(π / 2)) :
@@ -369,8 +341,7 @@ theorem oangle_sub_right_eq_arctan_of_oangle_eq_pi_div_two {x y : V} (h : o.oang
   rw [o.oangle_eq_angle_of_sign_eq_one hs,
     InnerProductGeometry.angle_sub_eq_arctan_of_inner_eq_zero
       (o.inner_rev_eq_zero_of_oangle_eq_pi_div_two h) (o.right_ne_zero_of_oangle_eq_pi_div_two h)]
-#align
-  orientation.oangle_sub_right_eq_arctan_of_oangle_eq_pi_div_two Orientation.oangle_sub_right_eq_arctan_of_oangle_eq_pi_div_two
+#align orientation.oangle_sub_right_eq_arctan_of_oangle_eq_pi_div_two Orientation.oangle_sub_right_eq_arctan_of_oangle_eq_pi_div_two
 
 /-- An angle in a right-angled triangle expressed using `arctan`, version subtracting vectors. -/
 theorem oangle_sub_left_eq_arctan_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y = ↑(π / 2)) :
@@ -378,8 +349,7 @@ theorem oangle_sub_left_eq_arctan_of_oangle_eq_pi_div_two {x y : V} (h : o.oangl
   by
   rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
   exact (-o).oangle_sub_right_eq_arctan_of_oangle_eq_pi_div_two h
-#align
-  orientation.oangle_sub_left_eq_arctan_of_oangle_eq_pi_div_two Orientation.oangle_sub_left_eq_arctan_of_oangle_eq_pi_div_two
+#align orientation.oangle_sub_left_eq_arctan_of_oangle_eq_pi_div_two Orientation.oangle_sub_left_eq_arctan_of_oangle_eq_pi_div_two
 
 /-- The cosine of an angle in a right-angled triangle as a ratio of sides, version subtracting
 vectors. -/
@@ -391,8 +361,7 @@ theorem cos_oangle_sub_right_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y
   rw [o.oangle_eq_angle_of_sign_eq_one hs, Real.Angle.cos_coe,
     InnerProductGeometry.cos_angle_sub_of_inner_eq_zero
       (o.inner_rev_eq_zero_of_oangle_eq_pi_div_two h)]
-#align
-  orientation.cos_oangle_sub_right_of_oangle_eq_pi_div_two Orientation.cos_oangle_sub_right_of_oangle_eq_pi_div_two
+#align orientation.cos_oangle_sub_right_of_oangle_eq_pi_div_two Orientation.cos_oangle_sub_right_of_oangle_eq_pi_div_two
 
 /-- The cosine of an angle in a right-angled triangle as a ratio of sides, version subtracting
 vectors. -/
@@ -401,8 +370,7 @@ theorem cos_oangle_sub_left_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y 
   by
   rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
   exact (-o).cos_oangle_sub_right_of_oangle_eq_pi_div_two h
-#align
-  orientation.cos_oangle_sub_left_of_oangle_eq_pi_div_two Orientation.cos_oangle_sub_left_of_oangle_eq_pi_div_two
+#align orientation.cos_oangle_sub_left_of_oangle_eq_pi_div_two Orientation.cos_oangle_sub_left_of_oangle_eq_pi_div_two
 
 /-- The sine of an angle in a right-angled triangle as a ratio of sides, version subtracting
 vectors. -/
@@ -415,8 +383,7 @@ theorem sin_oangle_sub_right_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y
     InnerProductGeometry.sin_angle_sub_of_inner_eq_zero
       (o.inner_rev_eq_zero_of_oangle_eq_pi_div_two h)
       (Or.inl (o.right_ne_zero_of_oangle_eq_pi_div_two h))]
-#align
-  orientation.sin_oangle_sub_right_of_oangle_eq_pi_div_two Orientation.sin_oangle_sub_right_of_oangle_eq_pi_div_two
+#align orientation.sin_oangle_sub_right_of_oangle_eq_pi_div_two Orientation.sin_oangle_sub_right_of_oangle_eq_pi_div_two
 
 /-- The sine of an angle in a right-angled triangle as a ratio of sides, version subtracting
 vectors. -/
@@ -425,8 +392,7 @@ theorem sin_oangle_sub_left_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y 
   by
   rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
   exact (-o).sin_oangle_sub_right_of_oangle_eq_pi_div_two h
-#align
-  orientation.sin_oangle_sub_left_of_oangle_eq_pi_div_two Orientation.sin_oangle_sub_left_of_oangle_eq_pi_div_two
+#align orientation.sin_oangle_sub_left_of_oangle_eq_pi_div_two Orientation.sin_oangle_sub_left_of_oangle_eq_pi_div_two
 
 /-- The tangent of an angle in a right-angled triangle as a ratio of sides, version subtracting
 vectors. -/
@@ -438,8 +404,7 @@ theorem tan_oangle_sub_right_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y
   rw [o.oangle_eq_angle_of_sign_eq_one hs, Real.Angle.tan_coe,
     InnerProductGeometry.tan_angle_sub_of_inner_eq_zero
       (o.inner_rev_eq_zero_of_oangle_eq_pi_div_two h)]
-#align
-  orientation.tan_oangle_sub_right_of_oangle_eq_pi_div_two Orientation.tan_oangle_sub_right_of_oangle_eq_pi_div_two
+#align orientation.tan_oangle_sub_right_of_oangle_eq_pi_div_two Orientation.tan_oangle_sub_right_of_oangle_eq_pi_div_two
 
 /-- The tangent of an angle in a right-angled triangle as a ratio of sides, version subtracting
 vectors. -/
@@ -448,8 +413,7 @@ theorem tan_oangle_sub_left_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y 
   by
   rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
   exact (-o).tan_oangle_sub_right_of_oangle_eq_pi_div_two h
-#align
-  orientation.tan_oangle_sub_left_of_oangle_eq_pi_div_two Orientation.tan_oangle_sub_left_of_oangle_eq_pi_div_two
+#align orientation.tan_oangle_sub_left_of_oangle_eq_pi_div_two Orientation.tan_oangle_sub_left_of_oangle_eq_pi_div_two
 
 /-- The cosine of an angle in a right-angled triangle multiplied by the hypotenuse equals the
 adjacent side, version subtracting vectors. -/
@@ -461,8 +425,7 @@ theorem cos_oangle_sub_right_mul_norm_of_oangle_eq_pi_div_two {x y : V}
   rw [o.oangle_eq_angle_of_sign_eq_one hs, Real.Angle.cos_coe,
     InnerProductGeometry.cos_angle_sub_mul_norm_of_inner_eq_zero
       (o.inner_rev_eq_zero_of_oangle_eq_pi_div_two h)]
-#align
-  orientation.cos_oangle_sub_right_mul_norm_of_oangle_eq_pi_div_two Orientation.cos_oangle_sub_right_mul_norm_of_oangle_eq_pi_div_two
+#align orientation.cos_oangle_sub_right_mul_norm_of_oangle_eq_pi_div_two Orientation.cos_oangle_sub_right_mul_norm_of_oangle_eq_pi_div_two
 
 /-- The cosine of an angle in a right-angled triangle multiplied by the hypotenuse equals the
 adjacent side, version subtracting vectors. -/
@@ -471,8 +434,7 @@ theorem cos_oangle_sub_left_mul_norm_of_oangle_eq_pi_div_two {x y : V}
   by
   rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
   exact (-o).cos_oangle_sub_right_mul_norm_of_oangle_eq_pi_div_two h
-#align
-  orientation.cos_oangle_sub_left_mul_norm_of_oangle_eq_pi_div_two Orientation.cos_oangle_sub_left_mul_norm_of_oangle_eq_pi_div_two
+#align orientation.cos_oangle_sub_left_mul_norm_of_oangle_eq_pi_div_two Orientation.cos_oangle_sub_left_mul_norm_of_oangle_eq_pi_div_two
 
 /-- The sine of an angle in a right-angled triangle multiplied by the hypotenuse equals the
 opposite side, version subtracting vectors. -/
@@ -484,8 +446,7 @@ theorem sin_oangle_sub_right_mul_norm_of_oangle_eq_pi_div_two {x y : V}
   rw [o.oangle_eq_angle_of_sign_eq_one hs, Real.Angle.sin_coe,
     InnerProductGeometry.sin_angle_sub_mul_norm_of_inner_eq_zero
       (o.inner_rev_eq_zero_of_oangle_eq_pi_div_two h)]
-#align
-  orientation.sin_oangle_sub_right_mul_norm_of_oangle_eq_pi_div_two Orientation.sin_oangle_sub_right_mul_norm_of_oangle_eq_pi_div_two
+#align orientation.sin_oangle_sub_right_mul_norm_of_oangle_eq_pi_div_two Orientation.sin_oangle_sub_right_mul_norm_of_oangle_eq_pi_div_two
 
 /-- The sine of an angle in a right-angled triangle multiplied by the hypotenuse equals the
 opposite side, version subtracting vectors. -/
@@ -494,8 +455,7 @@ theorem sin_oangle_sub_left_mul_norm_of_oangle_eq_pi_div_two {x y : V}
   by
   rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
   exact (-o).sin_oangle_sub_right_mul_norm_of_oangle_eq_pi_div_two h
-#align
-  orientation.sin_oangle_sub_left_mul_norm_of_oangle_eq_pi_div_two Orientation.sin_oangle_sub_left_mul_norm_of_oangle_eq_pi_div_two
+#align orientation.sin_oangle_sub_left_mul_norm_of_oangle_eq_pi_div_two Orientation.sin_oangle_sub_left_mul_norm_of_oangle_eq_pi_div_two
 
 /-- The tangent of an angle in a right-angled triangle multiplied by the adjacent side equals
 the opposite side, version subtracting vectors. -/
@@ -508,8 +468,7 @@ theorem tan_oangle_sub_right_mul_norm_of_oangle_eq_pi_div_two {x y : V}
     InnerProductGeometry.tan_angle_sub_mul_norm_of_inner_eq_zero
       (o.inner_rev_eq_zero_of_oangle_eq_pi_div_two h)
       (Or.inl (o.right_ne_zero_of_oangle_eq_pi_div_two h))]
-#align
-  orientation.tan_oangle_sub_right_mul_norm_of_oangle_eq_pi_div_two Orientation.tan_oangle_sub_right_mul_norm_of_oangle_eq_pi_div_two
+#align orientation.tan_oangle_sub_right_mul_norm_of_oangle_eq_pi_div_two Orientation.tan_oangle_sub_right_mul_norm_of_oangle_eq_pi_div_two
 
 /-- The tangent of an angle in a right-angled triangle multiplied by the adjacent side equals
 the opposite side, version subtracting vectors. -/
@@ -518,8 +477,7 @@ theorem tan_oangle_sub_left_mul_norm_of_oangle_eq_pi_div_two {x y : V}
   by
   rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
   exact (-o).tan_oangle_sub_right_mul_norm_of_oangle_eq_pi_div_two h
-#align
-  orientation.tan_oangle_sub_left_mul_norm_of_oangle_eq_pi_div_two Orientation.tan_oangle_sub_left_mul_norm_of_oangle_eq_pi_div_two
+#align orientation.tan_oangle_sub_left_mul_norm_of_oangle_eq_pi_div_two Orientation.tan_oangle_sub_left_mul_norm_of_oangle_eq_pi_div_two
 
 /-- A side of a right-angled triangle divided by the cosine of the adjacent angle equals the
 hypotenuse, version subtracting vectors. -/
@@ -532,8 +490,7 @@ theorem norm_div_cos_oangle_sub_right_of_oangle_eq_pi_div_two {x y : V}
     InnerProductGeometry.norm_div_cos_angle_sub_of_inner_eq_zero
       (o.inner_rev_eq_zero_of_oangle_eq_pi_div_two h)
       (Or.inl (o.right_ne_zero_of_oangle_eq_pi_div_two h))]
-#align
-  orientation.norm_div_cos_oangle_sub_right_of_oangle_eq_pi_div_two Orientation.norm_div_cos_oangle_sub_right_of_oangle_eq_pi_div_two
+#align orientation.norm_div_cos_oangle_sub_right_of_oangle_eq_pi_div_two Orientation.norm_div_cos_oangle_sub_right_of_oangle_eq_pi_div_two
 
 /-- A side of a right-angled triangle divided by the cosine of the adjacent angle equals the
 hypotenuse, version subtracting vectors. -/
@@ -542,8 +499,7 @@ theorem norm_div_cos_oangle_sub_left_of_oangle_eq_pi_div_two {x y : V}
   by
   rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
   exact (-o).norm_div_cos_oangle_sub_right_of_oangle_eq_pi_div_two h
-#align
-  orientation.norm_div_cos_oangle_sub_left_of_oangle_eq_pi_div_two Orientation.norm_div_cos_oangle_sub_left_of_oangle_eq_pi_div_two
+#align orientation.norm_div_cos_oangle_sub_left_of_oangle_eq_pi_div_two Orientation.norm_div_cos_oangle_sub_left_of_oangle_eq_pi_div_two
 
 /-- A side of a right-angled triangle divided by the sine of the opposite angle equals the
 hypotenuse, version subtracting vectors. -/
@@ -556,8 +512,7 @@ theorem norm_div_sin_oangle_sub_right_of_oangle_eq_pi_div_two {x y : V}
     InnerProductGeometry.norm_div_sin_angle_sub_of_inner_eq_zero
       (o.inner_rev_eq_zero_of_oangle_eq_pi_div_two h)
       (Or.inr (o.left_ne_zero_of_oangle_eq_pi_div_two h))]
-#align
-  orientation.norm_div_sin_oangle_sub_right_of_oangle_eq_pi_div_two Orientation.norm_div_sin_oangle_sub_right_of_oangle_eq_pi_div_two
+#align orientation.norm_div_sin_oangle_sub_right_of_oangle_eq_pi_div_two Orientation.norm_div_sin_oangle_sub_right_of_oangle_eq_pi_div_two
 
 /-- A side of a right-angled triangle divided by the sine of the opposite angle equals the
 hypotenuse, version subtracting vectors. -/
@@ -566,8 +521,7 @@ theorem norm_div_sin_oangle_sub_left_of_oangle_eq_pi_div_two {x y : V}
   by
   rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
   exact (-o).norm_div_sin_oangle_sub_right_of_oangle_eq_pi_div_two h
-#align
-  orientation.norm_div_sin_oangle_sub_left_of_oangle_eq_pi_div_two Orientation.norm_div_sin_oangle_sub_left_of_oangle_eq_pi_div_two
+#align orientation.norm_div_sin_oangle_sub_left_of_oangle_eq_pi_div_two Orientation.norm_div_sin_oangle_sub_left_of_oangle_eq_pi_div_two
 
 /-- A side of a right-angled triangle divided by the tangent of the opposite angle equals the
 adjacent side, version subtracting vectors. -/
@@ -580,8 +534,7 @@ theorem norm_div_tan_oangle_sub_right_of_oangle_eq_pi_div_two {x y : V}
     InnerProductGeometry.norm_div_tan_angle_sub_of_inner_eq_zero
       (o.inner_rev_eq_zero_of_oangle_eq_pi_div_two h)
       (Or.inr (o.left_ne_zero_of_oangle_eq_pi_div_two h))]
-#align
-  orientation.norm_div_tan_oangle_sub_right_of_oangle_eq_pi_div_two Orientation.norm_div_tan_oangle_sub_right_of_oangle_eq_pi_div_two
+#align orientation.norm_div_tan_oangle_sub_right_of_oangle_eq_pi_div_two Orientation.norm_div_tan_oangle_sub_right_of_oangle_eq_pi_div_two
 
 /-- A side of a right-angled triangle divided by the tangent of the opposite angle equals the
 adjacent side, version subtracting vectors. -/
@@ -590,8 +543,7 @@ theorem norm_div_tan_oangle_sub_left_of_oangle_eq_pi_div_two {x y : V}
   by
   rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj] at h⊢
   exact (-o).norm_div_tan_oangle_sub_right_of_oangle_eq_pi_div_two h
-#align
-  orientation.norm_div_tan_oangle_sub_left_of_oangle_eq_pi_div_two Orientation.norm_div_tan_oangle_sub_left_of_oangle_eq_pi_div_two
+#align orientation.norm_div_tan_oangle_sub_left_of_oangle_eq_pi_div_two Orientation.norm_div_tan_oangle_sub_left_of_oangle_eq_pi_div_two
 
 /-- An angle in a right-angled triangle expressed using `arctan`, where one side is a multiple
 of a rotation of another by `π / 2`. -/
@@ -616,8 +568,7 @@ theorem oangle_add_right_smul_rotation_pi_div_two {x : V} (h : x ≠ 0) (r : ℝ
     rw [o.oangle_add_right_eq_arctan_of_oangle_eq_pi_div_two ha, norm_smul,
       LinearIsometryEquiv.norm_map, mul_div_assoc, div_self (norm_ne_zero_iff.2 h), mul_one,
       Real.norm_eq_abs, abs_of_pos hr]
-#align
-  orientation.oangle_add_right_smul_rotation_pi_div_two Orientation.oangle_add_right_smul_rotation_pi_div_two
+#align orientation.oangle_add_right_smul_rotation_pi_div_two Orientation.oangle_add_right_smul_rotation_pi_div_two
 
 /-- An angle in a right-angled triangle expressed using `arctan`, where one side is a multiple
 of a rotation of another by `π / 2`. -/
@@ -632,16 +583,14 @@ theorem oangle_add_left_smul_rotation_pi_div_two {x : V} (h : x ≠ 0) (r : ℝ)
   nth_rw 3 [hx]
   refine' (-o).oangle_add_right_smul_rotation_pi_div_two _ _
   simp [hr, h]
-#align
-  orientation.oangle_add_left_smul_rotation_pi_div_two Orientation.oangle_add_left_smul_rotation_pi_div_two
+#align orientation.oangle_add_left_smul_rotation_pi_div_two Orientation.oangle_add_left_smul_rotation_pi_div_two
 
 /-- The tangent of an angle in a right-angled triangle, where one side is a multiple of a
 rotation of another by `π / 2`. -/
 theorem tan_oangle_add_right_smul_rotation_pi_div_two {x : V} (h : x ≠ 0) (r : ℝ) :
     Real.Angle.tan (o.oangle x (x + r • o.rotation (π / 2 : ℝ) x)) = r := by
   rw [o.oangle_add_right_smul_rotation_pi_div_two h, Real.Angle.tan_coe, Real.tan_arctan]
-#align
-  orientation.tan_oangle_add_right_smul_rotation_pi_div_two Orientation.tan_oangle_add_right_smul_rotation_pi_div_two
+#align orientation.tan_oangle_add_right_smul_rotation_pi_div_two Orientation.tan_oangle_add_right_smul_rotation_pi_div_two
 
 /-- The tangent of an angle in a right-angled triangle, where one side is a multiple of a
 rotation of another by `π / 2`. -/
@@ -649,8 +598,7 @@ theorem tan_oangle_add_left_smul_rotation_pi_div_two {x : V} (h : x ≠ 0) (r : 
     Real.Angle.tan (o.oangle (x + r • o.rotation (π / 2 : ℝ) x) (r • o.rotation (π / 2 : ℝ) x)) =
       r⁻¹ :=
   by rw [o.oangle_add_left_smul_rotation_pi_div_two h, Real.Angle.tan_coe, Real.tan_arctan]
-#align
-  orientation.tan_oangle_add_left_smul_rotation_pi_div_two Orientation.tan_oangle_add_left_smul_rotation_pi_div_two
+#align orientation.tan_oangle_add_left_smul_rotation_pi_div_two Orientation.tan_oangle_add_left_smul_rotation_pi_div_two
 
 /-- An angle in a right-angled triangle expressed using `arctan`, where one side is a multiple
 of a rotation of another by `π / 2`, version subtracting vectors. -/
@@ -663,8 +611,7 @@ theorem oangle_sub_right_smul_rotation_pi_div_two {x : V} (h : x ≠ 0) (r : ℝ
     simp [hr, ← Real.Angle.coe_add]
   rw [sub_eq_add_neg, hx, o.oangle_add_right_smul_rotation_pi_div_two]
   simpa [hr] using h
-#align
-  orientation.oangle_sub_right_smul_rotation_pi_div_two Orientation.oangle_sub_right_smul_rotation_pi_div_two
+#align orientation.oangle_sub_right_smul_rotation_pi_div_two Orientation.oangle_sub_right_smul_rotation_pi_div_two
 
 /-- An angle in a right-angled triangle expressed using `arctan`, where one side is a multiple
 of a rotation of another by `π / 2`, version subtracting vectors. -/
@@ -680,8 +627,7 @@ theorem oangle_sub_left_smul_rotation_pi_div_two {x : V} (h : x ≠ 0) (r : ℝ)
   nth_rw 2 [hx]
   rw [o.oangle_add_left_smul_rotation_pi_div_two, inv_inv]
   simpa [hr] using h
-#align
-  orientation.oangle_sub_left_smul_rotation_pi_div_two Orientation.oangle_sub_left_smul_rotation_pi_div_two
+#align orientation.oangle_sub_left_smul_rotation_pi_div_two Orientation.oangle_sub_left_smul_rotation_pi_div_two
 
 end Orientation
 
@@ -702,8 +648,7 @@ theorem oangle_right_eq_arccos_of_oangle_eq_pi_div_two {p₁ p₂ p₃ : P} (h :
   have hs : (∡ p₂ p₃ p₁).sign = 1 := by rw [oangle_rotate_sign, h, Real.Angle.sign_coe_pi_div_two]
   rw [oangle_eq_angle_of_sign_eq_one hs,
     angle_eq_arccos_of_angle_eq_pi_div_two (angle_eq_pi_div_two_of_oangle_eq_pi_div_two h)]
-#align
-  euclidean_geometry.oangle_right_eq_arccos_of_oangle_eq_pi_div_two EuclideanGeometry.oangle_right_eq_arccos_of_oangle_eq_pi_div_two
+#align euclidean_geometry.oangle_right_eq_arccos_of_oangle_eq_pi_div_two EuclideanGeometry.oangle_right_eq_arccos_of_oangle_eq_pi_div_two
 
 /-- An angle in a right-angled triangle expressed using `arccos`. -/
 theorem oangle_left_eq_arccos_of_oangle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∡ p₁ p₂ p₃ = ↑(π / 2)) :
@@ -713,8 +658,7 @@ theorem oangle_left_eq_arccos_of_oangle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : 
   rw [oangle_eq_angle_of_sign_eq_one hs, angle_comm,
     angle_eq_arccos_of_angle_eq_pi_div_two (angle_rev_eq_pi_div_two_of_oangle_eq_pi_div_two h),
     dist_comm p₁ p₃]
-#align
-  euclidean_geometry.oangle_left_eq_arccos_of_oangle_eq_pi_div_two EuclideanGeometry.oangle_left_eq_arccos_of_oangle_eq_pi_div_two
+#align euclidean_geometry.oangle_left_eq_arccos_of_oangle_eq_pi_div_two EuclideanGeometry.oangle_left_eq_arccos_of_oangle_eq_pi_div_two
 
 /-- An angle in a right-angled triangle expressed using `arcsin`. -/
 theorem oangle_right_eq_arcsin_of_oangle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∡ p₁ p₂ p₃ = ↑(π / 2)) :
@@ -724,8 +668,7 @@ theorem oangle_right_eq_arcsin_of_oangle_eq_pi_div_two {p₁ p₂ p₃ : P} (h :
   rw [oangle_eq_angle_of_sign_eq_one hs,
     angle_eq_arcsin_of_angle_eq_pi_div_two (angle_eq_pi_div_two_of_oangle_eq_pi_div_two h)
       (Or.inl (left_ne_of_oangle_eq_pi_div_two h))]
-#align
-  euclidean_geometry.oangle_right_eq_arcsin_of_oangle_eq_pi_div_two EuclideanGeometry.oangle_right_eq_arcsin_of_oangle_eq_pi_div_two
+#align euclidean_geometry.oangle_right_eq_arcsin_of_oangle_eq_pi_div_two EuclideanGeometry.oangle_right_eq_arcsin_of_oangle_eq_pi_div_two
 
 /-- An angle in a right-angled triangle expressed using `arcsin`. -/
 theorem oangle_left_eq_arcsin_of_oangle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∡ p₁ p₂ p₃ = ↑(π / 2)) :
@@ -736,8 +679,7 @@ theorem oangle_left_eq_arcsin_of_oangle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : 
     angle_eq_arcsin_of_angle_eq_pi_div_two (angle_rev_eq_pi_div_two_of_oangle_eq_pi_div_two h)
       (Or.inr (left_ne_of_oangle_eq_pi_div_two h)),
     dist_comm p₁ p₃]
-#align
-  euclidean_geometry.oangle_left_eq_arcsin_of_oangle_eq_pi_div_two EuclideanGeometry.oangle_left_eq_arcsin_of_oangle_eq_pi_div_two
+#align euclidean_geometry.oangle_left_eq_arcsin_of_oangle_eq_pi_div_two EuclideanGeometry.oangle_left_eq_arcsin_of_oangle_eq_pi_div_two
 
 /-- An angle in a right-angled triangle expressed using `arctan`. -/
 theorem oangle_right_eq_arctan_of_oangle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∡ p₁ p₂ p₃ = ↑(π / 2)) :
@@ -747,8 +689,7 @@ theorem oangle_right_eq_arctan_of_oangle_eq_pi_div_two {p₁ p₂ p₃ : P} (h :
   rw [oangle_eq_angle_of_sign_eq_one hs,
     angle_eq_arctan_of_angle_eq_pi_div_two (angle_eq_pi_div_two_of_oangle_eq_pi_div_two h)
       (right_ne_of_oangle_eq_pi_div_two h)]
-#align
-  euclidean_geometry.oangle_right_eq_arctan_of_oangle_eq_pi_div_two EuclideanGeometry.oangle_right_eq_arctan_of_oangle_eq_pi_div_two
+#align euclidean_geometry.oangle_right_eq_arctan_of_oangle_eq_pi_div_two EuclideanGeometry.oangle_right_eq_arctan_of_oangle_eq_pi_div_two
 
 /-- An angle in a right-angled triangle expressed using `arctan`. -/
 theorem oangle_left_eq_arctan_of_oangle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∡ p₁ p₂ p₃ = ↑(π / 2)) :
@@ -758,8 +699,7 @@ theorem oangle_left_eq_arctan_of_oangle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : 
   rw [oangle_eq_angle_of_sign_eq_one hs, angle_comm,
     angle_eq_arctan_of_angle_eq_pi_div_two (angle_rev_eq_pi_div_two_of_oangle_eq_pi_div_two h)
       (left_ne_of_oangle_eq_pi_div_two h)]
-#align
-  euclidean_geometry.oangle_left_eq_arctan_of_oangle_eq_pi_div_two EuclideanGeometry.oangle_left_eq_arctan_of_oangle_eq_pi_div_two
+#align euclidean_geometry.oangle_left_eq_arctan_of_oangle_eq_pi_div_two EuclideanGeometry.oangle_left_eq_arctan_of_oangle_eq_pi_div_two
 
 /-- The cosine of an angle in a right-angled triangle as a ratio of sides. -/
 theorem cos_oangle_right_of_oangle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∡ p₁ p₂ p₃ = ↑(π / 2)) :
@@ -768,8 +708,7 @@ theorem cos_oangle_right_of_oangle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∡ p
   have hs : (∡ p₂ p₃ p₁).sign = 1 := by rw [oangle_rotate_sign, h, Real.Angle.sign_coe_pi_div_two]
   rw [oangle_eq_angle_of_sign_eq_one hs, Real.Angle.cos_coe,
     cos_angle_of_angle_eq_pi_div_two (angle_eq_pi_div_two_of_oangle_eq_pi_div_two h)]
-#align
-  euclidean_geometry.cos_oangle_right_of_oangle_eq_pi_div_two EuclideanGeometry.cos_oangle_right_of_oangle_eq_pi_div_two
+#align euclidean_geometry.cos_oangle_right_of_oangle_eq_pi_div_two EuclideanGeometry.cos_oangle_right_of_oangle_eq_pi_div_two
 
 /-- The cosine of an angle in a right-angled triangle as a ratio of sides. -/
 theorem cos_oangle_left_of_oangle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∡ p₁ p₂ p₃ = ↑(π / 2)) :
@@ -779,8 +718,7 @@ theorem cos_oangle_left_of_oangle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∡ p�
   rw [oangle_eq_angle_of_sign_eq_one hs, angle_comm, Real.Angle.cos_coe,
     cos_angle_of_angle_eq_pi_div_two (angle_rev_eq_pi_div_two_of_oangle_eq_pi_div_two h),
     dist_comm p₁ p₃]
-#align
-  euclidean_geometry.cos_oangle_left_of_oangle_eq_pi_div_two EuclideanGeometry.cos_oangle_left_of_oangle_eq_pi_div_two
+#align euclidean_geometry.cos_oangle_left_of_oangle_eq_pi_div_two EuclideanGeometry.cos_oangle_left_of_oangle_eq_pi_div_two
 
 /-- The sine of an angle in a right-angled triangle as a ratio of sides. -/
 theorem sin_oangle_right_of_oangle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∡ p₁ p₂ p₃ = ↑(π / 2)) :
@@ -790,8 +728,7 @@ theorem sin_oangle_right_of_oangle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∡ p
   rw [oangle_eq_angle_of_sign_eq_one hs, Real.Angle.sin_coe,
     sin_angle_of_angle_eq_pi_div_two (angle_eq_pi_div_two_of_oangle_eq_pi_div_two h)
       (Or.inl (left_ne_of_oangle_eq_pi_div_two h))]
-#align
-  euclidean_geometry.sin_oangle_right_of_oangle_eq_pi_div_two EuclideanGeometry.sin_oangle_right_of_oangle_eq_pi_div_two
+#align euclidean_geometry.sin_oangle_right_of_oangle_eq_pi_div_two EuclideanGeometry.sin_oangle_right_of_oangle_eq_pi_div_two
 
 /-- The sine of an angle in a right-angled triangle as a ratio of sides. -/
 theorem sin_oangle_left_of_oangle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∡ p₁ p₂ p₃ = ↑(π / 2)) :
@@ -802,8 +739,7 @@ theorem sin_oangle_left_of_oangle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∡ p�
     sin_angle_of_angle_eq_pi_div_two (angle_rev_eq_pi_div_two_of_oangle_eq_pi_div_two h)
       (Or.inr (left_ne_of_oangle_eq_pi_div_two h)),
     dist_comm p₁ p₃]
-#align
-  euclidean_geometry.sin_oangle_left_of_oangle_eq_pi_div_two EuclideanGeometry.sin_oangle_left_of_oangle_eq_pi_div_two
+#align euclidean_geometry.sin_oangle_left_of_oangle_eq_pi_div_two EuclideanGeometry.sin_oangle_left_of_oangle_eq_pi_div_two
 
 /-- The tangent of an angle in a right-angled triangle as a ratio of sides. -/
 theorem tan_oangle_right_of_oangle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∡ p₁ p₂ p₃ = ↑(π / 2)) :
@@ -812,8 +748,7 @@ theorem tan_oangle_right_of_oangle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∡ p
   have hs : (∡ p₂ p₃ p₁).sign = 1 := by rw [oangle_rotate_sign, h, Real.Angle.sign_coe_pi_div_two]
   rw [oangle_eq_angle_of_sign_eq_one hs, Real.Angle.tan_coe,
     tan_angle_of_angle_eq_pi_div_two (angle_eq_pi_div_two_of_oangle_eq_pi_div_two h)]
-#align
-  euclidean_geometry.tan_oangle_right_of_oangle_eq_pi_div_two EuclideanGeometry.tan_oangle_right_of_oangle_eq_pi_div_two
+#align euclidean_geometry.tan_oangle_right_of_oangle_eq_pi_div_two EuclideanGeometry.tan_oangle_right_of_oangle_eq_pi_div_two
 
 /-- The tangent of an angle in a right-angled triangle as a ratio of sides. -/
 theorem tan_oangle_left_of_oangle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∡ p₁ p₂ p₃ = ↑(π / 2)) :
@@ -822,8 +757,7 @@ theorem tan_oangle_left_of_oangle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∡ p�
   have hs : (∡ p₃ p₁ p₂).sign = 1 := by rw [← oangle_rotate_sign, h, Real.Angle.sign_coe_pi_div_two]
   rw [oangle_eq_angle_of_sign_eq_one hs, angle_comm, Real.Angle.tan_coe,
     tan_angle_of_angle_eq_pi_div_two (angle_rev_eq_pi_div_two_of_oangle_eq_pi_div_two h)]
-#align
-  euclidean_geometry.tan_oangle_left_of_oangle_eq_pi_div_two EuclideanGeometry.tan_oangle_left_of_oangle_eq_pi_div_two
+#align euclidean_geometry.tan_oangle_left_of_oangle_eq_pi_div_two EuclideanGeometry.tan_oangle_left_of_oangle_eq_pi_div_two
 
 /-- The cosine of an angle in a right-angled triangle multiplied by the hypotenuse equals the
 adjacent side. -/
@@ -833,8 +767,7 @@ theorem cos_oangle_right_mul_dist_of_oangle_eq_pi_div_two {p₁ p₂ p₃ : P}
   have hs : (∡ p₂ p₃ p₁).sign = 1 := by rw [oangle_rotate_sign, h, Real.Angle.sign_coe_pi_div_two]
   rw [oangle_eq_angle_of_sign_eq_one hs, Real.Angle.cos_coe,
     cos_angle_mul_dist_of_angle_eq_pi_div_two (angle_eq_pi_div_two_of_oangle_eq_pi_div_two h)]
-#align
-  euclidean_geometry.cos_oangle_right_mul_dist_of_oangle_eq_pi_div_two EuclideanGeometry.cos_oangle_right_mul_dist_of_oangle_eq_pi_div_two
+#align euclidean_geometry.cos_oangle_right_mul_dist_of_oangle_eq_pi_div_two EuclideanGeometry.cos_oangle_right_mul_dist_of_oangle_eq_pi_div_two
 
 /-- The cosine of an angle in a right-angled triangle multiplied by the hypotenuse equals the
 adjacent side. -/
@@ -844,8 +777,7 @@ theorem cos_oangle_left_mul_dist_of_oangle_eq_pi_div_two {p₁ p₂ p₃ : P}
   have hs : (∡ p₃ p₁ p₂).sign = 1 := by rw [← oangle_rotate_sign, h, Real.Angle.sign_coe_pi_div_two]
   rw [oangle_eq_angle_of_sign_eq_one hs, angle_comm, Real.Angle.cos_coe, dist_comm p₁ p₃,
     cos_angle_mul_dist_of_angle_eq_pi_div_two (angle_rev_eq_pi_div_two_of_oangle_eq_pi_div_two h)]
-#align
-  euclidean_geometry.cos_oangle_left_mul_dist_of_oangle_eq_pi_div_two EuclideanGeometry.cos_oangle_left_mul_dist_of_oangle_eq_pi_div_two
+#align euclidean_geometry.cos_oangle_left_mul_dist_of_oangle_eq_pi_div_two EuclideanGeometry.cos_oangle_left_mul_dist_of_oangle_eq_pi_div_two
 
 /-- The sine of an angle in a right-angled triangle multiplied by the hypotenuse equals the
 opposite side. -/
@@ -855,8 +787,7 @@ theorem sin_oangle_right_mul_dist_of_oangle_eq_pi_div_two {p₁ p₂ p₃ : P}
   have hs : (∡ p₂ p₃ p₁).sign = 1 := by rw [oangle_rotate_sign, h, Real.Angle.sign_coe_pi_div_two]
   rw [oangle_eq_angle_of_sign_eq_one hs, Real.Angle.sin_coe,
     sin_angle_mul_dist_of_angle_eq_pi_div_two (angle_eq_pi_div_two_of_oangle_eq_pi_div_two h)]
-#align
-  euclidean_geometry.sin_oangle_right_mul_dist_of_oangle_eq_pi_div_two EuclideanGeometry.sin_oangle_right_mul_dist_of_oangle_eq_pi_div_two
+#align euclidean_geometry.sin_oangle_right_mul_dist_of_oangle_eq_pi_div_two EuclideanGeometry.sin_oangle_right_mul_dist_of_oangle_eq_pi_div_two
 
 /-- The sine of an angle in a right-angled triangle multiplied by the hypotenuse equals the
 opposite side. -/
@@ -866,8 +797,7 @@ theorem sin_oangle_left_mul_dist_of_oangle_eq_pi_div_two {p₁ p₂ p₃ : P}
   have hs : (∡ p₃ p₁ p₂).sign = 1 := by rw [← oangle_rotate_sign, h, Real.Angle.sign_coe_pi_div_two]
   rw [oangle_eq_angle_of_sign_eq_one hs, angle_comm, Real.Angle.sin_coe, dist_comm p₁ p₃,
     sin_angle_mul_dist_of_angle_eq_pi_div_two (angle_rev_eq_pi_div_two_of_oangle_eq_pi_div_two h)]
-#align
-  euclidean_geometry.sin_oangle_left_mul_dist_of_oangle_eq_pi_div_two EuclideanGeometry.sin_oangle_left_mul_dist_of_oangle_eq_pi_div_two
+#align euclidean_geometry.sin_oangle_left_mul_dist_of_oangle_eq_pi_div_two EuclideanGeometry.sin_oangle_left_mul_dist_of_oangle_eq_pi_div_two
 
 /-- The tangent of an angle in a right-angled triangle multiplied by the adjacent side equals
 the opposite side. -/
@@ -878,8 +808,7 @@ theorem tan_oangle_right_mul_dist_of_oangle_eq_pi_div_two {p₁ p₂ p₃ : P}
   rw [oangle_eq_angle_of_sign_eq_one hs, Real.Angle.tan_coe,
     tan_angle_mul_dist_of_angle_eq_pi_div_two (angle_eq_pi_div_two_of_oangle_eq_pi_div_two h)
       (Or.inr (right_ne_of_oangle_eq_pi_div_two h))]
-#align
-  euclidean_geometry.tan_oangle_right_mul_dist_of_oangle_eq_pi_div_two EuclideanGeometry.tan_oangle_right_mul_dist_of_oangle_eq_pi_div_two
+#align euclidean_geometry.tan_oangle_right_mul_dist_of_oangle_eq_pi_div_two EuclideanGeometry.tan_oangle_right_mul_dist_of_oangle_eq_pi_div_two
 
 /-- The tangent of an angle in a right-angled triangle multiplied by the adjacent side equals
 the opposite side. -/
@@ -890,8 +819,7 @@ theorem tan_oangle_left_mul_dist_of_oangle_eq_pi_div_two {p₁ p₂ p₃ : P}
   rw [oangle_eq_angle_of_sign_eq_one hs, angle_comm, Real.Angle.tan_coe,
     tan_angle_mul_dist_of_angle_eq_pi_div_two (angle_rev_eq_pi_div_two_of_oangle_eq_pi_div_two h)
       (Or.inr (left_ne_of_oangle_eq_pi_div_two h))]
-#align
-  euclidean_geometry.tan_oangle_left_mul_dist_of_oangle_eq_pi_div_two EuclideanGeometry.tan_oangle_left_mul_dist_of_oangle_eq_pi_div_two
+#align euclidean_geometry.tan_oangle_left_mul_dist_of_oangle_eq_pi_div_two EuclideanGeometry.tan_oangle_left_mul_dist_of_oangle_eq_pi_div_two
 
 /-- A side of a right-angled triangle divided by the cosine of the adjacent angle equals the
 hypotenuse. -/
@@ -902,8 +830,7 @@ theorem dist_div_cos_oangle_right_of_oangle_eq_pi_div_two {p₁ p₂ p₃ : P}
   rw [oangle_eq_angle_of_sign_eq_one hs, Real.Angle.cos_coe,
     dist_div_cos_angle_of_angle_eq_pi_div_two (angle_eq_pi_div_two_of_oangle_eq_pi_div_two h)
       (Or.inr (right_ne_of_oangle_eq_pi_div_two h))]
-#align
-  euclidean_geometry.dist_div_cos_oangle_right_of_oangle_eq_pi_div_two EuclideanGeometry.dist_div_cos_oangle_right_of_oangle_eq_pi_div_two
+#align euclidean_geometry.dist_div_cos_oangle_right_of_oangle_eq_pi_div_two EuclideanGeometry.dist_div_cos_oangle_right_of_oangle_eq_pi_div_two
 
 /-- A side of a right-angled triangle divided by the cosine of the adjacent angle equals the
 hypotenuse. -/
@@ -914,8 +841,7 @@ theorem dist_div_cos_oangle_left_of_oangle_eq_pi_div_two {p₁ p₂ p₃ : P}
   rw [oangle_eq_angle_of_sign_eq_one hs, angle_comm, Real.Angle.cos_coe, dist_comm p₁ p₃,
     dist_div_cos_angle_of_angle_eq_pi_div_two (angle_rev_eq_pi_div_two_of_oangle_eq_pi_div_two h)
       (Or.inr (left_ne_of_oangle_eq_pi_div_two h))]
-#align
-  euclidean_geometry.dist_div_cos_oangle_left_of_oangle_eq_pi_div_two EuclideanGeometry.dist_div_cos_oangle_left_of_oangle_eq_pi_div_two
+#align euclidean_geometry.dist_div_cos_oangle_left_of_oangle_eq_pi_div_two EuclideanGeometry.dist_div_cos_oangle_left_of_oangle_eq_pi_div_two
 
 /-- A side of a right-angled triangle divided by the sine of the opposite angle equals the
 hypotenuse. -/
@@ -926,8 +852,7 @@ theorem dist_div_sin_oangle_right_of_oangle_eq_pi_div_two {p₁ p₂ p₃ : P}
   rw [oangle_eq_angle_of_sign_eq_one hs, Real.Angle.sin_coe,
     dist_div_sin_angle_of_angle_eq_pi_div_two (angle_eq_pi_div_two_of_oangle_eq_pi_div_two h)
       (Or.inl (left_ne_of_oangle_eq_pi_div_two h))]
-#align
-  euclidean_geometry.dist_div_sin_oangle_right_of_oangle_eq_pi_div_two EuclideanGeometry.dist_div_sin_oangle_right_of_oangle_eq_pi_div_two
+#align euclidean_geometry.dist_div_sin_oangle_right_of_oangle_eq_pi_div_two EuclideanGeometry.dist_div_sin_oangle_right_of_oangle_eq_pi_div_two
 
 /-- A side of a right-angled triangle divided by the sine of the opposite angle equals the
 hypotenuse. -/
@@ -938,8 +863,7 @@ theorem dist_div_sin_oangle_left_of_oangle_eq_pi_div_two {p₁ p₂ p₃ : P}
   rw [oangle_eq_angle_of_sign_eq_one hs, angle_comm, Real.Angle.sin_coe, dist_comm p₁ p₃,
     dist_div_sin_angle_of_angle_eq_pi_div_two (angle_rev_eq_pi_div_two_of_oangle_eq_pi_div_two h)
       (Or.inl (right_ne_of_oangle_eq_pi_div_two h))]
-#align
-  euclidean_geometry.dist_div_sin_oangle_left_of_oangle_eq_pi_div_two EuclideanGeometry.dist_div_sin_oangle_left_of_oangle_eq_pi_div_two
+#align euclidean_geometry.dist_div_sin_oangle_left_of_oangle_eq_pi_div_two EuclideanGeometry.dist_div_sin_oangle_left_of_oangle_eq_pi_div_two
 
 /-- A side of a right-angled triangle divided by the tangent of the opposite angle equals the
 adjacent side. -/
@@ -950,8 +874,7 @@ theorem dist_div_tan_oangle_right_of_oangle_eq_pi_div_two {p₁ p₂ p₃ : P}
   rw [oangle_eq_angle_of_sign_eq_one hs, Real.Angle.tan_coe,
     dist_div_tan_angle_of_angle_eq_pi_div_two (angle_eq_pi_div_two_of_oangle_eq_pi_div_two h)
       (Or.inl (left_ne_of_oangle_eq_pi_div_two h))]
-#align
-  euclidean_geometry.dist_div_tan_oangle_right_of_oangle_eq_pi_div_two EuclideanGeometry.dist_div_tan_oangle_right_of_oangle_eq_pi_div_two
+#align euclidean_geometry.dist_div_tan_oangle_right_of_oangle_eq_pi_div_two EuclideanGeometry.dist_div_tan_oangle_right_of_oangle_eq_pi_div_two
 
 /-- A side of a right-angled triangle divided by the tangent of the opposite angle equals the
 adjacent side. -/
@@ -962,8 +885,7 @@ theorem dist_div_tan_oangle_left_of_oangle_eq_pi_div_two {p₁ p₂ p₃ : P}
   rw [oangle_eq_angle_of_sign_eq_one hs, angle_comm, Real.Angle.tan_coe,
     dist_div_tan_angle_of_angle_eq_pi_div_two (angle_rev_eq_pi_div_two_of_oangle_eq_pi_div_two h)
       (Or.inl (right_ne_of_oangle_eq_pi_div_two h))]
-#align
-  euclidean_geometry.dist_div_tan_oangle_left_of_oangle_eq_pi_div_two EuclideanGeometry.dist_div_tan_oangle_left_of_oangle_eq_pi_div_two
+#align euclidean_geometry.dist_div_tan_oangle_left_of_oangle_eq_pi_div_two EuclideanGeometry.dist_div_tan_oangle_left_of_oangle_eq_pi_div_two
 
 end EuclideanGeometry
 

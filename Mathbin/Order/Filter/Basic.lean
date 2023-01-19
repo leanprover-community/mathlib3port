@@ -1398,8 +1398,7 @@ theorem frequently_iff_forall_eventually_exists_and {p : α → Prop} {f : Filte
     (∃ᶠ x in f, p x) ↔ ∀ {q : α → Prop}, (∀ᶠ x in f, q x) → ∃ x, p x ∧ q x :=
   ⟨fun hp q hq => (hp.and_eventually hq).exists, fun H hp => by
     simpa only [and_not_self_iff, exists_false] using H hp⟩
-#align
-  filter.frequently_iff_forall_eventually_exists_and Filter.frequently_iff_forall_eventually_exists_and
+#align filter.frequently_iff_forall_eventually_exists_and Filter.frequently_iff_forall_eventually_exists_and
 
 theorem frequently_iff {f : Filter α} {P : α → Prop} :
     (∃ᶠ x in f, P x) ↔ ∀ {U}, U ∈ f → ∃ x ∈ U, P x :=

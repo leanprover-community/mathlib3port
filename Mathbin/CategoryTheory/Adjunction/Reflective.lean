@@ -110,8 +110,7 @@ theorem mem_ess_image_of_unit_is_split_mono [Reflective i] {A : C}
   skip
   haveI := is_iso_of_epi_of_is_split_mono (η.app A)
   exact mem_ess_image_of_unit_is_iso A
-#align
-  category_theory.mem_ess_image_of_unit_is_split_mono CategoryTheory.mem_ess_image_of_unit_is_split_mono
+#align category_theory.mem_ess_image_of_unit_is_split_mono CategoryTheory.mem_ess_image_of_unit_is_split_mono
 
 /-- Composition of reflective functors. -/
 instance Reflective.comp (F : C ⥤ D) (G : D ⥤ E) [Fr : Reflective F] [Gr : Reflective G] :
@@ -129,8 +128,7 @@ theorem unit_comp_partial_bijective_aux_symm_apply [Reflective i] {A : C} {B : D
     (f : i.obj ((leftAdjoint i).obj A) ⟶ i.obj B) :
     (unitCompPartialBijectiveAux _ _).symm f = (ofRightAdjoint i).Unit.app A ≫ f := by
   simp [unit_comp_partial_bijective_aux]
-#align
-  category_theory.unit_comp_partial_bijective_aux_symm_apply CategoryTheory.unit_comp_partial_bijective_aux_symm_apply
+#align category_theory.unit_comp_partial_bijective_aux_symm_apply CategoryTheory.unit_comp_partial_bijective_aux_symm_apply
 
 /-- If `i` has a reflector `L`, then the function `(i.obj (L.obj A) ⟶ B) → (A ⟶ B)` given by
 precomposing with `η.app A` is a bijection provided `B` is in the essential image of `i`.
@@ -156,22 +154,19 @@ def unitCompPartialBijective [Reflective i] (A : C) {B : C} (hB : B ∈ i.essIma
 theorem unit_comp_partial_bijective_symm_apply [Reflective i] (A : C) {B : C} (hB : B ∈ i.essImage)
     (f) : (unitCompPartialBijective A hB).symm f = (ofRightAdjoint i).Unit.app A ≫ f := by
   simp [unit_comp_partial_bijective, unit_comp_partial_bijective_aux_symm_apply]
-#align
-  category_theory.unit_comp_partial_bijective_symm_apply CategoryTheory.unit_comp_partial_bijective_symm_apply
+#align category_theory.unit_comp_partial_bijective_symm_apply CategoryTheory.unit_comp_partial_bijective_symm_apply
 
 theorem unit_comp_partial_bijective_symm_natural [Reflective i] (A : C) {B B' : C} (h : B ⟶ B')
     (hB : B ∈ i.essImage) (hB' : B' ∈ i.essImage) (f : i.obj ((leftAdjoint i).obj A) ⟶ B) :
     (unitCompPartialBijective A hB').symm (f ≫ h) = (unitCompPartialBijective A hB).symm f ≫ h := by
   simp
-#align
-  category_theory.unit_comp_partial_bijective_symm_natural CategoryTheory.unit_comp_partial_bijective_symm_natural
+#align category_theory.unit_comp_partial_bijective_symm_natural CategoryTheory.unit_comp_partial_bijective_symm_natural
 
 theorem unit_comp_partial_bijective_natural [Reflective i] (A : C) {B B' : C} (h : B ⟶ B')
     (hB : B ∈ i.essImage) (hB' : B' ∈ i.essImage) (f : A ⟶ B) :
     (unitCompPartialBijective A hB') (f ≫ h) = unitCompPartialBijective A hB f ≫ h := by
   rw [← Equiv.eq_symm_apply, unit_comp_partial_bijective_symm_natural A h, Equiv.symm_apply_apply]
-#align
-  category_theory.unit_comp_partial_bijective_natural CategoryTheory.unit_comp_partial_bijective_natural
+#align category_theory.unit_comp_partial_bijective_natural CategoryTheory.unit_comp_partial_bijective_natural
 
 /-- If `i : D ⥤ C` is reflective, the inverse functor of `i ≌ F.ess_image` can be explicitly
 defined by the reflector. -/

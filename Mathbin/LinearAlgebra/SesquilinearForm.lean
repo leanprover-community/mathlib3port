@@ -210,8 +210,7 @@ theorem ker_eq_bot_iff_ker_flip_eq_bot (H : B.IsRefl) : B.ker = ⊥ ↔ B.flip.k
   by
   refine' ⟨ker_flip_eq_bot H, fun h => _⟩
   exact (congr_arg _ B.flip_flip.symm).trans (ker_flip_eq_bot (flip_is_refl_iff.mpr H) h)
-#align
-  linear_map.is_refl.ker_eq_bot_iff_ker_flip_eq_bot LinearMap.IsRefl.ker_eq_bot_iff_ker_flip_eq_bot
+#align linear_map.is_refl.ker_eq_bot_iff_ker_flip_eq_bot LinearMap.IsRefl.ker_eq_bot_iff_ker_flip_eq_bot
 
 end IsRefl
 
@@ -393,8 +392,7 @@ theorem span_singleton_inf_orthogonal_eq_bot (B : V₁ →ₛₗ[J₁] V₁ →�
           exact y)
         fun hfalse => False.elim <| hx hfalse
   · rw [Submodule.mem_span] <;> exact fun _ hp => hp <| Finset.mem_singleton_self _
-#align
-  linear_map.span_singleton_inf_orthogonal_eq_bot LinearMap.span_singleton_inf_orthogonal_eq_bot
+#align linear_map.span_singleton_inf_orthogonal_eq_bot LinearMap.span_singleton_inf_orthogonal_eq_bot
 
 -- ↓ This lemma only applies in fields since we use the `mul_eq_zero`
 theorem orthogonal_span_singleton_eq_to_lin_ker {B : V →ₗ[K] V →ₛₗ[J] K} (x : V) :
@@ -407,8 +405,7 @@ theorem orthogonal_span_singleton_eq_to_lin_ker {B : V →ₗ[K] V →ₛₗ[J] 
   · rintro h _ ⟨z, rfl⟩
     rw [is_ortho, map_smulₛₗ₂, smul_eq_zero]
     exact Or.intro_right _ h
-#align
-  linear_map.orthogonal_span_singleton_eq_to_lin_ker LinearMap.orthogonal_span_singleton_eq_to_lin_ker
+#align linear_map.orthogonal_span_singleton_eq_to_lin_ker LinearMap.orthogonal_span_singleton_eq_to_lin_ker
 
 -- todo: Generalize this to sesquilinear maps
 theorem span_singleton_sup_orthogonal_eq_top {B : V →ₗ[K] V →ₗ[K] K} {x : V} (hx : ¬B.IsOrtho x x) :
@@ -416,8 +413,7 @@ theorem span_singleton_sup_orthogonal_eq_top {B : V →ₗ[K] V →ₗ[K] K} {x 
   by
   rw [orthogonal_span_singleton_eq_to_lin_ker]
   exact (B x).span_singleton_sup_ker_eq_top hx
-#align
-  linear_map.span_singleton_sup_orthogonal_eq_top LinearMap.span_singleton_sup_orthogonal_eq_top
+#align linear_map.span_singleton_sup_orthogonal_eq_top LinearMap.span_singleton_sup_orthogonal_eq_top
 
 -- todo: Generalize this to sesquilinear maps
 /-- Given a bilinear form `B` and some `x` such that `B x x ≠ 0`, the span of the singleton of `x`
@@ -619,8 +615,7 @@ theorem is_pair_self_adjoint_equiv (e : M₁ ≃ₗ[R] M) (f : Module.EndCat R M
 theorem is_skew_adjoint_iff_neg_self_adjoint (f : Module.EndCat R M) :
     B.IsSkewAdjoint f ↔ IsAdjointPair (-B) B f f :=
   show (∀ x y, B (f x) y = B x ((-f) y)) ↔ ∀ x y, B (f x) y = (-B) x (f y) by simp
-#align
-  linear_map.is_skew_adjoint_iff_neg_self_adjoint LinearMap.is_skew_adjoint_iff_neg_self_adjoint
+#align linear_map.is_skew_adjoint_iff_neg_self_adjoint LinearMap.is_skew_adjoint_iff_neg_self_adjoint
 
 @[simp]
 theorem mem_self_adjoint_submodule (f : Module.EndCat R M) :
@@ -742,14 +737,12 @@ theorem separating_left_iff_linear_nontrivial {B : M₁ →ₛₗ[I₁] M₂ →
     rw [zero_apply]
     exact hB _
   exact h x h'
-#align
-  linear_map.separating_left_iff_linear_nontrivial LinearMap.separating_left_iff_linear_nontrivial
+#align linear_map.separating_left_iff_linear_nontrivial LinearMap.separating_left_iff_linear_nontrivial
 
 theorem separating_right_iff_linear_flip_nontrivial {B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R} :
     B.SeparatingRight ↔ ∀ y : M₂, B.flip y = 0 → y = 0 := by
   rw [← flip_separating_left, separating_left_iff_linear_nontrivial]
-#align
-  linear_map.separating_right_iff_linear_flip_nontrivial LinearMap.separating_right_iff_linear_flip_nontrivial
+#align linear_map.separating_right_iff_linear_flip_nontrivial LinearMap.separating_right_iff_linear_flip_nontrivial
 
 /-- A bilinear form is left-separating if and only if it has a trivial kernel. -/
 theorem separating_left_iff_ker_eq_bot {B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R} :
@@ -761,8 +754,7 @@ theorem separating_left_iff_ker_eq_bot {B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[
 theorem separating_right_iff_flip_ker_eq_bot {B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R} :
     B.SeparatingRight ↔ B.flip.ker = ⊥ := by
   rw [← flip_separating_left, separating_left_iff_ker_eq_bot]
-#align
-  linear_map.separating_right_iff_flip_ker_eq_bot LinearMap.separating_right_iff_flip_ker_eq_bot
+#align linear_map.separating_right_iff_flip_ker_eq_bot LinearMap.separating_right_iff_flip_ker_eq_bot
 
 end CommSemiring
 
@@ -776,8 +768,7 @@ theorem IsRefl.nondegenerateOfSeparatingLeft {B : M →ₗ[R] M →ₗ[R] R} (hB
   refine' ⟨hB', _⟩
   rw [separating_right_iff_flip_ker_eq_bot, hB.ker_eq_bot_iff_ker_flip_eq_bot.mp]
   rwa [← separating_left_iff_ker_eq_bot]
-#align
-  linear_map.is_refl.nondegenerate_of_separating_left LinearMap.IsRefl.nondegenerateOfSeparatingLeft
+#align linear_map.is_refl.nondegenerate_of_separating_left LinearMap.IsRefl.nondegenerateOfSeparatingLeft
 
 theorem IsRefl.nondegenerateOfSeparatingRight {B : M →ₗ[R] M →ₗ[R] R} (hB : B.IsRefl)
     (hB' : B.SeparatingRight) : B.Nondegenerate :=
@@ -785,8 +776,7 @@ theorem IsRefl.nondegenerateOfSeparatingRight {B : M →ₗ[R] M →ₗ[R] R} (h
   refine' ⟨_, hB'⟩
   rw [separating_left_iff_ker_eq_bot, hB.ker_eq_bot_iff_ker_flip_eq_bot.mpr]
   rwa [← separating_right_iff_flip_ker_eq_bot]
-#align
-  linear_map.is_refl.nondegenerate_of_separating_right LinearMap.IsRefl.nondegenerateOfSeparatingRight
+#align linear_map.is_refl.nondegenerate_of_separating_right LinearMap.IsRefl.nondegenerateOfSeparatingRight
 
 /-- The restriction of a reflexive bilinear form `B` onto a submodule `W` is
 nondegenerate if `W` has trivial intersection with its orthogonal complement,
@@ -803,8 +793,7 @@ theorem nondegenerateRestrictOfDisjointOrthogonal {B : M →ₗ[R] M →ₗ[R] R
   simp_rw [dom_restrict₁₂_apply, Submodule.coe_mk] at b₁
   rw [hB.ortho_comm]
   exact b₁
-#align
-  linear_map.nondegenerate_restrict_of_disjoint_orthogonal LinearMap.nondegenerateRestrictOfDisjointOrthogonal
+#align linear_map.nondegenerate_restrict_of_disjoint_orthogonal LinearMap.nondegenerateRestrictOfDisjointOrthogonal
 
 /-- An orthogonal basis with respect to a left-separating bilinear form has no self-orthogonal
 elements. -/
@@ -822,8 +811,7 @@ theorem IsOrtho.not_is_ortho_basis_self_of_separating_left [Nontrivial R] {B : M
   obtain rfl | hij := eq_or_ne i j
   · exact ho
   · exact h hij
-#align
-  linear_map.is_Ortho.not_is_ortho_basis_self_of_separating_left LinearMap.IsOrtho.not_is_ortho_basis_self_of_separating_left
+#align linear_map.is_Ortho.not_is_ortho_basis_self_of_separating_left LinearMap.IsOrtho.not_is_ortho_basis_self_of_separating_left
 
 /-- An orthogonal basis with respect to a right-separating bilinear form has no self-orthogonal
 elements. -/
@@ -834,8 +822,7 @@ theorem IsOrtho.not_is_ortho_basis_self_of_separating_right [Nontrivial R]
   rw [is_Ortho_flip] at h
   rw [is_ortho_flip]
   exact h.not_is_ortho_basis_self_of_separating_left (flip_separating_left.mpr hB) i
-#align
-  linear_map.is_Ortho.not_is_ortho_basis_self_of_separating_right LinearMap.IsOrtho.not_is_ortho_basis_self_of_separating_right
+#align linear_map.is_Ortho.not_is_ortho_basis_self_of_separating_right LinearMap.IsOrtho.not_is_ortho_basis_self_of_separating_right
 
 /-- Given an orthogonal basis with respect to a bilinear form, the bilinear form is left-separating
 if the basis has no elements which are self-orthogonal. -/
@@ -858,8 +845,7 @@ theorem IsOrtho.separatingLeftOfNotIsOrthoBasisSelf [NoZeroDivisors R] {B : M �
   · intro hi
     convert zero_mul _ using 2
     exact finsupp.not_mem_support_iff.mp hi
-#align
-  linear_map.is_Ortho.separating_left_of_not_is_ortho_basis_self LinearMap.IsOrtho.separatingLeftOfNotIsOrthoBasisSelf
+#align linear_map.is_Ortho.separating_left_of_not_is_ortho_basis_self LinearMap.IsOrtho.separatingLeftOfNotIsOrthoBasisSelf
 
 /-- Given an orthogonal basis with respect to a bilinear form, the bilinear form is right-separating
 if the basis has no elements which are self-orthogonal. -/
@@ -871,8 +857,7 @@ theorem IsOrtho.separatingRightIffNotIsOrthoBasisSelf [NoZeroDivisors R] {B : M 
   refine' is_Ortho.separating_left_of_not_is_ortho_basis_self v hO fun i => _
   rw [is_ortho_flip]
   exact h i
-#align
-  linear_map.is_Ortho.separating_right_iff_not_is_ortho_basis_self LinearMap.IsOrtho.separatingRightIffNotIsOrthoBasisSelf
+#align linear_map.is_Ortho.separating_right_iff_not_is_ortho_basis_self LinearMap.IsOrtho.separatingRightIffNotIsOrthoBasisSelf
 
 /-- Given an orthogonal basis with respect to a bilinear form, the bilinear form is nondegenerate
 if the basis has no elements which are self-orthogonal. -/
@@ -880,8 +865,7 @@ theorem IsOrtho.nondegenerateOfNotIsOrthoBasisSelf [NoZeroDivisors R] {B : M →
     (v : Basis n R M) (hO : B.IsOrtho v) (h : ∀ i, ¬B.IsOrtho (v i) (v i)) : B.Nondegenerate :=
   ⟨IsOrtho.separatingLeftOfNotIsOrthoBasisSelf v hO h,
     IsOrtho.separatingRightIffNotIsOrthoBasisSelf v hO h⟩
-#align
-  linear_map.is_Ortho.nondegenerate_of_not_is_ortho_basis_self LinearMap.IsOrtho.nondegenerateOfNotIsOrthoBasisSelf
+#align linear_map.is_Ortho.nondegenerate_of_not_is_ortho_basis_self LinearMap.IsOrtho.nondegenerateOfNotIsOrthoBasisSelf
 
 end CommRing
 

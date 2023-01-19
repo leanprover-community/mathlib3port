@@ -234,8 +234,7 @@ theorem Stable.exists_pow_smul_eq_of_ge : ∃ n₀, ∀ n ≥ n₀, F.n n = I ^ 
   intro n hn
   convert hn₀ (n - n₀)
   rw [add_comm, tsub_add_cancel_of_le hn]
-#align
-  ideal.filtration.stable.exists_pow_smul_eq_of_ge Ideal.Filtration.Stable.exists_pow_smul_eq_of_ge
+#align ideal.filtration.stable.exists_pow_smul_eq_of_ge Ideal.Filtration.Stable.exists_pow_smul_eq_of_ge
 
 omit h
 
@@ -245,8 +244,7 @@ theorem stable_iff_exists_pow_smul_eq_of_ge :
   refine' ⟨stable.exists_pow_smul_eq_of_ge, fun h => ⟨h.some, fun n hn => _⟩⟩
   rw [h.some_spec n hn, h.some_spec (n + 1) (by linarith), smul_smul, ← pow_succ,
     tsub_add_eq_add_tsub hn]
-#align
-  ideal.filtration.stable_iff_exists_pow_smul_eq_of_ge Ideal.Filtration.stable_iff_exists_pow_smul_eq_of_ge
+#align ideal.filtration.stable_iff_exists_pow_smul_eq_of_ge Ideal.Filtration.stable_iff_exists_pow_smul_eq_of_ge
 
 theorem Stable.exists_forall_le (h : F.Stable) (e : F.n 0 ≤ F'.n 0) :
     ∃ n₀, ∀ n, F.n (n + n₀) ≤ F'.n n :=
@@ -380,8 +378,7 @@ theorem submodule_eq_span_le_iff_stable_ge (n₀ : ℕ) :
     · intro x y hx hy
       rw [map_add]
       exact F'.add_mem hx hy
-#align
-  ideal.filtration.submodule_eq_span_le_iff_stable_ge Ideal.Filtration.submodule_eq_span_le_iff_stable_ge
+#align ideal.filtration.submodule_eq_span_le_iff_stable_ge Ideal.Filtration.submodule_eq_span_le_iff_stable_ge
 
 /-- If the components of a filtration are finitely generated, then the filtration is stable iff
 its associated submodule of is finitely generated.  -/

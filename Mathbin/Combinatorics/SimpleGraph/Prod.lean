@@ -154,8 +154,7 @@ theorem of_box_prod_left_box_prod_left [DecidableEq β] [DecidableRel G.Adj] :
     rw [walk.box_prod_left, map_cons, of_box_prod_left, Or.by_cases, dif_pos, ← walk.box_prod_left,
       of_box_prod_left_box_prod_left]
     exacts[rfl, ⟨h, rfl⟩]
-#align
-  simple_graph.walk.of_box_prod_left_box_prod_left SimpleGraph.Walk.of_box_prod_left_box_prod_left
+#align simple_graph.walk.of_box_prod_left_box_prod_left SimpleGraph.Walk.of_box_prod_left_box_prod_left
 
 @[simp]
 theorem of_box_prod_left_box_prod_right [DecidableEq α] [DecidableRel G.Adj] :
@@ -166,8 +165,7 @@ theorem of_box_prod_left_box_prod_right [DecidableEq α] [DecidableRel G.Adj] :
     rw [walk.box_prod_right, map_cons, of_box_prod_right, Or.by_cases, dif_pos, ←
       walk.box_prod_right, of_box_prod_left_box_prod_right]
     exacts[rfl, ⟨h, rfl⟩]
-#align
-  simple_graph.walk.of_box_prod_left_box_prod_right SimpleGraph.Walk.of_box_prod_left_box_prod_right
+#align simple_graph.walk.of_box_prod_left_box_prod_right SimpleGraph.Walk.of_box_prod_left_box_prod_right
 
 end Walk
 

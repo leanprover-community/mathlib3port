@@ -121,22 +121,19 @@ over `ℝ` and `f 0 = 0`, then `f` is a linear isometry equivalence. -/
 def toRealLinearIsometryEquivOfMapZero (f : E ≃ᵢ F) (h0 : f 0 = 0) : E ≃ₗᵢ[ℝ] F :=
   { (AddMonoidHom.ofMapMidpoint ℝ ℝ f h0 f.map_midpoint).toRealLinearMap f.Continuous, f with
     norm_map' := fun x => show ‖f x‖ = ‖x‖ by simp only [← dist_zero_right, ← h0, f.dist_eq] }
-#align
-  isometry_equiv.to_real_linear_isometry_equiv_of_map_zero IsometryEquiv.toRealLinearIsometryEquivOfMapZero
+#align isometry_equiv.to_real_linear_isometry_equiv_of_map_zero IsometryEquiv.toRealLinearIsometryEquivOfMapZero
 
 @[simp]
 theorem coe_to_real_linear_equiv_of_map_zero (f : E ≃ᵢ F) (h0 : f 0 = 0) :
     ⇑(f.toRealLinearIsometryEquivOfMapZero h0) = f :=
   rfl
-#align
-  isometry_equiv.coe_to_real_linear_equiv_of_map_zero IsometryEquiv.coe_to_real_linear_equiv_of_map_zero
+#align isometry_equiv.coe_to_real_linear_equiv_of_map_zero IsometryEquiv.coe_to_real_linear_equiv_of_map_zero
 
 @[simp]
 theorem coe_to_real_linear_equiv_of_map_zero_symm (f : E ≃ᵢ F) (h0 : f 0 = 0) :
     ⇑(f.toRealLinearIsometryEquivOfMapZero h0).symm = f.symm :=
   rfl
-#align
-  isometry_equiv.coe_to_real_linear_equiv_of_map_zero_symm IsometryEquiv.coe_to_real_linear_equiv_of_map_zero_symm
+#align isometry_equiv.coe_to_real_linear_equiv_of_map_zero_symm IsometryEquiv.coe_to_real_linear_equiv_of_map_zero_symm
 
 /-- **Mazur-Ulam Theorem**: if `f` is an isometric bijection between two normed vector spaces
 over `ℝ`, then `x ↦ f x - f 0` is a linear isometry equivalence. -/
@@ -155,8 +152,7 @@ theorem to_real_linear_equiv_apply (f : E ≃ᵢ F) (x : E) :
 theorem to_real_linear_isometry_equiv_symm_apply (f : E ≃ᵢ F) (y : F) :
     (f.toRealLinearIsometryEquiv.symm : F → E) y = f.symm (y + f 0) :=
   rfl
-#align
-  isometry_equiv.to_real_linear_isometry_equiv_symm_apply IsometryEquiv.to_real_linear_isometry_equiv_symm_apply
+#align isometry_equiv.to_real_linear_isometry_equiv_symm_apply IsometryEquiv.to_real_linear_isometry_equiv_symm_apply
 
 /-- **Mazur-Ulam Theorem**: if `f` is an isometric bijection between two normed add-torsors over
 normed vector spaces over `ℝ`, then `f` is an affine isometry equivalence. -/
@@ -170,8 +166,7 @@ def toRealAffineIsometryEquiv (f : PE ≃ᵢ PF) : PE ≃ᵃⁱ[ℝ] PF :=
 @[simp]
 theorem coe_fn_to_real_affine_isometry_equiv (f : PE ≃ᵢ PF) : ⇑f.toRealAffineIsometryEquiv = f :=
   rfl
-#align
-  isometry_equiv.coe_fn_to_real_affine_isometry_equiv IsometryEquiv.coe_fn_to_real_affine_isometry_equiv
+#align isometry_equiv.coe_fn_to_real_affine_isometry_equiv IsometryEquiv.coe_fn_to_real_affine_isometry_equiv
 
 @[simp]
 theorem coe_to_real_affine_isometry_equiv (f : PE ≃ᵢ PF) :
@@ -179,8 +174,7 @@ theorem coe_to_real_affine_isometry_equiv (f : PE ≃ᵢ PF) :
   by
   ext
   rfl
-#align
-  isometry_equiv.coe_to_real_affine_isometry_equiv IsometryEquiv.coe_to_real_affine_isometry_equiv
+#align isometry_equiv.coe_to_real_affine_isometry_equiv IsometryEquiv.coe_to_real_affine_isometry_equiv
 
 end IsometryEquiv
 

@@ -423,8 +423,7 @@ theorem SeminormFamily.with_seminorms_iff_nhds_eq_infi (p : SeminormFamily 𝕜 
   refine' ⟨fun h => _, p.with_seminorms_of_nhds⟩
   rw [h.topology_eq_with_seminorms]
   exact AddGroupFilterBasis.nhds_zero_eq _
-#align
-  seminorm_family.with_seminorms_iff_nhds_eq_infi SeminormFamily.with_seminorms_iff_nhds_eq_infi
+#align seminorm_family.with_seminorms_iff_nhds_eq_infi SeminormFamily.with_seminorms_iff_nhds_eq_infi
 
 theorem WithSeminorms.continuous_seminorm [NontriviallyNormedField 𝕝] [Module 𝕝 E]
     [HasContinuousConstSmul 𝕝 E] {p : SeminormFamily 𝕝 E ι} (hp : WithSeminorms p) (i : ι) :
@@ -449,8 +448,7 @@ theorem SeminormFamily.with_seminorms_iff_topological_space_eq_infi (p : Seminor
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr = »(_, «expr⨅ , »((i), _))]]"
   exact @comap_norm_nhds_zero _ (p i).toAddGroupSeminorm.toSeminormedAddGroup
   all_goals infer_instance
-#align
-  seminorm_family.with_seminorms_iff_topological_space_eq_infi SeminormFamily.with_seminorms_iff_topological_space_eq_infi
+#align seminorm_family.with_seminorms_iff_topological_space_eq_infi SeminormFamily.with_seminorms_iff_topological_space_eq_infi
 
 omit t
 
@@ -469,8 +467,7 @@ theorem SeminormFamily.with_seminorms_iff_uniform_space_eq_infi [u : UniformSpac
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr = »(_, «expr⨅ , »((i), _))]]"
   exact @comap_norm_nhds_zero _ (p i).toAddGroupSeminorm.toSeminormedAddGroup
   all_goals infer_instance
-#align
-  seminorm_family.with_seminorms_iff_uniform_space_eq_infi SeminormFamily.with_seminorms_iff_uniform_space_eq_infi
+#align seminorm_family.with_seminorms_iff_uniform_space_eq_infi SeminormFamily.with_seminorms_iff_uniform_space_eq_infi
 
 end TopologicalAddGroup
 
@@ -533,16 +530,14 @@ theorem WithSeminorms.is_vonN_bounded_iff_finset_seminorm_bounded {s : Set E}
   simp_rw [← (I.sup p).mem_ball_zero] at h'
   refine' Absorbs.mono_right _ h'
   exact (Finset.sup I p).ball_zero_absorbs_ball_zero hr
-#align
-  with_seminorms.is_vonN_bounded_iff_finset_seminorm_bounded WithSeminorms.is_vonN_bounded_iff_finset_seminorm_bounded
+#align with_seminorms.is_vonN_bounded_iff_finset_seminorm_bounded WithSeminorms.is_vonN_bounded_iff_finset_seminorm_bounded
 
 theorem WithSeminorms.image_is_vonN_bounded_iff_finset_seminorm_bounded (f : G → E) {s : Set G}
     (hp : WithSeminorms p) :
     Bornology.IsVonNBounded 𝕜 (f '' s) ↔
       ∀ I : Finset ι, ∃ (r : _)(hr : 0 < r), ∀ x ∈ s, I.sup p (f x) < r :=
   by simp_rw [hp.is_vonN_bounded_iff_finset_seminorm_bounded, Set.ball_image_iff]
-#align
-  with_seminorms.image_is_vonN_bounded_iff_finset_seminorm_bounded WithSeminorms.image_is_vonN_bounded_iff_finset_seminorm_bounded
+#align with_seminorms.image_is_vonN_bounded_iff_finset_seminorm_bounded WithSeminorms.image_is_vonN_bounded_iff_finset_seminorm_bounded
 
 theorem WithSeminorms.is_vonN_bounded_iff_seminorm_bounded {s : Set E} (hp : WithSeminorms p) :
     Bornology.IsVonNBounded 𝕜 s ↔ ∀ i : ι, ∃ (r : _)(hr : 0 < r), ∀ x ∈ s, p i x < r :=
@@ -565,15 +560,13 @@ theorem WithSeminorms.is_vonN_bounded_iff_seminorm_bounded {s : Set E} (hp : Wit
   simp only [finset.not_nonempty_iff_eq_empty.mp hI, Finset.sup_empty, coe_bot, Pi.zero_apply,
     exists_prop]
   exact ⟨1, zero_lt_one, fun _ _ => zero_lt_one⟩
-#align
-  with_seminorms.is_vonN_bounded_iff_seminorm_bounded WithSeminorms.is_vonN_bounded_iff_seminorm_bounded
+#align with_seminorms.is_vonN_bounded_iff_seminorm_bounded WithSeminorms.is_vonN_bounded_iff_seminorm_bounded
 
 theorem WithSeminorms.image_is_vonN_bounded_iff_seminorm_bounded (f : G → E) {s : Set G}
     (hp : WithSeminorms p) :
     Bornology.IsVonNBounded 𝕜 (f '' s) ↔ ∀ i : ι, ∃ (r : _)(hr : 0 < r), ∀ x ∈ s, p i (f x) < r :=
   by simp_rw [hp.is_vonN_bounded_iff_seminorm_bounded, Set.ball_image_iff]
-#align
-  with_seminorms.image_is_vonN_bounded_iff_seminorm_bounded WithSeminorms.image_is_vonN_bounded_iff_seminorm_bounded
+#align with_seminorms.image_is_vonN_bounded_iff_seminorm_bounded WithSeminorms.image_is_vonN_bounded_iff_seminorm_bounded
 
 end NontriviallyNormedField
 

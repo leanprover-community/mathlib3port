@@ -1798,14 +1798,12 @@ theorem image_upper_bounds_subset_upper_bounds_image (Hst : s ⊆ t) :
   by
   rintro _ ⟨a, ha, rfl⟩
   exact Hf.mem_upper_bounds_image Hst ha.1 ha.2
-#align
-  monotone_on.image_upper_bounds_subset_upper_bounds_image MonotoneOn.image_upper_bounds_subset_upper_bounds_image
+#align monotone_on.image_upper_bounds_subset_upper_bounds_image MonotoneOn.image_upper_bounds_subset_upper_bounds_image
 
 theorem image_lower_bounds_subset_lower_bounds_image :
     f '' (lowerBounds s ∩ t) ⊆ lowerBounds (f '' s) :=
   Hf.dual.image_upper_bounds_subset_upper_bounds_image Hst
-#align
-  monotone_on.image_lower_bounds_subset_lower_bounds_image MonotoneOn.image_lower_bounds_subset_lower_bounds_image
+#align monotone_on.image_lower_bounds_subset_lower_bounds_image MonotoneOn.image_lower_bounds_subset_lower_bounds_image
 
 /- warning: monotone_on.map_bdd_above -> MonotoneOn.map_bddAbove is a dubious translation:
 lean 3 declaration is
@@ -1887,8 +1885,7 @@ Case conversion may be inaccurate. Consider using '#align antitone_on.image_lowe
 theorem image_lowerBounds_subset_upperBounds_image :
     f '' (lowerBounds s ∩ t) ⊆ upperBounds (f '' s) :=
   Hf.dual_right.image_lower_bounds_subset_lower_bounds_image Hst
-#align
-  antitone_on.image_lower_bounds_subset_upper_bounds_image AntitoneOn.image_lowerBounds_subset_upperBounds_image
+#align antitone_on.image_lower_bounds_subset_upper_bounds_image AntitoneOn.image_lowerBounds_subset_upperBounds_image
 
 /- warning: antitone_on.image_upper_bounds_subset_lower_bounds_image -> AntitoneOn.image_upperBounds_subset_lowerBounds_image is a dubious translation:
 lean 3 declaration is
@@ -1899,8 +1896,7 @@ Case conversion may be inaccurate. Consider using '#align antitone_on.image_uppe
 theorem image_upperBounds_subset_lowerBounds_image :
     f '' (upperBounds s ∩ t) ⊆ lowerBounds (f '' s) :=
   Hf.dual_right.image_upper_bounds_subset_upper_bounds_image Hst
-#align
-  antitone_on.image_upper_bounds_subset_lower_bounds_image AntitoneOn.image_upperBounds_subset_lowerBounds_image
+#align antitone_on.image_upper_bounds_subset_lower_bounds_image AntitoneOn.image_upperBounds_subset_lowerBounds_image
 
 /- warning: antitone_on.map_bdd_above -> AntitoneOn.map_bddAbove is a dubious translation:
 lean 3 declaration is
@@ -1963,15 +1959,13 @@ theorem image_upperBounds_subset_upperBounds_image : f '' upperBounds s ⊆ uppe
   by
   rintro _ ⟨a, ha, rfl⟩
   exact Hf.mem_upper_bounds_image ha
-#align
-  monotone.image_upper_bounds_subset_upper_bounds_image Monotone.image_upperBounds_subset_upperBounds_image
+#align monotone.image_upper_bounds_subset_upper_bounds_image Monotone.image_upperBounds_subset_upperBounds_image
 -/
 
 #print Monotone.image_lowerBounds_subset_lowerBounds_image /-
 theorem image_lowerBounds_subset_lowerBounds_image : f '' lowerBounds s ⊆ lowerBounds (f '' s) :=
   Hf.dual.image_upper_bounds_subset_upper_bounds_image
-#align
-  monotone.image_lower_bounds_subset_lower_bounds_image Monotone.image_lowerBounds_subset_lowerBounds_image
+#align monotone.image_lower_bounds_subset_lower_bounds_image Monotone.image_lowerBounds_subset_lowerBounds_image
 -/
 
 #print Monotone.map_bddAbove /-
@@ -2025,15 +2019,13 @@ theorem mem_lowerBounds_image : a ∈ upperBounds s → f a ∈ lowerBounds (f '
 #print Antitone.image_lowerBounds_subset_upperBounds_image /-
 theorem image_lowerBounds_subset_upperBounds_image : f '' lowerBounds s ⊆ upperBounds (f '' s) :=
   hf.dual_right.image_lower_bounds_subset_lower_bounds_image
-#align
-  antitone.image_lower_bounds_subset_upper_bounds_image Antitone.image_lowerBounds_subset_upperBounds_image
+#align antitone.image_lower_bounds_subset_upper_bounds_image Antitone.image_lowerBounds_subset_upperBounds_image
 -/
 
 #print Antitone.image_upperBounds_subset_lowerBounds_image /-
 theorem image_upperBounds_subset_lowerBounds_image : f '' upperBounds s ⊆ lowerBounds (f '' s) :=
   hf.dual_right.image_upper_bounds_subset_upper_bounds_image
-#align
-  antitone.image_upper_bounds_subset_lower_bounds_image Antitone.image_upperBounds_subset_lowerBounds_image
+#align antitone.image_upper_bounds_subset_lower_bounds_image Antitone.image_upperBounds_subset_lowerBounds_image
 -/
 
 #print Antitone.map_bddAbove /-
@@ -2152,16 +2144,14 @@ include h₀ h₁
 theorem mem_upperBounds_image2_of_mem_upperBounds_of_mem_lowerBounds (ha : a ∈ upperBounds s)
     (hb : b ∈ lowerBounds t) : f a b ∈ upperBounds (image2 f s t) :=
   forall_image2_iff.2 fun x hx y hy => (h₀ _ <| ha hx).trans <| h₁ _ <| hb hy
-#align
-  mem_upper_bounds_image2_of_mem_upper_bounds_of_mem_lower_bounds mem_upperBounds_image2_of_mem_upperBounds_of_mem_lowerBounds
+#align mem_upper_bounds_image2_of_mem_upper_bounds_of_mem_lower_bounds mem_upperBounds_image2_of_mem_upperBounds_of_mem_lowerBounds
 -/
 
 #print mem_lowerBounds_image2_of_mem_lowerBounds_of_mem_upperBounds /-
 theorem mem_lowerBounds_image2_of_mem_lowerBounds_of_mem_upperBounds (ha : a ∈ lowerBounds s)
     (hb : b ∈ upperBounds t) : f a b ∈ lowerBounds (image2 f s t) :=
   forall_image2_iff.2 fun x hx y hy => (h₀ _ <| ha hx).trans <| h₁ _ <| hb hy
-#align
-  mem_lower_bounds_image2_of_mem_lower_bounds_of_mem_upper_bounds mem_lowerBounds_image2_of_mem_lowerBounds_of_mem_upperBounds
+#align mem_lower_bounds_image2_of_mem_lower_bounds_of_mem_upper_bounds mem_lowerBounds_image2_of_mem_lowerBounds_of_mem_upperBounds
 -/
 
 theorem image2_upper_bounds_lower_bounds_subset_upper_bounds_image2 :
@@ -2169,8 +2159,7 @@ theorem image2_upper_bounds_lower_bounds_subset_upper_bounds_image2 :
   by
   rintro _ ⟨a, b, ha, hb, rfl⟩
   exact mem_upperBounds_image2_of_mem_upperBounds_of_mem_lowerBounds h₀ h₁ ha hb
-#align
-  image2_upper_bounds_lower_bounds_subset_upper_bounds_image2 image2_upper_bounds_lower_bounds_subset_upper_bounds_image2
+#align image2_upper_bounds_lower_bounds_subset_upper_bounds_image2 image2_upper_bounds_lower_bounds_subset_upper_bounds_image2
 
 #print image2_lowerBounds_upperBounds_subset_lowerBounds_image2 /-
 theorem image2_lowerBounds_upperBounds_subset_lowerBounds_image2 :
@@ -2178,8 +2167,7 @@ theorem image2_lowerBounds_upperBounds_subset_lowerBounds_image2 :
   by
   rintro _ ⟨a, b, ha, hb, rfl⟩
   exact mem_lowerBounds_image2_of_mem_lowerBounds_of_mem_upperBounds h₀ h₁ ha hb
-#align
-  image2_lower_bounds_upper_bounds_subset_lower_bounds_image2 image2_lowerBounds_upperBounds_subset_lowerBounds_image2
+#align image2_lower_bounds_upper_bounds_subset_lower_bounds_image2 image2_lowerBounds_upperBounds_subset_lowerBounds_image2
 -/
 
 #print BddAbove.bddAbove_image2_of_bddBelow /-
@@ -2242,8 +2230,7 @@ theorem image2_upperBounds_upperBounds_subset_upperBounds_image2 :
   by
   rintro _ ⟨a, b, ha, hb, rfl⟩
   exact mem_upperBounds_image2_of_mem_lowerBounds h₀ h₁ ha hb
-#align
-  image2_upper_bounds_upper_bounds_subset_upper_bounds_image2 image2_upperBounds_upperBounds_subset_upperBounds_image2
+#align image2_upper_bounds_upper_bounds_subset_upper_bounds_image2 image2_upperBounds_upperBounds_subset_upperBounds_image2
 -/
 
 #print image2_lowerBounds_lowerBounds_subset_lowerBounds_image2 /-
@@ -2252,8 +2239,7 @@ theorem image2_lowerBounds_lowerBounds_subset_lowerBounds_image2 :
   by
   rintro _ ⟨a, b, ha, hb, rfl⟩
   exact mem_lowerBounds_image2_of_mem_upperBounds h₀ h₁ ha hb
-#align
-  image2_lower_bounds_lower_bounds_subset_lower_bounds_image2 image2_lowerBounds_lowerBounds_subset_lowerBounds_image2
+#align image2_lower_bounds_lower_bounds_subset_lower_bounds_image2 image2_lowerBounds_lowerBounds_subset_lowerBounds_image2
 -/
 
 #print BddBelow.image2_bddAbove /-
@@ -2298,16 +2284,14 @@ include h₀ h₁
 theorem mem_upperBounds_image2_of_mem_upperBounds_of_mem_upperBounds (ha : a ∈ lowerBounds s)
     (hb : b ∈ upperBounds t) : f a b ∈ upperBounds (image2 f s t) :=
   forall_image2_iff.2 fun x hx y hy => (h₀ _ <| ha hx).trans <| h₁ _ <| hb hy
-#align
-  mem_upper_bounds_image2_of_mem_upper_bounds_of_mem_upper_bounds mem_upperBounds_image2_of_mem_upperBounds_of_mem_upperBounds
+#align mem_upper_bounds_image2_of_mem_upper_bounds_of_mem_upper_bounds mem_upperBounds_image2_of_mem_upperBounds_of_mem_upperBounds
 -/
 
 #print mem_lowerBounds_image2_of_mem_lowerBounds_of_mem_lowerBounds /-
 theorem mem_lowerBounds_image2_of_mem_lowerBounds_of_mem_lowerBounds (ha : a ∈ upperBounds s)
     (hb : b ∈ lowerBounds t) : f a b ∈ lowerBounds (image2 f s t) :=
   forall_image2_iff.2 fun x hx y hy => (h₀ _ <| ha hx).trans <| h₁ _ <| hb hy
-#align
-  mem_lower_bounds_image2_of_mem_lower_bounds_of_mem_lower_bounds mem_lowerBounds_image2_of_mem_lowerBounds_of_mem_lowerBounds
+#align mem_lower_bounds_image2_of_mem_lower_bounds_of_mem_lower_bounds mem_lowerBounds_image2_of_mem_lowerBounds_of_mem_lowerBounds
 -/
 
 #print image2_lowerBounds_upperBounds_subset_upperBounds_image2 /-
@@ -2316,8 +2300,7 @@ theorem image2_lowerBounds_upperBounds_subset_upperBounds_image2 :
   by
   rintro _ ⟨a, b, ha, hb, rfl⟩
   exact mem_upperBounds_image2_of_mem_upperBounds_of_mem_upperBounds h₀ h₁ ha hb
-#align
-  image2_lower_bounds_upper_bounds_subset_upper_bounds_image2 image2_lowerBounds_upperBounds_subset_upperBounds_image2
+#align image2_lower_bounds_upper_bounds_subset_upper_bounds_image2 image2_lowerBounds_upperBounds_subset_upperBounds_image2
 -/
 
 #print image2_upperBounds_lowerBounds_subset_lowerBounds_image2 /-
@@ -2326,8 +2309,7 @@ theorem image2_upperBounds_lowerBounds_subset_lowerBounds_image2 :
   by
   rintro _ ⟨a, b, ha, hb, rfl⟩
   exact mem_lowerBounds_image2_of_mem_lowerBounds_of_mem_lowerBounds h₀ h₁ ha hb
-#align
-  image2_upper_bounds_lower_bounds_subset_lower_bounds_image2 image2_upperBounds_lowerBounds_subset_lowerBounds_image2
+#align image2_upper_bounds_lower_bounds_subset_lower_bounds_image2 image2_upperBounds_lowerBounds_subset_lowerBounds_image2
 -/
 
 #print BddBelow.bddAbove_image2_of_bddAbove /-

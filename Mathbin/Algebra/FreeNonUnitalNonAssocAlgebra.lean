@@ -76,8 +76,7 @@ def lift : (X → A) ≃ (FreeNonUnitalNonAssocAlgebra R X →ₙₐ[R] A) :=
 theorem lift_symm_apply (F : FreeNonUnitalNonAssocAlgebra R X →ₙₐ[R] A) :
     (lift R).symm F = F ∘ of R :=
   rfl
-#align
-  free_non_unital_non_assoc_algebra.lift_symm_apply FreeNonUnitalNonAssocAlgebra.lift_symm_apply
+#align free_non_unital_non_assoc_algebra.lift_symm_apply FreeNonUnitalNonAssocAlgebra.lift_symm_apply
 
 @[simp]
 theorem of_comp_lift (f : X → A) : lift R f ∘ of R = f :=

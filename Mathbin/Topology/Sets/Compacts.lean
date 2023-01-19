@@ -223,8 +223,7 @@ theorem coe_mk (s : Compacts α) (h) : (mk s h : Set α) = s :=
 @[simp]
 theorem carrier_eq_coe (s : NonemptyCompacts α) : s.carrier = s :=
   rfl
-#align
-  topological_space.nonempty_compacts.carrier_eq_coe TopologicalSpace.NonemptyCompacts.carrier_eq_coe
+#align topological_space.nonempty_compacts.carrier_eq_coe TopologicalSpace.NonemptyCompacts.carrier_eq_coe
 
 instance : HasSup (NonemptyCompacts α) :=
   ⟨fun s t => ⟨s.toCompacts ⊔ t.toCompacts, s.Nonempty.mono <| subset_union_left _ _⟩⟩
@@ -257,8 +256,7 @@ instance [Inhabited α] : Inhabited (NonemptyCompacts α) :=
 
 instance to_compact_space {s : NonemptyCompacts α} : CompactSpace s :=
   is_compact_iff_compact_space.1 s.IsCompact
-#align
-  topological_space.nonempty_compacts.to_compact_space TopologicalSpace.NonemptyCompacts.to_compact_space
+#align topological_space.nonempty_compacts.to_compact_space TopologicalSpace.NonemptyCompacts.to_compact_space
 
 instance to_nonempty {s : NonemptyCompacts α} : Nonempty s :=
   s.Nonempty.to_subtype
@@ -303,8 +301,7 @@ protected theorem is_compact (s : PositiveCompacts α) : IsCompact (s : Set α) 
 
 theorem interior_nonempty (s : PositiveCompacts α) : (interior (s : Set α)).Nonempty :=
   s.interior_nonempty'
-#align
-  topological_space.positive_compacts.interior_nonempty TopologicalSpace.PositiveCompacts.interior_nonempty
+#align topological_space.positive_compacts.interior_nonempty TopologicalSpace.PositiveCompacts.interior_nonempty
 
 protected theorem nonempty (s : PositiveCompacts α) : (s : Set α).Nonempty :=
   s.interior_nonempty.mono interior_subset
@@ -313,8 +310,7 @@ protected theorem nonempty (s : PositiveCompacts α) : (s : Set α).Nonempty :=
 /-- Reinterpret a positive compact as a nonempty compact. -/
 def toNonemptyCompacts (s : PositiveCompacts α) : NonemptyCompacts α :=
   ⟨s.toCompacts, s.Nonempty⟩
-#align
-  topological_space.positive_compacts.to_nonempty_compacts TopologicalSpace.PositiveCompacts.toNonemptyCompacts
+#align topological_space.positive_compacts.to_nonempty_compacts TopologicalSpace.PositiveCompacts.toNonemptyCompacts
 
 @[ext]
 protected theorem ext {s t : PositiveCompacts α} (h : (s : Set α) = t) : s = t :=
@@ -329,8 +325,7 @@ theorem coe_mk (s : Compacts α) (h) : (mk s h : Set α) = s :=
 @[simp]
 theorem carrier_eq_coe (s : PositiveCompacts α) : s.carrier = s :=
   rfl
-#align
-  topological_space.positive_compacts.carrier_eq_coe TopologicalSpace.PositiveCompacts.carrier_eq_coe
+#align topological_space.positive_compacts.carrier_eq_coe TopologicalSpace.PositiveCompacts.carrier_eq_coe
 
 instance : HasSup (PositiveCompacts α) :=
   ⟨fun s t =>

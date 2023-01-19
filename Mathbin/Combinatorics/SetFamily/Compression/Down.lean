@@ -120,8 +120,7 @@ theorem card_memberSubfamily_add_card_nonMemberSubfamily (a : α) (𝒜 : Finset
   rw [member_subfamily, non_member_subfamily, card_image_of_inj_on,
     filter_card_add_filter_neg_card_eq_card]
   exact (erase_inj_on' _).mono fun s hs => (mem_filter.1 hs).2
-#align
-  finset.card_member_subfamily_add_card_non_member_subfamily Finset.card_memberSubfamily_add_card_nonMemberSubfamily
+#align finset.card_member_subfamily_add_card_non_member_subfamily Finset.card_memberSubfamily_add_card_nonMemberSubfamily
 -/
 
 #print Finset.memberSubfamily_union_nonMemberSubfamily /-
@@ -138,8 +137,7 @@ theorem memberSubfamily_union_nonMemberSubfamily (a : α) (𝒜 : Finset (Finset
     by_cases ha : a ∈ s
     · exact Or.inl ⟨by rwa [insert_erase ha], not_mem_erase _ _⟩
     · exact Or.inr ⟨by rwa [erase_eq_of_not_mem ha], not_mem_erase _ _⟩
-#align
-  finset.member_subfamily_union_non_member_subfamily Finset.memberSubfamily_union_nonMemberSubfamily
+#align finset.member_subfamily_union_non_member_subfamily Finset.memberSubfamily_union_nonMemberSubfamily
 -/
 
 #print Finset.memberSubfamily_memberSubfamily /-

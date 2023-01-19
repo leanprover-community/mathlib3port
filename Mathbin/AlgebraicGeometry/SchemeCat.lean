@@ -74,15 +74,13 @@ protected abbrev sheaf (X : SchemeCat) :=
 @[simps]
 def forgetToLocallyRingedSpace : Scheme ⥤ LocallyRingedSpace :=
   inducedFunctor _ deriving Full, Faithful
-#align
-  algebraic_geometry.Scheme.forget_to_LocallyRingedSpace AlgebraicGeometry.SchemeCat.forgetToLocallyRingedSpace
+#align algebraic_geometry.Scheme.forget_to_LocallyRingedSpace AlgebraicGeometry.SchemeCat.forgetToLocallyRingedSpace
 
 @[simp]
 theorem forget_to_LocallyRingedSpace_preimage {X Y : SchemeCat} (f : X ⟶ Y) :
     SchemeCat.forgetToLocallyRingedSpace.preimage f = f :=
   rfl
-#align
-  algebraic_geometry.Scheme.forget_to_LocallyRingedSpace_preimage AlgebraicGeometry.SchemeCat.forget_to_LocallyRingedSpace_preimage
+#align algebraic_geometry.Scheme.forget_to_LocallyRingedSpace_preimage AlgebraicGeometry.SchemeCat.forget_to_LocallyRingedSpace_preimage
 
 /-- The forgetful functor from `Scheme` to `Top`. -/
 @[simps]
@@ -150,8 +148,7 @@ theorem app_eq {X Y : SchemeCat} (f : X ⟶ Y) {U V : Opens Y.carrier} (e : U = 
 instance is_LocallyRingedSpace_iso {X Y : SchemeCat} (f : X ⟶ Y) [IsIso f] :
     @IsIso LocallyRingedSpaceCat _ _ _ f :=
   forgetToLocallyRingedSpace.map_is_iso f
-#align
-  algebraic_geometry.Scheme.is_LocallyRingedSpace_iso AlgebraicGeometry.SchemeCat.is_LocallyRingedSpace_iso
+#align algebraic_geometry.Scheme.is_LocallyRingedSpace_iso AlgebraicGeometry.SchemeCat.is_LocallyRingedSpace_iso
 
 @[simp]
 theorem inv_val_c_app {X Y : SchemeCat} (f : X ⟶ Y) [IsIso f] (U : Opens X.carrier) :
@@ -190,8 +187,7 @@ def specObj (R : CommRingCat) : SchemeCat
 theorem Spec_obj_to_LocallyRingedSpace (R : CommRingCat) :
     (specObj R).toLocallyRingedSpace = SpecCat.locallyRingedSpaceObj R :=
   rfl
-#align
-  algebraic_geometry.Scheme.Spec_obj_to_LocallyRingedSpace AlgebraicGeometry.SchemeCat.Spec_obj_to_LocallyRingedSpace
+#align algebraic_geometry.Scheme.Spec_obj_to_LocallyRingedSpace AlgebraicGeometry.SchemeCat.Spec_obj_to_LocallyRingedSpace
 
 /-- The induced map of a ring homomorphism on the ring spectra, as a morphism of schemes.
 -/
@@ -322,8 +318,7 @@ theorem basic_open_mul : X.basicOpen (f * g) = X.basicOpen f ⊓ X.basicOpen g :
 
 theorem basic_open_of_is_unit {f : X.Presheaf.obj (op U)} (hf : IsUnit f) : X.basicOpen f = U :=
   RingedSpaceCat.basic_open_of_is_unit _ hf
-#align
-  algebraic_geometry.Scheme.basic_open_of_is_unit AlgebraicGeometry.SchemeCat.basic_open_of_is_unit
+#align algebraic_geometry.Scheme.basic_open_of_is_unit AlgebraicGeometry.SchemeCat.basic_open_of_is_unit
 
 end BasicOpen
 

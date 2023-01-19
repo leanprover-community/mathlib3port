@@ -48,8 +48,7 @@ attribute [local reducible] FundamentalGroupoid
 def fundamentalGroupMulEquivOfPath (p : Path x₀ x₁) :
     FundamentalGroup X x₀ ≃* FundamentalGroup X x₁ :=
   AutCat.autMulEquivOfIso (asIso ⟦p⟧)
-#align
-  fundamental_group.fundamental_group_mul_equiv_of_path FundamentalGroup.fundamentalGroupMulEquivOfPath
+#align fundamental_group.fundamental_group_mul_equiv_of_path FundamentalGroup.fundamentalGroupMulEquivOfPath
 
 variable (x₀ x₁)
 
@@ -57,8 +56,7 @@ variable (x₀ x₁)
 def fundamentalGroupMulEquivOfPathConnected [PathConnectedSpace X] :
     FundamentalGroup X x₀ ≃* FundamentalGroup X x₁ :=
   fundamentalGroupMulEquivOfPath (PathConnectedSpace.somePath x₀ x₁)
-#align
-  fundamental_group.fundamental_group_mul_equiv_of_path_connected FundamentalGroup.fundamentalGroupMulEquivOfPathConnected
+#align fundamental_group.fundamental_group_mul_equiv_of_path_connected FundamentalGroup.fundamentalGroupMulEquivOfPathConnected
 
 /-- An element of the fundamental group as an arrow in the fundamental groupoid. -/
 abbrev toArrow {X : TopCat} {x : X} (p : FundamentalGroup X x) : x ⟶ x :=

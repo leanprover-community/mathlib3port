@@ -103,10 +103,8 @@ theorem eq_of_fst_le_fst_of_snd_le_snd (h₁ : (x : α × α).1 ≤ (y : α × �
     h₁.eq_of_not_lt fun hlt =>
       (mul_lt_mul_of_lt_of_le hlt h₂).Ne <|
         (mem_mul_antidiagonal.1 x.2).2.2.trans (mem_mul_antidiagonal.1 y.2).2.2.symm
-#align
-  set.mul_antidiagonal.eq_of_fst_le_fst_of_snd_le_snd Set.mulAntidiagonal.eq_of_fst_le_fst_of_snd_le_snd
-#align
-  set.add_antidiagonal.eq_of_fst_le_fst_of_snd_le_snd Set.addAntidiagonal.eq_of_fst_le_fst_of_snd_le_snd
+#align set.mul_antidiagonal.eq_of_fst_le_fst_of_snd_le_snd Set.mulAntidiagonal.eq_of_fst_le_fst_of_snd_le_snd
+#align set.add_antidiagonal.eq_of_fst_le_fst_of_snd_le_snd Set.addAntidiagonal.eq_of_fst_le_fst_of_snd_le_snd
 
 variable {s t}
 

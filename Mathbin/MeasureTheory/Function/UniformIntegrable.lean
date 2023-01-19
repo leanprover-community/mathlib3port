@@ -83,14 +83,12 @@ namespace UniformIntegrable
 protected theorem aeStronglyMeasurable {f : ι → α → β} {p : ℝ≥0∞} (hf : UniformIntegrable f p μ)
     (i : ι) : AeStronglyMeasurable (f i) μ :=
   hf.1 i
-#align
-  measure_theory.uniform_integrable.ae_strongly_measurable MeasureTheory.UniformIntegrable.aeStronglyMeasurable
+#align measure_theory.uniform_integrable.ae_strongly_measurable MeasureTheory.UniformIntegrable.aeStronglyMeasurable
 
 protected theorem unifIntegrable {f : ι → α → β} {p : ℝ≥0∞} (hf : UniformIntegrable f p μ) :
     UnifIntegrable f p μ :=
   hf.2.1
-#align
-  measure_theory.uniform_integrable.unif_integrable MeasureTheory.UniformIntegrable.unifIntegrable
+#align measure_theory.uniform_integrable.unif_integrable MeasureTheory.UniformIntegrable.unifIntegrable
 
 protected theorem memℒp {f : ι → α → β} {p : ℝ≥0∞} (hf : UniformIntegrable f p μ) (i : ι) :
     Memℒp (f i) p μ :=
@@ -220,8 +218,7 @@ theorem Memℒp.integral_indicator_norm_ge_le (hf : Memℒp f 1 μ) (hmeas : Str
       rw [indicator_of_not_mem, norm_zero]
       · exact norm_nonneg _
       · assumption
-#align
-  measure_theory.mem_ℒp.integral_indicator_norm_ge_le MeasureTheory.Memℒp.integral_indicator_norm_ge_le
+#align measure_theory.mem_ℒp.integral_indicator_norm_ge_le MeasureTheory.Memℒp.integral_indicator_norm_ge_le
 
 /-- This lemma is superceded by `measure_theory.mem_ℒp.integral_indicator_norm_ge_nonneg_le`
 which does not require measurability. -/
@@ -230,8 +227,7 @@ theorem Memℒp.integral_indicator_norm_ge_nonneg_le_of_meas (hf : Memℒp f 1 �
     ∃ M : ℝ, 0 ≤ M ∧ (∫⁻ x, ‖{ x | M ≤ ‖f x‖₊ }.indicator f x‖₊ ∂μ) ≤ Ennreal.ofReal ε :=
   let ⟨M, hM⟩ := hf.integral_indicator_norm_ge_le μ hmeas hε
   ⟨max M 0, le_max_right _ _, by simpa⟩
-#align
-  measure_theory.mem_ℒp.integral_indicator_norm_ge_nonneg_le_of_meas MeasureTheory.Memℒp.integral_indicator_norm_ge_nonneg_le_of_meas
+#align measure_theory.mem_ℒp.integral_indicator_norm_ge_nonneg_le_of_meas MeasureTheory.Memℒp.integral_indicator_norm_ge_nonneg_le_of_meas
 
 theorem Memℒp.integral_indicator_norm_ge_nonneg_le (hf : Memℒp f 1 μ) {ε : ℝ} (hε : 0 < ε) :
     ∃ M : ℝ, 0 ≤ M ∧ (∫⁻ x, ‖{ x | M ≤ ‖f x‖₊ }.indicator f x‖₊ ∂μ) ≤ Ennreal.ofReal ε :=
@@ -243,8 +239,7 @@ theorem Memℒp.integral_indicator_norm_ge_nonneg_le (hf : Memℒp f 1 μ) {ε :
   refine' lintegral_congr_ae _
   filter_upwards [hf.1.ae_eq_mk] with x hx
   simp only [indicator_apply, coe_nnnorm, mem_set_of_eq, Ennreal.coe_eq_coe, hx.symm]
-#align
-  measure_theory.mem_ℒp.integral_indicator_norm_ge_nonneg_le MeasureTheory.Memℒp.integral_indicator_norm_ge_nonneg_le
+#align measure_theory.mem_ℒp.integral_indicator_norm_ge_nonneg_le MeasureTheory.Memℒp.integral_indicator_norm_ge_nonneg_le
 
 theorem Memℒp.snorm_ess_sup_indicator_norm_ge_eq_zero (hf : Memℒp f ∞ μ)
     (hmeas : StronglyMeasurable f) : ∃ M : ℝ, snormEssSup ({ x | M ≤ ‖f x‖₊ }.indicator f) μ = 0 :=
@@ -272,8 +267,7 @@ theorem Memℒp.snorm_ess_sup_indicator_norm_ge_eq_zero (hf : Memℒp f ∞ μ)
     exact nonpos_iff_eq_zero.2 hle
   rw [this, snorm_ess_sup_measure_zero]
   exact measurable_set_le measurable_const hmeas.nnnorm.measurable.subtype_coe
-#align
-  measure_theory.mem_ℒp.snorm_ess_sup_indicator_norm_ge_eq_zero MeasureTheory.Memℒp.snorm_ess_sup_indicator_norm_ge_eq_zero
+#align measure_theory.mem_ℒp.snorm_ess_sup_indicator_norm_ge_eq_zero MeasureTheory.Memℒp.snorm_ess_sup_indicator_norm_ge_eq_zero
 
 /- This lemma is slightly weaker than `measure_theory.mem_ℒp.snorm_indicator_norm_ge_pos_le` as the
 latter provides `0 < M`. -/
@@ -316,8 +310,7 @@ theorem Memℒp.snorm_indicator_norm_ge_le (hf : Memℒp f p μ) (hmeas : Strong
     · simp [(Ennreal.to_real_pos hp_ne_zero hp_ne_top).Ne.symm]
     · change ¬_ ≤ _
       rwa [← hiff]
-#align
-  measure_theory.mem_ℒp.snorm_indicator_norm_ge_le MeasureTheory.Memℒp.snorm_indicator_norm_ge_le
+#align measure_theory.mem_ℒp.snorm_indicator_norm_ge_le MeasureTheory.Memℒp.snorm_indicator_norm_ge_le
 
 /-- This lemma implies that a single function is uniformly integrable (in the probability sense). -/
 theorem Memℒp.snorm_indicator_norm_ge_pos_le (hf : Memℒp f p μ) (hmeas : StronglyMeasurable f)
@@ -332,8 +325,7 @@ theorem Memℒp.snorm_indicator_norm_ge_pos_le (hf : Memℒp f p μ) (hmeas : St
   change max _ _ ≤ _ at hx
   -- removing the `change` breaks the proof!
   exact (max_le_iff.1 hx).1
-#align
-  measure_theory.mem_ℒp.snorm_indicator_norm_ge_pos_le MeasureTheory.Memℒp.snorm_indicator_norm_ge_pos_le
+#align measure_theory.mem_ℒp.snorm_indicator_norm_ge_pos_le MeasureTheory.Memℒp.snorm_indicator_norm_ge_pos_le
 
 end
 
@@ -428,8 +420,7 @@ theorem Memℒp.snorm_indicator_le_of_meas (hp_one : 1 ≤ p) (hp_top : p ≠ �
   rw [Ennreal.of_real_div_of_pos zero_lt_two, (by norm_num : Ennreal.ofReal 2 = 2),
       Ennreal.mul_div_cancel'] <;>
     norm_num
-#align
-  measure_theory.mem_ℒp.snorm_indicator_le_of_meas MeasureTheory.Memℒp.snorm_indicator_le_of_meas
+#align measure_theory.mem_ℒp.snorm_indicator_le_of_meas MeasureTheory.Memℒp.snorm_indicator_le_of_meas
 
 theorem Memℒp.snorm_indicator_le (hp_one : 1 ≤ p) (hp_top : p ≠ ∞) (hf : Memℒp f p μ) {ε : ℝ}
     (hε : 0 < ε) :
@@ -616,8 +607,7 @@ theorem tendsto_Lp_of_tendsto_ae_of_meas [IsFiniteMeasure μ] (hp : 1 ≤ p) (hp
   rw [this] at hnf hng hlt
   rw [snorm_neg, ← Ennreal.add_thirds ε, ← sub_eq_add_neg]
   exact add_le_add_three hnf hng hlt
-#align
-  measure_theory.tendsto_Lp_of_tendsto_ae_of_meas MeasureTheory.tendsto_Lp_of_tendsto_ae_of_meas
+#align measure_theory.tendsto_Lp_of_tendsto_ae_of_meas MeasureTheory.tendsto_Lp_of_tendsto_ae_of_meas
 
 /-- A sequence of uniformly integrable functions which converges μ-a.e. converges in Lp. -/
 theorem tendsto_Lp_of_tendsto_ae [IsFiniteMeasure μ] (hp : 1 ≤ p) (hp' : p ≠ ∞) {f : ℕ → α → β}
@@ -693,8 +683,7 @@ theorem tendsto_Lp_of_tendsto_in_measure [IsFiniteMeasure μ] (hp : 1 ≤ p) (hp
           let ⟨δ, hδ, hδ'⟩ := hui hε
           ⟨δ, hδ, fun i s hs hμs => hδ' _ s hs hμs⟩)
         hms'⟩
-#align
-  measure_theory.tendsto_Lp_of_tendsto_in_measure MeasureTheory.tendsto_Lp_of_tendsto_in_measure
+#align measure_theory.tendsto_Lp_of_tendsto_in_measure MeasureTheory.tendsto_Lp_of_tendsto_in_measure
 
 /-- **Vitali's convergence theorem**: A sequence of functions `f` converges to `g` in Lp if and
 only if it is uniformly integrable and converges to `g` in measure. -/
@@ -706,8 +695,7 @@ theorem tendsto_in_measure_iff_tendsto_Lp [IsFiniteMeasure μ] (hp : 1 ≤ p) (h
     ⟨tendstoInMeasureOfTendstoSnorm (lt_of_lt_of_le Ennreal.zero_lt_one hp).Ne.symm
         (fun n => (hf n).AeStronglyMeasurable) hg.AeStronglyMeasurable h,
       unifIntegrableOfTendstoLp μ hp hp' hf hg h⟩⟩
-#align
-  measure_theory.tendsto_in_measure_iff_tendsto_Lp MeasureTheory.tendsto_in_measure_iff_tendsto_Lp
+#align measure_theory.tendsto_in_measure_iff_tendsto_Lp MeasureTheory.tendsto_in_measure_iff_tendsto_Lp
 
 /-- This lemma is superceded by `unif_integrable_of` which do not require `C` to be positive. -/
 theorem unifIntegrableOf' (hp : 1 ≤ p) (hp' : p ≠ ∞) {f : ι → α → β}

@@ -193,8 +193,7 @@ theorem le_two_mul_dist_of_prenndist (d : X → X → ℝ≥0) (dist_self : ∀ 
       sum_take_add_sum_drop, ← two_mul] at hMs'
     convert hMs'
     rwa [zip_with_distrib_drop, drop, drop_append_of_le_length]
-#align
-  pseudo_metric_space.le_two_mul_dist_of_prenndist PseudoMetricSpace.le_two_mul_dist_of_prenndist
+#align pseudo_metric_space.le_two_mul_dist_of_prenndist PseudoMetricSpace.le_two_mul_dist_of_prenndist
 
 end PseudoMetricSpace
 

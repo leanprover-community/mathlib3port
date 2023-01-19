@@ -94,8 +94,7 @@ protected theorem coimage.fac : coimage.π f ≫ Abelian.factorThruCoimage f = f
 
 instance epi_factor_thru_coimage [Epi f] : Epi (Abelian.factorThruCoimage f) :=
   epi_of_epi_fac <| coimage.fac f
-#align
-  category_theory.abelian.epi_factor_thru_coimage CategoryTheory.Abelian.epi_factor_thru_coimage
+#align category_theory.abelian.epi_factor_thru_coimage CategoryTheory.Abelian.epi_factor_thru_coimage
 
 end Coimage
 
@@ -112,8 +111,7 @@ def coimageImageComparison : Abelian.coimage f ⟶ Abelian.image f :=
     by
     ext
     simp
-#align
-  category_theory.abelian.coimage_image_comparison CategoryTheory.Abelian.coimageImageComparison
+#align category_theory.abelian.coimage_image_comparison CategoryTheory.Abelian.coimageImageComparison
 
 /-- An alternative formulation of the canonical map from the abelian coimage to the abelian image.
 -/
@@ -122,22 +120,19 @@ def coimageImageComparison' : Abelian.coimage f ⟶ Abelian.image f :=
     (by
       ext
       simp)
-#align
-  category_theory.abelian.coimage_image_comparison' CategoryTheory.Abelian.coimageImageComparison'
+#align category_theory.abelian.coimage_image_comparison' CategoryTheory.Abelian.coimageImageComparison'
 
 theorem coimage_image_comparison_eq_coimage_image_comparison' :
     coimageImageComparison f = coimageImageComparison' f :=
   by
   ext
   simp [coimage_image_comparison, coimage_image_comparison']
-#align
-  category_theory.abelian.coimage_image_comparison_eq_coimage_image_comparison' CategoryTheory.Abelian.coimage_image_comparison_eq_coimage_image_comparison'
+#align category_theory.abelian.coimage_image_comparison_eq_coimage_image_comparison' CategoryTheory.Abelian.coimage_image_comparison_eq_coimage_image_comparison'
 
 @[simp, reassoc.1]
 theorem coimage_image_factorisation : coimage.π f ≫ coimageImageComparison f ≫ image.ι f = f := by
   simp [coimage_image_comparison]
-#align
-  category_theory.abelian.coimage_image_factorisation CategoryTheory.Abelian.coimage_image_factorisation
+#align category_theory.abelian.coimage_image_factorisation CategoryTheory.Abelian.coimage_image_factorisation
 
 end CategoryTheory.Abelian
 

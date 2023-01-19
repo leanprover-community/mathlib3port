@@ -391,8 +391,7 @@ def FiniteSpanningSetsIn.pi {C : ∀ i, Set (Set (α i))}
   ·
     simp_rw [(surjective_decode_iget (ι → ℕ)).Union_comp fun x => pi univ fun i => (hμ i).Set (x i),
       Union_univ_pi fun i => (hμ i).Set, (hμ _).spanning, Set.pi_univ]
-#align
-  measure_theory.measure.finite_spanning_sets_in.pi MeasureTheory.Measure.FiniteSpanningSetsIn.pi
+#align measure_theory.measure.finite_spanning_sets_in.pi MeasureTheory.Measure.FiniteSpanningSetsIn.pi
 
 /-- A measure on a finite product space equals the product measure if they are equal on rectangles
   with as sides sets that generate the corresponding σ-algebras. -/
@@ -620,8 +619,7 @@ instance pi.isMulLeftInvariant [∀ i, Group (α i)] [∀ i, HasMeasurableMul (�
     show (· * ·) v ⁻¹' univ.pi s = univ.pi fun i => (· * ·) (v i) ⁻¹' s i by rfl, pi_pi]
   simp_rw [measure_preimage_mul]
 #align measure_theory.measure.pi.is_mul_left_invariant MeasureTheory.Measure.pi.isMulLeftInvariant
-#align
-  measure_theory.measure.pi.is_add_left_invariant MeasureTheory.Measure.pi.is_add_left_invariant
+#align measure_theory.measure.pi.is_add_left_invariant MeasureTheory.Measure.pi.is_add_left_invariant
 
 @[to_additive]
 instance pi.isMulRightInvariant [∀ i, Group (α i)] [∀ i, HasMeasurableMul (α i)]
@@ -632,8 +630,7 @@ instance pi.isMulRightInvariant [∀ i, Group (α i)] [∀ i, HasMeasurableMul (
     show (· * v) ⁻¹' univ.pi s = univ.pi fun i => (· * v i) ⁻¹' s i by rfl, pi_pi]
   simp_rw [measure_preimage_mul_right]
 #align measure_theory.measure.pi.is_mul_right_invariant MeasureTheory.Measure.pi.isMulRightInvariant
-#align
-  measure_theory.measure.pi.is_add_right_invariant MeasureTheory.Measure.pi.is_add_right_invariant
+#align measure_theory.measure.pi.is_add_right_invariant MeasureTheory.Measure.pi.is_add_right_invariant
 
 @[to_additive]
 instance pi.isInvInvariant [∀ i, Group (α i)] [∀ i, HasMeasurableInv (α i)]
@@ -729,15 +726,13 @@ theorem measurePreservingPiEquivPiSubtypeProd {ι : Type u} {α : ι → Type v}
     Equiv.preimage_piEquivPiSubtypeProd_symm_pi p s
   rw [e.map_apply, this, prod_prod, pi_pi, pi_pi]
   exact Fintype.prod_subtype_mul_prod_subtype p fun i => μ i (s i)
-#align
-  measure_theory.measure_preserving_pi_equiv_pi_subtype_prod MeasureTheory.measurePreservingPiEquivPiSubtypeProd
+#align measure_theory.measure_preserving_pi_equiv_pi_subtype_prod MeasureTheory.measurePreservingPiEquivPiSubtypeProd
 
 theorem volumePreservingPiEquivPiSubtypeProd {ι : Type _} (α : ι → Type _) [Fintype ι]
     [∀ i, MeasureSpace (α i)] [∀ i, SigmaFinite (volume : Measure (α i))] (p : ι → Prop)
     [DecidablePred p] : MeasurePreserving (MeasurableEquiv.piEquivPiSubtypeProd α p) :=
   measurePreservingPiEquivPiSubtypeProd (fun i => volume) p
-#align
-  measure_theory.volume_preserving_pi_equiv_pi_subtype_prod MeasureTheory.volumePreservingPiEquivPiSubtypeProd
+#align measure_theory.volume_preserving_pi_equiv_pi_subtype_prod MeasureTheory.volumePreservingPiEquivPiSubtypeProd
 
 theorem measurePreservingPiFinSuccAboveEquiv {n : ℕ} {α : Fin (n + 1) → Type u}
     {m : ∀ i, MeasurableSpace (α i)} (μ : ∀ i, Measure (α i)) [∀ i, SigmaFinite (μ i)]
@@ -751,15 +746,13 @@ theorem measurePreservingPiFinSuccAboveEquiv {n : ℕ} {α : Fin (n + 1) → Typ
   rw [e.map_apply, i.prod_univ_succ_above _, ← pi_pi, ← prod_prod]
   congr 1 with ⟨x, f⟩
   simp [i.forall_iff_succ_above]
-#align
-  measure_theory.measure_preserving_pi_fin_succ_above_equiv MeasureTheory.measurePreservingPiFinSuccAboveEquiv
+#align measure_theory.measure_preserving_pi_fin_succ_above_equiv MeasureTheory.measurePreservingPiFinSuccAboveEquiv
 
 theorem volumePreservingPiFinSuccAboveEquiv {n : ℕ} (α : Fin (n + 1) → Type u)
     [∀ i, MeasureSpace (α i)] [∀ i, SigmaFinite (volume : Measure (α i))] (i : Fin (n + 1)) :
     MeasurePreserving (MeasurableEquiv.piFinSuccAboveEquiv α i) :=
   measurePreservingPiFinSuccAboveEquiv (fun _ => volume) i
-#align
-  measure_theory.volume_preserving_pi_fin_succ_above_equiv MeasureTheory.volumePreservingPiFinSuccAboveEquiv
+#align measure_theory.volume_preserving_pi_fin_succ_above_equiv MeasureTheory.volumePreservingPiFinSuccAboveEquiv
 
 theorem measurePreservingFunUnique {β : Type u} {m : MeasurableSpace β} (μ : Measure β) (α : Type v)
     [Unique α] : MeasurePreserving (MeasurableEquiv.funUnique α β) (Measure.pi fun a : α => μ) μ :=
@@ -801,8 +794,7 @@ theorem measurePreservingFinTwoArrowVec {α : Type u} {m : MeasurableSpace α} (
     MeasurePreserving MeasurableEquiv.finTwoArrow (Measure.pi ![μ, ν]) (μ.Prod ν) :=
   haveI : ∀ i, sigma_finite (![μ, ν] i) := Fin.forall_fin_two.2 ⟨‹_›, ‹_›⟩
   measure_preserving_pi_fin_two _
-#align
-  measure_theory.measure_preserving_fin_two_arrow_vec MeasureTheory.measurePreservingFinTwoArrowVec
+#align measure_theory.measure_preserving_fin_two_arrow_vec MeasureTheory.measurePreservingFinTwoArrowVec
 
 theorem measurePreservingFinTwoArrow {α : Type u} {m : MeasurableSpace α} (μ : Measure α)
     [SigmaFinite μ] :

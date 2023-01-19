@@ -56,6 +56,5 @@ noncomputable def Valuation.extendToLocalization : Valuation B Γ :=
 theorem Valuation.extend_to_localization_apply_map_apply (a : A) :
     v.extendToLocalization hS B (algebraMap A B a) = v a :=
   Submonoid.LocalizationMap.lift_eq _ _ a
-#align
-  valuation.extend_to_localization_apply_map_apply Valuation.extend_to_localization_apply_map_apply
+#align valuation.extend_to_localization_apply_map_apply Valuation.extend_to_localization_apply_map_apply
 

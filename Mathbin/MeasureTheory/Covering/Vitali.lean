@@ -166,8 +166,7 @@ theorem exists_disjoint_subfamily_covering_enlargment (B : ι → Set α) (t : S
           
       · rw [← not_disjoint_iff_nonempty_inter] at hcb
         exact (hcb (H _ H')).elim
-#align
-  vitali.exists_disjoint_subfamily_covering_enlargment Vitali.exists_disjoint_subfamily_covering_enlargment
+#align vitali.exists_disjoint_subfamily_covering_enlargment Vitali.exists_disjoint_subfamily_covering_enlargment
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (u «expr ⊆ » t) -/
 /-- Vitali covering theorem, closed balls version: given a family `t` of closed balls, one can
@@ -207,8 +206,7 @@ theorem exists_disjoint_subfamily_covering_enlargment_closed_ball [MetricSpace �
   · rcases ht with ⟨b, rb⟩
     rcases A b ⟨rb.1, rb.2⟩ with ⟨c, cu, hc⟩
     refine' ⟨c, cu, by simp only [closed_ball_eq_empty.2 h'a, empty_subset]⟩
-#align
-  vitali.exists_disjoint_subfamily_covering_enlargment_closed_ball Vitali.exists_disjoint_subfamily_covering_enlargment_closed_ball
+#align vitali.exists_disjoint_subfamily_covering_enlargment_closed_ball Vitali.exists_disjoint_subfamily_covering_enlargment_closed_ball
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (u «expr ⊆ » t') -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (u «expr ⊆ » t) -/

@@ -61,8 +61,7 @@ def sumEmbeddingEquivProdEmbeddingDisjoint {α β γ : Type _} :
   right_inv := fun ⟨⟨f, g⟩, _⟩ => by
     simp only [Prod.mk.inj_iff]
     constructor <;> ext <;> simp!
-#align
-  equiv.sum_embedding_equiv_prod_embedding_disjoint Equiv.sumEmbeddingEquivProdEmbeddingDisjoint
+#align equiv.sum_embedding_equiv_prod_embedding_disjoint Equiv.sumEmbeddingEquivProdEmbeddingDisjoint
 -/
 
 #print Equiv.codRestrict /-
@@ -90,8 +89,7 @@ def prodEmbeddingDisjointEquivSigmaEmbeddingRestricted {α β γ : Type _} :
             ext f
             rw [← Set.range_subset_iff, Set.subset_compl_iff_disjoint_right, disjoint_comm]).trans
         (codRestrict _ _)
-#align
-  equiv.prod_embedding_disjoint_equiv_sigma_embedding_restricted Equiv.prodEmbeddingDisjointEquivSigmaEmbeddingRestricted
+#align equiv.prod_embedding_disjoint_equiv_sigma_embedding_restricted Equiv.prodEmbeddingDisjointEquivSigmaEmbeddingRestricted
 -/
 
 /- warning: equiv.sum_embedding_equiv_sigma_embedding_restricted -> Equiv.sumEmbeddingEquivSigmaEmbeddingRestricted is a dubious translation:
@@ -107,8 +105,7 @@ def sumEmbeddingEquivSigmaEmbeddingRestricted {α β γ : Type _} :
     (Sum α β ↪ γ) ≃ Σf : α ↪ γ, β ↪ ↥(Set.range fᶜ) :=
   Equiv.trans sumEmbeddingEquivProdEmbeddingDisjoint
     prodEmbeddingDisjointEquivSigmaEmbeddingRestricted
-#align
-  equiv.sum_embedding_equiv_sigma_embedding_restricted Equiv.sumEmbeddingEquivSigmaEmbeddingRestricted
+#align equiv.sum_embedding_equiv_sigma_embedding_restricted Equiv.sumEmbeddingEquivSigmaEmbeddingRestricted
 
 #print Equiv.uniqueEmbeddingEquivResult /-
 /-- Embeddings from a single-member type are equivalent to members of the target type. -/

@@ -46,8 +46,7 @@ instance (priority := 100) DiscreteTopology.second_countable_topology_of_encodab
         ⟨{univ}, countable_singleton _, by simp only [eq_iff_true_of_subsingleton]⟩ }
   second_countable_topology_of_countable_cover (singletons_open_iff_discrete.mpr hd)
     (Union_of_singleton α)
-#align
-  discrete_topology.second_countable_topology_of_encodable DiscreteTopology.second_countable_topology_of_encodable
+#align discrete_topology.second_countable_topology_of_encodable DiscreteTopology.second_countable_topology_of_encodable
 
 theorem bot_topological_space_eq_generate_from_of_pred_succ_order {α} [PartialOrder α] [PredOrder α]
     [SuccOrder α] [NoMinOrder α] [NoMaxOrder α] :
@@ -63,8 +62,7 @@ theorem bot_topological_space_eq_generate_from_of_pred_succ_order {α} [PartialO
   apply IsOpen.inter
   · exact is_open_generate_from_of_mem ⟨succ a, Or.inr rfl⟩
   · exact is_open_generate_from_of_mem ⟨pred a, Or.inl rfl⟩
-#align
-  bot_topological_space_eq_generate_from_of_pred_succ_order bot_topological_space_eq_generate_from_of_pred_succ_order
+#align bot_topological_space_eq_generate_from_of_pred_succ_order bot_topological_space_eq_generate_from_of_pred_succ_order
 
 theorem discrete_topology_iff_order_topology_of_pred_succ' [PartialOrder α] [PredOrder α]
     [SuccOrder α] [NoMinOrder α] [NoMaxOrder α] : DiscreteTopology α ↔ OrderTopology α :=
@@ -74,8 +72,7 @@ theorem discrete_topology_iff_order_topology_of_pred_succ' [PartialOrder α] [Pr
     exact bot_topological_space_eq_generate_from_of_pred_succ_order
   · rw [h.topology_eq_generate_intervals]
     exact bot_topological_space_eq_generate_from_of_pred_succ_order.symm
-#align
-  discrete_topology_iff_order_topology_of_pred_succ' discrete_topology_iff_order_topology_of_pred_succ'
+#align discrete_topology_iff_order_topology_of_pred_succ' discrete_topology_iff_order_topology_of_pred_succ'
 
 instance (priority := 100) DiscreteTopology.order_topology_of_pred_succ' [h : DiscreteTopology α]
     [PartialOrder α] [PredOrder α] [SuccOrder α] [NoMinOrder α] [NoMaxOrder α] : OrderTopology α :=
@@ -109,8 +106,7 @@ theorem LinearOrder.bot_topological_space_eq_generate_from {α} [LinearOrder α]
       apply IsOpen.inter
       · exact is_open_generate_from_of_mem ⟨succ a, Or.inr rfl⟩
       · exact is_open_generate_from_of_mem ⟨pred a, Or.inl rfl⟩
-#align
-  linear_order.bot_topological_space_eq_generate_from LinearOrder.bot_topological_space_eq_generate_from
+#align linear_order.bot_topological_space_eq_generate_from LinearOrder.bot_topological_space_eq_generate_from
 
 theorem discrete_topology_iff_order_topology_of_pred_succ [LinearOrder α] [PredOrder α]
     [SuccOrder α] : DiscreteTopology α ↔ OrderTopology α :=
@@ -120,8 +116,7 @@ theorem discrete_topology_iff_order_topology_of_pred_succ [LinearOrder α] [Pred
     exact LinearOrder.bot_topological_space_eq_generate_from
   · rw [h.topology_eq_generate_intervals]
     exact linear_order.bot_topological_space_eq_generate_from.symm
-#align
-  discrete_topology_iff_order_topology_of_pred_succ discrete_topology_iff_order_topology_of_pred_succ
+#align discrete_topology_iff_order_topology_of_pred_succ discrete_topology_iff_order_topology_of_pred_succ
 
 instance (priority := 100) DiscreteTopology.order_topology_of_pred_succ [h : DiscreteTopology α]
     [LinearOrder α] [PredOrder α] [SuccOrder α] : OrderTopology α :=

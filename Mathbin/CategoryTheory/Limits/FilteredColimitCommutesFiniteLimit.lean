@@ -131,8 +131,7 @@ theorem colimit_limit_to_limit_colimit_injective :
     rw [← W _ _ (fH j)]
     rw [← W _ _ (gH j)]
     simp [w]
-#align
-  category_theory.limits.colimit_limit_to_limit_colimit_injective CategoryTheory.Limits.colimit_limit_to_limit_colimit_injective
+#align category_theory.limits.colimit_limit_to_limit_colimit_injective CategoryTheory.Limits.colimit_limit_to_limit_colimit_injective
 
 end
 
@@ -303,14 +302,12 @@ theorem colimit_limit_to_limit_colimit_surjective :
         id.def, types_comp_apply, limits.ι_colimit_limit_to_limit_colimit_π_apply]
       refine' ⟨k'', 𝟙 k'', g j ≫ gf (𝟙 j) ≫ i (𝟙 j), _⟩
       simp only [bifunctor.map_id_comp, types_comp_apply, bifunctor.map_id, types_id_apply]
-#align
-  category_theory.limits.colimit_limit_to_limit_colimit_surjective CategoryTheory.Limits.colimit_limit_to_limit_colimit_surjective
+#align category_theory.limits.colimit_limit_to_limit_colimit_surjective CategoryTheory.Limits.colimit_limit_to_limit_colimit_surjective
 
 instance colimit_limit_to_limit_colimit_is_iso : IsIso (colimitLimitToLimitColimit F) :=
   (is_iso_iff_bijective _).mpr
     ⟨colimit_limit_to_limit_colimit_injective F, colimit_limit_to_limit_colimit_surjective F⟩
-#align
-  category_theory.limits.colimit_limit_to_limit_colimit_is_iso CategoryTheory.Limits.colimit_limit_to_limit_colimit_is_iso
+#align category_theory.limits.colimit_limit_to_limit_colimit_is_iso CategoryTheory.Limits.colimit_limit_to_limit_colimit_is_iso
 
 instance colimit_limit_to_limit_colimit_cone_iso (F : J ⥤ K ⥤ Type v) :
     IsIso (colimitLimitToLimitColimitCone F) :=
@@ -320,8 +317,7 @@ instance colimit_limit_to_limit_colimit_cone_iso (F : J ⥤ K ⥤ Type v) :
     dsimp only [colimit_limit_to_limit_colimit_cone]
     infer_instance
   apply cones.cone_iso_of_hom_iso
-#align
-  category_theory.limits.colimit_limit_to_limit_colimit_cone_iso CategoryTheory.Limits.colimit_limit_to_limit_colimit_cone_iso
+#align category_theory.limits.colimit_limit_to_limit_colimit_cone_iso CategoryTheory.Limits.colimit_limit_to_limit_colimit_cone_iso
 
 noncomputable instance filteredColimPreservesFiniteLimitsOfTypes :
     PreservesFiniteLimits (colim : (K ⥤ Type v) ⥤ _) :=
@@ -334,8 +330,7 @@ noncomputable instance filteredColimPreservesFiniteLimitsOfTypes :
   symm; trans colim.map_cone (limit.cone F)
   exact functor.map_iso _ (hc.unique_up_to_iso (limit.is_limit F))
   exact as_iso (colimitLimitToLimitColimitCone.{v, v + 1} F)
-#align
-  category_theory.limits.filtered_colim_preserves_finite_limits_of_types CategoryTheory.Limits.filteredColimPreservesFiniteLimitsOfTypes
+#align category_theory.limits.filtered_colim_preserves_finite_limits_of_types CategoryTheory.Limits.filteredColimPreservesFiniteLimitsOfTypes
 
 variable {C : Type u} [Category.{v} C] [ConcreteCategory.{v} C]
 
@@ -352,8 +347,7 @@ noncomputable instance filteredColimPreservesFiniteLimits :
   haveI : preserves_limits_of_shape J ((colim : (K ⥤ C) ⥤ _) ⋙ forget C) :=
     preserves_limits_of_shape_of_nat_iso (preserves_colimit_nat_iso _).symm
   preserves_limits_of_shape_of_reflects_of_preserves _ (forget C)
-#align
-  category_theory.limits.filtered_colim_preserves_finite_limits CategoryTheory.Limits.filteredColimPreservesFiniteLimits
+#align category_theory.limits.filtered_colim_preserves_finite_limits CategoryTheory.Limits.filteredColimPreservesFiniteLimits
 
 end
 
@@ -396,8 +390,7 @@ theorem ι_colimit_limit_iso_limit_π (F : J ⥤ K ⥤ C) (a) (b) :
     limits.has_colimit.iso_of_nat_iso_ι_hom, nat_iso.of_components_hom_app]
   dsimp
   simp
-#align
-  category_theory.limits.ι_colimit_limit_iso_limit_π CategoryTheory.Limits.ι_colimit_limit_iso_limit_π
+#align category_theory.limits.ι_colimit_limit_iso_limit_π CategoryTheory.Limits.ι_colimit_limit_iso_limit_π
 
 end
 

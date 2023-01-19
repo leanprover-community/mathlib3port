@@ -90,13 +90,11 @@ instance (priority := 100) is_filtered_or_empty_of_semilattice_sup (α : Type u)
     where
   cocone_objs X Y := ⟨X ⊔ Y, homOfLe le_sup_left, homOfLe le_sup_right, trivial⟩
   cocone_maps X Y f g := ⟨Y, 𝟙 _, by ext⟩
-#align
-  category_theory.is_filtered_or_empty_of_semilattice_sup CategoryTheory.is_filtered_or_empty_of_semilattice_sup
+#align category_theory.is_filtered_or_empty_of_semilattice_sup CategoryTheory.is_filtered_or_empty_of_semilattice_sup
 
 instance (priority := 100) is_filtered_of_semilattice_sup_nonempty (α : Type u) [SemilatticeSup α]
     [Nonempty α] : IsFiltered α where
-#align
-  category_theory.is_filtered_of_semilattice_sup_nonempty CategoryTheory.is_filtered_of_semilattice_sup_nonempty
+#align category_theory.is_filtered_of_semilattice_sup_nonempty CategoryTheory.is_filtered_of_semilattice_sup_nonempty
 
 instance (priority := 100) is_filtered_or_empty_of_directed_le (α : Type u) [Preorder α]
     [IsDirected α (· ≤ ·)] : IsFilteredOrEmpty α
@@ -105,13 +103,11 @@ instance (priority := 100) is_filtered_or_empty_of_directed_le (α : Type u) [Pr
     let ⟨Z, h1, h2⟩ := exists_ge_ge X Y
     ⟨Z, homOfLe h1, homOfLe h2, trivial⟩
   cocone_maps X Y f g := ⟨Y, 𝟙 _, by simp⟩
-#align
-  category_theory.is_filtered_or_empty_of_directed_le CategoryTheory.is_filtered_or_empty_of_directed_le
+#align category_theory.is_filtered_or_empty_of_directed_le CategoryTheory.is_filtered_or_empty_of_directed_le
 
 instance (priority := 100) is_filtered_of_directed_le_nonempty (α : Type u) [Preorder α]
     [IsDirected α (· ≤ ·)] [Nonempty α] : IsFiltered α where
-#align
-  category_theory.is_filtered_of_directed_le_nonempty CategoryTheory.is_filtered_of_directed_le_nonempty
+#align category_theory.is_filtered_of_directed_le_nonempty CategoryTheory.is_filtered_of_directed_le_nonempty
 
 -- Sanity checks
 example (α : Type u) [SemilatticeSup α] [OrderBot α] : IsFiltered α := by infer_instance
@@ -478,13 +474,11 @@ instance (priority := 100) is_cofiltered_or_empty_of_semilattice_inf (α : Type 
     where
   cone_objs X Y := ⟨X ⊓ Y, homOfLe inf_le_left, homOfLe inf_le_right, trivial⟩
   cone_maps X Y f g := ⟨X, 𝟙 _, by ext⟩
-#align
-  category_theory.is_cofiltered_or_empty_of_semilattice_inf CategoryTheory.is_cofiltered_or_empty_of_semilattice_inf
+#align category_theory.is_cofiltered_or_empty_of_semilattice_inf CategoryTheory.is_cofiltered_or_empty_of_semilattice_inf
 
 instance (priority := 100) is_cofiltered_of_semilattice_inf_nonempty (α : Type u) [SemilatticeInf α]
     [Nonempty α] : IsCofiltered α where
-#align
-  category_theory.is_cofiltered_of_semilattice_inf_nonempty CategoryTheory.is_cofiltered_of_semilattice_inf_nonempty
+#align category_theory.is_cofiltered_of_semilattice_inf_nonempty CategoryTheory.is_cofiltered_of_semilattice_inf_nonempty
 
 instance (priority := 100) is_cofiltered_or_empty_of_directed_ge (α : Type u) [Preorder α]
     [IsDirected α (· ≥ ·)] : IsCofilteredOrEmpty α
@@ -493,13 +487,11 @@ instance (priority := 100) is_cofiltered_or_empty_of_directed_ge (α : Type u) [
     let ⟨Z, hX, hY⟩ := exists_le_le X Y
     ⟨Z, homOfLe hX, homOfLe hY, trivial⟩
   cone_maps X Y f g := ⟨X, 𝟙 _, by simp⟩
-#align
-  category_theory.is_cofiltered_or_empty_of_directed_ge CategoryTheory.is_cofiltered_or_empty_of_directed_ge
+#align category_theory.is_cofiltered_or_empty_of_directed_ge CategoryTheory.is_cofiltered_or_empty_of_directed_ge
 
 instance (priority := 100) is_cofiltered_of_directed_ge_nonempty (α : Type u) [Preorder α]
     [IsDirected α (· ≥ ·)] [Nonempty α] : IsCofiltered α where
-#align
-  category_theory.is_cofiltered_of_directed_ge_nonempty CategoryTheory.is_cofiltered_of_directed_ge_nonempty
+#align category_theory.is_cofiltered_of_directed_ge_nonempty CategoryTheory.is_cofiltered_of_directed_ge_nonempty
 
 -- Sanity checks
 example (α : Type u) [SemilatticeInf α] [OrderBot α] : IsCofiltered α := by infer_instance
@@ -716,8 +708,7 @@ theorem of_left_adjoint {L : C ⥤ D} {R : D ⥤ C} (h : L ⊣ R) : IsCofiltered
 /-- If `C` is cofiltered, and we have a left adjoint functor `L : C ⥤ D`, then `D` is cofiltered. -/
 theorem of_is_left_adjoint (L : C ⥤ D) [IsLeftAdjoint L] : IsCofiltered D :=
   of_left_adjoint (Adjunction.ofLeftAdjoint L)
-#align
-  category_theory.is_cofiltered.of_is_left_adjoint CategoryTheory.IsCofiltered.of_is_left_adjoint
+#align category_theory.is_cofiltered.of_is_left_adjoint CategoryTheory.IsCofiltered.of_is_left_adjoint
 
 /-- Being cofiltered is preserved by equivalence of categories. -/
 theorem of_equivalence (h : C ≌ D) : IsCofiltered D :=
@@ -744,8 +735,7 @@ instance is_cofiltered_op_of_is_filtered [IsFiltered C] : IsCofiltered Cᵒᵖ
       congr 1
       exact is_filtered.coeq_condition f.unop g.unop⟩
   Nonempty := ⟨op IsFiltered.nonempty.some⟩
-#align
-  category_theory.is_cofiltered_op_of_is_filtered CategoryTheory.is_cofiltered_op_of_is_filtered
+#align category_theory.is_cofiltered_op_of_is_filtered CategoryTheory.is_cofiltered_op_of_is_filtered
 
 instance is_filtered_op_of_is_cofiltered [IsCofiltered C] : IsFiltered Cᵒᵖ
     where
@@ -759,8 +749,7 @@ instance is_filtered_op_of_is_cofiltered [IsCofiltered C] : IsFiltered Cᵒᵖ
       congr 1
       exact is_cofiltered.eq_condition f.unop g.unop⟩
   Nonempty := ⟨op IsCofiltered.nonempty.some⟩
-#align
-  category_theory.is_filtered_op_of_is_cofiltered CategoryTheory.is_filtered_op_of_is_cofiltered
+#align category_theory.is_filtered_op_of_is_cofiltered CategoryTheory.is_filtered_op_of_is_cofiltered
 
 end Opposite
 

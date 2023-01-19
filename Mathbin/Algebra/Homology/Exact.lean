@@ -94,8 +94,7 @@ theorem Preadditive.exact_iff_homology_zero {A B C : V} (f : A ⟶ B) (g : B ⟶
     by
     obtain ⟨w, ⟨i⟩⟩ := h
     exact ⟨w, preadditive.epi_of_cokernel_zero ((cancel_mono i.hom).mp (by ext))⟩⟩
-#align
-  category_theory.preadditive.exact_iff_homology_zero CategoryTheory.Preadditive.exact_iff_homology_zero
+#align category_theory.preadditive.exact_iff_homology_zero CategoryTheory.Preadditive.exact_iff_homology_zero
 
 theorem Preadditive.exact_of_iso_of_exact {A₁ B₁ C₁ A₂ B₂ C₂ : V} (f₁ : A₁ ⟶ B₁) (g₁ : B₁ ⟶ C₁)
     (f₂ : A₂ ⟶ B₂) (g₂ : B₂ ⟶ C₂) (α : Arrow.mk f₁ ≅ Arrow.mk f₂) (β : Arrow.mk g₁ ≅ Arrow.mk g₂)
@@ -109,8 +108,7 @@ theorem Preadditive.exact_of_iso_of_exact {A₁ B₁ C₁ A₂ B₂ C₂ : V} (f
     arrow.left_hom_inv_right β.hom, p]
   simp only [arrow.mk_hom, is_iso.inv_hom_id_assoc, category.assoc, ← arrow.inv_right,
     is_iso.iso.inv_hom]
-#align
-  category_theory.preadditive.exact_of_iso_of_exact CategoryTheory.Preadditive.exact_of_iso_of_exact
+#align category_theory.preadditive.exact_of_iso_of_exact CategoryTheory.Preadditive.exact_of_iso_of_exact
 
 /-- A reformulation of `preadditive.exact_of_iso_of_exact` that does not involve the arrow
 category. -/
@@ -119,8 +117,7 @@ theorem Preadditive.exact_of_iso_of_exact' {A₁ B₁ C₁ A₂ B₂ C₂ : V} (
     (hsq₁ : α.Hom ≫ f₂ = f₁ ≫ β.Hom) (hsq₂ : β.Hom ≫ g₂ = g₁ ≫ γ.Hom) (h : Exact f₁ g₁) :
     Exact f₂ g₂ :=
   Preadditive.exact_of_iso_of_exact f₁ g₁ f₂ g₂ (Arrow.isoMk α β hsq₁) (Arrow.isoMk β γ hsq₂) rfl h
-#align
-  category_theory.preadditive.exact_of_iso_of_exact' CategoryTheory.Preadditive.exact_of_iso_of_exact'
+#align category_theory.preadditive.exact_of_iso_of_exact' CategoryTheory.Preadditive.exact_of_iso_of_exact'
 
 theorem Preadditive.exact_iff_exact_of_iso {A₁ B₁ C₁ A₂ B₂ C₂ : V} (f₁ : A₁ ⟶ B₁) (g₁ : B₁ ⟶ C₁)
     (f₂ : A₂ ⟶ B₂) (g₂ : B₂ ⟶ C₂) (α : Arrow.mk f₁ ≅ Arrow.mk f₂) (β : Arrow.mk g₁ ≅ Arrow.mk g₂)
@@ -132,8 +129,7 @@ theorem Preadditive.exact_iff_exact_of_iso {A₁ B₁ C₁ A₂ B₂ C₂ : V} (
         simp only [iso.symm_hom, ← comma.comp_right, α.inv_hom_id]
         simp only [p, ← comma.comp_left, arrow.id_right, arrow.id_left, iso.inv_hom_id]
         rfl)⟩
-#align
-  category_theory.preadditive.exact_iff_exact_of_iso CategoryTheory.Preadditive.exact_iff_exact_of_iso
+#align category_theory.preadditive.exact_iff_exact_of_iso CategoryTheory.Preadditive.exact_iff_exact_of_iso
 
 end
 
@@ -148,8 +144,7 @@ theorem comp_eq_zero_of_image_eq_kernel {A B C : V} (f : A ⟶ B) (g : B ⟶ C)
   convert comp_zero
   rw [p]
   simp
-#align
-  category_theory.comp_eq_zero_of_image_eq_kernel CategoryTheory.comp_eq_zero_of_image_eq_kernel
+#align category_theory.comp_eq_zero_of_image_eq_kernel CategoryTheory.comp_eq_zero_of_image_eq_kernel
 
 theorem image_to_kernel_is_iso_of_image_eq_kernel {A B C : V} (f : A ⟶ B) (g : B ⟶ C)
     (p : imageSubobject f = kernelSubobject g) :
@@ -159,8 +154,7 @@ theorem image_to_kernel_is_iso_of_image_eq_kernel {A B C : V} (f : A ⟶ B) (g :
   dsimp [imageToKernel]
   simp only [subobject.of_le_comp_of_le, subobject.of_le_refl]
   simp
-#align
-  category_theory.image_to_kernel_is_iso_of_image_eq_kernel CategoryTheory.image_to_kernel_is_iso_of_image_eq_kernel
+#align category_theory.image_to_kernel_is_iso_of_image_eq_kernel CategoryTheory.image_to_kernel_is_iso_of_image_eq_kernel
 
 -- We'll prove the converse later, when `V` is abelian.
 theorem exact_of_image_eq_kernel {A B C : V} (f : A ⟶ B) (g : B ⟶ C)
@@ -269,15 +263,13 @@ theorem kernel_subobject_arrow_eq_zero_of_exact_zero_left (h : Exact (0 : A ⟶ 
   rw [← cancel_epi (imageToKernel (0 : A ⟶ B) g h.w), ←
     cancel_epi (factor_thru_image_subobject (0 : A ⟶ B))]
   simp
-#align
-  category_theory.kernel_subobject_arrow_eq_zero_of_exact_zero_left CategoryTheory.kernel_subobject_arrow_eq_zero_of_exact_zero_left
+#align category_theory.kernel_subobject_arrow_eq_zero_of_exact_zero_left CategoryTheory.kernel_subobject_arrow_eq_zero_of_exact_zero_left
 
 theorem kernel_ι_eq_zero_of_exact_zero_left (h : Exact (0 : A ⟶ B) g) : kernel.ι g = 0 :=
   by
   rw [← kernel_subobject_arrow']
   simp [kernel_subobject_arrow_eq_zero_of_exact_zero_left A h]
-#align
-  category_theory.kernel_ι_eq_zero_of_exact_zero_left CategoryTheory.kernel_ι_eq_zero_of_exact_zero_left
+#align category_theory.kernel_ι_eq_zero_of_exact_zero_left CategoryTheory.kernel_ι_eq_zero_of_exact_zero_left
 
 theorem exact_zero_left_of_mono [HasZeroObject V] [Mono g] : Exact (0 : A ⟶ B) g :=
   ⟨by simp, image_to_kernel_epi_of_zero_of_mono _⟩
@@ -385,8 +377,7 @@ variable [HasImages W] [HasZeroMorphisms W] [HasKernels W]
     exact pair is itself exact. -/
 class ReflectsExactSequences (F : V ⥤ W) where
   reflects : ∀ {A B C : V} (f : A ⟶ B) (g : B ⟶ C), Exact (F.map f) (F.map g) → Exact f g
-#align
-  category_theory.functor.reflects_exact_sequences CategoryTheory.Functor.ReflectsExactSequences
+#align category_theory.functor.reflects_exact_sequences CategoryTheory.Functor.ReflectsExactSequences
 
 theorem exact_of_exact_map (F : V ⥤ W) [ReflectsExactSequences F] {A B C : V} {f : A ⟶ B}
     {g : B ⟶ C} (hfg : Exact (F.map f) (F.map g)) : Exact f g :=

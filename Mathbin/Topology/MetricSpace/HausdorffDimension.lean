@@ -594,8 +594,7 @@ theorem ContDiffOn.dense_compl_image_of_dimH_lt_finrank [FiniteDimensional ℝ F
     {s t : Set E} (h : ContDiffOn ℝ 1 f s) (hc : Convex ℝ s) (ht : t ⊆ s)
     (htF : dimH t < finrank ℝ F) : Dense ((f '' t)ᶜ) :=
   dense_compl_of_dimH_lt_finrank <| (h.dimH_image_le hc ht).trans_lt htF
-#align
-  cont_diff_on.dense_compl_image_of_dimH_lt_finrank ContDiffOn.dense_compl_image_of_dimH_lt_finrank
+#align cont_diff_on.dense_compl_image_of_dimH_lt_finrank ContDiffOn.dense_compl_image_of_dimH_lt_finrank
 
 /-- A particular case of Sard's Theorem. If `f` is a `C¹` smooth map from a real vector space to a
 real vector space `F` of strictly larger dimension, then the complement of the range of `f` is dense
@@ -603,6 +602,5 @@ in `F`. -/
 theorem ContDiff.dense_compl_range_of_finrank_lt_finrank [FiniteDimensional ℝ F] {f : E → F}
     (h : ContDiff ℝ 1 f) (hEF : finrank ℝ E < finrank ℝ F) : Dense (range fᶜ) :=
   dense_compl_of_dimH_lt_finrank <| h.dimH_range_le.trans_lt <| Ennreal.coe_nat_lt_coe_nat.2 hEF
-#align
-  cont_diff.dense_compl_range_of_finrank_lt_finrank ContDiff.dense_compl_range_of_finrank_lt_finrank
+#align cont_diff.dense_compl_range_of_finrank_lt_finrank ContDiff.dense_compl_range_of_finrank_lt_finrank
 

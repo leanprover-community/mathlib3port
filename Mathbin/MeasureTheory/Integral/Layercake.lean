@@ -163,8 +163,7 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul_of_measurable (μ : Measure α) 
   have mble := measurable_set_region_between_oc measurable_zero f_mble MeasurableSet.univ
   simp_rw [mem_univ, Pi.zero_apply, true_and_iff] at mble
   exact (ennreal.measurable_of_real.comp (g_mble.comp measurable_snd)).AeMeasurable.indicator mble
-#align
-  measure_theory.lintegral_comp_eq_lintegral_meas_le_mul_of_measurable MeasureTheory.lintegral_comp_eq_lintegral_meas_le_mul_of_measurable
+#align measure_theory.lintegral_comp_eq_lintegral_meas_le_mul_of_measurable MeasureTheory.lintegral_comp_eq_lintegral_meas_le_mul_of_measurable
 
 /-- The layer cake formula / Cavalieri's principle / tail probability formula:
 
@@ -214,8 +213,7 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul (μ : Measure α) [SigmaFinite �
   exact
     lintegral_comp_eq_lintegral_meas_le_mul_of_measurable μ f_nn f_mble G_intble G_mble
       fun t t_pos => G_nn t
-#align
-  measure_theory.lintegral_comp_eq_lintegral_meas_le_mul MeasureTheory.lintegral_comp_eq_lintegral_meas_le_mul
+#align measure_theory.lintegral_comp_eq_lintegral_meas_le_mul MeasureTheory.lintegral_comp_eq_lintegral_meas_le_mul
 
 /-- The standard case of the layer cake formula / Cavalieri's principle / tail probability formula:
 
@@ -272,8 +270,7 @@ theorem lintegral_rpow_eq_lintegral_meas_le_mul (μ : Measure α) [SigmaFinite �
   · congr with ω
     rw [← Ennreal.of_real_mul p_pos.le, mul_div_cancel' (f ω ^ p) p_pos.ne.symm]
   · exact ((f_mble.pow measurable_const).div_const p).ennreal_of_real
-#align
-  measure_theory.lintegral_rpow_eq_lintegral_meas_le_mul MeasureTheory.lintegral_rpow_eq_lintegral_meas_le_mul
+#align measure_theory.lintegral_rpow_eq_lintegral_meas_le_mul MeasureTheory.lintegral_rpow_eq_lintegral_meas_le_mul
 
 end MeasureTheory
 

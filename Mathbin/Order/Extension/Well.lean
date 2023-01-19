@@ -57,8 +57,7 @@ noncomputable def wellOrderExtension : LinearOrder α :=
 
 instance wellOrderExtension.is_well_founded_lt : IsWellFounded α hwf.wellOrderExtension.lt :=
   ⟨InvImage.wf _ <| Prod.lex_wf Ordinal.well_founded_lt.wf WellOrderingRel.is_well_order.wf⟩
-#align
-  well_founded.well_order_extension.is_well_founded_lt WellFounded.wellOrderExtension.is_well_founded_lt
+#align well_founded.well_order_extension.is_well_founded_lt WellFounded.wellOrderExtension.is_well_founded_lt
 
 /-- Any well-founded relation can be extended to a well-ordering on that type. -/
 theorem exists_well_order_ge : ∃ s, r ≤ s ∧ IsWellOrder α s :=

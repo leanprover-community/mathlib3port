@@ -509,8 +509,7 @@ theorem not_continuous_cofinite_topology_of_symm [Infinite X] [DiscreteTopology 
   use CofiniteTopology.of ↑(default : X)
   simpa [nhds_coe_eq, nhds_discrete, CofiniteTopology.nhds_eq] using
     (finite_singleton ((default : X) : Alexandroff X)).infinite_compl
-#align
-  alexandroff.not_continuous_cofinite_topology_of_symm Alexandroff.not_continuous_cofinite_topology_of_symm
+#align alexandroff.not_continuous_cofinite_topology_of_symm Alexandroff.not_continuous_cofinite_topology_of_symm
 
 end Alexandroff
 
@@ -527,6 +526,5 @@ theorem Continuous.homeoOfEquivCompactToT2.t1_counterexample :
   ⟨Alexandroff ℕ, CofiniteTopology (Alexandroff ℕ), inferInstance, inferInstance, inferInstance,
     inferInstance, CofiniteTopology.of, CofiniteTopology.continuous_of,
     Alexandroff.not_continuous_cofinite_topology_of_symm⟩
-#align
-  continuous.homeo_of_equiv_compact_to_t2.t1_counterexample Continuous.homeoOfEquivCompactToT2.t1_counterexample
+#align continuous.homeo_of_equiv_compact_to_t2.t1_counterexample Continuous.homeoOfEquivCompactToT2.t1_counterexample
 

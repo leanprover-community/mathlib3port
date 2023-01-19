@@ -348,8 +348,7 @@ theorem mem_inv_pointwise_smul_iff₀ {a : α} (ha : a ≠ 0) (S : Submonoid M) 
 theorem pointwise_smul_le_pointwise_smul_iff₀ {a : α} (ha : a ≠ 0) {S T : Submonoid M} :
     a • S ≤ a • T ↔ S ≤ T :=
   set_smul_subset_set_smul_iff₀ ha
-#align
-  submonoid.pointwise_smul_le_pointwise_smul_iff₀ Submonoid.pointwise_smul_le_pointwise_smul_iff₀
+#align submonoid.pointwise_smul_le_pointwise_smul_iff₀ Submonoid.pointwise_smul_le_pointwise_smul_iff₀
 
 theorem pointwise_smul_le_iff₀ {a : α} (ha : a ≠ 0) {S T : Submonoid M} : a • S ≤ T ↔ S ≤ a⁻¹ • T :=
   set_smul_subset_iff₀ ha
@@ -444,8 +443,7 @@ theorem smul_mem_pointwise_smul_iff {a : α} {S : AddSubmonoid A} {x : A} : a �
 theorem mem_pointwise_smul_iff_inv_smul_mem {a : α} {S : AddSubmonoid A} {x : A} :
     x ∈ a • S ↔ a⁻¹ • x ∈ S :=
   mem_smul_set_iff_inv_smul_mem
-#align
-  add_submonoid.mem_pointwise_smul_iff_inv_smul_mem AddSubmonoid.mem_pointwise_smul_iff_inv_smul_mem
+#align add_submonoid.mem_pointwise_smul_iff_inv_smul_mem AddSubmonoid.mem_pointwise_smul_iff_inv_smul_mem
 
 theorem mem_inv_pointwise_smul_iff {a : α} {S : AddSubmonoid A} {x : A} : x ∈ a⁻¹ • S ↔ a • x ∈ S :=
   mem_inv_smul_set_iff
@@ -455,8 +453,7 @@ theorem mem_inv_pointwise_smul_iff {a : α} {S : AddSubmonoid A} {x : A} : x ∈
 theorem pointwise_smul_le_pointwise_smul_iff {a : α} {S T : AddSubmonoid A} :
     a • S ≤ a • T ↔ S ≤ T :=
   set_smul_subset_set_smul_iff
-#align
-  add_submonoid.pointwise_smul_le_pointwise_smul_iff AddSubmonoid.pointwise_smul_le_pointwise_smul_iff
+#align add_submonoid.pointwise_smul_le_pointwise_smul_iff AddSubmonoid.pointwise_smul_le_pointwise_smul_iff
 
 theorem pointwise_smul_le_iff {a : α} {S T : AddSubmonoid A} : a • S ≤ T ↔ S ≤ a⁻¹ • T :=
   set_smul_subset_iff
@@ -483,8 +480,7 @@ theorem smul_mem_pointwise_smul_iff₀ {a : α} (ha : a ≠ 0) (S : AddSubmonoid
 theorem mem_pointwise_smul_iff_inv_smul_mem₀ {a : α} (ha : a ≠ 0) (S : AddSubmonoid A) (x : A) :
     x ∈ a • S ↔ a⁻¹ • x ∈ S :=
   mem_smul_set_iff_inv_smul_mem₀ ha (S : Set A) x
-#align
-  add_submonoid.mem_pointwise_smul_iff_inv_smul_mem₀ AddSubmonoid.mem_pointwise_smul_iff_inv_smul_mem₀
+#align add_submonoid.mem_pointwise_smul_iff_inv_smul_mem₀ AddSubmonoid.mem_pointwise_smul_iff_inv_smul_mem₀
 
 theorem mem_inv_pointwise_smul_iff₀ {a : α} (ha : a ≠ 0) (S : AddSubmonoid A) (x : A) :
     x ∈ a⁻¹ • S ↔ a • x ∈ S :=
@@ -495,8 +491,7 @@ theorem mem_inv_pointwise_smul_iff₀ {a : α} (ha : a ≠ 0) (S : AddSubmonoid 
 theorem pointwise_smul_le_pointwise_smul_iff₀ {a : α} (ha : a ≠ 0) {S T : AddSubmonoid A} :
     a • S ≤ a • T ↔ S ≤ T :=
   set_smul_subset_set_smul_iff₀ ha
-#align
-  add_submonoid.pointwise_smul_le_pointwise_smul_iff₀ AddSubmonoid.pointwise_smul_le_pointwise_smul_iff₀
+#align add_submonoid.pointwise_smul_le_pointwise_smul_iff₀ AddSubmonoid.pointwise_smul_le_pointwise_smul_iff₀
 
 theorem pointwise_smul_le_iff₀ {a : α} (ha : a ≠ 0) {S T : AddSubmonoid A} :
     a • S ≤ T ↔ S ≤ a⁻¹ • T :=

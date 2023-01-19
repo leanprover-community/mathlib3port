@@ -536,10 +536,8 @@ variable [CanonicallyLinearOrderedMonoid α]
 @[to_additive]
 instance (priority := 100) CanonicallyLinearOrderedMonoid.semilatticeSup : SemilatticeSup α :=
   { LinearOrder.toLattice with }
-#align
-  canonically_linear_ordered_monoid.semilattice_sup CanonicallyLinearOrderedMonoid.semilatticeSup
-#align
-  canonically_linear_ordered_add_monoid.semilattice_sup CanonicallyLinearOrderedAddMonoid.semilatticeSup
+#align canonically_linear_ordered_monoid.semilattice_sup CanonicallyLinearOrderedMonoid.semilatticeSup
+#align canonically_linear_ordered_add_monoid.semilattice_sup CanonicallyLinearOrderedAddMonoid.semilatticeSup
 -/
 
 /- warning: min_mul_distrib -> min_mul_distrib is a dubious translation:

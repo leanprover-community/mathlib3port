@@ -144,7 +144,7 @@ Case conversion may be inaccurate. Consider using '#align with_one.some_eq_coe [
 @[to_additive]
 theorem [anonymous] {a : α} : (some a : WithOne α) = ↑a :=
   rfl
-#align with_one.some_eq_coe[anonymous]
+#align with_one.some_eq_coe [anonymous]
 
 #print WithOne.coe_ne_one /-
 @[simp, to_additive]

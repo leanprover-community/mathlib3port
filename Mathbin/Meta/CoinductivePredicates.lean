@@ -197,48 +197,39 @@ namespace CoindPred
 
 unsafe def u_params (pd : coind_pred) : List level :=
   pd.u_names.map param
-#align
-  tactic.add_coinductive_predicate.coind_pred.u_params tactic.add_coinductive_predicate.coind_pred.u_params
+#align tactic.add_coinductive_predicate.coind_pred.u_params tactic.add_coinductive_predicate.coind_pred.u_params
 
 unsafe def f₁_l (pd : coind_pred) : expr :=
   pd.f₁.app_of_list pd.locals
-#align
-  tactic.add_coinductive_predicate.coind_pred.f₁_l tactic.add_coinductive_predicate.coind_pred.f₁_l
+#align tactic.add_coinductive_predicate.coind_pred.f₁_l tactic.add_coinductive_predicate.coind_pred.f₁_l
 
 unsafe def f₂_l (pd : coind_pred) : expr :=
   pd.f₂.app_of_list pd.locals
-#align
-  tactic.add_coinductive_predicate.coind_pred.f₂_l tactic.add_coinductive_predicate.coind_pred.f₂_l
+#align tactic.add_coinductive_predicate.coind_pred.f₂_l tactic.add_coinductive_predicate.coind_pred.f₂_l
 
 unsafe def pred (pd : coind_pred) : expr :=
   const pd.pd_name pd.u_params
-#align
-  tactic.add_coinductive_predicate.coind_pred.pred tactic.add_coinductive_predicate.coind_pred.pred
+#align tactic.add_coinductive_predicate.coind_pred.pred tactic.add_coinductive_predicate.coind_pred.pred
 
 unsafe def func (pd : coind_pred) : expr :=
   const (pd.pd_name ++ "functional") pd.u_params
-#align
-  tactic.add_coinductive_predicate.coind_pred.func tactic.add_coinductive_predicate.coind_pred.func
+#align tactic.add_coinductive_predicate.coind_pred.func tactic.add_coinductive_predicate.coind_pred.func
 
 unsafe def func_g (pd : coind_pred) : expr :=
   pd.func.app_of_list <| pd.params
-#align
-  tactic.add_coinductive_predicate.coind_pred.func_g tactic.add_coinductive_predicate.coind_pred.func_g
+#align tactic.add_coinductive_predicate.coind_pred.func_g tactic.add_coinductive_predicate.coind_pred.func_g
 
 unsafe def pred_g (pd : coind_pred) : expr :=
   pd.pred.app_of_list <| pd.params
-#align
-  tactic.add_coinductive_predicate.coind_pred.pred_g tactic.add_coinductive_predicate.coind_pred.pred_g
+#align tactic.add_coinductive_predicate.coind_pred.pred_g tactic.add_coinductive_predicate.coind_pred.pred_g
 
 unsafe def impl_locals (pd : coind_pred) : List expr :=
   pd.locals.map to_implicit_binder
-#align
-  tactic.add_coinductive_predicate.coind_pred.impl_locals tactic.add_coinductive_predicate.coind_pred.impl_locals
+#align tactic.add_coinductive_predicate.coind_pred.impl_locals tactic.add_coinductive_predicate.coind_pred.impl_locals
 
 unsafe def impl_params (pd : coind_pred) : List expr :=
   pd.params.map to_implicit_binder
-#align
-  tactic.add_coinductive_predicate.coind_pred.impl_params tactic.add_coinductive_predicate.coind_pred.impl_params
+#align tactic.add_coinductive_predicate.coind_pred.impl_params tactic.add_coinductive_predicate.coind_pred.impl_params
 
 unsafe def le (pd : coind_pred) (f₁ f₂ : expr) : expr :=
   (imp (f₁.app_of_list pd.locals) (f₂.app_of_list pd.locals)).pis pd.impl_locals
@@ -246,13 +237,11 @@ unsafe def le (pd : coind_pred) (f₁ f₂ : expr) : expr :=
 
 unsafe def corec_functional (pd : coind_pred) : expr :=
   const (pd.pd_name ++ "corec_functional") pd.u_params
-#align
-  tactic.add_coinductive_predicate.coind_pred.corec_functional tactic.add_coinductive_predicate.coind_pred.corec_functional
+#align tactic.add_coinductive_predicate.coind_pred.corec_functional tactic.add_coinductive_predicate.coind_pred.corec_functional
 
 unsafe def mono (pd : coind_pred) : expr :=
   const (pd.func.const_name ++ "mono") pd.u_params
-#align
-  tactic.add_coinductive_predicate.coind_pred.mono tactic.add_coinductive_predicate.coind_pred.mono
+#align tactic.add_coinductive_predicate.coind_pred.mono tactic.add_coinductive_predicate.coind_pred.mono
 
 unsafe def rec' (pd : coind_pred) : tactic expr := do
   let c := pd.func.const_name ++ "rec"
@@ -260,25 +249,21 @@ unsafe def rec' (pd : coind_pred) : tactic expr := do
   let decl ← env.get c
   let num := decl.univ_params.length
   return (const c <| if Num = pd then pd else level.zero :: pd)
-#align
-  tactic.add_coinductive_predicate.coind_pred.rec' tactic.add_coinductive_predicate.coind_pred.rec'
+#align tactic.add_coinductive_predicate.coind_pred.rec' tactic.add_coinductive_predicate.coind_pred.rec'
 
 -- ^^ `rec`'s universes are not always `u_params`, e.g. eq, wf, false
 unsafe def construct (pd : coind_pred) : expr :=
   const (pd.pd_name ++ "construct") pd.u_params
-#align
-  tactic.add_coinductive_predicate.coind_pred.construct tactic.add_coinductive_predicate.coind_pred.construct
+#align tactic.add_coinductive_predicate.coind_pred.construct tactic.add_coinductive_predicate.coind_pred.construct
 
 unsafe def destruct (pd : coind_pred) : expr :=
   const (pd.pd_name ++ "destruct") pd.u_params
-#align
-  tactic.add_coinductive_predicate.coind_pred.destruct tactic.add_coinductive_predicate.coind_pred.destruct
+#align tactic.add_coinductive_predicate.coind_pred.destruct tactic.add_coinductive_predicate.coind_pred.destruct
 
 unsafe def add_theorem (pd : coind_pred) (n : Name) (type : expr) (tac : tactic Unit) :
     tactic expr :=
   add_theorem_by n pd.u_names type tac
-#align
-  tactic.add_coinductive_predicate.coind_pred.add_theorem tactic.add_coinductive_predicate.coind_pred.add_theorem
+#align tactic.add_coinductive_predicate.coind_pred.add_theorem tactic.add_coinductive_predicate.coind_pred.add_theorem
 
 end CoindPred
 

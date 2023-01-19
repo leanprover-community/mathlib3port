@@ -100,10 +100,8 @@ theorem prod_antidiagonal_eq_prod_range_succ_mk {M : Type _} [CommMonoid M] (f :
   by
   convert Prod_map _ ⟨fun i => (i, n - i), fun x y h => (Prod.mk.inj h).1⟩ _
   rfl
-#align
-  finset.nat.prod_antidiagonal_eq_prod_range_succ_mk Finset.Nat.prod_antidiagonal_eq_prod_range_succ_mk
-#align
-  finset.nat.sum_antidiagonal_eq_sum_range_succ_mk Finset.Nat.sum_antidiagonal_eq_sum_range_succ_mk
+#align finset.nat.prod_antidiagonal_eq_prod_range_succ_mk Finset.Nat.prod_antidiagonal_eq_prod_range_succ_mk
+#align finset.nat.sum_antidiagonal_eq_sum_range_succ_mk Finset.Nat.sum_antidiagonal_eq_sum_range_succ_mk
 -/
 
 #print Finset.Nat.prod_antidiagonal_eq_prod_range_succ /-
@@ -114,8 +112,7 @@ using `rw ←`. -/
 theorem prod_antidiagonal_eq_prod_range_succ {M : Type _} [CommMonoid M] (f : ℕ → ℕ → M) (n : ℕ) :
     (∏ ij in Finset.Nat.antidiagonal n, f ij.1 ij.2) = ∏ k in range n.succ, f k (n - k) :=
   prod_antidiagonal_eq_prod_range_succ_mk _ _
-#align
-  finset.nat.prod_antidiagonal_eq_prod_range_succ Finset.Nat.prod_antidiagonal_eq_prod_range_succ
+#align finset.nat.prod_antidiagonal_eq_prod_range_succ Finset.Nat.prod_antidiagonal_eq_prod_range_succ
 #align finset.nat.sum_antidiagonal_eq_sum_range_succ Finset.Nat.sum_antidiagonal_eq_sum_range_succ
 -/
 

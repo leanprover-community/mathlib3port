@@ -315,8 +315,7 @@ def subpresheafContinuousPrelocalIsoPresheafToTop (T : TopCat.{v}) :
           ext (⟨f, p⟩x)
           rfl })
     (by tidy)
-#align
-  Top.subpresheaf_continuous_prelocal_iso_presheaf_to_Top TopCat.subpresheafContinuousPrelocalIsoPresheafToTop
+#align Top.subpresheaf_continuous_prelocal_iso_presheaf_to_Top TopCat.subpresheafContinuousPrelocalIsoPresheafToTop
 
 /-- The sheaf of continuous functions on `X` with values in a space `T`.
 -/

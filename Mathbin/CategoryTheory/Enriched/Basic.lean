@@ -161,8 +161,7 @@ def categoryOfEnrichedCategoryType (C : Type u₁) [𝒞 : EnrichedCategory (Typ
   id_comp' X Y f := congr_fun (e_id_comp (Type v) X Y) f
   comp_id' X Y f := congr_fun (e_comp_id (Type v) X Y) f
   assoc' W X Y Z f g h := (congr_fun (e_assoc (Type v) W X Y Z) ⟨f, g, h⟩ : _)
-#align
-  category_theory.category_of_enriched_category_Type CategoryTheory.categoryOfEnrichedCategoryType
+#align category_theory.category_of_enriched_category_Type CategoryTheory.categoryOfEnrichedCategoryType
 
 /-- Construct a `Type v`-enriched category from an honest category.
 -/
@@ -180,8 +179,7 @@ def enrichedCategoryTypeOfCategory (C : Type u₁) [𝒞 : Category.{v} C] : Enr
   assoc W X Y Z := by
     ext ⟨f, g, h⟩
     simp
-#align
-  category_theory.enriched_category_Type_of_category CategoryTheory.enrichedCategoryTypeOfCategory
+#align category_theory.enriched_category_Type_of_category CategoryTheory.enrichedCategoryTypeOfCategory
 
 /-- We verify that an enriched category in `Type u` is just the same thing as an honest category.
 -/
@@ -201,8 +199,7 @@ def enrichedCategoryTypeEquivCategory (C : Type u₁) : EnrichedCategory (Type v
     rcases 𝒞 with @⟨@⟨⟨⟩⟩⟩
     dsimp
     congr
-#align
-  category_theory.enriched_category_Type_equiv_category CategoryTheory.enrichedCategoryTypeEquivCategory
+#align category_theory.enriched_category_Type_equiv_category CategoryTheory.enrichedCategoryTypeEquivCategory
 
 section
 
@@ -509,8 +506,7 @@ def enrichedFunctorTypeEquivFunctor {C : Type u₁} [𝒞 : EnrichedCategory (Ty
   right_inv F := by
     cases F
     simp
-#align
-  category_theory.enriched_functor_Type_equiv_functor CategoryTheory.enrichedFunctorTypeEquivFunctor
+#align category_theory.enriched_functor_Type_equiv_functor CategoryTheory.enrichedFunctorTypeEquivFunctor
 
 /-- We verify that the presheaf representing natural transformations
 between `Type v`-enriched functors is actually represented by
@@ -531,8 +527,7 @@ def enrichedNatTransYonedaTypeIsoYonedaNatTrans {C : Type v} [EnrichedCategory (
               ext ⟨x, f⟩
               exact (σ x).naturality f } })
     (by tidy)
-#align
-  category_theory.enriched_nat_trans_yoneda_Type_iso_yoneda_nat_trans CategoryTheory.enrichedNatTransYonedaTypeIsoYonedaNatTrans
+#align category_theory.enriched_nat_trans_yoneda_Type_iso_yoneda_nat_trans CategoryTheory.enrichedNatTransYonedaTypeIsoYonedaNatTrans
 
 end
 

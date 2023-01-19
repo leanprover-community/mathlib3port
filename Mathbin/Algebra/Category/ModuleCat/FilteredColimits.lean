@@ -82,8 +82,7 @@ theorem colimit_smul_aux_eq_of_rel (r : R) (x y : Σj, F.obj j)
   use k, f, g
   simp only [CategoryTheory.Functor.comp_map, forget_map_eq_coe] at hfg
   rw [LinearMap.map_smul, LinearMap.map_smul, hfg]
-#align
-  Module.filtered_colimits.colimit_smul_aux_eq_of_rel ModuleCat.FilteredColimits.colimit_smul_aux_eq_of_rel
+#align Module.filtered_colimits.colimit_smul_aux_eq_of_rel ModuleCat.FilteredColimits.colimit_smul_aux_eq_of_rel
 
 /-- Scalar multiplication in the colimit. See also `colimit_smul_aux`. -/
 instance colimitHasSmul : SMul R M
@@ -183,8 +182,7 @@ def colimitCoconeIsColimit : IsColimit colimit_cocone
     LinearMap.coe_injective <|
       (Types.colimitCoconeIsColimit (F ⋙ forget (ModuleCat R))).uniq
         ((forget (ModuleCat R)).mapCocone t) m fun j => funext fun x => LinearMap.congr_fun (h j) x
-#align
-  Module.filtered_colimits.colimit_cocone_is_colimit ModuleCat.FilteredColimits.colimitCoconeIsColimit
+#align Module.filtered_colimits.colimit_cocone_is_colimit ModuleCat.FilteredColimits.colimitCoconeIsColimit
 
 instance forget₂AddCommGroupPreservesFilteredColimits :
     PreservesFilteredColimits (forget₂ (ModuleCat R) AddCommGroupCat.{u})
@@ -194,14 +192,12 @@ instance forget₂AddCommGroupPreservesFilteredColimits :
         preserves_colimit_of_preserves_colimit_cocone (colimit_cocone_is_colimit F)
           (AddCommGroupCat.FilteredColimits.colimit_cocone_is_colimit
             (F ⋙ forget₂ (ModuleCat.{u} R) AddCommGroupCat.{u})) }
-#align
-  Module.filtered_colimits.forget₂_AddCommGroup_preserves_filtered_colimits ModuleCat.FilteredColimits.forget₂AddCommGroupPreservesFilteredColimits
+#align Module.filtered_colimits.forget₂_AddCommGroup_preserves_filtered_colimits ModuleCat.FilteredColimits.forget₂AddCommGroupPreservesFilteredColimits
 
 instance forgetPreservesFilteredColimits : PreservesFilteredColimits (forget (ModuleCat.{u} R)) :=
   Limits.compPreservesFilteredColimits (forget₂ (ModuleCat R) AddCommGroupCat)
     (forget AddCommGroupCat)
-#align
-  Module.filtered_colimits.forget_preserves_filtered_colimits ModuleCat.FilteredColimits.forgetPreservesFilteredColimits
+#align Module.filtered_colimits.forget_preserves_filtered_colimits ModuleCat.FilteredColimits.forgetPreservesFilteredColimits
 
 end
 

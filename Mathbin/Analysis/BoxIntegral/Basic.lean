@@ -488,8 +488,7 @@ theorem dist_integral_sum_integral_le_of_mem_base_set (h : Integrable I l f vol)
   by
   rw [convergence_r, dif_pos h₀] at hπ
   exact (has_integral_iff.1 h.has_integral ε h₀).some_spec.2 c _ hπ hπp
-#align
-  box_integral.integrable.dist_integral_sum_integral_le_of_mem_base_set BoxIntegral.Integrable.dist_integral_sum_integral_le_of_mem_base_set
+#align box_integral.integrable.dist_integral_sum_integral_le_of_mem_base_set BoxIntegral.Integrable.dist_integral_sum_integral_le_of_mem_base_set
 
 /-- **Henstock-Sacks inequality**. Let `r₁ r₂ : ℝⁿ → (0, ∞)` be function such that for any tagged
 *partition* of `I` subordinate to `rₖ`, `k=1,2`, the integral sum of `f` over this partition differs
@@ -528,8 +527,7 @@ theorem dist_integral_sum_le_of_mem_base_set (h : Integrable I l f vol) (hpos₁
       (h₂.union_compl_to_subordinate (fun _ _ => min_le_right _ _) hπU hπc₂)
       (is_partition_union_compl_to_subordinate _ _ _ _)
   simpa [union_compl_to_subordinate] using (dist_triangle_right _ _ _).trans (add_le_add H₁ H₂)
-#align
-  box_integral.integrable.dist_integral_sum_le_of_mem_base_set BoxIntegral.Integrable.dist_integral_sum_le_of_mem_base_set
+#align box_integral.integrable.dist_integral_sum_le_of_mem_base_set BoxIntegral.Integrable.dist_integral_sum_le_of_mem_base_set
 
 /-- If `f` is integrable on `I` along `l`, then for two sufficiently fine tagged prepartitions
 (in the sense of the filter `box_integral.integration_params.to_filter l I`) such that they cover
@@ -548,8 +546,7 @@ theorem tendsto_integral_sum_to_filter_prod_self_inf_Union_eq_uniformity
   use h.convergence_r (ε / 2), h.convergence_r_cond (ε / 2); rintro ⟨π₁, π₂⟩ ⟨⟨h₁, h₂⟩, hU⟩
   rw [← add_halves ε]
   exact h.dist_integral_sum_le_of_mem_base_set ε0 ε0 h₁.some_spec h₂.some_spec hU
-#align
-  box_integral.integrable.tendsto_integral_sum_to_filter_prod_self_inf_Union_eq_uniformity BoxIntegral.Integrable.tendsto_integral_sum_to_filter_prod_self_inf_Union_eq_uniformity
+#align box_integral.integrable.tendsto_integral_sum_to_filter_prod_self_inf_Union_eq_uniformity BoxIntegral.Integrable.tendsto_integral_sum_to_filter_prod_self_inf_Union_eq_uniformity
 
 /-- If `f` is integrable on a box `I` along `l`, then for any fixed subset `s` of `I` that can be
 represented as a finite union of boxes, the integral sums of `f` over tagged prepartitions that
@@ -562,8 +559,7 @@ theorem cauchy_map_integral_sum_to_filter_Union (h : Integrable I l f vol) (π�
   exact
     h.tendsto_integral_sum_to_filter_prod_self_inf_Union_eq_uniformity.mono_left
       (inf_le_inf_left _ <| principal_mono.2 fun π h => h.1.trans h.2.symm)
-#align
-  box_integral.integrable.cauchy_map_integral_sum_to_filter_Union BoxIntegral.Integrable.cauchy_map_integral_sum_to_filter_Union
+#align box_integral.integrable.cauchy_map_integral_sum_to_filter_Union BoxIntegral.Integrable.cauchy_map_integral_sum_to_filter_Union
 
 variable [CompleteSpace F]
 
@@ -592,8 +588,7 @@ theorem tendsto_integral_sum_to_filter_Union_single (h : Integrable I l f vol) (
       (𝓝 <| integral J l f vol) :=
   let ⟨y, h₁, h₂⟩ := h.to_subbox_aux hJ
   h₁.integral_eq.symm ▸ h₂
-#align
-  box_integral.integrable.tendsto_integral_sum_to_filter_Union_single BoxIntegral.Integrable.tendsto_integral_sum_to_filter_Union_single
+#align box_integral.integrable.tendsto_integral_sum_to_filter_Union_single BoxIntegral.Integrable.tendsto_integral_sum_to_filter_Union_single
 
 /-- **Henstock-Sacks inequality**. Let `r : ℝⁿ → (0, ∞)` be a function such that for any tagged
 *partition* of `I` subordinate to `r`, the integral sum of `f` over this partition differs from the
@@ -667,8 +662,7 @@ theorem dist_integral_sum_sum_integral_le_of_mem_base_set_of_Union_eq (h : Integ
       field_simp [H0.ne']
       ring
     
-#align
-  box_integral.integrable.dist_integral_sum_sum_integral_le_of_mem_base_set_of_Union_eq BoxIntegral.Integrable.dist_integral_sum_sum_integral_le_of_mem_base_set_of_Union_eq
+#align box_integral.integrable.dist_integral_sum_sum_integral_le_of_mem_base_set_of_Union_eq BoxIntegral.Integrable.dist_integral_sum_sum_integral_le_of_mem_base_set_of_Union_eq
 
 /-- **Henstock-Sacks inequality**. Let `r : ℝⁿ → (0, ∞)` be a function such that for any tagged
 *partition* of `I` subordinate to `r`, the integral sum of `f` over this partition differs from the
@@ -687,8 +681,7 @@ theorem dist_integral_sum_sum_integral_le_of_mem_base_set (h : Integrable I l f 
     (hπ : l.MemBaseSet I c (h.convergenceR ε c) π) :
     dist (integralSum f vol π) (∑ J in π.boxes, integral J l f vol) ≤ ε :=
   h.dist_integral_sum_sum_integral_le_of_mem_base_set_of_Union_eq h0 hπ rfl
-#align
-  box_integral.integrable.dist_integral_sum_sum_integral_le_of_mem_base_set BoxIntegral.Integrable.dist_integral_sum_sum_integral_le_of_mem_base_set
+#align box_integral.integrable.dist_integral_sum_sum_integral_le_of_mem_base_set BoxIntegral.Integrable.dist_integral_sum_sum_integral_le_of_mem_base_set
 
 /-- Integral sum of `f` over a tagged prepartition `π` such that `π.Union = π₀.Union` tends to the
 sum of integrals of `f` over the boxes of `π₀`. -/
@@ -700,8 +693,7 @@ theorem tendsto_integral_sum_sum_integral (h : Integrable I l f vol) (π₀ : Pr
   simp only [mem_inter_iff, Set.mem_unionᵢ, mem_set_of_eq]
   rintro π ⟨c, hc, hU⟩
   exact h.dist_integral_sum_sum_integral_le_of_mem_base_set_of_Union_eq ε0 hc hU
-#align
-  box_integral.integrable.tendsto_integral_sum_sum_integral BoxIntegral.Integrable.tendsto_integral_sum_sum_integral
+#align box_integral.integrable.tendsto_integral_sum_sum_integral BoxIntegral.Integrable.tendsto_integral_sum_sum_integral
 
 /-- If `f` is integrable on `I`, then `λ J, integral J l f vol` is box-additive on subboxes of `I`:
 if `π₁`, `π₂` are two prepartitions of `I` covering the same part of `I`, then the sum of integrals
@@ -882,8 +874,7 @@ theorem hasIntegralOfBRiemannEqFfOfForallIsO (hl : l.bRiemann = ff) (B : ι →�
   · exact fun _ _ _ => mul_nonneg ε'0.le (hB0 _)
   · rw [← mul_sum, B.sum_partition_boxes le_rfl hπp, mul_comm]
     exact hεI.le
-#align
-  box_integral.has_integral_of_bRiemann_eq_ff_of_forall_is_o BoxIntegral.hasIntegralOfBRiemannEqFfOfForallIsO
+#align box_integral.has_integral_of_bRiemann_eq_ff_of_forall_is_o BoxIntegral.hasIntegralOfBRiemannEqFfOfForallIsO
 
 /-- A function `f` has Henstock (or `⊥`) integral over `I` is equal to the value of a box-additive
 function `g` on `I` provided that `vol J (f x)` is sufficiently close to `g J` for sufficiently
@@ -928,8 +919,7 @@ theorem hasIntegralOfLeHenstockOfForallIsO (hl : l ≤ Henstock) (B : ι →ᵇ�
   hasIntegralOfBRiemannEqFfOfForallIsO (hl.1.resolve_right (by decide)) B hB0 _ s hs (fun _ => A)
       H₁ <|
     by simpa only [A, true_imp_iff] using H₂
-#align
-  box_integral.has_integral_of_le_Henstock_of_forall_is_o BoxIntegral.hasIntegralOfLeHenstockOfForallIsO
+#align box_integral.has_integral_of_le_Henstock_of_forall_is_o BoxIntegral.hasIntegralOfLeHenstockOfForallIsO
 
 /-- Suppose that there exists a nonnegative box-additive function `B` with the following property.
 

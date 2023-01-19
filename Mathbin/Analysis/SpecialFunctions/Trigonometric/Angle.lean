@@ -694,8 +694,7 @@ theorem to_real_coe_eq_self_sub_two_mul_int_mul_pi_iff {θ : ℝ} {k : ℤ} :
   rw [← sub_zero (θ : angle), ← zsmul_zero k, ← coe_two_pi, ← coe_zsmul, ← coe_sub, zsmul_eq_mul, ←
     mul_assoc, mul_comm (k : ℝ), to_real_coe_eq_self_iff, Set.mem_Ioc]
   exact ⟨fun h => ⟨by linarith, by linarith⟩, fun h => ⟨by linarith, by linarith⟩⟩
-#align
-  real.angle.to_real_coe_eq_self_sub_two_mul_int_mul_pi_iff Real.Angle.to_real_coe_eq_self_sub_two_mul_int_mul_pi_iff
+#align real.angle.to_real_coe_eq_self_sub_two_mul_int_mul_pi_iff Real.Angle.to_real_coe_eq_self_sub_two_mul_int_mul_pi_iff
 
 theorem to_real_coe_eq_self_sub_two_pi_iff {θ : ℝ} :
     (θ : Angle).toReal = θ - 2 * π ↔ θ ∈ Set.Ioc π (3 * π) := by
@@ -715,14 +714,12 @@ theorem two_nsmul_to_real_eq_two_mul_sub_two_pi {θ : Angle} :
   exact
     ⟨fun h => by linarith, fun h =>
       ⟨(div_lt_iff' (zero_lt_two' ℝ)).1 h, by linarith [pi_pos, to_real_le_pi θ]⟩⟩
-#align
-  real.angle.two_nsmul_to_real_eq_two_mul_sub_two_pi Real.Angle.two_nsmul_to_real_eq_two_mul_sub_two_pi
+#align real.angle.two_nsmul_to_real_eq_two_mul_sub_two_pi Real.Angle.two_nsmul_to_real_eq_two_mul_sub_two_pi
 
 theorem two_zsmul_to_real_eq_two_mul_sub_two_pi {θ : Angle} :
     ((2 : ℤ) • θ).toReal = 2 * θ.toReal - 2 * π ↔ π / 2 < θ.toReal := by
   rw [two_zsmul, ← two_nsmul, two_nsmul_to_real_eq_two_mul_sub_two_pi]
-#align
-  real.angle.two_zsmul_to_real_eq_two_mul_sub_two_pi Real.Angle.two_zsmul_to_real_eq_two_mul_sub_two_pi
+#align real.angle.two_zsmul_to_real_eq_two_mul_sub_two_pi Real.Angle.two_zsmul_to_real_eq_two_mul_sub_two_pi
 
 theorem two_nsmul_to_real_eq_two_mul_add_two_pi {θ : Angle} :
     ((2 : ℕ) • θ).toReal = 2 * θ.toReal + 2 * π ↔ θ.toReal ≤ -π / 2 :=
@@ -732,14 +729,12 @@ theorem two_nsmul_to_real_eq_two_mul_add_two_pi {θ : Angle} :
   refine'
     ⟨fun h => by linarith, fun h =>
       ⟨by linarith [pi_pos, neg_pi_lt_to_real θ], (le_div_iff' (zero_lt_two' ℝ)).1 h⟩⟩
-#align
-  real.angle.two_nsmul_to_real_eq_two_mul_add_two_pi Real.Angle.two_nsmul_to_real_eq_two_mul_add_two_pi
+#align real.angle.two_nsmul_to_real_eq_two_mul_add_two_pi Real.Angle.two_nsmul_to_real_eq_two_mul_add_two_pi
 
 theorem two_zsmul_to_real_eq_two_mul_add_two_pi {θ : Angle} :
     ((2 : ℤ) • θ).toReal = 2 * θ.toReal + 2 * π ↔ θ.toReal ≤ -π / 2 := by
   rw [two_zsmul, ← two_nsmul, two_nsmul_to_real_eq_two_mul_add_two_pi]
-#align
-  real.angle.two_zsmul_to_real_eq_two_mul_add_two_pi Real.Angle.two_zsmul_to_real_eq_two_mul_add_two_pi
+#align real.angle.two_zsmul_to_real_eq_two_mul_add_two_pi Real.Angle.two_zsmul_to_real_eq_two_mul_add_two_pi
 
 @[simp]
 theorem sin_to_real (θ : Angle) : Real.sin θ.toReal = sin θ := by
@@ -765,8 +760,7 @@ theorem cos_nonneg_iff_abs_to_real_le_pi_div_two {θ : Angle} : 0 ≤ cos θ ↔
     linarith [neg_pi_lt_to_real θ]
   · refine' cos_neg_of_pi_div_two_lt_of_lt hn _
     linarith [to_real_le_pi θ]
-#align
-  real.angle.cos_nonneg_iff_abs_to_real_le_pi_div_two Real.Angle.cos_nonneg_iff_abs_to_real_le_pi_div_two
+#align real.angle.cos_nonneg_iff_abs_to_real_le_pi_div_two Real.Angle.cos_nonneg_iff_abs_to_real_le_pi_div_two
 
 theorem cos_pos_iff_abs_to_real_lt_pi_div_two {θ : Angle} : 0 < cos θ ↔ |θ.toReal| < π / 2 :=
   by
@@ -774,29 +768,25 @@ theorem cos_pos_iff_abs_to_real_lt_pi_div_two {θ : Angle} : 0 < cos θ ↔ |θ.
     and_congr_right]
   rintro -
   rw [Ne.def, Ne.def, not_iff_not, @eq_comm ℝ 0, abs_to_real_eq_pi_div_two_iff, cos_eq_zero_iff]
-#align
-  real.angle.cos_pos_iff_abs_to_real_lt_pi_div_two Real.Angle.cos_pos_iff_abs_to_real_lt_pi_div_two
+#align real.angle.cos_pos_iff_abs_to_real_lt_pi_div_two Real.Angle.cos_pos_iff_abs_to_real_lt_pi_div_two
 
 theorem cos_neg_iff_pi_div_two_lt_abs_to_real {θ : Angle} : cos θ < 0 ↔ π / 2 < |θ.toReal| := by
   rw [← not_le, ← not_le, not_iff_not, cos_nonneg_iff_abs_to_real_le_pi_div_two]
-#align
-  real.angle.cos_neg_iff_pi_div_two_lt_abs_to_real Real.Angle.cos_neg_iff_pi_div_two_lt_abs_to_real
+#align real.angle.cos_neg_iff_pi_div_two_lt_abs_to_real Real.Angle.cos_neg_iff_pi_div_two_lt_abs_to_real
 
 theorem abs_cos_eq_abs_sin_of_two_nsmul_add_two_nsmul_eq_pi {θ ψ : Angle}
     (h : (2 : ℕ) • θ + (2 : ℕ) • ψ = π) : |cos θ| = |sin ψ| :=
   by
   rw [← eq_sub_iff_add_eq, ← two_nsmul_coe_div_two, ← nsmul_sub, two_nsmul_eq_iff] at h
   rcases h with (rfl | rfl) <;> simp [cos_pi_div_two_sub]
-#align
-  real.angle.abs_cos_eq_abs_sin_of_two_nsmul_add_two_nsmul_eq_pi Real.Angle.abs_cos_eq_abs_sin_of_two_nsmul_add_two_nsmul_eq_pi
+#align real.angle.abs_cos_eq_abs_sin_of_two_nsmul_add_two_nsmul_eq_pi Real.Angle.abs_cos_eq_abs_sin_of_two_nsmul_add_two_nsmul_eq_pi
 
 theorem abs_cos_eq_abs_sin_of_two_zsmul_add_two_zsmul_eq_pi {θ ψ : Angle}
     (h : (2 : ℤ) • θ + (2 : ℤ) • ψ = π) : |cos θ| = |sin ψ| :=
   by
   simp_rw [two_zsmul, ← two_nsmul] at h
   exact abs_cos_eq_abs_sin_of_two_nsmul_add_two_nsmul_eq_pi h
-#align
-  real.angle.abs_cos_eq_abs_sin_of_two_zsmul_add_two_zsmul_eq_pi Real.Angle.abs_cos_eq_abs_sin_of_two_zsmul_add_two_zsmul_eq_pi
+#align real.angle.abs_cos_eq_abs_sin_of_two_zsmul_add_two_zsmul_eq_pi Real.Angle.abs_cos_eq_abs_sin_of_two_zsmul_add_two_zsmul_eq_pi
 
 /-- The tangent of a `real.angle`. -/
 def tan (θ : Angle) : ℝ :=
@@ -869,16 +859,14 @@ theorem tan_eq_inv_of_two_nsmul_add_two_nsmul_eq_pi {θ ψ : Angle}
     inv_mul_eq_div, mul_comm] at h
   rw [tan_coe, tan_coe, ← tan_pi_div_two_sub, h, add_sub_assoc, add_comm]
   exact real.tan_periodic.int_mul _ _
-#align
-  real.angle.tan_eq_inv_of_two_nsmul_add_two_nsmul_eq_pi Real.Angle.tan_eq_inv_of_two_nsmul_add_two_nsmul_eq_pi
+#align real.angle.tan_eq_inv_of_two_nsmul_add_two_nsmul_eq_pi Real.Angle.tan_eq_inv_of_two_nsmul_add_two_nsmul_eq_pi
 
 theorem tan_eq_inv_of_two_zsmul_add_two_zsmul_eq_pi {θ ψ : Angle}
     (h : (2 : ℤ) • θ + (2 : ℤ) • ψ = π) : tan ψ = (tan θ)⁻¹ :=
   by
   simp_rw [two_zsmul, ← two_nsmul] at h
   exact tan_eq_inv_of_two_nsmul_add_two_nsmul_eq_pi h
-#align
-  real.angle.tan_eq_inv_of_two_zsmul_add_two_zsmul_eq_pi Real.Angle.tan_eq_inv_of_two_zsmul_add_two_zsmul_eq_pi
+#align real.angle.tan_eq_inv_of_two_zsmul_add_two_zsmul_eq_pi Real.Angle.tan_eq_inv_of_two_zsmul_add_two_zsmul_eq_pi
 
 /-- The sign of a `real.angle` is `0` if the angle is `0` or `π`, `1` if the angle is strictly
 between `0` and `π` and `-1` is the angle is strictly between `-π` and `0`. It is defined as the
@@ -1026,8 +1014,7 @@ theorem sign_neg_coe_nonpos_of_nonneg_of_le_pi {θ : ℝ} (h0 : 0 ≤ θ) (hpi :
   by
   rw [sign, sign_nonpos_iff, sin_neg, Left.neg_nonpos_iff]
   exact sin_nonneg_of_nonneg_of_le_pi h0 hpi
-#align
-  real.angle.sign_neg_coe_nonpos_of_nonneg_of_le_pi Real.Angle.sign_neg_coe_nonpos_of_nonneg_of_le_pi
+#align real.angle.sign_neg_coe_nonpos_of_nonneg_of_le_pi Real.Angle.sign_neg_coe_nonpos_of_nonneg_of_le_pi
 
 theorem sign_two_nsmul_eq_sign_iff {θ : Angle} :
     ((2 : ℕ) • θ).sign = θ.sign ↔ θ = π ∨ |θ.toReal| < π / 2 :=

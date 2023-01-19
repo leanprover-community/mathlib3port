@@ -54,8 +54,7 @@ instance liftObjUnit : LiftObj (𝟙_ C) where lift := Unit
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance liftObjTensor (X Y : C) [LiftObj X] [LiftObj Y] : LiftObj (X ⊗ Y)
     where lift := LiftObj.lift X ⊗ LiftObj.lift Y
-#align
-  category_theory.monoidal_category.lift_obj_tensor CategoryTheory.MonoidalCategory.liftObjTensor
+#align category_theory.monoidal_category.lift_obj_tensor CategoryTheory.MonoidalCategory.liftObjTensor
 
 instance (priority := 100) liftObjOf (X : C) : LiftObj X where lift := of X
 #align category_theory.monoidal_category.lift_obj_of CategoryTheory.MonoidalCategory.liftObjOf
@@ -70,33 +69,27 @@ instance liftHomId (X : C) [LiftObj X] : LiftHom (𝟙 X) where lift := 𝟙 _
 
 instance liftHomLeftUnitorHom (X : C) [LiftObj X] : LiftHom (λ_ X).Hom
     where lift := (λ_ (LiftObj.lift X)).Hom
-#align
-  category_theory.monoidal_category.lift_hom_left_unitor_hom CategoryTheory.MonoidalCategory.liftHomLeftUnitorHom
+#align category_theory.monoidal_category.lift_hom_left_unitor_hom CategoryTheory.MonoidalCategory.liftHomLeftUnitorHom
 
 instance liftHomLeftUnitorInv (X : C) [LiftObj X] : LiftHom (λ_ X).inv
     where lift := (λ_ (LiftObj.lift X)).inv
-#align
-  category_theory.monoidal_category.lift_hom_left_unitor_inv CategoryTheory.MonoidalCategory.liftHomLeftUnitorInv
+#align category_theory.monoidal_category.lift_hom_left_unitor_inv CategoryTheory.MonoidalCategory.liftHomLeftUnitorInv
 
 instance liftHomRightUnitorHom (X : C) [LiftObj X] : LiftHom (ρ_ X).Hom
     where lift := (ρ_ (LiftObj.lift X)).Hom
-#align
-  category_theory.monoidal_category.lift_hom_right_unitor_hom CategoryTheory.MonoidalCategory.liftHomRightUnitorHom
+#align category_theory.monoidal_category.lift_hom_right_unitor_hom CategoryTheory.MonoidalCategory.liftHomRightUnitorHom
 
 instance liftHomRightUnitorInv (X : C) [LiftObj X] : LiftHom (ρ_ X).inv
     where lift := (ρ_ (LiftObj.lift X)).inv
-#align
-  category_theory.monoidal_category.lift_hom_right_unitor_inv CategoryTheory.MonoidalCategory.liftHomRightUnitorInv
+#align category_theory.monoidal_category.lift_hom_right_unitor_inv CategoryTheory.MonoidalCategory.liftHomRightUnitorInv
 
 instance liftHomAssociatorHom (X Y Z : C) [LiftObj X] [LiftObj Y] [LiftObj Z] :
     LiftHom (α_ X Y Z).Hom where lift := (α_ (LiftObj.lift X) (LiftObj.lift Y) (LiftObj.lift Z)).Hom
-#align
-  category_theory.monoidal_category.lift_hom_associator_hom CategoryTheory.MonoidalCategory.liftHomAssociatorHom
+#align category_theory.monoidal_category.lift_hom_associator_hom CategoryTheory.MonoidalCategory.liftHomAssociatorHom
 
 instance liftHomAssociatorInv (X Y Z : C) [LiftObj X] [LiftObj Y] [LiftObj Z] :
     LiftHom (α_ X Y Z).inv where lift := (α_ (LiftObj.lift X) (LiftObj.lift Y) (LiftObj.lift Z)).inv
-#align
-  category_theory.monoidal_category.lift_hom_associator_inv CategoryTheory.MonoidalCategory.liftHomAssociatorInv
+#align category_theory.monoidal_category.lift_hom_associator_inv CategoryTheory.MonoidalCategory.liftHomAssociatorInv
 
 instance liftHomComp {X Y Z : C} [LiftObj X] [LiftObj Y] [LiftObj Z] (f : X ⟶ Y) (g : Y ⟶ Z)
     [LiftHom f] [LiftHom g] : LiftHom (f ≫ g) where lift := LiftHom.lift f ≫ LiftHom.lift g
@@ -107,8 +100,7 @@ instance liftHomComp {X Y Z : C} [LiftObj X] [LiftObj Y] [LiftObj Z] (f : X ⟶ 
 instance liftHomTensor {W X Y Z : C} [LiftObj W] [LiftObj X] [LiftObj Y] [LiftObj Z] (f : W ⟶ X)
     (g : Y ⟶ Z) [LiftHom f] [LiftHom g] : LiftHom (f ⊗ g)
     where lift := LiftHom.lift f ⊗ LiftHom.lift g
-#align
-  category_theory.monoidal_category.lift_hom_tensor CategoryTheory.MonoidalCategory.liftHomTensor
+#align category_theory.monoidal_category.lift_hom_tensor CategoryTheory.MonoidalCategory.liftHomTensor
 
 /- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`Hom] [] -/
 -- We could likely turn this into a `Prop` valued existential if that proves useful.
@@ -118,8 +110,7 @@ Used by the `⊗≫` monoidal composition operator, and the `coherence` tactic.
 class MonoidalCoherence (X Y : C) [LiftObj X] [LiftObj Y] where
   Hom : X ⟶ Y
   [IsIso : IsIso hom]
-#align
-  category_theory.monoidal_category.monoidal_coherence CategoryTheory.MonoidalCategory.MonoidalCoherence
+#align category_theory.monoidal_category.monoidal_coherence CategoryTheory.MonoidalCategory.MonoidalCoherence
 
 attribute [instance] monoidal_coherence.is_iso
 
@@ -128,8 +119,7 @@ namespace MonoidalCoherence
 @[simps]
 instance refl (X : C) [LiftObj X] : MonoidalCoherence X X :=
   ⟨𝟙 _⟩
-#align
-  category_theory.monoidal_category.monoidal_coherence.refl CategoryTheory.MonoidalCategory.MonoidalCoherence.refl
+#align category_theory.monoidal_category.monoidal_coherence.refl CategoryTheory.MonoidalCategory.MonoidalCoherence.refl
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -138,8 +128,7 @@ instance refl (X : C) [LiftObj X] : MonoidalCoherence X X :=
 instance tensor (X Y Z : C) [LiftObj X] [LiftObj Y] [LiftObj Z] [MonoidalCoherence Y Z] :
     MonoidalCoherence (X ⊗ Y) (X ⊗ Z) :=
   ⟨𝟙 X ⊗ MonoidalCoherence.hom Y Z⟩
-#align
-  category_theory.monoidal_category.monoidal_coherence.tensor CategoryTheory.MonoidalCategory.MonoidalCoherence.tensor
+#align category_theory.monoidal_category.monoidal_coherence.tensor CategoryTheory.MonoidalCategory.MonoidalCoherence.tensor
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -147,8 +136,7 @@ instance tensor (X Y Z : C) [LiftObj X] [LiftObj Y] [LiftObj Z] [MonoidalCoheren
 instance tensorRight (X Y : C) [LiftObj X] [LiftObj Y] [MonoidalCoherence (𝟙_ C) Y] :
     MonoidalCoherence X (X ⊗ Y) :=
   ⟨(ρ_ X).inv ≫ (𝟙 X ⊗ MonoidalCoherence.hom (𝟙_ C) Y)⟩
-#align
-  category_theory.monoidal_category.monoidal_coherence.tensor_right CategoryTheory.MonoidalCategory.MonoidalCoherence.tensorRight
+#align category_theory.monoidal_category.monoidal_coherence.tensor_right CategoryTheory.MonoidalCategory.MonoidalCoherence.tensorRight
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -156,40 +144,35 @@ instance tensorRight (X Y : C) [LiftObj X] [LiftObj Y] [MonoidalCoherence (𝟙_
 instance tensorRight' (X Y : C) [LiftObj X] [LiftObj Y] [MonoidalCoherence Y (𝟙_ C)] :
     MonoidalCoherence (X ⊗ Y) X :=
   ⟨(𝟙 X ⊗ MonoidalCoherence.hom Y (𝟙_ C)) ≫ (ρ_ X).Hom⟩
-#align
-  category_theory.monoidal_category.monoidal_coherence.tensor_right' CategoryTheory.MonoidalCategory.MonoidalCoherence.tensorRight'
+#align category_theory.monoidal_category.monoidal_coherence.tensor_right' CategoryTheory.MonoidalCategory.MonoidalCoherence.tensorRight'
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simps]
 instance left (X Y : C) [LiftObj X] [LiftObj Y] [MonoidalCoherence X Y] :
     MonoidalCoherence (𝟙_ C ⊗ X) Y :=
   ⟨(λ_ X).Hom ≫ MonoidalCoherence.hom X Y⟩
-#align
-  category_theory.monoidal_category.monoidal_coherence.left CategoryTheory.MonoidalCategory.MonoidalCoherence.left
+#align category_theory.monoidal_category.monoidal_coherence.left CategoryTheory.MonoidalCategory.MonoidalCoherence.left
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simps]
 instance left' (X Y : C) [LiftObj X] [LiftObj Y] [MonoidalCoherence X Y] :
     MonoidalCoherence X (𝟙_ C ⊗ Y) :=
   ⟨MonoidalCoherence.hom X Y ≫ (λ_ Y).inv⟩
-#align
-  category_theory.monoidal_category.monoidal_coherence.left' CategoryTheory.MonoidalCategory.MonoidalCoherence.left'
+#align category_theory.monoidal_category.monoidal_coherence.left' CategoryTheory.MonoidalCategory.MonoidalCoherence.left'
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simps]
 instance right (X Y : C) [LiftObj X] [LiftObj Y] [MonoidalCoherence X Y] :
     MonoidalCoherence (X ⊗ 𝟙_ C) Y :=
   ⟨(ρ_ X).Hom ≫ MonoidalCoherence.hom X Y⟩
-#align
-  category_theory.monoidal_category.monoidal_coherence.right CategoryTheory.MonoidalCategory.MonoidalCoherence.right
+#align category_theory.monoidal_category.monoidal_coherence.right CategoryTheory.MonoidalCategory.MonoidalCoherence.right
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simps]
 instance right' (X Y : C) [LiftObj X] [LiftObj Y] [MonoidalCoherence X Y] :
     MonoidalCoherence X (Y ⊗ 𝟙_ C) :=
   ⟨MonoidalCoherence.hom X Y ≫ (ρ_ Y).inv⟩
-#align
-  category_theory.monoidal_category.monoidal_coherence.right' CategoryTheory.MonoidalCategory.MonoidalCoherence.right'
+#align category_theory.monoidal_category.monoidal_coherence.right' CategoryTheory.MonoidalCategory.MonoidalCoherence.right'
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -201,8 +184,7 @@ instance right' (X Y : C) [LiftObj X] [LiftObj Y] [MonoidalCoherence X Y] :
 instance assoc (X Y Z W : C) [LiftObj W] [LiftObj X] [LiftObj Y] [LiftObj Z]
     [MonoidalCoherence (X ⊗ Y ⊗ Z) W] : MonoidalCoherence ((X ⊗ Y) ⊗ Z) W :=
   ⟨(α_ X Y Z).Hom ≫ MonoidalCoherence.hom (X ⊗ Y ⊗ Z) W⟩
-#align
-  category_theory.monoidal_category.monoidal_coherence.assoc CategoryTheory.MonoidalCategory.MonoidalCoherence.assoc
+#align category_theory.monoidal_category.monoidal_coherence.assoc CategoryTheory.MonoidalCategory.MonoidalCoherence.assoc
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -214,8 +196,7 @@ instance assoc (X Y Z W : C) [LiftObj W] [LiftObj X] [LiftObj Y] [LiftObj Z]
 instance assoc' (W X Y Z : C) [LiftObj W] [LiftObj X] [LiftObj Y] [LiftObj Z]
     [MonoidalCoherence W (X ⊗ Y ⊗ Z)] : MonoidalCoherence W ((X ⊗ Y) ⊗ Z) :=
   ⟨MonoidalCoherence.hom W (X ⊗ Y ⊗ Z) ≫ (α_ X Y Z).inv⟩
-#align
-  category_theory.monoidal_category.monoidal_coherence.assoc' CategoryTheory.MonoidalCategory.MonoidalCoherence.assoc'
+#align category_theory.monoidal_category.monoidal_coherence.assoc' CategoryTheory.MonoidalCategory.MonoidalCoherence.assoc'
 
 end MonoidalCoherence
 
@@ -269,8 +250,7 @@ inserting unitors and associators between as necessary. -/
 def monoidalIsoComp {W X Y Z : C} [LiftObj X] [LiftObj Y] [MonoidalCoherence X Y] (f : W ≅ X)
     (g : Y ≅ Z) : W ≅ Z :=
   f ≪≫ asIso (MonoidalCoherence.hom X Y) ≪≫ g
-#align
-  category_theory.monoidal_category.monoidal_iso_comp CategoryTheory.MonoidalCategory.monoidalIsoComp
+#align category_theory.monoidal_category.monoidal_iso_comp CategoryTheory.MonoidalCategory.monoidalIsoComp
 
 -- mathport name: «expr ≪⊗≫ »
 infixr:80 " ≪⊗≫ " => monoidalIsoComp
@@ -297,8 +277,7 @@ theorem monoidal_comp_refl {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) : f ⊗≫ g 
   by
   dsimp [monoidal_comp]
   simp
-#align
-  category_theory.monoidal_category.monoidal_comp_refl CategoryTheory.MonoidalCategory.monoidal_comp_refl
+#align category_theory.monoidal_category.monoidal_comp_refl CategoryTheory.MonoidalCategory.monoidal_comp_refl
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

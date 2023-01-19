@@ -41,8 +41,7 @@ theorem finite_type_holds_for_localization_away : HoldsForLocalizationAway @Fini
     rw [Algebra.smul_def]
     rfl
   exact IsLocalization.finite_type_of_monoid_fg (Submonoid.powers r) S
-#align
-  ring_hom.finite_type_holds_for_localization_away RingHom.finite_type_holds_for_localization_away
+#align ring_hom.finite_type_holds_for_localization_away RingHom.finite_type_holds_for_localization_away
 
 theorem finite_type_of_localization_span_target : OfLocalizationSpanTarget @FiniteType :=
   by
@@ -104,8 +103,7 @@ theorem finite_type_of_localization_span_target : OfLocalizationSpanTarget @Fini
         exact Or.inl (Or.inr r.2)
       · rw [ht]
         trivial
-#align
-  ring_hom.finite_type_of_localization_span_target RingHom.finite_type_of_localization_span_target
+#align ring_hom.finite_type_of_localization_span_target RingHom.finite_type_of_localization_span_target
 
 theorem finite_type_is_local : PropertyIsLocal @FiniteType :=
   ⟨localization_finite_type, finite_type_of_localization_span_target,

@@ -285,8 +285,7 @@ instance (priority := 100) GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgeb
             _ ≤ x ⊔ z ⊔ x := sup_le_sup_right h x
             _ ≤ z ⊔ x := by rw [sup_assoc, sup_comm, sup_assoc, sup_idem]
             )⟩ }
-#align
-  generalized_boolean_algebra.to_generalized_coheyting_algebra GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra
+#align generalized_boolean_algebra.to_generalized_coheyting_algebra GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra
 -/
 
 /- warning: disjoint_sdiff_self_left -> disjoint_sdiff_self_left is a dubious translation:

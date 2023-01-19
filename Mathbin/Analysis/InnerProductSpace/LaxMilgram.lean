@@ -131,14 +131,12 @@ def continuousLinearEquivOfBilin (coercive : IsCoercive B) : V ≃L[ℝ] V :=
 theorem continuous_linear_equiv_of_bilin_apply (coercive : IsCoercive B) (v w : V) :
     ⟪coercive.continuousLinearEquivOfBilin v, w⟫_ℝ = B v w :=
   continuous_linear_map_of_bilin_apply ℝ B v w
-#align
-  is_coercive.continuous_linear_equiv_of_bilin_apply IsCoercive.continuous_linear_equiv_of_bilin_apply
+#align is_coercive.continuous_linear_equiv_of_bilin_apply IsCoercive.continuous_linear_equiv_of_bilin_apply
 
 theorem unique_continuous_linear_equiv_of_bilin (coercive : IsCoercive B) {v f : V}
     (is_lax_milgram : ∀ w, ⟪f, w⟫_ℝ = B v w) : f = coercive.continuousLinearEquivOfBilin v :=
   unique_continuous_linear_map_of_bilin ℝ B is_lax_milgram
-#align
-  is_coercive.unique_continuous_linear_equiv_of_bilin IsCoercive.unique_continuous_linear_equiv_of_bilin
+#align is_coercive.unique_continuous_linear_equiv_of_bilin IsCoercive.unique_continuous_linear_equiv_of_bilin
 
 end IsCoercive
 

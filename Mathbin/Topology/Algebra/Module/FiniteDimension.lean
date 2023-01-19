@@ -306,8 +306,7 @@ instance LinearMap.continuousLinearMapClassOfFiniteDimensional [T2Space E] [Fini
     ContinuousLinearMapClass (E →ₗ[𝕜] F') 𝕜 E F' :=
   { LinearMap.semilinearMapClass with
     map_continuous := fun f => f.continuous_of_finite_dimensional }
-#align
-  linear_map.continuous_linear_map_class_of_finite_dimensional LinearMap.continuousLinearMapClassOfFiniteDimensional
+#align linear_map.continuous_linear_map_class_of_finite_dimensional LinearMap.continuousLinearMapClassOfFiniteDimensional
 
 /-- In finite dimensions over a non-discrete complete normed field, the canonical identification
 (in terms of a basis) with `𝕜^n` (endowed with the product topology) is continuous.
@@ -416,15 +415,13 @@ theorem coe_to_continuous_linear_equiv' (e : E ≃ₗ[𝕜] F) : (e.toContinuous
 theorem coe_to_continuous_linear_equiv_symm (e : E ≃ₗ[𝕜] F) :
     (e.toContinuousLinearEquiv.symm : F →ₗ[𝕜] E) = e.symm :=
   rfl
-#align
-  linear_equiv.coe_to_continuous_linear_equiv_symm LinearEquiv.coe_to_continuous_linear_equiv_symm
+#align linear_equiv.coe_to_continuous_linear_equiv_symm LinearEquiv.coe_to_continuous_linear_equiv_symm
 
 @[simp]
 theorem coe_to_continuous_linear_equiv_symm' (e : E ≃ₗ[𝕜] F) :
     (e.toContinuousLinearEquiv.symm : F → E) = e.symm :=
   rfl
-#align
-  linear_equiv.coe_to_continuous_linear_equiv_symm' LinearEquiv.coe_to_continuous_linear_equiv_symm'
+#align linear_equiv.coe_to_continuous_linear_equiv_symm' LinearEquiv.coe_to_continuous_linear_equiv_symm'
 
 @[simp]
 theorem to_linear_equiv_to_continuous_linear_equiv (e : E ≃ₗ[𝕜] F) :
@@ -432,8 +429,7 @@ theorem to_linear_equiv_to_continuous_linear_equiv (e : E ≃ₗ[𝕜] F) :
   by
   ext x
   rfl
-#align
-  linear_equiv.to_linear_equiv_to_continuous_linear_equiv LinearEquiv.to_linear_equiv_to_continuous_linear_equiv
+#align linear_equiv.to_linear_equiv_to_continuous_linear_equiv LinearEquiv.to_linear_equiv_to_continuous_linear_equiv
 
 @[simp]
 theorem to_linear_equiv_to_continuous_linear_equiv_symm (e : E ≃ₗ[𝕜] F) :
@@ -441,8 +437,7 @@ theorem to_linear_equiv_to_continuous_linear_equiv_symm (e : E ≃ₗ[𝕜] F) :
   by
   ext x
   rfl
-#align
-  linear_equiv.to_linear_equiv_to_continuous_linear_equiv_symm LinearEquiv.to_linear_equiv_to_continuous_linear_equiv_symm
+#align linear_equiv.to_linear_equiv_to_continuous_linear_equiv_symm LinearEquiv.to_linear_equiv_to_continuous_linear_equiv_symm
 
 instance canLiftContinuousLinearEquiv :
     CanLift (E ≃ₗ[𝕜] F) (E ≃L[𝕜] F) ContinuousLinearEquiv.toLinearEquiv fun _ => True :=
@@ -459,8 +454,7 @@ variable [T2Space E] [FiniteDimensional 𝕜 E]
 vector space whose determinant is nonzero. -/
 def toContinuousLinearEquivOfDetNeZero (f : E →L[𝕜] E) (hf : f.det ≠ 0) : E ≃L[𝕜] E :=
   ((f : E →ₗ[𝕜] E).equivOfDetNeZero hf).toContinuousLinearEquiv
-#align
-  continuous_linear_map.to_continuous_linear_equiv_of_det_ne_zero ContinuousLinearMap.toContinuousLinearEquivOfDetNeZero
+#align continuous_linear_map.to_continuous_linear_equiv_of_det_ne_zero ContinuousLinearMap.toContinuousLinearEquivOfDetNeZero
 
 @[simp]
 theorem coe_to_continuous_linear_equiv_of_det_ne_zero (f : E →L[𝕜] E) (hf : f.det ≠ 0) :
@@ -468,15 +462,13 @@ theorem coe_to_continuous_linear_equiv_of_det_ne_zero (f : E →L[𝕜] E) (hf :
   by
   ext x
   rfl
-#align
-  continuous_linear_map.coe_to_continuous_linear_equiv_of_det_ne_zero ContinuousLinearMap.coe_to_continuous_linear_equiv_of_det_ne_zero
+#align continuous_linear_map.coe_to_continuous_linear_equiv_of_det_ne_zero ContinuousLinearMap.coe_to_continuous_linear_equiv_of_det_ne_zero
 
 @[simp]
 theorem to_continuous_linear_equiv_of_det_ne_zero_apply (f : E →L[𝕜] E) (hf : f.det ≠ 0) (x : E) :
     f.toContinuousLinearEquivOfDetNeZero hf x = f x :=
   rfl
-#align
-  continuous_linear_map.to_continuous_linear_equiv_of_det_ne_zero_apply ContinuousLinearMap.to_continuous_linear_equiv_of_det_ne_zero_apply
+#align continuous_linear_map.to_continuous_linear_equiv_of_det_ne_zero_apply ContinuousLinearMap.to_continuous_linear_equiv_of_det_ne_zero_apply
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
@@ -487,8 +479,7 @@ theorem Matrix.to_lin_fin_two_prod_to_continuous_linear_map (a b c d : 𝕜) :
       (a • ContinuousLinearMap.fst 𝕜 𝕜 𝕜 + b • ContinuousLinearMap.snd 𝕜 𝕜 𝕜).Prod
         (c • ContinuousLinearMap.fst 𝕜 𝕜 𝕜 + d • ContinuousLinearMap.snd 𝕜 𝕜 𝕜) :=
   ContinuousLinearMap.ext <| Matrix.to_lin_fin_two_prod_apply _ _ _ _
-#align
-  matrix.to_lin_fin_two_prod_to_continuous_linear_map Matrix.to_lin_fin_two_prod_to_continuous_linear_map
+#align matrix.to_lin_fin_two_prod_to_continuous_linear_map Matrix.to_lin_fin_two_prod_to_continuous_linear_map
 
 end ContinuousLinearMap
 

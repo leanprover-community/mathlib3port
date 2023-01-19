@@ -440,8 +440,7 @@ theorem yoneda_sections_small_inv_app_apply {C : Type u₁} [SmallCategory C] (X
     (F : Cᵒᵖ ⥤ Type u₁) (t : F.obj (op X)) (Y : Cᵒᵖ) (f : Y.unop ⟶ X) :
     ((yonedaSectionsSmall X F).inv t).app Y f = F.map f.op t :=
   rfl
-#align
-  category_theory.yoneda_sections_small_inv_app_apply CategoryTheory.yoneda_sections_small_inv_app_apply
+#align category_theory.yoneda_sections_small_inv_app_apply CategoryTheory.yoneda_sections_small_inv_app_apply
 
 attribute [local ext] Functor.ext
 

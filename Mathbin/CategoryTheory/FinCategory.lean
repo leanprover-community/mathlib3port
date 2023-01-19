@@ -90,8 +90,7 @@ noncomputable def asTypeToObjAsType : AsType α ⥤ ObjAsType α
     where
   obj := id
   map i j := (Fintype.equivFin _).symm
-#align
-  category_theory.fin_category.as_type_to_obj_as_type CategoryTheory.FinCategory.asTypeToObjAsType
+#align category_theory.fin_category.as_type_to_obj_as_type CategoryTheory.FinCategory.asTypeToObjAsType
 
 /-- The "identity" functor from `obj_as_type α` to `as_type α`. -/
 @[simps]
@@ -99,8 +98,7 @@ noncomputable def objAsTypeToAsType : ObjAsType α ⥤ AsType α
     where
   obj := id
   map i j := Fintype.equivFin _
-#align
-  category_theory.fin_category.obj_as_type_to_as_type CategoryTheory.FinCategory.objAsTypeToAsType
+#align category_theory.fin_category.obj_as_type_to_as_type CategoryTheory.FinCategory.objAsTypeToAsType
 
 /-- The constructed category (`as_type α`) is equivalent to `obj_as_type α`. -/
 noncomputable def asTypeEquivObjAsType : AsType α ≌ ObjAsType α :=
@@ -111,12 +109,10 @@ noncomputable def asTypeEquivObjAsType : AsType α ≌ ObjAsType α :=
     (NatIso.ofComponents Iso.refl fun _ _ _ => by
       dsimp
       simp)
-#align
-  category_theory.fin_category.as_type_equiv_obj_as_type CategoryTheory.FinCategory.asTypeEquivObjAsType
+#align category_theory.fin_category.as_type_equiv_obj_as_type CategoryTheory.FinCategory.asTypeEquivObjAsType
 
 noncomputable instance asTypeFinCategory : FinCategory (AsType α) where
-#align
-  category_theory.fin_category.as_type_fin_category CategoryTheory.FinCategory.asTypeFinCategory
+#align category_theory.fin_category.as_type_fin_category CategoryTheory.FinCategory.asTypeFinCategory
 
 /-- The constructed category (`as_type α`) is indeed equivalent to `α`. -/
 noncomputable def equivAsType : AsType α ≌ α :=

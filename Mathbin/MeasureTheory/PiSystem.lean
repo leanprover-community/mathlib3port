@@ -269,8 +269,7 @@ theorem generate_from_measurable_set_of_generate_pi_system {α} {g : Set (Set α
     (ht : t ∈ generatePiSystem g) : measurable_set[generateFrom g] t :=
   @generate_pi_system_measurable_set α (generateFrom g) g
     (fun s h_s_in_g => measurable_set_generate_from h_s_in_g) t ht
-#align
-  generate_from_measurable_set_of_generate_pi_system generate_from_measurable_set_of_generate_pi_system
+#align generate_from_measurable_set_of_generate_pi_system generate_from_measurable_set_of_generate_pi_system
 
 theorem generate_from_generate_pi_system_eq {α} {g : Set (Set α)} :
     generateFrom (generatePiSystem g) = generateFrom g :=
@@ -631,14 +630,12 @@ def ofMeasurableSpace (m : MeasurableSpace α) : DynkinSystem α
   hasEmpty := m.measurable_set_empty
   HasCompl := m.measurable_set_compl
   hasUnionNat f _ hf := m.measurable_set_Union f hf
-#align
-  measurable_space.dynkin_system.of_measurable_space MeasurableSpace.DynkinSystem.ofMeasurableSpace
+#align measurable_space.dynkin_system.of_measurable_space MeasurableSpace.DynkinSystem.ofMeasurableSpace
 
 theorem of_measurable_space_le_of_measurable_space_iff {m₁ m₂ : MeasurableSpace α} :
     ofMeasurableSpace m₁ ≤ ofMeasurableSpace m₂ ↔ m₁ ≤ m₂ :=
   Iff.rfl
-#align
-  measurable_space.dynkin_system.of_measurable_space_le_of_measurable_space_iff MeasurableSpace.DynkinSystem.of_measurable_space_le_of_measurable_space_iff
+#align measurable_space.dynkin_system.of_measurable_space_le_of_measurable_space_iff MeasurableSpace.DynkinSystem.of_measurable_space_le_of_measurable_space_iff
 
 /-- The least Dynkin system containing a collection of basic sets.
   This inductive type gives the underlying collection of sets. -/
@@ -658,8 +655,7 @@ theorem generate_has_compl {C : Set (Set α)} {s : Set α} : GenerateHas C (sᶜ
   intro h
   convert generate_has.compl h
   simp
-#align
-  measurable_space.dynkin_system.generate_has_compl MeasurableSpace.DynkinSystem.generate_has_compl
+#align measurable_space.dynkin_system.generate_has_compl MeasurableSpace.DynkinSystem.generate_has_compl
 
 /-- The least Dynkin system containing a collection of basic sets. -/
 def generate (s : Set (Set α)) : DynkinSystem α
@@ -688,15 +684,13 @@ def toMeasurableSpace (h_inter : ∀ s₁ s₂, d.Has s₁ → d.Has s₂ → d.
     exact
       d.has_Union (disjoint_disjointed _) fun n =>
         disjointedRec (fun t i h => h_inter _ _ h <| d.has_compl <| hf i) (hf n)
-#align
-  measurable_space.dynkin_system.to_measurable_space MeasurableSpace.DynkinSystem.toMeasurableSpace
+#align measurable_space.dynkin_system.to_measurable_space MeasurableSpace.DynkinSystem.toMeasurableSpace
 
 theorem of_measurable_space_to_measurable_space
     (h_inter : ∀ s₁ s₂, d.Has s₁ → d.Has s₂ → d.Has (s₁ ∩ s₂)) :
     ofMeasurableSpace (d.toMeasurableSpace h_inter) = d :=
   ext fun s => Iff.rfl
-#align
-  measurable_space.dynkin_system.of_measurable_space_to_measurable_space MeasurableSpace.DynkinSystem.of_measurable_space_to_measurable_space
+#align measurable_space.dynkin_system.of_measurable_space_to_measurable_space MeasurableSpace.DynkinSystem.of_measurable_space_to_measurable_space
 
 /-- If `s` is in a Dynkin system `d`, we can form the new Dynkin system `{s ∩ t | t ∈ d}`. -/
 def restrictOn {s : Set α} (h : d.Has s) : DynkinSystem α
@@ -723,8 +717,7 @@ theorem generate_le {s : Set (Set α)} (h : ∀ t ∈ s, d.Has t) : generate s �
 theorem generate_has_subset_generate_measurable {C : Set (Set α)} {s : Set α}
     (hs : (generate C).Has s) : measurable_set[generateFrom C] s :=
   generate_le (ofMeasurableSpace (generateFrom C)) (fun t => measurable_set_generate_from) s hs
-#align
-  measurable_space.dynkin_system.generate_has_subset_generate_measurable MeasurableSpace.DynkinSystem.generate_has_subset_generate_measurable
+#align measurable_space.dynkin_system.generate_has_subset_generate_measurable MeasurableSpace.DynkinSystem.generate_has_subset_generate_measurable
 
 theorem generateInter {s : Set (Set α)} (hs : IsPiSystem s) {t₁ t₂ : Set α}
     (ht₁ : (generate s).Has t₁) (ht₂ : (generate s).Has t₂) : (generate s).Has (t₁ ∩ t₂) :=

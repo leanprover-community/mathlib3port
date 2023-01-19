@@ -110,8 +110,7 @@ def normalOfIsPullbackSndOfNormal {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h :
     convert gr.is_limit
     dsimp only [kernel_fork.of_ι, fork.of_ι]
     congr ; exact q; exact q; exact q; apply proof_irrel_heq
-#align
-  category_theory.normal_of_is_pullback_snd_of_normal CategoryTheory.normalOfIsPullbackSndOfNormal
+#align category_theory.normal_of_is_pullback_snd_of_normal CategoryTheory.normalOfIsPullbackSndOfNormal
 
 /-- The first leg of a pullback cone is a normal monomorphism if the left component is too.
 
@@ -122,8 +121,7 @@ def normalOfIsPullbackFstOfNormal {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h :
     [hn : NormalMono k] (comm : f ≫ h = g ≫ k) (t : IsLimit (PullbackCone.mk _ _ comm)) :
     NormalMono f :=
   normalOfIsPullbackSndOfNormal comm.symm (PullbackCone.flipIsLimit t)
-#align
-  category_theory.normal_of_is_pullback_fst_of_normal CategoryTheory.normalOfIsPullbackFstOfNormal
+#align category_theory.normal_of_is_pullback_fst_of_normal CategoryTheory.normalOfIsPullbackFstOfNormal
 
 section
 
@@ -148,8 +146,7 @@ instance (priority := 100) regularMonoCategoryOfNormalMonoCategory [NormalMonoCa
     by
     haveI := normal_mono_of_mono f
     infer_instance
-#align
-  category_theory.regular_mono_category_of_normal_mono_category CategoryTheory.regularMonoCategoryOfNormalMonoCategory
+#align category_theory.regular_mono_category_of_normal_mono_category CategoryTheory.regularMonoCategoryOfNormalMonoCategory
 
 end
 
@@ -222,8 +219,7 @@ def normalOfIsPushoutSndOfNormal {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : 
     convert hn.is_colimit
     dsimp only [cokernel_cofork.of_π, cofork.of_π]
     congr ; exact q; exact q; exact q; apply proof_irrel_heq
-#align
-  category_theory.normal_of_is_pushout_snd_of_normal CategoryTheory.normalOfIsPushoutSndOfNormal
+#align category_theory.normal_of_is_pushout_snd_of_normal CategoryTheory.normalOfIsPushoutSndOfNormal
 
 /-- The first leg of a pushout cocone is a normal epimorphism if the left component is too.
 
@@ -234,8 +230,7 @@ def normalOfIsPushoutFstOfNormal {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : 
     [hn : NormalEpi f] (comm : f ≫ h = g ≫ k) (t : IsColimit (PushoutCocone.mk _ _ comm)) :
     NormalEpi k :=
   normalOfIsPushoutSndOfNormal comm.symm (PushoutCocone.flipIsColimit t)
-#align
-  category_theory.normal_of_is_pushout_fst_of_normal CategoryTheory.normalOfIsPushoutFstOfNormal
+#align category_theory.normal_of_is_pushout_fst_of_normal CategoryTheory.normalOfIsPushoutFstOfNormal
 
 end
 
@@ -306,8 +301,7 @@ instance (priority := 100) regularEpiCategoryOfNormalEpiCategory [NormalEpiCateg
     by
     haveI := normal_epi_of_epi f
     infer_instance
-#align
-  category_theory.regular_epi_category_of_normal_epi_category CategoryTheory.regularEpiCategoryOfNormalEpiCategory
+#align category_theory.regular_epi_category_of_normal_epi_category CategoryTheory.regularEpiCategoryOfNormalEpiCategory
 
 end CategoryTheory
 

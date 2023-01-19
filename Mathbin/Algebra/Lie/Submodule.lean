@@ -372,8 +372,7 @@ theorem exists_nested_lie_ideal_coe_eq_iff {K' : LieSubalgebra R L} (h : K ≤ K
     exact h' ⟨x, hx⟩ ⟨y, h hy⟩ hy
   · rintro h' ⟨x, hx⟩ ⟨y, hy⟩ hy'
     exact h' x y hx hy'
-#align
-  lie_subalgebra.exists_nested_lie_ideal_coe_eq_iff LieSubalgebra.exists_nested_lie_ideal_coe_eq_iff
+#align lie_subalgebra.exists_nested_lie_ideal_coe_eq_iff LieSubalgebra.exists_nested_lie_ideal_coe_eq_iff
 
 end LieSubalgebra
 

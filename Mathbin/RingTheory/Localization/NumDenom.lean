@@ -89,8 +89,7 @@ theorem num_mul_denom_eq_num_iff_eq' {x y : K} :
 theorem num_mul_denom_eq_num_mul_denom_iff_eq {x y : K} :
     num A y * denom A x = num A x * denom A y ↔ x = y :=
   ⟨fun h => by simpa only [mk'_num_denom] using mk'_eq_of_eq h, fun h => by rw [h]⟩
-#align
-  is_fraction_ring.num_mul_denom_eq_num_mul_denom_iff_eq IsFractionRing.num_mul_denom_eq_num_mul_denom_iff_eq
+#align is_fraction_ring.num_mul_denom_eq_num_mul_denom_iff_eq IsFractionRing.num_mul_denom_eq_num_mul_denom_iff_eq
 
 theorem eq_zero_of_num_eq_zero {x : K} (h : num A x = 0) : x = 0 :=
   num_mul_denom_eq_num_iff_eq'.mp (by rw [zero_mul, h, RingHom.map_zero])

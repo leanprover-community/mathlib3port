@@ -90,8 +90,7 @@ theorem to_fun_linear_tmul_apply (a : A) (p : R[X]) :
 theorem to_fun_linear_mul_tmul_mul_aux_1 (p : R[X]) (k : ℕ) (h : Decidable ¬p.coeff k = 0) (a : A) :
     ite (¬coeff p k = 0) (a * (algebraMap R A) (coeff p k)) 0 = a * (algebraMap R A) (coeff p k) :=
   by classical split_ifs <;> simp [*]
-#align
-  poly_equiv_tensor.to_fun_linear_mul_tmul_mul_aux_1 PolyEquivTensor.to_fun_linear_mul_tmul_mul_aux_1
+#align poly_equiv_tensor.to_fun_linear_mul_tmul_mul_aux_1 PolyEquivTensor.to_fun_linear_mul_tmul_mul_aux_1
 
 theorem to_fun_linear_mul_tmul_mul_aux_2 (k : ℕ) (a₁ a₂ : A) (p₁ p₂ : R[X]) :
     a₁ * a₂ * (algebraMap R A) ((p₁ * p₂).coeff k) =
@@ -101,8 +100,7 @@ theorem to_fun_linear_mul_tmul_mul_aux_2 (k : ℕ) (a₁ a₂ : A) (p₁ p₂ : 
   simp_rw [mul_assoc, Algebra.commutes, ← Finset.mul_sum, mul_assoc, ← Finset.mul_sum]
   congr
   simp_rw [Algebra.commutes (coeff p₂ _), coeff_mul, RingHom.map_sum, RingHom.map_mul]
-#align
-  poly_equiv_tensor.to_fun_linear_mul_tmul_mul_aux_2 PolyEquivTensor.to_fun_linear_mul_tmul_mul_aux_2
+#align poly_equiv_tensor.to_fun_linear_mul_tmul_mul_aux_2 PolyEquivTensor.to_fun_linear_mul_tmul_mul_aux_2
 
 theorem to_fun_linear_mul_tmul_mul (a₁ a₂ : A) (p₁ p₂ : R[X]) :
     (toFunLinear R A) ((a₁ * a₂) ⊗ₜ[R] (p₁ * p₂)) =
@@ -124,8 +122,7 @@ theorem to_fun_linear_algebra_map_tmul_one (r : R) :
     (toFunLinear R A) ((algebraMap R A) r ⊗ₜ[R] 1) = (algebraMap R A[X]) r := by
   rw [to_fun_linear_tmul_apply, to_fun_bilinear_apply_apply, Polynomial.aeval_one, algebra_map_smul,
     Algebra.algebra_map_eq_smul_one]
-#align
-  poly_equiv_tensor.to_fun_linear_algebra_map_tmul_one PolyEquivTensor.to_fun_linear_algebra_map_tmul_one
+#align poly_equiv_tensor.to_fun_linear_algebra_map_tmul_one PolyEquivTensor.to_fun_linear_algebra_map_tmul_one
 
 /-- (Implementation detail).
 The algebra homomorphism `A ⊗[R] R[X] →ₐ[R] A[X]`.

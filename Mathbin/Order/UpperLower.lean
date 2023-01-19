@@ -1701,8 +1701,7 @@ theorem Set.OrdConnected.upper_closure_inter_lower_closure (h : s.OrdConnected) 
     ↑(upperClosure s) ∩ ↑(lowerClosure s) = s :=
   (subset_inter subset_upper_closure subset_lower_closure).antisymm'
     fun a ⟨⟨b, hb, hba⟩, c, hc, hac⟩ => h.out hb hc ⟨hba, hac⟩
-#align
-  set.ord_connected.upper_closure_inter_lower_closure Set.OrdConnected.upper_closure_inter_lower_closure
+#align set.ord_connected.upper_closure_inter_lower_closure Set.OrdConnected.upper_closure_inter_lower_closure
 
 theorem ord_connected_iff_upper_closure_inter_lower_closure :
     s.OrdConnected ↔ ↑(upperClosure s) ∩ ↑(lowerClosure s) = s :=
@@ -1710,8 +1709,7 @@ theorem ord_connected_iff_upper_closure_inter_lower_closure :
   refine' ⟨Set.OrdConnected.upper_closure_inter_lower_closure, fun h => _⟩
   rw [← h]
   exact (UpperSet.upper _).OrdConnected.inter (LowerSet.lower _).OrdConnected
-#align
-  ord_connected_iff_upper_closure_inter_lower_closure ord_connected_iff_upper_closure_inter_lower_closure
+#align ord_connected_iff_upper_closure_inter_lower_closure ord_connected_iff_upper_closure_inter_lower_closure
 
 end Closure
 

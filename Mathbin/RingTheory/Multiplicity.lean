@@ -263,8 +263,7 @@ theorem multiplicity_eq_multiplicity_iff {a b c d : α} :
 theorem multiplicity_le_multiplicity_of_dvd_right {a b c : α} (h : b ∣ c) :
     multiplicity a b ≤ multiplicity a c :=
   multiplicity_le_multiplicity_iff.2 fun n hb => hb.trans h
-#align
-  multiplicity.multiplicity_le_multiplicity_of_dvd_right multiplicity.multiplicity_le_multiplicity_of_dvd_right
+#align multiplicity.multiplicity_le_multiplicity_of_dvd_right multiplicity.multiplicity_le_multiplicity_of_dvd_right
 
 theorem eq_of_associated_right {a b c : α} (h : Associated b c) :
     multiplicity a b = multiplicity a c :=
@@ -341,8 +340,7 @@ open Classical
 theorem multiplicity_le_multiplicity_of_dvd_left {a b c : α} (hdvd : a ∣ b) :
     multiplicity b c ≤ multiplicity a c :=
   multiplicity_le_multiplicity_iff.2 fun n h => (pow_dvd_pow_of_dvd hdvd n).trans h
-#align
-  multiplicity.multiplicity_le_multiplicity_of_dvd_left multiplicity.multiplicity_le_multiplicity_of_dvd_left
+#align multiplicity.multiplicity_le_multiplicity_of_dvd_left multiplicity.multiplicity_le_multiplicity_of_dvd_left
 
 theorem eq_of_associated_left {a b c : α} (h : Associated a b) :
     multiplicity b c = multiplicity a c :=
@@ -374,8 +372,7 @@ protected theorem zero (a : α) : multiplicity a 0 = ⊤ :=
 @[simp]
 theorem multiplicity_zero_eq_zero_of_ne_zero (a : α) (ha : a ≠ 0) : multiplicity 0 a = 0 :=
   multiplicity.multiplicity_eq_zero.2 <| mt zero_dvd_iff.1 ha
-#align
-  multiplicity.multiplicity_zero_eq_zero_of_ne_zero multiplicity.multiplicity_zero_eq_zero_of_ne_zero
+#align multiplicity.multiplicity_zero_eq_zero_of_ne_zero multiplicity.multiplicity_zero_eq_zero_of_ne_zero
 
 end MonoidWithZero
 

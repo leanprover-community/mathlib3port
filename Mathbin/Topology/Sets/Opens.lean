@@ -251,8 +251,7 @@ theorem open_embedding_of_le {U V : Opens α} (i : U ≤ V) : OpenEmbedding (Set
 
 theorem not_nonempty_iff_eq_bot (U : Opens α) : ¬Set.Nonempty (U : Set α) ↔ U = ⊥ := by
   rw [← subtype.coe_injective.eq_iff, opens.coe_bot, ← Set.not_nonempty_iff_eq_empty]
-#align
-  topological_space.opens.not_nonempty_iff_eq_bot TopologicalSpace.Opens.not_nonempty_iff_eq_bot
+#align topological_space.opens.not_nonempty_iff_eq_bot TopologicalSpace.Opens.not_nonempty_iff_eq_bot
 
 theorem ne_bot_iff_nonempty (U : Opens α) : U ≠ ⊥ ↔ Set.Nonempty (U : Set α) := by
   rw [Ne.def, ← opens.not_nonempty_iff_eq_bot, not_not]
@@ -320,8 +319,7 @@ theorem is_compact_open_iff_eq_finite_Union_of_is_basis {ι : Type _} (b : ι �
     ext
     simp
   · exact hb'
-#align
-  topological_space.opens.is_compact_open_iff_eq_finite_Union_of_is_basis TopologicalSpace.Opens.is_compact_open_iff_eq_finite_Union_of_is_basis
+#align topological_space.opens.is_compact_open_iff_eq_finite_Union_of_is_basis TopologicalSpace.Opens.is_compact_open_iff_eq_finite_Union_of_is_basis
 
 @[simp]
 theorem is_compact_element_iff (s : Opens α) :

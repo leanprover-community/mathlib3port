@@ -1176,8 +1176,7 @@ theorem map_prod_map_mk_nhds (x : X) (y : Y) : map (Prod.map mk mk) (𝓝 (x, y)
 theorem map_mk_nhds_within_preimage (s : Set (SeparationQuotient X)) (x : X) :
     map mk (𝓝[mk ⁻¹' s] x) = 𝓝[s] mk x := by
   rw [nhdsWithin, ← comap_principal, Filter.push_pull, nhdsWithin, map_mk_nhds]
-#align
-  separation_quotient.map_mk_nhds_within_preimage SeparationQuotient.map_mk_nhds_within_preimage
+#align separation_quotient.map_mk_nhds_within_preimage SeparationQuotient.map_mk_nhds_within_preimage
 
 /-- Lift a map `f : X → α` such that `inseparable x y → f x = f y` to a map
 `separation_quotient X → α`. -/
@@ -1206,8 +1205,7 @@ theorem tendsto_lift_nhds_within_mk {f : X → α} {hf : ∀ x y, (x ~ y) → f 
     {s : Set (SeparationQuotient X)} {l : Filter α} :
     Tendsto (lift f hf) (𝓝[s] mk x) l ↔ Tendsto f (𝓝[mk ⁻¹' s] x) l := by
   simp only [← map_mk_nhds_within_preimage, tendsto_map'_iff, lift_comp_mk]
-#align
-  separation_quotient.tendsto_lift_nhds_within_mk SeparationQuotient.tendsto_lift_nhds_within_mk
+#align separation_quotient.tendsto_lift_nhds_within_mk SeparationQuotient.tendsto_lift_nhds_within_mk
 
 @[simp]
 theorem continuous_at_lift {f : X → Y} {hf : ∀ x y, (x ~ y) → f x = f y} {x : X} :

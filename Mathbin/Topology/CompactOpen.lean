@@ -266,8 +266,7 @@ theorem nhds_compact_open_eq_Inf_nhds_induced (f : C(α, β)) :
   by
   rw [compact_open_eq_Inf_induced]
   simp [nhds_infi, nhds_induced]
-#align
-  continuous_map.nhds_compact_open_eq_Inf_nhds_induced ContinuousMap.nhds_compact_open_eq_Inf_nhds_induced
+#align continuous_map.nhds_compact_open_eq_Inf_nhds_induced ContinuousMap.nhds_compact_open_eq_Inf_nhds_induced
 
 theorem tendsto_compact_open_restrict {ι : Type _} {l : Filter ι} {F : ι → C(α, β)} {f : C(α, β)}
     (hFf : Filter.Tendsto F l (𝓝 f)) (s : Set α) :
@@ -320,8 +319,7 @@ theorem exists_tendsto_compact_open_iff_forall [LocallyCompactSpace α] [T2Space
     intro s hs
     rw [lift_cover_restrict']
     exact hf s hs
-#align
-  continuous_map.exists_tendsto_compact_open_iff_forall ContinuousMap.exists_tendsto_compact_open_iff_forall
+#align continuous_map.exists_tendsto_compact_open_iff_forall ContinuousMap.exists_tendsto_compact_open_iff_forall
 
 end InfInduced
 
@@ -383,8 +381,7 @@ theorem continuous_of_continuous_uncurry (f : α → C(β, γ))
   convert continuous_curry' ⟨_, h⟩
   ext
   rfl
-#align
-  continuous_map.continuous_of_continuous_uncurry ContinuousMap.continuous_of_continuous_uncurry
+#align continuous_map.continuous_of_continuous_uncurry ContinuousMap.continuous_of_continuous_uncurry
 
 /-- The curried form of a continuous map `α × β → γ` as a continuous map `α → C(β, γ)`.
     If `a × β` is locally compact, this is continuous. If `α` and `β` are both locally
@@ -412,8 +409,7 @@ theorem curry_apply (f : C(α × β, γ)) (a : α) (b : β) : f.curry a b = f (a
 theorem continuous_uncurry_of_continuous [LocallyCompactSpace β] (f : C(α, C(β, γ))) :
     Continuous (Function.uncurry fun x y => f x y) :=
   continuous_eval'.comp <| f.Continuous.prod_map continuous_id
-#align
-  continuous_map.continuous_uncurry_of_continuous ContinuousMap.continuous_uncurry_of_continuous
+#align continuous_map.continuous_uncurry_of_continuous ContinuousMap.continuous_uncurry_of_continuous
 
 /-- The uncurried form of a continuous map `α → C(β, γ)` as a continuous map `α × β → γ` (if `β` is
     locally compact). If `α` is also locally compact, then this is a homeomorphism between the two

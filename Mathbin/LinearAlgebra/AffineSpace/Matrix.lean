@@ -78,8 +78,7 @@ theorem affine_independent_of_to_matrix_right_inv [DecidableEq ι'] (p : ι' →
       hweq]
   replace hweq' := congr_arg (fun w => A.vec_mul w) hweq'
   simpa only [Matrix.vec_mul_vec_mul, ← Matrix.mul_eq_mul, hA, Matrix.vec_mul_one] using hweq'
-#align
-  affine_basis.affine_independent_of_to_matrix_right_inv AffineBasis.affine_independent_of_to_matrix_right_inv
+#align affine_basis.affine_independent_of_to_matrix_right_inv AffineBasis.affine_independent_of_to_matrix_right_inv
 
 /-- Given a family of points `p : ι' → P` and an affine basis `b`, if the matrix whose rows are the
 coordinates of `p` with respect `b` has a left inverse, then `p` spans the entire space. -/
@@ -110,8 +109,7 @@ theorem affine_span_eq_top_of_to_matrix_left_inv [DecidableEq ι] [Nontrivial k]
     simp_rw [hA, Matrix.one_apply, @eq_comm _ i j]
   rw [hbi]
   exact affine_combination_mem_affine_span hAi p
-#align
-  affine_basis.affine_span_eq_top_of_to_matrix_left_inv AffineBasis.affine_span_eq_top_of_to_matrix_left_inv
+#align affine_basis.affine_span_eq_top_of_to_matrix_left_inv AffineBasis.affine_span_eq_top_of_to_matrix_left_inv
 
 /-- A change of basis formula for barycentric coordinates.
 

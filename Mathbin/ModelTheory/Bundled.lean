@@ -91,8 +91,7 @@ instance : CoeSort T.ModelCat (Type w) :=
 @[simp]
 theorem carrier_eq_coe (M : T.ModelCat) : M.carrier = M :=
   rfl
-#align
-  first_order.language.Theory.Model.carrier_eq_coe FirstOrder.Language.TheoryCat.ModelCat.carrier_eq_coe
+#align first_order.language.Theory.Model.carrier_eq_coe FirstOrder.Language.TheoryCat.ModelCat.carrier_eq_coe
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The object in the category of R-algebras associated to a type equipped with the appropriate
@@ -128,8 +127,7 @@ def equivInduced {M : ModelCat.{u, v, w} T} {N : Type w'} (e : M ≃ N) : ModelC
   struc := e.inducedStructure
   is_model := @Equiv.Theory_model L M N _ e.inducedStructure T e.inducedStructureEquiv _
   nonempty' := e.symm.Nonempty
-#align
-  first_order.language.Theory.Model.equiv_induced FirstOrder.Language.TheoryCat.ModelCat.equivInduced
+#align first_order.language.Theory.Model.equiv_induced FirstOrder.Language.TheoryCat.ModelCat.equivInduced
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance of_small (M : Type w) [Nonempty M] [L.StructureCat M] [M ⊨ T] [h : Small.{w'} M] :
@@ -171,20 +169,17 @@ noncomputable def defaultExpansion {L' : Language} {φ : L →ᴸ L'} (h : φ.In
   is_model :=
     (@LhomCat.on_Theory_model L L' M _ (φ.defaultExpansion M) φ (h.is_expansion_on_default M) T).2
       M.is_model
-#align
-  first_order.language.Theory.Model.default_expansion FirstOrder.Language.TheoryCat.ModelCat.defaultExpansion
+#align first_order.language.Theory.Model.default_expansion FirstOrder.Language.TheoryCat.ModelCat.defaultExpansion
 
 instance leftStructure {L' : Language} {T : (L.Sum L').TheoryCat} (M : T.ModelCat) :
     L.StructureCat M :=
   (LhomCat.sumInl : L →ᴸ L.Sum L').reduct M
-#align
-  first_order.language.Theory.Model.left_Structure FirstOrder.Language.TheoryCat.ModelCat.leftStructure
+#align first_order.language.Theory.Model.left_Structure FirstOrder.Language.TheoryCat.ModelCat.leftStructure
 
 instance rightStructure {L' : Language} {T : (L.Sum L').TheoryCat} (M : T.ModelCat) :
     L'.StructureCat M :=
   (LhomCat.sumInr : L' →ᴸ L.Sum L').reduct M
-#align
-  first_order.language.Theory.Model.right_Structure FirstOrder.Language.TheoryCat.ModelCat.rightStructure
+#align first_order.language.Theory.Model.right_Structure FirstOrder.Language.TheoryCat.ModelCat.rightStructure
 
 /-- A model of a theory is also a model of any subtheory. -/
 @[simps]
@@ -192,15 +187,13 @@ def subtheoryModel (M : T.ModelCat) {T' : L.TheoryCat} (h : T' ⊆ T) : T'.Model
     where
   carrier := M
   is_model := ⟨fun φ hφ => realize_sentence_of_mem T (h hφ)⟩
-#align
-  first_order.language.Theory.Model.subtheory_Model FirstOrder.Language.TheoryCat.ModelCat.subtheoryModel
+#align first_order.language.Theory.Model.subtheory_Model FirstOrder.Language.TheoryCat.ModelCat.subtheoryModel
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance subtheory_Model_models (M : T.ModelCat) {T' : L.TheoryCat} (h : T' ⊆ T) :
     M.subtheoryModel h ⊨ T :=
   M.is_model
-#align
-  first_order.language.Theory.Model.subtheory_Model_models FirstOrder.Language.TheoryCat.ModelCat.subtheory_Model_models
+#align first_order.language.Theory.Model.subtheory_Model_models FirstOrder.Language.TheoryCat.ModelCat.subtheory_Model_models
 
 end ModelCat
 
@@ -228,14 +221,12 @@ def ElementarilyEquivalent.toModel {M : T.ModelCat} {N : Type _} [LN : L.Structu
   struc := LN
   nonempty' := h.Nonempty
   is_model := h.Theory_model
-#align
-  first_order.language.elementarily_equivalent.to_Model FirstOrder.Language.ElementarilyEquivalent.toModel
+#align first_order.language.elementarily_equivalent.to_Model FirstOrder.Language.ElementarilyEquivalent.toModel
 
 /-- An elementary substructure of a bundled model as a bundled model. -/
 def ElementarySubstructure.toModel {M : T.ModelCat} (S : L.ElementarySubstructure M) : T.ModelCat :=
   S.ElementarilyEquivalent.symm.toModel T
-#align
-  first_order.language.elementary_substructure.to_Model FirstOrder.Language.ElementarySubstructure.toModel
+#align first_order.language.elementary_substructure.to_Model FirstOrder.Language.ElementarySubstructure.toModel
 
 instance {M : T.ModelCat} (S : L.ElementarySubstructure M) [h : Small S] : Small (S.toModel T) :=
   h

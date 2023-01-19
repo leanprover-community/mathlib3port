@@ -51,7 +51,7 @@ Case conversion may be inaccurate. Consider using '#align list.length_of_fn_aux 
 theorem [anonymous] {n} (f : Fin n → α) : ∀ m h l, length (ofFnAux f m h l) = length l + m
   | 0, h, l => rfl
   | succ m, h, l => (length_of_fn_aux m _ _).trans (succ_add _ _)
-#align list.length_of_fn_aux[anonymous]
+#align list.length_of_fn_aux [anonymous]
 
 #print List.length_ofFn /-
 /-- The length of a list converted from a function is the size of the domain. -/
@@ -77,7 +77,7 @@ theorem [anonymous] {n} (f : Fin n → α) (i) :
         intro j; cases' j with j
         · simp only [nth, of_fn_nth_val, zero_add, dif_pos (show m < n from h)]
         · simp only [nth, H, add_succ, succ_add])
-#align list.nth_of_fn_aux[anonymous]
+#align list.nth_of_fn_aux [anonymous]
 
 #print List.get?_ofFn /-
 /-- The `n`th element of a list -/

@@ -337,8 +337,7 @@ theorem MeasureTheory.StronglyMeasurable.integral_prod_right [SigmaFinite ν] �
         simp [-uncurry_apply_pair]
     · simp [f', hfx, integral_undef]
   exact strongly_measurable_of_tendsto _ hf' h2f'
-#align
-  measure_theory.strongly_measurable.integral_prod_right MeasureTheory.StronglyMeasurable.integral_prod_right
+#align measure_theory.strongly_measurable.integral_prod_right MeasureTheory.StronglyMeasurable.integral_prod_right
 
 /-- The Bochner integral is measurable. This shows that the integrand of (the right-hand-side of)
   Fubini's theorem is measurable. -/
@@ -347,8 +346,7 @@ theorem MeasureTheory.StronglyMeasurable.integral_prod_right' [SigmaFinite ν] �
   by
   rw [← uncurry_curry f] at hf
   exact hf.integral_prod_right
-#align
-  measure_theory.strongly_measurable.integral_prod_right' MeasureTheory.StronglyMeasurable.integral_prod_right'
+#align measure_theory.strongly_measurable.integral_prod_right' MeasureTheory.StronglyMeasurable.integral_prod_right'
 
 /-- The Bochner integral is measurable. This shows that the integrand of (the right-hand-side of)
   the symmetric version of Fubini's theorem is measurable.
@@ -356,16 +354,14 @@ theorem MeasureTheory.StronglyMeasurable.integral_prod_right' [SigmaFinite ν] �
 theorem MeasureTheory.StronglyMeasurable.integral_prod_left [SigmaFinite μ] ⦃f : α → β → E⦄
     (hf : StronglyMeasurable (uncurry f)) : StronglyMeasurable fun y => ∫ x, f x y ∂μ :=
   (hf.compMeasurable measurable_swap).integral_prod_right'
-#align
-  measure_theory.strongly_measurable.integral_prod_left MeasureTheory.StronglyMeasurable.integral_prod_left
+#align measure_theory.strongly_measurable.integral_prod_left MeasureTheory.StronglyMeasurable.integral_prod_left
 
 /-- The Bochner integral is measurable. This shows that the integrand of (the right-hand-side of)
   the symmetric version of Fubini's theorem is measurable. -/
 theorem MeasureTheory.StronglyMeasurable.integral_prod_left' [SigmaFinite μ] ⦃f : α × β → E⦄
     (hf : StronglyMeasurable f) : StronglyMeasurable fun y => ∫ x, f (x, y) ∂μ :=
   (hf.compMeasurable measurable_swap).integral_prod_right'
-#align
-  measure_theory.strongly_measurable.integral_prod_left' MeasureTheory.StronglyMeasurable.integral_prod_left'
+#align measure_theory.strongly_measurable.integral_prod_left' MeasureTheory.StronglyMeasurable.integral_prod_left'
 
 end
 
@@ -499,8 +495,7 @@ theorem integrableMeasureProdMkLeft {s : Set (α × β)} (hs : MeasurableSet s)
   convert h2s.lt_top using 1; simp_rw [prod_apply hs]; apply lintegral_congr_ae
   refine' (ae_measure_lt_top hs h2s).mp _; apply eventually_of_forall; intro x hx
   rw [lt_top_iff_ne_top] at hx; simp [of_real_to_real, hx]
-#align
-  measure_theory.measure.integrable_measure_prod_mk_left MeasureTheory.Measure.integrableMeasureProdMkLeft
+#align measure_theory.measure.integrable_measure_prod_mk_left MeasureTheory.Measure.integrableMeasureProdMkLeft
 
 /-- Note: the assumption `hs` cannot be dropped. For a counterexample, see
   Walter Rudin *Real and Complex Analysis*, example (c) in section 8.9. -/
@@ -521,8 +516,7 @@ theorem measure_ae_null_of_prod_null {s : Set (α × β)} (h : μ.Prod ν s = 0)
     ⟨eventually_le.trans_eq (eventually_of_forall fun x => (measure_mono (preimage_mono hst) : _))
         ht,
       eventually_of_forall fun x => zero_le _⟩
-#align
-  measure_theory.measure.measure_ae_null_of_prod_null MeasureTheory.Measure.measure_ae_null_of_prod_null
+#align measure_theory.measure.measure_ae_null_of_prod_null MeasureTheory.Measure.measure_ae_null_of_prod_null
 
 theorem AbsolutelyContinuous.prod [SigmaFinite ν'] (h1 : μ ≪ μ') (h2 : ν ≪ ν') :
     μ.Prod ν ≪ μ'.Prod ν' :=
@@ -530,8 +524,7 @@ theorem AbsolutelyContinuous.prod [SigmaFinite ν'] (h1 : μ ≪ μ') (h2 : ν �
   refine' absolutely_continuous.mk fun s hs h2s => _
   simp_rw [measure_prod_null hs] at h2s⊢
   exact (h2s.filter_mono h1.ae_le).mono fun _ h => h2 h
-#align
-  measure_theory.measure.absolutely_continuous.prod MeasureTheory.Measure.AbsolutelyContinuous.prod
+#align measure_theory.measure.absolutely_continuous.prod MeasureTheory.Measure.AbsolutelyContinuous.prod
 
 /-- Note: the converse is not true. For a counterexample, see
   Walter Rudin *Real and Complex Analysis*, example (c) in section 8.9. -/
@@ -554,22 +547,19 @@ noncomputable def FiniteSpanningSetsIn.prod {ν : Measure β} {C : Set (Set α)}
   · rw [prod_prod]
     exact mul_lt_top (hμ.finite _).Ne (hν.finite _).Ne
   · simp_rw [Union_unpair_prod, hμ.spanning, hν.spanning, univ_prod_univ]
-#align
-  measure_theory.measure.finite_spanning_sets_in.prod MeasureTheory.Measure.FiniteSpanningSetsIn.prod
+#align measure_theory.measure.finite_spanning_sets_in.prod MeasureTheory.Measure.FiniteSpanningSetsIn.prod
 
 theorem quasiMeasurePreservingFst : QuasiMeasurePreserving Prod.fst (μ.Prod ν) μ :=
   by
   refine' ⟨measurable_fst, absolutely_continuous.mk fun s hs h2s => _⟩
   rw [map_apply measurable_fst hs, ← prod_univ, prod_prod, h2s, zero_mul]
-#align
-  measure_theory.measure.quasi_measure_preserving_fst MeasureTheory.Measure.quasiMeasurePreservingFst
+#align measure_theory.measure.quasi_measure_preserving_fst MeasureTheory.Measure.quasiMeasurePreservingFst
 
 theorem quasiMeasurePreservingSnd : QuasiMeasurePreserving Prod.snd (μ.Prod ν) ν :=
   by
   refine' ⟨measurable_snd, absolutely_continuous.mk fun s hs h2s => _⟩
   rw [map_apply measurable_snd hs, ← univ_prod, prod_prod, h2s, mul_zero]
-#align
-  measure_theory.measure.quasi_measure_preserving_snd MeasureTheory.Measure.quasiMeasurePreservingSnd
+#align measure_theory.measure.quasi_measure_preserving_snd MeasureTheory.Measure.quasiMeasurePreservingSnd
 
 variable [SigmaFinite μ]
 
@@ -653,8 +643,7 @@ theorem restrict_prod_eq_prod_univ (s : Set α) :
   by
   have : ν = ν.restrict Set.univ := measure.restrict_univ.symm
   rwa [this, measure.prod_restrict, ← this]
-#align
-  measure_theory.measure.restrict_prod_eq_prod_univ MeasureTheory.Measure.restrict_prod_eq_prod_univ
+#align measure_theory.measure.restrict_prod_eq_prod_univ MeasureTheory.Measure.restrict_prod_eq_prod_univ
 
 theorem prod_dirac (y : β) : μ.Prod (dirac y) = map (fun x => (x, y)) μ :=
   by
@@ -785,8 +774,7 @@ theorem prodOfRight {f : α × β → γ} {μ : Measure α} {ν : Measure β} {�
   refine' absolutely_continuous.mk fun s hs h2s => _
   simp_rw [map_apply hf hs, prod_apply (hf hs), preimage_preimage,
     lintegral_congr_ae (h2f.mono fun x hx => hx.preimage_null h2s), lintegral_zero]
-#align
-  measure_theory.quasi_measure_preserving.prod_of_right MeasureTheory.QuasiMeasurePreserving.prodOfRight
+#align measure_theory.quasi_measure_preserving.prod_of_right MeasureTheory.QuasiMeasurePreserving.prodOfRight
 
 theorem prodOfLeft {α β γ} [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ]
     {f : α × β → γ} {μ : Measure α} {ν : Measure β} {τ : Measure γ} (hf : Measurable f)
@@ -800,8 +788,7 @@ theorem prodOfLeft {α β γ} [MeasurableSpace α] [MeasurableSpace β] [Measura
       ((measurable_swap.measure_preserving (ν.prod μ)).symm
           MeasurableEquiv.prodComm).QuasiMeasurePreserving
   ext ⟨x, y⟩; rfl
-#align
-  measure_theory.quasi_measure_preserving.prod_of_left MeasureTheory.QuasiMeasurePreserving.prodOfLeft
+#align measure_theory.quasi_measure_preserving.prod_of_left MeasureTheory.QuasiMeasurePreserving.prodOfLeft
 
 end QuasiMeasurePreserving
 
@@ -853,8 +840,7 @@ theorem MeasureTheory.AeStronglyMeasurable.integralProdRight' [SigmaFinite ν] [
     AeStronglyMeasurable (fun x => ∫ y, f (x, y) ∂ν) μ :=
   ⟨fun x => ∫ y, hf.mk f (x, y) ∂ν, hf.strongly_measurable_mk.integral_prod_right', by
     filter_upwards [ae_ae_of_ae_prod hf.ae_eq_mk] with _ hx using integral_congr_ae hx⟩
-#align
-  measure_theory.ae_strongly_measurable.integral_prod_right' MeasureTheory.AeStronglyMeasurable.integralProdRight'
+#align measure_theory.ae_strongly_measurable.integral_prod_right' MeasureTheory.AeStronglyMeasurable.integralProdRight'
 
 theorem MeasureTheory.AeStronglyMeasurable.prod_mk_left {γ : Type _} [SigmaFinite ν]
     [TopologicalSpace γ] {f : α × β → γ} (hf : AeStronglyMeasurable f (μ.Prod ν)) :
@@ -863,8 +849,7 @@ theorem MeasureTheory.AeStronglyMeasurable.prod_mk_left {γ : Type _} [SigmaFini
   filter_upwards [ae_ae_of_ae_prod hf.ae_eq_mk] with x hx
   exact
     ⟨fun y => hf.mk f (x, y), hf.strongly_measurable_mk.comp_measurable measurable_prod_mk_left, hx⟩
-#align
-  measure_theory.ae_strongly_measurable.prod_mk_left MeasureTheory.AeStronglyMeasurable.prod_mk_left
+#align measure_theory.ae_strongly_measurable.prod_mk_left MeasureTheory.AeStronglyMeasurable.prod_mk_left
 
 end
 
@@ -1060,14 +1045,12 @@ theorem Integrable.prod_right_ae [SigmaFinite μ] ⦃f : α × β → E⦄ (hf :
 theorem Integrable.integralNormProdLeft ⦃f : α × β → E⦄ (hf : Integrable f (μ.Prod ν)) :
     Integrable (fun x => ∫ y, ‖f (x, y)‖ ∂ν) μ :=
   ((integrable_prod_iff hf.AeStronglyMeasurable).mp hf).2
-#align
-  measure_theory.integrable.integral_norm_prod_left MeasureTheory.Integrable.integralNormProdLeft
+#align measure_theory.integrable.integral_norm_prod_left MeasureTheory.Integrable.integralNormProdLeft
 
 theorem Integrable.integralNormProdRight [SigmaFinite μ] ⦃f : α × β → E⦄
     (hf : Integrable f (μ.Prod ν)) : Integrable (fun y => ∫ x, ‖f (x, y)‖ ∂μ) ν :=
   hf.swap.integralNormProdLeft
-#align
-  measure_theory.integrable.integral_norm_prod_right MeasureTheory.Integrable.integralNormProdRight
+#align measure_theory.integrable.integral_norm_prod_right MeasureTheory.Integrable.integralNormProdRight
 
 theorem integrableProdMul {L : Type _} [IsROrC L] {f : α → L} {g : β → L} (hf : Integrable f μ)
     (hg : Integrable g ν) : Integrable (fun z : α × β => f z.1 * g z.2) (μ.Prod ν) :=

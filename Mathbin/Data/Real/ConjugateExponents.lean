@@ -124,15 +124,13 @@ theorem one_lt_nnreal : 1 < Real.toNnreal p :=
 theorem inv_add_inv_conj_nnreal : 1 / Real.toNnreal p + 1 / Real.toNnreal q = 1 := by
   rw [← Real.to_nnreal_one, ← Real.to_nnreal_div' h.nonneg, ← Real.to_nnreal_div' h.symm.nonneg, ←
     Real.to_nnreal_add h.one_div_nonneg h.symm.one_div_nonneg, h.inv_add_inv_conj]
-#align
-  real.is_conjugate_exponent.inv_add_inv_conj_nnreal Real.IsConjugateExponent.inv_add_inv_conj_nnreal
+#align real.is_conjugate_exponent.inv_add_inv_conj_nnreal Real.IsConjugateExponent.inv_add_inv_conj_nnreal
 
 theorem inv_add_inv_conj_ennreal : 1 / Ennreal.ofReal p + 1 / Ennreal.ofReal q = 1 := by
   rw [← Ennreal.of_real_one, ← Ennreal.of_real_div_of_pos h.pos, ←
     Ennreal.of_real_div_of_pos h.symm.pos, ←
     Ennreal.of_real_add h.one_div_nonneg h.symm.one_div_nonneg, h.inv_add_inv_conj]
-#align
-  real.is_conjugate_exponent.inv_add_inv_conj_ennreal Real.IsConjugateExponent.inv_add_inv_conj_ennreal
+#align real.is_conjugate_exponent.inv_add_inv_conj_ennreal Real.IsConjugateExponent.inv_add_inv_conj_ennreal
 
 end IsConjugateExponent
 

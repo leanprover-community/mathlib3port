@@ -108,8 +108,7 @@ instance (priority := 100) ConditionallyCompleteLinearOrder.to_compact_Icc_space
     rw [diff_subset_iff, union_comm, Ico_union_right hxy.1.le, diff_subset_iff]
     exact Icc_subset_Icc_union_Icc
   · exact ((hsc.1 ⟨hy, hay⟩).not_lt hxy.1).elim
-#align
-  conditionally_complete_linear_order.to_compact_Icc_space ConditionallyCompleteLinearOrder.to_compact_Icc_space
+#align conditionally_complete_linear_order.to_compact_Icc_space ConditionallyCompleteLinearOrder.to_compact_Icc_space
 
 instance {ι : Type _} {α : ι → Type _} [∀ i, Preorder (α i)] [∀ i, TopologicalSpace (α i)]
     [∀ i, CompactIccSpace (α i)] : CompactIccSpace (∀ i, α i) :=
@@ -338,20 +337,16 @@ theorem Continuous.exists_forall_le_of_has_compact_mul_support [Nonempty β] [On
   obtain ⟨_, ⟨x, rfl⟩, hx⟩ := (h.is_compact_range hf).exists_is_least (range_nonempty _)
   rw [mem_lowerBounds, forall_range_iff] at hx
   exact ⟨x, hx⟩
-#align
-  continuous.exists_forall_le_of_has_compact_mul_support Continuous.exists_forall_le_of_has_compact_mul_support
-#align
-  continuous.exists_forall_le_of_has_compact_support Continuous.exists_forall_le_of_has_compact_support
+#align continuous.exists_forall_le_of_has_compact_mul_support Continuous.exists_forall_le_of_has_compact_mul_support
+#align continuous.exists_forall_le_of_has_compact_support Continuous.exists_forall_le_of_has_compact_support
 
 /-- A continuous function with compact support has a global maximum. -/
 @[to_additive "A continuous function with compact support has a global maximum."]
 theorem Continuous.exists_forall_ge_of_has_compact_mul_support [Nonempty β] [One α] {f : β → α}
     (hf : Continuous f) (h : HasCompactMulSupport f) : ∃ x : β, ∀ y : β, f y ≤ f x :=
   @Continuous.exists_forall_le_of_has_compact_mul_support αᵒᵈ _ _ _ _ _ _ _ _ hf h
-#align
-  continuous.exists_forall_ge_of_has_compact_mul_support Continuous.exists_forall_ge_of_has_compact_mul_support
-#align
-  continuous.exists_forall_ge_of_has_compact_support Continuous.exists_forall_ge_of_has_compact_support
+#align continuous.exists_forall_ge_of_has_compact_mul_support Continuous.exists_forall_ge_of_has_compact_mul_support
+#align continuous.exists_forall_ge_of_has_compact_support Continuous.exists_forall_ge_of_has_compact_support
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem IsCompact.continuous_Sup {f : γ → β → α} {K : Set β} (hK : IsCompact K)

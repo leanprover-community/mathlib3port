@@ -370,8 +370,7 @@ instance (priority := 100) LinearOrderedField.to_topological_division_ring :
     refine' inv_lt_of_inv_lt aux _
     rw [inv_div, abs_of_pos <| mul_pos ht hx', sq, ← mul_div_assoc']
     exact mul_lt_mul_of_pos_left hx ht
-#align
-  linear_ordered_field.to_topological_division_ring LinearOrderedField.to_topological_division_ring
+#align linear_ordered_field.to_topological_division_ring LinearOrderedField.to_topological_division_ring
 
 theorem nhds_within_pos_comap_mul_left {x : α} (hx : 0 < x) :
     comap (fun ε => x * ε) (𝓝[>] 0) = 𝓝[>] 0 :=

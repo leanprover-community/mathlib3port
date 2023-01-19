@@ -90,8 +90,7 @@ def multiforkEvaluationCone (F : K ⥤ SheafCat J D) (E : Cone (F ⋙ sheafToPre
         dsimp [multifork.of_ι]
         erw [category.assoc, ← E.w f]
         tidy }
-#align
-  category_theory.Sheaf.multifork_evaluation_cone CategoryTheory.SheafCat.multiforkEvaluationCone
+#align category_theory.Sheaf.multifork_evaluation_cone CategoryTheory.SheafCat.multiforkEvaluationCone
 
 variable [HasLimitsOfShape K D]
 
@@ -133,8 +132,7 @@ def isLimitMultiforkOfIsLimit (F : K ⥤ SheafCat J D) (E : Cone (F ⋙ sheafToP
       change _ = S.ι i ≫ _
       erw [← hm, category.assoc, ← (E.π.app k).naturality, category.assoc]
       rfl)
-#align
-  category_theory.Sheaf.is_limit_multifork_of_is_limit CategoryTheory.SheafCat.isLimitMultiforkOfIsLimit
+#align category_theory.Sheaf.is_limit_multifork_of_is_limit CategoryTheory.SheafCat.isLimitMultiforkOfIsLimit
 
 /-- If `E` is a cone which is a limit on the level of presheaves,
 then the limit presheaf is again a sheaf.
@@ -243,8 +241,7 @@ def isColimitSheafifyCocone {F : K ⥤ SheafCat J D} (E : Cocone (F ⋙ sheafToP
     intro j
     dsimp
     simpa only [← category.assoc, ← hm]
-#align
-  category_theory.Sheaf.is_colimit_sheafify_cocone CategoryTheory.SheafCat.isColimitSheafifyCocone
+#align category_theory.Sheaf.is_colimit_sheafify_cocone CategoryTheory.SheafCat.isColimitSheafifyCocone
 
 instance [HasColimitsOfShape K D] : HasColimitsOfShape K (SheafCat J D) :=
   ⟨fun F =>

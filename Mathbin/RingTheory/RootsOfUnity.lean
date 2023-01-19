@@ -759,8 +759,7 @@ def zmodEquivZpowers (h : IsPrimitiveRoot ζ k) : Zmod k ≃+ Additive (Subgroup
 theorem zmod_equiv_zpowers_apply_coe_int (i : ℤ) :
     h.zmodEquivZpowers i = Additive.ofMul (⟨ζ ^ i, i, rfl⟩ : Subgroup.zpowers ζ) :=
   AddMonoidHom.lift_of_right_inverse_comp_apply _ _ Zmod.int_cast_right_inverse _ _
-#align
-  is_primitive_root.zmod_equiv_zpowers_apply_coe_int IsPrimitiveRoot.zmod_equiv_zpowers_apply_coe_int
+#align is_primitive_root.zmod_equiv_zpowers_apply_coe_int IsPrimitiveRoot.zmod_equiv_zpowers_apply_coe_int
 
 @[simp]
 theorem zmod_equiv_zpowers_apply_coe_nat (i : ℕ) :
@@ -769,34 +768,29 @@ theorem zmod_equiv_zpowers_apply_coe_nat (i : ℕ) :
   have : (i : Zmod k) = (i : ℤ) := by norm_cast
   simp only [this, zmod_equiv_zpowers_apply_coe_int, zpow_ofNat]
   rfl
-#align
-  is_primitive_root.zmod_equiv_zpowers_apply_coe_nat IsPrimitiveRoot.zmod_equiv_zpowers_apply_coe_nat
+#align is_primitive_root.zmod_equiv_zpowers_apply_coe_nat IsPrimitiveRoot.zmod_equiv_zpowers_apply_coe_nat
 
 @[simp]
 theorem zmod_equiv_zpowers_symm_apply_zpow (i : ℤ) :
     h.zmodEquivZpowers.symm (Additive.ofMul (⟨ζ ^ i, i, rfl⟩ : Subgroup.zpowers ζ)) = i := by
   rw [← h.zmod_equiv_zpowers.symm_apply_apply i, zmod_equiv_zpowers_apply_coe_int]
-#align
-  is_primitive_root.zmod_equiv_zpowers_symm_apply_zpow IsPrimitiveRoot.zmod_equiv_zpowers_symm_apply_zpow
+#align is_primitive_root.zmod_equiv_zpowers_symm_apply_zpow IsPrimitiveRoot.zmod_equiv_zpowers_symm_apply_zpow
 
 @[simp]
 theorem zmod_equiv_zpowers_symm_apply_zpow' (i : ℤ) : h.zmodEquivZpowers.symm ⟨ζ ^ i, i, rfl⟩ = i :=
   h.zmod_equiv_zpowers_symm_apply_zpow i
-#align
-  is_primitive_root.zmod_equiv_zpowers_symm_apply_zpow' IsPrimitiveRoot.zmod_equiv_zpowers_symm_apply_zpow'
+#align is_primitive_root.zmod_equiv_zpowers_symm_apply_zpow' IsPrimitiveRoot.zmod_equiv_zpowers_symm_apply_zpow'
 
 @[simp]
 theorem zmod_equiv_zpowers_symm_apply_pow (i : ℕ) :
     h.zmodEquivZpowers.symm (Additive.ofMul (⟨ζ ^ i, i, rfl⟩ : Subgroup.zpowers ζ)) = i := by
   rw [← h.zmod_equiv_zpowers.symm_apply_apply i, zmod_equiv_zpowers_apply_coe_nat]
-#align
-  is_primitive_root.zmod_equiv_zpowers_symm_apply_pow IsPrimitiveRoot.zmod_equiv_zpowers_symm_apply_pow
+#align is_primitive_root.zmod_equiv_zpowers_symm_apply_pow IsPrimitiveRoot.zmod_equiv_zpowers_symm_apply_pow
 
 @[simp]
 theorem zmod_equiv_zpowers_symm_apply_pow' (i : ℕ) : h.zmodEquivZpowers.symm ⟨ζ ^ i, i, rfl⟩ = i :=
   h.zmod_equiv_zpowers_symm_apply_pow i
-#align
-  is_primitive_root.zmod_equiv_zpowers_symm_apply_pow' IsPrimitiveRoot.zmod_equiv_zpowers_symm_apply_pow'
+#align is_primitive_root.zmod_equiv_zpowers_symm_apply_pow' IsPrimitiveRoot.zmod_equiv_zpowers_symm_apply_pow'
 
 variable [IsDomain R]
 
@@ -1001,8 +995,7 @@ theorem nth_roots_one_eq_bUnion_primitive_roots' {ζ : R} {n : ℕ+} (h : IsPrim
       rw [(h.pow n.pos hd).card_primitive_roots]
     · intro i hi j hj hdiff
       exact Disjoint hdiff
-#align
-  is_primitive_root.nth_roots_one_eq_bUnion_primitive_roots' IsPrimitiveRoot.nth_roots_one_eq_bUnion_primitive_roots'
+#align is_primitive_root.nth_roots_one_eq_bUnion_primitive_roots' IsPrimitiveRoot.nth_roots_one_eq_bUnion_primitive_roots'
 
 /-- `nth_roots n` as a `finset` is equal to the union of `primitive_roots i R` for `i ∣ n`
 if there is a primitive root of unity in `R`. -/
@@ -1012,8 +1005,7 @@ theorem nth_roots_one_eq_bUnion_primitive_roots {ζ : R} {n : ℕ} (h : IsPrimit
   by_cases hn : n = 0
   · simp [hn]
   exact @nth_roots_one_eq_bUnion_primitive_roots' _ _ _ _ ⟨n, Nat.pos_of_ne_zero hn⟩ h
-#align
-  is_primitive_root.nth_roots_one_eq_bUnion_primitive_roots IsPrimitiveRoot.nth_roots_one_eq_bUnion_primitive_roots
+#align is_primitive_root.nth_roots_one_eq_bUnion_primitive_roots IsPrimitiveRoot.nth_roots_one_eq_bUnion_primitive_roots
 
 end IsDomain
 

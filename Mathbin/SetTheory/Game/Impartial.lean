@@ -220,8 +220,7 @@ theorem forall_left_moves_fuzzy_iff_equiv_zero : (∀ i, G.moveLeft i ‖ 0) ↔
     exact fun i => (hb i).1
   · rw [fuzzy_zero_iff_lf]
     exact hp.1.move_left_lf i
-#align
-  pgame.impartial.forall_left_moves_fuzzy_iff_equiv_zero Pgame.Impartial.forall_left_moves_fuzzy_iff_equiv_zero
+#align pgame.impartial.forall_left_moves_fuzzy_iff_equiv_zero Pgame.Impartial.forall_left_moves_fuzzy_iff_equiv_zero
 
 theorem forall_right_moves_fuzzy_iff_equiv_zero : (∀ j, G.moveRight j ‖ 0) ↔ (G ≈ 0) :=
   by
@@ -230,8 +229,7 @@ theorem forall_right_moves_fuzzy_iff_equiv_zero : (∀ j, G.moveRight j ‖ 0) �
     exact fun i => (hb i).2
   · rw [fuzzy_zero_iff_gf]
     exact hp.2.lf_move_right i
-#align
-  pgame.impartial.forall_right_moves_fuzzy_iff_equiv_zero Pgame.Impartial.forall_right_moves_fuzzy_iff_equiv_zero
+#align pgame.impartial.forall_right_moves_fuzzy_iff_equiv_zero Pgame.Impartial.forall_right_moves_fuzzy_iff_equiv_zero
 
 theorem exists_left_move_equiv_iff_fuzzy_zero : (∃ i, G.moveLeft i ≈ 0) ↔ G ‖ 0 :=
   by
@@ -239,8 +237,7 @@ theorem exists_left_move_equiv_iff_fuzzy_zero : (∃ i, G.moveLeft i ≈ 0) ↔ 
   rw [fuzzy_zero_iff_gf G, zero_lf_le] at hn
   cases' hn with i hi
   exact ⟨i, (equiv_zero_iff_ge _).2 hi⟩
-#align
-  pgame.impartial.exists_left_move_equiv_iff_fuzzy_zero Pgame.Impartial.exists_left_move_equiv_iff_fuzzy_zero
+#align pgame.impartial.exists_left_move_equiv_iff_fuzzy_zero Pgame.Impartial.exists_left_move_equiv_iff_fuzzy_zero
 
 theorem exists_right_move_equiv_iff_fuzzy_zero : (∃ j, G.moveRight j ≈ 0) ↔ G ‖ 0 :=
   by
@@ -248,8 +245,7 @@ theorem exists_right_move_equiv_iff_fuzzy_zero : (∃ j, G.moveRight j ≈ 0) �
   rw [fuzzy_zero_iff_lf G, lf_zero_le] at hn
   cases' hn with i hi
   exact ⟨i, (equiv_zero_iff_le _).2 hi⟩
-#align
-  pgame.impartial.exists_right_move_equiv_iff_fuzzy_zero Pgame.Impartial.exists_right_move_equiv_iff_fuzzy_zero
+#align pgame.impartial.exists_right_move_equiv_iff_fuzzy_zero Pgame.Impartial.exists_right_move_equiv_iff_fuzzy_zero
 
 end Impartial
 

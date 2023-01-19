@@ -406,8 +406,7 @@ theorem TopologicalSpace.IsTopologicalBasis.exists_mem_of_ne [T1Space α] {b : S
   by
   rcases hb.is_open_iff.1 is_open_ne x h with ⟨a, ab, xa, ha⟩
   exact ⟨a, ab, xa, fun h => ha h rfl⟩
-#align
-  topological_space.is_topological_basis.exists_mem_of_ne TopologicalSpace.IsTopologicalBasis.exists_mem_of_ne
+#align topological_space.is_topological_basis.exists_mem_of_ne TopologicalSpace.IsTopologicalBasis.exists_mem_of_ne
 
 theorem Filter.coclosed_compact_le_cofinite [T1Space α] :
     Filter.coclosedCompact α ≤ Filter.cofinite := fun s hs =>
@@ -1545,8 +1544,7 @@ theorem Filter.HasBasis.exists_inter_eq_singleton_of_mem_discrete {ι : Type _} 
     ⟨i, hi, hix⟩
   exact
     ⟨i, hi, subset.antisymm hix <| singleton_subset_iff.2 ⟨mem_of_mem_nhds <| hb.mem_of_mem hi, hx⟩⟩
-#align
-  filter.has_basis.exists_inter_eq_singleton_of_mem_discrete Filter.HasBasis.exists_inter_eq_singleton_of_mem_discrete
+#align filter.has_basis.exists_inter_eq_singleton_of_mem_discrete Filter.HasBasis.exists_inter_eq_singleton_of_mem_discrete
 
 /-- A point `x` in a discrete subset `s` of a topological space admits a neighbourhood
 that only meets `s` at `x`.  -/
@@ -3220,15 +3218,13 @@ theorem TopologicalSpace.IsTopologicalBasis.nhds_basis_closure {B : Set (Set α)
     (hB : TopologicalSpace.IsTopologicalBasis B) (a : α) :
     (𝓝 a).HasBasis (fun s : Set α => a ∈ s ∧ s ∈ B) closure := by
   simpa only [and_comm'] using hB.nhds_has_basis.nhds_closure
-#align
-  topological_space.is_topological_basis.nhds_basis_closure TopologicalSpace.IsTopologicalBasis.nhds_basis_closure
+#align topological_space.is_topological_basis.nhds_basis_closure TopologicalSpace.IsTopologicalBasis.nhds_basis_closure
 
 theorem TopologicalSpace.IsTopologicalBasis.exists_closure_subset {B : Set (Set α)}
     (hB : TopologicalSpace.IsTopologicalBasis B) {a : α} {s : Set α} (h : s ∈ 𝓝 a) :
     ∃ t ∈ B, a ∈ t ∧ closure t ⊆ s := by
   simpa only [exists_prop, and_assoc] using hB.nhds_has_basis.nhds_closure.mem_iff.mp h
-#align
-  topological_space.is_topological_basis.exists_closure_subset TopologicalSpace.IsTopologicalBasis.exists_closure_subset
+#align topological_space.is_topological_basis.exists_closure_subset TopologicalSpace.IsTopologicalBasis.exists_closure_subset
 
 theorem disjoint_nhds_nhds_iff_not_specializes {a b : α} : Disjoint (𝓝 a) (𝓝 b) ↔ ¬a ⤳ b := by
   rw [← nhds_set_singleton, disjoint_nhds_set_nhds, specializes_iff_mem_closure]

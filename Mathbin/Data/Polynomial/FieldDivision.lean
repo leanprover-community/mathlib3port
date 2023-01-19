@@ -61,8 +61,7 @@ theorem derivative_root_multiplicity_of_root [CharZero R] {p : R[X]} {t : R} (hp
   refine' mul_ne_zero (pow_ne_zero n <| X_sub_C_ne_zero t) _
   contrapose! h
   rw [h, eval_zero]
-#align
-  polynomial.derivative_root_multiplicity_of_root Polynomial.derivative_root_multiplicity_of_root
+#align polynomial.derivative_root_multiplicity_of_root Polynomial.derivative_root_multiplicity_of_root
 
 theorem root_multiplicity_sub_one_le_derivative_root_multiplicity [CharZero R] (p : R[X]) (t : R) :
     p.rootMultiplicity t - 1 ≤ p.derivative.rootMultiplicity t :=
@@ -71,8 +70,7 @@ theorem root_multiplicity_sub_one_le_derivative_root_multiplicity [CharZero R] (
   · exact (derivative_root_multiplicity_of_root h).symm.le
   · rw [root_multiplicity_eq_zero h, zero_tsub]
     exact zero_le _
-#align
-  polynomial.root_multiplicity_sub_one_le_derivative_root_multiplicity Polynomial.root_multiplicity_sub_one_le_derivative_root_multiplicity
+#align polynomial.root_multiplicity_sub_one_le_derivative_root_multiplicity Polynomial.root_multiplicity_sub_one_le_derivative_root_multiplicity
 
 section NormalizationMonoid
 
@@ -535,8 +533,7 @@ theorem is_coprime_of_is_root_of_eval_derivative_ne_zero {K : Type _} [Field K] 
   have : X - C a ∣ derivative f := key ▸ dvd_add h (dvd_mul_right _ _)
   rw [← dvd_iff_mod_by_monic_eq_zero (monic_X_sub_C _), mod_by_monic_X_sub_C_eq_C_eval] at this
   rw [← C_inj, this, C_0]
-#align
-  polynomial.is_coprime_of_is_root_of_eval_derivative_ne_zero Polynomial.is_coprime_of_is_root_of_eval_derivative_ne_zero
+#align polynomial.is_coprime_of_is_root_of_eval_derivative_ne_zero Polynomial.is_coprime_of_is_root_of_eval_derivative_ne_zero
 
 end Field
 

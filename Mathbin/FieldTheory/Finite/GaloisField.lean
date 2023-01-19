@@ -88,7 +88,7 @@ theorem finrank {n} (h : n ≠ 0) : FiniteDimensional.finrank (Zmod p) (GaloisFi
   rw [nat_degree_eq] at key
   suffices g_poly.rootSet (GaloisField p n) = Set.univ
     by
-    simp_rw [this, ← Fintype.of_equiv_card (Equiv.Set.univ _)] at key
+    simp_rw [this, ← Fintype.ofEquiv_card (Equiv.Set.univ _)] at key
     rw [@card_eq_pow_finrank (Zmod p), Zmod.card] at key
     exact Nat.pow_right_injective (Nat.Prime.one_lt' p).out key
   rw [Set.eq_univ_iff_forall]

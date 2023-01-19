@@ -36,8 +36,7 @@ variable (𝕜 E : Type _) [NormedField 𝕜] [NormedAddCommGroup E] [NormedSpac
 instance (priority := 100) NormedSpace.to_has_uniform_continuous_const_smul :
     HasUniformContinuousConstSmul 𝕜 E :=
   ⟨fun c => (lipschitz_with_smul c).UniformContinuous⟩
-#align
-  uniform_space.completion.normed_space.to_has_uniform_continuous_const_smul UniformSpace.Completion.NormedSpace.to_has_uniform_continuous_const_smul
+#align uniform_space.completion.normed_space.to_has_uniform_continuous_const_smul UniformSpace.Completion.NormedSpace.to_has_uniform_continuous_const_smul
 
 instance : NormedSpace 𝕜 (Completion E) :=
   { Completion.module with

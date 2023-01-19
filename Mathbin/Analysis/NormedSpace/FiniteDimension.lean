@@ -158,15 +158,13 @@ def AffineEquiv.toHomeomorphOfFiniteDimensional (f : PE ≃ᵃ[𝕜] PF) : PE �
 theorem AffineEquiv.coe_to_homeomorph_of_finite_dimensional (f : PE ≃ᵃ[𝕜] PF) :
     ⇑f.toHomeomorphOfFiniteDimensional = f :=
   rfl
-#align
-  affine_equiv.coe_to_homeomorph_of_finite_dimensional AffineEquiv.coe_to_homeomorph_of_finite_dimensional
+#align affine_equiv.coe_to_homeomorph_of_finite_dimensional AffineEquiv.coe_to_homeomorph_of_finite_dimensional
 
 @[simp]
 theorem AffineEquiv.coe_to_homeomorph_of_finite_dimensional_symm (f : PE ≃ᵃ[𝕜] PF) :
     ⇑f.toHomeomorphOfFiniteDimensional.symm = f.symm :=
   rfl
-#align
-  affine_equiv.coe_to_homeomorph_of_finite_dimensional_symm AffineEquiv.coe_to_homeomorph_of_finite_dimensional_symm
+#align affine_equiv.coe_to_homeomorph_of_finite_dimensional_symm AffineEquiv.coe_to_homeomorph_of_finite_dimensional_symm
 
 end Affine
 
@@ -285,8 +283,7 @@ theorem is_open_set_of_nat_le_rank (n : ℕ) : IsOpen { f : E →L[𝕜] F | ↑
 theorem FiniteDimensional.nonempty_continuous_linear_equiv_of_finrank_eq [FiniteDimensional 𝕜 E]
     [FiniteDimensional 𝕜 F] (cond : finrank 𝕜 E = finrank 𝕜 F) : Nonempty (E ≃L[𝕜] F) :=
   (nonempty_linear_equiv_of_finrank_eq cond).map LinearEquiv.toContinuousLinearEquiv
-#align
-  finite_dimensional.nonempty_continuous_linear_equiv_of_finrank_eq FiniteDimensional.nonempty_continuous_linear_equiv_of_finrank_eq
+#align finite_dimensional.nonempty_continuous_linear_equiv_of_finrank_eq FiniteDimensional.nonempty_continuous_linear_equiv_of_finrank_eq
 
 /-- Two finite-dimensional normed spaces are continuously linearly equivalent if and only if they
 have the same (finite) dimension. -/
@@ -294,8 +291,7 @@ theorem FiniteDimensional.nonempty_continuous_linear_equiv_iff_finrank_eq [Finit
     [FiniteDimensional 𝕜 F] : Nonempty (E ≃L[𝕜] F) ↔ finrank 𝕜 E = finrank 𝕜 F :=
   ⟨fun ⟨h⟩ => h.toLinearEquiv.finrank_eq, fun h =>
     FiniteDimensional.nonempty_continuous_linear_equiv_of_finrank_eq h⟩
-#align
-  finite_dimensional.nonempty_continuous_linear_equiv_iff_finrank_eq FiniteDimensional.nonempty_continuous_linear_equiv_iff_finrank_eq
+#align finite_dimensional.nonempty_continuous_linear_equiv_iff_finrank_eq FiniteDimensional.nonempty_continuous_linear_equiv_iff_finrank_eq
 
 /-- A continuous linear equivalence between two finite-dimensional normed spaces of the same
 (finite) dimension. -/
@@ -596,10 +592,8 @@ theorem HasCompactMulSupport.eq_one_or_finite_dimensional {X : Type _} [Topologi
   have : IsCompact (Metric.closedBall x r) :=
     is_compact_of_is_closed_subset hf Metric.is_closed_ball (hr.trans (subset_mul_tsupport _))
   exact finite_dimensional_of_is_compact_closed_ball 𝕜 rpos this
-#align
-  has_compact_mul_support.eq_one_or_finite_dimensional HasCompactMulSupport.eq_one_or_finite_dimensional
-#align
-  has_compact_support.eq_zero_or_finite_dimensional HasCompactSupport.eq_zero_or_finite_dimensional
+#align has_compact_mul_support.eq_one_or_finite_dimensional HasCompactMulSupport.eq_one_or_finite_dimensional
+#align has_compact_support.eq_zero_or_finite_dimensional HasCompactSupport.eq_zero_or_finite_dimensional
 
 end Riesz
 
@@ -618,8 +612,7 @@ theorem ContinuousLinearMap.exists_right_inverse_of_surjective [FiniteDimensiona
     ∃ g : F →L[𝕜] E, f.comp g = ContinuousLinearMap.id 𝕜 F :=
   let ⟨g, hg⟩ := (f : E →ₗ[𝕜] F).exists_right_inverse_of_surjective hf
   ⟨g.toContinuousLinearMap, ContinuousLinearMap.ext <| LinearMap.ext_iff.1 hg⟩
-#align
-  continuous_linear_map.exists_right_inverse_of_surjective ContinuousLinearMap.exists_right_inverse_of_surjective
+#align continuous_linear_map.exists_right_inverse_of_surjective ContinuousLinearMap.exists_right_inverse_of_surjective
 
 theorem closed_embedding_smul_left {c : E} (hc : c ≠ 0) : ClosedEmbedding fun x : 𝕜 => x • c :=
   LinearEquiv.closed_embedding_of_injective (LinearMap.ker_to_span_singleton 𝕜 E hc)
@@ -751,8 +744,7 @@ theorem IsCompact.exists_mem_frontier_inf_dist_compl_eq_dist {E : Type _} [Norme
   · refine' ⟨x, hx', _⟩
     rw [frontier_eq_closure_inter_closure] at hx'
     rw [Metric.inf_dist_zero_of_mem_closure hx'.2, dist_self]
-#align
-  is_compact.exists_mem_frontier_inf_dist_compl_eq_dist IsCompact.exists_mem_frontier_inf_dist_compl_eq_dist
+#align is_compact.exists_mem_frontier_inf_dist_compl_eq_dist IsCompact.exists_mem_frontier_inf_dist_compl_eq_dist
 
 /-- In a finite dimensional vector space over `ℝ`, the series `∑ x, ‖f x‖` is unconditionally
 summable if and only if the series `∑ x, f x` is unconditionally summable. One implication holds in

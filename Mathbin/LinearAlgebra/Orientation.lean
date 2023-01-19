@@ -100,8 +100,7 @@ instance (priority := 100) IsEmpty.oriented [Nontrivial R] [IsEmpty ι] : Module
 theorem Orientation.map_positive_orientation_of_is_empty [Nontrivial R] [IsEmpty ι]
     (f : M ≃ₗ[R] N) : Orientation.map ι f positiveOrientation = positive_orientation :=
   rfl
-#align
-  orientation.map_positive_orientation_of_is_empty Orientation.map_positive_orientation_of_is_empty
+#align orientation.map_positive_orientation_of_is_empty Orientation.map_positive_orientation_of_is_empty
 
 @[simp]
 theorem Orientation.map_of_is_empty [IsEmpty ι] (x : Orientation R M ι) (f : M ≃ₗ[R] M) :
@@ -256,8 +255,7 @@ theorem orientation_comp_linear_equiv_eq_iff_det_pos (e : Basis ι R M) (f : M �
     (e.map f).Orientation = e.Orientation ↔ 0 < (f : M →ₗ[R] M).det := by
   rw [orientation_map, e.map_orientation_eq_det_inv_smul, units_inv_smul, units_smul_eq_self_iff,
     LinearEquiv.coe_det]
-#align
-  basis.orientation_comp_linear_equiv_eq_iff_det_pos Basis.orientation_comp_linear_equiv_eq_iff_det_pos
+#align basis.orientation_comp_linear_equiv_eq_iff_det_pos Basis.orientation_comp_linear_equiv_eq_iff_det_pos
 
 /-- Composing a basis with a linear equiv gives the negation of that orientation if and only if
 the determinant is negative. -/
@@ -265,8 +263,7 @@ theorem orientation_comp_linear_equiv_eq_neg_iff_det_neg (e : Basis ι R M) (f :
     (e.map f).Orientation = -e.Orientation ↔ (f : M →ₗ[R] M).det < 0 := by
   rw [orientation_map, e.map_orientation_eq_det_inv_smul, units_inv_smul, units_smul_eq_neg_iff,
     LinearEquiv.coe_det]
-#align
-  basis.orientation_comp_linear_equiv_eq_neg_iff_det_neg Basis.orientation_comp_linear_equiv_eq_neg_iff_det_neg
+#align basis.orientation_comp_linear_equiv_eq_neg_iff_det_neg Basis.orientation_comp_linear_equiv_eq_neg_iff_det_neg
 
 /-- Negating a single basis vector (represented using `units_smul`) negates the corresponding
 orientation. -/

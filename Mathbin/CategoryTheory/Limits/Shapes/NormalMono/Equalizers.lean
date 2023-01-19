@@ -99,8 +99,7 @@ irreducible_def pullbackOfMono {X Y Z : C} (a : X ⟶ Z) (b : Y ⟶ Z) [Mono a] 
                     kernel.ι (prod.lift f g) :=
                 by rw [kernel.lift_ι]
                }
-#align
-  category_theory.normal_mono_category.pullback_of_mono CategoryTheory.NormalMonoCategory.pullbackOfMono
+#align category_theory.normal_mono_category.pullback_of_mono CategoryTheory.NormalMonoCategory.pullbackOfMono
 
 section
 
@@ -141,8 +140,7 @@ irreducible_def hasLimitParallelPair {X Y : C} (f g : X ⟶ Y) : HasLimit (paral
           (fun s => by simp only [fork.ι_of_ι, pullback.lift_fst]) fun s m h =>
           pullback.hom_ext (by simpa only [pullback.lift_fst] using h)
             (by simpa only [huv.symm, pullback.lift_fst] using h) }
-#align
-  category_theory.normal_mono_category.has_limit_parallel_pair CategoryTheory.NormalMonoCategory.hasLimitParallelPair
+#align category_theory.normal_mono_category.has_limit_parallel_pair CategoryTheory.NormalMonoCategory.hasLimitParallelPair
 
 end
 
@@ -153,8 +151,7 @@ attribute [local instance] has_limit_parallel_pair
 /-- A `normal_mono_category` category with finite products and kernels has all equalizers. -/
 instance (priority := 100) has_equalizers : HasEqualizers C :=
   has_equalizers_of_has_limit_parallel_pair _
-#align
-  category_theory.normal_mono_category.has_equalizers CategoryTheory.NormalMonoCategory.has_equalizers
+#align category_theory.normal_mono_category.has_equalizers CategoryTheory.NormalMonoCategory.has_equalizers
 
 end
 
@@ -171,8 +168,7 @@ theorem epi_of_zero_cokernel {X Y : C} (f : X ⟶ Y) (Z : C)
     have : is_iso (equalizer.ι u v) := by apply is_iso_limit_cone_parallel_pair_of_eq hn.symm hl
     apply (cancel_epi (equalizer.ι u v)).1
     exact equalizer.condition _ _⟩
-#align
-  category_theory.normal_mono_category.epi_of_zero_cokernel CategoryTheory.NormalMonoCategory.epi_of_zero_cokernel
+#align category_theory.normal_mono_category.epi_of_zero_cokernel CategoryTheory.NormalMonoCategory.epi_of_zero_cokernel
 
 section
 
@@ -184,8 +180,7 @@ open ZeroObject
 theorem epi_of_zero_cancel {X Y : C} (f : X ⟶ Y)
     (hf : ∀ (Z : C) (g : Y ⟶ Z) (hgf : f ≫ g = 0), g = 0) : Epi f :=
   epi_of_zero_cokernel f 0 <| zeroCokernelOfZeroCancel f hf
-#align
-  category_theory.normal_mono_category.epi_of_zero_cancel CategoryTheory.NormalMonoCategory.epi_of_zero_cancel
+#align category_theory.normal_mono_category.epi_of_zero_cancel CategoryTheory.NormalMonoCategory.epi_of_zero_cancel
 
 end
 
@@ -266,8 +261,7 @@ irreducible_def pushoutOfEpi {X Y Z : C} (a : X ⟶ Y) (b : X ⟶ Z) [Epi a] [Ep
                     cokernel.desc (coprod.desc f g) (b ≫ PushoutCocone.inr s) _ :=
                 by rw [cokernel.π_desc]
                }
-#align
-  category_theory.normal_epi_category.pushout_of_epi CategoryTheory.NormalEpiCategory.pushoutOfEpi
+#align category_theory.normal_epi_category.pushout_of_epi CategoryTheory.NormalEpiCategory.pushoutOfEpi
 
 section
 
@@ -310,8 +304,7 @@ irreducible_def hasColimitParallelPair {X Y : C} (f g : X ⟶ Y) : HasColimit (p
           (fun s => by simp only [pushout.inl_desc, cofork.π_of_π]) fun s m h =>
           pushout.hom_ext (by simpa only [pushout.inl_desc] using h)
             (by simpa only [huv.symm, pushout.inl_desc] using h) }
-#align
-  category_theory.normal_epi_category.has_colimit_parallel_pair CategoryTheory.NormalEpiCategory.hasColimitParallelPair
+#align category_theory.normal_epi_category.has_colimit_parallel_pair CategoryTheory.NormalEpiCategory.hasColimitParallelPair
 
 end
 
@@ -322,8 +315,7 @@ attribute [local instance] has_colimit_parallel_pair
 /-- A `normal_epi_category` category with finite coproducts and cokernels has all coequalizers. -/
 instance (priority := 100) has_coequalizers : HasCoequalizers C :=
   has_coequalizers_of_has_colimit_parallel_pair _
-#align
-  category_theory.normal_epi_category.has_coequalizers CategoryTheory.NormalEpiCategory.has_coequalizers
+#align category_theory.normal_epi_category.has_coequalizers CategoryTheory.NormalEpiCategory.has_coequalizers
 
 end
 
@@ -341,8 +333,7 @@ theorem mono_of_zero_kernel {X Y : C} (f : X ⟶ Y) (Z : C)
       apply is_iso_colimit_cocone_parallel_pair_of_eq hn.symm hl
     apply (cancel_mono (coequalizer.π u v)).1
     exact coequalizer.condition _ _⟩
-#align
-  category_theory.normal_epi_category.mono_of_zero_kernel CategoryTheory.NormalEpiCategory.mono_of_zero_kernel
+#align category_theory.normal_epi_category.mono_of_zero_kernel CategoryTheory.NormalEpiCategory.mono_of_zero_kernel
 
 section
 
@@ -354,8 +345,7 @@ open ZeroObject
 theorem mono_of_cancel_zero {X Y : C} (f : X ⟶ Y)
     (hf : ∀ (Z : C) (g : Z ⟶ X) (hgf : g ≫ f = 0), g = 0) : Mono f :=
   mono_of_zero_kernel f 0 <| zeroKernelOfCancelZero f hf
-#align
-  category_theory.normal_epi_category.mono_of_cancel_zero CategoryTheory.NormalEpiCategory.mono_of_cancel_zero
+#align category_theory.normal_epi_category.mono_of_cancel_zero CategoryTheory.NormalEpiCategory.mono_of_cancel_zero
 
 end
 

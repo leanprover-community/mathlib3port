@@ -156,7 +156,7 @@ theorem Fintype.card_fun [DecidableEq α] [Fintype α] [Fintype β] :
 
 @[simp]
 theorem card_vector [Fintype α] (n : ℕ) : Fintype.card (Vector α n) = Fintype.card α ^ n := by
-  rw [Fintype.of_equiv_card] <;> simp
+  rw [Fintype.ofEquiv_card] <;> simp
 #align card_vector card_vector
 
 @[simp, to_additive]

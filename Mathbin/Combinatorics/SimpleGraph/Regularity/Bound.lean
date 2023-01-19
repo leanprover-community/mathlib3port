@@ -93,8 +93,7 @@ theorem hundred_div_ε_pow_five_le_m [Nonempty α] (hPα : P.parts.card * 16 ^ P
       rwa [Nat.le_div_iff_mul_le'
           (step_bound_pos (P.parts_nonempty <| univ_nonempty.ne_empty).card_pos),
         step_bound, mul_left_comm, ← mul_pow])
-#align
-  szemeredi_regularity.hundred_div_ε_pow_five_le_m SzemerediRegularity.hundred_div_ε_pow_five_le_m
+#align szemeredi_regularity.hundred_div_ε_pow_five_le_m SzemerediRegularity.hundred_div_ε_pow_five_le_m
 
 theorem hundred_le_m [Nonempty α] (hPα : P.parts.card * 16 ^ P.parts.card ≤ card α)
     (hPε : 100 ≤ 4 ^ P.parts.card * ε ^ 5) (hε : ε ≤ 1) : 100 ≤ m := by
@@ -109,8 +108,7 @@ theorem a_add_one_le_four_pow_parts_card : a + 1 ≤ 4 ^ P.parts.card :=
   rw [step_bound, ← Nat.div_div_eq_div_mul, ← Nat.le_sub_iff_right h, tsub_le_iff_left, ←
     Nat.add_sub_assoc h]
   exact Nat.le_pred_of_lt (Nat.lt_div_mul_add h)
-#align
-  szemeredi_regularity.a_add_one_le_four_pow_parts_card SzemerediRegularity.a_add_one_le_four_pow_parts_card
+#align szemeredi_regularity.a_add_one_le_four_pow_parts_card SzemerediRegularity.a_add_one_le_four_pow_parts_card
 
 theorem card_aux₁ (hucard : u.card = m * 4 ^ P.parts.card + a) :
     (4 ^ P.parts.card - a) * m + a * (m + 1) = u.card := by
@@ -168,8 +166,7 @@ theorem hundred_lt_pow_initial_bound_mul {ε : ℝ} (hε : 0 < ε) (l : ℕ) :
     exact lt_max_of_lt_right (lt_max_of_lt_right <| Nat.lt_floor_add_one _)
   · exact log_pos (by norm_num)
   · exact div_pos (by norm_num) (pow_pos hε 5)
-#align
-  szemeredi_regularity.hundred_lt_pow_initial_bound_mul SzemerediRegularity.hundred_lt_pow_initial_bound_mul
+#align szemeredi_regularity.hundred_lt_pow_initial_bound_mul SzemerediRegularity.hundred_lt_pow_initial_bound_mul
 
 /-- An explicit bound on the size of the equipartition whose existence is given by Szemerédi's
 regularity lemma. -/

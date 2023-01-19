@@ -258,8 +258,7 @@ theorem root_multiplicity_le_one_of_separable [Nontrivial R] {p : R[X]} (hsep : 
   rw [root_multiplicity_eq_multiplicity, dif_neg hp, ← PartEnat.coe_le_coe, PartEnat.coe_get,
     Nat.cast_one]
   exact multiplicity_le_one_of_separable (not_is_unit_X_sub_C _) hsep
-#align
-  polynomial.root_multiplicity_le_one_of_separable Polynomial.root_multiplicity_le_one_of_separable
+#align polynomial.root_multiplicity_le_one_of_separable Polynomial.root_multiplicity_le_one_of_separable
 
 end CommRing
 
@@ -379,8 +378,7 @@ theorem is_unit_or_eq_zero_of_separable_expand {f : F[X]} (n : ℕ) (hp : 0 < p)
   rcases hf with ⟨r, hr, hrf⟩
   rw [eq_comm, expand_eq_C (pow_pos hp _)] at hrf
   rwa [hrf, is_unit_C]
-#align
-  polynomial.is_unit_or_eq_zero_of_separable_expand Polynomial.is_unit_or_eq_zero_of_separable_expand
+#align polynomial.is_unit_or_eq_zero_of_separable_expand Polynomial.is_unit_or_eq_zero_of_separable_expand
 
 theorem unique_separable_of_irreducible {f : F[X]} (hf : Irreducible f) (hp : 0 < p) (n₁ : ℕ)
     (g₁ : F[X]) (hg₁ : g₁.Separable) (hgf₁ : expand F (p ^ n₁) g₁ = f) (n₂ : ℕ) (g₂ : F[X])

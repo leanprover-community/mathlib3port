@@ -127,8 +127,7 @@ theorem IsSymmetric.coe_re_apply_inner_self_apply {T : E →L[𝕜] E} (hT : IsS
   · simp [hr, T.re_apply_inner_self_apply]
   rw [← eq_conj_iff_real]
   exact hT.conj_inner_sym x x
-#align
-  linear_map.is_symmetric.coe_re_apply_inner_self_apply LinearMap.IsSymmetric.coe_re_apply_inner_self_apply
+#align linear_map.is_symmetric.coe_re_apply_inner_self_apply LinearMap.IsSymmetric.coe_re_apply_inner_self_apply
 
 /-- If a symmetric operator preserves a submodule, its restriction to that submodule is
 symmetric. -/
@@ -165,8 +164,7 @@ theorem is_symmetric_iff_inner_map_self_real (T : V →ₗ[ℂ] V) :
     rw [inner_map_polarization']
     norm_num
     ring
-#align
-  linear_map.is_symmetric_iff_inner_map_self_real LinearMap.is_symmetric_iff_inner_map_self_real
+#align linear_map.is_symmetric_iff_inner_map_self_real LinearMap.is_symmetric_iff_inner_map_self_real
 
 end Complex
 

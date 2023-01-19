@@ -43,8 +43,7 @@ instance : HasDist (Completion α) :=
 protected theorem uniform_continuous_dist :
     UniformContinuous fun p : Completion α × Completion α => dist p.1 p.2 :=
   uniform_continuous_extension₂ dist
-#align
-  uniform_space.completion.uniform_continuous_dist UniformSpace.Completion.uniform_continuous_dist
+#align uniform_space.completion.uniform_continuous_dist UniformSpace.Completion.uniform_continuous_dist
 
 /-- The new distance is continuous. -/
 protected theorem continuous_dist [TopologicalSpace β] {f g : β → Completion α} (hf : Continuous f)

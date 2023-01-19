@@ -241,8 +241,7 @@ theorem is_normal_iff_strict_mono_and_continuous (f : Ordinal.{u} → Ordinal.{u
     exact
       ⟨_, out_nonempty_iff_ne_zero.2 ho.1, typein (· < ·), fun i => h _ (typein_lt_self i),
         sup_typein_limit ho.2⟩
-#align
-  ordinal.is_normal_iff_strict_mono_and_continuous Ordinal.is_normal_iff_strict_mono_and_continuous
+#align ordinal.is_normal_iff_strict_mono_and_continuous Ordinal.is_normal_iff_strict_mono_and_continuous
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (b «expr < » a) -/
 theorem enum_ord_is_normal_iff_is_closed (hs : s.Unbounded (· < ·)) :

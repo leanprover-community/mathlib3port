@@ -103,8 +103,7 @@ theorem is_maximal_inf_right_of_is_maximal_sup {x y : X} (hxz : IsMaximal x (x �
   rw [inf_comm]
   rw [sup_comm] at hxz hyz
   exact is_maximal_inf_left_of_is_maximal_sup hyz hxz
-#align
-  jordan_holder_lattice.is_maximal_inf_right_of_is_maximal_sup JordanHolderLattice.is_maximal_inf_right_of_is_maximal_sup
+#align jordan_holder_lattice.is_maximal_inf_right_of_is_maximal_sup JordanHolderLattice.is_maximal_inf_right_of_is_maximal_sup
 
 theorem is_maximal_of_eq_inf (x b : X) {a y : X} (ha : x ⊓ y = a) (hxy : x ≠ y)
     (hxb : IsMaximal x b) (hyb : IsMaximal y b) : IsMaximal a y :=
@@ -380,8 +379,7 @@ theorem length_pos_of_mem_ne {s : CompositionSeries X} {x y : X} (hx : x ∈ s) 
 theorem forall_mem_eq_of_length_eq_zero {s : CompositionSeries X} (hs : s.length = 0) {x y}
     (hx : x ∈ s) (hy : y ∈ s) : x = y :=
   by_contradiction fun hxy => pos_iff_ne_zero.1 (length_pos_of_mem_ne hx hy hxy) hs
-#align
-  composition_series.forall_mem_eq_of_length_eq_zero CompositionSeries.forall_mem_eq_of_length_eq_zero
+#align composition_series.forall_mem_eq_of_length_eq_zero CompositionSeries.forall_mem_eq_of_length_eq_zero
 
 /-- Remove the largest element from a `composition_series`. If the series `s`
 has length zero, then `s.erase_top = s` -/
@@ -731,8 +729,7 @@ theorem length_eq_zero_of_bot_eq_bot_of_top_eq_top_of_length_eq_zero {s₁ s₂ 
   have : Fin.last s₂.length = (0 : Fin s₂.length.succ) :=
     s₂.injective (hb.symm.trans (this.trans ht)).symm
   simpa [Fin.ext_iff]
-#align
-  composition_series.length_eq_zero_of_bot_eq_bot_of_top_eq_top_of_length_eq_zero CompositionSeries.length_eq_zero_of_bot_eq_bot_of_top_eq_top_of_length_eq_zero
+#align composition_series.length_eq_zero_of_bot_eq_bot_of_top_eq_top_of_length_eq_zero CompositionSeries.length_eq_zero_of_bot_eq_bot_of_top_eq_top_of_length_eq_zero
 
 theorem length_pos_of_bot_eq_bot_of_top_eq_top_of_length_pos {s₁ s₂ : CompositionSeries X}
     (hb : s₁.bot = s₂.bot) (ht : s₁.top = s₂.top) : 0 < s₁.length → 0 < s₂.length :=
@@ -740,8 +737,7 @@ theorem length_pos_of_bot_eq_bot_of_top_eq_top_of_length_pos {s₁ s₂ : Compos
     (by
       simp only [pos_iff_ne_zero, Ne.def, not_iff_not, not_not]
       exact length_eq_zero_of_bot_eq_bot_of_top_eq_top_of_length_eq_zero hb.symm ht.symm)
-#align
-  composition_series.length_pos_of_bot_eq_bot_of_top_eq_top_of_length_pos CompositionSeries.length_pos_of_bot_eq_bot_of_top_eq_top_of_length_pos
+#align composition_series.length_pos_of_bot_eq_bot_of_top_eq_top_of_length_pos CompositionSeries.length_pos_of_bot_eq_bot_of_top_eq_top_of_length_pos
 
 theorem eq_of_bot_eq_bot_of_top_eq_top_of_length_eq_zero {s₁ s₂ : CompositionSeries X}
     (hb : s₁.bot = s₂.bot) (ht : s₁.top = s₂.top) (hs₁0 : s₁.length = 0) : s₁ = s₂ :=
@@ -755,8 +751,7 @@ theorem eq_of_bot_eq_bot_of_top_eq_top_of_length_eq_zero {s₁ s₂ : Compositio
       fun hx => hx.symm ▸ s₂.top_mem⟩
   ext
   simp [*]
-#align
-  composition_series.eq_of_bot_eq_bot_of_top_eq_top_of_length_eq_zero CompositionSeries.eq_of_bot_eq_bot_of_top_eq_top_of_length_eq_zero
+#align composition_series.eq_of_bot_eq_bot_of_top_eq_top_of_length_eq_zero CompositionSeries.eq_of_bot_eq_bot_of_top_eq_top_of_length_eq_zero
 
 /-- Given a `composition_series`, `s`, and an element `x`
 such that `x` is maximal inside `s.top` there is a series, `t`,
@@ -804,8 +799,7 @@ theorem exists_top_eq_snoc_equivalant (s : CompositionSeries X) (x : X) (hm : Is
         exact
           second_iso_of_eq (is_maximal_erase_top_top h0s)
             (sup_eq_of_is_maximal (is_maximal_erase_top_top h0s) hm hetx) (by rw [inf_comm, htt])
-#align
-  composition_series.exists_top_eq_snoc_equivalant CompositionSeries.exists_top_eq_snoc_equivalant
+#align composition_series.exists_top_eq_snoc_equivalant CompositionSeries.exists_top_eq_snoc_equivalant
 
 /-- The **Jordan-Hölder** theorem, stated for any `jordan_holder_lattice`.
 If two composition series start and finish at the same place, they are equivalent. -/

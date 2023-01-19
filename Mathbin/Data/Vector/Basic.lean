@@ -143,7 +143,7 @@ Case conversion may be inaccurate. Consider using '#align vector.length_coe [ano
 theorem [anonymous] (v : Vector α n) :
     ((coe : { l : List α // l.length = n } → List α) v).length = n :=
   v.2
-#align vector.length_coe[anonymous]
+#align vector.length_coe [anonymous]
 
 #print Vector.toList_map /-
 @[simp]

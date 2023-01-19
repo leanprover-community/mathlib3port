@@ -47,15 +47,13 @@ theorem is_open_immersion_iff_stalk {f : X ⟶ Y} :
 theorem is_open_immersion_stable_under_composition :
     MorphismProperty.StableUnderComposition @IsOpenImmersion := by intro X Y Z f g h₁ h₂;
   infer_instance
-#align
-  algebraic_geometry.is_open_immersion_stable_under_composition AlgebraicGeometry.is_open_immersion_stable_under_composition
+#align algebraic_geometry.is_open_immersion_stable_under_composition AlgebraicGeometry.is_open_immersion_stable_under_composition
 
 theorem is_open_immersion_respects_iso : MorphismProperty.RespectsIso @IsOpenImmersion :=
   by
   apply is_open_immersion_stable_under_composition.respects_iso
   intro _ _ _; infer_instance
-#align
-  algebraic_geometry.is_open_immersion_respects_iso AlgebraicGeometry.is_open_immersion_respects_iso
+#align algebraic_geometry.is_open_immersion_respects_iso AlgebraicGeometry.is_open_immersion_respects_iso
 
 theorem isOpenImmersionIsLocalAtTarget : PropertyIsLocalAtTarget @IsOpenImmersion :=
   by
@@ -84,8 +82,7 @@ theorem isOpenImmersionIsLocalAtTarget : PropertyIsLocalAtTarget @IsOpenImmersio
               (morphism_restrict_opens_range f (𝒰.map _))).mpr
           (H _)
       infer_instance
-#align
-  algebraic_geometry.is_open_immersion_is_local_at_target AlgebraicGeometry.isOpenImmersionIsLocalAtTarget
+#align algebraic_geometry.is_open_immersion_is_local_at_target AlgebraicGeometry.isOpenImmersionIsLocalAtTarget
 
 theorem IsOpenImmersion.open_cover_tfae {X Y : SchemeCat.{u}} (f : X ⟶ Y) :
     TFAE
@@ -100,15 +97,13 @@ theorem IsOpenImmersion.open_cover_tfae {X Y : SchemeCat.{u}} (f : X ⟶ Y) :
         ∃ (ι : Type u)(U : ι → Opens Y.carrier)(hU : supᵢ U = ⊤),
           ∀ i, IsOpenImmersion (f ∣_ U i)] :=
   isOpenImmersionIsLocalAtTarget.open_cover_tfae f
-#align
-  algebraic_geometry.is_open_immersion.open_cover_tfae AlgebraicGeometry.IsOpenImmersion.open_cover_tfae
+#align algebraic_geometry.is_open_immersion.open_cover_tfae AlgebraicGeometry.IsOpenImmersion.open_cover_tfae
 
 theorem IsOpenImmersion.open_cover_iff {X Y : SchemeCat.{u}} (𝒰 : SchemeCat.OpenCover.{u} Y)
     (f : X ⟶ Y) :
     IsOpenImmersion f ↔ ∀ i, IsOpenImmersion (pullback.snd : pullback f (𝒰.map i) ⟶ _) :=
   isOpenImmersionIsLocalAtTarget.open_cover_iff f 𝒰
-#align
-  algebraic_geometry.is_open_immersion.open_cover_iff AlgebraicGeometry.IsOpenImmersion.open_cover_iff
+#align algebraic_geometry.is_open_immersion.open_cover_iff AlgebraicGeometry.IsOpenImmersion.open_cover_iff
 
 theorem is_open_immersion_stable_under_base_change :
     MorphismProperty.StableUnderBaseChange @IsOpenImmersion :=
@@ -116,8 +111,7 @@ theorem is_open_immersion_stable_under_base_change :
     by
     intro X Y Z f g H
     infer_instance
-#align
-  algebraic_geometry.is_open_immersion_stable_under_base_change AlgebraicGeometry.is_open_immersion_stable_under_base_change
+#align algebraic_geometry.is_open_immersion_stable_under_base_change AlgebraicGeometry.is_open_immersion_stable_under_base_change
 
 end AlgebraicGeometry
 

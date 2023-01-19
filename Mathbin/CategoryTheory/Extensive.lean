@@ -97,8 +97,7 @@ def IsVanKampenColimit {F : J ⥤ C} (c : Cocone F) : Prop :=
 
 theorem IsVanKampenColimit.is_universal {F : J ⥤ C} {c : Cocone F} (H : IsVanKampenColimit c) :
     IsUniversalColimit c := fun _ c' α f h hα => (H c' α f h hα).mpr
-#align
-  category_theory.is_van_kampen_colimit.is_universal CategoryTheory.IsVanKampenColimit.is_universal
+#align category_theory.is_van_kampen_colimit.is_universal CategoryTheory.IsVanKampenColimit.is_universal
 
 /-- A van Kampen colimit is a colimit. -/
 noncomputable def IsVanKampenColimit.isColimit {F : J ⥤ C} {c : Cocone F}
@@ -122,8 +121,7 @@ theorem IsInitial.is_van_kampen_colimit [HasStrictInitialObjects C] {X : C} (h :
   refine'
     ⟨by rintro _ ⟨⟨⟩⟩, fun _ =>
       ⟨is_colimit.of_iso_colimit h (cocones.ext (as_iso f).symm <| by rintro ⟨⟨⟩⟩)⟩⟩
-#align
-  category_theory.is_initial.is_van_kampen_colimit CategoryTheory.IsInitial.is_van_kampen_colimit
+#align category_theory.is_initial.is_van_kampen_colimit CategoryTheory.IsInitial.is_van_kampen_colimit
 
 section Extensive
 
@@ -254,20 +252,17 @@ theorem BinaryCofan.mono_inr_of_is_van_kampen [HasInitial C] {X Y : C} {c : Bina
           (by
             dsimp
             infer_instance)).some
-#align
-  category_theory.binary_cofan.mono_inr_of_is_van_kampen CategoryTheory.BinaryCofan.mono_inr_of_is_van_kampen
+#align category_theory.binary_cofan.mono_inr_of_is_van_kampen CategoryTheory.BinaryCofan.mono_inr_of_is_van_kampen
 
 theorem FinitaryExtensive.mono_inr_of_is_colimit [FinitaryExtensive C] {c : BinaryCofan X Y}
     (hc : IsColimit c) : Mono c.inr :=
   BinaryCofan.mono_inr_of_is_van_kampen (FinitaryExtensive.van_kampen c hc)
-#align
-  category_theory.finitary_extensive.mono_inr_of_is_colimit CategoryTheory.FinitaryExtensive.mono_inr_of_is_colimit
+#align category_theory.finitary_extensive.mono_inr_of_is_colimit CategoryTheory.FinitaryExtensive.mono_inr_of_is_colimit
 
 theorem FinitaryExtensive.mono_inl_of_is_colimit [FinitaryExtensive C] {c : BinaryCofan X Y}
     (hc : IsColimit c) : Mono c.inl :=
   FinitaryExtensive.mono_inr_of_is_colimit (BinaryCofan.isColimitFlip hc)
-#align
-  category_theory.finitary_extensive.mono_inl_of_is_colimit CategoryTheory.FinitaryExtensive.mono_inl_of_is_colimit
+#align category_theory.finitary_extensive.mono_inl_of_is_colimit CategoryTheory.FinitaryExtensive.mono_inl_of_is_colimit
 
 instance [FinitaryExtensive C] (X Y : C) : Mono (coprod.inl : X ⟶ X ⨿ Y) :=
   (FinitaryExtensive.mono_inl_of_is_colimit (coprodIsCoprod X Y) : _)
@@ -289,14 +284,12 @@ theorem BinaryCofan.isPullbackInitialToOfIsVanKampen [HasInitial C] {c : BinaryC
           (by
             dsimp
             infer_instance)).some
-#align
-  category_theory.binary_cofan.is_pullback_initial_to_of_is_van_kampen CategoryTheory.BinaryCofan.isPullbackInitialToOfIsVanKampen
+#align category_theory.binary_cofan.is_pullback_initial_to_of_is_van_kampen CategoryTheory.BinaryCofan.isPullbackInitialToOfIsVanKampen
 
 theorem FinitaryExtensive.isPullbackInitialToBinaryCofan [FinitaryExtensive C] {c : BinaryCofan X Y}
     (hc : IsColimit c) : IsPullback (initial.to _) (initial.to _) c.inl c.inr :=
   BinaryCofan.isPullbackInitialToOfIsVanKampen (FinitaryExtensive.van_kampen c hc)
-#align
-  category_theory.finitary_extensive.is_pullback_initial_to_binary_cofan CategoryTheory.FinitaryExtensive.isPullbackInitialToBinaryCofan
+#align category_theory.finitary_extensive.is_pullback_initial_to_binary_cofan CategoryTheory.FinitaryExtensive.isPullbackInitialToBinaryCofan
 
 theorem has_strict_initial_of_is_universal [HasInitial C]
     (H : IsUniversalColimit (BinaryCofan.mk (𝟙 (⊥_ C)) (𝟙 (⊥_ C)))) : HasStrictInitialObjects C :=
@@ -313,8 +306,7 @@ theorem has_strict_initial_of_is_universal [HasInitial C]
             (map_pair_equifibered _) _).some
       rintro ⟨⟨⟩⟩ <;> dsimp <;>
         exact is_pullback.of_horiz_is_iso ⟨(category.id_comp _).trans (category.comp_id _).symm⟩)
-#align
-  category_theory.has_strict_initial_of_is_universal CategoryTheory.has_strict_initial_of_is_universal
+#align category_theory.has_strict_initial_of_is_universal CategoryTheory.has_strict_initial_of_is_universal
 
 instance (priority := 100) has_strict_initial_objects_of_finitary_extensive [FinitaryExtensive C] :
     HasStrictInitialObjects C :=
@@ -324,8 +316,7 @@ instance (priority := 100) has_strict_initial_objects_of_finitary_extensive [Fin
             (by
               dsimp
               infer_instance)).some).is_universal
-#align
-  category_theory.has_strict_initial_objects_of_finitary_extensive CategoryTheory.has_strict_initial_objects_of_finitary_extensive
+#align category_theory.has_strict_initial_objects_of_finitary_extensive CategoryTheory.has_strict_initial_objects_of_finitary_extensive
 
 theorem finitary_extensive_iff_of_is_terminal (C : Type u) [Category.{v} C] [HasFiniteCoproducts C]
     (T : C) (HT : IsTerminal T) (c₀ : BinaryCofan T T) (hc₀ : IsColimit c₀) :
@@ -341,8 +332,7 @@ theorem finitary_extensive_iff_of_is_terminal (C : Type u) [Category.{v} C] [Has
       (by rw [← reassoc_of hY, hd', category.assoc])]
   obtain ⟨hl, hr⟩ := (H c (HT.from _) (HT.from _) d hd.symm hd'.symm).mp ⟨hc⟩
   rw [hl.paste_vert_iff hX.symm, hr.paste_vert_iff hY.symm]
-#align
-  category_theory.finitary_extensive_iff_of_is_terminal CategoryTheory.finitary_extensive_iff_of_is_terminal
+#align category_theory.finitary_extensive_iff_of_is_terminal CategoryTheory.finitary_extensive_iff_of_is_terminal
 
 instance types.finitaryExtensive : FinitaryExtensive (Type u) :=
   by
@@ -566,8 +556,7 @@ variable {D : Type u''} [Category.{v''} D]
 theorem NatTrans.Equifibered.whisker_right {F G : J ⥤ C} {α : F ⟶ G} (hα : α.Equifibered)
     (H : C ⥤ D) [PreservesLimitsOfShape WalkingCospan H] : (whiskerRight α H).Equifibered :=
   fun i j f => (hα f).map H
-#align
-  category_theory.nat_trans.equifibered.whisker_right CategoryTheory.NatTrans.Equifibered.whisker_right
+#align category_theory.nat_trans.equifibered.whisker_right CategoryTheory.NatTrans.Equifibered.whisker_right
 
 theorem IsVanKampenColimit.of_iso {F : J ⥤ C} {c c' : Cocone F} (H : IsVanKampenColimit c)
     (e : c ≅ c') : IsVanKampenColimit c' :=
@@ -625,8 +614,7 @@ theorem is_van_kampen_colimit_of_evaluation [HasPullbacks D] [HasColimitsOfShape
     exact fun H =>
       ⟨evaluation_jointly_reflects_colimits _ fun x =>
           ((this x).mpr fun j => (H j).map ((evaluation C D).obj x)).some⟩
-#align
-  category_theory.is_van_kampen_colimit_of_evaluation CategoryTheory.is_van_kampen_colimit_of_evaluation
+#align category_theory.is_van_kampen_colimit_of_evaluation CategoryTheory.is_van_kampen_colimit_of_evaluation
 
 instance [HasPullbacks C] [FinitaryExtensive C] : FinitaryExtensive (D ⥤ C) :=
   haveI : has_finite_coproducts (D ⥤ C) := ⟨fun n => limits.functor_category_has_colimits_of_shape⟩
@@ -639,8 +627,7 @@ theorem finitaryExtensiveOfPreservesAndReflects (F : C ⥤ D) [FinitaryExtensive
     [ReflectsLimitsOfShape WalkingCospan F] [PreservesColimitsOfShape (Discrete WalkingPair) F]
     [ReflectsColimitsOfShape (Discrete WalkingPair) F] : FinitaryExtensive C :=
   ⟨fun X Y c hc => (FinitaryExtensive.van_kampen _ (isColimitOfPreserves F hc)).of_map F⟩
-#align
-  category_theory.finitary_extensive_of_preserves_and_reflects CategoryTheory.finitaryExtensiveOfPreservesAndReflects
+#align category_theory.finitary_extensive_of_preserves_and_reflects CategoryTheory.finitaryExtensiveOfPreservesAndReflects
 
 theorem finitaryExtensiveOfPreservesAndReflectsIsomorphism (F : C ⥤ D) [FinitaryExtensive D]
     [HasFiniteCoproducts C] [HasPullbacks C] [PreservesLimitsOfShape WalkingCospan F]
@@ -652,8 +639,7 @@ theorem finitaryExtensiveOfPreservesAndReflectsIsomorphism (F : C ⥤ D) [Finita
   haveI : reflects_colimits_of_shape (discrete walking_pair) F :=
     reflects_colimits_of_shape_of_reflects_isomorphisms
   exact finitary_extensive_of_preserves_and_reflects F
-#align
-  category_theory.finitary_extensive_of_preserves_and_reflects_isomorphism CategoryTheory.finitaryExtensiveOfPreservesAndReflectsIsomorphism
+#align category_theory.finitary_extensive_of_preserves_and_reflects_isomorphism CategoryTheory.finitaryExtensiveOfPreservesAndReflectsIsomorphism
 
 end Functor
 

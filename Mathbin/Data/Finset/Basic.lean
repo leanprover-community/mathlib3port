@@ -1056,8 +1056,7 @@ theorem eq_singleton_or_nontrivial (ha : a ∈ s) : s = {a} ∨ (s : Set α).Non
 theorem Nonempty.exists_eq_singleton_or_nontrivial :
     s.Nonempty → (∃ a, s = {a}) ∨ (s : Set α).Nontrivial := fun ⟨a, ha⟩ =>
   (eq_singleton_or_nontrivial ha).imp_left <| Exists.intro a
-#align
-  finset.nonempty.exists_eq_singleton_or_nontrivial Finset.Nonempty.exists_eq_singleton_or_nontrivial
+#align finset.nonempty.exists_eq_singleton_or_nontrivial Finset.Nonempty.exists_eq_singleton_or_nontrivial
 -/
 
 instance [Nonempty α] : Nontrivial (Finset α) :=
@@ -2182,8 +2181,7 @@ theorem Directed.exists_mem_subset_of_finset_subset_bunionᵢ {α ι : Type _} [
       use k
       rw [coe_insert, Set.insert_subset]
       exact ⟨hk hbj, trans hti hk'⟩
-#align
-  directed.exists_mem_subset_of_finset_subset_bUnion Directed.exists_mem_subset_of_finset_subset_bunionᵢ
+#align directed.exists_mem_subset_of_finset_subset_bUnion Directed.exists_mem_subset_of_finset_subset_bunionᵢ
 
 /- warning: directed_on.exists_mem_subset_of_finset_subset_bUnion -> DirectedOn.exists_mem_subset_of_finset_subset_bunionᵢ is a dubious translation:
 lean 3 declaration is
@@ -2200,8 +2198,7 @@ theorem DirectedOn.exists_mem_subset_of_finset_subset_bunionᵢ {α ι : Type _}
   obtain ⟨⟨i, hic⟩, hi⟩ :=
     (directed_comp.2 hc.directed_coe).exists_mem_subset_of_finset_subset_bUnion hs
   exact ⟨i, hic, hi⟩
-#align
-  directed_on.exists_mem_subset_of_finset_subset_bUnion DirectedOn.exists_mem_subset_of_finset_subset_bunionᵢ
+#align directed_on.exists_mem_subset_of_finset_subset_bUnion DirectedOn.exists_mem_subset_of_finset_subset_bunionᵢ
 
 /-! #### inter -/
 
@@ -4127,7 +4124,7 @@ Case conversion may be inaccurate. Consider using '#align finset.filter_congr_de
 @[simp]
 theorem [anonymous] {α} (s : Finset α) (p : α → Prop) (h : DecidablePred p) [DecidablePred p] :
     @filter α p h s = s.filter p := by congr
-#align finset.filter_congr_decidable[anonymous]
+#align finset.filter_congr_decidable [anonymous]
 
 section Classical
 

@@ -143,43 +143,37 @@ def uncurry : (Y ⟶ A ⟹ X) → (A ⨯ Y ⟶ X) :=
 @[simp]
 theorem hom_equiv_apply_eq (f : A ⨯ Y ⟶ X) : (exp.adjunction A).homEquiv _ _ f = curry f :=
   rfl
-#align
-  category_theory.cartesian_closed.hom_equiv_apply_eq CategoryTheory.CartesianClosed.hom_equiv_apply_eq
+#align category_theory.cartesian_closed.hom_equiv_apply_eq CategoryTheory.CartesianClosed.hom_equiv_apply_eq
 
 @[simp]
 theorem hom_equiv_symm_apply_eq (f : Y ⟶ A ⟹ X) :
     ((exp.adjunction A).homEquiv _ _).symm f = uncurry f :=
   rfl
-#align
-  category_theory.cartesian_closed.hom_equiv_symm_apply_eq CategoryTheory.CartesianClosed.hom_equiv_symm_apply_eq
+#align category_theory.cartesian_closed.hom_equiv_symm_apply_eq CategoryTheory.CartesianClosed.hom_equiv_symm_apply_eq
 
 @[reassoc.1]
 theorem curry_natural_left (f : X ⟶ X') (g : A ⨯ X' ⟶ Y) :
     curry (Limits.prod.map (𝟙 _) f ≫ g) = f ≫ curry g :=
   Adjunction.hom_equiv_naturality_left _ _ _
-#align
-  category_theory.cartesian_closed.curry_natural_left CategoryTheory.CartesianClosed.curry_natural_left
+#align category_theory.cartesian_closed.curry_natural_left CategoryTheory.CartesianClosed.curry_natural_left
 
 @[reassoc.1]
 theorem curry_natural_right (f : A ⨯ X ⟶ Y) (g : Y ⟶ Y') :
     curry (f ≫ g) = curry f ≫ (exp _).map g :=
   Adjunction.hom_equiv_naturality_right _ _ _
-#align
-  category_theory.cartesian_closed.curry_natural_right CategoryTheory.CartesianClosed.curry_natural_right
+#align category_theory.cartesian_closed.curry_natural_right CategoryTheory.CartesianClosed.curry_natural_right
 
 @[reassoc.1]
 theorem uncurry_natural_right (f : X ⟶ A ⟹ Y) (g : Y ⟶ Y') :
     uncurry (f ≫ (exp _).map g) = uncurry f ≫ g :=
   Adjunction.hom_equiv_naturality_right_symm _ _ _
-#align
-  category_theory.cartesian_closed.uncurry_natural_right CategoryTheory.CartesianClosed.uncurry_natural_right
+#align category_theory.cartesian_closed.uncurry_natural_right CategoryTheory.CartesianClosed.uncurry_natural_right
 
 @[reassoc.1]
 theorem uncurry_natural_left (f : X ⟶ X') (g : X' ⟶ A ⟹ Y) :
     uncurry (f ≫ g) = Limits.prod.map (𝟙 _) f ≫ uncurry g :=
   Adjunction.hom_equiv_naturality_left_symm _ _ _
-#align
-  category_theory.cartesian_closed.uncurry_natural_left CategoryTheory.CartesianClosed.uncurry_natural_left
+#align category_theory.cartesian_closed.uncurry_natural_left CategoryTheory.CartesianClosed.uncurry_natural_left
 
 @[simp]
 theorem uncurry_curry (f : A ⨯ X ⟶ Y) : uncurry (curry f) = f :=
@@ -210,25 +204,21 @@ theorem curry_eq (g : A ⨯ Y ⟶ X) : curry g = (exp.coev A).app Y ≫ (exp A).
 
 theorem uncurry_id_eq_ev (A X : C) [Exponentiable A] : uncurry (𝟙 (A ⟹ X)) = (exp.ev A).app X := by
   rw [uncurry_eq, prod.map_id_id, id_comp]
-#align
-  category_theory.cartesian_closed.uncurry_id_eq_ev CategoryTheory.CartesianClosed.uncurry_id_eq_ev
+#align category_theory.cartesian_closed.uncurry_id_eq_ev CategoryTheory.CartesianClosed.uncurry_id_eq_ev
 
 theorem curry_id_eq_coev (A X : C) [Exponentiable A] : curry (𝟙 _) = (exp.coev A).app X :=
   by
   rw [curry_eq, (exp A).map_id (A ⨯ _)]
   apply comp_id
-#align
-  category_theory.cartesian_closed.curry_id_eq_coev CategoryTheory.CartesianClosed.curry_id_eq_coev
+#align category_theory.cartesian_closed.curry_id_eq_coev CategoryTheory.CartesianClosed.curry_id_eq_coev
 
 theorem curry_injective : Function.Injective (curry : (A ⨯ Y ⟶ X) → (Y ⟶ A ⟹ X)) :=
   (Closed.isAdj.adj.homEquiv _ _).Injective
-#align
-  category_theory.cartesian_closed.curry_injective CategoryTheory.CartesianClosed.curry_injective
+#align category_theory.cartesian_closed.curry_injective CategoryTheory.CartesianClosed.curry_injective
 
 theorem uncurry_injective : Function.Injective (uncurry : (Y ⟶ A ⟹ X) → (A ⨯ Y ⟶ X)) :=
   (Closed.isAdj.adj.homEquiv _ _).symm.Injective
-#align
-  category_theory.cartesian_closed.uncurry_injective CategoryTheory.CartesianClosed.uncurry_injective
+#align category_theory.cartesian_closed.uncurry_injective CategoryTheory.CartesianClosed.uncurry_injective
 
 end CartesianClosed
 

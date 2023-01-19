@@ -466,8 +466,7 @@ theorem coeff_zero_eq_constant_coeff : ⇑(coeff R (0 : σ →₀ ℕ)) = consta
 theorem coeff_zero_eq_constant_coeff_apply (φ : MvPowerSeries σ R) :
     coeff R (0 : σ →₀ ℕ) φ = constantCoeff σ R φ :=
   rfl
-#align
-  mv_power_series.coeff_zero_eq_constant_coeff_apply MvPowerSeries.coeff_zero_eq_constant_coeff_apply
+#align mv_power_series.coeff_zero_eq_constant_coeff_apply MvPowerSeries.coeff_zero_eq_constant_coeff_apply
 
 @[simp]
 theorem constant_coeff_C (a : R) : constantCoeff σ R (c σ R a) = a :=
@@ -1130,8 +1129,7 @@ variable (φ ψ)
 @[simp]
 theorem coeToMvPowerSeries.ring_hom_apply : coeToMvPowerSeries.ringHom φ = φ :=
   rfl
-#align
-  mv_polynomial.coe_to_mv_power_series.ring_hom_apply MvPolynomial.coeToMvPowerSeries.ring_hom_apply
+#align mv_polynomial.coe_to_mv_power_series.ring_hom_apply MvPolynomial.coeToMvPowerSeries.ring_hom_apply
 
 section Algebra
 
@@ -1153,8 +1151,7 @@ def coeToMvPowerSeries.algHom : MvPolynomial σ R →ₐ[R] MvPowerSeries σ A :
 theorem coeToMvPowerSeries.alg_hom_apply :
     coeToMvPowerSeries.algHom A φ = MvPowerSeries.map σ (algebraMap R A) ↑φ :=
   rfl
-#align
-  mv_polynomial.coe_to_mv_power_series.alg_hom_apply MvPolynomial.coeToMvPowerSeries.alg_hom_apply
+#align mv_polynomial.coe_to_mv_power_series.alg_hom_apply MvPolynomial.coeToMvPowerSeries.alg_hom_apply
 
 end Algebra
 
@@ -1329,8 +1326,7 @@ theorem coeff_zero_eq_constant_coeff : ⇑(coeff R 0) = constantCoeff R :=
 
 theorem coeff_zero_eq_constant_coeff_apply (φ : PowerSeries R) : coeff R 0 φ = constantCoeff R φ :=
   by rw [coeff_zero_eq_constant_coeff] <;> rfl
-#align
-  power_series.coeff_zero_eq_constant_coeff_apply PowerSeries.coeff_zero_eq_constant_coeff_apply
+#align power_series.coeff_zero_eq_constant_coeff_apply PowerSeries.coeff_zero_eq_constant_coeff_apply
 
 @[simp]
 theorem monomial_zero_eq_C : ⇑(monomial R 0) = c R := by
@@ -2364,8 +2360,7 @@ theorem coeff_mul_prod_one_sub_of_lt_order {R ι : Type _} [CommRing R] (k : ℕ
     simp only [Finset.mem_insert, forall_eq_or_imp] at t
     rw [Finset.prod_insert ha, ← mul_assoc, mul_right_comm, coeff_mul_one_sub_of_lt_order _ t.1]
     exact ih t.2
-#align
-  power_series.coeff_mul_prod_one_sub_of_lt_order PowerSeries.coeff_mul_prod_one_sub_of_lt_order
+#align power_series.coeff_mul_prod_one_sub_of_lt_order PowerSeries.coeff_mul_prod_one_sub_of_lt_order
 
 -- TODO: link with `X_pow_dvd_iff`
 theorem X_pow_order_dvd (h : (order φ).Dom) : X ^ (order φ).get h ∣ φ :=

@@ -314,8 +314,7 @@ theorem HasFtaylorSeriesUpToOn.eventually_has_fderiv_at (h : HasFtaylorSeriesUpT
     (hn : 1 ≤ n) (hx : s ∈ 𝓝 x) :
     ∀ᶠ y in 𝓝 x, HasFderivAt f (continuousMultilinearCurryFin1 𝕜 E F (p y 1)) y :=
   (eventually_eventually_nhds.2 hx).mono fun y hy => h.HasFderivAt hn hy
-#align
-  has_ftaylor_series_up_to_on.eventually_has_fderiv_at HasFtaylorSeriesUpToOn.eventually_has_fderiv_at
+#align has_ftaylor_series_up_to_on.eventually_has_fderiv_at HasFtaylorSeriesUpToOn.eventually_has_fderiv_at
 
 /-- If a function has a Taylor series at order at least `1` on a neighborhood of `x`, then
 it is differentiable at `x`. -/
@@ -492,8 +491,7 @@ theorem ContDiffWithinAt.congr_of_eventually_eq_insert (h : ContDiffWithinAt �
     (h₁ : f₁ =ᶠ[𝓝[insert x s] x] f) : ContDiffWithinAt 𝕜 n f₁ s x :=
   h.congr_of_eventually_eq (nhds_within_mono x (subset_insert x s) h₁)
     (mem_of_mem_nhds_within (mem_insert x s) h₁ : _)
-#align
-  cont_diff_within_at.congr_of_eventually_eq_insert ContDiffWithinAt.congr_of_eventually_eq_insert
+#align cont_diff_within_at.congr_of_eventually_eq_insert ContDiffWithinAt.congr_of_eventually_eq_insert
 
 theorem ContDiffWithinAt.congr_of_eventually_eq' (h : ContDiffWithinAt 𝕜 n f s x)
     (h₁ : f₁ =ᶠ[𝓝[s] x] f) (hx : x ∈ s) : ContDiffWithinAt 𝕜 n f₁ s x :=
@@ -635,8 +633,7 @@ theorem cont_diff_within_at_succ_iff_has_fderiv_within_at {n : ℕ} :
                 (@snoc k (fun i : Fin k.succ => E) v y (last k)) =
               p' x k v y
           rw [snoc_last, init_snoc]
-#align
-  cont_diff_within_at_succ_iff_has_fderiv_within_at cont_diff_within_at_succ_iff_has_fderiv_within_at
+#align cont_diff_within_at_succ_iff_has_fderiv_within_at cont_diff_within_at_succ_iff_has_fderiv_within_at
 
 /-- A version of `cont_diff_within_at_succ_iff_has_fderiv_within_at` where all derivatives
   are taken within the same set. -/
@@ -662,8 +659,7 @@ theorem cont_diff_within_at_succ_iff_has_fderiv_within_at' {n : ℕ} :
       insert_eq_of_mem (mem_insert _ _)]
     rintro ⟨u, hu, hus, f', huf', hf'⟩
     refine' ⟨u, hu, f', fun y hy => (huf' y hy).insert'.mono hus, hf'.insert.mono hus⟩
-#align
-  cont_diff_within_at_succ_iff_has_fderiv_within_at' cont_diff_within_at_succ_iff_has_fderiv_within_at'
+#align cont_diff_within_at_succ_iff_has_fderiv_within_at' cont_diff_within_at_succ_iff_has_fderiv_within_at'
 
 /-! ### Smooth functions within a set -/
 
@@ -1040,8 +1036,7 @@ theorem HasFtaylorSeriesUpToOn.eq_ftaylor_series_of_unique_diff_on
         (IH (le_of_lt A) hx).symm
     rw [iterated_fderiv_within_succ_eq_comp_left, Function.comp_apply, this.fderiv_within (hs x hx)]
     exact (ContinuousMultilinearMap.uncurry_curry_left _).symm
-#align
-  has_ftaylor_series_up_to_on.eq_ftaylor_series_of_unique_diff_on HasFtaylorSeriesUpToOn.eq_ftaylor_series_of_unique_diff_on
+#align has_ftaylor_series_up_to_on.eq_ftaylor_series_of_unique_diff_on HasFtaylorSeriesUpToOn.eq_ftaylor_series_of_unique_diff_on
 
 /-- When a function is `C^n` in a set `s` of unique differentiability, it admits
 `ftaylor_series_within 𝕜 f s` as a Taylor series up to order `n` in `s`. -/
@@ -1110,8 +1105,7 @@ theorem cont_diff_on_of_continuous_on_differentiable_on
     exact ContinuousLinearMap.curry_uncurry_left _
   · intro k hk
     exact Hcont k (le_trans hk hm)
-#align
-  cont_diff_on_of_continuous_on_differentiable_on cont_diff_on_of_continuous_on_differentiable_on
+#align cont_diff_on_of_continuous_on_differentiable_on cont_diff_on_of_continuous_on_differentiable_on
 
 theorem cont_diff_on_of_differentiable_on
     (h : ∀ m : ℕ, (m : ℕ∞) ≤ n → DifferentiableOn 𝕜 (iteratedFderivWithin 𝕜 m f s) s) :
@@ -1123,15 +1117,13 @@ theorem cont_diff_on_of_differentiable_on
 theorem ContDiffOn.continuous_on_iterated_fderiv_within {m : ℕ} (h : ContDiffOn 𝕜 n f s)
     (hmn : (m : ℕ∞) ≤ n) (hs : UniqueDiffOn 𝕜 s) : ContinuousOn (iteratedFderivWithin 𝕜 m f s) s :=
   (h.ftaylorSeriesWithin hs).cont m hmn
-#align
-  cont_diff_on.continuous_on_iterated_fderiv_within ContDiffOn.continuous_on_iterated_fderiv_within
+#align cont_diff_on.continuous_on_iterated_fderiv_within ContDiffOn.continuous_on_iterated_fderiv_within
 
 theorem ContDiffOn.differentiable_on_iterated_fderiv_within {m : ℕ} (h : ContDiffOn 𝕜 n f s)
     (hmn : (m : ℕ∞) < n) (hs : UniqueDiffOn 𝕜 s) :
     DifferentiableOn 𝕜 (iteratedFderivWithin 𝕜 m f s) s := fun x hx =>
   ((h.ftaylorSeriesWithin hs).fderivWithin m hmn x hx).DifferentiableWithinAt
-#align
-  cont_diff_on.differentiable_on_iterated_fderiv_within ContDiffOn.differentiable_on_iterated_fderiv_within
+#align cont_diff_on.differentiable_on_iterated_fderiv_within ContDiffOn.differentiable_on_iterated_fderiv_within
 
 theorem cont_diff_on_iff_continuous_on_differentiable_on (hs : UniqueDiffOn 𝕜 s) :
     ContDiffOn 𝕜 n f s ↔
@@ -1147,8 +1139,7 @@ theorem cont_diff_on_iff_continuous_on_differentiable_on (hs : UniqueDiffOn 𝕜
       exact h.differentiable_on_iterated_fderiv_within hm hs
   · intro h
     exact cont_diff_on_of_continuous_on_differentiable_on h.1 h.2
-#align
-  cont_diff_on_iff_continuous_on_differentiable_on cont_diff_on_iff_continuous_on_differentiable_on
+#align cont_diff_on_iff_continuous_on_differentiable_on cont_diff_on_iff_continuous_on_differentiable_on
 
 theorem cont_diff_on_succ_of_fderiv_within {n : ℕ} (hf : DifferentiableOn 𝕜 f s)
     (h : ContDiffOn 𝕜 n (fun y => fderivWithin 𝕜 f s y) s) : ContDiffOn 𝕜 (n + 1 : ℕ) f s :=
@@ -1303,8 +1294,7 @@ theorem has_ftaylor_series_up_to_on_univ_iff :
 theorem HasFtaylorSeriesUpTo.hasFtaylorSeriesUpToOn (h : HasFtaylorSeriesUpTo n f p) (s : Set E) :
     HasFtaylorSeriesUpToOn n f p s :=
   (has_ftaylor_series_up_to_on_univ_iff.2 h).mono (subset_univ _)
-#align
-  has_ftaylor_series_up_to.has_ftaylor_series_up_to_on HasFtaylorSeriesUpTo.hasFtaylorSeriesUpToOn
+#align has_ftaylor_series_up_to.has_ftaylor_series_up_to_on HasFtaylorSeriesUpTo.hasFtaylorSeriesUpToOn
 
 theorem HasFtaylorSeriesUpTo.ofLe (h : HasFtaylorSeriesUpTo n f p) (hmn : m ≤ n) :
     HasFtaylorSeriesUpTo m f p :=
@@ -1901,8 +1891,7 @@ theorem HasFtaylorSeriesUpToOn.continuousLinearMapComp (g : F →L[𝕜] G)
     convert (L m).HasFderivAt.compHasFderivWithinAt x (hf.fderiv_within m hm x hx)
   · intro m hm
     convert (L m).Continuous.comp_continuous_on (hf.cont m hm)
-#align
-  has_ftaylor_series_up_to_on.continuous_linear_map_comp HasFtaylorSeriesUpToOn.continuousLinearMapComp
+#align has_ftaylor_series_up_to_on.continuous_linear_map_comp HasFtaylorSeriesUpToOn.continuousLinearMapComp
 
 /-- Composition by continuous linear maps on the left preserves `C^n` functions in a domain
 at a point. -/
@@ -1940,8 +1929,7 @@ theorem ContinuousLinearEquiv.comp_cont_diff_within_at_iff (e : F ≃L[𝕜] G) 
     simpa only [(· ∘ ·), e.symm.coe_coe, e.symm_apply_apply] using
       H.continuous_linear_map_comp (e.symm : G →L[𝕜] F),
     fun H => H.continuousLinearMapComp (e : F →L[𝕜] G)⟩
-#align
-  continuous_linear_equiv.comp_cont_diff_within_at_iff ContinuousLinearEquiv.comp_cont_diff_within_at_iff
+#align continuous_linear_equiv.comp_cont_diff_within_at_iff ContinuousLinearEquiv.comp_cont_diff_within_at_iff
 
 /-- Composition by continuous linear equivs on the left respects higher differentiability at a
 point. -/
@@ -1990,8 +1978,7 @@ theorem HasFtaylorSeriesUpToOn.compContinuousLinearMap (hf : HasFtaylorSeriesUpT
     exact
       (hA m).Continuous.comp_continuous_on
         ((hf.cont m hm).comp g.continuous.continuous_on (subset.refl _))
-#align
-  has_ftaylor_series_up_to_on.comp_continuous_linear_map HasFtaylorSeriesUpToOn.compContinuousLinearMap
+#align has_ftaylor_series_up_to_on.comp_continuous_linear_map HasFtaylorSeriesUpToOn.compContinuousLinearMap
 
 /-- Composition by continuous linear maps on the right preserves `C^n` functions at a point on
 a domain. -/
@@ -2030,8 +2017,7 @@ theorem ContinuousLinearEquiv.cont_diff_within_at_comp_iff (e : G ≃L[𝕜] E) 
   · intro H
     rw [← e.apply_symm_apply x, ← e.coe_coe] at H
     exact H.comp_continuous_linear_map _
-#align
-  continuous_linear_equiv.cont_diff_within_at_comp_iff ContinuousLinearEquiv.cont_diff_within_at_comp_iff
+#align continuous_linear_equiv.cont_diff_within_at_comp_iff ContinuousLinearEquiv.cont_diff_within_at_comp_iff
 
 /-- Composition by continuous linear equivs on the right respects higher differentiability at a
 point. -/
@@ -3531,8 +3517,7 @@ theorem HasFtaylorSeriesUpToOn.exists_lipschitz_on_with_of_nnnorm_lt {E F : Type
   exact
     hs.exists_nhds_within_lipschitz_on_with_of_has_fderiv_within_at_of_nnnorm_lt
       (eventually_nhds_within_iff.2 <| eventually_of_forall hder) hcont K hK
-#align
-  has_ftaylor_series_up_to_on.exists_lipschitz_on_with_of_nnnorm_lt HasFtaylorSeriesUpToOn.exists_lipschitz_on_with_of_nnnorm_lt
+#align has_ftaylor_series_up_to_on.exists_lipschitz_on_with_of_nnnorm_lt HasFtaylorSeriesUpToOn.exists_lipschitz_on_with_of_nnnorm_lt
 
 /-- If `f` has a formal Taylor series `p` up to order `1` on `{x} ∪ s`, where `s` is a convex set,
 then `f` is Lipschitz in a neighborhood of `x` within `s`. -/
@@ -3542,8 +3527,7 @@ theorem HasFtaylorSeriesUpToOn.exists_lipschitz_on_with {E F : Type _} [NormedAd
     (hf : HasFtaylorSeriesUpToOn 1 f p (insert x s)) (hs : Convex ℝ s) :
     ∃ K, ∃ t ∈ 𝓝[s] x, LipschitzOnWith K f t :=
   (exists_gt _).imp <| hf.exists_lipschitz_on_with_of_nnnorm_lt hs
-#align
-  has_ftaylor_series_up_to_on.exists_lipschitz_on_with HasFtaylorSeriesUpToOn.exists_lipschitz_on_with
+#align has_ftaylor_series_up_to_on.exists_lipschitz_on_with HasFtaylorSeriesUpToOn.exists_lipschitz_on_with
 
 /-- If `f` is `C^1` within a conves set `s` at `x`, then it is Lipschitz on a neighborhood of `x`
 within `s`. -/
@@ -3568,8 +3552,7 @@ theorem ContDiffAt.exists_lipschitz_on_with_of_nnnorm_lt {f : E' → F'} {x : E'
     (hf : ContDiffAt 𝕂 1 f x) (K : ℝ≥0) (hK : ‖fderiv 𝕂 f x‖₊ < K) :
     ∃ t ∈ 𝓝 x, LipschitzOnWith K f t :=
   (hf.HasStrictFderivAt le_rfl).exists_lipschitz_on_with_of_nnnorm_lt K hK
-#align
-  cont_diff_at.exists_lipschitz_on_with_of_nnnorm_lt ContDiffAt.exists_lipschitz_on_with_of_nnnorm_lt
+#align cont_diff_at.exists_lipschitz_on_with_of_nnnorm_lt ContDiffAt.exists_lipschitz_on_with_of_nnnorm_lt
 
 /-- If `f` is `C^1` at `x`, then `f` is Lipschitz in a neighborhood of `x`. -/
 theorem ContDiffAt.exists_lipschitz_on_with {f : E' → F'} {x : E'} (hf : ContDiffAt 𝕂 1 f x) :

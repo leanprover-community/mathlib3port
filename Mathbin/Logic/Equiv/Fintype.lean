@@ -51,16 +51,14 @@ theorem Function.Embedding.to_equiv_range_apply (a : α) :
 @[simp]
 theorem Function.Embedding.to_equiv_range_symm_apply_self (a : α) :
     f.toEquivRange.symm ⟨f a, Set.mem_range_self a⟩ = a := by simp [Equiv.symm_apply_eq]
-#align
-  function.embedding.to_equiv_range_symm_apply_self Function.Embedding.to_equiv_range_symm_apply_self
+#align function.embedding.to_equiv_range_symm_apply_self Function.Embedding.to_equiv_range_symm_apply_self
 
 theorem Function.Embedding.to_equiv_range_eq_of_injective :
     f.toEquivRange = Equiv.ofInjective f f.Injective :=
   by
   ext
   simp
-#align
-  function.embedding.to_equiv_range_eq_of_injective Function.Embedding.to_equiv_range_eq_of_injective
+#align function.embedding.to_equiv_range_eq_of_injective Function.Embedding.to_equiv_range_eq_of_injective
 
 /-- Extend the domain of `e : equiv.perm α`, mapping it through `f : α ↪ β`.
 Everything outside of `set.range f` is kept fixed. Has poor computational performance,
@@ -84,14 +82,12 @@ theorem Equiv.Perm.via_fintype_embedding_apply_image (a : α) :
 theorem Equiv.Perm.via_fintype_embedding_apply_mem_range {b : β} (h : b ∈ Set.range f) :
     e.viaFintypeEmbedding f b = f (e (f.invOfMemRange ⟨b, h⟩)) := by
   simpa [Equiv.Perm.viaFintypeEmbedding, Equiv.Perm.extendDomain_apply_subtype, h]
-#align
-  equiv.perm.via_fintype_embedding_apply_mem_range Equiv.Perm.via_fintype_embedding_apply_mem_range
+#align equiv.perm.via_fintype_embedding_apply_mem_range Equiv.Perm.via_fintype_embedding_apply_mem_range
 
 theorem Equiv.Perm.via_fintype_embedding_apply_not_mem_range {b : β} (h : b ∉ Set.range f) :
     e.viaFintypeEmbedding f b = b := by
   rwa [Equiv.Perm.viaFintypeEmbedding, Equiv.Perm.extendDomain_apply_not_subtype]
-#align
-  equiv.perm.via_fintype_embedding_apply_not_mem_range Equiv.Perm.via_fintype_embedding_apply_not_mem_range
+#align equiv.perm.via_fintype_embedding_apply_not_mem_range Equiv.Perm.via_fintype_embedding_apply_not_mem_range
 
 @[simp]
 theorem Equiv.Perm.via_fintype_embedding_sign [DecidableEq α] [Fintype β] :

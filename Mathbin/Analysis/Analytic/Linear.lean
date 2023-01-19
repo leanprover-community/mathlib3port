@@ -43,8 +43,7 @@ def fpowerSeries (f : E →L[𝕜] F) (x : E) : FormalMultilinearSeries 𝕜 E F
 theorem fpower_series_apply_add_two (f : E →L[𝕜] F) (x : E) (n : ℕ) :
     f.fpowerSeries x (n + 2) = 0 :=
   rfl
-#align
-  continuous_linear_map.fpower_series_apply_add_two ContinuousLinearMap.fpower_series_apply_add_two
+#align continuous_linear_map.fpower_series_apply_add_two ContinuousLinearMap.fpower_series_apply_add_two
 
 @[simp]
 theorem fpower_series_radius (f : E →L[𝕜] F) (x : E) : (f.fpowerSeries x).radius = ∞ :=
@@ -97,8 +96,7 @@ def fpowerSeriesBilinear (f : E →L[𝕜] F →L[𝕜] G) (x : E × F) : Formal
 theorem fpower_series_bilinear_radius (f : E →L[𝕜] F →L[𝕜] G) (x : E × F) :
     (f.fpowerSeriesBilinear x).radius = ∞ :=
   (f.fpowerSeriesBilinear x).radius_eq_top_of_forall_image_add_eq_zero 3 fun n => rfl
-#align
-  continuous_linear_map.fpower_series_bilinear_radius ContinuousLinearMap.fpower_series_bilinear_radius
+#align continuous_linear_map.fpower_series_bilinear_radius ContinuousLinearMap.fpower_series_bilinear_radius
 
 protected theorem hasFpowerSeriesOnBallBilinear (f : E →L[𝕜] F →L[𝕜] G) (x : E × F) :
     HasFpowerSeriesOnBall (fun x : E × F => f x.1 x.2) (f.fpowerSeriesBilinear x) x ∞ :=
@@ -110,14 +108,12 @@ protected theorem hasFpowerSeriesOnBallBilinear (f : E →L[𝕜] F →L[𝕜] G
         simp only [Finset.sum_range_succ, Finset.sum_range_one, Prod.fst_add, Prod.snd_add,
           f.map_add_add]
         dsimp; simp only [add_comm, sub_self, has_sum_zero] }
-#align
-  continuous_linear_map.has_fpower_series_on_ball_bilinear ContinuousLinearMap.hasFpowerSeriesOnBallBilinear
+#align continuous_linear_map.has_fpower_series_on_ball_bilinear ContinuousLinearMap.hasFpowerSeriesOnBallBilinear
 
 protected theorem hasFpowerSeriesAtBilinear (f : E →L[𝕜] F →L[𝕜] G) (x : E × F) :
     HasFpowerSeriesAt (fun x : E × F => f x.1 x.2) (f.fpowerSeriesBilinear x) x :=
   ⟨∞, f.hasFpowerSeriesOnBallBilinear x⟩
-#align
-  continuous_linear_map.has_fpower_series_at_bilinear ContinuousLinearMap.hasFpowerSeriesAtBilinear
+#align continuous_linear_map.has_fpower_series_at_bilinear ContinuousLinearMap.hasFpowerSeriesAtBilinear
 
 protected theorem analytic_at_bilinear (f : E →L[𝕜] F →L[𝕜] G) (x : E × F) :
     AnalyticAt 𝕜 (fun x : E × F => f x.1 x.2) x :=

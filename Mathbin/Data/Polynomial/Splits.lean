@@ -289,8 +289,7 @@ theorem degree_eq_one_of_irreducible_of_splits {p : K[X]} (hp : Irreducible p)
     simp_all
   · apply hp_splits hp
     simp
-#align
-  polynomial.degree_eq_one_of_irreducible_of_splits Polynomial.degree_eq_one_of_irreducible_of_splits
+#align polynomial.degree_eq_one_of_irreducible_of_splits Polynomial.degree_eq_one_of_irreducible_of_splits
 
 theorem exists_root_of_splits {f : K[X]} (hs : Splits i f) (hf0 : degree f ≠ 0) :
     ∃ x, eval₂ i x f = 0 :=
@@ -387,8 +386,7 @@ theorem mem_lift_of_splits_of_roots_mem_range (R : Type _) [CommRing R] [Algebra
   refine' Subring.multiset_prod_mem _ _ fun P hP => _
   obtain ⟨b, hb, rfl⟩ := Multiset.mem_map.1 hP
   exact Subring.sub_mem _ (X_mem_lifts _) (C'_mem_lifts (hr _ hb))
-#align
-  polynomial.mem_lift_of_splits_of_roots_mem_range Polynomial.mem_lift_of_splits_of_roots_mem_range
+#align polynomial.mem_lift_of_splits_of_roots_mem_range Polynomial.mem_lift_of_splits_of_roots_mem_range
 
 section UFD
 
@@ -481,8 +479,7 @@ theorem prod_roots_eq_coeff_zero_of_monic_of_split {P : K[X]} (hmo : P.Monic)
     rw [neg_eq_neg_one_mul]
   rw [Multiset.prod_map_mul, Multiset.map_const, Multiset.prod_replicate, Multiset.map_id',
     splits_iff_card_roots.1 hP]
-#align
-  polynomial.prod_roots_eq_coeff_zero_of_monic_of_split Polynomial.prod_roots_eq_coeff_zero_of_monic_of_split
+#align polynomial.prod_roots_eq_coeff_zero_of_monic_of_split Polynomial.prod_roots_eq_coeff_zero_of_monic_of_split
 
 /-- If `P` is a monic polynomial that splits, then `P.next_coeff` equals the sum of the roots. -/
 theorem sum_roots_eq_next_coeff_of_monic_of_split {P : K[X]} (hmo : P.Monic)
@@ -492,8 +489,7 @@ theorem sum_roots_eq_next_coeff_of_monic_of_split {P : K[X]} (hmo : P.Monic)
   rw [monic.next_coeff_multiset_prod _ _ fun a ha => _]
   · simp_rw [next_coeff_X_sub_C, Multiset.sum_map_neg']
   · exact monic_X_sub_C a
-#align
-  polynomial.sum_roots_eq_next_coeff_of_monic_of_split Polynomial.sum_roots_eq_next_coeff_of_monic_of_split
+#align polynomial.sum_roots_eq_next_coeff_of_monic_of_split Polynomial.sum_roots_eq_next_coeff_of_monic_of_split
 
 end Splits
 

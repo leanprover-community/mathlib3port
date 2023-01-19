@@ -878,8 +878,7 @@ theorem infinite_pos_iff_infinitesimal_inv_pos {x : ℝ*} :
       lt_of_le_of_lt (coe_le_coe.2 (le_abs_self r))
         ((inv_lt_inv (inv_pos.mp hp) (coe_lt_coe.2 (abs_pos.2 h))).mp
           ((infinitesimal_def.mp hi) (|r|)⁻¹ (inv_pos.2 (abs_pos.2 h))).2)⟩
-#align
-  hyperreal.infinite_pos_iff_infinitesimal_inv_pos Hyperreal.infinite_pos_iff_infinitesimal_inv_pos
+#align hyperreal.infinite_pos_iff_infinitesimal_inv_pos Hyperreal.infinite_pos_iff_infinitesimal_inv_pos
 
 theorem infinite_neg_iff_infinitesimal_inv_neg {x : ℝ*} :
     InfiniteNeg x ↔ Infinitesimal x⁻¹ ∧ x⁻¹ < 0 :=
@@ -889,8 +888,7 @@ theorem infinite_neg_iff_infinitesimal_inv_neg {x : ℝ*} :
     rwa [infinitesimal_neg_iff, ← neg_pos, neg_inv], fun hin => by
     rwa [← neg_pos, infinitesimal_neg_iff, neg_inv, ← infinite_pos_iff_infinitesimal_inv_pos, ←
       infinite_neg_iff_infinite_pos_neg] at hin⟩
-#align
-  hyperreal.infinite_neg_iff_infinitesimal_inv_neg Hyperreal.infinite_neg_iff_infinitesimal_inv_neg
+#align hyperreal.infinite_neg_iff_infinitesimal_inv_neg Hyperreal.infinite_neg_iff_infinitesimal_inv_neg
 
 theorem infinitesimal_inv_of_infinite {x : ℝ*} : Infinite x → Infinitesimal x⁻¹ := fun hi =>
   Or.cases_on hi (fun hip => (infinite_pos_iff_infinitesimal_inv_pos.mp hip).1) fun hin =>
@@ -911,14 +909,12 @@ theorem infinite_iff_infinitesimal_inv {x : ℝ*} (h0 : x ≠ 0) : Infinite x �
 theorem infinitesimal_pos_iff_infinite_pos_inv {x : ℝ*} :
     InfinitePos x⁻¹ ↔ Infinitesimal x ∧ 0 < x := by
   convert infinite_pos_iff_infinitesimal_inv_pos <;> simp only [inv_inv]
-#align
-  hyperreal.infinitesimal_pos_iff_infinite_pos_inv Hyperreal.infinitesimal_pos_iff_infinite_pos_inv
+#align hyperreal.infinitesimal_pos_iff_infinite_pos_inv Hyperreal.infinitesimal_pos_iff_infinite_pos_inv
 
 theorem infinitesimal_neg_iff_infinite_neg_inv {x : ℝ*} :
     InfiniteNeg x⁻¹ ↔ Infinitesimal x ∧ x < 0 := by
   convert infinite_neg_iff_infinitesimal_inv_neg <;> simp only [inv_inv]
-#align
-  hyperreal.infinitesimal_neg_iff_infinite_neg_inv Hyperreal.infinitesimal_neg_iff_infinite_neg_inv
+#align hyperreal.infinitesimal_neg_iff_infinite_neg_inv Hyperreal.infinitesimal_neg_iff_infinite_neg_inv
 
 theorem infinitesimal_iff_infinite_inv {x : ℝ*} (h : x ≠ 0) : Infinitesimal x ↔ Infinite x⁻¹ := by
   convert (infinite_iff_infinitesimal_inv (inv_ne_zero h)).symm <;> simp only [inv_inv]
@@ -977,53 +973,45 @@ theorem infinite_pos_mul_of_infinite_pos_not_infinitesimal_pos {x y : ℝ*} :
     have hyr := by rw [not_imp, ← abs_lt, not_lt, abs_of_pos hy₂] at hy₁'' <;> exact hy₁''
     rw [← div_mul_cancel r (ne_of_gt hyr.1), coe_mul] <;>
       exact mul_lt_mul (hx (r / r₁)) hyr.2 (coe_lt_coe.2 hyr.1) (le_of_lt (hx 0))
-#align
-  hyperreal.infinite_pos_mul_of_infinite_pos_not_infinitesimal_pos Hyperreal.infinite_pos_mul_of_infinite_pos_not_infinitesimal_pos
+#align hyperreal.infinite_pos_mul_of_infinite_pos_not_infinitesimal_pos Hyperreal.infinite_pos_mul_of_infinite_pos_not_infinitesimal_pos
 
 theorem infinite_pos_mul_of_not_infinitesimal_pos_infinite_pos {x y : ℝ*} :
     ¬Infinitesimal x → 0 < x → InfinitePos y → InfinitePos (x * y) := fun hx hp hy => by
   rw [mul_comm] <;> exact infinite_pos_mul_of_infinite_pos_not_infinitesimal_pos hy hx hp
-#align
-  hyperreal.infinite_pos_mul_of_not_infinitesimal_pos_infinite_pos Hyperreal.infinite_pos_mul_of_not_infinitesimal_pos_infinite_pos
+#align hyperreal.infinite_pos_mul_of_not_infinitesimal_pos_infinite_pos Hyperreal.infinite_pos_mul_of_not_infinitesimal_pos_infinite_pos
 
 theorem infinite_pos_mul_of_infinite_neg_not_infinitesimal_neg {x y : ℝ*} :
     InfiniteNeg x → ¬Infinitesimal y → y < 0 → InfinitePos (x * y) := by
   rw [infinite_neg_iff_infinite_pos_neg, ← neg_pos, ← neg_mul_neg, infinitesimal_neg_iff] <;>
     exact infinite_pos_mul_of_infinite_pos_not_infinitesimal_pos
-#align
-  hyperreal.infinite_pos_mul_of_infinite_neg_not_infinitesimal_neg Hyperreal.infinite_pos_mul_of_infinite_neg_not_infinitesimal_neg
+#align hyperreal.infinite_pos_mul_of_infinite_neg_not_infinitesimal_neg Hyperreal.infinite_pos_mul_of_infinite_neg_not_infinitesimal_neg
 
 theorem infinite_pos_mul_of_not_infinitesimal_neg_infinite_neg {x y : ℝ*} :
     ¬Infinitesimal x → x < 0 → InfiniteNeg y → InfinitePos (x * y) := fun hx hp hy => by
   rw [mul_comm] <;> exact infinite_pos_mul_of_infinite_neg_not_infinitesimal_neg hy hx hp
-#align
-  hyperreal.infinite_pos_mul_of_not_infinitesimal_neg_infinite_neg Hyperreal.infinite_pos_mul_of_not_infinitesimal_neg_infinite_neg
+#align hyperreal.infinite_pos_mul_of_not_infinitesimal_neg_infinite_neg Hyperreal.infinite_pos_mul_of_not_infinitesimal_neg_infinite_neg
 
 theorem infinite_neg_mul_of_infinite_pos_not_infinitesimal_neg {x y : ℝ*} :
     InfinitePos x → ¬Infinitesimal y → y < 0 → InfiniteNeg (x * y) := by
   rw [infinite_neg_iff_infinite_pos_neg, ← neg_pos, neg_mul_eq_mul_neg, infinitesimal_neg_iff] <;>
     exact infinite_pos_mul_of_infinite_pos_not_infinitesimal_pos
-#align
-  hyperreal.infinite_neg_mul_of_infinite_pos_not_infinitesimal_neg Hyperreal.infinite_neg_mul_of_infinite_pos_not_infinitesimal_neg
+#align hyperreal.infinite_neg_mul_of_infinite_pos_not_infinitesimal_neg Hyperreal.infinite_neg_mul_of_infinite_pos_not_infinitesimal_neg
 
 theorem infinite_neg_mul_of_not_infinitesimal_neg_infinite_pos {x y : ℝ*} :
     ¬Infinitesimal x → x < 0 → InfinitePos y → InfiniteNeg (x * y) := fun hx hp hy => by
   rw [mul_comm] <;> exact infinite_neg_mul_of_infinite_pos_not_infinitesimal_neg hy hx hp
-#align
-  hyperreal.infinite_neg_mul_of_not_infinitesimal_neg_infinite_pos Hyperreal.infinite_neg_mul_of_not_infinitesimal_neg_infinite_pos
+#align hyperreal.infinite_neg_mul_of_not_infinitesimal_neg_infinite_pos Hyperreal.infinite_neg_mul_of_not_infinitesimal_neg_infinite_pos
 
 theorem infinite_neg_mul_of_infinite_neg_not_infinitesimal_pos {x y : ℝ*} :
     InfiniteNeg x → ¬Infinitesimal y → 0 < y → InfiniteNeg (x * y) := by
   rw [infinite_neg_iff_infinite_pos_neg, infinite_neg_iff_infinite_pos_neg, neg_mul_eq_neg_mul] <;>
     exact infinite_pos_mul_of_infinite_pos_not_infinitesimal_pos
-#align
-  hyperreal.infinite_neg_mul_of_infinite_neg_not_infinitesimal_pos Hyperreal.infinite_neg_mul_of_infinite_neg_not_infinitesimal_pos
+#align hyperreal.infinite_neg_mul_of_infinite_neg_not_infinitesimal_pos Hyperreal.infinite_neg_mul_of_infinite_neg_not_infinitesimal_pos
 
 theorem infinite_neg_mul_of_not_infinitesimal_pos_infinite_neg {x y : ℝ*} :
     ¬Infinitesimal x → 0 < x → InfiniteNeg y → InfiniteNeg (x * y) := fun hx hp hy => by
   rw [mul_comm] <;> exact infinite_neg_mul_of_infinite_neg_not_infinitesimal_pos hy hx hp
-#align
-  hyperreal.infinite_neg_mul_of_not_infinitesimal_pos_infinite_neg Hyperreal.infinite_neg_mul_of_not_infinitesimal_pos_infinite_neg
+#align hyperreal.infinite_neg_mul_of_not_infinitesimal_pos_infinite_neg Hyperreal.infinite_neg_mul_of_not_infinitesimal_pos_infinite_neg
 
 theorem infinite_pos_mul_infinite_pos {x y : ℝ*} :
     InfinitePos x → InfinitePos y → InfinitePos (x * y) := fun hx hy =>
@@ -1059,14 +1047,12 @@ theorem infinite_mul_of_infinite_not_infinitesimal {x y : ℝ*} :
     (Or.dcases_on h0
       (fun H0 Hx => Or.inl (infinite_pos_mul_of_infinite_neg_not_infinitesimal_neg Hx hy H0))
       fun H0 Hx => Or.inr (infinite_neg_mul_of_infinite_neg_not_infinitesimal_pos Hx hy H0))
-#align
-  hyperreal.infinite_mul_of_infinite_not_infinitesimal Hyperreal.infinite_mul_of_infinite_not_infinitesimal
+#align hyperreal.infinite_mul_of_infinite_not_infinitesimal Hyperreal.infinite_mul_of_infinite_not_infinitesimal
 
 theorem infinite_mul_of_not_infinitesimal_infinite {x y : ℝ*} :
     ¬Infinitesimal x → Infinite y → Infinite (x * y) := fun hx hy => by
   rw [mul_comm] <;> exact infinite_mul_of_infinite_not_infinitesimal hy hx
-#align
-  hyperreal.infinite_mul_of_not_infinitesimal_infinite Hyperreal.infinite_mul_of_not_infinitesimal_infinite
+#align hyperreal.infinite_mul_of_not_infinitesimal_infinite Hyperreal.infinite_mul_of_not_infinitesimal_infinite
 
 theorem Infinite.mul {x y : ℝ*} : Infinite x → Infinite y → Infinite (x * y) := fun hx hy =>
   infinite_mul_of_infinite_not_infinitesimal hx (not_infinitesimal_of_infinite hy)

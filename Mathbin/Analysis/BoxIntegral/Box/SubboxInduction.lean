@@ -111,8 +111,7 @@ theorem Union_coe_split_center_box (I : Box ι) : (⋃ s, (I.splitCenterBox s : 
 theorem upper_sub_lower_split_center_box (I : Box ι) (s : Set ι) (i : ι) :
     (I.splitCenterBox s).upper i - (I.splitCenterBox s).lower i = (I.upper i - I.lower i) / 2 := by
   by_cases hs : i ∈ s <;> field_simp [split_center_box, hs, mul_two, two_mul]
-#align
-  box_integral.box.upper_sub_lower_split_center_box BoxIntegral.Box.upper_sub_lower_split_center_box
+#align box_integral.box.upper_sub_lower_split_center_box BoxIntegral.Box.upper_sub_lower_split_center_box
 
 /-- Let `p` be a predicate on `box ι`, let `I` be a box. Suppose that the following two properties
 hold true.

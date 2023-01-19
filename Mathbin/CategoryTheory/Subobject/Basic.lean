@@ -238,8 +238,7 @@ theorem underlying_iso_arrow {X Y : C} (f : X ⟶ Y) [Mono f] :
 theorem underlying_iso_hom_comp_eq_mk {X Y : C} (f : X ⟶ Y) [Mono f] :
     (underlyingIso f).Hom ≫ f = (mk f).arrow :=
   (Iso.eq_inv_comp _).1 (underlying_iso_arrow f).symm
-#align
-  category_theory.subobject.underlying_iso_hom_comp_eq_mk CategoryTheory.Subobject.underlying_iso_hom_comp_eq_mk
+#align category_theory.subobject.underlying_iso_hom_comp_eq_mk CategoryTheory.Subobject.underlying_iso_hom_comp_eq_mk
 
 /-- Two morphisms into a subobject are equal exactly if
 the morphisms into the ambient object are equal -/
@@ -335,8 +334,7 @@ theorem of_le_mk_le_mk_of_comm {B A₁ A₂ : C} {f₁ : A₁ ⟶ B} {f₂ : A�
   by
   ext
   simp [w]
-#align
-  category_theory.subobject.of_le_mk_le_mk_of_comm CategoryTheory.Subobject.of_le_mk_le_mk_of_comm
+#align category_theory.subobject.of_le_mk_le_mk_of_comm CategoryTheory.Subobject.of_le_mk_le_mk_of_comm
 
 /-- An inequality of subobjects is witnessed by some morphism between the corresponding objects. -/
 def ofLeMk {B A : C} (X : Subobject B) (f : A ⟶ B) [Mono f] (h : X ≤ mk f) : (X : C) ⟶ A :=
@@ -385,16 +383,14 @@ theorem of_le_comp_of_le_mk {B A : C} (X Y : Subobject B) (f : A ⟶ B) [Mono f]
 theorem of_le_mk_comp_of_mk_le {B A : C} (X : Subobject B) (f : A ⟶ B) [Mono f] (Y : Subobject B)
     (h₁ : X ≤ mk f) (h₂ : mk f ≤ Y) : ofLeMk X f h₁ ≫ ofMkLe f Y h₂ = ofLe X Y (h₁.trans h₂) := by
   simp [of_mk_le, of_le_mk, of_le, ← functor.map_comp underlying]
-#align
-  category_theory.subobject.of_le_mk_comp_of_mk_le CategoryTheory.Subobject.of_le_mk_comp_of_mk_le
+#align category_theory.subobject.of_le_mk_comp_of_mk_le CategoryTheory.Subobject.of_le_mk_comp_of_mk_le
 
 @[simp, reassoc.1]
 theorem of_le_mk_comp_of_mk_le_mk {B A₁ A₂ : C} (X : Subobject B) (f : A₁ ⟶ B) [Mono f] (g : A₂ ⟶ B)
     [Mono g] (h₁ : X ≤ mk f) (h₂ : mk f ≤ mk g) :
     ofLeMk X f h₁ ≫ ofMkLeMk f g h₂ = ofLeMk X g (h₁.trans h₂) := by
   simp [of_mk_le, of_le_mk, of_le, of_mk_le_mk, ← functor.map_comp_assoc underlying]
-#align
-  category_theory.subobject.of_le_mk_comp_of_mk_le_mk CategoryTheory.Subobject.of_le_mk_comp_of_mk_le_mk
+#align category_theory.subobject.of_le_mk_comp_of_mk_le_mk CategoryTheory.Subobject.of_le_mk_comp_of_mk_le_mk
 
 @[simp, reassoc.1]
 theorem of_mk_le_comp_of_le {B A₁ : C} (f : A₁ ⟶ B) [Mono f] (X Y : Subobject B) (h₁ : mk f ≤ X)
@@ -407,24 +403,21 @@ theorem of_mk_le_comp_of_le_mk {B A₁ A₂ : C} (f : A₁ ⟶ B) [Mono f] (X : 
     [Mono g] (h₁ : mk f ≤ X) (h₂ : X ≤ mk g) :
     ofMkLe f X h₁ ≫ ofLeMk X g h₂ = ofMkLeMk f g (h₁.trans h₂) := by
   simp [of_mk_le, of_le_mk, of_le, of_mk_le_mk, ← functor.map_comp_assoc underlying]
-#align
-  category_theory.subobject.of_mk_le_comp_of_le_mk CategoryTheory.Subobject.of_mk_le_comp_of_le_mk
+#align category_theory.subobject.of_mk_le_comp_of_le_mk CategoryTheory.Subobject.of_mk_le_comp_of_le_mk
 
 @[simp, reassoc.1]
 theorem of_mk_le_mk_comp_of_mk_le {B A₁ A₂ : C} (f : A₁ ⟶ B) [Mono f] (g : A₂ ⟶ B) [Mono g]
     (X : Subobject B) (h₁ : mk f ≤ mk g) (h₂ : mk g ≤ X) :
     ofMkLeMk f g h₁ ≫ ofMkLe g X h₂ = ofMkLe f X (h₁.trans h₂) := by
   simp [of_mk_le, of_le_mk, of_le, of_mk_le_mk, ← functor.map_comp underlying]
-#align
-  category_theory.subobject.of_mk_le_mk_comp_of_mk_le CategoryTheory.Subobject.of_mk_le_mk_comp_of_mk_le
+#align category_theory.subobject.of_mk_le_mk_comp_of_mk_le CategoryTheory.Subobject.of_mk_le_mk_comp_of_mk_le
 
 @[simp, reassoc.1]
 theorem of_mk_le_mk_comp_of_mk_le_mk {B A₁ A₂ A₃ : C} (f : A₁ ⟶ B) [Mono f] (g : A₂ ⟶ B) [Mono g]
     (h : A₃ ⟶ B) [Mono h] (h₁ : mk f ≤ mk g) (h₂ : mk g ≤ mk h) :
     ofMkLeMk f g h₁ ≫ ofMkLeMk g h h₂ = ofMkLeMk f h (h₁.trans h₂) := by
   simp [of_mk_le, of_le_mk, of_le, of_mk_le_mk, ← functor.map_comp_assoc underlying]
-#align
-  category_theory.subobject.of_mk_le_mk_comp_of_mk_le_mk CategoryTheory.Subobject.of_mk_le_mk_comp_of_mk_le_mk
+#align category_theory.subobject.of_mk_le_mk_comp_of_mk_le_mk CategoryTheory.Subobject.of_mk_le_mk_comp_of_mk_le_mk
 
 @[simp]
 theorem of_le_refl {B : C} (X : Subobject B) : ofLe X X le_rfl = 𝟙 _ :=
@@ -617,15 +610,13 @@ def mapIsoToOrderIso (e : X ≅ Y) : Subobject X ≃o Subobject Y
 theorem map_iso_to_order_iso_apply (e : X ≅ Y) (P : Subobject X) :
     mapIsoToOrderIso e P = (map e.Hom).obj P :=
   rfl
-#align
-  category_theory.subobject.map_iso_to_order_iso_apply CategoryTheory.Subobject.map_iso_to_order_iso_apply
+#align category_theory.subobject.map_iso_to_order_iso_apply CategoryTheory.Subobject.map_iso_to_order_iso_apply
 
 @[simp]
 theorem map_iso_to_order_iso_symm_apply (e : X ≅ Y) (Q : Subobject Y) :
     (mapIsoToOrderIso e).symm Q = (map e.inv).obj Q :=
   rfl
-#align
-  category_theory.subobject.map_iso_to_order_iso_symm_apply CategoryTheory.Subobject.map_iso_to_order_iso_symm_apply
+#align category_theory.subobject.map_iso_to_order_iso_symm_apply CategoryTheory.Subobject.map_iso_to_order_iso_symm_apply
 
 /-- `map f : subobject X ⥤ subobject Y` is
 the left adjoint of `pullback f : subobject Y ⥤ subobject X`. -/

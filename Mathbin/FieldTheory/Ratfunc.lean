@@ -254,8 +254,7 @@ theorem lift_on_condition_of_lift_on'_condition {P : Sort v} {f : ∀ p q : K[X]
     _ = f (p * p') (p * q') := by rw [mul_comm p p', h]
     _ = f p' q' := H hq' hp
     
-#align
-  ratfunc.lift_on_condition_of_lift_on'_condition Ratfunc.lift_on_condition_of_lift_on'_condition
+#align ratfunc.lift_on_condition_of_lift_on'_condition Ratfunc.lift_on_condition_of_lift_on'_condition
 
 -- f
 /-- Non-dependent recursion principle for `ratfunc K`: if `f p q : P` for all `p q`,
@@ -718,8 +717,7 @@ theorem lift_monoid_with_zero_hom_apply_of_fraction_ring_mk (φ : R[X] →*₀ G
     (hφ : R[X]⁰ ≤ G₀⁰.comap φ) (n : R[X]) (d : R[X]⁰) :
     liftMonoidWithZeroHom φ hφ (of_fraction_ring (Localization.mk n d)) = φ n / φ d :=
   lift_on_of_fraction_ring_mk _ _ _ _
-#align
-  ratfunc.lift_monoid_with_zero_hom_apply_of_fraction_ring_mk Ratfunc.lift_monoid_with_zero_hom_apply_of_fraction_ring_mk
+#align ratfunc.lift_monoid_with_zero_hom_apply_of_fraction_ring_mk Ratfunc.lift_monoid_with_zero_hom_apply_of_fraction_ring_mk
 
 theorem lift_monoid_with_zero_hom_injective [Nontrivial R] (φ : R[X] →*₀ G₀)
     (hφ : Function.Injective φ)
@@ -765,8 +763,7 @@ theorem lift_ring_hom_apply_of_fraction_ring_mk (φ : R[X] →+* L) (hφ : R[X]�
     (n : R[X]) (d : R[X]⁰) :
     liftRingHom φ hφ (of_fraction_ring (Localization.mk n d)) = φ n / φ d :=
   lift_monoid_with_zero_hom_apply_of_fraction_ring_mk _ _ _ _
-#align
-  ratfunc.lift_ring_hom_apply_of_fraction_ring_mk Ratfunc.lift_ring_hom_apply_of_fraction_ring_mk
+#align ratfunc.lift_ring_hom_apply_of_fraction_ring_mk Ratfunc.lift_ring_hom_apply_of_fraction_ring_mk
 
 theorem lift_ring_hom_injective [Nontrivial R] (φ : R[X] →+* L) (hφ : Function.Injective φ)
     (hφ' : R[X]⁰ ≤ L⁰.comap φ := non_zero_divisors_le_comap_non_zero_divisors_of_injective _ hφ) :
@@ -1361,8 +1358,7 @@ theorem num_mul_denom_add_denom_mul_num_ne_zero {x y : Ratfunc K} (hxy : x + y �
   have h := num_denom_add x y
   rw [h_zero, zero_mul] at h
   exact (mul_ne_zero (num_ne_zero hxy) (mul_ne_zero x.denom_ne_zero y.denom_ne_zero)) h
-#align
-  ratfunc.num_mul_denom_add_denom_mul_num_ne_zero Ratfunc.num_mul_denom_add_denom_mul_num_ne_zero
+#align ratfunc.num_mul_denom_add_denom_mul_num_ne_zero Ratfunc.num_mul_denom_add_denom_mul_num_ne_zero
 
 end NumDenom
 
@@ -1613,8 +1609,7 @@ theorem nat_degree_num_mul_right_sub_nat_degree_denom_mul_left_eq_int_degree {x 
     nat_degree_sub_eq_of_prod_eq (mul_ne_zero (num_ne_zero hx) hs) (mul_ne_zero hs x.denom_ne_zero)
       (num_ne_zero hx) x.denom_ne_zero
   rw [mul_assoc]
-#align
-  ratfunc.nat_degree_num_mul_right_sub_nat_degree_denom_mul_left_eq_int_degree Ratfunc.nat_degree_num_mul_right_sub_nat_degree_denom_mul_left_eq_int_degree
+#align ratfunc.nat_degree_num_mul_right_sub_nat_degree_denom_mul_left_eq_int_degree Ratfunc.nat_degree_num_mul_right_sub_nat_degree_denom_mul_left_eq_int_degree
 
 theorem int_degree_add_le {x y : Ratfunc K} (hy : y ≠ 0) (hxy : x + y ≠ 0) :
     intDegree (x + y) ≤ max (intDegree x) (intDegree y) :=

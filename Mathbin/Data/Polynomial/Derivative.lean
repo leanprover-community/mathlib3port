@@ -272,8 +272,7 @@ theorem nat_degree_eq_zero_of_derivative_eq_zero [NoZeroSMulDivisors ℕ R] {f :
   replace h2 := h2.resolve_left m.succ_ne_zero
   rw [hm, ← leading_coeff, leading_coeff_eq_zero] at h2
   exact hf h2
-#align
-  polynomial.nat_degree_eq_zero_of_derivative_eq_zero Polynomial.nat_degree_eq_zero_of_derivative_eq_zero
+#align polynomial.nat_degree_eq_zero_of_derivative_eq_zero Polynomial.nat_degree_eq_zero_of_derivative_eq_zero
 
 theorem eq_C_of_derivative_eq_zero [NoZeroSMulDivisors ℕ R] {f : R[X]} (h : f.derivative = 0) :
     f = c (f.coeff 0) :=
@@ -406,8 +405,7 @@ theorem coeff_iterate_derivative_as_prod_Ico {k} (p : R[X]) :
       · rw [disjoint_singleton_right, mem_Ico]
         exact fun h => (Nat.lt_succ_self _).not_le h.1
     · exact congr_arg _ (Nat.succ_add m k)
-#align
-  polynomial.coeff_iterate_derivative_as_prod_Ico Polynomial.coeff_iterate_derivative_as_prod_Ico
+#align polynomial.coeff_iterate_derivative_as_prod_Ico Polynomial.coeff_iterate_derivative_as_prod_Ico
 
 theorem coeff_iterate_derivative_as_prod_range {k} (p : R[X]) :
     ∀ m : ℕ, ((derivative^[k]) p).coeff m = (∏ i in range k, m + k - i) • p.coeff (m + k) :=
@@ -424,8 +422,7 @@ theorem coeff_iterate_derivative_as_prod_range {k} (p : R[X]) :
     _ = (∏ i in range k.succ, m + k.succ - i) • p.coeff (m + k.succ) := by
       rw [prod_range_succ, add_tsub_assoc_of_le k.le_succ, Nat.succ_sub le_rfl, tsub_self]
     
-#align
-  polynomial.coeff_iterate_derivative_as_prod_range Polynomial.coeff_iterate_derivative_as_prod_range
+#align polynomial.coeff_iterate_derivative_as_prod_range Polynomial.coeff_iterate_derivative_as_prod_range
 
 theorem iterate_derivative_mul {n} (p q : R[X]) :
     (derivative^[n]) (p * q) =
@@ -517,8 +514,7 @@ theorem iterate_derivative_X_pow_eq_nat_cast_mul (n k : ℕ) :
     rw [Function.iterate_succ_apply', ih, derivative_nat_cast_mul, derivative_X_pow, C_eq_nat_cast,
       Nat.succ_eq_add_one, Nat.desc_factorial_succ, Nat.sub_sub, Nat.cast_mul, ← mul_assoc,
       mul_comm ↑(Nat.descFactorial _ _)]
-#align
-  polynomial.iterate_derivative_X_pow_eq_nat_cast_mul Polynomial.iterate_derivative_X_pow_eq_nat_cast_mul
+#align polynomial.iterate_derivative_X_pow_eq_nat_cast_mul Polynomial.iterate_derivative_X_pow_eq_nat_cast_mul
 
 theorem iterate_derivative_X_pow_eq_C_mul (n k : ℕ) :
     (derivative^[k]) (X ^ n : R[X]) = c ↑(Nat.descFactorial n k) * X ^ (n - k) := by
@@ -668,8 +664,7 @@ theorem eval_multiset_prod_X_sub_C_derivative {S : Multiset R} {r : R} (hr : r �
   by
   nth_rw 1 [← Multiset.cons_erase hr]
   simpa using (eval_ring_hom r).map_multiset_prod (Multiset.map (fun a => X - C a) (S.erase r))
-#align
-  polynomial.eval_multiset_prod_X_sub_C_derivative Polynomial.eval_multiset_prod_X_sub_C_derivative
+#align polynomial.eval_multiset_prod_X_sub_C_derivative Polynomial.eval_multiset_prod_X_sub_C_derivative
 
 theorem derivative_X_sub_C_pow (c : R) (m : ℕ) :
     ((X - c c) ^ m).derivative = c ↑m * (X - c c) ^ (m - 1) := by

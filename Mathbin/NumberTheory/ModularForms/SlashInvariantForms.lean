@@ -100,8 +100,7 @@ variable {F : Type _} {Γ : outParam <| Subgroup SL(2, ℤ)} {k : outParam ℤ}
 instance (priority := 100) SlashInvariantFormClass.coeToFun [SlashInvariantFormClass F Γ k] :
     CoeFun F fun _ => ℍ → ℂ :=
   FunLike.hasCoeToFun
-#align
-  slash_invariant_form.slash_invariant_form_class.coe_to_fun SlashInvariantForm.SlashInvariantFormClass.coeToFun
+#align slash_invariant_form.slash_invariant_form_class.coe_to_fun SlashInvariantForm.SlashInvariantFormClass.coeToFun
 
 @[simp]
 theorem slash_action_eqn [SlashInvariantFormClass F Γ k] (f : F) (γ : Γ) :
@@ -125,8 +124,7 @@ instance [SlashInvariantFormClass F Γ k] : CoeTC F (SlashInvariantForm Γ k) :=
 theorem SlashInvariantFormClass.coe_coe [SlashInvariantFormClass F Γ k] (f : F) :
     ((f : SlashInvariantForm Γ k) : ℍ → ℂ) = f :=
   rfl
-#align
-  slash_invariant_form.slash_invariant_form_class.coe_coe SlashInvariantForm.SlashInvariantFormClass.coe_coe
+#align slash_invariant_form.slash_invariant_form_class.coe_coe SlashInvariantForm.SlashInvariantFormClass.coe_coe
 
 instance hasAdd : Add (SlashInvariantForm Γ k) :=
   ⟨fun f g =>

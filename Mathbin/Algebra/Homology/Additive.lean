@@ -159,8 +159,7 @@ def Functor.mapHomologicalComplex (F : V ⥤ W) [F.Additive] (c : ComplexShape �
 
 instance Functor.map_homogical_complex_additive (F : V ⥤ W) [F.Additive] (c : ComplexShape ι) :
     (F.mapHomologicalComplex c).Additive where
-#align
-  category_theory.functor.map_homogical_complex_additive CategoryTheory.Functor.map_homogical_complex_additive
+#align category_theory.functor.map_homogical_complex_additive CategoryTheory.Functor.map_homogical_complex_additive
 
 instance Functor.map_homological_complex_reflects_iso (F : V ⥤ W) [F.Additive]
     [ReflectsIsomorphisms F] (c : ComplexShape ι) :
@@ -172,8 +171,7 @@ instance Functor.map_homological_complex_reflects_iso (F : V ⥤ W) [F.Additive]
         ((HomologicalComplex.eval W c n).mapIso (as_iso ((F.map_homological_complex c).map f)))
     haveI := fun n => is_iso_of_reflects_iso (f.f n) F
     exact HomologicalComplex.Hom.is_iso_of_components f⟩
-#align
-  category_theory.functor.map_homological_complex_reflects_iso CategoryTheory.Functor.map_homological_complex_reflects_iso
+#align category_theory.functor.map_homological_complex_reflects_iso CategoryTheory.Functor.map_homological_complex_reflects_iso
 
 /-- A natural transformation between functors induces a natural transformation
 between those functors applied to homological complexes.
@@ -182,14 +180,12 @@ between those functors applied to homological complexes.
 def NatTrans.mapHomologicalComplex {F G : V ⥤ W} [F.Additive] [G.Additive] (α : F ⟶ G)
     (c : ComplexShape ι) : F.mapHomologicalComplex c ⟶ G.mapHomologicalComplex c
     where app C := { f := fun i => α.app _ }
-#align
-  category_theory.nat_trans.map_homological_complex CategoryTheory.NatTrans.mapHomologicalComplex
+#align category_theory.nat_trans.map_homological_complex CategoryTheory.NatTrans.mapHomologicalComplex
 
 @[simp]
 theorem NatTrans.map_homological_complex_id (c : ComplexShape ι) (F : V ⥤ W) [F.Additive] :
     NatTrans.mapHomologicalComplex (𝟙 F) c = 𝟙 (F.mapHomologicalComplex c) := by tidy
-#align
-  category_theory.nat_trans.map_homological_complex_id CategoryTheory.NatTrans.map_homological_complex_id
+#align category_theory.nat_trans.map_homological_complex_id CategoryTheory.NatTrans.map_homological_complex_id
 
 @[simp]
 theorem NatTrans.map_homological_complex_comp (c : ComplexShape ι) {F G H : V ⥤ W} [F.Additive]
@@ -197,8 +193,7 @@ theorem NatTrans.map_homological_complex_comp (c : ComplexShape ι) {F G H : V �
     NatTrans.mapHomologicalComplex (α ≫ β) c =
       NatTrans.mapHomologicalComplex α c ≫ NatTrans.mapHomologicalComplex β c :=
   by tidy
-#align
-  category_theory.nat_trans.map_homological_complex_comp CategoryTheory.NatTrans.map_homological_complex_comp
+#align category_theory.nat_trans.map_homological_complex_comp CategoryTheory.NatTrans.map_homological_complex_comp
 
 @[simp, reassoc.1]
 theorem NatTrans.map_homological_complex_naturality {c : ComplexShape ι} {F G : V ⥤ W} [F.Additive]
@@ -206,8 +201,7 @@ theorem NatTrans.map_homological_complex_naturality {c : ComplexShape ι} {F G :
     (F.mapHomologicalComplex c).map f ≫ (NatTrans.mapHomologicalComplex α c).app D =
       (NatTrans.mapHomologicalComplex α c).app C ≫ (G.mapHomologicalComplex c).map f :=
   by tidy
-#align
-  category_theory.nat_trans.map_homological_complex_naturality CategoryTheory.NatTrans.map_homological_complex_naturality
+#align category_theory.nat_trans.map_homological_complex_naturality CategoryTheory.NatTrans.map_homological_complex_naturality
 
 end CategoryTheory
 
@@ -264,8 +258,7 @@ def singleMapHomologicalComplex (F : V ⥤ W) [F.Additive] (c : ComplexShape ι)
     ext i
     dsimp
     split_ifs with h <;> simp [h]
-#align
-  homological_complex.single_map_homological_complex HomologicalComplex.singleMapHomologicalComplex
+#align homological_complex.single_map_homological_complex HomologicalComplex.singleMapHomologicalComplex
 
 variable (F : V ⥤ W) [Functor.Additive F] (c)
 
@@ -273,29 +266,25 @@ variable (F : V ⥤ W) [Functor.Additive F] (c)
 theorem single_map_homological_complex_hom_app_self (j : ι) (X : V) :
     ((singleMapHomologicalComplex F c j).Hom.app X).f j = eqToHom (by simp) := by
   simp [single_map_homological_complex]
-#align
-  homological_complex.single_map_homological_complex_hom_app_self HomologicalComplex.single_map_homological_complex_hom_app_self
+#align homological_complex.single_map_homological_complex_hom_app_self HomologicalComplex.single_map_homological_complex_hom_app_self
 
 @[simp]
 theorem single_map_homological_complex_hom_app_ne {i j : ι} (h : i ≠ j) (X : V) :
     ((singleMapHomologicalComplex F c j).Hom.app X).f i = 0 := by
   simp [single_map_homological_complex, h]
-#align
-  homological_complex.single_map_homological_complex_hom_app_ne HomologicalComplex.single_map_homological_complex_hom_app_ne
+#align homological_complex.single_map_homological_complex_hom_app_ne HomologicalComplex.single_map_homological_complex_hom_app_ne
 
 @[simp]
 theorem single_map_homological_complex_inv_app_self (j : ι) (X : V) :
     ((singleMapHomologicalComplex F c j).inv.app X).f j = eqToHom (by simp) := by
   simp [single_map_homological_complex]
-#align
-  homological_complex.single_map_homological_complex_inv_app_self HomologicalComplex.single_map_homological_complex_inv_app_self
+#align homological_complex.single_map_homological_complex_inv_app_self HomologicalComplex.single_map_homological_complex_inv_app_self
 
 @[simp]
 theorem single_map_homological_complex_inv_app_ne {i j : ι} (h : i ≠ j) (X : V) :
     ((singleMapHomologicalComplex F c j).inv.app X).f i = 0 := by
   simp [single_map_homological_complex, h]
-#align
-  homological_complex.single_map_homological_complex_inv_app_ne HomologicalComplex.single_map_homological_complex_inv_app_ne
+#align homological_complex.single_map_homological_complex_inv_app_ne HomologicalComplex.single_map_homological_complex_inv_app_ne
 
 end HomologicalComplex
 
@@ -344,29 +333,25 @@ def single₀MapHomologicalComplex (F : V ⥤ W) [F.Additive] :
 theorem single₀_map_homological_complex_hom_app_zero (F : V ⥤ W) [F.Additive] (X : V) :
     ((single₀MapHomologicalComplex F).Hom.app X).f 0 = 𝟙 _ :=
   rfl
-#align
-  chain_complex.single₀_map_homological_complex_hom_app_zero ChainComplex.single₀_map_homological_complex_hom_app_zero
+#align chain_complex.single₀_map_homological_complex_hom_app_zero ChainComplex.single₀_map_homological_complex_hom_app_zero
 
 @[simp]
 theorem single₀_map_homological_complex_hom_app_succ (F : V ⥤ W) [F.Additive] (X : V) (n : ℕ) :
     ((single₀MapHomologicalComplex F).Hom.app X).f (n + 1) = 0 :=
   rfl
-#align
-  chain_complex.single₀_map_homological_complex_hom_app_succ ChainComplex.single₀_map_homological_complex_hom_app_succ
+#align chain_complex.single₀_map_homological_complex_hom_app_succ ChainComplex.single₀_map_homological_complex_hom_app_succ
 
 @[simp]
 theorem single₀_map_homological_complex_inv_app_zero (F : V ⥤ W) [F.Additive] (X : V) :
     ((single₀MapHomologicalComplex F).inv.app X).f 0 = 𝟙 _ :=
   rfl
-#align
-  chain_complex.single₀_map_homological_complex_inv_app_zero ChainComplex.single₀_map_homological_complex_inv_app_zero
+#align chain_complex.single₀_map_homological_complex_inv_app_zero ChainComplex.single₀_map_homological_complex_inv_app_zero
 
 @[simp]
 theorem single₀_map_homological_complex_inv_app_succ (F : V ⥤ W) [F.Additive] (X : V) (n : ℕ) :
     ((single₀MapHomologicalComplex F).inv.app X).f (n + 1) = 0 :=
   rfl
-#align
-  chain_complex.single₀_map_homological_complex_inv_app_succ ChainComplex.single₀_map_homological_complex_inv_app_succ
+#align chain_complex.single₀_map_homological_complex_inv_app_succ ChainComplex.single₀_map_homological_complex_inv_app_succ
 
 end ChainComplex
 
@@ -415,29 +400,25 @@ def single₀MapHomologicalComplex (F : V ⥤ W) [F.Additive] :
 theorem single₀_map_homological_complex_hom_app_zero (F : V ⥤ W) [F.Additive] (X : V) :
     ((single₀MapHomologicalComplex F).Hom.app X).f 0 = 𝟙 _ :=
   rfl
-#align
-  cochain_complex.single₀_map_homological_complex_hom_app_zero CochainComplex.single₀_map_homological_complex_hom_app_zero
+#align cochain_complex.single₀_map_homological_complex_hom_app_zero CochainComplex.single₀_map_homological_complex_hom_app_zero
 
 @[simp]
 theorem single₀_map_homological_complex_hom_app_succ (F : V ⥤ W) [F.Additive] (X : V) (n : ℕ) :
     ((single₀MapHomologicalComplex F).Hom.app X).f (n + 1) = 0 :=
   rfl
-#align
-  cochain_complex.single₀_map_homological_complex_hom_app_succ CochainComplex.single₀_map_homological_complex_hom_app_succ
+#align cochain_complex.single₀_map_homological_complex_hom_app_succ CochainComplex.single₀_map_homological_complex_hom_app_succ
 
 @[simp]
 theorem single₀_map_homological_complex_inv_app_zero (F : V ⥤ W) [F.Additive] (X : V) :
     ((single₀MapHomologicalComplex F).inv.app X).f 0 = 𝟙 _ :=
   rfl
-#align
-  cochain_complex.single₀_map_homological_complex_inv_app_zero CochainComplex.single₀_map_homological_complex_inv_app_zero
+#align cochain_complex.single₀_map_homological_complex_inv_app_zero CochainComplex.single₀_map_homological_complex_inv_app_zero
 
 @[simp]
 theorem single₀_map_homological_complex_inv_app_succ (F : V ⥤ W) [F.Additive] (X : V) (n : ℕ) :
     ((single₀MapHomologicalComplex F).inv.app X).f (n + 1) = 0 :=
   rfl
-#align
-  cochain_complex.single₀_map_homological_complex_inv_app_succ CochainComplex.single₀_map_homological_complex_inv_app_succ
+#align cochain_complex.single₀_map_homological_complex_inv_app_succ CochainComplex.single₀_map_homological_complex_inv_app_succ
 
 end CochainComplex
 

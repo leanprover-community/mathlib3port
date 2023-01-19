@@ -608,8 +608,7 @@ theorem mem_dual_annihilator (φ : Module.Dual R M) : φ ∈ W.dualAnnihilator �
 theorem dual_restrict_ker_eq_dual_annihilator (W : Submodule R M) :
     W.dualRestrict.ker = W.dualAnnihilator :=
   rfl
-#align
-  submodule.dual_restrict_ker_eq_dual_annihilator Submodule.dual_restrict_ker_eq_dual_annihilator
+#align submodule.dual_restrict_ker_eq_dual_annihilator Submodule.dual_restrict_ker_eq_dual_annihilator
 
 /-- The `dual_annihilator` of a submodule of the dual space pulled back along the evaluation map
 `module.dual.eval`. -/
@@ -672,8 +671,7 @@ theorem le_dual_annihilator_dual_annihilator_comap {U : Submodule R M} :
   simp_rw [mem_dual_annihilator_comap, mem_dual_annihilator]
   intro hv φ h
   exact h _ hv
-#align
-  submodule.le_dual_annihilator_dual_annihilator_comap Submodule.le_dual_annihilator_dual_annihilator_comap
+#align submodule.le_dual_annihilator_dual_annihilator_comap Submodule.le_dual_annihilator_dual_annihilator_comap
 
 theorem le_dual_annihilator_comap_dual_annihilator {U : Submodule R (Module.Dual R M)} :
     U ≤ U.dualAnnihilatorComap.dualAnnihilator :=
@@ -682,8 +680,7 @@ theorem le_dual_annihilator_comap_dual_annihilator {U : Submodule R (Module.Dual
   simp_rw [mem_dual_annihilator, mem_dual_annihilator_comap]
   intro hv φ h
   exact h _ hv
-#align
-  submodule.le_dual_annihilator_comap_dual_annihilator Submodule.le_dual_annihilator_comap_dual_annihilator
+#align submodule.le_dual_annihilator_comap_dual_annihilator Submodule.le_dual_annihilator_comap_dual_annihilator
 
 theorem dual_annihilator_sup_eq (U V : Submodule R M) :
     (U ⊔ V).dualAnnihilator = U.dualAnnihilator ⊓ V.dualAnnihilator :=
@@ -786,8 +783,7 @@ theorem dual_annihilator_dual_annihilator_comap_eq {W : Subspace K V} :
   refine' ⟨_, hφ⟩
   intro v hv
   convert LinearMap.of_is_compl_left_apply hW ⟨v, hv⟩
-#align
-  subspace.dual_annihilator_dual_annihilator_comap_eq Subspace.dual_annihilator_dual_annihilator_comap_eq
+#align subspace.dual_annihilator_dual_annihilator_comap_eq Subspace.dual_annihilator_dual_annihilator_comap_eq
 
 /-- Given a subspace `W` of `V` and an element of its dual `φ`, `dual_lift W φ` is
 the natural extension of `φ` to an element of the dual of `V`.
@@ -907,8 +903,7 @@ theorem finrank_add_finrank_dual_annihilator_comap_eq (W : Subspace K (Module.Du
     finrank K W + finrank K W.dualAnnihilatorComap = finrank K V := by
   rw [finrank_dual_annihilator_comap_eq, W.quot_equiv_annihilator.finrank_eq.symm, add_comm,
     Submodule.finrank_quotient_add_finrank, Subspace.dual_finrank_eq]
-#align
-  subspace.finrank_add_finrank_dual_annihilator_comap_eq Subspace.finrank_add_finrank_dual_annihilator_comap_eq
+#align subspace.finrank_add_finrank_dual_annihilator_comap_eq Subspace.finrank_add_finrank_dual_annihilator_comap_eq
 
 end
 
@@ -1006,8 +1001,7 @@ theorem ker_dual_map_eq_dual_annihilator_range : f.dualMap.ker = f.range.dualAnn
     rw [dual_map_apply]
     rw [Submodule.mem_dual_annihilator] at hφ
     exact hφ (f x) ⟨x, rfl⟩
-#align
-  linear_map.ker_dual_map_eq_dual_annihilator_range LinearMap.ker_dual_map_eq_dual_annihilator_range
+#align linear_map.ker_dual_map_eq_dual_annihilator_range LinearMap.ker_dual_map_eq_dual_annihilator_range
 
 theorem range_dual_map_le_dual_annihilator_ker : f.dualMap.range ≤ f.ker.dualAnnihilator :=
   by
@@ -1015,8 +1009,7 @@ theorem range_dual_map_le_dual_annihilator_ker : f.dualMap.range ≤ f.ker.dualA
   simp_rw [Submodule.mem_dual_annihilator, mem_ker]
   rintro x hx
   rw [dual_map_apply, hx, map_zero]
-#align
-  linear_map.range_dual_map_le_dual_annihilator_ker LinearMap.range_dual_map_le_dual_annihilator_ker
+#align linear_map.range_dual_map_le_dual_annihilator_ker LinearMap.range_dual_map_le_dual_annihilator_ker
 
 section FiniteDimensional
 
@@ -1039,8 +1032,7 @@ theorem finrank_range_dual_map_eq_finrank_range (f : V₁ →ₗ[K] V₂) :
   refine' add_left_injective (finrank K f.dual_map.ker) _
   change _ + _ = _ + _
   rw [finrank_range_add_finrank_ker f.dual_map, add_comm, this]
-#align
-  linear_map.finrank_range_dual_map_eq_finrank_range LinearMap.finrank_range_dual_map_eq_finrank_range
+#align linear_map.finrank_range_dual_map_eq_finrank_range LinearMap.finrank_range_dual_map_eq_finrank_range
 
 theorem range_dual_map_eq_dual_annihilator_ker [FiniteDimensional K V₁] (f : V₁ →ₗ[K] V₂) :
     f.dualMap.range = f.ker.dualAnnihilator :=
@@ -1051,8 +1043,7 @@ theorem range_dual_map_eq_dual_annihilator_ker [FiniteDimensional K V₁] (f : V
   refine' add_left_injective (finrank K f.ker) _
   simp_rw [this, finrank_range_dual_map_eq_finrank_range]
   exact finrank_range_add_finrank_ker f
-#align
-  linear_map.range_dual_map_eq_dual_annihilator_ker LinearMap.range_dual_map_eq_dual_annihilator_ker
+#align linear_map.range_dual_map_eq_dual_annihilator_ker LinearMap.range_dual_map_eq_dual_annihilator_ker
 
 end FiniteDimensional
 

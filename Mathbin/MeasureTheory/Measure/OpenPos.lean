@@ -60,8 +60,7 @@ theorem IsOpen.measure_eq_zero_iff (hU : IsOpen U) : μ U = 0 ↔ U = ∅ := by
 
 theorem measure_pos_of_nonempty_interior (h : (interior s).Nonempty) : 0 < μ s :=
   (is_open_interior.measure_pos μ h).trans_le (measure_mono interior_subset)
-#align
-  measure_theory.measure.measure_pos_of_nonempty_interior MeasureTheory.Measure.measure_pos_of_nonempty_interior
+#align measure_theory.measure.measure_pos_of_nonempty_interior MeasureTheory.Measure.measure_pos_of_nonempty_interior
 
 theorem measure_pos_of_mem_nhds (h : s ∈ 𝓝 x) : 0 < μ s :=
   measure_pos_of_nonempty_interior _ ⟨x, mem_interior_iff_mem_nhds.2 h⟩
@@ -75,8 +74,7 @@ variable {μ ν}
 
 protected theorem AbsolutelyContinuous.isOpenPosMeasure (h : μ ≪ ν) : IsOpenPosMeasure ν :=
   ⟨fun U ho hne h₀ => ho.measure_ne_zero μ hne (h h₀)⟩
-#align
-  measure_theory.measure.absolutely_continuous.is_open_pos_measure MeasureTheory.Measure.AbsolutelyContinuous.isOpenPosMeasure
+#align measure_theory.measure.absolutely_continuous.is_open_pos_measure MeasureTheory.Measure.AbsolutelyContinuous.isOpenPosMeasure
 
 theorem LE.le.isOpenPosMeasure (h : μ ≤ ν) : IsOpenPosMeasure ν :=
   h.AbsolutelyContinuous.IsOpenPosMeasure
@@ -88,8 +86,7 @@ theorem IsOpen.eq_empty_of_measure_zero (hU : IsOpen U) (h₀ : μ U = 0) : U = 
 
 theorem interior_eq_empty_of_null (hs : μ s = 0) : interior s = ∅ :=
   is_open_interior.eq_empty_of_measure_zero <| measure_mono_null interior_subset hs
-#align
-  measure_theory.measure.interior_eq_empty_of_null MeasureTheory.Measure.interior_eq_empty_of_null
+#align measure_theory.measure.interior_eq_empty_of_null MeasureTheory.Measure.interior_eq_empty_of_null
 
 /-- If two functions are a.e. equal on an open set and are continuous on this set, then they are
 equal on this set. -/

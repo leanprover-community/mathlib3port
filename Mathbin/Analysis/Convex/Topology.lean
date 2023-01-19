@@ -172,28 +172,24 @@ theorem Convex.open_segment_interior_closure_subset_interior {s : Set E} (hs : C
   by
   rintro _ ⟨a, b, ha, hb, hab, rfl⟩
   exact hs.combo_interior_closure_mem_interior hx hy ha hb.le hab
-#align
-  convex.open_segment_interior_closure_subset_interior Convex.open_segment_interior_closure_subset_interior
+#align convex.open_segment_interior_closure_subset_interior Convex.open_segment_interior_closure_subset_interior
 
 theorem Convex.open_segment_interior_self_subset_interior {s : Set E} (hs : Convex 𝕜 s) {x y : E}
     (hx : x ∈ interior s) (hy : y ∈ s) : openSegment 𝕜 x y ⊆ interior s :=
   hs.open_segment_interior_closure_subset_interior hx (subset_closure hy)
-#align
-  convex.open_segment_interior_self_subset_interior Convex.open_segment_interior_self_subset_interior
+#align convex.open_segment_interior_self_subset_interior Convex.open_segment_interior_self_subset_interior
 
 theorem Convex.open_segment_closure_interior_subset_interior {s : Set E} (hs : Convex 𝕜 s) {x y : E}
     (hx : x ∈ closure s) (hy : y ∈ interior s) : openSegment 𝕜 x y ⊆ interior s :=
   by
   rintro _ ⟨a, b, ha, hb, hab, rfl⟩
   exact hs.combo_closure_interior_mem_interior hx hy ha.le hb hab
-#align
-  convex.open_segment_closure_interior_subset_interior Convex.open_segment_closure_interior_subset_interior
+#align convex.open_segment_closure_interior_subset_interior Convex.open_segment_closure_interior_subset_interior
 
 theorem Convex.open_segment_self_interior_subset_interior {s : Set E} (hs : Convex 𝕜 s) {x y : E}
     (hx : x ∈ s) (hy : y ∈ interior s) : openSegment 𝕜 x y ⊆ interior s :=
   hs.open_segment_closure_interior_subset_interior (subset_closure hx) hy
-#align
-  convex.open_segment_self_interior_subset_interior Convex.open_segment_self_interior_subset_interior
+#align convex.open_segment_self_interior_subset_interior Convex.open_segment_self_interior_subset_interior
 
 /-- If `x ∈ closure s` and `y ∈ interior s`, then the segment `(x, y]` is included in `interior s`.
 -/
@@ -309,8 +305,7 @@ theorem Convex.closure_subset_image_homothety_interior_of_one_lt {s : Set E} (hs
   rw [open_segment_eq_image_line_map, ← inv_one, ← inv_Ioi (zero_lt_one' ℝ), ← image_inv,
     image_image, homothety_eq_line_map]
   exact mem_image_of_mem _ ht
-#align
-  convex.closure_subset_image_homothety_interior_of_one_lt Convex.closure_subset_image_homothety_interior_of_one_lt
+#align convex.closure_subset_image_homothety_interior_of_one_lt Convex.closure_subset_image_homothety_interior_of_one_lt
 
 /-- If we dilate a convex set about a point in its interior by a scale `t > 1`, the interior of
 the result includes the closure of the original set.
@@ -321,8 +316,7 @@ theorem Convex.closure_subset_interior_image_homothety_of_one_lt {s : Set E} (hs
     closure s ⊆ interior (homothety x t '' s) :=
   (hs.closure_subset_image_homothety_interior_of_one_lt hx t ht).trans <|
     (homothety_is_open_map x t (one_pos.trans ht).ne').image_interior_subset _
-#align
-  convex.closure_subset_interior_image_homothety_of_one_lt Convex.closure_subset_interior_image_homothety_of_one_lt
+#align convex.closure_subset_interior_image_homothety_of_one_lt Convex.closure_subset_interior_image_homothety_of_one_lt
 
 /-- If we dilate a convex set about a point in its interior by a scale `t > 1`, the interior of
 the result includes the closure of the original set.
@@ -331,8 +325,7 @@ TODO Generalise this from convex sets to sets that are balanced / star-shaped ab
 theorem Convex.subset_interior_image_homothety_of_one_lt {s : Set E} (hs : Convex ℝ s) {x : E}
     (hx : x ∈ interior s) (t : ℝ) (ht : 1 < t) : s ⊆ interior (homothety x t '' s) :=
   subset_closure.trans <| hs.closure_subset_interior_image_homothety_of_one_lt hx t ht
-#align
-  convex.subset_interior_image_homothety_of_one_lt Convex.subset_interior_image_homothety_of_one_lt
+#align convex.subset_interior_image_homothety_of_one_lt Convex.subset_interior_image_homothety_of_one_lt
 
 /-- A nonempty convex set is path connected. -/
 protected theorem Convex.is_path_connected {s : Set E} (hconv : Convex ℝ s) (hne : s.Nonempty) :

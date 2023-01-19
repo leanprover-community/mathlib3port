@@ -304,7 +304,7 @@ Case conversion may be inaccurate. Consider using '#align order_hom.to_fun_eq_co
 @[simp]
 theorem [anonymous] {f : α →o β} : f.toFun = f :=
   rfl
-#align order_hom.to_fun_eq_coe[anonymous]
+#align order_hom.to_fun_eq_coe [anonymous]
 
 /- warning: order_hom.coe_fun_mk -> OrderHom.coe_fun_mk is a dubious translation:
 lean 3 declaration is
@@ -888,8 +888,7 @@ theorem RelEmbedding.orderEmbeddingOfLTEmbedding_apply [PartialOrder α] [Partia
     {f : ((· < ·) : α → α → Prop) ↪r ((· < ·) : β → β → Prop)} {x : α} :
     RelEmbedding.orderEmbeddingOfLTEmbedding f x = f x :=
   rfl
-#align
-  rel_embedding.order_embedding_of_lt_embedding_apply RelEmbedding.orderEmbeddingOfLTEmbedding_apply
+#align rel_embedding.order_embedding_of_lt_embedding_apply RelEmbedding.orderEmbeddingOfLTEmbedding_apply
 
 namespace OrderEmbedding
 

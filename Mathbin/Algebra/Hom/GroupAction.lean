@@ -285,7 +285,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align distrib_mul_action_hom.has_coe [anonymous]ₓ'. -/
 instance [anonymous] : Coe (A →+[M] B) (A →+ B) :=
   ⟨toAddMonoidHom⟩
-#align distrib_mul_action_hom.has_coe[anonymous]
+#align distrib_mul_action_hom.has_coe [anonymous]
 
 /- warning: distrib_mul_action_hom.has_coe' clashes with [anonymous] -> [anonymous]
 warning: distrib_mul_action_hom.has_coe' -> [anonymous] is a dubious translation:
@@ -296,7 +296,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align distrib_mul_action_hom.has_coe' [anonymous]ₓ'. -/
 instance [anonymous] : Coe (A →+[M] B) (A →[M] B) :=
   ⟨toMulActionHom⟩
-#align distrib_mul_action_hom.has_coe'[anonymous]
+#align distrib_mul_action_hom.has_coe' [anonymous]
 
 instance : CoeFun (A →+[M] B) fun _ => A → B :=
   ⟨toFun⟩
@@ -385,8 +385,7 @@ theorem toMulActionHom_injective {f g : A →+[M] B} (h : (f : A →[M] B) = (g 
   by
   ext a
   exact MulActionHom.congr_fun h a
-#align
-  distrib_mul_action_hom.to_mul_action_hom_injective DistribMulActionHom.toMulActionHom_injective
+#align distrib_mul_action_hom.to_mul_action_hom_injective DistribMulActionHom.toMulActionHom_injective
 
 /- warning: distrib_mul_action_hom.to_add_monoid_hom_injective -> DistribMulActionHom.toAddMonoidHom_injective is a dubious translation:
 lean 3 declaration is
@@ -398,8 +397,7 @@ theorem toAddMonoidHom_injective {f g : A →+[M] B} (h : (f : A →+ B) = (g : 
   by
   ext a
   exact AddMonoidHom.congr_fun h a
-#align
-  distrib_mul_action_hom.to_add_monoid_hom_injective DistribMulActionHom.toAddMonoidHom_injective
+#align distrib_mul_action_hom.to_add_monoid_hom_injective DistribMulActionHom.toAddMonoidHom_injective
 
 /- warning: distrib_mul_action_hom.map_zero -> DistribMulActionHom.map_zero is a dubious translation:
 lean 3 declaration is
@@ -622,7 +620,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mul_semiring_action_hom.has_coe [anonymous]ₓ'. -/
 instance [anonymous] : Coe (R →+*[M] S) (R →+* S) :=
   ⟨toRingHom⟩
-#align mul_semiring_action_hom.has_coe[anonymous]
+#align mul_semiring_action_hom.has_coe [anonymous]
 
 /- warning: mul_semiring_action_hom.has_coe' clashes with [anonymous] -> [anonymous]
 warning: mul_semiring_action_hom.has_coe' -> [anonymous] is a dubious translation:
@@ -633,7 +631,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mul_semiring_action_hom.has_coe' [anonymous]ₓ'. -/
 instance [anonymous] : Coe (R →+*[M] S) (R →+[M] S) :=
   ⟨toDistribMulActionHom⟩
-#align mul_semiring_action_hom.has_coe'[anonymous]
+#align mul_semiring_action_hom.has_coe' [anonymous]
 
 instance : CoeFun (R →+*[M] S) fun _ => R → S :=
   ⟨fun c => c.toFun⟩

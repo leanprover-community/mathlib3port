@@ -99,8 +99,7 @@ def Function.Injective.linearOrderedCommMonoidWithZero {β : Type _} [Zero β] [
     hf.CommMonoidWithZero f zero one mul npow with
     zero_le_one :=
       show f 0 ≤ f 1 by simp only [zero, one, LinearOrderedCommMonoidWithZero.zero_le_one] }
-#align
-  function.injective.linear_ordered_comm_monoid_with_zero Function.Injective.linearOrderedCommMonoidWithZero
+#align function.injective.linear_ordered_comm_monoid_with_zero Function.Injective.linearOrderedCommMonoidWithZero
 
 /- warning: zero_le' -> zero_le' is a dubious translation:
 lean 3 declaration is

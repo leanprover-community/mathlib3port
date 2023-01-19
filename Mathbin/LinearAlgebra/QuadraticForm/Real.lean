@@ -78,8 +78,7 @@ noncomputable def isometrySignWeightedSumSquares [DecidableEq ι] (w : ι → �
     show -(1 / 2 : ℝ) + -(1 / 2) = -1 by ring, Real.rpow_neg_one, mul_inv, inv_sign,
     mul_assoc (sign (u j)) (u j)⁻¹, inv_mul_cancel (Units.ne_zero _), mul_one]
   infer_instance
-#align
-  quadratic_form.isometry_sign_weighted_sum_squares QuadraticForm.isometrySignWeightedSumSquares
+#align quadratic_form.isometry_sign_weighted_sum_squares QuadraticForm.isometrySignWeightedSumSquares
 
 /-- **Sylvester's law of inertia**: A nondegenerate real quadratic form is equivalent to a weighted
 sum of squares with the weights being ±1. -/
@@ -90,8 +89,7 @@ theorem equivalent_one_neg_one_weighted_sum_squared {M : Type _} [AddCommGroup M
   let ⟨w, ⟨hw₁⟩⟩ := Q.equivalent_weighted_sum_squares_units_of_nondegenerate' hQ
   ⟨sign ∘ coe ∘ w, fun i => sign_apply_eq_of_ne_zero (w i) (w i).NeZero,
     ⟨hw₁.trans (isometrySignWeightedSumSquares (coe ∘ w))⟩⟩
-#align
-  quadratic_form.equivalent_one_neg_one_weighted_sum_squared QuadraticForm.equivalent_one_neg_one_weighted_sum_squared
+#align quadratic_form.equivalent_one_neg_one_weighted_sum_squared QuadraticForm.equivalent_one_neg_one_weighted_sum_squared
 
 /-- **Sylvester's law of inertia**: A real quadratic form is equivalent to a weighted
 sum of squares with the weights being ±1 or 0. -/
@@ -101,8 +99,7 @@ theorem equivalent_one_zero_neg_one_weighted_sum_squared {M : Type _} [AddCommGr
       (∀ i, w i = -1 ∨ w i = 0 ∨ w i = 1) ∧ Equivalent Q (weightedSumSquares ℝ w) :=
   let ⟨w, ⟨hw₁⟩⟩ := Q.equivalent_weighted_sum_squares
   ⟨sign ∘ coe ∘ w, fun i => sign_apply_eq (w i), ⟨hw₁.trans (isometrySignWeightedSumSquares w)⟩⟩
-#align
-  quadratic_form.equivalent_one_zero_neg_one_weighted_sum_squared QuadraticForm.equivalent_one_zero_neg_one_weighted_sum_squared
+#align quadratic_form.equivalent_one_zero_neg_one_weighted_sum_squared QuadraticForm.equivalent_one_zero_neg_one_weighted_sum_squared
 
 end QuadraticForm
 

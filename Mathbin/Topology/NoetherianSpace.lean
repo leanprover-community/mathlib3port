@@ -60,8 +60,7 @@ theorem noetherian_space_iff_opens : NoetherianSpace α ↔ ∀ s : Opens α, Is
 
 instance (priority := 100) NoetherianSpace.compact_space [h : NoetherianSpace α] : CompactSpace α :=
   is_compact_univ_iff.mp ((noetherian_space_iff_opens α).mp h ⊤)
-#align
-  topological_space.noetherian_space.compact_space TopologicalSpace.NoetherianSpace.compact_space
+#align topological_space.noetherian_space.compact_space TopologicalSpace.NoetherianSpace.compact_space
 
 variable {α}
 
@@ -365,14 +364,12 @@ theorem noetherian_space_of_surjective [NoetherianSpace α] (f : α → β) (hf 
   intro s
   obtain ⟨t, e⟩ := set.image_surjective.mpr hf' s
   exact e ▸ (noetherian_space.is_compact t).image hf
-#align
-  topological_space.noetherian_space_of_surjective TopologicalSpace.noetherian_space_of_surjective
+#align topological_space.noetherian_space_of_surjective TopologicalSpace.noetherian_space_of_surjective
 
 theorem noetherian_space_iff_of_homeomorph (f : α ≃ₜ β) : NoetherianSpace α ↔ NoetherianSpace β :=
   ⟨fun h => @noetherian_space_of_surjective _ _ h f f.Continuous f.Surjective, fun h =>
     @noetherian_space_of_surjective _ _ h f.symm f.symm.Continuous f.symm.Surjective⟩
-#align
-  topological_space.noetherian_space_iff_of_homeomorph TopologicalSpace.noetherian_space_iff_of_homeomorph
+#align topological_space.noetherian_space_iff_of_homeomorph TopologicalSpace.noetherian_space_iff_of_homeomorph
 
 theorem NoetherianSpace.range [NoetherianSpace α] (f : α → β) (hf : Continuous f) :
     NoetherianSpace (Set.range f) :=
@@ -424,7 +421,7 @@ theorem NoetherianSpace.finite [NoetherianSpace α] [T2Space α] : Finite α :=
 #align topological_space.noetherian_space.finite TopologicalSpace.NoetherianSpace.finite
 
 instance (priority := 100) Finite.to_noetherian_space [Finite α] : NoetherianSpace α :=
-  ⟨Finite.well_founded_of_trans_of_irrefl _⟩
+  ⟨Finite.wellFounded_of_trans_of_irrefl _⟩
 #align topological_space.finite.to_noetherian_space TopologicalSpace.Finite.to_noetherian_space
 
 theorem NoetherianSpace.exists_finset_irreducible [NoetherianSpace α] (s : Closeds α) :
@@ -455,8 +452,7 @@ theorem NoetherianSpace.exists_finset_irreducible [NoetherianSpace α] (s : Clos
       · cases' finset.mem_union.mp k.2 with h' h'
         exacts[hS₁ ⟨k, h'⟩, hS₂ ⟨k, h'⟩]
       · rwa [Finset.sup_union, ← hS₁', ← hS₂', ← inf_sup_left, left_eq_inf]
-#align
-  topological_space.noetherian_space.exists_finset_irreducible TopologicalSpace.NoetherianSpace.exists_finset_irreducible
+#align topological_space.noetherian_space.exists_finset_irreducible TopologicalSpace.NoetherianSpace.exists_finset_irreducible
 
 theorem NoetherianSpace.finite_irreducible_components [NoetherianSpace α] :
     (irreducibleComponents α).Finite := by
@@ -478,8 +474,7 @@ theorem NoetherianSpace.finite_irreducible_components [NoetherianSpace α] :
     symm
     suffices K ≤ s by exact this.antisymm (hK.2 (hS₁ ⟨s, hs⟩) this)
     simpa
-#align
-  topological_space.noetherian_space.finite_irreducible_components TopologicalSpace.NoetherianSpace.finite_irreducible_components
+#align topological_space.noetherian_space.finite_irreducible_components TopologicalSpace.NoetherianSpace.finite_irreducible_components
 
 end TopologicalSpace
 

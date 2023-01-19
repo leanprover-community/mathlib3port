@@ -154,8 +154,7 @@ theorem card_support_eq_three (hp : p.IsUnitTrinomial) : p.support.card = 3 :=
   by
   obtain ⟨k, m, n, hkm, hmn, u, v, w, rfl⟩ := hp
   exact card_support_trinomial hkm hmn u.ne_zero v.ne_zero w.ne_zero
-#align
-  polynomial.is_unit_trinomial.card_support_eq_three Polynomial.IsUnitTrinomial.card_support_eq_three
+#align polynomial.is_unit_trinomial.card_support_eq_three Polynomial.IsUnitTrinomial.card_support_eq_three
 
 theorem ne_zero (hp : p.IsUnitTrinomial) : p ≠ 0 :=
   by
@@ -176,13 +175,11 @@ theorem coeff_is_unit (hp : p.IsUnitTrinomial) {k : ℕ} (hk : k ∈ p.support) 
 
 theorem leading_coeff_is_unit (hp : p.IsUnitTrinomial) : IsUnit p.leadingCoeff :=
   hp.coeff_is_unit (nat_degree_mem_support_of_nonzero hp.NeZero)
-#align
-  polynomial.is_unit_trinomial.leading_coeff_is_unit Polynomial.IsUnitTrinomial.leading_coeff_is_unit
+#align polynomial.is_unit_trinomial.leading_coeff_is_unit Polynomial.IsUnitTrinomial.leading_coeff_is_unit
 
 theorem trailing_coeff_is_unit (hp : p.IsUnitTrinomial) : IsUnit p.trailingCoeff :=
   hp.coeff_is_unit (nat_trailing_degree_mem_support_of_nonzero hp.NeZero)
-#align
-  polynomial.is_unit_trinomial.trailing_coeff_is_unit Polynomial.IsUnitTrinomial.trailing_coeff_is_unit
+#align polynomial.is_unit_trinomial.trailing_coeff_is_unit Polynomial.IsUnitTrinomial.trailing_coeff_is_unit
 
 end IsUnitTrinomial
 
@@ -349,15 +346,13 @@ theorem irreducible_of_coprime (hp : p.IsUnitTrinomial)
     rcases irreducible_aux3 hkm hmn hkm' hmn' (-u) (-v) (-w) x z hp hq hpq with (rfl | rfl)
     · exact Or.inr (Or.inl rfl)
     · exact Or.inr (Or.inr (Or.inr p.mirror_neg))
-#align
-  polynomial.is_unit_trinomial.irreducible_of_coprime Polynomial.IsUnitTrinomial.irreducible_of_coprime
+#align polynomial.is_unit_trinomial.irreducible_of_coprime Polynomial.IsUnitTrinomial.irreducible_of_coprime
 
 /-- A unit trinomial is irreducible if it is coprime with its mirror -/
 theorem irreducible_of_is_coprime (hp : p.IsUnitTrinomial) (h : IsCoprime p p.mirror) :
     Irreducible p :=
   irreducible_of_coprime hp fun q => h.is_unit_of_dvd'
-#align
-  polynomial.is_unit_trinomial.irreducible_of_is_coprime Polynomial.IsUnitTrinomial.irreducible_of_is_coprime
+#align polynomial.is_unit_trinomial.irreducible_of_is_coprime Polynomial.IsUnitTrinomial.irreducible_of_is_coprime
 
 /-- A unit trinomial is irreducible if it has no complex roots in common with its mirror -/
 theorem irreducible_of_coprime' (hp : IsUnitTrinomial p)
@@ -381,8 +376,7 @@ theorem irreducible_of_coprime' (hp : IsUnitTrinomial p)
     rw [hg', aeval_mul, hz, zero_mul]
   · cases' hq' with g' hg'
     rw [hg', aeval_mul, hz, zero_mul]
-#align
-  polynomial.is_unit_trinomial.irreducible_of_coprime' Polynomial.IsUnitTrinomial.irreducible_of_coprime'
+#align polynomial.is_unit_trinomial.irreducible_of_coprime' Polynomial.IsUnitTrinomial.irreducible_of_coprime'
 
 -- TODO: Develop more theory (e.g., it suffices to check that `aeval z p ≠ 0` for `z = 0`
 -- and `z` a root of unity)

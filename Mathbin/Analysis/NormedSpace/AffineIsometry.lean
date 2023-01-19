@@ -128,16 +128,14 @@ theorem to_affine_isometry_linear_isometry : f.toAffineIsometry.LinearIsometry =
   by
   ext
   rfl
-#align
-  linear_isometry.to_affine_isometry_linear_isometry LinearIsometry.to_affine_isometry_linear_isometry
+#align linear_isometry.to_affine_isometry_linear_isometry LinearIsometry.to_affine_isometry_linear_isometry
 
 -- somewhat arbitrary choice of simp direction
 @[simp]
 theorem to_affine_isometry_to_affine_map :
     f.toAffineIsometry.toAffineMap = f.toLinearMap.toAffineMap :=
   rfl
-#align
-  linear_isometry.to_affine_isometry_to_affine_map LinearIsometry.to_affine_isometry_to_affine_map
+#align linear_isometry.to_affine_isometry_to_affine_map LinearIsometry.to_affine_isometry_to_affine_map
 
 end LinearIsometry
 
@@ -435,8 +433,7 @@ def toAffineIsometryEquiv : V ≃ᵃⁱ[𝕜] V₂ :=
 @[simp]
 theorem coe_to_affine_isometry_equiv : ⇑(e.toAffineIsometryEquiv : V ≃ᵃⁱ[𝕜] V₂) = e :=
   rfl
-#align
-  linear_isometry_equiv.coe_to_affine_isometry_equiv LinearIsometryEquiv.coe_to_affine_isometry_equiv
+#align linear_isometry_equiv.coe_to_affine_isometry_equiv LinearIsometryEquiv.coe_to_affine_isometry_equiv
 
 @[simp]
 theorem to_affine_isometry_equiv_linear_isometry_equiv :
@@ -444,24 +441,21 @@ theorem to_affine_isometry_equiv_linear_isometry_equiv :
   by
   ext
   rfl
-#align
-  linear_isometry_equiv.to_affine_isometry_equiv_linear_isometry_equiv LinearIsometryEquiv.to_affine_isometry_equiv_linear_isometry_equiv
+#align linear_isometry_equiv.to_affine_isometry_equiv_linear_isometry_equiv LinearIsometryEquiv.to_affine_isometry_equiv_linear_isometry_equiv
 
 -- somewhat arbitrary choice of simp direction
 @[simp]
 theorem to_affine_isometry_equiv_to_affine_equiv :
     e.toAffineIsometryEquiv.toAffineEquiv = e.toLinearEquiv.toAffineEquiv :=
   rfl
-#align
-  linear_isometry_equiv.to_affine_isometry_equiv_to_affine_equiv LinearIsometryEquiv.to_affine_isometry_equiv_to_affine_equiv
+#align linear_isometry_equiv.to_affine_isometry_equiv_to_affine_equiv LinearIsometryEquiv.to_affine_isometry_equiv_to_affine_equiv
 
 -- somewhat arbitrary choice of simp direction
 @[simp]
 theorem to_affine_isometry_equiv_to_affine_isometry :
     e.toAffineIsometryEquiv.toAffineIsometry = e.toLinearIsometry.toAffineIsometry :=
   rfl
-#align
-  linear_isometry_equiv.to_affine_isometry_equiv_to_affine_isometry LinearIsometryEquiv.to_affine_isometry_equiv_to_affine_isometry
+#align linear_isometry_equiv.to_affine_isometry_equiv_to_affine_isometry LinearIsometryEquiv.to_affine_isometry_equiv_to_affine_isometry
 
 end LinearIsometryEquiv
 
@@ -769,8 +763,7 @@ theorem coe_vadd_const_symm (p : P) : ⇑(vaddConst 𝕜 p).symm = fun p' => p' 
 theorem vadd_const_to_affine_equiv (p : P) :
     (vaddConst 𝕜 p).toAffineEquiv = AffineEquiv.vaddConst 𝕜 p :=
   rfl
-#align
-  affine_isometry_equiv.vadd_const_to_affine_equiv AffineIsometryEquiv.vadd_const_to_affine_equiv
+#align affine_isometry_equiv.vadd_const_to_affine_equiv AffineIsometryEquiv.vadd_const_to_affine_equiv
 
 omit V
 
@@ -851,8 +844,7 @@ theorem point_reflection_apply (x y : P) : (pointReflection 𝕜 x) y = x -ᵥ y
 theorem point_reflection_to_affine_equiv (x : P) :
     (pointReflection 𝕜 x).toAffineEquiv = AffineEquiv.pointReflection 𝕜 x :=
   rfl
-#align
-  affine_isometry_equiv.point_reflection_to_affine_equiv AffineIsometryEquiv.point_reflection_to_affine_equiv
+#align affine_isometry_equiv.point_reflection_to_affine_equiv AffineIsometryEquiv.point_reflection_to_affine_equiv
 
 @[simp]
 theorem point_reflection_self (x : P) : pointReflection 𝕜 x x = x :=
@@ -861,8 +853,7 @@ theorem point_reflection_self (x : P) : pointReflection 𝕜 x x = x :=
 
 theorem point_reflection_involutive (x : P) : Function.Involutive (pointReflection 𝕜 x) :=
   Equiv.point_reflection_involutive x
-#align
-  affine_isometry_equiv.point_reflection_involutive AffineIsometryEquiv.point_reflection_involutive
+#align affine_isometry_equiv.point_reflection_involutive AffineIsometryEquiv.point_reflection_involutive
 
 @[simp]
 theorem point_reflection_symm (x : P) : (pointReflection 𝕜 x).symm = pointReflection 𝕜 x :=
@@ -872,44 +863,37 @@ theorem point_reflection_symm (x : P) : (pointReflection 𝕜 x).symm = pointRef
 @[simp]
 theorem dist_point_reflection_fixed (x y : P) : dist (pointReflection 𝕜 x y) x = dist y x := by
   rw [← (point_reflection 𝕜 x).dist_map y x, point_reflection_self]
-#align
-  affine_isometry_equiv.dist_point_reflection_fixed AffineIsometryEquiv.dist_point_reflection_fixed
+#align affine_isometry_equiv.dist_point_reflection_fixed AffineIsometryEquiv.dist_point_reflection_fixed
 
 theorem dist_point_reflection_self' (x y : P) : dist (pointReflection 𝕜 x y) y = ‖bit0 (x -ᵥ y)‖ :=
   by rw [point_reflection_apply, dist_eq_norm_vsub V, vadd_vsub_assoc, bit0]
-#align
-  affine_isometry_equiv.dist_point_reflection_self' AffineIsometryEquiv.dist_point_reflection_self'
+#align affine_isometry_equiv.dist_point_reflection_self' AffineIsometryEquiv.dist_point_reflection_self'
 
 theorem dist_point_reflection_self (x y : P) :
     dist (pointReflection 𝕜 x y) y = ‖(2 : 𝕜)‖ * dist x y := by
   rw [dist_point_reflection_self', ← two_smul' 𝕜 (x -ᵥ y), norm_smul, ← dist_eq_norm_vsub V]
-#align
-  affine_isometry_equiv.dist_point_reflection_self AffineIsometryEquiv.dist_point_reflection_self
+#align affine_isometry_equiv.dist_point_reflection_self AffineIsometryEquiv.dist_point_reflection_self
 
 theorem point_reflection_fixed_iff [Invertible (2 : 𝕜)] {x y : P} :
     pointReflection 𝕜 x y = y ↔ y = x :=
   AffineEquiv.point_reflection_fixed_iff_of_module 𝕜
-#align
-  affine_isometry_equiv.point_reflection_fixed_iff AffineIsometryEquiv.point_reflection_fixed_iff
+#align affine_isometry_equiv.point_reflection_fixed_iff AffineIsometryEquiv.point_reflection_fixed_iff
 
 variable [NormedSpace ℝ V]
 
 theorem dist_point_reflection_self_real (x y : P) : dist (pointReflection ℝ x y) y = 2 * dist x y :=
   by rw [dist_point_reflection_self, Real.norm_two]
-#align
-  affine_isometry_equiv.dist_point_reflection_self_real AffineIsometryEquiv.dist_point_reflection_self_real
+#align affine_isometry_equiv.dist_point_reflection_self_real AffineIsometryEquiv.dist_point_reflection_self_real
 
 @[simp]
 theorem point_reflection_midpoint_left (x y : P) : pointReflection ℝ (midpoint ℝ x y) x = y :=
   AffineEquiv.point_reflection_midpoint_left x y
-#align
-  affine_isometry_equiv.point_reflection_midpoint_left AffineIsometryEquiv.point_reflection_midpoint_left
+#align affine_isometry_equiv.point_reflection_midpoint_left AffineIsometryEquiv.point_reflection_midpoint_left
 
 @[simp]
 theorem point_reflection_midpoint_right (x y : P) : pointReflection ℝ (midpoint ℝ x y) y = x :=
   AffineEquiv.point_reflection_midpoint_right x y
-#align
-  affine_isometry_equiv.point_reflection_midpoint_right AffineIsometryEquiv.point_reflection_midpoint_right
+#align affine_isometry_equiv.point_reflection_midpoint_right AffineIsometryEquiv.point_reflection_midpoint_right
 
 end Constructions
 
@@ -985,8 +969,7 @@ noncomputable def isometryEquivMap (φ : P₁ →ᵃⁱ[𝕜] P₂) (E : AffineS
 theorem isometryEquivMap.apply_symm_apply {E : AffineSubspace 𝕜 P₁} [Nonempty E] {φ : P₁ →ᵃⁱ[𝕜] P₂}
     (x : E.map φ.toAffineMap) : φ ((E.isometryEquivMap φ).symm x) = x :=
   congr_arg coe <| (E.isometryEquivMap φ).apply_symm_apply _
-#align
-  affine_subspace.isometry_equiv_map.apply_symm_apply AffineSubspace.isometryEquivMap.apply_symm_apply
+#align affine_subspace.isometry_equiv_map.apply_symm_apply AffineSubspace.isometryEquivMap.apply_symm_apply
 
 @[simp]
 theorem isometryEquivMap.coe_apply (φ : P₁ →ᵃⁱ[𝕜] P₂) (E : AffineSubspace 𝕜 P₁) [Nonempty E]
@@ -999,8 +982,7 @@ theorem isometryEquivMap.to_affine_map_eq (φ : P₁ →ᵃⁱ[𝕜] P₂) (E : 
     [Nonempty E] :
     (E.isometryEquivMap φ).toAffineMap = E.equivMapOfInjective φ.toAffineMap φ.Injective :=
   rfl
-#align
-  affine_subspace.isometry_equiv_map.to_affine_map_eq AffineSubspace.isometryEquivMap.to_affine_map_eq
+#align affine_subspace.isometry_equiv_map.to_affine_map_eq AffineSubspace.isometryEquivMap.to_affine_map_eq
 
 end AffineSubspace
 

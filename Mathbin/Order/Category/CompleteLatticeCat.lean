@@ -105,6 +105,5 @@ theorem CompleteLattice_dual_comp_forget_to_BoundedLattice :
     CompleteLatticeCat.dual ⋙ forget₂ CompleteLatticeCat BoundedLatticeCat =
       forget₂ CompleteLatticeCat BoundedLatticeCat ⋙ BoundedLatticeCat.dual :=
   rfl
-#align
-  CompleteLattice_dual_comp_forget_to_BoundedLattice CompleteLattice_dual_comp_forget_to_BoundedLattice
+#align CompleteLattice_dual_comp_forget_to_BoundedLattice CompleteLattice_dual_comp_forget_to_BoundedLattice
 

@@ -43,8 +43,7 @@ class HasFiniteProducts : Prop where
 instance (priority := 10) hasFiniteProductsOfHasFiniteLimits [HasFiniteLimits C] :
     HasFiniteProducts C :=
   ⟨fun n => inferInstance⟩
-#align
-  category_theory.limits.has_finite_products_of_has_finite_limits CategoryTheory.Limits.hasFiniteProductsOfHasFiniteLimits
+#align category_theory.limits.has_finite_products_of_has_finite_limits CategoryTheory.Limits.hasFiniteProductsOfHasFiniteLimits
 
 instance hasLimitsOfShapeDiscrete [HasFiniteProducts C] (ι : Type w) [Finite ι] :
     HasLimitsOfShape (Discrete ι) C :=
@@ -52,8 +51,7 @@ instance hasLimitsOfShapeDiscrete [HasFiniteProducts C] (ι : Type w) [Finite ι
   rcases Finite.exists_equiv_fin ι with ⟨n, ⟨e⟩⟩
   haveI := has_finite_products.out C n
   exact has_limits_of_shape_of_equivalence (discrete.equivalence e.symm)
-#align
-  category_theory.limits.has_limits_of_shape_discrete CategoryTheory.Limits.hasLimitsOfShapeDiscrete
+#align category_theory.limits.has_limits_of_shape_discrete CategoryTheory.Limits.hasLimitsOfShapeDiscrete
 
 /-- We can now write this for powers. -/
 noncomputable example [HasFiniteProducts C] (X : C) : C :=
@@ -63,8 +61,7 @@ noncomputable example [HasFiniteProducts C] (X : C) : C :=
 -/
 theorem hasFiniteProductsOfHasProducts [HasProducts.{w} C] : HasFiniteProducts C :=
   ⟨fun n => hasLimitsOfShapeOfEquivalence (Discrete.equivalence Equiv.ulift.{w})⟩
-#align
-  category_theory.limits.has_finite_products_of_has_products CategoryTheory.Limits.hasFiniteProductsOfHasProducts
+#align category_theory.limits.has_finite_products_of_has_products CategoryTheory.Limits.hasFiniteProductsOfHasProducts
 
 /- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`out] [] -/
 /-- A category has finite coproducts if there is a chosen colimit for every diagram
@@ -85,22 +82,19 @@ instance hasColimitsOfShapeDiscrete [HasFiniteCoproducts C] (ι : Type w) [Finit
   rcases Finite.exists_equiv_fin ι with ⟨n, ⟨e⟩⟩
   haveI := has_finite_coproducts.out C n
   exact has_colimits_of_shape_of_equivalence (discrete.equivalence e.symm)
-#align
-  category_theory.limits.has_colimits_of_shape_discrete CategoryTheory.Limits.hasColimitsOfShapeDiscrete
+#align category_theory.limits.has_colimits_of_shape_discrete CategoryTheory.Limits.hasColimitsOfShapeDiscrete
 
 /-- If `C` has finite colimits then it has finite coproducts. -/
 instance (priority := 10) hasFiniteCoproductsOfHasFiniteColimits [HasFiniteColimits C] :
     HasFiniteCoproducts C :=
   ⟨fun J => by infer_instance⟩
-#align
-  category_theory.limits.has_finite_coproducts_of_has_finite_colimits CategoryTheory.Limits.hasFiniteCoproductsOfHasFiniteColimits
+#align category_theory.limits.has_finite_coproducts_of_has_finite_colimits CategoryTheory.Limits.hasFiniteCoproductsOfHasFiniteColimits
 
 /-- If a category has all coproducts then in particular it has finite coproducts.
 -/
 theorem hasFiniteCoproductsOfHasCoproducts [HasCoproducts.{w} C] : HasFiniteCoproducts C :=
   ⟨fun J => hasColimitsOfShapeOfEquivalence (Discrete.equivalence Equiv.ulift.{w})⟩
-#align
-  category_theory.limits.has_finite_coproducts_of_has_coproducts CategoryTheory.Limits.hasFiniteCoproductsOfHasCoproducts
+#align category_theory.limits.has_finite_coproducts_of_has_coproducts CategoryTheory.Limits.hasFiniteCoproductsOfHasCoproducts
 
 end CategoryTheory.Limits
 

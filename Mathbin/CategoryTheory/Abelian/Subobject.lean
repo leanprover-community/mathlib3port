@@ -65,8 +65,7 @@ def subobjectIsoSubobjectOp [Abelian C] (X : C) : Subobject X ≃o (Subobject (o
       simp only [← cancel_mono f, category.assoc, mono_lift_comp, image.fac, category.id_comp,
         auto_param_eq]
     · simp only [mono_lift_comp]
-#align
-  category_theory.abelian.subobject_iso_subobject_op CategoryTheory.Abelian.subobjectIsoSubobjectOp
+#align category_theory.abelian.subobject_iso_subobject_op CategoryTheory.Abelian.subobjectIsoSubobjectOp
 
 /-- A well-powered abelian category is also well-copowered. -/
 instance well_powered_opposite [Abelian C] [WellPowered C] : WellPowered Cᵒᵖ

@@ -112,7 +112,7 @@ instance isArtinianProd [IsArtinian R M] [IsArtinian R P] : IsArtinian R (M × P
 #align is_artinian_prod isArtinianProd
 
 instance (priority := 100) isArtinianOfFinite [Finite M] : IsArtinian R M :=
-  ⟨Finite.well_founded_of_trans_of_irrefl _⟩
+  ⟨Finite.wellFounded_of_trans_of_irrefl _⟩
 #align is_artinian_of_finite isArtinianOfFinite
 
 attribute [local elab_as_elim] Finite.induction_empty_option
@@ -242,8 +242,7 @@ theorem exists_endomorphism_iterate_ker_sup_range_eq_top (f : M →ₗ[R] M) :
     simp [iterate_add_apply]
   · use (f ^ (n + 1)) y
     simp
-#align
-  is_artinian.exists_endomorphism_iterate_ker_sup_range_eq_top IsArtinian.exists_endomorphism_iterate_ker_sup_range_eq_top
+#align is_artinian.exists_endomorphism_iterate_ker_sup_range_eq_top IsArtinian.exists_endomorphism_iterate_ker_sup_range_eq_top
 
 /-- Any injective endomorphism of an Artinian module is surjective. -/
 theorem surjective_of_injective_endomorphism (f : M →ₗ[R] M) (s : Injective f) : Surjective f :=
@@ -252,14 +251,12 @@ theorem surjective_of_injective_endomorphism (f : M →ₗ[R] M) (s : Injective 
   rw [linear_map.ker_eq_bot.mpr (LinearMap.iterate_injective s n), bot_sup_eq,
     LinearMap.range_eq_top] at w
   exact LinearMap.surjective_of_iterate_surjective Ne w
-#align
-  is_artinian.surjective_of_injective_endomorphism IsArtinian.surjective_of_injective_endomorphism
+#align is_artinian.surjective_of_injective_endomorphism IsArtinian.surjective_of_injective_endomorphism
 
 /-- Any injective endomorphism of an Artinian module is bijective. -/
 theorem bijective_of_injective_endomorphism (f : M →ₗ[R] M) (s : Injective f) : Bijective f :=
   ⟨s, surjective_of_injective_endomorphism f s⟩
-#align
-  is_artinian.bijective_of_injective_endomorphism IsArtinian.bijective_of_injective_endomorphism
+#align is_artinian.bijective_of_injective_endomorphism IsArtinian.bijective_of_injective_endomorphism
 
 /-- A sequence `f` of submodules of a artinian module,
 with the supremum `f (n+1)` and the infinum of `f 0`, ..., `f n` being ⊤,
@@ -279,8 +276,7 @@ theorem disjoint_partial_infs_eventually_top (f : ℕ → Submodule R M)
   obtain ⟨n, w⟩ := monotone_stabilizes (partialSups (OrderDual.toDual ∘ f))
   refine' ⟨n, fun m p => _⟩
   exact (h m).eq_bot_of_ge (sup_eq_left.1 <| (w (m + 1) <| le_add_right p).symm.trans <| w m p)
-#align
-  is_artinian.disjoint_partial_infs_eventually_top IsArtinian.disjoint_partial_infs_eventually_top
+#align is_artinian.disjoint_partial_infs_eventually_top IsArtinian.disjoint_partial_infs_eventually_top
 
 end IsArtinian
 

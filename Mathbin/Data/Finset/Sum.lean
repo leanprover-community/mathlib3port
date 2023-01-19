@@ -169,8 +169,7 @@ Case conversion may be inaccurate. Consider using '#align finset.disj_sum_ssubse
 theorem disjSum_ssubset_disjSum_of_ssubset_of_subset (hs : s₁ ⊂ s₂) (ht : t₁ ⊆ t₂) :
     s₁.disjSum t₁ ⊂ s₂.disjSum t₂ :=
   val_lt_iff.1 <| disjSum_lt_disjSum_of_lt_of_le (val_lt_iff.2 hs) (val_le_iff.2 ht)
-#align
-  finset.disj_sum_ssubset_disj_sum_of_ssubset_of_subset Finset.disjSum_ssubset_disjSum_of_ssubset_of_subset
+#align finset.disj_sum_ssubset_disj_sum_of_ssubset_of_subset Finset.disjSum_ssubset_disjSum_of_ssubset_of_subset
 
 /- warning: finset.disj_sum_ssubset_disj_sum_of_subset_of_ssubset -> Finset.disjSum_ssubset_disjSum_of_subset_of_ssubset is a dubious translation:
 lean 3 declaration is
@@ -181,8 +180,7 @@ Case conversion may be inaccurate. Consider using '#align finset.disj_sum_ssubse
 theorem disjSum_ssubset_disjSum_of_subset_of_ssubset (hs : s₁ ⊆ s₂) (ht : t₁ ⊂ t₂) :
     s₁.disjSum t₁ ⊂ s₂.disjSum t₂ :=
   val_lt_iff.1 <| disjSum_lt_disjSum_of_le_of_lt (val_le_iff.2 hs) (val_lt_iff.2 ht)
-#align
-  finset.disj_sum_ssubset_disj_sum_of_subset_of_ssubset Finset.disjSum_ssubset_disjSum_of_subset_of_ssubset
+#align finset.disj_sum_ssubset_disj_sum_of_subset_of_ssubset Finset.disjSum_ssubset_disjSum_of_subset_of_ssubset
 
 #print Finset.disjSum_strictMono_left /-
 theorem disjSum_strictMono_left (t : Finset β) : StrictMono fun s : Finset α => s.disjSum t :=

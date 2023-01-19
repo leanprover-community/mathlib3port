@@ -125,27 +125,23 @@ noncomputable def minCardFinsetOfMemConvexHull : Finset E :=
 
 theorem min_card_finset_of_mem_convex_hull_subseteq : ↑(minCardFinsetOfMemConvexHull hx) ⊆ s :=
   (Function.argminOn_mem _ _ { t : Finset E | ↑t ⊆ s ∧ x ∈ convexHull 𝕜 (t : Set E) } _).1
-#align
-  caratheodory.min_card_finset_of_mem_convex_hull_subseteq Caratheodory.min_card_finset_of_mem_convex_hull_subseteq
+#align caratheodory.min_card_finset_of_mem_convex_hull_subseteq Caratheodory.min_card_finset_of_mem_convex_hull_subseteq
 
 theorem mem_min_card_finset_of_mem_convex_hull :
     x ∈ convexHull 𝕜 (minCardFinsetOfMemConvexHull hx : Set E) :=
   (Function.argminOn_mem _ _ { t : Finset E | ↑t ⊆ s ∧ x ∈ convexHull 𝕜 (t : Set E) } _).2
-#align
-  caratheodory.mem_min_card_finset_of_mem_convex_hull Caratheodory.mem_min_card_finset_of_mem_convex_hull
+#align caratheodory.mem_min_card_finset_of_mem_convex_hull Caratheodory.mem_min_card_finset_of_mem_convex_hull
 
 theorem min_card_finset_of_mem_convex_hull_nonempty : (minCardFinsetOfMemConvexHull hx).Nonempty :=
   by
   rw [← Finset.coe_nonempty, ← @convex_hull_nonempty_iff 𝕜]
   exact ⟨x, mem_min_card_finset_of_mem_convex_hull hx⟩
-#align
-  caratheodory.min_card_finset_of_mem_convex_hull_nonempty Caratheodory.min_card_finset_of_mem_convex_hull_nonempty
+#align caratheodory.min_card_finset_of_mem_convex_hull_nonempty Caratheodory.min_card_finset_of_mem_convex_hull_nonempty
 
 theorem min_card_finset_of_mem_convex_hull_card_le_card {t : Finset E} (ht₁ : ↑t ⊆ s)
     (ht₂ : x ∈ convexHull 𝕜 (t : Set E)) : (minCardFinsetOfMemConvexHull hx).card ≤ t.card :=
   Function.argminOn_le _ _ _ ⟨ht₁, ht₂⟩
-#align
-  caratheodory.min_card_finset_of_mem_convex_hull_card_le_card Caratheodory.min_card_finset_of_mem_convex_hull_card_le_card
+#align caratheodory.min_card_finset_of_mem_convex_hull_card_le_card Caratheodory.min_card_finset_of_mem_convex_hull_card_le_card
 
 theorem affine_independent_min_card_finset_of_mem_convex_hull :
     AffineIndependent 𝕜 (coe : minCardFinsetOfMemConvexHull hx → E) :=
@@ -166,8 +162,7 @@ theorem affine_independent_min_card_finset_of_mem_convex_hull :
     apply contra
     erw [card_erase_of_mem p.2, hk]
     exact lt_add_one _
-#align
-  caratheodory.affine_independent_min_card_finset_of_mem_convex_hull Caratheodory.affine_independent_min_card_finset_of_mem_convex_hull
+#align caratheodory.affine_independent_min_card_finset_of_mem_convex_hull Caratheodory.affine_independent_min_card_finset_of_mem_convex_hull
 
 end Caratheodory
 

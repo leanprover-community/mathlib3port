@@ -63,15 +63,13 @@ def binaryProductLimitCone (G H : AddCommGroupCat.{u}) : Limits.LimitCone (pair 
 theorem binary_product_limit_cone_cone_π_app_left (G H : AddCommGroupCat.{u}) :
     (binaryProductLimitCone G H).Cone.π.app ⟨WalkingPair.left⟩ = AddMonoidHom.fst G H :=
   rfl
-#align
-  AddCommGroup.binary_product_limit_cone_cone_π_app_left AddCommGroupCat.binary_product_limit_cone_cone_π_app_left
+#align AddCommGroup.binary_product_limit_cone_cone_π_app_left AddCommGroupCat.binary_product_limit_cone_cone_π_app_left
 
 @[simp]
 theorem binary_product_limit_cone_cone_π_app_right (G H : AddCommGroupCat.{u}) :
     (binaryProductLimitCone G H).Cone.π.app ⟨WalkingPair.right⟩ = AddMonoidHom.snd G H :=
   rfl
-#align
-  AddCommGroup.binary_product_limit_cone_cone_π_app_right AddCommGroupCat.binary_product_limit_cone_cone_π_app_right
+#align AddCommGroup.binary_product_limit_cone_cone_π_app_right AddCommGroupCat.binary_product_limit_cone_cone_π_app_right
 
 /-- We verify that the biproduct in AddCommGroup is isomorphic to
 the cartesian product of the underlying types:

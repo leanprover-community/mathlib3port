@@ -94,8 +94,7 @@ private unsafe def using_location.explain_rewrites (rs : List (expr × Bool)) (s
     (steps : List how) : tactic String := do
   let rules ← steps.mmap fun h : how => Option.toList <$> explain_using_location rs s h
   return <| String.intercalate ",\n  " rules
-#align
-  tactic.rewrite_search.using_location.explain_rewrites tactic.rewrite_search.using_location.explain_rewrites
+#align tactic.rewrite_search.using_location.explain_rewrites tactic.rewrite_search.using_location.explain_rewrites
 
 namespace UsingConv
 
@@ -110,8 +109,7 @@ open AppAddr
 private unsafe def app_addr.to_string : AppAddr → String
   | node c => "(node " ++ ((c.toList.filterMap id).map app_addr.to_string).toString ++ ")"
   | rw rws => "(rw " ++ rws.toString ++ ")"
-#align
-  tactic.rewrite_search.using_conv.app_addr.to_string tactic.rewrite_search.using_conv.app_addr.to_string
+#align tactic.rewrite_search.using_conv.app_addr.to_string tactic.rewrite_search.using_conv.app_addr.to_string
 
 /-- A data structure for the result of a splice operation.
 obstructed:  There was more of the addr to be added left, but we hit a rw
@@ -131,8 +129,7 @@ private unsafe def pack_splice_result (s : ExprLens.Dir) :
     SpliceResult → DirPair (Option AppAddr) → SpliceResult
   | new addr, c => new <| app_addr.node <| c.Set s (some addr)
   | sr, _ => sr
-#align
-  tactic.rewrite_search.using_conv.pack_splice_result tactic.rewrite_search.using_conv.pack_splice_result
+#align tactic.rewrite_search.using_conv.pack_splice_result tactic.rewrite_search.using_conv.pack_splice_result
 
 private unsafe def splice_in_aux (new_rws : List ℕ) :
     Option AppAddr → List ExprLens.Dir → SpliceResult
@@ -168,8 +165,7 @@ private unsafe def splice_in (a : Option AppAddr) (rws : List ℕ) (s : List Exp
 private unsafe def build_rw_tactic (rs : List (expr × Bool)) (hs : List ℕ) : tactic String := do
   let rws ← (hs.map <| nth_rule rs).mmap pp_rule
   return <| "erw [" ++ String.intercalate ", " rws ++ "]"
-#align
-  tactic.rewrite_search.using_conv.build_rw_tactic tactic.rewrite_search.using_conv.build_rw_tactic
+#align tactic.rewrite_search.using_conv.build_rw_tactic tactic.rewrite_search.using_conv.build_rw_tactic
 
 private unsafe def explain_tree_aux (rs : List (expr × Bool)) :
     AppAddr → tactic (Option (List String))
@@ -189,8 +185,7 @@ private unsafe def explain_tree_aux (rs : List (expr × Bool)) :
         | (some sf, none) => ["congr"].append sf
         | (none, some sa) => ["congr", "skip"].append sa
         | (some sf, some sa) => (["congr"].append sf).append (["skip"].append sf)
-#align
-  tactic.rewrite_search.using_conv.explain_tree_aux tactic.rewrite_search.using_conv.explain_tree_aux
+#align tactic.rewrite_search.using_conv.explain_tree_aux tactic.rewrite_search.using_conv.explain_tree_aux
 
 /-- Construct a string of Lean code that does a rewrite for the provided tree. -/
 private unsafe def explain_tree (rs : List (expr × Bool)) (tree : AppAddr) : tactic (List String) :=
@@ -221,15 +216,13 @@ private unsafe def explanation_lines (rs : List (expr × Bool)) (s : Side) :
         let line ← explanation_lines tree []
         let lines ← explanation_lines none rest_if_fail
         return <| line ++ lines
-#align
-  tactic.rewrite_search.using_conv.explanation_lines tactic.rewrite_search.using_conv.explanation_lines
+#align tactic.rewrite_search.using_conv.explanation_lines tactic.rewrite_search.using_conv.explanation_lines
 
 /-- Explain a list of rewrites using `conv_x` tactics. -/
 unsafe def explain_rewrites (rs : List (expr × Bool)) (s : Side) (hows : List how) :
     tactic String :=
   String.intercalate ",\n  " <$> explanation_lines rs s none hows
-#align
-  tactic.rewrite_search.using_conv.explain_rewrites tactic.rewrite_search.using_conv.explain_rewrites
+#align tactic.rewrite_search.using_conv.explain_rewrites tactic.rewrite_search.using_conv.explain_rewrites
 
 end UsingConv
 
@@ -237,8 +230,7 @@ private unsafe def explain_rewrites_concisely (steps : List (expr × Bool)) (nee
     tactic String := do
   let rules ← String.intercalate ", " <$> steps.mmap pp_rule
   return <| "erw [" ++ rules ++ "]" ++ if needs_refl then ", refl" else ""
-#align
-  tactic.rewrite_search.explain_rewrites_concisely tactic.rewrite_search.explain_rewrites_concisely
+#align tactic.rewrite_search.explain_rewrites_concisely tactic.rewrite_search.explain_rewrites_concisely
 
 /-- Fails if we can't just use rewrite.
 Otherwise, returns 'tt' if we need a `refl` at the end.
@@ -253,8 +245,7 @@ private unsafe def check_if_simple_rewrite_succeeds (rewrites : List (expr × Bo
           { symm := q.2
             md := semireducible }
     reflexivity reducible >> return ff <|> reflexivity >> return tt
-#align
-  tactic.rewrite_search.check_if_simple_rewrite_succeeds tactic.rewrite_search.check_if_simple_rewrite_succeeds
+#align tactic.rewrite_search.check_if_simple_rewrite_succeeds tactic.rewrite_search.check_if_simple_rewrite_succeeds
 
 /-- Construct a list of rewrites from a proof unit. -/
 unsafe def proof_unit.rewrites (u : proof_unit) (rs : List (expr × Bool)) : List (expr × Bool) :=

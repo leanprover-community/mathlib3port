@@ -81,8 +81,7 @@ variable [AddCommMonoid P] [Module R P] [Module A P] [IsScalarTower R A P]
 
 theorem smul_eq_lsmul_rtensor (a : A) (x : M ⊗[R] N) : a • x = (lsmul R M a).rtensor N x :=
   rfl
-#align
-  tensor_product.algebra_tensor_module.smul_eq_lsmul_rtensor TensorProduct.AlgebraTensorModule.smul_eq_lsmul_rtensor
+#align tensor_product.algebra_tensor_module.smul_eq_lsmul_rtensor TensorProduct.AlgebraTensorModule.smul_eq_lsmul_rtensor
 
 /-- Heterobasic version of `tensor_product.curry`:
 
@@ -100,8 +99,7 @@ def curry (f : M ⊗[R] N →ₗ[A] P) : M →ₗ[A] N →ₗ[R] P :=
 theorem restrict_scalars_curry (f : M ⊗[R] N →ₗ[A] P) :
     RestrictScalars R (curry f) = curry (f.restrictScalars R) :=
   rfl
-#align
-  tensor_product.algebra_tensor_module.restrict_scalars_curry TensorProduct.AlgebraTensorModule.restrict_scalars_curry
+#align tensor_product.algebra_tensor_module.restrict_scalars_curry TensorProduct.AlgebraTensorModule.restrict_scalars_curry
 
 /-- Just as `tensor_product.ext` is marked `ext` instead of `tensor_product.ext'`, this is
 a better `ext` lemma than `tensor_product.algebra_tensor_module.ext` below.
@@ -112,8 +110,7 @@ theorem curry_injective : Function.Injective (curry : (M ⊗ N →ₗ[A] P) → 
   fun x y h =>
   LinearMap.restrict_scalars_injective R <|
     curry_injective <| (congr_arg (LinearMap.restrictScalars R) h : _)
-#align
-  tensor_product.algebra_tensor_module.curry_injective TensorProduct.AlgebraTensorModule.curry_injective
+#align tensor_product.algebra_tensor_module.curry_injective TensorProduct.AlgebraTensorModule.curry_injective
 
 theorem ext {g h : M ⊗[R] N →ₗ[A] P} (H : ∀ x y, g (x ⊗ₜ y) = h (x ⊗ₜ y)) : g = h :=
   curry_injective <| LinearMap.ext₂ H
@@ -579,8 +576,7 @@ theorem include_left_comp_algebra_map {R S T : Type _} [CommRing R] [CommRing S]
   by
   ext
   simp
-#align
-  algebra.tensor_product.include_left_comp_algebra_map Algebra.TensorProduct.include_left_comp_algebra_map
+#align algebra.tensor_product.include_left_comp_algebra_map Algebra.TensorProduct.include_left_comp_algebra_map
 
 end Semiring
 
@@ -693,15 +689,13 @@ def algHomOfLinearMapTensorProduct (f : A ⊗[R] B →ₗ[R] C)
       · intro x₁ x₂ h₁ h₂
         rw [add_mul, map_add, map_add, add_mul, h₁, h₂]
     commutes' := fun r => by rw [LinearMap.to_fun_eq_coe, algebra_map_apply, w₂] }
-#align
-  algebra.tensor_product.alg_hom_of_linear_map_tensor_product Algebra.TensorProduct.algHomOfLinearMapTensorProduct
+#align algebra.tensor_product.alg_hom_of_linear_map_tensor_product Algebra.TensorProduct.algHomOfLinearMapTensorProduct
 
 @[simp]
 theorem alg_hom_of_linear_map_tensor_product_apply (f w₁ w₂ x) :
     (algHomOfLinearMapTensorProduct f w₁ w₂ : A ⊗[R] B →ₐ[R] C) x = f x :=
   rfl
-#align
-  algebra.tensor_product.alg_hom_of_linear_map_tensor_product_apply Algebra.TensorProduct.alg_hom_of_linear_map_tensor_product_apply
+#align algebra.tensor_product.alg_hom_of_linear_map_tensor_product_apply Algebra.TensorProduct.alg_hom_of_linear_map_tensor_product_apply
 
 /-- Build an algebra equivalence from a linear equivalence out of a tensor product,
 and evidence of multiplicativity on pure tensors.
@@ -710,15 +704,13 @@ def algEquivOfLinearEquivTensorProduct (f : A ⊗[R] B ≃ₗ[R] C)
     (w₁ : ∀ (a₁ a₂ : A) (b₁ b₂ : B), f ((a₁ * a₂) ⊗ₜ (b₁ * b₂)) = f (a₁ ⊗ₜ b₁) * f (a₂ ⊗ₜ b₂))
     (w₂ : ∀ r, f ((algebraMap R A) r ⊗ₜ[R] 1) = (algebraMap R C) r) : A ⊗[R] B ≃ₐ[R] C :=
   { algHomOfLinearMapTensorProduct (f : A ⊗[R] B →ₗ[R] C) w₁ w₂, f with }
-#align
-  algebra.tensor_product.alg_equiv_of_linear_equiv_tensor_product Algebra.TensorProduct.algEquivOfLinearEquivTensorProduct
+#align algebra.tensor_product.alg_equiv_of_linear_equiv_tensor_product Algebra.TensorProduct.algEquivOfLinearEquivTensorProduct
 
 @[simp]
 theorem alg_equiv_of_linear_equiv_tensor_product_apply (f w₁ w₂ x) :
     (algEquivOfLinearEquivTensorProduct f w₁ w₂ : A ⊗[R] B ≃ₐ[R] C) x = f x :=
   rfl
-#align
-  algebra.tensor_product.alg_equiv_of_linear_equiv_tensor_product_apply Algebra.TensorProduct.alg_equiv_of_linear_equiv_tensor_product_apply
+#align algebra.tensor_product.alg_equiv_of_linear_equiv_tensor_product_apply Algebra.TensorProduct.alg_equiv_of_linear_equiv_tensor_product_apply
 
 /-- Build an algebra equivalence from a linear equivalence out of a triple tensor product,
 and evidence of multiplicativity on pure tensors.
@@ -756,15 +748,13 @@ def algEquivOfLinearEquivTripleTensorProduct (f : (A ⊗[R] B) ⊗[R] C ≃ₗ[R
       · intro x₁ x₂ h₁ h₂
         simp only [tmul_mul_tmul, map_add, mul_add, add_mul, h₁, h₂]
     commutes' := fun r => by simp [w₂] }
-#align
-  algebra.tensor_product.alg_equiv_of_linear_equiv_triple_tensor_product Algebra.TensorProduct.algEquivOfLinearEquivTripleTensorProduct
+#align algebra.tensor_product.alg_equiv_of_linear_equiv_triple_tensor_product Algebra.TensorProduct.algEquivOfLinearEquivTripleTensorProduct
 
 @[simp]
 theorem alg_equiv_of_linear_equiv_triple_tensor_product_apply (f w₁ w₂ x) :
     (algEquivOfLinearEquivTripleTensorProduct f w₁ w₂ : (A ⊗[R] B) ⊗[R] C ≃ₐ[R] D) x = f x :=
   rfl
-#align
-  algebra.tensor_product.alg_equiv_of_linear_equiv_triple_tensor_product_apply Algebra.TensorProduct.alg_equiv_of_linear_equiv_triple_tensor_product_apply
+#align algebra.tensor_product.alg_equiv_of_linear_equiv_triple_tensor_product_apply Algebra.TensorProduct.alg_equiv_of_linear_equiv_triple_tensor_product_apply
 
 end
 
@@ -967,8 +957,7 @@ theorem lmul'_comp_include_left : (lmul' R : _ →ₐ[R] S).comp includeLeft = A
 @[simp]
 theorem lmul'_comp_include_right : (lmul' R : _ →ₐ[R] S).comp includeRight = AlgHom.id R S :=
   AlgHom.ext <| _root_.one_mul
-#align
-  algebra.tensor_product.lmul'_comp_include_right Algebra.TensorProduct.lmul'_comp_include_right
+#align algebra.tensor_product.lmul'_comp_include_right Algebra.TensorProduct.lmul'_comp_include_right
 
 /-- If `S` is commutative, for a pair of morphisms `f : A →ₐ[R] S`, `g : B →ₐ[R] S`,
 We obtain a map `A ⊗[R] B →ₐ[R] S` that commutes with `f`, `g` via `a ⊗ b ↦ f(a) * g(b)`.

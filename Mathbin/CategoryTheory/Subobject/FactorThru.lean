@@ -104,8 +104,7 @@ theorem factors_of_factors_right {X Y Z : C} {P : Subobject Z} (f : X ⟶ Y) {g 
   intro P
   rintro ⟨g, rfl⟩
   exact ⟨f ≫ g, by simp⟩
-#align
-  category_theory.subobject.factors_of_factors_right CategoryTheory.Subobject.factors_of_factors_right
+#align category_theory.subobject.factors_of_factors_right CategoryTheory.Subobject.factors_of_factors_right
 
 theorem factors_zero [HasZeroMorphisms C] {X Y : C} {P : Subobject Y} : P.Factors (0 : X ⟶ Y) :=
   (factors_iff _ _).mpr ⟨0, by simp⟩
@@ -149,8 +148,7 @@ theorem factor_thru_comp_arrow {X Y : C} {P : Subobject Y} (f : X ⟶ P) (h) :
     P.factorThru (f ≫ P.arrow) h = f := by
   ext
   simp
-#align
-  category_theory.subobject.factor_thru_comp_arrow CategoryTheory.Subobject.factor_thru_comp_arrow
+#align category_theory.subobject.factor_thru_comp_arrow CategoryTheory.Subobject.factor_thru_comp_arrow
 
 @[simp]
 theorem factor_thru_eq_zero [HasZeroMorphisms C] {X Y : C} {P : Subobject Y} {f : X ⟶ Y}
@@ -209,8 +207,7 @@ theorem factor_thru_add {X Y : C} {P : Subobject Y} (f g : X ⟶ Y) (w : P.Facto
 theorem factors_left_of_factors_add {X Y : C} {P : Subobject Y} (f g : X ⟶ Y)
     (w : P.Factors (f + g)) (wg : P.Factors g) : P.Factors f :=
   (factors_iff _ _).mpr ⟨P.factorThru (f + g) w - P.factorThru g wg, by simp⟩
-#align
-  category_theory.subobject.factors_left_of_factors_add CategoryTheory.Subobject.factors_left_of_factors_add
+#align category_theory.subobject.factors_left_of_factors_add CategoryTheory.Subobject.factors_left_of_factors_add
 
 @[simp]
 theorem factor_thru_add_sub_factor_thru_right {X Y : C} {P : Subobject Y} (f g : X ⟶ Y)
@@ -220,14 +217,12 @@ theorem factor_thru_add_sub_factor_thru_right {X Y : C} {P : Subobject Y} (f g :
   by
   ext
   simp
-#align
-  category_theory.subobject.factor_thru_add_sub_factor_thru_right CategoryTheory.Subobject.factor_thru_add_sub_factor_thru_right
+#align category_theory.subobject.factor_thru_add_sub_factor_thru_right CategoryTheory.Subobject.factor_thru_add_sub_factor_thru_right
 
 theorem factors_right_of_factors_add {X Y : C} {P : Subobject Y} (f g : X ⟶ Y)
     (w : P.Factors (f + g)) (wf : P.Factors f) : P.Factors g :=
   (factors_iff _ _).mpr ⟨P.factorThru (f + g) w - P.factorThru f wf, by simp⟩
-#align
-  category_theory.subobject.factors_right_of_factors_add CategoryTheory.Subobject.factors_right_of_factors_add
+#align category_theory.subobject.factors_right_of_factors_add CategoryTheory.Subobject.factors_right_of_factors_add
 
 @[simp]
 theorem factor_thru_add_sub_factor_thru_left {X Y : C} {P : Subobject Y} (f g : X ⟶ Y)
@@ -237,8 +232,7 @@ theorem factor_thru_add_sub_factor_thru_left {X Y : C} {P : Subobject Y} (f g : 
   by
   ext
   simp
-#align
-  category_theory.subobject.factor_thru_add_sub_factor_thru_left CategoryTheory.Subobject.factor_thru_add_sub_factor_thru_left
+#align category_theory.subobject.factor_thru_add_sub_factor_thru_left CategoryTheory.Subobject.factor_thru_add_sub_factor_thru_left
 
 end Preadditive
 

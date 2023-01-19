@@ -146,8 +146,7 @@ theorem mul_dist_le_mul_dist_add_mul_dist (a b c d : P) :
   convert H <;>
     · field_simp [hb.ne', hc.ne', hd.ne', dist_comm a]
       ring
-#align
-  euclidean_geometry.mul_dist_le_mul_dist_add_mul_dist EuclideanGeometry.mul_dist_le_mul_dist_add_mul_dist
+#align euclidean_geometry.mul_dist_le_mul_dist_add_mul_dist EuclideanGeometry.mul_dist_le_mul_dist_add_mul_dist
 
 end EuclideanGeometry
 

@@ -152,8 +152,7 @@ theorem mem_iff_ann_ideal_generator_dvd {p : 𝕜[X]} {a : A} :
 theorem degree_ann_ideal_generator_le_of_mem (a : A) (p : 𝕜[X]) (hp : p ∈ annIdeal 𝕜 a)
     (hpn0 : p ≠ 0) : degree (annIdealGenerator 𝕜 a) ≤ degree p :=
   degree_le_of_dvd (mem_iff_ann_ideal_generator_dvd.1 hp) hpn0
-#align
-  polynomial.degree_ann_ideal_generator_le_of_mem Polynomial.degree_ann_ideal_generator_le_of_mem
+#align polynomial.degree_ann_ideal_generator_le_of_mem Polynomial.degree_ann_ideal_generator_le_of_mem
 
 variable (𝕜)
 

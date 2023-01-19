@@ -244,8 +244,7 @@ theorem underlying_iso_top_hom {B : C} : (underlyingIso (𝟙 B)).Hom = (⊤ : S
   by
   convert underlying_iso_hom_comp_eq_mk (𝟙 B)
   simp only [comp_id]
-#align
-  category_theory.subobject.underlying_iso_top_hom CategoryTheory.Subobject.underlying_iso_top_hom
+#align category_theory.subobject.underlying_iso_top_hom CategoryTheory.Subobject.underlying_iso_top_hom
 
 instance top_arrow_is_iso {B : C} : IsIso (⊤ : Subobject B).arrow :=
   by
@@ -257,8 +256,7 @@ instance top_arrow_is_iso {B : C} : IsIso (⊤ : Subobject B).arrow :=
 theorem underlying_iso_inv_top_arrow {B : C} :
     (underlyingIso _).inv ≫ (⊤ : Subobject B).arrow = 𝟙 B :=
   underlying_iso_arrow _
-#align
-  category_theory.subobject.underlying_iso_inv_top_arrow CategoryTheory.Subobject.underlying_iso_inv_top_arrow
+#align category_theory.subobject.underlying_iso_inv_top_arrow CategoryTheory.Subobject.underlying_iso_inv_top_arrow
 
 @[simp]
 theorem map_top (f : X ⟶ Y) [Mono f] : (map f).obj ⊤ = Subobject.mk f :=
@@ -278,8 +276,7 @@ theorem is_iso_iff_mk_eq_top {X Y : C} (f : X ⟶ Y) [Mono f] : IsIso f ↔ mk f
 
 theorem is_iso_arrow_iff_eq_top {Y : C} (P : Subobject Y) : IsIso P.arrow ↔ P = ⊤ := by
   rw [is_iso_iff_mk_eq_top, mk_arrow]
-#align
-  category_theory.subobject.is_iso_arrow_iff_eq_top CategoryTheory.Subobject.is_iso_arrow_iff_eq_top
+#align category_theory.subobject.is_iso_arrow_iff_eq_top CategoryTheory.Subobject.is_iso_arrow_iff_eq_top
 
 instance is_iso_top_arrow {Y : C} : IsIso (⊤ : Subobject Y).arrow := by rw [is_iso_arrow_iff_eq_top]
 #align category_theory.subobject.is_iso_top_arrow CategoryTheory.Subobject.is_iso_top_arrow
@@ -290,8 +287,7 @@ theorem mk_eq_top_of_is_iso {X Y : C} (f : X ⟶ Y) [IsIso f] : mk f = ⊤ :=
 
 theorem eq_top_of_is_iso_arrow {Y : C} (P : Subobject Y) [IsIso P.arrow] : P = ⊤ :=
   (is_iso_arrow_iff_eq_top P).mp inferInstance
-#align
-  category_theory.subobject.eq_top_of_is_iso_arrow CategoryTheory.Subobject.eq_top_of_is_iso_arrow
+#align category_theory.subobject.eq_top_of_is_iso_arrow CategoryTheory.Subobject.eq_top_of_is_iso_arrow
 
 section
 
@@ -423,14 +419,12 @@ instance {B : C} : SemilatticeInf (Subobject B) :=
 theorem factors_left_of_inf_factors {A B : C} {X Y : Subobject B} {f : A ⟶ B}
     (h : (X ⊓ Y).Factors f) : X.Factors f :=
   factors_of_le _ (inf_le_left _ _) h
-#align
-  category_theory.subobject.factors_left_of_inf_factors CategoryTheory.Subobject.factors_left_of_inf_factors
+#align category_theory.subobject.factors_left_of_inf_factors CategoryTheory.Subobject.factors_left_of_inf_factors
 
 theorem factors_right_of_inf_factors {A B : C} {X Y : Subobject B} {f : A ⟶ B}
     (h : (X ⊓ Y).Factors f) : Y.Factors f :=
   factors_of_le _ (inf_le_right _ _) h
-#align
-  category_theory.subobject.factors_right_of_inf_factors CategoryTheory.Subobject.factors_right_of_inf_factors
+#align category_theory.subobject.factors_right_of_inf_factors CategoryTheory.Subobject.factors_right_of_inf_factors
 
 @[simp]
 theorem inf_factors {A B : C} {X Y : Subobject B} (f : A ⟶ B) :
@@ -445,13 +439,11 @@ theorem inf_factors {A B : C} {X Y : Subobject B} (f : A ⟶ B) :
 
 theorem inf_arrow_factors_left {B : C} (X Y : Subobject B) : X.Factors (X ⊓ Y).arrow :=
   (factors_iff _ _).mpr ⟨ofLe (X ⊓ Y) X (inf_le_left X Y), by simp⟩
-#align
-  category_theory.subobject.inf_arrow_factors_left CategoryTheory.Subobject.inf_arrow_factors_left
+#align category_theory.subobject.inf_arrow_factors_left CategoryTheory.Subobject.inf_arrow_factors_left
 
 theorem inf_arrow_factors_right {B : C} (X Y : Subobject B) : Y.Factors (X ⊓ Y).arrow :=
   (factors_iff _ _).mpr ⟨ofLe (X ⊓ Y) Y (inf_le_right X Y), by simp⟩
-#align
-  category_theory.subobject.inf_arrow_factors_right CategoryTheory.Subobject.inf_arrow_factors_right
+#align category_theory.subobject.inf_arrow_factors_right CategoryTheory.Subobject.inf_arrow_factors_right
 
 @[simp]
 theorem finset_inf_factors {I : Type _} {A B : C} {s : Finset I} {P : I → Subobject B} (f : A ⟶ B) :
@@ -480,8 +472,7 @@ theorem finset_inf_arrow_factors {I : Type _} {B : C} (s : Finset I) (P : I → 
       · rw [← factor_thru_arrow _ _ (inf_arrow_factors_right _ _)]
         apply factors_of_factors_right
         exact ih _ m
-#align
-  category_theory.subobject.finset_inf_arrow_factors CategoryTheory.Subobject.finset_inf_arrow_factors
+#align category_theory.subobject.finset_inf_arrow_factors CategoryTheory.Subobject.finset_inf_arrow_factors
 
 theorem inf_eq_map_pullback' {A : C} (f₁ : MonoOver A) (f₂ : Subobject A) :
     (Subobject.inf.obj (Quotient.mk' f₁)).obj f₂ =
@@ -553,14 +544,12 @@ instance {B : C} : SemilatticeSup (Subobject B) :=
 theorem sup_factors_of_factors_left {A B : C} {X Y : Subobject B} {f : A ⟶ B} (P : X.Factors f) :
     (X ⊔ Y).Factors f :=
   factors_of_le f le_sup_left P
-#align
-  category_theory.subobject.sup_factors_of_factors_left CategoryTheory.Subobject.sup_factors_of_factors_left
+#align category_theory.subobject.sup_factors_of_factors_left CategoryTheory.Subobject.sup_factors_of_factors_left
 
 theorem sup_factors_of_factors_right {A B : C} {X Y : Subobject B} {f : A ⟶ B} (P : Y.Factors f) :
     (X ⊔ Y).Factors f :=
   factors_of_le f le_sup_right P
-#align
-  category_theory.subobject.sup_factors_of_factors_right CategoryTheory.Subobject.sup_factors_of_factors_right
+#align category_theory.subobject.sup_factors_of_factors_right CategoryTheory.Subobject.sup_factors_of_factors_right
 
 variable [HasInitial C] [InitialMonoClass C]
 
@@ -631,8 +620,7 @@ def leInfCone {A : C} (s : Set (Subobject A)) (f : Subobject A) (k : ∀ g ∈ s
 theorem le_Inf_cone_π_app_none {A : C} (s : Set (Subobject A)) (f : Subobject A)
     (k : ∀ g ∈ s, f ≤ g) : (leInfCone s f k).π.app none = f.arrow :=
   rfl
-#align
-  category_theory.subobject.le_Inf_cone_π_app_none CategoryTheory.Subobject.le_Inf_cone_π_app_none
+#align category_theory.subobject.le_Inf_cone_π_app_none CategoryTheory.Subobject.le_Inf_cone_π_app_none
 
 variable [HasWidePullbacks.{v₁} C]
 
@@ -751,8 +739,7 @@ theorem symm_apply_mem_iff_mem_image {α β : Type _} (e : α ≃ β) (s : Set �
   ⟨fun h => ⟨e.symm x, h, by simp⟩, by
     rintro ⟨a, m, rfl⟩
     simpa using m⟩
-#align
-  category_theory.subobject.symm_apply_mem_iff_mem_image CategoryTheory.Subobject.symm_apply_mem_iff_mem_image
+#align category_theory.subobject.symm_apply_mem_iff_mem_image CategoryTheory.Subobject.symm_apply_mem_iff_mem_image
 
 theorem Sup_le {A : C} (s : Set (Subobject A)) (f : Subobject A) (k : ∀ g ∈ s, g ≤ f) : sup s ≤ f :=
   by
@@ -803,8 +790,7 @@ open ZeroObject
 /-- A nonzero object has nontrivial subobject lattice. -/
 theorem nontrivial_of_not_is_zero {X : C} (h : ¬IsZero X) : Nontrivial (Subobject X) :=
   ⟨⟨mk (0 : 0 ⟶ X), mk (𝟙 X), fun w => h (IsZero.of_iso (is_zero_zero C) (isoOfMkEqMk _ _ w).symm)⟩⟩
-#align
-  category_theory.subobject.nontrivial_of_not_is_zero CategoryTheory.Subobject.nontrivial_of_not_is_zero
+#align category_theory.subobject.nontrivial_of_not_is_zero CategoryTheory.Subobject.nontrivial_of_not_is_zero
 
 end ZeroObject
 

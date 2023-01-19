@@ -112,8 +112,7 @@ theorem AnalyticAt.eventually_constant_or_nhds_le_map_nhds_aux (hf : AnalyticAt 
   exact
     (h6.ball_subset_image_closed_ball hr (fun z hz => hfx z hz) (not_eventually.mp h)).trans
       (image_subset f (closed_ball_subset_closed_ball inf_le_right))
-#align
-  analytic_at.eventually_constant_or_nhds_le_map_nhds_aux AnalyticAt.eventually_constant_or_nhds_le_map_nhds_aux
+#align analytic_at.eventually_constant_or_nhds_le_map_nhds_aux AnalyticAt.eventually_constant_or_nhds_le_map_nhds_aux
 
 /-- The *open mapping theorem* for holomorphic functions, local version: is a function `g : E → ℂ`
 is analytic at a point `z₀`, then either it is constant in a neighborhood of `z₀`, or it maps every
@@ -169,8 +168,7 @@ theorem AnalyticAt.eventually_constant_or_nhds_le_map_nhds {z₀ : E} (hg : Anal
     have h10 : Continuous fun t : ℂ => z₀ + t • z :=
       continuous_const.add (continuous_id'.smul continuous_const)
     simpa using h10.tendsto 0
-#align
-  analytic_at.eventually_constant_or_nhds_le_map_nhds AnalyticAt.eventually_constant_or_nhds_le_map_nhds
+#align analytic_at.eventually_constant_or_nhds_le_map_nhds AnalyticAt.eventually_constant_or_nhds_le_map_nhds
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (s «expr ⊆ » U) -/
 /-- The *open mapping theorem* for holomorphic functions, global version: if a function `g : E → ℂ`

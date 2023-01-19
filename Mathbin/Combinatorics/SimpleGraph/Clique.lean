@@ -220,8 +220,7 @@ theorem not_clique_free_card_of_top_embedding [Fintype α] (f : (⊤ : SimpleGra
     ¬G.CliqueFree (card α) := by
   rw [not_clique_free_iff]
   use (iso.complete_graph (Fintype.equivFin α)).symm.toEmbedding.trans f
-#align
-  simple_graph.not_clique_free_card_of_top_embedding SimpleGraph.not_clique_free_card_of_top_embedding
+#align simple_graph.not_clique_free_card_of_top_embedding SimpleGraph.not_clique_free_card_of_top_embedding
 
 theorem clique_free_bot (h : 2 ≤ n) : (⊥ : SimpleGraph α).CliqueFree n :=
   by

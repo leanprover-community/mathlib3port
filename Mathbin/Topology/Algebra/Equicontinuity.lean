@@ -49,8 +49,6 @@ theorem uniform_equicontinuous_of_equicontinuous_at_one {ι G M hom : Type _} [U
       map_one' := by ext <;> exact map_one _
       map_mul' := fun a b => by ext <;> exact map_mul _ _ _ }
   exact uniform_continuous_of_continuous_at_one φ hf
-#align
-  uniform_equicontinuous_of_equicontinuous_at_one uniform_equicontinuous_of_equicontinuous_at_one
-#align
-  uniform_equicontinuous_of_equicontinuous_at_zero uniform_equicontinuous_of_equicontinuous_at_zero
+#align uniform_equicontinuous_of_equicontinuous_at_one uniform_equicontinuous_of_equicontinuous_at_one
+#align uniform_equicontinuous_of_equicontinuous_at_zero uniform_equicontinuous_of_equicontinuous_at_zero
 

@@ -184,8 +184,7 @@ def DirectSum.IsInternal.isometryL2OfOrthogonalFamily [DecidableEq ι] {V : ι �
   trans ⟪∑ i, (V i).subtypeₗᵢ (v i), ∑ i, (V i).subtypeₗᵢ (w i)⟫
   · simp only [sum_inner, hV'.inner_right_fintype, PiLp.inner_apply]
   · congr <;> simp
-#align
-  direct_sum.is_internal.isometry_L2_of_orthogonal_family DirectSum.IsInternal.isometryL2OfOrthogonalFamily
+#align direct_sum.is_internal.isometry_L2_of_orthogonal_family DirectSum.IsInternal.isometryL2OfOrthogonalFamily
 
 @[simp]
 theorem DirectSum.IsInternal.isometry_L2_of_orthogonal_family_symm_apply [DecidableEq ι]
@@ -198,8 +197,7 @@ theorem DirectSum.IsInternal.isometry_L2_of_orthogonal_family_symm_apply [Decida
     suffices ∀ v : ⨁ i, V i, e₂ v = ∑ i, e₁ v i by exact this (e₁.symm w)
     intro v
     simp [e₂, DirectSum.coeLinearMap, DirectSum.toModule, Dfinsupp.sum_add_hom_apply]
-#align
-  direct_sum.is_internal.isometry_L2_of_orthogonal_family_symm_apply DirectSum.IsInternal.isometry_L2_of_orthogonal_family_symm_apply
+#align direct_sum.is_internal.isometry_L2_of_orthogonal_family_symm_apply DirectSum.IsInternal.isometry_L2_of_orthogonal_family_symm_apply
 
 end
 
@@ -562,8 +560,7 @@ theorem Complex.orthonormal_basis_one_I_repr_apply (z : ℂ) :
 theorem Complex.orthonormal_basis_one_I_repr_symm_apply (x : EuclideanSpace ℝ (Fin 2)) :
     Complex.orthonormalBasisOneI.repr.symm x = x 0 + x 1 * I :=
   rfl
-#align
-  complex.orthonormal_basis_one_I_repr_symm_apply Complex.orthonormal_basis_one_I_repr_symm_apply
+#align complex.orthonormal_basis_one_I_repr_symm_apply Complex.orthonormal_basis_one_I_repr_symm_apply
 
 @[simp]
 theorem Complex.to_basis_orthonormal_basis_one_I :
@@ -620,8 +617,7 @@ theorem OrthonormalBasis.to_matrix_orthonormal_basis_mem_unitary :
   convert a.repr.inner_map_map (b i) (b j)
   rw [orthonormal_iff_ite.mp b.orthonormal i j]
   rfl
-#align
-  orthonormal_basis.to_matrix_orthonormal_basis_mem_unitary OrthonormalBasis.to_matrix_orthonormal_basis_mem_unitary
+#align orthonormal_basis.to_matrix_orthonormal_basis_mem_unitary OrthonormalBasis.to_matrix_orthonormal_basis_mem_unitary
 
 /-- The determinant of the change-of-basis matrix between two orthonormal bases `a`, `b` has
 unit length. -/
@@ -633,8 +629,7 @@ theorem OrthonormalBasis.det_to_matrix_orthonormal_basis : ‖a.toBasis.det b‖
       (Matrix.det_of_mem_unitary (a.to_matrix_orthonormal_basis_mem_unitary b)).2
   norm_cast  at this
   rwa [← sqrt_norm_sq_eq_norm, sqrt_eq_one]
-#align
-  orthonormal_basis.det_to_matrix_orthonormal_basis OrthonormalBasis.det_to_matrix_orthonormal_basis
+#align orthonormal_basis.det_to_matrix_orthonormal_basis OrthonormalBasis.det_to_matrix_orthonormal_basis
 
 end
 
@@ -646,8 +641,7 @@ variable (a b : OrthonormalBasis ι ℝ F)
 theorem OrthonormalBasis.to_matrix_orthonormal_basis_mem_orthogonal :
     a.toBasis.toMatrix b ∈ Matrix.orthogonalGroup ι ℝ :=
   a.to_matrix_orthonormal_basis_mem_unitary b
-#align
-  orthonormal_basis.to_matrix_orthonormal_basis_mem_orthogonal OrthonormalBasis.to_matrix_orthonormal_basis_mem_orthogonal
+#align orthonormal_basis.to_matrix_orthonormal_basis_mem_orthogonal OrthonormalBasis.to_matrix_orthonormal_basis_mem_orthogonal
 
 /-- The determinant of the change-of-basis matrix between two orthonormal bases `a`, `b` is ±1. -/
 theorem OrthonormalBasis.det_to_matrix_orthonormal_basis_real :
@@ -655,8 +649,7 @@ theorem OrthonormalBasis.det_to_matrix_orthonormal_basis_real :
   by
   rw [← sq_eq_one_iff]
   simpa [unitary, sq] using Matrix.det_of_mem_unitary (a.to_matrix_orthonormal_basis_mem_unitary b)
-#align
-  orthonormal_basis.det_to_matrix_orthonormal_basis_real OrthonormalBasis.det_to_matrix_orthonormal_basis_real
+#align orthonormal_basis.det_to_matrix_orthonormal_basis_real OrthonormalBasis.det_to_matrix_orthonormal_basis_real
 
 end Real
 
@@ -681,8 +674,7 @@ noncomputable def DirectSum.IsInternal.collectedOrthonormalBasis
   (hV_sum.collectedBasis fun i => (v_family i).toBasis).toOrthonormalBasis <| by
     simpa using
       hV.orthonormal_sigma_orthonormal (show ∀ i, Orthonormal 𝕜 (v_family i).toBasis by simp)
-#align
-  direct_sum.is_internal.collected_orthonormal_basis DirectSum.IsInternal.collectedOrthonormalBasis
+#align direct_sum.is_internal.collected_orthonormal_basis DirectSum.IsInternal.collectedOrthonormalBasis
 
 theorem DirectSum.IsInternal.collected_orthonormal_basis_mem [DecidableEq ι]
     (h : DirectSum.IsInternal A) {α : ι → Type _} [∀ i, Fintype (α i)]
@@ -690,8 +682,7 @@ theorem DirectSum.IsInternal.collected_orthonormal_basis_mem [DecidableEq ι]
     (v : ∀ i, OrthonormalBasis (α i) 𝕜 (A i)) (a : Σi, α i) :
     h.collectedOrthonormalBasis hV v a ∈ A a.1 := by
   simp [DirectSum.IsInternal.collectedOrthonormalBasis]
-#align
-  direct_sum.is_internal.collected_orthonormal_basis_mem DirectSum.IsInternal.collected_orthonormal_basis_mem
+#align direct_sum.is_internal.collected_orthonormal_basis_mem DirectSum.IsInternal.collected_orthonormal_basis_mem
 
 variable [FiniteDimensional 𝕜 E]
 
@@ -736,8 +727,7 @@ theorem Orthonormal.exists_orthonormal_basis_extension_of_card_eq {ι : Type _} 
   use b₀.reindex g.symm
   intro i hi
   · simp [hb₀, hg i hi]
-#align
-  orthonormal.exists_orthonormal_basis_extension_of_card_eq Orthonormal.exists_orthonormal_basis_extension_of_card_eq
+#align orthonormal.exists_orthonormal_basis_extension_of_card_eq Orthonormal.exists_orthonormal_basis_extension_of_card_eq
 
 variable (𝕜 E)
 
@@ -784,8 +774,7 @@ irreducible_def DirectSum.IsInternal.sigmaOrthonormalBasisIndexEquiv
   (Σi, Fin (finrank 𝕜 (V i))) ≃ Fin n :=
   let b := hV.collectedOrthonormalBasis hV' fun i => stdOrthonormalBasis 𝕜 (V i)
   Fintype.equivFinOfCardEq <| (FiniteDimensional.finrank_eq_card_basis b.toBasis).symm.trans hn
-#align
-  direct_sum.is_internal.sigma_orthonormal_basis_index_equiv DirectSum.IsInternal.sigmaOrthonormalBasisIndexEquiv
+#align direct_sum.is_internal.sigma_orthonormal_basis_index_equiv DirectSum.IsInternal.sigmaOrthonormalBasisIndexEquiv
 
 /-- An `n`-dimensional `inner_product_space` equipped with a decomposition as an internal direct
 sum has an orthonormal basis indexed by `fin n` and subordinate to that direct sum. -/
@@ -794,8 +783,7 @@ irreducible_def DirectSum.IsInternal.subordinateOrthonormalBasis
   OrthonormalBasis (Fin n) 𝕜 E :=
   (hV.collectedOrthonormalBasis hV' fun i => stdOrthonormalBasis 𝕜 (V i)).reindex
     (hV.sigmaOrthonormalBasisIndexEquiv hn hV')
-#align
-  direct_sum.is_internal.subordinate_orthonormal_basis DirectSum.IsInternal.subordinateOrthonormalBasis
+#align direct_sum.is_internal.subordinate_orthonormal_basis DirectSum.IsInternal.subordinateOrthonormalBasis
 
 /-- An `n`-dimensional `inner_product_space` equipped with a decomposition as an internal direct
 sum has an orthonormal basis indexed by `fin n` and subordinate to that direct sum. This function
@@ -803,8 +791,7 @@ provides the mapping by which it is subordinate. -/
 irreducible_def DirectSum.IsInternal.subordinateOrthonormalBasisIndex (a : Fin n)
   (hV' : @OrthogonalFamily 𝕜 _ _ _ _ (fun i => V i) _ fun i => (V i).subtypeₗᵢ) : ι :=
   ((hV.sigmaOrthonormalBasisIndexEquiv hn hV').symm a).1
-#align
-  direct_sum.is_internal.subordinate_orthonormal_basis_index DirectSum.IsInternal.subordinateOrthonormalBasisIndex
+#align direct_sum.is_internal.subordinate_orthonormal_basis_index DirectSum.IsInternal.subordinateOrthonormalBasisIndex
 
 /-- The basis constructed in `orthogonal_family.subordinate_orthonormal_basis` is subordinate to
 the `orthogonal_family` in question. -/
@@ -815,8 +802,7 @@ theorem DirectSum.IsInternal.subordinate_orthonormal_basis_subordinate (a : Fin 
     DirectSum.IsInternal.subordinateOrthonormalBasisIndex] using
     hV.collected_orthonormal_basis_mem hV' (fun i => stdOrthonormalBasis 𝕜 (V i))
       ((hV.sigma_orthonormal_basis_index_equiv hn hV').symm a)
-#align
-  direct_sum.is_internal.subordinate_orthonormal_basis_subordinate DirectSum.IsInternal.subordinate_orthonormal_basis_subordinate
+#align direct_sum.is_internal.subordinate_orthonormal_basis_subordinate DirectSum.IsInternal.subordinate_orthonormal_basis_subordinate
 
 end SubordinateOrthonormalBasis
 

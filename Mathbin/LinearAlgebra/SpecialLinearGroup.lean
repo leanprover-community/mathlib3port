@@ -192,8 +192,7 @@ theorem to_lin'_apply (A : SpecialLinearGroup n R) (v : n → R) :
 theorem to_lin'_to_linear_map (A : SpecialLinearGroup n R) :
     ↑(SpecialLinearGroup.toLin' A) = Matrix.toLin' ↑ₘA :=
   rfl
-#align
-  matrix.special_linear_group.to_lin'_to_linear_map Matrix.SpecialLinearGroup.to_lin'_to_linear_map
+#align matrix.special_linear_group.to_lin'_to_linear_map Matrix.SpecialLinearGroup.to_lin'_to_linear_map
 
 theorem to_lin'_symm_apply (A : SpecialLinearGroup n R) (v : n → R) :
     A.toLin'.symm v = Matrix.toLin' (↑ₘA⁻¹) v :=
@@ -203,8 +202,7 @@ theorem to_lin'_symm_apply (A : SpecialLinearGroup n R) (v : n → R) :
 theorem to_lin'_symm_to_linear_map (A : SpecialLinearGroup n R) :
     ↑A.toLin'.symm = Matrix.toLin' ↑ₘA⁻¹ :=
   rfl
-#align
-  matrix.special_linear_group.to_lin'_symm_to_linear_map Matrix.SpecialLinearGroup.to_lin'_symm_to_linear_map
+#align matrix.special_linear_group.to_lin'_symm_to_linear_map Matrix.SpecialLinearGroup.to_lin'_symm_to_linear_map
 
 theorem to_lin'_injective :
     Function.Injective ⇑(toLin' : SpecialLinearGroup n R →* (n → R) ≃ₗ[R] n → R) := fun A B h =>

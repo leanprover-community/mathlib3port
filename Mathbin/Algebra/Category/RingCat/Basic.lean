@@ -317,8 +317,7 @@ theorem CommRing_iso_to_ring_equiv_to_ring_hom {X Y : CommRingCat} (i : X ≅ Y)
   by
   ext
   rfl
-#align
-  category_theory.iso.CommRing_iso_to_ring_equiv_to_ring_hom CategoryTheory.Iso.CommRing_iso_to_ring_equiv_to_ring_hom
+#align category_theory.iso.CommRing_iso_to_ring_equiv_to_ring_hom CategoryTheory.Iso.CommRing_iso_to_ring_equiv_to_ring_hom
 
 @[simp]
 theorem CommRing_iso_to_ring_equiv_symm_to_ring_hom {X Y : CommRingCat} (i : X ≅ Y) :
@@ -326,8 +325,7 @@ theorem CommRing_iso_to_ring_equiv_symm_to_ring_hom {X Y : CommRingCat} (i : X �
   by
   ext
   rfl
-#align
-  category_theory.iso.CommRing_iso_to_ring_equiv_symm_to_ring_hom CategoryTheory.Iso.CommRing_iso_to_ring_equiv_symm_to_ring_hom
+#align category_theory.iso.CommRing_iso_to_ring_equiv_symm_to_ring_hom CategoryTheory.Iso.CommRing_iso_to_ring_equiv_symm_to_ring_hom
 
 end CategoryTheory.Iso
 

@@ -153,8 +153,7 @@ theorem skew_adjoint_matrices_lie_subalgebra_equiv_apply (P : Matrix n n R) (h :
     (A : skewAdjointMatricesLieSubalgebra J) :
     ↑(skewAdjointMatricesLieSubalgebraEquiv J P h A) = P⁻¹ ⬝ ↑A ⬝ P := by
   simp [skewAdjointMatricesLieSubalgebraEquiv]
-#align
-  skew_adjoint_matrices_lie_subalgebra_equiv_apply skew_adjoint_matrices_lie_subalgebra_equiv_apply
+#align skew_adjoint_matrices_lie_subalgebra_equiv_apply skew_adjoint_matrices_lie_subalgebra_equiv_apply
 
 /-- An equivalence of matrix algebras commuting with the transpose endomorphisms restricts to an
 equivalence of Lie algebras of skew-adjoint matrices. -/
@@ -167,8 +166,7 @@ def skewAdjointMatricesLieSubalgebraEquivTranspose {m : Type w} [DecidableEq m] 
       suffices J.is_skew_adjoint (e.symm A) ↔ (e J).IsSkewAdjoint A by simpa [this]
       simp [Matrix.IsSkewAdjoint, Matrix.IsAdjointPair, ← Matrix.mul_eq_mul, ← h, ←
         Function.Injective.eq_iff e.injective])
-#align
-  skew_adjoint_matrices_lie_subalgebra_equiv_transpose skewAdjointMatricesLieSubalgebraEquivTranspose
+#align skew_adjoint_matrices_lie_subalgebra_equiv_transpose skewAdjointMatricesLieSubalgebraEquivTranspose
 
 @[simp]
 theorem skew_adjoint_matrices_lie_subalgebra_equiv_transpose_apply {m : Type w} [DecidableEq m]
@@ -176,8 +174,7 @@ theorem skew_adjoint_matrices_lie_subalgebra_equiv_transpose_apply {m : Type w} 
     (A : skewAdjointMatricesLieSubalgebra J) :
     (skewAdjointMatricesLieSubalgebraEquivTranspose J e h A : Matrix m m R) = e A :=
   rfl
-#align
-  skew_adjoint_matrices_lie_subalgebra_equiv_transpose_apply skew_adjoint_matrices_lie_subalgebra_equiv_transpose_apply
+#align skew_adjoint_matrices_lie_subalgebra_equiv_transpose_apply skew_adjoint_matrices_lie_subalgebra_equiv_transpose_apply
 
 theorem mem_skew_adjoint_matrices_lie_subalgebra_unit_smul (u : Rˣ) (J A : Matrix n n R) :
     A ∈ skewAdjointMatricesLieSubalgebra (u • J) ↔ A ∈ skewAdjointMatricesLieSubalgebra J :=
@@ -187,8 +184,7 @@ theorem mem_skew_adjoint_matrices_lie_subalgebra_unit_smul (u : Rˣ) (J A : Matr
   constructor <;> intro h
   · simpa using congr_arg (fun B => u⁻¹ • B) h
   · simp [h]
-#align
-  mem_skew_adjoint_matrices_lie_subalgebra_unit_smul mem_skew_adjoint_matrices_lie_subalgebra_unit_smul
+#align mem_skew_adjoint_matrices_lie_subalgebra_unit_smul mem_skew_adjoint_matrices_lie_subalgebra_unit_smul
 
 end SkewAdjointMatrices
 

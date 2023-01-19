@@ -112,8 +112,7 @@ theorem single_order_mul_power_series_part (x : LaurentSeries R) :
       obtain ⟨m, hm⟩ := h
       rw [← sub_nonneg, ← hm]
       exact Int.zero_le_of_nat _
-#align
-  laurent_series.single_order_mul_power_series_part LaurentSeries.single_order_mul_power_series_part
+#align laurent_series.single_order_mul_power_series_part LaurentSeries.single_order_mul_power_series_part
 
 theorem of_power_series_power_series_part (x : LaurentSeries R) :
     ofPowerSeries ℤ R x.powerSeriesPart = single (-x.order) 1 * x :=
@@ -121,8 +120,7 @@ theorem of_power_series_power_series_part (x : LaurentSeries R) :
   refine' Eq.trans _ (congr rfl x.single_order_mul_power_series_part)
   rw [← mul_assoc, single_mul_single, neg_add_self, mul_one, ← C_apply, C_one, one_mul,
     coe_power_series]
-#align
-  laurent_series.of_power_series_power_series_part LaurentSeries.of_power_series_power_series_part
+#align laurent_series.of_power_series_power_series_part LaurentSeries.of_power_series_power_series_part
 
 end Semiring
 

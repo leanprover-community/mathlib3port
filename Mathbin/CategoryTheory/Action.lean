@@ -115,21 +115,18 @@ variable {X} (x : X)
   corresponding point. In fact they are definitionally equivalent. -/
 def stabilizerIsoEnd : Stabilizer.submonoid M x ≃* EndCat (↑x : ActionCategory M X) :=
   MulEquiv.refl _
-#align
-  category_theory.action_category.stabilizer_iso_End CategoryTheory.ActionCategory.stabilizerIsoEnd
+#align category_theory.action_category.stabilizer_iso_End CategoryTheory.ActionCategory.stabilizerIsoEnd
 
 @[simp]
 theorem stabilizer_iso_End_apply (f : Stabilizer.submonoid M x) :
     (stabilizerIsoEnd M x).toFun f = f :=
   rfl
-#align
-  category_theory.action_category.stabilizer_iso_End_apply CategoryTheory.ActionCategory.stabilizer_iso_End_apply
+#align category_theory.action_category.stabilizer_iso_End_apply CategoryTheory.ActionCategory.stabilizer_iso_End_apply
 
 @[simp]
 theorem stabilizer_iso_End_symm_apply (f : EndCat _) : (stabilizerIsoEnd M x).invFun f = f :=
   rfl
-#align
-  category_theory.action_category.stabilizer_iso_End_symm_apply CategoryTheory.ActionCategory.stabilizer_iso_End_symm_apply
+#align category_theory.action_category.stabilizer_iso_End_symm_apply CategoryTheory.ActionCategory.stabilizer_iso_End_symm_apply
 
 variable {M X}
 
@@ -160,8 +157,7 @@ noncomputable instance : Groupoid (ActionCategory G X) :=
 def endMulEquivSubgroup (H : Subgroup G) : EndCat (objEquiv G (G ⧸ H) ↑(1 : G)) ≃* H :=
   MulEquiv.trans (stabilizerIsoEnd G ((1 : G) : G ⧸ H)).symm
     (MulEquiv.subgroupCongr <| stabilizer_quotient H)
-#align
-  category_theory.action_category.End_mul_equiv_subgroup CategoryTheory.ActionCategory.endMulEquivSubgroup
+#align category_theory.action_category.End_mul_equiv_subgroup CategoryTheory.ActionCategory.endMulEquivSubgroup
 
 /-- A target vertex `t` and a scalar `g` determine a morphism in the action groupoid. -/
 def homOfPair (t : X) (g : G) : ↑(g⁻¹ • t) ⟶ (t : ActionCategory G X) :=

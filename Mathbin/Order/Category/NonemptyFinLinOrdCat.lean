@@ -224,6 +224,5 @@ theorem NonemptyFinLinOrd_dual_comp_forget_to_LinearOrder :
     NonemptyFinLinOrdCat.dual ⋙ forget₂ NonemptyFinLinOrdCat LinearOrderCat =
       forget₂ NonemptyFinLinOrdCat LinearOrderCat ⋙ LinearOrderCat.dual :=
   rfl
-#align
-  NonemptyFinLinOrd_dual_comp_forget_to_LinearOrder NonemptyFinLinOrd_dual_comp_forget_to_LinearOrder
+#align NonemptyFinLinOrd_dual_comp_forget_to_LinearOrder NonemptyFinLinOrd_dual_comp_forget_to_LinearOrder
 

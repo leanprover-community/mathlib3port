@@ -645,8 +645,7 @@ protected theorem has_basis_uniformity_of_basis_aux₁ {p : ι → Prop} {s : ι
   by
   simp_rw [UniformOnFun.gen_eq_preimage_restrict, uniformity_comap rfl]
   exact (UniformFun.has_basis_uniformity_of_basis S β hb).comap _
-#align
-  uniform_on_fun.has_basis_uniformity_of_basis_aux₁ UniformOnFun.has_basis_uniformity_of_basis_aux₁
+#align uniform_on_fun.has_basis_uniformity_of_basis_aux₁ UniformOnFun.has_basis_uniformity_of_basis_aux₁
 
 protected theorem has_basis_uniformity_of_basis_aux₂ (h : DirectedOn (· ⊆ ·) 𝔖) {p : ι → Prop}
     {s : ι → Set (β × β)} (hb : HasBasis (𝓤 β) p s) :
@@ -658,8 +657,7 @@ protected theorem has_basis_uniformity_of_basis_aux₂ (h : DirectedOn (· ⊆ �
     ((UniformOnFun.has_basis_uniformity_of_basis_aux₁ α β 𝔖 hb _).le_basis_iff
           (UniformOnFun.has_basis_uniformity_of_basis_aux₁ α β 𝔖 hb _)).mpr
       fun V hV => ⟨V, hV, UniformOnFun.gen_mono hst subset_rfl⟩
-#align
-  uniform_on_fun.has_basis_uniformity_of_basis_aux₂ UniformOnFun.has_basis_uniformity_of_basis_aux₂
+#align uniform_on_fun.has_basis_uniformity_of_basis_aux₂ UniformOnFun.has_basis_uniformity_of_basis_aux₂
 
 /-- If `𝔖 : set (set α)` is nonempty and directed and `𝓑` is a filter basis of `𝓤 β`, then the
 uniformity of `α →ᵤ[𝔖] β` admits the family `{(f, g) | ∀ x ∈ S, (f x, g x) ∈ V}` for `S ∈ 𝔖` and

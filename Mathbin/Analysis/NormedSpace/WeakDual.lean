@@ -140,8 +140,7 @@ theorem to_weak_dual_continuous : Continuous fun x' : Dual 𝕜 E => x'.toWeakDu
 map. -/
 def continuousLinearMapToWeakDual : Dual 𝕜 E →L[𝕜] WeakDual 𝕜 E :=
   { toWeakDual with cont := to_weak_dual_continuous }
-#align
-  normed_space.dual.continuous_linear_map_to_weak_dual NormedSpace.Dual.continuousLinearMapToWeakDual
+#align normed_space.dual.continuous_linear_map_to_weak_dual NormedSpace.Dual.continuousLinearMapToWeakDual
 
 /-- The weak-star topology is coarser than the dual-norm topology. -/
 theorem dual_norm_topology_le_weak_dual_topology :
@@ -150,8 +149,7 @@ theorem dual_norm_topology_le_weak_dual_topology :
   by
   convert to_weak_dual_continuous.le_induced
   exact induced_id.symm
-#align
-  normed_space.dual.dual_norm_topology_le_weak_dual_topology NormedSpace.Dual.dual_norm_topology_le_weak_dual_topology
+#align normed_space.dual.dual_norm_topology_le_weak_dual_topology NormedSpace.Dual.dual_norm_topology_le_weak_dual_topology
 
 end Dual
 
@@ -221,8 +219,7 @@ theorem is_closed_image_coe_of_bounded_of_closed {s : Set (WeakDual 𝕜 E)}
     (hb : Bounded (dual.to_weak_dual ⁻¹' s)) (hc : IsClosed s) :
     IsClosed ((coeFn : WeakDual 𝕜 E → E → 𝕜) '' s) :=
   ContinuousLinearMap.is_closed_image_coe_of_bounded_of_weak_closed hb (is_closed_induced_iff'.1 hc)
-#align
-  weak_dual.is_closed_image_coe_of_bounded_of_closed WeakDual.is_closed_image_coe_of_bounded_of_closed
+#align weak_dual.is_closed_image_coe_of_bounded_of_closed WeakDual.is_closed_image_coe_of_bounded_of_closed
 
 theorem is_compact_of_bounded_of_closed [ProperSpace 𝕜] {s : Set (WeakDual 𝕜 E)}
     (hb : Bounded (dual.to_weak_dual ⁻¹' s)) (hc : IsClosed s) : IsCompact s :=
@@ -246,8 +243,7 @@ neighborhood `s` of the origin is a closed set. -/
 theorem NormedSpace.Dual.is_closed_image_polar_of_mem_nhds {s : Set E} (s_nhd : s ∈ 𝓝 (0 : E)) :
     IsClosed ((coeFn : Dual 𝕜 E → E → 𝕜) '' NormedSpace.polar 𝕜 s) :=
   is_closed_image_polar_of_mem_nhds 𝕜 s_nhd
-#align
-  normed_space.dual.is_closed_image_polar_of_mem_nhds NormedSpace.Dual.is_closed_image_polar_of_mem_nhds
+#align normed_space.dual.is_closed_image_polar_of_mem_nhds NormedSpace.Dual.is_closed_image_polar_of_mem_nhds
 
 /-- The **Banach-Alaoglu theorem**: the polar set of a neighborhood `s` of the origin in a
 normed space `E` is a compact subset of `weak_dual 𝕜 E`. -/

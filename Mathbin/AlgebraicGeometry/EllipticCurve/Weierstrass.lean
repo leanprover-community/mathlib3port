@@ -350,14 +350,12 @@ theorem two_torsion_polynomial_disc_is_unit [Invertible (2 : R)] :
   by
   rw [two_torsion_polynomial_disc, IsUnit.mul_iff, show (16 : R) = 2 ^ 4 by norm_num1]
   exact and_iff_right (isUnit_of_invertible <| 2 ^ 4)
-#align
-  weierstrass_curve.two_torsion_polynomial_disc_is_unit WeierstrassCurve.two_torsion_polynomial_disc_is_unit
+#align weierstrass_curve.two_torsion_polynomial_disc_is_unit WeierstrassCurve.two_torsion_polynomial_disc_is_unit
 
 theorem two_torsion_polynomial_disc_ne_zero [Nontrivial R] [Invertible (2 : R)] (hΔ : IsUnit W.Δ) :
     W.twoTorsionPolynomial.disc ≠ 0 :=
   (W.two_torsion_polynomial_disc_is_unit.mpr hΔ).NeZero
-#align
-  weierstrass_curve.two_torsion_polynomial_disc_ne_zero WeierstrassCurve.two_torsion_polynomial_disc_ne_zero
+#align weierstrass_curve.two_torsion_polynomial_disc_ne_zero WeierstrassCurve.two_torsion_polynomial_disc_ne_zero
 
 end TorsionPolynomial
 
@@ -547,16 +545,14 @@ theorem nonsingular_iff_variable_change (x y : R) :
     variable_change_a₄, inv_one, Units.val_one]
   congr 3
   all_goals ring1
-#align
-  weierstrass_curve.nonsingular_iff_variable_change WeierstrassCurve.nonsingular_iff_variable_change
+#align weierstrass_curve.nonsingular_iff_variable_change WeierstrassCurve.nonsingular_iff_variable_change
 
 theorem nonsingular_zero_of_Δ_ne_zero (h : W.Equation 0 0) (hΔ : W.Δ ≠ 0) : W.Nonsingular 0 0 :=
   by
   simp only [equation_zero, nonsingular_zero] at *
   contrapose! hΔ
   simp [h, hΔ]
-#align
-  weierstrass_curve.nonsingular_zero_of_Δ_ne_zero WeierstrassCurve.nonsingular_zero_of_Δ_ne_zero
+#align weierstrass_curve.nonsingular_zero_of_Δ_ne_zero WeierstrassCurve.nonsingular_zero_of_Δ_ne_zero
 
 /-- A Weierstrass curve is nonsingular at every point if its discriminant is non-zero. -/
 theorem nonsingular_of_Δ_ne_zero {x y : R} (h : W.Equation x y) (hΔ : W.Δ ≠ 0) :
@@ -591,8 +587,7 @@ instance [IsDomain R] [NormalizedGCDMonoid R] : IsDomain W.CoordinateRing :=
 
 instance CoordinateRing.is_domain_of_field {F : Type u} [Field F] (W : WeierstrassCurve F) :
     IsDomain W.CoordinateRing := by classical infer_instance
-#align
-  weierstrass_curve.coordinate_ring.is_domain_of_field WeierstrassCurve.CoordinateRing.is_domain_of_field
+#align weierstrass_curve.coordinate_ring.is_domain_of_field WeierstrassCurve.CoordinateRing.is_domain_of_field
 
 /-- The function field $R(W) := \mathrm{Frac}(R[W])$ of `W`. -/
 @[reducible]
@@ -674,8 +669,7 @@ def j : R :=
 theorem two_torsion_polynomial_disc_ne_zero [Nontrivial R] [Invertible (2 : R)] :
     E.twoTorsionPolynomial.disc ≠ 0 :=
   E.two_torsion_polynomial_disc_ne_zero <| E.coe_Δ' ▸ E.Δ'.IsUnit
-#align
-  elliptic_curve.two_torsion_polynomial_disc_ne_zero EllipticCurve.two_torsion_polynomial_disc_ne_zero
+#align elliptic_curve.two_torsion_polynomial_disc_ne_zero EllipticCurve.two_torsion_polynomial_disc_ne_zero
 
 theorem nonsingular [Nontrivial R] {x y : R} (h : E.Equation x y) : E.Nonsingular x y :=
   E.nonsingular_of_Δ_ne_zero h <| E.coe_Δ' ▸ E.Δ'.NeZero

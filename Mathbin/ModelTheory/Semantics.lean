@@ -111,8 +111,7 @@ theorem realize_functions_apply₁ {f : L.Functions 1} {t : L.term α} {v : α �
   rw [functions.apply₁, term.realize]
   refine' congr rfl (funext fun i => _)
   simp only [Matrix.cons_val_fin_one]
-#align
-  first_order.language.term.realize_functions_apply₁ FirstOrder.Language.Term.realize_functions_apply₁
+#align first_order.language.term.realize_functions_apply₁ FirstOrder.Language.Term.realize_functions_apply₁
 
 @[simp]
 theorem realize_functions_apply₂ {f : L.Functions 2} {t₁ t₂ : L.term α} {v : α → M} :
@@ -122,8 +121,7 @@ theorem realize_functions_apply₂ {f : L.Functions 2} {t₁ t₂ : L.term α} {
   refine' congr rfl (funext (Fin.cases _ _))
   · simp only [Matrix.cons_val_zero]
   · simp only [Matrix.cons_val_succ, Matrix.cons_val_fin_one, forall_const]
-#align
-  first_order.language.term.realize_functions_apply₂ FirstOrder.Language.Term.realize_functions_apply₂
+#align first_order.language.term.realize_functions_apply₂ FirstOrder.Language.Term.realize_functions_apply₂
 
 theorem realize_con {A : Set M} {a : A} {v : α → M} : (L.con a).term.realize v = a :=
   rfl
@@ -158,8 +156,7 @@ theorem realize_restrict_var_left [DecidableEq α] {γ : Type _} {t : L.term (Su
   · cases a <;> rfl
   · simp_rw [var_finset_left, Finset.coe_bunionᵢ, Set.unionᵢ_subset_iff] at h
     exact congr rfl (funext fun i => ih i (h i (Finset.mem_univ i)))
-#align
-  first_order.language.term.realize_restrict_var_left FirstOrder.Language.Term.realize_restrict_var_left
+#align first_order.language.term.realize_restrict_var_left FirstOrder.Language.Term.realize_restrict_var_left
 
 @[simp]
 theorem realize_constants_to_vars [L[[α]].StructureCat M] [(lhomWithConstants L α).IsExpansionOn M]
@@ -176,8 +173,7 @@ theorem realize_constants_to_vars [L[[α]].StructureCat M] [(lhomWithConstants L
     · cases f
       · simp [ih]
       · exact isEmptyElim f
-#align
-  first_order.language.term.realize_constants_to_vars FirstOrder.Language.Term.realize_constants_to_vars
+#align first_order.language.term.realize_constants_to_vars FirstOrder.Language.Term.realize_constants_to_vars
 
 @[simp]
 theorem realize_vars_to_constants [L[[α]].StructureCat M] [(lhomWithConstants L α).IsExpansionOn M]
@@ -187,8 +183,7 @@ theorem realize_vars_to_constants [L[[α]].StructureCat M] [(lhomWithConstants L
   induction' t with ab n f ts ih
   · cases ab <;> simp [language.con]
   · simp [ih]
-#align
-  first_order.language.term.realize_vars_to_constants FirstOrder.Language.Term.realize_vars_to_constants
+#align first_order.language.term.realize_vars_to_constants FirstOrder.Language.Term.realize_vars_to_constants
 
 theorem realize_constants_vars_equiv_left [L[[α]].StructureCat M]
     [(lhomWithConstants L α).IsExpansionOn M] {n} {t : L[[α]].term (Sum β (Fin n))} {v : β → M}
@@ -201,8 +196,7 @@ theorem realize_constants_vars_equiv_left [L[[α]].StructureCat M]
   refine' trans _ realize_constants_to_vars
   rcongr
   rcases x with (a | (b | i)) <;> simp
-#align
-  first_order.language.term.realize_constants_vars_equiv_left FirstOrder.Language.Term.realize_constants_vars_equiv_left
+#align first_order.language.term.realize_constants_vars_equiv_left FirstOrder.Language.Term.realize_constants_vars_equiv_left
 
 end Term
 
@@ -270,32 +264,27 @@ variable {v : α → M} {xs : Fin l → M}
 @[simp]
 theorem realize_bot : (⊥ : L.BoundedFormula α l).realize v xs ↔ False :=
   Iff.rfl
-#align
-  first_order.language.bounded_formula.realize_bot FirstOrder.Language.BoundedFormula.realize_bot
+#align first_order.language.bounded_formula.realize_bot FirstOrder.Language.BoundedFormula.realize_bot
 
 @[simp]
 theorem realize_not : φ.Not.realize v xs ↔ ¬φ.realize v xs :=
   Iff.rfl
-#align
-  first_order.language.bounded_formula.realize_not FirstOrder.Language.BoundedFormula.realize_not
+#align first_order.language.bounded_formula.realize_not FirstOrder.Language.BoundedFormula.realize_not
 
 @[simp]
 theorem realize_bd_equal (t₁ t₂ : L.term (Sum α (Fin l))) :
     (t₁.bdEqual t₂).realize v xs ↔ t₁.realize (Sum.elim v xs) = t₂.realize (Sum.elim v xs) :=
   Iff.rfl
-#align
-  first_order.language.bounded_formula.realize_bd_equal FirstOrder.Language.BoundedFormula.realize_bd_equal
+#align first_order.language.bounded_formula.realize_bd_equal FirstOrder.Language.BoundedFormula.realize_bd_equal
 
 @[simp]
 theorem realize_top : (⊤ : L.BoundedFormula α l).realize v xs ↔ True := by simp [Top.top]
-#align
-  first_order.language.bounded_formula.realize_top FirstOrder.Language.BoundedFormula.realize_top
+#align first_order.language.bounded_formula.realize_top FirstOrder.Language.BoundedFormula.realize_top
 
 @[simp]
 theorem realize_inf : (φ ⊓ ψ).realize v xs ↔ φ.realize v xs ∧ ψ.realize v xs := by
   simp [HasInf.inf, realize]
-#align
-  first_order.language.bounded_formula.realize_inf FirstOrder.Language.BoundedFormula.realize_inf
+#align first_order.language.bounded_formula.realize_inf FirstOrder.Language.BoundedFormula.realize_inf
 
 @[simp]
 theorem realize_foldr_inf (l : List (L.BoundedFormula α n)) (v : α → M) (xs : Fin n → M) :
@@ -304,21 +293,18 @@ theorem realize_foldr_inf (l : List (L.BoundedFormula α n)) (v : α → M) (xs 
   induction' l with φ l ih
   · simp
   · simp [ih]
-#align
-  first_order.language.bounded_formula.realize_foldr_inf FirstOrder.Language.BoundedFormula.realize_foldr_inf
+#align first_order.language.bounded_formula.realize_foldr_inf FirstOrder.Language.BoundedFormula.realize_foldr_inf
 
 @[simp]
 theorem realize_imp : (φ.imp ψ).realize v xs ↔ φ.realize v xs → ψ.realize v xs := by
   simp only [realize]
-#align
-  first_order.language.bounded_formula.realize_imp FirstOrder.Language.BoundedFormula.realize_imp
+#align first_order.language.bounded_formula.realize_imp FirstOrder.Language.BoundedFormula.realize_imp
 
 @[simp]
 theorem realize_rel {k : ℕ} {R : L.Relations k} {ts : Fin k → L.term _} :
     (R.BoundedFormula ts).realize v xs ↔ RelMap R fun i => (ts i).realize (Sum.elim v xs) :=
   Iff.rfl
-#align
-  first_order.language.bounded_formula.realize_rel FirstOrder.Language.BoundedFormula.realize_rel
+#align first_order.language.bounded_formula.realize_rel FirstOrder.Language.BoundedFormula.realize_rel
 
 @[simp]
 theorem realize_rel₁ {R : L.Relations 1} {t : L.term _} :
@@ -327,8 +313,7 @@ theorem realize_rel₁ {R : L.Relations 1} {t : L.term _} :
   rw [relations.bounded_formula₁, realize_rel, iff_eq_eq]
   refine' congr rfl (funext fun _ => _)
   simp only [Matrix.cons_val_fin_one]
-#align
-  first_order.language.bounded_formula.realize_rel₁ FirstOrder.Language.BoundedFormula.realize_rel₁
+#align first_order.language.bounded_formula.realize_rel₁ FirstOrder.Language.BoundedFormula.realize_rel₁
 
 @[simp]
 theorem realize_rel₂ {R : L.Relations 2} {t₁ t₂ : L.term _} :
@@ -339,16 +324,14 @@ theorem realize_rel₂ {R : L.Relations 2} {t₁ t₂ : L.term _} :
   refine' congr rfl (funext (Fin.cases _ _))
   · simp only [Matrix.cons_val_zero]
   · simp only [Matrix.cons_val_succ, Matrix.cons_val_fin_one, forall_const]
-#align
-  first_order.language.bounded_formula.realize_rel₂ FirstOrder.Language.BoundedFormula.realize_rel₂
+#align first_order.language.bounded_formula.realize_rel₂ FirstOrder.Language.BoundedFormula.realize_rel₂
 
 @[simp]
 theorem realize_sup : (φ ⊔ ψ).realize v xs ↔ φ.realize v xs ∨ ψ.realize v xs :=
   by
   simp only [realize, HasSup.sup, realize_not, eq_iff_iff]
   tauto
-#align
-  first_order.language.bounded_formula.realize_sup FirstOrder.Language.BoundedFormula.realize_sup
+#align first_order.language.bounded_formula.realize_sup FirstOrder.Language.BoundedFormula.realize_sup
 
 @[simp]
 theorem realize_foldr_sup (l : List (L.BoundedFormula α n)) (v : α → M) (xs : Fin n → M) :
@@ -359,14 +342,12 @@ theorem realize_foldr_sup (l : List (L.BoundedFormula α n)) (v : α → M) (xs 
   ·
     simp_rw [List.foldr_cons, realize_sup, ih, exists_prop, List.mem_cons, or_and_right, exists_or,
       exists_eq_left]
-#align
-  first_order.language.bounded_formula.realize_foldr_sup FirstOrder.Language.BoundedFormula.realize_foldr_sup
+#align first_order.language.bounded_formula.realize_foldr_sup FirstOrder.Language.BoundedFormula.realize_foldr_sup
 
 @[simp]
 theorem realize_all : (all θ).realize v xs ↔ ∀ a : M, θ.realize v (Fin.snoc xs a) :=
   Iff.rfl
-#align
-  first_order.language.bounded_formula.realize_all FirstOrder.Language.BoundedFormula.realize_all
+#align first_order.language.bounded_formula.realize_all FirstOrder.Language.BoundedFormula.realize_all
 
 @[simp]
 theorem realize_ex : θ.ex.realize v xs ↔ ∃ a : M, θ.realize v (Fin.snoc xs a) :=
@@ -378,16 +359,14 @@ theorem realize_ex : θ.ex.realize v xs ↔ ∃ a : M, θ.realize v (Fin.snoc xs
 @[simp]
 theorem realize_iff : (φ.Iff ψ).realize v xs ↔ (φ.realize v xs ↔ ψ.realize v xs) := by
   simp only [bounded_formula.iff, realize_inf, realize_imp, and_imp, ← iff_def]
-#align
-  first_order.language.bounded_formula.realize_iff FirstOrder.Language.BoundedFormula.realize_iff
+#align first_order.language.bounded_formula.realize_iff FirstOrder.Language.BoundedFormula.realize_iff
 
 theorem realize_cast_le_of_eq {m n : ℕ} (h : m = n) {h' : m ≤ n} {φ : L.BoundedFormula α m}
     {v : α → M} {xs : Fin n → M} : (φ.castLe h').realize v xs ↔ φ.realize v (xs ∘ Fin.cast h) :=
   by
   subst h
   simp only [cast_le_rfl, cast_refl, OrderIso.coe_refl, Function.comp.right_id]
-#align
-  first_order.language.bounded_formula.realize_cast_le_of_eq FirstOrder.Language.BoundedFormula.realize_cast_le_of_eq
+#align first_order.language.bounded_formula.realize_cast_le_of_eq FirstOrder.Language.BoundedFormula.realize_cast_le_of_eq
 
 theorem realize_map_term_rel_id [L'.StructureCat M]
     {ft : ∀ n, L.term (Sum α (Fin n)) → L'.term (Sum β (Fin n))}
@@ -405,8 +384,7 @@ theorem realize_map_term_rel_id [L'.StructureCat M]
   · simp [map_term_rel, realize, h1, h2]
   · simp [map_term_rel, realize, ih1, ih2]
   · simp only [map_term_rel, realize, ih, id.def]
-#align
-  first_order.language.bounded_formula.realize_map_term_rel_id FirstOrder.Language.BoundedFormula.realize_map_term_rel_id
+#align first_order.language.bounded_formula.realize_map_term_rel_id FirstOrder.Language.BoundedFormula.realize_map_term_rel_id
 
 theorem realize_map_term_rel_add_cast_le [L'.StructureCat M] {k : ℕ}
     {ft : ∀ n, L.term (Sum α (Fin n)) → L'.term (Sum β (Fin (k + n)))}
@@ -426,16 +404,14 @@ theorem realize_map_term_rel_add_cast_le [L'.StructureCat M] {k : ℕ}
   · simp [map_term_rel, realize, h1, h2]
   · simp [map_term_rel, realize, ih1, ih2]
   · simp [map_term_rel, realize, ih, hv]
-#align
-  first_order.language.bounded_formula.realize_map_term_rel_add_cast_le FirstOrder.Language.BoundedFormula.realize_map_term_rel_add_cast_le
+#align first_order.language.bounded_formula.realize_map_term_rel_add_cast_le FirstOrder.Language.BoundedFormula.realize_map_term_rel_add_cast_le
 
 theorem realize_relabel {m n : ℕ} {φ : L.BoundedFormula α n} {g : α → Sum β (Fin m)} {v : β → M}
     {xs : Fin (m + n) → M} :
     (φ.relabel g).realize v xs ↔
       φ.realize (Sum.elim v (xs ∘ Fin.castAdd n) ∘ g) (xs ∘ Fin.natAdd m) :=
   by rw [relabel, realize_map_term_rel_add_cast_le] <;> intros <;> simp
-#align
-  first_order.language.bounded_formula.realize_relabel FirstOrder.Language.BoundedFormula.realize_relabel
+#align first_order.language.bounded_formula.realize_relabel FirstOrder.Language.BoundedFormula.realize_relabel
 
 theorem realize_lift_at {n n' m : ℕ} {φ : L.BoundedFormula α n} {v : α → M} {xs : Fin (n + n') → M}
     (hmn : m + n' ≤ n + 1) :
@@ -466,16 +442,14 @@ theorem realize_lift_at {n n' m : ℕ} {φ : L.BoundedFormula α n} {v : α → 
       refine' (congr rfl (ext _)).trans (snoc_cast_succ _ _ _)
       simp only [cast_refl, coe_cast_succ, OrderIso.coe_refl, id.def]
       split_ifs <;> simp
-#align
-  first_order.language.bounded_formula.realize_lift_at FirstOrder.Language.BoundedFormula.realize_lift_at
+#align first_order.language.bounded_formula.realize_lift_at FirstOrder.Language.BoundedFormula.realize_lift_at
 
 theorem realize_lift_at_one {n m : ℕ} {φ : L.BoundedFormula α n} {v : α → M} {xs : Fin (n + 1) → M}
     (hmn : m ≤ n) :
     (φ.liftAt 1 m).realize v xs ↔
       φ.realize v (xs ∘ fun i => if ↑i < m then castSucc i else i.succ) :=
   by simp_rw [realize_lift_at (add_le_add_right hmn 1), cast_succ, add_nat_one]
-#align
-  first_order.language.bounded_formula.realize_lift_at_one FirstOrder.Language.BoundedFormula.realize_lift_at_one
+#align first_order.language.bounded_formula.realize_lift_at_one FirstOrder.Language.BoundedFormula.realize_lift_at_one
 
 @[simp]
 theorem realize_lift_at_one_self {n : ℕ} {φ : L.BoundedFormula α n} {v : α → M}
@@ -484,8 +458,7 @@ theorem realize_lift_at_one_self {n : ℕ} {φ : L.BoundedFormula α n} {v : α 
   rw [realize_lift_at_one (refl n), iff_eq_eq]
   refine' congr rfl (congr rfl (funext fun i => _))
   rw [if_pos i.is_lt]
-#align
-  first_order.language.bounded_formula.realize_lift_at_one_self FirstOrder.Language.BoundedFormula.realize_lift_at_one_self
+#align first_order.language.bounded_formula.realize_lift_at_one_self FirstOrder.Language.BoundedFormula.realize_lift_at_one_self
 
 theorem realize_subst {φ : L.BoundedFormula α n} {tf : α → L.term β} {v : β → M} {xs : Fin n → M} :
     (φ.subst tf).realize v xs ↔ φ.realize (fun a => (tf a).realize v) xs :=
@@ -497,8 +470,7 @@ theorem realize_subst {φ : L.BoundedFormula α n} {tf : α → L.term β} {v : 
         · simp only [Sum.elim_inl, term.realize_relabel, Sum.elim_comp_inl]
         · rfl)
     (by simp)
-#align
-  first_order.language.bounded_formula.realize_subst FirstOrder.Language.BoundedFormula.realize_subst
+#align first_order.language.bounded_formula.realize_subst FirstOrder.Language.BoundedFormula.realize_subst
 
 @[simp]
 theorem realize_restrict_free_var [DecidableEq α] {n : ℕ} {φ : L.BoundedFormula α n} {s : Set α}
@@ -511,8 +483,7 @@ theorem realize_restrict_free_var [DecidableEq α] {n : ℕ} {φ : L.BoundedForm
   · simp [restrict_free_var, realize]
   · simp [restrict_free_var, realize, ih1, ih2]
   · simp [restrict_free_var, realize, ih3]
-#align
-  first_order.language.bounded_formula.realize_restrict_free_var FirstOrder.Language.BoundedFormula.realize_restrict_free_var
+#align first_order.language.bounded_formula.realize_restrict_free_var FirstOrder.Language.BoundedFormula.realize_restrict_free_var
 
 theorem realize_constants_vars_equiv [L[[α]].StructureCat M]
     [(lhomWithConstants L α).IsExpansionOn M] {n} {φ : L[[α]].BoundedFormula β n} {v : β → M}
@@ -527,8 +498,7 @@ theorem realize_constants_vars_equiv [L[[α]].StructureCat M]
   cases R
   · simp
   · exact isEmptyElim R
-#align
-  first_order.language.bounded_formula.realize_constants_vars_equiv FirstOrder.Language.BoundedFormula.realize_constants_vars_equiv
+#align first_order.language.bounded_formula.realize_constants_vars_equiv FirstOrder.Language.BoundedFormula.realize_constants_vars_equiv
 
 @[simp]
 theorem realize_relabel_equiv {g : α ≃ β} {k} {φ : L.BoundedFormula α k} {v : β → M}
@@ -539,8 +509,7 @@ theorem realize_relabel_equiv {g : α ≃ β} {k} {φ : L.BoundedFormula α k} {
   simp only [relabel_equiv_apply, term.realize_relabel]
   refine' congr (congr rfl _) rfl
   ext (i | i) <;> rfl
-#align
-  first_order.language.bounded_formula.realize_relabel_equiv FirstOrder.Language.BoundedFormula.realize_relabel_equiv
+#align first_order.language.bounded_formula.realize_relabel_equiv FirstOrder.Language.BoundedFormula.realize_relabel_equiv
 
 variable [Nonempty M]
 
@@ -554,8 +523,7 @@ theorem realize_all_lift_at_one_self {n : ℕ} {φ : L.BoundedFormula α n} {v :
     simp
   · refine' (congr rfl (funext fun i => _)).mp h
     simp
-#align
-  first_order.language.bounded_formula.realize_all_lift_at_one_self FirstOrder.Language.BoundedFormula.realize_all_lift_at_one_self
+#align first_order.language.bounded_formula.realize_all_lift_at_one_self FirstOrder.Language.BoundedFormula.realize_all_lift_at_one_self
 
 theorem realize_to_prenex_imp_right {φ ψ : L.BoundedFormula α n} (hφ : IsQf φ) (hψ : IsPrenex ψ)
     {v : α → M} {xs : Fin n → M} : (φ.toPrenexImpRight ψ).realize v xs ↔ (φ.imp ψ).realize v xs :=
@@ -577,8 +545,7 @@ theorem realize_to_prenex_imp_right {φ ψ : L.BoundedFormula α n} (hφ : IsQf 
         exact ⟨a, fun _ => ha⟩
       · inhabit M
         exact ⟨default, fun h'' => (h h'').elim⟩
-#align
-  first_order.language.bounded_formula.realize_to_prenex_imp_right FirstOrder.Language.BoundedFormula.realize_to_prenex_imp_right
+#align first_order.language.bounded_formula.realize_to_prenex_imp_right FirstOrder.Language.BoundedFormula.realize_to_prenex_imp_right
 
 theorem realize_to_prenex_imp {φ ψ : L.BoundedFormula α n} (hφ : IsPrenex φ) (hψ : IsPrenex ψ)
     {v : α → M} {xs : Fin n → M} : (φ.toPrenexImp ψ).realize v xs ↔ (φ.imp ψ).realize v xs :=
@@ -600,8 +567,7 @@ theorem realize_to_prenex_imp {φ ψ : L.BoundedFormula α n} (hφ : IsPrenex φ
         exact ⟨a, fun h => (ha h).elim⟩
   · refine' trans (forall_congr' fun _ => ih hψ.lift_at) _
     simp
-#align
-  first_order.language.bounded_formula.realize_to_prenex_imp FirstOrder.Language.BoundedFormula.realize_to_prenex_imp
+#align first_order.language.bounded_formula.realize_to_prenex_imp FirstOrder.Language.BoundedFormula.realize_to_prenex_imp
 
 @[simp]
 theorem realize_to_prenex (φ : L.BoundedFormula α n) {v : α → M} :
@@ -615,8 +581,7 @@ theorem realize_to_prenex (φ : L.BoundedFormula α n) {v : α → M} :
     infer_instance
   · rw [realize_all, to_prenex, realize_all]
     exact forall_congr' fun a => h
-#align
-  first_order.language.bounded_formula.realize_to_prenex FirstOrder.Language.BoundedFormula.realize_to_prenex
+#align first_order.language.bounded_formula.realize_to_prenex FirstOrder.Language.BoundedFormula.realize_to_prenex
 
 end BoundedFormula
 
@@ -641,8 +606,7 @@ theorem realize_on_bounded_formula [L'.StructureCat M] (φ : L →ᴸ L') [φ.Is
     rfl
   · simp only [on_bounded_formula, ih1, ih2, realize_imp]
   · simp only [on_bounded_formula, ih3, realize_all]
-#align
-  first_order.language.Lhom.realize_on_bounded_formula FirstOrder.Language.LhomCat.realize_on_bounded_formula
+#align first_order.language.Lhom.realize_on_bounded_formula FirstOrder.Language.LhomCat.realize_on_bounded_formula
 
 end LhomCat
 
@@ -732,8 +696,7 @@ theorem realize_relabel_sum_inr (φ : L.Formula (Fin n)) {v : Empty → M} {x : 
   rw [bounded_formula.realize_relabel, formula.realize, Sum.elim_comp_inr, Fin.castAdd_zero,
     cast_refl, OrderIso.coe_refl, Function.comp.right_id,
     Subsingleton.elim (x ∘ (nat_add n : Fin 0 → Fin n)) default]
-#align
-  first_order.language.formula.realize_relabel_sum_inr FirstOrder.Language.Formula.realize_relabel_sum_inr
+#align first_order.language.formula.realize_relabel_sum_inr FirstOrder.Language.Formula.realize_relabel_sum_inr
 
 @[simp]
 theorem realize_equal {t₁ t₂ : L.term α} {x : α → M} :
@@ -762,8 +725,7 @@ theorem LhomCat.set_of_realize_on_formula [L'.StructureCat M] (φ : L →ᴸ L')
   by
   ext
   simp
-#align
-  first_order.language.Lhom.set_of_realize_on_formula FirstOrder.Language.LhomCat.set_of_realize_on_formula
+#align first_order.language.Lhom.set_of_realize_on_formula FirstOrder.Language.LhomCat.set_of_realize_on_formula
 
 variable (M)
 
@@ -795,15 +757,13 @@ theorem realize_equiv_sentence_symm_con [L[[α]].StructureCat M]
   congr with (i | i)
   · rfl
   · exact i.elim
-#align
-  first_order.language.formula.realize_equiv_sentence_symm_con FirstOrder.Language.Formula.realize_equiv_sentence_symm_con
+#align first_order.language.formula.realize_equiv_sentence_symm_con FirstOrder.Language.Formula.realize_equiv_sentence_symm_con
 
 @[simp]
 theorem realize_equiv_sentence [L[[α]].StructureCat M] [(L.lhomWithConstants α).IsExpansionOn M]
     (φ : L.Formula α) : (equivSentence φ).realize M ↔ φ.realize fun a => (L.con a : M) := by
   rw [← realize_equiv_sentence_symm_con M (equiv_sentence φ), _root_.equiv.symm_apply_apply]
-#align
-  first_order.language.formula.realize_equiv_sentence FirstOrder.Language.Formula.realize_equiv_sentence
+#align first_order.language.formula.realize_equiv_sentence FirstOrder.Language.Formula.realize_equiv_sentence
 
 theorem realize_equiv_sentence_symm (φ : L[[α]].Sentence) (v : α → M) :
     (equivSentence.symm φ).realize v ↔
@@ -811,8 +771,7 @@ theorem realize_equiv_sentence_symm (φ : L[[α]].Sentence) (v : α → M) :
         φ :=
   letI := constants_on.Structure v
   realize_equiv_sentence_symm_con M φ
-#align
-  first_order.language.formula.realize_equiv_sentence_symm FirstOrder.Language.Formula.realize_equiv_sentence_symm
+#align first_order.language.formula.realize_equiv_sentence_symm FirstOrder.Language.Formula.realize_equiv_sentence_symm
 
 end Formula
 
@@ -849,8 +808,7 @@ theorem mem_complete_theory {φ : Sentence L} : φ ∈ L.completeTheory M ↔ M 
 
 theorem elementarily_equivalent_iff : M ≅[L] N ↔ ∀ φ : L.Sentence, M ⊨ φ ↔ N ⊨ φ := by
   simp only [elementarily_equivalent, Set.ext_iff, complete_theory, Set.mem_setOf_eq]
-#align
-  first_order.language.elementarily_equivalent_iff FirstOrder.Language.elementarily_equivalent_iff
+#align first_order.language.elementarily_equivalent_iff FirstOrder.Language.elementarily_equivalent_iff
 
 variable (M)
 
@@ -877,8 +835,7 @@ theorem TheoryCat.model_iff : M ⊨ T ↔ ∀ φ ∈ T, M ⊨ φ :=
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem TheoryCat.realize_sentence_of_mem [M ⊨ T] {φ : L.Sentence} (h : φ ∈ T) : M ⊨ φ :=
   TheoryCat.Model.realize_of_mem φ h
-#align
-  first_order.language.Theory.realize_sentence_of_mem FirstOrder.Language.TheoryCat.realize_sentence_of_mem
+#align first_order.language.Theory.realize_sentence_of_mem FirstOrder.Language.TheoryCat.realize_sentence_of_mem
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -923,20 +880,17 @@ theorem model_union_iff {T' : L.TheoryCat} : M ⊨ T ∪ T' ↔ M ⊨ T ∧ M �
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem model_singleton_iff {φ : L.Sentence} : M ⊨ ({φ} : L.TheoryCat) ↔ M ⊨ φ := by simp
-#align
-  first_order.language.Theory.model_singleton_iff FirstOrder.Language.TheoryCat.model_singleton_iff
+#align first_order.language.Theory.model_singleton_iff FirstOrder.Language.TheoryCat.model_singleton_iff
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem model_iff_subset_complete_theory : M ⊨ T ↔ T ⊆ L.completeTheory M :=
   T.model_iff
-#align
-  first_order.language.Theory.model_iff_subset_complete_theory FirstOrder.Language.TheoryCat.model_iff_subset_complete_theory
+#align first_order.language.Theory.model_iff_subset_complete_theory FirstOrder.Language.TheoryCat.model_iff_subset_complete_theory
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem CompleteTheory.subset [MT : M ⊨ T] : T ⊆ L.completeTheory M :=
   model_iff_subset_complete_theory.1 MT
-#align
-  first_order.language.Theory.complete_theory.subset FirstOrder.Language.TheoryCat.CompleteTheory.subset
+#align first_order.language.Theory.complete_theory.subset FirstOrder.Language.TheoryCat.CompleteTheory.subset
 
 end TheoryCat
 
@@ -957,8 +911,7 @@ theorem realize_iff_of_model_complete_theory [N ⊨ L.completeTheory M] (φ : L.
   contrapose! h
   rw [← sentence.realize_not] at *
   exact (L.complete_theory M).realize_sentence_of_mem (mem_complete_theory.2 h)
-#align
-  first_order.language.realize_iff_of_model_complete_theory FirstOrder.Language.realize_iff_of_model_complete_theory
+#align first_order.language.realize_iff_of_model_complete_theory FirstOrder.Language.realize_iff_of_model_complete_theory
 
 variable {M N}
 
@@ -972,8 +925,7 @@ theorem realize_alls {φ : L.BoundedFormula α n} {v : α → M} :
   · exact unique.forall_iff.symm
   · simp only [alls, ih, realize]
     exact ⟨fun h xs => Fin.snoc_init_self xs ▸ h _ _, fun h xs x => h (Fin.snoc xs x)⟩
-#align
-  first_order.language.bounded_formula.realize_alls FirstOrder.Language.BoundedFormula.realize_alls
+#align first_order.language.bounded_formula.realize_alls FirstOrder.Language.BoundedFormula.realize_alls
 
 @[simp]
 theorem realize_exs {φ : L.BoundedFormula α n} {v : α → M} :
@@ -988,8 +940,7 @@ theorem realize_exs {φ : L.BoundedFormula α n} {v : α → M} :
     · rintro ⟨xs, h⟩
       rw [← Fin.snoc_init_self xs] at h
       exact ⟨_, _, h⟩
-#align
-  first_order.language.bounded_formula.realize_exs FirstOrder.Language.BoundedFormula.realize_exs
+#align first_order.language.bounded_formula.realize_exs FirstOrder.Language.BoundedFormula.realize_exs
 
 @[simp]
 theorem realize_to_formula (φ : L.BoundedFormula α n) (v : Sum α (Fin n) → M) :
@@ -1018,8 +969,7 @@ theorem realize_to_formula (φ : L.BoundedFormula α n) (v : Sum α (Fin n) → 
             fin_sum_fin_equiv_symm_apply_cast_add, Sum.map_inl, Sum.elim_inl]
           rw [← cast_succ, snoc_cast_succ]
     · exact Subsingleton.elim _ _
-#align
-  first_order.language.bounded_formula.realize_to_formula FirstOrder.Language.BoundedFormula.realize_to_formula
+#align first_order.language.bounded_formula.realize_to_formula FirstOrder.Language.BoundedFormula.realize_to_formula
 
 end BoundedFormula
 
@@ -1044,8 +994,7 @@ theorem realize_bounded_formula (g : M ≃[L] N) (φ : L.BoundedFormula α n) {v
       have h' := h (g.symm a)
       rw [← ih3, Fin.comp_snoc, g.apply_symm_apply] at h'
       exact h'
-#align
-  first_order.language.equiv.realize_bounded_formula FirstOrder.Language.Equiv.realize_bounded_formula
+#align first_order.language.equiv.realize_bounded_formula FirstOrder.Language.Equiv.realize_bounded_formula
 
 @[simp]
 theorem realize_formula (g : M ≃[L] N) (φ : L.Formula α) {v : α → M} :
@@ -1068,8 +1017,7 @@ theorem Theory_model (g : M ≃[L] N) [M ⊨ T] : N ⊨ T :=
 
 theorem elementarily_equivalent (g : M ≃[L] N) : M ≅[L] N :=
   elementarily_equivalent_iff.2 g.realize_sentence
-#align
-  first_order.language.equiv.elementarily_equivalent FirstOrder.Language.Equiv.elementarily_equivalent
+#align first_order.language.equiv.elementarily_equivalent FirstOrder.Language.Equiv.elementarily_equivalent
 
 end Equiv
 
@@ -1083,22 +1031,19 @@ variable {r : L.Relations 2}
 @[simp]
 theorem realize_reflexive : M ⊨ r.Reflexive ↔ Reflexive fun x y : M => RelMap r ![x, y] :=
   forall_congr' fun _ => realize_rel₂
-#align
-  first_order.language.relations.realize_reflexive FirstOrder.Language.Relations.realize_reflexive
+#align first_order.language.relations.realize_reflexive FirstOrder.Language.Relations.realize_reflexive
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem realize_irreflexive : M ⊨ r.Irreflexive ↔ Irreflexive fun x y : M => RelMap r ![x, y] :=
   forall_congr' fun _ => not_congr realize_rel₂
-#align
-  first_order.language.relations.realize_irreflexive FirstOrder.Language.Relations.realize_irreflexive
+#align first_order.language.relations.realize_irreflexive FirstOrder.Language.Relations.realize_irreflexive
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem realize_symmetric : M ⊨ r.Symmetric ↔ Symmetric fun x y : M => RelMap r ![x, y] :=
   forall_congr' fun _ => forall_congr' fun _ => imp_congr realize_rel₂ realize_rel₂
-#align
-  first_order.language.relations.realize_symmetric FirstOrder.Language.Relations.realize_symmetric
+#align first_order.language.relations.realize_symmetric FirstOrder.Language.Relations.realize_symmetric
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
@@ -1106,8 +1051,7 @@ theorem realize_antisymmetric :
     M ⊨ r.antisymmetric ↔ AntiSymmetric fun x y : M => RelMap r ![x, y] :=
   forall_congr' fun _ =>
     forall_congr' fun _ => imp_congr realize_rel₂ (imp_congr realize_rel₂ Iff.rfl)
-#align
-  first_order.language.relations.realize_antisymmetric FirstOrder.Language.Relations.realize_antisymmetric
+#align first_order.language.relations.realize_antisymmetric FirstOrder.Language.Relations.realize_antisymmetric
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
@@ -1115,8 +1059,7 @@ theorem realize_transitive : M ⊨ r.Transitive ↔ Transitive fun x y : M => Re
   forall_congr' fun _ =>
     forall_congr' fun _ =>
       forall_congr' fun _ => imp_congr realize_rel₂ (imp_congr realize_rel₂ realize_rel₂)
-#align
-  first_order.language.relations.realize_transitive FirstOrder.Language.Relations.realize_transitive
+#align first_order.language.relations.realize_transitive FirstOrder.Language.Relations.realize_transitive
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
@@ -1190,15 +1133,13 @@ theorem model_distinct_constants_theory {M : Type w} [L[[α]].StructureCat M] (s
   · rintro h φ a b ⟨⟨as, bs⟩, ab⟩ rfl
     simp only [sentence.realize, formula.realize_not, formula.realize_equal, term.realize_constants]
     exact fun contra => ab (h as bs contra)
-#align
-  first_order.language.model_distinct_constants_theory FirstOrder.Language.model_distinct_constants_theory
+#align first_order.language.model_distinct_constants_theory FirstOrder.Language.model_distinct_constants_theory
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem card_le_of_model_distinct_constants_theory (s : Set α) (M : Type w) [L[[α]].StructureCat M]
     [h : M ⊨ L.distinctConstantsTheory s] : Cardinal.lift.{w} (#s) ≤ Cardinal.lift.{u'} (#M) :=
   lift_mk_le'.2 ⟨⟨_, Set.injOn_iff_injective.1 ((L.model_distinct_constants_theory s).1 h)⟩⟩
-#align
-  first_order.language.card_le_of_model_distinct_constants_theory FirstOrder.Language.card_le_of_model_distinct_constants_theory
+#align first_order.language.card_le_of_model_distinct_constants_theory FirstOrder.Language.card_le_of_model_distinct_constants_theory
 
 end Cardinality
 
@@ -1207,61 +1148,51 @@ namespace ElementarilyEquivalent
 @[symm]
 theorem symm (h : M ≅[L] N) : N ≅[L] M :=
   h.symm
-#align
-  first_order.language.elementarily_equivalent.symm FirstOrder.Language.ElementarilyEquivalent.symm
+#align first_order.language.elementarily_equivalent.symm FirstOrder.Language.ElementarilyEquivalent.symm
 
 @[trans]
 theorem trans (MN : M ≅[L] N) (NP : N ≅[L] P) : M ≅[L] P :=
   MN.trans NP
-#align
-  first_order.language.elementarily_equivalent.trans FirstOrder.Language.ElementarilyEquivalent.trans
+#align first_order.language.elementarily_equivalent.trans FirstOrder.Language.ElementarilyEquivalent.trans
 
 theorem complete_theory_eq (h : M ≅[L] N) : L.completeTheory M = L.completeTheory N :=
   h
-#align
-  first_order.language.elementarily_equivalent.complete_theory_eq FirstOrder.Language.ElementarilyEquivalent.complete_theory_eq
+#align first_order.language.elementarily_equivalent.complete_theory_eq FirstOrder.Language.ElementarilyEquivalent.complete_theory_eq
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem realize_sentence (h : M ≅[L] N) (φ : L.Sentence) : M ⊨ φ ↔ N ⊨ φ :=
   (elementarily_equivalent_iff.1 h) φ
-#align
-  first_order.language.elementarily_equivalent.realize_sentence FirstOrder.Language.ElementarilyEquivalent.realize_sentence
+#align first_order.language.elementarily_equivalent.realize_sentence FirstOrder.Language.ElementarilyEquivalent.realize_sentence
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem Theory_model_iff (h : M ≅[L] N) : M ⊨ T ↔ N ⊨ T := by
   rw [Theory.model_iff_subset_complete_theory, Theory.model_iff_subset_complete_theory,
     h.complete_theory_eq]
-#align
-  first_order.language.elementarily_equivalent.Theory_model_iff FirstOrder.Language.ElementarilyEquivalent.Theory_model_iff
+#align first_order.language.elementarily_equivalent.Theory_model_iff FirstOrder.Language.ElementarilyEquivalent.Theory_model_iff
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem Theory_model [MT : M ⊨ T] (h : M ≅[L] N) : N ⊨ T :=
   h.Theory_model_iff.1 MT
-#align
-  first_order.language.elementarily_equivalent.Theory_model FirstOrder.Language.ElementarilyEquivalent.Theory_model
+#align first_order.language.elementarily_equivalent.Theory_model FirstOrder.Language.ElementarilyEquivalent.Theory_model
 
 theorem nonempty_iff (h : M ≅[L] N) : Nonempty M ↔ Nonempty N :=
   (model_nonempty_theory_iff L).symm.trans (h.Theory_model_iff.trans (model_nonempty_theory_iff L))
-#align
-  first_order.language.elementarily_equivalent.nonempty_iff FirstOrder.Language.ElementarilyEquivalent.nonempty_iff
+#align first_order.language.elementarily_equivalent.nonempty_iff FirstOrder.Language.ElementarilyEquivalent.nonempty_iff
 
 theorem nonempty [Mn : Nonempty M] (h : M ≅[L] N) : Nonempty N :=
   h.nonempty_iff.1 Mn
-#align
-  first_order.language.elementarily_equivalent.nonempty FirstOrder.Language.ElementarilyEquivalent.nonempty
+#align first_order.language.elementarily_equivalent.nonempty FirstOrder.Language.ElementarilyEquivalent.nonempty
 
 theorem infinite_iff (h : M ≅[L] N) : Infinite M ↔ Infinite N :=
   (model_infinite_theory_iff L).symm.trans (h.Theory_model_iff.trans (model_infinite_theory_iff L))
-#align
-  first_order.language.elementarily_equivalent.infinite_iff FirstOrder.Language.ElementarilyEquivalent.infinite_iff
+#align first_order.language.elementarily_equivalent.infinite_iff FirstOrder.Language.ElementarilyEquivalent.infinite_iff
 
 theorem infinite [Mi : Infinite M] (h : M ≅[L] N) : Infinite N :=
   h.infinite_iff.1 Mi
-#align
-  first_order.language.elementarily_equivalent.infinite FirstOrder.Language.ElementarilyEquivalent.infinite
+#align first_order.language.elementarily_equivalent.infinite FirstOrder.Language.ElementarilyEquivalent.infinite
 
 end ElementarilyEquivalent
 

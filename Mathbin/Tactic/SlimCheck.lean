@@ -159,8 +159,7 @@ unsafe def instance_tree.to_format : instance_tree → tactic format
 
 unsafe instance instance_tree.has_to_tactic_format : has_to_tactic_format instance_tree :=
   ⟨instance_tree.to_format⟩
-#align
-  tactic.interactive.instance_tree.has_to_tactic_format tactic.interactive.instance_tree.has_to_tactic_format
+#align tactic.interactive.instance_tree.has_to_tactic_format tactic.interactive.instance_tree.has_to_tactic_format
 
 /-- `slim_check` considers a proof goal and tries to generate examples
 that would contradict the statement.

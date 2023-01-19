@@ -168,8 +168,7 @@ theorem mem_sum_congr_hom_range_of_perm_maps_to_inl {m n : Type _} [Finite m] [F
         apply_of_injective_symm Sum.inr_injective]
       erw [subtype_perm_apply]
       rw [of_injective_apply, Subtype.coe_mk, Subtype.coe_mk]
-#align
-  equiv.perm.mem_sum_congr_hom_range_of_perm_maps_to_inl Equiv.Perm.mem_sum_congr_hom_range_of_perm_maps_to_inl
+#align equiv.perm.mem_sum_congr_hom_range_of_perm_maps_to_inl Equiv.Perm.mem_sum_congr_hom_range_of_perm_maps_to_inl
 
 theorem Disjoint.order_of {σ τ : Perm α} (hστ : Disjoint σ τ) :
     orderOf (σ * τ) = Nat.lcm (orderOf σ) (orderOf τ) :=

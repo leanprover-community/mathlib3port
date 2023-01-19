@@ -233,7 +233,7 @@ theorem sorted_univ_nodup (α) [Fintype α] [Encodable α] : (sortedUniv α).Nod
 @[simp]
 theorem sorted_univ_to_finset (α) [Fintype α] [Encodable α] [DecidableEq α] :
     (sortedUniv α).toFinset = Finset.univ :=
-  Finset.sort_to_finset _ _
+  Finset.sort_toFinset _ _
 #align encodable.sorted_univ_to_finset Encodable.sorted_univ_to_finset
 
 /-- An encodable `fintype` is equivalent to the same size `fin`. -/

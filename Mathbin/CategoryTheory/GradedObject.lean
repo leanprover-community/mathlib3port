@@ -65,8 +65,7 @@ variable {C : Type u} [Category.{v} C]
 
 instance categoryOfGradedObjects (β : Type w) : Category.{max w v} (GradedObject β C) :=
   CategoryTheory.pi fun _ => C
-#align
-  category_theory.graded_object.category_of_graded_objects CategoryTheory.GradedObject.categoryOfGradedObjects
+#align category_theory.graded_object.category_of_graded_objects CategoryTheory.GradedObject.categoryOfGradedObjects
 
 /-- The projection of a graded object to its `i`-th component. -/
 @[simps]
@@ -174,16 +173,14 @@ instance hasShift {β : Type _} [AddCommGroup β] (s : β) : HasShift (GradedObj
 theorem shift_functor_obj_apply {β : Type _} [AddCommGroup β] (s : β) (X : β → C) (t : β) (n : ℤ) :
     (shiftFunctor (GradedObjectWithShift s C) n).obj X t = X (t + n • s) :=
   rfl
-#align
-  category_theory.graded_object.shift_functor_obj_apply CategoryTheory.GradedObject.shift_functor_obj_apply
+#align category_theory.graded_object.shift_functor_obj_apply CategoryTheory.GradedObject.shift_functor_obj_apply
 
 @[simp]
 theorem shift_functor_map_apply {β : Type _} [AddCommGroup β] (s : β)
     {X Y : GradedObjectWithShift s C} (f : X ⟶ Y) (t : β) (n : ℤ) :
     (shiftFunctor (GradedObjectWithShift s C) n).map f t = f (t + n • s) :=
   rfl
-#align
-  category_theory.graded_object.shift_functor_map_apply CategoryTheory.GradedObject.shift_functor_map_apply
+#align category_theory.graded_object.shift_functor_map_apply CategoryTheory.GradedObject.shift_functor_map_apply
 
 instance hasZeroMorphisms [HasZeroMorphisms C] (β : Type w) :
     HasZeroMorphisms.{max w v} (GradedObject β C) where HasZero X Y := { zero := fun b => 0 }

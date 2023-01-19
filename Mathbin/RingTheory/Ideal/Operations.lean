@@ -646,7 +646,7 @@ theorem infi_span_singleton {ι : Type _} [Fintype ι] (I : ι → R)
     (hI : ∀ (i j) (hij : i ≠ j), IsCoprime (I i) (I j)) :
     (⨅ i, Ideal.span ({I i} : Set R)) = Ideal.span {∏ i, I i} :=
   by
-  rw [← Finset.inf_univ_eq_infi, finset_inf_span_singleton]
+  rw [← Finset.inf_univ_eq_infᵢ, finset_inf_span_singleton]
   rwa [Finset.coe_univ, Set.pairwise_univ]
 #align ideal.infi_span_singleton Ideal.infi_span_singleton
 
@@ -2206,15 +2206,13 @@ def quotientKerEquivOfRightInverse {g : S → R} (hf : Function.RightInverse g f
 theorem quotientKerEquivOfRightInverse.apply {g : S → R} (hf : Function.RightInverse g f)
     (x : R ⧸ f.ker) : quotientKerEquivOfRightInverse hf x = kerLift f x :=
   rfl
-#align
-  ring_hom.quotient_ker_equiv_of_right_inverse.apply RingHom.quotientKerEquivOfRightInverse.apply
+#align ring_hom.quotient_ker_equiv_of_right_inverse.apply RingHom.quotientKerEquivOfRightInverse.apply
 
 @[simp]
 theorem quotientKerEquivOfRightInverse.Symm.apply {g : S → R} (hf : Function.RightInverse g f)
     (x : S) : (quotientKerEquivOfRightInverse hf).symm x = Ideal.Quotient.mk f.ker (g x) :=
   rfl
-#align
-  ring_hom.quotient_ker_equiv_of_right_inverse.symm.apply RingHom.quotientKerEquivOfRightInverse.Symm.apply
+#align ring_hom.quotient_ker_equiv_of_right_inverse.symm.apply RingHom.quotientKerEquivOfRightInverse.Symm.apply
 
 /-- The **first isomorphism theorem** for commutative rings. -/
 noncomputable def quotientKerEquivOfSurjective (hf : Function.Surjective f) : R ⧸ f.ker ≃+* S :=
@@ -2561,16 +2559,14 @@ theorem quotientKerAlgEquivOfRightInverse.apply {f : A →ₐ[R₁] B} {g : B �
     (hf : Function.RightInverse g f) (x : A ⧸ f.toRingHom.ker) :
     quotientKerAlgEquivOfRightInverse hf x = kerLiftAlg f x :=
   rfl
-#align
-  ideal.quotient_ker_alg_equiv_of_right_inverse.apply Ideal.quotientKerAlgEquivOfRightInverse.apply
+#align ideal.quotient_ker_alg_equiv_of_right_inverse.apply Ideal.quotientKerAlgEquivOfRightInverse.apply
 
 @[simp]
 theorem QuotientKerAlgEquivOfRightInverseSymm.apply {f : A →ₐ[R₁] B} {g : B → A}
     (hf : Function.RightInverse g f) (x : B) :
     (quotientKerAlgEquivOfRightInverse hf).symm x = Quotient.mkₐ R₁ f.toRingHom.ker (g x) :=
   rfl
-#align
-  ideal.quotient_ker_alg_equiv_of_right_inverse_symm.apply Ideal.QuotientKerAlgEquivOfRightInverseSymm.apply
+#align ideal.quotient_ker_alg_equiv_of_right_inverse_symm.apply Ideal.QuotientKerAlgEquivOfRightInverseSymm.apply
 
 /-- The **first isomorphism theorem** for algebras. -/
 noncomputable def quotientKerAlgEquivOfSurjective {f : A →ₐ[R₁] B} (hf : Function.Surjective f) :
@@ -2891,15 +2887,13 @@ def quotQuotEquivQuotSup : (R ⧸ I) ⧸ J.map (Ideal.Quotient.mk I) ≃+* R ⧸
 theorem quot_quot_equiv_quot_sup_quot_quot_mk (x : R) :
     quotQuotEquivQuotSup I J (quotQuotMk I J x) = Ideal.Quotient.mk (I ⊔ J) x :=
   rfl
-#align
-  double_quot.quot_quot_equiv_quot_sup_quot_quot_mk DoubleQuot.quot_quot_equiv_quot_sup_quot_quot_mk
+#align double_quot.quot_quot_equiv_quot_sup_quot_quot_mk DoubleQuot.quot_quot_equiv_quot_sup_quot_quot_mk
 
 @[simp]
 theorem quot_quot_equiv_quot_sup_symm_quot_quot_mk (x : R) :
     (quotQuotEquivQuotSup I J).symm (Ideal.Quotient.mk (I ⊔ J) x) = quotQuotMk I J x :=
   rfl
-#align
-  double_quot.quot_quot_equiv_quot_sup_symm_quot_quot_mk DoubleQuot.quot_quot_equiv_quot_sup_symm_quot_quot_mk
+#align double_quot.quot_quot_equiv_quot_sup_symm_quot_quot_mk DoubleQuot.quot_quot_equiv_quot_sup_symm_quot_quot_mk
 
 /-- The obvious isomorphism `(R/I)/J' → (R/J)/I' `   -/
 def quotQuotEquivComm : (R ⧸ I) ⧸ J.map I ≃+* (R ⧸ J) ⧸ I.map J :=
@@ -2916,8 +2910,7 @@ theorem quot_quot_equiv_comm_quot_quot_mk (x : R) :
 theorem quot_quot_equiv_comm_comp_quot_quot_mk :
     RingHom.comp (↑(quotQuotEquivComm I J)) (quotQuotMk I J) = quotQuotMk J I :=
   RingHom.ext <| quot_quot_equiv_comm_quot_quot_mk I J
-#align
-  double_quot.quot_quot_equiv_comm_comp_quot_quot_mk DoubleQuot.quot_quot_equiv_comm_comp_quot_quot_mk
+#align double_quot.quot_quot_equiv_comm_comp_quot_quot_mk DoubleQuot.quot_quot_equiv_comm_comp_quot_quot_mk
 
 @[simp]
 theorem quot_quot_equiv_comm_symm : (quotQuotEquivComm I J).symm = quotQuotEquivComm J I :=
@@ -2936,8 +2929,7 @@ def quotQuotEquivQuotOfLe (h : I ≤ J) : (R ⧸ I) ⧸ J.map I ≃+* R ⧸ J :=
 theorem quot_quot_equiv_quot_of_le_quot_quot_mk (x : R) (h : I ≤ J) :
     quotQuotEquivQuotOfLe h (quotQuotMk I J x) = J x :=
   rfl
-#align
-  double_quot.quot_quot_equiv_quot_of_le_quot_quot_mk DoubleQuot.quot_quot_equiv_quot_of_le_quot_quot_mk
+#align double_quot.quot_quot_equiv_quot_of_le_quot_quot_mk DoubleQuot.quot_quot_equiv_quot_of_le_quot_quot_mk
 
 @[simp]
 theorem quot_quot_equiv_quot_of_le_symm_mk (x : R) (h : I ≤ J) :
@@ -2947,13 +2939,11 @@ theorem quot_quot_equiv_quot_of_le_symm_mk (x : R) (h : I ≤ J) :
 
 theorem quot_quot_equiv_quot_of_le_comp_quot_quot_mk (h : I ≤ J) :
     RingHom.comp (↑(quotQuotEquivQuotOfLe h)) (quotQuotMk I J) = J := by ext <;> rfl
-#align
-  double_quot.quot_quot_equiv_quot_of_le_comp_quot_quot_mk DoubleQuot.quot_quot_equiv_quot_of_le_comp_quot_quot_mk
+#align double_quot.quot_quot_equiv_quot_of_le_comp_quot_quot_mk DoubleQuot.quot_quot_equiv_quot_of_le_comp_quot_quot_mk
 
 theorem quot_quot_equiv_quot_of_le_symm_comp_mk (h : I ≤ J) :
     RingHom.comp (↑(quotQuotEquivQuotOfLe h).symm) J = quotQuotMk I J := by ext <;> rfl
-#align
-  double_quot.quot_quot_equiv_quot_of_le_symm_comp_mk DoubleQuot.quot_quot_equiv_quot_of_le_symm_comp_mk
+#align double_quot.quot_quot_equiv_quot_of_le_symm_comp_mk DoubleQuot.quot_quot_equiv_quot_of_le_symm_comp_mk
 
 end
 
@@ -2971,8 +2961,7 @@ variable [CommSemiring R] {A : Type v} [CommRing A] [Algebra R A] (I J : Ideal A
 theorem quot_quot_equiv_quot_sup_quot_quot_algebra_map (x : R) :
     DoubleQuot.quotQuotEquivQuotSup I J (algebraMap R _ x) = algebraMap _ _ x :=
   rfl
-#align
-  double_quot.quot_quot_equiv_quot_sup_quot_quot_algebra_map DoubleQuot.quot_quot_equiv_quot_sup_quot_quot_algebra_map
+#align double_quot.quot_quot_equiv_quot_sup_quot_quot_algebra_map DoubleQuot.quot_quot_equiv_quot_sup_quot_quot_algebra_map
 
 @[simp]
 theorem quot_quot_equiv_comm_algebra_map (x : R) :

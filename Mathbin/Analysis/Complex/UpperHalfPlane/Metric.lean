@@ -211,8 +211,7 @@ theorem cmp_dist_eq_cmp_dist_coe_center (z w : ℍ) (r : ℝ) :
   simp only [← cosh_strict_mono_on.cmp_map_eq dist_nonneg hr₀, ←
     (@strictMonoOn_pow ℝ _ _ two_pos).cmp_map_eq dist_nonneg hr₀', dist_coe_center_sq]
   rw [← cmp_mul_pos_left hzw₀, ← cmp_sub_zero, ← mul_sub, ← cmp_add_right, zero_add]
-#align
-  upper_half_plane.cmp_dist_eq_cmp_dist_coe_center UpperHalfPlane.cmp_dist_eq_cmp_dist_coe_center
+#align upper_half_plane.cmp_dist_eq_cmp_dist_coe_center UpperHalfPlane.cmp_dist_eq_cmp_dist_coe_center
 
 theorem dist_eq_iff_dist_coe_center_eq : dist z w = r ↔ dist (z : ℂ) (w.center r) = w.im * sinh r :=
   eq_iff_eq_of_cmp_eq_cmp (cmp_dist_eq_cmp_dist_coe_center z w r)

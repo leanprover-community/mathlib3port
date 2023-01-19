@@ -94,8 +94,7 @@ theorem kernel_zero_of_nonzero_from_simple {X Y : C} [Simple X] {f : X ⟶ Y} [H
     by_contra
     haveI := is_iso_of_mono_of_nonzero h
     exact w (eq_zero_of_epi_kernel f)
-#align
-  category_theory.kernel_zero_of_nonzero_from_simple CategoryTheory.kernel_zero_of_nonzero_from_simple
+#align category_theory.kernel_zero_of_nonzero_from_simple CategoryTheory.kernel_zero_of_nonzero_from_simple
 
 -- See also `mono_of_nonzero_from_simple`, which requires `preadditive C`.
 /-- A nonzero morphism `f` to a simple object is an epimorphism
@@ -181,16 +180,14 @@ theorem cokernel_zero_of_nonzero_to_simple {X Y : C} [Simple Y] {f : X ⟶ Y} (w
     by_contra h
     haveI := is_iso_of_epi_of_nonzero h
     exact w (eq_zero_of_mono_cokernel f)
-#align
-  category_theory.cokernel_zero_of_nonzero_to_simple CategoryTheory.cokernel_zero_of_nonzero_to_simple
+#align category_theory.cokernel_zero_of_nonzero_to_simple CategoryTheory.cokernel_zero_of_nonzero_to_simple
 
 theorem epi_from_simple_zero_of_not_iso {X Y : C} [Simple X] {f : X ⟶ Y} [Epi f]
     (w : IsIso f → False) : f = 0 := by
   classical
     by_contra
     exact w (is_iso_of_epi_of_nonzero h)
-#align
-  category_theory.epi_from_simple_zero_of_not_iso CategoryTheory.epi_from_simple_zero_of_not_iso
+#align category_theory.epi_from_simple_zero_of_not_iso CategoryTheory.epi_from_simple_zero_of_not_iso
 
 end Abelian
 
@@ -261,8 +258,7 @@ theorem simple_of_is_simple_order_subobject (X : C) [IsSimpleOrder (Subobject X)
     · rw [subobject.mk_eq_bot_iff_zero] at h
       exact False.elim (i h)
     · exact (subobject.is_iso_iff_mk_eq_top _).mpr h
-#align
-  category_theory.simple_of_is_simple_order_subobject CategoryTheory.simple_of_is_simple_order_subobject
+#align category_theory.simple_of_is_simple_order_subobject CategoryTheory.simple_of_is_simple_order_subobject
 
 /-- `X` is simple iff it has subobject lattice `{⊥, ⊤}`. -/
 theorem simple_iff_subobject_is_simple_order (X : C) : Simple X ↔ IsSimpleOrder (Subobject X) :=
@@ -271,8 +267,7 @@ theorem simple_iff_subobject_is_simple_order (X : C) : Simple X ↔ IsSimpleOrde
     infer_instance, by
     intro h
     exact simple_of_is_simple_order_subobject X⟩
-#align
-  category_theory.simple_iff_subobject_is_simple_order CategoryTheory.simple_iff_subobject_is_simple_order
+#align category_theory.simple_iff_subobject_is_simple_order CategoryTheory.simple_iff_subobject_is_simple_order
 
 /-- A subobject is simple iff it is an atom in the subobject lattice. -/
 theorem subobject_simple_iff_is_atom {X : C} (Y : Subobject X) : Simple (Y : C) ↔ IsAtom Y :=

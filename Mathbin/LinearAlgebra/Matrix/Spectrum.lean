@@ -85,20 +85,17 @@ theorem eigenvector_matrix_inv_apply (i j : n) :
   rw [eigenvector_matrix_inv, Basis.to_matrix_apply, OrthonormalBasis.coe_to_basis_repr_apply,
     OrthonormalBasis.repr_apply_apply, PiLp.basis_fun_apply, PiLp.equiv_symm_single,
     EuclideanSpace.inner_single_right, one_mul, IsROrC.star_def]
-#align
-  matrix.is_hermitian.eigenvector_matrix_inv_apply Matrix.IsHermitian.eigenvector_matrix_inv_apply
+#align matrix.is_hermitian.eigenvector_matrix_inv_apply Matrix.IsHermitian.eigenvector_matrix_inv_apply
 
 theorem conj_transpose_eigenvector_matrix_inv : hA.eigenvectorMatrixInvᴴ = hA.eigenvectorMatrix :=
   by
   ext (i j)
   rw [conj_transpose_apply, eigenvector_matrix_inv_apply, eigenvector_matrix_apply, star_star]
-#align
-  matrix.is_hermitian.conj_transpose_eigenvector_matrix_inv Matrix.IsHermitian.conj_transpose_eigenvector_matrix_inv
+#align matrix.is_hermitian.conj_transpose_eigenvector_matrix_inv Matrix.IsHermitian.conj_transpose_eigenvector_matrix_inv
 
 theorem conj_transpose_eigenvector_matrix : hA.eigenvectorMatrixᴴ = hA.eigenvectorMatrixInv := by
   rw [← conj_transpose_eigenvector_matrix_inv, conj_transpose_conj_transpose]
-#align
-  matrix.is_hermitian.conj_transpose_eigenvector_matrix Matrix.IsHermitian.conj_transpose_eigenvector_matrix
+#align matrix.is_hermitian.conj_transpose_eigenvector_matrix Matrix.IsHermitian.conj_transpose_eigenvector_matrix
 
 /-- *Diagonalization theorem*, *spectral theorem* for matrices; A hermitian matrix can be
 diagonalized by a change of basis.

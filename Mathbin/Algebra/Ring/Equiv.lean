@@ -162,7 +162,7 @@ Case conversion may be inaccurate. Consider using '#align ring_equiv.to_equiv_eq
 @[simp]
 theorem [anonymous] (f : R ≃+* S) : f.toEquiv = f :=
   rfl
-#align ring_equiv.to_equiv_eq_coe[anonymous]
+#align ring_equiv.to_equiv_eq_coe [anonymous]
 
 /- warning: ring_equiv.to_fun_eq_coe clashes with [anonymous] -> [anonymous]
 warning: ring_equiv.to_fun_eq_coe -> [anonymous] is a dubious translation:
@@ -174,7 +174,7 @@ Case conversion may be inaccurate. Consider using '#align ring_equiv.to_fun_eq_c
 @[simp]
 theorem [anonymous] (f : R ≃+* S) : f.toFun = f :=
   rfl
-#align ring_equiv.to_fun_eq_coe[anonymous]
+#align ring_equiv.to_fun_eq_coe [anonymous]
 
 /- warning: ring_equiv.coe_to_equiv clashes with [anonymous] -> [anonymous]
 warning: ring_equiv.coe_to_equiv -> [anonymous] is a dubious translation:
@@ -186,7 +186,7 @@ Case conversion may be inaccurate. Consider using '#align ring_equiv.coe_to_equi
 @[simp]
 theorem [anonymous] (f : R ≃+* S) : ⇑(f : R ≃ S) = f :=
   rfl
-#align ring_equiv.coe_to_equiv[anonymous]
+#align ring_equiv.coe_to_equiv [anonymous]
 
 /- warning: ring_equiv.map_mul -> RingEquiv.map_mul is a dubious translation:
 lean 3 declaration is
@@ -233,7 +233,7 @@ Case conversion may be inaccurate. Consider using '#align ring_equiv.coe_mk [ano
 @[simp]
 theorem [anonymous] (e e' h₁ h₂ h₃ h₄) : ⇑(⟨e, e', h₁, h₂, h₃, h₄⟩ : R ≃+* S) = e :=
   rfl
-#align ring_equiv.coe_mk[anonymous]
+#align ring_equiv.coe_mk [anonymous]
 
 /- warning: ring_equiv.mk_coe -> RingEquiv.mk_coe is a dubious translation:
 lean 3 declaration is
@@ -1097,8 +1097,7 @@ Case conversion may be inaccurate. Consider using '#align ring_equiv.to_non_unit
 theorem toNonUnitalRingHom_apply_symm_toNonUnitalRingHom_apply (e : R ≃+* S) :
     ∀ y : S, e.toNonUnitalRingHom (e.symm.toNonUnitalRingHom y) = y :=
   e.toEquiv.apply_symm_apply
-#align
-  ring_equiv.to_non_unital_ring_hom_apply_symm_to_non_unital_ring_hom_apply RingEquiv.toNonUnitalRingHom_apply_symm_toNonUnitalRingHom_apply
+#align ring_equiv.to_non_unital_ring_hom_apply_symm_to_non_unital_ring_hom_apply RingEquiv.toNonUnitalRingHom_apply_symm_toNonUnitalRingHom_apply
 
 /- warning: ring_equiv.symm_to_non_unital_ring_hom_apply_to_non_unital_ring_hom_apply -> RingEquiv.symm_toNonUnitalRingHom_apply_toNonUnitalRingHom_apply is a dubious translation:
 lean 3 declaration is
@@ -1110,8 +1109,7 @@ Case conversion may be inaccurate. Consider using '#align ring_equiv.symm_to_non
 theorem symm_toNonUnitalRingHom_apply_toNonUnitalRingHom_apply (e : R ≃+* S) :
     ∀ x : R, e.symm.toNonUnitalRingHom (e.toNonUnitalRingHom x) = x :=
   Equiv.symm_apply_apply e.toEquiv
-#align
-  ring_equiv.symm_to_non_unital_ring_hom_apply_to_non_unital_ring_hom_apply RingEquiv.symm_toNonUnitalRingHom_apply_toNonUnitalRingHom_apply
+#align ring_equiv.symm_to_non_unital_ring_hom_apply_to_non_unital_ring_hom_apply RingEquiv.symm_toNonUnitalRingHom_apply_toNonUnitalRingHom_apply
 
 /- warning: ring_equiv.to_non_unital_ring_hom_trans -> RingEquiv.toNonUnitalRingHom_trans is a dubious translation:
 lean 3 declaration is
@@ -1137,8 +1135,7 @@ theorem toNonUnitalRingHomm_comp_symm_toNonUnitalRingHom (e : R ≃+* S) :
   by
   ext
   simp
-#align
-  ring_equiv.to_non_unital_ring_hom_comp_symm_to_non_unital_ring_hom RingEquiv.toNonUnitalRingHomm_comp_symm_toNonUnitalRingHom
+#align ring_equiv.to_non_unital_ring_hom_comp_symm_to_non_unital_ring_hom RingEquiv.toNonUnitalRingHomm_comp_symm_toNonUnitalRingHom
 
 /- warning: ring_equiv.symm_to_non_unital_ring_hom_comp_to_non_unital_ring_hom -> RingEquiv.symm_toNonUnitalRingHom_comp_toNonUnitalRingHom is a dubious translation:
 lean 3 declaration is
@@ -1152,8 +1149,7 @@ theorem symm_toNonUnitalRingHom_comp_toNonUnitalRingHom (e : R ≃+* S) :
   by
   ext
   simp
-#align
-  ring_equiv.symm_to_non_unital_ring_hom_comp_to_non_unital_ring_hom RingEquiv.symm_toNonUnitalRingHom_comp_toNonUnitalRingHom
+#align ring_equiv.symm_to_non_unital_ring_hom_comp_to_non_unital_ring_hom RingEquiv.symm_toNonUnitalRingHom_comp_toNonUnitalRingHom
 
 end NonUnitalSemiringHom
 
@@ -1323,8 +1319,7 @@ Case conversion may be inaccurate. Consider using '#align ring_equiv.to_ring_hom
 theorem toRingHom_apply_symm_toRingHom_apply (e : R ≃+* S) :
     ∀ y : S, e.toRingHom (e.symm.toRingHom y) = y :=
   e.toEquiv.apply_symm_apply
-#align
-  ring_equiv.to_ring_hom_apply_symm_to_ring_hom_apply RingEquiv.toRingHom_apply_symm_toRingHom_apply
+#align ring_equiv.to_ring_hom_apply_symm_to_ring_hom_apply RingEquiv.toRingHom_apply_symm_toRingHom_apply
 
 /- warning: ring_equiv.symm_to_ring_hom_apply_to_ring_hom_apply -> RingEquiv.symm_toRingHom_apply_toRingHom_apply is a dubious translation:
 lean 3 declaration is
@@ -1336,8 +1331,7 @@ Case conversion may be inaccurate. Consider using '#align ring_equiv.symm_to_rin
 theorem symm_toRingHom_apply_toRingHom_apply (e : R ≃+* S) :
     ∀ x : R, e.symm.toRingHom (e.toRingHom x) = x :=
   Equiv.symm_apply_apply e.toEquiv
-#align
-  ring_equiv.symm_to_ring_hom_apply_to_ring_hom_apply RingEquiv.symm_toRingHom_apply_toRingHom_apply
+#align ring_equiv.symm_to_ring_hom_apply_to_ring_hom_apply RingEquiv.symm_toRingHom_apply_toRingHom_apply
 
 /- warning: ring_equiv.to_ring_hom_trans -> RingEquiv.toRingHom_trans is a dubious translation:
 lean 3 declaration is

@@ -203,8 +203,7 @@ instance : MetricSpace v.FunSpace :=
 
 theorem uniform_inducing_to_continuous_map : UniformInducing (@toContinuousMap _ _ _ v) :=
   ⟨rfl⟩
-#align
-  picard_lindelof.fun_space.uniform_inducing_to_continuous_map PicardLindelof.FunSpace.uniform_inducing_to_continuous_map
+#align picard_lindelof.fun_space.uniform_inducing_to_continuous_map PicardLindelof.FunSpace.uniform_inducing_to_continuous_map
 
 theorem range_to_continuous_map :
     range toContinuousMap = { f : C(Icc v.tMin v.tMax, E) | f v.t₀ = v.x₀ ∧ LipschitzWith v.c f } :=
@@ -215,8 +214,7 @@ theorem range_to_continuous_map :
   · rcases f with ⟨f, hf⟩
     rintro ⟨hf₀, hf_lip⟩
     exact ⟨⟨f, hf₀, hf_lip⟩, rfl⟩
-#align
-  picard_lindelof.fun_space.range_to_continuous_map PicardLindelof.FunSpace.range_to_continuous_map
+#align picard_lindelof.fun_space.range_to_continuous_map PicardLindelof.FunSpace.range_to_continuous_map
 
 theorem map_t₀ : f v.t₀ = v.x₀ :=
   f.map_t₀'
@@ -278,8 +276,7 @@ instance [CompleteSpace E] : CompleteSpace v.FunSpace :=
 
 theorem intervalIntegrableVComp (t₁ t₂ : ℝ) : IntervalIntegrable f.vComp volume t₁ t₂ :=
   f.continuous_v_comp.IntervalIntegrable _ _
-#align
-  picard_lindelof.fun_space.interval_integrable_v_comp PicardLindelof.FunSpace.intervalIntegrableVComp
+#align picard_lindelof.fun_space.interval_integrable_v_comp PicardLindelof.FunSpace.intervalIntegrableVComp
 
 variable [CompleteSpace E]
 
@@ -320,8 +317,7 @@ theorem has_deriv_within_at_next (t : Icc v.tMin v.tMax) :
   refine' this.congr_of_eventually_eq_of_mem _ t.coe_prop
   filter_upwards [self_mem_nhds_within] with _ ht'
   rw [v.proj_of_mem ht']
-#align
-  picard_lindelof.fun_space.has_deriv_within_at_next PicardLindelof.FunSpace.has_deriv_within_at_next
+#align picard_lindelof.fun_space.has_deriv_within_at_next PicardLindelof.FunSpace.has_deriv_within_at_next
 
 theorem dist_next_apply_le_of_le {f₁ f₂ : FunSpace v} {n : ℕ} {d : ℝ}
     (h : ∀ t, dist (f₁ t) (f₂ t) ≤ (v.l * |t - v.t₀|) ^ n / n ! * d) (t : Icc v.tMin v.tMax) :
@@ -348,8 +344,7 @@ theorem dist_next_apply_le_of_le {f₁ f₂ : FunSpace v} {n : ℕ} {d : ℝ}
   simp_rw [mul_pow, div_eq_mul_inv, mul_assoc, MeasureTheory.integral_mul_left,
     MeasureTheory.integral_mul_right, integral_pow_abs_sub_uIoc, div_eq_mul_inv, pow_succ (v.L : ℝ),
     Nat.factorial_succ, Nat.cast_mul, Nat.cast_succ, mul_inv, mul_assoc]
-#align
-  picard_lindelof.fun_space.dist_next_apply_le_of_le PicardLindelof.FunSpace.dist_next_apply_le_of_le
+#align picard_lindelof.fun_space.dist_next_apply_le_of_le PicardLindelof.FunSpace.dist_next_apply_le_of_le
 
 theorem dist_iterate_next_apply_le (f₁ f₂ : FunSpace v) (n : ℕ) (t : Icc v.tMin v.tMax) :
     dist ((next^[n]) f₁ t) ((next^[n]) f₂ t) ≤ (v.l * |t - v.t₀|) ^ n / n ! * dist f₁ f₂ :=
@@ -359,8 +354,7 @@ theorem dist_iterate_next_apply_le (f₁ f₂ : FunSpace v) (n : ℕ) (t : Icc v
     exact dist_apply_le_dist f₁ f₂ t
   · rw [iterate_succ_apply', iterate_succ_apply']
     exact dist_next_apply_le_of_le ihn _
-#align
-  picard_lindelof.fun_space.dist_iterate_next_apply_le PicardLindelof.FunSpace.dist_iterate_next_apply_le
+#align picard_lindelof.fun_space.dist_iterate_next_apply_le PicardLindelof.FunSpace.dist_iterate_next_apply_le
 
 theorem dist_iterate_next_le (f₁ f₂ : FunSpace v) (n : ℕ) :
     dist ((next^[n]) f₁) ((next^[n]) f₂) ≤ (v.l * v.tDist) ^ n / n ! * dist f₁ f₂ :=
@@ -431,8 +425,7 @@ theorem exists_forall_deriv_within_Icc_eq_of_is_picard_lindelof [CompleteSpace E
   exact
     PicardLindelof.exists_solution
       ⟨v, t_min, t_max, t₀, x₀, C, ⟨R, hpl.hR⟩, L, { hpl with ht₀ := t₀.property }⟩
-#align
-  exists_forall_deriv_within_Icc_eq_of_is_picard_lindelof exists_forall_deriv_within_Icc_eq_of_is_picard_lindelof
+#align exists_forall_deriv_within_Icc_eq_of_is_picard_lindelof exists_forall_deriv_within_Icc_eq_of_is_picard_lindelof
 
 variable [ProperSpace E] {v : E → E} (t₀ : ℝ) (x₀ : E)
 
@@ -480,8 +473,7 @@ theorem exists_is_picard_lindelof_const_of_cont_diff_on_nhds {s : Set E} (hv : C
         split_ifs
         · rwa [← h] at hr'
         · exact (mul_div_cancel' (r / 2) h).le }
-#align
-  exists_is_picard_lindelof_const_of_cont_diff_on_nhds exists_is_picard_lindelof_const_of_cont_diff_on_nhds
+#align exists_is_picard_lindelof_const_of_cont_diff_on_nhds exists_is_picard_lindelof_const_of_cont_diff_on_nhds
 
 /-- A time-independent, locally continuously differentiable ODE admits a solution in some open
 interval. -/
@@ -514,8 +506,7 @@ theorem exists_forall_deriv_at_Ioo_eq_of_cont_diff_on_nhds {s : Set E} (hv : Con
   apply Set.mem_of_mem_of_subset ht
   rw [← Real.ball_eq_Ioo]
   exact Metric.ball_subset_ball (min_le_left _ _)
-#align
-  exists_forall_deriv_at_Ioo_eq_of_cont_diff_on_nhds exists_forall_deriv_at_Ioo_eq_of_cont_diff_on_nhds
+#align exists_forall_deriv_at_Ioo_eq_of_cont_diff_on_nhds exists_forall_deriv_at_Ioo_eq_of_cont_diff_on_nhds
 
 /-- A time-independent, continuously differentiable ODE admits a solution in some open interval. -/
 theorem exists_forall_deriv_at_Ioo_eq_of_cont_diff (hv : ContDiff ℝ 1 v) :

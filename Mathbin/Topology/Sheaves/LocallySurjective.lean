@@ -118,8 +118,7 @@ theorem locally_surjective_iff_surjective_on_stalks (T : ℱ ⟶ 𝒢) :
     refine' ⟨W, hWU, ⟨ℱ.map hWV.op s, _⟩, hxW⟩
     convert h_eq
     simp only [← comp_apply, T.naturality]
-#align
-  Top.presheaf.locally_surjective_iff_surjective_on_stalks TopCat.Presheaf.locally_surjective_iff_surjective_on_stalks
+#align Top.presheaf.locally_surjective_iff_surjective_on_stalks TopCat.Presheaf.locally_surjective_iff_surjective_on_stalks
 
 end SurjectiveOnStalks
 

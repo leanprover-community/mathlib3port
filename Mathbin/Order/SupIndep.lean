@@ -291,8 +291,7 @@ theorem SetIndependent.mono {t : Set α} (hst : t ⊆ s) : SetIndependent t := f
 /-- If the elements of a set are independent, then any pair within that set is disjoint. -/
 theorem SetIndependent.pairwiseDisjoint : s.PairwiseDisjoint id := fun x hx y hy h =>
   disjoint_supₛ_right (hs hx) ((mem_diff y).mpr ⟨hy, h.symm⟩)
-#align
-  complete_lattice.set_independent.pairwise_disjoint CompleteLattice.SetIndependent.pairwiseDisjoint
+#align complete_lattice.set_independent.pairwise_disjoint CompleteLattice.SetIndependent.pairwiseDisjoint
 -/
 
 #print CompleteLattice.setIndependent_pair /-
@@ -460,8 +459,7 @@ theorem Independent.setIndependent_range (ht : Independent t) : set_independent 
   rw [set_independent_iff]
   rw [← coe_comp_range_factorization t] at ht
   exact ht.comp' surjective_onto_range
-#align
-  complete_lattice.independent.set_independent_range CompleteLattice.Independent.setIndependent_range
+#align complete_lattice.independent.set_independent_range CompleteLattice.Independent.setIndependent_range
 -/
 
 /- warning: complete_lattice.independent.injective -> CompleteLattice.Independent.injective is a dubious translation:
@@ -617,8 +615,7 @@ theorem setIndependent_iff_pairwiseDisjoint {s : Set α} :
     SetIndependent s ↔ s.PairwiseDisjoint id :=
   ⟨SetIndependent.pairwiseDisjoint, fun hs i hi =>
     disjoint_supₛ_iff.2 fun j hj => hs hi hj.1 <| Ne.symm hj.2⟩
-#align
-  complete_lattice.set_independent_iff_pairwise_disjoint CompleteLattice.setIndependent_iff_pairwiseDisjoint
+#align complete_lattice.set_independent_iff_pairwise_disjoint CompleteLattice.setIndependent_iff_pairwiseDisjoint
 -/
 
 alias set_independent_iff_pairwise_disjoint ↔ _ _root_.set.pairwise_disjoint.set_independent
@@ -628,8 +625,7 @@ alias set_independent_iff_pairwise_disjoint ↔ _ _root_.set.pairwise_disjoint.s
 theorem independent_iff_pairwiseDisjoint {f : ι → α} : Independent f ↔ Pairwise (Disjoint on f) :=
   ⟨Independent.pairwiseDisjoint, fun hs i =>
     disjoint_supᵢ_iff.2 fun j => disjoint_supᵢ_iff.2 fun hij => hs hij.symm⟩
-#align
-  complete_lattice.independent_iff_pairwise_disjoint CompleteLattice.independent_iff_pairwiseDisjoint
+#align complete_lattice.independent_iff_pairwise_disjoint CompleteLattice.independent_iff_pairwiseDisjoint
 -/
 
 end CompleteLattice

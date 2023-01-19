@@ -546,16 +546,14 @@ theorem coe_homothety_units_mul_hom_apply (p : P) (t : Rˣ) :
 theorem coe_homothety_units_mul_hom_apply_symm (p : P) (t : Rˣ) :
     ((homothetyUnitsMulHom p t).symm : P → P) = AffineMap.homothety p (↑t⁻¹ : R) :=
   rfl
-#align
-  affine_equiv.coe_homothety_units_mul_hom_apply_symm AffineEquiv.coe_homothety_units_mul_hom_apply_symm
+#align affine_equiv.coe_homothety_units_mul_hom_apply_symm AffineEquiv.coe_homothety_units_mul_hom_apply_symm
 
 @[simp]
 theorem coe_homothety_units_mul_hom_eq_homothety_hom_coe (p : P) :
     (coe : (P ≃ᵃ[R] P) → P →ᵃ[R] P) ∘ homothetyUnitsMulHom p =
       AffineMap.homothetyHom p ∘ (coe : Rˣ → R) :=
   funext fun _ => rfl
-#align
-  affine_equiv.coe_homothety_units_mul_hom_eq_homothety_hom_coe AffineEquiv.coe_homothety_units_mul_hom_eq_homothety_hom_coe
+#align affine_equiv.coe_homothety_units_mul_hom_eq_homothety_hom_coe AffineEquiv.coe_homothety_units_mul_hom_eq_homothety_hom_coe
 
 end Homothety
 
@@ -597,29 +595,25 @@ theorem point_reflection_involutive (x : P₁) : Involutive (pointReflection k x
 theorem point_reflection_fixed_iff_of_injective_bit0 {x y : P₁} (h : Injective (bit0 : V₁ → V₁)) :
     pointReflection k x y = y ↔ y = x :=
   Equiv.point_reflection_fixed_iff_of_injective_bit0 h
-#align
-  affine_equiv.point_reflection_fixed_iff_of_injective_bit0 AffineEquiv.point_reflection_fixed_iff_of_injective_bit0
+#align affine_equiv.point_reflection_fixed_iff_of_injective_bit0 AffineEquiv.point_reflection_fixed_iff_of_injective_bit0
 
 theorem injective_point_reflection_left_of_injective_bit0 (h : Injective (bit0 : V₁ → V₁))
     (y : P₁) : Injective fun x : P₁ => pointReflection k x y :=
   Equiv.injective_point_reflection_left_of_injective_bit0 h y
-#align
-  affine_equiv.injective_point_reflection_left_of_injective_bit0 AffineEquiv.injective_point_reflection_left_of_injective_bit0
+#align affine_equiv.injective_point_reflection_left_of_injective_bit0 AffineEquiv.injective_point_reflection_left_of_injective_bit0
 
 theorem injective_point_reflection_left_of_module [Invertible (2 : k)] :
     ∀ y, Injective fun x : P₁ => pointReflection k x y :=
   injective_point_reflection_left_of_injective_bit0 k fun x y h => by
     rwa [bit0, bit0, ← two_smul k x, ← two_smul k y,
       (isUnit_of_invertible (2 : k)).smul_left_cancel] at h
-#align
-  affine_equiv.injective_point_reflection_left_of_module AffineEquiv.injective_point_reflection_left_of_module
+#align affine_equiv.injective_point_reflection_left_of_module AffineEquiv.injective_point_reflection_left_of_module
 
 theorem point_reflection_fixed_iff_of_module [Invertible (2 : k)] {x y : P₁} :
     pointReflection k x y = y ↔ y = x :=
   ((injective_point_reflection_left_of_module k y).eq_iff' (point_reflection_self k y)).trans
     eq_comm
-#align
-  affine_equiv.point_reflection_fixed_iff_of_module AffineEquiv.point_reflection_fixed_iff_of_module
+#align affine_equiv.point_reflection_fixed_iff_of_module AffineEquiv.point_reflection_fixed_iff_of_module
 
 end AffineEquiv
 

@@ -101,8 +101,7 @@ theorem DirectSum.to_add_monoid_algebra_of (i : ι) (m : M) :
 theorem AddMonoidAlgebra.to_direct_sum_to_add_monoid_algebra (f : AddMonoidAlgebra M ι) :
     f.toDirectSum.toAddMonoidAlgebra = f :=
   Finsupp.to_dfinsupp_to_finsupp f
-#align
-  add_monoid_algebra.to_direct_sum_to_add_monoid_algebra AddMonoidAlgebra.to_direct_sum_to_add_monoid_algebra
+#align add_monoid_algebra.to_direct_sum_to_add_monoid_algebra AddMonoidAlgebra.to_direct_sum_to_add_monoid_algebra
 
 @[simp]
 theorem DirectSum.to_add_monoid_algebra_to_direct_sum (f : ⨁ i : ι, M) :

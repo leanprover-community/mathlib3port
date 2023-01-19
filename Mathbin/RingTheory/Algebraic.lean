@@ -244,8 +244,7 @@ theorem is_algebraic_of_larger_base_of_injective (hinj : Function.Injective (alg
 theorem is_algebraic_of_larger_base_of_injective (hinj : Function.Injective (algebraMap R S))
     (A_alg : IsAlgebraic R A) : IsAlgebraic S A := fun x =>
   is_algebraic_of_larger_base_of_injective hinj (A_alg x)
-#align
-  algebra.is_algebraic_of_larger_base_of_injective Algebra.is_algebraic_of_larger_base_of_injective
+#align algebra.is_algebraic_of_larger_base_of_injective Algebra.is_algebraic_of_larger_base_of_injective
 
 /-- If x is a algebraic over K, then x is algebraic over L when L is an extension of K -/
 theorem is_algebraic_of_larger_base {x : A} (A_alg : IsAlgebraic K x) : IsAlgebraic L x :=
@@ -383,8 +382,7 @@ theorem Subalgebra.inv_mem_of_root_of_coeff_zero_ne_zero {x : A} {p : K[X]}
   have : aeval (x : L) p = 0 := by rw [Subalgebra.aeval_coe, aeval_eq, Subalgebra.coe_zero]
   rw [inv_eq_of_root_of_coeff_zero_ne_zero this coeff_zero_ne, div_eq_inv_mul, Algebra.smul_def,
     map_inv₀, map_neg, inv_neg, neg_mul, Subalgebra.aeval_coe]
-#align
-  subalgebra.inv_mem_of_root_of_coeff_zero_ne_zero Subalgebra.inv_mem_of_root_of_coeff_zero_ne_zero
+#align subalgebra.inv_mem_of_root_of_coeff_zero_ne_zero Subalgebra.inv_mem_of_root_of_coeff_zero_ne_zero
 
 theorem Subalgebra.inv_mem_of_algebraic {x : A} (hx : IsAlgebraic K (x : L)) : (x⁻¹ : L) ∈ A :=
   by

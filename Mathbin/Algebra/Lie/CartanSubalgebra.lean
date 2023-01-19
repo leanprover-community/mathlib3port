@@ -61,8 +61,7 @@ theorem centralizer_eq_self_of_is_cartan_subalgebra (H : LieSubalgebra R L) [H.I
     H.toLieSubmodule.centralizer = H.toLieSubmodule := by
   rw [← LieSubmodule.coe_to_submodule_eq_iff, coe_centralizer_eq_normalizer,
     is_cartan_subalgebra.self_normalizing, coe_to_lie_submodule]
-#align
-  lie_subalgebra.centralizer_eq_self_of_is_cartan_subalgebra LieSubalgebra.centralizer_eq_self_of_is_cartan_subalgebra
+#align lie_subalgebra.centralizer_eq_self_of_is_cartan_subalgebra LieSubalgebra.centralizer_eq_self_of_is_cartan_subalgebra
 
 @[simp]
 theorem ucs_eq_self_of_is_cartan_subalgebra (H : LieSubalgebra R L) [H.IsCartanSubalgebra] (k : ℕ) :
@@ -71,8 +70,7 @@ theorem ucs_eq_self_of_is_cartan_subalgebra (H : LieSubalgebra R L) [H.IsCartanS
   induction' k with k ih
   · simp
   · simp [ih]
-#align
-  lie_subalgebra.ucs_eq_self_of_is_cartan_subalgebra LieSubalgebra.ucs_eq_self_of_is_cartan_subalgebra
+#align lie_subalgebra.ucs_eq_self_of_is_cartan_subalgebra LieSubalgebra.ucs_eq_self_of_is_cartan_subalgebra
 
 theorem is_cartan_subalgebra_iff_is_ucs_limit :
     H.IsCartanSubalgebra ↔ H.toLieSubmodule.IsUcsLimit :=
@@ -100,8 +98,7 @@ theorem is_cartan_subalgebra_iff_is_ucs_limit :
           rw [LieSubmodule.ucs_succ, hk k (le_refl k)] at hk'
           rw [← LieSubalgebra.coe_to_submodule_eq_iff, ←
             LieSubalgebra.coe_centralizer_eq_normalizer, hk', LieSubalgebra.coe_to_lie_submodule] }
-#align
-  lie_subalgebra.is_cartan_subalgebra_iff_is_ucs_limit LieSubalgebra.is_cartan_subalgebra_iff_is_ucs_limit
+#align lie_subalgebra.is_cartan_subalgebra_iff_is_ucs_limit LieSubalgebra.is_cartan_subalgebra_iff_is_ucs_limit
 
 end LieSubalgebra
 

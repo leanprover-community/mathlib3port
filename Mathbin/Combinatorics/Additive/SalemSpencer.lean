@@ -435,10 +435,8 @@ theorem mul_roth_number_lt_of_forall_not_mul_salem_spencer
   intro hn
   obtain ⟨u, hut, rfl⟩ := exists_smaller_set t n hn
   exact h _ (mem_powerset_len.2 ⟨hut.trans hts, rfl⟩) (ht.mono hut)
-#align
-  mul_roth_number_lt_of_forall_not_mul_salem_spencer mul_roth_number_lt_of_forall_not_mul_salem_spencer
-#align
-  add_roth_number_lt_of_forall_not_add_salem_spencer add_roth_number_lt_of_forall_not_add_salem_spencer
+#align mul_roth_number_lt_of_forall_not_mul_salem_spencer mul_roth_number_lt_of_forall_not_mul_salem_spencer
+#align add_roth_number_lt_of_forall_not_add_salem_spencer add_roth_number_lt_of_forall_not_add_salem_spencer
 
 end Monoid
 

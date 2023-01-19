@@ -115,8 +115,7 @@ variable [NormedAlgebra 𝕜 𝕜'] [IsScalarTower 𝕜 𝕜' E]
 instance is_scalar_tower_closed_ball_closed_ball_closed_ball :
     IsScalarTower (closedBall (0 : 𝕜) 1) (closedBall (0 : 𝕜') 1) (closedBall (0 : E) r) :=
   ⟨fun a b c => Subtype.ext <| smul_assoc (a : 𝕜) (b : 𝕜') (c : E)⟩
-#align
-  is_scalar_tower_closed_ball_closed_ball_closed_ball is_scalar_tower_closed_ball_closed_ball_closed_ball
+#align is_scalar_tower_closed_ball_closed_ball_closed_ball is_scalar_tower_closed_ball_closed_ball_closed_ball
 
 instance is_scalar_tower_closed_ball_closed_ball_ball :
     IsScalarTower (closedBall (0 : 𝕜) 1) (closedBall (0 : 𝕜') 1) (ball (0 : E) r) :=
@@ -167,8 +166,7 @@ variable [SMulCommClass 𝕜 𝕜' E]
 instance smul_comm_class_closed_ball_closed_ball_closed_ball :
     SMulCommClass (closedBall (0 : 𝕜) 1) (closedBall (0 : 𝕜') 1) (closedBall (0 : E) r) :=
   ⟨fun a b c => Subtype.ext <| smul_comm (a : 𝕜) (b : 𝕜') (c : E)⟩
-#align
-  smul_comm_class_closed_ball_closed_ball_closed_ball smul_comm_class_closed_ball_closed_ball_closed_ball
+#align smul_comm_class_closed_ball_closed_ball_closed_ball smul_comm_class_closed_ball_closed_ball_closed_ball
 
 instance smul_comm_class_closed_ball_closed_ball_ball :
     SMulCommClass (closedBall (0 : 𝕜) 1) (closedBall (0 : 𝕜') 1) (ball (0 : E) r) :=

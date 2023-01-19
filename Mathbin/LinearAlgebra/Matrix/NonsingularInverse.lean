@@ -459,8 +459,7 @@ theorem unit_of_det_invertible_eq_nonsing_inv_unit [Invertible A.det] :
   by
   ext
   rfl
-#align
-  matrix.unit_of_det_invertible_eq_nonsing_inv_unit Matrix.unit_of_det_invertible_eq_nonsing_inv_unit
+#align matrix.unit_of_det_invertible_eq_nonsing_inv_unit Matrix.unit_of_det_invertible_eq_nonsing_inv_unit
 
 variable {A} {B}
 
@@ -641,8 +640,7 @@ theorem det_smul_inv_vec_mul_eq_cramer_transpose (A : Matrix n n α) (b : n → 
     A.det • A⁻¹.vecMul b = cramer Aᵀ b := by
   rw [← A⁻¹.transpose_transpose, vec_mul_transpose, transpose_nonsing_inv, ← det_transpose,
     Aᵀ.det_smul_inv_mul_vec_eq_cramer _ (is_unit_det_transpose A h)]
-#align
-  matrix.det_smul_inv_vec_mul_eq_cramer_transpose Matrix.det_smul_inv_vec_mul_eq_cramer_transpose
+#align matrix.det_smul_inv_vec_mul_eq_cramer_transpose Matrix.det_smul_inv_vec_mul_eq_cramer_transpose
 
 /-! ### More results about determinants -/
 

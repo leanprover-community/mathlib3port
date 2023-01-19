@@ -518,8 +518,7 @@ def toAddGroupTopology.orderEmbedding : OrderEmbedding (RingTopology α) (AddGro
     have h_le : t₁ ≤ t₂ ↔ t₁.to_topological_space ≤ t₂.to_topological_space := by rfl
     rw [h_le]
     rfl
-#align
-  ring_topology.to_add_group_topology.order_embedding RingTopology.toAddGroupTopology.orderEmbedding
+#align ring_topology.to_add_group_topology.order_embedding RingTopology.toAddGroupTopology.orderEmbedding
 
 end RingTopology
 

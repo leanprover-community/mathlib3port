@@ -111,8 +111,7 @@ variable [Nonempty ι] {B : ι → AddSubgroup A} (hB : RingSubgroupsBasis B)
 theorem mem_add_group_filter_basis_iff {V : Set A} :
     V ∈ hB.toRingFilterBasis.toAddGroupFilterBasis ↔ ∃ i, V = B i :=
   Iff.rfl
-#align
-  ring_subgroups_basis.mem_add_group_filter_basis_iff RingSubgroupsBasis.mem_add_group_filter_basis_iff
+#align ring_subgroups_basis.mem_add_group_filter_basis_iff RingSubgroupsBasis.mem_add_group_filter_basis_iff
 
 theorem mem_add_group_filter_basis (i) :
     (B i : Set A) ∈ hB.toRingFilterBasis.toAddGroupFilterBasis :=

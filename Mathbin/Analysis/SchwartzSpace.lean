@@ -457,8 +457,7 @@ theorem schwartz_seminorm_family_apply (n k : ℕ) :
 theorem schwartz_seminorm_family_apply_zero :
     schwartzSeminormFamily 𝕜 E F 0 = SchwartzMap.seminorm 𝕜 0 0 :=
   rfl
-#align
-  schwartz_map.schwartz_seminorm_family_apply_zero SchwartzMap.schwartz_seminorm_family_apply_zero
+#align schwartz_map.schwartz_seminorm_family_apply_zero SchwartzMap.schwartz_seminorm_family_apply_zero
 
 instance : TopologicalSpace 𝓢(E, F) :=
   (schwartzSeminormFamily ℝ E F).ModuleFilterBasis.topology'
@@ -589,8 +588,7 @@ def toBoundedContinuousFunction (f : 𝓢(E, F)) : E →ᵇ F :=
 theorem to_bounded_continuous_function_apply (f : 𝓢(E, F)) (x : E) :
     f.toBoundedContinuousFunction x = f x :=
   rfl
-#align
-  schwartz_map.to_bounded_continuous_function_apply SchwartzMap.to_bounded_continuous_function_apply
+#align schwartz_map.to_bounded_continuous_function_apply SchwartzMap.to_bounded_continuous_function_apply
 
 variable (𝕜 E F)
 
@@ -612,8 +610,7 @@ def toBoundedContinuousFunctionLm : 𝓢(E, F) →ₗ[𝕜] E →ᵇ F
 theorem to_bounded_continuous_function_lm_apply (f : 𝓢(E, F)) (x : E) :
     toBoundedContinuousFunctionLm 𝕜 E F f x = f x :=
   rfl
-#align
-  schwartz_map.to_bounded_continuous_function_lm_apply SchwartzMap.to_bounded_continuous_function_lm_apply
+#align schwartz_map.to_bounded_continuous_function_lm_apply SchwartzMap.to_bounded_continuous_function_lm_apply
 
 /-- The inclusion map from Schwartz functions to bounded continuous functions as a continuous linear
 map. -/
@@ -634,8 +631,7 @@ def toBoundedContinuousFunctionClm : 𝓢(E, F) →L[𝕜] E →ᵇ F :=
 theorem to_bounded_continuous_function_clm_apply (f : 𝓢(E, F)) (x : E) :
     toBoundedContinuousFunctionClm 𝕜 E F f x = f x :=
   rfl
-#align
-  schwartz_map.to_bounded_continuous_function_clm_apply SchwartzMap.to_bounded_continuous_function_clm_apply
+#align schwartz_map.to_bounded_continuous_function_clm_apply SchwartzMap.to_bounded_continuous_function_clm_apply
 
 variable {E}
 

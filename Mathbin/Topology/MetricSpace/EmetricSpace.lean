@@ -379,8 +379,7 @@ theorem complete_of_convergent_controlled_sequences (B : ℕ → ℝ≥0∞) (hB
     CompleteSpace α :=
   UniformSpace.complete_of_convergent_controlled_sequences
     (fun n => { p : α × α | edist p.1 p.2 < B n }) (fun n => edist_mem_uniformity <| hB n) H
-#align
-  emetric.complete_of_convergent_controlled_sequences Emetric.complete_of_convergent_controlled_sequences
+#align emetric.complete_of_convergent_controlled_sequences Emetric.complete_of_convergent_controlled_sequences
 
 /-- A sequentially complete pseudoemetric space is complete. -/
 theorem complete_of_cauchy_seq_tendsto :
@@ -693,8 +692,7 @@ theorem ball_eq_empty_iff : ball x ε = ∅ ↔ ε = 0 :=
 theorem ord_connected_set_of_closed_ball_subset (x : α) (s : Set α) :
     OrdConnected { r | closedBall x r ⊆ s } :=
   ⟨fun r₁ hr₁ r₂ hr₂ r hr => (closed_ball_subset_closed_ball hr.2).trans hr₂⟩
-#align
-  emetric.ord_connected_set_of_closed_ball_subset Emetric.ord_connected_set_of_closed_ball_subset
+#align emetric.ord_connected_set_of_closed_ball_subset Emetric.ord_connected_set_of_closed_ball_subset
 
 theorem ord_connected_set_of_ball_subset (x : α) (s : Set α) : OrdConnected { r | ball x r ⊆ s } :=
   ⟨fun r₁ hr₁ r₂ hr₂ r hr => (ball_subset_ball hr.2).trans hr₂⟩
@@ -903,8 +901,7 @@ theorem subset_countable_closure_of_almost_dense_set (s : Set α)
     edist x (f n⁻¹ y) ≤ n⁻¹ * 2 := hf _ _ ⟨hyx, hx⟩
     _ < ε := Ennreal.mul_lt_of_lt_div hn
     
-#align
-  emetric.subset_countable_closure_of_almost_dense_set Emetric.subset_countable_closure_of_almost_dense_set
+#align emetric.subset_countable_closure_of_almost_dense_set Emetric.subset_countable_closure_of_almost_dense_set
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 /-- A compact set in a pseudo emetric space is separable, i.e., it is a subset of the closure of a

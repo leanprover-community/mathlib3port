@@ -359,8 +359,7 @@ theorem cocone_naturality_components (j j' : J) (f : j ⟶ j') (x : F.obj j) :
   by
   rw [← cocone_naturality F f]
   rfl
-#align
-  CommRing.colimits.cocone_naturality_components CommRingCat.Colimits.cocone_naturality_components
+#align CommRing.colimits.cocone_naturality_components CommRingCat.Colimits.cocone_naturality_components
 
 /-- The cocone over the proposed colimit commutative ring. -/
 def colimitCocone : Cocone F where

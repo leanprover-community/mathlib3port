@@ -59,15 +59,13 @@ variable {V : Type u} [Quiver.{v + 1} V]
 abbrev Quiver.Hom.toPosPath {X Y : V} (f : X ⟶ Y) :
     (CategoryTheory.Paths.categoryPaths <| Quiver.Symmetrify V).Hom X Y :=
   f.toPos.toPath
-#align
-  category_theory.groupoid.free.quiver.hom.to_pos_path CategoryTheory.Groupoid.Free.Quiver.Hom.toPosPath
+#align category_theory.groupoid.free.quiver.hom.to_pos_path CategoryTheory.Groupoid.Free.Quiver.Hom.toPosPath
 
 /-- Shorthand for the "forward" arrow corresponding to `f` in `paths $ symmetrify V` -/
 abbrev Quiver.Hom.toNegPath {X Y : V} (f : X ⟶ Y) :
     (CategoryTheory.Paths.categoryPaths <| Quiver.Symmetrify V).Hom Y X :=
   f.toNeg.toPath
-#align
-  category_theory.groupoid.free.quiver.hom.to_neg_path CategoryTheory.Groupoid.Free.Quiver.Hom.toNegPath
+#align category_theory.groupoid.free.quiver.hom.to_neg_path CategoryTheory.Groupoid.Free.Quiver.Hom.toNegPath
 
 /-- The "reduction" relation -/
 inductive redStep : HomRel (Paths (Quiver.Symmetrify V))
@@ -123,8 +121,7 @@ theorem congr_comp_reverse {X Y : paths <| Quiver.Symmetrify V} (p : X ⟶ Y) :
       simp only [category_struct.comp, Quiver.Path.comp_assoc] at this⊢
       exact this
     · exact ih
-#align
-  category_theory.groupoid.free.congr_comp_reverse CategoryTheory.Groupoid.Free.congr_comp_reverse
+#align category_theory.groupoid.free.congr_comp_reverse CategoryTheory.Groupoid.Free.congr_comp_reverse
 
 theorem congr_reverse_comp {X Y : paths <| Quiver.Symmetrify V} (p : X ⟶ Y) :
     Quot.mk (@Quotient.CompClosure _ _ redStep _ _) (p.reverse ≫ p) =
@@ -132,8 +129,7 @@ theorem congr_reverse_comp {X Y : paths <| Quiver.Symmetrify V} (p : X ⟶ Y) :
   by
   nth_rw 2 [← Quiver.Path.reverse_reverse p]
   apply congr_comp_reverse
-#align
-  category_theory.groupoid.free.congr_reverse_comp CategoryTheory.Groupoid.Free.congr_reverse_comp
+#align category_theory.groupoid.free.congr_reverse_comp CategoryTheory.Groupoid.Free.congr_reverse_comp
 
 instance : Category (FreeGroupoid V) :=
   Quotient.category redStep
@@ -223,16 +219,14 @@ theorem free_groupoid_functor_id :
   by
   dsimp only [free_groupoid_functor]; symm
   apply lift_unique; rfl
-#align
-  category_theory.groupoid.free.free_groupoid_functor_id CategoryTheory.Groupoid.Free.free_groupoid_functor_id
+#align category_theory.groupoid.free.free_groupoid_functor_id CategoryTheory.Groupoid.Free.free_groupoid_functor_id
 
 theorem free_groupoid_functor_comp (φ : V ⥤q V') (φ' : V' ⥤q V'') :
     freeGroupoidFunctor (φ ⋙q φ') = freeGroupoidFunctor φ ⋙ freeGroupoidFunctor φ' :=
   by
   dsimp only [free_groupoid_functor]; symm
   apply lift_unique; rfl
-#align
-  category_theory.groupoid.free.free_groupoid_functor_comp CategoryTheory.Groupoid.Free.free_groupoid_functor_comp
+#align category_theory.groupoid.free.free_groupoid_functor_comp CategoryTheory.Groupoid.Free.free_groupoid_functor_comp
 
 end Functoriality
 

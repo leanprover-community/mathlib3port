@@ -164,8 +164,7 @@ theorem Convex.convex_remove_iff_not_mem_convex_hull_remove {s : Set E} (hs : Co
         by
         rintro (rfl : y = x)
         exact hx hy⟩
-#align
-  convex.convex_remove_iff_not_mem_convex_hull_remove Convex.convex_remove_iff_not_mem_convex_hull_remove
+#align convex.convex_remove_iff_not_mem_convex_hull_remove Convex.convex_remove_iff_not_mem_convex_hull_remove
 
 theorem IsLinearMap.convex_hull_image {f : E → F} (hf : IsLinearMap 𝕜 f) (s : Set E) :
     convexHull 𝕜 (f '' s) = f '' convexHull 𝕜 s :=

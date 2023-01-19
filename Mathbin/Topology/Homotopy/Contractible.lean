@@ -90,8 +90,7 @@ variable {X Y : Type _} [TopologicalSpace X] [TopologicalSpace Y]
 protected theorem ContinuousMap.HomotopyEquiv.contractible_space [ContractibleSpace Y]
     (e : X ≃ₕ Y) : ContractibleSpace X :=
   ⟨(ContractibleSpace.hequiv_unit Y).map e.trans⟩
-#align
-  continuous_map.homotopy_equiv.contractible_space ContinuousMap.HomotopyEquiv.contractible_space
+#align continuous_map.homotopy_equiv.contractible_space ContinuousMap.HomotopyEquiv.contractible_space
 
 protected theorem ContinuousMap.HomotopyEquiv.contractible_space_iff (e : X ≃ₕ Y) :
     ContractibleSpace X ↔ ContractibleSpace Y :=
@@ -100,8 +99,7 @@ protected theorem ContinuousMap.HomotopyEquiv.contractible_space_iff (e : X ≃�
     exact e.symm.contractible_space, by
     intro h
     exact e.contractible_space⟩
-#align
-  continuous_map.homotopy_equiv.contractible_space_iff ContinuousMap.HomotopyEquiv.contractible_space_iff
+#align continuous_map.homotopy_equiv.contractible_space_iff ContinuousMap.HomotopyEquiv.contractible_space_iff
 
 protected theorem Homeomorph.contractible_space [ContractibleSpace Y] (e : X ≃ₜ Y) :
     ContractibleSpace X :=

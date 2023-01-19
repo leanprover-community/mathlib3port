@@ -44,7 +44,7 @@ theorem [anonymous] {b} (h : b ≠ 0) : shiftr b 2 < b :=
   apply (Nat.div_lt_iff_lt_mul' (by decide : 0 < 4)).2
   have := Nat.mul_lt_mul_of_pos_left (by decide : 1 < 4) (Nat.pos_of_ne_zero h)
   rwa [mul_one] at this
-#align nat.sqrt_aux_dec[anonymous]
+#align nat.sqrt_aux_dec [anonymous]
 
 /- warning: nat.sqrt_aux clashes with [anonymous] -> [anonymous]
 warning: nat.sqrt_aux -> [anonymous] is a dubious translation:
@@ -64,7 +64,7 @@ def [anonymous] : ℕ → ℕ → ℕ → ℕ
       match (n - (r + b : ℕ) : ℤ) with
       | (n' : ℕ) => sqrt_aux b' (div2 r + b) n'
       | _ => sqrt_aux b' (div2 r) n
-#align nat.sqrt_aux[anonymous]
+#align nat.sqrt_aux [anonymous]
 
 #print Nat.sqrt /-
 /-- `sqrt n` is the square root of a natural number `n`. If `n` is not a
@@ -85,7 +85,7 @@ but is expected to have type
   forall {r : Type.{u}} {n : Type.{v}}, (Nat -> r -> n) -> Nat -> (List.{u} r) -> (List.{v} n)
 Case conversion may be inaccurate. Consider using '#align nat.sqrt_aux_0 [anonymous]ₓ'. -/
 theorem [anonymous] (r n) : [anonymous] 0 r n = r := by rw [sqrt_aux] <;> simp
-#align nat.sqrt_aux_0[anonymous]
+#align nat.sqrt_aux_0 [anonymous]
 
 attribute [local simp] sqrt_aux_0
 
@@ -100,7 +100,7 @@ theorem [anonymous] {r n b} (h : b ≠ 0) {n'} (h₂ : r + b + n' = n) :
     [anonymous] b r n = [anonymous] (shiftr b 2) (div2 r + b) n' := by
   rw [sqrt_aux] <;> simp only [h, h₂.symm, Int.ofNat_add, if_false] <;>
     rw [add_comm _ (n' : ℤ), add_sub_cancel, sqrt_aux._match_1]
-#align nat.sqrt_aux_1[anonymous]
+#align nat.sqrt_aux_1 [anonymous]
 
 /- warning: nat.sqrt_aux_2 clashes with [anonymous] -> [anonymous]
 warning: nat.sqrt_aux_2 -> [anonymous] is a dubious translation:
@@ -115,7 +115,7 @@ theorem [anonymous] {r n b} (h : b ≠ 0) (h₂ : n < r + b) :
   rw [sqrt_aux] <;> simp only [h, h₂, if_false]
   cases' Int.eq_negSucc_of_lt_zero (sub_lt_zero.2 (Int.ofNat_lt_ofNat_of_lt h₂)) with k e
   rw [e, sqrt_aux._match_1]
-#align nat.sqrt_aux_2[anonymous]
+#align nat.sqrt_aux_2 [anonymous]
 
 private def is_sqrt (n q : ℕ) : Prop :=
   q * q ≤ n ∧ n < (q + 1) * (q + 1)

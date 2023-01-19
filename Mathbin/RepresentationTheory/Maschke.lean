@@ -200,8 +200,7 @@ theorem exists_left_inverse_of_injective (f : V →ₗ[MonoidAlgebra k G] W) (hf
   intro v
   have := congr_arg LinearMap.toFun hφ
   exact congr_fun this v
-#align
-  monoid_algebra.exists_left_inverse_of_injective MonoidAlgebra.exists_left_inverse_of_injective
+#align monoid_algebra.exists_left_inverse_of_injective MonoidAlgebra.exists_left_inverse_of_injective
 
 namespace Submodule
 

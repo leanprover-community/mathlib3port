@@ -70,14 +70,12 @@ theorem uniform_inducing_equiv_bounded_of_compact : UniformInducing (equivBounde
           fun ⟨t, ⟨ε, hε, ht⟩, hs⟩ =>
           ⟨⟨Set.univ, { p | dist p.1 p.2 ≤ ε }⟩, ⟨is_compact_univ, ⟨ε, hε, fun _ h => h⟩⟩,
             fun ⟨f, g⟩ h => hs _ _ (ht ((dist_le hε.le).mpr fun x => h x (mem_univ x)))⟩⟩)
-#align
-  continuous_map.uniform_inducing_equiv_bounded_of_compact ContinuousMap.uniform_inducing_equiv_bounded_of_compact
+#align continuous_map.uniform_inducing_equiv_bounded_of_compact ContinuousMap.uniform_inducing_equiv_bounded_of_compact
 
 theorem uniform_embedding_equiv_bounded_of_compact : UniformEmbedding (equivBoundedOfCompact α β) :=
   { uniform_inducing_equiv_bounded_of_compact α β with
     inj := (equivBoundedOfCompact α β).Injective }
-#align
-  continuous_map.uniform_embedding_equiv_bounded_of_compact ContinuousMap.uniform_embedding_equiv_bounded_of_compact
+#align continuous_map.uniform_embedding_equiv_bounded_of_compact ContinuousMap.uniform_embedding_equiv_bounded_of_compact
 
 /-- When `α` is compact, the bounded continuous maps `α →ᵇ 𝕜` are
 additively equivalent to `C(α, 𝕜)`.
@@ -112,8 +110,7 @@ theorem BoundedContinuousFunction.dist_mk_of_compact (f g : C(α, β)) :
 theorem BoundedContinuousFunction.dist_to_continuous_map (f g : α →ᵇ β) :
     dist f.toContinuousMap g.toContinuousMap = dist f g :=
   rfl
-#align
-  bounded_continuous_function.dist_to_continuous_map BoundedContinuousFunction.dist_to_continuous_map
+#align bounded_continuous_function.dist_to_continuous_map BoundedContinuousFunction.dist_to_continuous_map
 
 open BoundedContinuousFunction
 
@@ -182,8 +179,7 @@ theorem BoundedContinuousFunction.norm_mk_of_compact (f : C(α, E)) : ‖mkOfCom
 theorem BoundedContinuousFunction.norm_to_continuous_map_eq (f : α →ᵇ E) :
     ‖f.toContinuousMap‖ = ‖f‖ :=
   rfl
-#align
-  bounded_continuous_function.norm_to_continuous_map_eq BoundedContinuousFunction.norm_to_continuous_map_eq
+#align bounded_continuous_function.norm_to_continuous_map_eq BoundedContinuousFunction.norm_to_continuous_map_eq
 
 open BoundedContinuousFunction
 
@@ -284,8 +280,7 @@ def linearIsometryBoundedOfCompact : C(α, E) ≃ₗᵢ[𝕜] α →ᵇ E :=
       ext
       simp
     norm_map' := fun f => rfl }
-#align
-  continuous_map.linear_isometry_bounded_of_compact ContinuousMap.linearIsometryBoundedOfCompact
+#align continuous_map.linear_isometry_bounded_of_compact ContinuousMap.linearIsometryBoundedOfCompact
 
 variable {α E}
 
@@ -303,37 +298,32 @@ end
 theorem linear_isometry_bounded_of_compact_symm_apply (f : α →ᵇ E) :
     (linearIsometryBoundedOfCompact α E 𝕜).symm f = f.toContinuousMap :=
   rfl
-#align
-  continuous_map.linear_isometry_bounded_of_compact_symm_apply ContinuousMap.linear_isometry_bounded_of_compact_symm_apply
+#align continuous_map.linear_isometry_bounded_of_compact_symm_apply ContinuousMap.linear_isometry_bounded_of_compact_symm_apply
 
 @[simp]
 theorem linear_isometry_bounded_of_compact_apply_apply (f : C(α, E)) (a : α) :
     (linearIsometryBoundedOfCompact α E 𝕜 f) a = f a :=
   rfl
-#align
-  continuous_map.linear_isometry_bounded_of_compact_apply_apply ContinuousMap.linear_isometry_bounded_of_compact_apply_apply
+#align continuous_map.linear_isometry_bounded_of_compact_apply_apply ContinuousMap.linear_isometry_bounded_of_compact_apply_apply
 
 @[simp]
 theorem linear_isometry_bounded_of_compact_to_isometry_equiv :
     (linearIsometryBoundedOfCompact α E 𝕜).toIsometryEquiv = isometryEquivBoundedOfCompact α E :=
   rfl
-#align
-  continuous_map.linear_isometry_bounded_of_compact_to_isometry_equiv ContinuousMap.linear_isometry_bounded_of_compact_to_isometry_equiv
+#align continuous_map.linear_isometry_bounded_of_compact_to_isometry_equiv ContinuousMap.linear_isometry_bounded_of_compact_to_isometry_equiv
 
 @[simp]
 theorem linear_isometry_bounded_of_compact_to_add_equiv :
     (linearIsometryBoundedOfCompact α E 𝕜).toLinearEquiv.toAddEquiv =
       addEquivBoundedOfCompact α E :=
   rfl
-#align
-  continuous_map.linear_isometry_bounded_of_compact_to_add_equiv ContinuousMap.linear_isometry_bounded_of_compact_to_add_equiv
+#align continuous_map.linear_isometry_bounded_of_compact_to_add_equiv ContinuousMap.linear_isometry_bounded_of_compact_to_add_equiv
 
 @[simp]
 theorem linear_isometry_bounded_of_compact_of_compact_to_equiv :
     (linearIsometryBoundedOfCompact α E 𝕜).toLinearEquiv.toEquiv = equivBoundedOfCompact α E :=
   rfl
-#align
-  continuous_map.linear_isometry_bounded_of_compact_of_compact_to_equiv ContinuousMap.linear_isometry_bounded_of_compact_of_compact_to_equiv
+#align continuous_map.linear_isometry_bounded_of_compact_of_compact_to_equiv ContinuousMap.linear_isometry_bounded_of_compact_of_compact_to_equiv
 
 end
 
@@ -407,8 +397,7 @@ protected def ContinuousLinearMap.compLeftContinuousCompact (g : β →L[𝕜] �
   (linearIsometryBoundedOfCompact X γ 𝕜).symm.toLinearIsometry.toContinuousLinearMap.comp <|
     (g.compLeftContinuousBounded X).comp <|
       (linearIsometryBoundedOfCompact X β 𝕜).toLinearIsometry.toContinuousLinearMap
-#align
-  continuous_linear_map.comp_left_continuous_compact ContinuousLinearMap.compLeftContinuousCompact
+#align continuous_linear_map.comp_left_continuous_compact ContinuousLinearMap.compLeftContinuousCompact
 
 @[simp]
 theorem ContinuousLinearMap.to_linear_comp_left_continuous_compact (g : β →L[𝕜] γ) :
@@ -416,15 +405,13 @@ theorem ContinuousLinearMap.to_linear_comp_left_continuous_compact (g : β →L[
   by
   ext f
   rfl
-#align
-  continuous_linear_map.to_linear_comp_left_continuous_compact ContinuousLinearMap.to_linear_comp_left_continuous_compact
+#align continuous_linear_map.to_linear_comp_left_continuous_compact ContinuousLinearMap.to_linear_comp_left_continuous_compact
 
 @[simp]
 theorem ContinuousLinearMap.comp_left_continuous_compact_apply (g : β →L[𝕜] γ) (f : C(X, β))
     (x : X) : g.compLeftContinuousCompact X f x = g (f x) :=
   rfl
-#align
-  continuous_linear_map.comp_left_continuous_compact_apply ContinuousLinearMap.comp_left_continuous_compact_apply
+#align continuous_linear_map.comp_left_continuous_compact_apply ContinuousLinearMap.comp_left_continuous_compact_apply
 
 end CompLeft
 
@@ -504,8 +491,7 @@ theorem summable_of_locally_summable_norm {ι : Type _} {F : ι → C(X, E)}
     ext1 x
     simp
   simpa only [HasSum, A] using summable_of_summable_norm (hF K)
-#align
-  continuous_map.summable_of_locally_summable_norm ContinuousMap.summable_of_locally_summable_norm
+#align continuous_map.summable_of_locally_summable_norm ContinuousMap.summable_of_locally_summable_norm
 
 end Weierstrass
 

@@ -80,8 +80,7 @@ def succNthDefiningPoly (n : ℕ) (a₁ a₂ : 𝕎 k) (bs : Fin (n + 1) → k) 
             nthRemainder p n (fun v => bs v ^ p) (truncateFun (n + 1) a₁) -
           a₂.coeff (n + 1) * bs 0 ^ p ^ (n + 1) -
         nthRemainder p n bs (truncateFun (n + 1) a₂))
-#align
-  witt_vector.recursion_main.succ_nth_defining_poly WittVector.RecursionMain.succNthDefiningPoly
+#align witt_vector.recursion_main.succ_nth_defining_poly WittVector.RecursionMain.succNthDefiningPoly
 
 theorem succ_nth_defining_poly_degree [IsDomain k] (n : ℕ) (a₁ a₂ : 𝕎 k) (bs : Fin (n + 1) → k)
     (ha₁ : a₁.coeff 0 ≠ 0) (ha₂ : a₂.coeff 0 ≠ 0) : (succNthDefiningPoly p n a₁ a₂ bs).degree = p :=
@@ -101,8 +100,7 @@ theorem succ_nth_defining_poly_degree [IsDomain k] (n : ℕ) (a₁ a₂ : 𝕎 k
   apply lt_of_le_of_lt degree_C_le
   rw [this]
   exact_mod_cast hp.out.pos
-#align
-  witt_vector.recursion_main.succ_nth_defining_poly_degree WittVector.RecursionMain.succ_nth_defining_poly_degree
+#align witt_vector.recursion_main.succ_nth_defining_poly_degree WittVector.RecursionMain.succ_nth_defining_poly_degree
 
 end CommRing
 
@@ -282,8 +280,7 @@ theorem exists_frobenius_solution_fraction_ring_aux (m n : ℕ) (r' q' : 𝕎 k)
   · simp only [RingHom.map_mul, RingHom.map_pow, map_nat_cast, frobenius_equiv_apply]
     ring
   · simp only [RingHom.map_mul, RingHom.map_pow, map_nat_cast]
-#align
-  witt_vector.exists_frobenius_solution_fraction_ring_aux WittVector.exists_frobenius_solution_fraction_ring_aux
+#align witt_vector.exists_frobenius_solution_fraction_ring_aux WittVector.exists_frobenius_solution_fraction_ring_aux
 
 theorem exists_frobenius_solution_fraction_ring {a : FractionRing (𝕎 k)} (ha : a ≠ 0) :
     ∃ (b : FractionRing (𝕎 k))(hb : b ≠ 0)(m : ℤ), φ b * a = p ^ m * b :=
@@ -302,8 +299,7 @@ theorem exists_frobenius_solution_fraction_ring {a : FractionRing (𝕎 k)} (ha 
       (IsFractionRing.injective (WittVector p k) (FractionRing (WittVector p k))).Ne
         (frobenius_rotation_nonzero p hr' hq')
   exact exists_frobenius_solution_fraction_ring_aux p m n r' q' hr' hq' hq
-#align
-  witt_vector.exists_frobenius_solution_fraction_ring WittVector.exists_frobenius_solution_fraction_ring
+#align witt_vector.exists_frobenius_solution_fraction_ring WittVector.exists_frobenius_solution_fraction_ring
 
 end IsAlgClosed
 

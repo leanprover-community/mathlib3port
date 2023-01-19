@@ -127,8 +127,7 @@ theorem is_iso_of_iso_left_of_is_iso_right {f g : Arrow T} (ff : f ⟶ g) [IsIso
     out :=
       ⟨⟨inv ff.left, inv ff.right⟩, by ext <;> dsimp <;> simp only [is_iso.hom_inv_id], by
         ext <;> dsimp <;> simp only [is_iso.inv_hom_id]⟩ }
-#align
-  category_theory.arrow.is_iso_of_iso_left_of_is_iso_right CategoryTheory.Arrow.is_iso_of_iso_left_of_is_iso_right
+#align category_theory.arrow.is_iso_of_iso_left_of_is_iso_right CategoryTheory.Arrow.is_iso_of_iso_left_of_is_iso_right
 
 /-- Create an isomorphism between arrows,
 by providing isomorphisms between the domains and codomains,

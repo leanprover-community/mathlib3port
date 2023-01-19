@@ -237,8 +237,7 @@ protected def uniqueTo (X : C) : Unique (0 ⟶ X) :=
 /-- There is a unique morphism from any object `X` to the zero object. -/
 protected def uniqueFrom (X : C) : Unique (X ⟶ 0) :=
   ((is_zero_zero C).unique_from X).some
-#align
-  category_theory.limits.has_zero_object.unique_from CategoryTheory.Limits.HasZeroObject.uniqueFrom
+#align category_theory.limits.has_zero_object.unique_from CategoryTheory.Limits.HasZeroObject.uniqueFrom
 
 scoped[ZeroObject] attribute [instance] CategoryTheory.Limits.HasZeroObject.uniqueTo
 
@@ -247,14 +246,12 @@ scoped[ZeroObject] attribute [instance] CategoryTheory.Limits.HasZeroObject.uniq
 @[ext]
 theorem to_zero_ext {X : C} (f g : X ⟶ 0) : f = g :=
   (is_zero_zero C).eq_of_tgt _ _
-#align
-  category_theory.limits.has_zero_object.to_zero_ext CategoryTheory.Limits.HasZeroObject.to_zero_ext
+#align category_theory.limits.has_zero_object.to_zero_ext CategoryTheory.Limits.HasZeroObject.to_zero_ext
 
 @[ext]
 theorem from_zero_ext {X : C} (f g : 0 ⟶ X) : f = g :=
   (is_zero_zero C).eq_of_src _ _
-#align
-  category_theory.limits.has_zero_object.from_zero_ext CategoryTheory.Limits.HasZeroObject.from_zero_ext
+#align category_theory.limits.has_zero_object.from_zero_ext CategoryTheory.Limits.HasZeroObject.from_zero_ext
 
 instance (X : C) : Subsingleton (X ≅ 0) := by tidy
 
@@ -264,61 +261,51 @@ instance {X : C} (f : X ⟶ 0) : Epi f where left_cancellation Z g h w := by ext
 
 instance zero_to_zero_is_iso (f : (0 : C) ⟶ 0) : IsIso f := by
   convert show is_iso (𝟙 (0 : C)) by infer_instance
-#align
-  category_theory.limits.has_zero_object.zero_to_zero_is_iso CategoryTheory.Limits.HasZeroObject.zero_to_zero_is_iso
+#align category_theory.limits.has_zero_object.zero_to_zero_is_iso CategoryTheory.Limits.HasZeroObject.zero_to_zero_is_iso
 
 /-- A zero object is in particular initial. -/
 def zeroIsInitial : IsInitial (0 : C) :=
   (is_zero_zero C).IsInitial
-#align
-  category_theory.limits.has_zero_object.zero_is_initial CategoryTheory.Limits.HasZeroObject.zeroIsInitial
+#align category_theory.limits.has_zero_object.zero_is_initial CategoryTheory.Limits.HasZeroObject.zeroIsInitial
 
 /-- A zero object is in particular terminal. -/
 def zeroIsTerminal : IsTerminal (0 : C) :=
   (is_zero_zero C).IsTerminal
-#align
-  category_theory.limits.has_zero_object.zero_is_terminal CategoryTheory.Limits.HasZeroObject.zeroIsTerminal
+#align category_theory.limits.has_zero_object.zero_is_terminal CategoryTheory.Limits.HasZeroObject.zeroIsTerminal
 
 /-- A zero object is in particular initial. -/
 instance (priority := 10) has_initial : HasInitial C :=
   has_initial_of_unique 0
-#align
-  category_theory.limits.has_zero_object.has_initial CategoryTheory.Limits.HasZeroObject.has_initial
+#align category_theory.limits.has_zero_object.has_initial CategoryTheory.Limits.HasZeroObject.has_initial
 
 /-- A zero object is in particular terminal. -/
 instance (priority := 10) has_terminal : HasTerminal C :=
   has_terminal_of_unique 0
-#align
-  category_theory.limits.has_zero_object.has_terminal CategoryTheory.Limits.HasZeroObject.has_terminal
+#align category_theory.limits.has_zero_object.has_terminal CategoryTheory.Limits.HasZeroObject.has_terminal
 
 /-- The (unique) isomorphism between any initial object and the zero object. -/
 def zeroIsoIsInitial {X : C} (t : IsInitial X) : 0 ≅ X :=
   zeroIsInitial.uniqueUpToIso t
-#align
-  category_theory.limits.has_zero_object.zero_iso_is_initial CategoryTheory.Limits.HasZeroObject.zeroIsoIsInitial
+#align category_theory.limits.has_zero_object.zero_iso_is_initial CategoryTheory.Limits.HasZeroObject.zeroIsoIsInitial
 
 /-- The (unique) isomorphism between any terminal object and the zero object. -/
 def zeroIsoIsTerminal {X : C} (t : IsTerminal X) : 0 ≅ X :=
   zeroIsTerminal.uniqueUpToIso t
-#align
-  category_theory.limits.has_zero_object.zero_iso_is_terminal CategoryTheory.Limits.HasZeroObject.zeroIsoIsTerminal
+#align category_theory.limits.has_zero_object.zero_iso_is_terminal CategoryTheory.Limits.HasZeroObject.zeroIsoIsTerminal
 
 /-- The (unique) isomorphism between the chosen initial object and the chosen zero object. -/
 def zeroIsoInitial [HasInitial C] : 0 ≅ ⊥_ C :=
   zeroIsInitial.uniqueUpToIso initialIsInitial
-#align
-  category_theory.limits.has_zero_object.zero_iso_initial CategoryTheory.Limits.HasZeroObject.zeroIsoInitial
+#align category_theory.limits.has_zero_object.zero_iso_initial CategoryTheory.Limits.HasZeroObject.zeroIsoInitial
 
 /-- The (unique) isomorphism between the chosen terminal object and the chosen zero object. -/
 def zeroIsoTerminal [HasTerminal C] : 0 ≅ ⊤_ C :=
   zeroIsTerminal.uniqueUpToIso terminalIsTerminal
-#align
-  category_theory.limits.has_zero_object.zero_iso_terminal CategoryTheory.Limits.HasZeroObject.zeroIsoTerminal
+#align category_theory.limits.has_zero_object.zero_iso_terminal CategoryTheory.Limits.HasZeroObject.zeroIsoTerminal
 
 instance (priority := 100) has_strict_initial : InitialMonoClass C :=
   InitialMonoClass.of_is_initial zeroIsInitial fun X => CategoryTheory.mono _
-#align
-  category_theory.limits.has_zero_object.has_strict_initial CategoryTheory.Limits.HasZeroObject.has_strict_initial
+#align category_theory.limits.has_zero_object.has_strict_initial CategoryTheory.Limits.HasZeroObject.has_strict_initial
 
 end HasZeroObject
 

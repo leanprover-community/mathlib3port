@@ -135,8 +135,7 @@ def setoidHom (X Y : F C) : Setoid (X ⟶ᵐ Y) :=
   ⟨HomEquiv,
     ⟨fun f => HomEquiv.refl f, fun f g => HomEquiv.symm f g, fun f g h hfg hgh =>
       HomEquiv.trans hfg hgh⟩⟩
-#align
-  category_theory.free_monoidal_category.setoid_hom CategoryTheory.FreeMonoidalCategory.setoidHom
+#align category_theory.free_monoidal_category.setoid_hom CategoryTheory.FreeMonoidalCategory.setoidHom
 
 attribute [instance] setoid_hom
 
@@ -163,8 +162,7 @@ instance categoryFreeMonoidalCategory : Category.{u} (F C)
   assoc' := by
     rintro W X Y Z ⟨f⟩ ⟨g⟩ ⟨h⟩
     exact Quotient.sound (assoc f g h)
-#align
-  category_theory.free_monoidal_category.category_free_monoidal_category CategoryTheory.FreeMonoidalCategory.categoryFreeMonoidalCategory
+#align category_theory.free_monoidal_category.category_free_monoidal_category CategoryTheory.FreeMonoidalCategory.categoryFreeMonoidalCategory
 
 instance : MonoidalCategory (F C)
     where
@@ -206,8 +204,7 @@ theorem mk_comp {X Y Z : F C} (f : X ⟶ᵐ Y) (g : Y ⟶ᵐ Z) :
 theorem mk_tensor {X₁ Y₁ X₂ Y₂ : F C} (f : X₁ ⟶ᵐ Y₁) (g : X₂ ⟶ᵐ Y₂) :
     ⟦f.tensor g⟧ = @MonoidalCategory.tensorHom (F C) _ _ _ _ _ _ ⟦f⟧ ⟦g⟧ :=
   rfl
-#align
-  category_theory.free_monoidal_category.mk_tensor CategoryTheory.FreeMonoidalCategory.mk_tensor
+#align category_theory.free_monoidal_category.mk_tensor CategoryTheory.FreeMonoidalCategory.mk_tensor
 
 @[simp]
 theorem mk_id {X : F C} : ⟦Hom.id X⟧ = 𝟙 X :=
@@ -248,14 +245,12 @@ theorem mk_l_inv {X : F C} : ⟦Hom.l_inv X⟧ = (λ_ X).inv :=
 @[simp]
 theorem tensor_eq_tensor {X Y : F C} : X.tensor Y = X ⊗ Y :=
   rfl
-#align
-  category_theory.free_monoidal_category.tensor_eq_tensor CategoryTheory.FreeMonoidalCategory.tensor_eq_tensor
+#align category_theory.free_monoidal_category.tensor_eq_tensor CategoryTheory.FreeMonoidalCategory.tensor_eq_tensor
 
 @[simp]
 theorem unit_eq_unit : free_monoidal_category.unit = 𝟙_ (F C) :=
   rfl
-#align
-  category_theory.free_monoidal_category.unit_eq_unit CategoryTheory.FreeMonoidalCategory.unit_eq_unit
+#align category_theory.free_monoidal_category.unit_eq_unit CategoryTheory.FreeMonoidalCategory.unit_eq_unit
 
 section Functor
 
@@ -273,8 +268,7 @@ def projectObj : F C → D
   | free_monoidal_category.of X => f X
   | free_monoidal_category.unit => 𝟙_ D
   | free_monoidal_category.tensor X Y => project_obj X ⊗ project_obj Y
-#align
-  category_theory.free_monoidal_category.project_obj CategoryTheory.FreeMonoidalCategory.projectObj
+#align category_theory.free_monoidal_category.project_obj CategoryTheory.FreeMonoidalCategory.projectObj
 
 section
 
@@ -299,8 +293,7 @@ def projectMapAux : ∀ {X Y : F C}, (X ⟶ᵐ Y) → (projectObj f X ⟶ projec
   | _, _, ρ_inv _ => (ρ_ _).inv
   | _, _, comp f g => project_map_aux f ≫ project_map_aux g
   | _, _, hom.tensor f g => project_map_aux f ⊗ project_map_aux g
-#align
-  category_theory.free_monoidal_category.project_map_aux CategoryTheory.FreeMonoidalCategory.projectMapAux
+#align category_theory.free_monoidal_category.project_map_aux CategoryTheory.FreeMonoidalCategory.projectMapAux
 
 /-- Auxiliary definition for `free_monoidal_category.project`. -/
 def projectMap (X Y : F C) : (X ⟶ Y) → (projectObj f X ⟶ projectObj f Y) :=
@@ -337,8 +330,7 @@ def projectMap (X Y : F C) : (X ⟶ Y) → (projectObj f X ⟶ projectObj f Y) :
         exact monoidal_category.pentagon _ _ _ _
       · simp only [project_map_aux]
         exact monoidal_category.triangle _ _)
-#align
-  category_theory.free_monoidal_category.project_map CategoryTheory.FreeMonoidalCategory.projectMap
+#align category_theory.free_monoidal_category.project_map CategoryTheory.FreeMonoidalCategory.projectMap
 
 end
 

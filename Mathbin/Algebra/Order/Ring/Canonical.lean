@@ -128,8 +128,7 @@ Case conversion may be inaccurate. Consider using '#align canonically_ordered_co
 -- see Note [lower instance priority]
 instance (priority := 100) toNoZeroDivisors : NoZeroDivisors α :=
   ⟨fun a b h => CanonicallyOrderedCommSemiring.eq_zero_or_eq_zero_of_mul_eq_zero h⟩
-#align
-  canonically_ordered_comm_semiring.to_no_zero_divisors CanonicallyOrderedCommSemiring.toNoZeroDivisors
+#align canonically_ordered_comm_semiring.to_no_zero_divisors CanonicallyOrderedCommSemiring.toNoZeroDivisors
 
 /- warning: canonically_ordered_comm_semiring.to_covariant_mul_le -> CanonicallyOrderedCommSemiring.toCovariantClassMulLE is a dubious translation:
 lean 3 declaration is
@@ -144,8 +143,7 @@ instance (priority := 100) toCovariantClassMulLE : CovariantClass α α (· * ·
   rcases exists_add_of_le h with ⟨c, rfl⟩
   rw [mul_add]
   apply self_le_add_right
-#align
-  canonically_ordered_comm_semiring.to_covariant_mul_le CanonicallyOrderedCommSemiring.toCovariantClassMulLE
+#align canonically_ordered_comm_semiring.to_covariant_mul_le CanonicallyOrderedCommSemiring.toCovariantClassMulLE
 
 #print CanonicallyOrderedCommSemiring.toOrderedCommSemiring /-
 -- see Note [lower instance priority]
@@ -156,8 +154,7 @@ instance (priority := 100) toOrderedCommSemiring : OrderedCommSemiring α :=
     zero_le_one := zero_le _
     mul_le_mul_of_nonneg_left := fun a b c h _ => mul_le_mul_left' h _
     mul_le_mul_of_nonneg_right := fun a b c h _ => mul_le_mul_right' h _ }
-#align
-  canonically_ordered_comm_semiring.to_ordered_comm_semiring CanonicallyOrderedCommSemiring.toOrderedCommSemiring
+#align canonically_ordered_comm_semiring.to_ordered_comm_semiring CanonicallyOrderedCommSemiring.toOrderedCommSemiring
 -/
 
 /- warning: canonically_ordered_comm_semiring.mul_pos -> CanonicallyOrderedCommSemiring.mul_pos is a dubious translation:

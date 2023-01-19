@@ -481,8 +481,7 @@ theorem continuous_uncurry_extend_of_continuous_family {X ι : Type _} [Topologi
     [TopologicalSpace ι] {a b : ι → X} (γ : ∀ t : ι, Path (a t) (b t)) (h : Continuous ↿γ) :
     Continuous ↿fun t => (γ t).extend :=
   h.comp (continuous_id.prod_map continuous_proj_Icc)
-#align
-  path.continuous_uncurry_extend_of_continuous_family Path.continuous_uncurry_extend_of_continuous_family
+#align path.continuous_uncurry_extend_of_continuous_family Path.continuous_uncurry_extend_of_continuous_family
 
 @[continuity]
 theorem trans_continuous_family {X ι : Type _} [TopologicalSpace X] [TopologicalSpace ι]
@@ -1202,8 +1201,7 @@ theorem exists_path_through_family' {n : ℕ} (p : Fin (n + 1) → X) :
   have : IsPathConnected (univ : Set X) := path_connected_space_iff_univ.mp (by infer_instance)
   rcases this.exists_path_through_family' p fun i => True.intro with ⟨γ, t, -, h⟩
   exact ⟨γ, t, h⟩
-#align
-  path_connected_space.exists_path_through_family' PathConnectedSpace.exists_path_through_family'
+#align path_connected_space.exists_path_through_family' PathConnectedSpace.exists_path_through_family'
 
 end PathConnectedSpace
 

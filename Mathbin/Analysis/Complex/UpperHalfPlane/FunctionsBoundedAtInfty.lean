@@ -62,8 +62,7 @@ def IsZeroAtImInfty {α : Type _} [Zero α] [TopologicalSpace α] (f : ℍ → �
 theorem zero_form_is_bounded_at_im_infty {α : Type _} [NormedField α] :
     IsBoundedAtImInfty (0 : ℍ → α) :=
   const_bounded_at_filter atImInfty (0 : α)
-#align
-  upper_half_plane.zero_form_is_bounded_at_im_infty UpperHalfPlane.zero_form_is_bounded_at_im_infty
+#align upper_half_plane.zero_form_is_bounded_at_im_infty UpperHalfPlane.zero_form_is_bounded_at_im_infty
 
 /-- Module of functions that are zero at infinity. -/
 def zeroAtImInftySubmodule (α : Type _) [NormedField α] : Submodule α (ℍ → α) :=

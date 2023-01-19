@@ -122,10 +122,8 @@ theorem finprod_eq_prod_plift_of_mul_support_to_finset_subset {f : α → M}
   rw [finprod, dif_pos]
   refine' Finset.prod_subset hs fun x hx hxf => _
   rwa [hf.mem_to_finset, nmem_mul_support] at hxf
-#align
-  finprod_eq_prod_plift_of_mul_support_to_finset_subset finprod_eq_prod_plift_of_mul_support_to_finset_subset
-#align
-  finsum_eq_sum_plift_of_support_to_finset_subset finsum_eq_sum_plift_of_support_to_finset_subset
+#align finprod_eq_prod_plift_of_mul_support_to_finset_subset finprod_eq_prod_plift_of_mul_support_to_finset_subset
+#align finsum_eq_sum_plift_of_support_to_finset_subset finsum_eq_sum_plift_of_support_to_finset_subset
 
 @[to_additive]
 theorem finprod_eq_prod_plift_of_mul_support_subset {f : α → M} {s : Finset (PLift α)}
@@ -354,8 +352,7 @@ theorem finprod_eq_prod_of_mul_support_subset (f : α → M) {s : Finset α} (h 
 theorem finprod_eq_prod_of_mul_support_to_finset_subset (f : α → M) (hf : (mulSupport f).Finite)
     {s : Finset α} (h : hf.toFinset ⊆ s) : (∏ᶠ i, f i) = ∏ i in s, f i :=
   finprod_eq_prod_of_mul_support_subset _ fun x hx => h <| hf.mem_to_finset.2 hx
-#align
-  finprod_eq_prod_of_mul_support_to_finset_subset finprod_eq_prod_of_mul_support_to_finset_subset
+#align finprod_eq_prod_of_mul_support_to_finset_subset finprod_eq_prod_of_mul_support_to_finset_subset
 #align finsum_eq_sum_of_support_to_finset_subset finsum_eq_sum_of_support_to_finset_subset
 
 @[to_additive]
@@ -1145,8 +1142,7 @@ theorem Finset.mul_support_of_fiberwise_prod_subset_image [DecidableEq β] (s : 
   suffices (s.filter fun a : α => g a = b).Nonempty by
     simpa only [s.fiber_nonempty_iff_mem_image g b, Finset.mem_image, exists_prop]
   exact Finset.nonempty_of_prod_ne_one h
-#align
-  finset.mul_support_of_fiberwise_prod_subset_image Finset.mul_support_of_fiberwise_prod_subset_image
+#align finset.mul_support_of_fiberwise_prod_subset_image Finset.mul_support_of_fiberwise_prod_subset_image
 #align finset.support_of_fiberwise_sum_subset_image Finset.support_of_fiberwise_sum_subset_image
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/

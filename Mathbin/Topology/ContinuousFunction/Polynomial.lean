@@ -219,8 +219,7 @@ theorem polynomialFunctions.comap_comp_right_alg_hom_Icc_homeo_I (a b : ℝ) (h 
     · simp
     · ext x
       simp [mul_comm]
-#align
-  polynomial_functions.comap_comp_right_alg_hom_Icc_homeo_I polynomialFunctions.comap_comp_right_alg_hom_Icc_homeo_I
+#align polynomial_functions.comap_comp_right_alg_hom_Icc_homeo_I polynomialFunctions.comap_comp_right_alg_hom_Icc_homeo_I
 
 end
 

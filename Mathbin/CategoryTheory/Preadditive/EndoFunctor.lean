@@ -188,8 +188,7 @@ instance Endofunctor.coalgebraPreadditive : Preadditive (Endofunctor.Coalgebra F
     intros
     ext
     apply comp_add
-#align
-  category_theory.endofunctor.coalgebra_preadditive CategoryTheory.Endofunctor.coalgebraPreadditive
+#align category_theory.endofunctor.coalgebra_preadditive CategoryTheory.Endofunctor.coalgebraPreadditive
 
 instance Coalgebra.forget_additive : (Endofunctor.Coalgebra.forget F).Additive where
 #align category_theory.coalgebra.forget_additive CategoryTheory.Coalgebra.forget_additive

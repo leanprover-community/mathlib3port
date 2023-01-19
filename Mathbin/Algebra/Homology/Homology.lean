@@ -84,8 +84,7 @@ abbrev boundaries (C : HomologicalComplex V c) (j : ι) : Subobject (C.x j) :=
 theorem boundaries_eq_image_subobject [HasEqualizers V] {i j : ι} (r : c.Rel i j) :
     C.boundaries j = imageSubobject (C.d i j) :=
   C.image_to_eq_image r
-#align
-  homological_complex.boundaries_eq_image_subobject HomologicalComplex.boundaries_eq_image_subobject
+#align homological_complex.boundaries_eq_image_subobject HomologicalComplex.boundaries_eq_image_subobject
 
 /-- The underlying object of `C.boundaries j` is isomorphic to `image (C.d i j)`,
 for any `i` such that `rel i j`.
@@ -124,8 +123,7 @@ abbrev boundariesToCycles (C : HomologicalComplex V c) (i : ι) :
 theorem image_to_kernel_as_boundaries_to_cycles (C : HomologicalComplex V c) (i : ι) (h) :
     (C.boundaries i).of_le (C.cycles i) h = C.boundariesToCycles i :=
   rfl
-#align
-  homological_complex.image_to_kernel_as_boundaries_to_cycles HomologicalComplex.image_to_kernel_as_boundaries_to_cycles
+#align homological_complex.image_to_kernel_as_boundaries_to_cycles HomologicalComplex.image_to_kernel_as_boundaries_to_cycles
 
 variable [HasCokernels V]
 

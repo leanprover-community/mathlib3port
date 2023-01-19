@@ -34,8 +34,7 @@ unsafe def rewrite_without_new_mvars (r : expr) (e : expr) (cfg : nth_rewrite.cf
     -- This is necessary because of the locked tactic state.
         return
         (new_t, prf)
-#align
-  tactic.nth_rewrite.congr.rewrite_without_new_mvars tactic.nth_rewrite.congr.rewrite_without_new_mvars
+#align tactic.nth_rewrite.congr.rewrite_without_new_mvars tactic.nth_rewrite.congr.rewrite_without_new_mvars
 
 /-- Returns true if the argument is a proof that the entire expression was rewritten.
 

@@ -253,8 +253,7 @@ theorem equiv_toEmbedding_trans_symm_toEmbedding {α β : Sort _} (e : α ≃ β
   by
   ext
   simp
-#align
-  function.embedding.equiv_to_embedding_trans_symm_to_embedding Function.Embedding.equiv_toEmbedding_trans_symm_toEmbedding
+#align function.embedding.equiv_to_embedding_trans_symm_to_embedding Function.Embedding.equiv_toEmbedding_trans_symm_toEmbedding
 
 /- warning: function.embedding.equiv_symm_to_embedding_trans_to_embedding -> Function.Embedding.equiv_symm_toEmbedding_trans_toEmbedding is a dubious translation:
 lean 3 declaration is
@@ -268,8 +267,7 @@ theorem equiv_symm_toEmbedding_trans_toEmbedding {α β : Sort _} (e : α ≃ β
   by
   ext
   simp
-#align
-  function.embedding.equiv_symm_to_embedding_trans_to_embedding Function.Embedding.equiv_symm_toEmbedding_trans_toEmbedding
+#align function.embedding.equiv_symm_to_embedding_trans_to_embedding Function.Embedding.equiv_symm_toEmbedding_trans_toEmbedding
 
 #print Function.Embedding.congr /-
 /-- Transfer an embedding along a pair of equivalences. -/

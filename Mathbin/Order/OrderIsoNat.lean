@@ -100,15 +100,13 @@ theorem well_founded_iff_no_descending_seq :
     exact ⟨fun f => not_acc_of_decreasing_seq f 0 (h _)⟩
   · intro h
     exact ⟨fun x => acc_iff_no_decreasing_seq.2 inferInstance⟩
-#align
-  rel_embedding.well_founded_iff_no_descending_seq RelEmbedding.well_founded_iff_no_descending_seq
+#align rel_embedding.well_founded_iff_no_descending_seq RelEmbedding.well_founded_iff_no_descending_seq
 
 theorem not_well_founded_of_decreasing_seq (f : ((· > ·) : ℕ → ℕ → Prop) ↪r r) : ¬WellFounded r :=
   by
   rw [well_founded_iff_no_descending_seq, not_isEmpty_iff]
   exact ⟨f⟩
-#align
-  rel_embedding.not_well_founded_of_decreasing_seq RelEmbedding.not_well_founded_of_decreasing_seq
+#align rel_embedding.not_well_founded_of_decreasing_seq RelEmbedding.not_well_founded_of_decreasing_seq
 
 end RelEmbedding
 

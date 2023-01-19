@@ -219,8 +219,7 @@ theorem ae_eventually_measure_zero_of_singular (hρ : ρ ⊥ₘ μ) :
   intro a ha μa_pos μa_lt_top
   rw [Ennreal.div_lt_iff (Or.inl μa_pos.ne') (Or.inl μa_lt_top.ne)]
   exact ha.trans_le (Ennreal.mul_le_mul ((Ennreal.coe_le_coe.2 hn.le).trans w_lt.le) le_rfl)
-#align
-  vitali_family.ae_eventually_measure_zero_of_singular VitaliFamily.ae_eventually_measure_zero_of_singular
+#align vitali_family.ae_eventually_measure_zero_of_singular VitaliFamily.ae_eventually_measure_zero_of_singular
 
 section AbsolutelyContinuous
 
@@ -252,8 +251,7 @@ theorem null_of_frequently_le_of_frequently_ge {c d : ℝ≥0} (hcd : c < d) (s 
       v.measure_le_of_frequently_le ρ ((measure.absolutely_continuous.refl μ).smul d) s' fun x hx =>
         hd x hx.1
     
-#align
-  vitali_family.null_of_frequently_le_of_frequently_ge VitaliFamily.null_of_frequently_le_of_frequently_ge
+#align vitali_family.null_of_frequently_le_of_frequently_ge VitaliFamily.null_of_frequently_le_of_frequently_ge
 
 /-- If `ρ` is absolutely continuous with respect to `μ`, then for almost every `x`,
 the ratio `ρ a / μ a` converges as `a` shrinks to `x` along a Vitali family for `μ`. -/
@@ -476,8 +474,7 @@ theorem exists_measurable_supersets_lim_ratio {p q : ℝ≥0} (hpq : p < q) :
       exact inter_subset_right _ _
     _ ≤ ρ (to_measurable (ρ + μ) (u m) ∩ to_measurable (ρ + μ) (w n)) := B
     
-#align
-  vitali_family.exists_measurable_supersets_lim_ratio VitaliFamily.exists_measurable_supersets_lim_ratio
+#align vitali_family.exists_measurable_supersets_lim_ratio VitaliFamily.exists_measurable_supersets_lim_ratio
 
 theorem aeMeasurableLimRatio : AeMeasurable (v.limRatio ρ) μ :=
   by
@@ -528,8 +525,7 @@ theorem measure_le_mul_of_subset_lim_ratio_meas_lt {p : ℝ≥0} {s : Set α}
   rw [coe_nnreal_smul_apply]
   refine' (Ennreal.div_le_iff_le_mul _ (Or.inr (bot_le.trans_lt ha).ne')).1 ha.le
   simp only [Ennreal.coe_ne_top, Ne.def, or_true_iff, not_false_iff]
-#align
-  vitali_family.measure_le_mul_of_subset_lim_ratio_meas_lt VitaliFamily.measure_le_mul_of_subset_lim_ratio_meas_lt
+#align vitali_family.measure_le_mul_of_subset_lim_ratio_meas_lt VitaliFamily.measure_le_mul_of_subset_lim_ratio_meas_lt
 
 /-- If, for all `x` in a set `s`, one has frequently `q < ρ a / μ a`, then `q * μ s ≤ ρ s`, as
 proved in `measure_le_of_frequently_le`. Since `ρ a / μ a` tends almost everywhere to
@@ -558,8 +554,7 @@ theorem mul_measure_le_of_subset_lt_lim_ratio_meas {q : ℝ≥0} {s : Set α}
   apply I.frequently.mono fun a ha => _
   rw [coe_nnreal_smul_apply]
   exact Ennreal.mul_le_of_le_div ha.le
-#align
-  vitali_family.mul_measure_le_of_subset_lt_lim_ratio_meas VitaliFamily.mul_measure_le_of_subset_lt_lim_ratio_meas
+#align vitali_family.mul_measure_le_of_subset_lt_lim_ratio_meas VitaliFamily.mul_measure_le_of_subset_lt_lim_ratio_meas
 
 /-- The points with `v.lim_ratio_meas hρ x = ∞` have measure `0` for `μ`. -/
 theorem measure_lim_ratio_meas_top : μ { x | v.limRatioMeas hρ x = ∞ } = 0 :=
@@ -796,8 +791,7 @@ theorem ae_tendsto_rn_deriv_of_absolutely_continuous :
   rw [v.with_density_lim_ratio_meas_eq hρ] at A
   filter_upwards [v.ae_tendsto_lim_ratio_meas hρ, A] with _ _ h'x
   rwa [h'x]
-#align
-  vitali_family.ae_tendsto_rn_deriv_of_absolutely_continuous VitaliFamily.ae_tendsto_rn_deriv_of_absolutely_continuous
+#align vitali_family.ae_tendsto_rn_deriv_of_absolutely_continuous VitaliFamily.ae_tendsto_rn_deriv_of_absolutely_continuous
 
 end AbsolutelyContinuous
 
@@ -841,8 +835,7 @@ theorem ae_tendsto_measure_inter_div_of_measurable_set {s : Set α} (hs : Measur
   filter_upwards [ae_tendsto_rn_deriv v (μ.restrict s), rn_deriv_restrict μ hs]
   intro x hx h'x
   simpa only [h'x, restrict_apply' hs, inter_comm] using hx
-#align
-  vitali_family.ae_tendsto_measure_inter_div_of_measurable_set VitaliFamily.ae_tendsto_measure_inter_div_of_measurable_set
+#align vitali_family.ae_tendsto_measure_inter_div_of_measurable_set VitaliFamily.ae_tendsto_measure_inter_div_of_measurable_set
 
 /-- Given an arbitrary set `s`, then `μ (s ∩ a) / μ a` converges to `1` when `a` shrinks to a
 typical point of `s` along a Vitali family. This shows that almost every point of `s` is a
@@ -983,8 +976,7 @@ theorem ae_tendsto_lintegral_nnnorm_sub_div' {f : α → E} (hf : Integrable f �
         exact mul_le_mul_right' xc.le _
     _ = ε * μ a := by rw [← add_mul, Ennreal.add_halves]
     
-#align
-  vitali_family.ae_tendsto_lintegral_nnnorm_sub_div' VitaliFamily.ae_tendsto_lintegral_nnnorm_sub_div'
+#align vitali_family.ae_tendsto_lintegral_nnnorm_sub_div' VitaliFamily.ae_tendsto_lintegral_nnnorm_sub_div'
 
 theorem ae_tendsto_lintegral_nnnorm_sub_div {f : α → E} (hf : Integrable f μ) :
     ∀ᵐ x ∂μ, Tendsto (fun a => (∫⁻ y in a, ‖f y - f x‖₊ ∂μ) / μ a) (v.filterAt x) (𝓝 0) :=
@@ -999,8 +991,7 @@ theorem ae_tendsto_lintegral_nnnorm_sub_div {f : α → E} (hf : Integrable f μ
   apply ae_restrict_of_ae
   filter_upwards [hf.1.ae_eq_mk] with y hy
   rw [hy, h'x]
-#align
-  vitali_family.ae_tendsto_lintegral_nnnorm_sub_div VitaliFamily.ae_tendsto_lintegral_nnnorm_sub_div
+#align vitali_family.ae_tendsto_lintegral_nnnorm_sub_div VitaliFamily.ae_tendsto_lintegral_nnnorm_sub_div
 
 /-- *Lebesgue differentiation theorem*: for almost every point `x`, the
 average of `‖f y - f x‖` on `a` tends to `0` as `a` shrinks to `x` along a Vitali family.-/

@@ -383,8 +383,7 @@ theorem gram_schmidt_orthonormal_basis_apply_of_orthogonal {f : ι → E}
     rw [gramSchmidtNormed, gram_schmidt_of_orthogonal 𝕜 hf]
   rw [gram_schmidt_orthonormal_basis_apply h, H]
   simpa [H] using hi
-#align
-  gram_schmidt_orthonormal_basis_apply_of_orthogonal gram_schmidt_orthonormal_basis_apply_of_orthogonal
+#align gram_schmidt_orthonormal_basis_apply_of_orthogonal gram_schmidt_orthonormal_basis_apply_of_orthogonal
 
 theorem inner_gram_schmidt_orthonormal_basis_eq_zero {f : ι → E} {i : ι}
     (hi : gramSchmidtNormed 𝕜 f i = 0) (j : ι) : ⟪gramSchmidtOrthonormalBasis h f i, f j⟫ = 0 :=
@@ -429,8 +428,7 @@ orthonormal basis `gram_schmidt_orthonormal_basis` constructed from `f` is upper
 theorem gram_schmidt_orthonormal_basis_inv_block_triangular :
     ((gramSchmidtOrthonormalBasis h f).toBasis.toMatrix f).BlockTriangular id := fun i j =>
   gram_schmidt_orthonormal_basis_inv_triangular' h f
-#align
-  gram_schmidt_orthonormal_basis_inv_block_triangular gram_schmidt_orthonormal_basis_inv_block_triangular
+#align gram_schmidt_orthonormal_basis_inv_block_triangular gram_schmidt_orthonormal_basis_inv_block_triangular
 
 theorem gram_schmidt_orthonormal_basis_det :
     (gramSchmidtOrthonormalBasis h f).toBasis.det f =

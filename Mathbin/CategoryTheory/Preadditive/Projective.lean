@@ -128,8 +128,7 @@ instance TypeCat.enough_projectives : EnoughProjectives (Type u)
     where presentation X :=
     ⟨{  P := X
         f := 𝟙 X }⟩
-#align
-  category_theory.projective.Type.enough_projectives CategoryTheory.Projective.TypeCat.enough_projectives
+#align category_theory.projective.Type.enough_projectives CategoryTheory.Projective.TypeCat.enough_projectives
 
 instance {P Q : C} [HasBinaryCoproduct P Q] [Projective P] [Projective Q] : Projective (P ⨿ Q)
     where Factors E X' f e epi :=
@@ -164,8 +163,7 @@ theorem projective_iff_preserves_epimorphisms_coyoneda_obj (P : C) :
     fun h =>
     ⟨fun E X f e he =>
       (epi_iff_surjective _).1 (inferInstance : epi ((coyoneda.obj (op P)).map e)) f⟩⟩
-#align
-  category_theory.projective.projective_iff_preserves_epimorphisms_coyoneda_obj CategoryTheory.Projective.projective_iff_preserves_epimorphisms_coyoneda_obj
+#align category_theory.projective.projective_iff_preserves_epimorphisms_coyoneda_obj CategoryTheory.Projective.projective_iff_preserves_epimorphisms_coyoneda_obj
 
 section Preadditive
 
@@ -182,8 +180,7 @@ theorem projective_iff_preserves_epimorphisms_preadditive_coyoneda_obj (P : C) :
         (forget _)
   · intro
     exact (inferInstance : (preadditive_coyoneda.obj (op P) ⋙ forget _).PreservesEpimorphisms)
-#align
-  category_theory.projective.projective_iff_preserves_epimorphisms_preadditive_coyoneda_obj CategoryTheory.Projective.projective_iff_preserves_epimorphisms_preadditive_coyoneda_obj
+#align category_theory.projective.projective_iff_preserves_epimorphisms_preadditive_coyoneda_obj CategoryTheory.Projective.projective_iff_preserves_epimorphisms_preadditive_coyoneda_obj
 
 theorem projective_iff_preserves_epimorphisms_preadditive_coyoneda_obj' (P : C) :
     Projective P ↔ (preadditiveCoyonedaObj (op P)).PreservesEpimorphisms :=
@@ -196,8 +193,7 @@ theorem projective_iff_preserves_epimorphisms_preadditive_coyoneda_obj' (P : C) 
         (forget _)
   · intro
     exact (inferInstance : (preadditive_coyoneda_obj (op P) ⋙ forget _).PreservesEpimorphisms)
-#align
-  category_theory.projective.projective_iff_preserves_epimorphisms_preadditive_coyoneda_obj' CategoryTheory.Projective.projective_iff_preserves_epimorphisms_preadditive_coyoneda_obj'
+#align category_theory.projective.projective_iff_preserves_epimorphisms_preadditive_coyoneda_obj' CategoryTheory.Projective.projective_iff_preserves_epimorphisms_preadditive_coyoneda_obj'
 
 end Preadditive
 
@@ -277,8 +273,7 @@ theorem projective_of_map_projective (adj : F ⊣ G) [Full F] [Faithful F] (P : 
     use adj.unit.app _ ≫ G.map w ≫ (inv <| adj.unit.app _)
     refine' faithful.map_injective F _
     simpa⟩
-#align
-  category_theory.adjunction.projective_of_map_projective CategoryTheory.Adjunction.projective_of_map_projective
+#align category_theory.adjunction.projective_of_map_projective CategoryTheory.Adjunction.projective_of_map_projective
 
 /-- Given an adjunction `F ⊣ G` such that `G` preserves epis, `F` maps a projective presentation of
 `X` to a projective presentation of `F(X)`. -/
@@ -289,8 +284,7 @@ def mapProjectivePresentation (adj : F ⊣ G) [G.PreservesEpimorphisms] (X : C)
   Projective := adj.map_projective _ Y.Projective
   f := F.map Y.f
   Epi := by haveI := adj.left_adjoint_preserves_colimits <;> infer_instance
-#align
-  category_theory.adjunction.map_projective_presentation CategoryTheory.Adjunction.mapProjectivePresentation
+#align category_theory.adjunction.map_projective_presentation CategoryTheory.Adjunction.mapProjectivePresentation
 
 end Adjunction
 
@@ -307,8 +301,7 @@ def projectivePresentationOfMapProjectivePresentation (X : C)
   Projective := Adjunction.map_projective F.symm.toAdjunction Y.P Y.Projective
   f := F.inverse.map Y.f ≫ F.unitInv.app _
   Epi := epi_comp _ _
-#align
-  category_theory.equivalence.projective_presentation_of_map_projective_presentation CategoryTheory.Equivalence.projectivePresentationOfMapProjectivePresentation
+#align category_theory.equivalence.projective_presentation_of_map_projective_presentation CategoryTheory.Equivalence.projectivePresentationOfMapProjectivePresentation
 
 theorem enough_projectives_iff (F : C ≌ D) : EnoughProjectives C ↔ EnoughProjectives D :=
   by
@@ -322,8 +315,7 @@ theorem enough_projectives_iff (F : C ≌ D) : EnoughProjectives C ↔ EnoughPro
     exact
       F.projective_presentation_of_map_projective_presentation X
         (Nonempty.some (H.presentation (F.functor.obj X)))
-#align
-  category_theory.equivalence.enough_projectives_iff CategoryTheory.Equivalence.enough_projectives_iff
+#align category_theory.equivalence.enough_projectives_iff CategoryTheory.Equivalence.enough_projectives_iff
 
 end Equivalence
 

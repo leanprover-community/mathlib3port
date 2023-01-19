@@ -273,8 +273,7 @@ instance NonemptyCompacts.emetricSpace : EmetricSpace (NonemptyCompacts α)
 theorem NonemptyCompacts.ToCloseds.uniform_embedding :
     UniformEmbedding (@NonemptyCompacts.toCloseds α _ _) :=
   Isometry.uniform_embedding fun x y => rfl
-#align
-  emetric.nonempty_compacts.to_closeds.uniform_embedding Emetric.NonemptyCompacts.ToCloseds.uniform_embedding
+#align emetric.nonempty_compacts.to_closeds.uniform_embedding Emetric.NonemptyCompacts.ToCloseds.uniform_embedding
 
 /-- The range of `nonempty_compacts.to_closeds` is closed in a complete space -/
 theorem NonemptyCompacts.is_closed_in_closeds [CompleteSpace α] :
@@ -417,8 +416,7 @@ instance NonemptyCompacts.second_countable_topology [SecondCountableTopology α]
       -- we have proved that `d` is a good approximation of `t` as requested
       exact ⟨d, ‹d ∈ v›, Dtc⟩
   UniformSpace.second_countable_of_separable (nonempty_compacts α)
-#align
-  emetric.nonempty_compacts.second_countable_topology Emetric.NonemptyCompacts.second_countable_topology
+#align emetric.nonempty_compacts.second_countable_topology Emetric.NonemptyCompacts.second_countable_topology
 
 end
 
@@ -461,8 +459,7 @@ theorem lipschitz_inf_dist : LipschitzWith 2 fun p : α × NonemptyCompacts α =
 theorem uniform_continuous_inf_dist_Hausdorff_dist :
     UniformContinuous fun p : α × NonemptyCompacts α => infDist p.1 p.2 :=
   lipschitz_inf_dist.UniformContinuous
-#align
-  metric.uniform_continuous_inf_dist_Hausdorff_dist Metric.uniform_continuous_inf_dist_Hausdorff_dist
+#align metric.uniform_continuous_inf_dist_Hausdorff_dist Metric.uniform_continuous_inf_dist_Hausdorff_dist
 
 end
 

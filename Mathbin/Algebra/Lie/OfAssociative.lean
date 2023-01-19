@@ -303,8 +303,7 @@ theorem to_endomorphism_restrict_eq_to_endomorphism (h := N.to_endomorphism_comp
   by
   ext
   simp [LinearMap.restrict_apply]
-#align
-  lie_submodule.to_endomorphism_restrict_eq_to_endomorphism LieSubmodule.to_endomorphism_restrict_eq_to_endomorphism
+#align lie_submodule.to_endomorphism_restrict_eq_to_endomorphism LieSubmodule.to_endomorphism_restrict_eq_to_endomorphism
 
 end LieSubmodule
 

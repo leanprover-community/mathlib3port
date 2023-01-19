@@ -469,8 +469,7 @@ theorem null_homotopic_map'_f_of_not_rel_right {k₁ k₀ : ι} (r₁₀ : c.Rel
   dsimp
   split_ifs
   rfl
-#align
-  homotopy.null_homotopic_map'_f_of_not_rel_right Homotopy.null_homotopic_map'_f_of_not_rel_right
+#align homotopy.null_homotopic_map'_f_of_not_rel_right Homotopy.null_homotopic_map'_f_of_not_rel_right
 
 @[simp]
 theorem null_homotopic_map_f_eq_zero {k₀ : ι} (hk₀ : ∀ l : ι, ¬c.Rel k₀ l)

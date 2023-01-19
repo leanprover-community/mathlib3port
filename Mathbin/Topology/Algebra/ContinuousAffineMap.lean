@@ -126,8 +126,7 @@ theorem to_continuous_map_injective {f g : P →A[R] Q} (h : (f : C(P, Q)) = (g 
   by
   ext a
   exact ContinuousMap.congr_fun h a
-#align
-  continuous_affine_map.to_continuous_map_injective ContinuousAffineMap.to_continuous_map_injective
+#align continuous_affine_map.to_continuous_map_injective ContinuousAffineMap.to_continuous_map_injective
 
 @[norm_cast]
 theorem coe_affine_map_mk (f : P →ᵃ[R] Q) (h) : ((⟨f, h⟩ : P →A[R] Q) : P →ᵃ[R] Q) = f :=
@@ -316,13 +315,11 @@ def toContinuousAffineMap (f : V →L[R] W) : V →A[R] W
 @[simp]
 theorem coe_to_continuous_affine_map (f : V →L[R] W) : ⇑f.toContinuousAffineMap = f :=
   rfl
-#align
-  continuous_linear_map.coe_to_continuous_affine_map ContinuousLinearMap.coe_to_continuous_affine_map
+#align continuous_linear_map.coe_to_continuous_affine_map ContinuousLinearMap.coe_to_continuous_affine_map
 
 @[simp]
 theorem to_continuous_affine_map_map_zero (f : V →L[R] W) : f.toContinuousAffineMap 0 = 0 := by simp
-#align
-  continuous_linear_map.to_continuous_affine_map_map_zero ContinuousLinearMap.to_continuous_affine_map_map_zero
+#align continuous_linear_map.to_continuous_affine_map_map_zero ContinuousLinearMap.to_continuous_affine_map_map_zero
 
 end ContinuousLinearMap
 

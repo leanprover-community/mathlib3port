@@ -792,16 +792,14 @@ protected def subtypeEquivSubtypePerm (p : α → Prop) [DecidablePred p] :
 theorem subtypeEquivSubtypePerm_apply_of_mem (f : Perm (Subtype p)) (h : p a) :
     Perm.subtypeEquivSubtypePerm p f a = f ⟨a, h⟩ :=
   f.of_subtype_apply_of_mem h
-#align
-  equiv.perm.subtype_equiv_subtype_perm_apply_of_mem Equiv.Perm.subtypeEquivSubtypePerm_apply_of_mem
+#align equiv.perm.subtype_equiv_subtype_perm_apply_of_mem Equiv.Perm.subtypeEquivSubtypePerm_apply_of_mem
 -/
 
 #print Equiv.Perm.subtypeEquivSubtypePerm_apply_of_not_mem /-
 theorem subtypeEquivSubtypePerm_apply_of_not_mem (f : Perm (Subtype p)) (h : ¬p a) :
     Perm.subtypeEquivSubtypePerm p f a = a :=
   f.of_subtype_apply_of_not_mem h
-#align
-  equiv.perm.subtype_equiv_subtype_perm_apply_of_not_mem Equiv.Perm.subtypeEquivSubtypePerm_apply_of_not_mem
+#align equiv.perm.subtype_equiv_subtype_perm_apply_of_not_mem Equiv.Perm.subtypeEquivSubtypePerm_apply_of_not_mem
 -/
 
 end Subtype

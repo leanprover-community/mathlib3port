@@ -96,8 +96,7 @@ theorem coe_inj {f g : ι →ᵇᵃ[I₀] M} : (f : Box ι → M) = g ↔ f = g 
 theorem sum_partition_boxes (f : ι →ᵇᵃ[I₀] M) (hI : ↑I ≤ I₀) {π : Prepartition I}
     (h : π.IsPartition) : (∑ J in π.boxes, f J) = f I :=
   f.sum_partition_boxes' I hI π h
-#align
-  box_integral.box_additive_map.sum_partition_boxes BoxIntegral.BoxAdditiveMap.sum_partition_boxes
+#align box_integral.box_additive_map.sum_partition_boxes BoxIntegral.BoxAdditiveMap.sum_partition_boxes
 
 @[simps (config := { fullyApplied := false })]
 instance : Zero (ι →ᵇᵃ[I₀] M) :=

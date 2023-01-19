@@ -69,15 +69,13 @@ variable {U}
 -/
 def index (V : OpensLeCover U) : ι :=
   V.property.some
-#align
-  Top.presheaf.sheaf_condition.opens_le_cover.index TopCat.Presheaf.SheafCondition.OpensLeCover.index
+#align Top.presheaf.sheaf_condition.opens_le_cover.index TopCat.Presheaf.SheafCondition.OpensLeCover.index
 
 /-- The morphism from `V` to `U i` for some `i`.
 -/
 def homToIndex (V : OpensLeCover U) : V.obj ⟶ U (index V) :=
   V.property.some_spec.Hom
-#align
-  Top.presheaf.sheaf_condition.opens_le_cover.hom_to_index TopCat.Presheaf.SheafCondition.OpensLeCover.homToIndex
+#align Top.presheaf.sheaf_condition.opens_le_cover.hom_to_index TopCat.Presheaf.SheafCondition.OpensLeCover.homToIndex
 
 end OpensLeCover
 
@@ -89,8 +87,7 @@ def opensLeCoverCocone : Cocone (fullSubcategoryInclusion _ : OpensLeCover U ⥤
     where
   x := supᵢ U
   ι := { app := fun V : OpensLeCover U => V.homToIndex ≫ Opens.leSupr U _ }
-#align
-  Top.presheaf.sheaf_condition.opens_le_cover_cocone TopCat.Presheaf.SheafCondition.opensLeCoverCocone
+#align Top.presheaf.sheaf_condition.opens_le_cover_cocone TopCat.Presheaf.SheafCondition.opensLeCoverCocone
 
 end SheafCondition
 
@@ -232,8 +229,7 @@ theorem is_sheaf_iff_is_sheaf_opens_le_cover : F.IsSheaf ↔ F.IsSheafOpensLeCov
     intro hS
     rw [← (is_limit_opens_le_equiv_generate₂ F S hS).nonempty_congr]
     apply h
-#align
-  Top.presheaf.is_sheaf_iff_is_sheaf_opens_le_cover TopCat.Presheaf.is_sheaf_iff_is_sheaf_opens_le_cover
+#align Top.presheaf.is_sheaf_iff_is_sheaf_opens_le_cover TopCat.Presheaf.is_sheaf_iff_is_sheaf_opens_le_cover
 
 end
 

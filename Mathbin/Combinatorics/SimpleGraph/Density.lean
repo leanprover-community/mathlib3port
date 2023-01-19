@@ -200,8 +200,7 @@ theorem edge_density_sub_edge_density_le_one_sub_mul (hs : s₂ ⊆ s₁) (ht : 
   · rw [sub_mul, one_mul]
   refine' sub_nonneg_of_le (mul_le_one _ (by positivity) _) <;>
     exact div_le_one_of_le (Nat.cast_le.2 (card_le_of_subset ‹_›)) (Nat.cast_nonneg _)
-#align
-  rel.edge_density_sub_edge_density_le_one_sub_mul Rel.edge_density_sub_edge_density_le_one_sub_mul
+#align rel.edge_density_sub_edge_density_le_one_sub_mul Rel.edge_density_sub_edge_density_le_one_sub_mul
 
 theorem abs_edge_density_sub_edge_density_le_one_sub_mul (hs : s₂ ⊆ s₁) (ht : t₂ ⊆ t₁)
     (hs₂ : s₂.Nonempty) (ht₂ : t₂.Nonempty) :
@@ -217,8 +216,7 @@ theorem abs_edge_density_sub_edge_density_le_one_sub_mul (hs : s₂ ⊆ s₁) (h
     edge_density_add_edge_density_compl _ (hs₂.mono hs) (ht₂.mono ht),
     edge_density_add_edge_density_compl _ hs₂ ht₂, sub_sub_sub_cancel_left]
   exact edge_density_sub_edge_density_le_one_sub_mul _ hs ht hs₂ ht₂
-#align
-  rel.abs_edge_density_sub_edge_density_le_one_sub_mul Rel.abs_edge_density_sub_edge_density_le_one_sub_mul
+#align rel.abs_edge_density_sub_edge_density_le_one_sub_mul Rel.abs_edge_density_sub_edge_density_le_one_sub_mul
 
 theorem abs_edge_density_sub_edge_density_le_two_mul_sub_sq (hs : s₂ ⊆ s₁) (ht : t₂ ⊆ t₁)
     (hδ₀ : 0 ≤ δ) (hδ₁ : δ < 1) (hs₂ : (1 - δ) * s₁.card ≤ s₂.card)
@@ -242,8 +240,7 @@ theorem abs_edge_density_sub_edge_density_le_two_mul_sub_sq (hs : s₂ ⊆ s₁)
   · exact_mod_cast (hs₂'.mono hs).card_pos
   · exact_mod_cast (ht₂'.mono ht).card_pos
   · positivity
-#align
-  rel.abs_edge_density_sub_edge_density_le_two_mul_sub_sq Rel.abs_edge_density_sub_edge_density_le_two_mul_sub_sq
+#align rel.abs_edge_density_sub_edge_density_le_two_mul_sub_sq Rel.abs_edge_density_sub_edge_density_le_two_mul_sub_sq
 
 /-- If `s₂ ⊆ s₁`, `t₂ ⊆ t₁` and they take up all but a `δ`-proportion, then the difference in edge
 densities is at most `2 * δ`. -/
@@ -261,8 +258,7 @@ theorem abs_edge_density_sub_edge_density_le_two_mul (hs : s₂ ⊆ s₁) (ht : 
     · rw [abs_of_nonneg]
       exact_mod_cast edge_density_le_one r _ _
       exact_mod_cast edge_density_nonneg r _ _
-#align
-  rel.abs_edge_density_sub_edge_density_le_two_mul Rel.abs_edge_density_sub_edge_density_le_two_mul
+#align rel.abs_edge_density_sub_edge_density_le_two_mul Rel.abs_edge_density_sub_edge_density_le_two_mul
 
 end Asymmetric
 
@@ -396,8 +392,7 @@ theorem card_interedges_add_card_interedges_compl (h : Disjoint s t) :
     rw [compl_adj, and_iff_right (h.forall_ne_finset hx.1 hx.2)]
   rw [this, ← card_union_eq, filter_union_filter_neg_eq]
   exact disjoint_filter.2 fun x _ => not_not.2
-#align
-  simple_graph.card_interedges_add_card_interedges_compl SimpleGraph.card_interedges_add_card_interedges_compl
+#align simple_graph.card_interedges_add_card_interedges_compl SimpleGraph.card_interedges_add_card_interedges_compl
 
 theorem edge_density_add_edge_density_compl (hs : s.Nonempty) (ht : t.Nonempty) (h : Disjoint s t) :
     G.edgeDensity s t + Gᶜ.edgeDensity s t = 1 :=
@@ -405,8 +400,7 @@ theorem edge_density_add_edge_density_compl (hs : s.Nonempty) (ht : t.Nonempty) 
   rw [edge_density_def, edge_density_def, div_add_div_same, div_eq_one_iff_eq]
   · exact_mod_cast card_interedges_add_card_interedges_compl _ h
   · exact_mod_cast (mul_pos hs.card_pos ht.card_pos).ne'
-#align
-  simple_graph.edge_density_add_edge_density_compl SimpleGraph.edge_density_add_edge_density_compl
+#align simple_graph.edge_density_add_edge_density_compl SimpleGraph.edge_density_add_edge_density_compl
 
 end DecidableEq
 

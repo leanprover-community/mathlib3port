@@ -103,8 +103,7 @@ theorem eq_on_source : EqOn f (f.toContDiffBump ∘ extChartAt I c) (chartAt H c
 theorem eventually_eq_of_mem_source (hx : x ∈ (chartAt H c).source) :
     f =ᶠ[𝓝 x] f.toContDiffBump ∘ extChartAt I c :=
   f.EqOnSource.eventually_eq_of_mem <| IsOpen.mem_nhds (chartAt H c).open_source hx
-#align
-  smooth_bump_function.eventually_eq_of_mem_source SmoothBumpFunction.eventually_eq_of_mem_source
+#align smooth_bump_function.eventually_eq_of_mem_source SmoothBumpFunction.eventually_eq_of_mem_source
 
 theorem one_of_dist_le (hs : x ∈ (chartAt H c).source)
     (hd : dist (extChartAt I c x) (extChartAt I c c) ≤ f.R) : f x = 1 := by
@@ -156,8 +155,7 @@ theorem image_eq_inter_preimage_of_subset_support {s : Set M} (hs : s ⊆ suppor
       exact inter_subset_right _ _
   · refine' subset.trans (inter_subset_inter_left _ f.closed_ball_subset) _
     rw [(extChartAt I c).image_eq_target_inter_inv_preimage hse]
-#align
-  smooth_bump_function.image_eq_inter_preimage_of_subset_support SmoothBumpFunction.image_eq_inter_preimage_of_subset_support
+#align smooth_bump_function.image_eq_inter_preimage_of_subset_support SmoothBumpFunction.image_eq_inter_preimage_of_subset_support
 
 theorem mem_Icc : f x ∈ Icc (0 : ℝ) 1 :=
   by
@@ -180,8 +178,7 @@ theorem eventually_eq_one_of_dist_lt (hs : x ∈ (chartAt H c).source)
   filter_upwards [IsOpen.mem_nhds (is_open_ext_chart_at_preimage I c is_open_ball) ⟨hs, hd⟩]
   rintro z ⟨hzs, hzd : _ < _⟩
   exact f.one_of_dist_le hzs hzd.le
-#align
-  smooth_bump_function.eventually_eq_one_of_dist_lt SmoothBumpFunction.eventually_eq_one_of_dist_lt
+#align smooth_bump_function.eventually_eq_one_of_dist_lt SmoothBumpFunction.eventually_eq_one_of_dist_lt
 
 theorem eventually_eq_one : f =ᶠ[𝓝 c] 1 :=
   f.eventually_eq_one_of_dist_lt (mem_chart_source _ _) <|
@@ -217,8 +214,7 @@ theorem compact_symm_image_closed_ball :
     IsCompact ((extChartAt I c).symm '' (closedBall (extChartAt I c c) f.r ∩ range I)) :=
   (Euclidean.is_compact_closed_ball.inter_right I.closed_range).image_of_continuous_on <|
     (continuous_on_ext_chart_at_symm _ _).mono f.closed_ball_subset
-#align
-  smooth_bump_function.compact_symm_image_closed_ball SmoothBumpFunction.compact_symm_image_closed_ball
+#align smooth_bump_function.compact_symm_image_closed_ball SmoothBumpFunction.compact_symm_image_closed_ball
 
 /-- Given a smooth bump function `f : smooth_bump_function I c`, the closed ball of radius `f.R` is
 known to include the support of `f`. These closed balls (in the model normed space `E`) intersected
@@ -246,8 +242,7 @@ theorem is_closed_image_of_is_closed {s : Set M} (hsc : IsClosed s) (hs : s ⊆ 
     ContinuousOn.preimage_closed_of_closed
       ((continuous_on_ext_chart_at_symm _ _).mono f.closed_ball_subset) _ hsc
   exact IsClosed.inter is_closed_closed_ball I.closed_range
-#align
-  smooth_bump_function.is_closed_image_of_is_closed SmoothBumpFunction.is_closed_image_of_is_closed
+#align smooth_bump_function.is_closed_image_of_is_closed SmoothBumpFunction.is_closed_image_of_is_closed
 
 /-- If `f` is a smooth bump function and `s` closed subset of the support of `f` (i.e., of the open
 ball of radius `f.R`), then there exists `0 < r < f.R` such that `s` is a subset of the open ball of
@@ -261,8 +256,7 @@ theorem exists_r_pos_lt_subset_ball {s : Set M} (hsc : IsClosed s) (hs : s ⊆ s
   rw [support_eq_inter_preimage, subset_inter_iff, ← image_subset_iff] at hs
   rcases Euclidean.exists_pos_lt_subset_ball f.R_pos this hs.2 with ⟨r, hrR, hr⟩
   exact ⟨r, hrR, subset_inter hs.1 (image_subset_iff.1 hr)⟩
-#align
-  smooth_bump_function.exists_r_pos_lt_subset_ball SmoothBumpFunction.exists_r_pos_lt_subset_ball
+#align smooth_bump_function.exists_r_pos_lt_subset_ball SmoothBumpFunction.exists_r_pos_lt_subset_ball
 
 /-- Replace `r` with another value in the interval `(0, f.R)`. -/
 def updateR (r : ℝ) (hr : r ∈ Ioo 0 f.r) : SmoothBumpFunction I c :=
@@ -292,8 +286,7 @@ variable [T2Space M]
 theorem is_closed_symm_image_closed_ball :
     IsClosed ((extChartAt I c).symm '' (closedBall (extChartAt I c c) f.r ∩ range I)) :=
   f.compact_symm_image_closed_ball.IsClosed
-#align
-  smooth_bump_function.is_closed_symm_image_closed_ball SmoothBumpFunction.is_closed_symm_image_closed_ball
+#align smooth_bump_function.is_closed_symm_image_closed_ball SmoothBumpFunction.is_closed_symm_image_closed_ball
 
 theorem tsupport_subset_symm_image_closed_ball :
     tsupport f ⊆ (extChartAt I c).symm '' (closedBall (extChartAt I c c) f.r ∩ range I) :=
@@ -302,8 +295,7 @@ theorem tsupport_subset_symm_image_closed_ball :
   exact
     closure_minimal (image_subset _ <| inter_subset_inter_left _ ball_subset_closed_ball)
       f.is_closed_symm_image_closed_ball
-#align
-  smooth_bump_function.tsupport_subset_symm_image_closed_ball SmoothBumpFunction.tsupport_subset_symm_image_closed_ball
+#align smooth_bump_function.tsupport_subset_symm_image_closed_ball SmoothBumpFunction.tsupport_subset_symm_image_closed_ball
 
 theorem tsupport_subset_ext_chart_at_source : tsupport f ⊆ (extChartAt I c).source :=
   calc
@@ -312,13 +304,11 @@ theorem tsupport_subset_ext_chart_at_source : tsupport f ⊆ (extChartAt I c).so
     _ ⊆ (extChartAt I c).symm '' (extChartAt I c).target := image_subset _ f.closed_ball_subset
     _ = (extChartAt I c).source := (extChartAt I c).symm_image_target_eq_source
     
-#align
-  smooth_bump_function.tsupport_subset_ext_chart_at_source SmoothBumpFunction.tsupport_subset_ext_chart_at_source
+#align smooth_bump_function.tsupport_subset_ext_chart_at_source SmoothBumpFunction.tsupport_subset_ext_chart_at_source
 
 theorem tsupport_subset_chart_at_source : tsupport f ⊆ (chartAt H c).source := by
   simpa only [ext_chart_at_source] using f.tsupport_subset_ext_chart_at_source
-#align
-  smooth_bump_function.tsupport_subset_chart_at_source SmoothBumpFunction.tsupport_subset_chart_at_source
+#align smooth_bump_function.tsupport_subset_chart_at_source SmoothBumpFunction.tsupport_subset_chart_at_source
 
 protected theorem has_compact_support : HasCompactSupport f :=
   is_compact_of_is_closed_subset f.compact_symm_image_closed_ball is_closed_closure

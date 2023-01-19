@@ -82,8 +82,7 @@ theorem to_splitting_field_eval_X_self {s : Finset (MonicIrreducible k)} {f} (hf
   rw [to_splitting_field, eval_X_self, ← AlgHom.coe_to_ring_hom, hom_eval₂, AlgHom.coe_to_ring_hom,
     MvPolynomial.aeval_X, dif_pos hf, ← algebra_map_eq, AlgHom.comp_algebra_map]
   exact map_root_of_splits _ _ _
-#align
-  algebraic_closure.to_splitting_field_eval_X_self AlgebraicClosure.to_splitting_field_eval_X_self
+#align algebraic_closure.to_splitting_field_eval_X_self AlgebraicClosure.to_splitting_field_eval_X_self
 
 theorem span_eval_ne_top : spanEval k ≠ ⊤ :=
   by

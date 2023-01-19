@@ -115,8 +115,7 @@ closure. See note [reducible non-instances]. -/
 def commSemiringTopologicalClosure [T2Space A] (s : StarSubalgebra R A)
     (hs : ∀ x y : s, x * y = y * x) : CommSemiring s.topologicalClosure :=
   s.toSubalgebra.commSemiringTopologicalClosure hs
-#align
-  star_subalgebra.comm_semiring_topological_closure StarSubalgebra.commSemiringTopologicalClosure
+#align star_subalgebra.comm_semiring_topological_closure StarSubalgebra.commSemiringTopologicalClosure
 
 /-- If a star subalgebra of a topological star algebra is commutative, then so is its topological
 closure. See note [reducible non-instances]. -/

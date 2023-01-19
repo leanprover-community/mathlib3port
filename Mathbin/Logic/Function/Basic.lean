@@ -688,8 +688,7 @@ theorem RightInverse.injective {f : α → β} {g : β → α} (h : RightInverse
 #print Function.LeftInverse.rightInverse_of_injective /-
 theorem LeftInverse.rightInverse_of_injective {f : α → β} {g : β → α} (h : LeftInverse f g)
     (hf : Injective f) : RightInverse f g := fun x => hf <| h (f x)
-#align
-  function.left_inverse.right_inverse_of_injective Function.LeftInverse.rightInverse_of_injective
+#align function.left_inverse.right_inverse_of_injective Function.LeftInverse.rightInverse_of_injective
 -/
 
 #print Function.LeftInverse.rightInverse_of_surjective /-
@@ -697,24 +696,21 @@ theorem LeftInverse.rightInverse_of_surjective {f : α → β} {g : β → α} (
     (hg : Surjective g) : RightInverse f g := fun x =>
   let ⟨y, hy⟩ := hg x
   hy ▸ congr_arg g (h y)
-#align
-  function.left_inverse.right_inverse_of_surjective Function.LeftInverse.rightInverse_of_surjective
+#align function.left_inverse.right_inverse_of_surjective Function.LeftInverse.rightInverse_of_surjective
 -/
 
 #print Function.RightInverse.leftInverse_of_surjective /-
 theorem RightInverse.leftInverse_of_surjective {f : α → β} {g : β → α} :
     RightInverse f g → Surjective f → LeftInverse f g :=
   left_inverse.right_inverse_of_surjective
-#align
-  function.right_inverse.left_inverse_of_surjective Function.RightInverse.leftInverse_of_surjective
+#align function.right_inverse.left_inverse_of_surjective Function.RightInverse.leftInverse_of_surjective
 -/
 
 #print Function.RightInverse.leftInverse_of_injective /-
 theorem RightInverse.leftInverse_of_injective {f : α → β} {g : β → α} :
     RightInverse f g → Injective g → LeftInverse f g :=
   left_inverse.right_inverse_of_injective
-#align
-  function.right_inverse.left_inverse_of_injective Function.RightInverse.leftInverse_of_injective
+#align function.right_inverse.left_inverse_of_injective Function.RightInverse.leftInverse_of_injective
 -/
 
 /- warning: function.left_inverse.eq_right_inverse -> Function.LeftInverse.eq_rightInverse is a dubious translation:
@@ -816,8 +812,7 @@ Case conversion may be inaccurate. Consider using '#align function.inv_fun_eq_of
 theorem invFun_eq_of_injective_of_rightInverse {g : β → α} (hf : Injective f)
     (hg : RightInverse g f) : invFun f = g :=
   funext fun b => hf (by rw [hg b]; exact inv_fun_eq ⟨g b, hg b⟩)
-#align
-  function.inv_fun_eq_of_injective_of_right_inverse Function.invFun_eq_of_injective_of_rightInverse
+#align function.inv_fun_eq_of_injective_of_right_inverse Function.invFun_eq_of_injective_of_rightInverse
 
 /- warning: function.right_inverse_inv_fun -> Function.rightInverse_invFun is a dubious translation:
 lean 3 declaration is

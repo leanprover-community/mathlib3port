@@ -425,8 +425,7 @@ theorem of_zero_mul (a b : A 0) : of _ 0 (a * b) = of _ 0 a * of _ 0 b :=
 instance GradeZero.nonUnitalNonAssocSemiring : NonUnitalNonAssocSemiring (A 0) :=
   Function.Injective.nonUnitalNonAssocSemiring (of A 0) Dfinsupp.single_injective (of A 0).map_zero
     (of A 0).map_add (of_zero_mul A) fun x n => Dfinsupp.single_smul n x
-#align
-  direct_sum.grade_zero.non_unital_non_assoc_semiring DirectSum.GradeZero.nonUnitalNonAssocSemiring
+#align direct_sum.grade_zero.non_unital_non_assoc_semiring DirectSum.GradeZero.nonUnitalNonAssocSemiring
 
 instance GradeZero.smulWithZero (i : ι) : SMulWithZero (A 0) (A i) :=
   by
@@ -666,8 +665,7 @@ instance NonUnitalNonAssocSemiring.directSumGnonUnitalNonAssocSemiring {R : Type
     zero_mul := fun i j => zero_mul
     mul_add := fun i j => mul_add
     add_mul := fun i j => add_mul }
-#align
-  non_unital_non_assoc_semiring.direct_sum_gnon_unital_non_assoc_semiring NonUnitalNonAssocSemiring.directSumGnonUnitalNonAssocSemiring
+#align non_unital_non_assoc_semiring.direct_sum_gnon_unital_non_assoc_semiring NonUnitalNonAssocSemiring.directSumGnonUnitalNonAssocSemiring
 
 /-- A direct sum of copies of a `semiring` inherits the multiplication structure. -/
 instance Semiring.directSumGsemiring {R : Type _} [AddMonoid ι] [Semiring R] :

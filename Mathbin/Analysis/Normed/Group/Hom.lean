@@ -121,14 +121,12 @@ theorem coe_mk (f) (h₁) (h₂) (h₃) : ⇑(⟨f, h₁, h₂, h₃⟩ : Normed
 @[simp]
 theorem coe_mk_normed_add_group_hom (f : V₁ →+ V₂) (C) (hC) : ⇑(f.mkNormedAddGroupHom C hC) = f :=
   rfl
-#align
-  normed_add_group_hom.coe_mk_normed_add_group_hom NormedAddGroupHom.coe_mk_normed_add_group_hom
+#align normed_add_group_hom.coe_mk_normed_add_group_hom NormedAddGroupHom.coe_mk_normed_add_group_hom
 
 @[simp]
 theorem coe_mk_normed_add_group_hom' (f : V₁ →+ V₂) (C) (hC) : ⇑(f.mkNormedAddGroupHom' C hC) = f :=
   rfl
-#align
-  normed_add_group_hom.coe_mk_normed_add_group_hom' NormedAddGroupHom.coe_mk_normed_add_group_hom'
+#align normed_add_group_hom.coe_mk_normed_add_group_hom' NormedAddGroupHom.coe_mk_normed_add_group_hom'
 
 /-- The group homomorphism underlying a bounded group homomorphism. -/
 def toAddMonoidHom (f : NormedAddGroupHom V₁ V₂) : V₁ →+ V₂ :=
@@ -146,8 +144,7 @@ theorem to_add_monoid_hom_injective :
     show ⇑f.toAddMonoidHom = g by
       rw [h]
       rfl
-#align
-  normed_add_group_hom.to_add_monoid_hom_injective NormedAddGroupHom.to_add_monoid_hom_injective
+#align normed_add_group_hom.to_add_monoid_hom_injective NormedAddGroupHom.to_add_monoid_hom_injective
 
 @[simp]
 theorem mk_to_add_monoid_hom (f) (h₁) (h₂) :
@@ -197,8 +194,7 @@ theorem SurjectiveOnWith.exists_pos {f : NormedAddGroupHom V₁ V₂} {K : AddSu
   · linarith [abs_nonneg C]
   · apply h.mono
     linarith [le_abs_self C]
-#align
-  normed_add_group_hom.surjective_on_with.exists_pos NormedAddGroupHom.SurjectiveOnWith.exists_pos
+#align normed_add_group_hom.surjective_on_with.exists_pos NormedAddGroupHom.SurjectiveOnWith.exists_pos
 
 theorem SurjectiveOnWith.surj_on {f : NormedAddGroupHom V₁ V₂} {K : AddSubgroup V₂} {C : ℝ}
     (h : f.SurjectiveOnWith K C) : Set.SurjOn f Set.univ K := fun x hx =>
@@ -303,8 +299,7 @@ nonnegative. -/
 theorem mk_normed_add_group_hom_norm_le (f : V₁ →+ V₂) {C : ℝ} (hC : 0 ≤ C)
     (h : ∀ x, ‖f x‖ ≤ C * ‖x‖) : ‖f.mkNormedAddGroupHom C h‖ ≤ C :=
   op_norm_le_bound _ hC h
-#align
-  normed_add_group_hom.mk_normed_add_group_hom_norm_le NormedAddGroupHom.mk_normed_add_group_hom_norm_le
+#align normed_add_group_hom.mk_normed_add_group_hom_norm_le NormedAddGroupHom.mk_normed_add_group_hom_norm_le
 
 /-- If a bounded group homomorphism map is constructed from a group homomorphism
 via the constructor `mk_normed_add_group_hom`, then its norm is bounded by the bound
@@ -313,8 +308,7 @@ theorem mk_normed_add_group_hom_norm_le' (f : V₁ →+ V₂) {C : ℝ} (h : ∀
     ‖f.mkNormedAddGroupHom C h‖ ≤ max C 0 :=
   op_norm_le_bound _ (le_max_right _ _) fun x =>
     (h x).trans <| mul_le_mul_of_nonneg_right (le_max_left _ _) (norm_nonneg x)
-#align
-  normed_add_group_hom.mk_normed_add_group_hom_norm_le' NormedAddGroupHom.mk_normed_add_group_hom_norm_le'
+#align normed_add_group_hom.mk_normed_add_group_hom_norm_le' NormedAddGroupHom.mk_normed_add_group_hom_norm_le'
 
 alias mk_normed_add_group_hom_norm_le ← _root_.add_monoid_hom.mk_normed_add_group_hom_norm_le
 #align add_monoid_hom.mk_normed_add_group_hom_norm_le AddMonoidHom.mk_normed_add_group_hom_norm_le
@@ -433,8 +427,7 @@ theorem norm_id_of_nontrivial_seminorm (h : ∃ x : V, ‖x‖ ≠ 0) : ‖id V�
     let ⟨x, hx⟩ := h
     have := (id V).ratio_le_op_norm x
     rwa [id_apply, div_self hx] at this
-#align
-  normed_add_group_hom.norm_id_of_nontrivial_seminorm NormedAddGroupHom.norm_id_of_nontrivial_seminorm
+#align normed_add_group_hom.norm_id_of_nontrivial_seminorm NormedAddGroupHom.norm_id_of_nontrivial_seminorm
 
 /-- If a normed space is non-trivial, then the norm of the identity equals `1`. -/
 theorem norm_id {V : Type _} [NormedAddCommGroup V] [Nontrivial V] : ‖id V‖ = 1 :=
@@ -859,8 +852,7 @@ theorem norm_noninc_iff_norm_le_one : f.NormNoninc ↔ ‖f‖ ≤ 1 :=
   · refine' op_norm_le_bound _ zero_le_one fun v => _
     simpa [one_mul] using h v
   · simpa using le_of_op_norm_le f h v
-#align
-  normed_add_group_hom.norm_noninc.norm_noninc_iff_norm_le_one NormedAddGroupHom.NormNoninc.norm_noninc_iff_norm_le_one
+#align normed_add_group_hom.norm_noninc.norm_noninc_iff_norm_le_one NormedAddGroupHom.NormNoninc.norm_noninc_iff_norm_le_one
 
 theorem zero : (0 : NormedAddGroupHom V₁ V₂).NormNoninc := fun v => by simp
 #align normed_add_group_hom.norm_noninc.zero NormedAddGroupHom.NormNoninc.zero

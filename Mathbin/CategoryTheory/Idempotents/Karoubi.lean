@@ -145,8 +145,7 @@ theorem eq_to_hom_f {P Q : Karoubi C} (h : P = Q) :
   by
   subst h
   simp only [eq_to_hom_refl, karoubi.id_eq, comp_id]
-#align
-  category_theory.idempotents.karoubi.eq_to_hom_f CategoryTheory.Idempotents.Karoubi.eq_to_hom_f
+#align category_theory.idempotents.karoubi.eq_to_hom_f CategoryTheory.Idempotents.Karoubi.eq_to_hom_f
 
 end Karoubi
 
@@ -197,8 +196,7 @@ namespace Karoubi
 
 theorem hom_eq_zero_iff [Preadditive C] {P Q : Karoubi C} {f : Hom P Q} : f = 0 ↔ f.f = 0 :=
   hom_ext
-#align
-  category_theory.idempotents.karoubi.hom_eq_zero_iff CategoryTheory.Idempotents.Karoubi.hom_eq_zero_iff
+#align category_theory.idempotents.karoubi.hom_eq_zero_iff CategoryTheory.Idempotents.Karoubi.hom_eq_zero_iff
 
 /-- The map sending `f : P ⟶ Q` to `f.f : P.X ⟶ Q.X` is additive. -/
 @[simps]
@@ -207,8 +205,7 @@ def inclusionHom [Preadditive C] (P Q : Karoubi C) : AddMonoidHom (P ⟶ Q) (P.x
   toFun f := f.f
   map_zero' := rfl
   map_add' f g := rfl
-#align
-  category_theory.idempotents.karoubi.inclusion_hom CategoryTheory.Idempotents.Karoubi.inclusionHom
+#align category_theory.idempotents.karoubi.inclusion_hom CategoryTheory.Idempotents.Karoubi.inclusionHom
 
 @[simp]
 theorem sum_hom [Preadditive C] {P Q : Karoubi C} {α : Type _} (s : Finset α) (f : α → (P ⟶ Q)) :
@@ -251,8 +248,7 @@ instance [IsIdempotentComplete C] : EssSurj (toKaroubi C) :=
 /-- If `C` is idempotent complete, the functor `to_karoubi : C ⥤ karoubi C` is an equivalence. -/
 def toKaroubiIsEquivalence [IsIdempotentComplete C] : IsEquivalence (toKaroubi C) :=
   Equivalence.ofFullyFaithfullyEssSurj (toKaroubi C)
-#align
-  category_theory.idempotents.to_karoubi_is_equivalence CategoryTheory.Idempotents.toKaroubiIsEquivalence
+#align category_theory.idempotents.to_karoubi_is_equivalence CategoryTheory.Idempotents.toKaroubiIsEquivalence
 
 namespace Karoubi
 
@@ -288,31 +284,27 @@ theorem decomp_id_i_to_karoubi (X : C) : decompIdI ((toKaroubi C).obj X) = 𝟙 
   by
   ext
   rfl
-#align
-  category_theory.idempotents.karoubi.decomp_id_i_to_karoubi CategoryTheory.Idempotents.Karoubi.decomp_id_i_to_karoubi
+#align category_theory.idempotents.karoubi.decomp_id_i_to_karoubi CategoryTheory.Idempotents.Karoubi.decomp_id_i_to_karoubi
 
 theorem decomp_id_p_to_karoubi (X : C) : decompIdP ((toKaroubi C).obj X) = 𝟙 _ :=
   by
   ext
   rfl
-#align
-  category_theory.idempotents.karoubi.decomp_id_p_to_karoubi CategoryTheory.Idempotents.Karoubi.decomp_id_p_to_karoubi
+#align category_theory.idempotents.karoubi.decomp_id_p_to_karoubi CategoryTheory.Idempotents.Karoubi.decomp_id_p_to_karoubi
 
 theorem decomp_id_i_naturality {P Q : Karoubi C} (f : P ⟶ Q) :
     f ≫ decompIdI _ = decompIdI _ ≫ ⟨f.f, by erw [comp_id, id_comp]⟩ :=
   by
   ext
   simp only [comp_f, decomp_id_i_f, karoubi.comp_p, karoubi.p_comp]
-#align
-  category_theory.idempotents.karoubi.decomp_id_i_naturality CategoryTheory.Idempotents.Karoubi.decomp_id_i_naturality
+#align category_theory.idempotents.karoubi.decomp_id_i_naturality CategoryTheory.Idempotents.Karoubi.decomp_id_i_naturality
 
 theorem decomp_id_p_naturality {P Q : Karoubi C} (f : P ⟶ Q) :
     decompIdP P ≫ f = (⟨f.f, by erw [comp_id, id_comp]⟩ : (P.x : Karoubi C) ⟶ Q.x) ≫ decompIdP Q :=
   by
   ext
   simp only [comp_f, decomp_id_p_f, karoubi.comp_p, karoubi.p_comp]
-#align
-  category_theory.idempotents.karoubi.decomp_id_p_naturality CategoryTheory.Idempotents.Karoubi.decomp_id_p_naturality
+#align category_theory.idempotents.karoubi.decomp_id_p_naturality CategoryTheory.Idempotents.Karoubi.decomp_id_p_naturality
 
 @[simp]
 theorem zsmul_hom [Preadditive C] {P Q : Karoubi C} (n : ℤ) (f : P ⟶ Q) : (n • f).f = n • f.f :=

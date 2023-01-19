@@ -247,16 +247,14 @@ theorem sub_one_pow_totient_lt_cyclotomic_eval {n : ℕ} {q : ℝ} (hn' : 2 ≤ 
   · simp only [Subtype.coe_mk, Finset.mem_attach, exists_true_left, Subtype.exists, ←
       Nnreal.coe_lt_coe, ← Units.val_lt_val, Units.val_mk0 _, coe_nnnorm]
     simpa only [hq'.le, Real.coe_to_nnreal', max_eq_left, sub_nonneg] using hex
-#align
-  polynomial.sub_one_pow_totient_lt_cyclotomic_eval Polynomial.sub_one_pow_totient_lt_cyclotomic_eval
+#align polynomial.sub_one_pow_totient_lt_cyclotomic_eval Polynomial.sub_one_pow_totient_lt_cyclotomic_eval
 
 theorem sub_one_pow_totient_le_cyclotomic_eval {q : ℝ} (hq' : 1 < q) :
     ∀ n, (q - 1) ^ totient n ≤ (cyclotomic n ℝ).eval q
   | 0 => by simp only [totient_zero, pow_zero, cyclotomic_zero, eval_one]
   | 1 => by simp only [totient_one, pow_one, cyclotomic_one, eval_sub, eval_X, eval_one]
   | n + 2 => (sub_one_pow_totient_lt_cyclotomic_eval (by decide) hq').le
-#align
-  polynomial.sub_one_pow_totient_le_cyclotomic_eval Polynomial.sub_one_pow_totient_le_cyclotomic_eval
+#align polynomial.sub_one_pow_totient_le_cyclotomic_eval Polynomial.sub_one_pow_totient_le_cyclotomic_eval
 
 theorem cyclotomic_eval_lt_add_one_pow_totient {n : ℕ} {q : ℝ} (hn' : 3 ≤ n) (hq' : 1 < q) :
     (cyclotomic n ℝ).eval q < (q + 1) ^ totient n :=
@@ -327,8 +325,7 @@ theorem cyclotomic_eval_lt_add_one_pow_totient {n : ℕ} {q : ℝ} (hn' : 3 ≤ 
       Nnreal.coe_lt_coe, ← Units.val_lt_val, Units.val_mk0 _, coe_nnnorm]
     obtain ⟨ζ, hζ, hhζ : Complex.abs _ < _⟩ := hex
     exact ⟨ζ, hζ, by simp [hhζ]⟩
-#align
-  polynomial.cyclotomic_eval_lt_add_one_pow_totient Polynomial.cyclotomic_eval_lt_add_one_pow_totient
+#align polynomial.cyclotomic_eval_lt_add_one_pow_totient Polynomial.cyclotomic_eval_lt_add_one_pow_totient
 
 theorem cyclotomic_eval_le_add_one_pow_totient {q : ℝ} (hq' : 1 < q) :
     ∀ n, (cyclotomic n ℝ).eval q ≤ (q + 1) ^ totient n
@@ -336,8 +333,7 @@ theorem cyclotomic_eval_le_add_one_pow_totient {q : ℝ} (hq' : 1 < q) :
   | 1 => by simp [add_assoc, add_nonneg, zero_le_one]
   | 2 => by simp
   | n + 3 => (cyclotomic_eval_lt_add_one_pow_totient (by decide) hq').le
-#align
-  polynomial.cyclotomic_eval_le_add_one_pow_totient Polynomial.cyclotomic_eval_le_add_one_pow_totient
+#align polynomial.cyclotomic_eval_le_add_one_pow_totient Polynomial.cyclotomic_eval_le_add_one_pow_totient
 
 theorem sub_one_pow_totient_lt_nat_abs_cyclotomic_eval {n : ℕ} {q : ℕ} (hn' : 1 < n) (hq : q ≠ 1) :
     (q - 1) ^ totient n < ((cyclotomic n ℤ).eval ↑q).natAbs :=
@@ -349,8 +345,7 @@ theorem sub_one_pow_totient_lt_nat_abs_cyclotomic_eval {n : ℕ} {q : ℕ} (hn' 
   rw [← @Nat.cast_lt ℝ, Nat.cast_pow, Nat.cast_sub hq'.le, Nat.cast_one, Int.cast_natAbs]
   refine' (sub_one_pow_totient_lt_cyclotomic_eval hn' (Nat.one_lt_cast.2 hq')).trans_le _
   exact (cyclotomic.eval_apply (q : ℤ) n (algebraMap ℤ ℝ)).trans_le (le_abs_self _)
-#align
-  polynomial.sub_one_pow_totient_lt_nat_abs_cyclotomic_eval Polynomial.sub_one_pow_totient_lt_nat_abs_cyclotomic_eval
+#align polynomial.sub_one_pow_totient_lt_nat_abs_cyclotomic_eval Polynomial.sub_one_pow_totient_lt_nat_abs_cyclotomic_eval
 
 theorem sub_one_lt_nat_abs_cyclotomic_eval {n : ℕ} {q : ℕ} (hn' : 1 < n) (hq : q ≠ 1) :
     q - 1 < ((cyclotomic n ℤ).eval ↑q).natAbs :=

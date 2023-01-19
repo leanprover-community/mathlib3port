@@ -81,8 +81,7 @@ end InducedCategory
 
 instance fullSubcategoryInclusionLinear {C : Type _} [Category C] [Preadditive C]
     [CategoryTheory.Linear R C] (Z : C → Prop) : (fullSubcategoryInclusion Z).Linear R where
-#align
-  category_theory.functor.full_subcategory_inclusion_linear CategoryTheory.Functor.fullSubcategoryInclusionLinear
+#align category_theory.functor.full_subcategory_inclusion_linear CategoryTheory.Functor.fullSubcategoryInclusionLinear
 
 section
 

@@ -58,8 +58,7 @@ open AddSubmonoidClass
 `non_unital_non_assoc_semiring` structure -/
 instance (priority := 75) toNonUnitalNonAssocSemiring : NonUnitalNonAssocSemiring s :=
   Subtype.coe_injective.NonUnitalNonAssocSemiring coe rfl (by simp) (fun _ _ => rfl) fun _ _ => rfl
-#align
-  non_unital_subsemiring_class.to_non_unital_non_assoc_semiring NonUnitalSubsemiringClass.toNonUnitalNonAssocSemiring
+#align non_unital_subsemiring_class.to_non_unital_non_assoc_semiring NonUnitalSubsemiringClass.toNonUnitalNonAssocSemiring
 
 instance no_zero_divisors [NoZeroDivisors R] : NoZeroDivisors s :=
   Subtype.coe_injective.NoZeroDivisors coe rfl fun x y => rfl
@@ -82,15 +81,13 @@ omit R S
 instance toNonUnitalSemiring {R} [NonUnitalSemiring R] [SetLike S R]
     [NonUnitalSubsemiringClass S R] : NonUnitalSemiring s :=
   Subtype.coe_injective.NonUnitalSemiring coe rfl (by simp) (fun _ _ => rfl) fun _ _ => rfl
-#align
-  non_unital_subsemiring_class.to_non_unital_semiring NonUnitalSubsemiringClass.toNonUnitalSemiring
+#align non_unital_subsemiring_class.to_non_unital_semiring NonUnitalSubsemiringClass.toNonUnitalSemiring
 
 /-- A non-unital subsemiring of a `non_unital_comm_semiring` is a `non_unital_comm_semiring`. -/
 instance toNonUnitalCommSemiring {R} [NonUnitalCommSemiring R] [SetLike S R]
     [NonUnitalSubsemiringClass S R] : NonUnitalCommSemiring s :=
   Subtype.coe_injective.NonUnitalCommSemiring coe rfl (by simp) (fun _ _ => rfl) fun _ _ => rfl
-#align
-  non_unital_subsemiring_class.to_non_unital_comm_semiring NonUnitalSubsemiringClass.toNonUnitalCommSemiring
+#align non_unital_subsemiring_class.to_non_unital_comm_semiring NonUnitalSubsemiringClass.toNonUnitalCommSemiring
 
 /-! Note: currently, there are no ordered versions of non-unital rings. -/
 
@@ -155,14 +152,12 @@ theorem copy_eq (S : NonUnitalSubsemiring R) (s : Set R) (hs : s = ↑S) : S.cop
 theorem to_subsemigroup_injective :
     Function.Injective (toSubsemigroup : NonUnitalSubsemiring R → Subsemigroup R)
   | r, s, h => ext (SetLike.ext_iff.mp h : _)
-#align
-  non_unital_subsemiring.to_subsemigroup_injective NonUnitalSubsemiring.to_subsemigroup_injective
+#align non_unital_subsemiring.to_subsemigroup_injective NonUnitalSubsemiring.to_subsemigroup_injective
 
 @[mono]
 theorem to_subsemigroup_strict_mono :
     StrictMono (toSubsemigroup : NonUnitalSubsemiring R → Subsemigroup R) := fun _ _ => id
-#align
-  non_unital_subsemiring.to_subsemigroup_strict_mono NonUnitalSubsemiring.to_subsemigroup_strict_mono
+#align non_unital_subsemiring.to_subsemigroup_strict_mono NonUnitalSubsemiring.to_subsemigroup_strict_mono
 
 @[mono]
 theorem to_subsemigroup_mono :
@@ -173,14 +168,12 @@ theorem to_subsemigroup_mono :
 theorem to_add_submonoid_injective :
     Function.Injective (toAddSubmonoid : NonUnitalSubsemiring R → AddSubmonoid R)
   | r, s, h => ext (SetLike.ext_iff.mp h : _)
-#align
-  non_unital_subsemiring.to_add_submonoid_injective NonUnitalSubsemiring.to_add_submonoid_injective
+#align non_unital_subsemiring.to_add_submonoid_injective NonUnitalSubsemiring.to_add_submonoid_injective
 
 @[mono]
 theorem to_add_submonoid_strict_mono :
     StrictMono (toAddSubmonoid : NonUnitalSubsemiring R → AddSubmonoid R) := fun _ _ => id
-#align
-  non_unital_subsemiring.to_add_submonoid_strict_mono NonUnitalSubsemiring.to_add_submonoid_strict_mono
+#align non_unital_subsemiring.to_add_submonoid_strict_mono NonUnitalSubsemiring.to_add_submonoid_strict_mono
 
 @[mono]
 theorem to_add_submonoid_mono :
@@ -356,8 +349,7 @@ noncomputable def equivMapOfInjective (f : F) (hf : Function.Injective (f : R �
 theorem coe_equiv_map_of_injective_apply (f : F) (hf : Function.Injective f) (x : s) :
     (equivMapOfInjective s f hf x : S) = f x :=
   rfl
-#align
-  non_unital_subsemiring.coe_equiv_map_of_injective_apply NonUnitalSubsemiring.coe_equiv_map_of_injective_apply
+#align non_unital_subsemiring.coe_equiv_map_of_injective_apply NonUnitalSubsemiring.coe_equiv_map_of_injective_apply
 
 end NonUnitalSubsemiring
 
@@ -546,8 +538,7 @@ theorem coe_centralizer {R} [NonUnitalSemiring R] (s : Set R) :
 theorem centralizer_to_subsemigroup {R} [NonUnitalSemiring R] (s : Set R) :
     (centralizer s).toSubsemigroup = Subsemigroup.centralizer s :=
   rfl
-#align
-  non_unital_subsemiring.centralizer_to_subsemigroup NonUnitalSubsemiring.centralizer_to_subsemigroup
+#align non_unital_subsemiring.centralizer_to_subsemigroup NonUnitalSubsemiring.centralizer_to_subsemigroup
 
 theorem mem_centralizer_iff {R} [NonUnitalSemiring R] {s : Set R} {z : R} :
     z ∈ centralizer s ↔ ∀ g ∈ s, g * z = z * g :=
@@ -583,8 +574,7 @@ theorem subset_closure {s : Set R} : s ⊆ closure s := fun x hx => mem_closure.
 
 theorem not_mem_of_not_mem_closure {s : Set R} {P : R} (hP : P ∉ closure s) : P ∉ s := fun h =>
   hP (subset_closure h)
-#align
-  non_unital_subsemiring.not_mem_of_not_mem_closure NonUnitalSubsemiring.not_mem_of_not_mem_closure
+#align non_unital_subsemiring.not_mem_of_not_mem_closure NonUnitalSubsemiring.not_mem_of_not_mem_closure
 
 /-- A non-unital subsemiring `S` includes `closure s` if and only if it includes `s`. -/
 @[simp]
@@ -630,14 +620,12 @@ def nonUnitalSubsemiringClosure (M : Subsemigroup R) : NonUnitalSubsemiring R :=
 theorem non_unital_subsemiring_closure_coe :
     (M.nonUnitalSubsemiringClosure : Set R) = AddSubmonoid.closure (M : Set R) :=
   rfl
-#align
-  subsemigroup.non_unital_subsemiring_closure_coe Subsemigroup.non_unital_subsemiring_closure_coe
+#align subsemigroup.non_unital_subsemiring_closure_coe Subsemigroup.non_unital_subsemiring_closure_coe
 
 theorem non_unital_subsemiring_closure_to_add_submonoid :
     M.nonUnitalSubsemiringClosure.toAddSubmonoid = AddSubmonoid.closure (M : Set R) :=
   rfl
-#align
-  subsemigroup.non_unital_subsemiring_closure_to_add_submonoid Subsemigroup.non_unital_subsemiring_closure_to_add_submonoid
+#align subsemigroup.non_unital_subsemiring_closure_to_add_submonoid Subsemigroup.non_unital_subsemiring_closure_to_add_submonoid
 
 /-- The `non_unital_subsemiring` generated by a multiplicative subsemigroup coincides with the
 `non_unital_subsemiring.closure` of the subsemigroup itself . -/
@@ -653,8 +641,7 @@ theorem non_unital_subsemiring_closure_eq_closure :
     rintro - ⟨H2, rfl⟩
   · exact add_submonoid.mem_closure.mp hx H1.to_add_submonoid H2
   · exact H2 sM
-#align
-  subsemigroup.non_unital_subsemiring_closure_eq_closure Subsemigroup.non_unital_subsemiring_closure_eq_closure
+#align subsemigroup.non_unital_subsemiring_closure_eq_closure Subsemigroup.non_unital_subsemiring_closure_eq_closure
 
 end Subsemigroup
 
@@ -666,8 +653,7 @@ theorem closure_subsemigroup_closure (s : Set R) : closure ↑(Subsemigroup.clos
     (closure_le.mpr fun y hy =>
       (Subsemigroup.mem_closure.mp hy) (closure s).toSubsemigroup subset_closure)
     (closure_mono Subsemigroup.subset_closure)
-#align
-  non_unital_subsemiring.closure_subsemigroup_closure NonUnitalSubsemiring.closure_subsemigroup_closure
+#align non_unital_subsemiring.closure_subsemigroup_closure NonUnitalSubsemiring.closure_subsemigroup_closure
 
 /-- The elements of the non-unital subsemiring closure of `M` are exactly the elements of the
 additive closure of a multiplicative subsemigroup `M`. -/
@@ -692,8 +678,7 @@ theorem closure_add_submonoid_closure {s : Set R} : closure ↑(AddSubmonoid.clo
   refine' (add_submonoid.mem_closure.mp (mem_closure_iff.mp hx)) H.to_add_submonoid fun y hy => _
   refine' (subsemigroup.mem_closure.mp hy) H.to_subsemigroup fun z hz => _
   exact (add_submonoid.mem_closure.mp hz) H.to_add_submonoid fun w hw => J hw
-#align
-  non_unital_subsemiring.closure_add_submonoid_closure NonUnitalSubsemiring.closure_add_submonoid_closure
+#align non_unital_subsemiring.closure_add_submonoid_closure NonUnitalSubsemiring.closure_add_submonoid_closure
 
 /-- An induction principle for closure membership. If `p` holds for `0`, `1`, and all elements
 of `s`, and is preserved under addition and multiplication, then `p` holds for all elements

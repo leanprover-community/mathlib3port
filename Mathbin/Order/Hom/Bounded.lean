@@ -234,7 +234,7 @@ Case conversion may be inaccurate. Consider using '#align top_hom.to_fun_eq_coe 
 @[simp]
 theorem [anonymous] {f : TopHom α β} : f.toFun = (f : α → β) :=
   rfl
-#align top_hom.to_fun_eq_coe[anonymous]
+#align top_hom.to_fun_eq_coe [anonymous]
 
 -- this must come after the coe_to_fun definition
 initialize_simps_projections TopHom (toFun → apply)
@@ -556,7 +556,7 @@ Case conversion may be inaccurate. Consider using '#align bot_hom.to_fun_eq_coe 
 @[simp]
 theorem [anonymous] {f : BotHom α β} : f.toFun = (f : α → β) :=
   rfl
-#align bot_hom.to_fun_eq_coe[anonymous]
+#align bot_hom.to_fun_eq_coe [anonymous]
 
 -- this must come after the coe_to_fun definition
 initialize_simps_projections BotHom (toFun → apply)
@@ -899,7 +899,7 @@ Case conversion may be inaccurate. Consider using '#align bounded_order_hom.to_f
 @[simp]
 theorem [anonymous] {f : BoundedOrderHom α β} : f.toFun = (f : α → β) :=
   rfl
-#align bounded_order_hom.to_fun_eq_coe[anonymous]
+#align bounded_order_hom.to_fun_eq_coe [anonymous]
 
 /- warning: bounded_order_hom.ext -> BoundedOrderHom.ext is a dubious translation:
 lean 3 declaration is

@@ -147,8 +147,7 @@ theorem four_pow_le_two_mul_add_one_mul_central_binom (n : ℕ) :
       sum_le_sum fun i hi => choose_le_middle i (2 * n)
     _ = (2 * n + 1) * choose (2 * n) n := by simp
     
-#align
-  nat.four_pow_le_two_mul_add_one_mul_central_binom Nat.four_pow_le_two_mul_add_one_mul_central_binom
+#align nat.four_pow_le_two_mul_add_one_mul_central_binom Nat.four_pow_le_two_mul_add_one_mul_central_binom
 
 end Nat
 
@@ -196,8 +195,7 @@ theorem sum_powerset_neg_one_pow_card_of_nonempty {α : Type _} {x : Finset α} 
     rw [sum_powerset_neg_one_pow_card, if_neg]
     rw [← Ne.def, ← nonempty_iff_ne_empty]
     apply h0
-#align
-  finset.sum_powerset_neg_one_pow_card_of_nonempty Finset.sum_powerset_neg_one_pow_card_of_nonempty
+#align finset.sum_powerset_neg_one_pow_card_of_nonempty Finset.sum_powerset_neg_one_pow_card_of_nonempty
 
 end Finset
 

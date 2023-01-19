@@ -75,8 +75,7 @@ def bicone [HasFiniteBiproducts C] {J : Type} [Fintype J] (F : J → Karoubi C) 
     ·
       simp only [biproduct.ι_π_ne_assoc _ h, assoc, biproduct.map_π, biproduct.map_π_assoc, hom_ext,
         comp_f, zero_comp, quiver.hom.add_comm_group_zero_f]
-#align
-  category_theory.idempotents.karoubi.biproducts.bicone CategoryTheory.Idempotents.Karoubi.Biproducts.bicone
+#align category_theory.idempotents.karoubi.biproducts.bicone CategoryTheory.Idempotents.Karoubi.Biproducts.bicone
 
 end Biproducts
 
@@ -111,8 +110,7 @@ theorem karoubiHasFiniteBiproducts [HasFiniteBiproducts C] : HasFiniteBiproducts
               · exfalso
                 exact h rfl
               simp only [eq_to_hom_refl, id_comp, (F j).idem] } }
-#align
-  category_theory.idempotents.karoubi.karoubi_has_finite_biproducts CategoryTheory.Idempotents.Karoubi.karoubiHasFiniteBiproducts
+#align category_theory.idempotents.karoubi.karoubi_has_finite_biproducts CategoryTheory.Idempotents.Karoubi.karoubiHasFiniteBiproducts
 
 instance {D : Type _} [Category D] [AdditiveCategory D] : AdditiveCategory (Karoubi D)
     where
@@ -181,8 +179,7 @@ def decomposition (P : Karoubi C) : P ⊞ P.complement ≅ (toKaroubi _).obj P.x
     ext
     dsimp only [complement, to_karoubi]
     simp only [quiver.hom.add_comm_group_add_f, add_sub_cancel'_right, id_eq]
-#align
-  category_theory.idempotents.karoubi.decomposition CategoryTheory.Idempotents.Karoubi.decomposition
+#align category_theory.idempotents.karoubi.decomposition CategoryTheory.Idempotents.Karoubi.decomposition
 
 end Karoubi
 

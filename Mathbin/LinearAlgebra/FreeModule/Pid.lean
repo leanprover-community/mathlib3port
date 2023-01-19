@@ -89,8 +89,7 @@ theorem eq_bot_of_generator_maximal_submodule_image_eq_zero {N O : Submodule R M
   rw [LinearEquiv.map_zero, Finsupp.zero_apply]
   refine' (Submodule.eq_bot_iff _).mp (hϕ (Finsupp.lapply i ∘ₗ ↑b.repr) bot_le) _ _
   exact (LinearMap.mem_submodule_image_of_le hNO).mpr ⟨x, hx, rfl⟩
-#align
-  eq_bot_of_generator_maximal_submodule_image_eq_zero eq_bot_of_generator_maximal_submodule_image_eq_zero
+#align eq_bot_of_generator_maximal_submodule_image_eq_zero eq_bot_of_generator_maximal_submodule_image_eq_zero
 
 end Ring
 

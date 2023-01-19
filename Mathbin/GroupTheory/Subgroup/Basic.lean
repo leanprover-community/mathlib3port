@@ -285,8 +285,7 @@ instance (priority := 75) toLinearOrderedCommGroup {G : Type _} [LinearOrderedCo
   Subtype.coe_injective.LinearOrderedCommGroup _ rfl (fun _ _ => rfl) (fun _ => rfl)
     (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
 #align subgroup_class.to_linear_ordered_comm_group SubgroupClass.toLinearOrderedCommGroup
-#align
-  add_subgroup_class.to_linear_ordered_add_comm_group AddSubgroupClass.toLinearOrderedAddCommGroup
+#align add_subgroup_class.to_linear_ordered_add_comm_group AddSubgroupClass.toLinearOrderedAddCommGroup
 
 include hSG
 
@@ -1030,7 +1029,7 @@ theorem eq_top_of_card_eq [Fintype H] [Fintype G] (h : Fintype.card H = Fintype.
   by
   haveI : Fintype (H : Set G) := ‹Fintype H›
   rw [SetLike.ext'_iff, coe_top, ← Finset.coe_univ, ← (H : Set G).coe_to_finset, Finset.coe_inj, ←
-    Finset.card_eq_iff_eq_univ, ← h, Set.to_finset_card]
+    Finset.card_eq_iff_eq_univ, ← h, Set.toFinset_card]
   congr
 #align subgroup.eq_top_of_card_eq Subgroup.eq_top_of_card_eq
 #align add_subgroup.eq_top_of_card_eq AddSubgroup.eq_top_of_card_eq
@@ -2468,8 +2467,7 @@ theorem normalizer_condition_iff_only_full_group_self_normalizing :
   apply forall_congr'; intro H
   simp only [lt_iff_le_and_ne, le_normalizer, true_and_iff, le_top, Ne.def]
   tauto
-#align
-  normalizer_condition_iff_only_full_group_self_normalizing normalizer_condition_iff_only_full_group_self_normalizing
+#align normalizer_condition_iff_only_full_group_self_normalizing normalizer_condition_iff_only_full_group_self_normalizing
 
 variable (H)
 
@@ -2506,8 +2504,7 @@ theorem mem_centralizer_iff_commutator_eq_one {g : G} :
     g ∈ H.centralizer ↔ ∀ h ∈ H, h * g * h⁻¹ * g⁻¹ = 1 := by
   simp only [mem_centralizer_iff, mul_inv_eq_iff_eq_mul, one_mul]
 #align subgroup.mem_centralizer_iff_commutator_eq_one Subgroup.mem_centralizer_iff_commutator_eq_one
-#align
-  add_subgroup.mem_centralizer_iff_commutator_eq_zero AddSubgroup.mem_centralizer_iff_commutator_eq_zero
+#align add_subgroup.mem_centralizer_iff_commutator_eq_zero AddSubgroup.mem_centralizer_iff_commutator_eq_zero
 
 @[to_additive]
 theorem centralizer_top : centralizer ⊤ = center G :=
@@ -2535,8 +2532,7 @@ instance Subgroup.Centralizer.characteristic [hH : H.Characteristic] :
   rw [map_mul, map_mul]
   exact hg (ϕ h) (subgroup.characteristic_iff_le_comap.mp hH ϕ hh)
 #align subgroup.subgroup.centralizer.characteristic Subgroup.Subgroup.Centralizer.characteristic
-#align
-  add_subgroup.subgroup.centralizer.characteristic AddSubgroup.Subgroup.Centralizer.characteristic
+#align add_subgroup.subgroup.centralizer.characteristic AddSubgroup.Subgroup.Centralizer.characteristic
 
 end Centralizer
 
@@ -2667,8 +2663,7 @@ def normalClosure (s : Set G) : Subgroup G :=
 
 theorem conjugates_of_set_subset_normal_closure : conjugatesOfSet s ⊆ normalClosure s :=
   subset_closure
-#align
-  subgroup.conjugates_of_set_subset_normal_closure Subgroup.conjugates_of_set_subset_normal_closure
+#align subgroup.conjugates_of_set_subset_normal_closure Subgroup.conjugates_of_set_subset_normal_closure
 
 theorem subset_normal_closure : s ⊆ normalClosure s :=
   Set.Subset.trans subset_conjugates_of_set conjugates_of_set_subset_normal_closure
@@ -2736,8 +2731,7 @@ theorem normal_closure_closure_eq_normal_closure {s : Set G} :
     normalClosure ↑(closure s) = normalClosure s :=
   le_antisymm (normal_closure_le_normal closure_le_normal_closure)
     (normal_closure_mono subset_closure)
-#align
-  subgroup.normal_closure_closure_eq_normal_closure Subgroup.normal_closure_closure_eq_normal_closure
+#align subgroup.normal_closure_closure_eq_normal_closure Subgroup.normal_closure_closure_eq_normal_closure
 
 /-- The normal core of a subgroup `H` is the largest normal subgroup of `G` contained in `H`,
 as shown by `subgroup.normal_core_eq_supr`. -/
@@ -3472,10 +3466,8 @@ theorem comap_normalizer_eq_of_injective_of_le_range {N : Type _} [Group N] (H :
     rw [map_comap_eq_self h]
   · refine' le_trans (le_normalizer_map f) (le_of_eq _)
     rw [map_comap_eq_self (le_trans le_normalizer h)]
-#align
-  subgroup.comap_normalizer_eq_of_injective_of_le_range Subgroup.comap_normalizer_eq_of_injective_of_le_range
-#align
-  add_subgroup.comap_normalizer_eq_of_injective_of_le_range AddSubgroup.comap_normalizer_eq_of_injective_of_le_range
+#align subgroup.comap_normalizer_eq_of_injective_of_le_range Subgroup.comap_normalizer_eq_of_injective_of_le_range
+#align add_subgroup.comap_normalizer_eq_of_injective_of_le_range AddSubgroup.comap_normalizer_eq_of_injective_of_le_range
 
 @[to_additive]
 theorem subgroup_of_normalizer_eq {H N : Subgroup G} (h : H.normalizer ≤ N) :
@@ -3542,10 +3534,8 @@ theorem lift_of_right_inverse_aux_comp_apply (hf : Function.RightInverse f_inv f
   apply hg
   rw [f.mem_ker, f.map_mul, f.map_inv, mul_inv_eq_one]
   simp only [hf _]
-#align
-  monoid_hom.lift_of_right_inverse_aux_comp_apply MonoidHom.lift_of_right_inverse_aux_comp_apply
-#align
-  add_monoid_hom.lift_of_right_inverse_aux_comp_apply AddMonoidHom.lift_of_right_inverse_aux_comp_apply
+#align monoid_hom.lift_of_right_inverse_aux_comp_apply MonoidHom.lift_of_right_inverse_aux_comp_apply
+#align add_monoid_hom.lift_of_right_inverse_aux_comp_apply AddMonoidHom.lift_of_right_inverse_aux_comp_apply
 
 /-- `lift_of_right_inverse f hf g hg` is the unique group homomorphism `φ`
 
@@ -3931,8 +3921,7 @@ theorem equiv_map_of_injective_coe_mul_equiv (H : Subgroup G) (e : G ≃* G') :
   ext
   rfl
 #align subgroup.equiv_map_of_injective_coe_mul_equiv Subgroup.equiv_map_of_injective_coe_mul_equiv
-#align
-  add_subgroup.equiv_map_of_injective_coe_add_equiv AddSubgroup.equiv_map_of_injective_coe_add_equiv
+#align add_subgroup.equiv_map_of_injective_coe_add_equiv AddSubgroup.equiv_map_of_injective_coe_add_equiv
 
 variable {C : Type _} [CommGroup C] {s t : Subgroup C} {x : C}
 
@@ -4021,8 +4010,7 @@ theorem is_simple_group_of_surjective {H : Type _} [Group H] [IsSimpleGroup G] [
     · rw [← comap_top f] at h
       exact comap_injective hf h⟩
 #align is_simple_group.is_simple_group_of_surjective IsSimpleGroup.is_simple_group_of_surjective
-#align
-  is_simple_add_group.is_simple_add_group_of_surjective IsSimpleAddGroup.is_simple_add_group_of_surjective
+#align is_simple_add_group.is_simple_add_group_of_surjective IsSimpleAddGroup.is_simple_add_group_of_surjective
 
 end IsSimpleGroup
 
@@ -4069,8 +4057,7 @@ theorem inf_subgroup_of_inf_normal_of_right (A B' B : Subgroup G) (hB : B' ≤ B
       ⟨mul_mem (mul_mem (mem_inf.1 g.2).1 (mem_inf.1 n.2).1) (inv_mem (mem_inf.1 g.2).1),
         (normal_subgroup_of_iff hB).mp hN n g hn.2 (mem_inf.mp g.2).2⟩ }
 #align subgroup.inf_subgroup_of_inf_normal_of_right Subgroup.inf_subgroup_of_inf_normal_of_right
-#align
-  add_subgroup.inf_add_subgroup_of_inf_normal_of_right AddSubgroup.inf_add_subgroup_of_inf_normal_of_right
+#align add_subgroup.inf_add_subgroup_of_inf_normal_of_right AddSubgroup.inf_add_subgroup_of_inf_normal_of_right
 
 @[to_additive]
 theorem inf_subgroup_of_inf_normal_of_left {A' A : Subgroup G} (B : Subgroup G) (hA : A' ≤ A)
@@ -4080,8 +4067,7 @@ theorem inf_subgroup_of_inf_normal_of_left {A' A : Subgroup G} (B : Subgroup G) 
       ⟨(normal_subgroup_of_iff hA).mp hN n g hn.1 (mem_inf.mp g.2).1,
         mul_mem (mul_mem (mem_inf.1 g.2).2 (mem_inf.1 n.2).2) (inv_mem (mem_inf.1 g.2).2)⟩ }
 #align subgroup.inf_subgroup_of_inf_normal_of_left Subgroup.inf_subgroup_of_inf_normal_of_left
-#align
-  add_subgroup.inf_add_subgroup_of_inf_normal_of_left AddSubgroup.inf_add_subgroup_of_inf_normal_of_left
+#align add_subgroup.inf_add_subgroup_of_inf_normal_of_left AddSubgroup.inf_add_subgroup_of_inf_normal_of_left
 
 @[to_additive]
 instance normal_inf_normal (H K : Subgroup G) [hH : H.Normal] [hK : K.Normal] : (H ⊓ K).Normal :=
@@ -4196,10 +4182,8 @@ theorem eq_one_of_noncomm_prod_eq_one_of_independent {ι : Type _} (s : Finset �
       rcases h with ⟨rfl | _⟩
       · exact heq1i
       · exact ih hcomm hmem.2 heq1S _ h
-#align
-  subgroup.eq_one_of_noncomm_prod_eq_one_of_independent Subgroup.eq_one_of_noncomm_prod_eq_one_of_independent
-#align
-  add_subgroup.eq_zero_of_noncomm_sum_eq_zero_of_independent AddSubgroup.eq_zero_of_noncomm_sum_eq_zero_of_independent
+#align subgroup.eq_one_of_noncomm_prod_eq_one_of_independent Subgroup.eq_one_of_noncomm_prod_eq_one_of_independent
+#align add_subgroup.eq_zero_of_noncomm_sum_eq_zero_of_independent AddSubgroup.eq_zero_of_noncomm_sum_eq_zero_of_independent
 
 end Subgroup
 

@@ -356,10 +356,8 @@ theorem exists_finset_nhd_mul_support_subset {f : ι → X → R}
       intro i hi
       simp only [finite.coe_to_finset, mem_set_of_eq]
       exact ⟨z, ⟨hi, hzn⟩⟩
-#align
-  locally_finite.exists_finset_nhd_mul_support_subset LocallyFinite.exists_finset_nhd_mul_support_subset
-#align
-  locally_finite.exists_finset_nhd_support_subset LocallyFinite.exists_finset_nhd_support_subset
+#align locally_finite.exists_finset_nhd_mul_support_subset LocallyFinite.exists_finset_nhd_mul_support_subset
+#align locally_finite.exists_finset_nhd_support_subset LocallyFinite.exists_finset_nhd_support_subset
 
 end LocallyFinite
 

@@ -341,8 +341,7 @@ theorem padic_val_rat_le_padic_val_rat_iff {n₁ n₂ d₁ d₂ : ℤ} (hn₁ : 
     rw [← multiplicity.mul' (Nat.prime_iff_prime_int.1 hp.1) hf1, add_comm, ←
       multiplicity.mul' (Nat.prime_iff_prime_int.1 hp.1) hf2, PartEnat.get_le_get,
       multiplicity_le_multiplicity_iff]
-#align
-  padic_val_rat.padic_val_rat_le_padic_val_rat_iff padicValRat.padic_val_rat_le_padic_val_rat_iff
+#align padic_val_rat.padic_val_rat_le_padic_val_rat_iff padicValRat.padic_val_rat_le_padic_val_rat_iff
 
 /-- Sufficient conditions to show that the `p`-adic valuation of `q` is less than or equal to the
 `p`-adic valuation of `q + r`. -/

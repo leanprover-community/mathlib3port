@@ -105,8 +105,7 @@ def endMonoidalStarFunctor : MonoidalFunctor (EndMonoidal (MonoidalSingleObj.sta
     simp only [category.id_comp, category.comp_id]
     -- Should we provide further simp lemmas so this goal becomes visible?
     exact (tensor_id_comp_id_tensor _ _).symm
-#align
-  category_theory.monoidal_single_obj.End_monoidal_star_functor CategoryTheory.MonoidalSingleObj.endMonoidalStarFunctor
+#align category_theory.monoidal_single_obj.End_monoidal_star_functor CategoryTheory.MonoidalSingleObj.endMonoidalStarFunctor
 
 noncomputable section
 
@@ -121,8 +120,7 @@ def endMonoidalStarFunctorIsEquivalence : IsEquivalence (endMonoidalStarFunctor 
       map := fun X Y f => f }
   unitIso := NatIso.ofComponents (fun X => asIso (𝟙 _)) (by tidy)
   counitIso := NatIso.ofComponents (fun X => asIso (𝟙 _)) (by tidy)
-#align
-  category_theory.monoidal_single_obj.End_monoidal_star_functor_is_equivalence CategoryTheory.MonoidalSingleObj.endMonoidalStarFunctorIsEquivalence
+#align category_theory.monoidal_single_obj.End_monoidal_star_functor_is_equivalence CategoryTheory.MonoidalSingleObj.endMonoidalStarFunctorIsEquivalence
 
 end MonoidalSingleObj
 

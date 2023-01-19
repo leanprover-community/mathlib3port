@@ -130,8 +130,7 @@ theorem compatible_iff_left_res_eq_right_res (sf : piOpens F U) :
       rfl
     · rw [right_res, types.pi_lift_π_apply]
       rfl
-#align
-  Top.presheaf.compatible_iff_left_res_eq_right_res TopCat.Presheaf.compatible_iff_left_res_eq_right_res
+#align Top.presheaf.compatible_iff_left_res_eq_right_res TopCat.Presheaf.compatible_iff_left_res_eq_right_res
 
 /-- Under the isomorphism `pi_opens_iso_sections_family`, being a gluing of a family of
 sections `sf` is the same as lying in the preimage of `res` (the leftmost arrow of the
@@ -177,8 +176,7 @@ theorem is_sheaf_of_is_sheaf_unique_gluing_types (Fsh : F.IsSheafUniqueGluing) :
     apply m_uniq
     rw [is_gluing_iff_eq_res]
     exact congr_fun hl x
-#align
-  Top.presheaf.is_sheaf_of_is_sheaf_unique_gluing_types TopCat.Presheaf.is_sheaf_of_is_sheaf_unique_gluing_types
+#align Top.presheaf.is_sheaf_of_is_sheaf_unique_gluing_types TopCat.Presheaf.is_sheaf_of_is_sheaf_unique_gluing_types
 
 /-- The sheaf condition in terms of unique gluings can be obtained from the usual
 "equalizer" sheaf condition.
@@ -201,8 +199,7 @@ theorem is_sheaf_unique_gluing_of_is_sheaf_types (Fsh : F.IsSheaf) : F.IsSheafUn
     rw [← is_gluing_iff_eq_res F U]
     convert hy
     rw [inv_hom_id_apply]
-#align
-  Top.presheaf.is_sheaf_unique_gluing_of_is_sheaf_types TopCat.Presheaf.is_sheaf_unique_gluing_of_is_sheaf_types
+#align Top.presheaf.is_sheaf_unique_gluing_of_is_sheaf_types TopCat.Presheaf.is_sheaf_unique_gluing_of_is_sheaf_types
 
 /-- For type-valued presheaves, the sheaf condition in terms of unique gluings is equivalent to the
 usual sheaf condition in terms of equalizer diagrams.
@@ -210,8 +207,7 @@ usual sheaf condition in terms of equalizer diagrams.
 theorem is_sheaf_iff_is_sheaf_unique_gluing_types : F.IsSheaf ↔ F.IsSheafUniqueGluing :=
   Iff.intro (is_sheaf_unique_gluing_of_is_sheaf_types F)
     (is_sheaf_of_is_sheaf_unique_gluing_types F)
-#align
-  Top.presheaf.is_sheaf_iff_is_sheaf_unique_gluing_types TopCat.Presheaf.is_sheaf_iff_is_sheaf_unique_gluing_types
+#align Top.presheaf.is_sheaf_iff_is_sheaf_unique_gluing_types TopCat.Presheaf.is_sheaf_iff_is_sheaf_unique_gluing_types
 
 end TypeValued
 
@@ -230,8 +226,7 @@ in terms of equalizer diagrams.
 theorem is_sheaf_iff_is_sheaf_unique_gluing : F.IsSheaf ↔ F.IsSheafUniqueGluing :=
   Iff.trans (is_sheaf_iff_is_sheaf_comp (forget C) F)
     (is_sheaf_iff_is_sheaf_unique_gluing_types (F ⋙ forget C))
-#align
-  Top.presheaf.is_sheaf_iff_is_sheaf_unique_gluing TopCat.Presheaf.is_sheaf_iff_is_sheaf_unique_gluing
+#align Top.presheaf.is_sheaf_iff_is_sheaf_unique_gluing TopCat.Presheaf.is_sheaf_iff_is_sheaf_unique_gluing
 
 end
 

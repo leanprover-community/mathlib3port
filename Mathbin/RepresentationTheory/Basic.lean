@@ -217,8 +217,7 @@ theorem of_module_as_algebra_hom_apply_apply (r : MonoidAlgebra k G)
   · intro r f w
     simp only [w, AlgHom.map_smul, LinearMap.smul_apply,
       RestrictScalars.add_equiv_symm_map_smul_smul]
-#align
-  representation.of_module_as_algebra_hom_apply_apply Representation.of_module_as_algebra_hom_apply_apply
+#align representation.of_module_as_algebra_hom_apply_apply Representation.of_module_as_algebra_hom_apply_apply
 
 @[simp]
 theorem of_module_as_module_act (g : G) (x : RestrictScalars k (MonoidAlgebra k G) ρ.AsModule) :

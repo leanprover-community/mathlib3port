@@ -72,8 +72,7 @@ theorem dist_le {u v : V} (p : G.Walk u v) : G.dist u v ≤ p.length :=
 @[simp]
 theorem dist_eq_zero_iff_eq_or_not_reachable {u v : V} :
     G.dist u v = 0 ↔ u = v ∨ ¬G.Reachable u v := by simp [dist, Nat.Inf_eq_zero, reachable]
-#align
-  simple_graph.dist_eq_zero_iff_eq_or_not_reachable SimpleGraph.dist_eq_zero_iff_eq_or_not_reachable
+#align simple_graph.dist_eq_zero_iff_eq_or_not_reachable SimpleGraph.dist_eq_zero_iff_eq_or_not_reachable
 
 theorem dist_self {v : V} : dist G v v = 0 := by simp
 #align simple_graph.dist_self SimpleGraph.dist_self

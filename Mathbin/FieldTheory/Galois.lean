@@ -109,8 +109,7 @@ theorem IntermediateField.AdjoinSimple.card_aut_eq_finrank [FiniteDimensional F 
   rw [IntermediateField.adjoin.finrank hα]
   rw [← IntermediateField.card_alg_hom_adjoin_integral F hα h_sep h_splits]
   exact Fintype.card_congr (algEquivEquivAlgHom F F⟮⟯)
-#align
-  is_galois.intermediate_field.adjoin_simple.card_aut_eq_finrank IsGalois.IntermediateField.AdjoinSimple.card_aut_eq_finrank
+#align is_galois.intermediate_field.adjoin_simple.card_aut_eq_finrank IsGalois.IntermediateField.AdjoinSimple.card_aut_eq_finrank
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
@@ -343,8 +342,7 @@ def galoisInsertionIntermediateFieldSubgroup [FiniteDimensional F E] :
   gc K H := (IntermediateField.le_iff_le H K).symm
   le_l_u H := le_of_eq (IntermediateField.fixing_subgroup_fixed_field H).symm
   choice_eq K _ := rfl
-#align
-  is_galois.galois_insertion_intermediate_field_subgroup IsGalois.galoisInsertionIntermediateFieldSubgroup
+#align is_galois.galois_insertion_intermediate_field_subgroup IsGalois.galoisInsertionIntermediateFieldSubgroup
 
 /-- The Galois correspondence as a galois_coinsertion -/
 def galoisCoinsertionIntermediateFieldSubgroup [FiniteDimensional F E] [IsGalois F E] :
@@ -358,8 +356,7 @@ def galoisCoinsertionIntermediateFieldSubgroup [FiniteDimensional F E] [IsGalois
   gc K H := (IntermediateField.le_iff_le H K).symm
   u_l_le K := le_of_eq (fixed_field_fixing_subgroup K)
   choice_eq H _ := rfl
-#align
-  is_galois.galois_coinsertion_intermediate_field_subgroup IsGalois.galoisCoinsertionIntermediateFieldSubgroup
+#align is_galois.galois_coinsertion_intermediate_field_subgroup IsGalois.galoisCoinsertionIntermediateFieldSubgroup
 
 end IsGalois
 

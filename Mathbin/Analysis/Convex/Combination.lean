@@ -415,8 +415,7 @@ theorem convex_hull_eq_union_convex_hull_finite_subsets (s : Set E) :
       · simp only [hw₁, zero_lt_one]
       · exact fun i hi => Finset.mem_coe.2 (Finset.mem_image_of_mem _ hi)
   · exact Union_subset fun i => Union_subset convex_hull_mono
-#align
-  convex_hull_eq_union_convex_hull_finite_subsets convex_hull_eq_union_convex_hull_finite_subsets
+#align convex_hull_eq_union_convex_hull_finite_subsets convex_hull_eq_union_convex_hull_finite_subsets
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

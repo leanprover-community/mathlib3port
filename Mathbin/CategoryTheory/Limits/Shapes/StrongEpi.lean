@@ -228,8 +228,7 @@ attribute [local instance] strong_epi_of_epi
 
 instance (priority := 100) balanced_of_strong_epi_category [StrongEpiCategory C] : Balanced C
     where is_iso_of_mono_of_epi _ _ _ _ _ := is_iso_of_mono_of_strong_epi _
-#align
-  category_theory.balanced_of_strong_epi_category CategoryTheory.balanced_of_strong_epi_category
+#align category_theory.balanced_of_strong_epi_category CategoryTheory.balanced_of_strong_epi_category
 
 end
 
@@ -239,8 +238,7 @@ attribute [local instance] strong_mono_of_mono
 
 instance (priority := 100) balanced_of_strong_mono_category [StrongMonoCategory C] : Balanced C
     where is_iso_of_mono_of_epi _ _ _ _ _ := is_iso_of_epi_of_strong_mono _
-#align
-  category_theory.balanced_of_strong_mono_category CategoryTheory.balanced_of_strong_mono_category
+#align category_theory.balanced_of_strong_mono_category CategoryTheory.balanced_of_strong_mono_category
 
 end
 

@@ -232,8 +232,7 @@ variable (A)
 theorem comp_continuous_map_id :
     compContinuousMap (StarAlgHom.id ℂ A) = ContinuousMap.id (characterSpace ℂ A) :=
   ContinuousMap.ext fun a => ext fun x => rfl
-#align
-  weak_dual.character_space.comp_continuous_map_id WeakDual.characterSpace.comp_continuous_map_id
+#align weak_dual.character_space.comp_continuous_map_id WeakDual.characterSpace.comp_continuous_map_id
 
 variable {A}
 
@@ -242,8 +241,7 @@ variable {A}
 theorem comp_continuous_map_comp (ψ₂ : B →⋆ₐ[ℂ] C) (ψ₁ : A →⋆ₐ[ℂ] B) :
     compContinuousMap (ψ₂.comp ψ₁) = (compContinuousMap ψ₁).comp (compContinuousMap ψ₂) :=
   ContinuousMap.ext fun a => ext fun x => rfl
-#align
-  weak_dual.character_space.comp_continuous_map_comp WeakDual.characterSpace.comp_continuous_map_comp
+#align weak_dual.character_space.comp_continuous_map_comp WeakDual.characterSpace.comp_continuous_map_comp
 
 end CharacterSpace
 

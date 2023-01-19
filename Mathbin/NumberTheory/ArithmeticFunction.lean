@@ -561,15 +561,13 @@ variable [MonoidWithZero R]
 @[simp]
 theorem map_one {f : ArithmeticFunction R} (h : f.IsMultiplicative) : f 1 = 1 :=
   h.1
-#align
-  nat.arithmetic_function.is_multiplicative.map_one Nat.ArithmeticFunction.IsMultiplicative.map_one
+#align nat.arithmetic_function.is_multiplicative.map_one Nat.ArithmeticFunction.IsMultiplicative.map_one
 
 @[simp]
 theorem map_mul_of_coprime {f : ArithmeticFunction R} (hf : f.IsMultiplicative) {m n : ℕ}
     (h : m.Coprime n) : f (m * n) = f m * f n :=
   hf.2 h
-#align
-  nat.arithmetic_function.is_multiplicative.map_mul_of_coprime Nat.ArithmeticFunction.IsMultiplicative.map_mul_of_coprime
+#align nat.arithmetic_function.is_multiplicative.map_mul_of_coprime Nat.ArithmeticFunction.IsMultiplicative.map_mul_of_coprime
 
 end MonoidWithZero
 
@@ -582,20 +580,17 @@ theorem map_prod {ι : Type _} [CommMonoidWithZero R] (g : ι → ℕ) {f : Nat.
     rw [coe_insert, Set.pairwise_insert_of_symmetric (coprime.symmetric.comap g)] at hs
     rw [prod_insert has, prod_insert has, hf.map_mul_of_coprime, ih hs.1]
     exact Nat.coprime_prod_right fun i hi => hs.2 _ hi (hi.ne_of_not_mem has).symm
-#align
-  nat.arithmetic_function.is_multiplicative.map_prod Nat.ArithmeticFunction.IsMultiplicative.map_prod
+#align nat.arithmetic_function.is_multiplicative.map_prod Nat.ArithmeticFunction.IsMultiplicative.map_prod
 
 theorem nat_cast {f : ArithmeticFunction ℕ} [Semiring R] (h : f.IsMultiplicative) :
     IsMultiplicative (f : ArithmeticFunction R) :=
   ⟨by simp [h], fun m n cop => by simp [cop, h]⟩
-#align
-  nat.arithmetic_function.is_multiplicative.nat_cast Nat.ArithmeticFunction.IsMultiplicative.nat_cast
+#align nat.arithmetic_function.is_multiplicative.nat_cast Nat.ArithmeticFunction.IsMultiplicative.nat_cast
 
 theorem int_cast {f : ArithmeticFunction ℤ} [Ring R] (h : f.IsMultiplicative) :
     IsMultiplicative (f : ArithmeticFunction R) :=
   ⟨by simp [h], fun m n cop => by simp [cop, h]⟩
-#align
-  nat.arithmetic_function.is_multiplicative.int_cast Nat.ArithmeticFunction.IsMultiplicative.int_cast
+#align nat.arithmetic_function.is_multiplicative.int_cast Nat.ArithmeticFunction.IsMultiplicative.int_cast
 
 theorem mul [CommSemiring R] {f g : ArithmeticFunction R} (hf : f.IsMultiplicative)
     (hg : g.IsMultiplicative) : IsMultiplicative (f * g) :=
@@ -677,8 +672,7 @@ theorem multiplicative_factorization [CommMonoidWithZero R] (f : ArithmeticFunct
     (hf : f.IsMultiplicative) {n : ℕ} (hn : n ≠ 0) :
     f n = n.factorization.Prod fun p k => f (p ^ k) :=
   multiplicative_factorization f (fun _ _ => hf.2) hf.1 hn
-#align
-  nat.arithmetic_function.is_multiplicative.multiplicative_factorization Nat.ArithmeticFunction.IsMultiplicative.multiplicative_factorization
+#align nat.arithmetic_function.is_multiplicative.multiplicative_factorization Nat.ArithmeticFunction.IsMultiplicative.multiplicative_factorization
 
 /-- A recapitulation of the definition of multiplicative that is simpler for proofs -/
 theorem iff_ne_zero [MonoidWithZero R] {f : ArithmeticFunction R} :
@@ -691,8 +685,7 @@ theorem iff_ne_zero [MonoidWithZero R] {f : ArithmeticFunction R} :
   rcases eq_or_ne n 0 with (rfl | hn)
   · simp
   exact h hm hn hmn
-#align
-  nat.arithmetic_function.is_multiplicative.iff_ne_zero Nat.ArithmeticFunction.IsMultiplicative.iff_ne_zero
+#align nat.arithmetic_function.is_multiplicative.iff_ne_zero Nat.ArithmeticFunction.IsMultiplicative.iff_ne_zero
 
 /-- Two multiplicative functions `f` and `g` are equal if and only if
 they agree on prime powers -/
@@ -712,8 +705,7 @@ theorem eq_iff_eq_on_prime_powers [CommMonoidWithZero R] (f : ArithmeticFunction
   simp only [support_factorization, List.mem_toFinset]
   intro p hp
   exact h p _ (Nat.prime_of_mem_factors hp)
-#align
-  nat.arithmetic_function.is_multiplicative.eq_iff_eq_on_prime_powers Nat.ArithmeticFunction.IsMultiplicative.eq_iff_eq_on_prime_powers
+#align nat.arithmetic_function.is_multiplicative.eq_iff_eq_on_prime_powers Nat.ArithmeticFunction.IsMultiplicative.eq_iff_eq_on_prime_powers
 
 end IsMultiplicative
 
@@ -767,8 +759,7 @@ theorem sigma_zero_apply (n : ℕ) : σ 0 n = (divisors n).card := by simp [sigm
 
 theorem sigma_zero_apply_prime_pow {p i : ℕ} (hp : p.Prime) : σ 0 (p ^ i) = i + 1 := by
   rw [sigma_zero_apply, divisors_prime_pow hp, card_map, card_range]
-#align
-  nat.arithmetic_function.sigma_zero_apply_prime_pow Nat.ArithmeticFunction.sigma_zero_apply_prime_pow
+#align nat.arithmetic_function.sigma_zero_apply_prime_pow Nat.ArithmeticFunction.sigma_zero_apply_prime_pow
 
 theorem zeta_mul_pow_eq_sigma {k : ℕ} : ζ * pow k = σ k :=
   by
@@ -817,8 +808,7 @@ theorem is_multiplicative_sigma {k : ℕ} : IsMultiplicative (σ k) :=
   by
   rw [← zeta_mul_pow_eq_sigma]
   apply is_multiplicative_zeta.mul is_multiplicative_pow
-#align
-  nat.arithmetic_function.is_multiplicative_sigma Nat.ArithmeticFunction.is_multiplicative_sigma
+#align nat.arithmetic_function.is_multiplicative_sigma Nat.ArithmeticFunction.is_multiplicative_sigma
 
 /-- `Ω n` is the number of prime factors of `n`. -/
 def cardFactors : ArithmeticFunction ℕ :=
@@ -846,8 +836,7 @@ theorem card_factors_eq_one_iff_prime {n : ℕ} : Ω n = 1 ↔ n.Prime :=
   rw [← prod_factors n.succ_ne_zero, hx, List.prod_singleton]
   apply prime_of_mem_factors
   rw [hx, List.mem_singleton]
-#align
-  nat.arithmetic_function.card_factors_eq_one_iff_prime Nat.ArithmeticFunction.card_factors_eq_one_iff_prime
+#align nat.arithmetic_function.card_factors_eq_one_iff_prime Nat.ArithmeticFunction.card_factors_eq_one_iff_prime
 
 theorem card_factors_mul {m n : ℕ} (m0 : m ≠ 0) (n0 : n ≠ 0) : Ω (m * n) = Ω m + Ω n := by
   rw [card_factors_apply, card_factors_apply, card_factors_apply, ← Multiset.coe_card, ← factors_eq,
@@ -862,20 +851,17 @@ theorem card_factors_multiset_prod {s : Multiset ℕ} (h0 : s.Prod ≠ 0) :
   intro a t h h0
   rw [Multiset.prod_cons, mul_ne_zero_iff] at h0
   simp [h0, card_factors_mul, h]
-#align
-  nat.arithmetic_function.card_factors_multiset_prod Nat.ArithmeticFunction.card_factors_multiset_prod
+#align nat.arithmetic_function.card_factors_multiset_prod Nat.ArithmeticFunction.card_factors_multiset_prod
 
 @[simp]
 theorem card_factors_apply_prime {p : ℕ} (hp : p.Prime) : Ω p = 1 :=
   card_factors_eq_one_iff_prime.2 hp
-#align
-  nat.arithmetic_function.card_factors_apply_prime Nat.ArithmeticFunction.card_factors_apply_prime
+#align nat.arithmetic_function.card_factors_apply_prime Nat.ArithmeticFunction.card_factors_apply_prime
 
 @[simp]
 theorem card_factors_apply_prime_pow {p k : ℕ} (hp : p.Prime) : Ω (p ^ k) = k := by
   rw [card_factors_apply, hp.factors_pow, List.length_replicate]
-#align
-  nat.arithmetic_function.card_factors_apply_prime_pow Nat.ArithmeticFunction.card_factors_apply_prime_pow
+#align nat.arithmetic_function.card_factors_apply_prime_pow Nat.ArithmeticFunction.card_factors_apply_prime_pow
 
 /-- `ω n` is the number of distinct prime factors of `n`. -/
 def cardDistinctFactors : ArithmeticFunction ℕ :=
@@ -886,18 +872,15 @@ def cardDistinctFactors : ArithmeticFunction ℕ :=
 scoped[ArithmeticFunction] notation "ω" => Nat.ArithmeticFunction.cardDistinctFactors
 
 theorem card_distinct_factors_zero : ω 0 = 0 := by simp
-#align
-  nat.arithmetic_function.card_distinct_factors_zero Nat.ArithmeticFunction.card_distinct_factors_zero
+#align nat.arithmetic_function.card_distinct_factors_zero Nat.ArithmeticFunction.card_distinct_factors_zero
 
 @[simp]
 theorem card_distinct_factors_one : ω 1 = 0 := by simp [card_distinct_factors]
-#align
-  nat.arithmetic_function.card_distinct_factors_one Nat.ArithmeticFunction.card_distinct_factors_one
+#align nat.arithmetic_function.card_distinct_factors_one Nat.ArithmeticFunction.card_distinct_factors_one
 
 theorem card_distinct_factors_apply {n : ℕ} : ω n = n.factors.dedup.length :=
   rfl
-#align
-  nat.arithmetic_function.card_distinct_factors_apply Nat.ArithmeticFunction.card_distinct_factors_apply
+#align nat.arithmetic_function.card_distinct_factors_apply Nat.ArithmeticFunction.card_distinct_factors_apply
 
 theorem card_distinct_factors_eq_card_factors_iff_squarefree {n : ℕ} (h0 : n ≠ 0) :
     ω n = Ω n ↔ Squarefree n :=
@@ -908,21 +891,18 @@ theorem card_distinct_factors_eq_card_factors_iff_squarefree {n : ℕ} (h0 : n �
     apply List.nodup_dedup
   · rw [h.dedup]
     rfl
-#align
-  nat.arithmetic_function.card_distinct_factors_eq_card_factors_iff_squarefree Nat.ArithmeticFunction.card_distinct_factors_eq_card_factors_iff_squarefree
+#align nat.arithmetic_function.card_distinct_factors_eq_card_factors_iff_squarefree Nat.ArithmeticFunction.card_distinct_factors_eq_card_factors_iff_squarefree
 
 @[simp]
 theorem card_distinct_factors_apply_prime_pow {p k : ℕ} (hp : p.Prime) (hk : k ≠ 0) :
     ω (p ^ k) = 1 := by
   rw [card_distinct_factors_apply, hp.factors_pow, List.replicate_dedup hk, List.length_singleton]
-#align
-  nat.arithmetic_function.card_distinct_factors_apply_prime_pow Nat.ArithmeticFunction.card_distinct_factors_apply_prime_pow
+#align nat.arithmetic_function.card_distinct_factors_apply_prime_pow Nat.ArithmeticFunction.card_distinct_factors_apply_prime_pow
 
 @[simp]
 theorem card_distinct_factors_apply_prime {p : ℕ} (hp : p.Prime) : ω p = 1 := by
   rw [← pow_one p, card_distinct_factors_apply_prime_pow hp one_ne_zero]
-#align
-  nat.arithmetic_function.card_distinct_factors_apply_prime Nat.ArithmeticFunction.card_distinct_factors_apply_prime
+#align nat.arithmetic_function.card_distinct_factors_apply_prime Nat.ArithmeticFunction.card_distinct_factors_apply_prime
 
 /-- `μ` is the Möbius function. If `n` is squarefree with an even number of distinct prime factors,
   `μ n = 1`. If `n` is squarefree with an odd number of distinct prime factors, `μ n = -1`.
@@ -937,14 +917,12 @@ scoped[ArithmeticFunction] notation "μ" => Nat.ArithmeticFunction.moebius
 @[simp]
 theorem moebius_apply_of_squarefree {n : ℕ} (h : Squarefree n) : μ n = (-1) ^ cardFactors n :=
   if_pos h
-#align
-  nat.arithmetic_function.moebius_apply_of_squarefree Nat.ArithmeticFunction.moebius_apply_of_squarefree
+#align nat.arithmetic_function.moebius_apply_of_squarefree Nat.ArithmeticFunction.moebius_apply_of_squarefree
 
 @[simp]
 theorem moebius_eq_zero_of_not_squarefree {n : ℕ} (h : ¬Squarefree n) : μ n = 0 :=
   if_neg h
-#align
-  nat.arithmetic_function.moebius_eq_zero_of_not_squarefree Nat.ArithmeticFunction.moebius_eq_zero_of_not_squarefree
+#align nat.arithmetic_function.moebius_eq_zero_of_not_squarefree Nat.ArithmeticFunction.moebius_eq_zero_of_not_squarefree
 
 theorem moebius_apply_one : μ 1 = 1 := by simp
 #align nat.arithmetic_function.moebius_apply_one Nat.ArithmeticFunction.moebius_apply_one
@@ -955,8 +933,7 @@ theorem moebius_ne_zero_iff_squarefree {n : ℕ} : μ n ≠ 0 ↔ Squarefree n :
   · contrapose! h
     simp [h]
   · simp [h, pow_ne_zero]
-#align
-  nat.arithmetic_function.moebius_ne_zero_iff_squarefree Nat.ArithmeticFunction.moebius_ne_zero_iff_squarefree
+#align nat.arithmetic_function.moebius_ne_zero_iff_squarefree Nat.ArithmeticFunction.moebius_ne_zero_iff_squarefree
 
 theorem moebius_ne_zero_iff_eq_or {n : ℕ} : μ n ≠ 0 ↔ μ n = 1 ∨ μ n = -1 :=
   by
@@ -965,8 +942,7 @@ theorem moebius_ne_zero_iff_eq_or {n : ℕ} : μ n ≠ 0 ↔ μ n = 1 ∨ μ n =
     rw [moebius_apply_of_squarefree h]
     apply neg_one_pow_eq_or
   · rcases h with (h | h) <;> simp [h]
-#align
-  nat.arithmetic_function.moebius_ne_zero_iff_eq_or Nat.ArithmeticFunction.moebius_ne_zero_iff_eq_or
+#align nat.arithmetic_function.moebius_ne_zero_iff_eq_or Nat.ArithmeticFunction.moebius_ne_zero_iff_eq_or
 
 theorem moebius_apply_prime {p : ℕ} (hp : p.Prime) : μ p = -1 := by
   rw [moebius_apply_of_squarefree hp.squarefree, card_factors_apply_prime hp, pow_one]
@@ -979,8 +955,7 @@ theorem moebius_apply_prime_pow {p k : ℕ} (hp : p.Prime) (hk : k ≠ 0) :
   rw [moebius_eq_zero_of_not_squarefree]
   rw [squarefree_pow_iff hp.ne_one hk, not_and_or]
   exact Or.inr h
-#align
-  nat.arithmetic_function.moebius_apply_prime_pow Nat.ArithmeticFunction.moebius_apply_prime_pow
+#align nat.arithmetic_function.moebius_apply_prime_pow Nat.ArithmeticFunction.moebius_apply_prime_pow
 
 theorem moebius_apply_is_prime_pow_not_prime {n : ℕ} (hn : IsPrimePow n) (hn' : ¬n.Prime) :
     μ n = 0 := by
@@ -988,8 +963,7 @@ theorem moebius_apply_is_prime_pow_not_prime {n : ℕ} (hn : IsPrimePow n) (hn' 
   rw [moebius_apply_prime_pow hp hk.ne', if_neg]
   rintro rfl
   exact hn' (by simpa)
-#align
-  nat.arithmetic_function.moebius_apply_is_prime_pow_not_prime Nat.ArithmeticFunction.moebius_apply_is_prime_pow_not_prime
+#align nat.arithmetic_function.moebius_apply_is_prime_pow_not_prime Nat.ArithmeticFunction.moebius_apply_is_prime_pow_not_prime
 
 theorem is_multiplicative_moebius : IsMultiplicative μ :=
   by
@@ -997,8 +971,7 @@ theorem is_multiplicative_moebius : IsMultiplicative μ :=
   refine' ⟨by simp, fun n m hn hm hnm => _⟩
   simp only [moebius, ZeroHom.coe_mk, squarefree_mul hnm, ite_and, card_factors_mul hn hm]
   rw [pow_add, mul_comm, ite_mul_zero_left, ite_mul_zero_right, mul_comm]
-#align
-  nat.arithmetic_function.is_multiplicative_moebius Nat.ArithmeticFunction.is_multiplicative_moebius
+#align nat.arithmetic_function.is_multiplicative_moebius Nat.ArithmeticFunction.is_multiplicative_moebius
 
 open UniqueFactorizationMonoid
 
@@ -1032,14 +1005,12 @@ theorem coe_zeta_mul_moebius : (ζ * μ : ArithmeticFunction ℤ) = 1 := by
 @[simp]
 theorem coe_moebius_mul_coe_zeta [Ring R] : (μ * ζ : ArithmeticFunction R) = 1 := by
   rw [← coe_coe, ← int_coe_mul, moebius_mul_coe_zeta, int_coe_one]
-#align
-  nat.arithmetic_function.coe_moebius_mul_coe_zeta Nat.ArithmeticFunction.coe_moebius_mul_coe_zeta
+#align nat.arithmetic_function.coe_moebius_mul_coe_zeta Nat.ArithmeticFunction.coe_moebius_mul_coe_zeta
 
 @[simp]
 theorem coe_zeta_mul_coe_moebius [Ring R] : (ζ * μ : ArithmeticFunction R) = 1 := by
   rw [← coe_coe, ← int_coe_mul, coe_zeta_mul_moebius, int_coe_one]
-#align
-  nat.arithmetic_function.coe_zeta_mul_coe_moebius Nat.ArithmeticFunction.coe_zeta_mul_coe_moebius
+#align nat.arithmetic_function.coe_zeta_mul_coe_moebius Nat.ArithmeticFunction.coe_zeta_mul_coe_moebius
 
 section CommRing
 
@@ -1097,8 +1068,7 @@ theorem sum_eq_iff_sum_smul_moebius_eq [AddCommGroup R] {f g : ℕ → R} :
     simp only [n.succ_ne_zero, forall_prop_of_true, succ_pos', smul_apply, if_false, ZeroHom.coe_mk]
     rw [sum_congr rfl fun x hx => _]
     rw [if_neg (ne_of_gt (Nat.pos_of_mem_divisors (snd_mem_divisors_of_mem_antidiagonal hx)))]
-#align
-  nat.arithmetic_function.sum_eq_iff_sum_smul_moebius_eq Nat.ArithmeticFunction.sum_eq_iff_sum_smul_moebius_eq
+#align nat.arithmetic_function.sum_eq_iff_sum_smul_moebius_eq Nat.ArithmeticFunction.sum_eq_iff_sum_smul_moebius_eq
 
 /-- Möbius inversion for functions to a `ring`. -/
 theorem sum_eq_iff_sum_mul_moebius_eq [Ring R] {f g : ℕ → R} :
@@ -1109,16 +1079,14 @@ theorem sum_eq_iff_sum_mul_moebius_eq [Ring R] {f g : ℕ → R} :
   apply forall_congr'
   refine' fun a => imp_congr_right fun _ => (sum_congr rfl fun x hx => _).congr_left
   rw [zsmul_eq_mul]
-#align
-  nat.arithmetic_function.sum_eq_iff_sum_mul_moebius_eq Nat.ArithmeticFunction.sum_eq_iff_sum_mul_moebius_eq
+#align nat.arithmetic_function.sum_eq_iff_sum_mul_moebius_eq Nat.ArithmeticFunction.sum_eq_iff_sum_mul_moebius_eq
 
 /-- Möbius inversion for functions to a `comm_group`. -/
 theorem prod_eq_iff_prod_pow_moebius_eq [CommGroup R] {f g : ℕ → R} :
     (∀ n : ℕ, 0 < n → (∏ i in n.divisors, f i) = g n) ↔
       ∀ n : ℕ, 0 < n → (∏ x : ℕ × ℕ in n.divisorsAntidiagonal, g x.snd ^ μ x.fst) = f n :=
   @sum_eq_iff_sum_smul_moebius_eq (Additive R) _ _ _
-#align
-  nat.arithmetic_function.prod_eq_iff_prod_pow_moebius_eq Nat.ArithmeticFunction.prod_eq_iff_prod_pow_moebius_eq
+#align nat.arithmetic_function.prod_eq_iff_prod_pow_moebius_eq Nat.ArithmeticFunction.prod_eq_iff_prod_pow_moebius_eq
 
 /-- Möbius inversion for functions to a `comm_group_with_zero`. -/
 theorem prod_eq_iff_prod_pow_moebius_eq_of_nonzero [CommGroupWithZero R] {f g : ℕ → R}
@@ -1145,8 +1113,7 @@ theorem prod_eq_iff_prod_pow_moebius_eq_of_nonzero [CommGroupWithZero R] {f g : 
     intro x hx
     rw [dif_pos (Nat.pos_of_mem_divisors (Nat.snd_mem_divisors_of_mem_antidiagonal hx)),
       Units.coeHom_apply, Units.val_zpow_eq_zpow_val, Units.val_mk0]
-#align
-  nat.arithmetic_function.prod_eq_iff_prod_pow_moebius_eq_of_nonzero Nat.ArithmeticFunction.prod_eq_iff_prod_pow_moebius_eq_of_nonzero
+#align nat.arithmetic_function.prod_eq_iff_prod_pow_moebius_eq_of_nonzero Nat.ArithmeticFunction.prod_eq_iff_prod_pow_moebius_eq_of_nonzero
 
 end SpecialFunctions
 

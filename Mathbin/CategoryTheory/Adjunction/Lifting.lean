@@ -129,8 +129,7 @@ variable [HasReflexiveCoequalizers A]
 -/
 noncomputable def constructLeftAdjointObj (Y : B) : A :=
   coequalizer (F'.map (U.map (adj₁.counit.app Y))) (otherMap _ _ adj₁ adj₂ Y)
-#align
-  category_theory.lift_adjoint.construct_left_adjoint_obj CategoryTheory.LiftAdjoint.constructLeftAdjointObj
+#align category_theory.lift_adjoint.construct_left_adjoint_obj CategoryTheory.LiftAdjoint.constructLeftAdjointObj
 
 /-- The homset equivalence which helps show that `R` is a right adjoint. -/
 @[simps (config := { rhsMd := semireducible })]
@@ -163,8 +162,7 @@ noncomputable def constructLeftAdjointEquiv [∀ X : B, RegularEpi (adj₁.couni
       apply eq_comm
     _ ≃ (X ⟶ R.obj Y) := (Cofork.IsColimit.homIso (counitCoequalises adj₁ X) _).symm
     
-#align
-  category_theory.lift_adjoint.construct_left_adjoint_equiv CategoryTheory.LiftAdjoint.constructLeftAdjointEquiv
+#align category_theory.lift_adjoint.construct_left_adjoint_equiv CategoryTheory.LiftAdjoint.constructLeftAdjointEquiv
 
 /-- Construct the left adjoint to `R`, with object map `construct_left_adjoint_obj`. -/
 noncomputable def constructLeftAdjoint [∀ X : B, RegularEpi (adj₁.counit.app X)] : B ⥤ A :=
@@ -179,8 +177,7 @@ noncomputable def constructLeftAdjoint [∀ X : B, RegularEpi (adj₁.counit.app
     Equiv.subtypeEquiv_apply, Subtype.coe_mk, Subtype.coe_mk, Subtype.coe_mk, Subtype.coe_mk, ←
     adj₁.hom_equiv_naturality_right_symm, cofork.is_colimit.hom_iso_natural,
     adj₂.hom_equiv_naturality_right, functor.comp_map]
-#align
-  category_theory.lift_adjoint.construct_left_adjoint CategoryTheory.LiftAdjoint.constructLeftAdjoint
+#align category_theory.lift_adjoint.construct_left_adjoint CategoryTheory.LiftAdjoint.constructLeftAdjoint
 
 end LiftAdjoint
 

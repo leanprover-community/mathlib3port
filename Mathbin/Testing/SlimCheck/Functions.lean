@@ -205,8 +205,7 @@ instance Finsupp.sampleableExt [Repr α] [Repr β] : SampleableExt (α →₀ β
     let ⟨x⟩ ← (Uliftable.up <| sample β : Gen (ULift.{max u v} β))
     pure <| total_function.with_default (list.to_finmap' xs) x
   shrink := TotalFunction.shrink
-#align
-  slim_check.total_function.finsupp.sampleable_ext SlimCheck.TotalFunction.Finsupp.sampleableExt
+#align slim_check.total_function.finsupp.sampleable_ext SlimCheck.TotalFunction.Finsupp.sampleableExt
 
 -- TODO: support a non-constant codomain type
 instance Dfinsupp.sampleableExt [Repr α] [Repr β] : SampleableExt (Π₀ a : α, β)
@@ -218,8 +217,7 @@ instance Dfinsupp.sampleableExt [Repr α] [Repr β] : SampleableExt (Π₀ a : �
     let ⟨x⟩ ← (Uliftable.up <| sample β : Gen (ULift.{max u v} β))
     pure <| total_function.with_default (list.to_finmap' xs) x
   shrink := TotalFunction.shrink
-#align
-  slim_check.total_function.dfinsupp.sampleable_ext SlimCheck.TotalFunction.Dfinsupp.sampleableExt
+#align slim_check.total_function.dfinsupp.sampleable_ext SlimCheck.TotalFunction.Dfinsupp.sampleableExt
 
 end Finsupp
 
@@ -243,8 +241,7 @@ instance (priority := 2000) PiUncurry.sampleableExt [SampleableExt (α × β →
   interp m x y := interp (α × β → γ) m (x, y)
   sample := sample (α × β → γ)
   shrink := shrink
-#align
-  slim_check.total_function.pi_uncurry.sampleable_ext SlimCheck.TotalFunction.PiUncurry.sampleableExt
+#align slim_check.total_function.pi_uncurry.sampleable_ext SlimCheck.TotalFunction.PiUncurry.sampleableExt
 
 end SampleableExt
 
@@ -300,8 +297,7 @@ theorem List.apply_id_cons [DecidableEq α] (xs : List (α × α)) (x y z : α) 
     List.applyId ((y, z)::xs) x = if y = x then z else List.applyId xs x := by
   simp only [list.apply_id, List.dlookup, eq_rec_constant, Prod.toSigma, List.map] <;> split_ifs <;>
     rfl
-#align
-  slim_check.injective_function.list.apply_id_cons SlimCheck.InjectiveFunction.List.apply_id_cons
+#align slim_check.injective_function.list.apply_id_cons SlimCheck.InjectiveFunction.List.apply_id_cons
 
 open Function _Root_.List
 
@@ -332,8 +328,7 @@ theorem List.apply_id_zip_eq [DecidableEq α] {xs ys : List α} (h₀ : List.Nod
         · apply xs_ih <;> solve_by_elim [succ.inj]
         · apply h₀
           apply nth_mem h₂
-#align
-  slim_check.injective_function.list.apply_id_zip_eq SlimCheck.InjectiveFunction.List.apply_id_zip_eq
+#align slim_check.injective_function.list.apply_id_zip_eq SlimCheck.InjectiveFunction.List.apply_id_zip_eq
 
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:564:6: unsupported: specialize @hyp -/
 theorem apply_id_mem_iff [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup xs) (h₁ : xs ~ ys)
@@ -382,8 +377,7 @@ theorem List.apply_id_eq_self [DecidableEq α] {xs ys : List α} (x : α) :
     map_map, Prod.exists]
   intro y hy
   exact h (mem_zip hy).1
-#align
-  slim_check.injective_function.list.apply_id_eq_self SlimCheck.InjectiveFunction.List.apply_id_eq_self
+#align slim_check.injective_function.list.apply_id_eq_self SlimCheck.InjectiveFunction.List.apply_id_eq_self
 
 theorem apply_id_injective [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup xs) (h₁ : xs ~ ys) :
     Injective.{u + 1, u + 1} (List.applyId (xs.zip ys)) :=
@@ -413,8 +407,7 @@ theorem apply_id_injective [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup
     rw [h] at hx
     contradiction
   · rwa [list.apply_id_eq_self, list.apply_id_eq_self] at h <;> assumption
-#align
-  slim_check.injective_function.apply_id_injective SlimCheck.InjectiveFunction.apply_id_injective
+#align slim_check.injective_function.apply_id_injective SlimCheck.InjectiveFunction.apply_id_injective
 
 open TotalFunction (list.to_finmap')
 
@@ -540,8 +533,7 @@ instance PiInjective.sampleableExt : SampleableExt { f : ℤ → ℤ // Function
           InjectiveFunction.mk.{0} xs' ys.1 ys.2 (ys.2.nodup_iff.1 <| (nodup_range _).map Hinj)
         pure r
   shrink := @InjectiveFunction.shrink ℤ _ _
-#align
-  slim_check.injective_function.pi_injective.sampleable_ext SlimCheck.InjectiveFunction.PiInjective.sampleableExt
+#align slim_check.injective_function.pi_injective.sampleable_ext SlimCheck.InjectiveFunction.PiInjective.sampleableExt
 
 end InjectiveFunction
 

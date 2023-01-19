@@ -80,8 +80,7 @@ theorem of_bounded_under_abs_im (hre : Tendsto re l atTop)
     (him : IsBoundedUnder (· ≤ ·) l fun z => |z.im|) : IsExpCmpFilter l :=
   of_is_O_im_re_pow hre 0 <| by
     simpa only [pow_zero] using @is_bounded_under.is_O_const ℂ ℝ ℝ _ _ _ l him 1 one_ne_zero
-#align
-  complex.is_exp_cmp_filter.of_bounded_under_abs_im Complex.IsExpCmpFilter.of_bounded_under_abs_im
+#align complex.is_exp_cmp_filter.of_bounded_under_abs_im Complex.IsExpCmpFilter.of_bounded_under_abs_im
 
 theorem of_bounded_under_im (hre : Tendsto re l atTop) (him_le : IsBoundedUnder (· ≤ ·) l im)
     (him_ge : IsBoundedUnder (· ≥ ·) l im) : IsExpCmpFilter l :=
@@ -125,8 +124,7 @@ theorem is_o_im_pow_exp_re (hl : IsExpCmpFilter l) (n : ℕ) :
 theorem abs_im_pow_eventually_le_exp_re (hl : IsExpCmpFilter l) (n : ℕ) :
     (fun z : ℂ => |z.im| ^ n) ≤ᶠ[l] fun z => Real.exp z.re := by
   simpa using (hl.is_o_im_pow_exp_re n).bound zero_lt_one
-#align
-  complex.is_exp_cmp_filter.abs_im_pow_eventually_le_exp_re Complex.IsExpCmpFilter.abs_im_pow_eventually_le_exp_re
+#align complex.is_exp_cmp_filter.abs_im_pow_eventually_le_exp_re Complex.IsExpCmpFilter.abs_im_pow_eventually_le_exp_re
 
 /-- If `l : filter ℂ` is an "exponential comparison filter", then $\log |z| =o(ℜ z)$ along `l`.
 This is the main lemma in the proof of `complex.is_exp_cmp_filter.is_o_cpow_exp` below.

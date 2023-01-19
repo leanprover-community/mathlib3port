@@ -110,8 +110,7 @@ theorem supr_range_std_basis_le_infi_ker_proj (I J : Set ι) (h : Disjoint I J) 
   rw [proj_std_basis_ne R φ j i, zero_apply]
   rintro rfl
   exact h.le_bot ⟨hi, hj⟩
-#align
-  linear_map.supr_range_std_basis_le_infi_ker_proj LinearMap.supr_range_std_basis_le_infi_ker_proj
+#align linear_map.supr_range_std_basis_le_infi_ker_proj LinearMap.supr_range_std_basis_le_infi_ker_proj
 
 theorem infi_ker_proj_le_supr_range_std_basis {I : Finset ι} {J : Set ι} (hu : Set.univ ⊆ ↑I ∪ J) :
     (⨅ i ∈ J, ker (proj i : (∀ i, φ i) →ₗ[R] φ i)) ≤ ⨆ i ∈ I, range (stdBasis R φ i) :=
@@ -128,8 +127,7 @@ theorem infi_ker_proj_le_supr_range_std_basis {I : Finset ι} {J : Set ι} (hu :
           rw [std_basis_same]
           exact hb _ ((hu trivial).resolve_left hiI)]
       exact sum_mem_bsupr fun i hi => mem_range_self (std_basis R φ i) (b i))
-#align
-  linear_map.infi_ker_proj_le_supr_range_std_basis LinearMap.infi_ker_proj_le_supr_range_std_basis
+#align linear_map.infi_ker_proj_le_supr_range_std_basis LinearMap.infi_ker_proj_le_supr_range_std_basis
 
 theorem supr_range_std_basis_eq_infi_ker_proj {I J : Set ι} (hd : Disjoint I J)
     (hu : Set.univ ⊆ I ∪ J) (hI : Set.Finite I) :
@@ -140,8 +138,7 @@ theorem supr_range_std_basis_eq_infi_ker_proj {I J : Set ι} (hd : Disjoint I J)
   refine' le_trans (infi_ker_proj_le_supr_range_std_basis R φ this) (supᵢ_mono fun i => _)
   rw [Set.Finite.mem_to_finset]
   exact le_rfl
-#align
-  linear_map.supr_range_std_basis_eq_infi_ker_proj LinearMap.supr_range_std_basis_eq_infi_ker_proj
+#align linear_map.supr_range_std_basis_eq_infi_ker_proj LinearMap.supr_range_std_basis_eq_infi_ker_proj
 
 theorem supr_range_std_basis [Finite ι] : (⨆ i, range (stdBasis R φ i)) = ⊤ :=
   by

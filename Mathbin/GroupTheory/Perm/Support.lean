@@ -271,8 +271,7 @@ theorem zpow_apply_eq_of_apply_apply_eq_self {x : α} (hffx : f (f x) = x) :
     rw [zpow_negSucc, inv_eq_iff_eq, ← f.injective.eq_iff, ← mul_apply, ← pow_succ, eq_comm,
       inv_eq_iff_eq, ← mul_apply, ← pow_succ', @eq_comm _ x, or_comm]
     exact pow_apply_eq_of_apply_apply_eq_self hffx _
-#align
-  equiv.perm.zpow_apply_eq_of_apply_apply_eq_self Equiv.Perm.zpow_apply_eq_of_apply_apply_eq_self
+#align equiv.perm.zpow_apply_eq_of_apply_apply_eq_self Equiv.Perm.zpow_apply_eq_of_apply_apply_eq_self
 -/
 
 #print Equiv.Perm.Disjoint.mul_apply_eq_iff /-
@@ -528,8 +527,7 @@ theorem exists_mem_support_of_mem_support_prod {l : List (Perm α)} {x : α}
   induction' l with f l ih generalizing hx
   · rfl
   · rw [List.prod_cons, mul_apply, ih fun g hg => hx g (Or.inr hg), hx f (Or.inl rfl)]
-#align
-  equiv.perm.exists_mem_support_of_mem_support_prod Equiv.Perm.exists_mem_support_of_mem_support_prod
+#align equiv.perm.exists_mem_support_of_mem_support_prod Equiv.Perm.exists_mem_support_of_mem_support_prod
 
 #print Equiv.Perm.support_pow_le /-
 theorem support_pow_le (σ : Perm α) (n : ℕ) : (σ ^ n).Support ≤ σ.Support := fun x h1 =>
@@ -756,8 +754,7 @@ theorem mem_support_swap_mul_imp_mem_support_ne {x y : α} (hy : y ∈ Support (
   by_cases h : f y = x
   · constructor <;> intro <;> simp_all only [if_true, eq_self_iff_true, not_true, Ne.def]
   · split_ifs  at hy <;> cc
-#align
-  equiv.perm.mem_support_swap_mul_imp_mem_support_ne Equiv.Perm.mem_support_swap_mul_imp_mem_support_ne
+#align equiv.perm.mem_support_swap_mul_imp_mem_support_ne Equiv.Perm.mem_support_swap_mul_imp_mem_support_ne
 
 #print Equiv.Perm.Disjoint.mem_imp /-
 theorem Disjoint.mem_imp (h : Disjoint f g) {x : α} (hx : x ∈ f.Support) : x ∉ g.Support :=
@@ -982,8 +979,7 @@ theorem card_support_prod_list_of_pairwise_disjoint {l : List (Perm α)} (h : l.
   · obtain ⟨ha, ht⟩ := List.pairwise_cons.1 h
     rw [List.prod_cons, List.map_cons, List.sum_cons, ← ih ht]
     exact (disjoint_prod_right _ ha).card_support_mul
-#align
-  equiv.perm.card_support_prod_list_of_pairwise_disjoint Equiv.Perm.card_support_prod_list_of_pairwise_disjoint
+#align equiv.perm.card_support_prod_list_of_pairwise_disjoint Equiv.Perm.card_support_prod_list_of_pairwise_disjoint
 
 end Card
 

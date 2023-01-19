@@ -305,8 +305,7 @@ theorem is_stopping_time_hitting_is_stopping_time [ConditionallyCompleteLinearOr
     MeasurableSet.Union fun i =>
       MeasurableSet.Union fun hi =>
         (f.mono hi _ (hτ.measurable_set_eq i)).inter (hitting_is_stopping_time hf hs n)
-#align
-  measure_theory.is_stopping_time_hitting_is_stopping_time MeasureTheory.is_stopping_time_hitting_is_stopping_time
+#align measure_theory.is_stopping_time_hitting_is_stopping_time MeasureTheory.is_stopping_time_hitting_is_stopping_time
 
 section CompleteLattice
 

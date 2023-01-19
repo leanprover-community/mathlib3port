@@ -559,8 +559,7 @@ variable {ι : Type _} [DecidableEq ι] [Fintype ι]
 theorem Matrix.nondegenerate_to_bilin'_iff_nondegenerate_to_bilin {M : Matrix ι ι R₂}
     (b : Basis ι R₂ M₂) : M.toBilin'.Nondegenerate ↔ (Matrix.toBilin b M).Nondegenerate :=
   (nondegenerate_congr_iff b.equivFun.symm).symm
-#align
-  matrix.nondegenerate_to_bilin'_iff_nondegenerate_to_bilin Matrix.nondegenerate_to_bilin'_iff_nondegenerate_to_bilin
+#align matrix.nondegenerate_to_bilin'_iff_nondegenerate_to_bilin Matrix.nondegenerate_to_bilin'_iff_nondegenerate_to_bilin
 
 -- Lemmas transferring nondegeneracy between a matrix and its associated bilinear form
 theorem Matrix.Nondegenerate.toBilin' {M : Matrix ι ι R₃} (h : M.Nondegenerate) :
@@ -613,14 +612,12 @@ theorem Nondegenerate.to_matrix {B : BilinForm R₃ M₃} (h : B.Nondegenerate) 
 theorem nondegenerate_to_bilin'_iff_det_ne_zero {M : Matrix ι ι A} :
     M.toBilin'.Nondegenerate ↔ M.det ≠ 0 := by
   rw [Matrix.nondegenerate_to_bilin'_iff, Matrix.nondegenerate_iff_det_ne_zero]
-#align
-  bilin_form.nondegenerate_to_bilin'_iff_det_ne_zero BilinForm.nondegenerate_to_bilin'_iff_det_ne_zero
+#align bilin_form.nondegenerate_to_bilin'_iff_det_ne_zero BilinForm.nondegenerate_to_bilin'_iff_det_ne_zero
 
 theorem nondegenerateToBilin'OfDetNeZero' (M : Matrix ι ι A) (h : M.det ≠ 0) :
     M.toBilin'.Nondegenerate :=
   nondegenerate_to_bilin'_iff_det_ne_zero.mpr h
-#align
-  bilin_form.nondegenerate_to_bilin'_of_det_ne_zero' BilinForm.nondegenerateToBilin'OfDetNeZero'
+#align bilin_form.nondegenerate_to_bilin'_of_det_ne_zero' BilinForm.nondegenerateToBilin'OfDetNeZero'
 
 theorem nondegenerate_iff_det_ne_zero {B : BilinForm A M₃} (b : Basis ι A M₃) :
     B.Nondegenerate ↔ (toMatrix b B).det ≠ 0 := by

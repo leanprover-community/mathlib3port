@@ -57,8 +57,7 @@ def isLimitMapConeForkEquiv' :
   refine' parallel_pair.ext (iso.refl _) (iso.refl _) _ _ <;> simp
   refine' fork.ext (iso.refl _) _
   simp [fork.ι]
-#align
-  category_theory.limits.is_limit_map_cone_fork_equiv' CategoryTheory.Limits.isLimitMapConeForkEquiv'
+#align category_theory.limits.is_limit_map_cone_fork_equiv' CategoryTheory.Limits.isLimitMapConeForkEquiv'
 
 /-- The property of preserving kernels expressed in terms of kernel forks.
 
@@ -71,8 +70,7 @@ def isLimitForkMapOfIsLimit' [PreservesLimit (parallelPair f 0) G]
       (KernelFork.ofι (G.map h) (by simp only [← G.map_comp, w, functor.map_zero]) :
         Fork (G.map f) 0) :=
   isLimitMapConeForkEquiv' G w (PreservesLimit.preserves l)
-#align
-  category_theory.limits.is_limit_fork_map_of_is_limit' CategoryTheory.Limits.isLimitForkMapOfIsLimit'
+#align category_theory.limits.is_limit_fork_map_of_is_limit' CategoryTheory.Limits.isLimitForkMapOfIsLimit'
 
 variable (f) [HasKernel f]
 
@@ -85,8 +83,7 @@ def isLimitOfHasKernelOfPreservesLimit [PreservesLimit (parallelPair f 0) G] :
           (by simp only [← G.map_comp, equalizer.condition, comp_zero, functor.map_zero]) :
         Fork (G.map f) 0) :=
   isLimitForkMapOfIsLimit' G (kernel.condition f) (kernelIsKernel f)
-#align
-  category_theory.limits.is_limit_of_has_kernel_of_preserves_limit CategoryTheory.Limits.isLimitOfHasKernelOfPreservesLimit
+#align category_theory.limits.is_limit_of_has_kernel_of_preserves_limit CategoryTheory.Limits.isLimitOfHasKernelOfPreservesLimit
 
 instance [PreservesLimit (parallelPair f 0) G] : HasKernel (G.map f)
     where exists_limit := ⟨⟨_, isLimitOfHasKernelOfPreservesLimit G f⟩⟩
@@ -103,8 +100,7 @@ def PreservesKernel.ofIsoComparison [i : IsIso (kernelComparison f G)] :
   apply (is_limit_map_cone_fork_equiv' G (kernel.condition f)).symm _
   apply is_limit.of_point_iso (kernel_is_kernel (G.map f))
   exact i
-#align
-  category_theory.limits.preserves_kernel.of_iso_comparison CategoryTheory.Limits.PreservesKernel.ofIsoComparison
+#align category_theory.limits.preserves_kernel.of_iso_comparison CategoryTheory.Limits.PreservesKernel.ofIsoComparison
 
 variable [PreservesLimit (parallelPair f 0) G]
 
@@ -135,8 +131,7 @@ theorem kernel_map_comp_preserves_kernel_iso_inv {X' Y' : C} (g : X' ⟶ Y') [Ha
   by
   rw [iso.comp_inv_eq, category.assoc, preserves_kernel.iso_hom, iso.eq_inv_comp]
   exact kernel_comparison_comp_kernel_map _ _ _ _ _ _
-#align
-  category_theory.limits.kernel_map_comp_preserves_kernel_iso_inv CategoryTheory.Limits.kernel_map_comp_preserves_kernel_iso_inv
+#align category_theory.limits.kernel_map_comp_preserves_kernel_iso_inv CategoryTheory.Limits.kernel_map_comp_preserves_kernel_iso_inv
 
 end Kernels
 
@@ -163,8 +158,7 @@ def isColimitMapCoconeCoforkEquiv' :
   simp only [cofork.π, iso.refl_hom, id_comp, cocones.precompose_obj_ι, nat_trans.comp_app,
     parallel_pair.ext_hom_app, functor.map_cocone_ι_app, cofork.of_π_ι_app]
   apply category.comp_id
-#align
-  category_theory.limits.is_colimit_map_cocone_cofork_equiv' CategoryTheory.Limits.isColimitMapCoconeCoforkEquiv'
+#align category_theory.limits.is_colimit_map_cocone_cofork_equiv' CategoryTheory.Limits.isColimitMapCoconeCoforkEquiv'
 
 /-- The property of preserving cokernels expressed in terms of cokernel coforks.
 
@@ -177,8 +171,7 @@ def isColimitCoforkMapOfIsColimit' [PreservesColimit (parallelPair f 0) G]
       (CokernelCofork.ofπ (G.map h) (by simp only [← G.map_comp, w, functor.map_zero]) :
         Cofork (G.map f) 0) :=
   isColimitMapCoconeCoforkEquiv' G w (PreservesColimit.preserves l)
-#align
-  category_theory.limits.is_colimit_cofork_map_of_is_colimit' CategoryTheory.Limits.isColimitCoforkMapOfIsColimit'
+#align category_theory.limits.is_colimit_cofork_map_of_is_colimit' CategoryTheory.Limits.isColimitCoforkMapOfIsColimit'
 
 variable (f) [HasCokernel f]
 
@@ -192,8 +185,7 @@ def isColimitOfHasCokernelOfPreservesColimit [PreservesColimit (parallelPair f 0
           (by simp only [← G.map_comp, coequalizer.condition, zero_comp, functor.map_zero]) :
         Cofork (G.map f) 0) :=
   isColimitCoforkMapOfIsColimit' G (cokernel.condition f) (cokernelIsCokernel f)
-#align
-  category_theory.limits.is_colimit_of_has_cokernel_of_preserves_colimit CategoryTheory.Limits.isColimitOfHasCokernelOfPreservesColimit
+#align category_theory.limits.is_colimit_of_has_cokernel_of_preserves_colimit CategoryTheory.Limits.isColimitOfHasCokernelOfPreservesColimit
 
 instance [PreservesColimit (parallelPair f 0) G] : HasCokernel (G.map f)
     where exists_colimit := ⟨⟨_, isColimitOfHasCokernelOfPreservesColimit G f⟩⟩
@@ -210,8 +202,7 @@ def PreservesCokernel.ofIsoComparison [i : IsIso (cokernelComparison f G)] :
   apply (is_colimit_map_cocone_cofork_equiv' G (cokernel.condition f)).symm _
   apply is_colimit.of_point_iso (cokernel_is_cokernel (G.map f))
   exact i
-#align
-  category_theory.limits.preserves_cokernel.of_iso_comparison CategoryTheory.Limits.PreservesCokernel.ofIsoComparison
+#align category_theory.limits.preserves_cokernel.of_iso_comparison CategoryTheory.Limits.PreservesCokernel.ofIsoComparison
 
 variable [PreservesColimit (parallelPair f 0) G]
 
@@ -226,8 +217,7 @@ def PreservesCokernel.iso : G.obj (cokernel f) ≅ cokernel (G.map f) :=
 @[simp]
 theorem PreservesCokernel.iso_inv : (PreservesCokernel.iso G f).inv = cokernelComparison f G :=
   rfl
-#align
-  category_theory.limits.preserves_cokernel.iso_inv CategoryTheory.Limits.PreservesCokernel.iso_inv
+#align category_theory.limits.preserves_cokernel.iso_inv CategoryTheory.Limits.PreservesCokernel.iso_inv
 
 instance : IsIso (cokernelComparison f G) :=
   by
@@ -245,8 +235,7 @@ theorem preserves_cokernel_iso_comp_cokernel_map {X' Y' : C} (g : X' ⟶ Y') [Ha
   by
   rw [← iso.comp_inv_eq, category.assoc, ← iso.eq_inv_comp]
   exact cokernel_map_comp_cokernel_comparison _ _ _ _ _ _
-#align
-  category_theory.limits.preserves_cokernel_iso_comp_cokernel_map CategoryTheory.Limits.preserves_cokernel_iso_comp_cokernel_map
+#align category_theory.limits.preserves_cokernel_iso_comp_cokernel_map CategoryTheory.Limits.preserves_cokernel_iso_comp_cokernel_map
 
 end Cokernels
 

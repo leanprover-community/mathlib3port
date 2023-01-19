@@ -445,14 +445,12 @@ theorem coe_continuous_linear_equiv_at_eq (e : Trivialization F (π E)) [e.isLin
     (hb : b ∈ e.baseSet) :
     (e.continuousLinearEquivAt R b hb : E b → F) = e.continuousLinearMapAt R b :=
   (e.coe_linear_map_at_of_mem hb).symm
-#align
-  trivialization.coe_continuous_linear_equiv_at_eq Trivialization.coe_continuous_linear_equiv_at_eq
+#align trivialization.coe_continuous_linear_equiv_at_eq Trivialization.coe_continuous_linear_equiv_at_eq
 
 theorem symm_continuous_linear_equiv_at_eq (e : Trivialization F (π E)) [e.isLinear R] {b : B}
     (hb : b ∈ e.baseSet) : ((e.continuousLinearEquivAt R b hb).symm : F → E b) = e.symmL R b :=
   rfl
-#align
-  trivialization.symm_continuous_linear_equiv_at_eq Trivialization.symm_continuous_linear_equiv_at_eq
+#align trivialization.symm_continuous_linear_equiv_at_eq Trivialization.symm_continuous_linear_equiv_at_eq
 
 @[simp]
 theorem continuous_linear_equiv_at_apply' (e : Trivialization F (π E)) [e.isLinear R]
@@ -461,8 +459,7 @@ theorem continuous_linear_equiv_at_apply' (e : Trivialization F (π E)) [e.isLin
   by
   cases x
   rfl
-#align
-  trivialization.continuous_linear_equiv_at_apply' Trivialization.continuous_linear_equiv_at_apply'
+#align trivialization.continuous_linear_equiv_at_apply' Trivialization.continuous_linear_equiv_at_apply'
 
 variable (R)
 
@@ -475,8 +472,7 @@ theorem apply_eq_prod_continuous_linear_equiv_at (e : Trivialization F (π E)) [
     rw [e.source_eq]
     exact hb
   · simp only [coe_coe, continuous_linear_equiv_at_apply]
-#align
-  trivialization.apply_eq_prod_continuous_linear_equiv_at Trivialization.apply_eq_prod_continuous_linear_equiv_at
+#align trivialization.apply_eq_prod_continuous_linear_equiv_at Trivialization.apply_eq_prod_continuous_linear_equiv_at
 
 variable {R}
 
@@ -492,8 +488,7 @@ theorem symm_apply_eq_mk_continuous_linear_equiv_at_symm (e : Trivialization F (
   · simp only [e.source_eq, hb, mem_preimage]
   simp_rw [e.apply_eq_prod_continuous_linear_equiv_at R b hb, e.to_local_homeomorph.right_inv h,
     ContinuousLinearEquiv.apply_symm_apply]
-#align
-  trivialization.symm_apply_eq_mk_continuous_linear_equiv_at_symm Trivialization.symm_apply_eq_mk_continuous_linear_equiv_at_symm
+#align trivialization.symm_apply_eq_mk_continuous_linear_equiv_at_symm Trivialization.symm_apply_eq_mk_continuous_linear_equiv_at_symm
 
 theorem comp_continuous_linear_equiv_at_eq_coord_change (e e' : Trivialization F (π E))
     [e.isLinear R] [e'.isLinear R] {b : B} (hb : b ∈ e.baseSet ∩ e'.baseSet) :
@@ -503,8 +498,7 @@ theorem comp_continuous_linear_equiv_at_eq_coord_change (e e' : Trivialization F
   ext v
   rw [coord_changeL_apply e e' hb]
   rfl
-#align
-  trivialization.comp_continuous_linear_equiv_at_eq_coord_change Trivialization.comp_continuous_linear_equiv_at_eq_coord_change
+#align trivialization.comp_continuous_linear_equiv_at_eq_coord_change Trivialization.comp_continuous_linear_equiv_at_eq_coord_change
 
 end Trivialization
 
@@ -885,16 +879,14 @@ def trivializationOfMemPretrivializationAtlas (a : VectorPrebundle R F E)
     {e : Pretrivialization F (π E)} (he : e ∈ a.pretrivializationAtlas) :
     @Trivialization B F _ _ _ a.totalSpaceTopology (π E) :=
   a.toFiberPrebundle.trivializationOfMemPretrivializationAtlas he
-#align
-  vector_prebundle.trivialization_of_mem_pretrivialization_atlas VectorPrebundle.trivializationOfMemPretrivializationAtlas
+#align vector_prebundle.trivialization_of_mem_pretrivialization_atlas VectorPrebundle.trivializationOfMemPretrivializationAtlas
 
 theorem linearOfMemPretrivializationAtlas (a : VectorPrebundle R F E)
     {e : Pretrivialization F (π E)} (he : e ∈ a.pretrivializationAtlas) :
     @Trivialization.IsLinear R B F _ _ _ _ a.totalSpaceTopology _ _ _ _
       (trivializationOfMemPretrivializationAtlas a he) :=
   { linear := (a.pretrivializationLinear' e he).linear }
-#align
-  vector_prebundle.linear_of_mem_pretrivialization_atlas VectorPrebundle.linearOfMemPretrivializationAtlas
+#align vector_prebundle.linear_of_mem_pretrivialization_atlas VectorPrebundle.linearOfMemPretrivializationAtlas
 
 variable (a : VectorPrebundle R F E)
 
@@ -907,8 +899,7 @@ theorem mem_trivialization_at_source (b : B) (x : E b) :
 theorem total_space_mk_preimage_source (b : B) :
     totalSpaceMk b ⁻¹' (a.pretrivializationAt b).source = univ :=
   a.toFiberPrebundle.total_space_mk_preimage_source b
-#align
-  vector_prebundle.total_space_mk_preimage_source VectorPrebundle.total_space_mk_preimage_source
+#align vector_prebundle.total_space_mk_preimage_source VectorPrebundle.total_space_mk_preimage_source
 
 /-- Topology on the fibers `E b` induced by the map `E b → E.total_space`. -/
 def fiberTopology (b : B) : TopologicalSpace (E b) :=

@@ -62,8 +62,7 @@ theorem cardinal_mk_le_sigma_polynomial :
     simp only at h
     refine' (Subtype.heq_iff_coe_eq _).1 h.2
     simp only [h.1, iff_self_iff, forall_true_iff]
-#align
-  algebra.is_algebraic.cardinal_mk_le_sigma_polynomial Algebra.IsAlgebraic.cardinal_mk_le_sigma_polynomial
+#align algebra.is_algebraic.cardinal_mk_le_sigma_polynomial Algebra.IsAlgebraic.cardinal_mk_le_sigma_polynomial
 
 /-- The cardinality of an algebraic extension is at most the maximum of the cardinality
 of the base ring or `ℵ₀` -/
@@ -110,8 +109,7 @@ theorem isAlgClosureOfTranscendenceBasis [IsAlgClosed K] (hv : IsTranscendenceBa
   letI := RingHom.domain_nontrivial (algebraMap R K)
   { alg_closed := by infer_instance
     algebraic := hv.is_algebraic }
-#align
-  is_alg_closed.is_alg_closure_of_transcendence_basis IsAlgClosed.isAlgClosureOfTranscendenceBasis
+#align is_alg_closed.is_alg_closure_of_transcendence_basis IsAlgClosed.isAlgClosureOfTranscendenceBasis
 
 variable (hw : AlgebraicIndependent R w)
 
@@ -158,8 +156,7 @@ theorem cardinal_le_max_transcendence_basis (hv : IsTranscendenceBasis R v) :
     _ ≤ max (max (max (#R) (#ι)) ℵ₀) ℵ₀ := max_le_max MvPolynomial.cardinal_mk_le_max le_rfl
     _ = _ := by simp [max_assoc]
     
-#align
-  is_alg_closed.cardinal_le_max_transcendence_basis IsAlgClosed.cardinal_le_max_transcendence_basis
+#align is_alg_closed.cardinal_le_max_transcendence_basis IsAlgClosed.cardinal_le_max_transcendence_basis
 
 /-- If `K` is an uncountable algebraically closed field, then its
 cardinality is the same as that of a transcendence basis. -/
@@ -181,8 +178,7 @@ theorem cardinal_eq_cardinal_transcendence_basis_of_aleph_0_lt [Nontrivial R]
         · exact le_max_of_le_right this
       )
     (mk_le_of_injective (show Function.Injective v from hv.1.Injective))
-#align
-  is_alg_closed.cardinal_eq_cardinal_transcendence_basis_of_aleph_0_lt IsAlgClosed.cardinal_eq_cardinal_transcendence_basis_of_aleph_0_lt
+#align is_alg_closed.cardinal_eq_cardinal_transcendence_basis_of_aleph_0_lt IsAlgClosed.cardinal_eq_cardinal_transcendence_basis_of_aleph_0_lt
 
 end Cardinal
 
@@ -209,8 +205,7 @@ theorem ringEquivOfCardinalEqOfCharZero [CharZero K] [CharZero L] (hK : ℵ₀ <
     rwa [← hKL]
   cases' Cardinal.eq.1 this with e
   exact ⟨equiv_of_transcendence_basis _ _ e hs ht⟩
-#align
-  is_alg_closed.ring_equiv_of_cardinal_eq_of_char_zero IsAlgClosed.ringEquivOfCardinalEqOfCharZero
+#align is_alg_closed.ring_equiv_of_cardinal_eq_of_char_zero IsAlgClosed.ringEquivOfCardinalEqOfCharZero
 
 private theorem ring_equiv_of_cardinal_eq_of_char_p (p : ℕ) [Fact p.Prime] [CharP K p] [CharP L p]
     (hK : ℵ₀ < (#K)) (hKL : (#K) = (#L)) : K ≃+* L :=
@@ -236,8 +231,7 @@ private theorem ring_equiv_of_cardinal_eq_of_char_p (p : ℕ) [Fact p.Prime] [Ch
     rwa [← hKL]
   cases' Cardinal.eq.1 this with e
   exact ⟨equiv_of_transcendence_basis _ _ e hs ht⟩
-#align
-  is_alg_closed.ring_equiv_of_cardinal_eq_of_char_p is_alg_closed.ring_equiv_of_cardinal_eq_of_char_p
+#align is_alg_closed.ring_equiv_of_cardinal_eq_of_char_p is_alg_closed.ring_equiv_of_cardinal_eq_of_char_p
 
 /-- Two uncountable algebraically closed fields are isomorphic
 if they have the same cardinality and the same characteristic. -/

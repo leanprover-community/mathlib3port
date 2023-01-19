@@ -84,8 +84,7 @@ theorem derivation_eq_of_forall_mem_vars {D₁ D₂ : Derivation R (MvPolynomial
 theorem derivation_eq_zero_of_forall_mem_vars {D : Derivation R (MvPolynomial σ R) A}
     {f : MvPolynomial σ R} (h : ∀ i ∈ f.vars, D (x i) = 0) : D f = 0 :=
   show D f = (0 : Derivation R (MvPolynomial σ R) A) f from derivation_eq_of_forall_mem_vars h
-#align
-  mv_polynomial.derivation_eq_zero_of_forall_mem_vars MvPolynomial.derivation_eq_zero_of_forall_mem_vars
+#align mv_polynomial.derivation_eq_zero_of_forall_mem_vars MvPolynomial.derivation_eq_zero_of_forall_mem_vars
 
 @[ext]
 theorem derivation_ext {D₁ D₂ : Derivation R (MvPolynomial σ R) A} (h : ∀ i, D₁ (x i) = D₂ (x i)) :

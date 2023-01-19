@@ -276,8 +276,7 @@ theorem sigma_comparison_map_desc [HasCoproduct f] [HasCoproduct fun b => G.obj 
   trace
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[]"
   simp [← G.map_comp]
-#align
-  category_theory.limits.sigma_comparison_map_desc CategoryTheory.Limits.sigma_comparison_map_desc
+#align category_theory.limits.sigma_comparison_map_desc CategoryTheory.Limits.sigma_comparison_map_desc
 
 end Comparison
 
@@ -297,14 +296,12 @@ variable {C}
 
 theorem has_smallest_products_of_has_products [HasProducts.{w} C] : HasProducts.{0} C := fun J =>
   hasLimitsOfShapeOfEquivalence (Discrete.equivalence Equiv.ulift : Discrete (ULift.{w} J) ≌ _)
-#align
-  category_theory.limits.has_smallest_products_of_has_products CategoryTheory.Limits.has_smallest_products_of_has_products
+#align category_theory.limits.has_smallest_products_of_has_products CategoryTheory.Limits.has_smallest_products_of_has_products
 
 theorem has_smallest_coproducts_of_has_coproducts [HasCoproducts.{w} C] : HasCoproducts.{0} C :=
   fun J =>
   hasColimitsOfShapeOfEquivalence (Discrete.equivalence Equiv.ulift : Discrete (ULift.{w} J) ≌ _)
-#align
-  category_theory.limits.has_smallest_coproducts_of_has_coproducts CategoryTheory.Limits.has_smallest_coproducts_of_has_coproducts
+#align category_theory.limits.has_smallest_coproducts_of_has_coproducts CategoryTheory.Limits.has_smallest_coproducts_of_has_coproducts
 
 theorem has_products_of_limit_fans (lf : ∀ {J : Type w} (f : J → C), Fan f)
     (lf_is_limit : ∀ {J : Type w} (f : J → C), IsLimit (lf f)) : HasProducts.{w} C :=
@@ -314,8 +311,7 @@ theorem has_products_of_limit_fans (lf : ∀ {J : Type w} (f : J → C), Fan f)
       HasLimit.mk
         ⟨(Cones.postcompose Discrete.natIsoFunctor.inv).obj (lf fun j => F.obj ⟨j⟩),
           (IsLimit.postcomposeInvEquiv _ _).symm (lf_is_limit _)⟩ }
-#align
-  category_theory.limits.has_products_of_limit_fans CategoryTheory.Limits.has_products_of_limit_fans
+#align category_theory.limits.has_products_of_limit_fans CategoryTheory.Limits.has_products_of_limit_fans
 
 /-!
 (Co)products over a type with a unique term.

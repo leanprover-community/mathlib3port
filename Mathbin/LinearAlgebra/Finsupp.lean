@@ -946,14 +946,12 @@ theorem snd_sum_finsupp_lequiv_prod_finsupp {α β : Type _} (f : Sum α β →�
 theorem sum_finsupp_lequiv_prod_finsupp_symm_inl {α β : Type _} (fg : (α →₀ M) × (β →₀ M)) (x : α) :
     ((sumFinsuppLequivProdFinsupp R).symm fg) (Sum.inl x) = fg.1 x :=
   rfl
-#align
-  finsupp.sum_finsupp_lequiv_prod_finsupp_symm_inl Finsupp.sum_finsupp_lequiv_prod_finsupp_symm_inl
+#align finsupp.sum_finsupp_lequiv_prod_finsupp_symm_inl Finsupp.sum_finsupp_lequiv_prod_finsupp_symm_inl
 
 theorem sum_finsupp_lequiv_prod_finsupp_symm_inr {α β : Type _} (fg : (α →₀ M) × (β →₀ M)) (y : β) :
     ((sumFinsuppLequivProdFinsupp R).symm fg) (Sum.inr y) = fg.2 y :=
   rfl
-#align
-  finsupp.sum_finsupp_lequiv_prod_finsupp_symm_inr Finsupp.sum_finsupp_lequiv_prod_finsupp_symm_inr
+#align finsupp.sum_finsupp_lequiv_prod_finsupp_symm_inr Finsupp.sum_finsupp_lequiv_prod_finsupp_symm_inr
 
 end Sum
 
@@ -986,8 +984,7 @@ theorem sigma_finsupp_lequiv_pi_finsupp_symm_apply {M : Type _} {ιs : η → Ty
     [Module R M] (f : ∀ j, ιs j →₀ M) (ji) :
     (Finsupp.sigmaFinsuppLequivPiFinsupp R).symm f ji = f ji.1 ji.2 :=
   rfl
-#align
-  finsupp.sigma_finsupp_lequiv_pi_finsupp_symm_apply Finsupp.sigma_finsupp_lequiv_pi_finsupp_symm_apply
+#align finsupp.sigma_finsupp_lequiv_pi_finsupp_symm_apply Finsupp.sigma_finsupp_lequiv_pi_finsupp_symm_apply
 
 end Sigma
 
@@ -1233,20 +1230,17 @@ theorem splitting_of_finsupp_surjective_splits (f : M →ₗ[R] α →₀ R) (s 
   rw [sum_single_index, one_smul]
   · exact (s (Finsupp.single x 1)).some_spec
   · rw [zero_smul]
-#align
-  linear_map.splitting_of_finsupp_surjective_splits LinearMap.splitting_of_finsupp_surjective_splits
+#align linear_map.splitting_of_finsupp_surjective_splits LinearMap.splitting_of_finsupp_surjective_splits
 
 theorem left_inverse_splitting_of_finsupp_surjective (f : M →ₗ[R] α →₀ R) (s : Surjective f) :
     LeftInverse f (splittingOfFinsuppSurjective f s) := fun g =>
   LinearMap.congr_fun (splitting_of_finsupp_surjective_splits f s) g
-#align
-  linear_map.left_inverse_splitting_of_finsupp_surjective LinearMap.left_inverse_splitting_of_finsupp_surjective
+#align linear_map.left_inverse_splitting_of_finsupp_surjective LinearMap.left_inverse_splitting_of_finsupp_surjective
 
 theorem splitting_of_finsupp_surjective_injective (f : M →ₗ[R] α →₀ R) (s : Surjective f) :
     Injective (splittingOfFinsuppSurjective f s) :=
   (left_inverse_splitting_of_finsupp_surjective f s).Injective
-#align
-  linear_map.splitting_of_finsupp_surjective_injective LinearMap.splitting_of_finsupp_surjective_injective
+#align linear_map.splitting_of_finsupp_surjective_injective LinearMap.splitting_of_finsupp_surjective_injective
 
 -- See also `linear_map.splitting_of_finsupp_surjective`
 /-- A surjective linear map to functions on a finite type has a splitting. -/
@@ -1264,20 +1258,17 @@ theorem splitting_of_fun_on_fintype_surjective_splits [Fintype α] (f : M →ₗ
   rw [linear_equiv_fun_on_finite_symm_single, Finsupp.sum_single_index, one_smul,
     (s (Finsupp.single x 1)).some_spec, Finsupp.single_eq_pi_single]
   rw [zero_smul]
-#align
-  linear_map.splitting_of_fun_on_fintype_surjective_splits LinearMap.splitting_of_fun_on_fintype_surjective_splits
+#align linear_map.splitting_of_fun_on_fintype_surjective_splits LinearMap.splitting_of_fun_on_fintype_surjective_splits
 
 theorem left_inverse_splitting_of_fun_on_fintype_surjective [Fintype α] (f : M →ₗ[R] α → R)
     (s : Surjective f) : LeftInverse f (splittingOfFunOnFintypeSurjective f s) := fun g =>
   LinearMap.congr_fun (splitting_of_fun_on_fintype_surjective_splits f s) g
-#align
-  linear_map.left_inverse_splitting_of_fun_on_fintype_surjective LinearMap.left_inverse_splitting_of_fun_on_fintype_surjective
+#align linear_map.left_inverse_splitting_of_fun_on_fintype_surjective LinearMap.left_inverse_splitting_of_fun_on_fintype_surjective
 
 theorem splitting_of_fun_on_fintype_surjective_injective [Fintype α] (f : M →ₗ[R] α → R)
     (s : Surjective f) : Injective (splittingOfFunOnFintypeSurjective f s) :=
   (left_inverse_splitting_of_fun_on_fintype_surjective f s).Injective
-#align
-  linear_map.splitting_of_fun_on_fintype_surjective_injective LinearMap.splitting_of_fun_on_fintype_surjective_injective
+#align linear_map.splitting_of_fun_on_fintype_surjective_injective LinearMap.splitting_of_fun_on_fintype_surjective_injective
 
 end LinearMap
 

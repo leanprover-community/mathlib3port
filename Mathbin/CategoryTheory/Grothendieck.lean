@@ -169,8 +169,7 @@ def grothendieckTypeToCatFunctor : Grothendieck (G ⋙ Type_to_Cat) ⥤ G.Elemen
     where
   obj X := ⟨X.1, X.2.as⟩
   map X Y f := ⟨f.1, f.2.1.1⟩
-#align
-  category_theory.grothendieck.grothendieck_Type_to_Cat_functor CategoryTheory.Grothendieck.grothendieckTypeToCatFunctor
+#align category_theory.grothendieck.grothendieck_Type_to_Cat_functor CategoryTheory.Grothendieck.grothendieckTypeToCatFunctor
 
 /-- Auxiliary definition for `grothendieck_Type_to_Cat`, to speed up elaboration. -/
 @[simps]
@@ -178,8 +177,7 @@ def grothendieckTypeToCatInverse : G.Elements ⥤ Grothendieck (G ⋙ Type_to_Ca
     where
   obj X := ⟨X.1, ⟨X.2⟩⟩
   map X Y f := ⟨f.1, ⟨⟨f.2⟩⟩⟩
-#align
-  category_theory.grothendieck.grothendieck_Type_to_Cat_inverse CategoryTheory.Grothendieck.grothendieckTypeToCatInverse
+#align category_theory.grothendieck.grothendieck_Type_to_Cat_inverse CategoryTheory.Grothendieck.grothendieckTypeToCatInverse
 
 /-- The Grothendieck construction applied to a functor to `Type`
 (thought of as a functor to `Cat` by realising a type as a discrete category)
@@ -217,8 +215,7 @@ def grothendieckTypeToCat : Grothendieck (G ⋙ Type_to_Cat) ≌ G.Elements
     dsimp
     simp
     rfl
-#align
-  category_theory.grothendieck.grothendieck_Type_to_Cat CategoryTheory.Grothendieck.grothendieckTypeToCat
+#align category_theory.grothendieck.grothendieck_Type_to_Cat CategoryTheory.Grothendieck.grothendieckTypeToCat
 
 end Grothendieck
 

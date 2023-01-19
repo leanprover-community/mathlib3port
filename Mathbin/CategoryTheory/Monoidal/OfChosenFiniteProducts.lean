@@ -182,8 +182,7 @@ def BinaryFan.associatorOfLimitCone (L : ∀ X Y : C, LimitCone (pair X Y)) (X Y
     (L (L X Y).Cone.x Z).Cone.x ≅ (L X (L Y Z).Cone.x).Cone.x :=
   BinaryFan.associator (L X Y).IsLimit (L Y Z).IsLimit (L (L X Y).Cone.x Z).IsLimit
     (L X (L Y Z).Cone.x).IsLimit
-#align
-  category_theory.limits.binary_fan.associator_of_limit_cone CategoryTheory.Limits.BinaryFan.associatorOfLimitCone
+#align category_theory.limits.binary_fan.associator_of_limit_cone CategoryTheory.Limits.BinaryFan.associatorOfLimitCone
 
 attribute [local tidy] tactic.discrete_cases
 
@@ -252,24 +251,21 @@ namespace MonoidalOfChosenFiniteProducts
 @[reducible]
 def tensorObj (X Y : C) : C :=
   (ℬ X Y).Cone.x
-#align
-  category_theory.monoidal_of_chosen_finite_products.tensor_obj CategoryTheory.MonoidalOfChosenFiniteProducts.tensorObj
+#align category_theory.monoidal_of_chosen_finite_products.tensor_obj CategoryTheory.MonoidalOfChosenFiniteProducts.tensorObj
 
 /-- Implementation of the tensor product of morphisms for `monoidal_of_chosen_finite_products`. -/
 @[reducible]
 def tensorHom {W X Y Z : C} (f : W ⟶ X) (g : Y ⟶ Z) : tensorObj ℬ W Y ⟶ tensorObj ℬ X Z :=
   (BinaryFan.IsLimit.lift' (ℬ X Z).IsLimit ((ℬ W Y).Cone.π.app ⟨WalkingPair.left⟩ ≫ f)
       (((ℬ W Y).Cone.π.app ⟨WalkingPair.right⟩ : (ℬ W Y).Cone.x ⟶ Y) ≫ g)).val
-#align
-  category_theory.monoidal_of_chosen_finite_products.tensor_hom CategoryTheory.MonoidalOfChosenFiniteProducts.tensorHom
+#align category_theory.monoidal_of_chosen_finite_products.tensor_hom CategoryTheory.MonoidalOfChosenFiniteProducts.tensorHom
 
 theorem tensor_id (X₁ X₂ : C) : tensorHom ℬ (𝟙 X₁) (𝟙 X₂) = 𝟙 (tensorObj ℬ X₁ X₂) := by
   apply is_limit.hom_ext (ℬ _ _).IsLimit;
   rintro ⟨⟨⟩⟩ <;>
     · dsimp [tensor_hom]
       simp
-#align
-  category_theory.monoidal_of_chosen_finite_products.tensor_id CategoryTheory.MonoidalOfChosenFiniteProducts.tensor_id
+#align category_theory.monoidal_of_chosen_finite_products.tensor_id CategoryTheory.MonoidalOfChosenFiniteProducts.tensor_id
 
 theorem tensor_comp {X₁ Y₁ Z₁ X₂ Y₂ Z₂ : C} (f₁ : X₁ ⟶ Y₁) (f₂ : X₂ ⟶ Y₂) (g₁ : Y₁ ⟶ Z₁)
     (g₂ : Y₂ ⟶ Z₂) : tensorHom ℬ (f₁ ≫ g₁) (f₂ ≫ g₂) = tensorHom ℬ f₁ f₂ ≫ tensorHom ℬ g₁ g₂ := by
@@ -277,8 +273,7 @@ theorem tensor_comp {X₁ Y₁ Z₁ X₂ Y₂ Z₂ : C} (f₁ : X₁ ⟶ Y₁) (
   rintro ⟨⟨⟩⟩ <;>
     · dsimp [tensor_hom]
       simp
-#align
-  category_theory.monoidal_of_chosen_finite_products.tensor_comp CategoryTheory.MonoidalOfChosenFiniteProducts.tensor_comp
+#align category_theory.monoidal_of_chosen_finite_products.tensor_comp CategoryTheory.MonoidalOfChosenFiniteProducts.tensor_comp
 
 theorem pentagon (W X Y Z : C) :
     tensorHom ℬ (BinaryFan.associatorOfLimitCone ℬ W X Y).Hom (𝟙 Z) ≫
@@ -297,8 +292,7 @@ theorem pentagon (W X Y Z : C) :
     rintro ⟨⟨⟩⟩
     · simp
     · simp
-#align
-  category_theory.monoidal_of_chosen_finite_products.pentagon CategoryTheory.MonoidalOfChosenFiniteProducts.pentagon
+#align category_theory.monoidal_of_chosen_finite_products.pentagon CategoryTheory.MonoidalOfChosenFiniteProducts.pentagon
 
 theorem triangle (X Y : C) :
     (BinaryFan.associatorOfLimitCone ℬ X 𝒯.Cone.x Y).Hom ≫
@@ -307,8 +301,7 @@ theorem triangle (X Y : C) :
   by
   dsimp [tensor_hom]
   apply is_limit.hom_ext (ℬ _ _).IsLimit; rintro ⟨⟨⟩⟩ <;> simp
-#align
-  category_theory.monoidal_of_chosen_finite_products.triangle CategoryTheory.MonoidalOfChosenFiniteProducts.triangle
+#align category_theory.monoidal_of_chosen_finite_products.triangle CategoryTheory.MonoidalOfChosenFiniteProducts.triangle
 
 theorem left_unitor_naturality {X₁ X₂ : C} (f : X₁ ⟶ X₂) :
     tensorHom ℬ (𝟙 𝒯.Cone.x) f ≫ (BinaryFan.leftUnitor 𝒯.IsLimit (ℬ 𝒯.Cone.x X₂).IsLimit).Hom =
@@ -316,8 +309,7 @@ theorem left_unitor_naturality {X₁ X₂ : C} (f : X₁ ⟶ X₂) :
   by
   dsimp [tensor_hom]
   simp
-#align
-  category_theory.monoidal_of_chosen_finite_products.left_unitor_naturality CategoryTheory.MonoidalOfChosenFiniteProducts.left_unitor_naturality
+#align category_theory.monoidal_of_chosen_finite_products.left_unitor_naturality CategoryTheory.MonoidalOfChosenFiniteProducts.left_unitor_naturality
 
 theorem right_unitor_naturality {X₁ X₂ : C} (f : X₁ ⟶ X₂) :
     tensorHom ℬ f (𝟙 𝒯.Cone.x) ≫ (BinaryFan.rightUnitor 𝒯.IsLimit (ℬ X₂ 𝒯.Cone.x).IsLimit).Hom =
@@ -325,8 +317,7 @@ theorem right_unitor_naturality {X₁ X₂ : C} (f : X₁ ⟶ X₂) :
   by
   dsimp [tensor_hom]
   simp
-#align
-  category_theory.monoidal_of_chosen_finite_products.right_unitor_naturality CategoryTheory.MonoidalOfChosenFiniteProducts.right_unitor_naturality
+#align category_theory.monoidal_of_chosen_finite_products.right_unitor_naturality CategoryTheory.MonoidalOfChosenFiniteProducts.right_unitor_naturality
 
 theorem associator_naturality {X₁ X₂ X₃ Y₁ Y₂ Y₃ : C} (f₁ : X₁ ⟶ Y₁) (f₂ : X₂ ⟶ Y₂) (f₃ : X₃ ⟶ Y₃) :
     tensorHom ℬ (tensorHom ℬ f₁ f₂) f₃ ≫ (BinaryFan.associatorOfLimitCone ℬ Y₁ Y₂ Y₃).Hom =
@@ -339,8 +330,7 @@ theorem associator_naturality {X₁ X₂ X₃ Y₁ Y₂ Y₃ : C} (f₁ : X₁ �
     rintro ⟨⟨⟩⟩
     · simp
     · simp
-#align
-  category_theory.monoidal_of_chosen_finite_products.associator_naturality CategoryTheory.MonoidalOfChosenFiniteProducts.associator_naturality
+#align category_theory.monoidal_of_chosen_finite_products.associator_naturality CategoryTheory.MonoidalOfChosenFiniteProducts.associator_naturality
 
 end MonoidalOfChosenFiniteProducts
 
@@ -362,8 +352,7 @@ def monoidalOfChosenFiniteProducts : MonoidalCategory C
   left_unitor_naturality' _ _ f := left_unitor_naturality 𝒯 ℬ f
   right_unitor_naturality' _ _ f := right_unitor_naturality 𝒯 ℬ f
   associator_naturality' _ _ _ _ _ _ f₁ f₂ f₃ := associator_naturality ℬ f₁ f₂ f₃
-#align
-  category_theory.monoidal_of_chosen_finite_products CategoryTheory.monoidalOfChosenFiniteProducts
+#align category_theory.monoidal_of_chosen_finite_products CategoryTheory.monoidalOfChosenFiniteProducts
 
 namespace MonoidalOfChosenFiniteProducts
 
@@ -378,8 +367,7 @@ This is an implementation detail for `symmetric_of_chosen_finite_products`.
 def MonoidalOfChosenFiniteProductsSynonym (𝒯 : LimitCone (Functor.empty.{v} C))
     (ℬ : ∀ X Y : C, LimitCone (pair X Y)) :=
   C deriving Category
-#align
-  category_theory.monoidal_of_chosen_finite_products.monoidal_of_chosen_finite_products_synonym CategoryTheory.monoidalOfChosenFiniteProducts.MonoidalOfChosenFiniteProductsSynonym
+#align category_theory.monoidal_of_chosen_finite_products.monoidal_of_chosen_finite_products_synonym CategoryTheory.monoidalOfChosenFiniteProducts.MonoidalOfChosenFiniteProductsSynonym
 
 instance : MonoidalCategory (MonoidalOfChosenFiniteProductsSynonym 𝒯 ℬ) :=
   monoidalOfChosenFiniteProducts 𝒯 ℬ
@@ -393,8 +381,7 @@ theorem braiding_naturality {X X' Y Y' : C} (f : X ⟶ Y) (g : X' ⟶ Y') :
   rintro ⟨⟨⟩⟩ <;>
     · dsimp [limits.is_limit.cone_point_unique_up_to_iso]
       simp
-#align
-  category_theory.monoidal_of_chosen_finite_products.braiding_naturality CategoryTheory.monoidalOfChosenFiniteProducts.braiding_naturality
+#align category_theory.monoidal_of_chosen_finite_products.braiding_naturality CategoryTheory.monoidalOfChosenFiniteProducts.braiding_naturality
 
 theorem hexagon_forward (X Y Z : C) :
     (BinaryFan.associatorOfLimitCone ℬ X Y Z).Hom ≫
@@ -413,8 +400,7 @@ theorem hexagon_forward (X Y Z : C) :
     rintro ⟨⟨⟩⟩ <;>
       · dsimp [limits.is_limit.cone_point_unique_up_to_iso]
         simp
-#align
-  category_theory.monoidal_of_chosen_finite_products.hexagon_forward CategoryTheory.monoidalOfChosenFiniteProducts.hexagon_forward
+#align category_theory.monoidal_of_chosen_finite_products.hexagon_forward CategoryTheory.monoidalOfChosenFiniteProducts.hexagon_forward
 
 theorem hexagon_reverse (X Y Z : C) :
     (BinaryFan.associatorOfLimitCone ℬ X Y Z).inv ≫
@@ -435,8 +421,7 @@ theorem hexagon_reverse (X Y Z : C) :
   · dsimp [binary_fan.associator_of_limit_cone, binary_fan.associator,
       limits.is_limit.cone_point_unique_up_to_iso]
     simp
-#align
-  category_theory.monoidal_of_chosen_finite_products.hexagon_reverse CategoryTheory.monoidalOfChosenFiniteProducts.hexagon_reverse
+#align category_theory.monoidal_of_chosen_finite_products.hexagon_reverse CategoryTheory.monoidalOfChosenFiniteProducts.hexagon_reverse
 
 theorem symmetry (X Y : C) :
     (Limits.BinaryFan.braiding (ℬ X Y).IsLimit (ℬ Y X).IsLimit).Hom ≫
@@ -448,8 +433,7 @@ theorem symmetry (X Y : C) :
   rintro ⟨⟨⟩⟩ <;>
     · dsimp [limits.is_limit.cone_point_unique_up_to_iso]
       simp
-#align
-  category_theory.monoidal_of_chosen_finite_products.symmetry CategoryTheory.monoidalOfChosenFiniteProducts.symmetry
+#align category_theory.monoidal_of_chosen_finite_products.symmetry CategoryTheory.monoidalOfChosenFiniteProducts.symmetry
 
 end MonoidalOfChosenFiniteProducts
 
@@ -464,8 +448,7 @@ def symmetricOfChosenFiniteProducts : SymmetricCategory (MonoidalOfChosenFiniteP
   hexagon_forward' X Y Z := hexagon_forward ℬ X Y Z
   hexagon_reverse' X Y Z := hexagon_reverse ℬ X Y Z
   symmetry' X Y := symmetry ℬ X Y
-#align
-  category_theory.symmetric_of_chosen_finite_products CategoryTheory.symmetricOfChosenFiniteProducts
+#align category_theory.symmetric_of_chosen_finite_products CategoryTheory.symmetricOfChosenFiniteProducts
 
 end
 

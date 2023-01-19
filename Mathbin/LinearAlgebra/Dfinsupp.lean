@@ -441,8 +441,7 @@ theorem independent_iff_forall_dfinsupp (p : ι → Submodule R N) :
   refine' subtype.forall'.trans _
   simp_rw [Submodule.coe_eq_zero]
   rfl
-#align
-  complete_lattice.independent_iff_forall_dfinsupp CompleteLattice.independent_iff_forall_dfinsupp
+#align complete_lattice.independent_iff_forall_dfinsupp CompleteLattice.independent_iff_forall_dfinsupp
 
 /- If `dfinsupp.lsum` applied with `submodule.subtype` is injective then the submodules are
 independent. -/
@@ -456,8 +455,7 @@ theorem independent_of_dfinsupp_lsum_injective (p : ι → Submodule R N)
   · simpa only [lsum_single] using hv
   have := dfinsupp.ext_iff.mp (h hv) i
   simpa [eq_comm] using this
-#align
-  complete_lattice.independent_of_dfinsupp_lsum_injective CompleteLattice.independent_of_dfinsupp_lsum_injective
+#align complete_lattice.independent_of_dfinsupp_lsum_injective CompleteLattice.independent_of_dfinsupp_lsum_injective
 
 /- If `dfinsupp.sum_add_hom` applied with `add_submonoid.subtype` is injective then the additive
 submonoids are independent. -/
@@ -466,8 +464,7 @@ theorem independent_of_dfinsupp_sum_add_hom_injective (p : ι → AddSubmonoid N
   by
   rw [← independent_map_order_iso_iff (AddSubmonoid.toNatSubmodule : AddSubmonoid N ≃o _)]
   exact independent_of_dfinsupp_lsum_injective _ h
-#align
-  complete_lattice.independent_of_dfinsupp_sum_add_hom_injective CompleteLattice.independent_of_dfinsupp_sum_add_hom_injective
+#align complete_lattice.independent_of_dfinsupp_sum_add_hom_injective CompleteLattice.independent_of_dfinsupp_sum_add_hom_injective
 
 /-- Combining `dfinsupp.lsum` with `linear_map.to_span_singleton` is the same as `finsupp.total` -/
 theorem lsum_comp_map_range_to_span_singleton [∀ m : R, Decidable (m ≠ 0)] (p : ι → Submodule R N)
@@ -480,8 +477,7 @@ theorem lsum_comp_map_range_to_span_singleton [∀ m : R, Decidable (m ≠ 0)] (
   by
   ext
   simp
-#align
-  complete_lattice.lsum_comp_map_range_to_span_singleton CompleteLattice.lsum_comp_map_range_to_span_singleton
+#align complete_lattice.lsum_comp_map_range_to_span_singleton CompleteLattice.lsum_comp_map_range_to_span_singleton
 
 end Semiring
 
@@ -496,8 +492,7 @@ theorem independent_of_dfinsupp_sum_add_hom_injective' (p : ι → AddSubgroup N
   by
   rw [← independent_map_order_iso_iff (AddSubgroup.toIntSubmodule : AddSubgroup N ≃o _)]
   exact independent_of_dfinsupp_lsum_injective _ h
-#align
-  complete_lattice.independent_of_dfinsupp_sum_add_hom_injective' CompleteLattice.independent_of_dfinsupp_sum_add_hom_injective'
+#align complete_lattice.independent_of_dfinsupp_sum_add_hom_injective' CompleteLattice.independent_of_dfinsupp_sum_add_hom_injective'
 
 /-- The canonical map out of a direct sum of a family of submodules is injective when the submodules
 are `complete_lattice.independent`.
@@ -525,8 +520,7 @@ theorem Independent.dfinsupp_lsum_injective {p : ι → Submodule R N} (h : Inde
   refine' h i (-m i) m _
   rwa [← erase_add_single i m, LinearMap.map_add, lsum_single, Submodule.subtype_apply,
     add_eq_zero_iff_eq_neg, ← Submodule.coe_neg] at hm
-#align
-  complete_lattice.independent.dfinsupp_lsum_injective CompleteLattice.Independent.dfinsupp_lsum_injective
+#align complete_lattice.independent.dfinsupp_lsum_injective CompleteLattice.Independent.dfinsupp_lsum_injective
 
 /-- The canonical map out of a direct sum of a family of additive subgroups is injective when the
 additive subgroups are `complete_lattice.independent`. -/
@@ -535,8 +529,7 @@ theorem Independent.dfinsupp_sum_add_hom_injective {p : ι → AddSubgroup N} (h
   by
   rw [← independent_map_order_iso_iff (AddSubgroup.toIntSubmodule : AddSubgroup N ≃o _)] at h
   exact h.dfinsupp_lsum_injective
-#align
-  complete_lattice.independent.dfinsupp_sum_add_hom_injective CompleteLattice.Independent.dfinsupp_sum_add_hom_injective
+#align complete_lattice.independent.dfinsupp_sum_add_hom_injective CompleteLattice.Independent.dfinsupp_sum_add_hom_injective
 
 /-- A family of submodules over an additive group are independent if and only iff `dfinsupp.lsum`
 applied with `submodule.subtype` is injective.
@@ -546,16 +539,14 @@ Note that this is not generally true for `[semiring R]`; see
 theorem independent_iff_dfinsupp_lsum_injective (p : ι → Submodule R N) :
     Independent p ↔ Function.Injective (lsum ℕ fun i => (p i).Subtype) :=
   ⟨Independent.dfinsupp_lsum_injective, independent_of_dfinsupp_lsum_injective p⟩
-#align
-  complete_lattice.independent_iff_dfinsupp_lsum_injective CompleteLattice.independent_iff_dfinsupp_lsum_injective
+#align complete_lattice.independent_iff_dfinsupp_lsum_injective CompleteLattice.independent_iff_dfinsupp_lsum_injective
 
 /-- A family of additive subgroups over an additive group are independent if and only if
 `dfinsupp.sum_add_hom` applied with `add_subgroup.subtype` is injective. -/
 theorem independent_iff_dfinsupp_sum_add_hom_injective (p : ι → AddSubgroup N) :
     Independent p ↔ Function.Injective (sumAddHom fun i => (p i).Subtype) :=
   ⟨Independent.dfinsupp_sum_add_hom_injective, independent_of_dfinsupp_sum_add_hom_injective' p⟩
-#align
-  complete_lattice.independent_iff_dfinsupp_sum_add_hom_injective CompleteLattice.independent_iff_dfinsupp_sum_add_hom_injective
+#align complete_lattice.independent_iff_dfinsupp_sum_add_hom_injective CompleteLattice.independent_iff_dfinsupp_sum_add_hom_injective
 
 omit dec_ι
 
@@ -579,15 +570,13 @@ theorem Independent.linear_independent [NoZeroSMulDivisors R N] (p : ι → Subm
     apply smul_left_injective R (hv' i)
     have : l i • v i = a i := rfl
     simp [this, ha]
-#align
-  complete_lattice.independent.linear_independent CompleteLattice.Independent.linear_independent
+#align complete_lattice.independent.linear_independent CompleteLattice.Independent.linear_independent
 
 theorem independent_iff_linear_independent_of_ne_zero [NoZeroSMulDivisors R N] {v : ι → N}
     (h_ne_zero : ∀ i, v i ≠ 0) : (Independent fun i => R ∙ v i) ↔ LinearIndependent R v :=
   ⟨fun hv => hv.LinearIndependent _ (fun i => Submodule.mem_span_singleton_self <| v i) h_ne_zero,
     fun hv => hv.independent_span_singleton⟩
-#align
-  complete_lattice.independent_iff_linear_independent_of_ne_zero CompleteLattice.independent_iff_linear_independent_of_ne_zero
+#align complete_lattice.independent_iff_linear_independent_of_ne_zero CompleteLattice.independent_iff_linear_independent_of_ne_zero
 
 end Ring
 

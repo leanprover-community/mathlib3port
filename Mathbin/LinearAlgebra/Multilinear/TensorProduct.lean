@@ -91,8 +91,7 @@ theorem dom_coprod_dom_dom_congr_sum_congr (a : MultilinearMap R (fun _ : ι₁ 
     (a.domCoprod b).domDomCongr (σa.sumCongr σb) =
       (a.domDomCongr σa).domCoprod (b.domDomCongr σb) :=
   rfl
-#align
-  multilinear_map.dom_coprod_dom_dom_congr_sum_congr MultilinearMap.dom_coprod_dom_dom_congr_sum_congr
+#align multilinear_map.dom_coprod_dom_dom_congr_sum_congr MultilinearMap.dom_coprod_dom_dom_congr_sum_congr
 
 end DomCoprod
 

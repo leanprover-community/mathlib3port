@@ -78,8 +78,7 @@ theorem lift_comp_preserves_limits_iso_hom (t : Cone F) :
   by
   ext
   simp [← G.map_comp]
-#align
-  category_theory.lift_comp_preserves_limits_iso_hom CategoryTheory.lift_comp_preserves_limits_iso_hom
+#align category_theory.lift_comp_preserves_limits_iso_hom CategoryTheory.lift_comp_preserves_limits_iso_hom
 
 variable [PreservesLimitsOfShape J G] [HasLimitsOfShape J D] [HasLimitsOfShape J C]
 
@@ -136,8 +135,7 @@ theorem preserves_colimits_iso_inv_comp_desc (t : Cocone F) :
   by
   ext
   simp [← G.map_comp]
-#align
-  category_theory.preserves_colimits_iso_inv_comp_desc CategoryTheory.preserves_colimits_iso_inv_comp_desc
+#align category_theory.preserves_colimits_iso_inv_comp_desc CategoryTheory.preserves_colimits_iso_inv_comp_desc
 
 variable [PreservesColimitsOfShape J G] [HasColimitsOfShape J D] [HasColimitsOfShape J C]
 

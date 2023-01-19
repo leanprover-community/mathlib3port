@@ -1997,8 +1997,7 @@ theorem AddSubmonoid.supr_eq_mrange_dfinsupp_sum_add_hom [AddCommMonoid γ]
     exact ⟨Dfinsupp.single i ⟨y, hy⟩, Dfinsupp.sum_add_hom_single _ _ _⟩
   · rintro x ⟨v, rfl⟩
     exact dfinsupp_sum_add_hom_mem _ v _ fun i _ => (le_supᵢ S i : S i ≤ _) (v i).Prop
-#align
-  add_submonoid.supr_eq_mrange_dfinsupp_sum_add_hom AddSubmonoid.supr_eq_mrange_dfinsupp_sum_add_hom
+#align add_submonoid.supr_eq_mrange_dfinsupp_sum_add_hom AddSubmonoid.supr_eq_mrange_dfinsupp_sum_add_hom
 
 /-- The bounded supremum of a family of commutative additive submonoids is equal to the range of
 `dfinsupp.sum_add_hom` composed with `dfinsupp.filter_add_monoid_hom`; that is, every element in the
@@ -2019,8 +2018,7 @@ theorem AddSubmonoid.bsupr_eq_mrange_dfinsupp_sum_add_hom (p : ι → Prop) [Dec
     by_cases hp : p i
     · simp [hp]
     · simp [hp]
-#align
-  add_submonoid.bsupr_eq_mrange_dfinsupp_sum_add_hom AddSubmonoid.bsupr_eq_mrange_dfinsupp_sum_add_hom
+#align add_submonoid.bsupr_eq_mrange_dfinsupp_sum_add_hom AddSubmonoid.bsupr_eq_mrange_dfinsupp_sum_add_hom
 
 theorem AddSubmonoid.mem_supr_iff_exists_dfinsupp [AddCommMonoid γ] (S : ι → AddSubmonoid γ)
     (x : γ) : x ∈ supᵢ S ↔ ∃ f : Π₀ i, S i, Dfinsupp.sumAddHom (fun i => (S i).Subtype) f = x :=

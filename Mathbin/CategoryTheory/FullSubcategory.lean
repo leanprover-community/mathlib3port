@@ -272,8 +272,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.full_s
 def FullSubcategory.lift_comp_inclusion (F : C ⥤ D) (hF : ∀ X, P (F.obj X)) :
     FullSubcategory.lift P F hF ⋙ fullSubcategoryInclusion P ≅ F :=
   NatIso.ofComponents (fun X => Iso.refl _) (by simp)
-#align
-  category_theory.full_subcategory.lift_comp_inclusion CategoryTheory.FullSubcategory.lift_comp_inclusion
+#align category_theory.full_subcategory.lift_comp_inclusion CategoryTheory.FullSubcategory.lift_comp_inclusion
 
 /- warning: category_theory.full_subcategory.inclusion_obj_lift_obj -> CategoryTheory.fullSubcategoryInclusion_obj_lift_obj is a dubious translation:
 lean 3 declaration is
@@ -285,8 +284,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.full_s
 theorem CategoryTheory.fullSubcategoryInclusion_obj_lift_obj (F : C ⥤ D) (hF : ∀ X, P (F.obj X))
     {X : C} : (fullSubcategoryInclusion P).obj ((FullSubcategory.lift P F hF).obj X) = F.obj X :=
   rfl
-#align
-  category_theory.full_subcategory.inclusion_obj_lift_obj CategoryTheory.fullSubcategoryInclusion_obj_lift_obj
+#align category_theory.full_subcategory.inclusion_obj_lift_obj CategoryTheory.fullSubcategoryInclusion_obj_lift_obj
 
 /- warning: category_theory.full_subcategory.inclusion_map_lift_map -> CategoryTheory.fullSubcategoryInclusion_map_lift_map is a dubious translation:
 lean 3 declaration is
@@ -298,8 +296,7 @@ theorem CategoryTheory.fullSubcategoryInclusion_map_lift_map (F : C ⥤ D) (hF :
     {X Y : C} (f : X ⟶ Y) :
     (fullSubcategoryInclusion P).map ((FullSubcategory.lift P F hF).map f) = F.map f :=
   rfl
-#align
-  category_theory.full_subcategory.inclusion_map_lift_map CategoryTheory.fullSubcategoryInclusion_map_lift_map
+#align category_theory.full_subcategory.inclusion_map_lift_map CategoryTheory.fullSubcategoryInclusion_map_lift_map
 
 instance (F : C ⥤ D) (hF : ∀ X, P (F.obj X)) [Faithful F] :
     Faithful (FullSubcategory.lift P F hF) :=

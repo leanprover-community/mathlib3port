@@ -90,8 +90,7 @@ theorem norm_deriv_le_of_forall_mem_sphere_norm_le {c : ℂ} {R C : ℝ} {f : �
       norm_deriv_le_aux hR (e.differentiable.comp_diff_cont_on_cl hd) fun z hz =>
         (UniformSpace.Completion.norm_coe _).trans_le (hC z hz)
     
-#align
-  complex.norm_deriv_le_of_forall_mem_sphere_norm_le Complex.norm_deriv_le_of_forall_mem_sphere_norm_le
+#align complex.norm_deriv_le_of_forall_mem_sphere_norm_le Complex.norm_deriv_le_of_forall_mem_sphere_norm_le
 
 /-- An auxiliary lemma for Liouville's theorem `differentiable.apply_eq_apply_of_bounded`. -/
 theorem liouville_theorem_aux {f : ℂ → F} (hf : Differentiable ℂ f) (hb : Bounded (range f))
@@ -135,8 +134,7 @@ theorem apply_eq_apply_of_bounded {f : E → F} (hf : Differentiable ℂ f) (hb 
 theorem exists_const_forall_eq_of_bounded {f : E → F} (hf : Differentiable ℂ f)
     (hb : Bounded (range f)) : ∃ c, ∀ z, f z = c :=
   ⟨f 0, fun z => hf.apply_eq_apply_of_bounded hb _ _⟩
-#align
-  differentiable.exists_const_forall_eq_of_bounded Differentiable.exists_const_forall_eq_of_bounded
+#align differentiable.exists_const_forall_eq_of_bounded Differentiable.exists_const_forall_eq_of_bounded
 
 /-- **Liouville's theorem**: a complex differentiable bounded function is a constant. -/
 theorem exists_eq_const_of_bounded {f : E → F} (hf : Differentiable ℂ f) (hb : Bounded (range f)) :

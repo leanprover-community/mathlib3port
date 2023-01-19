@@ -183,8 +183,7 @@ theorem HasBoundedVariationOn.mono {f : α → E} {s : Set α} (h : HasBoundedVa
 theorem HasBoundedVariationOn.has_locally_bounded_variation_on {f : α → E} {s : Set α}
     (h : HasBoundedVariationOn f s) : HasLocallyBoundedVariationOn f s := fun x y hx hy =>
   h.mono (inter_subset_left _ _)
-#align
-  has_bounded_variation_on.has_locally_bounded_variation_on HasBoundedVariationOn.has_locally_bounded_variation_on
+#align has_bounded_variation_on.has_locally_bounded_variation_on HasBoundedVariationOn.has_locally_bounded_variation_on
 
 theorem edist_le (f : α → E) {s : Set α} {x y : α} (hx : x ∈ s) (hy : y ∈ s) :
     edist (f x) (f y) ≤ evariationOn f s :=
@@ -796,8 +795,7 @@ theorem HasLocallyBoundedVariationOn.exists_monotone_on_sub_monotone_on {f : α 
   ext x
   dsimp
   abel
-#align
-  has_locally_bounded_variation_on.exists_monotone_on_sub_monotone_on HasLocallyBoundedVariationOn.exists_monotone_on_sub_monotone_on
+#align has_locally_bounded_variation_on.exists_monotone_on_sub_monotone_on HasLocallyBoundedVariationOn.exists_monotone_on_sub_monotone_on
 
 /-! ## Lipschitz functions and bounded variation -/
 
@@ -832,8 +830,7 @@ theorem LipschitzOnWith.comp_has_locally_bounded_variation_on {f : E → F} {C :
     (h : HasLocallyBoundedVariationOn g s) : HasLocallyBoundedVariationOn (f ∘ g) s :=
   fun x y xs ys =>
   hf.comp_has_bounded_variation_on (hg.mono_left (inter_subset_left _ _)) (h x y xs ys)
-#align
-  lipschitz_on_with.comp_has_locally_bounded_variation_on LipschitzOnWith.comp_has_locally_bounded_variation_on
+#align lipschitz_on_with.comp_has_locally_bounded_variation_on LipschitzOnWith.comp_has_locally_bounded_variation_on
 
 theorem LipschitzWith.comp_has_bounded_variation_on {f : E → F} {C : ℝ≥0} (hf : LipschitzWith C f)
     {g : α → E} {s : Set α} (h : HasBoundedVariationOn g s) : HasBoundedVariationOn (f ∘ g) s :=
@@ -844,21 +841,18 @@ theorem LipschitzWith.comp_has_locally_bounded_variation_on {f : E → F} {C : �
     (hf : LipschitzWith C f) {g : α → E} {s : Set α} (h : HasLocallyBoundedVariationOn g s) :
     HasLocallyBoundedVariationOn (f ∘ g) s :=
   (hf.LipschitzOnWith univ).comp_has_locally_bounded_variation_on (mapsTo_univ _ _) h
-#align
-  lipschitz_with.comp_has_locally_bounded_variation_on LipschitzWith.comp_has_locally_bounded_variation_on
+#align lipschitz_with.comp_has_locally_bounded_variation_on LipschitzWith.comp_has_locally_bounded_variation_on
 
 theorem LipschitzOnWith.has_locally_bounded_variation_on {f : ℝ → E} {C : ℝ≥0} {s : Set ℝ}
     (hf : LipschitzOnWith C f s) : HasLocallyBoundedVariationOn f s :=
   hf.comp_has_locally_bounded_variation_on (mapsTo_id _)
     (@monotoneOn_id ℝ _ s).HasLocallyBoundedVariationOn
-#align
-  lipschitz_on_with.has_locally_bounded_variation_on LipschitzOnWith.has_locally_bounded_variation_on
+#align lipschitz_on_with.has_locally_bounded_variation_on LipschitzOnWith.has_locally_bounded_variation_on
 
 theorem LipschitzWith.has_locally_bounded_variation_on {f : ℝ → E} {C : ℝ≥0}
     (hf : LipschitzWith C f) (s : Set ℝ) : HasLocallyBoundedVariationOn f s :=
   (hf.LipschitzOnWith s).HasLocallyBoundedVariationOn
-#align
-  lipschitz_with.has_locally_bounded_variation_on LipschitzWith.has_locally_bounded_variation_on
+#align lipschitz_with.has_locally_bounded_variation_on LipschitzWith.has_locally_bounded_variation_on
 
 /-! ## Almost everywhere differentiability of functions with locally bounded variation -/
 
@@ -876,8 +870,7 @@ theorem ae_differentiable_within_at_of_mem_real {f : ℝ → ℝ} {s : Set ℝ}
     hq.ae_differentiable_within_at_of_mem] with x hxp hxq xs
   have fpq : ∀ x, f x = p x - q x := by simp [fpq]
   refine' ((hxp xs).sub (hxq xs)).congr (fun y hy => fpq y) (fpq x)
-#align
-  has_locally_bounded_variation_on.ae_differentiable_within_at_of_mem_real HasLocallyBoundedVariationOn.ae_differentiable_within_at_of_mem_real
+#align has_locally_bounded_variation_on.ae_differentiable_within_at_of_mem_real HasLocallyBoundedVariationOn.ae_differentiable_within_at_of_mem_real
 
 /-- A bounded variation function into a finite dimensional product vector space is differentiable
 almost everywhere. Superseded by `ae_differentiable_within_at_of_mem`. -/
@@ -892,8 +885,7 @@ theorem ae_differentiable_within_at_of_mem_pi {ι : Type _} [Fintype ι] {f : �
     exact LipschitzWith.comp_has_locally_bounded_variation_on (A i) h
   filter_upwards [ae_all_iff.2 this] with x hx xs
   exact differentiable_within_at_pi.2 fun i => hx i xs
-#align
-  has_locally_bounded_variation_on.ae_differentiable_within_at_of_mem_pi HasLocallyBoundedVariationOn.ae_differentiable_within_at_of_mem_pi
+#align has_locally_bounded_variation_on.ae_differentiable_within_at_of_mem_pi HasLocallyBoundedVariationOn.ae_differentiable_within_at_of_mem_pi
 
 /-- A real function into a finite dimensional real vector space with bounded variation on a set
 is differentiable almost everywhere in this set. -/
@@ -909,8 +901,7 @@ theorem ae_differentiable_within_at_of_mem {f : ℝ → V} {s : Set ℝ}
     exact A.symm.differentiable_at.comp_differentiable_within_at x (hx xs)
   apply ae_differentiable_within_at_of_mem_pi
   exact A.lipschitz.comp_has_locally_bounded_variation_on h
-#align
-  has_locally_bounded_variation_on.ae_differentiable_within_at_of_mem HasLocallyBoundedVariationOn.ae_differentiable_within_at_of_mem
+#align has_locally_bounded_variation_on.ae_differentiable_within_at_of_mem HasLocallyBoundedVariationOn.ae_differentiable_within_at_of_mem
 
 /-- A real function into a finite dimensional real vector space with bounded variation on a set
 is differentiable almost everywhere in this set. -/
@@ -919,8 +910,7 @@ theorem ae_differentiable_within_at {f : ℝ → V} {s : Set ℝ} (h : HasLocall
   by
   rw [ae_restrict_iff' hs]
   exact h.ae_differentiable_within_at_of_mem
-#align
-  has_locally_bounded_variation_on.ae_differentiable_within_at HasLocallyBoundedVariationOn.ae_differentiable_within_at
+#align has_locally_bounded_variation_on.ae_differentiable_within_at HasLocallyBoundedVariationOn.ae_differentiable_within_at
 
 /-- A real function into a finite dimensional real vector space with bounded variation
 is differentiable almost everywhere. -/
@@ -930,8 +920,7 @@ theorem ae_differentiable_at {f : ℝ → V} (h : HasLocallyBoundedVariationOn f
   filter_upwards [h.ae_differentiable_within_at_of_mem] with x hx
   rw [differentiable_within_at_univ] at hx
   exact hx (mem_univ _)
-#align
-  has_locally_bounded_variation_on.ae_differentiable_at HasLocallyBoundedVariationOn.ae_differentiable_at
+#align has_locally_bounded_variation_on.ae_differentiable_at HasLocallyBoundedVariationOn.ae_differentiable_at
 
 end HasLocallyBoundedVariationOn
 
@@ -940,8 +929,7 @@ is differentiable almost everywhere in this set . -/
 theorem LipschitzOnWith.ae_differentiable_within_at_of_mem {C : ℝ≥0} {f : ℝ → V} {s : Set ℝ}
     (h : LipschitzOnWith C f s) : ∀ᵐ x, x ∈ s → DifferentiableWithinAt ℝ f s x :=
   h.HasLocallyBoundedVariationOn.ae_differentiable_within_at_of_mem
-#align
-  lipschitz_on_with.ae_differentiable_within_at_of_mem LipschitzOnWith.ae_differentiable_within_at_of_mem
+#align lipschitz_on_with.ae_differentiable_within_at_of_mem LipschitzOnWith.ae_differentiable_within_at_of_mem
 
 /-- A real function into a finite dimensional real vector space which is Lipschitz on a set
 is differentiable almost everywhere in this set. -/

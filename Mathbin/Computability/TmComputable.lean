@@ -233,8 +233,7 @@ def Tm2ComputableInPolyTime.toTm2ComputableInTime {α β : Type} {ea : FinEncodi
     {eb : FinEncoding β} {f : α → β} (h : Tm2ComputableInPolyTime ea eb f) :
     Tm2ComputableInTime ea eb f :=
   ⟨h.toTm2ComputableAux, fun n => h.time.eval n, h.outputsFun⟩
-#align
-  turing.tm2_computable_in_poly_time.to_tm2_computable_in_time Turing.Tm2ComputableInPolyTime.toTm2ComputableInTime
+#align turing.tm2_computable_in_poly_time.to_tm2_computable_in_time Turing.Tm2ComputableInPolyTime.toTm2ComputableInTime
 
 open Turing.TM2Cat.Stmt
 

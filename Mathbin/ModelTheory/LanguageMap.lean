@@ -275,34 +275,29 @@ instance id_is_expansion_on (M : Type _) [L.StructureCat M] : IsExpansionOn (Lho
 instance of_is_empty_is_expansion_on (M : Type _) [L.StructureCat M] [L'.StructureCat M]
     [L.IsAlgebraic] [L.IsRelational] : IsExpansionOn (LhomCat.ofIsEmpty L L') M :=
   ⟨fun n => (IsRelational.empty_functions n).elim, fun n => (IsAlgebraic.empty_relations n).elim⟩
-#align
-  first_order.language.Lhom.of_is_empty_is_expansion_on FirstOrder.Language.LhomCat.of_is_empty_is_expansion_on
+#align first_order.language.Lhom.of_is_empty_is_expansion_on FirstOrder.Language.LhomCat.of_is_empty_is_expansion_on
 
 instance sum_elim_is_expansion_on {L'' : Language} (ψ : L'' →ᴸ L') (M : Type _) [L.StructureCat M]
     [L'.StructureCat M] [L''.StructureCat M] [ϕ.IsExpansionOn M] [ψ.IsExpansionOn M] :
     (ϕ.sum_elim ψ).IsExpansionOn M :=
   ⟨fun _ f _ => Sum.casesOn f (by simp) (by simp), fun _ R _ => Sum.casesOn R (by simp) (by simp)⟩
-#align
-  first_order.language.Lhom.sum_elim_is_expansion_on FirstOrder.Language.LhomCat.sum_elim_is_expansion_on
+#align first_order.language.Lhom.sum_elim_is_expansion_on FirstOrder.Language.LhomCat.sum_elim_is_expansion_on
 
 instance sum_map_is_expansion_on {L₁ L₂ : Language} (ψ : L₁ →ᴸ L₂) (M : Type _) [L.StructureCat M]
     [L'.StructureCat M] [L₁.StructureCat M] [L₂.StructureCat M] [ϕ.IsExpansionOn M]
     [ψ.IsExpansionOn M] : (ϕ.sum_map ψ).IsExpansionOn M :=
   ⟨fun _ f _ => Sum.casesOn f (by simp) (by simp), fun _ R _ => Sum.casesOn R (by simp) (by simp)⟩
-#align
-  first_order.language.Lhom.sum_map_is_expansion_on FirstOrder.Language.LhomCat.sum_map_is_expansion_on
+#align first_order.language.Lhom.sum_map_is_expansion_on FirstOrder.Language.LhomCat.sum_map_is_expansion_on
 
 instance sum_inl_is_expansion_on (M : Type _) [L.StructureCat M] [L'.StructureCat M] :
     (LhomCat.sumInl : L →ᴸ L.Sum L').IsExpansionOn M :=
   ⟨fun _ f _ => rfl, fun _ R _ => rfl⟩
-#align
-  first_order.language.Lhom.sum_inl_is_expansion_on FirstOrder.Language.LhomCat.sum_inl_is_expansion_on
+#align first_order.language.Lhom.sum_inl_is_expansion_on FirstOrder.Language.LhomCat.sum_inl_is_expansion_on
 
 instance sum_inr_is_expansion_on (M : Type _) [L.StructureCat M] [L'.StructureCat M] :
     (LhomCat.sumInr : L' →ᴸ L.Sum L').IsExpansionOn M :=
   ⟨fun _ f _ => rfl, fun _ R _ => rfl⟩
-#align
-  first_order.language.Lhom.sum_inr_is_expansion_on FirstOrder.Language.LhomCat.sum_inr_is_expansion_on
+#align first_order.language.Lhom.sum_inr_is_expansion_on FirstOrder.Language.LhomCat.sum_inr_is_expansion_on
 
 @[simp]
 theorem fun_map_sum_inl [(L.Sum L').StructureCat M]
@@ -330,8 +325,7 @@ instance (priority := 100) is_expansion_on_reduct (ϕ : L →ᴸ L') (M : Type _
     @IsExpansionOn L L' ϕ M (ϕ.reduct M) _ :=
   letI := ϕ.reduct M
   ⟨fun _ f _ => rfl, fun _ R _ => rfl⟩
-#align
-  first_order.language.Lhom.is_expansion_on_reduct FirstOrder.Language.LhomCat.is_expansion_on_reduct
+#align first_order.language.Lhom.is_expansion_on_reduct FirstOrder.Language.LhomCat.is_expansion_on_reduct
 
 theorem Injective.is_expansion_on_default {ϕ : L →ᴸ L'}
     [∀ (n) (f : L'.Functions n), Decidable (f ∈ Set.range fun f : L.Functions n => onFunction ϕ f)]
@@ -347,8 +341,7 @@ theorem Injective.is_expansion_on_default {ϕ : L →ᴸ L'}
   · have hr : ϕ.on_relation r ∈ Set.range fun r : L.relations n => ϕ.on_relation r := ⟨r, rfl⟩
     refine' (dif_pos hr).trans _
     rw [h.on_relation hr.some_spec]
-#align
-  first_order.language.Lhom.injective.is_expansion_on_default FirstOrder.Language.LhomCat.Injective.is_expansion_on_default
+#align first_order.language.Lhom.injective.is_expansion_on_default FirstOrder.Language.LhomCat.Injective.is_expansion_on_default
 
 end LhomCat
 
@@ -419,14 +412,12 @@ instance is_algebraic_constants_on : IsAlgebraic (constantsOn α) :=
 
 instance is_relational_constants_on [ie : IsEmpty α] : IsRelational (constantsOn α) :=
   language.is_relational_mk₂
-#align
-  first_order.language.is_relational_constants_on FirstOrder.Language.is_relational_constants_on
+#align first_order.language.is_relational_constants_on FirstOrder.Language.is_relational_constants_on
 
 instance is_empty_functions_constants_on_succ {n : ℕ} :
     IsEmpty ((constantsOn α).Functions (n + 1)) :=
   Nat.casesOn n PEmpty.is_empty fun n => Nat.casesOn n PEmpty.is_empty fun _ => PEmpty.is_empty
-#align
-  first_order.language.is_empty_functions_constants_on_succ FirstOrder.Language.is_empty_functions_constants_on_succ
+#align first_order.language.is_empty_functions_constants_on_succ FirstOrder.Language.is_empty_functions_constants_on_succ
 
 theorem card_constants_on : (constantsOn α).card = (#α) := by simp
 #align first_order.language.card_constants_on FirstOrder.Language.card_constants_on
@@ -452,8 +443,7 @@ theorem constants_on_map_is_expansion_on {f : α → β} {fα : α → M} {fβ :
   exact
     ⟨fun n => Nat.casesOn n (fun F x => (congr_fun h F : _)) fun n F => isEmptyElim F, fun _ R =>
       isEmptyElim R⟩
-#align
-  first_order.language.constants_on_map_is_expansion_on FirstOrder.Language.constants_on_map_is_expansion_on
+#align first_order.language.constants_on_map_is_expansion_on FirstOrder.Language.constants_on_map_is_expansion_on
 
 end ConstantsOn
 
@@ -487,8 +477,7 @@ def lhomWithConstants : L →ᴸ L[[α]] :=
 
 theorem Lhom_with_constants_injective : (L.lhomWithConstants α).Injective :=
   Lhom.sum_inl_injective
-#align
-  first_order.language.Lhom_with_constants_injective FirstOrder.Language.Lhom_with_constants_injective
+#align first_order.language.Lhom_with_constants_injective FirstOrder.Language.Lhom_with_constants_injective
 
 variable {α}
 
@@ -520,8 +509,7 @@ def LequivCat.addEmptyConstants [ie : IsEmpty α] : L ≃ᴸ L[[α]]
   right_inv := by
     simp only [Lhom.comp_sum_elim, Lhom_with_constants, Lhom.comp_id]
     exact trans (congr rfl (Subsingleton.elim _ _)) Lhom.sum_elim_inl_inr
-#align
-  first_order.language.Lequiv.add_empty_constants FirstOrder.Language.LequivCat.addEmptyConstants
+#align first_order.language.Lequiv.add_empty_constants FirstOrder.Language.LequivCat.addEmptyConstants
 
 variable {α} {β : Type _}
 
@@ -530,16 +518,14 @@ theorem with_constants_fun_map_sum_inl [L[[α]].StructureCat M]
     [(lhomWithConstants L α).IsExpansionOn M] {n} {f : L.Functions n} {x : Fin n → M} :
     @funMap (L[[α]]) M _ n (Sum.inl f) x = funMap f x :=
   (lhomWithConstants L α).map_on_function f x
-#align
-  first_order.language.with_constants_fun_map_sum_inl FirstOrder.Language.with_constants_fun_map_sum_inl
+#align first_order.language.with_constants_fun_map_sum_inl FirstOrder.Language.with_constants_fun_map_sum_inl
 
 @[simp]
 theorem with_constants_rel_map_sum_inl [L[[α]].StructureCat M]
     [(lhomWithConstants L α).IsExpansionOn M] {n} {R : L.Relations n} {x : Fin n → M} :
     @RelMap (L[[α]]) M _ n (Sum.inl R) x = RelMap R x :=
   (lhomWithConstants L α).map_on_relation R x
-#align
-  first_order.language.with_constants_rel_map_sum_inl FirstOrder.Language.with_constants_rel_map_sum_inl
+#align first_order.language.with_constants_rel_map_sum_inl FirstOrder.Language.with_constants_rel_map_sum_inl
 
 /-- The language map extending the constant set.  -/
 def lhomWithConstantsMap (f : α → β) : L[[α]] →ᴸ L[[β]] :=
@@ -549,8 +535,7 @@ def lhomWithConstantsMap (f : α → β) : L[[α]] →ᴸ L[[β]] :=
 @[simp]
 theorem LhomCat.map_constants_comp_sum_inl {f : α → β} :
     (L.lhomWithConstantsMap f).comp LhomCat.sumInl = L.lhomWithConstants β := by ext (n f R) <;> rfl
-#align
-  first_order.language.Lhom.map_constants_comp_sum_inl FirstOrder.Language.LhomCat.map_constants_comp_sum_inl
+#align first_order.language.Lhom.map_constants_comp_sum_inl FirstOrder.Language.LhomCat.map_constants_comp_sum_inl
 
 end
 
@@ -562,13 +547,11 @@ instance constantsOnSelfStructure : (constantsOn M).StructureCat M :=
 
 instance withConstantsSelfStructure : L[[M]].StructureCat M :=
   Language.sumStructure _ _ M
-#align
-  first_order.language.with_constants_self_Structure FirstOrder.Language.withConstantsSelfStructure
+#align first_order.language.with_constants_self_Structure FirstOrder.Language.withConstantsSelfStructure
 
 instance with_constants_self_expansion : (lhomWithConstants L M).IsExpansionOn M :=
   ⟨fun _ _ _ => rfl, fun _ _ _ => rfl⟩
-#align
-  first_order.language.with_constants_self_expansion FirstOrder.Language.with_constants_self_expansion
+#align first_order.language.with_constants_self_expansion FirstOrder.Language.with_constants_self_expansion
 
 variable (α : Type _) [(constantsOn α).StructureCat M]
 
@@ -583,14 +566,12 @@ instance with_constants_expansion : (L.lhomWithConstants α).IsExpansionOn M :=
 instance add_empty_constants_is_expansion_on' :
     (LequivCat.addEmptyConstants L (∅ : Set M)).toLhom.IsExpansionOn M :=
   L.with_constants_expansion _
-#align
-  first_order.language.add_empty_constants_is_expansion_on' FirstOrder.Language.add_empty_constants_is_expansion_on'
+#align first_order.language.add_empty_constants_is_expansion_on' FirstOrder.Language.add_empty_constants_is_expansion_on'
 
 instance add_empty_constants_symm_is_expansion_on :
     (LequivCat.addEmptyConstants L (∅ : Set M)).symm.toLhom.IsExpansionOn M :=
   LhomCat.sum_elim_is_expansion_on _ _ _
-#align
-  first_order.language.add_empty_constants_symm_is_expansion_on FirstOrder.Language.add_empty_constants_symm_is_expansion_on
+#align first_order.language.add_empty_constants_symm_is_expansion_on FirstOrder.Language.add_empty_constants_symm_is_expansion_on
 
 instance add_constants_expansion {L' : Language} [L'.StructureCat M] (φ : L →ᴸ L')
     [φ.IsExpansionOn M] : (φ.addConstants α).IsExpansionOn M :=
@@ -603,8 +584,7 @@ theorem with_constants_fun_map_sum_inr {a : α} {x : Fin 0 → M} :
   by
   rw [Unique.eq_default x]
   exact (Lhom.sum_inr : constants_on α →ᴸ L.sum _).map_on_function _ _
-#align
-  first_order.language.with_constants_fun_map_sum_inr FirstOrder.Language.with_constants_fun_map_sum_inr
+#align first_order.language.with_constants_fun_map_sum_inr FirstOrder.Language.with_constants_fun_map_sum_inr
 
 variable {α} (A : Set M)
 
@@ -618,14 +598,12 @@ variable {A} {B : Set M} (h : A ⊆ B)
 instance constants_on_map_inclusion_is_expansion_on :
     (LhomCat.constantsOnMap (Set.inclusion h)).IsExpansionOn M :=
   constants_on_map_is_expansion_on rfl
-#align
-  first_order.language.constants_on_map_inclusion_is_expansion_on FirstOrder.Language.constants_on_map_inclusion_is_expansion_on
+#align first_order.language.constants_on_map_inclusion_is_expansion_on FirstOrder.Language.constants_on_map_inclusion_is_expansion_on
 
 instance map_constants_inclusion_is_expansion_on :
     (L.lhomWithConstantsMap (Set.inclusion h)).IsExpansionOn M :=
   LhomCat.sum_map_is_expansion_on _ _ _
-#align
-  first_order.language.map_constants_inclusion_is_expansion_on FirstOrder.Language.map_constants_inclusion_is_expansion_on
+#align first_order.language.map_constants_inclusion_is_expansion_on FirstOrder.Language.map_constants_inclusion_is_expansion_on
 
 end WithConstants
 

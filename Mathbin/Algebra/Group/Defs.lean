@@ -374,8 +374,7 @@ Case conversion may be inaccurate. Consider using '#align comm_semigroup.is_righ
 theorem CommSemigroup.IsRightCancelMul.toIsLeftCancelMul (G : Type u) [CommSemigroup G]
     [IsRightCancelMul G] : IsLeftCancelMul G :=
   ⟨fun a b c h => mul_right_cancel <| (mul_comm _ _).trans (h.trans <| mul_comm _ _)⟩
-#align
-  comm_semigroup.is_right_cancel_mul.to_is_left_cancel_mul CommSemigroup.IsRightCancelMul.toIsLeftCancelMul
+#align comm_semigroup.is_right_cancel_mul.to_is_left_cancel_mul CommSemigroup.IsRightCancelMul.toIsLeftCancelMul
 
 /- warning: comm_semigroup.is_left_cancel_mul.to_is_right_cancel_mul -> CommSemigroup.IsLeftCancelMul.toIsRightCancelMul is a dubious translation:
 lean 3 declaration is
@@ -390,8 +389,7 @@ Case conversion may be inaccurate. Consider using '#align comm_semigroup.is_left
 theorem CommSemigroup.IsLeftCancelMul.toIsRightCancelMul (G : Type u) [CommSemigroup G]
     [IsLeftCancelMul G] : IsRightCancelMul G :=
   ⟨fun a b c h => mul_left_cancel <| (mul_comm _ _).trans (h.trans <| mul_comm _ _)⟩
-#align
-  comm_semigroup.is_left_cancel_mul.to_is_right_cancel_mul CommSemigroup.IsLeftCancelMul.toIsRightCancelMul
+#align comm_semigroup.is_left_cancel_mul.to_is_right_cancel_mul CommSemigroup.IsLeftCancelMul.toIsRightCancelMul
 
 /- warning: comm_semigroup.is_left_cancel_mul.to_is_cancel_mul -> CommSemigroup.IsLeftCancelMul.toIsCancelMul is a dubious translation:
 lean 3 declaration is
@@ -406,8 +404,7 @@ Case conversion may be inaccurate. Consider using '#align comm_semigroup.is_left
 theorem CommSemigroup.IsLeftCancelMul.toIsCancelMul (G : Type u) [CommSemigroup G]
     [IsLeftCancelMul G] : IsCancelMul G :=
   { ‹IsLeftCancelMul G›, CommSemigroup.IsLeftCancelMul.toIsRightCancelMul G with }
-#align
-  comm_semigroup.is_left_cancel_mul.to_is_cancel_mul CommSemigroup.IsLeftCancelMul.toIsCancelMul
+#align comm_semigroup.is_left_cancel_mul.to_is_cancel_mul CommSemigroup.IsLeftCancelMul.toIsCancelMul
 
 /- warning: comm_semigroup.is_right_cancel_mul.to_is_cancel_mul -> CommSemigroup.IsRightCancelMul.toIsCancelMul is a dubious translation:
 lean 3 declaration is
@@ -422,8 +419,7 @@ Case conversion may be inaccurate. Consider using '#align comm_semigroup.is_righ
 theorem CommSemigroup.IsRightCancelMul.toIsCancelMul (G : Type u) [CommSemigroup G]
     [IsRightCancelMul G] : IsCancelMul G :=
   { ‹IsRightCancelMul G›, CommSemigroup.IsRightCancelMul.toIsLeftCancelMul G with }
-#align
-  comm_semigroup.is_right_cancel_mul.to_is_cancel_mul CommSemigroup.IsRightCancelMul.toIsCancelMul
+#align comm_semigroup.is_right_cancel_mul.to_is_cancel_mul CommSemigroup.IsRightCancelMul.toIsCancelMul
 
 end CommSemigroup
 

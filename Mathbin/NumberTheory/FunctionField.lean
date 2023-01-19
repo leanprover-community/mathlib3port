@@ -131,8 +131,7 @@ theorem algebra_map_injective : Function.Injective ⇑(algebraMap Fq[X] (ringOfI
   rw [← Subtype.coe_inj, Subalgebra.coe_zero] at hp
   rw [injective_iff_map_eq_zero (algebraMap Fq[X] F)] at hinj
   exact hinj p hp
-#align
-  function_field.ring_of_integers.algebra_map_injective FunctionField.ringOfIntegers.algebra_map_injective
+#align function_field.ring_of_integers.algebra_map_injective FunctionField.ringOfIntegers.algebra_map_injective
 
 theorem not_is_field : ¬IsField (ringOfIntegers Fq F) := by
   simpa [←

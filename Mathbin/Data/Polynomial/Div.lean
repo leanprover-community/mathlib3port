@@ -72,8 +72,7 @@ theorem multiplicity_finite_of_degree_pos_of_monic (hp : (0 : WithBot ℕ) < deg
         (lt_add_of_le_of_pos (le_mul_of_one_le_right (Nat.zero_le _) hnp)
           (add_pos_of_pos_of_nonneg (by rwa [one_mul]) (Nat.zero_le _)))
         this⟩
-#align
-  polynomial.multiplicity_finite_of_degree_pos_of_monic Polynomial.multiplicity_finite_of_degree_pos_of_monic
+#align polynomial.multiplicity_finite_of_degree_pos_of_monic Polynomial.multiplicity_finite_of_degree_pos_of_monic
 
 end CommSemiring
 
@@ -577,8 +576,7 @@ theorem div_by_monic_mul_pow_root_multiplicity_eq (p : R[X]) (a : R) :
       rw [← mod_by_monic_add_div p this,
         (dvd_iff_mod_by_monic_eq_zero this).2 (pow_root_multiplicity_dvd _ _)] <;>
     simp [mul_comm]
-#align
-  polynomial.div_by_monic_mul_pow_root_multiplicity_eq Polynomial.div_by_monic_mul_pow_root_multiplicity_eq
+#align polynomial.div_by_monic_mul_pow_root_multiplicity_eq Polynomial.div_by_monic_mul_pow_root_multiplicity_eq
 
 theorem eval_div_by_monic_pow_root_multiplicity_ne_zero {p : R[X]} (a : R) (hp : p ≠ 0) :
     eval a (p /ₘ (X - c a) ^ rootMultiplicity a p) ≠ 0 :=
@@ -594,8 +592,7 @@ theorem eval_div_by_monic_pow_root_multiplicity_ne_zero {p : R[X]} (a : R) (hp :
         (show (0 : WithBot ℕ) < degree (X - C a) by rw [degree_X_sub_C] <;> exact by decide)
         (monic_X_sub_C _) hp)
       (Nat.lt_succ_self _) (dvd_of_mul_right_eq _ this)
-#align
-  polynomial.eval_div_by_monic_pow_root_multiplicity_ne_zero Polynomial.eval_div_by_monic_pow_root_multiplicity_ne_zero
+#align polynomial.eval_div_by_monic_pow_root_multiplicity_ne_zero Polynomial.eval_div_by_monic_pow_root_multiplicity_ne_zero
 
 end multiplicity
 

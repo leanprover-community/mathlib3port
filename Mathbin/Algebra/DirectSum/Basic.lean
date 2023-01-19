@@ -367,8 +367,7 @@ theorem IsInternal.add_submonoid_supr_eq_top {M : Type _} [DecidableEq ι] [AddC
   by
   rw [AddSubmonoid.supr_eq_mrange_dfinsupp_sum_add_hom, AddMonoidHom.mrange_top_iff_surjective]
   exact Function.Bijective.surjective h
-#align
-  direct_sum.is_internal.add_submonoid_supr_eq_top DirectSum.IsInternal.add_submonoid_supr_eq_top
+#align direct_sum.is_internal.add_submonoid_supr_eq_top DirectSum.IsInternal.add_submonoid_supr_eq_top
 
 end DirectSum
 

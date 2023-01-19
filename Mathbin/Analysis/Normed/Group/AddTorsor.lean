@@ -217,8 +217,7 @@ def pseudoMetricSpaceOfNormedAddCommGroupOfAddTorsor (V P : Type _) [SeminormedA
     change ‖x -ᵥ z‖ ≤ ‖x -ᵥ y‖ + ‖y -ᵥ z‖
     rw [← vsub_add_vsub_cancel]
     apply norm_add_le
-#align
-  pseudo_metric_space_of_normed_add_comm_group_of_add_torsor pseudoMetricSpaceOfNormedAddCommGroupOfAddTorsor
+#align pseudo_metric_space_of_normed_add_comm_group_of_add_torsor pseudoMetricSpaceOfNormedAddCommGroupOfAddTorsor
 
 /-- The distance defines a metric space structure on the torsor. This
 is not an instance because it depends on `V` to define a `metric_space
@@ -235,8 +234,7 @@ def metricSpaceOfNormedAddCommGroupOfAddTorsor (V P : Type _) [NormedAddCommGrou
     change ‖x -ᵥ z‖ ≤ ‖x -ᵥ y‖ + ‖y -ᵥ z‖
     rw [← vsub_add_vsub_cancel]
     apply norm_add_le
-#align
-  metric_space_of_normed_add_comm_group_of_add_torsor metricSpaceOfNormedAddCommGroupOfAddTorsor
+#align metric_space_of_normed_add_comm_group_of_add_torsor metricSpaceOfNormedAddCommGroupOfAddTorsor
 
 include V
 

@@ -52,8 +52,7 @@ instance decompositionSubgroupMulSemiringAction (A : ValuationSubring L) :
     smul_zero := fun g => Subtype.ext <| smul_zero g
     smul_one := fun g => Subtype.ext <| smul_one g
     smul_mul := fun g k l => Subtype.ext <| smul_mul' g k l }
-#align
-  valuation_subring.decomposition_subgroup_mul_semiring_action ValuationSubring.decompositionSubgroupMulSemiringAction
+#align valuation_subring.decomposition_subgroup_mul_semiring_action ValuationSubring.decompositionSubgroupMulSemiringAction
 
 /-- The inertia subgroup defined as the kernel of the group homomorphism from
 the decomposition subgroup to the group of automorphisms of the residue field of `A`. -/

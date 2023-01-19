@@ -72,8 +72,7 @@ instance (priority := 100) reflects_isomorphisms_of_reflects_monomorphisms_of_re
     haveI : epi f := epi_of_epi_map F inferInstance
     haveI : mono f := mono_of_mono_map F inferInstance
     exact is_iso_of_mono_of_epi f
-#align
-  category_theory.reflects_isomorphisms_of_reflects_monomorphisms_of_reflects_epimorphisms CategoryTheory.reflects_isomorphisms_of_reflects_monomorphisms_of_reflects_epimorphisms
+#align category_theory.reflects_isomorphisms_of_reflects_monomorphisms_of_reflects_epimorphisms CategoryTheory.reflects_isomorphisms_of_reflects_monomorphisms_of_reflects_epimorphisms
 
 end ReflectsIso
 

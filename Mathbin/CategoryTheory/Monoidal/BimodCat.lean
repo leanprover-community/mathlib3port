@@ -62,8 +62,7 @@ theorem id_tensor_π_preserves_coequalizer_inv_colim_map_desc {X Y Z X' Y' Z' : 
           colimMap (parallelPairHom (𝟙 Z ⊗ f) (𝟙 Z ⊗ g) f' g' p q wf wg) ≫ coequalizer.desc h wh =
       q ≫ h :=
   map_π_preserves_coequalizer_inv_colim_map_desc (tensorLeft Z) f g f' g' p q wf wg h wh
-#align
-  id_tensor_π_preserves_coequalizer_inv_colim_map_desc id_tensor_π_preserves_coequalizer_inv_colim_map_desc
+#align id_tensor_π_preserves_coequalizer_inv_colim_map_desc id_tensor_π_preserves_coequalizer_inv_colim_map_desc
 
 end
 
@@ -98,8 +97,7 @@ theorem π_tensor_id_preserves_coequalizer_inv_colim_map_desc {X Y Z X' Y' Z' : 
           colimMap (parallelPairHom (f ⊗ 𝟙 Z) (g ⊗ 𝟙 Z) f' g' p q wf wg) ≫ coequalizer.desc h wh =
       q ≫ h :=
   map_π_preserves_coequalizer_inv_colim_map_desc (tensorRight Z) f g f' g' p q wf wg h wh
-#align
-  π_tensor_id_preserves_coequalizer_inv_colim_map_desc π_tensor_id_preserves_coequalizer_inv_colim_map_desc
+#align π_tensor_id_preserves_coequalizer_inv_colim_map_desc π_tensor_id_preserves_coequalizer_inv_colim_map_desc
 
 end
 

@@ -449,29 +449,25 @@ def sumArrowLequivProdArrow (α β R M : Type _) [Semiring R] [AddCommMonoid M] 
 theorem sum_arrow_lequiv_prod_arrow_apply_fst {α β} (f : Sum α β → M) (a : α) :
     (sumArrowLequivProdArrow α β R M f).1 a = f (Sum.inl a) :=
   rfl
-#align
-  linear_equiv.sum_arrow_lequiv_prod_arrow_apply_fst LinearEquiv.sum_arrow_lequiv_prod_arrow_apply_fst
+#align linear_equiv.sum_arrow_lequiv_prod_arrow_apply_fst LinearEquiv.sum_arrow_lequiv_prod_arrow_apply_fst
 
 @[simp]
 theorem sum_arrow_lequiv_prod_arrow_apply_snd {α β} (f : Sum α β → M) (b : β) :
     (sumArrowLequivProdArrow α β R M f).2 b = f (Sum.inr b) :=
   rfl
-#align
-  linear_equiv.sum_arrow_lequiv_prod_arrow_apply_snd LinearEquiv.sum_arrow_lequiv_prod_arrow_apply_snd
+#align linear_equiv.sum_arrow_lequiv_prod_arrow_apply_snd LinearEquiv.sum_arrow_lequiv_prod_arrow_apply_snd
 
 @[simp]
 theorem sum_arrow_lequiv_prod_arrow_symm_apply_inl {α β} (f : α → M) (g : β → M) (a : α) :
     ((sumArrowLequivProdArrow α β R M).symm (f, g)) (Sum.inl a) = f a :=
   rfl
-#align
-  linear_equiv.sum_arrow_lequiv_prod_arrow_symm_apply_inl LinearEquiv.sum_arrow_lequiv_prod_arrow_symm_apply_inl
+#align linear_equiv.sum_arrow_lequiv_prod_arrow_symm_apply_inl LinearEquiv.sum_arrow_lequiv_prod_arrow_symm_apply_inl
 
 @[simp]
 theorem sum_arrow_lequiv_prod_arrow_symm_apply_inr {α β} (f : α → M) (g : β → M) (b : β) :
     ((sumArrowLequivProdArrow α β R M).symm (f, g)) (Sum.inr b) = g b :=
   rfl
-#align
-  linear_equiv.sum_arrow_lequiv_prod_arrow_symm_apply_inr LinearEquiv.sum_arrow_lequiv_prod_arrow_symm_apply_inr
+#align linear_equiv.sum_arrow_lequiv_prod_arrow_symm_apply_inr LinearEquiv.sum_arrow_lequiv_prod_arrow_symm_apply_inr
 
 /-- If `ι` has a unique element, then `ι → M` is linearly equivalent to `M`. -/
 @[simps (config :=

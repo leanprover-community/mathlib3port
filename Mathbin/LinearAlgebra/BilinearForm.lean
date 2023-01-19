@@ -985,8 +985,7 @@ theorem is_adjoint_pair_iff_comp_left_eq_comp_right (f g : Module.EndCat R M) :
   · intro x y
     rw [← comp_left_apply, ← comp_right_apply]
     rw [h]
-#align
-  bilin_form.is_adjoint_pair_iff_comp_left_eq_comp_right BilinForm.is_adjoint_pair_iff_comp_left_eq_comp_right
+#align bilin_form.is_adjoint_pair_iff_comp_left_eq_comp_right BilinForm.is_adjoint_pair_iff_comp_left_eq_comp_right
 
 theorem isAdjointPairZero : IsAdjointPair B B' 0 0 := fun x y => by
   simp only [BilinForm.zero_left, BilinForm.zero_right, LinearMap.zero_apply]
@@ -1087,8 +1086,7 @@ theorem is_skew_adjoint_iff_neg_self_adjoint (f : Module.EndCat R₁ M₁) :
     B₁.IsSkewAdjoint f ↔ IsAdjointPair (-B₁) B₁ f f :=
   show (∀ x y, B₁ (f x) y = B₁ x ((-f) y)) ↔ ∀ x y, B₁ (f x) y = (-B₁) x (f y) by
     simp only [LinearMap.neg_apply, BilinForm.neg_apply, BilinForm.neg_right]
-#align
-  bilin_form.is_skew_adjoint_iff_neg_self_adjoint BilinForm.is_skew_adjoint_iff_neg_self_adjoint
+#align bilin_form.is_skew_adjoint_iff_neg_self_adjoint BilinForm.is_skew_adjoint_iff_neg_self_adjoint
 
 /-- The set of self-adjoint endomorphisms of a module with bilinear form is a submodule. (In fact
 it is a Jordan subalgebra.) -/
@@ -1172,8 +1170,7 @@ theorem span_singleton_inf_orthogonal_eq_bot {B : BilinForm K V} {x : V} (hx : �
     rw [smul_right] at this
     exact Or.elim (zero_eq_mul.mp this.symm) id fun hfalse => False.elim <| hx hfalse
   · rw [Submodule.mem_span] <;> exact fun _ hp => hp <| Finset.mem_singleton_self _
-#align
-  bilin_form.span_singleton_inf_orthogonal_eq_bot BilinForm.span_singleton_inf_orthogonal_eq_bot
+#align bilin_form.span_singleton_inf_orthogonal_eq_bot BilinForm.span_singleton_inf_orthogonal_eq_bot
 
 -- ↓ This lemma only applies in fields since we use the `mul_eq_zero`
 theorem orthogonal_span_singleton_eq_to_lin_ker {B : BilinForm K V} (x : V) :
@@ -1186,16 +1183,14 @@ theorem orthogonal_span_singleton_eq_to_lin_ker {B : BilinForm K V} (x : V) :
   · rintro h _ ⟨z, rfl⟩
     rw [is_ortho, smul_left, mul_eq_zero]
     exact Or.intro_right _ h
-#align
-  bilin_form.orthogonal_span_singleton_eq_to_lin_ker BilinForm.orthogonal_span_singleton_eq_to_lin_ker
+#align bilin_form.orthogonal_span_singleton_eq_to_lin_ker BilinForm.orthogonal_span_singleton_eq_to_lin_ker
 
 theorem span_singleton_sup_orthogonal_eq_top {B : BilinForm K V} {x : V} (hx : ¬B.IsOrtho x x) :
     (K ∙ x) ⊔ B.orthogonal (K ∙ x) = ⊤ :=
   by
   rw [orthogonal_span_singleton_eq_to_lin_ker]
   exact LinearMap.span_singleton_sup_ker_eq_top _ hx
-#align
-  bilin_form.span_singleton_sup_orthogonal_eq_top BilinForm.span_singleton_sup_orthogonal_eq_top
+#align bilin_form.span_singleton_sup_orthogonal_eq_top BilinForm.span_singleton_sup_orthogonal_eq_top
 
 /-- Given a bilinear form `B` and some `x` such that `B x x ≠ 0`, the span of the singleton of `x`
   is complement to its orthogonal complement. -/
@@ -1298,8 +1293,7 @@ theorem nondegenerateRestrictOfDisjointOrthogonal (B : BilinForm R₁ M₁) (b :
   specialize b₁ ⟨y, hy⟩
   rw [restrict_apply, Submodule.coe_mk, Submodule.coe_mk] at b₁
   exact is_ortho_def.mpr (b x y b₁)
-#align
-  bilin_form.nondegenerate_restrict_of_disjoint_orthogonal BilinForm.nondegenerateRestrictOfDisjointOrthogonal
+#align bilin_form.nondegenerate_restrict_of_disjoint_orthogonal BilinForm.nondegenerateRestrictOfDisjointOrthogonal
 
 /-- An orthogonal basis with respect to a nondegenerate bilinear form has no self-orthogonal
 elements. -/
@@ -1317,8 +1311,7 @@ theorem IsOrtho.not_is_ortho_basis_self_of_nondegenerate {n : Type w} [Nontrivia
   obtain rfl | hij := eq_or_ne i j
   · exact ho
   · exact h hij
-#align
-  bilin_form.is_Ortho.not_is_ortho_basis_self_of_nondegenerate BilinForm.IsOrtho.not_is_ortho_basis_self_of_nondegenerate
+#align bilin_form.is_Ortho.not_is_ortho_basis_self_of_nondegenerate BilinForm.IsOrtho.not_is_ortho_basis_self_of_nondegenerate
 
 /-- Given an orthogonal basis with respect to a bilinear form, the bilinear form is nondegenerate
 iff the basis has no elements which are self-orthogonal. -/
@@ -1341,8 +1334,7 @@ theorem IsOrtho.nondegenerate_iff_not_is_ortho_basis_self {n : Type w} [Nontrivi
   · intro hi
     convert zero_mul _ using 2
     exact finsupp.not_mem_support_iff.mp hi
-#align
-  bilin_form.is_Ortho.nondegenerate_iff_not_is_ortho_basis_self BilinForm.IsOrtho.nondegenerate_iff_not_is_ortho_basis_self
+#align bilin_form.is_Ortho.nondegenerate_iff_not_is_ortho_basis_self BilinForm.IsOrtho.nondegenerate_iff_not_is_ortho_basis_self
 
 section
 
@@ -1366,8 +1358,7 @@ theorem to_lin_restrict_ker_eq_inf_orthogonal (B : BilinForm K V) (W : Subspace 
     change B x y = 0
     rw [b]
     exact hx.2 _ Submodule.mem_top
-#align
-  bilin_form.to_lin_restrict_ker_eq_inf_orthogonal BilinForm.to_lin_restrict_ker_eq_inf_orthogonal
+#align bilin_form.to_lin_restrict_ker_eq_inf_orthogonal BilinForm.to_lin_restrict_ker_eq_inf_orthogonal
 
 theorem to_lin_restrict_range_dual_annihilator_comap_eq_orthogonal (B : BilinForm K V)
     (W : Subspace K V) : (B.toLin.domRestrict W).range.dualAnnihilatorComap = B.orthogonal W :=
@@ -1379,8 +1370,7 @@ theorem to_lin_restrict_range_dual_annihilator_comap_eq_orthogonal (B : BilinFor
   · rw [Submodule.mem_dual_annihilator_comap]
     rintro _ ⟨⟨w, hw⟩, rfl⟩
     exact hx w hw
-#align
-  bilin_form.to_lin_restrict_range_dual_annihilator_comap_eq_orthogonal BilinForm.to_lin_restrict_range_dual_annihilator_comap_eq_orthogonal
+#align bilin_form.to_lin_restrict_range_dual_annihilator_comap_eq_orthogonal BilinForm.to_lin_restrict_range_dual_annihilator_comap_eq_orthogonal
 
 variable [FiniteDimensional K V]
 
@@ -1418,8 +1408,7 @@ theorem restrict_nondegenerate_of_is_compl_orthogonal {B : BilinForm K V} {W : S
   rw [← finrank_bot K V, ← this, Submodule.dim_sup_add_dim_inf_eq,
     finrank_add_finrank_orthogonal b₁]
   exact le_self_add
-#align
-  bilin_form.restrict_nondegenerate_of_is_compl_orthogonal BilinForm.restrict_nondegenerate_of_is_compl_orthogonal
+#align bilin_form.restrict_nondegenerate_of_is_compl_orthogonal BilinForm.restrict_nondegenerate_of_is_compl_orthogonal
 
 /-- A subspace is complement to its orthogonal complement with respect to some reflexive bilinear
 form if and only if that bilinear form restricted on to the subspace is nondegenerate. -/
@@ -1427,8 +1416,7 @@ theorem restrict_nondegenerate_iff_is_compl_orthogonal {B : BilinForm K V} {W : 
     (b₁ : B.IsRefl) : (B.restrict W).Nondegenerate ↔ IsCompl W (B.orthogonal W) :=
   ⟨fun b₂ => restrict_nondegenerate_of_is_compl_orthogonal b₁ b₂, fun h =>
     B.nondegenerateRestrictOfDisjointOrthogonal b₁ h.1⟩
-#align
-  bilin_form.restrict_nondegenerate_iff_is_compl_orthogonal BilinForm.restrict_nondegenerate_iff_is_compl_orthogonal
+#align bilin_form.restrict_nondegenerate_iff_is_compl_orthogonal BilinForm.restrict_nondegenerate_iff_is_compl_orthogonal
 
 /-- Given a nondegenerate bilinear form `B` on a finite-dimensional vector space, `B.to_dual` is
 the linear equivalence between a vector space and its dual with the underlying linear map
@@ -1495,8 +1483,7 @@ theorem restrictOrthogonalSpanSingletonNondegenerate (B : BilinForm K V) (b₁ :
   specialize hm ⟨z, hz⟩
   rw [restrict] at hm
   erw [add_right, show B m.1 y = 0 by rw [b₂] <;> exact m.2 y hy, hm, add_zero]
-#align
-  bilin_form.restrict_orthogonal_span_singleton_nondegenerate BilinForm.restrictOrthogonalSpanSingletonNondegenerate
+#align bilin_form.restrict_orthogonal_span_singleton_nondegenerate BilinForm.restrictOrthogonalSpanSingletonNondegenerate
 
 section LinearAdjoints
 
@@ -1513,8 +1500,7 @@ theorem is_adjoint_pair_unique_of_nondegenerate (B : BilinForm R₁ M₁) (b : B
     (φ ψ₁ ψ₂ : M₁ →ₗ[R₁] M₁) (hψ₁ : IsAdjointPair B B ψ₁ φ) (hψ₂ : IsAdjointPair B B ψ₂ φ) :
     ψ₁ = ψ₂ :=
   B.comp_left_injective b <| ext fun v w => by rw [comp_left_apply, comp_left_apply, hψ₁, hψ₂]
-#align
-  bilin_form.is_adjoint_pair_unique_of_nondegenerate BilinForm.is_adjoint_pair_unique_of_nondegenerate
+#align bilin_form.is_adjoint_pair_unique_of_nondegenerate BilinForm.is_adjoint_pair_unique_of_nondegenerate
 
 variable [FiniteDimensional K V]
 
@@ -1528,8 +1514,7 @@ noncomputable def symmCompOfNondegenerate (B₁ B₂ : BilinForm K V) (b₂ : B�
 theorem comp_symm_comp_of_nondegenerate_apply (B₁ : BilinForm K V) {B₂ : BilinForm K V}
     (b₂ : B₂.Nondegenerate) (v : V) : toLin B₂ (B₁.symmCompOfNondegenerate B₂ b₂ v) = toLin B₁ v :=
   by erw [symm_comp_of_nondegenerate, LinearEquiv.apply_symm_apply (B₂.to_dual b₂) _]
-#align
-  bilin_form.comp_symm_comp_of_nondegenerate_apply BilinForm.comp_symm_comp_of_nondegenerate_apply
+#align bilin_form.comp_symm_comp_of_nondegenerate_apply BilinForm.comp_symm_comp_of_nondegenerate_apply
 
 @[simp]
 theorem symm_comp_of_nondegenerate_left_apply (B₁ : BilinForm K V) {B₂ : BilinForm K V}
@@ -1537,8 +1522,7 @@ theorem symm_comp_of_nondegenerate_left_apply (B₁ : BilinForm K V) {B₂ : Bil
   by
   conv_lhs => rw [← BilinForm.to_lin_apply, comp_symm_comp_of_nondegenerate_apply]
   rfl
-#align
-  bilin_form.symm_comp_of_nondegenerate_left_apply BilinForm.symm_comp_of_nondegenerate_left_apply
+#align bilin_form.symm_comp_of_nondegenerate_left_apply BilinForm.symm_comp_of_nondegenerate_left_apply
 
 /-- Given the nondegenerate bilinear form `B` and the linear map `φ`,
 `left_adjoint_of_nondegenerate` provides the left adjoint of `φ` with respect to `B`.
@@ -1551,8 +1535,7 @@ noncomputable def leftAdjointOfNondegenerate (B : BilinForm K V) (b : B.Nondegen
 theorem isAdjointPairLeftAdjointOfNondegenerate (B : BilinForm K V) (b : B.Nondegenerate)
     (φ : V →ₗ[K] V) : IsAdjointPair B B (B.leftAdjointOfNondegenerate b φ) φ := fun x y =>
   (B.compRight φ).symm_comp_of_nondegenerate_left_apply b y x
-#align
-  bilin_form.is_adjoint_pair_left_adjoint_of_nondegenerate BilinForm.isAdjointPairLeftAdjointOfNondegenerate
+#align bilin_form.is_adjoint_pair_left_adjoint_of_nondegenerate BilinForm.isAdjointPairLeftAdjointOfNondegenerate
 
 /-- Given the nondegenerate bilinear form `B`, the linear map `φ` has a unique left adjoint given by
 `bilin_form.left_adjoint_of_nondegenerate`. -/
@@ -1562,8 +1545,7 @@ theorem is_adjoint_pair_iff_eq_of_nondegenerate (B : BilinForm K V) (b : B.Nonde
     B.is_adjoint_pair_unique_of_nondegenerate b φ ψ _ h
       (isAdjointPairLeftAdjointOfNondegenerate _ _ _),
     fun h => h.symm ▸ isAdjointPairLeftAdjointOfNondegenerate _ _ _⟩
-#align
-  bilin_form.is_adjoint_pair_iff_eq_of_nondegenerate BilinForm.is_adjoint_pair_iff_eq_of_nondegenerate
+#align bilin_form.is_adjoint_pair_iff_eq_of_nondegenerate BilinForm.is_adjoint_pair_iff_eq_of_nondegenerate
 
 end LinearAdjoints
 

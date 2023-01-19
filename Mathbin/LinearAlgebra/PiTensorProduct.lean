@@ -586,8 +586,7 @@ def subsingletonEquiv [Subsingleton ι] (i₀ : ι) : (⨂[R] i : ι, M) ≃ₗ[
 theorem subsingleton_equiv_apply_tprod [Subsingleton ι] (i : ι) (f : ι → M) :
     subsingletonEquiv i (tprod R f) = f i :=
   lift.tprod _
-#align
-  pi_tensor_product.subsingleton_equiv_apply_tprod PiTensorProduct.subsingleton_equiv_apply_tprod
+#align pi_tensor_product.subsingleton_equiv_apply_tprod PiTensorProduct.subsingleton_equiv_apply_tprod
 
 section Tmul
 

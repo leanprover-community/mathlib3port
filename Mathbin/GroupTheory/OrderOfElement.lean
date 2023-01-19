@@ -405,8 +405,7 @@ theorem order_of_dvd_lcm_mul : orderOf y ∣ Nat.lcm (orderOf x) (orderOf (x * y
 theorem order_of_mul_dvd_mul_order_of : orderOf (x * y) ∣ orderOf x * orderOf y :=
   dvd_trans h.order_of_mul_dvd_lcm (lcm_dvd_mul _ _)
 #align commute.order_of_mul_dvd_mul_order_of Commute.order_of_mul_dvd_mul_order_of
-#align
-  add_commute.add_order_of_add_dvd_mul_add_order_of AddCommute.add_order_of_add_dvd_mul_add_order_of
+#align add_commute.add_order_of_add_dvd_mul_add_order_of AddCommute.add_order_of_add_dvd_mul_add_order_of
 
 @[to_additive add_order_of_add_eq_mul_add_order_of_of_coprime]
 theorem order_of_mul_eq_mul_order_of_of_coprime (hco : (orderOf x).Coprime (orderOf y)) :
@@ -414,10 +413,8 @@ theorem order_of_mul_eq_mul_order_of_of_coprime (hco : (orderOf x).Coprime (orde
   by
   convert h.function_commute_mul_left.minimal_period_of_comp_eq_mul_of_coprime hco
   simp only [orderOf, comp_mul_left]
-#align
-  commute.order_of_mul_eq_mul_order_of_of_coprime Commute.order_of_mul_eq_mul_order_of_of_coprime
-#align
-  add_commute.add_order_of_add_eq_mul_add_order_of_of_coprime AddCommute.add_order_of_add_eq_mul_add_order_of_of_coprime
+#align commute.order_of_mul_eq_mul_order_of_of_coprime Commute.order_of_mul_eq_mul_order_of_of_coprime
+#align add_commute.add_order_of_add_eq_mul_add_order_of_of_coprime AddCommute.add_order_of_add_eq_mul_add_order_of_of_coprime
 
 /-- Commuting elements of finite order are closed under multiplication. -/
 @[to_additive "Commuting elements of finite additive order are closed under addition."]
@@ -444,10 +441,8 @@ theorem order_of_mul_eq_right_of_forall_prime_mul_dvd (hy : IsOfFinOrder y)
   refine' trans (order_of_dvd_lcm_mul h) (lcm_dvd ((dvd_div_iff hpy).2 _) hd)
   by_cases p ∣ orderOf x
   exacts[hdvd p hp h, (hp.coprime_iff_not_dvd.2 h).mul_dvd_of_dvd_of_dvd hpy hxy]
-#align
-  commute.order_of_mul_eq_right_of_forall_prime_mul_dvd Commute.order_of_mul_eq_right_of_forall_prime_mul_dvd
-#align
-  add_commute.add_order_of_add_eq_right_of_forall_prime_mul_dvd AddCommute.add_order_of_add_eq_right_of_forall_prime_mul_dvd
+#align commute.order_of_mul_eq_right_of_forall_prime_mul_dvd Commute.order_of_mul_eq_right_of_forall_prime_mul_dvd
+#align add_commute.add_order_of_add_eq_right_of_forall_prime_mul_dvd AddCommute.add_order_of_add_eq_right_of_forall_prime_mul_dvd
 
 end Commute
 

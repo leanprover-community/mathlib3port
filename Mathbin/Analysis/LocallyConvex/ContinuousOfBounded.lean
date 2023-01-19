@@ -181,8 +181,7 @@ theorem LinearMap.continuous_at_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
     simp only [hn', inv_smul_smul₀, Ne.def, Nat.cast_eq_zero, not_false_iff] at h'
     rwa [← h']
   exact hu' n hn' h''
-#align
-  linear_map.continuous_at_zero_of_locally_bounded LinearMap.continuous_at_zero_of_locally_bounded
+#align linear_map.continuous_at_zero_of_locally_bounded LinearMap.continuous_at_zero_of_locally_bounded
 
 /-- If `E` is first countable, then every locally bounded linear map `E →ₛₗ[σ] F` is continuous. -/
 theorem LinearMap.continuous_of_locally_bounded [UniformAddGroup F] (f : E →ₛₗ[σ] F)

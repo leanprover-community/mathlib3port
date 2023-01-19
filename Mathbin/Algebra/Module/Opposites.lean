@@ -57,8 +57,7 @@ theorem coe_op_linear_equiv_to_linear_map : ((opLinearEquiv R).toLinearMap : M �
 theorem coe_op_linear_equiv_symm_to_linear_map :
     ((opLinearEquiv R).symm.toLinearMap : Mᵐᵒᵖ → M) = unop :=
   rfl
-#align
-  mul_opposite.coe_op_linear_equiv_symm_to_linear_map MulOpposite.coe_op_linear_equiv_symm_to_linear_map
+#align mul_opposite.coe_op_linear_equiv_symm_to_linear_map MulOpposite.coe_op_linear_equiv_symm_to_linear_map
 
 @[simp]
 theorem op_linear_equiv_to_add_equiv : (opLinearEquiv R : M ≃ₗ[R] Mᵐᵒᵖ).toAddEquiv = op_add_equiv :=

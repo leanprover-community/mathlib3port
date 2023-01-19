@@ -71,8 +71,7 @@ variable {B}
 theorem aeval_algebra_map_eq_zero_iff_of_injective {x : A} {p : R[X]}
     (h : Function.Injective (algebraMap A B)) : aeval (algebraMap A B x) p = 0 ↔ aeval x p = 0 := by
   rw [aeval_algebra_map_apply, ← (algebraMap A B).map_zero, h.eq_iff]
-#align
-  polynomial.aeval_algebra_map_eq_zero_iff_of_injective Polynomial.aeval_algebra_map_eq_zero_iff_of_injective
+#align polynomial.aeval_algebra_map_eq_zero_iff_of_injective Polynomial.aeval_algebra_map_eq_zero_iff_of_injective
 
 end CommSemiring
 

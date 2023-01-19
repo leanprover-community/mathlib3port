@@ -1049,8 +1049,7 @@ choice in basic `nat` lemmas. -/
 def StrictOrderedCommSemiring.toOrderedCommSemiring' [@DecidableRel α (· ≤ ·)] :
     OrderedCommSemiring α :=
   { ‹StrictOrderedCommSemiring α›, StrictOrderedSemiring.toOrderedSemiring' with }
-#align
-  strict_ordered_comm_semiring.to_ordered_comm_semiring' StrictOrderedCommSemiring.toOrderedCommSemiring'
+#align strict_ordered_comm_semiring.to_ordered_comm_semiring' StrictOrderedCommSemiring.toOrderedCommSemiring'
 -/
 
 #print StrictOrderedCommSemiring.toOrderedCommSemiring /-
@@ -1058,8 +1057,7 @@ def StrictOrderedCommSemiring.toOrderedCommSemiring' [@DecidableRel α (· ≤ �
 instance (priority := 100) StrictOrderedCommSemiring.toOrderedCommSemiring :
     OrderedCommSemiring α :=
   { ‹StrictOrderedCommSemiring α›, StrictOrderedSemiring.toOrderedSemiring with }
-#align
-  strict_ordered_comm_semiring.to_ordered_comm_semiring StrictOrderedCommSemiring.toOrderedCommSemiring
+#align strict_ordered_comm_semiring.to_ordered_comm_semiring StrictOrderedCommSemiring.toOrderedCommSemiring
 -/
 
 end StrictOrderedCommSemiring
@@ -1229,8 +1227,7 @@ def StrictOrderedCommRing.toOrderedCommRing' [@DecidableRel α (· ≤ ·)] : Or
 instance (priority := 100) StrictOrderedCommRing.toStrictOrderedCommSemiring :
     StrictOrderedCommSemiring α :=
   { ‹StrictOrderedCommRing α›, StrictOrderedRing.toStrictOrderedSemiring with }
-#align
-  strict_ordered_comm_ring.to_strict_ordered_comm_semiring StrictOrderedCommRing.toStrictOrderedCommSemiring
+#align strict_ordered_comm_ring.to_strict_ordered_comm_semiring StrictOrderedCommRing.toStrictOrderedCommSemiring
 -/
 
 #print StrictOrderedCommRing.toOrderedCommRing /-
@@ -1284,8 +1281,7 @@ theorem nonneg_and_nonneg_or_nonpos_and_nonpos_of_mul_nnonneg (hab : 0 ≤ a * b
   rcases lt_trichotomy 0 a with (ha | rfl | ha)
   exacts[mul_neg_of_pos_of_neg ha (ab ha.le), ((ab le_rfl).asymm (nab le_rfl)).elim,
     mul_neg_of_neg_of_pos ha (nab ha.le)]
-#align
-  nonneg_and_nonneg_or_nonpos_and_nonpos_of_mul_nnonneg nonneg_and_nonneg_or_nonpos_and_nonpos_of_mul_nnonneg
+#align nonneg_and_nonneg_or_nonpos_and_nonpos_of_mul_nnonneg nonneg_and_nonneg_or_nonpos_and_nonpos_of_mul_nnonneg
 
 /- warning: nonneg_of_mul_nonneg_left -> nonneg_of_mul_nonneg_left is a dubious translation:
 lean 3 declaration is
@@ -1709,8 +1705,7 @@ end LinearOrderedSemiring
 instance (priority := 100) LinearOrderedCommSemiring.toLinearOrderedCancelAddCommMonoid
     [LinearOrderedCommSemiring α] : LinearOrderedCancelAddCommMonoid α :=
   { ‹LinearOrderedCommSemiring α› with }
-#align
-  linear_ordered_comm_semiring.to_linear_ordered_cancel_add_comm_monoid LinearOrderedCommSemiring.toLinearOrderedCancelAddCommMonoid
+#align linear_ordered_comm_semiring.to_linear_ordered_cancel_add_comm_monoid LinearOrderedCommSemiring.toLinearOrderedCancelAddCommMonoid
 -/
 
 section LinearOrderedRing
@@ -1731,8 +1726,7 @@ instance (priority := 100) LinearOrderedRing.toLinearOrderedSemiring : LinearOrd
 instance (priority := 100) LinearOrderedRing.toLinearOrderedAddCommGroup :
     LinearOrderedAddCommGroup α :=
   { ‹LinearOrderedRing α› with }
-#align
-  linear_ordered_ring.to_linear_ordered_add_comm_group LinearOrderedRing.toLinearOrderedAddCommGroup
+#align linear_ordered_ring.to_linear_ordered_add_comm_group LinearOrderedRing.toLinearOrderedAddCommGroup
 -/
 
 /- warning: linear_ordered_ring.no_zero_divisors -> LinearOrderedRing.noZeroDivisors is a dubious translation:
@@ -2110,8 +2104,7 @@ end LinearOrderedRing
 instance (priority := 100) LinearOrderedCommRing.toStrictOrderedCommRing
     [d : LinearOrderedCommRing α] : StrictOrderedCommRing α :=
   { d with }
-#align
-  linear_ordered_comm_ring.to_strict_ordered_comm_ring LinearOrderedCommRing.toStrictOrderedCommRing
+#align linear_ordered_comm_ring.to_strict_ordered_comm_ring LinearOrderedCommRing.toStrictOrderedCommRing
 -/
 
 #print LinearOrderedCommRing.toLinearOrderedCommSemiring /-
@@ -2119,8 +2112,7 @@ instance (priority := 100) LinearOrderedCommRing.toStrictOrderedCommRing
 instance (priority := 100) LinearOrderedCommRing.toLinearOrderedCommSemiring
     [d : LinearOrderedCommRing α] : LinearOrderedCommSemiring α :=
   { d, LinearOrderedRing.toLinearOrderedSemiring with }
-#align
-  linear_ordered_comm_ring.to_linear_ordered_comm_semiring LinearOrderedCommRing.toLinearOrderedCommSemiring
+#align linear_ordered_comm_ring.to_linear_ordered_comm_semiring LinearOrderedCommRing.toLinearOrderedCommSemiring
 -/
 
 section LinearOrderedCommRing

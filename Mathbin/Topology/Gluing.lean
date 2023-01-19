@@ -450,8 +450,7 @@ theorem from_open_subsets_glue_injective : Function.Injective (fromOpenSubsetsGl
   rw [(of_open_subsets U).ι_eq_iff_rel]
   right
   exact ⟨⟨⟨x, hx⟩, hy⟩, rfl, rfl⟩
-#align
-  Top.glue_data.from_open_subsets_glue_injective TopCat.GlueData.from_open_subsets_glue_injective
+#align Top.glue_data.from_open_subsets_glue_injective TopCat.GlueData.from_open_subsets_glue_injective
 
 theorem from_open_subsets_glue_is_open_map : IsOpenMap (fromOpenSubsetsGlue U) :=
   by
@@ -472,14 +471,12 @@ theorem from_open_subsets_glue_is_open_map : IsOpenMap (fromOpenSubsetsGlue U) :
   · refine' ⟨Set.mem_image_of_mem _ hx, _⟩
     rw [ι_from_open_subsets_glue_apply]
     exact Set.mem_range_self _
-#align
-  Top.glue_data.from_open_subsets_glue_is_open_map TopCat.GlueData.from_open_subsets_glue_is_open_map
+#align Top.glue_data.from_open_subsets_glue_is_open_map TopCat.GlueData.from_open_subsets_glue_is_open_map
 
 theorem from_open_subsets_glue_open_embedding : OpenEmbedding (fromOpenSubsetsGlue U) :=
   open_embedding_of_continuous_injective_open (ContinuousMap.continuous_to_fun _)
     (from_open_subsets_glue_injective U) (from_open_subsets_glue_is_open_map U)
-#align
-  Top.glue_data.from_open_subsets_glue_open_embedding TopCat.GlueData.from_open_subsets_glue_open_embedding
+#align Top.glue_data.from_open_subsets_glue_open_embedding TopCat.GlueData.from_open_subsets_glue_open_embedding
 
 theorem range_from_open_subsets_glue : Set.range (fromOpenSubsetsGlue U) = ⋃ i, (U i : Set α) :=
   by

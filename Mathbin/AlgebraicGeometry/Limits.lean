@@ -104,8 +104,7 @@ instance (priority := 100) is_open_immersion_of_is_empty {X Y : SchemeCat} (f : 
       exact fun x => isEmptyElim (show X.carrier from x.some)
   · rintro (i : X.carrier)
     exact isEmptyElim i
-#align
-  algebraic_geometry.is_open_immersion_of_is_empty AlgebraicGeometry.is_open_immersion_of_is_empty
+#align algebraic_geometry.is_open_immersion_of_is_empty AlgebraicGeometry.is_open_immersion_of_is_empty
 
 instance (priority := 100) is_iso_of_is_empty {X Y : SchemeCat} (f : X ⟶ Y) [IsEmpty Y.carrier] :
     IsIso f :=

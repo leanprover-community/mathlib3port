@@ -154,14 +154,12 @@ theorem initial_of_adjunction {L : C ⥤ D} {R : D ⥤ C} (adj : L ⊣ R) : Init
 
 instance (priority := 100) final_of_is_right_adjoint (F : C ⥤ D) [h : IsRightAdjoint F] : Final F :=
   final_of_adjunction h.adj
-#align
-  category_theory.functor.final_of_is_right_adjoint CategoryTheory.Functor.final_of_is_right_adjoint
+#align category_theory.functor.final_of_is_right_adjoint CategoryTheory.Functor.final_of_is_right_adjoint
 
 instance (priority := 100) initial_of_is_left_adjoint (F : C ⥤ D) [h : IsLeftAdjoint F] :
     Initial F :=
   initial_of_adjunction h.adj
-#align
-  category_theory.functor.initial_of_is_left_adjoint CategoryTheory.Functor.initial_of_is_left_adjoint
+#align category_theory.functor.initial_of_is_left_adjoint CategoryTheory.Functor.initial_of_is_left_adjoint
 
 namespace Final
 
@@ -264,8 +262,7 @@ theorem colimit_cocone_comp_aux (s : Cocone (F ⋙ G)) (j : C) :
     rw [← s.w f]
     simpa using h
   · exact s.w (𝟙 _)
-#align
-  category_theory.functor.final.colimit_cocone_comp_aux CategoryTheory.Functor.Final.colimit_cocone_comp_aux
+#align category_theory.functor.final.colimit_cocone_comp_aux CategoryTheory.Functor.Final.colimit_cocone_comp_aux
 
 variable (F G)
 
@@ -289,8 +286,7 @@ variable {G}
 -/
 def isColimitWhiskerEquiv (t : Cocone G) : IsColimit (t.whisker F) ≃ IsColimit t :=
   IsColimit.ofCoconeEquiv (coconesEquiv F G).symm
-#align
-  category_theory.functor.final.is_colimit_whisker_equiv CategoryTheory.Functor.Final.isColimitWhiskerEquiv
+#align category_theory.functor.final.is_colimit_whisker_equiv CategoryTheory.Functor.Final.isColimitWhiskerEquiv
 
 /-- When `F` is cofinal, and `t : cocone (F ⋙ G)`,
 `extend_cocone.obj t` is a colimit coconne exactly when `t` is.
@@ -298,8 +294,7 @@ def isColimitWhiskerEquiv (t : Cocone G) : IsColimit (t.whisker F) ≃ IsColimit
 def isColimitExtendCoconeEquiv (t : Cocone (F ⋙ G)) :
     IsColimit (extendCocone.obj t) ≃ IsColimit t :=
   IsColimit.ofCoconeEquiv (coconesEquiv F G)
-#align
-  category_theory.functor.final.is_colimit_extend_cocone_equiv CategoryTheory.Functor.Final.isColimitExtendCoconeEquiv
+#align category_theory.functor.final.is_colimit_extend_cocone_equiv CategoryTheory.Functor.Final.isColimitExtendCoconeEquiv
 
 /-- Given a colimit cocone over `G : D ⥤ E` we can construct a colimit cocone over `F ⋙ G`. -/
 @[simps]
@@ -307,8 +302,7 @@ def colimitCoconeComp (t : ColimitCocone G) : ColimitCocone (F ⋙ G)
     where
   Cocone := _
   IsColimit := (isColimitWhiskerEquiv F _).symm t.IsColimit
-#align
-  category_theory.functor.final.colimit_cocone_comp CategoryTheory.Functor.Final.colimitCoconeComp
+#align category_theory.functor.final.colimit_cocone_comp CategoryTheory.Functor.Final.colimitCoconeComp
 
 instance (priority := 100) compHasColimit [HasColimit G] : HasColimit (F ⋙ G) :=
   HasColimit.mk (colimitCoconeComp F (getColimitCocone G))
@@ -321,8 +315,7 @@ theorem colimit_pre_is_iso_aux {t : Cocone G} (P : IsColimit t) :
   apply P.hom_ext
   intro j
   dsimp; simp
-#align
-  category_theory.functor.final.colimit_pre_is_iso_aux CategoryTheory.Functor.Final.colimit_pre_is_iso_aux
+#align category_theory.functor.final.colimit_pre_is_iso_aux CategoryTheory.Functor.Final.colimit_pre_is_iso_aux
 
 instance colimit_pre_is_iso [HasColimit G] : IsIso (colimit.pre G F) :=
   by
@@ -330,8 +323,7 @@ instance colimit_pre_is_iso [HasColimit G] : IsIso (colimit.pre G F) :=
   erw [colimit_pre_is_iso_aux]
   dsimp
   infer_instance
-#align
-  category_theory.functor.final.colimit_pre_is_iso CategoryTheory.Functor.Final.colimit_pre_is_iso
+#align category_theory.functor.final.colimit_pre_is_iso CategoryTheory.Functor.Final.colimit_pre_is_iso
 
 section
 
@@ -354,8 +346,7 @@ def colimitCoconeOfComp (t : ColimitCocone (F ⋙ G)) : ColimitCocone G
     where
   Cocone := extendCocone.obj t.Cocone
   IsColimit := (isColimitExtendCoconeEquiv F _).symm t.IsColimit
-#align
-  category_theory.functor.final.colimit_cocone_of_comp CategoryTheory.Functor.Final.colimitCoconeOfComp
+#align category_theory.functor.final.colimit_cocone_of_comp CategoryTheory.Functor.Final.colimitCoconeOfComp
 
 /-- When `F` is cofinal, and `F ⋙ G` has a colimit, then `G` has a colimit also.
 
@@ -364,8 +355,7 @@ We can't make this an instance, because `F` is not determined by the goal.
 -/
 theorem hasColimitOfComp [HasColimit (F ⋙ G)] : HasColimit G :=
   HasColimit.mk (colimitCoconeOfComp F (getColimitCocone (F ⋙ G)))
-#align
-  category_theory.functor.final.has_colimit_of_comp CategoryTheory.Functor.Final.hasColimitOfComp
+#align category_theory.functor.final.has_colimit_of_comp CategoryTheory.Functor.Final.hasColimitOfComp
 
 section
 
@@ -398,8 +388,7 @@ then `colimit (F ⋙ coyoneda.obj (op d)) ≅ punit`
 def colimitCompCoyonedaIso (d : D) [IsIso (colimit.pre (coyoneda.obj (op d)) F)] :
     colimit (F ⋙ coyoneda.obj (op d)) ≅ PUnit :=
   asIso (colimit.pre (coyoneda.obj (op d)) F) ≪≫ coyoneda.colimitCoyonedaIso (op d)
-#align
-  category_theory.functor.final.colimit_comp_coyoneda_iso CategoryTheory.Functor.Final.colimitCompCoyonedaIso
+#align category_theory.functor.final.colimit_comp_coyoneda_iso CategoryTheory.Functor.Final.colimitCompCoyonedaIso
 
 theorem zigzag_of_eqv_gen_quot_rel {F : C ⥤ D} {d : D} {f₁ f₂ : ΣX, d ⟶ F.obj X}
     (t : EqvGen (Types.Quot.Rel.{v, v} (F ⋙ coyoneda.obj (op d))) f₁ f₂) :
@@ -419,8 +408,7 @@ theorem zigzag_of_eqv_gen_quot_rel {F : C ⥤ D} {d : D} {f₁ f₂ : ΣX, d ⟶
   case trans x y z h₁ h₂ ih₁ ih₂ =>
     apply Relation.ReflTransGen.trans
     exact ih₁; exact ih₂
-#align
-  category_theory.functor.final.zigzag_of_eqv_gen_quot_rel CategoryTheory.Functor.Final.zigzag_of_eqv_gen_quot_rel
+#align category_theory.functor.final.zigzag_of_eqv_gen_quot_rel CategoryTheory.Functor.Final.zigzag_of_eqv_gen_quot_rel
 
 /-- If `colimit (F ⋙ coyoneda.obj (op d)) ≅ punit` for all `d : D`, then `F` is cofinal.
 -/
@@ -444,8 +432,7 @@ theorem cofinal_of_colimit_comp_coyoneda_iso_punit
     have t := Types.colimit_eq.{v, v} e
     clear e y₁ y₂
     exact zigzag_of_eqv_gen_quot_rel t⟩
-#align
-  category_theory.functor.final.cofinal_of_colimit_comp_coyoneda_iso_punit CategoryTheory.Functor.Final.cofinal_of_colimit_comp_coyoneda_iso_punit
+#align category_theory.functor.final.cofinal_of_colimit_comp_coyoneda_iso_punit CategoryTheory.Functor.Final.cofinal_of_colimit_comp_coyoneda_iso_punit
 
 end Final
 
@@ -553,8 +540,7 @@ theorem limit_cone_comp_aux (s : Cone (F ⋙ G)) (j : C) :
     rw [← w]
     simpa using h
   · exact s.w (𝟙 _)
-#align
-  category_theory.functor.initial.limit_cone_comp_aux CategoryTheory.Functor.Initial.limit_cone_comp_aux
+#align category_theory.functor.initial.limit_cone_comp_aux CategoryTheory.Functor.Initial.limit_cone_comp_aux
 
 variable (F G)
 
@@ -578,16 +564,14 @@ variable {G}
 -/
 def isLimitWhiskerEquiv (t : Cone G) : IsLimit (t.whisker F) ≃ IsLimit t :=
   IsLimit.ofConeEquiv (conesEquiv F G).symm
-#align
-  category_theory.functor.initial.is_limit_whisker_equiv CategoryTheory.Functor.Initial.isLimitWhiskerEquiv
+#align category_theory.functor.initial.is_limit_whisker_equiv CategoryTheory.Functor.Initial.isLimitWhiskerEquiv
 
 /-- When `F` is initial, and `t : cone (F ⋙ G)`,
 `extend_cone.obj t` is a limit cone exactly when `t` is.
 -/
 def isLimitExtendConeEquiv (t : Cone (F ⋙ G)) : IsLimit (extendCone.obj t) ≃ IsLimit t :=
   IsLimit.ofConeEquiv (conesEquiv F G)
-#align
-  category_theory.functor.initial.is_limit_extend_cone_equiv CategoryTheory.Functor.Initial.isLimitExtendConeEquiv
+#align category_theory.functor.initial.is_limit_extend_cone_equiv CategoryTheory.Functor.Initial.isLimitExtendConeEquiv
 
 /-- Given a limit cone over `G : D ⥤ E` we can construct a limit cone over `F ⋙ G`. -/
 @[simps]
@@ -608,8 +592,7 @@ theorem limit_pre_is_iso_aux {t : Cone G} (P : IsLimit t) :
   apply P.hom_ext
   intro j
   simp
-#align
-  category_theory.functor.initial.limit_pre_is_iso_aux CategoryTheory.Functor.Initial.limit_pre_is_iso_aux
+#align category_theory.functor.initial.limit_pre_is_iso_aux CategoryTheory.Functor.Initial.limit_pre_is_iso_aux
 
 instance limit_pre_is_iso [HasLimit G] : IsIso (limit.pre G F) :=
   by
@@ -617,8 +600,7 @@ instance limit_pre_is_iso [HasLimit G] : IsIso (limit.pre G F) :=
   erw [limit_pre_is_iso_aux]
   dsimp
   infer_instance
-#align
-  category_theory.functor.initial.limit_pre_is_iso CategoryTheory.Functor.Initial.limit_pre_is_iso
+#align category_theory.functor.initial.limit_pre_is_iso CategoryTheory.Functor.Initial.limit_pre_is_iso
 
 section
 
@@ -641,8 +623,7 @@ def limitConeOfComp (t : LimitCone (F ⋙ G)) : LimitCone G
     where
   Cone := extendCone.obj t.Cone
   IsLimit := (isLimitExtendConeEquiv F _).symm t.IsLimit
-#align
-  category_theory.functor.initial.limit_cone_of_comp CategoryTheory.Functor.Initial.limitConeOfComp
+#align category_theory.functor.initial.limit_cone_of_comp CategoryTheory.Functor.Initial.limitConeOfComp
 
 /-- When `F` is initial, and `F ⋙ G` has a limit, then `G` has a limit also.
 
@@ -651,8 +632,7 @@ We can't make this an instance, because `F` is not determined by the goal.
 -/
 theorem hasLimitOfComp [HasLimit (F ⋙ G)] : HasLimit G :=
   HasLimit.mk (limitConeOfComp F (getLimitCone (F ⋙ G)))
-#align
-  category_theory.functor.initial.has_limit_of_comp CategoryTheory.Functor.Initial.hasLimitOfComp
+#align category_theory.functor.initial.has_limit_of_comp CategoryTheory.Functor.Initial.hasLimitOfComp
 
 section
 

@@ -206,8 +206,7 @@ theorem basis_to_matrix_mul_linear_map_to_matrix_mul_basis_to_matrix [DecidableE
     [DecidableEq ι'] :
     c.toMatrix c' ⬝ LinearMap.toMatrix b' c' f ⬝ b'.toMatrix b = LinearMap.toMatrix b c f := by
   rw [basis_to_matrix_mul_linear_map_to_matrix, linear_map_to_matrix_mul_basis_to_matrix]
-#align
-  basis_to_matrix_mul_linear_map_to_matrix_mul_basis_to_matrix basis_to_matrix_mul_linear_map_to_matrix_mul_basis_to_matrix
+#align basis_to_matrix_mul_linear_map_to_matrix_mul_basis_to_matrix basis_to_matrix_mul_linear_map_to_matrix_mul_basis_to_matrix
 
 theorem basis_to_matrix_mul [DecidableEq κ] (b₁ : Basis ι R M) (b₂ : Basis ι' R M)
     (b₃ : Basis κ R N) (A : Matrix ι' κ R) :

@@ -249,8 +249,7 @@ Case conversion may be inaccurate. Consider using '#align to_antisymmetrization_
 theorem toAntisymmetrization_le_toAntisymmetrization_iff :
     toAntisymmetrization (· ≤ ·) a ≤ toAntisymmetrization (· ≤ ·) b ↔ a ≤ b :=
   Iff.rfl
-#align
-  to_antisymmetrization_le_to_antisymmetrization_iff toAntisymmetrization_le_toAntisymmetrization_iff
+#align to_antisymmetrization_le_to_antisymmetrization_iff toAntisymmetrization_le_toAntisymmetrization_iff
 
 /- warning: to_antisymmetrization_lt_to_antisymmetrization_iff -> toAntisymmetrization_lt_toAntisymmetrization_iff is a dubious translation:
 lean 3 declaration is
@@ -262,8 +261,7 @@ Case conversion may be inaccurate. Consider using '#align to_antisymmetrization_
 theorem toAntisymmetrization_lt_toAntisymmetrization_iff :
     toAntisymmetrization (· ≤ ·) a < toAntisymmetrization (· ≤ ·) b ↔ a < b :=
   Iff.rfl
-#align
-  to_antisymmetrization_lt_to_antisymmetrization_iff toAntisymmetrization_lt_toAntisymmetrization_iff
+#align to_antisymmetrization_lt_to_antisymmetrization_iff toAntisymmetrization_lt_toAntisymmetrization_iff
 
 /- warning: of_antisymmetrization_le_of_antisymmetrization_iff -> ofAntisymmetrization_le_ofAntisymmetrization_iff is a dubious translation:
 lean 3 declaration is
@@ -276,8 +274,7 @@ theorem ofAntisymmetrization_le_ofAntisymmetrization_iff {a b : Antisymmetrizati
     ofAntisymmetrization (· ≤ ·) a ≤ ofAntisymmetrization (· ≤ ·) b ↔ a ≤ b := by
   convert to_antisymmetrization_le_to_antisymmetrization_iff.symm <;>
     exact (toAntisymmetrization_ofAntisymmetrization _ _).symm
-#align
-  of_antisymmetrization_le_of_antisymmetrization_iff ofAntisymmetrization_le_ofAntisymmetrization_iff
+#align of_antisymmetrization_le_of_antisymmetrization_iff ofAntisymmetrization_le_ofAntisymmetrization_iff
 
 /- warning: of_antisymmetrization_lt_of_antisymmetrization_iff -> ofAntisymmetrization_lt_ofAntisymmetrization_iff is a dubious translation:
 lean 3 declaration is
@@ -290,8 +287,7 @@ theorem ofAntisymmetrization_lt_ofAntisymmetrization_iff {a b : Antisymmetrizati
     ofAntisymmetrization (· ≤ ·) a < ofAntisymmetrization (· ≤ ·) b ↔ a < b := by
   convert to_antisymmetrization_lt_to_antisymmetrization_iff.symm <;>
     exact (toAntisymmetrization_ofAntisymmetrization _ _).symm
-#align
-  of_antisymmetrization_lt_of_antisymmetrization_iff ofAntisymmetrization_lt_ofAntisymmetrization_iff
+#align of_antisymmetrization_lt_of_antisymmetrization_iff ofAntisymmetrization_lt_ofAntisymmetrization_iff
 
 /- warning: to_antisymmetrization_mono -> toAntisymmetrization_mono is a dubious translation:
 lean 3 declaration is

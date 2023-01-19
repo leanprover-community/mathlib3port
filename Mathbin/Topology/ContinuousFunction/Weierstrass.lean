@@ -97,8 +97,7 @@ theorem continuous_map_mem_polynomial_functions_closure (a b : ℝ) (f : C(Set.I
   by
   rw [polynomial_functions_closure_eq_top _ _]
   simp
-#align
-  continuous_map_mem_polynomial_functions_closure continuous_map_mem_polynomial_functions_closure
+#align continuous_map_mem_polynomial_functions_closure continuous_map_mem_polynomial_functions_closure
 
 open Polynomial
 

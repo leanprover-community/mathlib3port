@@ -123,10 +123,8 @@ theorem colimit_mul_aux_eq_of_rel_left {x x' y : Σj, F.obj j}
   use s, α, γ
   dsimp
   simp_rw [MonoidHom.map_mul, ← comp_apply, ← F.map_comp, h₁, h₂, h₃, F.map_comp, comp_apply, hfg]
-#align
-  Mon.filtered_colimits.colimit_mul_aux_eq_of_rel_left MonCat.FilteredColimits.colimit_mul_aux_eq_of_rel_left
-#align
-  AddMon.filtered_colimits.colimit_add_aux_eq_of_rel_left AddMonCat.FilteredColimits.colimit_add_aux_eq_of_rel_left
+#align Mon.filtered_colimits.colimit_mul_aux_eq_of_rel_left MonCat.FilteredColimits.colimit_mul_aux_eq_of_rel_left
+#align AddMon.filtered_colimits.colimit_add_aux_eq_of_rel_left AddMonCat.FilteredColimits.colimit_add_aux_eq_of_rel_left
 
 /-- Multiplication in the colimit is well-defined in the right argument. -/
 @[to_additive "Addition in the colimit is well-defined in the right argument."]
@@ -143,10 +141,8 @@ theorem colimit_mul_aux_eq_of_rel_right {x y y' : Σj, F.obj j}
   use s, α, γ
   dsimp
   simp_rw [MonoidHom.map_mul, ← comp_apply, ← F.map_comp, h₁, h₂, h₃, F.map_comp, comp_apply, hfg]
-#align
-  Mon.filtered_colimits.colimit_mul_aux_eq_of_rel_right MonCat.FilteredColimits.colimit_mul_aux_eq_of_rel_right
-#align
-  AddMon.filtered_colimits.colimit_add_aux_eq_of_rel_right AddMonCat.FilteredColimits.colimit_add_aux_eq_of_rel_right
+#align Mon.filtered_colimits.colimit_mul_aux_eq_of_rel_right MonCat.FilteredColimits.colimit_mul_aux_eq_of_rel_right
+#align AddMon.filtered_colimits.colimit_add_aux_eq_of_rel_right AddMonCat.FilteredColimits.colimit_add_aux_eq_of_rel_right
 
 /-- Multiplication in the colimit. See also `colimit_mul_aux`. -/
 @[to_additive "Addition in the colimit. See also `colimit_add_aux`."]
@@ -273,10 +269,8 @@ def colimitCoconeIsColimit : IsColimit colimit_cocone
     MonoidHom.coe_inj <|
       (Types.colimitCoconeIsColimit (F ⋙ forget MonCat)).uniq ((forget MonCat).mapCocone t) m
         fun j => funext fun x => MonoidHom.congr_fun (h j) x
-#align
-  Mon.filtered_colimits.colimit_cocone_is_colimit MonCat.FilteredColimits.colimitCoconeIsColimit
-#align
-  AddMon.filtered_colimits.colimit_cocone_is_colimit AddMonCat.FilteredColimits.colimit_cocone_is_colimit
+#align Mon.filtered_colimits.colimit_cocone_is_colimit MonCat.FilteredColimits.colimitCoconeIsColimit
+#align AddMon.filtered_colimits.colimit_cocone_is_colimit AddMonCat.FilteredColimits.colimit_cocone_is_colimit
 
 @[to_additive]
 instance forgetPreservesFilteredColimits : PreservesFilteredColimits (forget MonCat.{u})
@@ -285,10 +279,8 @@ instance forgetPreservesFilteredColimits : PreservesFilteredColimits (forget Mon
       PreservesColimit := fun F =>
         preserves_colimit_of_preserves_colimit_cocone (colimitCoconeIsColimit.{u, u} F)
           (types.colimit_cocone_is_colimit (F ⋙ forget MonCat.{u})) }
-#align
-  Mon.filtered_colimits.forget_preserves_filtered_colimits MonCat.FilteredColimits.forgetPreservesFilteredColimits
-#align
-  AddMon.filtered_colimits.forget_preserves_filtered_colimits AddMonCat.FilteredColimits.forget_preserves_filtered_colimits
+#align Mon.filtered_colimits.forget_preserves_filtered_colimits MonCat.FilteredColimits.forgetPreservesFilteredColimits
+#align AddMon.filtered_colimits.forget_preserves_filtered_colimits AddMonCat.FilteredColimits.forget_preserves_filtered_colimits
 
 end
 
@@ -326,8 +318,7 @@ instance colimitCommMonoid : CommMonoid M :=
       dsimp
       rw [mul_comm] }
 #align CommMon.filtered_colimits.colimit_comm_monoid CommMonCat.FilteredColimits.colimitCommMonoid
-#align
-  AddCommMon.filtered_colimits.colimit_add_comm_monoid AddCommMonCat.FilteredColimits.colimitAddCommMonoid
+#align AddCommMon.filtered_colimits.colimit_add_comm_monoid AddCommMonCat.FilteredColimits.colimitAddCommMonoid
 
 /-- The bundled commutative monoid giving the filtered colimit of a diagram. -/
 @[to_additive "The bundled additive commutative monoid giving the filtered colimit of a diagram."]
@@ -358,10 +349,8 @@ def colimitCoconeIsColimit : IsColimit colimit_cocone
     MonoidHom.coe_inj <|
       (Types.colimitCoconeIsColimit (F ⋙ forget CommMonCat)).uniq ((forget CommMonCat).mapCocone t)
         m fun j => funext fun x => MonoidHom.congr_fun (h j) x
-#align
-  CommMon.filtered_colimits.colimit_cocone_is_colimit CommMonCat.FilteredColimits.colimitCoconeIsColimit
-#align
-  AddCommMon.filtered_colimits.colimit_cocone_is_colimit AddCommMonCat.FilteredColimits.colimit_cocone_is_colimit
+#align CommMon.filtered_colimits.colimit_cocone_is_colimit CommMonCat.FilteredColimits.colimitCoconeIsColimit
+#align AddCommMon.filtered_colimits.colimit_cocone_is_colimit AddCommMonCat.FilteredColimits.colimit_cocone_is_colimit
 
 @[to_additive forget₂_AddMon_preserves_filtered_colimits]
 instance forget₂MonPreservesFilteredColimits :
@@ -371,18 +360,14 @@ instance forget₂MonPreservesFilteredColimits :
       PreservesColimit := fun F =>
         preserves_colimit_of_preserves_colimit_cocone (colimitCoconeIsColimit.{u, u} F)
           (MonCat.FilteredColimits.colimitCoconeIsColimit (F ⋙ forget₂ CommMonCat MonCat.{u})) }
-#align
-  CommMon.filtered_colimits.forget₂_Mon_preserves_filtered_colimits CommMonCat.FilteredColimits.forget₂MonPreservesFilteredColimits
-#align
-  AddCommMon.filtered_colimits.forget₂_AddMon_preserves_filtered_colimits AddCommMonCat.FilteredColimits.forget₂_AddMon_preserves_filtered_colimits
+#align CommMon.filtered_colimits.forget₂_Mon_preserves_filtered_colimits CommMonCat.FilteredColimits.forget₂MonPreservesFilteredColimits
+#align AddCommMon.filtered_colimits.forget₂_AddMon_preserves_filtered_colimits AddCommMonCat.FilteredColimits.forget₂_AddMon_preserves_filtered_colimits
 
 @[to_additive]
 instance forgetPreservesFilteredColimits : PreservesFilteredColimits (forget CommMonCat.{u}) :=
   Limits.compPreservesFilteredColimits (forget₂ CommMonCat MonCat) (forget MonCat)
-#align
-  CommMon.filtered_colimits.forget_preserves_filtered_colimits CommMonCat.FilteredColimits.forgetPreservesFilteredColimits
-#align
-  AddCommMon.filtered_colimits.forget_preserves_filtered_colimits AddCommMonCat.FilteredColimits.forget_preserves_filtered_colimits
+#align CommMon.filtered_colimits.forget_preserves_filtered_colimits CommMonCat.FilteredColimits.forgetPreservesFilteredColimits
+#align AddCommMon.filtered_colimits.forget_preserves_filtered_colimits AddCommMonCat.FilteredColimits.forget_preserves_filtered_colimits
 
 end
 

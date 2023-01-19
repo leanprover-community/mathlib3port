@@ -1637,8 +1637,7 @@ theorem image_preimage_inl_union_image_preimage_inr (s : Set (Sum α β)) :
     Sum.inl '' (Sum.inl ⁻¹' s) ∪ Sum.inr '' (Sum.inr ⁻¹' s) = s := by
   rw [image_preimage_eq_inter_range, image_preimage_eq_inter_range, ← inter_distrib_left,
     range_inl_union_range_inr, inter_univ]
-#align
-  set.image_preimage_inl_union_image_preimage_inr Set.image_preimage_inl_union_image_preimage_inr
+#align set.image_preimage_inl_union_image_preimage_inr Set.image_preimage_inl_union_image_preimage_inr
 
 #print Set.range_quot_mk /-
 @[simp]
@@ -2266,8 +2265,7 @@ theorem Surjective.preimage_subset_preimage_iff {s t : Set β} (hf : Surjective 
   apply preimage_subset_preimage_iff
   rw [hf.range_eq]
   apply subset_univ
-#align
-  function.surjective.preimage_subset_preimage_iff Function.Surjective.preimage_subset_preimage_iff
+#align function.surjective.preimage_subset_preimage_iff Function.Surjective.preimage_subset_preimage_iff
 -/
 
 /- warning: function.surjective.range_comp -> Function.Surjective.range_comp is a dubious translation:

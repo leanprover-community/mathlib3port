@@ -164,8 +164,7 @@ theorem span_singleton_inv (x : K) : (spanSingleton R₁⁰ x)⁻¹ = spanSingle
 theorem span_singleton_div_span_singleton (x y : K) :
     spanSingleton R₁⁰ x / spanSingleton R₁⁰ y = spanSingleton R₁⁰ (x / y) := by
   rw [div_span_singleton, mul_comm, span_singleton_mul_span_singleton, div_eq_mul_inv]
-#align
-  fractional_ideal.span_singleton_div_span_singleton FractionalIdeal.span_singleton_div_span_singleton
+#align fractional_ideal.span_singleton_div_span_singleton FractionalIdeal.span_singleton_div_span_singleton
 
 theorem span_singleton_div_self {x : K} (hx : x ≠ 0) :
     spanSingleton R₁⁰ x / spanSingleton R₁⁰ x = 1 := by
@@ -177,8 +176,7 @@ theorem coe_ideal_span_singleton_div_self {x : R₁} (hx : x ≠ 0) :
   rw [coe_ideal_span_singleton,
     span_singleton_div_self K <|
       (map_ne_zero_iff _ <| NoZeroSMulDivisors.algebra_map_injective R₁ K).mpr hx]
-#align
-  fractional_ideal.coe_ideal_span_singleton_div_self FractionalIdeal.coe_ideal_span_singleton_div_self
+#align fractional_ideal.coe_ideal_span_singleton_div_self FractionalIdeal.coe_ideal_span_singleton_div_self
 
 theorem span_singleton_mul_inv {x : K} (hx : x ≠ 0) :
     spanSingleton R₁⁰ x * (spanSingleton R₁⁰ x)⁻¹ = 1 := by
@@ -190,8 +188,7 @@ theorem coe_ideal_span_singleton_mul_inv {x : R₁} (hx : x ≠ 0) :
   rw [coe_ideal_span_singleton,
     span_singleton_mul_inv K <|
       (map_ne_zero_iff _ <| NoZeroSMulDivisors.algebra_map_injective R₁ K).mpr hx]
-#align
-  fractional_ideal.coe_ideal_span_singleton_mul_inv FractionalIdeal.coe_ideal_span_singleton_mul_inv
+#align fractional_ideal.coe_ideal_span_singleton_mul_inv FractionalIdeal.coe_ideal_span_singleton_mul_inv
 
 theorem span_singleton_inv_mul {x : K} (hx : x ≠ 0) :
     (spanSingleton R₁⁰ x)⁻¹ * spanSingleton R₁⁰ x = 1 := by
@@ -201,8 +198,7 @@ theorem span_singleton_inv_mul {x : K} (hx : x ≠ 0) :
 theorem coe_ideal_span_singleton_inv_mul {x : R₁} (hx : x ≠ 0) :
     (Ideal.span ({x} : Set R₁) : FractionalIdeal R₁⁰ K)⁻¹ * Ideal.span ({x} : Set R₁) = 1 := by
   rw [mul_comm, coe_ideal_span_singleton_mul_inv K hx]
-#align
-  fractional_ideal.coe_ideal_span_singleton_inv_mul FractionalIdeal.coe_ideal_span_singleton_inv_mul
+#align fractional_ideal.coe_ideal_span_singleton_inv_mul FractionalIdeal.coe_ideal_span_singleton_inv_mul
 
 theorem mul_generator_self_inv {R₁ : Type _} [CommRing R₁] [Algebra R₁ K] [IsLocalization R₁⁰ K]
     (I : FractionalIdeal R₁⁰ K) [Submodule.IsPrincipal (I : Submodule R₁ K)] (h : I ≠ 0) :
@@ -239,8 +235,7 @@ theorem invertible_iff_generator_nonzero (I : FractionalIdeal R₁⁰ K)
     have := mem_span_singleton_self _ (generator (I : Submodule R₁ K))
     rw [hI, mem_zero_iff] at this
     contradiction
-#align
-  fractional_ideal.invertible_iff_generator_nonzero FractionalIdeal.invertible_iff_generator_nonzero
+#align fractional_ideal.invertible_iff_generator_nonzero FractionalIdeal.invertible_iff_generator_nonzero
 
 theorem isPrincipalInv (I : FractionalIdeal R₁⁰ K) [Submodule.IsPrincipal (I : Submodule R₁ K)]
     (h : I ≠ 0) : Submodule.IsPrincipal I⁻¹.1 :=
@@ -292,8 +287,7 @@ theorem FractionalIdeal.adjoin_integral_eq_one_of_is_unit [Algebra A K] [IsFract
     simp
   convert congr_arg (· * I⁻¹) mul_self <;>
     simp only [(mul_inv_cancel_iff_is_unit K).mpr hI, mul_assoc, mul_one]
-#align
-  fractional_ideal.adjoin_integral_eq_one_of_is_unit FractionalIdeal.adjoin_integral_eq_one_of_is_unit
+#align fractional_ideal.adjoin_integral_eq_one_of_is_unit FractionalIdeal.adjoin_integral_eq_one_of_is_unit
 
 namespace IsDedekindDomainInv
 
@@ -1068,8 +1062,7 @@ namespace HeightOneSpectrum
 
 instance isMaximal : v.asIdeal.IsMaximal :=
   dimension_le_one v.asIdeal v.ne_bot v.IsPrime
-#align
-  is_dedekind_domain.height_one_spectrum.is_maximal IsDedekindDomain.HeightOneSpectrum.isMaximal
+#align is_dedekind_domain.height_one_spectrum.is_maximal IsDedekindDomain.HeightOneSpectrum.isMaximal
 
 theorem prime : Prime v.asIdeal :=
   Ideal.prime_of_is_prime v.ne_bot v.IsPrime
@@ -1077,13 +1070,11 @@ theorem prime : Prime v.asIdeal :=
 
 theorem irreducible : Irreducible v.asIdeal :=
   UniqueFactorizationMonoid.irreducible_iff_prime.mpr v.Prime
-#align
-  is_dedekind_domain.height_one_spectrum.irreducible IsDedekindDomain.HeightOneSpectrum.irreducible
+#align is_dedekind_domain.height_one_spectrum.irreducible IsDedekindDomain.HeightOneSpectrum.irreducible
 
 theorem associates_irreducible : _root_.irreducible <| Associates.mk v.asIdeal :=
   (Associates.irreducible_mk _).mpr v.Irreducible
-#align
-  is_dedekind_domain.height_one_spectrum.associates_irreducible IsDedekindDomain.HeightOneSpectrum.associates_irreducible
+#align is_dedekind_domain.height_one_spectrum.associates_irreducible IsDedekindDomain.HeightOneSpectrum.associates_irreducible
 
 /-- An equivalence between the height one and maximal spectra for rings of Krull dimension 1. -/
 def equivMaximalSpectrum (hR : ¬IsField R) : HeightOneSpectrum R ≃ MaximalSpectrum R
@@ -1093,8 +1084,7 @@ def equivMaximalSpectrum (hR : ¬IsField R) : HeightOneSpectrum R ≃ MaximalSpe
     ⟨v.asIdeal, v.IsMaximal.IsPrime, Ring.ne_bot_of_is_maximal_of_not_is_field v.IsMaximal hR⟩
   left_inv := fun ⟨_, _, _⟩ => rfl
   right_inv := fun ⟨_, _⟩ => rfl
-#align
-  is_dedekind_domain.height_one_spectrum.equiv_maximal_spectrum IsDedekindDomain.HeightOneSpectrum.equivMaximalSpectrum
+#align is_dedekind_domain.height_one_spectrum.equiv_maximal_spectrum IsDedekindDomain.HeightOneSpectrum.equivMaximalSpectrum
 
 variable (R K)
 
@@ -1117,8 +1107,7 @@ theorem infi_localization_eq_bot [Algebra R K] [hK : IsFractionRing R K] :
   all_goals rw [← MaximalSpectrum.infi_localization_eq_bot, Algebra.mem_infi]
   · exact fun hx ⟨v, hv⟩ => hx ((equiv_maximal_spectrum hR).symm ⟨v, hv⟩)
   · exact fun hx ⟨v, hv, hbot⟩ => hx ⟨v, dimension_le_one v hbot hv⟩
-#align
-  is_dedekind_domain.height_one_spectrum.infi_localization_eq_bot IsDedekindDomain.HeightOneSpectrum.infi_localization_eq_bot
+#align is_dedekind_domain.height_one_spectrum.infi_localization_eq_bot IsDedekindDomain.HeightOneSpectrum.infi_localization_eq_bot
 
 end HeightOneSpectrum
 
@@ -1229,8 +1218,7 @@ theorem ideal_factors_equiv_of_quot_equiv_mem_normalized_factors_of_mem_normaliz
     rintro ⟨l, hl⟩ ⟨l', hl'⟩
     rw [Subtype.coe_mk, Subtype.coe_mk]
     apply ideal_factors_equiv_of_quot_equiv_is_dvd_iso f
-#align
-  ideal_factors_equiv_of_quot_equiv_mem_normalized_factors_of_mem_normalized_factors ideal_factors_equiv_of_quot_equiv_mem_normalized_factors_of_mem_normalized_factors
+#align ideal_factors_equiv_of_quot_equiv_mem_normalized_factors_of_mem_normalized_factors ideal_factors_equiv_of_quot_equiv_mem_normalized_factors_of_mem_normalized_factors
 
 /-- The bijection between the sets of normalized factors of I and J induced by a ring
     isomorphism `f : R/I ≅ A/J`. -/
@@ -1273,8 +1261,7 @@ theorem normalized_factors_equiv_of_quot_equiv_multiplicity_eq_multiplicity (hI 
   exact
     multiplicity_factor_dvd_iso_eq_multiplicity_of_mem_normalized_factor hI hJ hL
       fun ⟨l, hl⟩ ⟨l', hl'⟩ => ideal_factors_equiv_of_quot_equiv_is_dvd_iso f hl hl'
-#align
-  normalized_factors_equiv_of_quot_equiv_multiplicity_eq_multiplicity normalized_factors_equiv_of_quot_equiv_multiplicity_eq_multiplicity
+#align normalized_factors_equiv_of_quot_equiv_multiplicity_eq_multiplicity normalized_factors_equiv_of_quot_equiv_multiplicity_eq_multiplicity
 
 end
 
@@ -1500,8 +1487,7 @@ theorem singleton_span_mem_normalized_factors_of_mem_normalized_factors [Normali
         (prime_of_normalized_factor a ha)
     by_contra
     exact (prime_of_normalized_factor a ha).NeZero (span_singleton_eq_bot.mp h)
-#align
-  singleton_span_mem_normalized_factors_of_mem_normalized_factors singleton_span_mem_normalized_factors_of_mem_normalized_factors
+#align singleton_span_mem_normalized_factors_of_mem_normalized_factors singleton_span_mem_normalized_factors_of_mem_normalized_factors
 
 theorem multiplicity_eq_multiplicity_span [DecidableRel ((· ∣ ·) : R → R → Prop)]
     [DecidableRel ((· ∣ ·) : Ideal R → Ideal R → Prop)] {a b : R} :
@@ -1576,8 +1562,7 @@ theorem multiplicity_normalized_factors_equiv_span_normalized_factors_eq_multipl
   by
   simp only [normalizedFactorsEquivSpanNormalizedFactors, multiplicity_eq_multiplicity_span,
     Subtype.coe_mk, Equiv.of_bijective_apply]
-#align
-  multiplicity_normalized_factors_equiv_span_normalized_factors_eq_multiplicity multiplicity_normalized_factors_equiv_span_normalized_factors_eq_multiplicity
+#align multiplicity_normalized_factors_equiv_span_normalized_factors_eq_multiplicity multiplicity_normalized_factors_equiv_span_normalized_factors_eq_multiplicity
 
 /-- The bijection `normalized_factors_equiv_span_normalized_factors.symm` between the set of prime
     factors of the ideal `⟨r⟩` and the set of prime factors of `r` preserves multiplicities. -/
@@ -1590,8 +1575,7 @@ theorem multiplicity_normalized_factors_equiv_span_normalized_factors_symm_eq_mu
   obtain ⟨a, ha⟩ := x
   rw [hx.symm, Equiv.symm_apply_apply, Subtype.coe_mk,
     multiplicity_normalized_factors_equiv_span_normalized_factors_eq_multiplicity hr ha, hx]
-#align
-  multiplicity_normalized_factors_equiv_span_normalized_factors_symm_eq_multiplicity multiplicity_normalized_factors_equiv_span_normalized_factors_symm_eq_multiplicity
+#align multiplicity_normalized_factors_equiv_span_normalized_factors_symm_eq_multiplicity multiplicity_normalized_factors_equiv_span_normalized_factors_symm_eq_multiplicity
 
 end PID
 

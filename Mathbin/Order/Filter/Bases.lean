@@ -1034,8 +1034,7 @@ instance Nat.inhabitedCountableFilterBasis : Inhabited (CountableFilterBasis ℕ
 theorem HasCountableBasis.is_countably_generated {f : Filter α} {p : ι → Prop} {s : ι → Set α}
     (h : f.HasCountableBasis p s) : f.IsCountablyGenerated :=
   ⟨⟨{ t | ∃ i, p i ∧ s i = t }, h.Countable.image s, h.to_has_basis.eq_generate⟩⟩
-#align
-  filter.has_countable_basis.is_countably_generated Filter.HasCountableBasis.is_countably_generated
+#align filter.has_countable_basis.is_countably_generated Filter.HasCountableBasis.is_countably_generated
 
 theorem antitone_seq_of_seq (s : ℕ → Set α) :
     ∃ t : ℕ → Set α, Antitone t ∧ (⨅ i, 𝓟 <| s i) = ⨅ i, 𝓟 (t i) :=
@@ -1214,8 +1213,7 @@ theorem is_countably_generated_iff_exists_antitone_basis {f : Filter α} :
   · rintro ⟨x, h⟩
     rw [h.to_has_basis.eq_infi]
     exact is_countably_generated_seq x
-#align
-  filter.is_countably_generated_iff_exists_antitone_basis Filter.is_countably_generated_iff_exists_antitone_basis
+#align filter.is_countably_generated_iff_exists_antitone_basis Filter.is_countably_generated_iff_exists_antitone_basis
 
 @[instance]
 theorem is_countably_generated_principal (s : Set α) : IsCountablyGenerated (𝓟 s) :=

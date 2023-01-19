@@ -165,8 +165,7 @@ theorem open_embedding_iff_open_embedding_of_supr_eq_top (h : Continuous f) :
   · apply embedding_iff_embedding_of_supr_eq_top <;> assumption
   · simp_rw [Set.range_restrictPreimage]
     apply is_open_iff_coe_preimage_of_supr_eq_top hU
-#align
-  open_embedding_iff_open_embedding_of_supr_eq_top open_embedding_iff_open_embedding_of_supr_eq_top
+#align open_embedding_iff_open_embedding_of_supr_eq_top open_embedding_iff_open_embedding_of_supr_eq_top
 
 theorem closed_embedding_iff_closed_embedding_of_supr_eq_top (h : Continuous f) :
     ClosedEmbedding f ↔ ∀ i, ClosedEmbedding ((U i).1.restrictPreimage f) :=
@@ -177,6 +176,5 @@ theorem closed_embedding_iff_closed_embedding_of_supr_eq_top (h : Continuous f) 
   · apply embedding_iff_embedding_of_supr_eq_top <;> assumption
   · simp_rw [Set.range_restrictPreimage]
     apply is_closed_iff_coe_preimage_of_supr_eq_top hU
-#align
-  closed_embedding_iff_closed_embedding_of_supr_eq_top closed_embedding_iff_closed_embedding_of_supr_eq_top
+#align closed_embedding_iff_closed_embedding_of_supr_eq_top closed_embedding_iff_closed_embedding_of_supr_eq_top
 

@@ -69,8 +69,7 @@ theorem factor_thru_image_subobject_comp_image_to_kernel (w : f ≫ g = 0) :
   by
   ext
   simp
-#align
-  factor_thru_image_subobject_comp_image_to_kernel factor_thru_image_subobject_comp_image_to_kernel
+#align factor_thru_image_subobject_comp_image_to_kernel factor_thru_image_subobject_comp_image_to_kernel
 
 end
 

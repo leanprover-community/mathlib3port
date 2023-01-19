@@ -274,8 +274,7 @@ def fromTransported (e : C ≌ D) : MonoidalFunctor (Transported e) C :=
 def transportedMonoidalUnitIso (e : C ≌ D) :
     LaxMonoidalFunctor.id C ≅ laxToTransported e ⊗⋙ (fromTransported e).toLaxMonoidalFunctor :=
   asIso (monoidalUnit (toTransported e))
-#align
-  category_theory.monoidal.transported_monoidal_unit_iso CategoryTheory.Monoidal.transportedMonoidalUnitIso
+#align category_theory.monoidal.transported_monoidal_unit_iso CategoryTheory.Monoidal.transportedMonoidalUnitIso
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The counit isomorphism upgrades to a monoidal isomorphism. -/
@@ -284,8 +283,7 @@ def transportedMonoidalCounitIso (e : C ≌ D) :
     (fromTransported e).toLaxMonoidalFunctor ⊗⋙ laxToTransported e ≅
       LaxMonoidalFunctor.id (Transported e) :=
   asIso (monoidalCounit (toTransported e))
-#align
-  category_theory.monoidal.transported_monoidal_counit_iso CategoryTheory.Monoidal.transportedMonoidalCounitIso
+#align category_theory.monoidal.transported_monoidal_counit_iso CategoryTheory.Monoidal.transportedMonoidalCounitIso
 
 end CategoryTheory.Monoidal
 

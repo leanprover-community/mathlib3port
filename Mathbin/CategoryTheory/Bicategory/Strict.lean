@@ -84,8 +84,7 @@ theorem whisker_left_eq_to_hom {a b c : B} (f : a ⟶ b) {g h : b ⟶ c} (η : g
   by
   cases η
   simp only [whisker_left_id, eq_to_hom_refl]
-#align
-  category_theory.bicategory.whisker_left_eq_to_hom CategoryTheory.Bicategory.whisker_left_eq_to_hom
+#align category_theory.bicategory.whisker_left_eq_to_hom CategoryTheory.Bicategory.whisker_left_eq_to_hom
 
 @[simp]
 theorem eq_to_hom_whisker_right {a b c : B} {f g : a ⟶ b} (η : f = g) (h : b ⟶ c) :
@@ -93,8 +92,7 @@ theorem eq_to_hom_whisker_right {a b c : B} {f g : a ⟶ b} (η : f = g) (h : b 
   by
   cases η
   simp only [id_whisker_right, eq_to_hom_refl]
-#align
-  category_theory.bicategory.eq_to_hom_whisker_right CategoryTheory.Bicategory.eq_to_hom_whisker_right
+#align category_theory.bicategory.eq_to_hom_whisker_right CategoryTheory.Bicategory.eq_to_hom_whisker_right
 
 end Bicategory
 

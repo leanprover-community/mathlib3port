@@ -322,8 +322,7 @@ theorem cont_mdiff_within_at_comp_diffeomorph_iff {m} (h : M ≃ₘ^n⟮I, J⟯ 
       Hfh.comp (h x) (h.symm.cont_mdiff_within_at.of_le hm) (maps_to_preimage _ _)
   · rw [← h.image_eq_preimage]
     exact fun hf => hf.comp x (h.cont_mdiff_within_at.of_le hm) (maps_to_image _ _)
-#align
-  diffeomorph.cont_mdiff_within_at_comp_diffeomorph_iff Diffeomorph.cont_mdiff_within_at_comp_diffeomorph_iff
+#align diffeomorph.cont_mdiff_within_at_comp_diffeomorph_iff Diffeomorph.cont_mdiff_within_at_comp_diffeomorph_iff
 
 @[simp]
 theorem cont_mdiff_on_comp_diffeomorph_iff {m} (h : M ≃ₘ^n⟮I, J⟯ N) {f : N → M'} {s} (hm : m ≤ n) :
@@ -352,8 +351,7 @@ theorem cont_mdiff_within_at_diffeomorph_comp_iff {m} (h : M ≃ₘ^n⟮I, J⟯ 
     simpa only [(· ∘ ·), h.symm_apply_apply] using
       (h.symm.cont_mdiff_at.of_le hm).comp_cont_mdiff_within_at _ Hhf,
     fun Hf => (h.ContMdiffAt.of_le hm).comp_cont_mdiff_within_at _ Hf⟩
-#align
-  diffeomorph.cont_mdiff_within_at_diffeomorph_comp_iff Diffeomorph.cont_mdiff_within_at_diffeomorph_comp_iff
+#align diffeomorph.cont_mdiff_within_at_diffeomorph_comp_iff Diffeomorph.cont_mdiff_within_at_diffeomorph_comp_iff
 
 @[simp]
 theorem cont_mdiff_at_diffeomorph_comp_iff {m} (h : M ≃ₘ^n⟮I, J⟯ N) {f : M' → M} (hm : m ≤ n) {x} :
@@ -376,8 +374,7 @@ theorem cont_mdiff_diffeomorph_comp_iff {m} (h : M ≃ₘ^n⟮I, J⟯ N) {f : M'
 theorem to_local_homeomorph_mdifferentiable (h : M ≃ₘ^n⟮I, J⟯ N) (hn : 1 ≤ n) :
     h.toHomeomorph.toLocalHomeomorph.Mdifferentiable I J :=
   ⟨h.MdifferentiableOn _ hn, h.symm.MdifferentiableOn _ hn⟩
-#align
-  diffeomorph.to_local_homeomorph_mdifferentiable Diffeomorph.to_local_homeomorph_mdifferentiable
+#align diffeomorph.to_local_homeomorph_mdifferentiable Diffeomorph.to_local_homeomorph_mdifferentiable
 
 section Constructions
 
@@ -537,20 +534,17 @@ theorem trans_diffeomorph_range : range (I.transDiffeomorph e) = e '' range I :=
 theorem coe_ext_chart_at_trans_diffeomorph (x : M) :
     ⇑(extChartAt (I.transDiffeomorph e) x) = e ∘ extChartAt I x :=
   rfl
-#align
-  model_with_corners.coe_ext_chart_at_trans_diffeomorph ModelWithCorners.coe_ext_chart_at_trans_diffeomorph
+#align model_with_corners.coe_ext_chart_at_trans_diffeomorph ModelWithCorners.coe_ext_chart_at_trans_diffeomorph
 
 theorem coe_ext_chart_at_trans_diffeomorph_symm (x : M) :
     ⇑(extChartAt (I.transDiffeomorph e) x).symm = (extChartAt I x).symm ∘ e.symm :=
   rfl
-#align
-  model_with_corners.coe_ext_chart_at_trans_diffeomorph_symm ModelWithCorners.coe_ext_chart_at_trans_diffeomorph_symm
+#align model_with_corners.coe_ext_chart_at_trans_diffeomorph_symm ModelWithCorners.coe_ext_chart_at_trans_diffeomorph_symm
 
 theorem ext_chart_at_trans_diffeomorph_target (x : M) :
     (extChartAt (I.transDiffeomorph e) x).target = e.symm ⁻¹' (extChartAt I x).target := by
   simp only [range_comp e, e.image_eq_preimage, preimage_preimage, mfld_simps]
-#align
-  model_with_corners.ext_chart_at_trans_diffeomorph_target ModelWithCorners.ext_chart_at_trans_diffeomorph_target
+#align model_with_corners.ext_chart_at_trans_diffeomorph_target ModelWithCorners.ext_chart_at_trans_diffeomorph_target
 
 end ModelWithCorners
 
@@ -566,8 +560,7 @@ instance smooth_manifold_with_corners_trans_diffeomorph [SmoothManifoldWithCorne
     e.cont_diff.comp_cont_diff_on
       (((contDiffGroupoid ⊤ I).compatible h₁ h₂).1.comp e.symm.cont_diff.cont_diff_on _)
   mfld_set_tac
-#align
-  diffeomorph.smooth_manifold_with_corners_trans_diffeomorph Diffeomorph.smooth_manifold_with_corners_trans_diffeomorph
+#align diffeomorph.smooth_manifold_with_corners_trans_diffeomorph Diffeomorph.smooth_manifold_with_corners_trans_diffeomorph
 
 variable (I M)
 
@@ -603,22 +596,19 @@ variable {I M}
 theorem cont_mdiff_within_at_trans_diffeomorph_right {f : M' → M} {x s} :
     ContMdiffWithinAt I' (I.transDiffeomorph e) n f s x ↔ ContMdiffWithinAt I' I n f s x :=
   (toTransDiffeomorph I M e).cont_mdiff_within_at_diffeomorph_comp_iff le_top
-#align
-  diffeomorph.cont_mdiff_within_at_trans_diffeomorph_right Diffeomorph.cont_mdiff_within_at_trans_diffeomorph_right
+#align diffeomorph.cont_mdiff_within_at_trans_diffeomorph_right Diffeomorph.cont_mdiff_within_at_trans_diffeomorph_right
 
 @[simp]
 theorem cont_mdiff_at_trans_diffeomorph_right {f : M' → M} {x} :
     ContMdiffAt I' (I.transDiffeomorph e) n f x ↔ ContMdiffAt I' I n f x :=
   (toTransDiffeomorph I M e).cont_mdiff_at_diffeomorph_comp_iff le_top
-#align
-  diffeomorph.cont_mdiff_at_trans_diffeomorph_right Diffeomorph.cont_mdiff_at_trans_diffeomorph_right
+#align diffeomorph.cont_mdiff_at_trans_diffeomorph_right Diffeomorph.cont_mdiff_at_trans_diffeomorph_right
 
 @[simp]
 theorem cont_mdiff_on_trans_diffeomorph_right {f : M' → M} {s} :
     ContMdiffOn I' (I.transDiffeomorph e) n f s ↔ ContMdiffOn I' I n f s :=
   (toTransDiffeomorph I M e).cont_mdiff_on_diffeomorph_comp_iff le_top
-#align
-  diffeomorph.cont_mdiff_on_trans_diffeomorph_right Diffeomorph.cont_mdiff_on_trans_diffeomorph_right
+#align diffeomorph.cont_mdiff_on_trans_diffeomorph_right Diffeomorph.cont_mdiff_on_trans_diffeomorph_right
 
 @[simp]
 theorem cont_mdiff_trans_diffeomorph_right {f : M' → M} :
@@ -636,22 +626,19 @@ theorem smooth_trans_diffeomorph_right {f : M' → M} :
 theorem cont_mdiff_within_at_trans_diffeomorph_left {f : M → M'} {x s} :
     ContMdiffWithinAt (I.transDiffeomorph e) I' n f s x ↔ ContMdiffWithinAt I I' n f s x :=
   ((toTransDiffeomorph I M e).cont_mdiff_within_at_comp_diffeomorph_iff le_top).symm
-#align
-  diffeomorph.cont_mdiff_within_at_trans_diffeomorph_left Diffeomorph.cont_mdiff_within_at_trans_diffeomorph_left
+#align diffeomorph.cont_mdiff_within_at_trans_diffeomorph_left Diffeomorph.cont_mdiff_within_at_trans_diffeomorph_left
 
 @[simp]
 theorem cont_mdiff_at_trans_diffeomorph_left {f : M → M'} {x} :
     ContMdiffAt (I.transDiffeomorph e) I' n f x ↔ ContMdiffAt I I' n f x :=
   ((toTransDiffeomorph I M e).cont_mdiff_at_comp_diffeomorph_iff le_top).symm
-#align
-  diffeomorph.cont_mdiff_at_trans_diffeomorph_left Diffeomorph.cont_mdiff_at_trans_diffeomorph_left
+#align diffeomorph.cont_mdiff_at_trans_diffeomorph_left Diffeomorph.cont_mdiff_at_trans_diffeomorph_left
 
 @[simp]
 theorem cont_mdiff_on_trans_diffeomorph_left {f : M → M'} {s} :
     ContMdiffOn (I.transDiffeomorph e) I' n f s ↔ ContMdiffOn I I' n f s :=
   ((toTransDiffeomorph I M e).cont_mdiff_on_comp_diffeomorph_iff le_top).symm
-#align
-  diffeomorph.cont_mdiff_on_trans_diffeomorph_left Diffeomorph.cont_mdiff_on_trans_diffeomorph_left
+#align diffeomorph.cont_mdiff_on_trans_diffeomorph_left Diffeomorph.cont_mdiff_on_trans_diffeomorph_left
 
 @[simp]
 theorem cont_mdiff_trans_diffeomorph_left {f : M → M'} :

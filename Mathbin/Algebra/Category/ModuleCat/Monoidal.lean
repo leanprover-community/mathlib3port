@@ -99,8 +99,7 @@ private theorem associator_naturality_aux {X₁ X₂ X₃ : Type _} [AddCommMono
   apply TensorProduct.ext_threefold
   intro x y z
   rfl
-#align
-  Module.monoidal_category.associator_naturality_aux Module.monoidal_category.associator_naturality_aux
+#align Module.monoidal_category.associator_naturality_aux Module.monoidal_category.associator_naturality_aux
 
 variable (R)
 
@@ -123,8 +122,7 @@ theorem associator_naturality {X₁ X₂ X₃ Y₁ Y₂ Y₃ : ModuleCat R} (f�
     tensorHom (tensorHom f₁ f₂) f₃ ≫ (associator Y₁ Y₂ Y₃).Hom =
       (associator X₁ X₂ X₃).Hom ≫ tensorHom f₁ (tensorHom f₂ f₃) :=
   by convert associator_naturality_aux f₁ f₂ f₃ using 1
-#align
-  Module.monoidal_category.associator_naturality ModuleCat.MonoidalCategory.associator_naturality
+#align Module.monoidal_category.associator_naturality ModuleCat.MonoidalCategory.associator_naturality
 
 theorem pentagon (W X Y Z : ModuleCat R) :
     tensorHom (associator W X Y).Hom (𝟙 Z) ≫
@@ -145,8 +143,7 @@ theorem left_unitor_naturality {M N : ModuleCat R} (f : M ⟶ N) :
   erw [TensorProduct.lid_tmul, TensorProduct.lid_tmul]
   rw [LinearMap.map_smul]
   rfl
-#align
-  Module.monoidal_category.left_unitor_naturality ModuleCat.MonoidalCategory.left_unitor_naturality
+#align Module.monoidal_category.left_unitor_naturality ModuleCat.MonoidalCategory.left_unitor_naturality
 
 /-- (implementation) the right unitor for R-modules -/
 def rightUnitor (M : ModuleCat.{u} R) : ModuleCat.of R (M ⊗[R] R) ≅ M :=
@@ -160,8 +157,7 @@ theorem right_unitor_naturality {M N : ModuleCat R} (f : M ⟶ N) :
   erw [TensorProduct.rid_tmul, TensorProduct.rid_tmul]
   rw [LinearMap.map_smul]
   rfl
-#align
-  Module.monoidal_category.right_unitor_naturality ModuleCat.MonoidalCategory.right_unitor_naturality
+#align Module.monoidal_category.right_unitor_naturality ModuleCat.MonoidalCategory.right_unitor_naturality
 
 theorem triangle (M N : ModuleCat.{u} R) :
     (associator M (ModuleCat.of R R) N).Hom ≫ tensorHom (𝟙 M) (leftUnitor N).Hom =
@@ -216,32 +212,28 @@ theorem hom_apply {K L M N : ModuleCat.{u} R} (f : K ⟶ L) (g : M ⟶ N) (k : K
 theorem left_unitor_hom_apply {M : ModuleCat.{u} R} (r : R) (m : M) :
     ((λ_ M).Hom : 𝟙_ (ModuleCat R) ⊗ M ⟶ M) (r ⊗ₜ[R] m) = r • m :=
   TensorProduct.lid_tmul m r
-#align
-  Module.monoidal_category.left_unitor_hom_apply ModuleCat.monoidalCategory.left_unitor_hom_apply
+#align Module.monoidal_category.left_unitor_hom_apply ModuleCat.monoidalCategory.left_unitor_hom_apply
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem left_unitor_inv_apply {M : ModuleCat.{u} R} (m : M) :
     ((λ_ M).inv : M ⟶ 𝟙_ (ModuleCat.{u} R) ⊗ M) m = 1 ⊗ₜ[R] m :=
   TensorProduct.lid_symm_apply m
-#align
-  Module.monoidal_category.left_unitor_inv_apply ModuleCat.monoidalCategory.left_unitor_inv_apply
+#align Module.monoidal_category.left_unitor_inv_apply ModuleCat.monoidalCategory.left_unitor_inv_apply
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem right_unitor_hom_apply {M : ModuleCat.{u} R} (m : M) (r : R) :
     ((ρ_ M).Hom : M ⊗ 𝟙_ (ModuleCat R) ⟶ M) (m ⊗ₜ r) = r • m :=
   TensorProduct.rid_tmul m r
-#align
-  Module.monoidal_category.right_unitor_hom_apply ModuleCat.monoidalCategory.right_unitor_hom_apply
+#align Module.monoidal_category.right_unitor_hom_apply ModuleCat.monoidalCategory.right_unitor_hom_apply
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem right_unitor_inv_apply {M : ModuleCat.{u} R} (m : M) :
     ((ρ_ M).inv : M ⟶ M ⊗ 𝟙_ (ModuleCat.{u} R)) m = m ⊗ₜ[R] 1 :=
   TensorProduct.rid_symm_apply m
-#align
-  Module.monoidal_category.right_unitor_inv_apply ModuleCat.monoidalCategory.right_unitor_inv_apply
+#align Module.monoidal_category.right_unitor_inv_apply ModuleCat.monoidalCategory.right_unitor_inv_apply
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

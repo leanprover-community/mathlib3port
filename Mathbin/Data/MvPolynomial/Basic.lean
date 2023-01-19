@@ -713,8 +713,7 @@ theorem support_sdiff_support_subset_support_add [DecidableEq σ] (p q : MvPolyn
   intro m hm
   simp only [not_not, mem_support_iff, Finset.mem_sdiff, Ne.def] at hm
   simp [hm.2, hm.1]
-#align
-  mv_polynomial.support_sdiff_support_subset_support_add MvPolynomial.support_sdiff_support_subset_support_add
+#align mv_polynomial.support_sdiff_support_subset_support_add MvPolynomial.support_sdiff_support_subset_support_add
 
 theorem support_symm_diff_support_subset_support_add [DecidableEq σ] (p q : MvPolynomial σ R) :
     p.support ∆ q.support ⊆ (p + q).support :=
@@ -724,8 +723,7 @@ theorem support_symm_diff_support_subset_support_add [DecidableEq σ] (p q : MvP
   · exact support_sdiff_support_subset_support_add p q
   · rw [add_comm]
     exact support_sdiff_support_subset_support_add q p
-#align
-  mv_polynomial.support_symm_diff_support_subset_support_add MvPolynomial.support_symm_diff_support_subset_support_add
+#align mv_polynomial.support_symm_diff_support_subset_support_add MvPolynomial.support_symm_diff_support_subset_support_add
 
 theorem coeff_mul_monomial' (m) (s : σ →₀ ℕ) (r : R) (p : MvPolynomial σ R) :
     coeff m (p * monomial s r) = if s ≤ m then coeff (m - s) p * r else 0 :=

@@ -108,8 +108,7 @@ theorem cs_down_0_not_rel_left (j : ℕ) : ¬c.Rel 0 j :=
   dsimp at hj
   apply Nat.not_succ_le_zero j
   rw [Nat.succ_eq_add_one, hj]
-#align
-  algebraic_topology.dold_kan.cs_down_0_not_rel_left AlgebraicTopology.DoldKan.cs_down_0_not_rel_left
+#align algebraic_topology.dold_kan.cs_down_0_not_rel_left AlgebraicTopology.DoldKan.cs_down_0_not_rel_left
 
 /-- The sequence of maps which gives the null homotopic maps `Hσ` that shall be in
 the inductive construction of the projections `P q : K[X] ⟶ K[X]` -/

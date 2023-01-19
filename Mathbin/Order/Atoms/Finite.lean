@@ -54,7 +54,7 @@ theorem univ : (Finset.univ : Finset α) = {⊤, ⊥} :=
 #align fintype.is_simple_order.univ Fintype.IsSimpleOrder.univ
 
 theorem card : Fintype.card α = 2 :=
-  (Fintype.of_equiv_card _).trans Fintype.card_bool
+  (Fintype.ofEquiv_card _).trans Fintype.card_bool
 #align fintype.is_simple_order.card Fintype.IsSimpleOrder.card
 
 end IsSimpleOrder

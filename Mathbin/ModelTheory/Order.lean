@@ -169,8 +169,7 @@ instance is_ordered_structure_has_le [LE M] : IsOrderedStructure Language.order 
   by
   rw [is_ordered_structure_iff, order_Lhom_order]
   exact Lhom.id_is_expansion_on M
-#align
-  first_order.language.is_ordered_structure_has_le FirstOrder.Language.is_ordered_structure_has_le
+#align first_order.language.is_ordered_structure_has_le FirstOrder.Language.is_ordered_structure_has_le
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance model_preorder [Preorder M] : M ⊨ Theory.preorder :=
@@ -275,8 +274,7 @@ theorem realize_densely_ordered_iff [Preorder M] :
   refine' ⟨fun h => ⟨fun a b ab => h a b ab⟩, _⟩
   intro h a b ab
   exact exists_between ab
-#align
-  first_order.language.realize_densely_ordered_iff FirstOrder.Language.realize_densely_ordered_iff
+#align first_order.language.realize_densely_ordered_iff FirstOrder.Language.realize_densely_ordered_iff
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]

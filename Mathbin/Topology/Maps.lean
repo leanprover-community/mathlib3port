@@ -386,44 +386,38 @@ theorem to_quotient_map {f : α → β} (open_map : IsOpenMap f) (cont : Continu
 theorem interior_preimage_subset_preimage_interior (hf : IsOpenMap f) {s : Set β} :
     interior (f ⁻¹' s) ⊆ f ⁻¹' interior s :=
   hf.maps_to_interior (mapsTo_preimage _ _)
-#align
-  is_open_map.interior_preimage_subset_preimage_interior IsOpenMap.interior_preimage_subset_preimage_interior
+#align is_open_map.interior_preimage_subset_preimage_interior IsOpenMap.interior_preimage_subset_preimage_interior
 
 theorem preimage_interior_eq_interior_preimage (hf₁ : IsOpenMap f) (hf₂ : Continuous f)
     (s : Set β) : f ⁻¹' interior s = interior (f ⁻¹' s) :=
   Subset.antisymm (preimage_interior_subset_interior_preimage hf₂)
     (interior_preimage_subset_preimage_interior hf₁)
-#align
-  is_open_map.preimage_interior_eq_interior_preimage IsOpenMap.preimage_interior_eq_interior_preimage
+#align is_open_map.preimage_interior_eq_interior_preimage IsOpenMap.preimage_interior_eq_interior_preimage
 
 theorem preimage_closure_subset_closure_preimage (hf : IsOpenMap f) {s : Set β} :
     f ⁻¹' closure s ⊆ closure (f ⁻¹' s) :=
   by
   rw [← compl_subset_compl]
   simp only [← interior_compl, ← preimage_compl, hf.interior_preimage_subset_preimage_interior]
-#align
-  is_open_map.preimage_closure_subset_closure_preimage IsOpenMap.preimage_closure_subset_closure_preimage
+#align is_open_map.preimage_closure_subset_closure_preimage IsOpenMap.preimage_closure_subset_closure_preimage
 
 theorem preimage_closure_eq_closure_preimage (hf : IsOpenMap f) (hfc : Continuous f) (s : Set β) :
     f ⁻¹' closure s = closure (f ⁻¹' s) :=
   hf.preimage_closure_subset_closure_preimage.antisymm (hfc.closure_preimage_subset s)
-#align
-  is_open_map.preimage_closure_eq_closure_preimage IsOpenMap.preimage_closure_eq_closure_preimage
+#align is_open_map.preimage_closure_eq_closure_preimage IsOpenMap.preimage_closure_eq_closure_preimage
 
 theorem preimage_frontier_subset_frontier_preimage (hf : IsOpenMap f) {s : Set β} :
     f ⁻¹' frontier s ⊆ frontier (f ⁻¹' s) := by
   simpa only [frontier_eq_closure_inter_closure, preimage_inter] using
     inter_subset_inter hf.preimage_closure_subset_closure_preimage
       hf.preimage_closure_subset_closure_preimage
-#align
-  is_open_map.preimage_frontier_subset_frontier_preimage IsOpenMap.preimage_frontier_subset_frontier_preimage
+#align is_open_map.preimage_frontier_subset_frontier_preimage IsOpenMap.preimage_frontier_subset_frontier_preimage
 
 theorem preimage_frontier_eq_frontier_preimage (hf : IsOpenMap f) (hfc : Continuous f) (s : Set β) :
     f ⁻¹' frontier s = frontier (f ⁻¹' s) := by
   simp only [frontier_eq_closure_inter_closure, preimage_inter, preimage_compl,
     hf.preimage_closure_eq_closure_preimage hfc]
-#align
-  is_open_map.preimage_frontier_eq_frontier_preimage IsOpenMap.preimage_frontier_eq_frontier_preimage
+#align is_open_map.preimage_frontier_eq_frontier_preimage IsOpenMap.preimage_frontier_eq_frontier_preimage
 
 end IsOpenMap
 
@@ -671,8 +665,7 @@ theorem closed_embedding_of_continuous_injective_closed (h₁ : Continuous f) (h
   rw [is_closed_induced_iff]
   refine' fun hs => ⟨f '' s, h₃ s hs, _⟩
   rw [preimage_image_eq _ h₂]
-#align
-  closed_embedding_of_continuous_injective_closed closed_embedding_of_continuous_injective_closed
+#align closed_embedding_of_continuous_injective_closed closed_embedding_of_continuous_injective_closed
 
 theorem closed_embedding_id : ClosedEmbedding (@id α) :=
   ⟨embedding_id, by convert is_closed_univ <;> apply range_id⟩

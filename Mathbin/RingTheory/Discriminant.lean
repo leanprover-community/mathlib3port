@@ -160,8 +160,7 @@ theorem discr_eq_det_embeddings_matrix_reindex_pow_two [DecidableEq ι] [IsSepar
     algebraMap K E (discr K b) = (embeddingsMatrixReindex K E b e).det ^ 2 := by
   rw [discr_def, RingHom.map_det, RingHom.map_matrix_apply,
     trace_matrix_eq_embeddings_matrix_reindex_mul_trans, det_mul, det_transpose, pow_two]
-#align
-  algebra.discr_eq_det_embeddings_matrix_reindex_pow_two Algebra.discr_eq_det_embeddings_matrix_reindex_pow_two
+#align algebra.discr_eq_det_embeddings_matrix_reindex_pow_two Algebra.discr_eq_det_embeddings_matrix_reindex_pow_two
 
 /-- The discriminant of a power basis. -/
 theorem discr_power_basis_eq_prod (e : Fin pb.dim ≃ (L →ₐ[K] E)) [IsSeparable K L] :
@@ -328,8 +327,7 @@ theorem discr_eq_discr_of_to_matrix_coeff_is_integral [NumberField K] {b : Basis
     cases' Int.isUnit_iff.1 hunit with hp hm
     · simp [hp]
     · simp [hm]
-#align
-  algebra.discr_eq_discr_of_to_matrix_coeff_is_integral Algebra.discr_eq_discr_of_to_matrix_coeff_is_integral
+#align algebra.discr_eq_discr_of_to_matrix_coeff_is_integral Algebra.discr_eq_discr_of_to_matrix_coeff_is_integral
 
 /-- Let `K` be the fraction field of an integrally closed domain `R` and let `L` be a finite
 separable extension of `K`. Let `B : power_basis K L` be such that `is_integral R B.gen`.

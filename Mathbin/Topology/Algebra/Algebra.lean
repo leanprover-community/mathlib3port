@@ -148,8 +148,7 @@ theorem Subalgebra.topological_closure_comap_homeomorph (s : Subalgebra R A) {B 
   simp only [Subalgebra.coe_comap, Subsemiring.coe_comap, AlgHom.coe_to_ring_hom]
   rw [w]
   exact f'.preimage_closure _
-#align
-  subalgebra.topological_closure_comap_homeomorph Subalgebra.topological_closure_comap_homeomorph
+#align subalgebra.topological_closure_comap_homeomorph Subalgebra.topological_closure_comap_homeomorph
 
 end TopologicalAlgebra
 

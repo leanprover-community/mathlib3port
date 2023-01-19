@@ -207,10 +207,8 @@ theorem injective_noncomm_pi_coprod_of_independent
     ext i
     apply hinj
     simp [this i (Finset.mem_univ i)]
-#align
-  monoid_hom.injective_noncomm_pi_coprod_of_independent MonoidHom.injective_noncomm_pi_coprod_of_independent
-#align
-  add_monoid_hom.injective_noncomm_pi_coprod_of_independent AddMonoidHom.injective_noncomm_pi_coprod_of_independent
+#align monoid_hom.injective_noncomm_pi_coprod_of_independent MonoidHom.injective_noncomm_pi_coprod_of_independent
+#align add_monoid_hom.injective_noncomm_pi_coprod_of_independent AddMonoidHom.injective_noncomm_pi_coprod_of_independent
 
 variable (hcomm)
 
@@ -251,8 +249,7 @@ theorem independent_range_of_coprime_order [Finite ι] [∀ i, Fintype (H i)]
     apply hcoprime
     exact j.2
 #align monoid_hom.independent_range_of_coprime_order MonoidHom.independent_range_of_coprime_order
-#align
-  add_monoid_hom.independent_range_of_coprime_order AddMonoidHom.independent_range_of_coprime_order
+#align add_monoid_hom.independent_range_of_coprime_order AddMonoidHom.independent_range_of_coprime_order
 
 end MonoidHom
 
@@ -321,10 +318,8 @@ theorem injective_noncomm_pi_coprod_of_independent (hind : CompleteLattice.Indep
   · simpa using hind
   · intro i
     exact Subtype.coe_injective
-#align
-  subgroup.injective_noncomm_pi_coprod_of_independent Subgroup.injective_noncomm_pi_coprod_of_independent
-#align
-  add_subgroup.injective_noncomm_pi_coprod_of_independent AddSubgroup.injective_noncomm_pi_coprod_of_independent
+#align subgroup.injective_noncomm_pi_coprod_of_independent Subgroup.injective_noncomm_pi_coprod_of_independent
+#align add_subgroup.injective_noncomm_pi_coprod_of_independent AddSubgroup.injective_noncomm_pi_coprod_of_independent
 
 variable (hcomm)
 

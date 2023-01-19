@@ -1463,8 +1463,7 @@ instance subsingleton_normalizedGCDMonoid_of_unique_units : Subsingleton (Normal
     subst this
     have := Subsingleton.elim a_norm b_norm
     subst this⟩
-#align
-  subsingleton_normalized_gcd_monoid_of_unique_units subsingleton_normalizedGCDMonoid_of_unique_units
+#align subsingleton_normalized_gcd_monoid_of_unique_units subsingleton_normalizedGCDMonoid_of_unique_units
 -/
 
 /- warning: norm_unit_eq_one -> normUnit_eq_one is a dubious translation:

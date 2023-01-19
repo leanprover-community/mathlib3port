@@ -46,8 +46,7 @@ theorem analytic_at_of_differentiable_on_punctured_nhds_of_continuous_at {f : �
   exact
     (has_fpower_series_on_ball_of_differentiable_off_countable (countable_singleton c) hc
         (fun z hz => hRs (diff_subset_diff_left ball_subset_closed_ball hz)) hR0).AnalyticAt
-#align
-  complex.analytic_at_of_differentiable_on_punctured_nhds_of_continuous_at Complex.analytic_at_of_differentiable_on_punctured_nhds_of_continuous_at
+#align complex.analytic_at_of_differentiable_on_punctured_nhds_of_continuous_at Complex.analytic_at_of_differentiable_on_punctured_nhds_of_continuous_at
 
 theorem differentiable_on_compl_singleton_and_continuous_at_iff {f : ℂ → E} {s : Set ℂ} {c : ℂ}
     (hs : s ∈ 𝓝 c) : DifferentiableOn ℂ f (s \ {c}) ∧ ContinuousAt f c ↔ DifferentiableOn ℂ f s :=
@@ -63,8 +62,7 @@ theorem differentiable_on_compl_singleton_and_continuous_at_iff {f : ℂ → E} 
   ·
     simpa only [DifferentiableWithinAt, HasFderivWithinAt, hne.nhds_within_diff_singleton] using
       hd x ⟨hx, hne⟩
-#align
-  complex.differentiable_on_compl_singleton_and_continuous_at_iff Complex.differentiable_on_compl_singleton_and_continuous_at_iff
+#align complex.differentiable_on_compl_singleton_and_continuous_at_iff Complex.differentiable_on_compl_singleton_and_continuous_at_iff
 
 theorem differentiable_on_dslope {f : ℂ → E} {s : Set ℂ} {c : ℂ} (hc : s ∈ 𝓝 c) :
     DifferentiableOn ℂ (dslope f c) s ↔ DifferentiableOn ℂ f s :=
@@ -108,8 +106,7 @@ theorem differentiable_on_update_lim_insert_of_is_o {f : ℂ → E} {s : Set ℂ
     DifferentiableOn ℂ (update f c (lim (𝓝[≠] c) f)) (insert c s) :=
   differentiable_on_update_lim_of_is_o (insert_mem_nhds_iff.2 hc)
     (hd.mono fun z hz => hz.1.resolve_left hz.2) ho
-#align
-  complex.differentiable_on_update_lim_insert_of_is_o Complex.differentiable_on_update_lim_insert_of_is_o
+#align complex.differentiable_on_update_lim_insert_of_is_o Complex.differentiable_on_update_lim_insert_of_is_o
 
 /-- **Removable singularity** theorem: if `s` is a neighborhood of `c : ℂ`, a function `f : ℂ → E`
 is complex differentiable and is bounded on `s \ {c}`, then `f` redefined to be equal to
@@ -124,8 +121,7 @@ theorem differentiable_on_update_lim_of_bdd_above {f : ℂ → E} {s : Set ℂ} 
         eventually_map.2 <|
           mem_nhds_within_iff_exists_mem_nhds_inter.2
             ⟨s, hc, fun z hz => norm_sub_le_of_le (hC <| mem_image_of_mem _ hz) le_rfl⟩⟩
-#align
-  complex.differentiable_on_update_lim_of_bdd_above Complex.differentiable_on_update_lim_of_bdd_above
+#align complex.differentiable_on_update_lim_of_bdd_above Complex.differentiable_on_update_lim_of_bdd_above
 
 /-- **Removable singularity** theorem: if a function `f : ℂ → E` is complex differentiable on a
 punctured neighborhood of `c` and $f(z) - f(c)=o((z-c)^{-1})$, then `f` has a limit at `c`. -/
@@ -139,8 +135,7 @@ theorem tendsto_lim_of_differentiable_on_punctured_nhds_of_is_o {f : ℂ → E} 
     (hz.1 hz.2).DifferentiableWithinAt
   have H := differentiable_on_update_lim_of_is_o hd this ho
   exact continuous_at_update_same.1 (H.differentiable_at hd).ContinuousAt
-#align
-  complex.tendsto_lim_of_differentiable_on_punctured_nhds_of_is_o Complex.tendsto_lim_of_differentiable_on_punctured_nhds_of_is_o
+#align complex.tendsto_lim_of_differentiable_on_punctured_nhds_of_is_o Complex.tendsto_lim_of_differentiable_on_punctured_nhds_of_is_o
 
 /-- **Removable singularity** theorem: if a function `f : ℂ → E` is complex differentiable and
 bounded on a punctured neighborhood of `c`, then `f` has a limit at `c`. -/
@@ -149,8 +144,7 @@ theorem tendsto_lim_of_differentiable_on_punctured_nhds_of_bounded_under {f : �
     (hb : IsBoundedUnder (· ≤ ·) (𝓝[≠] c) fun z => ‖f z - f c‖) :
     Tendsto f (𝓝[≠] c) (𝓝 <| lim (𝓝[≠] c) f) :=
   tendsto_lim_of_differentiable_on_punctured_nhds_of_is_o hd hb.is_o_sub_self_inv
-#align
-  complex.tendsto_lim_of_differentiable_on_punctured_nhds_of_bounded_under Complex.tendsto_lim_of_differentiable_on_punctured_nhds_of_bounded_under
+#align complex.tendsto_lim_of_differentiable_on_punctured_nhds_of_bounded_under Complex.tendsto_lim_of_differentiable_on_punctured_nhds_of_bounded_under
 
 /-- The Cauchy formula for the derivative of a holomorphic function. -/
 theorem two_pi_I_inv_smul_circle_integral_sub_sq_inv_smul_of_differentiable {U : Set ℂ}
@@ -183,8 +177,7 @@ theorem two_pi_I_inv_smul_circle_integral_sub_sq_inv_smul_of_differentiable {U :
   · refine' circleIntegral.integral_congr (pos_of_mem_ball hw₀).le fun z hz => _
     simp only [dslope_of_ne, metric.sphere_disjoint_ball.ne_of_mem hz hw₀, slope, ← smul_assoc, sq,
       mul_inv, Ne.def, not_false_iff, vsub_eq_sub, Algebra.id.smul_eq_mul]
-#align
-  complex.two_pi_I_inv_smul_circle_integral_sub_sq_inv_smul_of_differentiable Complex.two_pi_I_inv_smul_circle_integral_sub_sq_inv_smul_of_differentiable
+#align complex.two_pi_I_inv_smul_circle_integral_sub_sq_inv_smul_of_differentiable Complex.two_pi_I_inv_smul_circle_integral_sub_sq_inv_smul_of_differentiable
 
 end Complex
 

@@ -97,8 +97,7 @@ instance forget_to_FinPartialOrder_faithful : Faithful (forget₂ FinBoolAlgCat 
   ⟨fun X Y f g h =>
     haveI := congr_arg (coeFn : _ → X → Y) h
     FunLike.coe_injective this⟩
-#align
-  FinBoolAlg.forget_to_FinPartialOrder_faithful FinBoolAlgCat.forget_to_FinPartialOrder_faithful
+#align FinBoolAlg.forget_to_FinPartialOrder_faithful FinBoolAlgCat.forget_to_FinPartialOrder_faithful
 
 /-- Constructs an equivalence between finite Boolean algebras from an order isomorphism between
 them. -/

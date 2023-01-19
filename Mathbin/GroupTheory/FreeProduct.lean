@@ -746,8 +746,7 @@ theorem lift_word_prod_nontrivial_of_other_i {i j k} (w : Neword H i j) (hhead :
   have : X k ⊆ X i := by simpa [heq1] using lift_word_ping_pong f X hpp w hlast.symm
   obtain ⟨x, hx⟩ := hXnonempty k
   exact (hXdisj hhead).le_bot ⟨hx, this hx⟩
-#align
-  free_product.lift_word_prod_nontrivial_of_other_i FreeProduct.lift_word_prod_nontrivial_of_other_i
+#align free_product.lift_word_prod_nontrivial_of_other_i FreeProduct.lift_word_prod_nontrivial_of_other_i
 
 include hnontriv
 
@@ -755,8 +754,7 @@ theorem lift_word_prod_nontrivial_of_head_eq_last {i} (w : Neword H i i) : lift 
   by
   obtain ⟨k, hk⟩ := exists_ne i
   exact lift_word_prod_nontrivial_of_other_i f X hXnonempty hXdisj hpp w hk hk
-#align
-  free_product.lift_word_prod_nontrivial_of_head_eq_last FreeProduct.lift_word_prod_nontrivial_of_head_eq_last
+#align free_product.lift_word_prod_nontrivial_of_head_eq_last FreeProduct.lift_word_prod_nontrivial_of_head_eq_last
 
 theorem lift_word_prod_nontrivial_of_head_card {i j} (w : Neword H i j) (hcard : 3 ≤ (#H i))
     (hheadtail : i ≠ j) : lift f w.Prod ≠ 1 :=
@@ -773,8 +771,7 @@ theorem lift_word_prod_nontrivial_of_head_card {i j} (w : Neword H i j) (hcard :
   intro heq1
   apply hw'
   simp [w', heq1]
-#align
-  free_product.lift_word_prod_nontrivial_of_head_card FreeProduct.lift_word_prod_nontrivial_of_head_card
+#align free_product.lift_word_prod_nontrivial_of_head_card FreeProduct.lift_word_prod_nontrivial_of_head_card
 
 include hcard
 
@@ -809,8 +806,7 @@ theorem lift_word_prod_nontrivial_of_not_empty {i j} (w : Neword H i j) : lift f
         intro heq1
         apply hw'
         simp [w', heq1]
-#align
-  free_product.lift_word_prod_nontrivial_of_not_empty FreeProduct.lift_word_prod_nontrivial_of_not_empty
+#align free_product.lift_word_prod_nontrivial_of_not_empty FreeProduct.lift_word_prod_nontrivial_of_not_empty
 
 theorem empty_of_word_prod_eq_one {w : Word H} (h : lift f w.Prod = 1) : w = word.empty :=
   by

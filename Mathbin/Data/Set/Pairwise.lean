@@ -763,8 +763,7 @@ theorem Set.PairwiseDisjoint.subset_of_bunionᵢ_subset_bunionᵢ (h₀ : (s ∪
   obtain ⟨j, hj, haj⟩ := mem_Union₂.1 (h <| mem_Union₂_of_mem hi hai)
   rwa [h₀.eq (subset_union_left _ _ hi) (subset_union_right _ _ hj)
       (not_disjoint_iff.2 ⟨a, hai, haj⟩)]
-#align
-  set.pairwise_disjoint.subset_of_bUnion_subset_bUnion Set.PairwiseDisjoint.subset_of_bunionᵢ_subset_bunionᵢ
+#align set.pairwise_disjoint.subset_of_bUnion_subset_bUnion Set.PairwiseDisjoint.subset_of_bunionᵢ_subset_bunionᵢ
 
 /- warning: pairwise.subset_of_bUnion_subset_bUnion -> Pairwise.subset_of_bunionᵢ_subset_bunionᵢ is a dubious translation:
 lean 3 declaration is

@@ -88,8 +88,7 @@ theorem homogeneous_submodule_eq_finsupp_supported [CommSemiring R] (n : ℕ) :
   rw [Finsupp.mem_supported, Set.subset_def]
   simp only [Finsupp.mem_support_iff, Finset.mem_coe]
   rfl
-#align
-  mv_polynomial.homogeneous_submodule_eq_finsupp_supported MvPolynomial.homogeneous_submodule_eq_finsupp_supported
+#align mv_polynomial.homogeneous_submodule_eq_finsupp_supported MvPolynomial.homogeneous_submodule_eq_finsupp_supported
 
 variable {σ R}
 
@@ -141,8 +140,7 @@ theorem is_homogeneous_of_total_degree_zero {p : MvPolynomial σ R} (hp : p.tota
   -- we have to do this in two steps to stop simp changing bot to zero
   simp_rw [mem_support_iff] at hp
   exact hp
-#align
-  mv_polynomial.is_homogeneous_of_total_degree_zero MvPolynomial.is_homogeneous_of_total_degree_zero
+#align mv_polynomial.is_homogeneous_of_total_degree_zero MvPolynomial.is_homogeneous_of_total_degree_zero
 
 theorem is_homogeneous_C (r : R) : IsHomogeneous (c r : MvPolynomial σ R) 0 :=
   by
@@ -235,8 +233,7 @@ instance HomogeneousSubmodule.gcomm_semiring : SetLike.GradedMonoid (homogeneous
     where
   one_mem := is_homogeneous_one σ R
   mul_mem i j xi xj := IsHomogeneous.mul
-#align
-  mv_polynomial.is_homogeneous.homogeneous_submodule.gcomm_semiring MvPolynomial.IsHomogeneous.HomogeneousSubmodule.gcomm_semiring
+#align mv_polynomial.is_homogeneous.homogeneous_submodule.gcomm_semiring MvPolynomial.IsHomogeneous.HomogeneousSubmodule.gcomm_semiring
 
 open DirectSum
 
@@ -285,8 +282,7 @@ theorem homogeneous_component_is_homogeneous : (homogeneousComponent n φ).IsHom
   intro d hd
   contrapose! hd
   rw [coeff_homogeneous_component, if_neg hd]
-#align
-  mv_polynomial.homogeneous_component_is_homogeneous MvPolynomial.homogeneous_component_is_homogeneous
+#align mv_polynomial.homogeneous_component_is_homogeneous MvPolynomial.homogeneous_component_is_homogeneous
 
 @[simp]
 theorem homogeneous_component_zero : homogeneousComponent 0 φ = c (coeff 0 φ) :=
@@ -348,8 +344,7 @@ theorem homogeneous_component_homogeneous_polynomial (m n : ℕ) (p : MvPolynomi
     split_ifs with h1
     · rfl
     · simp only [coeff_zero]
-#align
-  mv_polynomial.homogeneous_component_homogeneous_polynomial MvPolynomial.homogeneous_component_homogeneous_polynomial
+#align mv_polynomial.homogeneous_component_homogeneous_polynomial MvPolynomial.homogeneous_component_homogeneous_polynomial
 
 end HomogeneousComponent
 

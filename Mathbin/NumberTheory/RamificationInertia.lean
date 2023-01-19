@@ -158,15 +158,13 @@ theorem ramification_idx_eq_normalized_factors_count (hp0 : map f p ≠ ⊥) (hP
       normalized_factors_pow, normalized_factors_irreducible hPirr, normalize_eq,
       Multiset.nsmul_singleton, ← Multiset.le_count_iff_replicate_le]
   · exact (Nat.lt_succ_self _).not_le
-#align
-  ideal.is_dedekind_domain.ramification_idx_eq_normalized_factors_count Ideal.IsDedekindDomain.ramification_idx_eq_normalized_factors_count
+#align ideal.is_dedekind_domain.ramification_idx_eq_normalized_factors_count Ideal.IsDedekindDomain.ramification_idx_eq_normalized_factors_count
 
 theorem ramification_idx_eq_factors_count (hp0 : map f p ≠ ⊥) (hP : P.IsPrime) (hP0 : P ≠ ⊥) :
     ramificationIdx f p P = (factors (map f p)).count P := by
   rw [is_dedekind_domain.ramification_idx_eq_normalized_factors_count hp0 hP hP0,
     factors_eq_normalized_factors]
-#align
-  ideal.is_dedekind_domain.ramification_idx_eq_factors_count Ideal.IsDedekindDomain.ramification_idx_eq_factors_count
+#align ideal.is_dedekind_domain.ramification_idx_eq_factors_count Ideal.IsDedekindDomain.ramification_idx_eq_factors_count
 
 theorem ramification_idx_ne_zero (hp0 : map f p ≠ ⊥) (hP : P.IsPrime) (le : map f p ≤ P) :
     ramificationIdx f p P ≠ 0 :=
@@ -180,8 +178,7 @@ theorem ramification_idx_ne_zero (hp0 : map f p ≠ ⊥) (hP : P.IsPrime) (le : 
   obtain ⟨P', hP', P'_eq⟩ :=
     exists_mem_normalized_factors_of_dvd hp0 hPirr (ideal.dvd_iff_le.mpr le)
   rwa [Multiset.count_ne_zero, associated_iff_eq.mp P'_eq]
-#align
-  ideal.is_dedekind_domain.ramification_idx_ne_zero Ideal.IsDedekindDomain.ramification_idx_ne_zero
+#align ideal.is_dedekind_domain.ramification_idx_ne_zero Ideal.IsDedekindDomain.ramification_idx_ne_zero
 
 end IsDedekindDomain
 
@@ -300,8 +297,7 @@ theorem FinrankQuotientMap.linear_independent_of_nontrivial [IsDomain R] [IsDede
     infer_instance
   simp only [IsScalarTower.algebra_map_smul, ← LinearMap.map_smul, ← LinearMap.map_sum,
     (f.map_eq_zero_iff hf).mp Eq, LinearMap.map_zero]
-#align
-  ideal.finrank_quotient_map.linear_independent_of_nontrivial Ideal.FinrankQuotientMap.linear_independent_of_nontrivial
+#align ideal.finrank_quotient_map.linear_independent_of_nontrivial Ideal.FinrankQuotientMap.linear_independent_of_nontrivial
 
 open Matrix
 
@@ -498,15 +494,13 @@ local notation "e" => ramificationIdx f p P
 of `P` over `p`. -/
 noncomputable instance Quotient.algebraQuotientPowRamificationIdx : Algebra (R ⧸ p) (S ⧸ P ^ e) :=
   Quotient.algebraQuotientOfLeComap (Ideal.map_le_iff_le_comap.mp le_pow_ramification_idx)
-#align
-  ideal.quotient.algebra_quotient_pow_ramification_idx Ideal.Quotient.algebraQuotientPowRamificationIdx
+#align ideal.quotient.algebra_quotient_pow_ramification_idx Ideal.Quotient.algebraQuotientPowRamificationIdx
 
 @[simp]
 theorem Quotient.algebra_map_quotient_pow_ramification_idx (x : R) :
     algebraMap (R ⧸ p) (S ⧸ P ^ e) (Ideal.Quotient.mk p x) = Ideal.Quotient.mk _ (f x) :=
   rfl
-#align
-  ideal.quotient.algebra_map_quotient_pow_ramification_idx Ideal.Quotient.algebra_map_quotient_pow_ramification_idx
+#align ideal.quotient.algebra_map_quotient_pow_ramification_idx Ideal.Quotient.algebra_map_quotient_pow_ramification_idx
 
 variable [hfp : NeZero (ramificationIdx f p P)]
 
@@ -518,8 +512,7 @@ This can't be an instance since the map `f : R → S` is generally not inferrabl
 -/
 def Quotient.algebraQuotientOfRamificationIdxNeZero : Algebra (R ⧸ p) (S ⧸ P) :=
   Quotient.algebraQuotientOfLeComap (le_comap_of_ramification_idx_ne_zero hfp.out)
-#align
-  ideal.quotient.algebra_quotient_of_ramification_idx_ne_zero Ideal.Quotient.algebraQuotientOfRamificationIdxNeZero
+#align ideal.quotient.algebra_quotient_of_ramification_idx_ne_zero Ideal.Quotient.algebraQuotientOfRamificationIdxNeZero
 
 -- In this file, the value for `f` can be inferred.
 attribute [local instance] Ideal.Quotient.algebraQuotientOfRamificationIdxNeZero
@@ -528,8 +521,7 @@ attribute [local instance] Ideal.Quotient.algebraQuotientOfRamificationIdxNeZero
 theorem Quotient.algebra_map_quotient_of_ramification_idx_ne_zero (x : R) :
     algebraMap (R ⧸ p) (S ⧸ P) (Ideal.Quotient.mk p x) = Ideal.Quotient.mk _ (f x) :=
   rfl
-#align
-  ideal.quotient.algebra_map_quotient_of_ramification_idx_ne_zero Ideal.Quotient.algebra_map_quotient_of_ramification_idx_ne_zero
+#align ideal.quotient.algebra_map_quotient_of_ramification_idx_ne_zero Ideal.Quotient.algebra_map_quotient_of_ramification_idx_ne_zero
 
 omit hfp
 
@@ -566,16 +558,14 @@ noncomputable def quotientToQuotientRangePowQuotSuccAux {i : ℕ} {a : S} (a_mem
     ext
     rw [pow_quot_succ_inclusion_apply_coe, Subtype.coe_mk, Submodule.coe_sub, Subtype.coe_mk,
       Subtype.coe_mk, _root_.map_mul, map_sub, sub_mul]
-#align
-  ideal.quotient_to_quotient_range_pow_quot_succ_aux Ideal.quotientToQuotientRangePowQuotSuccAux
+#align ideal.quotient_to_quotient_range_pow_quot_succ_aux Ideal.quotientToQuotientRangePowQuotSuccAux
 
 theorem quotient_to_quotient_range_pow_quot_succ_aux_mk {i : ℕ} {a : S} (a_mem : a ∈ P ^ i)
     (x : S) :
     quotientToQuotientRangePowQuotSuccAux f p P a_mem (Submodule.Quotient.mk x) =
       Submodule.Quotient.mk ⟨_, Ideal.mem_map_of_mem _ (Ideal.mul_mem_left _ x a_mem)⟩ :=
   by apply Quotient.map'_mk'
-#align
-  ideal.quotient_to_quotient_range_pow_quot_succ_aux_mk Ideal.quotient_to_quotient_range_pow_quot_succ_aux_mk
+#align ideal.quotient_to_quotient_range_pow_quot_succ_aux_mk Ideal.quotient_to_quotient_range_pow_quot_succ_aux_mk
 
 include hfp
 
@@ -606,8 +596,7 @@ theorem quotient_to_quotient_range_pow_quot_succ_mk {i : ℕ} {a : S} (a_mem : a
     quotientToQuotientRangePowQuotSucc f p P a_mem (Submodule.Quotient.mk x) =
       Submodule.Quotient.mk ⟨_, Ideal.mem_map_of_mem _ (Ideal.mul_mem_left _ x a_mem)⟩ :=
   quotient_to_quotient_range_pow_quot_succ_aux_mk f p P a_mem x
-#align
-  ideal.quotient_to_quotient_range_pow_quot_succ_mk Ideal.quotient_to_quotient_range_pow_quot_succ_mk
+#align ideal.quotient_to_quotient_range_pow_quot_succ_mk Ideal.quotient_to_quotient_range_pow_quot_succ_mk
 
 theorem quotient_to_quotient_range_pow_quot_succ_injective [IsDomain S] [IsDedekindDomain S]
     [P.IsPrime] {i : ℕ} (hi : i < e) {a : S} (a_mem : a ∈ P ^ i) (a_not_mem : a ∉ P ^ (i + 1)) :
@@ -628,8 +617,7 @@ theorem quotient_to_quotient_range_pow_quot_succ_injective [IsDomain S] [IsDedek
         (Ideal.IsPrime.mul_mem_pow _
               ((Submodule.sub_mem_iff_right _ hz).mp (Pe_le_Pi1 h))).resolve_right
           a_not_mem
-#align
-  ideal.quotient_to_quotient_range_pow_quot_succ_injective Ideal.quotient_to_quotient_range_pow_quot_succ_injective
+#align ideal.quotient_to_quotient_range_pow_quot_succ_injective Ideal.quotient_to_quotient_range_pow_quot_succ_injective
 
 theorem quotient_to_quotient_range_pow_quot_succ_surjective [IsDomain S] [IsDedekindDomain S]
     (hP0 : P ≠ ⊥) [hP : P.IsPrime] {i : ℕ} (hi : i < e) {a : S} (a_mem : a ∈ P ^ i)
@@ -661,8 +649,7 @@ theorem quotient_to_quotient_range_pow_quot_succ_surjective [IsDomain S] [IsDede
     rw [ideal.span_singleton_eq_bot.mp ha] at a_not_mem
     have := (P ^ (i + 1)).zero_mem
     contradiction
-#align
-  ideal.quotient_to_quotient_range_pow_quot_succ_surjective Ideal.quotient_to_quotient_range_pow_quot_succ_surjective
+#align ideal.quotient_to_quotient_range_pow_quot_succ_surjective Ideal.quotient_to_quotient_range_pow_quot_succ_surjective
 
 /-- Quotienting `P^i / P^e` by its subspace `P^(i+1) ⧸ P^e` is
 `R ⧸ p`-linearly isomorphic to `S ⧸ P`. -/
@@ -677,8 +664,7 @@ noncomputable def quotientRangePowQuotSuccInclusionEquiv [IsDomain S] [IsDedekin
   · exact quotient_to_quotient_range_pow_quot_succ f p P a_mem
   · exact quotient_to_quotient_range_pow_quot_succ_injective f p P hi a_mem a_not_mem
   · exact quotient_to_quotient_range_pow_quot_succ_surjective f p P hP hi a_mem a_not_mem
-#align
-  ideal.quotient_range_pow_quot_succ_inclusion_equiv Ideal.quotientRangePowQuotSuccInclusionEquiv
+#align ideal.quotient_range_pow_quot_succ_inclusion_equiv Ideal.quotientRangePowQuotSuccInclusionEquiv
 
 /-- Since the inclusion `(P^(i + 1) / P^e) ⊂ (P^i / P^e)` has a kernel isomorphic to `P / S`,
 `[P^i / P^e : R / p] = [P^(i+1) / P^e : R / p] + [P / S : R / p]` -/

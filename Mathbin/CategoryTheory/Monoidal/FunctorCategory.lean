@@ -49,8 +49,7 @@ def tensorObj : C ⥤ D where
   map X Y f := F.map f ⊗ G.map f
   map_id' X := by rw [F.map_id, G.map_id, tensor_id]
   map_comp' X Y Z f g := by rw [F.map_comp, G.map_comp, tensor_comp]
-#align
-  category_theory.monoidal.functor_category.tensor_obj CategoryTheory.Monoidal.FunctorCategory.tensorObj
+#align category_theory.monoidal.functor_category.tensor_obj CategoryTheory.Monoidal.FunctorCategory.tensorObj
 
 variable {F G F' G'}
 
@@ -67,8 +66,7 @@ def tensorHom : tensorObj F F' ⟶ tensorObj G G'
   naturality' X Y f := by
     dsimp
     rw [← tensor_comp, α.naturality, β.naturality, tensor_comp]
-#align
-  category_theory.monoidal.functor_category.tensor_hom CategoryTheory.Monoidal.FunctorCategory.tensorHom
+#align category_theory.monoidal.functor_category.tensor_hom CategoryTheory.Monoidal.FunctorCategory.tensorHom
 
 end FunctorCategory
 
@@ -121,8 +119,7 @@ instance functorCategoryMonoidal : MonoidalCategory (C ⥤ D)
     rw [associator_naturality]
   triangle' F G := by ext X; dsimp; rw [triangle]
   pentagon' F G H K := by ext X; dsimp; rw [pentagon]
-#align
-  category_theory.monoidal.functor_category_monoidal CategoryTheory.Monoidal.functorCategoryMonoidal
+#align category_theory.monoidal.functor_category_monoidal CategoryTheory.Monoidal.functorCategoryMonoidal
 
 @[simp]
 theorem tensor_unit_obj {X} : (𝟙_ (C ⥤ D)).obj X = 𝟙_ D :=
@@ -223,8 +220,7 @@ instance functorCategoryBraided : BraidedCategory (C ⥤ D)
   hexagon_reverse' F G H := by
     ext X
     apply hexagon_reverse
-#align
-  category_theory.monoidal.functor_category_braided CategoryTheory.Monoidal.functorCategoryBraided
+#align category_theory.monoidal.functor_category_braided CategoryTheory.Monoidal.functorCategoryBraided
 
 example : BraidedCategory (C ⥤ D) :=
   CategoryTheory.Monoidal.functorCategoryBraided
@@ -245,8 +241,7 @@ instance functorCategorySymmetric : SymmetricCategory (C ⥤ D)
     where symmetry' F G := by
     ext X
     apply symmetry
-#align
-  category_theory.monoidal.functor_category_symmetric CategoryTheory.Monoidal.functorCategorySymmetric
+#align category_theory.monoidal.functor_category_symmetric CategoryTheory.Monoidal.functorCategorySymmetric
 
 end SymmetricCategory
 

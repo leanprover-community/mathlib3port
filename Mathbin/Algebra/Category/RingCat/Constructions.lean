@@ -151,8 +151,7 @@ instance CommRing_has_strict_terminal_objects : HasStrictTerminalObjects CommRin
   replace e : 0 * x = 1 * x := congr_arg (fun a => a * x) e
   rw [one_mul, zero_mul, ← f.map_zero] at e
   exact e
-#align
-  CommRing.CommRing_has_strict_terminal_objects CommRingCat.CommRing_has_strict_terminal_objects
+#align CommRing.CommRing_has_strict_terminal_objects CommRingCat.CommRing_has_strict_terminal_objects
 
 theorem subsingleton_of_is_terminal {X : CommRingCat} (hX : IsTerminal X) : Subsingleton X :=
   (hX.uniqueUpToIso punitIsTerminal).commRingIsoToRingEquiv.toEquiv.subsingleton_congr.mpr

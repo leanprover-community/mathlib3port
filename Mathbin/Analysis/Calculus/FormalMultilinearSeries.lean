@@ -87,15 +87,13 @@ def removeZero (p : FormalMultilinearSeries 𝕜 E F) : FormalMultilinearSeries 
 @[simp]
 theorem remove_zero_coeff_zero (p : FormalMultilinearSeries 𝕜 E F) : p.removeZero 0 = 0 :=
   rfl
-#align
-  formal_multilinear_series.remove_zero_coeff_zero FormalMultilinearSeries.remove_zero_coeff_zero
+#align formal_multilinear_series.remove_zero_coeff_zero FormalMultilinearSeries.remove_zero_coeff_zero
 
 @[simp]
 theorem remove_zero_coeff_succ (p : FormalMultilinearSeries 𝕜 E F) (n : ℕ) :
     p.removeZero (n + 1) = p (n + 1) :=
   rfl
-#align
-  formal_multilinear_series.remove_zero_coeff_succ FormalMultilinearSeries.remove_zero_coeff_succ
+#align formal_multilinear_series.remove_zero_coeff_succ FormalMultilinearSeries.remove_zero_coeff_succ
 
 theorem remove_zero_of_pos (p : FormalMultilinearSeries 𝕜 E F) {n : ℕ} (h : 0 < n) :
     p.removeZero n = p n := by
@@ -117,15 +115,13 @@ theorem congr (p : FormalMultilinearSeries 𝕜 E F) {m n : ℕ} {v : Fin m → 
 continuous linear map, gives a new formal multilinear series `p.comp_continuous_linear_map u`. -/
 def compContinuousLinearMap (p : FormalMultilinearSeries 𝕜 F G) (u : E →L[𝕜] F) :
     FormalMultilinearSeries 𝕜 E G := fun n => (p n).compContinuousLinearMap fun i : Fin n => u
-#align
-  formal_multilinear_series.comp_continuous_linear_map FormalMultilinearSeries.compContinuousLinearMap
+#align formal_multilinear_series.comp_continuous_linear_map FormalMultilinearSeries.compContinuousLinearMap
 
 @[simp]
 theorem comp_continuous_linear_map_apply (p : FormalMultilinearSeries 𝕜 F G) (u : E →L[𝕜] F) (n : ℕ)
     (v : Fin n → E) : (p.compContinuousLinearMap u) n v = p n (u ∘ v) :=
   rfl
-#align
-  formal_multilinear_series.comp_continuous_linear_map_apply FormalMultilinearSeries.comp_continuous_linear_map_apply
+#align formal_multilinear_series.comp_continuous_linear_map_apply FormalMultilinearSeries.comp_continuous_linear_map_apply
 
 variable (𝕜) [CommRing 𝕜'] [SMul 𝕜 𝕜']
 
@@ -178,21 +174,18 @@ left gives a new formal multilinear series `f.comp_formal_multilinear_series p` 
 is `f ∘ pₙ`. -/
 def compFormalMultilinearSeries (f : F →L[𝕜] G) (p : FormalMultilinearSeries 𝕜 E F) :
     FormalMultilinearSeries 𝕜 E G := fun n => f.compContinuousMultilinearMap (p n)
-#align
-  continuous_linear_map.comp_formal_multilinear_series ContinuousLinearMap.compFormalMultilinearSeries
+#align continuous_linear_map.comp_formal_multilinear_series ContinuousLinearMap.compFormalMultilinearSeries
 
 @[simp]
 theorem comp_formal_multilinear_series_apply (f : F →L[𝕜] G) (p : FormalMultilinearSeries 𝕜 E F)
     (n : ℕ) : (f.compFormalMultilinearSeries p) n = f.compContinuousMultilinearMap (p n) :=
   rfl
-#align
-  continuous_linear_map.comp_formal_multilinear_series_apply ContinuousLinearMap.comp_formal_multilinear_series_apply
+#align continuous_linear_map.comp_formal_multilinear_series_apply ContinuousLinearMap.comp_formal_multilinear_series_apply
 
 theorem comp_formal_multilinear_series_apply' (f : F →L[𝕜] G) (p : FormalMultilinearSeries 𝕜 E F)
     (n : ℕ) (v : Fin n → E) : (f.compFormalMultilinearSeries p) n v = f (p n v) :=
   rfl
-#align
-  continuous_linear_map.comp_formal_multilinear_series_apply' ContinuousLinearMap.comp_formal_multilinear_series_apply'
+#align continuous_linear_map.comp_formal_multilinear_series_apply' ContinuousLinearMap.comp_formal_multilinear_series_apply'
 
 end ContinuousLinearMap
 
@@ -217,8 +210,7 @@ theorem order_zero : (0 : FormalMultilinearSeries 𝕜 E F).order = 0 := by simp
 #align formal_multilinear_series.order_zero FormalMultilinearSeries.order_zero
 
 theorem ne_zero_of_order_ne_zero (hp : p.order ≠ 0) : p ≠ 0 := fun h => by simpa [h] using hp
-#align
-  formal_multilinear_series.ne_zero_of_order_ne_zero FormalMultilinearSeries.ne_zero_of_order_ne_zero
+#align formal_multilinear_series.ne_zero_of_order_ne_zero FormalMultilinearSeries.ne_zero_of_order_ne_zero
 
 theorem order_eq_find [DecidablePred fun n => p n ≠ 0] (hp : ∃ n, p n ≠ 0) :
     p.order = Nat.find hp := by simp [order, Inf, hp]
@@ -257,8 +249,7 @@ theorem apply_eq_zero_of_lt_order (hp : n < p.order) : p n = 0 :=
     classical
       rw [order_eq_find' h] at hp
       simpa using Nat.find_min _ hp
-#align
-  formal_multilinear_series.apply_eq_zero_of_lt_order FormalMultilinearSeries.apply_eq_zero_of_lt_order
+#align formal_multilinear_series.apply_eq_zero_of_lt_order FormalMultilinearSeries.apply_eq_zero_of_lt_order
 
 end Order
 
@@ -284,8 +275,7 @@ theorem apply_eq_prod_smul_coeff : p n y = (∏ i, y i) • p.coeff n :=
   by
   convert (p n).toMultilinearMap.map_smul_univ y 1
   funext <;> simp only [Pi.one_apply, Algebra.id.smul_eq_mul, mul_one]
-#align
-  formal_multilinear_series.apply_eq_prod_smul_coeff FormalMultilinearSeries.apply_eq_prod_smul_coeff
+#align formal_multilinear_series.apply_eq_prod_smul_coeff FormalMultilinearSeries.apply_eq_prod_smul_coeff
 
 theorem coeff_eq_zero : p.coeff n = 0 ↔ p n = 0 := by
   rw [← mk_pi_field_coeff_eq p, ContinuousMultilinearMap.mk_pi_field_eq_zero_iff]
@@ -293,14 +283,12 @@ theorem coeff_eq_zero : p.coeff n = 0 ↔ p n = 0 := by
 
 @[simp]
 theorem apply_eq_pow_smul_coeff : (p n fun _ => z) = z ^ n • p.coeff n := by simp
-#align
-  formal_multilinear_series.apply_eq_pow_smul_coeff FormalMultilinearSeries.apply_eq_pow_smul_coeff
+#align formal_multilinear_series.apply_eq_pow_smul_coeff FormalMultilinearSeries.apply_eq_pow_smul_coeff
 
 @[simp]
 theorem norm_apply_eq_norm_coef : ‖p n‖ = ‖coeff p n‖ := by
   rw [← mk_pi_field_coeff_eq p, ContinuousMultilinearMap.norm_mk_pi_field]
-#align
-  formal_multilinear_series.norm_apply_eq_norm_coef FormalMultilinearSeries.norm_apply_eq_norm_coef
+#align formal_multilinear_series.norm_apply_eq_norm_coef FormalMultilinearSeries.norm_apply_eq_norm_coef
 
 end Coef
 

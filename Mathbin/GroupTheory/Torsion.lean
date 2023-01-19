@@ -245,10 +245,8 @@ variable {G} {p}
 @[to_additive "Elements of the `p`-primary component have additive order `p^n` for some `n`"]
 theorem primaryComponent.exists_order_of_eq_prime_pow (g : CommMonoid.primaryComponent G p) :
     ∃ n : ℕ, orderOf g = p ^ n := by simpa [primary_component] using g.property
-#align
-  comm_monoid.primary_component.exists_order_of_eq_prime_pow CommMonoid.primaryComponent.exists_order_of_eq_prime_pow
-#align
-  add_comm_monoid.primary_component.exists_order_of_eq_prime_nsmul AddCommMonoid.primaryComponent.exists_order_of_eq_prime_nsmul
+#align comm_monoid.primary_component.exists_order_of_eq_prime_pow CommMonoid.primaryComponent.exists_order_of_eq_prime_pow
+#align add_comm_monoid.primary_component.exists_order_of_eq_prime_nsmul AddCommMonoid.primaryComponent.exists_order_of_eq_prime_nsmul
 
 /-- The `p`- and `q`-primary components are disjoint for `p ≠ q`. -/
 @[to_additive "The `p`- and `q`-primary components are disjoint for `p ≠ q`."]
@@ -316,8 +314,7 @@ def torsion : Subgroup G :=
 theorem torsion_eq_torsion_submonoid : CommMonoid.torsion G = (torsion G).toSubmonoid :=
   rfl
 #align comm_group.torsion_eq_torsion_submonoid CommGroup.torsion_eq_torsion_submonoid
-#align
-  add_comm_group.add_torsion_eq_add_torsion_submonoid AddCommGroup.add_torsion_eq_add_torsion_submonoid
+#align add_comm_group.add_torsion_eq_add_torsion_submonoid AddCommGroup.add_torsion_eq_add_torsion_submonoid
 
 variable (p : ℕ) [hp : Fact p.Prime]
 

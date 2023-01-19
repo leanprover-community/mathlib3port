@@ -1698,8 +1698,7 @@ unsafe def synthesize_tactic_state_with_variables_as_hyps (es : List pexpr) :
       let mappings ← add_local_consts_as_local_hyps all_implicitly_included_vars
       let ts ← get_state
       return (ts, mappings)
-#align
-  lean.parser.synthesize_tactic_state_with_variables_as_hyps lean.parser.synthesize_tactic_state_with_variables_as_hyps
+#align lean.parser.synthesize_tactic_state_with_variables_as_hyps lean.parser.synthesize_tactic_state_with_variables_as_hyps
 
 end Lean.Parser
 

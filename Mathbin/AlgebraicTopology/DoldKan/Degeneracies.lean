@@ -54,8 +54,7 @@ theorem HigherFacesVanish.comp_σ {Y : C} {X : SimplicialObject C} {n b q : ℕ}
   · simp only [Fin.lt_iff_val_lt_val, Nat.lt_iff_add_one_le, Fin.succ_mk, Fin.val_mk, Fin.val_succ,
       add_le_add_iff_right]
     linarith
-#align
-  algebraic_topology.dold_kan.higher_faces_vanish.comp_σ AlgebraicTopology.DoldKan.HigherFacesVanish.comp_σ
+#align algebraic_topology.dold_kan.higher_faces_vanish.comp_σ AlgebraicTopology.DoldKan.HigherFacesVanish.comp_σ
 
 theorem σ_comp_P_eq_zero (X : SimplicialObject C) {n q : ℕ} (i : Fin (n + 1)) (hi : n + 1 ≤ i + q) :
     X.σ i ≫ (p q).f (n + 1) = 0 :=
@@ -145,8 +144,7 @@ theorem degeneracy_comp_P_infty (X : SimplicialObject C) (n : ℕ) {Δ' : Simple
   · obtain ⟨i, α, h⟩ := SimplexCategory.eq_σ_comp_of_not_injective θ hθ
     rw [h, op_comp, X.map_comp, assoc, show X.map (SimplexCategory.σ i).op = X.σ i by rfl,
       σ_comp_P_infty, comp_zero]
-#align
-  algebraic_topology.dold_kan.degeneracy_comp_P_infty AlgebraicTopology.DoldKan.degeneracy_comp_P_infty
+#align algebraic_topology.dold_kan.degeneracy_comp_P_infty AlgebraicTopology.DoldKan.degeneracy_comp_P_infty
 
 end DoldKan
 

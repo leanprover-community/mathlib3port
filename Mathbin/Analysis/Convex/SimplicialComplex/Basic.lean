@@ -87,8 +87,7 @@ theorem mem_space_iff : x ∈ K.space ↔ ∃ s ∈ K.faces, x ∈ convexHull �
 
 theorem convex_hull_subset_space (hs : s ∈ K.faces) : convexHull 𝕜 ↑s ⊆ K.space :=
   subset_bunionᵢ_of_mem hs
-#align
-  geometry.simplicial_complex.convex_hull_subset_space Geometry.SimplicialComplex.convex_hull_subset_space
+#align geometry.simplicial_complex.convex_hull_subset_space Geometry.SimplicialComplex.convex_hull_subset_space
 
 protected theorem subset_space (hs : s ∈ K.faces) : (s : Set E) ⊆ K.space :=
   (subset_convex_hull 𝕜 _).trans <| convex_hull_subset_space hs
@@ -99,8 +98,7 @@ theorem convex_hull_inter_convex_hull (hs : s ∈ K.faces) (ht : t ∈ K.faces) 
   (K.inter_subset_convex_hull hs ht).antisymm <|
     subset_inter (convex_hull_mono <| Set.inter_subset_left _ _) <|
       convex_hull_mono <| Set.inter_subset_right _ _
-#align
-  geometry.simplicial_complex.convex_hull_inter_convex_hull Geometry.SimplicialComplex.convex_hull_inter_convex_hull
+#align geometry.simplicial_complex.convex_hull_inter_convex_hull Geometry.SimplicialComplex.convex_hull_inter_convex_hull
 
 /-- The conclusion is the usual meaning of "glue nicely" in textbooks. It turns out to be quite
 unusable, as it's about faces as sets in space rather than simplices. Further,  additional structure
@@ -119,8 +117,7 @@ theorem disjoint_or_exists_inter_eq_convex_hull (hs : s ∈ K.faces) (ht : t ∈
     · rw [← coe_inter, hst, coe_empty, convex_hull_empty]
       rfl
     · rw [coe_inter, convex_hull_inter_convex_hull hs ht]
-#align
-  geometry.simplicial_complex.disjoint_or_exists_inter_eq_convex_hull Geometry.SimplicialComplex.disjoint_or_exists_inter_eq_convex_hull
+#align geometry.simplicial_complex.disjoint_or_exists_inter_eq_convex_hull Geometry.SimplicialComplex.disjoint_or_exists_inter_eq_convex_hull
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (s t «expr ∈ » faces) -/
@@ -174,8 +171,7 @@ theorem vertices_eq : K.vertices = ⋃ k ∈ K.faces, (k : Set E) :=
 
 theorem vertices_subset_space : K.vertices ⊆ K.space :=
   vertices_eq.Subset.trans <| Union₂_mono fun x hx => subset_convex_hull 𝕜 x
-#align
-  geometry.simplicial_complex.vertices_subset_space Geometry.SimplicialComplex.vertices_subset_space
+#align geometry.simplicial_complex.vertices_subset_space Geometry.SimplicialComplex.vertices_subset_space
 
 theorem vertex_mem_convex_hull_iff (hx : x ∈ K.vertices) (hs : s ∈ K.faces) :
     x ∈ convexHull 𝕜 (s : Set E) ↔ x ∈ s :=
@@ -187,8 +183,7 @@ theorem vertex_mem_convex_hull_iff (hx : x ∈ K.vertices) (hs : s ∈ K.faces) 
     rwa [← coe_inter,
       Finset.disjoint_iff_inter_eq_empty.1 (Finset.disjoint_singleton_right.2 H).symm, coe_empty,
       convex_hull_empty] at h
-#align
-  geometry.simplicial_complex.vertex_mem_convex_hull_iff Geometry.SimplicialComplex.vertex_mem_convex_hull_iff
+#align geometry.simplicial_complex.vertex_mem_convex_hull_iff Geometry.SimplicialComplex.vertex_mem_convex_hull_iff
 
 /-- A face is a subset of another one iff its vertices are.  -/
 theorem face_subset_face_iff (hs : s ∈ K.faces) (ht : t ∈ K.faces) :
@@ -198,8 +193,7 @@ theorem face_subset_face_iff (hs : s ∈ K.faces) (ht : t ∈ K.faces) :
           (K.down_closed hs (Finset.singleton_subset_iff.2 hxs) <| singleton_ne_empty _) ht).1
       (h (subset_convex_hull 𝕜 (↑s) hxs)),
     convex_hull_mono⟩
-#align
-  geometry.simplicial_complex.face_subset_face_iff Geometry.SimplicialComplex.face_subset_face_iff
+#align geometry.simplicial_complex.face_subset_face_iff Geometry.SimplicialComplex.face_subset_face_iff
 
 /-! ### Facets -/
 
@@ -226,8 +220,7 @@ theorem not_facet_iff_subface (hs : s ∈ K.faces) : s ∉ K.facets ↔ ∃ t, t
     have := hs' ht.1 ht.2.1
     rw [this] at ht
     exact ht.2.2 (subset.refl t)
-#align
-  geometry.simplicial_complex.not_facet_iff_subface Geometry.SimplicialComplex.not_facet_iff_subface
+#align geometry.simplicial_complex.not_facet_iff_subface Geometry.SimplicialComplex.not_facet_iff_subface
 
 /-!
 ### The semilattice of simplicial complexes

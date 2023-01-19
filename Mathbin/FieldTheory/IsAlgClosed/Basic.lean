@@ -163,21 +163,18 @@ theorem algebra_map_surjective_of_is_integral {k K : Type _} [Field k] [Ring K] 
   rw [eq_X_add_C_of_degree_eq_one h, hq, C_1, one_mul, aeval_add, aeval_X, aeval_C,
     add_eq_zero_iff_eq_neg] at this
   exact (RingHom.map_neg (algebraMap k K) ((minpoly k x).coeff 0)).symm ▸ this.symm
-#align
-  is_alg_closed.algebra_map_surjective_of_is_integral IsAlgClosed.algebra_map_surjective_of_is_integral
+#align is_alg_closed.algebra_map_surjective_of_is_integral IsAlgClosed.algebra_map_surjective_of_is_integral
 
 theorem algebra_map_surjective_of_is_integral' {k K : Type _} [Field k] [CommRing K] [IsDomain K]
     [hk : IsAlgClosed k] (f : k →+* K) (hf : f.IsIntegral) : Function.Surjective f :=
   @algebra_map_surjective_of_is_integral k K _ _ _ _ f.toAlgebra hf
-#align
-  is_alg_closed.algebra_map_surjective_of_is_integral' IsAlgClosed.algebra_map_surjective_of_is_integral'
+#align is_alg_closed.algebra_map_surjective_of_is_integral' IsAlgClosed.algebra_map_surjective_of_is_integral'
 
 theorem algebra_map_surjective_of_is_algebraic {k K : Type _} [Field k] [Ring K] [IsDomain K]
     [hk : IsAlgClosed k] [Algebra k K] (hf : Algebra.IsAlgebraic k K) :
     Function.Surjective (algebraMap k K) :=
   algebra_map_surjective_of_is_integral (Algebra.is_algebraic_iff_is_integral.mp hf)
-#align
-  is_alg_closed.algebra_map_surjective_of_is_algebraic IsAlgClosed.algebra_map_surjective_of_is_algebraic
+#align is_alg_closed.algebra_map_surjective_of_is_algebraic IsAlgClosed.algebra_map_surjective_of_is_algebraic
 
 end IsAlgClosed
 
@@ -278,15 +275,13 @@ theorem maximal_subfield_with_hom_chain_bounded (c : Set (SubfieldWithHom K L M 
   else by
     rw [Set.not_nonempty_iff_eq_empty] at hcn
     simp [hcn]
-#align
-  lift.subfield_with_hom.maximal_subfield_with_hom_chain_bounded lift.SubfieldWithHom.maximal_subfield_with_hom_chain_bounded
+#align lift.subfield_with_hom.maximal_subfield_with_hom_chain_bounded lift.SubfieldWithHom.maximal_subfield_with_hom_chain_bounded
 
 variable (hL M)
 
 theorem exists_maximal_subfield_with_hom : ∃ E : SubfieldWithHom K L M hL, ∀ N, E ≤ N → N ≤ E :=
   exists_maximal_of_chains_bounded maximal_subfield_with_hom_chain_bounded fun _ _ _ => le_trans
-#align
-  lift.subfield_with_hom.exists_maximal_subfield_with_hom lift.SubfieldWithHom.exists_maximal_subfield_with_hom
+#align lift.subfield_with_hom.exists_maximal_subfield_with_hom lift.SubfieldWithHom.exists_maximal_subfield_with_hom
 
 /-- The maximal `subfield_with_hom`. We later prove that this is equal to `⊤`. -/
 noncomputable def maximalSubfieldWithHom : SubfieldWithHom K L M hL :=
@@ -297,8 +292,7 @@ theorem maximal_subfield_with_hom_is_maximal :
     ∀ N : SubfieldWithHom K L M hL,
       maximalSubfieldWithHom M hL ≤ N → N ≤ maximalSubfieldWithHom M hL :=
   Classical.choose_spec (exists_maximal_subfield_with_hom M hL)
-#align
-  lift.subfield_with_hom.maximal_subfield_with_hom_is_maximal lift.SubfieldWithHom.maximal_subfield_with_hom_is_maximal
+#align lift.subfield_with_hom.maximal_subfield_with_hom_is_maximal lift.SubfieldWithHom.maximal_subfield_with_hom_is_maximal
 
 theorem maximal_subfield_with_hom_eq_top : (maximalSubfieldWithHom M hL).carrier = ⊤ :=
   by
@@ -333,8 +327,7 @@ theorem maximal_subfield_with_hom_eq_top : (maximalSubfieldWithHom M hL).carrier
     simp only [O', restrict_scalars_apply, AlgHom.commutes]
   refine' (maximal_subfield_with_hom_is_maximal M hL O' hO').fst _
   exact Algebra.subset_adjoin (Set.mem_singleton x)
-#align
-  lift.subfield_with_hom.maximal_subfield_with_hom_eq_top lift.SubfieldWithHom.maximal_subfield_with_hom_eq_top
+#align lift.subfield_with_hom.maximal_subfield_with_hom_eq_top lift.SubfieldWithHom.maximal_subfield_with_hom_eq_top
 
 end SubfieldWithHom
 
@@ -535,8 +528,7 @@ theorem equiv_of_equiv_symm_comp_algebra_map (hSR : S ≃+* R) :
     ((equivOfEquiv L M hSR).symm : M →+* L).comp (algebraMap R M) =
       (algebraMap S L).comp hSR.symm :=
   RingHom.ext_iff.2 (equiv_of_equiv_symm_algebra_map L M hSR)
-#align
-  is_alg_closure.equiv_of_equiv_symm_comp_algebra_map IsAlgClosure.equiv_of_equiv_symm_comp_algebra_map
+#align is_alg_closure.equiv_of_equiv_symm_comp_algebra_map IsAlgClosure.equiv_of_equiv_symm_comp_algebra_map
 
 end EquivOfEquiv
 
@@ -566,6 +558,5 @@ theorem Algebra.IsAlgebraic.range_eval_eq_root_set_minpoly {F K} (A) [Field F] [
     ⟨ψ₀.restrict_scalars F,
       (congr_arg ψ₀ (AdjoinRoot.lift_root hx).symm).trans <|
         (ψ₀.commutes _).trans <| AdjoinRoot.lift_root ha⟩
-#align
-  algebra.is_algebraic.range_eval_eq_root_set_minpoly Algebra.IsAlgebraic.range_eval_eq_root_set_minpoly
+#align algebra.is_algebraic.range_eval_eq_root_set_minpoly Algebra.IsAlgebraic.range_eval_eq_root_set_minpoly
 

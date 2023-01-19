@@ -114,8 +114,7 @@ theorem evariance_eq_lintegral_of_real (X : Ω → ℝ) (μ : Measure Ω) :
   rw [pow_two, ← Ennreal.coe_mul, ← nnnorm_mul, ← pow_two]
   congr
   exact (Real.to_nnreal_eq_nnnorm_of_nonneg <| sq_nonneg _).symm
-#align
-  probability_theory.evariance_eq_lintegral_of_real ProbabilityTheory.evariance_eq_lintegral_of_real
+#align probability_theory.evariance_eq_lintegral_of_real ProbabilityTheory.evariance_eq_lintegral_of_real
 
 theorem MeasureTheory.Memℒp.variance_eq_of_integral_eq_zero (hX : Memℒp X 2 μ) (hXint : μ[X] = 0) :
     variance X μ = μ[X ^ 2] :=
@@ -130,8 +129,7 @@ theorem MeasureTheory.Memℒp.variance_eq_of_integral_eq_zero (hX : Memℒp X 2 
     simp only [Pi.sub_apply, Real.norm_eq_abs, Ennreal.to_real_bit0, Ennreal.one_to_real,
       Real.rpow_two, pow_bit0_abs]
   · exact ae_of_all _ fun ω => pow_two_nonneg _
-#align
-  measure_theory.mem_ℒp.variance_eq_of_integral_eq_zero MeasureTheory.Memℒp.variance_eq_of_integral_eq_zero
+#align measure_theory.mem_ℒp.variance_eq_of_integral_eq_zero MeasureTheory.Memℒp.variance_eq_of_integral_eq_zero
 
 theorem MeasureTheory.Memℒp.variance_eq [IsFiniteMeasure μ] (hX : Memℒp X 2 μ) :
     variance X μ = μ[(X - fun ω => μ[X]) ^ 2] :=

@@ -200,14 +200,12 @@ theorem IsDiag.from_blocks_of_is_symm [Zero α] {A : Matrix m m α} {C : Matrix 
 theorem mul_transpose_self_is_diag_iff_has_orthogonal_rows [Fintype n] [Mul α] [AddCommMonoid α]
     {A : Matrix m n α} : (A ⬝ Aᵀ).IsDiag ↔ A.HasOrthogonalRows :=
   Iff.rfl
-#align
-  matrix.mul_transpose_self_is_diag_iff_has_orthogonal_rows Matrix.mul_transpose_self_is_diag_iff_has_orthogonal_rows
+#align matrix.mul_transpose_self_is_diag_iff_has_orthogonal_rows Matrix.mul_transpose_self_is_diag_iff_has_orthogonal_rows
 
 theorem transpose_mul_self_is_diag_iff_has_orthogonal_cols [Fintype m] [Mul α] [AddCommMonoid α]
     {A : Matrix m n α} : (Aᵀ ⬝ A).IsDiag ↔ A.HasOrthogonalCols :=
   Iff.rfl
-#align
-  matrix.transpose_mul_self_is_diag_iff_has_orthogonal_cols Matrix.transpose_mul_self_is_diag_iff_has_orthogonal_cols
+#align matrix.transpose_mul_self_is_diag_iff_has_orthogonal_cols Matrix.transpose_mul_self_is_diag_iff_has_orthogonal_cols
 
 end Matrix
 

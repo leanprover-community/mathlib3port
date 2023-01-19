@@ -116,8 +116,7 @@ theorem squarefree_iff_multiplicity_le_one (r : R) :
   refine' forall_congr' fun a => _
   rw [← sq, pow_dvd_iff_le_multiplicity, or_iff_not_imp_left, not_le, imp_congr _ Iff.rfl]
   simpa using PartEnat.add_one_le_iff_lt (PartEnat.coe_ne_top 1)
-#align
-  multiplicity.squarefree_iff_multiplicity_le_one multiplicity.squarefree_iff_multiplicity_le_one
+#align multiplicity.squarefree_iff_multiplicity_le_one multiplicity.squarefree_iff_multiplicity_le_one
 
 end CommMonoid
 
@@ -173,22 +172,19 @@ theorem irreducible_sq_not_dvd_iff_eq_zero_and_no_irreducibles_or_squarefree (r 
     simpa only [zero_dvd_iff, mul_zero] using hx
   obtain ⟨j, hj₁, hj₂⟩ := WfDvdMonoid.exists_irreducible_factor i this
   exact h _ hj₁ ((mul_dvd_mul hj₂ hj₂).trans hx)
-#align
-  irreducible_sq_not_dvd_iff_eq_zero_and_no_irreducibles_or_squarefree irreducible_sq_not_dvd_iff_eq_zero_and_no_irreducibles_or_squarefree
+#align irreducible_sq_not_dvd_iff_eq_zero_and_no_irreducibles_or_squarefree irreducible_sq_not_dvd_iff_eq_zero_and_no_irreducibles_or_squarefree
 
 theorem squarefree_iff_irreducible_sq_not_dvd_of_ne_zero {r : R} (hr : r ≠ 0) :
     Squarefree r ↔ ∀ x : R, Irreducible x → ¬x * x ∣ r := by
   simpa [hr] using (irreducible_sq_not_dvd_iff_eq_zero_and_no_irreducibles_or_squarefree r).symm
-#align
-  squarefree_iff_irreducible_sq_not_dvd_of_ne_zero squarefree_iff_irreducible_sq_not_dvd_of_ne_zero
+#align squarefree_iff_irreducible_sq_not_dvd_of_ne_zero squarefree_iff_irreducible_sq_not_dvd_of_ne_zero
 
 theorem squarefree_iff_irreducible_sq_not_dvd_of_exists_irreducible {r : R}
     (hr : ∃ x : R, Irreducible x) : Squarefree r ↔ ∀ x : R, Irreducible x → ¬x * x ∣ r :=
   by
   rw [irreducible_sq_not_dvd_iff_eq_zero_and_no_irreducibles_or_squarefree, ← not_exists]
   simp only [hr, not_true, false_or_iff, and_false_iff]
-#align
-  squarefree_iff_irreducible_sq_not_dvd_of_exists_irreducible squarefree_iff_irreducible_sq_not_dvd_of_exists_irreducible
+#align squarefree_iff_irreducible_sq_not_dvd_of_exists_irreducible squarefree_iff_irreducible_sq_not_dvd_of_exists_irreducible
 
 end Irreducible
 
@@ -266,16 +262,14 @@ theorem squarefree_iff_nodup_normalized_factors [NormalizationMonoid R] [Decidab
     rw [multiplicity_eq_count_normalized_factors hib x0]
     specialize h (normalize b)
     assumption_mod_cast
-#align
-  unique_factorization_monoid.squarefree_iff_nodup_normalized_factors UniqueFactorizationMonoid.squarefree_iff_nodup_normalized_factors
+#align unique_factorization_monoid.squarefree_iff_nodup_normalized_factors UniqueFactorizationMonoid.squarefree_iff_nodup_normalized_factors
 
 theorem dvd_pow_iff_dvd_of_squarefree {x y : R} {n : ℕ} (hsq : Squarefree x) (h0 : n ≠ 0) :
     x ∣ y ^ n ↔ x ∣ y := by
   classical
     haveI := UniqueFactorizationMonoid.toGcdMonoid R
     exact ⟨hsq.is_radical n y, fun h => h.pow h0⟩
-#align
-  unique_factorization_monoid.dvd_pow_iff_dvd_of_squarefree UniqueFactorizationMonoid.dvd_pow_iff_dvd_of_squarefree
+#align unique_factorization_monoid.dvd_pow_iff_dvd_of_squarefree UniqueFactorizationMonoid.dvd_pow_iff_dvd_of_squarefree
 
 end UniqueFactorizationMonoid
 

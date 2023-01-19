@@ -405,15 +405,13 @@ def truncate {m : ℕ} (hm : n ≤ m) : TruncatedWittVector p m R →+* Truncate
 theorem truncate_comp_witt_vector_truncate {m : ℕ} (hm : n ≤ m) :
     (@truncate p _ n R _ m hm).comp (WittVector.truncate m) = WittVector.truncate n :=
   RingHom.lift_of_right_inverse_comp _ _ _ _
-#align
-  truncated_witt_vector.truncate_comp_witt_vector_truncate TruncatedWittVector.truncate_comp_witt_vector_truncate
+#align truncated_witt_vector.truncate_comp_witt_vector_truncate TruncatedWittVector.truncate_comp_witt_vector_truncate
 
 @[simp]
 theorem truncate_witt_vector_truncate {m : ℕ} (hm : n ≤ m) (x : 𝕎 R) :
     truncate hm (WittVector.truncate m x) = WittVector.truncate n x :=
   RingHom.lift_of_right_inverse_comp_apply _ _ _ _ _
-#align
-  truncated_witt_vector.truncate_witt_vector_truncate TruncatedWittVector.truncate_witt_vector_truncate
+#align truncated_witt_vector.truncate_witt_vector_truncate TruncatedWittVector.truncate_witt_vector_truncate
 
 @[simp]
 theorem truncate_truncate {n₁ n₂ n₃ : ℕ} (h1 : n₁ ≤ n₂) (h2 : n₂ ≤ n₃)

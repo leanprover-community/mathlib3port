@@ -460,8 +460,7 @@ def Submonoid.commMonoidTopologicalClosure [T2Space M] (s : Submonoid M)
       Subtype.ext <|
         eq_on_closure₂ this continuous_mul (continuous_snd.mul continuous_fst) x hx y hy }
 #align submonoid.comm_monoid_topological_closure Submonoid.commMonoidTopologicalClosure
-#align
-  add_submonoid.add_comm_monoid_topological_closure AddSubmonoid.add_comm_monoid_topological_closure
+#align add_submonoid.add_comm_monoid_topological_closure AddSubmonoid.add_comm_monoid_topological_closure
 
 @[to_additive exists_open_nhds_zero_half]
 theorem exists_open_nhds_one_split {s : Set M} (hs : s ∈ 𝓝 (1 : M)) :

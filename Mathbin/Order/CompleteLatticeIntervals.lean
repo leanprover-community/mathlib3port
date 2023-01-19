@@ -192,8 +192,7 @@ conditionally complete linear order. -/
 noncomputable instance ordConnectedSubsetConditionallyCompleteLinearOrder [Inhabited s]
     [OrdConnected s] : ConditionallyCompleteLinearOrder s :=
   subsetConditionallyCompleteLinearOrder s supₛ_within_of_ordConnected infₛ_within_of_ordConnected
-#align
-  ord_connected_subset_conditionally_complete_linear_order ordConnectedSubsetConditionallyCompleteLinearOrder
+#align ord_connected_subset_conditionally_complete_linear_order ordConnectedSubsetConditionallyCompleteLinearOrder
 -/
 
 end OrdConnected

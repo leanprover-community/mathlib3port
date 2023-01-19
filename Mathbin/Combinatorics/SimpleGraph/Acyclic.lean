@@ -77,13 +77,11 @@ theorem is_acyclic_iff_forall_adj_is_bridge :
       apply hb.2 _ hp
       rw [walk.edges_cons]
       apply List.mem_cons_self
-#align
-  simple_graph.is_acyclic_iff_forall_adj_is_bridge SimpleGraph.is_acyclic_iff_forall_adj_is_bridge
+#align simple_graph.is_acyclic_iff_forall_adj_is_bridge SimpleGraph.is_acyclic_iff_forall_adj_is_bridge
 
 theorem is_acyclic_iff_forall_edge_is_bridge : G.IsAcyclic ↔ ∀ ⦃e⦄, e ∈ G.edgeSet → G.IsBridge e :=
   by simp [is_acyclic_iff_forall_adj_is_bridge, Sym2.forall]
-#align
-  simple_graph.is_acyclic_iff_forall_edge_is_bridge SimpleGraph.is_acyclic_iff_forall_edge_is_bridge
+#align simple_graph.is_acyclic_iff_forall_edge_is_bridge SimpleGraph.is_acyclic_iff_forall_edge_is_bridge
 
 theorem IsAcyclic.path_unique {G : SimpleGraph V} (h : G.IsAcyclic) {v w : V} (p q : G.Path v w) :
     p = q := by

@@ -178,8 +178,7 @@ def invariantsEquivFdRepHom (X Y : FdRep k G) : (linHom X.ρ Y.ρ).invariants �
   by
   rw [← FdRep.forget₂_ρ, ← FdRep.forget₂_ρ]
   exact lin_hom.invariants_equiv_Rep_hom _ _ ≪≫ₗ FdRep.forget₂HomLinearEquiv X Y
-#align
-  representation.lin_hom.invariants_equiv_fdRep_hom Representation.linHom.invariantsEquivFdRepHom
+#align representation.lin_hom.invariants_equiv_fdRep_hom Representation.linHom.invariantsEquivFdRepHom
 
 end FdRep
 

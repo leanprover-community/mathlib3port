@@ -233,8 +233,7 @@ theorem maximal_ideal_iff_is_field_quotient (I : Ideal R) : I.IsMaximal ↔ IsFi
     letI := @quotient.field _ _ I h
     Field.toIsField _,
     maximalOfIsField _⟩
-#align
-  ideal.quotient.maximal_ideal_iff_is_field_quotient Ideal.Quotient.maximal_ideal_iff_is_field_quotient
+#align ideal.quotient.maximal_ideal_iff_is_field_quotient Ideal.Quotient.maximal_ideal_iff_is_field_quotient
 
 variable [CommRing S]
 
@@ -522,8 +521,7 @@ theorem fst_comp_quotient_inf_equiv_quotient_prod (I J : Ideal R) (coprime : I �
         (quotientInfEquivQuotientProd I J coprime : R ⧸ I ⊓ J →+* (R ⧸ I) × R ⧸ J) =
       Ideal.Quotient.factor (I ⊓ J) I inf_le_left :=
   by ext <;> rfl
-#align
-  ideal.fst_comp_quotient_inf_equiv_quotient_prod Ideal.fst_comp_quotient_inf_equiv_quotient_prod
+#align ideal.fst_comp_quotient_inf_equiv_quotient_prod Ideal.fst_comp_quotient_inf_equiv_quotient_prod
 
 @[simp]
 theorem snd_comp_quotient_inf_equiv_quotient_prod (I J : Ideal R) (coprime : I ⊔ J = ⊤) :
@@ -531,8 +529,7 @@ theorem snd_comp_quotient_inf_equiv_quotient_prod (I J : Ideal R) (coprime : I �
         (quotientInfEquivQuotientProd I J coprime : R ⧸ I ⊓ J →+* (R ⧸ I) × R ⧸ J) =
       Ideal.Quotient.factor (I ⊓ J) J inf_le_right :=
   by ext <;> rfl
-#align
-  ideal.snd_comp_quotient_inf_equiv_quotient_prod Ideal.snd_comp_quotient_inf_equiv_quotient_prod
+#align ideal.snd_comp_quotient_inf_equiv_quotient_prod Ideal.snd_comp_quotient_inf_equiv_quotient_prod
 
 end Ideal
 

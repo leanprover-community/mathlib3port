@@ -220,8 +220,7 @@ theorem exists_perfect_nonempty_of_is_closed_of_not_countable [SecondCountableTo
     contradiction
   rw [VD]
   exact subset_union_right _ _
-#align
-  exists_perfect_nonempty_of_is_closed_of_not_countable exists_perfect_nonempty_of_is_closed_of_not_countable
+#align exists_perfect_nonempty_of_is_closed_of_not_countable exists_perfect_nonempty_of_is_closed_of_not_countable
 
 end Kernel
 

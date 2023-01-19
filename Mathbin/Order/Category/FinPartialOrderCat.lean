@@ -117,6 +117,5 @@ theorem FinPartialOrder_dual_comp_forget_to_PartialOrder :
     FinPartialOrderCat.dual ⋙ forget₂ FinPartialOrderCat PartialOrderCat =
       forget₂ FinPartialOrderCat PartialOrderCat ⋙ PartialOrderCat.dual :=
   rfl
-#align
-  FinPartialOrder_dual_comp_forget_to_PartialOrder FinPartialOrder_dual_comp_forget_to_PartialOrder
+#align FinPartialOrder_dual_comp_forget_to_PartialOrder FinPartialOrder_dual_comp_forget_to_PartialOrder
 

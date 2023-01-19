@@ -118,8 +118,7 @@ namespace commMonTypeEquivalenceCommMon
 instance commMonCommMonoid (A : CommMon_ (Type u)) : CommMonoid A.x :=
   { MonTypeEquivalenceMon.monMonoid A.toMon_ with
     mul_comm := fun x y => by convert congr_fun A.mul_comm (y, x) }
-#align
-  CommMon_Type_equivalence_CommMon.CommMon_comm_monoid CommMonTypeEquivalenceCommMon.commMonCommMonoid
+#align CommMon_Type_equivalence_CommMon.CommMon_comm_monoid CommMonTypeEquivalenceCommMon.commMonCommMonoid
 
 /-- Converting a commutative monoid object in `Type` to a bundled commutative monoid.
 -/

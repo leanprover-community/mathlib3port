@@ -66,8 +66,7 @@ theorem Submartingale.expected_stopped_value_mono [SigmaFiniteFiltration μ 𝒢
       integrable.indicator (integrable.sub (hf.integrable _) (hf.integrable _)) (𝒢.le _ _ (this _))
   · exact hf.integrable_stopped_value hπ hbdd
   · exact hf.integrable_stopped_value hτ fun ω => le_trans (hle ω) (hbdd ω)
-#align
-  measure_theory.submartingale.expected_stopped_value_mono MeasureTheory.Submartingale.expected_stopped_value_mono
+#align measure_theory.submartingale.expected_stopped_value_mono MeasureTheory.Submartingale.expected_stopped_value_mono
 
 /-- The converse direction of the optional stopping theorem, i.e. an adapted integrable process `f`
 is a submartingale if for all bounded stopping times `τ` and `π` such that `τ ≤ π`, the
@@ -90,8 +89,7 @@ theorem submartingaleOfExpectedStoppedValueMono [IsFiniteMeasure μ] (hadp : Ada
     rwa [stopped_value_const, stopped_value_piecewise_const,
       integral_piecewise (𝒢.le _ _ hs) (hint _).IntegrableOn (hint _).IntegrableOn, ←
       integral_add_compl (𝒢.le _ _ hs) (hint j), add_le_add_iff_right] at hf
-#align
-  measure_theory.submartingale_of_expected_stopped_value_mono MeasureTheory.submartingaleOfExpectedStoppedValueMono
+#align measure_theory.submartingale_of_expected_stopped_value_mono MeasureTheory.submartingaleOfExpectedStoppedValueMono
 
 /-- **The optional stopping theorem** (fair game theorem): an adapted integrable process `f`
 is a submartingale if and only if for all bounded stopping times `τ` and `π` such that `τ ≤ π`, the
@@ -105,8 +103,7 @@ theorem submartingale_iff_expected_stopped_value_mono [IsFiniteMeasure μ] (hadp
             τ ≤ π → (∃ N, ∀ x, π x ≤ N) → μ[stoppedValue f τ] ≤ μ[stoppedValue f π] :=
   ⟨fun hf _ _ hτ hπ hle ⟨N, hN⟩ => hf.expected_stopped_value_mono hτ hπ hle hN,
     submartingaleOfExpectedStoppedValueMono hadp hint⟩
-#align
-  measure_theory.submartingale_iff_expected_stopped_value_mono MeasureTheory.submartingale_iff_expected_stopped_value_mono
+#align measure_theory.submartingale_iff_expected_stopped_value_mono MeasureTheory.submartingale_iff_expected_stopped_value_mono
 
 /-- The stopped process of a submartingale with respect to a stopping time is a submartingale. -/
 @[protected]

@@ -72,8 +72,7 @@ theorem ι_π_summand_eq_zero [HasZeroMorphisms C] {Δ : SimplexCategoryᵒᵖ} 
   erw [colimit.ι_desc, cofan.mk_ι_app]
   apply dif_neg
   exact h.symm
-#align
-  simplicial_object.splitting.ι_π_summand_eq_zero SimplicialObject.Splitting.ι_π_summand_eq_zero
+#align simplicial_object.splitting.ι_π_summand_eq_zero SimplicialObject.Splitting.ι_π_summand_eq_zero
 
 variable [Preadditive C]
 
@@ -102,8 +101,7 @@ theorem σ_comp_π_summand_id_eq_zero {n : ℕ} (i : Fin (n + 1)) :
   have h := SimplexCategory.len_le_of_epi (inferInstance : epi A.e)
   dsimp at h⊢
   linarith
-#align
-  simplicial_object.splitting.σ_comp_π_summand_id_eq_zero SimplicialObject.Splitting.σ_comp_π_summand_id_eq_zero
+#align simplicial_object.splitting.σ_comp_π_summand_id_eq_zero SimplicialObject.Splitting.σ_comp_π_summand_id_eq_zero
 
 /-- If a simplicial object `X` in an additive category is split,
 then `P_infty` vanishes on all the summands of `X _[n]` which do
@@ -114,8 +112,7 @@ theorem ι_summand_comp_P_infty_eq_zero {X : SimplicialObject C} (s : Simplicial
   by
   rw [SimplicialObject.Splitting.IndexSet.eq_id_iff_mono] at hA
   rw [SimplicialObject.Splitting.ι_summand_eq, assoc, degeneracy_comp_P_infty X n A.e hA, comp_zero]
-#align
-  simplicial_object.splitting.ι_summand_comp_P_infty_eq_zero SimplicialObject.Splitting.ι_summand_comp_P_infty_eq_zero
+#align simplicial_object.splitting.ι_summand_comp_P_infty_eq_zero SimplicialObject.Splitting.ι_summand_comp_P_infty_eq_zero
 
 theorem comp_P_infty_eq_zero_iff {Z : C} {n : ℕ} (f : Z ⟶ X _[n]) :
     f ≫ pInfty.f n = 0 ↔ f ≫ s.πSummand (IndexSet.id (op [n])) = 0 :=
@@ -142,8 +139,7 @@ theorem comp_P_infty_eq_zero_iff {Z : C} {n : ℕ} (f : Z ⟶ X _[n]) :
       subst hA
       rw [assoc, reassoc_of h, zero_comp]
     · simp only [assoc, s.ι_summand_comp_P_infty_eq_zero A hA, comp_zero]
-#align
-  simplicial_object.splitting.comp_P_infty_eq_zero_iff SimplicialObject.Splitting.comp_P_infty_eq_zero_iff
+#align simplicial_object.splitting.comp_P_infty_eq_zero_iff SimplicialObject.Splitting.comp_P_infty_eq_zero_iff
 
 @[simp, reassoc.1]
 theorem P_infty_comp_π_summand_id (n : ℕ) :
@@ -153,8 +149,7 @@ theorem P_infty_comp_π_summand_id (n : ℕ) :
   symm
   rw [← sub_eq_zero, ← sub_comp, ← comp_P_infty_eq_zero_iff, sub_comp, id_comp, P_infty_f_idem,
     sub_self]
-#align
-  simplicial_object.splitting.P_infty_comp_π_summand_id SimplicialObject.Splitting.P_infty_comp_π_summand_id
+#align simplicial_object.splitting.P_infty_comp_π_summand_id SimplicialObject.Splitting.P_infty_comp_π_summand_id
 
 @[simp, reassoc.1]
 theorem π_summand_comp_ι_summand_comp_P_infty_eq_P_infty (n : ℕ) :
@@ -166,8 +161,7 @@ theorem π_summand_comp_ι_summand_comp_P_infty_eq_P_infty (n : ℕ) :
   rw [Fintype.sum_eq_single (index_set.id (op [n])), assoc]
   rintro A (hA : ¬A.eq_id)
   rw [assoc, s.ι_summand_comp_P_infty_eq_zero A hA, comp_zero]
-#align
-  simplicial_object.splitting.π_summand_comp_ι_summand_comp_P_infty_eq_P_infty SimplicialObject.Splitting.π_summand_comp_ι_summand_comp_P_infty_eq_P_infty
+#align simplicial_object.splitting.π_summand_comp_ι_summand_comp_P_infty_eq_P_infty SimplicialObject.Splitting.π_summand_comp_ι_summand_comp_P_infty_eq_P_infty
 
 /-- The differentials `s.d i j : s.N i ⟶ s.N j` on nondegenerate simplices of a split
 simplicial object are induced by the differentials on the alternating face map complex. -/
@@ -182,8 +176,7 @@ theorem ι_summand_comp_d_comp_π_summand_eq_zero (j k : ℕ) (A : IndexSet (op 
   rw [A.eq_id_iff_mono] at hA
   rw [← assoc, ← s.comp_P_infty_eq_zero_iff, assoc, ← P_infty.comm j k, s.ι_summand_eq, assoc,
     degeneracy_comp_P_infty_assoc X j A.e hA, zero_comp, comp_zero]
-#align
-  simplicial_object.splitting.ι_summand_comp_d_comp_π_summand_eq_zero SimplicialObject.Splitting.ι_summand_comp_d_comp_π_summand_eq_zero
+#align simplicial_object.splitting.ι_summand_comp_d_comp_π_summand_eq_zero SimplicialObject.Splitting.ι_summand_comp_d_comp_π_summand_eq_zero
 
 /-- If `s` is a splitting of a simplicial object `X` in a preadditive category,
 `s.nondeg_complex` is a chain complex which is given in degree `n` by
@@ -249,8 +242,7 @@ def toKaroubiNondegComplexIsoN₁ : (toKaroubi _).obj s.nondegComplex ≅ n₁.o
     ext n
     simp only [π_summand_comp_ι_summand_comp_P_infty_eq_P_infty, karoubi.comp_f,
       HomologicalComplex.comp_f, N₁_obj_p, karoubi.id_eq]
-#align
-  simplicial_object.splitting.to_karoubi_nondeg_complex_iso_N₁ SimplicialObject.Splitting.toKaroubiNondegComplexIsoN₁
+#align simplicial_object.splitting.to_karoubi_nondeg_complex_iso_N₁ SimplicialObject.Splitting.toKaroubiNondegComplexIsoN₁
 
 end Splitting
 
@@ -303,8 +295,7 @@ def toKaroubiNondegComplexFunctorIsoN₁ :
       alternating_face_map_complex.map_f, assoc, P_infty_f_idem_assoc]
     erw [← split.ι_summand_naturality_symm_assoc Φ (splitting.index_set.id (op [n]))]
     rw [P_infty_f_naturality]
-#align
-  simplicial_object.split.to_karoubi_nondeg_complex_functor_iso_N₁ SimplicialObject.Split.toKaroubiNondegComplexFunctorIsoN₁
+#align simplicial_object.split.to_karoubi_nondeg_complex_functor_iso_N₁ SimplicialObject.Split.toKaroubiNondegComplexFunctorIsoN₁
 
 end Split
 

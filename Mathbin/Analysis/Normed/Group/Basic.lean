@@ -154,8 +154,7 @@ instance (priority := 100) NormedCommGroup.toSeminormedCommGroup [NormedCommGrou
     SeminormedCommGroup E :=
   { ‹NormedCommGroup E› with }
 #align normed_comm_group.to_seminormed_comm_group NormedCommGroup.toSeminormedCommGroup
-#align
-  normed_add_comm_group.to_seminormed_add_comm_group NormedAddCommGroup.toSeminormedAddCommGroup
+#align normed_add_comm_group.to_seminormed_add_comm_group NormedAddCommGroup.toSeminormedAddCommGroup
 
 -- See note [lower instance priority]
 @[to_additive]
@@ -865,8 +864,7 @@ theorem MonoidHomClass.uniform_continuous_of_bound [MonoidHomClass 𝓕 E F] (f 
     (h : ∀ x, ‖f x‖ ≤ C * ‖x‖) : UniformContinuous f :=
   (MonoidHomClass.lipschitz_of_bound f C h).UniformContinuous
 #align monoid_hom_class.uniform_continuous_of_bound MonoidHomClass.uniform_continuous_of_bound
-#align
-  add_monoid_hom_class.uniform_continuous_of_bound AddMonoidHomClass.uniform_continuous_of_bound
+#align add_monoid_hom_class.uniform_continuous_of_bound AddMonoidHomClass.uniform_continuous_of_bound
 
 @[to_additive IsCompact.exists_bound_of_continuous_on]
 theorem IsCompact.exists_bound_of_continuous_on' [TopologicalSpace α] {s : Set α} (hs : IsCompact s)
@@ -1343,10 +1341,8 @@ theorem SeminormedGroup.uniform_cauchy_seq_on_filter_iff_tendsto_uniformly_on_fi
       (hf { p : G × G | dist p.fst p.snd < ε } <| dist_mem_uniformity hε).mono fun x hx =>
         H (f x.fst.fst x.snd) (f x.fst.snd x.snd) _
     simpa [dist_eq_norm_div, norm_div_rev] using hx
-#align
-  seminormed_group.uniform_cauchy_seq_on_filter_iff_tendsto_uniformly_on_filter_one SeminormedGroup.uniform_cauchy_seq_on_filter_iff_tendsto_uniformly_on_filter_one
-#align
-  seminormed_add_group.uniform_cauchy_seq_on_filter_iff_tendsto_uniformly_on_filter_zero SeminormedAddGroup.uniform_cauchy_seq_on_filter_iff_tendsto_uniformly_on_filter_zero
+#align seminormed_group.uniform_cauchy_seq_on_filter_iff_tendsto_uniformly_on_filter_one SeminormedGroup.uniform_cauchy_seq_on_filter_iff_tendsto_uniformly_on_filter_one
+#align seminormed_add_group.uniform_cauchy_seq_on_filter_iff_tendsto_uniformly_on_filter_zero SeminormedAddGroup.uniform_cauchy_seq_on_filter_iff_tendsto_uniformly_on_filter_zero
 
 @[to_additive]
 theorem SeminormedGroup.uniform_cauchy_seq_on_iff_tendsto_uniformly_on_one {f : ι → κ → G}
@@ -1357,10 +1353,8 @@ theorem SeminormedGroup.uniform_cauchy_seq_on_iff_tendsto_uniformly_on_one {f : 
   rw [tendsto_uniformly_on_iff_tendsto_uniformly_on_filter,
     uniform_cauchy_seq_on_iff_uniform_cauchy_seq_on_filter,
     SeminormedGroup.uniform_cauchy_seq_on_filter_iff_tendsto_uniformly_on_filter_one]
-#align
-  seminormed_group.uniform_cauchy_seq_on_iff_tendsto_uniformly_on_one SeminormedGroup.uniform_cauchy_seq_on_iff_tendsto_uniformly_on_one
-#align
-  seminormed_add_group.uniform_cauchy_seq_on_iff_tendsto_uniformly_on_zero SeminormedAddGroup.uniform_cauchy_seq_on_iff_tendsto_uniformly_on_zero
+#align seminormed_group.uniform_cauchy_seq_on_iff_tendsto_uniformly_on_one SeminormedGroup.uniform_cauchy_seq_on_iff_tendsto_uniformly_on_one
+#align seminormed_add_group.uniform_cauchy_seq_on_iff_tendsto_uniformly_on_zero SeminormedAddGroup.uniform_cauchy_seq_on_iff_tendsto_uniformly_on_zero
 
 end SeminormedGroup
 
@@ -2006,8 +2000,7 @@ instance (priority := 100) SeminormedCommGroup.to_uniform_group : UniformGroup E
 instance (priority := 100) SeminormedCommGroup.to_topological_group : TopologicalGroup E :=
   inferInstance
 #align seminormed_comm_group.to_topological_group SeminormedCommGroup.to_topological_group
-#align
-  seminormed_add_comm_group.to_topological_add_group SeminormedAddCommGroup.to_topological_add_group
+#align seminormed_add_comm_group.to_topological_add_group SeminormedAddCommGroup.to_topological_add_group
 
 @[to_additive]
 theorem cauchy_seq_prod_of_eventually_eq {u v : ℕ → E} {N : ℕ} (huv : ∀ n ≥ N, u n = v n)

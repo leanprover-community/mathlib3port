@@ -110,8 +110,7 @@ theorem exists_locally_finite_subset_Union_ball_radius_lt (hs : IsClosed s) {R :
       (fun x hx => hfin.point_finite x) hsub' with
     ⟨r, hsub, hlt⟩
   exact ⟨ι, c, r, r', fun i => ⟨(hr' i).1, (hlt i).1, (hlt i).2, (hr' i).2.2⟩, hfin, hsub⟩
-#align
-  exists_locally_finite_subset_Union_ball_radius_lt exists_locally_finite_subset_Union_ball_radius_lt
+#align exists_locally_finite_subset_Union_ball_radius_lt exists_locally_finite_subset_Union_ball_radius_lt
 
 /-- Let `R : α → ℝ` be a (possibly discontinuous) positive function on a proper metric space. Then
 there exists a collection of pairs of balls `metric.ball (c i) (r i)`, `metric.ball (c i) (r' i)`

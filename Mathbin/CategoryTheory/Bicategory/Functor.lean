@@ -94,28 +94,24 @@ namespace PrelaxFunctor
 
 instance hasCoeToPrefunctor : Coe (PrelaxFunctor B C) (Prefunctor B C) :=
   ⟨toPrefunctor⟩
-#align
-  category_theory.prelax_functor.has_coe_to_prefunctor CategoryTheory.PrelaxFunctor.hasCoeToPrefunctor
+#align category_theory.prelax_functor.has_coe_to_prefunctor CategoryTheory.PrelaxFunctor.hasCoeToPrefunctor
 
 variable (F : PrelaxFunctor B C)
 
 @[simp]
 theorem to_prefunctor_eq_coe : F.toPrefunctor = F :=
   rfl
-#align
-  category_theory.prelax_functor.to_prefunctor_eq_coe CategoryTheory.PrelaxFunctor.to_prefunctor_eq_coe
+#align category_theory.prelax_functor.to_prefunctor_eq_coe CategoryTheory.PrelaxFunctor.to_prefunctor_eq_coe
 
 @[simp]
 theorem to_prefunctor_obj : (F : Prefunctor B C).obj = F.obj :=
   rfl
-#align
-  category_theory.prelax_functor.to_prefunctor_obj CategoryTheory.PrelaxFunctor.to_prefunctor_obj
+#align category_theory.prelax_functor.to_prefunctor_obj CategoryTheory.PrelaxFunctor.to_prefunctor_obj
 
 @[simp]
 theorem to_prefunctor_map : @Prefunctor.map B _ C _ F = @map _ _ _ _ _ _ F :=
   rfl
-#align
-  category_theory.prelax_functor.to_prefunctor_map CategoryTheory.PrelaxFunctor.to_prefunctor_map
+#align category_theory.prelax_functor.to_prefunctor_map CategoryTheory.PrelaxFunctor.to_prefunctor_map
 
 /-- The identity prelax functor. -/
 @[simps]
@@ -156,8 +152,7 @@ def OplaxFunctor.Map₂AssociatorAux (obj : B → C) (map : ∀ {X Y : B}, (X �
     (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d) : Prop :=
   map₂ (α_ f g h).Hom ≫ map_comp f (g ≫ h) ≫ map f ◁ map_comp g h =
     map_comp (f ≫ g) h ≫ map_comp f g ▷ map h ≫ (α_ (map f) (map g) (map h)).Hom
-#align
-  category_theory.oplax_functor.map₂_associator_aux CategoryTheory.OplaxFunctor.Map₂AssociatorAux
+#align category_theory.oplax_functor.map₂_associator_aux CategoryTheory.OplaxFunctor.Map₂AssociatorAux
 
 /-- An oplax functor `F` between bicategories `B` and `C` consists of a function between objects
 `F.obj`, a function between 1-morphisms `F.map`, and a function between 2-morphisms `F.map₂`.
@@ -243,20 +238,17 @@ theorem to_prelax_eq_coe : F.toPrelaxFunctor = F :=
 @[simp]
 theorem to_prelax_functor_obj : (F : PrelaxFunctor B C).obj = F.obj :=
   rfl
-#align
-  category_theory.oplax_functor.to_prelax_functor_obj CategoryTheory.OplaxFunctor.to_prelax_functor_obj
+#align category_theory.oplax_functor.to_prelax_functor_obj CategoryTheory.OplaxFunctor.to_prelax_functor_obj
 
 @[simp]
 theorem to_prelax_functor_map : @PrelaxFunctor.map B _ _ C _ _ F = @map _ _ _ _ F :=
   rfl
-#align
-  category_theory.oplax_functor.to_prelax_functor_map CategoryTheory.OplaxFunctor.to_prelax_functor_map
+#align category_theory.oplax_functor.to_prelax_functor_map CategoryTheory.OplaxFunctor.to_prelax_functor_map
 
 @[simp]
 theorem to_prelax_functor_map₂ : @PrelaxFunctor.map₂ B _ _ C _ _ F = @map₂ _ _ _ _ F :=
   rfl
-#align
-  category_theory.oplax_functor.to_prelax_functor_map₂ CategoryTheory.OplaxFunctor.to_prelax_functor_map₂
+#align category_theory.oplax_functor.to_prelax_functor_map₂ CategoryTheory.OplaxFunctor.to_prelax_functor_map₂
 
 /-- Function between 1-morphisms as a functor. -/
 @[simps]
@@ -350,8 +342,7 @@ def Pseudofunctor.Map₂AssociatorAux (obj : B → C) (map : ∀ {X Y : B}, (X �
     (map_comp (f ≫ g) h).Hom ≫
       (map_comp f g).Hom ▷ map h ≫
         (α_ (map f) (map g) (map h)).Hom ≫ map f ◁ (map_comp g h).inv ≫ (map_comp f (g ≫ h)).inv
-#align
-  category_theory.pseudofunctor.map₂_associator_aux CategoryTheory.Pseudofunctor.Map₂AssociatorAux
+#align category_theory.pseudofunctor.map₂_associator_aux CategoryTheory.Pseudofunctor.Map₂AssociatorAux
 
 /-- A pseudofunctor `F` between bicategories `B` and `C` consists of a function between objects
 `F.obj`, a function between 1-morphisms `F.map`, and a function between 2-morphisms `F.map₂`.
@@ -426,34 +417,29 @@ add_decl_doc pseudofunctor.to_prelax_functor
 
 instance hasCoeToPrelaxFunctor : Coe (Pseudofunctor B C) (PrelaxFunctor B C) :=
   ⟨toPrelaxFunctor⟩
-#align
-  category_theory.pseudofunctor.has_coe_to_prelax_functor CategoryTheory.Pseudofunctor.hasCoeToPrelaxFunctor
+#align category_theory.pseudofunctor.has_coe_to_prelax_functor CategoryTheory.Pseudofunctor.hasCoeToPrelaxFunctor
 
 variable (F : Pseudofunctor B C)
 
 @[simp]
 theorem to_prelax_functor_eq_coe : F.toPrelaxFunctor = F :=
   rfl
-#align
-  category_theory.pseudofunctor.to_prelax_functor_eq_coe CategoryTheory.Pseudofunctor.to_prelax_functor_eq_coe
+#align category_theory.pseudofunctor.to_prelax_functor_eq_coe CategoryTheory.Pseudofunctor.to_prelax_functor_eq_coe
 
 @[simp]
 theorem to_prelax_functor_obj : (F : PrelaxFunctor B C).obj = F.obj :=
   rfl
-#align
-  category_theory.pseudofunctor.to_prelax_functor_obj CategoryTheory.Pseudofunctor.to_prelax_functor_obj
+#align category_theory.pseudofunctor.to_prelax_functor_obj CategoryTheory.Pseudofunctor.to_prelax_functor_obj
 
 @[simp]
 theorem to_prelax_functor_map : @PrelaxFunctor.map B _ _ C _ _ F = @map _ _ _ _ F :=
   rfl
-#align
-  category_theory.pseudofunctor.to_prelax_functor_map CategoryTheory.Pseudofunctor.to_prelax_functor_map
+#align category_theory.pseudofunctor.to_prelax_functor_map CategoryTheory.Pseudofunctor.to_prelax_functor_map
 
 @[simp]
 theorem to_prelax_functor_map₂ : @PrelaxFunctor.map₂ B _ _ C _ _ F = @map₂ _ _ _ _ F :=
   rfl
-#align
-  category_theory.pseudofunctor.to_prelax_functor_map₂ CategoryTheory.Pseudofunctor.to_prelax_functor_map₂
+#align category_theory.pseudofunctor.to_prelax_functor_map₂ CategoryTheory.Pseudofunctor.to_prelax_functor_map₂
 
 /-- The oplax functor associated with a pseudofunctor. -/
 def toOplax : OplaxFunctor B C :=
@@ -495,8 +481,7 @@ theorem to_oplax_map_id (a : B) : (F : OplaxFunctor B C).map_id a = (F.map_id a)
 theorem to_oplax_map_comp {a b c : B} (f : a ⟶ b) (g : b ⟶ c) :
     (F : OplaxFunctor B C).map_comp f g = (F.map_comp f g).Hom :=
   rfl
-#align
-  category_theory.pseudofunctor.to_oplax_map_comp CategoryTheory.Pseudofunctor.to_oplax_map_comp
+#align category_theory.pseudofunctor.to_oplax_map_comp CategoryTheory.Pseudofunctor.to_oplax_map_comp
 
 /-- Function on 1-morphisms as a functor. -/
 @[simps]

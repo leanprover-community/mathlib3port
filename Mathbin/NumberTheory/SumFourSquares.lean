@@ -127,8 +127,7 @@ private theorem sum_four_squares_of_two_mul_sum_four_squares {m a b c d : ℤ}
     have : (∑ x, f (σ x) ^ 2) = ∑ x, f x ^ 2 := by conv_rhs => rw [← Equiv.sum_comp σ]
     have fin4univ : (univ : Finset (Fin 4)).1 = 0 ::ₘ 1 ::ₘ 2 ::ₘ 3 ::ₘ 0 := by decide
     simpa [Finset.sum_eq_multiset_sum, fin4univ, Multiset.sum_cons, f, add_assoc] ⟩
-#align
-  nat.sum_four_squares_of_two_mul_sum_four_squares nat.sum_four_squares_of_two_mul_sum_four_squares
+#align nat.sum_four_squares_of_two_mul_sum_four_squares nat.sum_four_squares_of_two_mul_sum_four_squares
 
 private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] :
     ∃ a b c d : ℤ, a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 = p :=

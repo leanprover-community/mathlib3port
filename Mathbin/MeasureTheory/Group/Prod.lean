@@ -106,8 +106,7 @@ theorem measurePreservingProdMulSwap [IsMulLeftInvariant μ] :
     MeasurePreserving (fun z : G × G => (z.2, z.2 * z.1)) (μ.Prod ν) (ν.Prod μ) :=
   (measurePreservingProdMul ν μ).comp measurePreservingSwap
 #align measure_theory.measure_preserving_prod_mul_swap MeasureTheory.measurePreservingProdMulSwap
-#align
-  measure_theory.measure_preserving_prod_add_swap MeasureTheory.measure_preserving_prod_add_swap
+#align measure_theory.measure_preserving_prod_add_swap MeasureTheory.measure_preserving_prod_add_swap
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[to_additive]
@@ -150,10 +149,8 @@ where `S` is the map `(x, y) ↦ (x, xy)` and `R` is `prod.swap`. -/
 theorem measurePreservingProdInvMulSwap :
     MeasurePreserving (fun z : G × G => (z.2, z.2⁻¹ * z.1)) (μ.Prod ν) (ν.Prod μ) :=
   (measurePreservingProdInvMul ν μ).comp measurePreservingSwap
-#align
-  measure_theory.measure_preserving_prod_inv_mul_swap MeasureTheory.measurePreservingProdInvMulSwap
-#align
-  measure_theory.measure_preserving_prod_neg_add_swap MeasureTheory.measure_preserving_prod_neg_add_swap
+#align measure_theory.measure_preserving_prod_inv_mul_swap MeasureTheory.measurePreservingProdInvMulSwap
+#align measure_theory.measure_preserving_prod_neg_add_swap MeasureTheory.measure_preserving_prod_neg_add_swap
 
 /-- The map `(x, y) ↦ (yx, x⁻¹)` is measure-preserving.
 This is the function `S⁻¹RSR` in [Halmos, §59],
@@ -249,10 +246,8 @@ theorem absolutelyContinuousMapMulRight (g : G) : μ ≪ map (· * g) μ :=
   by
   refine' absolutely_continuous.mk fun s hs => _
   rw [map_apply (measurable_mul_const g) hs, measure_mul_right_null]; exact id
-#align
-  measure_theory.absolutely_continuous_map_mul_right MeasureTheory.absolutelyContinuousMapMulRight
-#align
-  measure_theory.absolutely_continuous_map_add_right MeasureTheory.absolutely_continuous_map_add_right
+#align measure_theory.absolutely_continuous_map_mul_right MeasureTheory.absolutelyContinuousMapMulRight
+#align measure_theory.absolutely_continuous_map_add_right MeasureTheory.absolutely_continuous_map_add_right
 
 @[to_additive]
 theorem absolutelyContinuousMapDivLeft (g : G) : μ ≪ map (fun h => g / h) μ :=
@@ -261,10 +256,8 @@ theorem absolutelyContinuousMapDivLeft (g : G) : μ ≪ map (fun h => g / h) μ 
   rw [← map_map (measurable_const_mul g) measurable_inv]
   conv_lhs => rw [← map_mul_left_eq_self μ g]
   exact (absolutely_continuous_inv μ).map (measurable_const_mul g)
-#align
-  measure_theory.absolutely_continuous_map_div_left MeasureTheory.absolutelyContinuousMapDivLeft
-#align
-  measure_theory.absolutely_continuous_map_sub_left MeasureTheory.absolutely_continuous_map_sub_left
+#align measure_theory.absolutely_continuous_map_div_left MeasureTheory.absolutelyContinuousMapDivLeft
+#align measure_theory.absolutely_continuous_map_sub_left MeasureTheory.absolutely_continuous_map_sub_left
 
 /-- This is the computation performed in the proof of [Halmos, §60 Th. A]. -/
 @[to_additive "This is the computation performed in the proof of [Halmos, §60 Th. A]."]
@@ -307,10 +300,8 @@ theorem absolutelyContinuousOfIsMulLeftInvariant [IsMulLeftInvariant ν] (hν : 
   simp_rw [Pi.one_apply, lintegral_one, mul_one, (measure_mul_right_null ν _).mpr hνs,
     lintegral_zero, mul_eq_zero, measure_univ_eq_zero.not.mpr hν, or_false_iff] at h1
   exact h1
-#align
-  measure_theory.absolutely_continuous_of_is_mul_left_invariant MeasureTheory.absolutelyContinuousOfIsMulLeftInvariant
-#align
-  measure_theory.absolutely_continuous_of_is_add_left_invariant MeasureTheory.absolutely_continuous_of_is_add_left_invariant
+#align measure_theory.absolutely_continuous_of_is_mul_left_invariant MeasureTheory.absolutelyContinuousOfIsMulLeftInvariant
+#align measure_theory.absolutely_continuous_of_is_add_left_invariant MeasureTheory.absolutely_continuous_of_is_add_left_invariant
 
 @[to_additive]
 theorem ae_measure_preimage_mul_right_lt_top [IsMulLeftInvariant ν] (sm : MeasurableSet s)
@@ -327,10 +318,8 @@ theorem ae_measure_preimage_mul_right_lt_top [IsMulLeftInvariant ν] (sm : Measu
     mul_one] at h1
   rw [← lintegral_indicator _ hA, ← h1]
   exact Ennreal.mul_ne_top hμs h3A.ne
-#align
-  measure_theory.ae_measure_preimage_mul_right_lt_top MeasureTheory.ae_measure_preimage_mul_right_lt_top
-#align
-  measure_theory.ae_measure_preimage_add_right_lt_top MeasureTheory.ae_measure_preimage_add_right_lt_top
+#align measure_theory.ae_measure_preimage_mul_right_lt_top MeasureTheory.ae_measure_preimage_mul_right_lt_top
+#align measure_theory.ae_measure_preimage_add_right_lt_top MeasureTheory.ae_measure_preimage_add_right_lt_top
 
 @[to_additive]
 theorem ae_measure_preimage_mul_right_lt_top_of_ne_zero [IsMulLeftInvariant ν]
@@ -342,10 +331,8 @@ theorem ae_measure_preimage_mul_right_lt_top_of_ne_zero [IsMulLeftInvariant ν]
   refine' mt _ h2s
   intro hν
   rw [hν, measure.coe_zero, Pi.zero_apply]
-#align
-  measure_theory.ae_measure_preimage_mul_right_lt_top_of_ne_zero MeasureTheory.ae_measure_preimage_mul_right_lt_top_of_ne_zero
-#align
-  measure_theory.ae_measure_preimage_add_right_lt_top_of_ne_zero MeasureTheory.ae_measure_preimage_add_right_lt_top_of_ne_zero
+#align measure_theory.ae_measure_preimage_mul_right_lt_top_of_ne_zero MeasureTheory.ae_measure_preimage_mul_right_lt_top_of_ne_zero
+#align measure_theory.ae_measure_preimage_add_right_lt_top_of_ne_zero MeasureTheory.ae_measure_preimage_add_right_lt_top_of_ne_zero
 
 /-- A technical lemma relating two different measures. This is basically [Halmos, §60 Th. A].
   Note that if `f` is the characteristic function of a measurable set `t` this states that
@@ -408,8 +395,7 @@ theorem measurePreservingProdMulRight [IsMulRightInvariant ν] :
   (MeasurePreserving.id μ).skewProduct (measurable_snd.mul measurable_fst) <|
     Filter.eventually_of_forall <| map_mul_right_eq_self ν
 #align measure_theory.measure_preserving_prod_mul_right MeasureTheory.measurePreservingProdMulRight
-#align
-  measure_theory.measure_preserving_prod_add_right MeasureTheory.measure_preserving_prod_add_right
+#align measure_theory.measure_preserving_prod_add_right MeasureTheory.measure_preserving_prod_add_right
 
 /-- The map `(x, y) ↦ (y, xy)` sends the measure `μ × ν` to `ν × μ`. -/
 @[to_additive measure_preserving_prod_add_swap_right
@@ -417,10 +403,8 @@ theorem measurePreservingProdMulRight [IsMulRightInvariant ν] :
 theorem measurePreservingProdMulSwapRight [IsMulRightInvariant μ] :
     MeasurePreserving (fun z : G × G => (z.2, z.1 * z.2)) (μ.Prod ν) (ν.Prod μ) :=
   (measurePreservingProdMulRight ν μ).comp measurePreservingSwap
-#align
-  measure_theory.measure_preserving_prod_mul_swap_right MeasureTheory.measurePreservingProdMulSwapRight
-#align
-  measure_theory.measure_preserving_prod_add_swap_right MeasureTheory.measure_preserving_prod_add_swap_right
+#align measure_theory.measure_preserving_prod_mul_swap_right MeasureTheory.measurePreservingProdMulSwapRight
+#align measure_theory.measure_preserving_prod_add_swap_right MeasureTheory.measure_preserving_prod_add_swap_right
 
 /-- The map `(x, y) ↦ (xy, y)` preserves the measure `μ × ν`. -/
 @[to_additive measure_preserving_add_prod
@@ -448,8 +432,7 @@ theorem measurePreservingProdDivSwap [IsMulRightInvariant μ] :
     MeasurePreserving (fun z : G × G => (z.2, z.1 / z.2)) (μ.Prod ν) (ν.Prod μ) :=
   (measurePreservingProdDiv ν μ).comp measurePreservingSwap
 #align measure_theory.measure_preserving_prod_div_swap MeasureTheory.measurePreservingProdDivSwap
-#align
-  measure_theory.measure_preserving_prod_sub_swap MeasureTheory.measure_preserving_prod_sub_swap
+#align measure_theory.measure_preserving_prod_sub_swap MeasureTheory.measure_preserving_prod_sub_swap
 
 /-- The map `(x, y) ↦ (x / y, y)` preserves the measure `μ × ν`. -/
 @[to_additive measure_preserving_sub_prod
@@ -469,10 +452,8 @@ theorem measurePreservingMulProdInvRight [IsMulRightInvariant μ] [IsMulRightInv
   convert (measure_preserving_prod_div_swap ν μ).comp (measure_preserving_prod_mul_swap_right μ ν)
   ext1 ⟨x, y⟩
   simp_rw [Function.comp_apply, div_mul_eq_div_div_swap, div_self', one_div]
-#align
-  measure_theory.measure_preserving_mul_prod_inv_right MeasureTheory.measurePreservingMulProdInvRight
-#align
-  measure_theory.measure_preserving_add_prod_neg_right MeasureTheory.measure_preserving_add_prod_neg_right
+#align measure_theory.measure_preserving_mul_prod_inv_right MeasureTheory.measurePreservingMulProdInvRight
+#align measure_theory.measure_preserving_add_prod_neg_right MeasureTheory.measure_preserving_add_prod_neg_right
 
 end RightInvariant
 
@@ -488,10 +469,8 @@ theorem quasiMeasurePreservingInvOfRightInvariant [IsMulRightInvariant μ] :
   exact
     (quasi_measure_preserving_inv μ.inv).mono (inv_absolutely_continuous μ.inv)
       (absolutely_continuous_inv μ.inv)
-#align
-  measure_theory.quasi_measure_preserving_inv_of_right_invariant MeasureTheory.quasiMeasurePreservingInvOfRightInvariant
-#align
-  measure_theory.quasi_measure_preserving_neg_of_right_invariant MeasureTheory.quasi_measure_preserving_neg_of_right_invariant
+#align measure_theory.quasi_measure_preserving_inv_of_right_invariant MeasureTheory.quasiMeasurePreservingInvOfRightInvariant
+#align measure_theory.quasi_measure_preserving_neg_of_right_invariant MeasureTheory.quasi_measure_preserving_neg_of_right_invariant
 
 @[to_additive]
 theorem quasiMeasurePreservingDivLeft [IsMulLeftInvariant μ] (g : G) :
@@ -501,8 +480,7 @@ theorem quasiMeasurePreservingDivLeft [IsMulLeftInvariant μ] (g : G) :
   exact
     (measure_preserving_mul_left μ g).QuasiMeasurePreserving.comp (quasi_measure_preserving_inv μ)
 #align measure_theory.quasi_measure_preserving_div_left MeasureTheory.quasiMeasurePreservingDivLeft
-#align
-  measure_theory.quasi_measure_preserving_sub_left MeasureTheory.quasi_measure_preserving_sub_left
+#align measure_theory.quasi_measure_preserving_sub_left MeasureTheory.quasi_measure_preserving_sub_left
 
 @[to_additive]
 theorem quasiMeasurePreservingDivLeftOfRightInvariant [IsMulRightInvariant μ] (g : G) :
@@ -512,10 +490,8 @@ theorem quasiMeasurePreservingDivLeftOfRightInvariant [IsMulRightInvariant μ] (
   exact
     (quasi_measure_preserving_div_left μ.inv g).mono (inv_absolutely_continuous μ.inv)
       (absolutely_continuous_inv μ.inv)
-#align
-  measure_theory.quasi_measure_preserving_div_left_of_right_invariant MeasureTheory.quasiMeasurePreservingDivLeftOfRightInvariant
-#align
-  measure_theory.quasi_measure_preserving_sub_left_of_right_invariant MeasureTheory.quasi_measure_preserving_sub_left_of_right_invariant
+#align measure_theory.quasi_measure_preserving_div_left_of_right_invariant MeasureTheory.quasiMeasurePreservingDivLeftOfRightInvariant
+#align measure_theory.quasi_measure_preserving_sub_left_of_right_invariant MeasureTheory.quasi_measure_preserving_sub_left_of_right_invariant
 
 @[to_additive]
 theorem quasiMeasurePreservingDivOfRightInvariant [IsMulRightInvariant μ] :
@@ -523,10 +499,8 @@ theorem quasiMeasurePreservingDivOfRightInvariant [IsMulRightInvariant μ] :
   by
   refine' quasi_measure_preserving.prod_of_left measurable_div (eventually_of_forall fun y => _)
   exact (measure_preserving_div_right μ y).QuasiMeasurePreserving
-#align
-  measure_theory.quasi_measure_preserving_div_of_right_invariant MeasureTheory.quasiMeasurePreservingDivOfRightInvariant
-#align
-  measure_theory.quasi_measure_preserving_sub_of_right_invariant MeasureTheory.quasi_measure_preserving_sub_of_right_invariant
+#align measure_theory.quasi_measure_preserving_div_of_right_invariant MeasureTheory.quasiMeasurePreservingDivOfRightInvariant
+#align measure_theory.quasi_measure_preserving_sub_of_right_invariant MeasureTheory.quasi_measure_preserving_sub_of_right_invariant
 
 @[to_additive]
 theorem quasiMeasurePreservingDiv [IsMulLeftInvariant μ] :
@@ -545,10 +519,8 @@ theorem quasiMeasurePreservingMulRight [IsMulLeftInvariant μ] (g : G) :
   by
   refine' ⟨measurable_mul_const g, absolutely_continuous.mk fun s hs => _⟩
   rw [map_apply (measurable_mul_const g) hs, measure_mul_right_null]; exact id
-#align
-  measure_theory.quasi_measure_preserving_mul_right MeasureTheory.quasiMeasurePreservingMulRight
-#align
-  measure_theory.quasi_measure_preserving_add_right MeasureTheory.quasi_measure_preserving_add_right
+#align measure_theory.quasi_measure_preserving_mul_right MeasureTheory.quasiMeasurePreservingMulRight
+#align measure_theory.quasi_measure_preserving_add_right MeasureTheory.quasi_measure_preserving_add_right
 
 /-- A *right*-invariant measure is quasi-preserved by *left*-multiplication.
 This should not be confused with `(measure_preserving_mul_left μ g).quasi_measure_preserving`. -/
@@ -567,8 +539,7 @@ theorem quasiMeasurePreservingMulLeft [IsMulRightInvariant μ] (g : G) :
   simp_rw [Function.comp, mul_inv_rev, inv_inv] at this
   exact this
 #align measure_theory.quasi_measure_preserving_mul_left MeasureTheory.quasiMeasurePreservingMulLeft
-#align
-  measure_theory.quasi_measure_preserving_add_left MeasureTheory.quasi_measure_preserving_add_left
+#align measure_theory.quasi_measure_preserving_add_left MeasureTheory.quasi_measure_preserving_add_left
 
 end QuasiMeasurePreserving
 

@@ -108,8 +108,7 @@ variable {X : ChainComplex W ℕ} {Y : W} (f : X ⟶ (ChainComplex.single₀ _).
 noncomputable def toSingle₀CokernelAtZeroIso : cokernel (X.d 1 0) ≅ Y :=
   X.homologyZeroIso.symm.trans
     ((@asIso _ _ _ _ _ (hf.1 0)).trans ((ChainComplex.homologyFunctor0Single₀ W).app Y))
-#align
-  homological_complex.hom.to_single₀_cokernel_at_zero_iso HomologicalComplex.Hom.toSingle₀CokernelAtZeroIso
+#align homological_complex.hom.to_single₀_cokernel_at_zero_iso HomologicalComplex.Hom.toSingle₀CokernelAtZeroIso
 
 theorem to_single₀_cokernel_at_zero_iso_hom_eq [hf : QuasiIso f] :
     f.toSingle₀CokernelAtZeroIso.Hom =
@@ -121,8 +120,7 @@ theorem to_single₀_cokernel_at_zero_iso_hom_eq [hf : QuasiIso f] :
   dsimp
   simp only [cokernel.π_desc, category.assoc, homology.map_desc, cokernel.π_desc_assoc]
   simp [homology.desc, iso.refl_inv (X.X 0)]
-#align
-  homological_complex.hom.to_single₀_cokernel_at_zero_iso_hom_eq HomologicalComplex.Hom.to_single₀_cokernel_at_zero_iso_hom_eq
+#align homological_complex.hom.to_single₀_cokernel_at_zero_iso_hom_eq HomologicalComplex.Hom.to_single₀_cokernel_at_zero_iso_hom_eq
 
 theorem to_single₀_epi_at_zero [hf : QuasiIso f] : Epi (f.f 0) :=
   by
@@ -144,8 +142,7 @@ theorem to_single₀_exact_d_f_at_zero [hf : QuasiIso f] : Exact (X.d 1 0) (f.f 
       apply kernel.of_mono
     rw [← to_single₀_cokernel_at_zero_iso_hom_eq]
     infer_instance
-#align
-  homological_complex.hom.to_single₀_exact_d_f_at_zero HomologicalComplex.Hom.to_single₀_exact_d_f_at_zero
+#align homological_complex.hom.to_single₀_exact_d_f_at_zero HomologicalComplex.Hom.to_single₀_exact_d_f_at_zero
 
 theorem to_single₀_exact_at_succ [hf : QuasiIso f] (n : ℕ) :
     Exact (X.d (n + 2) (n + 1)) (X.d (n + 1) n) :=
@@ -153,8 +150,7 @@ theorem to_single₀_exact_at_succ [hf : QuasiIso f] (n : ℕ) :
     ⟨X.d_comp_d _ _ _,
       ⟨(ChainComplex.homologySuccIso _ _).symm.trans
           ((@asIso _ _ _ _ _ (hf.1 (n + 1))).trans homologyZeroZero)⟩⟩
-#align
-  homological_complex.hom.to_single₀_exact_at_succ HomologicalComplex.Hom.to_single₀_exact_at_succ
+#align homological_complex.hom.to_single₀_exact_at_succ HomologicalComplex.Hom.to_single₀_exact_at_succ
 
 end
 
@@ -167,8 +163,7 @@ variable {X : CochainComplex W ℕ} {Y : W} (f : (CochainComplex.single₀ _).ob
 noncomputable def fromSingle₀KernelAtZeroIso [hf : QuasiIso f] : kernel (X.d 0 1) ≅ Y :=
   X.homologyZeroIso.symm.trans
     ((@asIso _ _ _ _ _ (hf.1 0)).symm.trans ((CochainComplex.homologyFunctor0Single₀ W).app Y))
-#align
-  homological_complex.hom.from_single₀_kernel_at_zero_iso HomologicalComplex.Hom.fromSingle₀KernelAtZeroIso
+#align homological_complex.hom.from_single₀_kernel_at_zero_iso HomologicalComplex.Hom.fromSingle₀KernelAtZeroIso
 
 theorem from_single₀_kernel_at_zero_iso_inv_eq [hf : QuasiIso f] :
     f.fromSingle₀KernelAtZeroIso.inv =
@@ -184,8 +179,7 @@ theorem from_single₀_kernel_at_zero_iso_inv_eq [hf : QuasiIso f] :
     cokernel_iso_of_eq_hom_comp_desc, kernel_subobject_arrow, homology.π_map_assoc,
     is_iso.inv_comp_eq]
   simp [homology.π, kernel_subobject_map_comp, iso.refl_hom (X.X 0), category.comp_id]
-#align
-  homological_complex.hom.from_single₀_kernel_at_zero_iso_inv_eq HomologicalComplex.Hom.from_single₀_kernel_at_zero_iso_inv_eq
+#align homological_complex.hom.from_single₀_kernel_at_zero_iso_inv_eq HomologicalComplex.Hom.from_single₀_kernel_at_zero_iso_inv_eq
 
 theorem from_single₀_mono_at_zero [hf : QuasiIso f] : Mono (f.f 0) :=
   by
@@ -194,8 +188,7 @@ theorem from_single₀_mono_at_zero [hf : QuasiIso f] : Mono (f.f 0) :=
   rw [← kernel.lift_ι (X.d 0 1) (f.f 0) (by rw [f.2 0 1 rfl] <;> exact zero_comp), ←
     from_single₀_kernel_at_zero_iso_inv_eq] at Hgh
   rw [(@cancel_mono _ _ _ _ _ _ (mono_comp _ _) _ _).1 Hgh]
-#align
-  homological_complex.hom.from_single₀_mono_at_zero HomologicalComplex.Hom.from_single₀_mono_at_zero
+#align homological_complex.hom.from_single₀_mono_at_zero HomologicalComplex.Hom.from_single₀_mono_at_zero
 
 theorem from_single₀_exact_f_d_at_zero [hf : QuasiIso f] : Exact (f.f 0) (X.d 0 1) :=
   by
@@ -209,8 +202,7 @@ theorem from_single₀_exact_f_d_at_zero [hf : QuasiIso f] : Exact (f.f 0) (X.d 
       apply cokernel.of_epi
     rw [← from_single₀_kernel_at_zero_iso_inv_eq f]
     infer_instance
-#align
-  homological_complex.hom.from_single₀_exact_f_d_at_zero HomologicalComplex.Hom.from_single₀_exact_f_d_at_zero
+#align homological_complex.hom.from_single₀_exact_f_d_at_zero HomologicalComplex.Hom.from_single₀_exact_f_d_at_zero
 
 theorem from_single₀_exact_at_succ [hf : QuasiIso f] (n : ℕ) :
     Exact (X.d n (n + 1)) (X.d (n + 1) (n + 2)) :=
@@ -218,8 +210,7 @@ theorem from_single₀_exact_at_succ [hf : QuasiIso f] (n : ℕ) :
     ⟨X.d_comp_d _ _ _,
       ⟨(CochainComplex.homologySuccIso _ _).symm.trans
           ((@asIso _ _ _ _ _ (hf.1 (n + 1))).symm.trans homologyZeroZero)⟩⟩
-#align
-  homological_complex.hom.from_single₀_exact_at_succ HomologicalComplex.Hom.from_single₀_exact_at_succ
+#align homological_complex.hom.from_single₀_exact_at_succ HomologicalComplex.Hom.from_single₀_exact_at_succ
 
 end
 
@@ -238,6 +229,5 @@ theorem CategoryTheory.Functor.quasiIsoOfMapQuasiIso {C D : HomologicalComplex A
       rw [← functor.comp_map, ← nat_iso.naturality_2 (F.homology_functor_iso i) f, functor.comp_map]
       infer_instance
     is_iso_of_reflects_iso _ F⟩
-#align
-  category_theory.functor.quasi_iso_of_map_quasi_iso CategoryTheory.Functor.quasiIsoOfMapQuasiIso
+#align category_theory.functor.quasi_iso_of_map_quasi_iso CategoryTheory.Functor.quasiIsoOfMapQuasiIso
 

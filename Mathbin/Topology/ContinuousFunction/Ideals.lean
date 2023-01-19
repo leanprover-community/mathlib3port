@@ -165,8 +165,7 @@ theorem ideal_of_empty_eq_bot : idealOfSet R (∅ : Set X) = ⊥ :=
 theorem mem_ideal_of_set_compl_singleton (x : X) (f : C(X, R)) :
     f ∈ idealOfSet R ({x}ᶜ : Set X) ↔ f x = 0 := by
   simp only [mem_ideal_of_set, compl_compl, Set.mem_singleton_iff, forall_eq]
-#align
-  continuous_map.mem_ideal_of_set_compl_singleton ContinuousMap.mem_ideal_of_set_compl_singleton
+#align continuous_map.mem_ideal_of_set_compl_singleton ContinuousMap.mem_ideal_of_set_compl_singleton
 
 variable (X R)
 
@@ -325,8 +324,7 @@ theorem ideal_of_set_of_ideal_eq_closure (I : Ideal C(X, 𝕜)) :
   convert I.mul_mem_left ((algebraMapClm ℝ≥0 𝕜 : C(ℝ≥0, 𝕜)).comp g) hI'
   ext
   simp only [algebra_map_clm_coe, ContinuousMap.coe_coe, comp_apply, coe_mul, Pi.mul_apply, map_mul]
-#align
-  continuous_map.ideal_of_set_of_ideal_eq_closure ContinuousMap.ideal_of_set_of_ideal_eq_closure
+#align continuous_map.ideal_of_set_of_ideal_eq_closure ContinuousMap.ideal_of_set_of_ideal_eq_closure
 
 theorem ideal_of_set_of_ideal_is_closed {I : Ideal C(X, 𝕜)} (hI : IsClosed (I : Set C(X, 𝕜))) :
     idealOfSet 𝕜 (setOfIdeal I) = I :=
@@ -398,8 +396,7 @@ theorem ideal_of_set_is_maximal_iff (s : Opens X) :
 theorem idealOfComplSingletonIsMaximal (x : X) : (idealOfSet 𝕜 ({x}ᶜ : Set X)).IsMaximal :=
   (ideal_of_set_is_maximal_iff 𝕜 (Closeds.singleton x).compl).mpr <|
     Opens.is_coatom_iff.mpr ⟨x, rfl⟩
-#align
-  continuous_map.ideal_of_compl_singleton_is_maximal ContinuousMap.idealOfComplSingletonIsMaximal
+#align continuous_map.ideal_of_compl_singleton_is_maximal ContinuousMap.idealOfComplSingletonIsMaximal
 
 variable {𝕜}
 
@@ -463,8 +460,7 @@ def continuousMapEval : C(X, characterSpace 𝕜 C(X, 𝕜))
 @[simp]
 theorem continuous_map_eval_apply_apply (x : X) (f : C(X, 𝕜)) : continuousMapEval X 𝕜 x f = f x :=
   rfl
-#align
-  weak_dual.character_space.continuous_map_eval_apply_apply WeakDual.characterSpace.continuous_map_eval_apply_apply
+#align weak_dual.character_space.continuous_map_eval_apply_apply WeakDual.characterSpace.continuous_map_eval_apply_apply
 
 end ContinuousMapEval
 
@@ -487,8 +483,7 @@ theorem continuous_map_eval_bijective : Bijective (continuousMapEval X 𝕜) :=
     refine' ⟨x, ext_ker <| Ideal.ext fun f => _⟩
     simpa only [RingHom.mem_ker, continuous_map_eval_apply_apply, mem_ideal_of_set_compl_singleton,
       RingHom.mem_ker] using set_like.ext_iff.mp hx f
-#align
-  weak_dual.character_space.continuous_map_eval_bijective WeakDual.characterSpace.continuous_map_eval_bijective
+#align weak_dual.character_space.continuous_map_eval_bijective WeakDual.characterSpace.continuous_map_eval_bijective
 
 /-- This is the natural homeomorphism between a compact Hausdorff space `X` and the
 `character_space 𝕜 C(X, 𝕜)`. -/

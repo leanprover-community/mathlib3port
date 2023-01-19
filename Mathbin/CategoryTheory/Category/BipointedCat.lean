@@ -217,8 +217,7 @@ def pointedToBipointedCompBipointedToPointedFst :
       { Hom := ⟨id, rfl⟩
         inv := ⟨id, rfl⟩ })
     fun X Y f => rfl
-#align
-  Pointed_to_Bipointed_comp_Bipointed_to_Pointed_fst pointedToBipointedCompBipointedToPointedFst
+#align Pointed_to_Bipointed_comp_Bipointed_to_Pointed_fst pointedToBipointedCompBipointedToPointedFst
 
 /-- `Bipointed_to_Pointed_snd` is inverse to `Pointed_to_Bipointed`. -/
 @[simps]
@@ -229,8 +228,7 @@ def pointedToBipointedCompBipointedToPointedSnd :
       { Hom := ⟨id, rfl⟩
         inv := ⟨id, rfl⟩ })
     fun X Y f => rfl
-#align
-  Pointed_to_Bipointed_comp_Bipointed_to_Pointed_snd pointedToBipointedCompBipointedToPointedSnd
+#align Pointed_to_Bipointed_comp_Bipointed_to_Pointed_snd pointedToBipointedCompBipointedToPointedSnd
 
 /-- The free/forgetful adjunction between `Pointed_to_Bipointed_fst` and `Bipointed_to_Pointed_fst`.
 -/
@@ -250,8 +248,7 @@ def pointedToBipointedFstBipointedToPointedFstAdjunction :
         by
         ext
         cases x <;> rfl }
-#align
-  Pointed_to_Bipointed_fst_Bipointed_to_Pointed_fst_adjunction pointedToBipointedFstBipointedToPointedFstAdjunction
+#align Pointed_to_Bipointed_fst_Bipointed_to_Pointed_fst_adjunction pointedToBipointedFstBipointedToPointedFstAdjunction
 
 /-- The free/forgetful adjunction between `Pointed_to_Bipointed_snd` and `Bipointed_to_Pointed_snd`.
 -/
@@ -271,6 +268,5 @@ def pointedToBipointedSndBipointedToPointedSndAdjunction :
         by
         ext
         cases x <;> rfl }
-#align
-  Pointed_to_Bipointed_snd_Bipointed_to_Pointed_snd_adjunction pointedToBipointedSndBipointedToPointedSndAdjunction
+#align Pointed_to_Bipointed_snd_Bipointed_to_Pointed_snd_adjunction pointedToBipointedSndBipointedToPointedSndAdjunction
 

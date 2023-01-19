@@ -51,8 +51,7 @@ instance (priority := 74) AddSubmonoidWithOneClass.toAddMonoidWithOne
     natCast := fun n => ⟨n, nat_cast_mem s n⟩
     nat_cast_zero := Subtype.ext Nat.cast_zero
     nat_cast_succ := fun n => Subtype.ext (Nat.cast_succ _) }
-#align
-  add_submonoid_with_one_class.to_add_monoid_with_one AddSubmonoidWithOneClass.toAddMonoidWithOne
+#align add_submonoid_with_one_class.to_add_monoid_with_one AddSubmonoidWithOneClass.toAddMonoidWithOne
 
 end AddSubmonoidWithOneClass
 
@@ -164,8 +163,7 @@ instance toStrictOrderedCommSemiring {R} [StrictOrderedCommSemiring R] [SetLike 
     [SubsemiringClass S R] : StrictOrderedCommSemiring s :=
   Subtype.coe_injective.StrictOrderedCommSemiring coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) (fun _ _ => rfl) fun _ => rfl
-#align
-  subsemiring_class.to_strict_ordered_comm_semiring SubsemiringClass.toStrictOrderedCommSemiring
+#align subsemiring_class.to_strict_ordered_comm_semiring SubsemiringClass.toStrictOrderedCommSemiring
 
 /-- A subsemiring of a `linear_ordered_semiring` is a `linear_ordered_semiring`. -/
 instance toLinearOrderedSemiring {R} [LinearOrderedSemiring R] [SetLike S R]
@@ -179,8 +177,7 @@ instance toLinearOrderedCommSemiring {R} [LinearOrderedCommSemiring R] [SetLike 
     [SubsemiringClass S R] : LinearOrderedCommSemiring s :=
   Subtype.coe_injective.LinearOrderedCommSemiring coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
-#align
-  subsemiring_class.to_linear_ordered_comm_semiring SubsemiringClass.toLinearOrderedCommSemiring
+#align subsemiring_class.to_linear_ordered_comm_semiring SubsemiringClass.toLinearOrderedCommSemiring
 
 end SubsemiringClass
 

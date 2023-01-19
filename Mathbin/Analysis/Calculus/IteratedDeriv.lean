@@ -84,8 +84,7 @@ theorem iterated_deriv_within_eq_iterated_fderiv_within :
     iteratedDerivWithin n f s x =
       (iteratedFderivWithin 𝕜 n f s x : (Fin n → 𝕜) → F) fun i : Fin n => 1 :=
   rfl
-#align
-  iterated_deriv_within_eq_iterated_fderiv_within iterated_deriv_within_eq_iterated_fderiv_within
+#align iterated_deriv_within_eq_iterated_fderiv_within iterated_deriv_within_eq_iterated_fderiv_within
 
 /-- Write the iterated derivative as the composition of a continuous linear equiv and the iterated
 Fréchet derivative -/
@@ -115,8 +114,7 @@ theorem iterated_fderiv_within_apply_eq_iterated_deriv_within_mul_prod {m : Fin 
   by
   rw [iterated_deriv_within_eq_iterated_fderiv_within, ← ContinuousMultilinearMap.map_smul_univ]
   simp
-#align
-  iterated_fderiv_within_apply_eq_iterated_deriv_within_mul_prod iterated_fderiv_within_apply_eq_iterated_deriv_within_mul_prod
+#align iterated_fderiv_within_apply_eq_iterated_deriv_within_mul_prod iterated_fderiv_within_apply_eq_iterated_deriv_within_mul_prod
 
 @[simp]
 theorem iterated_deriv_within_zero : iteratedDerivWithin 0 f s = f :=
@@ -145,8 +143,7 @@ theorem cont_diff_on_of_continuous_on_differentiable_on_deriv {n : ℕ∞}
   apply cont_diff_on_of_continuous_on_differentiable_on
   · simpa [iterated_fderiv_within_eq_equiv_comp, LinearIsometryEquiv.comp_continuous_on_iff]
   · simpa [iterated_fderiv_within_eq_equiv_comp, LinearIsometryEquiv.comp_differentiable_on_iff]
-#align
-  cont_diff_on_of_continuous_on_differentiable_on_deriv cont_diff_on_of_continuous_on_differentiable_on_deriv
+#align cont_diff_on_of_continuous_on_differentiable_on_deriv cont_diff_on_of_continuous_on_differentiable_on_deriv
 
 /-- To check that a function is `n` times continuously differentiable, it suffices to check that its
 first `n` derivatives are differentiable. This is slightly too strong as the condition we
@@ -166,8 +163,7 @@ theorem ContDiffOn.continuous_on_iterated_deriv_within {n : ℕ∞} {m : ℕ} (h
     (hmn : (m : ℕ∞) ≤ n) (hs : UniqueDiffOn 𝕜 s) : ContinuousOn (iteratedDerivWithin m f s) s := by
   simpa only [iterated_deriv_within_eq_equiv_comp, LinearIsometryEquiv.comp_continuous_on_iff] using
     h.continuous_on_iterated_fderiv_within hmn hs
-#align
-  cont_diff_on.continuous_on_iterated_deriv_within ContDiffOn.continuous_on_iterated_deriv_within
+#align cont_diff_on.continuous_on_iterated_deriv_within ContDiffOn.continuous_on_iterated_deriv_within
 
 /-- On a set with unique derivatives, a `C^n` function has derivatives less than `n` which are
 differentiable. -/
@@ -177,8 +173,7 @@ theorem ContDiffOn.differentiable_on_iterated_deriv_within {n : ℕ∞} {m : ℕ
   simpa only [iterated_deriv_within_eq_equiv_comp,
     LinearIsometryEquiv.comp_differentiable_on_iff] using
     h.differentiable_on_iterated_fderiv_within hmn hs
-#align
-  cont_diff_on.differentiable_on_iterated_deriv_within ContDiffOn.differentiable_on_iterated_deriv_within
+#align cont_diff_on.differentiable_on_iterated_deriv_within ContDiffOn.differentiable_on_iterated_deriv_within
 
 /-- The property of being `C^n`, initially defined in terms of the Fréchet derivative, can be
 reformulated in terms of the one-dimensional derivative on sets with unique derivatives. -/
@@ -190,8 +185,7 @@ theorem cont_diff_on_iff_continuous_on_differentiable_on_deriv {n : ℕ∞} (hs 
   simp only [cont_diff_on_iff_continuous_on_differentiable_on hs,
     iterated_fderiv_within_eq_equiv_comp, LinearIsometryEquiv.comp_continuous_on_iff,
     LinearIsometryEquiv.comp_differentiable_on_iff]
-#align
-  cont_diff_on_iff_continuous_on_differentiable_on_deriv cont_diff_on_iff_continuous_on_differentiable_on_deriv
+#align cont_diff_on_iff_continuous_on_differentiable_on_deriv cont_diff_on_iff_continuous_on_differentiable_on_deriv
 
 /-- The `n+1`-th iterated derivative within a set with unique derivatives can be obtained by
 differentiating the `n`-th iterated derivative. -/
@@ -263,8 +257,7 @@ theorem iterated_fderiv_apply_eq_iterated_deriv_mul_prod {m : Fin n → 𝕜} :
   by
   rw [iterated_deriv_eq_iterated_fderiv, ← ContinuousMultilinearMap.map_smul_univ]
   simp
-#align
-  iterated_fderiv_apply_eq_iterated_deriv_mul_prod iterated_fderiv_apply_eq_iterated_deriv_mul_prod
+#align iterated_fderiv_apply_eq_iterated_deriv_mul_prod iterated_fderiv_apply_eq_iterated_deriv_mul_prod
 
 @[simp]
 theorem iterated_deriv_zero : iteratedDeriv 0 f = f :=

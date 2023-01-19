@@ -66,8 +66,7 @@ finite-dimensional. -/
 theorem finite_dimensional_direction_affine_span_of_finite {s : Set P} (h : Set.Finite s) :
     FiniteDimensional k (affineSpan k s).direction :=
   (direction_affine_span k s).symm ▸ finite_dimensional_vector_span_of_finite k h
-#align
-  finite_dimensional_direction_affine_span_of_finite finite_dimensional_direction_affine_span_of_finite
+#align finite_dimensional_direction_affine_span_of_finite finite_dimensional_direction_affine_span_of_finite
 
 /-- The direction of the affine span of a family indexed by a
 `fintype` is finite-dimensional. -/
@@ -81,8 +80,7 @@ by a `fintype` is finite-dimensional. -/
 instance finite_dimensional_direction_affine_span_image_of_finite [Finite ι] (p : ι → P)
     (s : Set ι) : FiniteDimensional k (affineSpan k (p '' s)).direction :=
   finite_dimensional_direction_affine_span_of_finite k (Set.to_finite _)
-#align
-  finite_dimensional_direction_affine_span_image_of_finite finite_dimensional_direction_affine_span_image_of_finite
+#align finite_dimensional_direction_affine_span_image_of_finite finite_dimensional_direction_affine_span_image_of_finite
 
 /-- An affine-independent family of points in a finite-dimensional affine space is finite. -/
 theorem finite_of_fin_dim_affine_independent [FiniteDimensional k V] {p : ι → P}
@@ -124,8 +122,7 @@ theorem AffineIndependent.finrank_vector_span_image_finset {p : ι → P} (hi : 
     rw [Finset.card_image_of_injective _ (vsub_left_injective _), Finset.card_erase_of_mem hp₁]
     exact Nat.pred_eq_of_eq_succ hc'
   rwa [vector_span_eq_span_vsub_finset_right_ne k hp₁, finrank_span_finset_eq_card, hc]
-#align
-  affine_independent.finrank_vector_span_image_finset AffineIndependent.finrank_vector_span_image_finset
+#align affine_independent.finrank_vector_span_image_finset AffineIndependent.finrank_vector_span_image_finset
 
 /-- The `vector_span` of a finite affinely independent family has
 dimension one less than its cardinality. -/
@@ -144,8 +141,7 @@ theorem AffineIndependent.vector_span_eq_top_of_card_eq_finrank_add_one [FiniteD
     [Fintype ι] {p : ι → P} (hi : AffineIndependent k p) (hc : Fintype.card ι = finrank k V + 1) :
     vectorSpan k (Set.range p) = ⊤ :=
   eq_top_of_finrank_eq <| hi.finrank_vector_span hc
-#align
-  affine_independent.vector_span_eq_top_of_card_eq_finrank_add_one AffineIndependent.vector_span_eq_top_of_card_eq_finrank_add_one
+#align affine_independent.vector_span_eq_top_of_card_eq_finrank_add_one AffineIndependent.vector_span_eq_top_of_card_eq_finrank_add_one
 
 variable (k)
 
@@ -212,8 +208,7 @@ theorem affine_independent_iff_not_finrank_vector_span_le [Fintype ι] (p : ι �
     (hc : Fintype.card ι = n + 2) :
     AffineIndependent k p ↔ ¬finrank k (vectorSpan k (Set.range p)) ≤ n := by
   rw [affine_independent_iff_le_finrank_vector_span k p hc, ← Nat.lt_iff_add_one_le, lt_iff_not_ge]
-#align
-  affine_independent_iff_not_finrank_vector_span_le affine_independent_iff_not_finrank_vector_span_le
+#align affine_independent_iff_not_finrank_vector_span_le affine_independent_iff_not_finrank_vector_span_le
 
 /-- `n + 2` points have a `vector_span` with dimension at most `n` if
 and only if they are not affinely independent. -/
@@ -221,8 +216,7 @@ theorem finrank_vector_span_le_iff_not_affine_independent [Fintype ι] (p : ι �
     (hc : Fintype.card ι = n + 2) :
     finrank k (vectorSpan k (Set.range p)) ≤ n ↔ ¬AffineIndependent k p :=
   (not_iff_comm.1 (affine_independent_iff_not_finrank_vector_span_le k p hc).symm).symm
-#align
-  finrank_vector_span_le_iff_not_affine_independent finrank_vector_span_le_iff_not_affine_independent
+#align finrank_vector_span_le_iff_not_affine_independent finrank_vector_span_le_iff_not_affine_independent
 
 variable {k}
 
@@ -234,8 +228,7 @@ theorem AffineIndependent.vector_span_image_finset_eq_of_le_of_card_eq_finrank_a
     (hle : vectorSpan k (s.image p : Set P) ≤ sm) (hc : Finset.card s = finrank k sm + 1) :
     vectorSpan k (s.image p : Set P) = sm :=
   eq_of_le_of_finrank_eq hle <| hi.finrank_vector_span_image_finset hc
-#align
-  affine_independent.vector_span_image_finset_eq_of_le_of_card_eq_finrank_add_one AffineIndependent.vector_span_image_finset_eq_of_le_of_card_eq_finrank_add_one
+#align affine_independent.vector_span_image_finset_eq_of_le_of_card_eq_finrank_add_one AffineIndependent.vector_span_image_finset_eq_of_le_of_card_eq_finrank_add_one
 
 /-- If the `vector_span` of a finite affinely independent
 family lies in a submodule with dimension one less than its
@@ -245,8 +238,7 @@ theorem AffineIndependent.vector_span_eq_of_le_of_card_eq_finrank_add_one [Finty
     (hle : vectorSpan k (Set.range p) ≤ sm) (hc : Fintype.card ι = finrank k sm + 1) :
     vectorSpan k (Set.range p) = sm :=
   eq_of_le_of_finrank_eq hle <| hi.finrank_vector_span hc
-#align
-  affine_independent.vector_span_eq_of_le_of_card_eq_finrank_add_one AffineIndependent.vector_span_eq_of_le_of_card_eq_finrank_add_one
+#align affine_independent.vector_span_eq_of_le_of_card_eq_finrank_add_one AffineIndependent.vector_span_eq_of_le_of_card_eq_finrank_add_one
 
 /-- If the `affine_span` of a finite subset of an affinely independent
 family lies in an affine subspace whose direction has dimension one
@@ -264,8 +256,7 @@ theorem AffineIndependent.affine_span_image_finset_eq_of_le_of_card_eq_finrank_a
   have hd := direction_le hle
   rw [direction_affine_span] at hd⊢
   exact hi.vector_span_image_finset_eq_of_le_of_card_eq_finrank_add_one hd hc
-#align
-  affine_independent.affine_span_image_finset_eq_of_le_of_card_eq_finrank_add_one AffineIndependent.affine_span_image_finset_eq_of_le_of_card_eq_finrank_add_one
+#align affine_independent.affine_span_image_finset_eq_of_le_of_card_eq_finrank_add_one AffineIndependent.affine_span_image_finset_eq_of_le_of_card_eq_finrank_add_one
 
 /-- If the `affine_span` of a finite affinely independent family lies
 in an affine subspace whose direction has dimension one less than its
@@ -278,8 +269,7 @@ theorem AffineIndependent.affine_span_eq_of_le_of_card_eq_finrank_add_one [Finty
   rw [← Finset.card_univ] at hc
   rw [← Set.image_univ, ← Finset.coe_univ, ← Finset.coe_image] at hle⊢
   exact hi.affine_span_image_finset_eq_of_le_of_card_eq_finrank_add_one hle hc
-#align
-  affine_independent.affine_span_eq_of_le_of_card_eq_finrank_add_one AffineIndependent.affine_span_eq_of_le_of_card_eq_finrank_add_one
+#align affine_independent.affine_span_eq_of_le_of_card_eq_finrank_add_one AffineIndependent.affine_span_eq_of_le_of_card_eq_finrank_add_one
 
 /-- The `affine_span` of a finite affinely independent family is `⊤` iff the
 family's cardinality is one more than that of the finite-dimensional space. -/
@@ -297,8 +287,7 @@ theorem AffineIndependent.affine_span_eq_top_iff_card_eq_finrank_add_one [Finite
   · intro hc
     rw [← finrank_top, ← direction_top k V P] at hc
     exact hi.affine_span_eq_of_le_of_card_eq_finrank_add_one le_top hc
-#align
-  affine_independent.affine_span_eq_top_iff_card_eq_finrank_add_one AffineIndependent.affine_span_eq_top_iff_card_eq_finrank_add_one
+#align affine_independent.affine_span_eq_top_iff_card_eq_finrank_add_one AffineIndependent.affine_span_eq_top_iff_card_eq_finrank_add_one
 
 /-- The `vector_span` of adding a point to a finite-dimensional subspace is finite-dimensional. -/
 instance finite_dimensional_vector_span_insert (s : AffineSubspace k P)
@@ -320,8 +309,7 @@ instance finite_dimensional_direction_affine_span_insert (s : AffineSubspace k P
     [FiniteDimensional k s.direction] (p : P) :
     FiniteDimensional k (affineSpan k (insert p (s : Set P))).direction :=
   (direction_affine_span k (insert p (s : Set P))).symm ▸ finite_dimensional_vector_span_insert s p
-#align
-  finite_dimensional_direction_affine_span_insert finite_dimensional_direction_affine_span_insert
+#align finite_dimensional_direction_affine_span_insert finite_dimensional_direction_affine_span_insert
 
 variable (k)
 
@@ -380,8 +368,7 @@ theorem Collinear.finite_dimensional_vector_span {s : Set P} (h : Collinear k s)
 theorem Collinear.finite_dimensional_direction_affine_span {s : Set P} (h : Collinear k s) :
     FiniteDimensional k (affineSpan k s).direction :=
   (direction_affine_span k s).symm ▸ h.finite_dimensional_vector_span
-#align
-  collinear.finite_dimensional_direction_affine_span Collinear.finite_dimensional_direction_affine_span
+#align collinear.finite_dimensional_direction_affine_span Collinear.finite_dimensional_direction_affine_span
 
 variable (k P)
 
@@ -601,8 +588,7 @@ theorem collinear_insert_insert_of_mem_affine_span_pair {p₁ p₂ p₃ p₄ : P
       ((AffineSubspace.le_def' _ _).1 (affine_span_mono k (Set.subset_insert _ _)) _ h₁),
     collinear_insert_iff_of_mem_affine_span h₂]
   exact collinear_pair _ _ _
-#align
-  collinear_insert_insert_of_mem_affine_span_pair collinear_insert_insert_of_mem_affine_span_pair
+#align collinear_insert_insert_of_mem_affine_span_pair collinear_insert_insert_of_mem_affine_span_pair
 
 /-- If three points lie in the affine span of two points, those five points are collinear. -/
 theorem collinear_insert_insert_insert_of_mem_affine_span_pair {p₁ p₂ p₃ p₄ p₅ : P}
@@ -616,8 +602,7 @@ theorem collinear_insert_insert_insert_of_mem_affine_span_pair {p₁ p₂ p₃ p
       ((AffineSubspace.le_def' _ _).1 (affine_span_mono k (Set.subset_insert _ _)) _ h₂),
     collinear_insert_iff_of_mem_affine_span h₃]
   exact collinear_pair _ _ _
-#align
-  collinear_insert_insert_insert_of_mem_affine_span_pair collinear_insert_insert_insert_of_mem_affine_span_pair
+#align collinear_insert_insert_insert_of_mem_affine_span_pair collinear_insert_insert_insert_of_mem_affine_span_pair
 
 /-- If three points lie in the affine span of two points, the first four points are collinear. -/
 theorem collinear_insert_insert_insert_left_of_mem_affine_span_pair {p₁ p₂ p₃ p₄ p₅ : P}
@@ -626,8 +611,7 @@ theorem collinear_insert_insert_insert_left_of_mem_affine_span_pair {p₁ p₂ p
   by
   refine' (collinear_insert_insert_insert_of_mem_affine_span_pair h₁ h₂ h₃).Subset _
   simp [Set.insert_subset_insert]
-#align
-  collinear_insert_insert_insert_left_of_mem_affine_span_pair collinear_insert_insert_insert_left_of_mem_affine_span_pair
+#align collinear_insert_insert_insert_left_of_mem_affine_span_pair collinear_insert_insert_insert_left_of_mem_affine_span_pair
 
 /-- If three points lie in the affine span of two points, the first three points are collinear. -/
 theorem collinear_triple_of_mem_affine_span_pair {p₁ p₂ p₃ p₄ p₅ : P} (h₁ : p₁ ∈ line[k, p₄, p₅])
@@ -658,8 +642,7 @@ theorem Coplanar.finite_dimensional_vector_span {s : Set P} (h : Coplanar k s) :
 theorem Coplanar.finite_dimensional_direction_affine_span {s : Set P} (h : Coplanar k s) :
     FiniteDimensional k (affineSpan k s).direction :=
   (direction_affine_span k s).symm ▸ h.finite_dimensional_vector_span
-#align
-  coplanar.finite_dimensional_direction_affine_span Coplanar.finite_dimensional_direction_affine_span
+#align coplanar.finite_dimensional_direction_affine_span Coplanar.finite_dimensional_direction_affine_span
 
 /-- A set of points, whose `vector_span` is finite-dimensional, is coplanar if and only if their
 `vector_span` has dimension at most `2`. -/
@@ -846,8 +829,7 @@ theorem exists_affine_basis_of_finite_dimensional [Fintype ι] [FiniteDimensiona
   lift s to Finset P using b.finite_set
   refine' ⟨b.comp_equiv <| Fintype.equivOfCardEq _⟩
   rw [h, ← b.card_eq_finrank_add_one]
-#align
-  affine_basis.exists_affine_basis_of_finite_dimensional AffineBasis.exists_affine_basis_of_finite_dimensional
+#align affine_basis.exists_affine_basis_of_finite_dimensional AffineBasis.exists_affine_basis_of_finite_dimensional
 
 end DivisionRing
 

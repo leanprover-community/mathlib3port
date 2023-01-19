@@ -32,26 +32,22 @@ variable (J : Type u₂) [Category.{v₂} J] (C : Type u₁) [Category.{v₁} C]
 theorem hasLimitsOfShapeOfEssentiallySmall [EssentiallySmall.{w₁} J] [HasLimitsOfSize.{w₁, w₁} C] :
     HasLimitsOfShape J C :=
   has_limits_of_shape_of_equivalence <| equivalence.symm <| equivSmallModel.{w₁} J
-#align
-  category_theory.limits.has_limits_of_shape_of_essentially_small CategoryTheory.Limits.hasLimitsOfShapeOfEssentiallySmall
+#align category_theory.limits.has_limits_of_shape_of_essentially_small CategoryTheory.Limits.hasLimitsOfShapeOfEssentiallySmall
 
 theorem hasColimitsOfShapeOfEssentiallySmall [EssentiallySmall.{w₁} J]
     [HasColimitsOfSize.{w₁, w₁} C] : HasColimitsOfShape J C :=
   has_colimits_of_shape_of_equivalence <| equivalence.symm <| equivSmallModel.{w₁} J
-#align
-  category_theory.limits.has_colimits_of_shape_of_essentially_small CategoryTheory.Limits.hasColimitsOfShapeOfEssentiallySmall
+#align category_theory.limits.has_colimits_of_shape_of_essentially_small CategoryTheory.Limits.hasColimitsOfShapeOfEssentiallySmall
 
 theorem has_products_of_shape_of_small (β : Type w₂) [Small.{w₁} β] [HasProducts.{w₁} C] :
     HasProductsOfShape β C :=
   has_limits_of_shape_of_equivalence <| discrete.equivalence <| Equiv.symm <| equivShrink β
-#align
-  category_theory.limits.has_products_of_shape_of_small CategoryTheory.Limits.has_products_of_shape_of_small
+#align category_theory.limits.has_products_of_shape_of_small CategoryTheory.Limits.has_products_of_shape_of_small
 
 theorem has_coproducts_of_shape_of_small (β : Type w₂) [Small.{w₁} β] [HasCoproducts.{w₁} C] :
     HasCoproductsOfShape β C :=
   has_colimits_of_shape_of_equivalence <| discrete.equivalence <| Equiv.symm <| equivShrink β
-#align
-  category_theory.limits.has_coproducts_of_shape_of_small CategoryTheory.Limits.has_coproducts_of_shape_of_small
+#align category_theory.limits.has_coproducts_of_shape_of_small CategoryTheory.Limits.has_coproducts_of_shape_of_small
 
 end CategoryTheory.Limits
 

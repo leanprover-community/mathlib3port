@@ -53,14 +53,12 @@ export HasUniformContinuousConstSmul (uniform_continuous_const_smul)
 instance AddMonoid.has_uniform_continuous_const_smul_nat [AddGroup X] [UniformAddGroup X] :
     HasUniformContinuousConstSmul ℕ X :=
   ⟨uniform_continuous_const_nsmul⟩
-#align
-  add_monoid.has_uniform_continuous_const_smul_nat AddMonoid.has_uniform_continuous_const_smul_nat
+#align add_monoid.has_uniform_continuous_const_smul_nat AddMonoid.has_uniform_continuous_const_smul_nat
 
 instance AddGroup.has_uniform_continuous_const_smul_int [AddGroup X] [UniformAddGroup X] :
     HasUniformContinuousConstSmul ℤ X :=
   ⟨uniform_continuous_const_zsmul⟩
-#align
-  add_group.has_uniform_continuous_const_smul_int AddGroup.has_uniform_continuous_const_smul_int
+#align add_group.has_uniform_continuous_const_smul_int AddGroup.has_uniform_continuous_const_smul_int
 
 /-- A `distrib_mul_action` that is continuous on a uniform group is uniformly continuous.
 This can't be an instance due to it forming a loop with
@@ -71,8 +69,7 @@ theorem has_uniform_continuous_const_smul_of_continuous_const_smul [Monoid R] [A
   ⟨fun r =>
     uniform_continuous_of_continuous_at_zero (DistribMulAction.toAddMonoidHom M r)
       (Continuous.continuous_at (continuous_const_smul r))⟩
-#align
-  has_uniform_continuous_const_smul_of_continuous_const_smul has_uniform_continuous_const_smul_of_continuous_const_smul
+#align has_uniform_continuous_const_smul_of_continuous_const_smul has_uniform_continuous_const_smul_of_continuous_const_smul
 
 /-- The action of `semiring.to_module` is uniformly continuous. -/
 instance Ring.has_uniform_continuous_const_smul [Ring R] [UniformSpace R] [UniformAddGroup R]
@@ -94,10 +91,8 @@ variable [SMul M X]
 instance (priority := 100) HasUniformContinuousConstSmul.to_has_continuous_const_smul
     [HasUniformContinuousConstSmul M X] : HasContinuousConstSmul M X :=
   ⟨fun c => (uniform_continuous_const_smul c).Continuous⟩
-#align
-  has_uniform_continuous_const_smul.to_has_continuous_const_smul HasUniformContinuousConstSmul.to_has_continuous_const_smul
-#align
-  has_uniform_continuous_const_vadd.to_has_continuous_const_vadd HasUniformContinuousConstVadd.to_has_continuous_const_vadd
+#align has_uniform_continuous_const_smul.to_has_continuous_const_smul HasUniformContinuousConstSmul.to_has_continuous_const_smul
+#align has_uniform_continuous_const_vadd.to_has_continuous_const_vadd HasUniformContinuousConstVadd.to_has_continuous_const_vadd
 
 variable {M X Y}
 
@@ -136,10 +131,8 @@ end SMul
 instance UniformGroup.to_has_uniform_continuous_const_smul {G : Type u} [Group G] [UniformSpace G]
     [UniformGroup G] : HasUniformContinuousConstSmul G G :=
   ⟨fun c => uniform_continuous_const.mul uniform_continuous_id⟩
-#align
-  uniform_group.to_has_uniform_continuous_const_smul UniformGroup.to_has_uniform_continuous_const_smul
-#align
-  uniform_add_group.to_has_uniform_continuous_const_vadd UniformAddGroup.to_has_uniform_continuous_const_vadd
+#align uniform_group.to_has_uniform_continuous_const_smul UniformGroup.to_has_uniform_continuous_const_smul
+#align uniform_add_group.to_has_uniform_continuous_const_vadd UniformAddGroup.to_has_uniform_continuous_const_vadd
 
 namespace UniformSpace
 

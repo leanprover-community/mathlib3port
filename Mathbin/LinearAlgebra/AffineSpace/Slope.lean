@@ -124,8 +124,7 @@ theorem sub_div_sub_smul_slope_add_sub_div_sub_smul_slope (f : k → PE) (a b c 
   simp_rw [slope, div_eq_inv_mul, mul_smul, ← smul_add,
     smul_inv_smul₀ (sub_ne_zero.2 <| Ne.symm hab), smul_inv_smul₀ (sub_ne_zero.2 <| Ne.symm hbc),
     vsub_add_vsub_cancel]
-#align
-  sub_div_sub_smul_slope_add_sub_div_sub_smul_slope sub_div_sub_smul_slope_add_sub_div_sub_smul_slope
+#align sub_div_sub_smul_slope_add_sub_div_sub_smul_slope sub_div_sub_smul_slope_add_sub_div_sub_smul_slope
 
 /-- `slope f a c` is an affine combination of `slope f a b` and `slope f b c`. This version uses
 `line_map` to express this property. -/

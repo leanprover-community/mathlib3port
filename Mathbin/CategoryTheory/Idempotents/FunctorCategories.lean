@@ -98,8 +98,7 @@ instance functor_category_is_idempotent_complete [IsIdempotentComplete C] :
     simp only [nat_trans.comp_app, assoc, equalizer.lift_ι, nat_trans.id_app, id_comp, ←
       equalizer.condition, comp_id]
   · simp only [nat_trans.comp_app, equalizer.lift_ι]
-#align
-  category_theory.idempotents.functor_category_is_idempotent_complete CategoryTheory.Idempotents.functor_category_is_idempotent_complete
+#align category_theory.idempotents.functor_category_is_idempotent_complete CategoryTheory.Idempotents.functor_category_is_idempotent_complete
 
 namespace KaroubiFunctorCategoryEmbedding
 
@@ -119,15 +118,13 @@ def obj (P : Karoubi (J ⥤ C)) : J ⥤ Karoubi C
         have h := congr_app P.idem j
         rw [nat_trans.comp_app] at h
         slice_rhs 1 3 => erw [h, h] }
-#align
-  category_theory.idempotents.karoubi_functor_category_embedding.obj CategoryTheory.Idempotents.KaroubiFunctorCategoryEmbedding.obj
+#align category_theory.idempotents.karoubi_functor_category_embedding.obj CategoryTheory.Idempotents.KaroubiFunctorCategoryEmbedding.obj
 
 /-- Tautological action on maps of the functor `karoubi (J ⥤ C) ⥤ (J ⥤ karoubi C)`. -/
 @[simps]
 def map {P Q : Karoubi (J ⥤ C)} (f : P ⟶ Q) : obj P ⟶ obj Q
     where app j := ⟨f.f.app j, congr_app f.comm j⟩
-#align
-  category_theory.idempotents.karoubi_functor_category_embedding.map CategoryTheory.Idempotents.KaroubiFunctorCategoryEmbedding.map
+#align category_theory.idempotents.karoubi_functor_category_embedding.map CategoryTheory.Idempotents.KaroubiFunctorCategoryEmbedding.map
 
 end KaroubiFunctorCategoryEmbedding
 
@@ -139,8 +136,7 @@ def karoubiFunctorCategoryEmbedding : Karoubi (J ⥤ C) ⥤ J ⥤ Karoubi C
     where
   obj := KaroubiFunctorCategoryEmbedding.obj
   map P Q := KaroubiFunctorCategoryEmbedding.map
-#align
-  category_theory.idempotents.karoubi_functor_category_embedding CategoryTheory.Idempotents.karoubiFunctorCategoryEmbedding
+#align category_theory.idempotents.karoubi_functor_category_embedding CategoryTheory.Idempotents.karoubiFunctorCategoryEmbedding
 
 instance : Full (karoubiFunctorCategoryEmbedding J C)
     where
@@ -185,8 +181,7 @@ theorem to_karoubi_comp_karoubi_functor_category_embedding :
       simpa only [comp_id, id_comp]
     · intro j
       rfl
-#align
-  category_theory.idempotents.to_karoubi_comp_karoubi_functor_category_embedding CategoryTheory.Idempotents.to_karoubi_comp_karoubi_functor_category_embedding
+#align category_theory.idempotents.to_karoubi_comp_karoubi_functor_category_embedding CategoryTheory.Idempotents.to_karoubi_comp_karoubi_functor_category_embedding
 
 end Idempotents
 

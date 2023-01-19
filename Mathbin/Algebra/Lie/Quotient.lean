@@ -106,13 +106,11 @@ def actionAsEndoMap : L →ₗ⁅R⁆ Module.EndCat R (M ⧸ N) :=
 a natural bracket action of `L` on the quotient `M/N`. -/
 instance actionAsEndoMapBracket : Bracket L (M ⧸ N) :=
   ⟨fun x n => actionAsEndoMap N x n⟩
-#align
-  lie_submodule.quotient.action_as_endo_map_bracket LieSubmodule.Quotient.actionAsEndoMapBracket
+#align lie_submodule.quotient.action_as_endo_map_bracket LieSubmodule.Quotient.actionAsEndoMapBracket
 
 instance lieQuotientLieRingModule : LieRingModule L (M ⧸ N) :=
   { LieRingModule.compLieHom _ (actionAsEndoMap N) with bracket := Bracket.bracket }
-#align
-  lie_submodule.quotient.lie_quotient_lie_ring_module LieSubmodule.Quotient.lieQuotientLieRingModule
+#align lie_submodule.quotient.lie_quotient_lie_ring_module LieSubmodule.Quotient.lieQuotientLieRingModule
 
 /-- The quotient of a Lie module by a Lie submodule, is a Lie module. -/
 instance lieQuotientLieModule : LieModule R L (M ⧸ N) :=

@@ -308,8 +308,7 @@ theorem Convex.second_derivative_within_at_symmetric_of_mem_interior {v w : E}
     · filter_upwards [self_mem_nhds_within] with _ hpos
       field_simp [LT.lt.ne' hpos, SMul.smul]
   simpa only [sub_eq_zero] using is_o_const_const_iff.1 B
-#align
-  convex.second_derivative_within_at_symmetric_of_mem_interior Convex.second_derivative_within_at_symmetric_of_mem_interior
+#align convex.second_derivative_within_at_symmetric_of_mem_interior Convex.second_derivative_within_at_symmetric_of_mem_interior
 
 omit s_conv xs hx hf
 

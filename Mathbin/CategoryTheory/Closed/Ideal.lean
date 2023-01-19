@@ -146,8 +146,7 @@ instance (priority := 10) exponentialIdealOfPreservesBinaryProducts
     apply is_iso.hom_inv_id_assoc
   haveI : is_split_mono (η.app (A ⟹ i.obj B)) := is_split_mono.mk' ⟨_, this⟩
   apply mem_ess_image_of_unit_is_split_mono
-#align
-  category_theory.exponential_ideal_of_preserves_binary_products CategoryTheory.exponentialIdealOfPreservesBinaryProducts
+#align category_theory.exponential_ideal_of_preserves_binary_products CategoryTheory.exponentialIdealOfPreservesBinaryProducts
 
 variable [ExponentialIdeal i]
 
@@ -263,8 +262,7 @@ noncomputable def preservesBinaryProductsOfExponentialIdeal :
     by
     apply limits.preserves_limit_of_iso_diagram _ (diagram_iso_pair K).symm
     apply preserves_limit_pair.of_iso_prod_comparison
-#align
-  category_theory.preserves_binary_products_of_exponential_ideal CategoryTheory.preservesBinaryProductsOfExponentialIdeal
+#align category_theory.preserves_binary_products_of_exponential_ideal CategoryTheory.preservesBinaryProductsOfExponentialIdeal
 
 /--
 If a reflective subcategory is an exponential ideal, then the reflector preserves finite products.
@@ -275,8 +273,7 @@ noncomputable def preservesFiniteProductsOfExponentialIdeal (J : Type) [Fintype 
   letI := preserves_binary_products_of_exponential_ideal i
   letI := leftAdjointPreservesTerminalOfReflective.{0} i
   apply preserves_finite_products_of_preserves_binary_and_terminal (left_adjoint i) J
-#align
-  category_theory.preserves_finite_products_of_exponential_ideal CategoryTheory.preservesFiniteProductsOfExponentialIdeal
+#align category_theory.preserves_finite_products_of_exponential_ideal CategoryTheory.preservesFiniteProductsOfExponentialIdeal
 
 end
 

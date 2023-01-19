@@ -90,8 +90,7 @@ theorem mul_norm_eq_abs_sub_sq_norm {x y z : V} (h₁ : ∃ k : ℝ, k ≠ 1 ∧
     _ = |‖z + y‖ ^ 2 - ‖z - x‖ ^ 2| := by
       simp [norm_add_sq_real, norm_sub_sq_real, hzy, hzx, abs_sub_comm]
     
-#align
-  inner_product_geometry.mul_norm_eq_abs_sub_sq_norm InnerProductGeometry.mul_norm_eq_abs_sub_sq_norm
+#align inner_product_geometry.mul_norm_eq_abs_sub_sq_norm InnerProductGeometry.mul_norm_eq_abs_sub_sq_norm
 
 end InnerProductGeometry
 
@@ -139,8 +138,7 @@ theorem mul_dist_eq_mul_dist_of_cospherical {a b c d p : P} (h : Cospherical ({a
     rw [← hb] at ha
     rw [mul_dist_eq_abs_sub_sq_dist hapb ha, hb, mul_dist_eq_abs_sub_sq_dist hcpd hc, hd]
   all_goals simp
-#align
-  euclidean_geometry.mul_dist_eq_mul_dist_of_cospherical EuclideanGeometry.mul_dist_eq_mul_dist_of_cospherical
+#align euclidean_geometry.mul_dist_eq_mul_dist_of_cospherical EuclideanGeometry.mul_dist_eq_mul_dist_of_cospherical
 
 /-- **Intersecting Chords Theorem**. -/
 theorem mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_pi {a b c d p : P}
@@ -150,8 +148,7 @@ theorem mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_pi {a b c d p : P}
   obtain ⟨-, k₁, _, hab⟩ := angle_eq_pi_iff.mp hapb
   obtain ⟨-, k₂, _, hcd⟩ := angle_eq_pi_iff.mp hcpd
   exact mul_dist_eq_mul_dist_of_cospherical h ⟨k₁, by linarith, hab⟩ ⟨k₂, by linarith, hcd⟩
-#align
-  euclidean_geometry.mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_pi EuclideanGeometry.mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_pi
+#align euclidean_geometry.mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_pi EuclideanGeometry.mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_pi
 
 /-- **Intersecting Secants Theorem**. -/
 theorem mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_zero {a b c d p : P}
@@ -163,8 +160,7 @@ theorem mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_zero {a b c d p : P}
   refine' mul_dist_eq_mul_dist_of_cospherical h ⟨k₁, _, hab₁⟩ ⟨k₂, _, hcd₁⟩ <;> by_contra hnot <;>
     simp_all only [not_not, one_smul]
   exacts[hab (vsub_left_cancel hab₁).symm, hcd (vsub_left_cancel hcd₁).symm]
-#align
-  euclidean_geometry.mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_zero EuclideanGeometry.mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_zero
+#align euclidean_geometry.mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_zero EuclideanGeometry.mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_zero
 
 /-- **Ptolemy’s Theorem**. -/
 theorem mul_dist_add_mul_dist_eq_mul_dist_of_cospherical {a b c d p : P}
@@ -189,8 +185,7 @@ theorem mul_dist_add_mul_dist_eq_mul_dist_of_cospherical {a b c d p : P}
   have h₄ : ∀ x y : ℝ, x * (y * x) = x * x * y := fun x y => by rw [mul_left_comm, mul_comm]
   field_simp [h₁, h₂, dist_eq_add_dist_of_angle_eq_pi hbpd, h₃, hbp, dist_comm a b, h₄, ← sq,
     dist_sq_mul_dist_add_dist_sq_mul_dist b, hapc]
-#align
-  euclidean_geometry.mul_dist_add_mul_dist_eq_mul_dist_of_cospherical EuclideanGeometry.mul_dist_add_mul_dist_eq_mul_dist_of_cospherical
+#align euclidean_geometry.mul_dist_add_mul_dist_eq_mul_dist_of_cospherical EuclideanGeometry.mul_dist_add_mul_dist_eq_mul_dist_of_cospherical
 
 end EuclideanGeometry
 

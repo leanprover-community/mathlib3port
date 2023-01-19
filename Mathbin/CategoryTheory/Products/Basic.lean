@@ -221,8 +221,7 @@ variable {C}
 @[simps]
 def Functor.constCompEvaluationObj (X : C) : Functor.const C ⋙ (evaluation C D).obj X ≅ 𝟭 D :=
   NatIso.ofComponents (fun Y => Iso.refl _) fun Y Z f => by simp
-#align
-  category_theory.functor.const_comp_evaluation_obj CategoryTheory.Functor.constCompEvaluationObj
+#align category_theory.functor.const_comp_evaluation_obj CategoryTheory.Functor.constCompEvaluationObj
 
 end
 
@@ -339,8 +338,7 @@ def functorProdFunctorEquivUnitIso :
     (fun F =>
       (((Functor.prod'CompFst _ _).Prod (Functor.prod'CompSnd _ _)).trans (prod.etaIso F)).symm)
     fun F G α => by tidy
-#align
-  category_theory.functor_prod_functor_equiv_unit_iso CategoryTheory.functorProdFunctorEquivUnitIso
+#align category_theory.functor_prod_functor_equiv_unit_iso CategoryTheory.functorProdFunctorEquivUnitIso
 
 /-- The counit isomorphism for `functor_prod_functor_equiv` -/
 @[simps]
@@ -348,8 +346,7 @@ def functorProdFunctorEquivCounitIso :
     functorProdToProdFunctor A B C ⋙ prodFunctorToFunctorProd A B C ≅ 𝟭 _ :=
   NatIso.ofComponents (fun F => NatIso.ofComponents (fun X => prod.etaIso (F.obj X)) (by tidy))
     (by tidy)
-#align
-  category_theory.functor_prod_functor_equiv_counit_iso CategoryTheory.functorProdFunctorEquivCounitIso
+#align category_theory.functor_prod_functor_equiv_counit_iso CategoryTheory.functorProdFunctorEquivCounitIso
 
 /-- The equivalence of categories between `(A ⥤ B) × (A ⥤ C)` and `A ⥤ (B × C)` -/
 @[simps]

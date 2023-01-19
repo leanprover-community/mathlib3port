@@ -184,8 +184,7 @@ theorem conformal_at_iff_differentiable_at_or_differentiable_at_comp_conj {f : ‚
   refine' exists_congr fun g => rfl.congr _
   have : fderiv ‚Ñù conj (conj z) = _ := conj_cle.fderiv
   simp [fderiv.comp _ h_diff conj_cle.differentiable_at, this, conj_conj]
-#align
-  conformal_at_iff_differentiable_at_or_differentiable_at_comp_conj conformal_at_iff_differentiable_at_or_differentiable_at_comp_conj
+#align conformal_at_iff_differentiable_at_or_differentiable_at_comp_conj conformal_at_iff_differentiable_at_or_differentiable_at_comp_conj
 
 end Conformality
 

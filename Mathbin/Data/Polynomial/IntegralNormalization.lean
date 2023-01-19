@@ -70,20 +70,17 @@ theorem integral_normalization_coeff_degree {f : R[X]} {i : ℕ} (hi : f.degree 
 theorem integral_normalization_coeff_nat_degree {f : R[X]} (hf : f ≠ 0) :
     (integralNormalization f).coeff (natDegree f) = 1 :=
   integral_normalization_coeff_degree (degree_eq_nat_degree hf)
-#align
-  polynomial.integral_normalization_coeff_nat_degree Polynomial.integral_normalization_coeff_nat_degree
+#align polynomial.integral_normalization_coeff_nat_degree Polynomial.integral_normalization_coeff_nat_degree
 
 theorem integral_normalization_coeff_ne_degree {f : R[X]} {i : ℕ} (hi : f.degree ≠ i) :
     coeff (integralNormalization f) i = coeff f i * f.leadingCoeff ^ (f.natDegree - 1 - i) := by
   rw [integral_normalization_coeff, if_neg hi]
-#align
-  polynomial.integral_normalization_coeff_ne_degree Polynomial.integral_normalization_coeff_ne_degree
+#align polynomial.integral_normalization_coeff_ne_degree Polynomial.integral_normalization_coeff_ne_degree
 
 theorem integral_normalization_coeff_ne_nat_degree {f : R[X]} {i : ℕ} (hi : i ≠ natDegree f) :
     coeff (integralNormalization f) i = coeff f i * f.leadingCoeff ^ (f.natDegree - 1 - i) :=
   integral_normalization_coeff_ne_degree (degree_ne_of_nat_degree_ne hi.symm)
-#align
-  polynomial.integral_normalization_coeff_ne_nat_degree Polynomial.integral_normalization_coeff_ne_nat_degree
+#align polynomial.integral_normalization_coeff_ne_nat_degree Polynomial.integral_normalization_coeff_ne_nat_degree
 
 theorem monic_integral_normalization {f : R[X]} (hf : f ≠ 0) : Monic (integralNormalization f) :=
   monic_of_degree_le f.natDegree
@@ -153,15 +150,13 @@ theorem integral_normalization_eval₂_eq_zero {p : R[X]} (f : R →+* S) {z : S
       exact @Finset.sum_attach _ _ p.support _ fun i => f (p.coeff i) * z ^ i
     _ = 0 := by rw [hz, _root_.mul_zero]
     
-#align
-  polynomial.integral_normalization_eval₂_eq_zero Polynomial.integral_normalization_eval₂_eq_zero
+#align polynomial.integral_normalization_eval₂_eq_zero Polynomial.integral_normalization_eval₂_eq_zero
 
 theorem integral_normalization_aeval_eq_zero [Algebra R S] {f : R[X]} {z : S} (hz : aeval z f = 0)
     (inj : ∀ x : R, algebraMap R S x = 0 → x = 0) :
     aeval (z * algebraMap R S f.leadingCoeff) (integralNormalization f) = 0 :=
   integral_normalization_eval₂_eq_zero (algebraMap R S) hz inj
-#align
-  polynomial.integral_normalization_aeval_eq_zero Polynomial.integral_normalization_aeval_eq_zero
+#align polynomial.integral_normalization_aeval_eq_zero Polynomial.integral_normalization_aeval_eq_zero
 
 end IsDomain
 

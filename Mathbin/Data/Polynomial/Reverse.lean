@@ -302,8 +302,7 @@ theorem nat_degree_eq_reverse_nat_degree_add_nat_trailing_degree (f : R[X]) :
     apply nat_trailing_degree_le_of_ne_zero
     have key := mt leading_coeff_eq_zero.mp (mt reverse_eq_zero.mp hf)
     rwa [leading_coeff, coeff_reverse, rev_at_le f.reverse_nat_degree_le] at key
-#align
-  polynomial.nat_degree_eq_reverse_nat_degree_add_nat_trailing_degree Polynomial.nat_degree_eq_reverse_nat_degree_add_nat_trailing_degree
+#align polynomial.nat_degree_eq_reverse_nat_degree_add_nat_trailing_degree Polynomial.nat_degree_eq_reverse_nat_degree_add_nat_trailing_degree
 
 theorem reverse_nat_degree (f : R[X]) : f.reverse.natDegree = f.natDegree - f.natTrailingDegree :=
   by rw [f.nat_degree_eq_reverse_nat_degree_add_nat_trailing_degree, add_tsub_cancel_right]

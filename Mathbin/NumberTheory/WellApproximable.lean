@@ -113,8 +113,7 @@ theorem image_pow_subset_of_coprime (hm : 0 < m) (hmn : n.Coprime m) :
   convert pow_mem_ball hm hab using 1
   simp only [nsmul_eq_mul, Algebra.id.smul_eq_mul]
 #align approx_order_of.image_pow_subset_of_coprime approxOrderOf.image_pow_subset_of_coprime
-#align
-  approx_add_order_of.image_nsmul_subset_of_coprime approxAddOrderOf.image_nsmul_subset_of_coprime
+#align approx_add_order_of.image_nsmul_subset_of_coprime approxAddOrderOf.image_nsmul_subset_of_coprime
 
 @[to_additive]
 theorem image_pow_subset (n : ℕ) (hm : 0 < m) :
@@ -363,8 +362,7 @@ theorem add_well_approximable_ae_empty_or_univ (δ : ℕ → ℝ) (hδ : Tendsto
     · cases hB p
       · contradiction
       simp only [h, union_ae_eq_univ_of_ae_eq_univ_left, union_ae_eq_univ_of_ae_eq_univ_right]
-#align
-  add_circle.add_well_approximable_ae_empty_or_univ AddCircle.add_well_approximable_ae_empty_or_univ
+#align add_circle.add_well_approximable_ae_empty_or_univ AddCircle.add_well_approximable_ae_empty_or_univ
 
 end AddCircle
 

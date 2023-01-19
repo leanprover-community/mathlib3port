@@ -74,8 +74,7 @@ A presheaf is a sheaf if `F` preserves the limit of `pairwise.diagram U`.
 -/
 def IsSheafPreservesLimitPairwiseIntersections (F : Presheaf C X) : Prop :=
   ∀ ⦃ι : Type w⦄ (U : ι → Opens X), Nonempty (PreservesLimit (Pairwise.diagram U).op F)
-#align
-  Top.presheaf.is_sheaf_preserves_limit_pairwise_intersections TopCat.Presheaf.IsSheafPreservesLimitPairwiseIntersections
+#align Top.presheaf.is_sheaf_preserves_limit_pairwise_intersections TopCat.Presheaf.IsSheafPreservesLimitPairwiseIntersections
 
 end
 
@@ -92,8 +91,7 @@ the object level of `pairwise_to_opens_le_cover : pairwise ι ⥤ opens_le_cover
 def pairwiseToOpensLeCoverObj : Pairwise ι → OpensLeCover U
   | single i => ⟨U i, ⟨i, le_rfl⟩⟩
   | pair i j => ⟨U i ⊓ U j, ⟨i, inf_le_left⟩⟩
-#align
-  Top.presheaf.sheaf_condition.pairwise_to_opens_le_cover_obj TopCat.Presheaf.SheafCondition.pairwiseToOpensLeCoverObj
+#align Top.presheaf.sheaf_condition.pairwise_to_opens_le_cover_obj TopCat.Presheaf.SheafCondition.pairwiseToOpensLeCoverObj
 
 open CategoryTheory.Pairwise.Hom
 
@@ -106,8 +104,7 @@ def pairwiseToOpensLeCoverMap :
   | _, _, id_pair i j => 𝟙 _
   | _, _, left i j => homOfLe inf_le_left
   | _, _, right i j => homOfLe inf_le_right
-#align
-  Top.presheaf.sheaf_condition.pairwise_to_opens_le_cover_map TopCat.Presheaf.SheafCondition.pairwiseToOpensLeCoverMap
+#align Top.presheaf.sheaf_condition.pairwise_to_opens_le_cover_map TopCat.Presheaf.SheafCondition.pairwiseToOpensLeCoverMap
 
 /-- The category of single and double intersections of the `U i` maps into the category
 of open sets below some `U i`.
@@ -117,8 +114,7 @@ def pairwiseToOpensLeCover : Pairwise ι ⥤ OpensLeCover U
     where
   obj := pairwiseToOpensLeCoverObj U
   map V W i := pairwiseToOpensLeCoverMap U i
-#align
-  Top.presheaf.sheaf_condition.pairwise_to_opens_le_cover TopCat.Presheaf.SheafCondition.pairwiseToOpensLeCover
+#align Top.presheaf.sheaf_condition.pairwise_to_opens_le_cover TopCat.Presheaf.SheafCondition.pairwiseToOpensLeCover
 
 instance (V : OpensLeCover U) : Nonempty (StructuredArrow V (pairwiseToOpensLeCover U)) :=
   ⟨{  right := single V.index
@@ -227,8 +223,7 @@ def pairwiseDiagramIso : Pairwise.diagram U ≅ pairwiseToOpensLeCover U ⋙ ful
     where
   Hom := { app := by rintro (i | ⟨i, j⟩) <;> exact 𝟙 _ }
   inv := { app := by rintro (i | ⟨i, j⟩) <;> exact 𝟙 _ }
-#align
-  Top.presheaf.sheaf_condition.pairwise_diagram_iso TopCat.Presheaf.SheafCondition.pairwiseDiagramIso
+#align Top.presheaf.sheaf_condition.pairwise_diagram_iso TopCat.Presheaf.SheafCondition.pairwiseDiagramIso
 
 /--
 The cocone `pairwise.cocone U` with cocone point `supr U` over `pairwise.diagram U` is isomorphic
@@ -240,8 +235,7 @@ def pairwiseCoconeIso :
       (Cones.postcomposeEquivalence (NatIso.op (pairwiseDiagramIso U : _) : _)).Functor.obj
         ((opensLeCoverCocone U).op.whisker (pairwiseToOpensLeCover U).op) :=
   Cones.ext (Iso.refl _) (by tidy)
-#align
-  Top.presheaf.sheaf_condition.pairwise_cocone_iso TopCat.Presheaf.SheafCondition.pairwiseCoconeIso
+#align Top.presheaf.sheaf_condition.pairwise_cocone_iso TopCat.Presheaf.SheafCondition.pairwiseCoconeIso
 
 end SheafCondition
 
@@ -278,8 +272,7 @@ theorem is_sheaf_opens_le_cover_iff_is_sheaf_pairwise_intersections :
         _ ≃ IsLimit (F.mapCone (Pairwise.cocone U).op) :=
           IsLimit.equivIsoLimit ((Cones.functoriality _ _).mapIso (pairwiseCoconeIso U : _).symm)
         
-#align
-  Top.presheaf.is_sheaf_opens_le_cover_iff_is_sheaf_pairwise_intersections TopCat.Presheaf.is_sheaf_opens_le_cover_iff_is_sheaf_pairwise_intersections
+#align Top.presheaf.is_sheaf_opens_le_cover_iff_is_sheaf_pairwise_intersections TopCat.Presheaf.is_sheaf_opens_le_cover_iff_is_sheaf_pairwise_intersections
 
 /-- The sheaf condition in terms of an equalizer diagram is equivalent
 to the reformulation in terms of a limit diagram over `U i` and `U i ⊓ U j`.
@@ -288,8 +281,7 @@ theorem is_sheaf_iff_is_sheaf_pairwise_intersections : F.IsSheaf ↔ F.IsSheafPa
   by
   rw [is_sheaf_iff_is_sheaf_opens_le_cover,
     is_sheaf_opens_le_cover_iff_is_sheaf_pairwise_intersections]
-#align
-  Top.presheaf.is_sheaf_iff_is_sheaf_pairwise_intersections TopCat.Presheaf.is_sheaf_iff_is_sheaf_pairwise_intersections
+#align Top.presheaf.is_sheaf_iff_is_sheaf_pairwise_intersections TopCat.Presheaf.is_sheaf_iff_is_sheaf_pairwise_intersections
 
 /-- The sheaf condition in terms of an equalizer diagram is equivalent
 to the reformulation in terms of the presheaf preserving the limit of the diagram
@@ -305,8 +297,7 @@ theorem is_sheaf_iff_is_sheaf_preserves_limit_pairwise_intersections :
   · intro h ι U
     haveI := (h U).some
     exact ⟨preserves_limit.preserves (pairwise.cocone_is_colimit U).op⟩
-#align
-  Top.presheaf.is_sheaf_iff_is_sheaf_preserves_limit_pairwise_intersections TopCat.Presheaf.is_sheaf_iff_is_sheaf_preserves_limit_pairwise_intersections
+#align Top.presheaf.is_sheaf_iff_is_sheaf_preserves_limit_pairwise_intersections TopCat.Presheaf.is_sheaf_iff_is_sheaf_preserves_limit_pairwise_intersections
 
 end TopCat.Presheaf
 
@@ -396,8 +387,7 @@ theorem inter_union_pullback_cone_lift_left :
   exact
     (F.presheaf.is_sheaf_iff_is_sheaf_pairwise_intersections.mp F.2 _).some.fac _
       (op <| pairwise.single (ULift.up walking_pair.left))
-#align
-  Top.sheaf.inter_union_pullback_cone_lift_left TopCat.Sheaf.inter_union_pullback_cone_lift_left
+#align Top.sheaf.inter_union_pullback_cone_lift_left TopCat.Sheaf.inter_union_pullback_cone_lift_left
 
 theorem inter_union_pullback_cone_lift_right :
     interUnionPullbackConeLift F U V s ≫ F.1.map (homOfLe le_sup_right).op = s.snd :=
@@ -406,8 +396,7 @@ theorem inter_union_pullback_cone_lift_right :
   exact
     (F.presheaf.is_sheaf_iff_is_sheaf_pairwise_intersections.mp F.2 _).some.fac _
       (op <| pairwise.single (ULift.up walking_pair.right))
-#align
-  Top.sheaf.inter_union_pullback_cone_lift_right TopCat.Sheaf.inter_union_pullback_cone_lift_right
+#align Top.sheaf.inter_union_pullback_cone_lift_right TopCat.Sheaf.inter_union_pullback_cone_lift_right
 
 /-- For a sheaf `F`, `F(U ⊔ V)` is the pullback of `F(U) ⟶ F(U ⊓ V)` and `F(V) ⟶ F(U ⊓ V)`. -/
 def isLimitPullbackCone : IsLimit (interUnionPullbackCone F U V) :=

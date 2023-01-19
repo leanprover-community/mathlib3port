@@ -81,8 +81,7 @@ instance (A : Mon_ (ModuleCat.{u} R)) : Algebra R A.x :=
 @[simp]
 theorem algebra_map (A : Mon_ (ModuleCat.{u} R)) (r : R) : algebraMap R A.x r = A.one r :=
   rfl
-#align
-  Module.Mon_Module_equivalence_Algebra.algebra_map ModuleCat.MonModuleEquivalenceAlgebra.algebra_map
+#align Module.Mon_Module_equivalence_Algebra.algebra_map ModuleCat.MonModuleEquivalenceAlgebra.algebra_map
 
 /-- Converting a monoid object in `Module R` to a bundled algebra.
 -/
@@ -126,8 +125,7 @@ def inverseObj (A : AlgebraCat.{u} R) : Mon_ (ModuleCat.{u} R)
       Function.comp_apply, ModuleCat.monoidalCategory.hom_apply, AlgebraCat.coe_comp,
       monoidal_category.associator_hom_apply]
     simp only [LinearMap.mul'_apply, mul_assoc]
-#align
-  Module.Mon_Module_equivalence_Algebra.inverse_obj ModuleCat.MonModuleEquivalenceAlgebra.inverseObj
+#align Module.Mon_Module_equivalence_Algebra.inverse_obj ModuleCat.MonModuleEquivalenceAlgebra.inverseObj
 
 /-- Converting a bundled algebra to a monoid object in `Module R`.
 -/

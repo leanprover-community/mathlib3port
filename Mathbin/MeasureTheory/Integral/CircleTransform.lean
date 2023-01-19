@@ -124,8 +124,7 @@ theorem continuous_on_prod_circle_transform_function {R r : ℝ} (hr : r < R) {z
     simp at *
     linarith
   exact sub_ne_zero.2 (circle_map_ne_mem_ball ha2 b)
-#align
-  complex.continuous_on_prod_circle_transform_function Complex.continuous_on_prod_circle_transform_function
+#align complex.continuous_on_prod_circle_transform_function Complex.continuous_on_prod_circle_transform_function
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr continuous_on.smul, ",", expr continuous_on_const, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
@@ -149,8 +148,7 @@ theorem continuous_on_abs_circle_transform_bounding_function {R r : ℝ} (hr : r
   refine' continuous_abs.continuous_on.comp this _
   show maps_to _ _ (⊤ : Set ℂ)
   simp [maps_to]
-#align
-  complex.continuous_on_abs_circle_transform_bounding_function Complex.continuous_on_abs_circle_transform_bounding_function
+#align complex.continuous_on_abs_circle_transform_bounding_function Complex.continuous_on_abs_circle_transform_bounding_function
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr is_compact.prod, ",", expr proper_space.is_compact_closed_ball z r, ",", expr is_compact_uIcc, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
@@ -176,8 +174,7 @@ theorem abs_circle_transform_bounding_function_le {R r : ℝ} (hr : r < R) (hr' 
           simp only [mem_prod, mem_closed_ball, mem_univ, and_true_iff, and_imp]
           tauto))
   simpa only [SetCoe.forall, Subtype.coe_mk, SetCoe.exists]
-#align
-  complex.abs_circle_transform_bounding_function_le Complex.abs_circle_transform_bounding_function_le
+#align complex.abs_circle_transform_bounding_function_le Complex.abs_circle_transform_bounding_function_le
 
 /-- The derivative of a `circle_transform` is locally bounded. -/
 theorem circle_transform_deriv_bound {R : ℝ} (hR : 0 < R) {z x : ℂ} {f : ℂ → ℂ} (hx : x ∈ ball z R)

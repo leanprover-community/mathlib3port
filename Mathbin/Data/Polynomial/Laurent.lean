@@ -347,8 +347,7 @@ theorem left_inverse_trunc_to_laurent :
     exact fun n r => by
       simp only [Polynomial.to_laurent_C_mul_T, trunc_C_mul_T, Int.coe_nat_nonneg,
         Int.toNat_coe_nat, if_true]
-#align
-  laurent_polynomial.left_inverse_trunc_to_laurent LaurentPolynomial.left_inverse_trunc_to_laurent
+#align laurent_polynomial.left_inverse_trunc_to_laurent LaurentPolynomial.left_inverse_trunc_to_laurent
 
 @[simp]
 theorem Polynomial.trunc_to_laurent (f : R[X]) : trunc f.toLaurent = f :=
@@ -406,8 +405,7 @@ theorem reduce_to_polynomial_of_mul_T (f : R[T;T⁻¹]) {Q : R[T;T⁻¹] → Pro
   · simpa only [Int.ofNat_zero, neg_zero, T_zero, mul_one] using Qf _
   · convert QT _ _
     simpa using hn
-#align
-  laurent_polynomial.reduce_to_polynomial_of_mul_T LaurentPolynomial.reduce_to_polynomial_of_mul_T
+#align laurent_polynomial.reduce_to_polynomial_of_mul_T LaurentPolynomial.reduce_to_polynomial_of_mul_T
 
 section Support
 

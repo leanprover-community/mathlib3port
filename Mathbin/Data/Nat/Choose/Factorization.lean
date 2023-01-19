@@ -110,8 +110,7 @@ theorem factorization_central_binom_of_two_mul_self_lt_three_mul (n_big : 2 < n)
   · rintro rfl
     linarith
   · rw [two_mul, add_tsub_cancel_left]
-#align
-  nat.factorization_central_binom_of_two_mul_self_lt_three_mul Nat.factorization_central_binom_of_two_mul_self_lt_three_mul
+#align nat.factorization_central_binom_of_two_mul_self_lt_three_mul Nat.factorization_central_binom_of_two_mul_self_lt_three_mul
 
 theorem factorization_factorial_eq_zero_of_lt (h : n < p) : (factorial n).factorization p = 0 :=
   by
@@ -134,16 +133,14 @@ theorem factorization_choose_eq_zero_of_lt (h : n < p) : (choose n k).factorizat
 theorem factorization_central_binom_eq_zero_of_two_mul_lt (h : 2 * n < p) :
     (centralBinom n).factorization p = 0 :=
   factorization_choose_eq_zero_of_lt h
-#align
-  nat.factorization_central_binom_eq_zero_of_two_mul_lt Nat.factorization_central_binom_eq_zero_of_two_mul_lt
+#align nat.factorization_central_binom_eq_zero_of_two_mul_lt Nat.factorization_central_binom_eq_zero_of_two_mul_lt
 
 /-- Contrapositive form of `nat.factorization_central_binom_eq_zero_of_two_mul_lt`
 -/
 theorem le_two_mul_of_factorization_central_binom_pos
     (h_pos : 0 < (centralBinom n).factorization p) : p ≤ 2 * n :=
   le_of_not_lt (pos_iff_ne_zero.mp h_pos ∘ factorization_central_binom_eq_zero_of_two_mul_lt)
-#align
-  nat.le_two_mul_of_factorization_central_binom_pos Nat.le_two_mul_of_factorization_central_binom_pos
+#align nat.le_two_mul_of_factorization_central_binom_pos Nat.le_two_mul_of_factorization_central_binom_pos
 
 /-- A binomial coefficient is the product of its prime factors, which are at most `n`. -/
 theorem prod_pow_factorization_choose (n k : ℕ) (hkn : k ≤ n) :

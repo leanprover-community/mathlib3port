@@ -264,8 +264,7 @@ theorem mk_whisker_left (f : a ⟶ b) {g h : b ⟶ c} (η : Hom₂ g h) :
 theorem mk_whisker_right {f g : a ⟶ b} (η : Hom₂ f g) (h : b ⟶ c) :
     Quot.mk Rel (Hom₂.whisker_right h η) = (Quot.mk Rel η ▷ h : f ≫ h ⟶ g ≫ h) :=
   rfl
-#align
-  category_theory.free_bicategory.mk_whisker_right CategoryTheory.FreeBicategory.mk_whisker_right
+#align category_theory.free_bicategory.mk_whisker_right CategoryTheory.FreeBicategory.mk_whisker_right
 
 variable (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d)
 
@@ -285,38 +284,32 @@ theorem mk_id : Quot.mk _ (Hom₂.id f) = 𝟙 f :=
 @[simp]
 theorem mk_associator_hom : Quot.mk _ (Hom₂.associator f g h) = (α_ f g h).Hom :=
   rfl
-#align
-  category_theory.free_bicategory.mk_associator_hom CategoryTheory.FreeBicategory.mk_associator_hom
+#align category_theory.free_bicategory.mk_associator_hom CategoryTheory.FreeBicategory.mk_associator_hom
 
 @[simp]
 theorem mk_associator_inv : Quot.mk _ (Hom₂.associator_inv f g h) = (α_ f g h).inv :=
   rfl
-#align
-  category_theory.free_bicategory.mk_associator_inv CategoryTheory.FreeBicategory.mk_associator_inv
+#align category_theory.free_bicategory.mk_associator_inv CategoryTheory.FreeBicategory.mk_associator_inv
 
 @[simp]
 theorem mk_left_unitor_hom : Quot.mk _ (Hom₂.left_unitor f) = (λ_ f).Hom :=
   rfl
-#align
-  category_theory.free_bicategory.mk_left_unitor_hom CategoryTheory.FreeBicategory.mk_left_unitor_hom
+#align category_theory.free_bicategory.mk_left_unitor_hom CategoryTheory.FreeBicategory.mk_left_unitor_hom
 
 @[simp]
 theorem mk_left_unitor_inv : Quot.mk _ (Hom₂.left_unitor_inv f) = (λ_ f).inv :=
   rfl
-#align
-  category_theory.free_bicategory.mk_left_unitor_inv CategoryTheory.FreeBicategory.mk_left_unitor_inv
+#align category_theory.free_bicategory.mk_left_unitor_inv CategoryTheory.FreeBicategory.mk_left_unitor_inv
 
 @[simp]
 theorem mk_right_unitor_hom : Quot.mk _ (Hom₂.right_unitor f) = (ρ_ f).Hom :=
   rfl
-#align
-  category_theory.free_bicategory.mk_right_unitor_hom CategoryTheory.FreeBicategory.mk_right_unitor_hom
+#align category_theory.free_bicategory.mk_right_unitor_hom CategoryTheory.FreeBicategory.mk_right_unitor_hom
 
 @[simp]
 theorem mk_right_unitor_inv : Quot.mk _ (Hom₂.right_unitor_inv f) = (ρ_ f).inv :=
   rfl
-#align
-  category_theory.free_bicategory.mk_right_unitor_inv CategoryTheory.FreeBicategory.mk_right_unitor_inv
+#align category_theory.free_bicategory.mk_right_unitor_inv CategoryTheory.FreeBicategory.mk_right_unitor_inv
 
 /-- Canonical prefunctor from `B` to `free_bicategory B`. -/
 @[simps]

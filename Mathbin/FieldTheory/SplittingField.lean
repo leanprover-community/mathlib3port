@@ -460,8 +460,7 @@ theorem finite_dimensional (f : K[X]) [IsSplittingField K L f] : FiniteDimension
               ⟨f, hf,
                 (eval₂_eq_eval_map _).trans <|
                   (mem_roots <| map_ne_zero hf).1 (Multiset.mem_toFinset.mp hy)⟩⟩
-#align
-  polynomial.is_splitting_field.finite_dimensional Polynomial.IsSplittingField.finite_dimensional
+#align polynomial.is_splitting_field.finite_dimensional Polynomial.IsSplittingField.finite_dimensional
 
 instance (f : K[X]) : FiniteDimensional K f.SplittingField :=
   finite_dimensional f.SplittingField f

@@ -745,8 +745,7 @@ theorem DenseRange.topological_closure_map_subgroup [Group H] [TopologicalSpace 
   simp only [Subgroup.topological_closure_coe, Subgroup.coe_top, ← dense_iff_closure_eq] at hs⊢
   exact hf'.dense_image hf hs
 #align dense_range.topological_closure_map_subgroup DenseRange.topological_closure_map_subgroup
-#align
-  dense_range.topological_closure_map_add_subgroup DenseRange.topological_closure_map_add_subgroup
+#align dense_range.topological_closure_map_add_subgroup DenseRange.topological_closure_map_add_subgroup
 
 /-- The topological closure of a normal subgroup is normal.-/
 @[to_additive "The topological closure of a normal additive subgroup is normal."]
@@ -805,8 +804,7 @@ def Subgroup.commGroupTopologicalClosure [T2Space G] (s : Subgroup G)
     (hs : ∀ x y : s, x * y = y * x) : CommGroup s.topologicalClosure :=
   { s.topologicalClosure.toGroup, s.toSubmonoid.commMonoidTopologicalClosure hs with }
 #align subgroup.comm_group_topological_closure Subgroup.commGroupTopologicalClosure
-#align
-  add_subgroup.add_comm_group_topological_closure AddSubgroup.add_comm_group_topological_closure
+#align add_subgroup.add_comm_group_topological_closure AddSubgroup.add_comm_group_topological_closure
 
 @[to_additive exists_nhds_half_neg]
 theorem exists_nhds_split_inv {s : Set G} (hs : s ∈ 𝓝 (1 : G)) :
@@ -1072,10 +1070,8 @@ theorem TopologicalGroup.exists_antitone_basis_nhds_one :
     exact h a b (u_anti ((le_max_left _ _).trans hm) ha) (u_anti ((le_max_right _ _).trans hm) hb)
   obtain ⟨φ, -, hφ, φ_anti_basis⟩ := has_antitone_basis.subbasis_with_rel ⟨hu, u_anti⟩ event_mul
   exact ⟨u ∘ φ, φ_anti_basis, fun n => hφ n.lt_succ_self⟩
-#align
-  topological_group.exists_antitone_basis_nhds_one TopologicalGroup.exists_antitone_basis_nhds_one
-#align
-  topological_add_group.exists_antitone_basis_nhds_zero TopologicalAddGroup.exists_antitone_basis_nhds_zero
+#align topological_group.exists_antitone_basis_nhds_one TopologicalGroup.exists_antitone_basis_nhds_one
+#align topological_add_group.exists_antitone_basis_nhds_zero TopologicalAddGroup.exists_antitone_basis_nhds_zero
 
 include n
 
@@ -1086,8 +1082,7 @@ countable neighborhood basis. -/
 instance QuotientGroup.nhds_one_is_countably_generated : (𝓝 (1 : G ⧸ N)).IsCountablyGenerated :=
   (QuotientGroup.nhds_eq N 1).symm ▸ map.is_countably_generated _ _
 #align quotient_group.nhds_one_is_countably_generated QuotientGroup.nhds_one_is_countably_generated
-#align
-  quotient_add_group.nhds_zero_is_countably_generated quotientAddGroup.nhds_zero_is_countably_generated
+#align quotient_add_group.nhds_zero_is_countably_generated quotientAddGroup.nhds_zero_is_countably_generated
 
 end QuotientTopologicalGroup
 
@@ -1533,10 +1528,8 @@ theorem Subgroup.properly_discontinuous_smul_of_tendsto_cofinite (S : Subgroup G
       convert H
       ext x
       simpa only [image_smul, mem_image, Prod.exists] using Set.smul_inter_ne_empty_iff' }
-#align
-  subgroup.properly_discontinuous_smul_of_tendsto_cofinite Subgroup.properly_discontinuous_smul_of_tendsto_cofinite
-#align
-  add_subgroup.properly_discontinuous_vadd_of_tendsto_cofinite AddSubgroup.properly_discontinuous_vadd_of_tendsto_cofinite
+#align subgroup.properly_discontinuous_smul_of_tendsto_cofinite Subgroup.properly_discontinuous_smul_of_tendsto_cofinite
+#align add_subgroup.properly_discontinuous_vadd_of_tendsto_cofinite AddSubgroup.properly_discontinuous_vadd_of_tendsto_cofinite
 
 attribute [local semireducible] MulOpposite
 
@@ -1560,10 +1553,8 @@ theorem Subgroup.properly_discontinuous_smul_opposite_of_tendsto_cofinite (S : S
       convert H
       ext x
       simpa only [image_smul, mem_image, Prod.exists] using Set.op_smul_inter_ne_empty_iff }
-#align
-  subgroup.properly_discontinuous_smul_opposite_of_tendsto_cofinite Subgroup.properly_discontinuous_smul_opposite_of_tendsto_cofinite
-#align
-  add_subgroup.properly_discontinuous_vadd_opposite_of_tendsto_cofinite AddSubgroup.properly_discontinuous_vadd_opposite_of_tendsto_cofinite
+#align subgroup.properly_discontinuous_smul_opposite_of_tendsto_cofinite Subgroup.properly_discontinuous_smul_opposite_of_tendsto_cofinite
+#align add_subgroup.properly_discontinuous_vadd_opposite_of_tendsto_cofinite AddSubgroup.properly_discontinuous_vadd_opposite_of_tendsto_cofinite
 
 end
 
@@ -1656,10 +1647,8 @@ instance (priority := 100) SeparableLocallyCompactGroup.sigma_compact_space [Sep
         (dense_range_dense_seq G).inter_nhds_nonempty
           ((Homeomorph.mulLeft x).Continuous.ContinuousAt <| hL1)
     exact ⟨n, hn⟩
-#align
-  separable_locally_compact_group.sigma_compact_space SeparableLocallyCompactGroup.sigma_compact_space
-#align
-  separable_locally_compact_add_group.sigma_compact_space SeparableLocallyCompactAddGroup.sigma_compact_space
+#align separable_locally_compact_group.sigma_compact_space SeparableLocallyCompactGroup.sigma_compact_space
+#align separable_locally_compact_add_group.sigma_compact_space SeparableLocallyCompactAddGroup.sigma_compact_space
 
 /-- Given two compact sets in a noncompact topological group, there is a translate of the second
 one that is disjoint from the first one. -/
@@ -1914,8 +1903,7 @@ theorem to_topological_space_injective :
   cases g
   congr
 #align group_topology.to_topological_space_injective GroupTopology.to_topological_space_injective
-#align
-  add_group_topology.to_topological_space_injective AddGroupTopology.to_topological_space_injective
+#align add_group_topology.to_topological_space_injective AddGroupTopology.to_topological_space_injective
 
 @[ext, to_additive]
 theorem ext' {f g : GroupTopology α} (h : f.IsOpen = g.IsOpen) : f = g :=

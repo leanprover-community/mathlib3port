@@ -127,14 +127,12 @@ variable [CommSemigroup M₀] [Zero M₀]
 theorem IsLeftCancelMulZero.to_is_right_cancel_mul_zero [IsLeftCancelMulZero M₀] :
     IsRightCancelMulZero M₀ :=
   ⟨fun a b c ha h => mul_left_cancel₀ ha <| (mul_comm _ _).trans <| h.trans (mul_comm _ _)⟩
-#align
-  is_left_cancel_mul_zero.to_is_right_cancel_mul_zero IsLeftCancelMulZero.to_is_right_cancel_mul_zero
+#align is_left_cancel_mul_zero.to_is_right_cancel_mul_zero IsLeftCancelMulZero.to_is_right_cancel_mul_zero
 
 theorem IsRightCancelMulZero.to_is_left_cancel_mul_zero [IsRightCancelMulZero M₀] :
     IsLeftCancelMulZero M₀ :=
   ⟨fun a b c ha h => mul_right_cancel₀ ha <| (mul_comm _ _).trans <| h.trans (mul_comm _ _)⟩
-#align
-  is_right_cancel_mul_zero.to_is_left_cancel_mul_zero IsRightCancelMulZero.to_is_left_cancel_mul_zero
+#align is_right_cancel_mul_zero.to_is_left_cancel_mul_zero IsRightCancelMulZero.to_is_left_cancel_mul_zero
 
 theorem IsLeftCancelMulZero.to_is_cancel_mul_zero [IsLeftCancelMulZero M₀] : IsCancelMulZero M₀ :=
   { ‹IsLeftCancelMulZero M₀›, IsLeftCancelMulZero.to_is_right_cancel_mul_zero with }
@@ -227,8 +225,7 @@ class CancelCommMonoidWithZero (M₀ : Type _) extends CommMonoidWithZero M₀ w
 instance (priority := 100) CancelCommMonoidWithZero.toCancelMonoidWithZero
     [h : CancelCommMonoidWithZero M₀] : CancelMonoidWithZero M₀ :=
   { h, @IsLeftCancelMulZero.to_is_right_cancel_mul_zero M₀ _ _ { h with } with }
-#align
-  cancel_comm_monoid_with_zero.to_cancel_monoid_with_zero CancelCommMonoidWithZero.toCancelMonoidWithZero
+#align cancel_comm_monoid_with_zero.to_cancel_monoid_with_zero CancelCommMonoidWithZero.toCancelMonoidWithZero
 -/
 
 #print GroupWithZero /-

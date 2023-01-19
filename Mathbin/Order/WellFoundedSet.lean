@@ -970,8 +970,7 @@ theorem PartiallyWellOrderedOn.image_of_monotone_on (hs : s.PartiallyWellOrdered
   obtain rfl : f ∘ g = g'; exact funext HEq
   obtain ⟨m, n, hlt, hmn⟩ := hs g hgs
   exact ⟨m, n, hlt, hf _ (hgs m) _ (hgs n) hmn⟩
-#align
-  set.partially_well_ordered_on.image_of_monotone_on Set.PartiallyWellOrderedOn.image_of_monotone_on
+#align set.partially_well_ordered_on.image_of_monotone_on Set.PartiallyWellOrderedOn.image_of_monotone_on
 
 theorem IsAntichain.finite_of_partially_well_ordered_on (ha : IsAntichain r s)
     (hp : s.PartiallyWellOrderedOn r) : s.Finite :=
@@ -982,8 +981,7 @@ theorem IsAntichain.finite_of_partially_well_ordered_on (ha : IsAntichain r s)
     hmn.ne
       ((hi.nat_embedding _).Injective <|
         Subtype.val_injective <| ha.eq (hi.nat_embedding _ m).2 (hi.nat_embedding _ n).2 h)
-#align
-  is_antichain.finite_of_partially_well_ordered_on IsAntichain.finite_of_partially_well_ordered_on
+#align is_antichain.finite_of_partially_well_ordered_on IsAntichain.finite_of_partially_well_ordered_on
 
 section IsRefl
 
@@ -1038,8 +1036,7 @@ theorem partially_well_ordered_on_iff_finite_antichains [IsSymm α r] :
   obtain h | h := (ne_of_apply_ne _ hmn).lt_or_lt
   · exact H _ _ h
   · exact mt symm (H _ _ h)
-#align
-  set.partially_well_ordered_on_iff_finite_antichains Set.partially_well_ordered_on_iff_finite_antichains
+#align set.partially_well_ordered_on_iff_finite_antichains Set.partially_well_ordered_on_iff_finite_antichains
 
 variable [IsTrans α r]
 
@@ -1053,8 +1050,7 @@ theorem PartiallyWellOrderedOn.exists_monotone_subseq (h : s.PartiallyWellOrdere
   · exfalso
     obtain ⟨m, n, hlt, hle⟩ := h (f ∘ g) fun n => hf _
     exact h2 m n hlt hle
-#align
-  set.partially_well_ordered_on.exists_monotone_subseq Set.PartiallyWellOrderedOn.exists_monotone_subseq
+#align set.partially_well_ordered_on.exists_monotone_subseq Set.PartiallyWellOrderedOn.exists_monotone_subseq
 
 theorem partially_well_ordered_on_iff_exists_monotone_subseq :
     s.PartiallyWellOrderedOn r ↔
@@ -1065,8 +1061,7 @@ theorem partially_well_ordered_on_iff_exists_monotone_subseq :
     · exact h.exists_monotone_subseq f hf
     · obtain ⟨g, gmon⟩ := h f hf
       exact ⟨g 0, g 1, g.lt_iff_lt.2 zero_lt_one, gmon _ _ zero_le_one⟩
-#align
-  set.partially_well_ordered_on_iff_exists_monotone_subseq Set.partially_well_ordered_on_iff_exists_monotone_subseq
+#align set.partially_well_ordered_on_iff_exists_monotone_subseq Set.partially_well_ordered_on_iff_exists_monotone_subseq
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 protected theorem PartiallyWellOrderedOn.prod {t : Set β} (hs : PartiallyWellOrderedOn s r)
@@ -1407,8 +1402,7 @@ def IsBadSeq (r : α → α → Prop) (s : Set α) (f : ℕ → α) : Prop :=
 theorem iff_forall_not_is_bad_seq (r : α → α → Prop) (s : Set α) :
     s.PartiallyWellOrderedOn r ↔ ∀ f, ¬IsBadSeq r s f :=
   forall_congr' fun f => by simp [is_bad_seq]
-#align
-  set.partially_well_ordered_on.iff_forall_not_is_bad_seq Set.PartiallyWellOrderedOn.iff_forall_not_is_bad_seq
+#align set.partially_well_ordered_on.iff_forall_not_is_bad_seq Set.PartiallyWellOrderedOn.iff_forall_not_is_bad_seq
 
 /-- This indicates that every bad sequence `g` that agrees with `f` on the first `n`
   terms has `rk (f n) ≤ rk (g n)`. -/
@@ -1429,8 +1423,7 @@ noncomputable def minBadSeqOfBadSeq (r : α → α → Prop) (rk : α → ℕ) (
     refine' ⟨Classical.choose (Nat.find_spec h), h1, by convert h2, fun g hg1 hg2 con => _⟩
     refine' Nat.find_min h _ ⟨g, fun m mn => (h1 m mn).trans (hg1 m mn), by convert Con, rfl⟩
     rwa [← h3]
-#align
-  set.partially_well_ordered_on.min_bad_seq_of_bad_seq Set.PartiallyWellOrderedOn.minBadSeqOfBadSeq
+#align set.partially_well_ordered_on.min_bad_seq_of_bad_seq Set.PartiallyWellOrderedOn.minBadSeqOfBadSeq
 
 theorem exists_min_bad_of_exists_bad (r : α → α → Prop) (rk : α → ℕ) (s : Set α) :
     (∃ f, IsBadSeq r s f) → ∃ f, IsBadSeq r s f ∧ ∀ n, IsMinBadSeq r rk s n f :=
@@ -1463,8 +1456,7 @@ theorem exists_min_bad_of_exists_bad (r : α → α → Prop) (rk : α → ℕ) 
     convert (fs n).2.1.2 m n mn
   · convert (fs n).2.2 g (fun m mn => Eq.trans _ (hg1 m mn)) (lt_of_lt_of_le hg2 le_rfl)
     rw [← h m n (le_of_lt mn)]
-#align
-  set.partially_well_ordered_on.exists_min_bad_of_exists_bad Set.PartiallyWellOrderedOn.exists_min_bad_of_exists_bad
+#align set.partially_well_ordered_on.exists_min_bad_of_exists_bad Set.PartiallyWellOrderedOn.exists_min_bad_of_exists_bad
 
 theorem iff_not_exists_is_min_bad_seq (rk : α → ℕ) {s : Set α} :
     s.PartiallyWellOrderedOn r ↔ ¬∃ f, IsBadSeq r s f ∧ ∀ n, IsMinBadSeq r rk s n f :=
@@ -1474,8 +1466,7 @@ theorem iff_not_exists_is_min_bad_seq (rk : α → ℕ) {s : Set α} :
   · apply exists_min_bad_of_exists_bad
   rintro ⟨f, hf1, hf2⟩
   exact ⟨f, hf1⟩
-#align
-  set.partially_well_ordered_on.iff_not_exists_is_min_bad_seq Set.PartiallyWellOrderedOn.iff_not_exists_is_min_bad_seq
+#align set.partially_well_ordered_on.iff_not_exists_is_min_bad_seq Set.PartiallyWellOrderedOn.iff_not_exists_is_min_bad_seq
 
 /-- Higman's Lemma, which states that for any reflexive, transitive relation `r` which is
   partially well-ordered on a set `s`, the relation `list.sublist_forall₂ r` is partially
@@ -1527,8 +1518,7 @@ theorem partially_well_ordered_on_sublist_forall₂ (r : α → α → Prop) [Is
       apply hf1.2 _ _ (g.lt_iff_lt.2 mn)
       rw [← List.cons_head!_tail (hnil (g (m - g 0))), ← List.cons_head!_tail (hnil (g n'))]
       exact List.SublistForall₂.cons (hg _ _ (le_of_lt mn)) hmn
-#align
-  set.partially_well_ordered_on.partially_well_ordered_on_sublist_forall₂ Set.PartiallyWellOrderedOn.partially_well_ordered_on_sublist_forall₂
+#align set.partially_well_ordered_on.partially_well_ordered_on_sublist_forall₂ Set.PartiallyWellOrderedOn.partially_well_ordered_on_sublist_forall₂
 
 end Set.PartiallyWellOrderedOn
 

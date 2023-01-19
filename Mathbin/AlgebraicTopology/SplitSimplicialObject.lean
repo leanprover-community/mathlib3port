@@ -140,8 +140,7 @@ theorem eq_id_iff_eq : A.EqId ↔ A.1 = Δ := by
     · haveI := hf
       simp only [eq_to_hom_refl, comp_id]
       exact eq_id_of_epi f
-#align
-  simplicial_object.splitting.index_set.eq_id_iff_eq SimplicialObject.Splitting.IndexSet.eq_id_iff_eq
+#align simplicial_object.splitting.index_set.eq_id_iff_eq SimplicialObject.Splitting.IndexSet.eq_id_iff_eq
 
 theorem eq_id_iff_len_eq : A.EqId ↔ A.1.unop.len = Δ.unop.len :=
   by
@@ -153,8 +152,7 @@ theorem eq_id_iff_len_eq : A.EqId ↔ A.1.unop.len = Δ.unop.len :=
     rw [← unop_inj_iff]
     ext
     exact h
-#align
-  simplicial_object.splitting.index_set.eq_id_iff_len_eq SimplicialObject.Splitting.IndexSet.eq_id_iff_len_eq
+#align simplicial_object.splitting.index_set.eq_id_iff_len_eq SimplicialObject.Splitting.IndexSet.eq_id_iff_len_eq
 
 theorem eq_id_iff_len_le : A.EqId ↔ Δ.unop.len ≤ A.1.unop.len :=
   by
@@ -163,8 +161,7 @@ theorem eq_id_iff_len_le : A.EqId ↔ Δ.unop.len ≤ A.1.unop.len :=
   · intro h
     rw [h]
   · exact le_antisymm (len_le_of_epi (inferInstance : epi A.e))
-#align
-  simplicial_object.splitting.index_set.eq_id_iff_len_le SimplicialObject.Splitting.IndexSet.eq_id_iff_len_le
+#align simplicial_object.splitting.index_set.eq_id_iff_len_le SimplicialObject.Splitting.IndexSet.eq_id_iff_len_le
 
 theorem eq_id_iff_mono : A.EqId ↔ Mono A.e :=
   by
@@ -177,8 +174,7 @@ theorem eq_id_iff_mono : A.EqId ↔ Mono A.e :=
   · intro h
     rw [eq_id_iff_len_le]
     exact len_le_of_mono h
-#align
-  simplicial_object.splitting.index_set.eq_id_iff_mono SimplicialObject.Splitting.IndexSet.eq_id_iff_mono
+#align simplicial_object.splitting.index_set.eq_id_iff_mono SimplicialObject.Splitting.IndexSet.eq_id_iff_mono
 
 /-- Given `A : index_set Δ₁`, if `p.unop : unop Δ₂ ⟶ unop Δ₁` is an epi, this
 is the obvious element in `A : index_set Δ₂` associated to the composition
@@ -358,8 +354,7 @@ theorem ι_summand_epi_naturality {Δ₁ Δ₂ : SimplexCategoryᵒᵖ} (A : Ind
   erw [colimit.ι_desc, colimit.ι_desc, cofan.mk_ι_app, cofan.mk_ι_app]
   dsimp only [index_set.epi_comp, index_set.e]
   rw [op_comp, X.map_comp, assoc, Quiver.Hom.op_unop]
-#align
-  simplicial_object.splitting.ι_summand_epi_naturality SimplicialObject.Splitting.ι_summand_epi_naturality
+#align simplicial_object.splitting.ι_summand_epi_naturality SimplicialObject.Splitting.ι_summand_epi_naturality
 
 end Splitting
 
@@ -464,8 +459,7 @@ theorem comp_f {S₁ S₂ S₃ : Split C} (Φ₁₂ : S₁ ⟶ S₂) (Φ₂₃ :
 theorem ι_summand_naturality_symm {S₁ S₂ : Split C} (Φ : S₁ ⟶ S₂) {Δ : SimplexCategoryᵒᵖ}
     (A : Splitting.IndexSet Δ) : S₁.s.ιSummand A ≫ Φ.f.app Δ = Φ.f A.1.unop.len ≫ S₂.s.ιSummand A :=
   by rw [S₁.s.ι_summand_eq, S₂.s.ι_summand_eq, assoc, Φ.F.naturality, ← Φ.comm_assoc]
-#align
-  simplicial_object.split.ι_summand_naturality_symm SimplicialObject.Split.ι_summand_naturality_symm
+#align simplicial_object.split.ι_summand_naturality_symm SimplicialObject.Split.ι_summand_naturality_symm
 
 variable (C)
 

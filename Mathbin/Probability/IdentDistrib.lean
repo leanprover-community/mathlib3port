@@ -112,8 +112,7 @@ protected theorem compOfAeMeasurable {u : γ → δ} (h : IdentDistrib f g μ ν
       rw [← AeMeasurable.map_map_of_ae_measurable hu h.ae_measurable_fst, ←
         AeMeasurable.map_map_of_ae_measurable _ h.ae_measurable_snd, h.map_eq]
       rwa [← h.map_eq] }
-#align
-  probability_theory.ident_distrib.comp_of_ae_measurable ProbabilityTheory.IdentDistrib.compOfAeMeasurable
+#align probability_theory.ident_distrib.comp_of_ae_measurable ProbabilityTheory.IdentDistrib.compOfAeMeasurable
 
 protected theorem comp {u : γ → δ} (h : IdentDistrib f g μ ν) (hu : Measurable u) :
     IdentDistrib (u ∘ f) (u ∘ g) μ ν :=
@@ -134,8 +133,7 @@ theorem measure_mem_eq (h : IdentDistrib f g μ ν) {s : Set γ} (hs : Measurabl
 #align probability_theory.ident_distrib.measure_mem_eq ProbabilityTheory.IdentDistrib.measure_mem_eq
 
 alias measure_mem_eq ← measure_preimage_eq
-#align
-  probability_theory.ident_distrib.measure_preimage_eq ProbabilityTheory.IdentDistrib.measure_preimage_eq
+#align probability_theory.ident_distrib.measure_preimage_eq ProbabilityTheory.IdentDistrib.measure_preimage_eq
 
 theorem ae_snd (h : IdentDistrib f g μ ν) {p : γ → Prop} (pmeas : MeasurableSet { x | p x })
     (hp : ∀ᵐ x ∂μ, p (f x)) : ∀ᵐ x ∂ν, p (g x) :=
@@ -156,8 +154,7 @@ strongly measurable. So is the second function, but use `h.symm.ae_strongly_meas
 theorem aeStronglyMeasurableFst [TopologicalSpace γ] [MetrizableSpace γ] [OpensMeasurableSpace γ]
     [SecondCountableTopology γ] (h : IdentDistrib f g μ ν) : AeStronglyMeasurable f μ :=
   h.aeMeasurableFst.AeStronglyMeasurable
-#align
-  probability_theory.ident_distrib.ae_strongly_measurable_fst ProbabilityTheory.IdentDistrib.aeStronglyMeasurableFst
+#align probability_theory.ident_distrib.ae_strongly_measurable_fst ProbabilityTheory.IdentDistrib.aeStronglyMeasurableFst
 
 /-- If `f` and `g` are identically distributed and `f` is a.e. strongly measurable, so is `g`. -/
 theorem aeStronglyMeasurableSnd [TopologicalSpace γ] [MetrizableSpace γ] [BorelSpace γ]
@@ -168,14 +165,12 @@ theorem aeStronglyMeasurableSnd [TopologicalSpace γ] [MetrizableSpace γ] [Bore
   refine' ⟨closure t, t_sep.closure, _⟩
   apply h.ae_mem_snd is_closed_closure.measurable_set
   filter_upwards [ht] with x hx using subset_closure hx
-#align
-  probability_theory.ident_distrib.ae_strongly_measurable_snd ProbabilityTheory.IdentDistrib.aeStronglyMeasurableSnd
+#align probability_theory.ident_distrib.ae_strongly_measurable_snd ProbabilityTheory.IdentDistrib.aeStronglyMeasurableSnd
 
 theorem ae_strongly_measurable_iff [TopologicalSpace γ] [MetrizableSpace γ] [BorelSpace γ]
     (h : IdentDistrib f g μ ν) : AeStronglyMeasurable f μ ↔ AeStronglyMeasurable g ν :=
   ⟨fun hf => h.aeStronglyMeasurableSnd hf, fun hg => h.symm.aeStronglyMeasurableSnd hg⟩
-#align
-  probability_theory.ident_distrib.ae_strongly_measurable_iff ProbabilityTheory.IdentDistrib.ae_strongly_measurable_iff
+#align probability_theory.ident_distrib.ae_strongly_measurable_iff ProbabilityTheory.IdentDistrib.ae_strongly_measurable_iff
 
 theorem ess_sup_eq [ConditionallyCompleteLinearOrder γ] [TopologicalSpace γ]
     [OpensMeasurableSpace γ] [OrderClosedTopology γ] (h : IdentDistrib f g μ ν) :
@@ -280,8 +275,7 @@ protected theorem sq [Pow γ ℕ] [HasMeasurablePow γ ℕ] (h : IdentDistrib f 
 protected theorem coeNnrealEnnreal {f : α → ℝ≥0} {g : β → ℝ≥0} (h : IdentDistrib f g μ ν) :
     IdentDistrib (fun x => (f x : ℝ≥0∞)) (fun x => (g x : ℝ≥0∞)) μ ν :=
   h.comp measurable_coe_nnreal_ennreal
-#align
-  probability_theory.ident_distrib.coe_nnreal_ennreal ProbabilityTheory.IdentDistrib.coeNnrealEnnreal
+#align probability_theory.ident_distrib.coe_nnreal_ennreal ProbabilityTheory.IdentDistrib.coeNnrealEnnreal
 
 @[to_additive]
 theorem mulConst [Mul γ] [HasMeasurableMul γ] (h : IdentDistrib f g μ ν) (c : γ) :
@@ -360,8 +354,7 @@ theorem Memℒp.uniformIntegrableOfIdentDistribAux {ι : Type _} {f : ι → α 
   · rfl
   all_goals
     exact ae_strongly_measurable_id.indicator (measurable_set_le measurable_const measurable_nnnorm)
-#align
-  probability_theory.mem_ℒp.uniform_integrable_of_ident_distrib_aux ProbabilityTheory.Memℒp.uniformIntegrableOfIdentDistribAux
+#align probability_theory.mem_ℒp.uniform_integrable_of_ident_distrib_aux ProbabilityTheory.Memℒp.uniformIntegrableOfIdentDistribAux
 
 /-- A sequence of identically distributed Lᵖ functions is p-uniformly integrable. -/
 theorem Memℒp.uniformIntegrableOfIdentDistrib {ι : Type _} {f : ι → α → E} {j : ι} {p : ℝ≥0∞}
@@ -380,8 +373,7 @@ theorem Memℒp.uniformIntegrableOfIdentDistrib {ι : Type _} {f : ι → α →
         (ident_distrib.of_ae_eq (hgmeas i).AeMeasurable (hgeq i)).trans
           ((hf i).trans <| ident_distrib.of_ae_eq (hfmeas j).AeMeasurable (hgeq j).symm))
       hgeq
-#align
-  probability_theory.mem_ℒp.uniform_integrable_of_ident_distrib ProbabilityTheory.Memℒp.uniformIntegrableOfIdentDistrib
+#align probability_theory.mem_ℒp.uniform_integrable_of_ident_distrib ProbabilityTheory.Memℒp.uniformIntegrableOfIdentDistrib
 
 end UniformIntegrable
 

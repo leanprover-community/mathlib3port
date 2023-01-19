@@ -308,8 +308,7 @@ private theorem left_inv_eq_right_inv_aux (p : FormalMultilinearSeries 𝕜 E F)
     _ = (id 𝕜 E).comp (rightInv p i) := by rw [left_inv_comp p i h]
     _ = rightInv p i := by simp
     
-#align
-  formal_multilinear_series.left_inv_eq_right_inv_aux formal_multilinear_series.left_inv_eq_right_inv_aux
+#align formal_multilinear_series.left_inv_eq_right_inv_aux formal_multilinear_series.left_inv_eq_right_inv_aux
 
 /-- The left inverse and the right inverse of a formal multilinear series coincide. This is not at
 all obvious from their definition, but it follows from uniqueness of inverses (which comes from the
@@ -459,8 +458,7 @@ theorem radius_right_inv_pos_of_radius_pos_aux1 (n : ℕ) (p : ℕ → ℝ) (hp 
       dsimp
       simp [prod_const, ← mul_sum, mul_pow]
     
-#align
-  formal_multilinear_series.radius_right_inv_pos_of_radius_pos_aux1 FormalMultilinearSeries.radius_right_inv_pos_of_radius_pos_aux1
+#align formal_multilinear_series.radius_right_inv_pos_of_radius_pos_aux1 FormalMultilinearSeries.radius_right_inv_pos_of_radius_pos_aux1
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr add_le_add, ",", expr le_refl, ",", expr sum_le_sum
    (λ j hj, _), ",", expr mul_le_mul_of_nonneg_left, ",", expr pow_nonneg, ",", expr ha, "]"],
@@ -533,8 +531,7 @@ theorem radius_right_inv_pos_of_radius_pos_aux2 {n : ℕ} (hn : 2 ≤ n + 1)
         radius_right_inv_pos_of_radius_pos_aux1 n (fun k => ‖p.right_inv i k‖)
           (fun k => norm_nonneg _) hr ha
     
-#align
-  formal_multilinear_series.radius_right_inv_pos_of_radius_pos_aux2 FormalMultilinearSeries.radius_right_inv_pos_of_radius_pos_aux2
+#align formal_multilinear_series.radius_right_inv_pos_of_radius_pos_aux2 FormalMultilinearSeries.radius_right_inv_pos_of_radius_pos_aux2
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr add_le_add, ",", expr le_refl, ",", expr mul_le_mul_of_nonneg_left, ",", expr mul_nonneg, ",", expr norm_nonneg, ",", expr Cpos.le, "]"],
   []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
@@ -635,8 +632,7 @@ theorem radius_right_inv_pos_of_radius_pos (p : FormalMultilinearSeries 𝕜 E F
         single_le_sum this (by simp [one_le_n])
       _ ≤ (I + 1) * a := IRec (n + 1) (by decide)
       
-#align
-  formal_multilinear_series.radius_right_inv_pos_of_radius_pos FormalMultilinearSeries.radius_right_inv_pos_of_radius_pos
+#align formal_multilinear_series.radius_right_inv_pos_of_radius_pos FormalMultilinearSeries.radius_right_inv_pos_of_radius_pos
 
 end FormalMultilinearSeries
 

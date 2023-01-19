@@ -268,8 +268,7 @@ theorem trace_gen_eq_zero {x : L} (hx : ¬IsIntegral K x) :
   refine' is_integral_of_mem_of_fg K⟮⟯.toSubalgebra _ x _
   · exact (Submodule.fg_iff_finite_dimensional _).mpr (FiniteDimensional.of_fintype_basis b)
   · exact subset_adjoin K _ (Set.mem_singleton x)
-#align
-  intermediate_field.adjoin_simple.trace_gen_eq_zero IntermediateField.AdjoinSimple.trace_gen_eq_zero
+#align intermediate_field.adjoin_simple.trace_gen_eq_zero IntermediateField.AdjoinSimple.trace_gen_eq_zero
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
@@ -289,8 +288,7 @@ theorem trace_gen_eq_sum_roots (x : L) (hf : (minpoly K x).Splits (algebraMap K 
       rw [adjoin.power_basis_gen hx, minpoly.eq_of_algebra_map_eq injKxL hx'] <;>
     try simp only [adjoin_simple.algebra_map_gen _ _]
   exact hf
-#align
-  intermediate_field.adjoin_simple.trace_gen_eq_sum_roots IntermediateField.AdjoinSimple.trace_gen_eq_sum_roots
+#align intermediate_field.adjoin_simple.trace_gen_eq_sum_roots IntermediateField.AdjoinSimple.trace_gen_eq_sum_roots
 
 end IntermediateField.AdjoinSimple
 
@@ -540,8 +538,7 @@ theorem embeddings_matrix_reindex_eq_vandermonde (pb : PowerBasis A B)
   by
   ext (i j)
   simp [embeddings_matrix_reindex, embeddings_matrix]
-#align
-  algebra.embeddings_matrix_reindex_eq_vandermonde Algebra.embeddings_matrix_reindex_eq_vandermonde
+#align algebra.embeddings_matrix_reindex_eq_vandermonde Algebra.embeddings_matrix_reindex_eq_vandermonde
 
 section Field
 
@@ -558,8 +555,7 @@ theorem trace_matrix_eq_embeddings_matrix_mul_trans :
   by
   ext (i j)
   simp [trace_eq_sum_embeddings, embeddings_matrix, Matrix.mul_apply]
-#align
-  algebra.trace_matrix_eq_embeddings_matrix_mul_trans Algebra.trace_matrix_eq_embeddings_matrix_mul_trans
+#align algebra.trace_matrix_eq_embeddings_matrix_mul_trans Algebra.trace_matrix_eq_embeddings_matrix_mul_trans
 
 theorem trace_matrix_eq_embeddings_matrix_reindex_mul_trans [Fintype κ] (e : κ ≃ (L →ₐ[K] E)) :
     (traceMatrix K b).map (algebraMap K E) =
@@ -567,8 +563,7 @@ theorem trace_matrix_eq_embeddings_matrix_reindex_mul_trans [Fintype κ] (e : κ
   by
   rw [trace_matrix_eq_embeddings_matrix_mul_trans, embeddings_matrix_reindex, reindex_apply,
     transpose_submatrix, ← submatrix_mul_transpose_submatrix, ← Equiv.coe_refl, Equiv.refl_symm]
-#align
-  algebra.trace_matrix_eq_embeddings_matrix_reindex_mul_trans Algebra.trace_matrix_eq_embeddings_matrix_reindex_mul_trans
+#align algebra.trace_matrix_eq_embeddings_matrix_reindex_mul_trans Algebra.trace_matrix_eq_embeddings_matrix_reindex_mul_trans
 
 end Field
 

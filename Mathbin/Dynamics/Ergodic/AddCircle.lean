@@ -110,8 +110,7 @@ theorem ae_empty_or_univ_of_forall_vadd_ae_eq_self {s : Set <| AddCircle T}
   rw [Ennreal.div_eq_div_iff hT₁ Ennreal.of_real_ne_top hI₀ hI₁,
     volume_of_add_preimage_eq s _ (u j) d huj (hu₁ j) closed_ball_ae_eq_ball, nsmul_eq_mul, ←
     mul_assoc, hI₂]
-#align
-  add_circle.ae_empty_or_univ_of_forall_vadd_ae_eq_self AddCircle.ae_empty_or_univ_of_forall_vadd_ae_eq_self
+#align add_circle.ae_empty_or_univ_of_forall_vadd_ae_eq_self AddCircle.ae_empty_or_univ_of_forall_vadd_ae_eq_self
 
 theorem ergodicZsmul {n : ℤ} (hn : 1 < |n|) : Ergodic fun y : AddCircle T => n • y :=
   { measure_preserving_zsmul volume (abs_pos.mp <| lt_trans zero_lt_one hn) with

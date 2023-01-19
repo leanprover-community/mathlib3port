@@ -162,8 +162,7 @@ theorem has_fderiv_at_integral_of_dominated_loc_of_lip' {F : H → α → E} {F'
       ext x
       rw [norm_smul_of_nonneg (nneg _)]
     rwa [has_fderiv_at_iff_tendsto, this] at ha
-#align
-  has_fderiv_at_integral_of_dominated_loc_of_lip' has_fderiv_at_integral_of_dominated_loc_of_lip'
+#align has_fderiv_at_integral_of_dominated_loc_of_lip' has_fderiv_at_integral_of_dominated_loc_of_lip'
 
 /-- Differentiation under integral of `x ↦ ∫ F x a` at a given point `x₀`, assuming
 `F x₀` is integrable, `x ↦ F x a` is locally Lipschitz on a ball around `x₀` for ae `a`
@@ -274,6 +273,5 @@ theorem has_deriv_at_integral_of_dominated_loc_of_deriv_le {F : 𝕜 → α → 
   exact
     has_deriv_at_integral_of_dominated_loc_of_lip ε_pos hF_meas hF_int hF'_meas this
       bound_integrable diff_x₀
-#align
-  has_deriv_at_integral_of_dominated_loc_of_deriv_le has_deriv_at_integral_of_dominated_loc_of_deriv_le
+#align has_deriv_at_integral_of_dominated_loc_of_deriv_le has_deriv_at_integral_of_dominated_loc_of_deriv_le
 

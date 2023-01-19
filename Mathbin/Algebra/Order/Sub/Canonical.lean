@@ -327,8 +327,7 @@ protected theorem lt_of_tsub_lt_tsub_left_of_le [ContravariantClass α α (· + 
   by
   conv_lhs at h => rw [← tsub_add_cancel_of_le hca]
   exact lt_of_add_lt_add_left (hb.lt_add_of_tsub_lt_right h)
-#align
-  add_le_cancellable.lt_of_tsub_lt_tsub_left_of_le AddLECancellable.lt_of_tsub_lt_tsub_left_of_le
+#align add_le_cancellable.lt_of_tsub_lt_tsub_left_of_le AddLECancellable.lt_of_tsub_lt_tsub_left_of_le
 
 /- warning: add_le_cancellable.tsub_lt_tsub_left_of_le -> AddLECancellable.tsub_lt_tsub_left_of_le is a dubious translation:
 lean 3 declaration is
@@ -363,8 +362,7 @@ protected theorem tsub_lt_tsub_iff_left_of_le_of_le [ContravariantClass α α (�
     (hb : AddLECancellable b) (hab : AddLECancellable (a - b)) (h₁ : b ≤ a) (h₂ : c ≤ a) :
     a - b < a - c ↔ c < b :=
   ⟨hb.lt_of_tsub_lt_tsub_left_of_le h₂, hab.tsub_lt_tsub_left_of_le h₁⟩
-#align
-  add_le_cancellable.tsub_lt_tsub_iff_left_of_le_of_le AddLECancellable.tsub_lt_tsub_iff_left_of_le_of_le
+#align add_le_cancellable.tsub_lt_tsub_iff_left_of_le_of_le AddLECancellable.tsub_lt_tsub_iff_left_of_le_of_le
 
 /- warning: add_le_cancellable.add_tsub_tsub_cancel -> AddLECancellable.add_tsub_tsub_cancel is a dubious translation:
 lean 3 declaration is
@@ -842,8 +840,7 @@ def CanonicallyOrderedAddMonoid.toAddCancelCommMonoid : AddCancelCommMonoid α :
   { (by infer_instance : AddCommMonoid α) with
     add_left_cancel := fun a b c h => by
       simpa only [add_tsub_cancel_left] using congr_arg (fun x => x - a) h }
-#align
-  canonically_ordered_add_monoid.to_add_cancel_comm_monoid CanonicallyOrderedAddMonoid.toAddCancelCommMonoid
+#align canonically_ordered_add_monoid.to_add_cancel_comm_monoid CanonicallyOrderedAddMonoid.toAddCancelCommMonoid
 
 end Contra
 

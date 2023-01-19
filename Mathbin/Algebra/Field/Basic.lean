@@ -100,8 +100,7 @@ theorem one_div_mul_add_mul_one_div_eq_one_div_add_one_div (ha : a ≠ 0) (hb : 
     1 / a * (a + b) * (1 / b) = 1 / a + 1 / b := by
   rw [mul_add, one_div_mul_cancel ha, add_mul, one_mul, mul_assoc, mul_one_div_cancel hb, mul_one,
     add_comm]
-#align
-  one_div_mul_add_mul_one_div_eq_one_div_add_one_div one_div_mul_add_mul_one_div_eq_one_div_add_one_div
+#align one_div_mul_add_mul_one_div_eq_one_div_add_one_div one_div_mul_add_mul_one_div_eq_one_div_add_one_div
 
 /- warning: add_div_eq_mul_add_div -> add_div_eq_mul_add_div is a dubious translation:
 lean 3 declaration is
@@ -345,8 +344,7 @@ theorem one_div_mul_sub_mul_one_div_eq_one_div_add_one_div (ha : a ≠ 0) (hb : 
     1 / a * (b - a) * (1 / b) = 1 / a - 1 / b := by
   rw [mul_sub_left_distrib (1 / a), one_div_mul_cancel ha, mul_sub_right_distrib, one_mul,
     mul_assoc, mul_one_div_cancel hb, mul_one]
-#align
-  one_div_mul_sub_mul_one_div_eq_one_div_add_one_div one_div_mul_sub_mul_one_div_eq_one_div_add_one_div
+#align one_div_mul_sub_mul_one_div_eq_one_div_add_one_div one_div_mul_sub_mul_one_div_eq_one_div_add_one_div
 
 #print DivisionRing.isDomain /-
 -- see Note [lower instance priority]

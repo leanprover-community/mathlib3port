@@ -204,8 +204,7 @@ theorem average_mem_open_segment_compl_self [IsFiniteMeasure μ] {f : α → E} 
   simpa only [union_compl_self, restrict_univ] using
     average_union_mem_open_segment ae_disjoint_compl_right hs.compl hs₀ hsc₀ (measure_ne_top _ _)
       (measure_ne_top _ _) hfi.integrable_on hfi.integrable_on
-#align
-  measure_theory.average_mem_open_segment_compl_self MeasureTheory.average_mem_open_segment_compl_self
+#align measure_theory.average_mem_open_segment_compl_self MeasureTheory.average_mem_open_segment_compl_self
 
 @[simp]
 theorem average_const [IsFiniteMeasure μ] [h : μ.ae.ne_bot] (c : E) : (⨍ x, c ∂μ) = c := by

@@ -50,8 +50,7 @@ noncomputable def toTrivialization {x : X} {I : Type _} [TopologicalSpace I]
 theorem mem_to_trivialization_base_set {x : X} {I : Type _} [TopologicalSpace I]
     (h : IsEvenlyCovered f x I) : x ∈ h.toTrivialization.baseSet :=
   Classical.choose_spec h.2
-#align
-  is_evenly_covered.mem_to_trivialization_base_set IsEvenlyCovered.mem_to_trivialization_base_set
+#align is_evenly_covered.mem_to_trivialization_base_set IsEvenlyCovered.mem_to_trivialization_base_set
 
 theorem to_trivialization_apply {x : E} {I : Type _} [TopologicalSpace I]
     (h : IsEvenlyCovered f (f x) I) : (h.toTrivialization x).2 = ⟨x, rfl⟩ :=

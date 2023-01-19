@@ -240,7 +240,7 @@ Case conversion may be inaccurate. Consider using '#align mul_equiv.to_equiv_eq_
 @[simp, to_additive]
 theorem [anonymous] (f : M ≃* N) : f.toEquiv = f :=
   rfl
-#align mul_equiv.to_equiv_eq_coe[anonymous]
+#align mul_equiv.to_equiv_eq_coe [anonymous]
 
 /- warning: mul_equiv.to_fun_eq_coe clashes with [anonymous] -> [anonymous]
 warning: mul_equiv.to_fun_eq_coe -> [anonymous] is a dubious translation:
@@ -252,7 +252,7 @@ Case conversion may be inaccurate. Consider using '#align mul_equiv.to_fun_eq_co
 @[simp, to_additive]
 theorem [anonymous] {f : M ≃* N} : f.toFun = f :=
   rfl
-#align mul_equiv.to_fun_eq_coe[anonymous]
+#align mul_equiv.to_fun_eq_coe [anonymous]
 
 /- warning: mul_equiv.coe_to_equiv clashes with [anonymous] -> [anonymous]
 warning: mul_equiv.coe_to_equiv -> [anonymous] is a dubious translation:
@@ -264,7 +264,7 @@ Case conversion may be inaccurate. Consider using '#align mul_equiv.coe_to_equiv
 @[simp, to_additive]
 theorem [anonymous] {f : M ≃* N} : ⇑(f : M ≃ N) = f :=
   rfl
-#align mul_equiv.coe_to_equiv[anonymous]
+#align mul_equiv.coe_to_equiv [anonymous]
 
 /- warning: mul_equiv.coe_to_mul_hom -> MulEquiv.coe_toMulHom is a dubious translation:
 lean 3 declaration is
@@ -407,7 +407,7 @@ Case conversion may be inaccurate. Consider using '#align mul_equiv.coe_mk [anon
 @[simp, to_additive]
 theorem [anonymous] (f : M → N) (g h₁ h₂ h₃) : ⇑(MulEquiv.mk f g h₁ h₂ h₃) = f :=
   rfl
-#align mul_equiv.coe_mk[anonymous]
+#align mul_equiv.coe_mk [anonymous]
 
 /- warning: mul_equiv.to_equiv_mk clashes with [anonymous] -> [anonymous]
 warning: mul_equiv.to_equiv_mk -> [anonymous] is a dubious translation:
@@ -420,7 +420,7 @@ Case conversion may be inaccurate. Consider using '#align mul_equiv.to_equiv_mk 
 theorem [anonymous] (f : M → N) (g : N → M) (h₁ h₂ h₃) :
     (mk f g h₁ h₂ h₃).toEquiv = ⟨f, g, h₁, h₂⟩ :=
   rfl
-#align mul_equiv.to_equiv_mk[anonymous]
+#align mul_equiv.to_equiv_mk [anonymous]
 
 /- warning: mul_equiv.symm_symm -> MulEquiv.symm_symm is a dubious translation:
 lean 3 declaration is

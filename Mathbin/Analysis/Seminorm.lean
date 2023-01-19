@@ -811,8 +811,7 @@ theorem ball_zero_eq_preimage_ball {r : ℝ} : p.ball 0 r = p ⁻¹' Metric.ball
 theorem closed_ball_zero_eq_preimage_closed_ball {r : ℝ} :
     p.closedBall 0 r = p ⁻¹' Metric.closedBall 0 r := by
   rw [closed_ball_zero_eq, preimage_metric_closed_ball]
-#align
-  seminorm.closed_ball_zero_eq_preimage_closed_ball Seminorm.closed_ball_zero_eq_preimage_closed_ball
+#align seminorm.closed_ball_zero_eq_preimage_closed_ball Seminorm.closed_ball_zero_eq_preimage_closed_ball
 
 @[simp]
 theorem ball_bot {r : ℝ} (x : E) (hr : 0 < r) : ball (⊥ : Seminorm 𝕜 E) x r = Set.univ :=
@@ -1149,8 +1148,7 @@ protected theorem uniform_continuous_of_continuous_at_zero [UniformSpace E] [Uni
   exact
     tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds (hp.comp Filter.tendsto_comap)
       (fun xy => dist_nonneg) fun xy => p.norm_sub_map_le_sub _ _
-#align
-  seminorm.uniform_continuous_of_continuous_at_zero Seminorm.uniform_continuous_of_continuous_at_zero
+#align seminorm.uniform_continuous_of_continuous_at_zero Seminorm.uniform_continuous_of_continuous_at_zero
 
 protected theorem continuous_of_continuous_at_zero [TopologicalSpace E] [TopologicalAddGroup E]
     {p : Seminorm 𝕝 E} (hp : ContinuousAt p 0) : Continuous p :=

@@ -105,7 +105,7 @@ def [anonymous] (n : ℤ) : ℕ+ → ℚ
         exact Int.coe_nat_dvd.2 (Nat.gcd_dvd_left _ _)
       rw [this]
       exact Nat.coprime_div_gcd_div_gcd (Nat.gcd_pos_of_pos_right _ dpos)⟩
-#align rat.mk_pnat[anonymous]
+#align rat.mk_pnat [anonymous]
 
 #print mkRat /-
 /-- Form the quotient `n / d` where `n:ℤ` and `d:ℕ`. In the case `d = 0`, we
@@ -133,7 +133,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align rat.mk_pnat_eq [anonymous]ₓ'. -/
 theorem [anonymous] (n d h) : [anonymous] n ⟨d, h⟩ = n /. d := by
   change n /. d with dite _ _ _ <;> simp [ne_of_gt h]
-#align rat.mk_pnat_eq[anonymous]
+#align rat.mk_pnat_eq [anonymous]
 
 /- warning: rat.mk_nat_eq -> Rat.mkRat_eq is a dubious translation:
 lean 3 declaration is
@@ -169,7 +169,7 @@ theorem [anonymous] (n) : [anonymous] 0 n = 0 :=
   cases' n with n npos
   simp only [mk_pnat, Int.natAbs_zero, Nat.div_self npos, Nat.gcd_zero_left, Int.zero_div]
   rfl
-#align rat.zero_mk_pnat[anonymous]
+#align rat.zero_mk_pnat [anonymous]
 
 #print Rat.zero_mkRat /-
 @[simp]

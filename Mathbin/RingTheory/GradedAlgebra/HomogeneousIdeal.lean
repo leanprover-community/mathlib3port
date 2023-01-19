@@ -211,8 +211,7 @@ variable {𝒜 I}
 theorem Ideal.mem_homogeneous_core_of_is_homogeneous_of_mem {x : A} (h : SetLike.IsHomogeneous 𝒜 x)
     (hmem : x ∈ I) : x ∈ I.homogeneousCore 𝒜 :=
   Ideal.subset_span ⟨⟨x, h⟩, hmem, rfl⟩
-#align
-  ideal.mem_homogeneous_core_of_is_homogeneous_of_mem Ideal.mem_homogeneous_core_of_is_homogeneous_of_mem
+#align ideal.mem_homogeneous_core_of_is_homogeneous_of_mem Ideal.mem_homogeneous_core_of_is_homogeneous_of_mem
 
 theorem Ideal.IsHomogeneous.to_ideal_homogeneous_core_eq_self (h : I.IsHomogeneous 𝒜) :
     (I.homogeneousCore 𝒜).toIdeal = I :=
@@ -222,15 +221,13 @@ theorem Ideal.IsHomogeneous.to_ideal_homogeneous_core_eq_self (h : I.IsHomogeneo
   classical
     rw [← DirectSum.sum_support_decompose 𝒜 x]
     exact Ideal.sum_mem _ fun j hj => Ideal.subset_span ⟨⟨_, is_homogeneous_coe _⟩, h _ hx, rfl⟩
-#align
-  ideal.is_homogeneous.to_ideal_homogeneous_core_eq_self Ideal.IsHomogeneous.to_ideal_homogeneous_core_eq_self
+#align ideal.is_homogeneous.to_ideal_homogeneous_core_eq_self Ideal.IsHomogeneous.to_ideal_homogeneous_core_eq_self
 
 @[simp]
 theorem HomogeneousIdeal.to_ideal_homogeneous_core_eq_self (I : HomogeneousIdeal 𝒜) :
     I.toIdeal.homogeneousCore 𝒜 = I := by
   ext1 <;> convert Ideal.IsHomogeneous.to_ideal_homogeneous_core_eq_self I.is_homogeneous
-#align
-  homogeneous_ideal.to_ideal_homogeneous_core_eq_self HomogeneousIdeal.to_ideal_homogeneous_core_eq_self
+#align homogeneous_ideal.to_ideal_homogeneous_core_eq_self HomogeneousIdeal.to_ideal_homogeneous_core_eq_self
 
 variable (𝒜 I)
 
@@ -604,15 +601,13 @@ theorem Ideal.IsHomogeneous.to_ideal_homogeneous_hull_eq_self (h : I.IsHomogeneo
   apply Ideal.span_le.2
   rintro _ ⟨i, x, rfl⟩
   exact h _ x.prop
-#align
-  ideal.is_homogeneous.to_ideal_homogeneous_hull_eq_self Ideal.IsHomogeneous.to_ideal_homogeneous_hull_eq_self
+#align ideal.is_homogeneous.to_ideal_homogeneous_hull_eq_self Ideal.IsHomogeneous.to_ideal_homogeneous_hull_eq_self
 
 @[simp]
 theorem HomogeneousIdeal.homogeneous_hull_to_ideal_eq_self (I : HomogeneousIdeal 𝒜) :
     I.toIdeal.homogeneousHull 𝒜 = I :=
   HomogeneousIdeal.to_ideal_injective <| I.IsHomogeneous.to_ideal_homogeneous_hull_eq_self
-#align
-  homogeneous_ideal.homogeneous_hull_to_ideal_eq_self HomogeneousIdeal.homogeneous_hull_to_ideal_eq_self
+#align homogeneous_ideal.homogeneous_hull_to_ideal_eq_self HomogeneousIdeal.homogeneous_hull_to_ideal_eq_self
 
 variable (I 𝒜)
 

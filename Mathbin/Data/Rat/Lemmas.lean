@@ -92,7 +92,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align rat.mk_pnat_num [anonymous]ₓ'. -/
 theorem [anonymous] (n : ℤ) (d : ℕ+) : ([anonymous] n d).num = n / Nat.gcd n.natAbs d := by
   cases d <;> rfl
-#align rat.mk_pnat_num[anonymous]
+#align rat.mk_pnat_num [anonymous]
 
 /- warning: rat.mk_pnat_denom clashes with [anonymous] -> [anonymous]
 warning: rat.mk_pnat_denom -> [anonymous] is a dubious translation:
@@ -103,7 +103,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align rat.mk_pnat_denom [anonymous]ₓ'. -/
 theorem [anonymous] (n : ℤ) (d : ℕ+) : ([anonymous] n d).denom = d / Nat.gcd n.natAbs d := by
   cases d <;> rfl
-#align rat.mk_pnat_denom[anonymous]
+#align rat.mk_pnat_denom [anonymous]
 
 /- warning: rat.num_mk -> Rat.num_mk is a dubious translation:
 lean 3 declaration is
@@ -140,7 +140,7 @@ theorem [anonymous] (n : ℤ) (d : ℕ+) : ([anonymous] n d).denom ∣ d.1 :=
   rw [mk_pnat_denom]
   apply Nat.div_dvd_of_dvd
   apply Nat.gcd_dvd_right
-#align rat.mk_pnat_denom_dvd[anonymous]
+#align rat.mk_pnat_denom_dvd [anonymous]
 
 #print Rat.add_den_dvd /-
 theorem add_den_dvd (q₁ q₂ : ℚ) : (q₁ + q₂).denom ∣ q₁.denom * q₂.denom :=
@@ -513,7 +513,7 @@ Case conversion may be inaccurate. Consider using '#align rat.mk_pnat_pnat_denom
 @[simp]
 theorem [anonymous] (x : ℚ) : [anonymous] x.num x.pnatDenom = x := by
   rw [pnat_denom, mk_pnat_eq, num_denom]
-#align rat.mk_pnat_pnat_denom_eq[anonymous]
+#align rat.mk_pnat_pnat_denom_eq [anonymous]
 
 #print Rat.pnatDen_eq_iff_den_eq /-
 theorem pnatDen_eq_iff_den_eq {x : ℚ} {n : ℕ+} : x.pnatDenom = n ↔ x.denom = ↑n :=

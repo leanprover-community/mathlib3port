@@ -167,8 +167,7 @@ theorem integrable_iff_integrable_mul_pdf [IsFiniteMeasure ℙ] {X : Ω → E} [
   rw [← integrable_map_measure hf.ae_strongly_measurable (has_pdf.measurable X ℙ μ).AeMeasurable,
     map_eq_with_density_pdf X ℙ μ, integrable_with_density_iff (measurable_pdf _ _ _) ae_lt_top]
   infer_instance
-#align
-  measure_theory.pdf.integrable_iff_integrable_mul_pdf MeasureTheory.pdf.integrable_iff_integrable_mul_pdf
+#align measure_theory.pdf.integrable_iff_integrable_mul_pdf MeasureTheory.pdf.integrable_iff_integrable_mul_pdf
 
 /-- **The Law of the Unconscious Statistician**: Given a random variable `X` and a measurable
 function `f`, `f ∘ X` is a random variable with expectation `∫ x, f x * pdf X ∂μ`
@@ -219,8 +218,7 @@ theorem integral_fun_mul_eq_integral [IsFiniteMeasure ℙ] {X : Ω → E} [HasPd
   · rw [integral_undef hpdf, integral_undef]
     rwa [← integrable_iff_integrable_mul_pdf hf] at hpdf
     all_goals infer_instance
-#align
-  measure_theory.pdf.integral_fun_mul_eq_integral MeasureTheory.pdf.integral_fun_mul_eq_integral
+#align measure_theory.pdf.integral_fun_mul_eq_integral MeasureTheory.pdf.integral_fun_mul_eq_integral
 
 theorem mapAbsolutelyContinuous {X : Ω → E} [HasPdf X ℙ μ] : map X ℙ ≪ μ :=
   by
@@ -239,8 +237,7 @@ theorem haveLebesgueDecompositionOfHasPdf {X : Ω → E} [hX' : HasPdf X ℙ μ]
   ⟨⟨⟨0, pdf X ℙ μ⟩, by
       simp only [zero_add, measurable_pdf X ℙ μ, true_and_iff, mutually_singular.zero_left,
         map_eq_with_density_pdf X ℙ μ]⟩⟩
-#align
-  measure_theory.pdf.have_lebesgue_decomposition_of_has_pdf MeasureTheory.pdf.haveLebesgueDecompositionOfHasPdf
+#align measure_theory.pdf.have_lebesgue_decomposition_of_has_pdf MeasureTheory.pdf.haveLebesgueDecompositionOfHasPdf
 
 theorem has_pdf_iff {X : Ω → E} :
     HasPdf X ℙ μ ↔ Measurable X ∧ (map X ℙ).HaveLebesgueDecomposition μ ∧ map X ℙ ≪ μ :=
@@ -282,14 +279,12 @@ theorem quasiMeasurePreservingHasPdf {X : Ω → E} [HasPdf X ℙ μ] {g : E →
   have := hg.absolutely_continuous hs
   rw [map_apply hg.measurable hsm] at this
   exact set_lintegral_measure_zero _ _ this
-#align
-  measure_theory.pdf.quasi_measure_preserving_has_pdf MeasureTheory.pdf.quasiMeasurePreservingHasPdf
+#align measure_theory.pdf.quasi_measure_preserving_has_pdf MeasureTheory.pdf.quasiMeasurePreservingHasPdf
 
 theorem quasiMeasurePreservingHasPdf' [IsFiniteMeasure ℙ] [SigmaFinite ν] {X : Ω → E} [HasPdf X ℙ μ]
     {g : E → F} (hg : QuasiMeasurePreserving g μ ν) : HasPdf (g ∘ X) ℙ ν :=
   quasiMeasurePreservingHasPdf hg inferInstance
-#align
-  measure_theory.pdf.quasi_measure_preserving_has_pdf' MeasureTheory.pdf.quasiMeasurePreservingHasPdf'
+#align measure_theory.pdf.quasi_measure_preserving_has_pdf' MeasureTheory.pdf.quasiMeasurePreservingHasPdf'
 
 end
 
@@ -303,8 +298,7 @@ theorem Real.has_pdf_iff_of_measurable (hX : Measurable X) : HasPdf X ℙ ↔ ma
   by
   rw [has_pdf_iff_of_measurable hX, and_iff_right_iff_imp]
   exact fun h => inferInstance
-#align
-  measure_theory.pdf.real.has_pdf_iff_of_measurable MeasureTheory.pdf.Real.has_pdf_iff_of_measurable
+#align measure_theory.pdf.real.has_pdf_iff_of_measurable MeasureTheory.pdf.Real.has_pdf_iff_of_measurable
 
 theorem Real.has_pdf_iff : HasPdf X ℙ ↔ Measurable X ∧ map X ℙ ≪ volume :=
   by
@@ -401,8 +395,7 @@ theorem isProbabilityMeasure {m : MeasurableSpace Ω} {X : Ω → E} {ℙ : Meas
     have : X ⁻¹' Set.univ = Set.univ := by simp only [Set.preimage_univ]
     rw [← this, hu.measure_preimage hns hnt hms MeasurableSet.univ, Set.inter_univ,
       Ennreal.div_self hns hnt]⟩
-#align
-  measure_theory.pdf.is_uniform.is_probability_measure MeasureTheory.pdf.IsUniform.isProbabilityMeasure
+#align measure_theory.pdf.is_uniform.is_probability_measure MeasureTheory.pdf.IsUniform.isProbabilityMeasure
 
 variable {X : Ω → ℝ} {s : Set ℝ} (hms : MeasurableSet s) (hns : volume s ≠ 0)
 

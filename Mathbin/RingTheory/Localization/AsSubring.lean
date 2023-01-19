@@ -61,8 +61,7 @@ theorem mem_range_map_to_fraction_ring_iff (B : Type _) [CommRing B] [Algebra A 
     rintro ⟨a, s, hs, rfl⟩
     use IsLocalization.mk' _ a ⟨s, hs⟩
     apply IsLocalization.lift_mk'⟩
-#align
-  localization.mem_range_map_to_fraction_ring_iff Localization.mem_range_map_to_fraction_ring_iff
+#align localization.mem_range_map_to_fraction_ring_iff Localization.mem_range_map_to_fraction_ring_iff
 
 instance is_localization_range_map_to_fraction_ring (B : Type _) [CommRing B] [Algebra A B]
     [IsLocalization S B] (hS : S ≤ A⁰) : IsLocalization S (mapToFractionRing K S B hS).range :=
@@ -75,14 +74,12 @@ instance is_localization_range_map_to_fraction_ring (B : Type _) [CommRing B] [A
           exact
             ⟨fun h => congr_arg _ (IsLocalization.injective _ hS h), fun h =>
               congr_arg _ (IsFractionRing.injective A K h)⟩)
-#align
-  localization.is_localization_range_map_to_fraction_ring Localization.is_localization_range_map_to_fraction_ring
+#align localization.is_localization_range_map_to_fraction_ring Localization.is_localization_range_map_to_fraction_ring
 
 instance is_fraction_ring_range_map_to_fraction_ring (B : Type _) [CommRing B] [Algebra A B]
     [IsLocalization S B] (hS : S ≤ A⁰) : IsFractionRing (mapToFractionRing K S B hS).range K :=
   IsFractionRing.is_fraction_ring_of_is_localization S _ _ hS
-#align
-  localization.is_fraction_ring_range_map_to_fraction_ring Localization.is_fraction_ring_range_map_to_fraction_ring
+#align localization.is_fraction_ring_range_map_to_fraction_ring Localization.is_fraction_ring_range_map_to_fraction_ring
 
 /-- Given a commutative ring `A` with fraction ring `K`, and a submonoid `S` of `A` which
 contains no zero divisor, this is the localization of `A` at `S`, considered as
@@ -107,8 +104,7 @@ instance is_localization_subalgebra : IsLocalization S (subalgebra K S hS) :=
   dsimp only [Localization.subalgebra]
   rw [Subalgebra.copy_eq]
   infer_instance
-#align
-  localization.subalgebra.is_localization_subalgebra Localization.subalgebra.is_localization_subalgebra
+#align localization.subalgebra.is_localization_subalgebra Localization.subalgebra.is_localization_subalgebra
 
 instance is_fraction_ring : IsFractionRing (subalgebra K S hS) K :=
   IsFractionRing.is_fraction_ring_of_is_localization S _ _ hS
@@ -131,8 +127,7 @@ theorem mem_range_map_to_fraction_ring_iff_of_field (B : Type _) [CommRing B] [A
   by
   rw [mem_range_map_to_fraction_ring_iff]
   iterate 3 congr with ; convert Iff.rfl; rw [Units.val_inv_eq_inv_val]; rfl
-#align
-  localization.subalgebra.mem_range_map_to_fraction_ring_iff_of_field Localization.subalgebra.mem_range_map_to_fraction_ring_iff_of_field
+#align localization.subalgebra.mem_range_map_to_fraction_ring_iff_of_field Localization.subalgebra.mem_range_map_to_fraction_ring_iff_of_field
 
 /-- Given a domain `A` with fraction field `K`, and a submonoid `S` of `A` which
 contains no zero divisor, this is the localization of `A` at `S`, considered as
@@ -155,13 +150,11 @@ instance is_localization_of_field : IsLocalization S (subalgebra.ofField K S hS)
   dsimp only [Localization.subalgebra.ofField]
   rw [Subalgebra.copy_eq]
   infer_instance
-#align
-  localization.subalgebra.is_localization_of_field Localization.subalgebra.is_localization_of_field
+#align localization.subalgebra.is_localization_of_field Localization.subalgebra.is_localization_of_field
 
 instance is_fraction_ring_of_field : IsFractionRing (subalgebra.ofField K S hS) K :=
   IsFractionRing.is_fraction_ring_of_is_localization S _ _ hS
-#align
-  localization.subalgebra.is_fraction_ring_of_field Localization.subalgebra.is_fraction_ring_of_field
+#align localization.subalgebra.is_fraction_ring_of_field Localization.subalgebra.is_fraction_ring_of_field
 
 end Subalgebra
 

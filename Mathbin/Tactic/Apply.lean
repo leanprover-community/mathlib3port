@@ -61,8 +61,7 @@ private unsafe def try_apply_opt_auto_param_instance_for_apply (cfg : ApplyCfg)
           ((set_goals [m.2] >> try apply_instance) >> when cfg (try apply_opt_param)) >>
             when cfg (try apply_auto_param)
     set_goals gs
-#align
-  tactic.try_apply_opt_auto_param_instance_for_apply tactic.try_apply_opt_auto_param_instance_for_apply
+#align tactic.try_apply_opt_auto_param_instance_for_apply tactic.try_apply_opt_auto_param_instance_for_apply
 
 private unsafe def retry_apply_aux :
     ∀ (e : expr) (cfg : ApplyCfg), List (Bool × Name × expr) → tactic (List (Name × expr))

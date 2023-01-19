@@ -42,8 +42,7 @@ namespace HasLimits
 instance categoryObjects {F : J ⥤ Cat.{u, u}} {j} :
     SmallCategory ((F ⋙ Cat.objects.{u, u}).obj j) :=
   (F.obj j).str
-#align
-  category_theory.Cat.has_limits.category_objects CategoryTheory.CatCat.HasLimits.categoryObjects
+#align category_theory.Cat.has_limits.category_objects CategoryTheory.CatCat.HasLimits.categoryObjects
 
 /-- Auxiliary definition:
 the diagram whose limit gives the morphism space between two objects of the limit category. -/
@@ -142,8 +141,7 @@ theorem limit_π_hom_diagram_eq_to_hom {F : J ⥤ Cat.{v, v}} (X Y : limit (F �
   by
   subst h
   simp
-#align
-  category_theory.Cat.has_limits.limit_π_hom_diagram_eq_to_hom CategoryTheory.CatCat.HasLimits.limit_π_hom_diagram_eq_to_hom
+#align category_theory.Cat.has_limits.limit_π_hom_diagram_eq_to_hom CategoryTheory.CatCat.HasLimits.limit_π_hom_diagram_eq_to_hom
 
 /-- Auxiliary definition: the proposed cone is a limit cone. -/
 def limitConeIsLimit (F : J ⥤ Cat.{v, v}) : IsLimit (limitCone F)
@@ -162,8 +160,7 @@ def limitConeIsLimit (F : J ⥤ Cat.{v, v}) : IsLimit (limitCone F)
       dsimp
       simp [fun j => functor.congr_hom (w j).symm f]
       congr
-#align
-  category_theory.Cat.has_limits.limit_cone_is_limit CategoryTheory.CatCat.HasLimits.limitConeIsLimit
+#align category_theory.Cat.has_limits.limit_cone_is_limit CategoryTheory.CatCat.HasLimits.limitConeIsLimit
 
 end HasLimits
 

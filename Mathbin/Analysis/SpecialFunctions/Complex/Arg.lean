@@ -458,8 +458,7 @@ theorem arg_mul_cos_add_sin_mul_I_eq_to_Ioc_mod {r : ℝ} (hr : 0 < r) (θ : ℝ
     ring
   convert arg_mul_cos_add_sin_mul_I hr hi using 3
   simp [toIocMod, cos_sub_int_mul_two_pi, sin_sub_int_mul_two_pi]
-#align
-  complex.arg_mul_cos_add_sin_mul_I_eq_to_Ioc_mod Complex.arg_mul_cos_add_sin_mul_I_eq_to_Ioc_mod
+#align complex.arg_mul_cos_add_sin_mul_I_eq_to_Ioc_mod Complex.arg_mul_cos_add_sin_mul_I_eq_to_Ioc_mod
 
 theorem arg_cos_add_sin_mul_I_eq_to_Ioc_mod (θ : ℝ) :
     arg (cos θ + sin θ * I) = toIocMod (-π) Real.two_pi_pos θ := by
@@ -600,8 +599,7 @@ theorem tendsto_arg_nhds_within_im_neg_of_re_neg_of_im_zero {z : ℂ} (hre : z.r
   · simp [him]
   · lift z to ℝ using him
     simpa using hre.ne
-#align
-  complex.tendsto_arg_nhds_within_im_neg_of_re_neg_of_im_zero Complex.tendsto_arg_nhds_within_im_neg_of_re_neg_of_im_zero
+#align complex.tendsto_arg_nhds_within_im_neg_of_re_neg_of_im_zero Complex.tendsto_arg_nhds_within_im_neg_of_re_neg_of_im_zero
 
 theorem continuous_within_at_arg_of_re_neg_of_im_zero {z : ℂ} (hre : z.re < 0) (him : z.im = 0) :
     ContinuousWithinAt arg { z : ℂ | 0 ≤ z.im } z :=
@@ -620,15 +618,13 @@ theorem continuous_within_at_arg_of_re_neg_of_im_zero {z : ℂ} (hre : z.re < 0)
     lift z to ℝ using him
     simpa using hre.ne
   · rw [arg, if_neg hre.not_le, if_pos him.ge]
-#align
-  complex.continuous_within_at_arg_of_re_neg_of_im_zero Complex.continuous_within_at_arg_of_re_neg_of_im_zero
+#align complex.continuous_within_at_arg_of_re_neg_of_im_zero Complex.continuous_within_at_arg_of_re_neg_of_im_zero
 
 theorem tendsto_arg_nhds_within_im_nonneg_of_re_neg_of_im_zero {z : ℂ} (hre : z.re < 0)
     (him : z.im = 0) : Tendsto arg (𝓝[{ z : ℂ | 0 ≤ z.im }] z) (𝓝 π) := by
   simpa only [arg_eq_pi_iff.2 ⟨hre, him⟩] using
     (continuous_within_at_arg_of_re_neg_of_im_zero hre him).Tendsto
-#align
-  complex.tendsto_arg_nhds_within_im_nonneg_of_re_neg_of_im_zero Complex.tendsto_arg_nhds_within_im_nonneg_of_re_neg_of_im_zero
+#align complex.tendsto_arg_nhds_within_im_nonneg_of_re_neg_of_im_zero Complex.tendsto_arg_nhds_within_im_nonneg_of_re_neg_of_im_zero
 
 theorem continuous_at_arg_coe_angle (h : x ≠ 0) : ContinuousAt (coe ∘ arg : ℂ → Real.Angle) x :=
   by

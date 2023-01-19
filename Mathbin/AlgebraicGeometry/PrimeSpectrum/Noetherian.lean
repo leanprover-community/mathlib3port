@@ -101,8 +101,7 @@ theorem exists_prime_spectrum_prod_le_and_ne_bot_of_domain (h_fA : ¬IsField A) 
     apply sup_le (show span A {x} * M ≤ M from Ideal.mul_le_left)
     rwa [span_mul_span, Set.singleton_mul_singleton, span_singleton_le_iff_mem]
   · rintro (hx | hy) <;> contradiction
-#align
-  prime_spectrum.exists_prime_spectrum_prod_le_and_ne_bot_of_domain PrimeSpectrum.exists_prime_spectrum_prod_le_and_ne_bot_of_domain
+#align prime_spectrum.exists_prime_spectrum_prod_le_and_ne_bot_of_domain PrimeSpectrum.exists_prime_spectrum_prod_le_and_ne_bot_of_domain
 
 open TopologicalSpace
 

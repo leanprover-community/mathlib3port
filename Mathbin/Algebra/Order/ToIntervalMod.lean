@@ -1114,8 +1114,7 @@ theorem mem_Ioo_mod_iff_to_Ico_mod_eq_to_Ioc_mod :
 theorem mem_Ioo_mod_iff_to_Ico_mod_add_period_ne_to_Ioc_mod :
     MemIooMod a b x ↔ toIcoMod a hb x + b ≠ toIocMod a hb x :=
   (tfae_mem_Ioo_mod a hb x).out 0 2
-#align
-  mem_Ioo_mod_iff_to_Ico_mod_add_period_ne_to_Ioc_mod mem_Ioo_mod_iff_to_Ico_mod_add_period_ne_to_Ioc_mod
+#align mem_Ioo_mod_iff_to_Ico_mod_add_period_ne_to_Ioc_mod mem_Ioo_mod_iff_to_Ico_mod_add_period_ne_to_Ioc_mod
 
 theorem mem_Ioo_mod_iff_to_Ico_mod_ne_left : MemIooMod a b x ↔ toIcoMod a hb x ≠ a :=
   (tfae_mem_Ioo_mod a hb x).out 0 3
@@ -1124,8 +1123,7 @@ theorem mem_Ioo_mod_iff_to_Ico_mod_ne_left : MemIooMod a b x ↔ toIcoMod a hb x
 theorem not_mem_Ioo_mod_iff_to_Ico_mod_add_period_eq_to_Ioc_mod :
     ¬MemIooMod a b x ↔ toIcoMod a hb x + b = toIocMod a hb x :=
   (mem_Ioo_mod_iff_to_Ico_mod_add_period_ne_to_Ioc_mod hb).not_left
-#align
-  not_mem_Ioo_mod_iff_to_Ico_mod_add_period_eq_to_Ioc_mod not_mem_Ioo_mod_iff_to_Ico_mod_add_period_eq_to_Ioc_mod
+#align not_mem_Ioo_mod_iff_to_Ico_mod_add_period_eq_to_Ioc_mod not_mem_Ioo_mod_iff_to_Ico_mod_add_period_eq_to_Ioc_mod
 
 theorem not_mem_Ioo_mod_iff_to_Ico_mod_eq_left : ¬MemIooMod a b x ↔ toIcoMod a hb x = a :=
   (mem_Ioo_mod_iff_to_Ico_mod_ne_left hb).not_left
@@ -1155,14 +1153,12 @@ theorem mem_Ioo_mod_iff_to_Ico_div_ne_to_Ioc_div_add_one :
   rw [mem_Ioo_mod_iff_to_Ico_mod_add_period_ne_to_Ioc_mod hb, Ne, Ne, toIcoMod, toIocMod, ←
     eq_sub_iff_add_eq, sub_sub, sub_right_inj, ← add_one_zsmul,
     (zsmul_strictMono_left hb).Injective.eq_iff]
-#align
-  mem_Ioo_mod_iff_to_Ico_div_ne_to_Ioc_div_add_one mem_Ioo_mod_iff_to_Ico_div_ne_to_Ioc_div_add_one
+#align mem_Ioo_mod_iff_to_Ico_div_ne_to_Ioc_div_add_one mem_Ioo_mod_iff_to_Ico_div_ne_to_Ioc_div_add_one
 
 theorem not_mem_Ioo_mod_iff_to_Ico_div_eq_to_Ioc_div_add_one :
     ¬MemIooMod a b x ↔ toIcoDiv a hb x = toIocDiv a hb x + 1 :=
   (mem_Ioo_mod_iff_to_Ico_div_ne_to_Ioc_div_add_one hb).not_left
-#align
-  not_mem_Ioo_mod_iff_to_Ico_div_eq_to_Ioc_div_add_one not_mem_Ioo_mod_iff_to_Ico_div_eq_to_Ioc_div_add_one
+#align not_mem_Ioo_mod_iff_to_Ico_div_eq_to_Ioc_div_add_one not_mem_Ioo_mod_iff_to_Ico_div_eq_to_Ioc_div_add_one
 
 include hb
 

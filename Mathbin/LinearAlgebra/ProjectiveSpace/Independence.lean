@@ -75,8 +75,7 @@ theorem independent_iff_complete_lattice_independent :
     refine' h.linear_independent (Projectivization.submodule ∘ f) (fun i => _) fun i => _
     · simpa only [Function.comp_apply, submodule_eq] using Submodule.mem_span_singleton_self _
     · exact rep_nonzero (f i)
-#align
-  projectivization.independent_iff_complete_lattice_independent Projectivization.independent_iff_complete_lattice_independent
+#align projectivization.independent_iff_complete_lattice_independent Projectivization.independent_iff_complete_lattice_independent
 
 /-- A linearly dependent family of nonzero vectors gives a dependent family of points
 in projective space. -/
