@@ -161,11 +161,11 @@ theorem card_le_of_surjective' [RankCondition R] {α β : Type _} [Fintype α] [
 has an injective splitting `(fin m → R) →ₗ[R] (fin n → R)`
 from which the strong rank condition gives the necessary inequality for the rank condition.
 -/
-instance (priority := 100) rankConditionOfStrongRankCondition [StrongRankCondition R] :
+instance (priority := 100) rankCondition_of_strongRankCondition [StrongRankCondition R] :
     RankCondition R
     where le_of_fin_surjective n m f s :=
     le_of_fin_injective R _ (f.splitting_of_fun_on_fintype_surjective_injective s)
-#align rank_condition_of_strong_rank_condition rankConditionOfStrongRankCondition
+#align rank_condition_of_strong_rank_condition rankCondition_of_strongRankCondition
 
 /-- We say that `R` has the invariant basis number property if `(fin n → R) ≃ₗ[R] (fin m → R)`
     implies `n = m`. This gives rise to a well-defined notion of rank of a finitely generated free
@@ -225,7 +225,7 @@ An injective map `((fin n ⊕ fin (1 + m)) → R) →ₗ[R] (fin n → R)` for s
 would force `fin (1 + m) → R ≃ₗ punit` (via `is_noetherian.equiv_punit_of_prod_injective`),
 which is not the case!
 -/
-instance (priority := 100) noetherianRingStrongRankCondition : StrongRankCondition R :=
+instance (priority := 100) noetherian_ring_strongRankCondition : StrongRankCondition R :=
   by
   fconstructor
   intro m n f i
@@ -242,7 +242,7 @@ instance (priority := 100) noetherianRingStrongRankCondition : StrongRankConditi
   apply @zero_ne_one (Fin (1 + m) → R) _ _
   apply (IsNoetherian.equivPunitOfProdInjective f' i').Injective
   ext
-#align noetherian_ring_strong_rank_condition noetherianRingStrongRankCondition
+#align noetherian_ring_strong_rank_condition noetherian_ring_strongRankCondition
 
 end
 

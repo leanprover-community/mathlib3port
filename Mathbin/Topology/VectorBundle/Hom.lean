@@ -263,7 +263,7 @@ def Bundle.ContinuousLinearMap.vectorPrebundle :
       ∃ (e₁ : Trivialization F₁ (π E₁))(e₂ : Trivialization F₂ (π E₂))(_ :
         MemTrivializationAtlas e₁)(_ : MemTrivializationAtlas e₂),
         e = Pretrivialization.continuousLinearMap σ e₁ e₂ }
-  pretrivializationLinear' := by
+  pretrivialization_linear' := by
     rintro _ ⟨e₁, he₁, e₂, he₂, rfl⟩
     infer_instance
   pretrivializationAt x :=

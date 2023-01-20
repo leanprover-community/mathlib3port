@@ -121,17 +121,17 @@ variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] {f : E → ℝ}
 
 theorem HasFderivAt.sqrt (hf : HasFderivAt f f' x) (hx : f x ≠ 0) :
     HasFderivAt (fun y => sqrt (f y)) ((1 / (2 * sqrt (f x))) • f') x :=
-  (hasDerivAt_sqrt hx).compHasFderivAt x hf
+  (hasDerivAt_sqrt hx).comp_has_fderiv_at x hf
 #align has_fderiv_at.sqrt HasFderivAt.sqrt
 
 theorem HasStrictFderivAt.sqrt (hf : HasStrictFderivAt f f' x) (hx : f x ≠ 0) :
     HasStrictFderivAt (fun y => sqrt (f y)) ((1 / (2 * sqrt (f x))) • f') x :=
-  (hasStrictDerivAt_sqrt hx).compHasStrictFderivAt x hf
+  (hasStrictDerivAt_sqrt hx).comp_has_strict_fderiv_at x hf
 #align has_strict_fderiv_at.sqrt HasStrictFderivAt.sqrt
 
 theorem HasFderivWithinAt.sqrt (hf : HasFderivWithinAt f f' s x) (hx : f x ≠ 0) :
     HasFderivWithinAt (fun y => sqrt (f y)) ((1 / (2 * sqrt (f x))) • f') s x :=
-  (hasDerivAt_sqrt hx).compHasFderivWithinAt x hf
+  (hasDerivAt_sqrt hx).comp_has_fderiv_within_at x hf
 #align has_fderiv_within_at.sqrt HasFderivWithinAt.sqrt
 
 theorem DifferentiableWithinAt.sqrt (hf : DifferentiableWithinAt ℝ f s x) (hx : f x ≠ 0) :

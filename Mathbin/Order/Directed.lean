@@ -63,8 +63,8 @@ theorem directedOn_iff_directed {s} : @DirectedOn α r s ↔ Directed r (coe : s
 #align directed_on_iff_directed directedOn_iff_directed
 -/
 
-alias directedOn_iff_directed ↔ DirectedOn.directed_coe _
-#align directed_on.directed_coe DirectedOn.directed_coe
+alias directedOn_iff_directed ↔ DirectedOn.directed_val _
+#align directed_on.directed_coe DirectedOn.directed_val
 
 #print directedOn_range /-
 theorem directedOn_range {f : β → α} : Directed r f ↔ DirectedOn r (Set.range f) := by
@@ -160,7 +160,7 @@ theorem directedOn_of_sup_mem [SemilatticeSup α] {S : Set α}
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α _inst_1)] {e : ι -> β} {f : ι -> α}, (Directed.{u1, u3} α ι (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) f) -> (Function.Injective.{u3, succ u2} ι β e) -> (Directed.{u1, succ u2} α β (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) (Function.extend.{u3, succ u2, succ u1} ι β α e f (Bot.bot.{max u2 u1} (β -> α) (Pi.hasBot.{u2, u1} β (fun (ᾰ : β) => α) (fun (i : β) => OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2)))))
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α _inst_1)] {e : ι -> β} {f : ι -> α}, (Directed.{u1, u3} α ι (fun (x._@.Mathlib.Order.Directed._hyg.1319 : α) (x._@.Mathlib.Order.Directed._hyg.1321 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Directed._hyg.1319 x._@.Mathlib.Order.Directed._hyg.1321) f) -> (Function.Injective.{u3, succ u2} ι β e) -> (Directed.{u1, succ u2} α β (fun (x._@.Mathlib.Order.Directed._hyg.1338 : α) (x._@.Mathlib.Order.Directed._hyg.1340 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Directed._hyg.1338 x._@.Mathlib.Order.Directed._hyg.1340) (Function.extend.{u3, succ u2, succ u1} ι β α e f (Bot.bot.{max u1 u2} (β -> α) (Pi.instBotForAll.{u2, u1} β (fun (ᾰ : β) => α) (fun (i : β) => OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2)))))
+  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α _inst_1)] {e : ι -> β} {f : ι -> α}, (Directed.{u1, u3} α ι (fun (x._@.Mathlib.Order.Directed._hyg.1320 : α) (x._@.Mathlib.Order.Directed._hyg.1322 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Directed._hyg.1320 x._@.Mathlib.Order.Directed._hyg.1322) f) -> (Function.Injective.{u3, succ u2} ι β e) -> (Directed.{u1, succ u2} α β (fun (x._@.Mathlib.Order.Directed._hyg.1339 : α) (x._@.Mathlib.Order.Directed._hyg.1341 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Directed._hyg.1339 x._@.Mathlib.Order.Directed._hyg.1341) (Function.extend.{u3, succ u2, succ u1} ι β α e f (Bot.bot.{max u1 u2} (β -> α) (Pi.instBotForAll.{u2, u1} β (fun (ᾰ : β) => α) (fun (i : β) => OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2)))))
 Case conversion may be inaccurate. Consider using '#align directed.extend_bot Directed.extend_botₓ'. -/
 theorem Directed.extend_bot [Preorder α] [OrderBot α] {e : ι → β} {f : ι → α}
     (hf : Directed (· ≤ ·) f) (he : Function.Injective e) :

@@ -169,17 +169,17 @@ variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] {f : E → ℝ}
 
 theorem HasStrictFderivAt.arctan (hf : HasStrictFderivAt f f' x) :
     HasStrictFderivAt (fun x => arctan (f x)) ((1 / (1 + f x ^ 2)) • f') x :=
-  (hasStrictDerivAt_arctan (f x)).compHasStrictFderivAt x hf
+  (hasStrictDerivAt_arctan (f x)).comp_has_strict_fderiv_at x hf
 #align has_strict_fderiv_at.arctan HasStrictFderivAt.arctan
 
 theorem HasFderivAt.arctan (hf : HasFderivAt f f' x) :
     HasFderivAt (fun x => arctan (f x)) ((1 / (1 + f x ^ 2)) • f') x :=
-  (hasDerivAt_arctan (f x)).compHasFderivAt x hf
+  (hasDerivAt_arctan (f x)).comp_has_fderiv_at x hf
 #align has_fderiv_at.arctan HasFderivAt.arctan
 
 theorem HasFderivWithinAt.arctan (hf : HasFderivWithinAt f f' s x) :
     HasFderivWithinAt (fun x => arctan (f x)) ((1 / (1 + f x ^ 2)) • f') s x :=
-  (hasDerivAt_arctan (f x)).compHasFderivWithinAt x hf
+  (hasDerivAt_arctan (f x)).comp_has_fderiv_within_at x hf
 #align has_fderiv_within_at.arctan HasFderivWithinAt.arctan
 
 theorem fderivWithin_arctan (hf : DifferentiableWithinAt ℝ f s x) (hxs : UniqueDiffWithinAt ℝ s x) :

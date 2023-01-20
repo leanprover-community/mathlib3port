@@ -59,9 +59,9 @@ variable {R M N G M' : Type _} [NormedField R] [SeminormedAddCommGroup M] [Semin
   [SeminormedAddCommGroup G] [NormedSpace R M] [NormedSpace R N] [NormedSpace R G]
   [NormedAddCommGroup M'] [NormedSpace R M'] {f : M →L[R] N} {g : N →L[R] G} {c : R}
 
-theorem isConformalMapId : IsConformalMap (id R M) :=
+theorem isConformalMap_id : IsConformalMap (id R M) :=
   ⟨1, one_neZero, id, by simp⟩
-#align is_conformal_map_id isConformalMapId
+#align is_conformal_map_id isConformalMap_id
 
 theorem IsConformalMap.smul (hf : IsConformalMap f) {c : R} (hc : c ≠ 0) : IsConformalMap (c • f) :=
   by
@@ -69,9 +69,9 @@ theorem IsConformalMap.smul (hf : IsConformalMap f) {c : R} (hc : c ≠ 0) : IsC
   exact ⟨c * c', mul_ne_zero hc hc', li, smul_smul _ _ _⟩
 #align is_conformal_map.smul IsConformalMap.smul
 
-theorem isConformalMapConstSmul (hc : c ≠ 0) : IsConformalMap (c • id R M) :=
-  isConformalMapId.smul hc
-#align is_conformal_map_const_smul isConformalMapConstSmul
+theorem isConformalMap_const_smul (hc : c ≠ 0) : IsConformalMap (c • id R M) :=
+  isConformalMap_id.smul hc
+#align is_conformal_map_const_smul isConformalMap_const_smul
 
 protected theorem LinearIsometry.isConformalMap (f' : M →ₗᵢ[R] N) :
     IsConformalMap f'.toContinuousLinearMap :=
@@ -79,9 +79,9 @@ protected theorem LinearIsometry.isConformalMap (f' : M →ₗᵢ[R] N) :
 #align linear_isometry.is_conformal_map LinearIsometry.isConformalMap
 
 @[nontriviality]
-theorem isConformalMapOfSubsingleton [Subsingleton M] (f' : M →L[R] N) : IsConformalMap f' :=
+theorem isConformalMap_of_subsingleton [Subsingleton M] (f' : M →L[R] N) : IsConformalMap f' :=
   ⟨1, one_neZero, ⟨0, fun x => by simp [Subsingleton.elim x 0]⟩, Subsingleton.elim _ _⟩
-#align is_conformal_map_of_subsingleton isConformalMapOfSubsingleton
+#align is_conformal_map_of_subsingleton isConformalMap_of_subsingleton
 
 namespace IsConformalMap
 

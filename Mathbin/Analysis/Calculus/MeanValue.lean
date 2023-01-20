@@ -1431,8 +1431,9 @@ variable {𝕜 : Type _} [IsROrC 𝕜] {G : Type _} [NormedAddCommGroup G] [Norm
 
 /-- Over the reals or the complexes, a continuously differentiable function is strictly
 differentiable. -/
-theorem hasStrictFderivAtOfHasFderivAtOfContinuousAt (hder : ∀ᶠ y in 𝓝 x, HasFderivAt f (f' y) y)
-    (hcont : ContinuousAt f' x) : HasStrictFderivAt f (f' x) x :=
+theorem hasStrictFderivAt_of_hasFderivAt_of_continuousAt
+    (hder : ∀ᶠ y in 𝓝 x, HasFderivAt f (f' y) y) (hcont : ContinuousAt f' x) :
+    HasStrictFderivAt f (f' x) x :=
   by
   -- turn little-o definition of strict_fderiv into an epsilon-delta statement
   refine' is_o_iff.mpr fun c hc => metric.eventually_nhds_iff_ball.mpr _
@@ -1452,14 +1453,14 @@ theorem hasStrictFderivAtOfHasFderivAtOfContinuousAt (hder : ∀ᶠ y in 𝓝 x,
   letI : NormedSpace ℝ G := RestrictScalars.normedSpace ℝ 𝕜 G
   refine' (convex_ball _ _).norm_image_sub_le_of_norm_has_fderiv_within_le' _ hf' h.2 h.1
   exact fun y hy => (hε hy).1.HasFderivWithinAt
-#align has_strict_fderiv_at_of_has_fderiv_at_of_continuous_at hasStrictFderivAtOfHasFderivAtOfContinuousAt
+#align has_strict_fderiv_at_of_has_fderiv_at_of_continuous_at hasStrictFderivAt_of_hasFderivAt_of_continuousAt
 
 /-- Over the reals or the complexes, a continuously differentiable function is strictly
 differentiable. -/
 theorem hasStrictDerivAt_of_hasDerivAt_of_continuousAt {f f' : 𝕜 → G} {x : 𝕜}
     (hder : ∀ᶠ y in 𝓝 x, HasDerivAt f (f' y) y) (hcont : ContinuousAt f' x) :
     HasStrictDerivAt f (f' x) x :=
-  hasStrictFderivAtOfHasFderivAtOfContinuousAt (hder.mono fun y hy => hy.HasFderivAt) <|
+  hasStrictFderivAt_of_hasFderivAt_of_continuousAt (hder.mono fun y hy => hy.HasFderivAt) <|
     (smulRightL 𝕜 𝕜 G 1).Continuous.ContinuousAt.comp hcont
 #align has_strict_deriv_at_of_has_deriv_at_of_continuous_at hasStrictDerivAt_of_hasDerivAt_of_continuousAt
 

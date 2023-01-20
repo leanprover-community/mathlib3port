@@ -1713,7 +1713,7 @@ end LinearMap
 
 namespace IsLinearMap
 
-theorem isLinearMapAdd [Semiring R] [AddCommMonoid M] [Module R M] :
+theorem isLinearMap_add [Semiring R] [AddCommMonoid M] [Module R M] :
     IsLinearMap R fun x : M × M => x.1 + x.2 :=
   by
   apply IsLinearMap.mk
@@ -1722,9 +1722,9 @@ theorem isLinearMapAdd [Semiring R] [AddCommMonoid M] [Module R M] :
     cc
   · intro x y
     simp [smul_add]
-#align is_linear_map.is_linear_map_add IsLinearMap.isLinearMapAdd
+#align is_linear_map.is_linear_map_add IsLinearMap.isLinearMap_add
 
-theorem isLinearMapSub {R M : Type _} [Semiring R] [AddCommGroup M] [Module R M] :
+theorem isLinearMap_sub {R M : Type _} [Semiring R] [AddCommGroup M] [Module R M] :
     IsLinearMap R fun x : M × M => x.1 - x.2 :=
   by
   apply IsLinearMap.mk
@@ -1732,7 +1732,7 @@ theorem isLinearMapSub {R M : Type _} [Semiring R] [AddCommGroup M] [Module R M]
     simp [add_comm, add_left_comm, sub_eq_add_neg]
   · intro x y
     simp [smul_sub]
-#align is_linear_map.is_linear_map_sub IsLinearMap.isLinearMapSub
+#align is_linear_map.is_linear_map_sub IsLinearMap.isLinearMap_sub
 
 end IsLinearMap
 
@@ -2042,11 +2042,11 @@ def submoduleMap (p : Submodule R M) : p ≃ₛₗ[σ₁₂] ↥(p.map (e : M �
         subst hxy
         simp only [symm_apply_apply, Submodule.coe_mk, coe_coe, hx]⟩
     left_inv := fun x => by
-      simp only [LinearMap.domRestrict_apply, LinearMap.codRestrict_apply, LinearMap.toFun_eq_coe,
+      simp only [LinearMap.domRestrict_apply, LinearMap.codRestrict_apply, LinearMap.to_fun_eq_coe,
         LinearEquiv.coe_coe, LinearEquiv.symm_apply_apply, SetLike.eta]
     right_inv := fun y => by
       apply SetCoe.ext
-      simp only [LinearMap.domRestrict_apply, LinearMap.codRestrict_apply, LinearMap.toFun_eq_coe,
+      simp only [LinearMap.domRestrict_apply, LinearMap.codRestrict_apply, LinearMap.to_fun_eq_coe,
         LinearEquiv.coe_coe, [anonymous], LinearEquiv.apply_symm_apply] }
 #align linear_equiv.submodule_map LinearEquiv.submoduleMap
 

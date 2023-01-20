@@ -585,9 +585,9 @@ protected theorem map_smul [Module R₁ M₂] (f : M₁ →L[R₁] M₂) (c : R�
 
 @[simp]
 theorem map_smul_of_tower {R S : Type _} [Semiring S] [SMul R M₁] [Module S M₁] [SMul R M₂]
-    [Module S M₂] [LinearMap.CompatibleSmul M₁ M₂ R S] (f : M₁ →L[S] M₂) (c : R) (x : M₁) :
+    [Module S M₂] [LinearMap.CompatibleSMul M₁ M₂ R S] (f : M₁ →L[S] M₂) (c : R) (x : M₁) :
     f (c • x) = c • f x :=
-  LinearMap.CompatibleSmul.map_smul f c x
+  LinearMap.CompatibleSMul.map_smul f c x
 #align continuous_linear_map.map_smul_of_tower ContinuousLinearMap.map_smul_of_tower
 
 protected theorem map_sum {ι : Type _} (f : M₁ →SL[σ₁₂] M₂) (s : Finset ι) (g : ι → M₁) :
@@ -1600,7 +1600,7 @@ variable [DistribMulAction S₃ M₂] [HasContinuousConstSmul S₃ M₂] [SMulCo
 variable [DistribMulAction S N₂] [HasContinuousConstSmul S N₂] [SMulCommClass R S N₂]
 
 @[simp]
-theorem comp_smul [LinearMap.CompatibleSmul N₂ N₃ S R] (hₗ : N₂ →L[R] N₃) (c : S)
+theorem comp_smul [LinearMap.CompatibleSMul N₂ N₃ S R] (hₗ : N₂ →L[R] N₃) (c : S)
     (fₗ : M →L[R] N₂) : hₗ.comp (c • fₗ) = c • hₗ.comp fₗ :=
   by
   ext x
@@ -1753,7 +1753,7 @@ section RestrictScalars
 
 variable {A M M₂ : Type _} [Ring A] [AddCommGroup M] [AddCommGroup M₂] [Module A M] [Module A M₂]
   [TopologicalSpace M] [TopologicalSpace M₂] (R : Type _) [Ring R] [Module R M] [Module R M₂]
-  [LinearMap.CompatibleSmul M M₂ R A]
+  [LinearMap.CompatibleSMul M M₂ R A]
 
 /-- If `A` is an `R`-algebra, then a continuous `A`-linear map can be interpreted as a continuous
 `R`-linear map. We assume `linear_map.compatible_smul M M₂ R A` to match assumptions of

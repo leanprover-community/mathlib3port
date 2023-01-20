@@ -41,7 +41,7 @@ variable (R : Type _) [CommRing R] [Nontrivial R]
 open Polynomial Function Fin LinearMap
 
 /-- Any commutative ring satisfies the `strong_rank_condition`. -/
-instance (priority := 100) commRingStrongRankCondition : StrongRankCondition R :=
+instance (priority := 100) commRing_strongRankCondition : StrongRankCondition R :=
   by
   suffices ∀ n, ∀ f : (Fin (n + 1) → R) →ₗ[R] Fin n → R, ¬injective f by
     rwa [strongRankCondition_iff_succ R]
@@ -65,5 +65,5 @@ instance (priority := 100) commRingStrongRankCondition : StrongRankCondition R :
     replace heval := congr_fun heval (Fin.last n)
     simpa [hnex] using heval
   contradiction
-#align comm_ring_strong_rank_condition commRingStrongRankCondition
+#align comm_ring_strong_rank_condition commRing_strongRankCondition
 

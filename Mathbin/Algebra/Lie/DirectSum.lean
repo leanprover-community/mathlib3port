@@ -91,7 +91,7 @@ def lieModuleOf [DecidableEq ι] (j : ι) : M j →ₗ⁅R,L⁆ ⨁ i, M i :=
 def lieModuleComponent (j : ι) : (⨁ i, M i) →ₗ⁅R,L⁆ M j :=
   { component R ι M j with
     map_lie' := fun x m => by
-      simp only [component, lapply_apply, lie_module_bracket_apply, LinearMap.toFun_eq_coe] }
+      simp only [component, lapply_apply, lie_module_bracket_apply, LinearMap.to_fun_eq_coe] }
 #align direct_sum.lie_module_component DirectSum.lieModuleComponent
 
 end Modules
@@ -159,7 +159,7 @@ def lieAlgebraComponent (j : ι) : (⨁ i, L i) →ₗ⁅R⁆ L j :=
   { component R ι L j with
     toFun := component R ι L j
     map_lie' := fun x y => by
-      simp only [component, bracket_apply, lapply_apply, LinearMap.toFun_eq_coe] }
+      simp only [component, bracket_apply, lapply_apply, LinearMap.to_fun_eq_coe] }
 #align direct_sum.lie_algebra_component DirectSum.lieAlgebraComponent
 
 @[ext]

@@ -148,36 +148,36 @@ theorem stereoInvFunAux_mem (hv : ‖v‖ = 1) {w : E} (hw : w ∈ (ℝ ∙ v)�
   ring
 #align stereo_inv_fun_aux_mem stereoInvFunAux_mem
 
-theorem hasFderivAtStereoInvFunAux (v : E) :
+theorem hasFderivAt_stereoInvFunAux (v : E) :
     HasFderivAt (stereoInvFunAux v) (ContinuousLinearMap.id ℝ E) 0 :=
   by
   have h₀ : HasFderivAt (fun w : E => ‖w‖ ^ 2) (0 : E →L[ℝ] ℝ) 0 :=
     by
-    convert (hasStrictFderivAtNormSq _).HasFderivAt
+    convert (hasStrictFderivAt_norm_sq _).HasFderivAt
     simp
   have h₁ : HasFderivAt (fun w : E => (‖w‖ ^ 2 + 4)⁻¹) (0 : E →L[ℝ] ℝ) 0 := by
-    convert (hasFderivAtInv _).comp _ (h₀.add (hasFderivAtConst 4 0)) <;> simp
+    convert (hasFderivAt_inv _).comp _ (h₀.add (hasFderivAt_const 4 0)) <;> simp
   have h₂ :
     HasFderivAt (fun w => (4 : ℝ) • w + (‖w‖ ^ 2 - 4) • v) ((4 : ℝ) • ContinuousLinearMap.id ℝ E)
       0 :=
     by
     convert
-      ((hasFderivAtConst (4 : ℝ) 0).smul (hasFderivAtId 0)).add
-        ((h₀.sub (hasFderivAtConst (4 : ℝ) 0)).smul (hasFderivAtConst v 0))
+      ((hasFderivAt_const (4 : ℝ) 0).smul (hasFderivAt_id 0)).add
+        ((h₀.sub (hasFderivAt_const (4 : ℝ) 0)).smul (hasFderivAt_const v 0))
     ext w
     simp
   convert h₁.smul h₂
   ext w
   simp
-#align has_fderiv_at_stereo_inv_fun_aux hasFderivAtStereoInvFunAux
+#align has_fderiv_at_stereo_inv_fun_aux hasFderivAt_stereoInvFunAux
 
-theorem hasFderivAtStereoInvFunAuxCompCoe (v : E) :
+theorem hasFderivAt_stereoInvFunAux_comp_coe (v : E) :
     HasFderivAt (stereoInvFunAux v ∘ (coe : (ℝ ∙ v)ᗮ → E)) (ℝ ∙ v)ᗮ.subtypeL 0 :=
   by
   have : HasFderivAt (stereoInvFunAux v) (ContinuousLinearMap.id ℝ E) ((ℝ ∙ v)ᗮ.subtypeL 0) :=
-    hasFderivAtStereoInvFunAux v
+    hasFderivAt_stereoInvFunAux v
   convert this.comp (0 : (ℝ ∙ v)ᗮ) (by apply ContinuousLinearMap.hasFderivAt)
-#align has_fderiv_at_stereo_inv_fun_aux_comp_coe hasFderivAtStereoInvFunAuxCompCoe
+#align has_fderiv_at_stereo_inv_fun_aux_comp_coe hasFderivAt_stereoInvFunAux_comp_coe
 
 theorem contDiff_stereoInvFunAux : ContDiff ℝ ⊤ (stereoInvFunAux v) :=
   by
@@ -535,7 +535,7 @@ theorem range_mfderiv_coe_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] (v : s
     HasFderivAt (stereoInvFunAux (-v : E) ∘ (coe : (ℝ ∙ (↑(-v) : E))ᗮ → E))
       (ℝ ∙ (↑(-v) : E))ᗮ.subtypeL (U.symm 0) :=
     by
-    convert hasFderivAtStereoInvFunAuxCompCoe (-v : E)
+    convert hasFderivAt_stereoInvFunAux_comp_coe (-v : E)
     simp
   rw [(this.comp 0 U.symm.to_continuous_linear_equiv.has_fderiv_at).fderiv]
   convert
@@ -569,7 +569,7 @@ theorem mfderiv_coe_sphere_injective {n : ℕ} [Fact (finrank ℝ E = n + 1)] (v
     HasFderivAt (stereoInvFunAux (-v : E) ∘ (coe : (ℝ ∙ (↑(-v) : E))ᗮ → E))
       (ℝ ∙ (↑(-v) : E))ᗮ.subtypeL (U.symm 0) :=
     by
-    convert hasFderivAtStereoInvFunAuxCompCoe (-v : E)
+    convert hasFderivAt_stereoInvFunAux_comp_coe (-v : E)
     simp
   rw [(this.comp 0 U.symm.to_continuous_linear_equiv.has_fderiv_at).fderiv]
   simpa using Subtype.coe_injective

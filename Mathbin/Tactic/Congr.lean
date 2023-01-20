@@ -225,7 +225,7 @@ add_tactic_doc
               to_expr
                   (
                       if
-                        sym . isSome
+                        Sym . isSome
                         then
                         ` `( $ ( src ) = $ ( tgt ) )
                         else
@@ -235,7 +235,7 @@ add_tactic_doc
                     false
                 >>=
                 mk_meta_var
-          ( if sym then mk_eq_mp v r else mk_eq_mpr v r ) >>= tactic.exact
+          ( if Sym then mk_eq_mp v r else mk_eq_mpr v r ) >>= tactic.exact
           let gs ← get_goals
           set_goals [ v ]
           try ( tactic.congr' n )

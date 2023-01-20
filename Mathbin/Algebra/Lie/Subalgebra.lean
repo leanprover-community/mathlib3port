@@ -280,7 +280,7 @@ def incl : L' →ₗ⁅R⁆ L :=
   { (L' : Submodule R L).Subtype with
     map_lie' := fun x y =>
       by
-      simp only [LinearMap.toFun_eq_coe, Submodule.subtype_apply]
+      simp only [LinearMap.to_fun_eq_coe, Submodule.subtype_apply]
       rfl }
 #align lie_subalgebra.incl LieSubalgebra.incl
 
@@ -293,7 +293,7 @@ theorem coe_incl : ⇑L'.incl = coe :=
 def incl' : L' →ₗ⁅R,L'⁆ L :=
   { (L' : Submodule R L).Subtype with
     map_lie' := fun x y => by
-      simp only [coe_bracket_of_module, LinearMap.toFun_eq_coe, Submodule.subtype_apply,
+      simp only [coe_bracket_of_module, LinearMap.to_fun_eq_coe, Submodule.subtype_apply,
         coe_bracket] }
 #align lie_subalgebra.incl' LieSubalgebra.incl'
 

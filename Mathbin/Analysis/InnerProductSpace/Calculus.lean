@@ -95,7 +95,7 @@ theorem ContDiff.inner (hf : ContDiff ℝ n f) (hg : ContDiff ℝ n g) :
 theorem HasFderivWithinAt.inner (hf : HasFderivWithinAt f f' s x)
     (hg : HasFderivWithinAt g g' s x) :
     HasFderivWithinAt (fun t => ⟪f t, g t⟫) ((fderivInnerClm (f x, g x)).comp <| f'.Prod g') s x :=
-  (isBoundedBilinearMapInner.HasFderivAt (f x, g x)).compHasFderivWithinAt x (hf.Prod hg)
+  (isBoundedBilinearMapInner.HasFderivAt (f x, g x)).comp_has_fderiv_within_at x (hf.Prod hg)
 #align has_fderiv_within_at.inner HasFderivWithinAt.inner
 
 theorem HasStrictFderivAt.inner (hf : HasStrictFderivAt f f' x) (hg : HasStrictFderivAt g g' x) :
@@ -122,7 +122,7 @@ theorem HasDerivAt.inner {f g : ℝ → E} {f' g' : E} {x : ℝ} :
 
 theorem DifferentiableWithinAt.inner (hf : DifferentiableWithinAt ℝ f s x)
     (hg : DifferentiableWithinAt ℝ g s x) : DifferentiableWithinAt ℝ (fun x => ⟪f x, g x⟫) s x :=
-  ((differentiable_inner _).HasFderivAt.compHasFderivWithinAt x
+  ((differentiable_inner _).HasFderivAt.comp_has_fderiv_within_at x
       (hf.Prod hg).HasFderivWithinAt).DifferentiableWithinAt
 #align differentiable_within_at.inner DifferentiableWithinAt.inner
 
@@ -225,14 +225,14 @@ theorem ContDiff.dist (hf : ContDiff ℝ n f) (hg : ContDiff ℝ n g) (hne : ∀
 
 omit 𝕜
 
-theorem hasStrictFderivAtNormSq (x : F) :
+theorem hasStrictFderivAt_norm_sq (x : F) :
     HasStrictFderivAt (fun x => ‖x‖ ^ 2) (bit0 (innerSL x : F →L[ℝ] ℝ)) x :=
   by
   simp only [sq, ← inner_self_eq_norm_mul_norm]
-  convert (hasStrictFderivAtId x).inner (hasStrictFderivAtId x)
+  convert (hasStrictFderivAt_id x).inner (hasStrictFderivAt_id x)
   ext y
   simp [bit0, real_inner_comm]
-#align has_strict_fderiv_at_norm_sq hasStrictFderivAtNormSq
+#align has_strict_fderiv_at_norm_sq hasStrictFderivAt_norm_sq
 
 include 𝕜
 

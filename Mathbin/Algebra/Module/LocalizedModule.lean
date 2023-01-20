@@ -847,7 +847,7 @@ theorem iso_symm_apply_aux (m : M') :
   generalize_proofs _ h2
   apply_fun iso S f using LinearEquiv.injective _
   rw [LinearEquiv.apply_symm_apply]
-  simp only [iso_apply, LinearMap.toFun_eq_coe, from_localized_module_mk]
+  simp only [iso_apply, LinearMap.to_fun_eq_coe, from_localized_module_mk]
   erw [Module.endCat_algebraMap_isUnit_inv_apply_eq_iff', h2.some_spec]
 #align is_localized_module.iso_symm_apply_aux IsLocalizedModule.iso_symm_apply_aux
 

@@ -78,17 +78,17 @@ def cramerMap (i : n) : α :=
   (A.updateColumn i b).det
 #align matrix.cramer_map Matrix.cramerMap
 
-theorem cramerMapIsLinear (i : n) : IsLinearMap α fun b => cramerMap A b i :=
+theorem cramerMap_is_linear (i : n) : IsLinearMap α fun b => cramerMap A b i :=
   { map_add := det_updateColumn_add _ _
     map_smul := det_updateColumn_smul _ _ }
-#align matrix.cramer_map_is_linear Matrix.cramerMapIsLinear
+#align matrix.cramer_map_is_linear Matrix.cramerMap_is_linear
 
-theorem cramerIsLinear : IsLinearMap α (cramerMap A) :=
+theorem cramer_is_linear : IsLinearMap α (cramerMap A) :=
   by
   constructor <;> intros <;> ext i
   · apply (cramer_map_is_linear A i).1
   · apply (cramer_map_is_linear A i).2
-#align matrix.cramer_is_linear Matrix.cramerIsLinear
+#align matrix.cramer_is_linear Matrix.cramer_is_linear
 
 /-- `cramer A b i` is the determinant of the matrix `A` with column `i` replaced with `b`,
   and thus `cramer A b` is the vector output by Cramer's rule on `A` and `b`.
@@ -97,7 +97,7 @@ theorem cramerIsLinear : IsLinearMap α (cramerMap A) :=
   Otherwise, the outcome of `cramer` is well-defined but not necessarily useful.
  -/
 def cramer (A : Matrix n n α) : (n → α) →ₗ[α] n → α :=
-  IsLinearMap.mk' (cramerMap A) (cramerIsLinear A)
+  IsLinearMap.mk' (cramerMap A) (cramer_is_linear A)
 #align matrix.cramer Matrix.cramer
 
 theorem cramer_apply (i : n) : cramer A b i = (A.updateColumn i b).det :=

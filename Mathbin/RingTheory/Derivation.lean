@@ -157,7 +157,7 @@ theorem map_sum {ι : Type _} (s : Finset ι) (f : ι → A) : D (∑ i in s, f 
 #align derivation.map_sum Derivation.map_sum
 
 @[simp]
-theorem map_smul_of_tower {S : Type _} [SMul S A] [SMul S M] [LinearMap.CompatibleSmul A M S R]
+theorem map_smul_of_tower {S : Type _} [SMul S A] [SMul S M] [LinearMap.CompatibleSMul A M S R]
     (D : Derivation R A M) (r : S) (a : A) : D (r • a) = r • D a :=
   D.toLinearMap.map_smul_of_tower r a
 #align derivation.map_smul_of_tower Derivation.map_smul_of_tower
@@ -362,7 +362,7 @@ section RestrictScalars
 
 variable {S : Type _} [CommSemiring S]
 
-variable [Algebra S A] [Module S M] [LinearMap.CompatibleSmul A M R S]
+variable [Algebra S A] [Module S M] [LinearMap.CompatibleSMul A M R S]
 
 variable (R)
 
@@ -615,7 +615,7 @@ def derivationToSquareZeroOfLift (f : A →ₐ[R] B)
     ext
     dsimp only [Submodule.coe_add, Submodule.coe_mk, LinearMap.coe_mk,
       diffToIdealOfQuotientCompEq_apply, Submodule.coe_smul_of_tower, IsScalarTower.coe_to_alg_hom',
-      LinearMap.toFun_eq_coe]
+      LinearMap.to_fun_eq_coe]
     simp only [map_mul, sub_mul, mul_sub, Algebra.smul_def] at this⊢
     rw [sub_eq_iff_eq_add, sub_eq_iff_eq_add] at this
     rw [this]

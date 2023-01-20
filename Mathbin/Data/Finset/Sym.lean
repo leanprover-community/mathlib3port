@@ -257,7 +257,7 @@ def symInsertEquiv (h : a ∉ s) : (insert a s).Sym n ≃ Σi : Fin (n + 1), s.S
     · exact fun i => Sym α (n - i)
     swap; · exact fun _ _ => id
     swap; · exact Subtype.coe_injective
-    refine' Eq.trans _ (Sym.filterNe_fill a _ _)
+    refine' Eq.trans _ (Sym.filter_ne_fill a _ _)
     exacts[rfl, h ∘ mem_sym_iff.1 hm a]
 #align finset.sym_insert_equiv Finset.symInsertEquiv
 

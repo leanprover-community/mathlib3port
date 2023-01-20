@@ -917,13 +917,13 @@ end Pi
 
 /- warning: tprod.measurable_space -> Tprod.measurableSpace is a dubious translation:
 lean 3 declaration is
-  forall {δ : Type.{u1}} (π : δ -> Type.{u2}) [_inst_1 : forall (x : δ), MeasurableSpace.{u2} (π x)] (l : List.{u1} δ), MeasurableSpace.{max u2 u3} (List.Tprod.{u1, u2, u3} δ π l)
+  forall {δ : Type.{u1}} (π : δ -> Type.{u2}) [_inst_1 : forall (x : δ), MeasurableSpace.{u2} (π x)] (l : List.{u1} δ), MeasurableSpace.{max u2 u3} (List.TProd.{u1, u2, u3} δ π l)
 but is expected to have type
-  forall {δ : Type.{u3}} (π : δ -> Type.{u1}) [_inst_1 : forall (x : δ), MeasurableSpace.{u1} (π x)] (l : List.{u3} δ), MeasurableSpace.{max u1 u2} (List.Tprod.{u3, u1, u2} δ π l)
+  PUnit.{max (max (succ (succ u1)) (succ u2)) (succ (succ u3))}
 Case conversion may be inaccurate. Consider using '#align tprod.measurable_space Tprod.measurableSpaceₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance Tprod.measurableSpace (π : δ → Type _) [∀ x, MeasurableSpace (π x)] :
-    ∀ l : List δ, MeasurableSpace (List.Tprod π l)
+    ∀ l : List δ, MeasurableSpace (List.TProd π l)
   | [] => PUnit.measurableSpace
   | i::is => @Prod.measurableSpace _ _ _ (Tprod.measurableSpace is)
 #align tprod.measurable_space Tprod.measurableSpace
@@ -934,35 +934,35 @@ open List
 
 variable {π : δ → Type _} [∀ x, MeasurableSpace (π x)]
 
-theorem measurable_tprod_mk (l : List δ) : Measurable (@Tprod.mk δ π l) :=
+theorem measurable_tProd_mk (l : List δ) : Measurable (@TProd.mk δ π l) :=
   by
   induction' l with i l ih
   · exact measurable_const
   · exact (measurable_pi_apply i).prod_mk ih
-#align measurable_tprod_mk measurable_tprod_mk
+#align measurable_tprod_mk measurable_tProd_mk
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem measurable_tprod_elim [DecidableEq δ] :
-    ∀ {l : List δ} {i : δ} (hi : i ∈ l), Measurable fun v : Tprod π l => v.elim hi
+theorem measurable_tProd_elim [DecidableEq δ] :
+    ∀ {l : List δ} {i : δ} (hi : i ∈ l), Measurable fun v : TProd π l => v.elim hi
   | i::is, j, hj => by
     by_cases hji : j = i
     · subst hji
       simp [measurable_fst]
     · rw [funext <| tprod.elim_of_ne _ hji]
-      exact (measurable_tprod_elim (hj.resolve_left hji)).comp measurable_snd
-#align measurable_tprod_elim measurable_tprod_elim
+      exact (measurable_tProd_elim (hj.resolve_left hji)).comp measurable_snd
+#align measurable_tprod_elim measurable_tProd_elim
 
-theorem measurable_tprod_elim' [DecidableEq δ] {l : List δ} (h : ∀ i, i ∈ l) :
-    Measurable (Tprod.elim' h : Tprod π l → ∀ i, π i) :=
-  measurable_pi_lambda _ fun i => measurable_tprod_elim (h i)
-#align measurable_tprod_elim' measurable_tprod_elim'
+theorem measurable_tProd_elim' [DecidableEq δ] {l : List δ} (h : ∀ i, i ∈ l) :
+    Measurable (TProd.elim' h : TProd π l → ∀ i, π i) :=
+  measurable_pi_lambda _ fun i => measurable_tProd_elim (h i)
+#align measurable_tprod_elim' measurable_tProd_elim'
 
-theorem MeasurableSet.tprod (l : List δ) {s : ∀ i, Set (π i)} (hs : ∀ i, MeasurableSet (s i)) :
+theorem MeasurableSet.tProd (l : List δ) {s : ∀ i, Set (π i)} (hs : ∀ i, MeasurableSet (s i)) :
     MeasurableSet (Set.tprod l s) := by
   induction' l with i l ih
   exact MeasurableSet.univ
   exact (hs i).Prod ih
-#align measurable_set.tprod MeasurableSet.tprod
+#align measurable_set.tprod MeasurableSet.tProd
 
 end Tprod
 
@@ -1523,11 +1523,11 @@ def piCongrRight (e : ∀ a, π a ≃ᵐ π' a) : (∀ a, π a) ≃ᵐ ∀ a, π
 /-- Pi-types are measurably equivalent to iterated products. -/
 @[simps (config := { fullyApplied := false })]
 def piMeasurableEquivTprod [DecidableEq δ'] {l : List δ'} (hnd : l.Nodup) (h : ∀ i, i ∈ l) :
-    (∀ i, π i) ≃ᵐ List.Tprod π l
+    (∀ i, π i) ≃ᵐ List.TProd π l
     where
-  toEquiv := List.Tprod.piEquivTprod hnd h
-  measurable_to_fun := measurable_tprod_mk l
-  measurable_inv_fun := measurable_tprod_elim' h
+  toEquiv := List.TProd.piEquivTProd hnd h
+  measurable_to_fun := measurable_tProd_mk l
+  measurable_inv_fun := measurable_tProd_elim' h
 #align measurable_equiv.pi_measurable_equiv_tprod MeasurableEquiv.piMeasurableEquivTprod
 
 /-- If `α` has a unique term, then the type of function `α → β` is measurably equivalent to `β`. -/

@@ -1884,7 +1884,7 @@ theorem HasFtaylorSeriesUpToOn.continuousLinearMapComp (g : F →L[𝕜] G)
   constructor
   · exact fun x hx => congr_arg g (hf.zero_eq x hx)
   · intro m hm x hx
-    convert (L m).HasFderivAt.compHasFderivWithinAt x (hf.fderiv_within m hm x hx)
+    convert (L m).HasFderivAt.comp_has_fderiv_within_at x (hf.fderiv_within m hm x hx)
   · intro m hm
     convert (L m).Continuous.comp_continuous_on (hf.cont m hm)
 #align has_ftaylor_series_up_to_on.continuous_linear_map_comp HasFtaylorSeriesUpToOn.continuousLinearMapComp
@@ -1956,7 +1956,7 @@ theorem HasFtaylorSeriesUpToOn.compContinuousLinearMap (hf : HasFtaylorSeriesUpT
   by
   let A : ∀ m : ℕ, (E[×m]→L[𝕜] F) → G[×m]→L[𝕜] F := fun m h => h.compContinuousLinearMap fun _ => g
   have hA : ∀ m, IsBoundedLinearMap 𝕜 (A m) := fun m =>
-    isBoundedLinearMapContinuousMultilinearMapCompLinear g
+    isBoundedLinearMap_continuousMultilinearMap_comp_linear g
   constructor
   · intro x hx
     simp only [(hf.zero_eq (g x) hx).symm, Function.comp_apply]
@@ -1965,7 +1965,7 @@ theorem HasFtaylorSeriesUpToOn.compContinuousLinearMap (hf : HasFtaylorSeriesUpT
     rfl
   · intro m hm x hx
     convert
-      (hA m).HasFderivAt.compHasFderivWithinAt x
+      (hA m).HasFderivAt.comp_has_fderiv_within_at x
         ((hf.fderiv_within m hm (g x) hx).comp x g.has_fderiv_within_at (subset.refl _))
     ext (y v)
     change p (g x) (Nat.succ m) (g ∘ cons y v) = p (g x) m.succ (cons (g y) (g ∘ v))
@@ -2063,7 +2063,7 @@ theorem HasFtaylorSeriesUpToOn.prod (hf : HasFtaylorSeriesUpToOn n f p s) {g : E
     rfl
   · intro m hm x hx
     convert
-      (L m).HasFderivAt.compHasFderivWithinAt x
+      (L m).HasFderivAt.comp_has_fderiv_within_at x
         ((hf.fderiv_within m hm x hx).Prod (hg.fderiv_within m hm x hx))
   · intro m hm
     exact (L m).Continuous.comp_continuous_on ((hf.cont m hm).Prod (hg.cont m hm))
@@ -2575,7 +2575,7 @@ theorem hasFtaylorSeriesUpToOn_pi :
     exact (h i).zero_eq x hx
   · intro m hm x hx
     have := hasFderivWithinAt_pi.2 fun i => (h i).fderivWithin m hm x hx
-    convert (L m).HasFderivAt.compHasFderivWithinAt x this
+    convert (L m).HasFderivAt.comp_has_fderiv_within_at x this
   · intro m hm
     have := continuousOn_pi.2 fun i => (h i).cont m hm
     convert (L m).Continuous.comp_continuous_on this
@@ -3167,7 +3167,7 @@ theorem contDiffAt_ring_inverse [CompleteSpace R] (x : Rˣ) : ContDiffAt 𝕜 n 
     · refine' ⟨{ y : R | IsUnit y }, x.nhds, _⟩
       rintro _ ⟨y, rfl⟩
       rw [inverse_unit]
-      exact hasFderivAtRingInverse y
+      exact hasFderivAt_ring_inverse y
     ·
       convert
         (mul_left_right_is_bounded_bilinear 𝕜 R).ContDiff.neg.comp_cont_diff_at (x : R) (IH.prod IH)
@@ -3351,7 +3351,7 @@ an inverse function. -/
 theorem LocalHomeomorph.contDiffAt_symm_deriv [CompleteSpace 𝕜] (f : LocalHomeomorph 𝕜 𝕜)
     {f₀' a : 𝕜} (h₀ : f₀' ≠ 0) (ha : a ∈ f.target) (hf₀' : HasDerivAt f f₀' (f.symm a))
     (hf : ContDiffAt 𝕜 n f (f.symm a)) : ContDiffAt 𝕜 n f.symm a :=
-  f.cont_diff_at_symm ha (hf₀'.hasFderivAtEquiv h₀) hf
+  f.cont_diff_at_symm ha (hf₀'.has_fderiv_at_equiv h₀) hf
 #align local_homeomorph.cont_diff_at_symm_deriv LocalHomeomorph.contDiffAt_symm_deriv
 
 /-- Let `f` be an `n` times continuously differentiable homeomorphism of a nontrivially normed
@@ -3442,33 +3442,33 @@ variable {𝕂 : Type _} [IsROrC 𝕂] {E' : Type _} [NormedAddCommGroup E'] [No
 theorem HasFtaylorSeriesUpToOn.hasStrictFderivAt {s : Set E'} {f : E' → F'} {x : E'}
     {p : E' → FormalMultilinearSeries 𝕂 E' F'} (hf : HasFtaylorSeriesUpToOn n f p s) (hn : 1 ≤ n)
     (hs : s ∈ 𝓝 x) : HasStrictFderivAt f ((continuousMultilinearCurryFin1 𝕂 E' F') (p x 1)) x :=
-  hasStrictFderivAtOfHasFderivAtOfContinuousAt (hf.eventually_has_fderiv_at hn hs) <|
+  hasStrictFderivAt_of_hasFderivAt_of_continuousAt (hf.eventually_has_fderiv_at hn hs) <|
     (continuousMultilinearCurryFin1 𝕂 E' F').ContinuousAt.comp <| (hf.cont 1 hn).ContinuousAt hs
 #align has_ftaylor_series_up_to_on.has_strict_fderiv_at HasFtaylorSeriesUpToOn.hasStrictFderivAt
 
 /-- If a function is `C^n` with `1 ≤ n` around a point, and its derivative at that point is given to
 us as `f'`, then `f'` is also a strict derivative. -/
-theorem ContDiffAt.hasStrictFderivAt' {f : E' → F'} {f' : E' →L[𝕂] F'} {x : E'}
+theorem ContDiffAt.has_strict_fderiv_at' {f : E' → F'} {f' : E' →L[𝕂] F'} {x : E'}
     (hf : ContDiffAt 𝕂 n f x) (hf' : HasFderivAt f f' x) (hn : 1 ≤ n) : HasStrictFderivAt f f' x :=
   by
   rcases hf 1 hn with ⟨u, H, p, hp⟩
   simp only [nhdsWithin_univ, mem_univ, insert_eq_of_mem] at H
   have := hp.has_strict_fderiv_at le_rfl H
   rwa [hf'.unique this.has_fderiv_at]
-#align cont_diff_at.has_strict_fderiv_at' ContDiffAt.hasStrictFderivAt'
+#align cont_diff_at.has_strict_fderiv_at' ContDiffAt.has_strict_fderiv_at'
 
 /-- If a function is `C^n` with `1 ≤ n` around a point, and its derivative at that point is given to
 us as `f'`, then `f'` is also a strict derivative. -/
 theorem ContDiffAt.has_strict_deriv_at' {f : 𝕂 → F'} {f' : F'} {x : 𝕂} (hf : ContDiffAt 𝕂 n f x)
     (hf' : HasDerivAt f f' x) (hn : 1 ≤ n) : HasStrictDerivAt f f' x :=
-  hf.hasStrictFderivAt' hf' hn
+  hf.has_strict_fderiv_at' hf' hn
 #align cont_diff_at.has_strict_deriv_at' ContDiffAt.has_strict_deriv_at'
 
 /-- If a function is `C^n` with `1 ≤ n` around a point, then the derivative of `f` at this point
 is also a strict derivative. -/
 theorem ContDiffAt.hasStrictFderivAt {f : E' → F'} {x : E'} (hf : ContDiffAt 𝕂 n f x) (hn : 1 ≤ n) :
     HasStrictFderivAt f (fderiv 𝕂 f x) x :=
-  hf.hasStrictFderivAt' (hf.DifferentiableAt hn).HasFderivAt hn
+  hf.has_strict_fderiv_at' (hf.DifferentiableAt hn).HasFderivAt hn
 #align cont_diff_at.has_strict_fderiv_at ContDiffAt.hasStrictFderivAt
 
 /-- If a function is `C^n` with `1 ≤ n` around a point, then the derivative of `f` at this point
@@ -3717,7 +3717,7 @@ theorem HasFtaylorSeriesUpToOn.restrictScalars (h : HasFtaylorSeriesUpToOn n f p
     fderivWithin := by
       intro m hm x hx
       convert
-        (ContinuousMultilinearMap.restrictScalarsLinear 𝕜).HasFderivAt.compHasFderivWithinAt _
+        (ContinuousMultilinearMap.restrictScalarsLinear 𝕜).HasFderivAt.comp_has_fderiv_within_at _
           ((h.fderiv_within m hm x hx).restrictScalars 𝕜)
     cont := fun m hm =>
       ContinuousMultilinearMap.continuous_restrictScalars.comp_continuous_on (h.cont m hm) }

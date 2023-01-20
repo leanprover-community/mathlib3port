@@ -109,8 +109,8 @@ structure ImplicitFunctionData (𝕜 : Type _) [NontriviallyNormedField 𝕜] (E
   rightFun : E → G
   rightDeriv : E →L[𝕜] G
   pt : E
-  leftHasDeriv : HasStrictFderivAt left_fun left_deriv pt
-  rightHasDeriv : HasStrictFderivAt right_fun right_deriv pt
+  left_has_deriv : HasStrictFderivAt left_fun left_deriv pt
+  right_has_deriv : HasStrictFderivAt right_fun right_deriv pt
   left_range : range left_deriv = ⊤
   right_range : range right_deriv = ⊤
   is_compl_ker : IsCompl (ker left_deriv) (ker right_deriv)
@@ -139,7 +139,7 @@ protected theorem hasStrictFderivAt :
           φ.is_compl_ker :
         E →L[𝕜] F × G)
       φ.pt :=
-  φ.leftHasDeriv.Prod φ.rightHasDeriv
+  φ.left_has_deriv.Prod φ.right_has_deriv
 #align implicit_function_data.has_strict_fderiv_at ImplicitFunctionData.hasStrictFderivAt
 
 /-- Implicit function theorem. If `f : E → F` and `g : E → G` are two maps strictly differentiable
@@ -201,18 +201,18 @@ theorem map_nhds_eq : map φ.leftFun (𝓝 φ.pt) = 𝓝 (φ.leftFun φ.pt) :=
     rw [← map_map, φ.has_strict_fderiv_at.map_nhds_eq_of_equiv, map_fst_nhds]
 #align implicit_function_data.map_nhds_eq ImplicitFunctionData.map_nhds_eq
 
-theorem implicitFunctionHasStrictFderivAt (g'inv : G →L[𝕜] E)
+theorem implicitFunction_hasStrictFderivAt (g'inv : G →L[𝕜] E)
     (hg'inv : φ.rightDeriv.comp g'inv = ContinuousLinearMap.id 𝕜 G)
     (hg'invf : φ.leftDeriv.comp g'inv = 0) :
     HasStrictFderivAt (φ.implicitFunction (φ.leftFun φ.pt)) g'inv (φ.rightFun φ.pt) :=
   by
   have := φ.has_strict_fderiv_at.to_local_inverse
   simp only [prod_fun] at this
-  convert this.comp (φ.right_fun φ.pt) ((hasStrictFderivAtConst _ _).Prod (hasStrictFderivAtId _))
+  convert this.comp (φ.right_fun φ.pt) ((hasStrictFderivAt_const _ _).Prod (hasStrictFderivAt_id _))
   simp only [ContinuousLinearMap.ext_iff, ContinuousLinearMap.coe_comp', Function.comp_apply] at
     hg'inv hg'invf⊢
   simp [ContinuousLinearEquiv.eq_symm_apply, *]
-#align implicit_function_data.implicit_function_has_strict_fderiv_at ImplicitFunctionData.implicitFunctionHasStrictFderivAt
+#align implicit_function_data.implicit_function_has_strict_fderiv_at ImplicitFunctionData.implicitFunction_hasStrictFderivAt
 
 end ImplicitFunctionData
 
@@ -254,9 +254,9 @@ def implicitFunctionDataOfComplemented (hf : HasStrictFderivAt f f' a) (hf' : ra
   rightFun x := Classical.choose hker (x - a)
   rightDeriv := Classical.choose hker
   pt := a
-  leftHasDeriv := hf
-  rightHasDeriv :=
-    (Classical.choose hker).HasStrictFderivAt.comp a ((hasStrictFderivAtId a).sub_const a)
+  left_has_deriv := hf
+  right_has_deriv :=
+    (Classical.choose hker).HasStrictFderivAt.comp a ((hasStrictFderivAt_id a).sub_const a)
   left_range := hf'
   right_range := LinearMap.range_eq_of_proj (Classical.choose_spec hker)
   is_compl_ker := LinearMap.isCompl_of_proj (Classical.choose_spec hker)
@@ -352,12 +352,12 @@ theorem implicitFunctionOfComplemented_apply_image (hf : HasStrictFderivAt f f' 
   exact congr_arg Prod.snd (hf.implicit_to_local_homeomorph_of_complemented_self hf' hker).symm
 #align has_strict_fderiv_at.implicit_function_of_complemented_apply_image HasStrictFderivAt.implicitFunctionOfComplemented_apply_image
 
-theorem toImplicitFunctionOfComplemented (hf : HasStrictFderivAt f f' a) (hf' : range f' = ⊤)
+theorem to_implicitFunctionOfComplemented (hf : HasStrictFderivAt f f' a) (hf' : range f' = ⊤)
     (hker : (ker f').ClosedComplemented) :
     HasStrictFderivAt (hf.implicitFunctionOfComplemented f f' hf' hker (f a)) (ker f').subtypeL 0 :=
   by
   convert
-    (implicit_function_data_of_complemented f f' hf hf' hker).implicitFunctionHasStrictFderivAt
+    (implicit_function_data_of_complemented f f' hf hf' hker).implicit_function_has_strict_fderiv_at
       (ker f').subtypeL _ _
   swap
   · ext
@@ -369,7 +369,7 @@ theorem toImplicitFunctionOfComplemented (hf : HasStrictFderivAt f f' a) (hf' : 
     simp only [ContinuousLinearMap.coe_comp', Submodule.coe_subtypeL', Submodule.coeSubtype,
       Function.comp_apply, LinearMap.map_coe_ker, ContinuousLinearMap.zero_apply]
   simp only [implicit_function_data_of_complemented, map_sub, sub_self]
-#align has_strict_fderiv_at.to_implicit_function_of_complemented HasStrictFderivAt.toImplicitFunctionOfComplemented
+#align has_strict_fderiv_at.to_implicit_function_of_complemented HasStrictFderivAt.to_implicitFunctionOfComplemented
 
 end Complemented
 
@@ -477,10 +477,10 @@ theorem eq_implicitFunction (hf : HasStrictFderivAt f f' a) (hf' : range f' = �
   by apply eq_implicit_function_of_complemented
 #align has_strict_fderiv_at.eq_implicit_function HasStrictFderivAt.eq_implicitFunction
 
-theorem toImplicitFunction (hf : HasStrictFderivAt f f' a) (hf' : range f' = ⊤) :
+theorem to_implicitFunction (hf : HasStrictFderivAt f f' a) (hf' : range f' = ⊤) :
     HasStrictFderivAt (hf.implicitFunction f f' hf' (f a)) (ker f').subtypeL 0 := by
   apply to_implicit_function_of_complemented
-#align has_strict_fderiv_at.to_implicit_function HasStrictFderivAt.toImplicitFunction
+#align has_strict_fderiv_at.to_implicit_function HasStrictFderivAt.to_implicitFunction
 
 end FiniteDimensional
 

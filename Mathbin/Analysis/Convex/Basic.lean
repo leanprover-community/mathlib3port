@@ -219,7 +219,7 @@ theorem Convex.is_linear_preimage {s : Set F} (hs : Convex 𝕜 s) {f : E → F}
 theorem Convex.add {t : Set E} (hs : Convex 𝕜 s) (ht : Convex 𝕜 t) : Convex 𝕜 (s + t) :=
   by
   rw [← add_image_prod]
-  exact (hs.prod ht).is_linear_image IsLinearMap.isLinearMapAdd
+  exact (hs.prod ht).is_linear_image IsLinearMap.isLinearMap_add
 #align convex.add Convex.add
 
 theorem Convex.vadd (hs : Convex 𝕜 s) (z : E) : Convex 𝕜 (z +ᵥ s) :=
@@ -517,7 +517,7 @@ theorem Convex.affine_image (f : E →ᵃ[𝕜] F) (hs : Convex 𝕜 s) : Convex
 #align convex.affine_image Convex.affine_image
 
 theorem Convex.neg (hs : Convex 𝕜 s) : Convex 𝕜 (-s) :=
-  hs.is_linear_preimage IsLinearMap.isLinearMapNeg
+  hs.is_linear_preimage IsLinearMap.isLinearMap_neg
 #align convex.neg Convex.neg
 
 theorem Convex.sub (hs : Convex 𝕜 s) (ht : Convex 𝕜 t) : Convex 𝕜 (s - t) :=

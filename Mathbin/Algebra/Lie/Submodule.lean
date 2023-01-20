@@ -1107,10 +1107,10 @@ theorem idealRange_eq_top_of_surjective (h : Function.Surjective f) : f.idealRan
   exact LieSubmodule.top_coeSubmodule
 #align lie_hom.ideal_range_eq_top_of_surjective LieHom.idealRange_eq_top_of_surjective
 
-theorem isIdealMorphismOfSurjective (h : Function.Surjective f) : f.IsIdealMorphism := by
+theorem isIdealMorphism_of_surjective (h : Function.Surjective f) : f.IsIdealMorphism := by
   rw [is_ideal_morphism_def, f.ideal_range_eq_top_of_surjective h, f.range_eq_top.mpr h,
     LieIdeal.top_coe_lieSubalgebra]
-#align lie_hom.is_ideal_morphism_of_surjective LieHom.isIdealMorphismOfSurjective
+#align lie_hom.is_ideal_morphism_of_surjective LieHom.isIdealMorphism_of_surjective
 
 end LieHom
 
@@ -1257,11 +1257,11 @@ theorem incl_idealRange : I.incl.idealRange = I :=
   use I
 #align lie_ideal.incl_ideal_range LieIdeal.incl_idealRange
 
-theorem inclIsIdealMorphism : I.incl.IsIdealMorphism :=
+theorem incl_isIdealMorphism : I.incl.IsIdealMorphism :=
   by
   rw [I.incl.is_ideal_morphism_def, incl_ideal_range]
   exact (I : LieSubalgebra R L).incl_range.symm
-#align lie_ideal.incl_is_ideal_morphism LieIdeal.inclIsIdealMorphism
+#align lie_ideal.incl_is_ideal_morphism LieIdeal.incl_isIdealMorphism
 
 end LieIdeal
 

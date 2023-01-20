@@ -382,7 +382,7 @@ theorem ofLinearMap_id (map_one) (map_mul) :
   ext fun _ => rfl
 #align alg_hom.of_linear_map_id AlgHom.ofLinearMap_id
 
-theorem map_smul_of_tower {R'} [SMul R' A] [SMul R' B] [LinearMap.CompatibleSmul A B R' R] (r : R')
+theorem map_smul_of_tower {R'} [SMul R' A] [SMul R' B] [LinearMap.CompatibleSMul A B R' R] (r : R')
     (x : A) : φ (r • x) = r • φ x :=
   φ.toLinearMap.map_smul_of_tower r x
 #align alg_hom.map_smul_of_tower AlgHom.map_smul_of_tower

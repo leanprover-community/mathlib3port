@@ -130,7 +130,7 @@ theorem Set.Subsingleton.strictConvex (hs : s.Subsingleton) : StrictConvex 𝕜 
 #align set.subsingleton.strict_convex Set.Subsingleton.strictConvex
 
 theorem StrictConvex.linear_image [Semiring 𝕝] [Module 𝕝 E] [Module 𝕝 F]
-    [LinearMap.CompatibleSmul E F 𝕜 𝕝] (hs : StrictConvex 𝕜 s) (f : E →ₗ[𝕝] F) (hf : IsOpenMap f) :
+    [LinearMap.CompatibleSMul E F 𝕜 𝕝] (hs : StrictConvex 𝕜 s) (f : E →ₗ[𝕝] F) (hf : IsOpenMap f) :
     StrictConvex 𝕜 (f '' s) :=
   by
   rintro _ ⟨x, hx, rfl⟩ _ ⟨y, hy, rfl⟩ hxy a b ha hb hab
@@ -283,7 +283,7 @@ end continuous_add
 section ContinuousSmul
 
 variable [LinearOrderedField 𝕝] [Module 𝕝 E] [HasContinuousConstSmul 𝕝 E]
-  [LinearMap.CompatibleSmul E E 𝕜 𝕝] {s : Set E} {x : E}
+  [LinearMap.CompatibleSMul E E 𝕜 𝕝] {s : Set E} {x : E}
 
 theorem StrictConvex.smul (hs : StrictConvex 𝕜 s) (c : 𝕝) : StrictConvex 𝕜 (c • s) :=
   by
@@ -395,7 +395,7 @@ theorem StrictConvex.affine_image (hs : StrictConvex 𝕜 s) {f : E →ᵃ[𝕜]
 variable [TopologicalAddGroup E]
 
 theorem StrictConvex.neg (hs : StrictConvex 𝕜 s) : StrictConvex 𝕜 (-s) :=
-  hs.is_linear_preimage IsLinearMap.isLinearMapNeg continuous_id.neg neg_injective
+  hs.is_linear_preimage IsLinearMap.isLinearMap_neg continuous_id.neg neg_injective
 #align strict_convex.neg StrictConvex.neg
 
 theorem StrictConvex.sub (hs : StrictConvex 𝕜 s) (ht : StrictConvex 𝕜 t) : StrictConvex 𝕜 (s - t) :=

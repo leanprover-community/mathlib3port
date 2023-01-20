@@ -640,7 +640,7 @@ theorem coe_ofInvolutive {σ σ' : R →+* R} [RingHomInvPair σ σ'] [RingHomIn
 section RestrictScalars
 
 variable (R) [Module R M] [Module R M₂] [Module S M] [Module S M₂]
-  [LinearMap.CompatibleSmul M M₂ R S]
+  [LinearMap.CompatibleSMul M M₂ R S]
 
 /-- If `M` and `M₂` are both `R`-semimodules and `S`-semimodules and `R`-semimodule structures
 are defined by an action of `R` on `S` (formally, we have two scalar towers), then any `S`-linear

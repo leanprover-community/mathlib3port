@@ -18,9 +18,11 @@ import Mathbin.Data.Sym.Basic
 
 variable {α : Type _}
 
+#print Vector.fintype /-
 instance Vector.fintype [Fintype α] {n : ℕ} : Fintype (Vector α n) :=
   Fintype.ofEquiv _ (Equiv.vectorEquivFin _ _).symm
 #align vector.fintype Vector.fintype
+-/
 
 instance [DecidableEq α] [Fintype α] {n : ℕ} : Fintype (Sym.Sym' α n) :=
   Quotient.fintype _

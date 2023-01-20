@@ -947,11 +947,11 @@ def LinearEquiv.dualMap (f : M₁ ≃ₗ[R] M₂) : Dual R M₂ ≃ₗ[R] Dual R
     invFun := f.symm.toLinearMap.dualMap
     left_inv := by
       intro φ; ext x
-      simp only [LinearMap.dualMap_apply, LinearEquiv.coe_toLinearMap, LinearMap.toFun_eq_coe,
+      simp only [LinearMap.dualMap_apply, LinearEquiv.coe_toLinearMap, LinearMap.to_fun_eq_coe,
         LinearEquiv.apply_symm_apply]
     right_inv := by
       intro φ; ext x
-      simp only [LinearMap.dualMap_apply, LinearEquiv.coe_toLinearMap, LinearMap.toFun_eq_coe,
+      simp only [LinearMap.dualMap_apply, LinearEquiv.coe_toLinearMap, LinearMap.to_fun_eq_coe,
         LinearEquiv.symm_apply_apply] }
 #align linear_equiv.dual_map LinearEquiv.dualMap
 

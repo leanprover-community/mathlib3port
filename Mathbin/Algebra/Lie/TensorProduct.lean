@@ -149,7 +149,7 @@ variable {R L M N P Q}
 def map (f : M →ₗ⁅R,L⁆ P) (g : N →ₗ⁅R,L⁆ Q) : M ⊗[R] N →ₗ⁅R,L⁆ P ⊗[R] Q :=
   { map (f : M →ₗ[R] P) (g : N →ₗ[R] Q) with
     map_lie' := fun x t => by
-      simp only [LinearMap.toFun_eq_coe]
+      simp only [LinearMap.to_fun_eq_coe]
       apply t.induction_on
       · simp only [LinearMap.map_zero, lie_zero]
       · intro m n
@@ -208,7 +208,7 @@ def toModuleHom : L ⊗[R] M →ₗ⁅R,L⁆ M :=
 @[simp]
 theorem toModuleHom_apply (x : L) (m : M) : toModuleHom R L M (x ⊗ₜ m) = ⁅x, m⁆ := by
   simp only [to_module_hom, TensorProduct.LieModule.liftLie_apply, to_endomorphism_apply_apply,
-    LieHom.coe_to_linearMap, LieModuleHom.coe_mk, LinearMap.coe_mk, LinearMap.toFun_eq_coe]
+    LieHom.coe_to_linearMap, LieModuleHom.coe_mk, LinearMap.coe_mk, LinearMap.to_fun_eq_coe]
 #align lie_module.to_module_hom_apply LieModule.toModuleHom_apply
 
 end LieModule

@@ -587,7 +587,7 @@ theorem HasDerivAtFilter.congr_of_eventuallyEq (h : HasDerivAtFilter f f' x L) (
 
 theorem HasDerivWithinAt.congr_mono (h : HasDerivWithinAt f f' s x) (ht : ∀ x ∈ t, f₁ x = f x)
     (hx : f₁ x = f x) (h₁ : t ⊆ s) : HasDerivWithinAt f₁ f' t x :=
-  HasFderivWithinAt.congrMono h ht hx h₁
+  HasFderivWithinAt.congr_mono h ht hx h₁
 #align has_deriv_within_at.congr_mono HasDerivWithinAt.congr_mono
 
 theorem HasDerivWithinAt.congr (h : HasDerivWithinAt f f' s x) (hs : ∀ x ∈ s, f₁ x = f x)
@@ -649,7 +649,7 @@ section id
 variable (s x L)
 
 theorem hasDerivAtFilter_id : HasDerivAtFilter id 1 x L :=
-  (hasFderivAtFilterId x L).HasDerivAtFilter
+  (hasFderivAtFilter_id x L).HasDerivAtFilter
 #align has_deriv_at_filter_id hasDerivAtFilter_id
 
 theorem hasDerivWithinAt_id : HasDerivWithinAt id 1 s x :=
@@ -665,7 +665,7 @@ theorem hasDerivAt_id' : HasDerivAt (fun x : 𝕜 => x) 1 x :=
 #align has_deriv_at_id' hasDerivAt_id'
 
 theorem hasStrictDerivAt_id : HasStrictDerivAt id 1 x :=
-  (hasStrictFderivAtId x).HasStrictDerivAt
+  (hasStrictFderivAt_id x).HasStrictDerivAt
 #align has_strict_deriv_at_id hasStrictDerivAt_id
 
 theorem deriv_id : deriv id x = 1 :=
@@ -696,11 +696,11 @@ section Const
 variable (c : F) (s x L)
 
 theorem hasDerivAtFilter_const : HasDerivAtFilter (fun x => c) 0 x L :=
-  (hasFderivAtFilterConst c x L).HasDerivAtFilter
+  (hasFderivAtFilter_const c x L).HasDerivAtFilter
 #align has_deriv_at_filter_const hasDerivAtFilter_const
 
 theorem hasStrictDerivAt_const : HasStrictDerivAt (fun x => c) 0 x :=
-  (hasStrictFderivAtConst c x).HasStrictDerivAt
+  (hasStrictFderivAt_const c x).HasStrictDerivAt
 #align has_strict_deriv_at_const hasStrictDerivAt_const
 
 theorem hasDerivWithinAt_const : HasDerivWithinAt (fun x => c) 0 s x :=
@@ -1404,16 +1404,16 @@ theorem deriv.scomp (hg : DifferentiableAt 𝕜' g₁ (h x)) (hh : Differentiabl
 /-! ### Derivative of the composition of a scalar and vector functions -/
 
 
-theorem HasDerivAtFilter.compHasFderivAtFilter {f : E → 𝕜'} {f' : E →L[𝕜] 𝕜'} (x) {L'' : Filter E}
+theorem HasDerivAtFilter.comp_hasFderivAtFilter {f : E → 𝕜'} {f' : E →L[𝕜] 𝕜'} (x) {L'' : Filter E}
     (hh₂ : HasDerivAtFilter h₂ h₂' (f x) L') (hf : HasFderivAtFilter f f' x L'')
     (hL : Tendsto f L'' L') : HasFderivAtFilter (h₂ ∘ f) (h₂' • f') x L'' :=
   by
   convert (hh₂.restrict_scalars 𝕜).comp x hf hL
   ext x
   simp [mul_comm]
-#align has_deriv_at_filter.comp_has_fderiv_at_filter HasDerivAtFilter.compHasFderivAtFilter
+#align has_deriv_at_filter.comp_has_fderiv_at_filter HasDerivAtFilter.comp_hasFderivAtFilter
 
-theorem HasStrictDerivAt.compHasStrictFderivAt {f : E → 𝕜'} {f' : E →L[𝕜] 𝕜'} (x)
+theorem HasStrictDerivAt.comp_hasStrictFderivAt {f : E → 𝕜'} {f' : E →L[𝕜] 𝕜'} (x)
     (hh : HasStrictDerivAt h₂ h₂' (f x)) (hf : HasStrictFderivAt f f' x) :
     HasStrictFderivAt (h₂ ∘ f) (h₂' • f') x :=
   by
@@ -1421,24 +1421,24 @@ theorem HasStrictDerivAt.compHasStrictFderivAt {f : E → 𝕜'} {f' : E →L[�
   convert (hh.restrict_scalars 𝕜).comp x hf
   ext x
   simp [mul_comm]
-#align has_strict_deriv_at.comp_has_strict_fderiv_at HasStrictDerivAt.compHasStrictFderivAt
+#align has_strict_deriv_at.comp_has_strict_fderiv_at HasStrictDerivAt.comp_hasStrictFderivAt
 
-theorem HasDerivAt.compHasFderivAt {f : E → 𝕜'} {f' : E →L[𝕜] 𝕜'} (x) (hh : HasDerivAt h₂ h₂' (f x))
-    (hf : HasFderivAt f f' x) : HasFderivAt (h₂ ∘ f) (h₂' • f') x :=
-  hh.compHasFderivAtFilter x hf hf.ContinuousAt
-#align has_deriv_at.comp_has_fderiv_at HasDerivAt.compHasFderivAt
+theorem HasDerivAt.comp_hasFderivAt {f : E → 𝕜'} {f' : E →L[𝕜] 𝕜'} (x)
+    (hh : HasDerivAt h₂ h₂' (f x)) (hf : HasFderivAt f f' x) : HasFderivAt (h₂ ∘ f) (h₂' • f') x :=
+  hh.comp_has_fderiv_at_filter x hf hf.ContinuousAt
+#align has_deriv_at.comp_has_fderiv_at HasDerivAt.comp_hasFderivAt
 
-theorem HasDerivAt.compHasFderivWithinAt {f : E → 𝕜'} {f' : E →L[𝕜] 𝕜'} {s} (x)
+theorem HasDerivAt.comp_hasFderivWithinAt {f : E → 𝕜'} {f' : E →L[𝕜] 𝕜'} {s} (x)
     (hh : HasDerivAt h₂ h₂' (f x)) (hf : HasFderivWithinAt f f' s x) :
     HasFderivWithinAt (h₂ ∘ f) (h₂' • f') s x :=
-  hh.compHasFderivAtFilter x hf hf.ContinuousWithinAt
-#align has_deriv_at.comp_has_fderiv_within_at HasDerivAt.compHasFderivWithinAt
+  hh.comp_has_fderiv_at_filter x hf hf.ContinuousWithinAt
+#align has_deriv_at.comp_has_fderiv_within_at HasDerivAt.comp_hasFderivWithinAt
 
-theorem HasDerivWithinAt.compHasFderivWithinAt {f : E → 𝕜'} {f' : E →L[𝕜] 𝕜'} {s t} (x)
+theorem HasDerivWithinAt.comp_hasFderivWithinAt {f : E → 𝕜'} {f' : E →L[𝕜] 𝕜'} {s t} (x)
     (hh : HasDerivWithinAt h₂ h₂' t (f x)) (hf : HasFderivWithinAt f f' s x) (hst : MapsTo f s t) :
     HasFderivWithinAt (h₂ ∘ f) (h₂' • f') s x :=
-  hh.compHasFderivAtFilter x hf <| hf.ContinuousWithinAt.tendsto_nhds_within hst
-#align has_deriv_within_at.comp_has_fderiv_within_at HasDerivWithinAt.compHasFderivWithinAt
+  hh.comp_has_fderiv_at_filter x hf <| hf.ContinuousWithinAt.tendsto_nhds_within hst
+#align has_deriv_within_at.comp_has_fderiv_within_at HasDerivWithinAt.comp_hasFderivWithinAt
 
 /-! ### Derivative of the composition of two scalar functions -/
 
@@ -1775,15 +1775,15 @@ theorem derivWithin_inv (x_ne_zero : x ≠ 0) (hxs : UniqueDiffWithinAt 𝕜 s x
   exact deriv_inv
 #align deriv_within_inv derivWithin_inv
 
-theorem hasFderivAtInv (x_ne_zero : x ≠ 0) :
+theorem hasFderivAt_inv (x_ne_zero : x ≠ 0) :
     HasFderivAt (fun x => x⁻¹) (smulRight (1 : 𝕜 →L[𝕜] 𝕜) (-(x ^ 2)⁻¹) : 𝕜 →L[𝕜] 𝕜) x :=
   hasDerivAt_inv x_ne_zero
-#align has_fderiv_at_inv hasFderivAtInv
+#align has_fderiv_at_inv hasFderivAt_inv
 
-theorem hasFderivWithinAtInv (x_ne_zero : x ≠ 0) :
+theorem hasFderivWithinAt_inv (x_ne_zero : x ≠ 0) :
     HasFderivWithinAt (fun x => x⁻¹) (smulRight (1 : 𝕜 →L[𝕜] 𝕜) (-(x ^ 2)⁻¹) : 𝕜 →L[𝕜] 𝕜) s x :=
-  (hasFderivAtInv x_ne_zero).HasFderivWithinAt
-#align has_fderiv_within_at_inv hasFderivWithinAtInv
+  (hasFderivAt_inv x_ne_zero).HasFderivWithinAt
+#align has_fderiv_within_at_inv hasFderivWithinAt_inv
 
 theorem fderiv_inv : fderiv 𝕜 (fun x => x⁻¹) x = smulRight (1 : 𝕜 →L[𝕜] 𝕜) (-(x ^ 2)⁻¹) := by
   rw [← deriv_fderiv, deriv_inv]
@@ -2034,26 +2034,27 @@ theorem HasDerivAt.clm_apply (hc : HasDerivAt c c' x) (hu : HasDerivAt u u' x) :
 theorem derivWithin_clm_apply (hxs : UniqueDiffWithinAt 𝕜 s x) (hc : DifferentiableWithinAt 𝕜 c s x)
     (hu : DifferentiableWithinAt 𝕜 u s x) :
     derivWithin (fun y => (c y) (u y)) s x = derivWithin c s x (u x) + c x (derivWithin u s x) :=
-  (hc.HasDerivWithinAt.clmApply hu.HasDerivWithinAt).derivWithin hxs
+  (hc.HasDerivWithinAt.clm_apply hu.HasDerivWithinAt).derivWithin hxs
 #align deriv_within_clm_apply derivWithin_clm_apply
 
 theorem deriv_clm_apply (hc : DifferentiableAt 𝕜 c x) (hu : DifferentiableAt 𝕜 u x) :
     deriv (fun y => (c y) (u y)) x = deriv c x (u x) + c x (deriv u x) :=
-  (hc.HasDerivAt.clmApply hu.HasDerivAt).deriv
+  (hc.HasDerivAt.clm_apply hu.HasDerivAt).deriv
 #align deriv_clm_apply deriv_clm_apply
 
 end ClmCompApply
 
-theorem HasStrictDerivAt.hasStrictFderivAtEquiv {f : 𝕜 → 𝕜} {f' x : 𝕜}
+theorem HasStrictDerivAt.hasStrictFderivAt_equiv {f : 𝕜 → 𝕜} {f' x : 𝕜}
     (hf : HasStrictDerivAt f f' x) (hf' : f' ≠ 0) :
     HasStrictFderivAt f (ContinuousLinearEquiv.unitsEquivAut 𝕜 (Units.mk0 f' hf') : 𝕜 →L[𝕜] 𝕜) x :=
   hf
-#align has_strict_deriv_at.has_strict_fderiv_at_equiv HasStrictDerivAt.hasStrictFderivAtEquiv
+#align has_strict_deriv_at.has_strict_fderiv_at_equiv HasStrictDerivAt.hasStrictFderivAt_equiv
 
-theorem HasDerivAt.hasFderivAtEquiv {f : 𝕜 → 𝕜} {f' x : 𝕜} (hf : HasDerivAt f f' x) (hf' : f' ≠ 0) :
+theorem HasDerivAt.hasFderivAt_equiv {f : 𝕜 → 𝕜} {f' x : 𝕜} (hf : HasDerivAt f f' x)
+    (hf' : f' ≠ 0) :
     HasFderivAt f (ContinuousLinearEquiv.unitsEquivAut 𝕜 (Units.mk0 f' hf') : 𝕜 →L[𝕜] 𝕜) x :=
   hf
-#align has_deriv_at.has_fderiv_at_equiv HasDerivAt.hasFderivAtEquiv
+#align has_deriv_at.has_fderiv_at_equiv HasDerivAt.hasFderivAt_equiv
 
 /-- If `f (g y) = y` for `y` in some neighborhood of `a`, `g` is continuous at `a`, and `f` has an
 invertible derivative `f'` at `g a` in the strict sense, then `g` has the derivative `f'⁻¹` at `a`
@@ -2064,7 +2065,7 @@ inverse function. -/
 theorem HasStrictDerivAt.of_local_left_inverse {f g : 𝕜 → 𝕜} {f' a : 𝕜} (hg : ContinuousAt g a)
     (hf : HasStrictDerivAt f f' (g a)) (hf' : f' ≠ 0) (hfg : ∀ᶠ y in 𝓝 a, f (g y) = y) :
     HasStrictDerivAt g f'⁻¹ a :=
-  (hf.hasStrictFderivAtEquiv hf').ofLocalLeftInverse hg hfg
+  (hf.has_strict_fderiv_at_equiv hf').of_local_left_inverse hg hfg
 #align has_strict_deriv_at.of_local_left_inverse HasStrictDerivAt.of_local_left_inverse
 
 /-- If `f` is a local homeomorphism defined on a neighbourhood of `f.symm a`, and `f` has a
@@ -2076,7 +2077,7 @@ an inverse function. -/
 theorem LocalHomeomorph.hasStrictDerivAt_symm (f : LocalHomeomorph 𝕜 𝕜) {a f' : 𝕜}
     (ha : a ∈ f.target) (hf' : f' ≠ 0) (htff' : HasStrictDerivAt f f' (f.symm a)) :
     HasStrictDerivAt f.symm f'⁻¹ a :=
-  htff'.ofLocalLeftInverse (f.symm.ContinuousAt ha) hf' (f.eventually_right_inverse ha)
+  htff'.of_local_left_inverse (f.symm.ContinuousAt ha) hf' (f.eventually_right_inverse ha)
 #align local_homeomorph.has_strict_deriv_at_symm LocalHomeomorph.hasStrictDerivAt_symm
 
 /-- If `f (g y) = y` for `y` in some neighborhood of `a`, `g` is continuous at `a`, and `f` has an
@@ -2087,7 +2088,7 @@ an inverse function. -/
 theorem HasDerivAt.of_local_left_inverse {f g : 𝕜 → 𝕜} {f' a : 𝕜} (hg : ContinuousAt g a)
     (hf : HasDerivAt f f' (g a)) (hf' : f' ≠ 0) (hfg : ∀ᶠ y in 𝓝 a, f (g y) = y) :
     HasDerivAt g f'⁻¹ a :=
-  (hf.hasFderivAtEquiv hf').ofLocalLeftInverse hg hfg
+  (hf.has_fderiv_at_equiv hf').of_local_left_inverse hg hfg
 #align has_deriv_at.of_local_left_inverse HasDerivAt.of_local_left_inverse
 
 /-- If `f` is a local homeomorphism defined on a neighbourhood of `f.symm a`, and `f` has an
@@ -2097,7 +2098,7 @@ This is one of the easy parts of the inverse function theorem: it assumes that w
 an inverse function. -/
 theorem LocalHomeomorph.hasDerivAt_symm (f : LocalHomeomorph 𝕜 𝕜) {a f' : 𝕜} (ha : a ∈ f.target)
     (hf' : f' ≠ 0) (htff' : HasDerivAt f f' (f.symm a)) : HasDerivAt f.symm f'⁻¹ a :=
-  htff'.ofLocalLeftInverse (f.symm.ContinuousAt ha) hf' (f.eventually_right_inverse ha)
+  htff'.of_local_left_inverse (f.symm.ContinuousAt ha) hf' (f.eventually_right_inverse ha)
 #align local_homeomorph.has_deriv_at_symm LocalHomeomorph.hasDerivAt_symm
 
 theorem HasDerivAt.eventually_ne (h : HasDerivAt f f' x) (hf' : f' ≠ 0) :

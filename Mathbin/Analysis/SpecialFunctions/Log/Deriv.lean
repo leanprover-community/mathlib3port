@@ -35,7 +35,7 @@ variable {x : ℝ}
 theorem hasStrictDerivAt_log_of_pos (hx : 0 < x) : HasStrictDerivAt log x⁻¹ x :=
   by
   have : HasStrictDerivAt log (exp <| log x)⁻¹ x :=
-    (has_strict_deriv_at_exp <| log x).ofLocalLeftInverse (continuousAt_log hx.ne')
+    (has_strict_deriv_at_exp <| log x).of_local_left_inverse (continuousAt_log hx.ne')
         (ne_of_gt <| exp_pos _) <|
       Eventually.mono (lt_mem_nhds hx) @exp_log
   rwa [exp_log hx] at this
@@ -144,17 +144,17 @@ variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] {f : E → ℝ}
 
 theorem HasFderivWithinAt.log (hf : HasFderivWithinAt f f' s x) (hx : f x ≠ 0) :
     HasFderivWithinAt (fun x => log (f x)) ((f x)⁻¹ • f') s x :=
-  (hasDerivAt_log hx).compHasFderivWithinAt x hf
+  (hasDerivAt_log hx).comp_has_fderiv_within_at x hf
 #align has_fderiv_within_at.log HasFderivWithinAt.log
 
 theorem HasFderivAt.log (hf : HasFderivAt f f' x) (hx : f x ≠ 0) :
     HasFderivAt (fun x => log (f x)) ((f x)⁻¹ • f') x :=
-  (hasDerivAt_log hx).compHasFderivAt x hf
+  (hasDerivAt_log hx).comp_has_fderiv_at x hf
 #align has_fderiv_at.log HasFderivAt.log
 
 theorem HasStrictFderivAt.log (hf : HasStrictFderivAt f f' x) (hx : f x ≠ 0) :
     HasStrictFderivAt (fun x => log (f x)) ((f x)⁻¹ • f') x :=
-  (hasStrictDerivAt_log hx).compHasStrictFderivAt x hf
+  (hasStrictDerivAt_log hx).comp_has_strict_fderiv_at x hf
 #align has_strict_fderiv_at.log HasStrictFderivAt.log
 
 theorem DifferentiableWithinAt.log (hf : DifferentiableWithinAt ℝ f s x) (hx : f x ≠ 0) :

@@ -54,16 +54,20 @@ variable {α β γ : Type _}
 
 namespace Finite
 
+#print Finite.of_subsingleton /-
 -- see Note [lower instance priority]
 instance (priority := 100) of_subsingleton {α : Sort _} [Subsingleton α] : Finite α :=
   of_injective (Function.const α ()) <| Function.injective_of_subsingleton _
 #align finite.of_subsingleton Finite.of_subsingleton
+-/
 
+#print Finite.prop /-
 -- Higher priority for `Prop`s
 @[nolint instance_priority]
 instance prop (p : Prop) : Finite p :=
   Finite.of_subsingleton
 #align finite.prop Finite.prop
+-/
 
 instance [Finite α] [Finite β] : Finite (α × β) :=
   by
@@ -74,13 +78,17 @@ instance [Finite α] [Finite β] : Finite (α × β) :=
 instance {α β : Sort _} [Finite α] [Finite β] : Finite (PProd α β) :=
   of_equiv _ Equiv.pprodEquivProdPLift.symm
 
+#print Finite.prod_left /-
 theorem prod_left (β) [Finite (α × β)] [Nonempty β] : Finite α :=
   of_surjective (Prod.fst : α × β → α) Prod.fst_surjective
 #align finite.prod_left Finite.prod_left
+-/
 
+#print Finite.prod_right /-
 theorem prod_right (α) [Finite (α × β)] [Nonempty α] : Finite β :=
   of_surjective (Prod.snd : α × β → β) Prod.snd_surjective
 #align finite.prod_right Finite.prod_right
+-/
 
 instance [Finite α] [Finite β] : Finite (Sum α β) :=
   by
@@ -88,13 +96,17 @@ instance [Finite α] [Finite β] : Finite (Sum α β) :=
   haveI := Fintype.ofFinite β
   infer_instance
 
+#print Finite.sum_left /-
 theorem sum_left (β) [Finite (Sum α β)] : Finite α :=
   of_injective (Sum.inl : α → Sum α β) Sum.inl_injective
 #align finite.sum_left Finite.sum_left
+-/
 
+#print Finite.sum_right /-
 theorem sum_right (α) [Finite (Sum α β)] : Finite β :=
   of_injective (Sum.inr : β → Sum α β) Sum.inr_injective
 #align finite.sum_right Finite.sum_right
+-/
 
 instance {β : α → Type _} [Finite α] [∀ a, Finite (β a)] : Finite (Σa, β a) :=
   by
@@ -112,11 +124,14 @@ instance [Finite α] : Finite (Set α) :=
 
 end Finite
 
+#print Subtype.finite /-
 /-- This instance also provides `[finite s]` for `s : set α`. -/
 instance Subtype.finite {α : Sort _} [Finite α] {p : α → Prop} : Finite { x // p x } :=
   Finite.of_injective coe Subtype.coe_injective
 #align subtype.finite Subtype.finite
+-/
 
+#print Pi.finite /-
 instance Pi.finite {α : Sort _} {β : α → Sort _} [Finite α] [∀ a, Finite (β a)] :
     Finite (∀ a, β a) := by
   haveI := Fintype.ofFinite (PLift α)
@@ -125,21 +140,34 @@ instance Pi.finite {α : Sort _} {β : α → Sort _} [Finite α] [∀ a, Finite
     Finite.of_equiv (∀ a : PLift α, PLift (β (Equiv.plift a)))
       (Equiv.piCongr Equiv.plift fun _ => Equiv.plift)
 #align pi.finite Pi.finite
+-/
 
+#print Vector.finite /-
 instance Vector.finite {α : Type _} [Finite α] {n : ℕ} : Finite (Vector α n) :=
   by
   haveI := Fintype.ofFinite α
   infer_instance
 #align vector.finite Vector.finite
+-/
 
+#print Quot.finite /-
 instance Quot.finite {α : Sort _} [Finite α] (r : α → α → Prop) : Finite (Quot r) :=
   Finite.of_surjective _ (surjective_quot_mk r)
 #align quot.finite Quot.finite
+-/
 
+#print Quotient.finite /-
 instance Quotient.finite {α : Sort _} [Finite α] (s : Setoid α) : Finite (Quotient s) :=
   Quot.finite _
 #align quotient.finite Quotient.finite
+-/
 
+/- warning: function.embedding.finite -> Function.Embedding.finite is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u1}} {β : Sort.{u2}} [_inst_1 : Finite.{u2} β], Finite.{max 1 (imax u1 u2)} (Function.Embedding.{u1, u2} α β)
+but is expected to have type
+  forall {α : Sort.{u1}} {β : Sort.{u2}} [_inst_1 : Finite.{u2} β], Finite.{max (max 1 u2) u1} (Function.Embedding.{u1, u2} α β)
+Case conversion may be inaccurate. Consider using '#align function.embedding.finite Function.Embedding.finiteₓ'. -/
 instance Function.Embedding.finite {α β : Sort _} [Finite β] : Finite (α ↪ β) :=
   by
   cases' isEmpty_or_nonempty (α ↪ β) with _ h
@@ -149,10 +177,22 @@ instance Function.Embedding.finite {α β : Sort _} [Finite β] : Finite (α ↪
     exact Finite.of_injective _ FunLike.coe_injective
 #align function.embedding.finite Function.Embedding.finite
 
+/- warning: equiv.finite_right -> Equiv.finite_right is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u1}} {β : Sort.{u2}} [_inst_1 : Finite.{u2} β], Finite.{max 1 (imax u1 u2) (imax u2 u1)} (Equiv.{u1, u2} α β)
+but is expected to have type
+  forall {α : Sort.{u1}} {β : Sort.{u2}} [_inst_1 : Finite.{u2} β], Finite.{max (max 1 u2) u1} (Equiv.{u1, u2} α β)
+Case conversion may be inaccurate. Consider using '#align equiv.finite_right Equiv.finite_rightₓ'. -/
 instance Equiv.finite_right {α β : Sort _} [Finite β] : Finite (α ≃ β) :=
   Finite.of_injective Equiv.toEmbedding fun e₁ e₂ h => Equiv.ext <| by convert FunLike.congr_fun h
 #align equiv.finite_right Equiv.finite_right
 
+/- warning: equiv.finite_left -> Equiv.finite_left is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u1}} {β : Sort.{u2}} [_inst_1 : Finite.{u1} α], Finite.{max 1 (imax u1 u2) (imax u2 u1)} (Equiv.{u1, u2} α β)
+but is expected to have type
+  forall {α : Sort.{u1}} {β : Sort.{u2}} [_inst_1 : Finite.{u1} α], Finite.{max (max 1 u2) u1} (Equiv.{u1, u2} α β)
+Case conversion may be inaccurate. Consider using '#align equiv.finite_left Equiv.finite_leftₓ'. -/
 instance Equiv.finite_left {α β : Sort _} [Finite α] : Finite (α ≃ β) :=
   Finite.of_equiv _ ⟨Equiv.symm, Equiv.symm, Equiv.symm_symm, Equiv.symm_symm⟩
 #align equiv.finite_left Equiv.finite_left

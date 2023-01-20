@@ -514,7 +514,7 @@ theorem mul_le_add_haar_image_of_lt_det (A : E →L[ℝ] E) {m : ℝ≥0}
     · simp only [Ennreal.coe_ne_top, true_or_iff, Ne.def, not_false_iff]
   -- as `f⁻¹` is well approximated by `B⁻¹`, the conclusion follows from `hδ₀`
   -- and our choice of `δ`.
-  exact hδ₀ _ _ ((hf'.to_inv h1δ).monoNum h2δ.le)
+  exact hδ₀ _ _ ((hf'.to_inv h1δ).mono_num h2δ.le)
 #align measure_theory.mul_le_add_haar_image_of_lt_det MeasureTheory.mul_le_add_haar_image_of_lt_det
 
 /-- If a differentiable function `f` is approximated by a linear map `A` on a set `s`, up to `δ`,

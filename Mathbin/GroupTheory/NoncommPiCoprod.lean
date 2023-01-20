@@ -139,7 +139,7 @@ theorem noncommPiCoprod_mrange : (noncommPiCoprod ϕ hcomm).mrange = ⨆ i : ι,
   classical
     apply le_antisymm
     · rintro x ⟨f, rfl⟩
-      refine' Submonoid.noncommProd_mem _ _ _ _ _
+      refine' Submonoid.noncomm_prod_mem _ _ _ _ _
       intro i hi
       apply Submonoid.mem_supₛ_of_mem
       · use i

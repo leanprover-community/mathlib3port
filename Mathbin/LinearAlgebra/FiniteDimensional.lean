@@ -1449,7 +1449,7 @@ theorem Module.finrank_le_one_iff_top_isPrincipal [FiniteDimensional K V] :
 -- * `A = K`
 -- * `[field K] [algebra K A] [is_scalar_tower K A V] [is_scalar_tower K A W]`
 theorem surjective_of_nonzero_of_finrank_eq_one {W A : Type _} [Semiring A] [Module A V]
-    [AddCommGroup W] [Module K W] [Module A W] [LinearMap.CompatibleSmul V W K A]
+    [AddCommGroup W] [Module K W] [Module A W] [LinearMap.CompatibleSMul V W K A]
     (h : finrank K W = 1) {f : V →ₗ[A] W} (w : f ≠ 0) : Surjective f :=
   by
   change surjective (f.restrict_scalars K)

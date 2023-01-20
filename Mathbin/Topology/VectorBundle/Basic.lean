@@ -350,7 +350,7 @@ space) has a topological vector space structure with fiber `F` (denoted with
 `vector_bundle R F E`) if around every point there is a fiber bundle trivialization
 which is linear in the fibers. -/
 class VectorBundle : Prop where
-  trivializationLinear' : ∀ (e : Trivialization F (π E)) [MemTrivializationAtlas e], e.isLinear R
+  trivialization_linear' : ∀ (e : Trivialization F (π E)) [MemTrivializationAtlas e], e.isLinear R
   continuous_on_coord_change' :
     ∀ (e e' : Trivialization F (π E)) [MemTrivializationAtlas e] [MemTrivializationAtlas e'],
       ContinuousOn (fun b => Trivialization.coordChangeL R e e' b : B → F →L[R] F)
@@ -359,10 +359,10 @@ class VectorBundle : Prop where
 
 variable {F E}
 
-instance (priority := 100) trivializationLinear [VectorBundle R F E] (e : Trivialization F (π E))
+instance (priority := 100) trivialization_linear [VectorBundle R F E] (e : Trivialization F (π E))
     [MemTrivializationAtlas e] : e.isLinear R :=
-  VectorBundle.trivializationLinear' e
-#align trivialization_linear trivializationLinear
+  VectorBundle.trivialization_linear' e
+#align trivialization_linear trivialization_linear
 
 theorem continuousOn_coord_change [VectorBundle R F E] (e e' : Trivialization F (π E))
     [he : MemTrivializationAtlas e] [he' : MemTrivializationAtlas e'] :
@@ -743,7 +743,7 @@ instance fiberBundle : FiberBundle F Z.Fiber :=
 
 instance vectorBundle : VectorBundle R F Z.Fiber
     where
-  trivializationLinear' := by
+  trivialization_linear' := by
     rintro _ ⟨i, rfl⟩
     apply local_triv.is_linear
   continuous_on_coord_change' := by
@@ -794,7 +794,7 @@ This makes it inconvenient to explicitly define a `coord_change` function when c
 @[nolint has_nonempty_instance]
 structure VectorPrebundle where
   pretrivializationAtlas : Set (Pretrivialization F (π E))
-  pretrivializationLinear' :
+  pretrivialization_linear' :
     ∀ (e : Pretrivialization F (π E)) (he : e ∈ pretrivialization_atlas), e.isLinear R
   pretrivializationAt : B → Pretrivialization F (π E)
   mem_base_pretrivialization_at : ∀ x : B, x ∈ (pretrivialization_at x).baseSet
@@ -881,12 +881,12 @@ def trivializationOfMemPretrivializationAtlas (a : VectorPrebundle R F E)
   a.toFiberPrebundle.trivializationOfMemPretrivializationAtlas he
 #align vector_prebundle.trivialization_of_mem_pretrivialization_atlas VectorPrebundle.trivializationOfMemPretrivializationAtlas
 
-theorem linearOfMemPretrivializationAtlas (a : VectorPrebundle R F E)
+theorem linear_of_mem_pretrivializationAtlas (a : VectorPrebundle R F E)
     {e : Pretrivialization F (π E)} (he : e ∈ a.pretrivializationAtlas) :
     @Trivialization.IsLinear R B F _ _ _ _ a.totalSpaceTopology _ _ _ _
       (trivializationOfMemPretrivializationAtlas a he) :=
-  { linear := (a.pretrivializationLinear' e he).linear }
-#align vector_prebundle.linear_of_mem_pretrivialization_atlas VectorPrebundle.linearOfMemPretrivializationAtlas
+  { linear := (a.pretrivialization_linear' e he).linear }
+#align vector_prebundle.linear_of_mem_pretrivialization_atlas VectorPrebundle.linear_of_mem_pretrivializationAtlas
 
 variable (a : VectorPrebundle R F E)
 
@@ -932,7 +932,7 @@ establishes that for the topology constructed on the sigma-type using
 "trivializations" (i.e., homeomorphisms with respect to the constructed topology). -/
 theorem toVectorBundle :
     @VectorBundle R _ F E _ _ _ _ _ _ a.totalSpaceTopology a.fiberTopology a.toFiberBundle :=
-  { trivializationLinear' := by
+  { trivialization_linear' := by
       rintro _ ⟨e, he, rfl⟩
       apply linear_of_mem_pretrivialization_atlas
     continuous_on_coord_change' :=

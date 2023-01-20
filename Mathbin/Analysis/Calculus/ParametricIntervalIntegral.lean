@@ -55,8 +55,9 @@ theorem hasFderivAt_integral_of_dominated_loc_of_lip {F : H → ℝ → E} {F' :
 `F x₀` is integrable, `x ↦ F x a` is differentiable on a ball around `x₀` for ae `a` with
 derivative norm uniformly bounded by an integrable function (the ball radius is independent of `a`),
 and `F x` is ae-measurable for `x` in a possibly smaller neighborhood of `x₀`. -/
-theorem hasFderivAtIntegralOfDominatedOfFderivLe {F : H → ℝ → E} {F' : H → ℝ → H →L[𝕜] E} {x₀ : H}
-    (ε_pos : 0 < ε) (hF_meas : ∀ᶠ x in 𝓝 x₀, AeStronglyMeasurable (F x) (μ.restrict (Ι a b)))
+theorem hasFderivAt_integral_of_dominated_of_fderiv_le {F : H → ℝ → E} {F' : H → ℝ → H →L[𝕜] E}
+    {x₀ : H} (ε_pos : 0 < ε)
+    (hF_meas : ∀ᶠ x in 𝓝 x₀, AeStronglyMeasurable (F x) (μ.restrict (Ι a b)))
     (hF_int : IntervalIntegrable (F x₀) μ a b)
     (hF'_meas : AeStronglyMeasurable (F' x₀) (μ.restrict (Ι a b)))
     (h_bound : ∀ᵐ t ∂μ, t ∈ Ι a b → ∀ x ∈ ball x₀ ε, ‖F' x t‖ ≤ bound t)
@@ -67,10 +68,10 @@ theorem hasFderivAtIntegralOfDominatedOfFderivLe {F : H → ℝ → E} {F' : H �
   simp only [intervalIntegrable_iff, interval_integral_eq_integral_uIoc, ←
     ae_restrict_iff' measurableSet_uIoc] at *
   exact
-    (hasFderivAtIntegralOfDominatedOfFderivLe ε_pos hF_meas hF_int hF'_meas h_bound bound_integrable
-          h_diff).const_smul
+    (hasFderivAt_integral_of_dominated_of_fderiv_le ε_pos hF_meas hF_int hF'_meas h_bound
+          bound_integrable h_diff).const_smul
       _
-#align interval_integral.has_fderiv_at_integral_of_dominated_of_fderiv_le intervalIntegral.hasFderivAtIntegralOfDominatedOfFderivLe
+#align interval_integral.has_fderiv_at_integral_of_dominated_of_fderiv_le intervalIntegral.hasFderivAt_integral_of_dominated_of_fderiv_le
 
 /-- Derivative under integral of `x ↦ ∫ F x a` at a given point `x₀ : 𝕜`, `𝕜 = ℝ` or `𝕜 = ℂ`,
 assuming `F x₀` is integrable, `x ↦ F x a` is locally Lipschitz on a ball around `x₀` for ae `a`

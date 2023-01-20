@@ -329,7 +329,7 @@ In words the assumptions mean the following:
   * `hf`: For all `(y, n)` with `y` sufficiently close to `x` and `n` sufficiently large, `f' n` is
     the derivative of `f n`
   * `hfg`: The `f n` converge pointwise to `g` on a neighborhood of `x` -/
-theorem hasFderivAtOfTendstoUniformlyOnFilter [NeBot l]
+theorem hasFderivAt_of_tendstoUniformlyOnFilter [NeBot l]
     (hf' : TendstoUniformlyOnFilter f' g' l (𝓝 x))
     (hf : ∀ᶠ n : ι × E in l ×ᶠ 𝓝 x, HasFderivAt (f n.1) (f' n.1 n.2) n.2)
     (hfg : ∀ᶠ y in 𝓝 x, Tendsto (fun n => f n y) l (𝓝 (g y))) : HasFderivAt g (g' x) x :=
@@ -425,10 +425,10 @@ theorem hasFderivAtOfTendstoUniformlyOnFilter [NeBot l]
     simp only [Function.comp_apply, Prod_map]
     rw [norm_sub_rev]
     exact (f' n.1 x - g' x).le_op_norm (n.2 - x)
-#align has_fderiv_at_of_tendsto_uniformly_on_filter hasFderivAtOfTendstoUniformlyOnFilter
+#align has_fderiv_at_of_tendsto_uniformly_on_filter hasFderivAt_of_tendstoUniformlyOnFilter
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem hasFderivAtOfTendstoLocallyUniformlyOn [NeBot l] {s : Set E} (hs : IsOpen s)
+theorem hasFderivAt_of_tendstoLocallyUniformlyOn [NeBot l] {s : Set E} (hs : IsOpen s)
     (hf' : TendstoLocallyUniformlyOn f' g' l s) (hf : ∀ n, ∀ x ∈ s, HasFderivAt (f n) (f' n x) x)
     (hfg : ∀ x ∈ s, Tendsto (fun n => f n x) l (𝓝 (g x))) (hx : x ∈ s) : HasFderivAt g (g' x) x :=
   by
@@ -436,34 +436,34 @@ theorem hasFderivAtOfTendstoLocallyUniformlyOn [NeBot l] {s : Set E} (hs : IsOpe
   have h3 : Set.univ ×ˢ s ∈ l ×ᶠ 𝓝 x := by simp only [h1, prod_mem_prod_iff, univ_mem, and_self_iff]
   have h4 : ∀ᶠ n : ι × E in l ×ᶠ 𝓝 x, HasFderivAt (f n.1) (f' n.1 n.2) n.2 :=
     eventually_of_mem h3 fun ⟨n, z⟩ ⟨hn, hz⟩ => hf n z hz
-  refine' hasFderivAtOfTendstoUniformlyOnFilter _ h4 (eventually_of_mem h1 hfg)
+  refine' hasFderivAt_of_tendstoUniformlyOnFilter _ h4 (eventually_of_mem h1 hfg)
   simpa [IsOpen.nhdsWithin_eq hs hx] using tendsto_locally_uniformly_on_iff_filter.mp hf' x hx
-#align has_fderiv_at_of_tendsto_locally_uniformly_on hasFderivAtOfTendstoLocallyUniformlyOn
+#align has_fderiv_at_of_tendsto_locally_uniformly_on hasFderivAt_of_tendstoLocallyUniformlyOn
 
 /-- A slight variant of `has_fderiv_at_of_tendsto_locally_uniformly_on` with the assumption stated
 in terms of `differentiable_on` rather than `has_fderiv_at`. This makes a few proofs nicer in
 complex analysis where holomorphicity is assumed but the derivative is not known a priori. -/
-theorem hasFderivAtOfTendstoLocallyUniformlyOn' [NeBot l] {s : Set E} (hs : IsOpen s)
+theorem hasFderivAt_of_tendsto_locally_uniformly_on' [NeBot l] {s : Set E} (hs : IsOpen s)
     (hf' : TendstoLocallyUniformlyOn (fderiv 𝕜 ∘ f) g' l s) (hf : ∀ n, DifferentiableOn 𝕜 (f n) s)
     (hfg : ∀ x ∈ s, Tendsto (fun n => f n x) l (𝓝 (g x))) (hx : x ∈ s) : HasFderivAt g (g' x) x :=
   by
-  refine' hasFderivAtOfTendstoLocallyUniformlyOn hs hf' (fun n z hz => _) hfg hx
+  refine' hasFderivAt_of_tendstoLocallyUniformlyOn hs hf' (fun n z hz => _) hfg hx
   exact ((hf n z hz).DifferentiableAt (hs.mem_nhds hz)).HasFderivAt
-#align has_fderiv_at_of_tendsto_locally_uniformly_on' hasFderivAtOfTendstoLocallyUniformlyOn'
+#align has_fderiv_at_of_tendsto_locally_uniformly_on' hasFderivAt_of_tendsto_locally_uniformly_on'
 
 /-- `(d/dx) lim_{n → ∞} f n x = lim_{n → ∞} f' n x` when the `f' n` converge
 _uniformly_ to their limit on an open set containing `x`. -/
-theorem hasFderivAtOfTendstoUniformlyOn [NeBot l] {s : Set E} (hs : IsOpen s)
+theorem hasFderivAt_of_tendstoUniformlyOn [NeBot l] {s : Set E} (hs : IsOpen s)
     (hf' : TendstoUniformlyOn f' g' l s)
     (hf : ∀ n : ι, ∀ x : E, x ∈ s → HasFderivAt (f n) (f' n x) x)
     (hfg : ∀ x : E, x ∈ s → Tendsto (fun n => f n x) l (𝓝 (g x))) :
     ∀ x : E, x ∈ s → HasFderivAt g (g' x) x := fun x =>
-  hasFderivAtOfTendstoLocallyUniformlyOn hs hf'.TendstoLocallyUniformlyOn hf hfg
-#align has_fderiv_at_of_tendsto_uniformly_on hasFderivAtOfTendstoUniformlyOn
+  hasFderivAt_of_tendstoLocallyUniformlyOn hs hf'.TendstoLocallyUniformlyOn hf hfg
+#align has_fderiv_at_of_tendsto_uniformly_on hasFderivAt_of_tendstoUniformlyOn
 
 /-- `(d/dx) lim_{n → ∞} f n x = lim_{n → ∞} f' n x` when the `f' n` converge
 _uniformly_ to their limit. -/
-theorem hasFderivAtOfTendstoUniformly [NeBot l] (hf' : TendstoUniformly f' g' l)
+theorem hasFderivAt_of_tendstoUniformly [NeBot l] (hf' : TendstoUniformly f' g' l)
     (hf : ∀ n : ι, ∀ x : E, HasFderivAt (f n) (f' n x) x)
     (hfg : ∀ x : E, Tendsto (fun n => f n x) l (𝓝 (g x))) : ∀ x : E, HasFderivAt g (g' x) x :=
   by
@@ -471,8 +471,8 @@ theorem hasFderivAtOfTendstoUniformly [NeBot l] (hf' : TendstoUniformly f' g' l)
   have hf : ∀ n : ι, ∀ x : E, x ∈ Set.univ → HasFderivAt (f n) (f' n x) x := by simp [hf]
   have hfg : ∀ x : E, x ∈ Set.univ → tendsto (fun n => f n x) l (𝓝 (g x)) := by simp [hfg]
   have hf' : TendstoUniformlyOn f' g' l Set.univ := by rwa [tendstoUniformlyOn_univ]
-  refine' hasFderivAtOfTendstoUniformlyOn isOpen_univ hf' hf hfg x (Set.mem_univ x)
-#align has_fderiv_at_of_tendsto_uniformly hasFderivAtOfTendstoUniformly
+  refine' hasFderivAt_of_tendstoUniformlyOn isOpen_univ hf' hf hfg x (Set.mem_univ x)
+#align has_fderiv_at_of_tendsto_uniformly hasFderivAt_of_tendstoUniformly
 
 end LimitsOfDerivatives
 
@@ -564,7 +564,7 @@ theorem hasDerivAt_of_tendstoUniformlyOnFilter [NeBot l]
       ContinuousLinearMap.one_apply]
     rw [← smul_sub, norm_smul, mul_comm]
     exact mul_le_mul hn.le rfl.le (norm_nonneg _) hq.le
-  exact hasFderivAtOfTendstoUniformlyOnFilter hf' hf hfg
+  exact hasFderivAt_of_tendstoUniformlyOnFilter hf' hf hfg
 #align has_deriv_at_of_tendsto_uniformly_on_filter hasDerivAt_of_tendstoUniformlyOnFilter
 
 theorem hasDerivAt_of_tendstoLocallyUniformlyOn [NeBot l] {s : Set 𝕜} (hs : IsOpen s)

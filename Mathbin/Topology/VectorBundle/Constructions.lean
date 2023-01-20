@@ -63,7 +63,7 @@ variable (𝕜)
 
 instance vectorBundle : VectorBundle 𝕜 F (Bundle.Trivial B F)
     where
-  trivializationLinear' := by
+  trivialization_linear' := by
     intro e he
     rw [eq_trivialization B F e]
     infer_instance
@@ -120,7 +120,7 @@ variable [∀ x, AddCommMonoid (E₁ x)] [∀ x, Module 𝕜 (E₁ x)] [∀ x, A
 instance VectorBundle.prod [VectorBundle 𝕜 F₁ E₁] [VectorBundle 𝕜 F₂ E₂] :
     VectorBundle 𝕜 (F₁ × F₂) (E₁ ×ᵇ E₂)
     where
-  trivializationLinear' := by
+  trivialization_linear' := by
     rintro _ ⟨e₁, e₂, he₁, he₂, rfl⟩; skip
     infer_instance
   continuous_on_coord_change' :=
@@ -178,15 +178,15 @@ variable {E F} [TopologicalSpace B'] [TopologicalSpace (TotalSpace E)] [Nontrivi
   [NormedAddCommGroup F] [NormedSpace 𝕜 F] [TopologicalSpace B] [∀ x, AddCommMonoid (E x)]
   [∀ x, Module 𝕜 (E x)] {K : Type _} [ContinuousMapClass K B' B]
 
-instance Trivialization.pullbackLinear (e : Trivialization F (π E)) [e.isLinear 𝕜] (f : K) :
+instance Trivialization.pullback_linear (e : Trivialization F (π E)) [e.isLinear 𝕜] (f : K) :
     (@Trivialization.pullback _ _ _ B' _ _ _ _ _ _ _ e f).isLinear 𝕜
     where linear x h := e.linear 𝕜 h
-#align trivialization.pullback_linear Trivialization.pullbackLinear
+#align trivialization.pullback_linear Trivialization.pullback_linear
 
 instance VectorBundle.pullback [∀ x, TopologicalSpace (E x)] [FiberBundle F E] [VectorBundle 𝕜 F E]
     (f : K) : VectorBundle 𝕜 F ((f : B' → B) *ᵖ E)
     where
-  trivializationLinear' := by
+  trivialization_linear' := by
     rintro _ ⟨e, he, rfl⟩; skip
     infer_instance
   continuous_on_coord_change' :=

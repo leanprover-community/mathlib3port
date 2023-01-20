@@ -30,7 +30,7 @@ open Filter
 
 namespace Complex
 
-theorem hasStrictFderivAtCpow {p : ℂ × ℂ} (hp : 0 < p.1.re ∨ p.1.im ≠ 0) :
+theorem hasStrictFderivAt_cpow {p : ℂ × ℂ} (hp : 0 < p.1.re ∨ p.1.im ≠ 0) :
     HasStrictFderivAt (fun x : ℂ × ℂ => x.1 ^ x.2)
       ((p.2 * p.1 ^ (p.2 - 1)) • ContinuousLinearMap.fst ℂ ℂ ℂ +
         (p.1 ^ p.2 * log p.1) • ContinuousLinearMap.snd ℂ ℂ ℂ)
@@ -43,18 +43,18 @@ theorem hasStrictFderivAtCpow {p : ℂ × ℂ} (hp : 0 < p.1.re ∨ p.1.im ≠ 0
     ((is_open_ne.preimage continuous_fst).eventually_mem A).mono fun p hp =>
       cpow_def_of_ne_zero hp _
   rw [cpow_sub _ _ A, cpow_one, mul_div_left_comm, mul_smul, mul_smul, ← smul_add]
-  refine' HasStrictFderivAt.congrOfEventuallyEq _ this.symm
+  refine' HasStrictFderivAt.congr_of_eventuallyEq _ this.symm
   simpa only [cpow_def_of_ne_zero A, div_eq_mul_inv, mul_smul, add_comm] using
-    ((has_strict_fderiv_at_fst.clog hp).mul hasStrictFderivAtSnd).cexp
-#align complex.has_strict_fderiv_at_cpow Complex.hasStrictFderivAtCpow
+    ((has_strict_fderiv_at_fst.clog hp).mul hasStrictFderivAt_snd).cexp
+#align complex.has_strict_fderiv_at_cpow Complex.hasStrictFderivAt_cpow
 
-theorem hasStrictFderivAtCpow' {x y : ℂ} (hp : 0 < x.re ∨ x.im ≠ 0) :
+theorem hasStrictFderivAt_cpow' {x y : ℂ} (hp : 0 < x.re ∨ x.im ≠ 0) :
     HasStrictFderivAt (fun x : ℂ × ℂ => x.1 ^ x.2)
       ((y * x ^ (y - 1)) • ContinuousLinearMap.fst ℂ ℂ ℂ +
         (x ^ y * log x) • ContinuousLinearMap.snd ℂ ℂ ℂ)
       (x, y) :=
-  @hasStrictFderivAtCpow (x, y) hp
-#align complex.has_strict_fderiv_at_cpow' Complex.hasStrictFderivAtCpow'
+  @hasStrictFderivAt_cpow (x, y) hp
+#align complex.has_strict_fderiv_at_cpow' Complex.hasStrictFderivAt_cpow'
 
 theorem hasStrictDerivAt_const_cpow {x y : ℂ} (h : x ≠ 0 ∨ y ≠ 0) :
     HasStrictDerivAt (fun y => x ^ y) (x ^ y * log x) y :=
@@ -69,13 +69,13 @@ theorem hasStrictDerivAt_const_cpow {x y : ℂ} (h : x ≠ 0 ∨ y ≠ 0) :
       ((hasStrictDerivAt_id y).const_mul (log x)).cexp
 #align complex.has_strict_deriv_at_const_cpow Complex.hasStrictDerivAt_const_cpow
 
-theorem hasFderivAtCpow {p : ℂ × ℂ} (hp : 0 < p.1.re ∨ p.1.im ≠ 0) :
+theorem hasFderivAt_cpow {p : ℂ × ℂ} (hp : 0 < p.1.re ∨ p.1.im ≠ 0) :
     HasFderivAt (fun x : ℂ × ℂ => x.1 ^ x.2)
       ((p.2 * p.1 ^ (p.2 - 1)) • ContinuousLinearMap.fst ℂ ℂ ℂ +
         (p.1 ^ p.2 * log p.1) • ContinuousLinearMap.snd ℂ ℂ ℂ)
       p :=
-  (hasStrictFderivAtCpow hp).HasFderivAt
-#align complex.has_fderiv_at_cpow Complex.hasFderivAtCpow
+  (hasStrictFderivAt_cpow hp).HasFderivAt
+#align complex.has_fderiv_at_cpow Complex.hasFderivAt_cpow
 
 end Complex
 
@@ -93,22 +93,22 @@ theorem HasStrictFderivAt.cpow (hf : HasStrictFderivAt f f' x) (hg : HasStrictFd
   by convert (@has_strict_fderiv_at_cpow ((fun x => (f x, g x)) x) h0).comp x (hf.prod hg)
 #align has_strict_fderiv_at.cpow HasStrictFderivAt.cpow
 
-theorem HasStrictFderivAt.constCpow (hf : HasStrictFderivAt f f' x) (h0 : c ≠ 0 ∨ f x ≠ 0) :
+theorem HasStrictFderivAt.const_cpow (hf : HasStrictFderivAt f f' x) (h0 : c ≠ 0 ∨ f x ≠ 0) :
     HasStrictFderivAt (fun x => c ^ f x) ((c ^ f x * log c) • f') x :=
-  (hasStrictDerivAt_const_cpow h0).compHasStrictFderivAt x hf
-#align has_strict_fderiv_at.const_cpow HasStrictFderivAt.constCpow
+  (hasStrictDerivAt_const_cpow h0).comp_has_strict_fderiv_at x hf
+#align has_strict_fderiv_at.const_cpow HasStrictFderivAt.const_cpow
 
 theorem HasFderivAt.cpow (hf : HasFderivAt f f' x) (hg : HasFderivAt g g' x)
     (h0 : 0 < (f x).re ∨ (f x).im ≠ 0) :
     HasFderivAt (fun x => f x ^ g x) ((g x * f x ^ (g x - 1)) • f' + (f x ^ g x * log (f x)) • g')
       x :=
-  by convert (@Complex.hasFderivAtCpow ((fun x => (f x, g x)) x) h0).comp x (hf.prod hg)
+  by convert (@Complex.hasFderivAt_cpow ((fun x => (f x, g x)) x) h0).comp x (hf.prod hg)
 #align has_fderiv_at.cpow HasFderivAt.cpow
 
-theorem HasFderivAt.constCpow (hf : HasFderivAt f f' x) (h0 : c ≠ 0 ∨ f x ≠ 0) :
+theorem HasFderivAt.const_cpow (hf : HasFderivAt f f' x) (h0 : c ≠ 0 ∨ f x ≠ 0) :
     HasFderivAt (fun x => c ^ f x) ((c ^ f x * log c) • f') x :=
-  (hasStrictDerivAt_const_cpow h0).HasDerivAt.compHasFderivAt x hf
-#align has_fderiv_at.const_cpow HasFderivAt.constCpow
+  (hasStrictDerivAt_const_cpow h0).HasDerivAt.comp_has_fderiv_at x hf
+#align has_fderiv_at.const_cpow HasFderivAt.const_cpow
 
 theorem HasFderivWithinAt.cpow (hf : HasFderivWithinAt f f' s x) (hg : HasFderivWithinAt g g' s x)
     (h0 : 0 < (f x).re ∨ (f x).im ≠ 0) :
@@ -116,13 +116,14 @@ theorem HasFderivWithinAt.cpow (hf : HasFderivWithinAt f f' s x) (hg : HasFderiv
       ((g x * f x ^ (g x - 1)) • f' + (f x ^ g x * log (f x)) • g') s x :=
   by
   convert
-    (@Complex.hasFderivAtCpow ((fun x => (f x, g x)) x) h0).compHasFderivWithinAt x (hf.prod hg)
+    (@Complex.hasFderivAt_cpow ((fun x => (f x, g x)) x) h0).comp_has_fderiv_within_at x
+      (hf.prod hg)
 #align has_fderiv_within_at.cpow HasFderivWithinAt.cpow
 
-theorem HasFderivWithinAt.constCpow (hf : HasFderivWithinAt f f' s x) (h0 : c ≠ 0 ∨ f x ≠ 0) :
+theorem HasFderivWithinAt.const_cpow (hf : HasFderivWithinAt f f' s x) (h0 : c ≠ 0 ∨ f x ≠ 0) :
     HasFderivWithinAt (fun x => c ^ f x) ((c ^ f x * log c) • f') s x :=
-  (hasStrictDerivAt_const_cpow h0).HasDerivAt.compHasFderivWithinAt x hf
-#align has_fderiv_within_at.const_cpow HasFderivWithinAt.constCpow
+  (hasStrictDerivAt_const_cpow h0).HasDerivAt.comp_has_fderiv_within_at x hf
+#align has_fderiv_within_at.const_cpow HasFderivWithinAt.const_cpow
 
 theorem DifferentiableAt.cpow (hf : DifferentiableAt ℂ f x) (hg : DifferentiableAt ℂ g x)
     (h0 : 0 < (f x).re ∨ (f x).im ≠ 0) : DifferentiableAt ℂ (fun x => f x ^ g x) x :=
@@ -231,7 +232,7 @@ namespace Real
 variable {x y z : ℝ}
 
 /-- `(x, y) ↦ x ^ y` is strictly differentiable at `p : ℝ × ℝ` such that `0 < p.fst`. -/
-theorem hasStrictFderivAtRpowOfPos (p : ℝ × ℝ) (hp : 0 < p.1) :
+theorem hasStrictFderivAt_rpow_of_pos (p : ℝ × ℝ) (hp : 0 < p.1) :
     HasStrictFderivAt (fun x : ℝ × ℝ => x.1 ^ x.2)
       ((p.2 * p.1 ^ (p.2 - 1)) • ContinuousLinearMap.fst ℝ ℝ ℝ +
         (p.1 ^ p.2 * log p.1) • ContinuousLinearMap.snd ℝ ℝ ℝ)
@@ -239,14 +240,14 @@ theorem hasStrictFderivAtRpowOfPos (p : ℝ × ℝ) (hp : 0 < p.1) :
   by
   have : (fun x : ℝ × ℝ => x.1 ^ x.2) =ᶠ[𝓝 p] fun x => exp (log x.1 * x.2) :=
     (continuous_at_fst.eventually (lt_mem_nhds hp)).mono fun p hp => rpow_def_of_pos hp _
-  refine' HasStrictFderivAt.congrOfEventuallyEq _ this.symm
-  convert ((has_strict_fderiv_at_fst.log hp.ne').mul hasStrictFderivAtSnd).exp
+  refine' HasStrictFderivAt.congr_of_eventuallyEq _ this.symm
+  convert ((has_strict_fderiv_at_fst.log hp.ne').mul hasStrictFderivAt_snd).exp
   rw [rpow_sub_one hp.ne', ← rpow_def_of_pos hp, smul_add, smul_smul, mul_div_left_comm,
     div_eq_mul_inv, smul_smul, smul_smul, mul_assoc, add_comm]
-#align real.has_strict_fderiv_at_rpow_of_pos Real.hasStrictFderivAtRpowOfPos
+#align real.has_strict_fderiv_at_rpow_of_pos Real.hasStrictFderivAt_rpow_of_pos
 
 /-- `(x, y) ↦ x ^ y` is strictly differentiable at `p : ℝ × ℝ` such that `p.fst < 0`. -/
-theorem hasStrictFderivAtRpowOfNeg (p : ℝ × ℝ) (hp : p.1 < 0) :
+theorem hasStrictFderivAt_rpow_of_neg (p : ℝ × ℝ) (hp : p.1 < 0) :
     HasStrictFderivAt (fun x : ℝ × ℝ => x.1 ^ x.2)
       ((p.2 * p.1 ^ (p.2 - 1)) • ContinuousLinearMap.fst ℝ ℝ ℝ +
         (p.1 ^ p.2 * log p.1 - exp (log p.1 * p.2) * sin (p.2 * π) * π) •
@@ -255,16 +256,16 @@ theorem hasStrictFderivAtRpowOfNeg (p : ℝ × ℝ) (hp : p.1 < 0) :
   by
   have : (fun x : ℝ × ℝ => x.1 ^ x.2) =ᶠ[𝓝 p] fun x => exp (log x.1 * x.2) * cos (x.2 * π) :=
     (continuous_at_fst.eventually (gt_mem_nhds hp)).mono fun p hp => rpow_def_of_neg hp _
-  refine' HasStrictFderivAt.congrOfEventuallyEq _ this.symm
+  refine' HasStrictFderivAt.congr_of_eventuallyEq _ this.symm
   convert
-    ((has_strict_fderiv_at_fst.log hp.ne).mul hasStrictFderivAtSnd).exp.mul
+    ((has_strict_fderiv_at_fst.log hp.ne).mul hasStrictFderivAt_snd).exp.mul
       (has_strict_fderiv_at_snd.mul_const _).cos using
     1
   simp_rw [rpow_sub_one hp.ne, smul_add, ← add_assoc, smul_smul, ← add_smul, ← mul_assoc,
     mul_comm (cos _), ← rpow_def_of_neg hp]
   rw [div_eq_mul_inv, add_comm]
   congr 2 <;> ring
-#align real.has_strict_fderiv_at_rpow_of_neg Real.hasStrictFderivAtRpowOfNeg
+#align real.has_strict_fderiv_at_rpow_of_neg Real.hasStrictFderivAt_rpow_of_neg
 
 /-- The function `λ (x, y), x ^ y` is infinitely smooth at `(x, y)` unless `x = 0`. -/
 theorem contDiffAt_rpow_of_ne (p : ℝ × ℝ) (hp : p.1 ≠ 0) {n : ℕ∞} :
@@ -401,20 +402,20 @@ theorem HasFderivWithinAt.rpow (hf : HasFderivWithinAt f f' s x) (hg : HasFderiv
     (h : 0 < f x) :
     HasFderivWithinAt (fun x => f x ^ g x)
       ((g x * f x ^ (g x - 1)) • f' + (f x ^ g x * log (f x)) • g') s x :=
-  (hasStrictFderivAtRpowOfPos (f x, g x) h).HasFderivAt.compHasFderivWithinAt x (hf.Prod hg)
+  (hasStrictFderivAt_rpow_of_pos (f x, g x) h).HasFderivAt.comp_has_fderiv_within_at x (hf.Prod hg)
 #align has_fderiv_within_at.rpow HasFderivWithinAt.rpow
 
 theorem HasFderivAt.rpow (hf : HasFderivAt f f' x) (hg : HasFderivAt g g' x) (h : 0 < f x) :
     HasFderivAt (fun x => f x ^ g x) ((g x * f x ^ (g x - 1)) • f' + (f x ^ g x * log (f x)) • g')
       x :=
-  (hasStrictFderivAtRpowOfPos (f x, g x) h).HasFderivAt.comp x (hf.Prod hg)
+  (hasStrictFderivAt_rpow_of_pos (f x, g x) h).HasFderivAt.comp x (hf.Prod hg)
 #align has_fderiv_at.rpow HasFderivAt.rpow
 
 theorem HasStrictFderivAt.rpow (hf : HasStrictFderivAt f f' x) (hg : HasStrictFderivAt g g' x)
     (h : 0 < f x) :
     HasStrictFderivAt (fun x => f x ^ g x)
       ((g x * f x ^ (g x - 1)) • f' + (f x ^ g x * log (f x)) • g') x :=
-  (hasStrictFderivAtRpowOfPos (f x, g x) h).comp x (hf.Prod hg)
+  (hasStrictFderivAt_rpow_of_pos (f x, g x) h).comp x (hf.Prod hg)
 #align has_strict_fderiv_at.rpow HasStrictFderivAt.rpow
 
 theorem DifferentiableWithinAt.rpow (hf : DifferentiableWithinAt ℝ f s x)
@@ -437,20 +438,20 @@ theorem Differentiable.rpow (hf : Differentiable ℝ f) (hg : Differentiable ℝ
     Differentiable ℝ fun x => f x ^ g x := fun x => (hf x).rpow (hg x) (h x)
 #align differentiable.rpow Differentiable.rpow
 
-theorem HasFderivWithinAt.rpowConst (hf : HasFderivWithinAt f f' s x) (h : f x ≠ 0 ∨ 1 ≤ p) :
+theorem HasFderivWithinAt.rpow_const (hf : HasFderivWithinAt f f' s x) (h : f x ≠ 0 ∨ 1 ≤ p) :
     HasFderivWithinAt (fun x => f x ^ p) ((p * f x ^ (p - 1)) • f') s x :=
-  (hasDerivAt_rpow_const h).compHasFderivWithinAt x hf
-#align has_fderiv_within_at.rpow_const HasFderivWithinAt.rpowConst
+  (hasDerivAt_rpow_const h).comp_has_fderiv_within_at x hf
+#align has_fderiv_within_at.rpow_const HasFderivWithinAt.rpow_const
 
-theorem HasFderivAt.rpowConst (hf : HasFderivAt f f' x) (h : f x ≠ 0 ∨ 1 ≤ p) :
+theorem HasFderivAt.rpow_const (hf : HasFderivAt f f' x) (h : f x ≠ 0 ∨ 1 ≤ p) :
     HasFderivAt (fun x => f x ^ p) ((p * f x ^ (p - 1)) • f') x :=
-  (hasDerivAt_rpow_const h).compHasFderivAt x hf
-#align has_fderiv_at.rpow_const HasFderivAt.rpowConst
+  (hasDerivAt_rpow_const h).comp_has_fderiv_at x hf
+#align has_fderiv_at.rpow_const HasFderivAt.rpow_const
 
-theorem HasStrictFderivAt.rpowConst (hf : HasStrictFderivAt f f' x) (h : f x ≠ 0 ∨ 1 ≤ p) :
+theorem HasStrictFderivAt.rpow_const (hf : HasStrictFderivAt f f' x) (h : f x ≠ 0 ∨ 1 ≤ p) :
     HasStrictFderivAt (fun x => f x ^ p) ((p * f x ^ (p - 1)) • f') x :=
-  (hasStrictDerivAt_rpow_const h).compHasStrictFderivAt x hf
-#align has_strict_fderiv_at.rpow_const HasStrictFderivAt.rpowConst
+  (hasStrictDerivAt_rpow_const h).comp_has_strict_fderiv_at x hf
+#align has_strict_fderiv_at.rpow_const HasStrictFderivAt.rpow_const
 
 theorem DifferentiableWithinAt.rpow_const (hf : DifferentiableWithinAt ℝ f s x)
     (h : f x ≠ 0 ∨ 1 ≤ p) : DifferentiableWithinAt ℝ (fun x => f x ^ p) s x :=
@@ -471,20 +472,20 @@ theorem Differentiable.rpow_const (hf : Differentiable ℝ f) (h : ∀ x, f x �
     Differentiable ℝ fun x => f x ^ p := fun x => (hf x).rpow_const (h x)
 #align differentiable.rpow_const Differentiable.rpow_const
 
-theorem HasFderivWithinAt.constRpow (hf : HasFderivWithinAt f f' s x) (hc : 0 < c) :
+theorem HasFderivWithinAt.const_rpow (hf : HasFderivWithinAt f f' s x) (hc : 0 < c) :
     HasFderivWithinAt (fun x => c ^ f x) ((c ^ f x * log c) • f') s x :=
-  (hasStrictDerivAt_const_rpow hc (f x)).HasDerivAt.compHasFderivWithinAt x hf
-#align has_fderiv_within_at.const_rpow HasFderivWithinAt.constRpow
+  (hasStrictDerivAt_const_rpow hc (f x)).HasDerivAt.comp_has_fderiv_within_at x hf
+#align has_fderiv_within_at.const_rpow HasFderivWithinAt.const_rpow
 
-theorem HasFderivAt.constRpow (hf : HasFderivAt f f' x) (hc : 0 < c) :
+theorem HasFderivAt.const_rpow (hf : HasFderivAt f f' x) (hc : 0 < c) :
     HasFderivAt (fun x => c ^ f x) ((c ^ f x * log c) • f') x :=
-  (hasStrictDerivAt_const_rpow hc (f x)).HasDerivAt.compHasFderivAt x hf
-#align has_fderiv_at.const_rpow HasFderivAt.constRpow
+  (hasStrictDerivAt_const_rpow hc (f x)).HasDerivAt.comp_has_fderiv_at x hf
+#align has_fderiv_at.const_rpow HasFderivAt.const_rpow
 
-theorem HasStrictFderivAt.constRpow (hf : HasStrictFderivAt f f' x) (hc : 0 < c) :
+theorem HasStrictFderivAt.const_rpow (hf : HasStrictFderivAt f f' x) (hc : 0 < c) :
     HasStrictFderivAt (fun x => c ^ f x) ((c ^ f x * log c) • f') x :=
-  (hasStrictDerivAt_const_rpow hc (f x)).compHasStrictFderivAt x hf
-#align has_strict_fderiv_at.const_rpow HasStrictFderivAt.constRpow
+  (hasStrictDerivAt_const_rpow hc (f x)).comp_has_strict_fderiv_at x hf
+#align has_strict_fderiv_at.const_rpow HasStrictFderivAt.const_rpow
 
 theorem ContDiffWithinAt.rpow (hf : ContDiffWithinAt ℝ n f s x) (hg : ContDiffWithinAt ℝ n g s x)
     (h : f x ≠ 0) : ContDiffWithinAt ℝ n (fun x => f x ^ g x) s x :=

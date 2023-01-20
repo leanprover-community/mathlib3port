@@ -41,16 +41,16 @@ open Complex ContinuousLinearMap
 
 open ComplexConjugate
 
-theorem isConformalMapConj : IsConformalMap (conjLie : ℂ →L[ℝ] ℂ) :=
+theorem isConformalMap_conj : IsConformalMap (conjLie : ℂ →L[ℝ] ℂ) :=
   conjLie.toLinearIsometry.IsConformalMap
-#align is_conformal_map_conj isConformalMapConj
+#align is_conformal_map_conj isConformalMap_conj
 
 section ConformalIntoComplexNormed
 
 variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [NormedSpace ℂ E] {z : ℂ}
   {g : ℂ →L[ℝ] E} {f : ℂ → E}
 
-theorem isConformalMapComplexLinear {map : ℂ →L[ℂ] E} (nonzero : map ≠ 0) :
+theorem isConformalMap_complex_linear {map : ℂ →L[ℂ] E} (nonzero : map ≠ 0) :
     IsConformalMap (map.restrictScalars ℝ) :=
   by
   have minor₁ : ‖map 1‖ ≠ 0 := by simpa only [ext_ring_iff, Ne.def, norm_eq_zero] using nonzero
@@ -67,12 +67,12 @@ theorem isConformalMapComplexLinear {map : ℂ →L[ℂ] E} (nonzero : map ≠ 0
       ContinuousLinearMap.coe_coe, coe_restrict_scalars', coe_smul',
       LinearIsometry.coe_toContinuousLinearMap, LinearIsometry.coe_mk, Pi.smul_apply,
       smul_inv_smul₀, Ne.def, not_false_iff]
-#align is_conformal_map_complex_linear isConformalMapComplexLinear
+#align is_conformal_map_complex_linear isConformalMap_complex_linear
 
-theorem isConformalMapComplexLinearConj {map : ℂ →L[ℂ] E} (nonzero : map ≠ 0) :
+theorem isConformalMap_complex_linear_conj {map : ℂ →L[ℂ] E} (nonzero : map ≠ 0) :
     IsConformalMap ((map.restrictScalars ℝ).comp (conjCle : ℂ →L[ℝ] ℂ)) :=
-  (isConformalMapComplexLinear nonzero).comp isConformalMapConj
-#align is_conformal_map_complex_linear_conj isConformalMapComplexLinearConj
+  (isConformalMap_complex_linear nonzero).comp isConformalMap_conj
+#align is_conformal_map_complex_linear_conj isConformalMap_complex_linear_conj
 
 end ConformalIntoComplexNormed
 
@@ -117,7 +117,7 @@ theorem isConformalMap_iff_is_complex_or_conj_linear :
   constructor
   · exact fun h => ⟨h.is_complex_or_conj_linear, h.NeZero⟩
   · rintro ⟨⟨map, rfl⟩ | ⟨map, hmap⟩, h₂⟩
-    · refine' isConformalMapComplexLinear _
+    · refine' isConformalMap_complex_linear _
       contrapose! h₂ with w
       simp only [w, restrict_scalars_zero]
     · have minor₁ : g = map.restrict_scalars ℝ ∘L ↑conj_cle :=
@@ -126,7 +126,7 @@ theorem isConformalMap_iff_is_complex_or_conj_linear :
         simp only [hmap, coe_comp', ContinuousLinearEquiv.coe_coe, Function.comp_apply,
           conj_cle_apply, starRingEnd_self_apply]
       rw [minor₁] at h₂⊢
-      refine' isConformalMapComplexLinearConj _
+      refine' isConformalMap_complex_linear_conj _
       contrapose! h₂ with w
       simp only [w, restrict_scalars_zero, zero_comp]
 #align is_conformal_map_iff_is_complex_or_conj_linear isConformalMap_iff_is_complex_or_conj_linear

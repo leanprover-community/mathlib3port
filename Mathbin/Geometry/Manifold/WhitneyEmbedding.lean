@@ -100,7 +100,7 @@ theorem comp_embeddingPiTangent_mfderiv (x : M) (hx : x ∈ s) :
       (@ContinuousLinearMap.proj ℝ _ ι (fun _ => E × ℝ) _ _ (fun _ => inferInstance) (f.ind x hx))
   have := L.has_mfderiv_at.comp x f.embedding_pi_tangent.mdifferentiable_at.has_mfderiv_at
   convert hasMfderivAt_unique this _
-  refine' (hasMfderivAtExtChartAt I (f.mem_chart_at_ind_source x hx)).congr_of_eventually_eq _
+  refine' (hasMfderivAt_extChartAt I (f.mem_chart_at_ind_source x hx)).congr_of_eventually_eq _
   refine' (f.eventually_eq_one x hx).mono fun y hy => _
   simp only [embedding_pi_tangent_coe, ContinuousLinearMap.coe_comp', (· ∘ ·),
     ContinuousLinearMap.coe_fst', ContinuousLinearMap.proj_apply]

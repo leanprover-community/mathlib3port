@@ -252,7 +252,7 @@ variable {δ : Type _} {π : δ → Type _} [∀ x, MeasurableSpace (π x)]
 
 -- for some reason the equation compiler doesn't like this definition
 /-- A product of measures in `tprod α l`. -/
-protected def tprod (l : List δ) (μ : ∀ i, Measure (π i)) : Measure (Tprod π l) :=
+protected def tprod (l : List δ) (μ : ∀ i, Measure (π i)) : Measure (TProd π l) :=
   by
   induction' l with i l ih
   exact dirac PUnit.unit
@@ -260,16 +260,16 @@ protected def tprod (l : List δ) (μ : ∀ i, Measure (π i)) : Measure (Tprod 
 #align measure_theory.measure.tprod MeasureTheory.Measure.tprod
 
 @[simp]
-theorem tprod_nil (μ : ∀ i, Measure (π i)) : Measure.tprod [] μ = dirac PUnit.unit :=
+theorem tProd_nil (μ : ∀ i, Measure (π i)) : Measure.tprod [] μ = dirac PUnit.unit :=
   rfl
-#align measure_theory.measure.tprod_nil MeasureTheory.Measure.tprod_nil
+#align measure_theory.measure.tprod_nil MeasureTheory.Measure.tProd_nil
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem tprod_cons (i : δ) (l : List δ) (μ : ∀ i, Measure (π i)) :
+theorem tProd_cons (i : δ) (l : List δ) (μ : ∀ i, Measure (π i)) :
     Measure.tprod (i::l) μ = (μ i).Prod (Measure.tprod l μ) :=
   rfl
-#align measure_theory.measure.tprod_cons MeasureTheory.Measure.tprod_cons
+#align measure_theory.measure.tprod_cons MeasureTheory.Measure.tProd_cons
 
 instance sigmaFiniteTprod (l : List δ) (μ : ∀ i, Measure (π i)) [∀ i, SigmaFinite (μ i)] :
     SigmaFinite (Measure.tprod l μ) :=
@@ -282,12 +282,12 @@ instance sigmaFiniteTprod (l : List δ) (μ : ∀ i, Measure (π i)) [∀ i, Sig
     infer_instance
 #align measure_theory.measure.sigma_finite_tprod MeasureTheory.Measure.sigmaFiniteTprod
 
-theorem tprod_tprod (l : List δ) (μ : ∀ i, Measure (π i)) [∀ i, SigmaFinite (μ i)]
+theorem tProd_tProd (l : List δ) (μ : ∀ i, Measure (π i)) [∀ i, SigmaFinite (μ i)]
     (s : ∀ i, Set (π i)) : Measure.tprod l μ (Set.tprod l s) = (l.map fun i => (μ i) (s i)).Prod :=
   by
   induction' l with i l ih; · simp
   rw [tprod_cons, Set.tprod, prod_prod, map_cons, prod_cons, ih]
-#align measure_theory.measure.tprod_tprod MeasureTheory.Measure.tprod_tprod
+#align measure_theory.measure.tprod_tprod MeasureTheory.Measure.tProd_tProd
 
 end Tprod
 
@@ -301,7 +301,7 @@ variable [Encodable ι]
   equivalence `measurable_equiv.pi_measurable_equiv_tprod`.
   The definition `measure_theory.measure.pi` should be used instead of this one. -/
 def pi' : Measure (∀ i, α i) :=
-  Measure.map (Tprod.elim' mem_sortedUniv) (Measure.tprod (sortedUniv ι) μ)
+  Measure.map (TProd.elim' mem_sortedUniv) (Measure.tprod (sortedUniv ι) μ)
 #align measure_theory.measure.pi' MeasureTheory.Measure.pi'
 
 theorem pi'_pi [∀ i, SigmaFinite (μ i)] (s : ∀ i, Set (α i)) : pi' μ (pi univ s) = ∏ i, μ i (s i) :=

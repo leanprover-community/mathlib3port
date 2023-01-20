@@ -237,7 +237,7 @@ theorem StarConvex.is_linear_preimage {s : Set F} {f : E → F} (hs : StarConvex
 theorem StarConvex.add {t : Set E} (hs : StarConvex 𝕜 x s) (ht : StarConvex 𝕜 y t) :
     StarConvex 𝕜 (x + y) (s + t) := by
   rw [← add_image_prod]
-  exact (hs.prod ht).is_linear_image IsLinearMap.isLinearMapAdd
+  exact (hs.prod ht).is_linear_image IsLinearMap.isLinearMap_add
 #align star_convex.add StarConvex.add
 
 theorem StarConvex.add_left (hs : StarConvex 𝕜 x s) (z : E) :
@@ -285,7 +285,7 @@ variable [AddCommGroup E] [Module 𝕜 E] {x y : E}
 
 theorem StarConvex.sub' {s : Set (E × E)} (hs : StarConvex 𝕜 (x, y) s) :
     StarConvex 𝕜 (x - y) ((fun x : E × E => x.1 - x.2) '' s) :=
-  hs.is_linear_image IsLinearMap.isLinearMapSub
+  hs.is_linear_image IsLinearMap.isLinearMap_sub
 #align star_convex.sub' StarConvex.sub'
 
 end AddCommGroup
@@ -391,7 +391,7 @@ theorem StarConvex.affine_image (f : E →ᵃ[𝕜] F) {s : Set E} (hs : StarCon
 theorem StarConvex.neg (hs : StarConvex 𝕜 x s) : StarConvex 𝕜 (-x) (-s) :=
   by
   rw [← image_neg]
-  exact hs.is_linear_image IsLinearMap.isLinearMapNeg
+  exact hs.is_linear_image IsLinearMap.isLinearMap_neg
 #align star_convex.neg StarConvex.neg
 
 theorem StarConvex.sub (hs : StarConvex 𝕜 x s) (ht : StarConvex 𝕜 y t) :

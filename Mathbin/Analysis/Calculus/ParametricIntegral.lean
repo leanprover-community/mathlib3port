@@ -189,9 +189,10 @@ theorem hasFderivAt_integral_of_dominated_loc_of_lip {F : H → α → E} {F' : 
 `F x₀` is integrable, `x ↦ F x a` is differentiable on a ball around `x₀` for ae `a` with
 derivative norm uniformly bounded by an integrable function (the ball radius is independent of `a`),
 and `F x` is ae-measurable for `x` in a possibly smaller neighborhood of `x₀`. -/
-theorem hasFderivAtIntegralOfDominatedOfFderivLe {F : H → α → E} {F' : H → α → H →L[𝕜] E} {x₀ : H}
-    {bound : α → ℝ} {ε : ℝ} (ε_pos : 0 < ε) (hF_meas : ∀ᶠ x in 𝓝 x₀, AeStronglyMeasurable (F x) μ)
-    (hF_int : Integrable (F x₀) μ) (hF'_meas : AeStronglyMeasurable (F' x₀) μ)
+theorem hasFderivAt_integral_of_dominated_of_fderiv_le {F : H → α → E} {F' : H → α → H →L[𝕜] E}
+    {x₀ : H} {bound : α → ℝ} {ε : ℝ} (ε_pos : 0 < ε)
+    (hF_meas : ∀ᶠ x in 𝓝 x₀, AeStronglyMeasurable (F x) μ) (hF_int : Integrable (F x₀) μ)
+    (hF'_meas : AeStronglyMeasurable (F' x₀) μ)
     (h_bound : ∀ᵐ a ∂μ, ∀ x ∈ ball x₀ ε, ‖F' x a‖ ≤ bound a)
     (bound_integrable : Integrable (bound : α → ℝ) μ)
     (h_diff : ∀ᵐ a ∂μ, ∀ x ∈ ball x₀ ε, HasFderivAt (fun x => F x a) (F' x a) x) :
@@ -213,7 +214,7 @@ theorem hasFderivAtIntegralOfDominatedOfFderivLe {F : H → α → E} {F' : H �
   exact
     (hasFderivAt_integral_of_dominated_loc_of_lip ε_pos hF_meas hF_int hF'_meas this
         bound_integrable diff_x₀).2
-#align has_fderiv_at_integral_of_dominated_of_fderiv_le hasFderivAtIntegralOfDominatedOfFderivLe
+#align has_fderiv_at_integral_of_dominated_of_fderiv_le hasFderivAt_integral_of_dominated_of_fderiv_le
 
 /-- Derivative under integral of `x ↦ ∫ F x a` at a given point `x₀ : 𝕜`, `𝕜 = ℝ` or `𝕜 = ℂ`,
 assuming `F x₀` is integrable, `x ↦ F x a` is locally Lipschitz on a ball around `x₀` for ae `a`

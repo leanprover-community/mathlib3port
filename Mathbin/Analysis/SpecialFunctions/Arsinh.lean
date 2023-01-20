@@ -249,17 +249,17 @@ variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] {f : E → ℝ}
 
 theorem HasStrictFderivAt.arsinh (hf : HasStrictFderivAt f f' a) :
     HasStrictFderivAt (fun x => arsinh (f x)) ((sqrt (1 + f a ^ 2))⁻¹ • f') a :=
-  (hasStrictDerivAt_arsinh _).compHasStrictFderivAt a hf
+  (hasStrictDerivAt_arsinh _).comp_has_strict_fderiv_at a hf
 #align has_strict_fderiv_at.arsinh HasStrictFderivAt.arsinh
 
 theorem HasFderivAt.arsinh (hf : HasFderivAt f f' a) :
     HasFderivAt (fun x => arsinh (f x)) ((sqrt (1 + f a ^ 2))⁻¹ • f') a :=
-  (hasDerivAt_arsinh _).compHasFderivAt a hf
+  (hasDerivAt_arsinh _).comp_has_fderiv_at a hf
 #align has_fderiv_at.arsinh HasFderivAt.arsinh
 
 theorem HasFderivWithinAt.arsinh (hf : HasFderivWithinAt f f' s a) :
     HasFderivWithinAt (fun x => arsinh (f x)) ((sqrt (1 + f a ^ 2))⁻¹ • f') s a :=
-  (hasDerivAt_arsinh _).compHasFderivWithinAt a hf
+  (hasDerivAt_arsinh _).comp_has_fderiv_within_at a hf
 #align has_fderiv_within_at.arsinh HasFderivWithinAt.arsinh
 
 theorem DifferentiableAt.arsinh (h : DifferentiableAt ℝ f a) :
