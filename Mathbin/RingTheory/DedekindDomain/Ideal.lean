@@ -1173,11 +1173,11 @@ def idealFactorsEquivOfQuotEquiv : { p : Ideal R | p ∣ I } ≃o { p : Ideal A 
     (idealFactorsFunOfQuotHom
       (show Function.Surjective (f.symm : A ⧸ J →+* R ⧸ I) from f.symm.Surjective))
     (by
-      simp only [← idealFactorsFunOfQuotHom_id, OrderHom.coe_eq, OrderHom.coe_eq,
+      simp only [← idealFactorsFunOfQuotHom_id, [anonymous], [anonymous],
         idealFactorsFunOfQuotHom_comp, ← RingEquiv.toRingHom_eq_coe, ← RingEquiv.toRingHom_eq_coe, ←
         RingEquiv.toRingHom_trans, RingEquiv.symm_trans_self, RingEquiv.toRingHom_refl])
     (by
-      simp only [← idealFactorsFunOfQuotHom_id, OrderHom.coe_eq, OrderHom.coe_eq,
+      simp only [← idealFactorsFunOfQuotHom_id, [anonymous], [anonymous],
         idealFactorsFunOfQuotHom_comp, ← RingEquiv.toRingHom_eq_coe, ← RingEquiv.toRingHom_eq_coe, ←
         RingEquiv.toRingHom_trans, RingEquiv.self_trans_symm, RingEquiv.toRingHom_refl])
 #align ideal_factors_equiv_of_quot_equiv idealFactorsEquivOfQuotEquiv
