@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Floris van Doorn, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.real.sqrt
-! leanprover-community/mathlib commit 509de852e1de55e1efa8eacfa11df0823f26f226
+! leanprover-community/mathlib commit 1126441d6bccf98c81214a0780c73d499f6721fe
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -398,6 +398,11 @@ theorem sqrt_inv (x : ℝ) : sqrt x⁻¹ = (sqrt x)⁻¹ := by
 theorem sqrt_div (hx : 0 ≤ x) (y : ℝ) : sqrt (x / y) = sqrt x / sqrt y := by
   rw [division_def, sqrt_mul hx, sqrt_inv, division_def]
 #align real.sqrt_div Real.sqrt_div
+
+@[simp]
+theorem sqrt_div' (x) {y : ℝ} (hy : 0 ≤ y) : sqrt (x / y) = sqrt x / sqrt y := by
+  rw [division_def, sqrt_mul' x (inv_nonneg.2 hy), sqrt_inv, division_def]
+#align real.sqrt_div' Real.sqrt_div'
 
 @[simp]
 theorem div_sqrt : x / sqrt x = sqrt x :=

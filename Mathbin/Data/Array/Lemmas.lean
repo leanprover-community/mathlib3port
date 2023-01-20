@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.array.lemmas
-! leanprover-community/mathlib commit 509de852e1de55e1efa8eacfa11df0823f26f226
+! leanprover-community/mathlib commit 1126441d6bccf98c81214a0780c73d499f6721fe
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -331,40 +331,6 @@ theorem read_map₂ : (map₂ f a₁ a₂).read i = f (a₁.read i) (a₂.read i
 #align array.read_map₂ Array'.read_map₂
 
 end Map₂
-
-end Array'
-
-namespace Equiv
-
-/-- The natural equivalence between length-`n` heterogeneous arrays
-and dependent functions from `fin n`. -/
-def dArrayEquivFin {n : ℕ} (α : Fin n → Type _) : DArray n α ≃ ∀ i, α i :=
-  ⟨DArray.read, DArray.mk, fun ⟨f⟩ => rfl, fun f => rfl⟩
-#align equiv.d_array_equiv_fin Equiv.dArrayEquivFin
-
-/-- The natural equivalence between length-`n` arrays and functions from `fin n`. -/
-def arrayEquivFin (n : ℕ) (α : Type _) : Array' n α ≃ (Fin n → α) :=
-  dArrayEquivFin _
-#align equiv.array_equiv_fin Equiv.arrayEquivFin
-
-/-- The natural equivalence between length-`n` vectors and length-`n` arrays. -/
-def vectorEquivArray (α : Type _) (n : ℕ) : Vector α n ≃ Array' n α :=
-  (vectorEquivFin _ _).trans (arrayEquivFin _ _).symm
-#align equiv.vector_equiv_array Equiv.vectorEquivArray
-
-end Equiv
-
-namespace Array'
-
-open Function
-
-variable {n : ℕ}
-
-instance : Traversable (Array' n) :=
-  @Equiv.traversable (flip Vector n) _ (fun α => Equiv.vectorEquivArray α n) _
-
-instance : IsLawfulTraversable (Array' n) :=
-  @Equiv.isLawfulTraversable (flip Vector n) _ (fun α => Equiv.vectorEquivArray α n) _ _
 
 end Array'
 

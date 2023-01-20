@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.complex.cauchy_integral
-! leanprover-community/mathlib commit 509de852e1de55e1efa8eacfa11df0823f26f226
+! leanprover-community/mathlib commit 1126441d6bccf98c81214a0780c73d499f6721fe
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -189,7 +189,9 @@ theorem integral_boundary_rect_of_has_fderiv_at_real_off_countable (f : ℂ → 
   have hF' : ∀ p : ℝ × ℝ, (-(I • F' p)) (1, 0) + F' p (0, 1) = -(I • f' (e p) 1 - f' (e p) I) :=
     by
     rintro ⟨x, y⟩
-    simp [F', he₁, he₂, ← sub_eq_neg_add]
+    simp only [ContinuousLinearMap.neg_apply, ContinuousLinearMap.smul_apply, F',
+      ContinuousLinearMap.comp_apply, ContinuousLinearEquiv.coe_coe, he₁, he₂, neg_add_eq_sub,
+      neg_sub]
   set R : Set (ℝ × ℝ) := [z.re, w.re] ×ˢ [w.im, z.im]
   set t : Set (ℝ × ℝ) := e ⁻¹' s
   rw [uIcc_comm z.im] at Hc Hi

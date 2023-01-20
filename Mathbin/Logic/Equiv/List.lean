@@ -4,12 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module logic.equiv.list
-! leanprover-community/mathlib commit 509de852e1de55e1efa8eacfa11df0823f26f226
+! leanprover-community/mathlib commit 1126441d6bccf98c81214a0780c73d499f6721fe
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Data.Array.Lemmas
 import Mathbin.Data.Finset.Sort
+import Mathbin.Data.Vector.Basic
 import Mathbin.Logic.Denumerable
 
 /-!
@@ -167,16 +167,6 @@ instance finArrow [Encodable α] {n} : Encodable (Fin n → α) :=
 instance finPi (n) (π : Fin n → Type _) [∀ i, Encodable (π i)] : Encodable (∀ i, π i) :=
   ofEquiv _ (Equiv.piEquivSubtypeSigma (Fin n) π)
 #align encodable.fin_pi Encodable.finPi
-
-/-- If `α` is encodable, then so is `array n α`. -/
-instance Array'.encodable [Encodable α] {n} : Encodable (Array' n α) :=
-  ofEquiv _ (Equiv.arrayEquivFin _ _)
-#align array.encodable Array'.encodable
-
-/-- If `α` is countable, then so is `array n α`. -/
-instance Array'.countable [Countable α] {n} : Countable (Array' n α) :=
-  Countable.of_equiv _ (Equiv.vectorEquivArray _ _)
-#align array.countable Array'.countable
 
 /-- If `α` is encodable, then so is `finset α`. -/
 instance Finset.encodable [Encodable α] : Encodable (Finset α) :=

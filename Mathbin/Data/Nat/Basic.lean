@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.basic
-! leanprover-community/mathlib commit 509de852e1de55e1efa8eacfa11df0823f26f226
+! leanprover-community/mathlib commit 1126441d6bccf98c81214a0780c73d499f6721fe
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -357,22 +357,18 @@ theorem mul_def {a b : ℕ} : Nat.mul a b = a * b :=
 -/
 
 #print Nat.exists_eq_add_of_le /-
-theorem exists_eq_add_of_le : ∀ {m n : ℕ}, m ≤ n → ∃ k : ℕ, n = m + k
-  | 0, 0, h => ⟨0, by simp⟩
-  | 0, n + 1, h => ⟨n + 1, by simp⟩
-  | m + 1, n + 1, h =>
-    let ⟨k, hk⟩ := exists_eq_add_of_le (Nat.le_of_succ_le_succ h)
-    ⟨k, by simp [hk, add_comm, add_left_comm]⟩
+theorem exists_eq_add_of_le (h : m ≤ n) : ∃ k : ℕ, n = m + k :=
+  ⟨n - m, (Nat.add_sub_of_le h).symm⟩
 #align nat.exists_eq_add_of_le Nat.exists_eq_add_of_le
 -/
 
+theorem exists_eq_add_of_le' (h : m ≤ n) : ∃ k : ℕ, n = k + m :=
+  ⟨n - m, (Nat.sub_add_cancel h).symm⟩
+#align nat.exists_eq_add_of_le' Nat.exists_eq_add_of_le'
+
 #print Nat.exists_eq_add_of_lt /-
-theorem exists_eq_add_of_lt : ∀ {m n : ℕ}, m < n → ∃ k : ℕ, n = m + k + 1
-  | 0, 0, h => False.elim <| lt_irrefl _ h
-  | 0, n + 1, h => ⟨n, by simp⟩
-  | m + 1, n + 1, h =>
-    let ⟨k, hk⟩ := exists_eq_add_of_le (Nat.le_of_succ_le_succ h)
-    ⟨k, by simp [hk]⟩
+theorem exists_eq_add_of_lt (h : m < n) : ∃ k : ℕ, n = m + k + 1 :=
+  ⟨n - (m + 1), by rw [add_right_comm, Nat.add_sub_of_le h]⟩
 #align nat.exists_eq_add_of_lt Nat.exists_eq_add_of_lt
 -/
 

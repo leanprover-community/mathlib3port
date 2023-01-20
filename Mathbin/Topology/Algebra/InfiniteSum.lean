@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.algebra.infinite_sum
-! leanprover-community/mathlib commit 509de852e1de55e1efa8eacfa11df0823f26f226
+! leanprover-community/mathlib commit 1126441d6bccf98c81214a0780c73d499f6721fe
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -486,6 +486,36 @@ theorem HasSum.sigma_of_has_sum [T3Space α] {γ : β → Type _} {f : (Σb : β
     HasSum f a := by simpa [(hf'.has_sum.sigma hf).unique ha] using hf'.has_sum
 #align has_sum.sigma_of_has_sum HasSum.sigma_of_has_sum
 
+/-- Version of `has_sum.update` for `add_comm_monoid` rather than `add_comm_group`.
+Rather than showing that `f.update` has a specific sum in terms of `has_sum`,
+it gives a relationship between the sums of `f` and `f.update` given that both exist. -/
+theorem HasSum.update' {α β : Type _} [TopologicalSpace α] [AddCommMonoid α] [T2Space α]
+    [HasContinuousAdd α] {f : β → α} {a a' : α} (hf : HasSum f a) (b : β) (x : α)
+    (hf' : HasSum (f.update b x) a') : a + x = a' + f b :=
+  by
+  have : ∀ b', f b' + ite (b' = b) x 0 = f.update b x b' + ite (b' = b) (f b) 0 :=
+    by
+    intro b'
+    split_ifs with hb'
+    · simpa only [Function.update_apply, hb', eq_self_iff_true] using add_comm (f b) x
+    · simp only [Function.update_apply, hb', if_false]
+  have h := hf.add (has_sum_ite_eq b x)
+  simp_rw [this] at h
+  exact HasSum.unique h (hf'.add (has_sum_ite_eq b (f b)))
+#align has_sum.update' HasSum.update'
+
+/-- Version of `has_sum_ite_sub_has_sum` for `add_comm_monoid` rather than `add_comm_group`.
+Rather than showing that the `ite` expression has a specific sum in terms of `has_sum`,
+it gives a relationship between the sums of `f` and `ite (n = b) 0 (f n)` given that both exist. -/
+theorem eq_add_of_has_sum_ite {α β : Type _} [TopologicalSpace α] [AddCommMonoid α] [T2Space α]
+    [HasContinuousAdd α] {f : β → α} {a : α} (hf : HasSum f a) (b : β) (a' : α)
+    (hf' : HasSum (fun n => ite (n = b) 0 (f n)) a') : a = a' + f b :=
+  by
+  refine' (add_zero a).symm.trans (hf.update' b 0 _)
+  convert hf'
+  exact funext (f.update_apply b 0)
+#align eq_add_of_has_sum_ite eq_add_of_has_sum_ite
+
 end HasSum
 
 section tsum
@@ -535,6 +565,16 @@ theorem tsum_eq_sum {f : β → α} {s : Finset β} (hf : ∀ (b) (_ : b ∉ s),
     (∑' b, f b) = ∑ b in s, f b :=
   (has_sum_sum_of_ne_finset_zero hf).tsum_eq
 #align tsum_eq_sum tsum_eq_sum
+
+/- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ∉ » s) -/
+theorem sum_eq_tsum_indicator (f : β → α) (s : Finset β) :
+    (∑ x in s, f x) = ∑' x, Set.indicator (↑s) f x :=
+  have : ∀ (x) (_ : x ∉ s), Set.indicator (↑s) f x = 0 := fun x hx =>
+    Set.indicator_apply_eq_zero.2 fun hx' => (hx <| Finset.mem_coe.1 hx').elim
+  (Finset.sum_congr rfl fun x hx =>
+        (Set.indicator_apply_eq_self.2 fun hx' => (hx' <| Finset.mem_coe.2 hx).elim).symm).trans
+    (tsum_eq_sum this).symm
+#align sum_eq_tsum_indicator sum_eq_tsum_indicator
 
 theorem tsum_congr {α β : Type _} [AddCommMonoid α] [TopologicalSpace α] {f g : β → α}
     (hfg : ∀ b, f b = g b) : (∑' b, f b) = ∑' b, g b :=
@@ -686,6 +726,24 @@ theorem tsum_sum {f : γ → β → α} {s : Finset γ} (hf : ∀ i ∈ s, Summa
     (∑' b, ∑ i in s, f i b) = ∑ i in s, ∑' b, f i b :=
   (has_sum_sum fun i hi => (hf i hi).HasSum).tsum_eq
 #align tsum_sum tsum_sum
+
+/-- Version of `tsum_eq_add_tsum_ite` for `add_comm_monoid` rather than `add_comm_group`.
+Requires a different convergence assumption involving `function.update`. -/
+theorem tsum_eq_add_tsum_ite' {f : β → α} (b : β) (hf : Summable (f.update b 0)) :
+    (∑' x, f x) = f b + ∑' x, ite (x = b) 0 (f x) :=
+  calc
+    (∑' x, f x) = ∑' x, ite (x = b) (f x) 0 + f.update b 0 x :=
+      tsum_congr fun n => by split_ifs <;> simp [Function.update_apply, h]
+    _ = (∑' x, ite (x = b) (f x) 0) + ∑' x, f.update b 0 x :=
+      tsum_add ⟨ite (b = b) (f b) 0, has_sum_single b fun b hb => if_neg hb⟩ hf
+    _ = ite (b = b) (f b) 0 + ∑' x, f.update b 0 x :=
+      by
+      congr
+      exact tsum_eq_single b fun b' hb' => if_neg hb'
+    _ = f b + ∑' x, ite (x = b) 0 (f x) := by
+      simp only [Function.update, eq_self_iff_true, if_true, eq_rec_constant, dite_eq_ite]
+    
+#align tsum_eq_add_tsum_ite' tsum_eq_add_tsum_ite'
 
 variable [AddCommMonoid δ] [TopologicalSpace δ] [T3Space δ] [HasContinuousAdd δ]
 
@@ -963,14 +1021,14 @@ theorem Set.Finite.summable_compl_iff {s : Set β} (hs : s.Finite) :
   (hs.Summable f).summable_compl_iff
 #align set.finite.summable_compl_iff Set.Finite.summable_compl_iff
 
-theorem has_sum_ite_eq_extract [DecidableEq β] (hf : HasSum f a) (b : β) :
+theorem has_sum_ite_sub_has_sum [DecidableEq β] (hf : HasSum f a) (b : β) :
     HasSum (fun n => ite (n = b) 0 (f n)) (a - f b) :=
   by
   convert hf.update b 0 using 1
   · ext n
     rw [Function.update_apply]
   · rw [sub_add_eq_add_sub, zero_add]
-#align has_sum_ite_eq_extract has_sum_ite_eq_extract
+#align has_sum_ite_sub_has_sum has_sum_ite_sub_has_sum
 
 section tsum
 
@@ -994,14 +1052,14 @@ theorem sum_add_tsum_compl {s : Finset β} (hf : Summable f) :
 #align sum_add_tsum_compl sum_add_tsum_compl
 
 /-- Let `f : β → α` be a sequence with summable series and let `b ∈ β` be an index.
-Lemma `tsum_ite_eq_extract` writes `Σ f n` as the sum of `f b` plus the series of the
+Lemma `tsum_eq_add_tsum_ite` writes `Σ f n` as the sum of `f b` plus the series of the
 remaining terms. -/
-theorem tsum_ite_eq_extract [DecidableEq β] (hf : Summable f) (b : β) :
+theorem tsum_eq_add_tsum_ite [DecidableEq β] (hf : Summable f) (b : β) :
     (∑' n, f n) = f b + ∑' n, ite (n = b) 0 (f n) :=
   by
-  rw [(has_sum_ite_eq_extract hf.has_sum b).tsum_eq]
+  rw [(has_sum_ite_sub_has_sum hf.has_sum b).tsum_eq]
   exact (add_sub_cancel'_right _ _).symm
-#align tsum_ite_eq_extract tsum_ite_eq_extract
+#align tsum_eq_add_tsum_ite tsum_eq_add_tsum_ite
 
 end tsum
 

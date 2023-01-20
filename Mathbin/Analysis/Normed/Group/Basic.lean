@@ -4,13 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.normed.group.basic
-! leanprover-community/mathlib commit 509de852e1de55e1efa8eacfa11df0823f26f226
+! leanprover-community/mathlib commit 1126441d6bccf98c81214a0780c73d499f6721fe
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Normed.Group.Seminorm
 import Mathbin.Order.LiminfLimsup
 import Mathbin.Topology.Algebra.UniformGroup
+import Mathbin.Topology.Instances.Rat
 import Mathbin.Topology.MetricSpace.Algebra
 import Mathbin.Topology.MetricSpace.Isometry
 import Mathbin.Topology.Sequences
@@ -1909,6 +1910,81 @@ theorem of_real_le_ennnorm (r : ℝ) : Ennreal.ofReal r ≤ ‖r‖₊ :=
 #align real.of_real_le_ennnorm Real.of_real_le_ennnorm
 
 end Real
+
+namespace Int
+
+instance : NormedAddCommGroup ℤ where
+  norm n := ‖(n : ℝ)‖
+  dist_eq m n := by simp only [Int.dist_eq, norm, Int.cast_sub]
+
+@[norm_cast]
+theorem norm_cast_real (m : ℤ) : ‖(m : ℝ)‖ = ‖m‖ :=
+  rfl
+#align int.norm_cast_real Int.norm_cast_real
+
+theorem norm_eq_abs (n : ℤ) : ‖n‖ = |n| :=
+  rfl
+#align int.norm_eq_abs Int.norm_eq_abs
+
+@[simp]
+theorem norm_coe_nat (n : ℕ) : ‖(n : ℤ)‖ = n := by simp [Int.norm_eq_abs]
+#align int.norm_coe_nat Int.norm_coe_nat
+
+theorem Nnreal.coe_nat_abs (n : ℤ) : (n.natAbs : ℝ≥0) = ‖n‖₊ :=
+  Nnreal.eq <|
+    calc
+      ((n.natAbs : ℝ≥0) : ℝ) = (n.natAbs : ℤ) := by simp only [Int.cast_ofNat, Nnreal.coe_nat_cast]
+      _ = |n| := by simp only [Int.coe_natAbs, Int.cast_abs]
+      _ = ‖n‖ := rfl
+      
+#align nnreal.coe_nat_abs Nnreal.coe_nat_abs
+
+theorem abs_le_floor_nnreal_iff (z : ℤ) (c : ℝ≥0) : |z| ≤ ⌊c⌋₊ ↔ ‖z‖₊ ≤ c :=
+  by
+  rw [Int.abs_eq_natAbs, Int.ofNat_le, Nat.le_floor_iff (zero_le c)]
+  congr
+  exact Nnreal.coe_nat_abs z
+#align int.abs_le_floor_nnreal_iff Int.abs_le_floor_nnreal_iff
+
+end Int
+
+namespace Rat
+
+instance : NormedAddCommGroup ℚ where
+  norm r := ‖(r : ℝ)‖
+  dist_eq r₁ r₂ := by simp only [Rat.dist_eq, norm, Rat.cast_sub]
+
+@[norm_cast, simp]
+theorem norm_cast_real (r : ℚ) : ‖(r : ℝ)‖ = ‖r‖ :=
+  rfl
+#align rat.norm_cast_real Rat.norm_cast_real
+
+@[norm_cast, simp]
+theorem Int.norm_cast_rat (m : ℤ) : ‖(m : ℚ)‖ = ‖m‖ := by
+  rw [← Rat.norm_cast_real, ← Int.norm_cast_real] <;> congr 1 <;> norm_cast
+#align int.norm_cast_rat Int.norm_cast_rat
+
+end Rat
+
+-- Now that we've installed the norm on `ℤ`,
+-- we can state some lemmas about `zsmul`.
+section
+
+variable [SeminormedCommGroup α]
+
+@[to_additive norm_zsmul_le]
+theorem norm_zpow_le_mul_norm (n : ℤ) (a : α) : ‖a ^ n‖ ≤ ‖n‖ * ‖a‖ := by
+  rcases n.eq_coe_or_neg with ⟨n, rfl | rfl⟩ <;> simpa using norm_pow_le_mul_norm n a
+#align norm_zpow_le_mul_norm norm_zpow_le_mul_norm
+#align norm_zsmul_le norm_zsmul_le
+
+@[to_additive nnnorm_zsmul_le]
+theorem nnnorm_zpow_le_mul_norm (n : ℤ) (a : α) : ‖a ^ n‖₊ ≤ ‖n‖₊ * ‖a‖₊ := by
+  simpa only [← Nnreal.coe_le_coe, Nnreal.coe_mul] using norm_zpow_le_mul_norm n a
+#align nnnorm_zpow_le_mul_norm nnnorm_zpow_le_mul_norm
+#align nnnorm_zsmul_le nnnorm_zsmul_le
+
+end
 
 namespace LipschitzWith
 

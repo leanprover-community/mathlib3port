@@ -635,6 +635,7 @@ import Mathbin.Analysis.Normed.Group.AddTorsor
 import Mathbin.Analysis.Normed.Group.BallSphere
 import Mathbin.Analysis.Normed.Group.Basic
 import Mathbin.Analysis.Normed.Group.Completion
+import Mathbin.Analysis.Normed.Group.ControlledClosure
 import Mathbin.Analysis.Normed.Group.Hom
 import Mathbin.Analysis.Normed.Group.HomCompletion
 import Mathbin.Analysis.Normed.Group.InfiniteSum
@@ -1301,6 +1302,7 @@ import Mathbin.Data.Finsupp.Pointwise
 import Mathbin.Data.Finsupp.Pwo
 import Mathbin.Data.Finsupp.ToDfinsupp
 import Mathbin.Data.Finsupp.WellFounded
+import Mathbin.Data.Fintype.Array
 import Mathbin.Data.Fintype.Basic
 import Mathbin.Data.Fintype.BigOperators
 import Mathbin.Data.Fintype.Card
@@ -2034,6 +2036,7 @@ import Mathbin.Logic.Embedding.Basic
 import Mathbin.Logic.Embedding.Set
 import Mathbin.Logic.Encodable.Basic
 import Mathbin.Logic.Encodable.Lattice
+import Mathbin.Logic.Equiv.Array
 import Mathbin.Logic.Equiv.Basic
 import Mathbin.Logic.Equiv.Defs
 import Mathbin.Logic.Equiv.Embedding

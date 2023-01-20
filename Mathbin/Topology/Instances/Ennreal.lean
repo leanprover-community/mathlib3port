@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.instances.ennreal
-! leanprover-community/mathlib commit 509de852e1de55e1efa8eacfa11df0823f26f226
+! leanprover-community/mathlib commit 1126441d6bccf98c81214a0780c73d499f6721fe
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1167,6 +1167,11 @@ theorem tsum_Union_le {ι : Type _} [Fintype ι] (f : α → ℝ≥0∞) (t : ι
     exact tsum_bUnion_le _ _ _
 #align ennreal.tsum_Union_le Ennreal.tsum_Union_le
 
+theorem tsum_eq_add_tsum_ite {f : β → ℝ≥0∞} (b : β) :
+    (∑' x, f x) = f b + ∑' x, ite (x = b) 0 (f x) :=
+  tsum_eq_add_tsum_ite' b Ennreal.summable
+#align ennreal.tsum_eq_add_tsum_ite Ennreal.tsum_eq_add_tsum_ite
+
 theorem tsum_add_one_eq_top {f : ℕ → ℝ≥0∞} (hf : (∑' n, f n) = ∞) (hf0 : f 0 ≠ ∞) :
     (∑' n, f (n + 1)) = ∞ :=
   by
@@ -1425,6 +1430,14 @@ theorem tsum_pos {g : α → ℝ≥0} (hg : Summable g) (i : α) (hi : 0 < g i) 
   rw [← tsum_zero]
   exact tsum_lt_tsum (fun a => zero_le _) hi hg
 #align nnreal.tsum_pos Nnreal.tsum_pos
+
+theorem tsum_eq_add_tsum_ite {f : α → ℝ≥0} (hf : Summable f) (i : α) :
+    (∑' x, f x) = f i + ∑' x, ite (x = i) 0 (f x) :=
+  by
+  refine' tsum_eq_add_tsum_ite' i (Nnreal.summable_of_le (fun i' => _) hf)
+  rw [Function.update_apply]
+  split_ifs <;> simp only [zero_le', le_rfl]
+#align nnreal.tsum_eq_add_tsum_ite Nnreal.tsum_eq_add_tsum_ite
 
 end Nnreal
 

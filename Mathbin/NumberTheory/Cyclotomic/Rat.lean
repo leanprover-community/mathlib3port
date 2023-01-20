@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module number_theory.cyclotomic.rat
-! leanprover-community/mathlib commit 509de852e1de55e1efa8eacfa11df0823f26f226
+! leanprover-community/mathlib commit 1126441d6bccf98c81214a0780c73d499f6721fe
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,7 +40,7 @@ namespace IsCyclotomicExtension.Rat
 /-- The discriminant of the power basis given by `ζ - 1`. -/
 theorem discr_prime_pow_ne_two' [IsCyclotomicExtension {p ^ (k + 1)} ℚ K]
     (hζ : IsPrimitiveRoot ζ ↑(p ^ (k + 1))) (hk : p ^ (k + 1) ≠ 2) :
-    discr ℚ (hζ.subOnePowerBasis ℚ).Basis =
+    discr ℚ (hζ.subOnePowerBasis ℚ).basis =
       (-1) ^ ((p ^ (k + 1) : ℕ).totient / 2) * p ^ ((p : ℕ) ^ k * ((p - 1) * (k + 1) - 1)) :=
   by
   rw [← discr_prime_pow_ne_two hζ (cyclotomic.irreducible_rat (p ^ (k + 1)).Pos) hk]
@@ -48,7 +48,7 @@ theorem discr_prime_pow_ne_two' [IsCyclotomicExtension {p ^ (k + 1)} ℚ K]
 #align is_cyclotomic_extension.rat.discr_prime_pow_ne_two' IsCyclotomicExtension.Rat.discr_prime_pow_ne_two'
 
 theorem discr_odd_prime' [IsCyclotomicExtension {p} ℚ K] (hζ : IsPrimitiveRoot ζ p) (hodd : p ≠ 2) :
-    discr ℚ (hζ.subOnePowerBasis ℚ).Basis = (-1) ^ (((p : ℕ) - 1) / 2) * p ^ ((p : ℕ) - 2) :=
+    discr ℚ (hζ.subOnePowerBasis ℚ).basis = (-1) ^ (((p : ℕ) - 1) / 2) * p ^ ((p : ℕ) - 2) :=
   by
   rw [← discr_odd_prime hζ (cyclotomic.irreducible_rat hp.out.pos) hodd]
   exact hζ.discr_zeta_eq_discr_zeta_sub_one.symm
@@ -58,7 +58,7 @@ theorem discr_odd_prime' [IsCyclotomicExtension {p} ℚ K] (hζ : IsPrimitiveRoo
 `p ^ k = 2` the formula uses `1 / 2 = 0` and `0 - 1 = 0`. It is useful only to have a uniform
 result. See also `is_cyclotomic_extension.rat.discr_prime_pow_eq_unit_mul_pow'`. -/
 theorem discr_prime_pow' [IsCyclotomicExtension {p ^ k} ℚ K] (hζ : IsPrimitiveRoot ζ ↑(p ^ k)) :
-    discr ℚ (hζ.subOnePowerBasis ℚ).Basis =
+    discr ℚ (hζ.subOnePowerBasis ℚ).basis =
       (-1) ^ ((p ^ k : ℕ).totient / 2) * p ^ ((p : ℕ) ^ (k - 1) * ((p - 1) * k - 1)) :=
   by
   rw [← discr_prime_pow hζ (cyclotomic.irreducible_rat (p ^ k).Pos)]
@@ -70,7 +70,7 @@ theorem discr_prime_pow' [IsCyclotomicExtension {p ^ k} ℚ K] (hζ : IsPrimitiv
 enough and less cumbersome to use than `is_cyclotomic_extension.rat.discr_prime_pow'`. -/
 theorem discr_prime_pow_eq_unit_mul_pow' [IsCyclotomicExtension {p ^ k} ℚ K]
     (hζ : IsPrimitiveRoot ζ ↑(p ^ k)) :
-    ∃ (u : ℤˣ)(n : ℕ), discr ℚ (hζ.subOnePowerBasis ℚ).Basis = u * p ^ n :=
+    ∃ (u : ℤˣ)(n : ℕ), discr ℚ (hζ.subOnePowerBasis ℚ).basis = u * p ^ n :=
   by
   rw [hζ.discr_zeta_eq_discr_zeta_sub_one.symm]
   exact discr_prime_pow_eq_unit_mul_pow hζ (cyclotomic.irreducible_rat (p ^ k).Pos)

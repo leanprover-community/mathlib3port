@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module tactic.ring
-! leanprover-community/mathlib commit 509de852e1de55e1efa8eacfa11df0823f26f226
+! leanprover-community/mathlib commit 1126441d6bccf98c81214a0780c73d499f6721fe
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -602,29 +602,41 @@ theorem unfold_div {α} [DivisionRing α] (a b c : α) (h : a * b⁻¹ = c) : a 
               )
             ( eval_norm_atom norm_atom e )
       |
-        e @ q( @ Pow.pow _ _ $ ( P ) $ ( e₁ ) $ ( e₂ ) )
+        e @ q( @ Pow.pow _ _ $ ( inst ) $ ( e₁ ) $ ( e₂ ) )
         =>
-        do
-          let ( e₂' , p₂ ) ← lift <| norm_num.derive e₂ <|> refl_conv e₂
-            match
-              e₂' , P
-              with
-              |
-                  some k , q( Monoid.Pow )
-                  =>
-                  do
-                    let ( e₁' , p₁ ) ← eval e₁
-                      let ( e' , p' ) ← eval_pow e₁' ( e₂ , k )
-                      let
-                        p
-                          ←
-                          ic_lift
-                            fun
-                              ic
-                                =>
-                                ic ` ` subst_into_pow [ e₁ , e₂ , e₁' , e₂' , e' , p₁ , p₂ , p' ]
-                      return ( e' , p )
-                | _ , _ => eval_norm_atom norm_atom e
+        condM
+          (
+              succeeds
+                do
+                  let inst' ← ic_lift fun ic => ic . mk_app ` ` Monoid.Pow [ ]
+                    lift <| is_def_eq inst inst'
+              )
+            (
+              do
+                let ( e₂' , p₂ ) ← lift <| norm_num.derive e₂ <|> refl_conv e₂
+                  match
+                    e₂'
+                    with
+                    |
+                        some k
+                        =>
+                        do
+                          let ( e₁' , p₁ ) ← eval e₁
+                            let ( e' , p' ) ← eval_pow e₁' ( e₂ , k )
+                            let
+                              p
+                                ←
+                                ic_lift
+                                  fun
+                                    ic
+                                      =>
+                                      ic
+                                        ` ` subst_into_pow
+                                          [ e₁ , e₂ , e₁' , e₂' , e' , p₁ , p₂ , p' ]
+                            return ( e' , p )
+                      | _ => eval_norm_atom norm_atom e
+              )
+            ( eval_norm_atom norm_atom e )
       |
         e
         =>

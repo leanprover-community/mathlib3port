@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Simon Hudon, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.group.basic
-! leanprover-community/mathlib commit 509de852e1de55e1efa8eacfa11df0823f26f226
+! leanprover-community/mathlib commit 1126441d6bccf98c81214a0780c73d499f6721fe
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1968,4 +1968,55 @@ theorem bit1_sub [One M] (a b : M) : bit1 (a - b) = bit1 a - bit0 b :=
 #align bit1_sub bit1_sub
 
 end SubtractionCommMonoid
+
+section Multiplicative
+
+variable [Monoid β] (p r : α → α → Prop) [IsTotal α r] (f : α → α → β)
+
+@[to_additive additive_of_symmetric_of_is_total]
+theorem multiplicative_of_symmetric_of_is_total (hsymm : Symmetric p)
+    (hf_swap : ∀ {a b}, p a b → f a b * f b a = 1)
+    (hmul : ∀ {a b c}, r a b → r b c → p a b → p b c → p a c → f a c = f a b * f b c) {a b c : α}
+    (pab : p a b) (pbc : p b c) (pac : p a c) : f a c = f a b * f b c :=
+  by
+  suffices ∀ {b c}, r b c → p a b → p b c → p a c → f a c = f a b * f b c
+    by
+    obtain rbc | rcb := total_of r b c
+    · exact this rbc pab pbc pac
+    · rw [this rcb pac (hsymm pbc) pab, mul_assoc, hf_swap (hsymm pbc), mul_one]
+  intro b c rbc pab pbc pac
+  obtain rab | rba := total_of r a b
+  · exact hmul rab rbc pab pbc pac
+  rw [← one_mul (f a c), ← hf_swap pab, mul_assoc]
+  obtain rac | rca := total_of r a c
+  · rw [hmul rba rac (hsymm pab) pac pbc]
+  · rw [hmul rbc rca pbc (hsymm pac) (hsymm pab), mul_assoc, hf_swap (hsymm pac), mul_one]
+#align multiplicative_of_symmetric_of_is_total multiplicative_of_symmetric_of_is_total
+#align additive_of_symmetric_of_is_total additive_of_symmetric_of_is_total
+
+/- warning: multiplicative_of_is_total -> multiplicative_of_isTotal is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Monoid.{u2} β] (r : α -> α -> Prop) [_inst_2 : IsTotal.{u1} α r] (f : α -> α -> β) (p : α -> Prop), (forall {a : α} {b : α}, (p a) -> (p b) -> (Eq.{succ u2} β (HMul.hMul.{u2, u2, u2} β β β (instHMul.{u2} β (MulOneClass.toHasMul.{u2} β (Monoid.toMulOneClass.{u2} β _inst_1))) (f a b) (f b a)) (OfNat.ofNat.{u2} β 1 (OfNat.mk.{u2} β 1 (One.one.{u2} β (MulOneClass.toHasOne.{u2} β (Monoid.toMulOneClass.{u2} β _inst_1))))))) -> (forall {a : α} {b : α} {c : α}, (r a b) -> (r b c) -> (p a) -> (p b) -> (p c) -> (Eq.{succ u2} β (f a c) (HMul.hMul.{u2, u2, u2} β β β (instHMul.{u2} β (MulOneClass.toHasMul.{u2} β (Monoid.toMulOneClass.{u2} β _inst_1))) (f a b) (f b c)))) -> (forall {a : α} {b : α} {c : α}, (p a) -> (p b) -> (p c) -> (Eq.{succ u2} β (f a c) (HMul.hMul.{u2, u2, u2} β β β (instHMul.{u2} β (MulOneClass.toHasMul.{u2} β (Monoid.toMulOneClass.{u2} β _inst_1))) (f a b) (f b c))))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Monoid.{u2} β] (r : α -> α -> β) (_inst_2 : α -> α -> Prop) [f : IsTotal.{u1} α _inst_2], (forall (ᾰ : α) (b : α), Eq.{succ u2} β (HMul.hMul.{u2, u2, u2} β β β (instHMul.{u2} β (MulOneClass.toMul.{u2} β (Monoid.toMulOneClass.{u2} β _inst_1))) (r ᾰ b) (r b ᾰ)) (OfNat.ofNat.{u2} β 1 (One.toOfNat1.{u2} β (Monoid.toOne.{u2} β _inst_1)))) -> (forall {a : α} {b : α} {ᾰ : α}, (_inst_2 a b) -> (_inst_2 b ᾰ) -> (Eq.{succ u2} β (r a ᾰ) (HMul.hMul.{u2, u2, u2} β β β (instHMul.{u2} β (MulOneClass.toMul.{u2} β (Monoid.toMulOneClass.{u2} β _inst_1))) (r a b) (r b ᾰ)))) -> (forall (hmul : α) (a : α) (b : α), Eq.{succ u2} β (r hmul b) (HMul.hMul.{u2, u2, u2} β β β (instHMul.{u2} β (MulOneClass.toMul.{u2} β (Monoid.toMulOneClass.{u2} β _inst_1))) (r hmul a) (r a b)))
+Case conversion may be inaccurate. Consider using '#align multiplicative_of_is_total multiplicative_of_isTotalₓ'. -/
+/-- If a binary function from a type equipped with a total relation `r` to a monoid is
+  anti-symmetric (i.e. satisfies `f a b * f b a = 1`), in order to show it is multiplicative
+  (i.e. satisfies `f a c = f a b * f b c`), we may assume `r a b` and `r b c` are satisfied.
+  We allow restricting to a subset specified by a predicate `p`. -/
+@[to_additive additive_of_isTotal
+      "If a binary function from a type equipped with a total relation\n  `r` to an additive monoid is anti-symmetric (i.e. satisfies `f a b + f b a = 0`), in order to show\n  it is additive (i.e. satisfies `f a c = f a b + f b c`), we may assume `r a b` and `r b c`\n  are satisfied. We allow restricting to a subset specified by a predicate `p`."]
+theorem multiplicative_of_isTotal (p : α → Prop) (hswap : ∀ {a b}, p a → p b → f a b * f b a = 1)
+    (hmul : ∀ {a b c}, r a b → r b c → p a → p b → p c → f a c = f a b * f b c) {a b c : α}
+    (pa : p a) (pb : p b) (pc : p c) : f a c = f a b * f b c :=
+  by
+  apply multiplicative_of_symmetric_of_is_total (fun a b => p a ∧ p b) r f fun _ _ => And.symm
+  · simp_rw [and_imp]
+    exact @hswap
+  · exact fun a b c rab rbc pab pbc pac => hmul rab rbc pab.1 pab.2 pac.2
+  exacts[⟨pa, pb⟩, ⟨pb, pc⟩, ⟨pa, pc⟩]
+#align multiplicative_of_is_total multiplicative_of_isTotal
+#align additive_of_is_total additive_of_isTotal
+
+end Multiplicative
 

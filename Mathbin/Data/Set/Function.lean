@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Andrew Zipperer, Haitao Zhang, Minchao Wu, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.set.function
-! leanprover-community/mathlib commit 509de852e1de55e1efa8eacfa11df0823f26f226
+! leanprover-community/mathlib commit 1126441d6bccf98c81214a0780c73d499f6721fe
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -248,22 +248,18 @@ theorem range_extend {f : α → β} (hf : Injective f) (g : α → γ) (g' : β
   exacts[⟨f x, hf.extend_apply _ _ _⟩, ⟨y, extend_apply' _ _ _ hy⟩]
 #align set.range_extend Set.range_extend
 
-/- warning: set.cod_restrict -> Set.codRestrict is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} (f : ι -> α) (s : Set.{u1} α), (forall (x : ι), Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) (f x) s) -> ι -> (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s)
-but is expected to have type
-  forall {α : Type.{u1}} {ι : Type.{u2}} (f : ι -> α) (s : Set.{u1} α), (forall (x : ι), Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) (f x) s) -> ι -> (Set.Elem.{u1} α s)
-Case conversion may be inaccurate. Consider using '#align set.cod_restrict Set.codRestrictₓ'. -/
+#print Set.codRestrict /-
 /-- Restrict codomain of a function `f` to a set `s`. Same as `subtype.coind` but this version
 has codomain `↥s` instead of `subtype s`. -/
 def codRestrict (f : ι → α) (s : Set α) (h : ∀ x, f x ∈ s) : ι → s := fun x => ⟨f x, h x⟩
 #align set.cod_restrict Set.codRestrict
+-/
 
 /- warning: set.coe_cod_restrict_apply -> Set.val_codRestrict_apply is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {ι : Sort.{u2}} (f : ι -> α) (s : Set.{u1} α) (h : forall (x : ι), Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) (f x) s) (x : ι), Eq.{succ u1} α ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s))))) (Set.codRestrict.{u1, u2} α ι f s h x)) (f x)
 but is expected to have type
-  forall {α : Type.{u2}} {ι : Type.{u1}} (f : ι -> α) (s : Set.{u2} α) (h : forall (x : ι), Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) (f x) s) (x : ι), Eq.{succ u2} α (Subtype.val.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) (Set.codRestrict.{u2, u1} α ι f s h x)) (f x)
+  forall {α : Type.{u2}} {ι : Sort.{u1}} (f : ι -> α) (s : Set.{u2} α) (h : forall (x : ι), Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) (f x) s) (x : ι), Eq.{succ u2} α (Subtype.val.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) (Set.codRestrict.{u2, u1} α ι f s h x)) (f x)
 Case conversion may be inaccurate. Consider using '#align set.coe_cod_restrict_apply Set.val_codRestrict_applyₓ'. -/
 @[simp]
 theorem val_codRestrict_apply (f : ι → α) (s : Set α) (h : ∀ x, f x ∈ s) (x : ι) :
@@ -275,7 +271,7 @@ theorem val_codRestrict_apply (f : ι → α) (s : Set α) (h : ∀ x, f x ∈ s
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {f : ι -> α} {g : α -> β} {b : Set.{u1} α} (h : forall (x : ι), Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) (f x) b), Eq.{max u3 (succ u2)} (ι -> β) (Function.comp.{u3, succ u1, succ u2} ι (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) b) β (Set.restrict.{u1, u2} α (fun (ᾰ : α) => β) b g) (Set.codRestrict.{u1, u3} α ι f b h)) (Function.comp.{u3, succ u1, succ u2} ι α β g f)
 but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {ι : Type.{u1}} {f : ι -> α} {g : α -> β} {b : Set.{u3} α} (h : forall (x : ι), Membership.mem.{u3, u3} α (Set.{u3} α) (Set.instMembershipSet.{u3} α) (f x) b), Eq.{max (succ u2) (succ u1)} (ι -> β) (Function.comp.{succ u1, succ u3, succ u2} ι (Set.Elem.{u3} α b) β (Set.restrict.{u3, u2} α (fun (ᾰ : α) => β) b g) (Set.codRestrict.{u3, u1} α ι f b h)) (Function.comp.{succ u1, succ u3, succ u2} ι α β g f)
+  forall {α : Type.{u3}} {β : Type.{u2}} {ι : Sort.{u1}} {f : ι -> α} {g : α -> β} {b : Set.{u3} α} (h : forall (x : ι), Membership.mem.{u3, u3} α (Set.{u3} α) (Set.instMembershipSet.{u3} α) (f x) b), Eq.{max (succ u2) u1} (ι -> β) (Function.comp.{u1, succ u3, succ u2} ι (Set.Elem.{u3} α b) β (Set.restrict.{u3, u2} α (fun (ᾰ : α) => β) b g) (Set.codRestrict.{u3, u1} α ι f b h)) (Function.comp.{u1, succ u3, succ u2} ι α β g f)
 Case conversion may be inaccurate. Consider using '#align set.restrict_comp_cod_restrict Set.restrict_comp_codRestrictₓ'. -/
 @[simp]
 theorem restrict_comp_codRestrict {f : ι → α} {g : α → β} {b : Set α} (h : ∀ x, f x ∈ b) :
@@ -287,7 +283,7 @@ theorem restrict_comp_codRestrict {f : ι → α} {g : α → β} {b : Set α} (
 lean 3 declaration is
   forall {α : Type.{u1}} {ι : Sort.{u2}} {f : ι -> α} {s : Set.{u1} α} (h : forall (x : ι), Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) (f x) s), Iff (Function.Injective.{u2, succ u1} ι (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) (Set.codRestrict.{u1, u2} α ι f s h)) (Function.Injective.{u2, succ u1} ι α f)
 but is expected to have type
-  forall {α : Type.{u2}} {ι : Type.{u1}} {f : ι -> α} {s : Set.{u2} α} (h : forall (x : ι), Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) (f x) s), Iff (Function.Injective.{succ u1, succ u2} ι (Set.Elem.{u2} α s) (Set.codRestrict.{u2, u1} α ι f s h)) (Function.Injective.{succ u1, succ u2} ι α f)
+  forall {α : Type.{u2}} {ι : Sort.{u1}} {f : ι -> α} {s : Set.{u2} α} (h : forall (x : ι), Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) (f x) s), Iff (Function.Injective.{u1, succ u2} ι (Set.Elem.{u2} α s) (Set.codRestrict.{u2, u1} α ι f s h)) (Function.Injective.{u1, succ u2} ι α f)
 Case conversion may be inaccurate. Consider using '#align set.injective_cod_restrict Set.injective_codRestrictₓ'. -/
 @[simp]
 theorem injective_codRestrict {f : ι → α} {s : Set α} (h : ∀ x, f x ∈ s) :
@@ -670,7 +666,7 @@ theorem MapsTo.val_restrict_apply (h : MapsTo f s t) (x : s) : (h.restrict f s t
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {t : Set.{u2} β} {f : α -> β} (h : forall (x : coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s), Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) (f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s))))) x)) t), Eq.{max (succ u1) (succ u2)} ((coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) -> (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t)) (Set.codRestrict.{u2, succ u1} β (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) (Set.restrict.{u1, u2} α (fun (ᾰ : α) => β) s f) t h) (Set.MapsTo.restrict.{u1, u2} α β f s t (fun (x : α) (hx : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) => h (Subtype.mk.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) x hx)))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t : Set.{u1} β} {f : α -> β} (h : forall (x : Set.Elem.{u2} α s), Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) (f (Subtype.val.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) x)) t), Eq.{max (succ u2) (succ u1)} ((Set.Elem.{u2} α s) -> (Set.Elem.{u1} β t)) (Set.codRestrict.{u1, u2} β (Set.Elem.{u2} α s) (Set.restrict.{u2, u1} α (fun (ᾰ : α) => β) s f) t h) (Set.MapsTo.restrict.{u2, u1} α β f s t (fun (x : α) (hx : Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) => h (Subtype.mk.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) x hx)))
+  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t : Set.{u1} β} {f : α -> β} (h : forall (x : Set.Elem.{u2} α s), Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) (f (Subtype.val.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) x)) t), Eq.{max (succ u2) (succ u1)} ((Set.Elem.{u2} α s) -> (Set.Elem.{u1} β t)) (Set.codRestrict.{u1, succ u2} β (Set.Elem.{u2} α s) (Set.restrict.{u2, u1} α (fun (ᾰ : α) => β) s f) t h) (Set.MapsTo.restrict.{u2, u1} α β f s t (fun (x : α) (hx : Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) => h (Subtype.mk.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) x hx)))
 Case conversion may be inaccurate. Consider using '#align set.cod_restrict_restrict Set.codRestrict_restrictₓ'. -/
 /-- Restricting the domain and then the codomain is the same as `maps_to.restrict`. -/
 @[simp]
@@ -683,7 +679,7 @@ theorem codRestrict_restrict (h : ∀ x : s, f x ∈ t) :
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {t : Set.{u2} β} {f : α -> β} (h : Set.MapsTo.{u1, u2} α β f s t), Eq.{max (succ u1) (succ u2)} ((coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) -> (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t)) (Set.MapsTo.restrict.{u1, u2} α β f s t h) (Set.codRestrict.{u2, succ u1} β (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) (Set.restrict.{u1, u2} α (fun (ᾰ : α) => β) s f) t (fun (x : coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) => h (Subtype.val.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) x) (Subtype.property.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) x)))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t : Set.{u1} β} {f : α -> β} (h : Set.MapsTo.{u2, u1} α β f s t), Eq.{max (succ u2) (succ u1)} ((Set.Elem.{u2} α s) -> (Set.Elem.{u1} β t)) (Set.MapsTo.restrict.{u2, u1} α β f s t h) (Set.codRestrict.{u1, u2} β (Set.Elem.{u2} α s) (Set.restrict.{u2, u1} α (fun (ᾰ : α) => β) s f) t (fun (x : Set.Elem.{u2} α s) => h (Subtype.val.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) x) (Subtype.property.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) x)))
+  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t : Set.{u1} β} {f : α -> β} (h : Set.MapsTo.{u2, u1} α β f s t), Eq.{max (succ u2) (succ u1)} ((Set.Elem.{u2} α s) -> (Set.Elem.{u1} β t)) (Set.MapsTo.restrict.{u2, u1} α β f s t h) (Set.codRestrict.{u1, succ u2} β (Set.Elem.{u2} α s) (Set.restrict.{u2, u1} α (fun (ᾰ : α) => β) s f) t (fun (x : Set.Elem.{u2} α s) => h (Subtype.val.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) x) (Subtype.property.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) x)))
 Case conversion may be inaccurate. Consider using '#align set.maps_to.restrict_eq_cod_restrict Set.MapsTo.restrict_eq_codRestrictₓ'. -/
 /-- Reverse of `set.cod_restrict_restrict`. -/
 theorem MapsTo.restrict_eq_codRestrict (h : MapsTo f s t) :
@@ -2656,7 +2652,7 @@ protected theorem restrict (h : Monotone f) (s : Set α) : Monotone (s.restrict 
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β}, (Monotone.{u1, u2} α β _inst_1 _inst_2 f) -> (forall {s : Set.{u2} β} (hs : forall (x : α), Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) (f x) s), Monotone.{u1, u2} α (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) s) _inst_1 (Subtype.preorder.{u2} β _inst_2 (fun (x : β) => Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) x s)) (Set.codRestrict.{u2, succ u1} β α f s hs))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : α -> β}, (Monotone.{u2, u1} α β _inst_1 _inst_2 f) -> (forall {s : Set.{u1} β} (hs : forall (x : α), Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) (f x) s), Monotone.{u2, u1} α (Set.Elem.{u1} β s) _inst_1 (Subtype.preorder.{u1} β _inst_2 (fun (x : β) => Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) x s)) (Set.codRestrict.{u1, u2} β α f s hs))
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : α -> β}, (Monotone.{u2, u1} α β _inst_1 _inst_2 f) -> (forall {s : Set.{u1} β} (hs : forall (x : α), Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) (f x) s), Monotone.{u2, u1} α (Set.Elem.{u1} β s) _inst_1 (Subtype.preorder.{u1} β _inst_2 (fun (x : β) => Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) x s)) (Set.codRestrict.{u1, succ u2} β α f s hs))
 Case conversion may be inaccurate. Consider using '#align monotone.cod_restrict Monotone.codRestrictₓ'. -/
 protected theorem codRestrict (h : Monotone f) {s : Set β} (hs : ∀ x, f x ∈ s) :
     Monotone (s.codRestrict f hs) :=
@@ -3151,7 +3147,7 @@ alias strictMono_restrict ↔ _root_.strict_mono.of_restrict _root_.strict_mono_
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β}, (StrictMono.{u1, u2} α β _inst_1 _inst_2 f) -> (forall {s : Set.{u2} β} (hs : forall (x : α), Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) (f x) s), StrictMono.{u1, u2} α (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) s) _inst_1 (Subtype.preorder.{u2} β _inst_2 (fun (x : β) => Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) x s)) (Set.codRestrict.{u2, succ u1} β α f s hs))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : α -> β}, (StrictMono.{u2, u1} α β _inst_1 _inst_2 f) -> (forall {s : Set.{u1} β} (hs : forall (x : α), Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) (f x) s), StrictMono.{u2, u1} α (Set.Elem.{u1} β s) _inst_1 (Subtype.preorder.{u1} β _inst_2 (fun (x : β) => Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) x s)) (Set.codRestrict.{u1, u2} β α f s hs))
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : α -> β}, (StrictMono.{u2, u1} α β _inst_1 _inst_2 f) -> (forall {s : Set.{u1} β} (hs : forall (x : α), Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) (f x) s), StrictMono.{u2, u1} α (Set.Elem.{u1} β s) _inst_1 (Subtype.preorder.{u1} β _inst_2 (fun (x : β) => Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) x s)) (Set.codRestrict.{u1, succ u2} β α f s hs))
 Case conversion may be inaccurate. Consider using '#align strict_mono.cod_restrict StrictMono.codRestrictₓ'. -/
 theorem StrictMono.codRestrict [Preorder α] [Preorder β] {f : α → β} (hf : StrictMono f) {s : Set β}
     (hs : ∀ x, f x ∈ s) : StrictMono (Set.codRestrict f s hs) :=

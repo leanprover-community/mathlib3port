@@ -5,7 +5,7 @@ Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Sébasti
   Rémy Degenne, David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.special_functions.pow
-! leanprover-community/mathlib commit 509de852e1de55e1efa8eacfa11df0823f26f226
+! leanprover-community/mathlib commit 1126441d6bccf98c81214a0780c73d499f6721fe
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -27,6 +27,8 @@ We also prove basic properties of these functions.
 noncomputable section
 
 open Classical Real TopologicalSpace Nnreal Ennreal Filter BigOperators Asymptotics
+
+open ComplexConjugate
 
 open Filter Finset Set
 
@@ -586,6 +588,45 @@ theorem abs_cpow_eq_rpow_re_of_nonneg {x : ℝ} (hx : 0 ≤ x) {y : ℂ} (hy : r
     exact ne_of_apply_ne re hy
   · exact abs_cpow_eq_rpow_re_of_pos hlt y
 #align complex.abs_cpow_eq_rpow_re_of_nonneg Complex.abs_cpow_eq_rpow_re_of_nonneg
+
+theorem inv_cpow_eq_ite (x : ℂ) (n : ℂ) :
+    x⁻¹ ^ n = if x.arg = π then conj (x ^ conj n)⁻¹ else (x ^ n)⁻¹ :=
+  by
+  simp_rw [Complex.cpow_def, log_inv_eq_ite, inv_eq_zero, map_eq_zero, ite_mul, neg_mul,
+    IsROrC.conj_inv, apply_ite conj, apply_ite exp, apply_ite Inv.inv, map_zero, map_one, exp_neg,
+    inv_one, inv_zero, ← exp_conj, map_mul, conj_conj]
+  split_ifs with hx hn ha ha <;> rfl
+#align complex.inv_cpow_eq_ite Complex.inv_cpow_eq_ite
+
+theorem inv_cpow (x : ℂ) (n : ℂ) (hx : x.arg ≠ π) : x⁻¹ ^ n = (x ^ n)⁻¹ := by
+  rw [inv_cpow_eq_ite, if_neg hx]
+#align complex.inv_cpow Complex.inv_cpow
+
+/-- `complex.inv_cpow_eq_ite` with the `ite` on the other side. -/
+theorem inv_cpow_eq_ite' (x : ℂ) (n : ℂ) :
+    (x ^ n)⁻¹ = if x.arg = π then conj (x⁻¹ ^ conj n) else x⁻¹ ^ n :=
+  by
+  rw [inv_cpow_eq_ite, apply_ite conj, conj_conj, conj_conj]
+  split_ifs
+  · rfl
+  · rw [inv_cpow _ _ h]
+#align complex.inv_cpow_eq_ite' Complex.inv_cpow_eq_ite'
+
+theorem conj_cpow_eq_ite (x : ℂ) (n : ℂ) :
+    conj x ^ n = if x.arg = π then x ^ n else conj (x ^ conj n) :=
+  by
+  simp_rw [cpow_def, map_eq_zero, apply_ite conj, map_one, map_zero, ← exp_conj, map_mul, conj_conj,
+    log_conj_eq_ite]
+  split_ifs with hcx hn hx <;> rfl
+#align complex.conj_cpow_eq_ite Complex.conj_cpow_eq_ite
+
+theorem conj_cpow (x : ℂ) (n : ℂ) (hx : x.arg ≠ π) : conj x ^ n = conj (x ^ conj n) := by
+  rw [conj_cpow_eq_ite, if_neg hx]
+#align complex.conj_cpow Complex.conj_cpow
+
+theorem cpow_conj (x : ℂ) (n : ℂ) (hx : x.arg ≠ π) : x ^ conj n = conj (conj x ^ n) := by
+  rw [conj_cpow _ _ hx, conj_conj]
+#align complex.cpow_conj Complex.cpow_conj
 
 end Complex
 
